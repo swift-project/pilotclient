@@ -501,7 +501,7 @@ namespace BlackSimPlugin::FsCommon
                 CCoordinateGeodetic position = situation.getPosition();
                 CLatitude  lat(latitudeRaw  * latCorrectionFactor, CAngleUnit::deg());
                 CLongitude lon(longitudeRaw * lonCorrectionFactor, CAngleUnit::deg());
-                CAltitude  groundAltitude(groundAltitudeRaw / 256.0, CLengthUnit::m());
+                CAltitude  groundAltitude(groundAltitudeRaw / 256.0, CAltitude::MeanSeaLevel, CLengthUnit::m());
                 position.setLatitude(lat);
                 position.setLongitude(lon);
                 position.setGeodeticHeight(groundAltitude);
@@ -531,6 +531,7 @@ namespace BlackSimPlugin::FsCommon
                 situation.setPressureAltitude(pressureAltitude);
                 situation.setVelocity({velocityWorld[0], velocityWorld[1], velocityWorld[2], CSpeedUnit::ft_s(), rotationVelocityBody[0],
                                         rotationVelocityBody[1], rotationVelocityBody[2], CAngleUnit::rad(), CTimeUnit::s()});
+                situation.setGroundElevation(groundAltitude, CAircraftSituation::FromProvider);
                 aircraft.setSituation(situation);
                 aircraft.setCG(altitude - groundAltitude); // calculate the CG
             } // situation
