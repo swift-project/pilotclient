@@ -533,7 +533,7 @@ namespace BlackSimPlugin::FsCommon
                                         rotationVelocityBody[1], rotationVelocityBody[2], CAngleUnit::rad(), CTimeUnit::s()});
                 situation.setGroundElevation(groundAltitude, CAircraftSituation::FromProvider);
                 aircraft.setSituation(situation);
-                aircraft.setCG(altitude - groundAltitude); // calculate the CG
+                //aircraft.setCG(altitude - groundAltitude); // calculate the CG
             } // situation
 
             // model
