@@ -63,6 +63,7 @@ namespace BlackGui::Components
     void CInstallXSwiftBusComponent::setDefaultDownloadName(const QString &defaultDownload)
     {
         m_defaultDownloadName = defaultDownload;
+        this->updatesChanged();
     }
 
     void CInstallXSwiftBusComponent::selectPluginDirectory()
