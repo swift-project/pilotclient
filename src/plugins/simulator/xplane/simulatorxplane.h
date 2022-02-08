@@ -75,6 +75,7 @@ namespace BlackSimPlugin::XPlane
         double latitudeDeg = 0;             //!< Longitude [deg]
         double longitudeDeg = 0;            //!< Latitude  [deg]
         double altitudeM = 0;               //!< Altitude  [m]
+        double heightAglM = 0;              //!< Height AGL [m]
         double groundspeedMs = 0;           //!< Ground speed [m/s]
         double pitchDeg = 0;                //!< Pitch [deg]
         double rollDeg = 0;                 //!< Roll  [deg]

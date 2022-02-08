@@ -321,7 +321,7 @@ namespace BlackSimPlugin::XPlane
             m_serviceProxy->getOwnAircraftCom2DataAsync(&m_xplaneData);
             m_serviceProxy->getOwnAircraftXpdrAsync(&m_xplaneData);
             m_serviceProxy->getAllWheelsOnGroundAsync(&m_xplaneData.onGroundAll);
-            m_serviceProxy->getGroundElevationAsync(&m_xplaneData.groundElevation);
+            m_serviceProxy->getHeightAglMAsync(&m_xplaneData.heightAglM);
 
             CAircraftSituation situation;
             situation.setPosition({ m_xplaneData.latitudeDeg, m_xplaneData.longitudeDeg, 0 });
@@ -334,7 +334,7 @@ namespace BlackSimPlugin::XPlane
             situation.setPitch({ m_xplaneData.pitchDeg, CAngleUnit::deg() });
             situation.setBank({ m_xplaneData.rollDeg, CAngleUnit::deg() });
             situation.setGroundSpeed({ m_xplaneData.groundspeedMs, CSpeedUnit::m_s() });
-            const CAltitude elevation { std::isnan(m_xplaneData.groundElevation) ? 0 : m_xplaneData.groundElevation, CAltitude::MeanSeaLevel, CLengthUnit::m() };
+            const CAltitude elevation { m_xplaneData.altitudeM - m_xplaneData.heightAglM, CAltitude::MeanSeaLevel, CLengthUnit::m() };
             situation.setGroundElevation(elevation, CAircraftSituation::FromProvider);
             situation.setVelocity({ m_xplaneData.localXVelocityMs, m_xplaneData.localYVelocityMs, m_xplaneData.localZVelocityMs,
                 CSpeedUnit::m_s(), m_xplaneData.pitchRadPerSec, m_xplaneData.rollRadPerSec, m_xplaneData.headingRadPerSec,
