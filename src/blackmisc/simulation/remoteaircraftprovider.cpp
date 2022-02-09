@@ -289,6 +289,10 @@ namespace BlackMisc::Simulation
             {
                 newSituationsList.prefillLatestAdjustedFirst(situationCorrected, IRemoteAircraftProvider::MaxSituationsPerCallsign);
             }
+            else if (!situationCorrected.hasVelocity() && newSituationsList.front().hasVelocity())
+            {
+                return situationCorrected;
+            }
             else
             {
                 // newSituationsList.push_frontKeepLatestFirstIgnoreOverlapping(situationCorrected, true, IRemoteAircraftProvider::MaxSituationsPerCallsign);
