@@ -157,16 +157,16 @@ namespace XSwiftBus
 
         //! Get aircraft local velocity in world coordinates meters per second
         //! @{
-        double getLocalXVelocityMps() const { return m_velocityX.get(); }
-        double getLocalYVelocityMps() const { return m_velocityY.get(); }
-        double getLocalZVelocityMps() const { return m_velocityZ.get(); }
+        double getLocalXVelocityMps() const { return isPaused() ? 0 : m_velocityX.get(); }
+        double getLocalYVelocityMps() const { return isPaused() ? 0 : m_velocityY.get(); }
+        double getLocalZVelocityMps() const { return isPaused() ? 0 : m_velocityZ.get(); }
         //! @}
 
         //! Get aircraft angular velocity in radians per second
         //! @{
-        double getPitchRadPerSec() const { return m_pitchVelocity.get(); }
-        double getRollRadPerSec() const { return m_rollVelocity.get(); }
-        double getHeadingRadPerSec() const { return m_headingVelocity.get(); }
+        double getPitchRadPerSec() const { return isPaused() ? 0 : m_pitchVelocity.get(); }
+        double getRollRadPerSec() const { return isPaused() ? 0 : m_rollVelocity.get(); }
+        double getHeadingRadPerSec() const { return isPaused() ? 0 : m_headingVelocity.get(); }
         //! @}
 
         //! Get whether any wheel is on the ground
