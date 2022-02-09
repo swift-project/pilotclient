@@ -418,10 +418,13 @@ namespace BlackMisc
             QString getPBHInfo() const;
 
             //! Set 6DOF velocity
-            void setVelocity(const CAircraftVelocity &velocity) { m_velocity = velocity; }
+            void setVelocity(const CAircraftVelocity &velocity) { m_velocity = velocity; m_hasVelocity = true; }
 
             //! Get 6DOF velocity
             const CAircraftVelocity &getVelocity() const { return m_velocity; }
+
+            //! Is velocity non-zero?
+            bool hasVelocity() const { return m_hasVelocity; }
 
             //! Get ground speed
             const PhysicalQuantities::CSpeed &getGroundSpeed() const { return m_groundSpeed; }
@@ -573,6 +576,7 @@ namespace BlackMisc
             PhysicalQuantities::CSpeed  m_groundSpeed   { 0, nullptr };
             PhysicalQuantities::CLength m_cg            { 0, nullptr };
             PhysicalQuantities::CLength m_sceneryOffset { 0, nullptr };
+            bool m_hasVelocity = false;
             CAircraftVelocity m_velocity;
             bool m_isInterim = false; //!< interim situation?
             bool m_isElvInfoTransferred = false; //!< the gnd.elevation has been transferred
@@ -599,6 +603,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(groundSpeed),
                 BLACK_METAMEMBER(cg),
                 BLACK_METAMEMBER(sceneryOffset),
+                BLACK_METAMEMBER(hasVelocity),
                 BLACK_METAMEMBER(velocity),
                 BLACK_METAMEMBER(groundElevationPlane),
                 BLACK_METAMEMBER(onGround),
