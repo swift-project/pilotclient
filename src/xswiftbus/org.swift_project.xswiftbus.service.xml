@@ -143,6 +143,9 @@ R"XML(<node>
     <method name="getAllWheelsOnGround">
       <arg type="b" direction="out"/>
     </method>
+    <method name="getGroundElevation">
+      <arg type="d" direction="out"/>
+    </method>
     <method name="getCom1ActiveKhz">
       <arg type="i" direction="out"/>
     </method>
