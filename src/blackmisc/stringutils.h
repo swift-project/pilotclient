@@ -126,6 +126,12 @@ namespace BlackMisc
     //! Split a string into multiple lines. Blank lines are skipped.
     BLACKMISC_EXPORT QStringList splitLines(const QString &s);
 
+    //! Extended percent encoding supporting UTF-16
+    BLACKMISC_EXPORT QByteArray utfToPercentEncoding(const QString &s, const QByteArray &allow = {}, char percent = '%');
+
+    //! Reverse utfFromPercentEncoding
+    BLACKMISC_EXPORT QString utfFromPercentEncoding(const QByteArray &ba, char percent = '%');
+
     //! A map converted to string
     template<class K, class V> QString qmapToString(const QMap<K, V> &map)
     {

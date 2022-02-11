@@ -34,6 +34,69 @@ namespace BlackMisc
         return splitString(s, [](QChar c) { return c == '\n' || c == '\r'; });
     }
 
+    QByteArray utfToPercentEncoding(const QString& s, const QByteArray &allow, char percent)
+    {
+        QByteArray result;
+        for (const QChar &c : s)
+        {
+            if (const char latin = c.toLatin1())
+            {
+                if ((latin >= 'a' && latin <= 'z') || (latin >= 'A' && latin <= 'Z')
+                    || (latin >= '0' && latin <= '9') || allow.contains(latin))
+                {
+                    result += c;
+                }
+                else
+                {
+                    result += percent;
+                    if (latin < 0x10) { result += '0'; }
+                    result += QByteArray::number(static_cast<int>(latin), 16);
+                }
+            }
+            else
+            {
+                result += percent;
+                result += 'x';
+                const ushort unicode = c.unicode();
+                if (unicode < 0x0010) { result += '0'; }
+                if (unicode < 0x0100) { result += '0'; }
+                if (unicode < 0x1000) { result += '0'; }
+                result += QByteArray::number(unicode, 16);
+            }
+        }
+        return result;
+    }
+
+    QString utfFromPercentEncoding(const QByteArray& ba, char percent)
+    {
+        QString result;
+        for (int i = 0; i < ba.size(); ++i)
+        {
+            if (ba[i] == percent)
+            {
+                ++i;
+                Q_ASSERT(i < ba.size());
+                if (ba[i] == 'x')
+                {
+                    ++i;
+                    Q_ASSERT(i < ba.size());
+                    result += QChar(ba.mid(i, 4).toInt(nullptr, 16));
+                    i += 3;
+                }
+                else
+                {
+                    result += static_cast<char>(ba.mid(i, 2).toInt(nullptr, 16));
+                    ++i;
+                }
+            }
+            else
+            {
+                result += ba[i];
+            }
+        }
+        return result;
+    }
+
     const QString &boolToOnOff(bool v)
     {
         static const QString on("on");

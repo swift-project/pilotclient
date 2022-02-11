@@ -73,7 +73,7 @@ namespace BlackMiscTest
     void CTestIdentifier::dbusObjectPath()
     {
         QObject q;
-        q.setObjectName("!@#$%^&*()_+");
+        q.setObjectName(QString::fromUtf16(u"!@#$%^&*()_+\u263a"));
         CTestIdentifiable id(&q);
         QString s(id.identifier().toDBusObjectPath());
         QVERIFY2(id.identifier() == CIdentifier::fromDBusObjectPath(s), "Conversion from dbus object path and back compares equal");

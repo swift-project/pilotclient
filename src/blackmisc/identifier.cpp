@@ -21,27 +21,25 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc, CIdentifier)
 //! \private Escape characters not allowed in dbus paths
 QString toDBusPath(const QString &s)
 {
-    Q_ASSERT_X(!BlackMisc::containsChar(s, [](QChar c) { return c.unicode() > 0x7f; }), Q_FUNC_INFO, "7-bit ASCII only");
-    return s.toLatin1().toPercentEncoding("/", "-._~", '_');
+    return BlackMisc::utfToPercentEncoding(s, "/", '_');
 }
 
 //! \private Escape characters not allowed in dbus path elements
 QString toDBusPathElement(const QString &s)
 {
-    Q_ASSERT_X(!BlackMisc::containsChar(s, [](QChar c) { return c.unicode() > 0x7f; }), Q_FUNC_INFO, "7-bit ASCII only");
-    return s.toLatin1().toPercentEncoding({}, "-._~", '_');
+    return BlackMisc::utfToPercentEncoding(s, {}, '_');
 }
 
 //! \private Unescape characters not allowed in dbus paths
 QString fromDBusPath(const QString &s)
 {
-    return QByteArray::fromPercentEncoding(s.toLatin1(), '_');
+    return BlackMisc::utfFromPercentEncoding(s.toLatin1(), '_');
 }
 
 //! \private Unescape characters not allowed in dbus path elements
 QString fromDBusPathElement(const QString &s)
 {
-    return QByteArray::fromPercentEncoding(s.toLatin1(), '_');
+    return BlackMisc::utfFromPercentEncoding(s.toLatin1(), '_');
 }
 
 //! \private

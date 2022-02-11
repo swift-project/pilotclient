@@ -129,12 +129,17 @@ namespace BlackMiscTest
         //! ctor
         Server()
         {
+            QObject::connect(&m_process, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), [](int code, QProcess::ExitStatus status)
+            {
+                qDebug() << "Server process exited" << (status ? "abnormally" : "normally") << "with exit code" << code;
+            });
             m_process.start("sharedstatetestserver", QStringList());
             m_process.waitForStarted();
         }
         //! dtor
         ~Server()
         {
+            m_process.disconnect();
             m_process.kill();
             m_process.waitForFinished();
         }
