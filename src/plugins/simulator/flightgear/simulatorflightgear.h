@@ -244,6 +244,8 @@ namespace BlackSimPlugin::Flightgear
         qint64 m_statsAddMaxTimeMs = -1;
         qint64 m_statsAddCurrentTimeMs = -1;
 
+        bool m_simulatorPaused = false;
+
         //! Reset the Flightgear data
         void resetFlightgearData()
         {
