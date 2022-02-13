@@ -74,8 +74,8 @@ namespace BlackMisc::Aviation
         int comparePropertyByIndex(CPropertyIndexRef index, const CAircraftVelocity &compareValue) const;
 
     private:
-        static const PhysicalQuantities::CSpeedUnit c_xyzUnit;
         static const PhysicalQuantities::CAngleUnit c_pbhAngleUnit; //!< \todo Create a dedicated PQ class for angular velocity
+        static const PhysicalQuantities::CSpeedUnit c_xyzSpeedUnit;
         static const PhysicalQuantities::CTimeUnit c_pbhTimeUnit;
 
         double m_x = 0;

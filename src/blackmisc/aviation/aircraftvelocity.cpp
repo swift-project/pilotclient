@@ -16,7 +16,7 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftVelocity)
 
 namespace BlackMisc::Aviation
 {
-    const CSpeedUnit CAircraftVelocity::c_xyzUnit = CSpeedUnit::m_s();
+    const CSpeedUnit CAircraftVelocity::c_xyzSpeedUnit = CSpeedUnit::m_s();
     const CAngleUnit CAircraftVelocity::c_pbhAngleUnit = CAngleUnit::rad();
     const CTimeUnit CAircraftVelocity::c_pbhTimeUnit = CTimeUnit::s();
 
@@ -30,9 +30,9 @@ namespace BlackMisc::Aviation
 
     void CAircraftVelocity::setLinearVelocity(double x, double y, double z, CSpeedUnit xyzUnit)
     {
-        m_x = c_xyzUnit.convertFrom(x, xyzUnit);
-        m_y = c_xyzUnit.convertFrom(y, xyzUnit);
-        m_z = c_xyzUnit.convertFrom(z, xyzUnit);
+        m_x = c_xyzSpeedUnit.convertFrom(x, xyzUnit);
+        m_y = c_xyzSpeedUnit.convertFrom(y, xyzUnit);
+        m_z = c_xyzSpeedUnit.convertFrom(z, xyzUnit);
     }
 
     void CAircraftVelocity::setAngularVelocity(double pitch, double roll, double heading, CAngleUnit pbhAngleUnit, CTimeUnit pbhTimeUnit)
@@ -44,17 +44,17 @@ namespace BlackMisc::Aviation
 
     double CAircraftVelocity::getVelocityX(CSpeedUnit unit) const
     {
-        return unit.convertFrom(m_x, c_xyzUnit);
+        return unit.convertFrom(m_x, c_xyzSpeedUnit);
     }
 
     double CAircraftVelocity::getVelocityY(CSpeedUnit unit) const
     {
-        return unit.convertFrom(m_y, c_xyzUnit);
+        return unit.convertFrom(m_y, c_xyzSpeedUnit);
     }
 
     double CAircraftVelocity::getVelocityZ(CSpeedUnit unit) const
     {
-        return unit.convertFrom(m_z, c_xyzUnit);
+        return unit.convertFrom(m_z, c_xyzSpeedUnit);
     }
 
     double CAircraftVelocity::getPitchVelocity(CAngleUnit angleUnit, CTimeUnit timeUnit) const
@@ -74,7 +74,7 @@ namespace BlackMisc::Aviation
 
     QString CAircraftVelocity::convertToQString(bool i18n) const
     {
-        return u"Velocity: " % QStringLiteral("%1 %2 %3 ").arg(m_x).arg(m_y).arg(m_z) % c_xyzUnit.convertToQString(i18n) %
+        return u"Velocity: " % QStringLiteral("%1 %2 %3 ").arg(m_x).arg(m_y).arg(m_z) % c_xyzSpeedUnit.convertToQString(i18n) %
                 u" | Rotation: " % QStringLiteral("%1 %2 %3 ").arg(m_pitch).arg(m_roll).arg(m_heading) %
                 c_pbhAngleUnit.convertToQString(i18n) % u"/" % c_pbhTimeUnit.convertToQString(i18n);
     }
