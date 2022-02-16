@@ -52,6 +52,7 @@ enum class MessageType
     PilotClientCom,
     RevBClientParts,    // IVAO only
     RevBPilotDescription, // -PD IVAO only not handled in swift
+    Rehost,
 };
 
 namespace BlackCore::Fsd

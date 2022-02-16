@@ -379,6 +379,7 @@ namespace BlackCore::Fsd
         void handleCustomPilotPacket(const QStringList &tokens);
         void handleFsdIdentification(const QStringList &tokens);
         void handleRevBClientPartsPacket(const QStringList &tokens);
+        void handleRehost(const QStringList &tokens);
 
         //
         void handleUnknownPacket(const QString &line);
@@ -475,6 +476,7 @@ namespace BlackCore::Fsd
 
         std::unique_ptr<QTcpSocket> m_socket = std::make_unique<QTcpSocket>(this); //!< used TCP socket, parent needed as it runs in worker thread
         void connectSocketSignals();
+        bool m_rehosting = false;
 
         std::atomic_bool m_unitTestMode   { false };
         std::atomic_bool m_printToConsole { false };

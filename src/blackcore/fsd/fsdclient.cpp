@@ -39,6 +39,7 @@
 #include "blackcore/fsd/planeinforequestfsinn.h"
 #include "blackcore/fsd/planeinformationfsinn.h"
 #include "blackcore/fsd/revbclientparts.h"
+#include "blackcore/fsd/rehost.h"
 
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/network/rawfsdmessage.h"
@@ -1097,6 +1098,7 @@ namespace BlackCore::Fsd
         m_messageTypeMapping["#DL"] = MessageType::ServerHeartbeat;
         m_messageTypeMapping["#TM"] = MessageType::TextMessage;
         m_messageTypeMapping["#SB"] = MessageType::PilotClientCom;
+        m_messageTypeMapping["$XX"] = MessageType::Rehost;
 
         // Euroscope
         m_messageTypeMapping["SIMDATA"] = MessageType::EuroscopeSimData;
@@ -1642,6 +1644,34 @@ namespace BlackCore::Fsd
         CLogMessage(this).debug(u"Set Config at %1  ") << offsetTimeMs ;
     }
 
+    void CFSDClient::handleRehost(const QStringList &tokens)
+    {
+        const Rehost rehost = Rehost::fromTokens(tokens);
+
+        CLogMessage(this).info(u"Server requested we switch server to %1") << rehost.m_hostname;
+
+        m_rehosting = true;
+        auto newSocket = new QTcpSocket(this);
+        connect(newSocket, &QTcpSocket::connected, this, [this, newSocket]
+        {
+            readDataFromSocket();
+            CLogMessage(this).debug(u"Successfully switched server");
+            QObject::disconnect(newSocket);
+            m_socket.reset(newSocket);
+            m_rehosting = false;
+            connectSocketSignals();
+            readDataFromSocket();
+        });
+        connect(newSocket, &QTcpSocket::errorOccurred, this, [this, newSocket]
+        {
+            CLogMessage(this).warning(u"Failed to switch server: %1") << newSocket->errorString();
+            m_rehosting = false;
+            delete newSocket;
+            if (m_socket->state() != QAbstractSocket::ConnectedState) { updateConnectionStatus(CConnectionStatus::Disconnected); }
+        });
+        newSocket->connectToHost(rehost.m_hostname, m_socket->peerPort());
+    }
+
     void CFSDClient::handleCustomPilotPacket(const QStringList &tokens)
     {
         const QString subType = tokens.at(2);
@@ -1757,11 +1787,15 @@ namespace BlackCore::Fsd
 
     void CFSDClient::printSocketError(QAbstractSocket::SocketError socketError)
     {
+        if (m_rehosting) { return; }
+
         CLogMessage(this).error(u"FSD socket error: %1") << this->socketErrorString(socketError);
     }
 
     void CFSDClient::handleSocketError(QAbstractSocket::SocketError socketError)
     {
+        if (m_rehosting) { return; }
+
         const QString error = this->socketErrorString(socketError);
         switch (socketError)
         {
@@ -1893,6 +1927,7 @@ namespace BlackCore::Fsd
 
     void CFSDClient::clearState()
     {
+        m_rehosting = false;
         m_stoppedSendingVisualPositions = false;
         m_serverWantsVisualPositions = false;
         m_visualPositionUpdateSentCount = 0;
@@ -2252,6 +2287,7 @@ namespace BlackCore::Fsd
             case MessageType::VisualPilotDataStopped:  handleVisualPilotDataUpdate(tokens, messageType); break;
             case MessageType::VisualPilotDataToggle:   handleVisualPilotDataToggle(tokens); break;
             case MessageType::EuroscopeSimData:  handleEuroscopeSimData(tokens);  break;
+            case MessageType::Rehost:            handleRehost(tokens);            break;
 
             // normally we should not get here
             default:
