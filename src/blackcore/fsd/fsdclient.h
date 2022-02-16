@@ -366,7 +366,7 @@ namespace BlackCore::Fsd
         void handleDeletePilot(const QStringList &tokens);
         void handleTextMessage(const QStringList &tokens);
         void handlePilotDataUpdate(const QStringList &tokens);
-        void handleVisualPilotDataUpdate(const QStringList &tokens);
+        void handleVisualPilotDataUpdate(const QStringList &tokens, MessageType messageType);
         void handleVisualPilotDataToggle(const QStringList &tokens);
         void handleEuroscopeSimData(const QStringList &tokens);
         void handlePing(const QStringList &tokens);
@@ -574,6 +574,7 @@ namespace BlackCore::Fsd
         static int constexpr c_sendFsdMsgIntervalMsec           = 10;   //!< interval for FSD send messages
         bool m_stoppedSendingVisualPositions = false; //!< for when velocity drops to zero
         bool m_serverWantsVisualPositions = false;    //!< there are interested clients in range
+        unsigned m_visualPositionUpdateSentCount = 0; //!< for choosing when to send a periodic (slowfast) packet
     };
 } // ns
 

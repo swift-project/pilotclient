@@ -40,6 +40,8 @@ enum class MessageType
     KillRequest,
     PilotDataUpdate,
     VisualPilotDataUpdate,
+    VisualPilotDataPeriodic,
+    VisualPilotDataStopped,
     VisualPilotDataToggle,
     Ping,
     Pong,

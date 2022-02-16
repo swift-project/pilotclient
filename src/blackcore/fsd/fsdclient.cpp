@@ -31,6 +31,8 @@
 #include "blackcore/fsd/servererror.h"
 #include "blackcore/fsd/interimpilotdataupdate.h"
 #include "blackcore/fsd/visualpilotdataupdate.h"
+#include "blackcore/fsd/visualpilotdataperiodic.h"
+#include "blackcore/fsd/visualpilotdatastopped.h"
 #include "blackcore/fsd/visualpilotdatatoggle.h"
 #include "blackcore/fsd/planeinforequest.h"
 #include "blackcore/fsd/planeinformation.h"
@@ -411,6 +413,7 @@ namespace BlackCore::Fsd
             {
                 if (m_stoppedSendingVisualPositions) { return; }
                 m_stoppedSendingVisualPositions = true;
+                m_visualPositionUpdateSentCount = 0;
             }
             else
             {
@@ -436,7 +439,19 @@ namespace BlackCore::Fsd
                 myAircraft.getVelocity().getPitchVelocity(CAngleUnit::rad(), CTimeUnit::s()),
                 myAircraft.getVelocity().getRollVelocity(CAngleUnit::rad(), CTimeUnit::s()),
                 myAircraft.getVelocity().getHeadingVelocity(CAngleUnit::rad(), CTimeUnit::s()));
-        sendQueudedMessage(visualPilotDataUpdate);
+
+        if (m_stoppedSendingVisualPositions)
+        {
+            sendQueudedMessage(visualPilotDataUpdate.toStopped());
+        }
+        else if (m_visualPositionUpdateSentCount++ % 25 == 0)
+        {
+            sendQueudedMessage(visualPilotDataUpdate.toPeriodic());
+        }
+        else
+        {
+            sendQueudedMessage(visualPilotDataUpdate);
+        }
     }
 
     void CFSDClient::sendAtcDataUpdate(double latitude, double longitude)
@@ -1068,6 +1083,8 @@ namespace BlackCore::Fsd
         m_messageTypeMapping["$!!"] = MessageType::KillRequest;
         m_messageTypeMapping["@"]   = MessageType::PilotDataUpdate;
         m_messageTypeMapping["^"]   = MessageType::VisualPilotDataUpdate;
+        m_messageTypeMapping["#SL"] = MessageType::VisualPilotDataPeriodic;
+        m_messageTypeMapping["#ST"] = MessageType::VisualPilotDataStopped;
         m_messageTypeMapping["$SF"] = MessageType::VisualPilotDataToggle;
         m_messageTypeMapping["$PI"] = MessageType::Ping;
         m_messageTypeMapping["$PO"] = MessageType::Pong;
@@ -1268,9 +1285,16 @@ namespace BlackCore::Fsd
         emit euroscopeSimDataUpdatedReceived(situation, parts, currentOffsetTime(data.sender()), data.m_model, data.m_livery);
     }
 
-    void CFSDClient::handleVisualPilotDataUpdate(const QStringList &tokens)
+    void CFSDClient::handleVisualPilotDataUpdate(const QStringList &tokens, MessageType messageType)
     {
-        const VisualPilotDataUpdate dataUpdate = VisualPilotDataUpdate::fromTokens(tokens);
+        VisualPilotDataUpdate dataUpdate;
+        switch (messageType)
+        {
+            case MessageType::VisualPilotDataUpdate:    dataUpdate = VisualPilotDataUpdate::fromTokens(tokens);                 break;
+            case MessageType::VisualPilotDataPeriodic:  dataUpdate = VisualPilotDataPeriodic::fromTokens(tokens).toUpdate();    break;
+            case MessageType::VisualPilotDataStopped:   dataUpdate = VisualPilotDataStopped::fromTokens(tokens).toUpdate();     break;
+            default: qFatal("Precondition violated");   break;
+        }
         const CCallsign callsign(dataUpdate.sender(), CCallsign::Aircraft);
 
         CAircraftSituation situation(
@@ -1866,6 +1890,7 @@ namespace BlackCore::Fsd
     {
         m_stoppedSendingVisualPositions = false;
         m_serverWantsVisualPositions = false;
+        m_visualPositionUpdateSentCount = 0;
         m_textMessagesToConsolidate.clear();
         m_pendingAtisQueries.clear();
         m_lastPositionUpdate.clear();
@@ -2217,7 +2242,9 @@ namespace BlackCore::Fsd
             case MessageType::TextMessage:       handleTextMessage(tokens);       break;
             case MessageType::PilotClientCom:    handleCustomPilotPacket(tokens); break;
             case MessageType::RevBClientParts:   handleRevBClientPartsPacket(tokens); break;
-            case MessageType::VisualPilotDataUpdate:   handleVisualPilotDataUpdate(tokens); break;
+            case MessageType::VisualPilotDataUpdate:
+            case MessageType::VisualPilotDataPeriodic:
+            case MessageType::VisualPilotDataStopped:  handleVisualPilotDataUpdate(tokens, messageType); break;
             case MessageType::VisualPilotDataToggle:   handleVisualPilotDataToggle(tokens); break;
             case MessageType::EuroscopeSimData:  handleEuroscopeSimData(tokens);  break;
 

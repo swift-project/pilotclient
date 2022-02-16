@@ -8,23 +8,22 @@
 
 //! \file
 
-#ifndef BLACKCORE_FSD_VISUALPILOTDATAUPDATE_H
-#define BLACKCORE_FSD_VISUALPILOTDATAUPDATE_H
+#ifndef BLACKCORE_FSD_VISUALPILOTDATAPERIODIC_H
+#define BLACKCORE_FSD_VISUALPILOTDATAPERIODIC_H
 
 #include "messagebase.h"
 #include "enums.h"
 
 namespace BlackCore::Fsd
 {
-    class VisualPilotDataPeriodic;
-    class VisualPilotDataStopped;
+    class VisualPilotDataUpdate;
 
-    //! Pilot data update broadcasted to pilots in range every 0.2 seconds.
-    class BLACKCORE_EXPORT VisualPilotDataUpdate : public MessageBase
+    //! Every 25th VisualPilotDataUpdate is actually one of these ("slowfast").
+    class BLACKCORE_EXPORT VisualPilotDataPeriodic : public MessageBase
     {
     public:
         //! Constructor
-        VisualPilotDataUpdate(const QString &sender, double latitude, double longitude, double altitudeTrue, double heightAgl,
+        VisualPilotDataPeriodic(const QString &sender, double latitude, double longitude, double altitudeTrue, double heightAgl,
                                 double pitch, double bank, double heading, double xVelocity, double yVelocity, double zVelocity,
                                 double pitchRadPerSec, double bankRadPerSec, double headingRadPerSec, double noseGearAngle = 0.0);
 
@@ -32,16 +31,13 @@ namespace BlackCore::Fsd
         QStringList toTokens() const;
 
         //! Construct from tokens
-        static VisualPilotDataUpdate fromTokens(const QStringList &tokens);
+        static VisualPilotDataPeriodic fromTokens(const QStringList &tokens);
 
         //! PDU identifier
-        static QString pdu() { return "^"; }
+        static QString pdu() { return "#SL"; }
 
-        //! Return a periodic update with the same values
-        VisualPilotDataPeriodic toPeriodic() const;
-
-        //! Return a stopped update with the same values
-        VisualPilotDataStopped toStopped() const;
+        //! Return a regular visual update with the same values
+        VisualPilotDataUpdate toUpdate() const;
 
         //! Properties
         //! @{
@@ -61,12 +57,12 @@ namespace BlackCore::Fsd
         double m_noseGearAngle      = 0.0;
         //! @}
 
-    //private: // not private: used in CFSDClient::handleVisualPilotDataUpdate
-        VisualPilotDataUpdate();
+    private:
+        VisualPilotDataPeriodic();
     };
 
     //! Equal to operator
-    inline bool operator==(const VisualPilotDataUpdate &lhs, const VisualPilotDataUpdate &rhs)
+    inline bool operator==(const VisualPilotDataPeriodic &lhs, const VisualPilotDataPeriodic &rhs)
     {
         return  qFuzzyCompare(lhs.m_latitude, rhs.m_latitude) &&
                 qFuzzyCompare(lhs.m_longitude, rhs.m_longitude) &&
@@ -85,7 +81,7 @@ namespace BlackCore::Fsd
     }
 
     //! Not equal to operator
-    inline bool operator!=(const VisualPilotDataUpdate &lhs, const VisualPilotDataUpdate &rhs)
+    inline bool operator!=(const VisualPilotDataPeriodic &lhs, const VisualPilotDataPeriodic &rhs)
     {
         return !(lhs == rhs);
     }

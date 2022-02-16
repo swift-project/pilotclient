@@ -6,9 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "visualpilotdataupdate.h"
 #include "visualpilotdataperiodic.h"
-#include "visualpilotdatastopped.h"
+#include "visualpilotdataupdate.h"
 #include "pbh.h"
 #include "serializer.h"
 
@@ -19,10 +18,10 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackCore::Fsd
 {
-    VisualPilotDataUpdate::VisualPilotDataUpdate() : MessageBase()
+    VisualPilotDataPeriodic::VisualPilotDataPeriodic() : MessageBase()
     { }
 
-    VisualPilotDataUpdate::VisualPilotDataUpdate(const QString &sender, double latitude, double longitude, double altitudeTrue, double heightAgl,
+    VisualPilotDataPeriodic::VisualPilotDataPeriodic(const QString &sender, double latitude, double longitude, double altitudeTrue, double heightAgl,
                                                     double pitch, double bank, double heading, double xVelocity, double yVelocity, double zVelocity,
                                                     double pitchRadPerSec, double bankRadPerSec, double headingRadPerSec, double noseGearAngle)
         : MessageBase(sender, {}),
@@ -42,7 +41,7 @@ namespace BlackCore::Fsd
             m_noseGearAngle(noseGearAngle)
     { }
 
-    QStringList VisualPilotDataUpdate::toTokens() const
+    QStringList VisualPilotDataPeriodic::toTokens() const
     {
         std::uint32_t pbh;
         packPBH(m_pitch, m_bank, m_heading, false/*! \todo check if needed? */, pbh);
@@ -64,11 +63,11 @@ namespace BlackCore::Fsd
         return tokens;
     }
 
-    VisualPilotDataUpdate VisualPilotDataUpdate::fromTokens(const QStringList &tokens)
+    VisualPilotDataPeriodic VisualPilotDataPeriodic::fromTokens(const QStringList &tokens)
     {
         if (tokens.size() < 12)
         {
-            CLogMessage(static_cast<VisualPilotDataUpdate *>(nullptr)).debug(u"Wrong number of arguments.");
+            CLogMessage(static_cast<VisualPilotDataPeriodic *>(nullptr)).debug(u"Wrong number of arguments.");
             return {};
         }
 
@@ -78,20 +77,14 @@ namespace BlackCore::Fsd
         bool unused = false; //! \todo check if needed?
         unpackPBH(tokens[5].toUInt(), pitch, bank, heading, unused);
 
-        return VisualPilotDataUpdate(tokens[0], tokens[1].toDouble(), tokens[2].toDouble(), tokens[3].toDouble(), tokens[4].toDouble(),
+        return VisualPilotDataPeriodic(tokens[0], tokens[1].toDouble(), tokens[2].toDouble(), tokens[3].toDouble(), tokens[4].toDouble(),
                 pitch, bank, heading, tokens[6].toDouble(), tokens[7].toDouble(), tokens[8].toDouble(), tokens[9].toDouble(),
                 tokens[11].toDouble(), tokens[10].toDouble(), tokens.value(12, QStringLiteral("0")).toDouble());
     }
 
-    VisualPilotDataPeriodic VisualPilotDataUpdate::toPeriodic() const
+    VisualPilotDataUpdate VisualPilotDataPeriodic::toUpdate() const
     {
-        return VisualPilotDataPeriodic(m_sender, m_latitude, m_longitude, m_altitudeTrue, m_heightAgl, m_pitch, m_bank, m_heading,
+        return VisualPilotDataUpdate(m_sender, m_latitude, m_longitude, m_altitudeTrue, m_heightAgl, m_pitch, m_bank, m_heading,
             m_xVelocity, m_yVelocity, m_zVelocity, m_pitchRadPerSec, m_bankRadPerSec, m_headingRadPerSec, m_noseGearAngle);
-    }
-
-    VisualPilotDataStopped VisualPilotDataUpdate::toStopped() const
-    {
-        return VisualPilotDataStopped(m_sender, m_latitude, m_longitude, m_altitudeTrue, m_heightAgl, m_pitch, m_bank, m_heading,
-            m_noseGearAngle);
     }
 }
