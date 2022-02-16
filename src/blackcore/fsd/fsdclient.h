@@ -473,7 +473,8 @@ namespace BlackCore::Fsd
         // Parser
         QHash<QString, MessageType> m_messageTypeMapping;
 
-        QTcpSocket m_socket { this }; //!< used TCP socket, parent needed as it runs in worker thread
+        std::unique_ptr<QTcpSocket> m_socket = std::make_unique<QTcpSocket>(this); //!< used TCP socket, parent needed as it runs in worker thread
+        void connectSocketSignals();
 
         std::atomic_bool m_unitTestMode   { false };
         std::atomic_bool m_printToConsole { false };

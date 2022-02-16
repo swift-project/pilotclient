@@ -108,10 +108,7 @@ namespace BlackCore::Fsd
             m_tokenBucket(10, 5000, 1)
     {
         initializeMessageTypes();
-        connect(&m_socket, &QTcpSocket::readyRead, this, &CFSDClient::readDataFromSocket,  Qt::QueuedConnection);
-        connect(&m_socket, &QTcpSocket::connected, this, &CFSDClient::handleSocketConnected);
-        connect(&m_socket, qOverload<QAbstractSocket::SocketError>(&QTcpSocket::error), this, &CFSDClient::printSocketError,  Qt::QueuedConnection);
-        connect(&m_socket, qOverload<QAbstractSocket::SocketError>(&QTcpSocket::error), this, &CFSDClient::handleSocketError, Qt::QueuedConnection);
+        connectSocketSignals();
 
         m_positionUpdateTimer.setObjectName(this->objectName().append(":m_positionUpdateTimer"));
         connect(&m_positionUpdateTimer, &QTimer::timeout, this, &CFSDClient::sendPilotDataUpdate);
@@ -135,6 +132,14 @@ namespace BlackCore::Fsd
             CLogMessage("Enabled network statistics");
             m_statistics = true;
         }
+    }
+
+    void CFSDClient::connectSocketSignals()
+    {
+        connect(m_socket.get(), &QTcpSocket::readyRead, this, &CFSDClient::readDataFromSocket,  Qt::QueuedConnection);
+        connect(m_socket.get(), &QTcpSocket::connected, this, &CFSDClient::handleSocketConnected);
+        connect(m_socket.get(), &QTcpSocket::errorOccurred, this, &CFSDClient::printSocketError,  Qt::QueuedConnection);
+        connect(m_socket.get(), &QTcpSocket::errorOccurred, this, &CFSDClient::handleSocketError, Qt::QueuedConnection);
     }
 
     void CFSDClient::setClientIdAndKey(quint16 id, const QByteArray &key)
@@ -241,7 +246,7 @@ namespace BlackCore::Fsd
             return;
         }
 
-        if (m_socket.isOpen()) { return; }
+        if (m_socket->isOpen()) { return; }
         Q_ASSERT(!m_clientName.isEmpty());
         Q_ASSERT((m_versionMajor + m_versionMinor) > 0);
         Q_ASSERT(m_capabilities != Capabilities::None);
@@ -266,7 +271,7 @@ namespace BlackCore::Fsd
         const CServer s = this->getServer();
         const QString host = s.getAddress();
         const quint16 port = static_cast<quint16>(s.getPort());
-        m_socket.connectToHost(host, port);
+        m_socket->connectToHost(host, port);
         this->startPositionTimers();
     }
 
@@ -286,12 +291,12 @@ namespace BlackCore::Fsd
 
         // allow also to close if broken
         CLoginMode mode = this->getLoginMode();
-        if (m_socket.isOpen())
+        if (m_socket->isOpen())
         {
             if (mode.isPilot()) { this->sendDeletePilot(); }
             else if (mode.isObserver()) { this->sendDeleteAtc(); }
         }
-        m_socket.close();
+        m_socket->close();
 
         this->updateConnectionStatus(CConnectionStatus::Disconnected);
         this->clearState();
@@ -817,7 +822,7 @@ namespace BlackCore::Fsd
         if (message.isEmpty()) { return; }
         const QByteArray bufferEncoded = m_fsdTextCodec->fromUnicode(message);
         if (m_printToConsole) { qDebug() << "FSD Sent=>" << bufferEncoded; }
-        if (!m_unitTestMode)  { m_socket.write(bufferEncoded); }
+        if (!m_unitTestMode)  { m_socket->write(bufferEncoded); }
 
         // remove CR/LF and emit
         emitRawFsdMessage(message.trimmed(), true);
@@ -972,7 +977,7 @@ namespace BlackCore::Fsd
             std::array<char, 50> sysuid = {};
             vatsim_get_system_unique_id(sysuid.data());
 
-            const QString userInfo = QStringLiteral("CID=") % cid % " " % m_clientName % " IP=" % m_socket.localAddress().toString() %
+            const QString userInfo = QStringLiteral("CID=") % cid % " " % m_clientName % " IP=" % m_socket->localAddress().toString() %
                                         " SYS_UID=" % sysuid.data() % " FSVER=" % m_hostApplication % " LT=" % QString::number(latitude) %
                                         " LO=" % QString::number(longitude) % " AL=" % QString::number(altitude) %
                                         " " % realName;
@@ -2127,14 +2132,14 @@ namespace BlackCore::Fsd
 
     void CFSDClient::readDataFromSocketMaxLines(int maxLines)
     {
-        if (m_socket.bytesAvailable() < 1) { return; }
+        if (m_socket->bytesAvailable() < 1) { return; }
 
         int lines = 0;
 
         // reads at least one line if available
-        while (m_socket.canReadLine())
+        while (m_socket->canReadLine())
         {
-            const QByteArray dataEncoded = m_socket.readLine();
+            const QByteArray dataEncoded = m_socket->readLine();
             if (dataEncoded.isEmpty()) { continue; }
             const QString data = m_fsdTextCodec->toUnicode(dataEncoded);
             this->parseMessage(data);
@@ -2164,9 +2169,9 @@ namespace BlackCore::Fsd
     QString CFSDClient::socketErrorString(QAbstractSocket::SocketError error) const
     {
         QString e = CFSDClient::socketErrorToQString(error);
-        if (!m_socket.errorString().isEmpty())
+        if (!m_socket->errorString().isEmpty())
         {
-            e += QStringLiteral(": ") % m_socket.errorString();
+            e += QStringLiteral(": ") % m_socket->errorString();
         }
         return e;
     }
