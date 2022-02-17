@@ -192,8 +192,8 @@ namespace BlackGui::Components
         //! Pause/Continue timeout
         void toggleTimeout();
 
-        //! Show / hide elements for UI depending on login state
-        void setUiLoginState(bool connected);
+        //! Show / hide elements for UI depending on login/simulator state
+        void updateUiConnectState();
 
         //! Make disconnect button flash briefly to catch the user's attention
         void blinkConnectButton();
@@ -248,6 +248,8 @@ namespace BlackGui::Components
         BlackMisc::CDigestSignal m_changedLoginDataDigestSignal { this, &CLoginComponent::loginDataChangedDigest, 1500, 10 };
         bool m_autoPopupWizard = false; //!< automatically popup wizard if mapping is needed
         bool m_updatePilotOnServerChanges = true;
+        bool m_networkConnected = false;
+        bool m_simulatorConnected = false;
         const QIcon m_iconPlay  {":/famfamfam/icons/famfamfam/icons/silk/control_play_blue.png"};
         const QIcon m_iconPause {":/famfamfam/icons/famfamfam/icons/silk/control_pause_blue.png"};
         int m_logoffIntervalSeconds = LogoffIntervalSeconds;

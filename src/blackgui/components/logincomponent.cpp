@@ -174,7 +174,7 @@ namespace BlackGui::Components
         connect(ui->pb_OverrideCredentialsVatsim, &QPushButton::clicked, this, &CLoginComponent::overrideCredentialsToPilot);
         connect(ui->pb_OverrideCredentialsOtherServers, &QPushButton::clicked, this, &CLoginComponent::overrideCredentialsToPilot);
 
-        this->setUiLoginState(false);
+        this->updateUiConnectState();
 
         const int tab = m_networkSetup.wasLastUsedWithOtherServer() ? LoginOthers : LoginVATSIM;
         ui->tw_Network->setCurrentIndex(tab);
@@ -200,8 +200,8 @@ namespace BlackGui::Components
         else
         {
             this->setOwnModelAndIcaoValues();
-            const bool isConnected = sGui->getIContextNetwork()->isConnected();
-            this->setUiLoginState(isConnected);
+            m_networkConnected = sGui->getIContextNetwork()->isConnected();
+            this->updateUiConnectState();
             this->blinkConnectButton();
         }
 
@@ -235,12 +235,12 @@ namespace BlackGui::Components
         if (!sGui || sGui->isShuttingDown()) { return; }
         if (!sGui->getIContextNetwork() || !sGui->getIContextAudio()) { return; }
 
-        const bool isConnected = sGui && sGui->getIContextNetwork()->isConnected();
+        m_networkConnected = sGui && sGui->getIContextNetwork()->isConnected();
         const bool vatsimLogin = this->isVatsimNetworkTabSelected();
         m_networkSetup.setAutoLogoff(ui->cb_AutoLogoff->isChecked());
 
         ui->form_Pilot->setVatsimValidation(vatsimLogin);
-        this->setUiLoginState(isConnected);
+        this->updateUiConnectState();
 
         // reset time
         this->setLogoffCountdown();
@@ -248,7 +248,7 @@ namespace BlackGui::Components
         CServer currentServer; // used for login
         CSimulatedAircraft ownAircraft; // used own aircraft
         CStatusMessage msg;
-        if (!isConnected)
+        if (!m_networkConnected)
         {
             if (!this->validateAircraftValues())
             {
@@ -413,9 +413,11 @@ namespace BlackGui::Components
     {
         ISimulator::SimulatorStatus s = static_cast<ISimulator::SimulatorStatus>(status);
         if (!this->hasValidContexts()) { return; }
+        m_simulatorConnected = s.testFlag(ISimulator::Connected);
+        this->updateUiConnectState();
         if (sGui->getIContextNetwork()->isConnected())
         {
-            if (!s.testFlag(ISimulator::Connected))
+            if (!m_simulatorConnected)
             {
                 // sim NOT connected but network connected
                 this->autoLogoffDetection();
@@ -428,7 +430,8 @@ namespace BlackGui::Components
         Q_UNUSED(from)
         if (to != CConnectionStatus::Connected) { return; }
 
-        this->setUiLoginState(true);
+        m_networkConnected = true;
+        this->updateUiConnectState();
         this->updateGui();
     }
 
@@ -807,17 +810,21 @@ namespace BlackGui::Components
         }
     }
 
-    void CLoginComponent::setUiLoginState(bool connected)
+    void CLoginComponent::updateUiConnectState()
     {
-        ui->fr_LoginDisconnected->setVisible(!connected);
-        ui->fr_LogoffConfirmationConnected->setVisible(connected);
+        ui->fr_LoginDisconnected->setVisible(!m_networkConnected);
+        ui->fr_LogoffConfirmationConnected->setVisible(m_networkConnected);
 
-        const QString s = connected ? QStringLiteral("disconnect") : QStringLiteral("connect");
+        const QString s = m_networkConnected ? QStringLiteral("disconnect") : QStringLiteral("connect");
         ui->pb_Ok->setText(s);
+
+        if (m_networkConnected) { ui->pb_Ok->setDisabled(false); }
+        else { ui->pb_Ok->setDisabled(!m_simulatorConnected); }
     }
 
     void CLoginComponent::blinkConnectButton()
     {
+        if (!ui->pb_Ok->isEnabled()) { return; }
         ui->pb_Ok->setProperty("blinkOn", true);
         static constexpr int blinkLength = 100;
         static constexpr int blinkTimes = 10;
@@ -921,14 +928,13 @@ namespace BlackGui::Components
 
     void CLoginComponent::updateGui()
     {
+        if (!m_networkConnected) { return; }
         if (!this->hasValidContexts())   { return; }
         if (!sGui->getIContextNetwork()) { return; }
         const IContextNetwork *nwc = sGui->getIContextNetwork();
-        const bool connected = nwc->isConnected();
-        if (!connected) { return; }
         const CSimulatedAircraft ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
         this->setGuiLoginAsValues(ownAircraft);
-        this->setUiLoginState(connected);
+        this->updateUiConnectState();
         this->setOwnModelAndIcaoValues();
         const CServer server = nwc->getConnectedServer();
         ui->le_LoginHomeBase->setText(server.getUser().getHomeBase().asString());
