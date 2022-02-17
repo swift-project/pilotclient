@@ -304,6 +304,9 @@ namespace BlackMisc
             //! Set height to NULL
             void setGeodeticHeightToNull();
 
+            //! Add small position adjustment
+            void adjust(const PhysicalQuantities::CLength &dLat, const PhysicalQuantities::CLength &dLon, const PhysicalQuantities::CLength &dAlt);
+
             //! Set normal vector
             void setNormalVector(const QVector3D &normal) { m_x = static_cast<double>(normal.x()); m_y = static_cast<double>(normal.y()); m_z = static_cast<double>(normal.z()); }
 

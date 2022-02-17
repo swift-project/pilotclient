@@ -44,8 +44,8 @@ namespace BlackMisc::Simulation
         m_oldSituation(oldSituation)
     { }
 
-    CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, double timeFraction, qint64 interpolatedTime) :
-        IInterpolant(interpolatedTime, 2),
+    CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, double timeFraction, qint64 interpolatedTime, const CInterpolantVelocity &velocity) :
+        IInterpolant(interpolatedTime, 2, velocity),
         m_oldSituation(oldSituation), m_newSituation(newSituation),
         m_simulationTimeFraction(timeFraction)
     {
@@ -55,8 +55,13 @@ namespace BlackMisc::Simulation
     void CInterpolatorLinear::anchor()
     { }
 
-    CAircraftSituation CInterpolatorLinear::CInterpolant::interpolatePositionAndAltitude(const CAircraftSituation &situation, bool interpolateGndFactor) const
+    CAircraftSituation CInterpolatorLinear::CInterpolant::interpolatePositionAndAltitude(const CAircraftSituation &situation, bool interpolateGndFactor)
     {
+        if (m_velocity.isReady())
+        {
+            return m_velocity.extrapolate();
+        }
+
         const std::array<double, 3> oldVec(m_oldSituation.getPosition().normalVectorDouble());
         const std::array<double, 3> newVec(m_newSituation.getPosition().normalVectorDouble());
 
@@ -227,7 +232,7 @@ namespace BlackMisc::Simulation
             log.interpolantRecalc = recalculate;
         }
 
-        m_interpolant = { oldSituation, newSituation, simulationTimeFraction, interpolatedTime };
+        m_interpolant = { oldSituation, newSituation, simulationTimeFraction, interpolatedTime, m_interpolant.getVelocity() };
         m_interpolant.setRecalculated(recalculate);
 
         return m_interpolant;

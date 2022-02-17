@@ -252,7 +252,7 @@ namespace BlackMisc::Simulation
         // interpolant as function of derived class
         // CInterpolatorLinear::Interpolant or CInterpolatorSpline::Interpolant
         SituationLog log;
-        const auto interpolant = derived()->getInterpolant(log);
+        auto interpolant = derived()->getInterpolant(log);
         const bool isValidInterpolant = interpolant.isValid();
 
         CAircraftSituation currentSituation = m_lastSituation;
@@ -712,11 +712,16 @@ namespace BlackMisc::Simulation
         m_currentInterpolationStatus.reset();
         m_currentPartsStatus.reset();
         m_currentSetup = setup;
+        derived()->updateInterpolantTime();
 
         if (changedSituations)
         {
             m_situationsLastModified = lastModifed;
             m_currentSituations = this->remoteAircraftSituationsAndChange(setup); // only update when needed
+            if (!m_currentSituations.isEmpty())
+            {
+                derived()->setLatestSituation(m_currentSituations.front());
+            }
         }
 
         if (!m_model.hasCG() || slowUpdateStep)

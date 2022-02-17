@@ -14,6 +14,7 @@
 #include "blackmisc/simulation/interpolator.h"
 #include "blackmisc/simulation/interpolationlogger.h"
 #include "blackmisc/simulation/interpolant.h"
+#include "blackmisc/simulation/interpolantvelocity.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/blackmiscexport.h"
 #include <QString>
@@ -47,11 +48,11 @@ namespace BlackMisc
                 CInterpolant() {}
                 CInterpolant(const Aviation::CAircraftSituation &oldSituation);
                 CInterpolant(const Aviation::CAircraftSituation &oldSituation, const CInterpolatorPbh &pbh);
-                CInterpolant(const Aviation::CAircraftSituation &oldSituation, const Aviation::CAircraftSituation &newSituation, double timeFraction, qint64 interpolatedTime);
+                CInterpolant(const Aviation::CAircraftSituation &oldSituation, const Aviation::CAircraftSituation &newSituation, double timeFraction, qint64 interpolatedTime, const CInterpolantVelocity &velocity);
                 //! @}
 
                 //! Perform the interpolation
-                Aviation::CAircraftSituation interpolatePositionAndAltitude(const Aviation::CAircraftSituation &situation, bool interpolateGndFactor) const;
+                Aviation::CAircraftSituation interpolatePositionAndAltitude(const Aviation::CAircraftSituation &situation, bool interpolateGndFactor);
 
                 //! Old situation
                 const Aviation::CAircraftSituation &getOldSituation() const { return m_oldSituation; }
@@ -67,6 +68,12 @@ namespace BlackMisc
 
             //! Get the interpolant for the given time point
             CInterpolant getInterpolant(SituationLog &log);
+
+            //! To be used by the velocity interpolant
+            //! @{
+            void setLatestSituation(const Aviation::CAircraftSituation &situation) { m_interpolant.setLatestSituation(situation); }
+            void updateInterpolantTime() { m_interpolant.setCurrentTime(m_currentTimeMsSinceEpoch); }
+            //! @}
 
         private:
             CInterpolant m_interpolant; //!< current interpolant

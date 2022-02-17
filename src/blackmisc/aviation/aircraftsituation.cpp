@@ -928,6 +928,43 @@ namespace BlackMisc::Aviation
                 );
     }
 
+    CAircraftSituation CAircraftSituation::extrapolate(int ms)
+    {
+        auto copy = *this;
+        const double time = CAircraftVelocity::c_timeUnit.convertFrom(ms, CTimeUnit::ms());
+        copy.m_position.adjust(
+            { m_velocity.getVelocityZ(CSpeedUnit::m_s()) * time, CLengthUnit::m() },
+            { m_velocity.getVelocityX(CSpeedUnit::m_s()) * time, CLengthUnit::m() },
+            { m_velocity.getVelocityY(CSpeedUnit::m_s()) * time, CLengthUnit::m() });
+        copy.m_pitch.addValueSameUnit(time * m_velocity.getHeadingVelocity(m_pitch.getUnit(), CAircraftVelocity::c_timeUnit));
+        copy.m_bank.addValueSameUnit(time * m_velocity.getHeadingVelocity(m_bank.getUnit(), CAircraftVelocity::c_timeUnit));
+        copy.m_heading.addValueSameUnit(time * m_velocity.getHeadingVelocity(m_heading.getUnit(), CAircraftVelocity::c_timeUnit));
+        return copy;
+    }
+
+    CAircraftVelocity CAircraftSituation::calculateErrorVelocity(const CAircraftSituation& from, const CAircraftSituation& to, int ms, bool &o_ok)
+    {
+        if (ms == 0) { return {}; }
+        const CLength distance = from.calculateGreatCircleDistance(to);
+        const CAngle bearing = from.calculateBearing(to);
+        const double time = CAircraftVelocity::c_timeUnit.convertFrom(ms, CTimeUnit::ms());
+        const double toAlt = to.m_position.geodeticHeight().value(CAircraftVelocity::c_xyzLengthUnit);
+        const double fromAlt = from.m_position.geodeticHeight().value(CAircraftVelocity::c_xyzLengthUnit);
+        o_ok = distance < CLength(100, CLengthUnit::m()) && std::abs(toAlt - fromAlt) < 100;
+        return
+        {
+            distance.value(CAircraftVelocity::c_xyzLengthUnit) * bearing.sin() / time,
+            (toAlt - fromAlt) / time,
+            distance.value(CAircraftVelocity::c_xyzLengthUnit) * bearing.cos() / time,
+            CAircraftVelocity::c_xyzSpeedUnit,
+            (to.m_pitch - from.m_pitch).value(CAircraftVelocity::c_pbhAngleUnit) / time,
+            (to.m_bank - from.m_bank).value(CAircraftVelocity::c_pbhAngleUnit) / time,
+            (to.m_heading - from.m_heading).value(CAircraftVelocity::c_pbhAngleUnit) / time,
+            CAircraftVelocity::c_pbhAngleUnit,
+            CAircraftVelocity::c_timeUnit
+        };
+    }
+
     bool CAircraftSituation::isMoving() const
     {
         const double gsKmh = this->getGroundSpeed().value(CSpeedUnit::km_h());

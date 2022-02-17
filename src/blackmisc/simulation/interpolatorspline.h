@@ -59,10 +59,10 @@ namespace BlackMisc::Simulation
             CInterpolant() : m_pa(PosArray::zeroPosArray()) {}
 
             //! Constructor
-            CInterpolant(const PosArray &pa, const PhysicalQuantities::CLengthUnit &altitudeUnit, const CInterpolatorPbh &pbh);
+            CInterpolant(const PosArray &pa, const PhysicalQuantities::CLengthUnit &altitudeUnit, const CInterpolatorPbh &pbh, const CInterpolantVelocity &velocity);
 
             //! Perform the interpolation
-            Aviation::CAircraftSituation interpolatePositionAndAltitude(const Aviation::CAircraftSituation &currentSituation, bool interpolateGndFactor) const;
+            Aviation::CAircraftSituation interpolatePositionAndAltitude(const Aviation::CAircraftSituation &currentSituation, bool interpolateGndFactor);
 
             //! Old situation
             const Aviation::CAircraftSituation &getOldSituation() const { return pbh().getOldSituation(); }
@@ -84,6 +84,12 @@ namespace BlackMisc::Simulation
 
         //! Strategy used by CInterpolator::getInterpolatedSituation
         CInterpolant getInterpolant(SituationLog &log);
+
+        //! To be used by the velocity interpolant
+        //! @{
+        void setLatestSituation(const Aviation::CAircraftSituation &situation) { m_interpolant.setLatestSituation(situation); }
+        void updateInterpolantTime() { m_interpolant.setCurrentTime(m_currentTimeMsSinceEpoch); }
+        //! @}
 
     private:
         //! Update the elevations used in CInterpolatorSpline::m_s

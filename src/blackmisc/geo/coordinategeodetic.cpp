@@ -20,6 +20,9 @@ using namespace BlackMisc::Math;
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Geo, CCoordinateGeodetic)
 
+template <typename T>
+constexpr static T c_earthRadiusMeters = static_cast<T>(6371000.8);
+
 namespace BlackMisc::Geo
 {
     ICoordinateGeodetic::~ICoordinateGeodetic()
@@ -47,14 +50,13 @@ namespace BlackMisc::Geo
     {
         if (coordinate1.isNull() || coordinate2.isNull()) { return CLength::null(); }
         // if (coordinate1.equalNormalVectorDouble(coordinate2)) { return CLength(0, CLengthUnit::defaultUnit()); }
-        constexpr float earthRadiusMeters = 6371000.8f;
 
         const QVector3D v1 = coordinate1.normalVector();
         const QVector3D v2 = coordinate2.normalVector();
         Q_ASSERT_X(std::isfinite(v1.x()) && std::isfinite(v1.y()) && std::isfinite(v1.z()), Q_FUNC_INFO, "Distance calculation: v1 non-finite argument");
         Q_ASSERT_X(std::isfinite(v2.x()) && std::isfinite(v2.y()) && std::isfinite(v2.z()), Q_FUNC_INFO, "Distance calculation: v2 non-finite argument");
 
-        const float d = earthRadiusMeters * std::atan2(QVector3D::crossProduct(v1, v2).length(), QVector3D::dotProduct(v1, v2));
+        const float d = c_earthRadiusMeters<float> * std::atan2(QVector3D::crossProduct(v1, v2).length(), QVector3D::dotProduct(v1, v2));
 
         BLACK_VERIFY_X(!std::isnan(d), Q_FUNC_INFO, "Distance calculation: NaN in result");
         if (std::isnan(d))
@@ -393,6 +395,13 @@ namespace BlackMisc::Geo
     void CCoordinateGeodetic::setGeodeticHeightToNull()
     {
         this->setGeodeticHeight(CAltitude::null());
+    }
+
+    void CCoordinateGeodetic::adjust(const PhysicalQuantities::CLength& dLat, const PhysicalQuantities::CLength& dLon, const PhysicalQuantities::CLength& dAlt)
+    {
+        setLatitude({ latitude().value(CAngleUnit::rad()) + dLat.value(CLengthUnit::m()) / c_earthRadiusMeters<double>, CAngleUnit::rad() });
+        setLongitude({ longitude().value(CAngleUnit::rad()) + dLon.value(CLengthUnit::m()) / c_earthRadiusMeters<double> / latitude().cos(), CAngleUnit::rad() });
+        setGeodeticHeight(geodeticHeight().withOffset(dAlt));
     }
 
     void CCoordinateGeodetic::setNormalVector(const std::array<double, 3> &normalVector)

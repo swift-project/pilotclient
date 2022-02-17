@@ -73,6 +73,28 @@ namespace BlackMisc::Aviation
         return c_timeUnit.convertFrom(angleUnit.convertFrom(m_heading, c_pbhAngleUnit), timeUnit);
     }
 
+    CAircraftVelocity& CAircraftVelocity::operator+=(const CAircraftVelocity& other)
+    {
+        m_x += other.m_x;
+        m_y += other.m_y;
+        m_z += other.m_z;
+        m_pitch += other.m_pitch;
+        m_roll += other.m_roll;
+        m_heading += other.m_heading;
+        return *this;
+    }
+
+    CAircraftVelocity& CAircraftVelocity::operator-=(const CAircraftVelocity& other)
+    {
+        m_x -= other.m_x;
+        m_y -= other.m_y;
+        m_z -= other.m_z;
+        m_pitch -= other.m_pitch;
+        m_roll -= other.m_roll;
+        m_heading -= other.m_heading;
+        return *this;
+    }
+
     QString CAircraftVelocity::convertToQString(bool i18n) const
     {
         return u"Velocity: " % QStringLiteral("%1 %2 %3 ").arg(m_x).arg(m_y).arg(m_z) % c_xyzSpeedUnit.convertToQString(i18n) %

@@ -232,7 +232,7 @@ namespace BlackMisc::Simulation
             m_nextSampleAdjustedTime = m_s[2].getAdjustedMSecsSinceEpoch(); // latest
             m_prevSampleTime = m_s[1].getMSecsSinceEpoch(); // last interpolated situation normally
             m_nextSampleTime = m_s[2].getMSecsSinceEpoch(); // latest
-            m_interpolant = CInterpolant(pa, altUnit, CInterpolatorPbh(m_s[1], m_s[2])); // older, newer
+            m_interpolant = CInterpolant(pa, altUnit, CInterpolatorPbh(m_s[1], m_s[2]), m_interpolant.getVelocity()); // older, newer
             Q_ASSERT_X(m_prevSampleAdjustedTime < m_nextSampleAdjustedTime, Q_FUNC_INFO, "Wrong time order");
         }
 
@@ -315,15 +315,21 @@ namespace BlackMisc::Simulation
         return false;
     }
 
-    CInterpolatorSpline::CInterpolant::CInterpolant(const CInterpolatorSpline::PosArray &pa, const CLengthUnit &altitudeUnit, const CInterpolatorPbh &pbh) :
+    CInterpolatorSpline::CInterpolant::CInterpolant(const CInterpolatorSpline::PosArray &pa, const CLengthUnit &altitudeUnit, const CInterpolatorPbh &pbh, const CInterpolantVelocity &velocity) :
+        IInterpolant(velocity),
         m_pa(pa), m_altitudeUnit(altitudeUnit)
     {
         m_pbh = pbh;
         m_situationsAvailable = pa.size();
     }
 
-    CAircraftSituation CInterpolatorSpline::CInterpolant::interpolatePositionAndAltitude(const CAircraftSituation &currentSituation, bool interpolateGndFactor) const
+    CAircraftSituation CInterpolatorSpline::CInterpolant::interpolatePositionAndAltitude(const CAircraftSituation &currentSituation, bool interpolateGndFactor)
     {
+        if (m_velocity.isReady())
+        {
+            return m_velocity.extrapolate();
+        }
+
         const double t1 = m_pa.t[1];
         const double t2 = m_pa.t[2]; // latest (adjusted)
 

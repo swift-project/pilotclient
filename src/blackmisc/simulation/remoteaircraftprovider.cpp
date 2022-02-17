@@ -280,18 +280,18 @@ namespace BlackMisc::Simulation
         {
             const qint64 now = QDateTime::currentMSecsSinceEpoch();
             QWriteLocker lock(&m_lockSituations);
+            CAircraftSituationList &newSituationsList = m_situationsByCallsign[cs];
+            if (!situationCorrected.hasVelocity() && !newSituationsList.isEmpty() && newSituationsList.front().hasVelocity())
+            {
+                return situationCorrected;
+            }
             m_situationsAdded++;
             m_situationsLastModified[cs] = now;
-            CAircraftSituationList &newSituationsList = m_situationsByCallsign[cs];
             newSituationsList.setAdjustedSortHint(CAircraftSituationList::AdjustedTimestampLatestFirst);
             const int situations = newSituationsList.size();
             if (situations < 1)
             {
                 newSituationsList.prefillLatestAdjustedFirst(situationCorrected, IRemoteAircraftProvider::MaxSituationsPerCallsign);
-            }
-            else if (!situationCorrected.hasVelocity() && newSituationsList.front().hasVelocity())
-            {
-                return situationCorrected;
             }
             else
             {

@@ -61,6 +61,14 @@ namespace BlackMisc::Aviation
         double getHeadingVelocity(PhysicalQuantities::CAngleUnit angleUnit, PhysicalQuantities::CTimeUnit timeUnit) const;
         //! @}
 
+        //! Arithmetic operator
+        //! @{
+        friend CAircraftVelocity operator +(CAircraftVelocity a, const CAircraftVelocity &b) { return a += b; }
+        friend CAircraftVelocity operator -(CAircraftVelocity a, const CAircraftVelocity &b) { return a -= b; }
+        CAircraftVelocity &operator +=(const CAircraftVelocity &other);
+        CAircraftVelocity &operator -=(const CAircraftVelocity &other);
+        //! @}
+
         //! \copydoc Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 

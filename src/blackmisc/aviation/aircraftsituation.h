@@ -426,6 +426,12 @@ namespace BlackMisc
             //! Is velocity non-zero?
             bool hasVelocity() const { return m_hasVelocity; }
 
+            //! Return the situation adjusted for movement using the velocity plus error over time
+            CAircraftSituation extrapolate(int ms);
+
+            //! Return the velocity needed to move from one position to another in the given time
+            static CAircraftVelocity calculateErrorVelocity(const CAircraftSituation &from, const CAircraftSituation &to, int ms, bool &o_ok);
+
             //! Get ground speed
             const PhysicalQuantities::CSpeed &getGroundSpeed() const { return m_groundSpeed; }
 
