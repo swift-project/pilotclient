@@ -56,6 +56,7 @@ namespace BlackMisc::Input
             CKeyboardKey(Key_PageUp),
             CKeyboardKey(Key_PageDown),
             CKeyboardKey(Key_CapsLock),
+            CKeyboardKey(Key_Enter),
             CKeyboardKey(Key_DeadGrave),
             CKeyboardKey(Key_A),
             CKeyboardKey(Key_B),

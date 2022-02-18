@@ -42,6 +42,7 @@ namespace BlackMisc::Input
         Key_Comma,
         Key_Minus,
         Key_Period,
+        Key_Enter,
         // 0 - 9
         Key_0 = '0',
         Key_1,

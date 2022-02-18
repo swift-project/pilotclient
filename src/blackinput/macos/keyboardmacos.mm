@@ -94,6 +94,7 @@ namespace BlackInput
         { kHIDUsage_KeyboardPageUp, Key_PageUp },
         { kHIDUsage_KeyboardPageDown, Key_PageDown },
         { kHIDUsage_KeyboardCapsLock, Key_CapsLock },
+        { kHIDUsage_KeyboardReturn, Key_Enter },
         { kHIDUsage_KeyboardF1, Key_Function1 },
         { kHIDUsage_KeyboardF2, Key_Function2 },
         { kHIDUsage_KeyboardF3, Key_Function3 },

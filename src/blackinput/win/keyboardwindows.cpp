@@ -75,6 +75,7 @@ namespace BlackInput
             { VK_PRIOR, Key_PageUp },
             { VK_NEXT, Key_PageDown },
             { VK_CAPITAL, Key_CapsLock },
+            { VK_RETURN, Key_Enter },
             { VK_MULTIPLY, Key_Multiply },
             { VK_SUBTRACT, Key_NumpadMinus },
             { VK_ADD, Key_NumpadPlus },

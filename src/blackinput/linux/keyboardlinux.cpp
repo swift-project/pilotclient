@@ -89,6 +89,7 @@ namespace BlackInput
         { XK_Page_Up, Key_PageUp },
         { XK_Page_Down, Key_PageDown },
         { XK_Caps_Lock, Key_CapsLock },
+        { XK_Return, Key_Enter },
         { XK_F1, Key_Function1 },
         { XK_F2, Key_Function2 },
         { XK_F3, Key_Function3 },
