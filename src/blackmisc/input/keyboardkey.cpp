@@ -82,6 +82,7 @@ namespace BlackMisc::Input
         case Key_PageUp:   return QStringLiteral("PgUp");
         case Key_PageDown: return QStringLiteral("PgDn");
         case Key_CapsLock: return QStringLiteral("CapsLock");
+        case Key_Enter:    return QStringLiteral("Enter");
         case Key_OEM1:     return QStringLiteral("OEM1");
         case Key_OEM2:     return QStringLiteral("OEM2");
         case Key_OEM3:     return QStringLiteral("OEM3");
