@@ -73,14 +73,18 @@ namespace BlackMisc::Aviation
         //! \copydoc Mixin::Index::comparePropertyByIndex
         int comparePropertyByIndex(CPropertyIndexRef index, const CAircraftVelocity &compareValue) const;
 
-    private:
-        static const PhysicalQuantities::CAngleUnit c_pbhAngleUnit; //!< \todo Create a dedicated PQ class for angular velocity
+        //! Unit constants
+        //! @{
         static const PhysicalQuantities::CSpeedUnit c_xyzSpeedUnit;
-        static const PhysicalQuantities::CTimeUnit c_pbhTimeUnit;
+        static const PhysicalQuantities::CLengthUnit c_xyzLengthUnit;
+        static const PhysicalQuantities::CAngleUnit c_pbhAngleUnit; // TODO Create a dedicated PQ class for angular velocity
+        static const PhysicalQuantities::CTimeUnit c_timeUnit;
+        //! @}
 
-        double m_x = 0;
-        double m_y = 0;
-        double m_z = 0;
+    private:
+        double m_x = 0; //!< Positive moves east
+        double m_y = 0; //!< Positive moves up
+        double m_z = 0; //!< Positive moves north
         double m_pitch = 0;
         double m_roll = 0;
         double m_heading = 0;
