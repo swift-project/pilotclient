@@ -1309,6 +1309,7 @@ namespace BlackCore::Fsd
             default: qFatal("Precondition violated");   break;
         }
         const CCallsign callsign(dataUpdate.sender(), CCallsign::Aircraft);
+        Q_ASSERT(dataUpdate.isValid());
 
         CAircraftSituation situation(
             callsign,

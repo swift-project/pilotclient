@@ -122,7 +122,10 @@ namespace BlackMisc::Simulation
         CAircraftSituation oldSituation = m_interpolant.getOldSituation();
         CAircraftSituation newSituation = m_interpolant.getNewSituation();
 
-        Q_ASSERT_X(newSituation.getAdjustedMSecsSinceEpoch() >= oldSituation.getAdjustedMSecsSinceEpoch(), Q_FUNC_INFO, "Wrong order");
+        if (newSituation.getAdjustedMSecsSinceEpoch() <= oldSituation.getAdjustedMSecsSinceEpoch())
+        {
+            Q_ASSERT_X(newSituation.getAdjustedMSecsSinceEpoch() >= oldSituation.getAdjustedMSecsSinceEpoch(), Q_FUNC_INFO, "Wrong order");
+        }
 
         const bool updated = m_situationsLastModifiedUsed < m_situationsLastModified;
         const bool newSplit = newSituation.getAdjustedMSecsSinceEpoch() < m_currentTimeMsSinceEpoch;

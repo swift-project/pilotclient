@@ -592,10 +592,6 @@ namespace BlackMisc
             this->container().clear();
             const qint64 osTime = value.getTimeOffsetMs();
             const qint64 os = -1 * qAbs(deltaTimeMs < 0 ? osTime : deltaTimeMs);
-            if (BlackConfig::CBuildConfig::isLocalDeveloperDebugBuild())
-            {
-                BLACK_VERIFY_X(os < 0, Q_FUNC_INFO, "Need negative offset time to prefill time");
-            }
             this->container().push_front(value);
             for (int i = 1; i < elements; i++)
             {

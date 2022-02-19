@@ -401,7 +401,10 @@ namespace BlackMisc::Geo
     {
         setLatitude({ latitude().value(CAngleUnit::rad()) + dLat.value(CLengthUnit::m()) / c_earthRadiusMeters<double>, CAngleUnit::rad() });
         setLongitude({ longitude().value(CAngleUnit::rad()) + dLon.value(CLengthUnit::m()) / c_earthRadiusMeters<double> / latitude().cos(), CAngleUnit::rad() });
+        Q_ASSERT(std::isfinite(dAlt.value()));
+        Q_ASSERT(std::isfinite(geodeticHeight().value()));
         setGeodeticHeight(geodeticHeight().withOffset(dAlt));
+        Q_ASSERT(std::isfinite(geodeticHeight().value()));
     }
 
     void CCoordinateGeodetic::setNormalVector(const std::array<double, 3> &normalVector)

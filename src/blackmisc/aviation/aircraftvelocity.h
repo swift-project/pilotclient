@@ -61,6 +61,9 @@ namespace BlackMisc::Aviation
         double getHeadingVelocity(PhysicalQuantities::CAngleUnit angleUnit, PhysicalQuantities::CTimeUnit timeUnit) const;
         //! @}
 
+        //! False if any component is NaN or infinity
+        bool isValid() const;
+
         //! Arithmetic operator
         //! @{
         friend CAircraftVelocity operator +(CAircraftVelocity a, const CAircraftVelocity &b) { return a += b; }

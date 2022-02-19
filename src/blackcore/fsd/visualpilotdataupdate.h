@@ -43,6 +43,9 @@ namespace BlackCore::Fsd
         //! Return a stopped update with the same values
         VisualPilotDataStopped toStopped() const;
 
+        //! True if this is a valid packet (no infinity or NaN)
+        bool isValid() const;
+
         //! Properties
         //! @{
         double m_latitude      = 0.0;

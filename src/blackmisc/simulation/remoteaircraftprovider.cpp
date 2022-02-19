@@ -258,13 +258,6 @@ namespace BlackMisc::Simulation
         const CCallsign cs = situation.getCallsign();
         if (cs.isEmpty()) { return situation; }
 
-        // testing
-        if (CBuildConfig::isLocalDeveloperDebugBuild())
-        {
-            BLACK_VERIFY_X(situation.getTimeOffsetMs() > 0, Q_FUNC_INFO, "Missing offset");
-            BLACK_VERIFY_X(situation.isValidVectorRange(),  Q_FUNC_INFO, "Invalid vector");
-        }
-
         // add altitude offset (for testing only)
         CAircraftSituation situationCorrected(allowTestAltitudeOffset ? this->addTestAltitudeOffsetToSituation(situation) : situation);
 

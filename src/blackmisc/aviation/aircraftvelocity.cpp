@@ -73,6 +73,12 @@ namespace BlackMisc::Aviation
         return c_timeUnit.convertFrom(angleUnit.convertFrom(m_heading, c_pbhAngleUnit), timeUnit);
     }
 
+    bool CAircraftVelocity::isValid() const
+    {
+        return std::isfinite(m_x) && std::isfinite(m_y) && std::isfinite(m_z)
+            && std::isfinite(m_pitch) && std::isfinite(m_roll) && std::isfinite(m_heading);
+    }
+
     CAircraftVelocity& CAircraftVelocity::operator+=(const CAircraftVelocity& other)
     {
         m_x += other.m_x;

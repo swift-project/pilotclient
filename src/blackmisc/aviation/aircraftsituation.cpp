@@ -932,10 +932,12 @@ namespace BlackMisc::Aviation
     {
         auto copy = *this;
         const double time = CAircraftVelocity::c_timeUnit.convertFrom(ms, CTimeUnit::ms());
+        Q_ASSERT(std::isfinite(copy.m_position.geodeticHeight().value()));
         copy.m_position.adjust(
             { m_velocity.getVelocityZ(CSpeedUnit::m_s()) * time, CLengthUnit::m() },
             { m_velocity.getVelocityX(CSpeedUnit::m_s()) * time, CLengthUnit::m() },
             { m_velocity.getVelocityY(CSpeedUnit::m_s()) * time, CLengthUnit::m() });
+        Q_ASSERT(std::isfinite(copy.m_position.geodeticHeight().value()));
         copy.m_pitch.addValueSameUnit(time * m_velocity.getHeadingVelocity(m_pitch.getUnit(), CAircraftVelocity::c_timeUnit));
         copy.m_bank.addValueSameUnit(time * m_velocity.getHeadingVelocity(m_bank.getUnit(), CAircraftVelocity::c_timeUnit));
         copy.m_heading.addValueSameUnit(time * m_velocity.getHeadingVelocity(m_heading.getUnit(), CAircraftVelocity::c_timeUnit));
@@ -951,6 +953,11 @@ namespace BlackMisc::Aviation
         const double toAlt = to.m_position.geodeticHeight().value(CAircraftVelocity::c_xyzLengthUnit);
         const double fromAlt = from.m_position.geodeticHeight().value(CAircraftVelocity::c_xyzLengthUnit);
         o_ok = distance < CLength(100, CLengthUnit::m()) && std::abs(toAlt - fromAlt) < 100;
+        Q_ASSERT(std::isfinite(toAlt));
+        Q_ASSERT(std::isfinite(fromAlt));
+        Q_ASSERT(std::isfinite(toAlt - fromAlt));
+        Q_ASSERT(std::isfinite((toAlt - fromAlt) / time));
+        Q_ASSERT(std::abs(toAlt - fromAlt) < 10000);
         return
         {
             distance.value(CAircraftVelocity::c_xyzLengthUnit) * bearing.sin() / time,

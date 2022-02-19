@@ -252,12 +252,6 @@ namespace BlackMisc::Simulation
         const double dt2 = static_cast<double>(m_nextSampleAdjustedTime  - m_prevSampleAdjustedTime);
         double timeFraction = dt1 / dt2;
 
-        if (CBuildConfig::isLocalDeveloperDebugBuild())
-        {
-            BLACK_VERIFY_X(dt1 >= 0, Q_FUNC_INFO, "Expect postive dt1");
-            BLACK_VERIFY_X(dt2 >  0, Q_FUNC_INFO, "Expect postive dt2");
-            BLACK_VERIFY_X(isAcceptableTimeFraction(timeFraction), Q_FUNC_INFO, "Expect fraction 0-1");
-        }
         timeFraction = clampValidTimeFraction(timeFraction);
         const qint64 interpolatedTime = m_prevSampleTime + qRound64(timeFraction * dt2);
 
@@ -362,7 +356,7 @@ namespace BlackMisc::Simulation
         valid = CAircraftSituation::isValidVector(normalVector);
         if (!valid && CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            BLACK_VERIFY_X(valid, Q_FUNC_INFO, "invalid vector");
+            //BLACK_VERIFY_X(valid, Q_FUNC_INFO, "invalid vector");
             CLogMessage(this).warning(u"Invalid vector for '%1' v: %2 %3 %4") <<
                     currentSituation.getCallsign().asString() << normalVector[0] << normalVector[1] << normalVector[2];
         }

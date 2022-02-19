@@ -94,4 +94,12 @@ namespace BlackCore::Fsd
         return VisualPilotDataStopped(m_sender, m_latitude, m_longitude, m_altitudeTrue, m_heightAgl, m_pitch, m_bank, m_heading,
             m_noseGearAngle);
     }
+
+    bool VisualPilotDataUpdate::isValid() const
+    {
+        return std::isfinite(m_latitude) && std::isfinite(m_longitude) && std::isfinite(m_altitudeTrue) && std::isfinite(m_heightAgl)
+            && std::isfinite(m_pitch) && std::isfinite(m_bank) && std::isfinite(m_heading)
+            && std::isfinite(m_xVelocity) && std::isfinite(m_yVelocity) && std::isfinite(m_zVelocity)
+            && std::isfinite(m_pitchRadPerSec) && std::isfinite(m_bankRadPerSec) && std::isfinite(m_headingRadPerSec) && std::isfinite(m_noseGearAngle);
+    }
 }

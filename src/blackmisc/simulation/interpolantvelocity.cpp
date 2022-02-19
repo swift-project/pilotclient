@@ -30,6 +30,10 @@ namespace BlackMisc::Simulation
                 {
                     m_situation = extrapolated;
                     m_situation.setVelocity(situation.getVelocity() + error);
+
+                    Q_ASSERT(situation.getVelocity().isValid());
+                    Q_ASSERT(error.isValid());
+                    Q_ASSERT(m_situation.getVelocity().isValid());
                 }
                 else
                 {
