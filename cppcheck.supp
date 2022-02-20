@@ -45,6 +45,7 @@ unknownMacro:src/xswiftbus/libxplanemp/src/BitmapUtils.cpp
 returnDanglingLifetime:src/blackmisc/iterator.h
 unreadVariable:tests/blackcore/testreaders/testreaders.cpp
 unknownMacro:src/blackmisc/aviation/altitude.h
+unknownMacro:src/blackmisc/geo/coordinategeodetic.cpp
 unknownMacro:src/blackmisc/geo/elevationplane.h
 unknownMacro:src/blackmisc/identifier.cpp
 unknownMacro:tests/blackmisc/testsharedstate/testsharedstate.h
