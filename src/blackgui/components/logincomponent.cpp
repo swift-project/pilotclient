@@ -171,6 +171,11 @@ namespace BlackGui::Components
         this->onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1, {});
         this->reloadOtherServersSetup();
 
+        if (sGui && sGui->getIContextSimulator())
+        {
+            this->onSimulatorStatusChanged(sGui->getIContextSimulator()->getSimulatorStatus());
+        }
+
         connect(ui->pb_OverrideCredentialsVatsim, &QPushButton::clicked, this, &CLoginComponent::overrideCredentialsToPilot);
         connect(ui->pb_OverrideCredentialsOtherServers, &QPushButton::clicked, this, &CLoginComponent::overrideCredentialsToPilot);
 
