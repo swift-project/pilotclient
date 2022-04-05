@@ -404,7 +404,7 @@ namespace BlackMisc
         CStatusMessage setAndSave(const T &value, qint64 timestamp = 0) { return m_page->setValue(*m_element, CVariant::from(value), timestamp, true); }
 
         //! Save using the currently set value. Must be called from the thread in which the owner lives.
-        CStatusMessage save() { return m_page->setValue(*m_element, {}, 0, true, true); }
+        CStatusMessage save() { return m_page->setValue(*m_element, {}, 0, true); }
 
         //! Write a property of the value. Must be called from the thread in which the owner lives.
         CStatusMessage setProperty(CPropertyIndexRef index, const CVariant &value, qint64 timestamp = 0) { auto v = get(); v.setPropertyByIndex(index, value); return set(v, timestamp); }

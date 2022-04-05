@@ -363,6 +363,7 @@ namespace BlackMisc
         QMap<QString, CVariantMap> namespaces;
         for (auto it = values.cbegin(); it != values.cend(); ++it)
         {
+            Q_ASSERT(it.value().isValid());
             namespaces[it.key().section('/', 0, m_fileSplitDepth - 1)].insert(it.key(), it.value());
         }
         if (! QDir::root().mkpath(dir))
@@ -693,28 +694,27 @@ namespace BlackMisc
         return element.m_value.read();
     }
 
-    CStatusMessage CValuePage::setValue(Element &element, CVariant value, qint64 timestamp, bool save, bool ignoreValue)
+    CStatusMessage CValuePage::setValue(Element &element, CVariant value, qint64 timestamp, bool save)
     {
         Q_ASSERT_X(! element.m_key.isEmpty(), Q_FUNC_INFO, "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
         Q_ASSERT(QThread::currentThread() == thread());
 
         if (timestamp == 0) { timestamp = QDateTime::currentMSecsSinceEpoch(); }
+        if (! value.isValid()) { value = element.m_value.read(); }
+
         bool changed = element.m_timestamp != timestamp || element.m_value.read() != value;
-        if (! changed && ! save && ! ignoreValue)
+        if (! changed && ! save)
         {
             return CStatusMessage(this).info(u"Value '%1' not set, same timestamp and value") << element.m_nameWithKey;
         }
 
-        if (ignoreValue) { value = element.m_value.read(); }
-        else { ignoreValue = ! changed; }
-
         auto status = validate(element, value, CStatusMessage::SeverityError);
         if (status.isSuccess())
         {
-            if (ignoreValue)
+            if (! changed)
             {
                 element.m_saved = save;
-                emit valuesWantToCache({ { { element.m_key, {} } }, 0, save, false });
+                emit valuesWantToCache({ { { element.m_key, value } }, 0, save, false });
             }
             else if (m_batchMode > 0)
             {
