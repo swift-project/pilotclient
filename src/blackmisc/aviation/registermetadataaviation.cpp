@@ -15,7 +15,6 @@ namespace BlackMisc
     {
         void registerMetadata()
         {
-            CAdfSystem::registerMetadata();
             CAircraftEngine::registerMetadata();
             CAircraftEngineList::registerMetadata();
             CAircraftIcaoCode::registerMetadata();

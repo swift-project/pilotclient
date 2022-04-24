@@ -16,7 +16,6 @@
 
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/aviation/heading.h"
-#include "blackmisc/aviation/adfsystem.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/navsystem.h"
 #include "blackmisc/aviation/transponder.h"

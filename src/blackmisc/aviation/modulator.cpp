@@ -9,7 +9,6 @@
 #include "blackmisc/aviation/modulator.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/navsystem.h"
-#include "blackmisc/aviation/adfsystem.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/comparefunctions.h"
@@ -243,26 +242,11 @@ namespace BlackMisc::Aviation
         return n;
     }
 
-    template <class AVIO>
-    const QString &CModulator<AVIO>::NameAdf1()
-    {
-        static QString n("ADF1");
-        return n;
-    }
-
-    template <class AVIO>
-    const QString &CModulator<AVIO>::NameAdf2()
-    {
-        static QString n("ADF2");
-        return n;
-    }
-
     // see here for the reason of the forward instantiations
     // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
     //! \cond PRIVATE
     template class CModulator<CComSystem>;
     template class CModulator<CNavSystem>;
-    template class CModulator<CAdfSystem>;
     //! \endcond
 
 } // namespace

@@ -116,12 +116,6 @@ namespace BlackMisc::Aviation
         //! NAV3
         static const QString &NameNav3();
 
-        //! ADF1
-        static const QString &NameAdf1();
-
-        //! ADF2
-        static const QString &NameAdf2();
-
     private:
         QString m_name; //!< name of the unit
         PhysicalQuantities::CFrequency m_frequencyActive;  //!< active frequency
@@ -158,11 +152,9 @@ namespace BlackMisc::Aviation
     //! \cond PRIVATE
     class CComSystem;
     class CNavSystem;
-    class CAdfSystem;
 
     extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CModulator<CComSystem>;
     extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CModulator<CNavSystem>;
-    extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CModulator<CAdfSystem>;
     //! \endcond
 
 } // namespace
