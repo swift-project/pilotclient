@@ -569,7 +569,7 @@ namespace BlackMisc::Simulation::XPlane
         {
             ++lineNum;
             QString line = in.readLine();
-            auto tokens = splitString(line, [](QChar c) { return c.isSpace(); });
+            auto tokens = line.split(' ');
             if (!tokens.empty())
             {
                 auto it = commands.find(tokens[0]);
@@ -615,7 +615,7 @@ namespace BlackMisc::Simulation::XPlane
             ++lineNum;
             QString line = in.readLine();
             if (line.isEmpty() || line[0] == '#') continue;
-            auto tokens = splitString(line, [](QChar c) { return c.isSpace(); });
+            auto tokens = line.split(' ');
             if (!tokens.empty())
             {
                 auto it = commands.find(tokens[0]);

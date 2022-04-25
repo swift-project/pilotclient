@@ -59,7 +59,7 @@ namespace BlackMisc::Aviation
         using base_type = PhysicalQuantities::CLength;
 
         //! Metric tuple
-        using MetricTuple = std::tuple<int, int, int>;
+        using MetricTuple = std::tuple<int, int>;
 
         BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAltitude)
         BLACKMISC_DECLARE_USING_MIXIN_STRING(CAltitude)

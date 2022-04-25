@@ -29,11 +29,6 @@ namespace BlackMisc
         return splitStringRefs(s, [](QChar c) { return c == '\n' || c == '\r'; });
     }
 
-    QStringList splitLines(const QString &s)
-    {
-        return splitString(s, [](QChar c) { return c == '\n' || c == '\r'; });
-    }
-
     QByteArray utfToPercentEncoding(const QString& s, const QByteArray &allow, char percent)
     {
         QByteArray result;

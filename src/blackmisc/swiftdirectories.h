@@ -74,9 +74,6 @@ namespace BlackMisc
         //! The test data directory
         static const QString &shareTestDirectory();
 
-        //! The misc data directory
-        static const QString &shareMiscDirectory();
-
         //! FSX/P3D terrain probe
         static const QString &shareTerrainProbeDirectory();
 

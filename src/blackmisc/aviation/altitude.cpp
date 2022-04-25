@@ -11,8 +11,6 @@
 #include "blackmisc/pq/constants.h"
 #include "blackmisc/pq/pqstring.h"
 #include "blackmisc/math/mathutils.h"
-#include "blackmisc/fileutils.h"
-#include "blackmisc/swiftdirectories.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/iconlist.h"
@@ -27,27 +25,6 @@ using namespace BlackMisc::Math;
 
 namespace BlackMisc::Aviation
 {
-    namespace Private
-    {
-        QVector<CAltitude::MetricTuple> initMetricValues()
-        {
-            QVector<CAltitude::MetricTuple> v;
-            const QString f = CFileUtils::appendFilePaths(CSwiftDirectories::shareMiscDirectory(), "Metric Altitudes.csv");
-            const QString ma = CFileUtils::readFileToString(f);
-            const QStringList values = splitLines(ma);
-            for (const QString &value : values)
-            {
-                const QStringList alts = value.split(";");
-                int v1 = -1, v2 = -1, v3 = -1;
-                if (alts.size() >= 1) { v1 = alts[0].toInt(); }
-                if (alts.size() >= 2) { v2 = alts[1].toInt(); }
-                if (alts.size() >= 3) { v3 = alts[2].toInt(); }
-                const CAltitude::MetricTuple m(v1, v2, v3);
-                v.push_back(m);
-            }
-            return v;
-        }
-    }
 
     void CAltitude::registerMetadata()
     {
@@ -58,7 +35,102 @@ namespace BlackMisc::Aviation
 
     const QVector<CAltitude::MetricTuple> &CAltitude::metricTuples()
     {
-        static const QVector<MetricTuple> v = Private::initMetricValues();
+        static const QVector<MetricTuple> v = {
+                {300,1000},
+                {600,2000},
+                {900,3000},
+                {1200,3900},
+                {1200,4000},
+                {1500,4900},
+                {1500,5000},
+                {1800,5900},
+                {1850,6000},
+                {2100,6900},
+                {2150,7000},
+                {2400,7900},
+                {2450,8000},
+                {2700,8900},
+                {2750,9000},
+                {3000,9800},
+                {3050,10000},
+                {3300,10800},
+                {3350,11000},
+                {3600,11800},
+                {3650,12000},
+                {3900,12800},
+                {3950,13000},
+                {4200,13800},
+                {4250,14000},
+                {4500,14800},
+                {4550,15000},
+                {4800,15700},
+                {4900,16000},
+                {5100,16700},
+                {5200,17000},
+                {5400,17700},
+                {5500,18000},
+                {5700,18700},
+                {5800,19000},
+                {6000,19700},
+                {6100,20000},
+                {6300,20700},
+                {6400,21000},
+                {6600,21700},
+                {6700,22000},
+                {6900,22600},
+                {7000,23000},
+                {7200,23600},
+                {7300,24000},
+                {7500,24600},
+                {7600,25000},
+                {7800,25600},
+                {7900,26000},
+                {8100,26600},
+                {8250,27000},
+                {8400,27600},
+                {8550,28000},
+                {8600,28200},
+                {8850,29000},
+                {8900,29100},
+                {9100,29900},
+                {9150,30000},
+                {9200,30100},
+                {9450,31000},
+                {9500,31100},
+                {9600,31500},
+                {9750,32000},
+                {9800,32100},
+                {10050,33000},
+                {10100,33100},
+                {10350,34000},
+                {10400,34100},
+                {10600,34800},
+                {10650,35000},
+                {10700,35100},
+                {10950,36000},
+                {11000,36100},
+                {11100,36400},
+                {11300,37000},
+                {11300,37100},
+                {11600,38000},
+                {11600,38100},
+                {11900,39000},
+                {11900,39100},
+                {12100,39700},
+                {12200,40000},
+                {12200,40100},
+                {12500,41000},
+                {13100,43000},
+                {13700,44900},
+                {13700,45000},
+                {14100,46300},
+                {14300,46900},
+                {14350,47000},
+                {14900,48900},
+                {14950,49000},
+                {15100,49500},
+                {15550,51000},
+        };
         return v;
     }
 
