@@ -11,7 +11,6 @@
 
 #include <QTime>
 #include <QtGlobal>
-#include <algorithm>
 #include <cmath>
 #include <cstdlib>
 #include <limits>

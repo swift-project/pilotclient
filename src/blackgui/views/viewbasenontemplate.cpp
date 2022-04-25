@@ -19,7 +19,7 @@
 #include "blackgui/views/viewbase.h"
 #include "blackgui/shortcut.h"
 #include "blackmisc/logmessage.h"
-#include "viewbase.h"
+
 
 #include <QApplication>
 #include <QAction>

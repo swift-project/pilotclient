@@ -8,9 +8,8 @@
 
 #include "settingstextmessagestyle.h"
 #include "ui_settingstextmessagestyle.h"
-#include "settingsfontdialog.h"
-#include "texteditdialog.h"
-#include "settingstextmessagestyle.h"
+#include "blackgui/components/settingsfontdialog.h"
+#include "blackgui/components/texteditdialog.h"
 #include "blackgui/shortcut.h"
 
 #include <QTextEdit>

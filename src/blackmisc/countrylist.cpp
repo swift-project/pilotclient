@@ -7,9 +7,7 @@
  */
 
 #include "blackmisc/countrylist.h"
-#include "blackmisc/range.h"
 
-#include <QJsonObject>
 #include <QJsonValue>
 #include <QRegularExpression>
 #include <Qt>

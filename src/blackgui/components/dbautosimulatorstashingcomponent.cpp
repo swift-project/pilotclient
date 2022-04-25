@@ -8,7 +8,7 @@
 
 #include "blackcore/db/databaseutils.h"
 #include "dbautosimulatorstashingcomponent.h"
-#include "dbmappingcomponent.h"
+#include "blackgui/components/dbmappingcomponent.h"
 #include "ui_dbautosimulatorstashingcomponent.h"
 #include <QIntValidator>
 

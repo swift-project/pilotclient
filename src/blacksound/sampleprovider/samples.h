@@ -14,7 +14,7 @@
 #include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/settingscache.h"
 #include "blacksound/blacksoundexport.h"
-#include "resourcesound.h"
+#include "blacksound/sampleprovider/resourcesound.h"
 
 #include <QObject>
 

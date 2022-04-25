@@ -12,8 +12,6 @@
 
 namespace BlackMisc::Audio
 {
-    constexpr CNotificationSounds::Notification CNotificationSounds::AllNotifications;
-    constexpr CNotificationSounds::Notification CNotificationSounds::DefaultNotifications;
 
     const QString &CNotificationSounds::flagToString(CNotificationSounds::NotificationFlag notification)
     {

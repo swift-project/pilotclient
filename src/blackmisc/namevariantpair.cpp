@@ -8,7 +8,6 @@
 
 #include "blackmisc/namevariantpair.h"
 #include "blackmisc/propertyindexvariantmap.h"
-#include <tuple>
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc, CNameVariantPair)
 

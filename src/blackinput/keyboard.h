@@ -11,7 +11,7 @@
 #ifndef BLACKINPUT_KEYBOARD_H
 #define BLACKINPUT_KEYBOARD_H
 
-#include "blackinputexport.h"
+#include "blackinput/blackinputexport.h"
 #include "blackmisc/input/keyboardkeylist.h"
 #include "blackmisc/input/hotkeycombination.h"
 #include <QObject>

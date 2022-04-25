@@ -11,13 +11,9 @@
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/stringutils.h"
-#include "blackmisc/verify.h"
-#include "blackconfig/buildconfig.h"
 
 #include "QStringBuilder"
 #include <QtGlobal>
-
-using namespace BlackConfig;
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftParts)
 

@@ -8,12 +8,10 @@
 
 #include "blackmisc/platform.h"
 #include "blackmisc/icons.h"
-#include "blackmisc/stringutils.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackconfig/buildconfig.h"
 
 #include <QJsonValue>
-#include <Qt>
 #include <QtGlobal>
 
 using namespace BlackConfig;

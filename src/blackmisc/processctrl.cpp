@@ -9,10 +9,10 @@
 #include "blackmisc/processctrl.h"
 #include "blackmisc/logmessage.h"
 #include <QStringBuilder>
-#include <array>
 
 #ifdef Q_OS_WIN
 #include <windows.h>
+#include <array>
 #endif
 
 namespace BlackMisc

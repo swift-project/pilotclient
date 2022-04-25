@@ -12,7 +12,6 @@
 #include "blackmisc/icons.h"
 #include "blackmisc/rgbcolor.h"
 #include "blackmisc/variant.h"
-#include "colorselector.h"
 #include "ui_colorselector.h"
 
 #include <QColor>

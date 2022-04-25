@@ -12,8 +12,6 @@
 
 #include <QList>
 #include <QSet>
-#include <Qt>
-#include <QtGlobal>
 #include <QStringBuilder>
 #include <algorithm>
 

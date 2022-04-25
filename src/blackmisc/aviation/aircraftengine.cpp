@@ -9,7 +9,6 @@
 #include "blackmisc/aviation/aircraftengine.h"
 #include "blackmisc/stringutils.h"
 
-#include <QChar>
 #include <QtGlobal>
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftEngine)

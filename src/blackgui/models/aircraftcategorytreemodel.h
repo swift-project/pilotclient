@@ -11,7 +11,7 @@
 #ifndef BLACKGUI_MODELS_AIRCRAFTCATEGORYTREEMODEL_H
 #define BLACKGUI_MODELS_AIRCRAFTCATEGORYTREEMODEL_H
 
-#include "columns.h"
+#include "blackgui/models/columns.h"
 #include "blackmisc/aviation/aircraftcategorylist.h"
 #include "blackgui/blackguiexport.h"
 

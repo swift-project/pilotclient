@@ -15,14 +15,16 @@
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/geo/geoobjectlist.h"
 
+#include "blackmisc/pq/length.h"
+
+#include "blackmisc/mixin/mixinmetatype.h"
+#include "blackmisc/mixin/mixinjson.h"
+
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
-#include "blackmisc/json.h"
 #include "blackmisc/sequence.h"
 
-#include <QJsonObject>
 #include <QMetaType>
-#include <initializer_list>
 
 BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Geo, CCoordinateGeodetic, CCoordinateGeodeticList)
 

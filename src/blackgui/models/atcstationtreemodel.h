@@ -11,7 +11,7 @@
 #ifndef BLACKGUI_MODELS_ATCTREEMODEL_H
 #define BLACKGUI_MODELS_ATCTREEMODEL_H
 
-#include "columns.h"
+#include "blackgui/models/columns.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackgui/blackguiexport.h"
 

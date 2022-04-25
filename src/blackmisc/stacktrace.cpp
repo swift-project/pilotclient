@@ -8,14 +8,12 @@
 
 #include "blackmisc/stacktrace.h"
 
-#include <stdlib.h>
 #include <QByteArray>
 #include <QLatin1String>
 #include <QStringBuilder>
 #include <QMutexLocker>
 #include <array>
 #include <cstdlib>
-#include <mutex>
 
 #if defined(Q_CC_MSVC)
 #   include <Windows.h>

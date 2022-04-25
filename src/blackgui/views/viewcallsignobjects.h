@@ -11,7 +11,7 @@
 #ifndef BLACKGUI_VIEWS_VIEWCALLSIGNOBJECTS_H
 #define BLACKGUI_VIEWS_VIEWCALLSIGNOBJECTS_H
 
-#include "viewbase.h"
+#include "blackgui/views/viewbase.h"
 #include <QSet>
 #include <QObject>
 #include <QString>

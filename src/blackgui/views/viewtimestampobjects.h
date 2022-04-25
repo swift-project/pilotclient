@@ -11,7 +11,7 @@
 #ifndef BLACKGUI_VIEWS_VIEWTIMESTAMPOBJECTS_H
 #define BLACKGUI_VIEWS_VIEWTIMESTAMPOBJECTS_H
 
-#include "viewbase.h"
+#include "blackgui/views/viewbase.h"
 #include <QObject>
 #include <QString>
 #include <QtGlobal>

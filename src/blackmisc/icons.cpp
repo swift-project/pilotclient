@@ -10,7 +10,6 @@
 
 #include "blackmisc/icons.h"
 #include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/threadutils.h"
 

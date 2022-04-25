@@ -12,7 +12,6 @@
 #include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/stringutils.h"
 
-#include <QRegularExpression>
 #include <Qt>
 #include <QtGlobal>
 

@@ -8,7 +8,7 @@
 
 #include "ui_copyconfigurationcomponent.h"
 #include "copyconfigurationcomponent.h"
-#include "configurationwizard.h"
+#include "blackgui/components/configurationwizard.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackgui/guiapplication.h"
 #include "blackconfig/buildconfig.h"

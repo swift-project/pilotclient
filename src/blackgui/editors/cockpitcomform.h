@@ -11,7 +11,7 @@
 #ifndef BLACKGUI_EDITORS_COCKPITCOMFORM_H
 #define BLACKGUI_EDITORS_COCKPITCOMFORM_H
 
-#include "form.h"
+#include "blackgui/editors/form.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/atcstationlist.h"

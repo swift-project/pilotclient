@@ -8,7 +8,6 @@
 
 #include "blackmisc/network/registermetadatanetwork.h"
 #include "blackmisc/network/network.h"
-#include "blackmisc/variant.h"
 
 namespace BlackMisc
 {

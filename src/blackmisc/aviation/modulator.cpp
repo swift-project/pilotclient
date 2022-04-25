@@ -10,7 +10,6 @@
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/navsystem.h"
 #include "blackmisc/aviation/adfsystem.h"
-#include "blackmisc/math/mathutils.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/comparefunctions.h"

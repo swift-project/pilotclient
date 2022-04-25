@@ -8,10 +8,8 @@
 
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/propertyindexref.h"
 #include "blackmisc/verify.h"
 
-#include <QByteArray>
 #include <QtGlobal>
 #include <QStringBuilder>
 #include <cmath>

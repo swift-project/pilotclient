@@ -12,7 +12,6 @@
 #include "blackmisc/dictionary.h"
 
 #include <QHash>
-#include <tuple>
 
 namespace BlackMisc
 {

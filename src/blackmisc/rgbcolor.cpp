@@ -17,7 +17,6 @@
 #include <QPixmap>
 #include <QSize>
 #include <QStringBuilder>
-#include <Qt>
 #include <QtGlobal>
 
 using namespace BlackMisc;

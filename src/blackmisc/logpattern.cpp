@@ -13,9 +13,7 @@
 
 #include <QHash>
 #include <QList>
-#include <QStringList>
 #include <algorithm>
-#include <tuple>
 
 namespace BlackMisc
 {

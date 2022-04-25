@@ -14,7 +14,6 @@
 #include <future>
 #include <QTimer>
 #include <QPointer>
-#include <QCoreApplication>
 
 #ifdef Q_OS_WIN32
 #include <Windows.h>

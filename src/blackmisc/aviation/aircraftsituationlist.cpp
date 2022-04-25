@@ -10,10 +10,8 @@
 #include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/pq/speed.h"
-#include "blackmisc/verify.h"
 
 #include <QList>
-#include <tuple>
 
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;

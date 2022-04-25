@@ -7,7 +7,7 @@
  */
 
 #include "modelmatcherlogenable.h"
-#include "guiapplication.h"
+#include "blackgui/guiapplication.h"
 #include "ui_modelmatcherlogenable.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulator.h"

@@ -10,9 +10,7 @@
 #include "blackmisc/network/remotefile.h"
 #include "blackmisc/json.h"
 
-#include <QJsonObject>
 #include <QJsonValue>
-#include <tuple>
 
 BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Network, CRemoteFile, CRemoteFileList)
 

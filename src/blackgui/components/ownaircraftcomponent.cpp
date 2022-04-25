@@ -8,7 +8,7 @@
 
 #include "ownaircraftcomponent.h"
 #include "ui_ownaircraftcomponent.h"
-#include "dbquickmappingwizard.h"
+#include "blackgui/components/dbquickmappingwizard.h"
 
 #include "blackgui/uppercasevalidator.h"
 #include "blackgui/guiapplication.h"

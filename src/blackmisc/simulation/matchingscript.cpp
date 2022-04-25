@@ -7,7 +7,7 @@
  */
 
 #include "blackmisc/simulation/matchingscript.h"
-#include "stringutils.h"
+#include "blackmisc/stringutils.h"
 
 using namespace BlackMisc::Aviation;
 

@@ -7,12 +7,10 @@
  */
 
 #include "blackmisc/network/rawfsdmessage.h"
-#include "blackmisc/logcategories.h"
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
 
-#include <Qt>
 #include <QtGlobal>
 
 using namespace BlackMisc;

@@ -27,7 +27,6 @@
 #include <Qt>
 #include <QtDebug>
 #include <algorithm>
-#include <tuple>
 
 #ifdef Q_OS_WIN
 #include <windows.h>

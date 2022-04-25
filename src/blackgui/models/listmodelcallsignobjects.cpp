@@ -7,7 +7,7 @@
  */
 
 #include "listmodelcallsignobjects.h"
-#include "allmodelcontainers.h"
+#include "blackgui/models/allmodelcontainers.h"
 #include "blackmisc/orderable.h"
 
 #include <QBrush>

@@ -9,7 +9,6 @@
 #include "blackmisc/pixmap.h"
 
 #include <QBuffer>
-#include <QFile>
 #include <QIODevice>
 #include <QReadLocker>
 #include <QWriteLocker>

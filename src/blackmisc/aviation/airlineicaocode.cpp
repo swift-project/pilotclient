@@ -16,13 +16,9 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/setbuilder.h"
 
-#include <QJsonValue>
-#include <QRegularExpression>
-#include <QRegularExpressionMatch>
 #include <QStringBuilder>
 #include <QDir>
 #include <Qt>

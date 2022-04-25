@@ -11,7 +11,7 @@
 #ifndef BLACKGUI_EDITORS_INTERPOLATIONSETUPFORM_H
 #define BLACKGUI_EDITORS_INTERPOLATIONSETUPFORM_H
 
-#include "form.h"
+#include "blackgui/editors/form.h"
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/statusmessagelist.h"

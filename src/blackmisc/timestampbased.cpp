@@ -12,9 +12,7 @@
 #include "blackmisc/verify.h"
 
 #include <QByteArray>
-#include <QDate>
-#include <QTime>
-#include <Qt>
+#include <QDateTime>
 
 namespace BlackMisc
 {

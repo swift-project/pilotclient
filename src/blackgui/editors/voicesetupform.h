@@ -13,7 +13,7 @@
 
 #include "blackmisc/audio/voicesetup.h"
 #include "blackmisc/statusmessagelist.h"
-#include "form.h"
+#include "blackgui/editors/form.h"
 #include <QFrame>
 #include <QScopedPointer>
 

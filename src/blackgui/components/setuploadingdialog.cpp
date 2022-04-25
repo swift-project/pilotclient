@@ -7,7 +7,7 @@
  */
 
 #include "setuploadingdialog.h"
-#include "copymodelsfromotherswiftversionsdialog.h"
+#include "blackgui/components/copymodelsfromotherswiftversionsdialog.h"
 #include "ui_setuploadingdialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/data/globalsetup.h"

@@ -9,7 +9,7 @@
  */
 
 #include "loadindicator.h"
-#include "guiapplication.h"
+#include "blackgui/guiapplication.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/threadutils.h"
 

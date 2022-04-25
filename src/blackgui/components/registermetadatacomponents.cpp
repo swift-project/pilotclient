@@ -7,7 +7,7 @@
  */
 
 #include "registermetadatacomponents.h"
-#include "textmessagecomponenttab.h"
+#include "blackgui/components/textmessagecomponenttab.h"
 
 #include <QMetaType>
 

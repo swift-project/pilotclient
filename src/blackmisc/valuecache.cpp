@@ -11,7 +11,6 @@
 #include "blackmisc/valuecache.h"
 #include "blackmisc/atomicfile.h"
 #include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/lockfree.h"
 #include "blackmisc/logcategories.h"
@@ -32,7 +31,6 @@
 #include <QStandardPaths>
 #include <QThread>
 #include <Qt>
-#include <algorithm>
 #include <atomic>
 #include <exception>
 #include <functional>

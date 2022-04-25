@@ -7,7 +7,7 @@
  */
 
 #include "viewbaseproxystyle.h"
-#include "viewbase.h"
+#include "blackgui/views/viewbase.h"
 
 namespace BlackGui::Views
 {

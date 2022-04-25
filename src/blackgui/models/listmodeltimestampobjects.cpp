@@ -6,8 +6,8 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "listmodeltimestampobjects.h"
-#include "allmodelcontainers.h"
+#include "blackgui/models/listmodeltimestampobjects.h"
+#include "blackgui/models/allmodelcontainers.h"
 
 #include <QModelIndex>
 #include <type_traits>

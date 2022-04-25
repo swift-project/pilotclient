@@ -14,7 +14,6 @@
 #include <QRegularExpression>
 #include <Qt>
 #include <QtGlobal>
-#include <QtMath>
 
 using namespace BlackMisc::PhysicalQuantities;
 

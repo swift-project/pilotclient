@@ -8,10 +8,8 @@
 
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/containerbase.h"
-#include "blackmisc/dbus.h"
 
 #include <QDBusMetaType>
-#include <QJsonObject>
 #include <QString>
 
 BLACK_DEFINE_COLLECTION_MIXINS(BlackMisc::Aviation, CCallsign, CCallsignSet)

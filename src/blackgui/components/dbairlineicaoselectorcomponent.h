@@ -18,7 +18,6 @@
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
-#include <QScopedPointer>
 
 class QCompleter;
 class QWidget;

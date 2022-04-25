@@ -12,7 +12,7 @@
 #define BLACKGUI_COMPONENTS_SETTINGSSWIFTPLUGIN_H
 
 #include <QFrame>
-#include <blackmisc/simulation/settings/swiftpluginsettings.h>
+#include "blackmisc/simulation/settings/swiftpluginsettings.h"
 #include "blackgui/blackguiexport.h"
 
 namespace Ui { class CSettingsSwiftPlugin; }

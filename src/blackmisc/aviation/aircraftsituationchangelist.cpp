@@ -7,7 +7,6 @@
  */
 
 #include "blackmisc/aviation/aircraftsituationchangelist.h"
-#include <tuple>
 
 BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAircraftSituationChange, CAircraftSituationChangeList)
 

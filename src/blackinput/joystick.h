@@ -11,7 +11,7 @@
 #ifndef BLACKINPUT_JOYSTICK_H
 #define BLACKINPUT_JOYSTICK_H
 
-#include "blackinputexport.h"
+#include "blackinput/blackinputexport.h"
 #include "blackmisc/input/hotkeycombination.h"
 #include <QObject>
 #include <memory>

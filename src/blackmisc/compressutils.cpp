@@ -9,7 +9,6 @@
 #include "blackmisc/compressutils.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
 #include "blackmisc/stringutils.h"
 #include "blackconfig/buildconfig.h"
 

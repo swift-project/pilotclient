@@ -14,11 +14,7 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
 
-#include <QChar>
-#include <QJsonValue>
-#include <QMultiMap>
 #include <QRegularExpression>
-#include <QRegularExpressionMatch>
 #include <QStringBuilder>
 #include <Qt>
 #include <QtGlobal>

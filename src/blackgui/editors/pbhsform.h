@@ -11,7 +11,7 @@
 #ifndef BLACKGUI_EDITORS_PBHSFORM_H
 #define BLACKGUI_EDITORS_PBHSFORM_H
 
-#include "form.h"
+#include "blackgui/editors/form.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/heading.h"
 #include "blackmisc/pq/angle.h"

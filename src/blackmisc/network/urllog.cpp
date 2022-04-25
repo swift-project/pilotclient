@@ -12,7 +12,6 @@
 #include "blackmisc/stringutils.h"
 
 #include <QJsonValue>
-#include <QPair>
 #include <QtGlobal>
 
 #include <atomic>

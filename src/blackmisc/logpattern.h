@@ -28,9 +28,9 @@
 #include <QMetaType>
 #include <QSet>
 #include <QString>
+#include <QStringList>
 #include <QtGlobal>
 
-class QStringList;
 template <class Key, class T> class QHash;
 
 namespace BlackMisc

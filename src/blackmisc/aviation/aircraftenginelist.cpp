@@ -7,9 +7,7 @@
  */
 
 #include "blackmisc/aviation/aircraftenginelist.h"
-#include "blackmisc/range.h"
 
-#include <QJsonValue>
 #include <QString>
 #include <QtGlobal>
 

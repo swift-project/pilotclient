@@ -8,7 +8,6 @@
 
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/containerbase.h"
-#include "blackmisc/dbus.h"
 #include "blackmisc/iterator.h"
 #include "blackmisc/range.h"
 

@@ -11,7 +11,6 @@
 #include "blackgui/filters/liveryfilterbar.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/views/liveryview.h"
-#include "dbliverycomponent.h"
 #include "ui_dbliverycomponent.h"
 
 #include <QtGlobal>

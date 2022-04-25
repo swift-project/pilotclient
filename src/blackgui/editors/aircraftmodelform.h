@@ -11,7 +11,7 @@
 #ifndef BLACKGUI_EDITORS_AIRCRAFTMODELFORM_H
 #define BLACKGUI_EDITORS_AIRCRAFTMODELFORM_H
 
-#include "form.h"
+#include "blackgui/editors/form.h"
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/simulation/distributor.h"

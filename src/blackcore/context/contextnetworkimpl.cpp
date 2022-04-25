@@ -22,7 +22,6 @@
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/callsign.h"
-#include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/network/textmessage.h"

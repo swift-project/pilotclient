@@ -7,7 +7,7 @@
  */
 
 #include "listmodeldbobjects.h"
-#include "allmodelcontainers.h"
+#include "blackgui/models/allmodelcontainers.h"
 #include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/aircraftmodel.h"

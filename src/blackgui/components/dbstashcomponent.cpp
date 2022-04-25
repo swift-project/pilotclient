@@ -23,7 +23,6 @@
 #include "blackmisc/logcategories.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/verify.h"
-#include "dbstashcomponent.h"
 #include "ui_dbstashcomponent.h"
 
 #include <QCheckBox>

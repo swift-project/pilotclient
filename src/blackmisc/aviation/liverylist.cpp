@@ -10,9 +10,6 @@
 #include "blackmisc/predicates.h"
 #include "blackmisc/range.h"
 
-#include <QtGlobal>
-#include <tuple>
-
 using namespace BlackMisc::Aviation;
 
 BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CLivery, CLiveryList)

@@ -7,14 +7,13 @@
  */
 
 #include "blackmisc/network/fsdsetup.h"
-#include "blackmisc/logcategories.h"
+#include "blackmisc/logcategorylist.h"
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/comparefunctions.h"
 
-#include <Qt>
 #include <QtGlobal>
 
 using namespace BlackMisc;

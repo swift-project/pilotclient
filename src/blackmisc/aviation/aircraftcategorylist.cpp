@@ -7,10 +7,8 @@
  */
 
 #include "blackmisc/aviation/aircraftcategorylist.h"
-#include "blackmisc/range.h"
 #include "blackmisc/setbuilder.h"
 
-#include <QJsonObject>
 #include <QJsonValue>
 #include <Qt>
 #include <QMap>

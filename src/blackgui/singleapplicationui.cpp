@@ -7,7 +7,7 @@
  */
 
 #include "singleapplicationui.h"
-#include "guiapplication.h"
+#include "blackgui/guiapplication.h"
 #include <QWidget>
 
 using namespace BlackMisc;

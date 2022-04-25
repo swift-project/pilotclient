@@ -10,15 +10,11 @@
 
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/propertyindexlist.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/range.h"
 
-#include <QJsonObject>
 #include <QJsonValue>
 #include <QString>
 #include <QStringBuilder>
 #include <QStringList>
-#include <tuple>
 
 BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc, CStatusMessage, CStatusMessageList)
 

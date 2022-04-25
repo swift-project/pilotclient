@@ -8,7 +8,7 @@
 
 #include "ui_matchingform.h"
 #include "matchingform.h"
-#include "guiutility.h"
+#include "blackgui/guiutility.h"
 
 #include <QPushButton>
 #include <QFileDialog>

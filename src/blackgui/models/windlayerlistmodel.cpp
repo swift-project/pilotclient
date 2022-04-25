@@ -7,7 +7,7 @@
  */
 
 #include "windlayerlistmodel.h"
-#include "columnformatters.h"
+#include "blackgui/models/columnformatters.h"
 
 #include <Qt>
 #include <QtGlobal>

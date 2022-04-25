@@ -9,10 +9,8 @@
 #include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/logcategories.h"
 #include "blackmisc/country.h"
-#include "blackmisc/range.h"
 #include "blackmisc/setbuilder.h"
 
-#include <QJsonObject>
 #include <QJsonValue>
 #include <QStringBuilder>
 

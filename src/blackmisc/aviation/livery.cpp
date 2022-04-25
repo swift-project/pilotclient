@@ -20,7 +20,6 @@
 #include <QJsonValue>
 #include <Qt>
 #include <QtGlobal>
-#include <tuple>
 #include <QStringBuilder>
 
 using namespace BlackMisc;

@@ -8,13 +8,11 @@
 
 #include "blackmisc/atomicfile.h"
 #include "blackmisc/algorithm.h"
-#include "blackmisc/stacktrace.h"
 
 #include <QDir>
 #include <QFileInfo>
 #include <QFlags>
 #include <QStringBuilder>
-#include <random>
 #include <type_traits>
 
 #if defined(Q_OS_POSIX)

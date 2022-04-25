@@ -10,8 +10,8 @@
 #define BLACKSOUND_SAMPLEPROVIDER_RESOURCESOUNDSAMPLEPROVIDER_H
 
 #include "blacksound/blacksoundexport.h"
-#include "sampleprovider.h"
-#include "resourcesound.h"
+#include "blacksound/sampleprovider/sampleprovider.h"
+#include "blacksound/sampleprovider/resourcesound.h"
 
 namespace BlackSound::SampleProvider
 {

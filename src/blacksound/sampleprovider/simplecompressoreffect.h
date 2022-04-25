@@ -12,7 +12,7 @@
 #define BLACKSOUND_SAMPLEPROVIDER_SIMPLECOMPRESSOREFFECT_H
 
 #include "blacksound/blacksoundexport.h"
-#include "sampleprovider.h"
+#include "blacksound/sampleprovider/sampleprovider.h"
 #include "blacksound/dsp/SimpleComp.h"
 
 #include <QObject>

@@ -12,7 +12,6 @@
 
 #include <QDateTime>
 #include <QJsonDocument>
-#include <QList>
 #include <QStringList>
 
 using namespace BlackMisc;

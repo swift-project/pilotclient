@@ -15,14 +15,12 @@
 #include <QDateTime>
 #include <QFile>
 #include <QFileInfo>
-#include <QFlags>
 #include <QIODevice>
 #include <QList>
 #include <QLockFile>
 #include <QRegularExpression>
 #include <QTextStream>
 #include <QtGlobal>
-#include <QMap>
 #include <algorithm>
 #include <QStringBuilder>
 

@@ -20,7 +20,6 @@
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/statusmessagelist.h"
-#include "dbautostashingcomponent.h"
 #include "ui_dbautostashingcomponent.h"
 
 #include <QCheckBox>

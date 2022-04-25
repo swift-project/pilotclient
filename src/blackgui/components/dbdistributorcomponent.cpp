@@ -6,7 +6,6 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "dbdistributorcomponent.h"
 #include "ui_dbdistributorcomponent.h"
 #include "blackgui/components/dbdistributorcomponent.h"
 #include "blackgui/guiapplication.h"

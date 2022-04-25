@@ -6,13 +6,13 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "aircraftcombinedtypeselector.h"
-#include "dbaircrafticaoselectorcomponent.h"
-#include "dbairlineicaoselectorcomponent.h"
-#include "dbliveryselectorcomponent.h"
-#include "modelmatchercomponent.h"
-#include "settingsmatchingdialog.h"
-#include "simulatorselector.h"
+#include "blackgui/components/aircraftcombinedtypeselector.h"
+#include "blackgui/components/dbaircrafticaoselectorcomponent.h"
+#include "blackgui/components/dbairlineicaoselectorcomponent.h"
+#include "blackgui/components/dbliveryselectorcomponent.h"
+#include "blackgui/components/modelmatchercomponent.h"
+#include "blackgui/components/settingsmatchingdialog.h"
+#include "blackgui/components/simulatorselector.h"
 #include "blackgui/models/statusmessagelistmodel.h"
 #include "blackgui/views/statusmessageview.h"
 #include "blackgui/views/aircraftmodelview.h"

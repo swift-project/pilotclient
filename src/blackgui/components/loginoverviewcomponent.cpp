@@ -8,8 +8,8 @@
 
 #include "ui_loginoverviewcomponent.h"
 #include "loginoverviewcomponent.h"
-#include "serverlistselector.h"
-#include "dbquickmappingwizard.h"
+#include "blackgui/components/serverlistselector.h"
+#include "blackgui/components/dbquickmappingwizard.h"
 #include "blackgui/editors/serverform.h"
 #include "blackgui/editors/pilotform.h"
 #include "blackgui/guiapplication.h"

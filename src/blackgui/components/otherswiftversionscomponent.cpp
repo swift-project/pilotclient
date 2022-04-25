@@ -10,7 +10,7 @@
 #include "ui_otherswiftversionscomponent.h"
 #include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
-#include "guiapplication.h"
+#include "blackgui/guiapplication.h"
 #include <QUrl>
 #include <QDesktopServices>
 

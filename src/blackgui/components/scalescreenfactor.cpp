@@ -8,7 +8,7 @@
 
 #include "scalescreenfactor.h"
 #include "ui_scalescreenfactor.h"
-#include "guiutility.h"
+#include "blackgui/guiutility.h"
 
 #include <QDesktopWidget>
 #include <QScreen>

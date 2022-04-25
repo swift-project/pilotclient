@@ -7,13 +7,6 @@
  */
 
 #include "blackmisc/aviation/flightplanlist.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/iterator.h"
-#include "blackmisc/predicates.h"
-#include "blackmisc/range.h"
-
-#include <QString>
-#include <QtGlobal>
 
 BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CFlightPlan, CFlightPlanList)
 

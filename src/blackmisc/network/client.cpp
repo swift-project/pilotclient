@@ -16,7 +16,6 @@
 #include <QString>
 #include <QStringBuilder>
 #include <QStringList>
-#include <tuple>
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network, CClient)
 

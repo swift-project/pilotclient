@@ -11,7 +11,7 @@
 #ifndef BLACKGUI_EDITORS_NETWORKSETUPFORM_H
 #define BLACKGUI_EDITORS_NETWORKSETUPFORM_H
 
-#include "form.h"
+#include "blackgui/editors/form.h"
 #include <QScopedPointer>
 
 namespace Ui { class CNetworkSetupForm; }

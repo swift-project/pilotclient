@@ -12,7 +12,7 @@
 #define BLACKGUI_COMPONENTS_DOWNLOADDIALOG_H
 
 #include "blackgui/blackguiexport.h"
-#include "downloadcomponent.h"
+#include "blackgui/components/downloadcomponent.h"
 
 #include <QDialog>
 #include <QScopedPointer>

@@ -22,7 +22,6 @@
 #include <QIODevice>
 #include <QJsonDocument>
 #include <QJsonValue>
-#include <QJsonValuePtr>
 #include <QMutexLocker>
 #include <QStandardPaths>
 #include <QTimer>

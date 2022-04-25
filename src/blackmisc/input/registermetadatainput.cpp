@@ -8,7 +8,6 @@
 
 #include "blackmisc/input/registermetadatainput.h"
 #include "blackmisc/input/input.h"
-#include "blackmisc/variant.h"
 
 #include <QDBusMetaType>
 

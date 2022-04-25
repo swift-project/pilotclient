@@ -11,7 +11,7 @@
 #ifndef BLACKGUI_EDITORS_MATCHINGFORM_H
 #define BLACKGUI_EDITORS_MATCHINGFORM_H
 
-#include "form.h"
+#include "blackgui/editors/form.h"
 #include "blackmisc/simulation/aircraftmatchersetup.h"
 #include "blackmisc/directories.h"
 

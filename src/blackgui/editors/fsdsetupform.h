@@ -11,7 +11,7 @@
 #ifndef BLACKGUI_EDITORS_FSDSETUPCOMPONENT_H
 #define BLACKGUI_EDITORS_FSDSETUPCOMPONENT_H
 
-#include "form.h"
+#include "blackgui/editors/form.h"
 #include <QFrame>
 #include <QScopedPointer>
 #include "blackmisc/network/fsdsetup.h"

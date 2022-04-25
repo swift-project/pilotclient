@@ -8,7 +8,6 @@
 
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/speed.h"

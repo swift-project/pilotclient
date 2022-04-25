@@ -11,24 +11,22 @@
 #ifndef BLACKMISC_GEO_COORDINATEGEODETIC_H
 #define BLACKMISC_GEO_COORDINATEGEODETIC_H
 
-#include "blackmisc/aviation/altitude.h"
-#include "blackmisc/geo/latitude.h"
-#include "blackmisc/geo/longitude.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/math/mathutils.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/units.h"
-#include "blackmisc/math/mathutils.h"
-#include "blackmisc/metaclass.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/geo/latitude.h"
+
+#include "blackmisc/geo/longitude.h"
 #include "blackmisc/propertyindexref.h"
-#include "blackmisc/mixin/mixinstring.h"
 #include "blackmisc/valueobject.h"
-#include "blackmisc/mixin/mixinmetatype.h"
-#include "blackmisc/stringutils.h"
 #include "blackmisc/blackmiscexport.h"
 
-#include <QMetaType>
-#include <QString>
+
 #include <QVector3D>
+#include <QString>
 #include <array>
 
 BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Geo, CCoordinateGeodetic)

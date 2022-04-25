@@ -7,13 +7,10 @@
  */
 
 #include "blackmisc/network/textmessagelist.h"
-#include "blackmisc/iterator.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/range.h"
 
-#include <QtGlobal>
 #include <algorithm>
-#include <tuple>
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;

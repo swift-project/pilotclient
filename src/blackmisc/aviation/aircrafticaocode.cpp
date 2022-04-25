@@ -16,10 +16,8 @@
 #include "blackmisc/pq/speed.h"
 
 #include <QChar>
-#include <QJsonValue>
 #include <QMultiMap>
 #include <QRegularExpression>
-#include <QRegularExpressionMatch>
 #include <QStringBuilder>
 #include <Qt>
 #include <QtGlobal>

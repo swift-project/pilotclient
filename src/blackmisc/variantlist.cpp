@@ -8,7 +8,6 @@
 
 #include "blackmisc/variantlist.h"
 #include <algorithm>
-#include <iterator>
 
 BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc, CVariant, CVariantList)
 

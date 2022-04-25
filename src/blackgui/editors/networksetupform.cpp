@@ -8,7 +8,7 @@
 
 #include "networksetupform.h"
 #include "ui_networksetupform.h"
-#include "guiutility.h"
+#include "blackgui/guiutility.h"
 
 using namespace BlackMisc;
 

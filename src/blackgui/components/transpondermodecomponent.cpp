@@ -8,7 +8,7 @@
 
 #include "transpondermodecomponent.h"
 #include "ui_transpondermodecomponent.h"
-#include "guiapplication.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/context/contextownaircraft.h"
 #include "blackmisc/aviation/transponder.h"
 

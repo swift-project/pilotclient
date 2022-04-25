@@ -7,7 +7,7 @@
  */
 
 #include "simulatedaircraftview.h"
-#include "flightplandialog.h"
+#include "blackgui/views/flightplandialog.h"
 #include "blackgui/models/simulatedaircraftlistmodel.h"
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/guiapplication.h"

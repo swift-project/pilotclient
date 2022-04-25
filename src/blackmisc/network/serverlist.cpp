@@ -7,7 +7,6 @@
  */
 
 #include "blackmisc/network/serverlist.h"
-#include <tuple>
 
 BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Network, CServer, CServerList)
 

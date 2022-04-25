@@ -7,11 +7,7 @@
  */
 
 #include "blackmisc/geo/coordinategeodeticlist.h"
-#include "math/mathutils.h"
-
-#include <QJsonValue>
-#include <QString>
-#include <QtGlobal>
+#include "blackmisc/math/mathutils.h"
 
 using namespace BlackMisc::Math;
 using namespace BlackMisc::PhysicalQuantities;

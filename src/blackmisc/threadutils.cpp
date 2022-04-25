@@ -12,8 +12,6 @@
 #include <QObject>
 #include <QThread>
 #include <QtGlobal>
-#include <QPointer>
-#include <QTimer>
 #include <thread>
 #include <sstream>
 

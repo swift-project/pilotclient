@@ -7,7 +7,6 @@
  */
 
 #include "blackmisc/settingscache.h"
-#include "blackmisc/directoryutils.h"
 #include "blackmisc/logmessage.h"
 
 #include <QStandardPaths>

@@ -11,7 +11,7 @@
 #ifndef BLACKGUI_EDITORS_OWNMODELSETFORM_H
 #define BLACKGUI_EDITORS_OWNMODELSETFORM_H
 
-#include "form.h"
+#include "blackgui/editors/form.h"
 #include "blackmisc/simulation/settings/modelsettings.h"
 #include <QObject>
 #include <QScopedPointer>

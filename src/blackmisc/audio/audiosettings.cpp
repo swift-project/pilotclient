@@ -9,7 +9,6 @@
 #include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/swiftdirectories.h"
 #include "blackmisc/fileutils.h"
-#include <QChar>
 #include <QtGlobal>
 #include <QStringBuilder>
 #include <QDir>

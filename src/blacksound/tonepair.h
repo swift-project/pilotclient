@@ -11,7 +11,7 @@
 #ifndef BLACKSOUND_TONEPAIR_H
 #define BLACKSOUND_TONEPAIR_H
 
-#include "blacksoundexport.h"
+#include "blacksound/blacksoundexport.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/time.h"
 

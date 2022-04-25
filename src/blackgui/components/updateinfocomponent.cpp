@@ -6,10 +6,10 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "updateinfocomponent.h"
+#include "blackgui/components/updateinfocomponent.h"
 #include "ui_updateinfocomponent.h"
-#include "installxswiftbusdialog.h"
-#include "downloaddialog.h"
+#include "blackgui/components/installxswiftbusdialog.h"
+#include "blackgui/components/downloaddialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/db/distributionlist.h"

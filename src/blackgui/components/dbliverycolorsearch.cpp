@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "dbliverycolorsearch.h"
+#include "blackgui/components/dbliverycolorsearch.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
 #include "blackmisc/aviation/liverylist.h"

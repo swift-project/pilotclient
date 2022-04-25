@@ -8,8 +8,6 @@
 
 #include "blackmisc/iconlist.h"
 #include "blackmisc/containerbase.h"
-#include "blackmisc/dbus.h"
-#include "blackmisc/range.h"
 #include <QDBusMetaType>
 
 BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc, CIcon, CIconList)

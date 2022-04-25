@@ -8,7 +8,7 @@
 
 #include "airportsmallcompleter.h"
 #include "ui_airportsmallcompleter.h"
-#include "airportdialog.h"
+#include "blackgui/components/airportdialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/uppercasevalidator.h"

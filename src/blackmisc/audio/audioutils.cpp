@@ -10,7 +10,6 @@
 #include "blackmisc/audio/audioutils.h"
 
 #include <QProcess>
-#include <QStringList>
 #include <QAudioDeviceInfo>
 
 using namespace BlackConfig;

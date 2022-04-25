@@ -9,8 +9,6 @@
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 
-#include <tuple>
-
 BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAircraftParts, CAircraftPartsList)
 
 namespace BlackMisc::Aviation

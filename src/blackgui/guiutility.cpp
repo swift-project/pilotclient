@@ -11,7 +11,6 @@
 #include "blackgui/overlaymessagesframe.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/verify.h"
-#include "guiutility.h"
 
 #include <QApplication>
 #include <QCheckBox>

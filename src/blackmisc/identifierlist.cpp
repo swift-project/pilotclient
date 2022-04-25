@@ -9,8 +9,7 @@
 #include "blackmisc/identifierlist.h"
 #include "blackmisc/mixin/mixincompare.h"
 
-#include <QString>
-#include <tuple>
+#include <QStringList>
 
 BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc, CIdentifier, CIdentifierList)
 

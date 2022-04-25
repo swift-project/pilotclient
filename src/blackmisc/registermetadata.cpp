@@ -21,7 +21,6 @@
 #include "blackmisc/applicationinfolist.h"
 #include "blackmisc/countrylist.h"
 #include "blackmisc/crashsettings.h"
-#include "blackmisc/dbus.h"
 #include "blackmisc/directories.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/identifierlist.h"
@@ -38,7 +37,6 @@
 #include "blackmisc/sequence.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/valuecache.h"
-#include "blackmisc/valueobject.h"
 #include "blackmisc/variantlist.h"
 #include "blackmisc/variantmap.h"
 

@@ -12,7 +12,6 @@
 #include "blackcore/context/contextnetworkimpl.h"
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/context/contextownaircraftimpl.h"
-#include "blackcore/context/contextsimulatorimpl.h"
 #include "blackcore/db/databaseutils.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/application.h"

@@ -13,7 +13,7 @@
 
 #include "blacksound/threadedtonepairplayer.h"
 #include "blacksound/tonepair.h"
-#include "blacksoundexport.h"
+#include "blacksound/blacksoundexport.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/aviation/selcal.h"
 #include "blackmisc/worker.h"

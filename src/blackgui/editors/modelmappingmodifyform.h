@@ -11,7 +11,7 @@
 #ifndef BLACKGUI_EDITORS_MODELMAPPINGMODIFYFORM_H
 #define BLACKGUI_EDITORS_MODELMAPPINGMODIFYFORM_H
 
-#include "form.h"
+#include "blackgui/editors/form.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include <QFrame>

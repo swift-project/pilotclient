@@ -11,7 +11,7 @@
 #ifndef BLACKSOUND_THREADEDTONEPAIRPLAYER_H
 #define BLACKSOUND_THREADEDTONEPAIRPLAYER_H
 
-#include "blacksoundexport.h"
+#include "blacksound/blacksoundexport.h"
 #include "blacksound/tonepair.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/worker.h"

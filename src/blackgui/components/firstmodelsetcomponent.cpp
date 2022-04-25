@@ -6,11 +6,11 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "firstmodelsetcomponent.h"
-#include "dbownmodelsdialog.h"
-#include "dbownmodelscomponent.h"
-#include "dbownmodelsetdialog.h"
-#include "dbownmodelsetcomponent.h"
+#include "blackgui/components/firstmodelsetcomponent.h"
+#include "blackgui/components/dbownmodelsdialog.h"
+#include "blackgui/components/dbownmodelscomponent.h"
+#include "blackgui/components/dbownmodelsetdialog.h"
+#include "blackgui/components/dbownmodelsetcomponent.h"
 #include "ui_firstmodelsetcomponent.h"
 
 #include "blackgui/views/distributorview.h"

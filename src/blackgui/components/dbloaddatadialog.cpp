@@ -6,7 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "dbloaddatadialog.h"
+#include "blackgui/components/dbloaddatadialog.h"
 #include "ui_dbloaddatadialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"

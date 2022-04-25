@@ -7,7 +7,7 @@
  */
 
 #include "aircraftmodelsetvalidationdialog.h"
-#include "guiapplication.h"
+#include "blackgui/guiapplication.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "ui_aircraftmodelsetvalidationdialog.h"
 

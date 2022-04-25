@@ -8,8 +8,8 @@
 
 #include "dbquickmappingwizard.h"
 #include "ui_dbquickmappingwizard.h"
-#include "dbaircrafticaoselectorcomponent.h"
-#include "dbairlinenameselectorcomponent.h"
+#include "blackgui/components/dbaircrafticaoselectorcomponent.h"
+#include "blackgui/components/dbairlinenameselectorcomponent.h"
 #include "blackgui/views/aircrafticaoview.h"
 #include "blackgui/views/liveryview.h"
 #include "blackgui/views/distributorview.h"

@@ -7,10 +7,10 @@
  */
 
 #include "flightplancomponent.h"
-#include "altitudedialog.h"
-#include "stringlistdialog.h"
-#include "simbriefdownloaddialog.h"
-#include "selcalcodeselector.h"
+#include "blackgui/components/altitudedialog.h"
+#include "blackgui/components/stringlistdialog.h"
+#include "blackgui/components/simbriefdownloaddialog.h"
+#include "blackgui/components/selcalcodeselector.h"
 #include "blackgui/uppercasevalidator.h"
 #include "blackgui/eventfilter.h"
 #include "blackgui/guiapplication.h"

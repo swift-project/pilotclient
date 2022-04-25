@@ -10,7 +10,7 @@
 
 #include <QMessageBox>
 #include "copyxswiftbusdialog.h"
-#include "guiapplication.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/swiftdirectories.h"

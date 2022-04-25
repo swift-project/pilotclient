@@ -8,17 +8,13 @@
 
 #include "blackmisc/filelogger.h"
 #include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
 #include "blackconfig/buildconfig.h"
 
 #include <QCoreApplication>
 #include <QDateTime>
-#include <QVersionNumber>
 #include <QDir>
 #include <QFileInfo>
-#include <QFlags>
 #include <QIODevice>
-#include <QLatin1String>
 #include <QString>
 #include <QStringBuilder>
 #include <QtGlobal>

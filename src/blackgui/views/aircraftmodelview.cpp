@@ -7,9 +7,9 @@
  */
 
 #include "aircraftmodelview.h"
-#include "viewbase.h"
-#include "aircraftmodelstatisticsdialog.h"
-#include "aircraftmodelvalidationdialog.h"
+#include "blackgui/views/viewbase.h"
+#include "blackgui/views/aircraftmodelstatisticsdialog.h"
+#include "blackgui/views/aircraftmodelvalidationdialog.h"
 #include "blackgui/filters/aircraftmodelfilterdialog.h"
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/guiapplication.h"

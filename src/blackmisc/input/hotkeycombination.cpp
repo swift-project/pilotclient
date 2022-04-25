@@ -8,12 +8,10 @@
 
 #include "blackmisc/input/hotkeycombination.h"
 #include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/iterator.h"
 
 #include <QStringList>
 #include <QtGlobal>
 #include <algorithm>
-#include <tuple>
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Input, CHotkeyCombination)
 

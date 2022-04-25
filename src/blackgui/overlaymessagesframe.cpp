@@ -8,7 +8,7 @@
 
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/overlaymessages.h"
-#include "dockwidgetinfoarea.h"
+#include "blackgui/dockwidgetinfoarea.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/guiutility.h"
 #include "blackmisc/network/textmessage.h"

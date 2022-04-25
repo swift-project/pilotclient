@@ -21,7 +21,7 @@
 #include <QJsonObject>
 #include <QMap>
 #include <QList>
-#include <QStringList>
+#include <QString>
 #include <QMetaType>
 
 BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftCategory)

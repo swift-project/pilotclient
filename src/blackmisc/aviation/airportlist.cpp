@@ -8,11 +8,9 @@
 
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/range.h"
 #include "blackmisc/setbuilder.h"
 
 #include <QString>
-#include <tuple>
 
 using namespace BlackMisc::PhysicalQuantities;
 

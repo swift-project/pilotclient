@@ -11,7 +11,6 @@
 
 #include <QRegularExpression>
 #include <Qt>
-#include <QtDebug>
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CTransponder)
 

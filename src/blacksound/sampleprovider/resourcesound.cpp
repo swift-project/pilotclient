@@ -9,7 +9,7 @@
 //! \file
 
 #include "resourcesound.h"
-#include "audioutilities.h"
+#include "blacksound/audioutilities.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/stringutils.h"
 #include <QCoreApplication>

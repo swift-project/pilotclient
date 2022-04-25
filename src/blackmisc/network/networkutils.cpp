@@ -14,9 +14,7 @@
 #include <QAbstractSocket>
 #include <QDateTime>
 #include <QMetaEnum>
-#include <QDebug>
 #include <QHostAddress>
-#include <QJsonDocument>
 #include <QList>
 #include <QProcess>
 #include <QNetworkAddressEntry>
@@ -34,10 +32,8 @@
 #include <QUrl>
 #include <QUrlQuery>
 #include <QStringBuilder>
-#include <QEventLoop>
 #include <QVariant>
 #include <QtDebug>
-#include <QTimer>
 #include <QRegularExpression>
 
 using namespace BlackConfig;

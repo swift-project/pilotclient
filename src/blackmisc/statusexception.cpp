@@ -9,7 +9,6 @@
 #include "blackmisc/statusexception.h"
 
 #include <QReadLocker>
-#include <QString>
 #include <QWriteLocker>
 
 namespace BlackMisc

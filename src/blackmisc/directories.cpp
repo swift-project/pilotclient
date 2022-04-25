@@ -8,7 +8,6 @@
 
 #include "blackmisc/directories.h"
 #include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
 #include <QFileInfo>
 #include <QDir>
 

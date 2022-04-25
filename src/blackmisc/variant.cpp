@@ -10,14 +10,11 @@
 
 #include "blackmisc/variant.h"
 #include "blackmisc/imageutils.h"
-#include "blackmisc/dictionary.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
 
-#include <QByteArray>
-#include <QChar>
 #include <QDBusArgument>
 #include <QDBusVariant>
 #include <QDate>
@@ -25,7 +22,7 @@
 #include <QHash>
 #include <QJsonArray>
 #include <QJsonValue>
-#include <QStringList>
+#include <QString>
 #include <QTime>
 #include <Qt>
 #include <QtDebug>

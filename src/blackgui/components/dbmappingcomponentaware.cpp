@@ -8,7 +8,6 @@
 
 #include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/components/dbmappingcomponentaware.h"
-#include "dbmappingcomponentaware.h"
 
 #include <QObject>
 

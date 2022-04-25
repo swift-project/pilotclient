@@ -12,7 +12,6 @@
 #include "blackmisc/stringutils.h"
 
 #include <QtGlobal>
-#include <tuple>
 
 using namespace BlackMisc::Math;
 

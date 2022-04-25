@@ -11,7 +11,7 @@
 #ifndef BLACKGUI_COMPONENTS_TEXTMESSAGECOMPONENT_H
 #define BLACKGUI_COMPONENTS_TEXTMESSAGECOMPONENT_H
 
-#include "textmessagecomponenttab.h"
+#include "blackgui/components/textmessagecomponenttab.h"
 #include "blackgui/settings/textmessagesettings.h"
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"

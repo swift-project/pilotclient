@@ -9,14 +9,12 @@
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/networkutils.h"
-#include "blackmisc/processctrl.h"
 #include "blackmisc/statusmessage.h"
 
 #include <QDBusServer>
 #include <QMetaClassInfo>
 #include <QMetaObject>
 #include <QStringList>
-#include <QThread>
 #include <QtGlobal>
 
 using namespace BlackMisc::Network;

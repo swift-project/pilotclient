@@ -12,7 +12,6 @@
 #include "blackmisc/fileutils.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/network/ping.h"
-#include "blackmisc/range.h"
 #include "blackmisc/setbuilder.h"
 #include "blackconfig/buildconfig.h"
 #include <QCoreApplication>
@@ -21,7 +20,6 @@
 #include <QSet>
 #include <QDateTime>
 #include <QRegularExpression>
-#include <QStandardPaths>
 
 using namespace BlackConfig;
 using namespace BlackMisc::Network;

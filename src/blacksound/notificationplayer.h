@@ -11,7 +11,7 @@
 #ifndef BLACKSOUND_NOTIFICATIONPLAYER_H
 #define BLACKSOUND_NOTIFICATIONPLAYER_H
 
-#include "blacksoundexport.h"
+#include "blacksound/blacksoundexport.h"
 #include "blackmisc/audio/notificationsounds.h"
 
 #include <QObject>

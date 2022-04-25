@@ -11,7 +11,7 @@
 #ifndef BLACKGUI_COMPONENTS_INFOBARWEBREADERSSTATUSSMALLCOMPONENT_H
 #define BLACKGUI_COMPONENTS_INFOBARWEBREADERSSTATUSSMALLCOMPONENT_H
 
-#include "infobarwebreadersstatuscomponent.h"
+#include "blackgui/components/infobarwebreadersstatuscomponent.h"
 #include <QScopedPointer>
 
 namespace Ui { class CInfoBarWebReadersStatusSmallComponent; }

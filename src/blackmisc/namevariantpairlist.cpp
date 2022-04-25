@@ -9,8 +9,6 @@
 #include "blackmisc/namevariantpairlist.h"
 #include "blackmisc/range.h"
 
-#include <tuple>
-
 BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc, CNameVariantPair, CNameVariantPairList)
 
 namespace BlackMisc

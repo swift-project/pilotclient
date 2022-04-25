@@ -8,7 +8,6 @@
 
 #include "blackgui/components/dbdebugdatabasesetup.h"
 #include "blackgui/guiapplication.h"
-#include "dbdebugdatabasesetup.h"
 #include "ui_dbdebugdatabasesetup.h"
 
 #include <QCheckBox>

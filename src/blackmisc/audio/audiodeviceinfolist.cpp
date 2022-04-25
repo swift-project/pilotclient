@@ -7,15 +7,11 @@
  */
 
 #include "blackmisc/audio/audiodeviceinfolist.h"
-#include "blackmisc/iterator.h"
-#include "blackmisc/range.h"
 #include "blackmisc/stringutils.h"
 
 #include <QString>
 #include <QAudioDeviceInfo>
-#include <QHostInfo>
 #include <algorithm>
-#include <tuple>
 
 BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Audio, CAudioDeviceInfo, CAudioDeviceInfoList)
 

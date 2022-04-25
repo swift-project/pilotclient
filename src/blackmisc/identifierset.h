@@ -14,6 +14,8 @@
 #include "blackmisc/identifier.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/blackmiscexport.h"
+
+#include <QStringList>
 #include <QMetaType>
 
 BLACK_DECLARE_COLLECTION_MIXINS(BlackMisc, CIdentifier, CIdentifierSet)

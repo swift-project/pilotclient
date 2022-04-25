@@ -8,11 +8,9 @@
 
 #include "blackmisc/network/authenticateduser.h"
 #include "blackmisc/icons.h"
-#include "blackmisc/logcategories.h"
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/statusmessage.h"
 
-#include <QJsonArray>
 #include <QJsonValue>
 #include <QStringBuilder>
 #include <QtGlobal>
