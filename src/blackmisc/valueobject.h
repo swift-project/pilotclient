@@ -106,11 +106,9 @@ namespace BlackMisc
      * Mix of the most commonly used mixin classes.
      * \see BlackMisc::Mixin
      * \tparam Derived  The class which is inheriting from this one (CRTP).
-     * \tparam Base     The class which this one shall inherit from (default is CEmpty,
-     *                  but this can be changed to create a deeper inheritance hierarchy).
      */
-    template <class Derived, class Base = CEmpty> class CValueObject :
-        public Base,
+    template <class Derived> class CValueObject :
+        public CEmpty,
         public Mixin::MetaType<Derived>,
         public Mixin::HashByMetaClass<Derived>,
         public Mixin::DBusByMetaClass<Derived>,
@@ -125,7 +123,7 @@ namespace BlackMisc
     {
     public:
         //! Base class
-        using base_type = Base;
+        using base_type = CEmpty;
 
         //! \copydoc BlackMisc::Mixin::String::toQString
         using Mixin::String<Derived>::toQString;
@@ -172,7 +170,7 @@ namespace BlackMisc
 
     protected:
         //! Inheriting constructors.
-        using Base::Base;
+        using CEmpty::CEmpty;
 
         //! Default constructor.
         CValueObject() = default;
