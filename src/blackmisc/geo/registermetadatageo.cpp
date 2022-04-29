@@ -8,7 +8,6 @@
 
 #include "blackmisc/geo/registermetadatageo.h"
 
-namespace BlackMisc
 // Geo headers
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
@@ -16,17 +15,15 @@ namespace BlackMisc
 #include "blackmisc/geo/coordinategeodeticlist.h"
 #include "blackmisc/geo/elevationplane.h"
 
+namespace BlackMisc::Geo
 {
-    namespace Geo
+    void registerMetadata()
     {
-        void registerMetadata()
-        {
-            CCoordinateGeodetic::registerMetadata();
-            CCoordinateGeodeticList::registerMetadata();
-            CLatitude::registerMetadata();
-            CLongitude::registerMetadata();
-            CElevationPlane::registerMetadata();
-        }
+        CCoordinateGeodetic::registerMetadata();
+        CCoordinateGeodeticList::registerMetadata();
+        CLatitude::registerMetadata();
+        CLongitude::registerMetadata();
+        CElevationPlane::registerMetadata();
     }
 
 } // ns

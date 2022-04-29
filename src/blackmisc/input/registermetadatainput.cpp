@@ -16,22 +16,19 @@
 
 #include <QDBusMetaType>
 
-namespace BlackMisc
+namespace BlackMisc::Input
 {
-    namespace Input
+    void registerMetadata()
     {
-        void registerMetadata()
-        {
-            CActionHotkey::registerMetadata();
-            CActionHotkeyList::registerMetadata();
-            CHotkeyCombination::registerMetadata();
-            CJoystickButton::registerMetadata();
-            CJoystickButtonList::registerMetadata();
-            CKeyboardKey::registerMetadata();
-            CKeyboardKeyList::registerMetadata();
-            qDBusRegisterMetaType<KeyCode>();
-            qRegisterMetaTypeStreamOperators<KeyCode>();
-        }
+        CActionHotkey::registerMetadata();
+        CActionHotkeyList::registerMetadata();
+        CHotkeyCombination::registerMetadata();
+        CJoystickButton::registerMetadata();
+        CJoystickButtonList::registerMetadata();
+        CKeyboardKey::registerMetadata();
+        CKeyboardKeyList::registerMetadata();
+        qDBusRegisterMetaType<KeyCode>();
+        qRegisterMetaTypeStreamOperators<KeyCode>();
     }
 
 } // ns

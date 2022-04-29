@@ -9,7 +9,6 @@
 #include "blackmisc/db/registermetadatadb.h"
 #include "blackmisc/variant.h"
 
-namespace BlackMisc
 // DB headers
 #include "blackmisc/db/dbinfolist.h"
 #include "blackmisc/db/dbinfo.h"
@@ -20,20 +19,18 @@ namespace BlackMisc
 #include "blackmisc/db/artifactlist.h"
 #include "blackmisc/db/updateinfo.h"
 
+namespace BlackMisc::Db
 {
-    namespace Db
+    void registerMetadata()
     {
-        void registerMetadata()
-        {
-            CDbFlags::registerMetadata();
-            CDbInfo::registerMetadata();
-            CDbInfoList::registerMetadata();
-            CArtifact::registerMetadata();
-            CArtifactList::registerMetadata();
-            CDistribution::registerMetadata();
-            CDistributionList::registerMetadata();
-            CUpdateInfo::registerMetadata();
-        }
+        CDbFlags::registerMetadata();
+        CDbInfo::registerMetadata();
+        CDbInfoList::registerMetadata();
+        CArtifact::registerMetadata();
+        CArtifactList::registerMetadata();
+        CDistribution::registerMetadata();
+        CDistributionList::registerMetadata();
+        CUpdateInfo::registerMetadata();
     }
 
 } // ns

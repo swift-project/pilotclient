@@ -23,75 +23,71 @@
 class QStringList;
 
 BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CSelcal)
-
-namespace BlackMisc
+namespace BlackMisc::PhysicalQuantities { class CFrequency; }
+namespace BlackMisc::Aviation
 {
-    namespace PhysicalQuantities { class CFrequency; }
-    namespace Aviation
+    /*!
+     * Value object for SELCAL.
+     * \see http://en.wikipedia.org/wiki/SELCAL
+     * \see http://www.asri.aero/our-services/selcal/ User Guide
+     */
+    class BLACKMISC_EXPORT CSelcal : public CValueObject<CSelcal>
     {
-        /*!
-         * Value object for SELCAL.
-         * \see http://en.wikipedia.org/wiki/SELCAL
-         * \see http://www.asri.aero/our-services/selcal/ User Guide
-         */
-        class BLACKMISC_EXPORT CSelcal : public CValueObject<CSelcal>
-        {
-        public:
-            //! Default constructor.
-            CSelcal() = default;
+    public:
+        //! Default constructor.
+        CSelcal() = default;
 
-            //! Constructor.
-            CSelcal(const QString &code) : m_code(unifyCode(code)) {}
+        //! Constructor.
+        CSelcal(const QString &code) : m_code(unifyCode(code)) {}
 
-            //! Constructor needed to disambiguate implicit conversion from string literal.
-            CSelcal(const char *code) : m_code(unifyCode(code)) {}
+        //! Constructor needed to disambiguate implicit conversion from string literal.
+        CSelcal(const char *code) : m_code(unifyCode(code)) {}
 
-            //! Is valid?
-            bool isValid() const { return isValidCode(m_code); }
+        //! Is valid?
+        bool isValid() const { return isValidCode(m_code); }
 
-            //! Get SELCAL code
-            const QString &getCode() const { return m_code; }
+        //! Get SELCAL code
+        const QString &getCode() const { return m_code; }
 
-            //! List of 4 frequencies, if list is empty SELCAL code is not valid
-            //! \return  either 4 frequencies, or empty list
-            QList<PhysicalQuantities::CFrequency> getFrequencies() const;
+        //! List of 4 frequencies, if list is empty SELCAL code is not valid
+        //! \return  either 4 frequencies, or empty list
+        QList<PhysicalQuantities::CFrequency> getFrequencies() const;
 
-            //! Equals given string
-            bool equalsString(const QString &code) const;
+        //! Equals given string
+        bool equalsString(const QString &code) const;
 
-            //! \copydoc BlackMisc::Mixin::String::toQString
-            QString convertToQString(bool i18n = false) const;
+        //! \copydoc BlackMisc::Mixin::String::toQString
+        QString convertToQString(bool i18n = false) const;
 
-            //! Valid SELCAL characters
-            static const QString &validCharacters();
+        //! Valid SELCAL characters
+        static const QString &validCharacters();
 
-            //! Is given character a valid SELCAL characer?
-            static bool isValidCharacter(QChar c);
+        //! Is given character a valid SELCAL characer?
+        static bool isValidCharacter(QChar c);
 
-            //! Valid SELCAL code?
-            static bool isValidCode(const QString &code);
+        //! Valid SELCAL code?
+        static bool isValidCode(const QString &code);
 
-            //! All valid code pairs: AB, AC, AD ...
-            static const QStringList &codePairs();
+        //! All valid code pairs: AB, AC, AD ...
+        static const QStringList &codePairs();
 
-            //! Unify SELCAL code by removing illegal characters
-            static QString unifyCode(const QString &selcalCandidate);
+        //! Unify SELCAL code by removing illegal characters
+        static QString unifyCode(const QString &selcalCandidate);
 
-        private:
-            //! Audio frequency for character
-            static const PhysicalQuantities::CFrequency &audioFrequencyEquivalent(QChar c);
+    private:
+        //! Audio frequency for character
+        static const PhysicalQuantities::CFrequency &audioFrequencyEquivalent(QChar c);
 
-            //! All audio frequencies
-            static const QList<PhysicalQuantities::CFrequency> &audioFrequencyEquivalents();
+        //! All audio frequencies
+        static const QList<PhysicalQuantities::CFrequency> &audioFrequencyEquivalents();
 
-            QString m_code;
+        QString m_code;
 
-            BLACK_METACLASS(
-                CSelcal,
-                BLACK_METAMEMBER(code)
-            );
-        };
-    } // namespace
+        BLACK_METACLASS(
+            CSelcal,
+            BLACK_METAMEMBER(code)
+        );
+    };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CSelcal)

@@ -10,7 +10,6 @@
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
 
-namespace BlackMisc
 // Weather headers
 #include "blackmisc/weather/cloudlayer.h"
 #include "blackmisc/weather/cloudlayerlist.h"
@@ -30,29 +29,27 @@ namespace BlackMisc
 #include "blackmisc/weather/windlayer.h"
 #include "blackmisc/weather/windlayerlist.h"
 
+namespace BlackMisc::Weather
 {
-    namespace Weather
+    void registerMetadata()
     {
-        void registerMetadata()
-        {
-            CCloudLayer::registerMetadata();
-            CCloudLayerList::registerMetadata();
-            CGridPoint::registerMetadata();
-            CMetar::registerMetadata();
-            CMetarList::registerMetadata();
-            CPresentWeather::registerMetadata();
-            CPresentWeatherList::registerMetadata();
-            CTemperatureLayer::registerMetadata();
-            CTemperatureLayerList::registerMetadata();
-            CVisibilityLayer::registerMetadata();
-            CVisibilityLayerList::registerMetadata();
-            CWeatherDataPluginInfo::registerMetadata();
-            CWeatherDataPluginInfoList::registerMetadata();
-            CWeatherGrid::registerMetadata();
-            CWeatherScenario::registerMetadata();
-            CWindLayer::registerMetadata();
-            CWindLayerList::registerMetadata();
-        }
+        CCloudLayer::registerMetadata();
+        CCloudLayerList::registerMetadata();
+        CGridPoint::registerMetadata();
+        CMetar::registerMetadata();
+        CMetarList::registerMetadata();
+        CPresentWeather::registerMetadata();
+        CPresentWeatherList::registerMetadata();
+        CTemperatureLayer::registerMetadata();
+        CTemperatureLayerList::registerMetadata();
+        CVisibilityLayer::registerMetadata();
+        CVisibilityLayerList::registerMetadata();
+        CWeatherDataPluginInfo::registerMetadata();
+        CWeatherDataPluginInfoList::registerMetadata();
+        CWeatherGrid::registerMetadata();
+        CWeatherScenario::registerMetadata();
+        CWindLayer::registerMetadata();
+        CWindLayerList::registerMetadata();
     }
 
 } // ns
