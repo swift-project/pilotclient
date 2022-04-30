@@ -299,7 +299,7 @@ namespace BlackMisc
         void markAllAsSaved(const QStringList &keys);
 
         //! Mutex protecting operations which are critical on m_elements.
-        mutable QMutex m_mutex { QMutex::Recursive };
+        mutable QRecursiveMutex m_mutex;
 
     protected:
         //! Synchronously return a current value.

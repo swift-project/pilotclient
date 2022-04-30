@@ -184,7 +184,7 @@ namespace BlackMisc
 
         bool m_started = false;
         bool m_finished = false;
-        mutable QMutex m_finishedMutex { QMutex::Recursive };
+        mutable QRecursiveMutex m_finishedMutex;
         static QSet<CWorkerBase *> s_allWorkers;
     };
 

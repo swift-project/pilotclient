@@ -90,7 +90,7 @@ namespace BlackMisc
             CIdentifier m_identifier = CIdentifier::anonymous();
 
             QMap<QString, Channel> m_channels;
-            mutable QMutex m_channelsMutex { QMutex::Recursive };
+            mutable QRecursiveMutex m_channelsMutex;
         };
     }
 }

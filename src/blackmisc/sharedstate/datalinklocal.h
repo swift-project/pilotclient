@@ -54,7 +54,7 @@ namespace BlackMisc::SharedState
         Channel &getChannel(const QObject *object);
 
         QMap<QString, Channel> m_channels;
-        mutable QMutex m_channelsMutex { QMutex::Recursive };
+        mutable QRecursiveMutex m_channelsMutex;
     };
 }
 

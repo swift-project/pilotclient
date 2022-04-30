@@ -429,14 +429,14 @@ namespace BlackCore::Afv::Clients
 
         std::atomic_bool m_connectedWithContext { false };
 
-        mutable QMutex m_mutex                { QMutex::Recursive };
-        mutable QMutex m_mutexInputStream     { QMutex::Recursive };
-        mutable QMutex m_mutexOutputStream    { QMutex::Recursive };
-        mutable QMutex m_mutexTransceivers    { QMutex::Recursive };
-        mutable QMutex m_mutexCallsign        { QMutex::Recursive };
-        mutable QMutex m_mutexConnection      { QMutex::Recursive };
-        mutable QMutex m_mutexVolume          { QMutex::Recursive };
-        mutable QMutex m_mutexSampleProviders { QMutex::Recursive };
+        mutable QRecursiveMutex m_mutex;
+        mutable QRecursiveMutex m_mutexInputStream;
+        mutable QRecursiveMutex m_mutexOutputStream;
+        mutable QRecursiveMutex m_mutexTransceivers;
+        mutable QRecursiveMutex m_mutexCallsign;
+        mutable QRecursiveMutex m_mutexConnection;
+        mutable QRecursiveMutex m_mutexVolume;
+        mutable QRecursiveMutex m_mutexSampleProviders;
 
     };
 } // ns

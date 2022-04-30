@@ -169,7 +169,7 @@ namespace BlackMisc
         void sessionValue(const QString &key);
 
     private:
-        mutable QMutex m_mutex { QMutex::Recursive };
+        mutable QRecursiveMutex m_mutex;
         bool m_updateInProgress = false;
         bool m_found = false;
         bool m_pendingRead = false;
