@@ -355,6 +355,14 @@ namespace BlackCore::Fsd
         }
         else
         {
+            if (this->isVisualPositionSendingEnabledForServer())
+            {
+                // Slowfast must be sent before the ordinary update.
+                // Sending after causes a server performance issue.
+                // See https://discord.com/channels/775552633918062643/775736423319732256/960746661259390996
+                sendVisualPilotDataUpdate(true);
+            }
+
             PilotRating r = this->getPilotRating();
             PilotDataUpdate pilotDataUpdate(myAircraft.getTransponderMode(),
                                             getOwnCallsignAsString(),
@@ -370,11 +378,6 @@ namespace BlackCore::Fsd
                                             myAircraft.getHeading().normalizedTo360Degrees().value(CAngleUnit::deg()),
                                             myAircraft.getParts().isOnGround());
             sendQueudedMessage(pilotDataUpdate);
-        }
-
-        if (this->isVisualPositionSendingEnabledForServer())
-        {
-            sendVisualPilotDataUpdate(true);
         }
     }
 
