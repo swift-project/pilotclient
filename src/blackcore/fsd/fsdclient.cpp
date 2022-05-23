@@ -548,16 +548,15 @@ namespace BlackCore::Fsd
         QVector<int> frequencies;
         for (const auto &message : radioMessages)
         {
+            // Adjust to nearest frequency, in case of 5kHz difference
+            const CAtcStationList stations = m_atcStations.findIfFrequencyIsWithinSpacing(message.getFrequency(), CComSystem::ChannelSpacing25KHz);
+            const CFrequency freq = stations.isEmpty() ? message.getFrequency() : stations.findClosest(1, getOwnAircraftPosition()).front().getFrequency();
+
             // I could send the same message to n frequencies in one step
             // if this is really required, I need to group by message
             // currently I send individual messages
             frequencies.clear();
-            int freqkHz = message.getFrequency().valueInteger(CFrequencyUnit::kHz());
-            if (m_server.getServerType() == CServer::FSDServerVatsim)
-            {
-                // VATSIM always drops the last 5 kHz.
-                freqkHz = freqkHz / 10 * 10;
-            }
+            int freqkHz = freq.valueInteger(CFrequencyUnit::kHz());
             frequencies.push_back(freqkHz);
             sendRadioMessage(frequencies, message.getMessage());
             increaseStatisticsValue(QStringLiteral("sendTextMessages.FREQ"));
@@ -1016,6 +1015,8 @@ namespace BlackCore::Fsd
         const CCoordinateGeodetic position(atcDataUpdate.m_latitude, atcDataUpdate.m_longitude, 0);
 
         emit this->atcDataUpdateReceived(cs, freq, position, range);
+
+        m_atcStations.replaceOrAddObjectByCallsign({ cs, {}, freq, position, range });
     }
 
     void CFSDClient::handleAuthChallenge(const QStringList &tokens)
@@ -1048,6 +1049,8 @@ namespace BlackCore::Fsd
     {
         const DeleteAtc deleteAtc = DeleteAtc::fromTokens(tokens);
         emit deleteAtcReceived(deleteAtc.m_cid);
+
+        m_atcStations.removeByCallsign(deleteAtc.m_cid);
     }
 
     void CFSDClient::handleDeletePilot(const QStringList &tokens)
@@ -1728,6 +1731,7 @@ namespace BlackCore::Fsd
         m_pendingAtisQueries.clear();
         m_lastPositionUpdate.clear();
         m_lastOffsetTimes.clear();
+        m_atcStations.clear();
         m_queuedFsdMessages.clear();
         m_sentAircraftConfig = CAircraftParts::null();
         m_loginSince = -1;
