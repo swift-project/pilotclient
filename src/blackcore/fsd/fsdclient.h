@@ -19,6 +19,7 @@
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/simulationenvironmentprovider.h"
+#include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/aviation/informationmessage.h"
@@ -513,6 +514,8 @@ namespace BlackCore::Fsd
         QHash<BlackMisc::Aviation::CCallsign, QList<qint64>> m_lastOffsetTimes; //!< latest offset first
         QHash<BlackMisc::Aviation::CCallsign, qint64> m_interpolatedOffsetTime;
         static const int c_offsetTimeInterpolationInverseRate = 4;
+
+        BlackMisc::Aviation::CAtcStationList m_atcStations;
 
         BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TRawFsdMessageSetting> m_fsdMessageSetting { this, &CFSDClient::fsdMessageSettingsChanged };
         QFile m_rawFsdMessageLogFile;
