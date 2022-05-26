@@ -21,7 +21,7 @@
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/network/clientlist.h"
-#include "blackmisc/network/network.h"
+#include "blackmisc/network/loginmode.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/textmessagelist.h"

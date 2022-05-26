@@ -12,7 +12,9 @@
 #define BLACKMISC_PQ_CONSTANTS_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/pq/pq.h"
+#include "blackmisc/pq/temperature.h"
+#include "blackmisc/pq/pressure.h"
+#include "blackmisc/pq/frequency.h"
 
 namespace BlackMisc::PhysicalQuantities
 {

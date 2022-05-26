@@ -8,10 +8,28 @@
 
 #include "blackmisc/weather/registermetadataweather.h"
 #include "blackmisc/valueobject.h"
-#include "blackmisc/weather/weather.h"
 #include "blackmisc/variant.h"
 
 namespace BlackMisc
+// Weather headers
+#include "blackmisc/weather/cloudlayer.h"
+#include "blackmisc/weather/cloudlayerlist.h"
+#include "blackmisc/weather/gridpoint.h"
+#include "blackmisc/weather/metar.h"
+#include "blackmisc/weather/metarlist.h"
+#include "blackmisc/weather/presentweather.h"
+#include "blackmisc/weather/presentweatherlist.h"
+#include "blackmisc/weather/temperaturelayer.h"
+#include "blackmisc/weather/temperaturelayerlist.h"
+#include "blackmisc/weather/visibilitylayer.h"
+#include "blackmisc/weather/visibilitylayerlist.h"
+#include "blackmisc/weather/weatherdataplugininfo.h"
+#include "blackmisc/weather/weatherdataplugininfolist.h"
+#include "blackmisc/weather/weathergrid.h"
+#include "blackmisc/weather/weatherscenario.h"
+#include "blackmisc/weather/windlayer.h"
+#include "blackmisc/weather/windlayerlist.h"
+
 {
     namespace Weather
     {

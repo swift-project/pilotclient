@@ -7,10 +7,19 @@
  */
 
 #include "blackmisc/db/registermetadatadb.h"
-#include "blackmisc/db/db.h"
 #include "blackmisc/variant.h"
 
 namespace BlackMisc
+// DB headers
+#include "blackmisc/db/dbinfolist.h"
+#include "blackmisc/db/dbinfo.h"
+#include "blackmisc/db/dbflags.h"
+#include "blackmisc/db/distribution.h"
+#include "blackmisc/db/distributionlist.h"
+#include "blackmisc/db/artifact.h"
+#include "blackmisc/db/artifactlist.h"
+#include "blackmisc/db/updateinfo.h"
+
 {
     namespace Db
     {

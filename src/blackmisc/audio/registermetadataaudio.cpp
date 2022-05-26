@@ -7,7 +7,13 @@
  */
 
 #include "blackmisc/audio/registermetadataaudio.h"
-#include "blackmisc/audio/audio.h"
+
+// Audio headers
+#include "blackmisc/audio/audiodeviceinfo.h"
+#include "blackmisc/audio/audiodeviceinfolist.h"
+#include "blackmisc/audio/audiosettings.h"
+#include "blackmisc/audio/voicesetup.h"
+
 #include "blackmisc/audio/ptt.h"
 #include <QDBusMetaType>
 

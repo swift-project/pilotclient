@@ -7,7 +7,12 @@
  */
 
 #include "blackmisc/input/registermetadatainput.h"
-#include "blackmisc/input/input.h"
+
+// Input headers
+#include "blackmisc/input/actionhotkeylist.h"
+#include "blackmisc/input/hotkeycombination.h"
+#include "blackmisc/input/keyboardkeylist.h"
+#include "blackmisc/input/joystickbuttonlist.h"
 
 #include <QDBusMetaType>
 

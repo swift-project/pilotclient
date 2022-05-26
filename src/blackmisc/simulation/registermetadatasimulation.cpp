@@ -7,7 +7,32 @@
  */
 
 #include "blackmisc/simulation/registermetadatasimulation.h"
-#include "blackmisc/simulation/simulation.h"
+
+// Simulation headers
+#include "blackmisc/simulation/aircraftmatchersetup.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/airspaceaircraftsnapshot.h"
+#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/simulation/distributorlistpreferences.h"
+#include "blackmisc/simulation/interpolationrenderingsetup.h"
+#include "blackmisc/simulation/interpolationsetuplist.h"
+#include "blackmisc/simulation/matchingstatistics.h"
+#include "blackmisc/simulation/matchinglog.h"
+#include "blackmisc/simulation/reverselookup.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/simulation/simulatorinfolist.h"
+#include "blackmisc/simulation/simulatorinternals.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
+#include "blackmisc/simulation/simulatorplugininfolist.h"
+#include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
+#include "blackmisc/simulation/fscommon/vpilotmodelruleset.h"
+#include "blackmisc/simulation/fsx/simconnectutilities.h"
+#include "blackmisc/simulation/settings/modelsettings.h"
+#include "blackmisc/simulation/settings/simulatorsettings.h"
+#include "blackmisc/simulation/settings/swiftpluginsettings.h"
+#include "blackmisc/simulation/settings/xswiftbussettings.h"
+
 #include "blackmisc/variant.h"
 
 using namespace BlackMisc::Simulation;

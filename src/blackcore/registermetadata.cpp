@@ -18,7 +18,7 @@
 #include "blackcore/simulator.h"
 #include "blackcore/webreaderflags.h"
 #include "blackcore/aircraftmatcher.h"
-#include "blackmisc/network/network.h"
+#include "blackmisc/network/loginmode.h"
 #include "blackmisc/dbus.h"
 #include "blackmisc/valueobject.h"
 

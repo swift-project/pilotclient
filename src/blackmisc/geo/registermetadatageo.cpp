@@ -7,9 +7,15 @@
  */
 
 #include "blackmisc/geo/registermetadatageo.h"
-#include "blackmisc/geo/geo.h"
 
 namespace BlackMisc
+// Geo headers
+#include "blackmisc/geo/latitude.h"
+#include "blackmisc/geo/longitude.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/geo/coordinategeodeticlist.h"
+#include "blackmisc/geo/elevationplane.h"
+
 {
     namespace Geo
     {
