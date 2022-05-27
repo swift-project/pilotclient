@@ -9,6 +9,7 @@
 #include "blackmisc/network/user.h"
 #include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/comparefunctions.h"
+#include "blackmisc/obfuscation.h"
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
@@ -34,14 +35,14 @@ namespace BlackMisc::Network
     }
 
     CUser::CUser(const QString &id, const QString &realname, const CCallsign &callsign)
-        : m_id(decode(id)), m_realname(decode(realname)), m_callsign(callsign)
+        : m_id(CObfuscation::decode(id)), m_realname(CObfuscation::decode(realname)), m_callsign(callsign)
     {
         this->deriveHomeBaseFromCallsign();
         this->setRealName(m_realname); // extracts homebase if this is included in real name
     }
 
     CUser::CUser(const QString &id, const QString &realname, const QString &email, const QString &password, const CCallsign &callsign)
-        : m_id(decode(id)), m_realname(decode(realname)), m_email(decode(email)), m_password(decode(password)), m_callsign(callsign)
+        : m_id(CObfuscation::decode(id)), m_realname(CObfuscation::decode(realname)), m_email(CObfuscation::decode(email)), m_password(CObfuscation::decode(password)), m_callsign(callsign)
     {
         this->deriveHomeBaseFromCallsign();
         this->setRealName(m_realname); // extracts homebase
@@ -111,7 +112,7 @@ namespace BlackMisc::Network
 
     void CUser::setRealName(const QString &realname)
     {
-        QString rn(simplifyAccents(decode(realname).simplified()));
+        QString rn(simplifyAccents(CObfuscation::decode(realname).simplified()));
         if (rn.isEmpty())
         {
             m_realname.clear();
@@ -296,5 +297,17 @@ namespace BlackMisc::Network
         }
         Q_ASSERT_X(false, Q_FUNC_INFO, "compare failed");
         return 0;
+    }
+
+    void CUser::setPassword(const QString &pw) {
+        m_password = CObfuscation::decode(pw);
+    }
+
+    void CUser::setEmail(const QString &email) {
+        m_email = CObfuscation::decode(email);
+    }
+
+    void CUser::setId(const QString &id) {
+        m_id = CObfuscation::decode(id);
     }
 } // namespace

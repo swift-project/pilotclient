@@ -13,7 +13,6 @@
 
 #include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/aviation/callsign.h"
-#include "blackmisc/obfuscation.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/statusmessagelist.h"
@@ -31,8 +30,7 @@ namespace BlackMisc::Network
      * Value object encapsulating information of a user.
      */
     class BLACKMISC_EXPORT CUser :
-        public CValueObject<CUser>,
-        public CObfuscation
+        public CValueObject<CUser>
     {
     public:
         /*!
@@ -72,7 +70,7 @@ namespace BlackMisc::Network
         const QString &getPassword() const { return m_password; }
 
         //! Set password
-        void setPassword(const QString &pw) { m_password = decode(pw); }
+        void setPassword(const QString &pw);
 
         //! Valid user object?
         bool isValid() const { return !isNull(); }
@@ -117,7 +115,7 @@ namespace BlackMisc::Network
         const QString &getEmail() const { return m_email; }
 
         //! Set email.
-        void setEmail(const QString &email) { m_email = decode(email); }
+        void setEmail(const QString &email);
 
         //! Valid email?
         bool hasValidEmail() const { return !m_email.isEmpty(); }
@@ -135,7 +133,7 @@ namespace BlackMisc::Network
         bool hasNumericId() const;
 
         //! Set id
-        void setId(const QString &id) { m_id = decode(id); }
+        void setId(const QString &id);
 
         //! Homebase
         const Aviation::CAirportIcaoCode &getHomeBase() const { return m_homebase; }

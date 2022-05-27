@@ -20,7 +20,7 @@ namespace BlackMisc
     //! \remark this is no real security, but as the name says just obfuscation. The sole purpose of this class is to remove potentially strings from the source code
     class BLACKMISC_EXPORT CObfuscation
     {
-    protected:
+    public:
         //! Constructor
         CObfuscation() {}
 

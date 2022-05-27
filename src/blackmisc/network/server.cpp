@@ -9,6 +9,7 @@
 #include "blackmisc/network/server.h"
 #include "blackmisc/logcategories.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/obfuscation.h"
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/comparefunctions.h"
@@ -32,7 +33,7 @@ namespace BlackMisc::Network
 
     CServer::CServer(const QString &name, const QString &description, const QString &address, int port, const CUser &user,
                         const CFsdSetup &fsdSetup, const CVoiceSetup &voiceSetup, const CEcosystem &ecosytem, ServerType serverType, bool isAcceptingConnections)
-        : m_name(decode(name)), m_description(decode(description)), m_address(decode(address)), m_port(port), m_user(user),
+        : m_name(CObfuscation::decode(name)), m_description(CObfuscation::decode(description)), m_address(CObfuscation::decode(address)), m_port(port), m_user(user),
             m_ecosystem(ecosytem),
             m_serverType(serverType), m_isAcceptingConnections(isAcceptingConnections),
             m_fsdSetup(fsdSetup), m_voiceSetup(voiceSetup)
@@ -289,5 +290,17 @@ namespace BlackMisc::Network
         case Unspecified:
         default: return unspecified;
         }
+    }
+
+    void CServer::setAddress(const QString &address) {
+        m_address = CObfuscation::decode(address);
+    }
+
+    void CServer::setName(const QString &name) {
+        m_name = CObfuscation::decode(name);
+    }
+
+    void CServer::setDescription(const QString &description) {
+        m_description = CObfuscation::decode(description).simplified();
     }
 } // namespace

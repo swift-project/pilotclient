@@ -15,7 +15,6 @@
 #include "blackmisc/network/fsdsetup.h"
 #include "blackmisc/network/ecosystem.h"
 #include "blackmisc/audio/voicesetup.h"
-#include "blackmisc/obfuscation.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindexref.h"
@@ -33,8 +32,7 @@ namespace BlackMisc::Network
     //! Value object encapsulating information of a server
     class BLACKMISC_EXPORT CServer :
         public CValueObject<CServer>,
-        public ITimestampBased,
-        public CObfuscation
+        public ITimestampBased
     {
     public:
         //! Properties by index
@@ -93,7 +91,7 @@ namespace BlackMisc::Network
         const QString &getAddress() const { return m_address; }
 
         //! Set address (e.g. myserver.foo.com)
-        void setAddress(const QString &address) { m_address = decode(address); }
+        void setAddress(const QString &address);
 
         //! Get user
         const CUser &getUser() const { return m_user; }
@@ -108,7 +106,7 @@ namespace BlackMisc::Network
         bool hasName() const { return !m_name.isEmpty(); }
 
         //! Set name
-        void setName(const QString &name) { m_name = decode(name); }
+        void setName(const QString &name);
 
         //! Matches server name?
         bool matchesName(const QString &name) const;
@@ -123,7 +121,7 @@ namespace BlackMisc::Network
         const QString &getDescription() const { return m_description; }
 
         //! Set description
-        void setDescription(const QString &description) { m_description = decode(description).simplified(); }
+        void setDescription(const QString &description);
 
         //! Get port
         int getPort() const { return m_port; }
