@@ -1,4 +1,4 @@
-/* Copyright (C) 2013
+/* Copyright (C) 2022
  * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -8,14 +8,20 @@
 
 //! \file
 
-#ifndef BLACKMISC_MATH_MATH_H
-#define BLACKMISC_MATH_MATH_H
+#ifndef BLACKMISC_MATH_CONSTANTS_H
+#define BLACKMISC_MATH_CONSTANTS_H
 
-/*!
- * \namespace BlackMisc::Math
- * \brief Math classes such as vectors, matrices, and utility methods.
- */
+namespace BlackMisc::Math
+{
+    //! PI
+    constexpr double c_pi = 3.1415926535897932;
 
-#include "blackmisc/math/mathutils.h"
+    //! PI / 2
+    constexpr double c_pihalf = c_pi / 2;
+
+    //! PI * 2
+    constexpr double c_pi2 = c_pi * 2;
+
+} // ns
 
 #endif // guard

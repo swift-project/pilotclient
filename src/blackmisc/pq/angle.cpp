@@ -9,6 +9,7 @@
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/math/constants.h"
 #include "blackmisc/math/mathutils.h"
 
 #include <cmath>
@@ -79,12 +80,12 @@ namespace BlackMisc::PhysicalQuantities
 
     double CAngle::piFactor() const
     {
-        return Math::CMathUtils::round(this->value(CAngleUnit::rad()) / CMathUtils::PI(), 6);
+        return Math::CMathUtils::round(this->value(CAngleUnit::rad()) / c_pi, 6);
     }
 
     const double &CAngle::PI()
     {
-        return CMathUtils::PI();
+        return c_pi;
     }
 
     double CAngle::sin() const

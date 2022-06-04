@@ -6,6 +6,7 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
+#include "blackmisc/math/constants.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/verify.h"
 
@@ -17,12 +18,6 @@
 
 namespace BlackMisc::Math
 {
-    double CMathUtils::cubicRootReal(double x)
-    {
-        const double result = std::pow(qAbs(x), 1.0 / 3.0);
-        return x < 0 ? -result : result;
-    }
-
     double CMathUtils::round(double value, int digits)
     {
         // gosh, is there no Qt method for this??? It's year 2013
@@ -33,11 +28,6 @@ namespace BlackMisc::Math
         const qint64 ri = qRound64(value * m); // do not loose any range here
         const double rv = static_cast<double>(ri) / m;
         return rv;
-    }
-
-    QString CMathUtils::roundAsString(double value, int digits)
-    {
-        return QString::number(round(value, digits));
     }
 
     double CMathUtils::roundEpsilon(double value, double epsilon)
@@ -64,12 +54,12 @@ namespace BlackMisc::Math
 
     double CMathUtils::deg2rad(double degree)
     {
-        return degree * CMathUtils::PI() / 180.0;
+        return degree * c_pi / 180.0;
     }
 
     double CMathUtils::rad2deg(double radians)
     {
-        return radians * 180.0 / CMathUtils::PI();
+        return radians * 180.0 / c_pi;
     }
 
     double CMathUtils::normalizeDegrees180(double degrees)

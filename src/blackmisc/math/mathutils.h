@@ -28,26 +28,8 @@ namespace BlackMisc::Math
         //! No objects, just static
         CMathUtils() = delete;
 
-        //! Calculates the square of x
-        static inline double square(double x)
-        {
-            return x * x;
-        }
-
-        //! Calculates x to the power of three
-        static inline double cubic(const double x)
-        {
-            return x * x * x;
-        }
-
-        //! Calculates the real cubic root
-        static double cubicRootReal(double x);
-
         //! Utility round method
         static double round(double value, int digits);
-
-        //! Utility round method, returning as string
-        static QString roundAsString(double value, int digits);
 
         //! Round by given epsilon
         static double roundEpsilon(double value, double epsilon);
@@ -77,27 +59,6 @@ namespace BlackMisc::Math
         {
             double unused;
             return modf(value, &unused);
-        }
-
-        //! PI / 2
-        static const double &PIHALF()
-        {
-            static double pi = 2.0 * qAtan(1.0);
-            return pi;
-        }
-
-        //! PI
-        static const double &PI()
-        {
-            static double pi = 4.0 * qAtan(1.0);
-            return pi;
-        }
-
-        //! PI * 2
-        static const double &PI2()
-        {
-            static double pi2 = 8.0 * qAtan(1.0);
-            return pi2;
         }
 
         //! Degrees to radians
