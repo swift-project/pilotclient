@@ -79,7 +79,6 @@ namespace BlackMisc
             GlobalIndexCServer                          =  6400,
             GlobalIndexCFsdSetup                        =  6500,
             GlobalIndexCVoiceSetup                      =  6600,
-            GlobalIndexCNetworkSettings                 =  6700,
             GlobalIndexCUrl                             =  6800,
             GlobalIndexCUrlLog                          =  6900,
             GlobalIndexCRemoteFile                      =  7000,
