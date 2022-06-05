@@ -52,14 +52,14 @@ namespace BlackMisc::Aviation
         }
     }
 
-    CAirport CAirportList::findFirstByIcao(const CAirportIcaoCode &icao, const CAirport &ifNotFound) const
+    CAirport CAirportList::findFirstByIcao(const CAirportIcaoCode &icao) const
     {
-        return this->findFirstByOrDefault(&CAirport::getIcao, icao, ifNotFound);
+        return this->findFirstByOrDefault(&CAirport::getIcao, icao, CAirport());
     }
 
-    CAirport CAirportList::findFirstByNameOrLocation(const QString &nameOrLocation, const CAirport &ifNotFound) const
+    CAirport CAirportList::findFirstByNameOrLocation(const QString &nameOrLocation) const
     {
-        if (this->isEmpty() || nameOrLocation.isEmpty()) { return ifNotFound; }
+        if (this->isEmpty() || nameOrLocation.isEmpty()) { return CAirport(); }
         CAirportList airports = this->findBy([&](const CAirport & airport)
         {
             return airport.matchesDescriptiveName(nameOrLocation);
@@ -71,7 +71,7 @@ namespace BlackMisc::Aviation
             return airport.matchesLocation(nameOrLocation);
         });
         if (!airports.isEmpty()) { return airports.frontOrDefault(); }
-        return ifNotFound;
+        return CAirport();
     }
 
     QStringList CAirportList::allIcaoCodes(bool sorted) const
