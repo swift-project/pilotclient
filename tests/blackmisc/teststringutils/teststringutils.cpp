@@ -33,6 +33,7 @@ namespace BlackMiscTest
         void testRemove();
         void testContains();
         void testIndexOf();
+        void testSplit();
         void testTimestampParsing();
         void testCodecs();
         void testSimplify();
@@ -58,6 +59,16 @@ namespace BlackMiscTest
         QVERIFY2(indexOfChar(s, [](QChar c) { return c.isNumber(); }) == 18, "Test index of character by predicate");
         s = "string without a number";
         QVERIFY2(indexOfChar(s, [](QChar c) { return c.isNumber(); }) == -1, "Test not index of character by predicate");
+    }
+
+    void CTestStringUtils::testSplit()
+    {
+        const QString s = "line one\nline two\r\nline three\n";
+        QStringList lines = splitLines(s);
+        QVERIFY2(lines.size() == 3, "Test split string into lines: correct number of lines");
+        QVERIFY2(lines[0] == "line one", "Test split string into lines: correct first line");
+        QVERIFY2(lines[1] == "line two", "Test split string into lines: correct second line");
+        QVERIFY2(lines[2] == "line three", "Test split string into lines: correct third line");
     }
 
     void CTestStringUtils::testTimestampParsing()

@@ -410,6 +410,13 @@ namespace BlackSample
 
         timer.start();
         {
+            auto lines = splitLines(bigString);
+            Q_UNUSED(lines);
+        }
+        out << "Split 100,000 line string into list of lines: (QStringList)          " << timer.elapsed() << "ms" << Qt::endl;
+
+        timer.start();
+        {
             auto lines = splitLinesRefs(bigString);
             Q_UNUSED(lines);
         }

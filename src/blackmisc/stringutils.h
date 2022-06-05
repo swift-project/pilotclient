@@ -12,6 +12,7 @@
 #define BLACKMISC_STRINGUTILS_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/range.h"
 #include "blackmisc/typetraits.h"
 
 #include <QByteArray>
@@ -115,6 +116,15 @@ namespace BlackMisc
 
     //! It would be risky to call splitLinesRefs with an rvalue, so forbid it.
     void splitLinesRefs(const QString &&) = delete;
+
+    //! Split a string into multiple strings, using a predicate function to identify the split points.
+    template <class F> QStringList splitString(const QString &s, F predicate)
+    {
+        return makeRange(splitStringRefs(s, predicate)).transform([](QStringRef sr) { return sr.toString(); });
+    }
+
+    //! Split a string into multiple lines. Blank lines are skipped.
+    BLACKMISC_EXPORT QStringList splitLines(const QString &s);
 
     //! Extended percent encoding supporting UTF-16
     BLACKMISC_EXPORT QByteArray utfToPercentEncoding(const QString &s, const QByteArray &allow = {}, char percent = '%');
