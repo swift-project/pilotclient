@@ -87,6 +87,7 @@ jobs:
         with:
           version: ${{ env.qt_version }}
       - name: Download InstallBuilder
+        timeout-minutes: 20
         run: |
           wget -O ~/installbuilder.run ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-linux-x64-installer.run
           chmod 700 ~/installbuilder.run
@@ -177,6 +178,7 @@ jobs:
           modules: debug_info
           extra: --archives qtbase
       - name: Download InstallBuilder
+        timeout-minutes: 20
         run: |
           $tries = 0
           while ($tries -lt 20 -and -not (Test-Path "$HOME\installbuilder.exe")) {
@@ -264,6 +266,7 @@ jobs:
           modules: debug_info
           extra: --archives qtbase
       - name: Download InstallBuilder
+        timeout-minutes: 20
         run: |
           $tries = 0
           while ($tries -lt 20 -and -not (Test-Path "$HOME\installbuilder.exe")) {
@@ -337,6 +340,7 @@ jobs:
         with:
           version: ${{ env.qt_version }}
       - name: Download InstallBuilder
+        timeout-minutes: 20
         run: |
           wget -O $HOME/installbuilder.dmg ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-osx-installer.dmg
           chmod 700 $HOME/installbuilder.dmg
