@@ -6,13 +6,11 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-#include "blackmisc/iterator.h"
 #include "blackmisc/range.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 
 #include <algorithm>
-#include <tuple>
 
 BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Simulation, CSimulatorPluginInfo, CSimulatorPluginInfoList)
 

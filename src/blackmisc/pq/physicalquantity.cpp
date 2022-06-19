@@ -25,12 +25,9 @@
 #include "blackmisc/dictionary.h"
 #include "blackmisc/verify.h"
 
-#include <QCoreApplication>
 #include <QDBusArgument>
-#include <QHash>
 #include <QJsonObject>
 #include <QJsonValue>
-#include <QList>
 #include <QString>
 #include <QtGlobal>
 #include <limits>

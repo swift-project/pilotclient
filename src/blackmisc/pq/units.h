@@ -20,7 +20,7 @@
 #include "blackmisc/mixin/mixinindex.h"
 #include "blackmisc/mixin/mixinmetatype.h"
 
-#include <math.h>
+#include <cmath>
 #include <QDBusArgument>
 #include <QList>
 #include <QMetaType>

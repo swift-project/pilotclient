@@ -14,7 +14,6 @@
 #include "blackmisc/metaclass.h"
 #include "blackmisc/inheritancetraits.h"
 #include "blackmisc/typetraits.h"
-#include "blackmisc/range.h"
 #include <QList>
 #include <QPair>
 #include <QString>
