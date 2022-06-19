@@ -102,7 +102,7 @@ namespace BlackMisc
         //! @}
 
         //! Default constructor.
-        CSequence() {}
+        CSequence() = default;
 
         //! Initializer list constructor.
         CSequence(std::initializer_list<T> il) : m_impl(il) {}

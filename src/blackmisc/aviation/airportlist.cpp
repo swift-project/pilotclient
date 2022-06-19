@@ -18,8 +18,6 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAirport, CAirportList)
 
 namespace BlackMisc::Aviation
 {
-    CAirportList::CAirportList() { }
-
     CAirportList::CAirportList(const CSequence<CAirport> &other) :
         CSequence<CAirport>(other)
     { }

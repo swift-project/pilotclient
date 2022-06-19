@@ -38,7 +38,7 @@ namespace BlackMisc::Network
         };
 
         //! Default constructor.
-        CRawFsdMessage() {}
+        CRawFsdMessage() = default;
 
         //! Constructor.
         CRawFsdMessage(const QString &rawMessage);

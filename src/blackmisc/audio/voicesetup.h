@@ -38,7 +38,7 @@ namespace BlackMisc::Audio
         };
 
         //! Default constructor.
-        CVoiceSetup() {}
+        CVoiceSetup() = default;
 
         //! Setup with values
         CVoiceSetup(const QString &afvVoiceServerUrl, const QString &afvMapUrl);

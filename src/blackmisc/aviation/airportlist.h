@@ -37,7 +37,7 @@ namespace BlackMisc::Aviation
         using CSequence::CSequence;
 
         //! Default constructor.
-        CAirportList();
+        CAirportList() = default;
 
         //! Construct from a base class object.
         CAirportList(const CSequence<CAirport> &other);

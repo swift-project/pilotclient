@@ -52,7 +52,7 @@ namespace BlackMisc::Aviation
         };
 
         //! Default constructor.
-        CAirport();
+        CAirport() = default;
 
         //! Simplified constructor
         CAirport(const QString &icao);

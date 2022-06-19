@@ -24,9 +24,6 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAirport)
 
 namespace BlackMisc::Aviation
 {
-    CAirport::CAirport()
-    { }
-
     CAirport::CAirport(const QString &icao)  :
         m_icao(icao)
     { }
