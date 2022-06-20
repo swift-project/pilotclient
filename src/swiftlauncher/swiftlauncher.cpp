@@ -231,33 +231,9 @@ void CSwiftLauncher::mouseReleaseEvent(QMouseEvent *event)
     QDialog::mouseReleaseEvent(event);
 }
 
-void CSwiftLauncher::displayLatestNews(QNetworkReply *reply)
-{
-    QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(reply);
-    if (nwReply->error() == QNetworkReply::NoError)
-    {
-        const QString html = nwReply->readAll().trimmed();
-        if (html.isEmpty()) { return; }
-        CLogMessage(this).info(u"Received news from '%1'") << nwReply->url().toString();
-        ui->tbr_LatestNews->setHtml(html); // causes QFSFileEngine::open: No file name specified
-        constexpr qint64 newNews = 72 * 3600 * 1000;
-        const qint64 deltaT = CNetworkUtils::lastModifiedSinceNow(nwReply.data());
-        if (deltaT > 0 && deltaT < newNews)
-        {
-            ui->tb_Launcher->setCurrentWidget(ui->pg_LatestNewsAndAbout);
-            ui->tw_LatestNewsAbout->setCurrentWidget(ui->tb_LatestNews);
-        }
-    }
-    else
-    {
-        CLogMessage(this).warning(u"Error received news from '%1'") << nwReply->url().toString();
-    }
-}
-
 void CSwiftLauncher::updateInfoAvailable()
 {
     this->setHeaderInfo(ui->comp_UpdateInfo->getLatestAvailablePilotClientArtifactForSelection());
-    this->loadLatestNews();
 }
 
 void CSwiftLauncher::init()
@@ -276,7 +252,6 @@ void CSwiftLauncher::init()
     ui->lbl_HeaderInfo->setVisible(false);
     ui->sw_SwiftLauncher->setCurrentWidget(ui->pg_SwiftLauncherMain);
     ui->tb_Launcher->setCurrentWidget(ui->pg_CoreMode);
-    ui->tw_LatestNewsAbout->setCurrentWidget(ui->tb_LatestNews);
 }
 
 void CSwiftLauncher::initStyleSheet()
@@ -291,22 +266,6 @@ void CSwiftLauncher::initStyleSheet()
     );
     this->setStyleSheet(""); // clear, otherwise launcher crashing
     this->setStyleSheet(s);
-}
-
-void CSwiftLauncher::loadLatestNews()
-{
-    if (!sGui || sGui->isShuttingDown()) { return; }
-
-    CFailoverUrlList newsUrls(sGui->getGlobalSetup().getSwiftLatestNewsUrls());
-    const CUrl newsUrl(newsUrls.obtainNextWorkingUrl(true, 10 * 1000));
-    // const CUrl newsUrl("https://dev.swift-project.org/phame/blog/view/1/?__print__=1");
-
-    if (newsUrl.isEmpty())
-    {
-        CLogMessage(this).warning(u"No working news URL in %1") << newsUrls.toQString();
-        return;
-    }
-    sGui->getFromNetwork(newsUrl, { this, &CSwiftLauncher::displayLatestNews});
 }
 
 void CSwiftLauncher::initLogDisplay()
