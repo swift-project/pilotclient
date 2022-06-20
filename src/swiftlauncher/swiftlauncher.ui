@@ -93,7 +93,7 @@
             <property name="tabSpacing">
              <number>6</number>
             </property>
-            <widget class="QWidget" name="pg_LatestNewsAndAbout">
+            <widget class="QWidget" name="pg_About">
              <property name="geometry">
               <rect>
                <x>0</x>
@@ -103,48 +103,11 @@
               </rect>
              </property>
              <attribute name="label">
-              <string>Latest &amp;news and about</string>
+              <string>About</string>
              </attribute>
-             <layout class="QVBoxLayout" name="vl_LatestNewsAndAbout">
+             <layout class="QVBoxLayout" name="vl_About">
               <item>
-               <widget class="QTabWidget" name="tw_LatestNewsAbout">
-                <property name="currentIndex">
-                 <number>1</number>
-                </property>
-                <widget class="QWidget" name="tb_LatestNews">
-                 <attribute name="title">
-                  <string>News</string>
-                 </attribute>
-                 <layout class="QVBoxLayout" name="vl_LatestNews">
-                  <item>
-                   <widget class="QTextBrowser" name="tbr_LatestNews">
-                    <property name="documentTitle">
-                     <string>Latest news</string>
-                    </property>
-                    <property name="readOnly">
-                     <bool>true</bool>
-                    </property>
-                    <property name="placeholderText">
-                     <string>Latest news will go here</string>
-                    </property>
-                    <property name="openExternalLinks">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-                <widget class="QWidget" name="tb_About">
-                 <attribute name="title">
-                  <string>About</string>
-                 </attribute>
-                 <layout class="QVBoxLayout" name="vl_About">
-                  <item>
-                   <widget class="BlackGui::Components::CAboutHtmlComponent" name="comp_AboutHTML"/>
-                  </item>
-                 </layout>
-                </widget>
-               </widget>
+               <widget class="BlackGui::Components::CAboutHtmlComponent" name="comp_AboutHTML"/>
               </item>
              </layout>
             </widget>
@@ -928,8 +891,6 @@
   <tabstop>pb_DumpDir</tabstop>
   <tabstop>pb_P3DConfigDirs</tabstop>
   <tabstop>pb_FSXConfigDirs</tabstop>
-  <tabstop>tw_LatestNewsAbout</tabstop>
-  <tabstop>tbr_LatestNews</tabstop>
   <tabstop>tb_BackToMain</tabstop>
   <tabstop>rb_WindowNormal</tabstop>
   <tabstop>rb_WindowFrameless</tabstop>

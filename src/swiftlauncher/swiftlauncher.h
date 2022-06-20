@@ -131,10 +131,6 @@ private:
     //! Set header info
     void setHeaderInfo(const BlackMisc::Db::CArtifact &latestArtifact);
 
-    //! Latest news
-    //! \sa CSwiftLauncher::displayLatestNews
-    void loadLatestNews();
-
     //! Executaable for core
     bool setSwiftCoreExecutable();
 
@@ -158,9 +154,6 @@ private:
 
     //! Check for other swift applications, if so show message box
     bool warnAboutOtherSwiftApplications();
-
-    //! Display latest news
-    void displayLatestNews(QNetworkReply *reply);
 
     //! Distribution info is available
     void updateInfoAvailable();

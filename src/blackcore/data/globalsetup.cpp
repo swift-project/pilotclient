@@ -59,11 +59,6 @@ namespace BlackCore::Data
             "https://swift.fir-berlin.de/shared"
         };
 
-        m_newsUrls = CUrlList
-        {
-            "https://blog.swift-project.net/?__print__=1",
-            "https://dev.swift-project.org/phame/blog/view/1/?__print__=1"
-        };
         m_onlineHelpUrls = CUrlList
         {
             "https://datastore.swift-project.org/page/swifthelpdispatcher.html",
@@ -262,11 +257,6 @@ namespace BlackCore::Data
         return setup;
     }
 
-    const CUrlList &CGlobalSetup::getSwiftLatestNewsUrls() const
-    {
-        return m_newsUrls;
-    }
-
     CServerList CGlobalSetup::getPredefinedServersPlusHardcodedServers() const
     {
         static const CServerList hardcoded(
@@ -319,9 +309,6 @@ namespace BlackCore::Data
             % separator
             % u"Bootstrap URLs: "
             % getSwiftBootstrapFileUrls().toQString(i18n)
-            % separator
-            % u"News URLs: "
-            % getSwiftLatestNewsUrls().toQString(i18n)
             % separator
             % u"Help URLs: "
             % m_onlineHelpUrls.toQString(i18n)
@@ -388,7 +375,6 @@ namespace BlackCore::Data
         case IndexBootstrapFileUrls:     return QVariant::fromValue(this->getSwiftBootstrapFileUrls());
         case IndexUpdateInfoFileUrls:    return QVariant::fromValue(this->getSwiftUpdateInfoFileUrls());
         case IndexSharedUrls:            return QVariant::fromValue(m_sharedUrls);
-        case IndexNewsUrls:              return QVariant::fromValue(m_newsUrls);
         case IndexOnlineHelpUrls:        return QVariant::fromValue(m_onlineHelpUrls);
         case IndexCrashReportServerUrl:  return QVariant::fromValue(m_crashReportServerUrl);
         case IndexWasLoadedFromWeb:      return QVariant::fromValue(m_wasLoadedFromWeb);
@@ -420,7 +406,6 @@ namespace BlackCore::Data
         case IndexVatsimBookings:        m_vatsimBookingsUrl.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexVatsimMetars:          m_vatsimMetarsUrls = variant.value<CUrlList>(); break;
         case IndexSharedUrls:            m_sharedUrls = variant.value<CUrlList>(); break;
-        case IndexNewsUrls:              m_newsUrls = variant.value<CUrlList>(); break;
         case IndexOnlineHelpUrls:        m_onlineHelpUrls = variant.value<CUrlList>(); break;
         case IndexCrashReportServerUrl:  m_crashReportServerUrl = variant.value<CUrl>(); break;
         case IndexWasLoadedFromWeb:      m_wasLoadedFromWeb = variant.toBool(); break;

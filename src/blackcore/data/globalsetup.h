@@ -53,7 +53,6 @@ namespace BlackCore::Data
             IndexSwiftDbFiles,
             IndexBootstrapFileUrls,
             IndexUpdateInfoFileUrls,
-            IndexNewsUrls,
             IndexOnlineHelpUrls,
             IndexCrashReportServerUrl,
             IndexWasLoadedFromWeb,
@@ -182,9 +181,6 @@ namespace BlackCore::Data
         //! VATSIM data file URLs
         const BlackMisc::Network::CUrlList &getVatsimDataFileUrls() const { return m_vatsimDataFileUrls; }
 
-        //! Locations of swift DB news
-        const BlackMisc::Network::CUrlList &getSwiftLatestNewsUrls() const;
-
         //! Help page URL
         //! \remark working URL evaluated at runtime, based on getOnlineHelpUrls
         BlackMisc::Network::CUrl getHelpPageUrl(const QString &context = {}) const;
@@ -254,7 +250,6 @@ namespace BlackCore::Data
         BlackMisc::Network::CUrlList    m_vatsimStatusFileUrls;        //!< Status file, where to find the VATSIM files (METAR, data, ATIS, other status files)
         BlackMisc::Network::CUrlList    m_vatsimDataFileUrls;          //!< Overall VATSIM data file / merely for bootstrapping the first time
         BlackMisc::Network::CUrlList    m_sharedUrls;                  //!< where we can obtain shared info files such as bootstrap, ..
-        BlackMisc::Network::CUrlList    m_newsUrls;                    //!< where we can obtain latest news
         BlackMisc::Network::CUrlList    m_onlineHelpUrls;              //!< online help URLs
         BlackMisc::Network::CServerList m_predefinedServers;           //!< Predefined servers loaded from setup file
         BlackMisc::Network::CUrl        m_ncepGlobalForecastSystemUrl; //!< NCEP GFS url 0.5 degree resolution
@@ -281,7 +276,6 @@ namespace BlackCore::Data
             BLACK_METAMEMBER(vatsimBookingsUrl),
             BLACK_METAMEMBER(vatsimMetarsUrls),
             BLACK_METAMEMBER(sharedUrls),
-            BLACK_METAMEMBER(newsUrls),
             BLACK_METAMEMBER(onlineHelpUrls),
             BLACK_METAMEMBER(predefinedServers),
             BLACK_METAMEMBER(development),
