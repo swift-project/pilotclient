@@ -51,7 +51,6 @@ namespace BlackCore::Data
             IndexVatsimMetars,
             IndexVatsimData,
             IndexSwiftDbFiles,
-            IndexSwiftMapUrls,
             IndexBootstrapFileUrls,
             IndexUpdateInfoFileUrls,
             IndexNewsUrls,
@@ -190,9 +189,6 @@ namespace BlackCore::Data
         //! \remark working URL evaluated at runtime, based on getOnlineHelpUrls
         BlackMisc::Network::CUrl getHelpPageUrl(const QString &context = {}) const;
 
-        //! swift map URLs
-        const BlackMisc::Network::CUrlList &getSwiftMapUrls() const;
-
         //! Predefined servers
         const BlackMisc::Network::CServerList &getPredefinedServers() const { return m_predefinedServers; }
 
@@ -260,7 +256,6 @@ namespace BlackCore::Data
         BlackMisc::Network::CUrlList    m_sharedUrls;                  //!< where we can obtain shared info files such as bootstrap, ..
         BlackMisc::Network::CUrlList    m_newsUrls;                    //!< where we can obtain latest news
         BlackMisc::Network::CUrlList    m_onlineHelpUrls;              //!< online help URLs
-        BlackMisc::Network::CUrlList    m_mapUrls;                     //!< swift map URLs
         BlackMisc::Network::CServerList m_predefinedServers;           //!< Predefined servers loaded from setup file
         BlackMisc::Network::CUrl        m_ncepGlobalForecastSystemUrl; //!< NCEP GFS url 0.5 degree resolution
         BlackMisc::Network::CUrl        m_ncepGlobalForecastSystemUrl25; //!< NCEP GFS url 0.25 degree resolution
@@ -288,7 +283,6 @@ namespace BlackCore::Data
             BLACK_METAMEMBER(sharedUrls),
             BLACK_METAMEMBER(newsUrls),
             BLACK_METAMEMBER(onlineHelpUrls),
-            BLACK_METAMEMBER(mapUrls),
             BLACK_METAMEMBER(predefinedServers),
             BLACK_METAMEMBER(development),
             BLACK_METAMEMBER(mappingMinimumVersion),

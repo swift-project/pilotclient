@@ -278,7 +278,6 @@
     <property name="title">
      <string>Tools</string>
     </property>
-    <addaction name="menu_MovingMap"/>
     <addaction name="menu_AutoPublish"/>
     <addaction name="menu_ToggleIncognito"/>
     <addaction name="menu_ModelBrowser"/>
@@ -497,11 +496,6 @@
   <action name="menu_CacheReset">
    <property name="text">
     <string>Reset</string>
-   </property>
-  </action>
-  <action name="menu_MovingMap">
-   <property name="text">
-    <string>Moving map</string>
    </property>
   </action>
   <action name="menu_AutoPublish">

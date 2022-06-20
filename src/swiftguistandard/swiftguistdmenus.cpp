@@ -94,12 +94,6 @@ void SwiftGuiStd::onMenuClicked()
             this->displayInOverlayWindow(QStringLiteral("Incognito mode is %1").arg(boolToOnOff(sGui->isIncognito())), 5000);
         }
     }
-    else if (sender == ui->menu_MovingMap && sGui && !sGui->getGlobalSetup().getSwiftMapUrls().isEmpty())
-    {
-        const CUrlList urls = sGui->getGlobalSetup().getSwiftMapUrls();
-        const CUrl url = urls.getRandomUrl();
-        QDesktopServices::openUrl(url);
-    }
 }
 
 void SwiftGuiStd::attachSimulatorWindow()
@@ -152,7 +146,6 @@ void SwiftGuiStd::initMenus()
 
     sGui->addMenuHelp(*ui->menu_Help);
     ui->menu_InfoAreas->addActions(ui->comp_MainInfoArea->getInfoAreaSelectActions(true, ui->menu_InfoAreas));
-    ui->menu_MovingMap->setIcon(CIcons::swiftMap16());
 
     if (CBuildConfig::isLocalDeveloperDebugBuild() && ui->menu_File && ui->menu_File->actions().size() > 5)
     {

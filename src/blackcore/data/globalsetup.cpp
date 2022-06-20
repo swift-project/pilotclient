@@ -69,7 +69,6 @@ namespace BlackCore::Data
             "https://datastore.swift-project.org/page/swifthelpdispatcher.html",
             "https://datastore.swift-project.net/page/swifthelpdispatcher.html"
         };
-        m_mapUrls = CUrlList{ "map.swift-project.org/" };
         m_ncepGlobalForecastSystemUrl   = CUrl("http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p50.pl");
         m_ncepGlobalForecastSystemUrl25 = CUrl("http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl");
 
@@ -268,11 +267,6 @@ namespace BlackCore::Data
         return m_newsUrls;
     }
 
-    const CUrlList &CGlobalSetup::getSwiftMapUrls() const
-    {
-        return m_mapUrls;
-    }
-
     CServerList CGlobalSetup::getPredefinedServersPlusHardcodedServers() const
     {
         static const CServerList hardcoded(
@@ -331,9 +325,6 @@ namespace BlackCore::Data
             % separator
             % u"Help URLs: "
             % m_onlineHelpUrls.toQString(i18n)
-            % separator
-            % u"swift map URLs: "
-            % getSwiftMapUrls().toQString(i18n)
             % separator;
         s +=
             u"DB root directory: "
@@ -398,7 +389,6 @@ namespace BlackCore::Data
         case IndexUpdateInfoFileUrls:    return QVariant::fromValue(this->getSwiftUpdateInfoFileUrls());
         case IndexSharedUrls:            return QVariant::fromValue(m_sharedUrls);
         case IndexNewsUrls:              return QVariant::fromValue(m_newsUrls);
-        case IndexSwiftMapUrls:          return QVariant::fromValue(m_mapUrls);
         case IndexOnlineHelpUrls:        return QVariant::fromValue(m_onlineHelpUrls);
         case IndexCrashReportServerUrl:  return QVariant::fromValue(m_crashReportServerUrl);
         case IndexWasLoadedFromWeb:      return QVariant::fromValue(m_wasLoadedFromWeb);
@@ -432,7 +422,6 @@ namespace BlackCore::Data
         case IndexSharedUrls:            m_sharedUrls = variant.value<CUrlList>(); break;
         case IndexNewsUrls:              m_newsUrls = variant.value<CUrlList>(); break;
         case IndexOnlineHelpUrls:        m_onlineHelpUrls = variant.value<CUrlList>(); break;
-        case IndexSwiftMapUrls:          m_mapUrls = variant.value<CUrlList>(); break;
         case IndexCrashReportServerUrl:  m_crashReportServerUrl = variant.value<CUrl>(); break;
         case IndexWasLoadedFromWeb:      m_wasLoadedFromWeb = variant.toBool(); break;
         case IndexWasLoadedFromFile:     m_wasLoadedFromFile = variant.toBool(); break;
