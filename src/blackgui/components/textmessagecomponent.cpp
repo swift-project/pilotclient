@@ -189,6 +189,7 @@ namespace BlackGui::Components
         for (const CTextMessage &message : messages)
         {
             bool relevantForMe = false;
+            CNotificationSounds::NotificationFlag notification = CNotificationSounds::NoNotifications;
 
             // SELCAL
             if (!m_usedAsOverlayWidget && message.isSelcalMessage() && ownAircraft.isSelcalSelected(message.getSelcalCode()))
@@ -211,6 +212,12 @@ namespace BlackGui::Components
             if (message.isSendToUnicom())
             {
                 ui->tep_TextMessagesUnicom->insertTextMessage(message);
+
+                // Message was received from others
+                if (!message.wasSent())
+                {
+                    notification = CNotificationSounds::NotificationTextMessageUnicom;
+                }
                 relevantForMe = true;
             }
 
@@ -231,18 +238,26 @@ namespace BlackGui::Components
                 if (message.isSendToFrequency(ownAircraft.getCom1System().getFrequencyActive()))
                 {
                     ui->tep_TextMessagesCOM1->insertTextMessage(message);
+                    if (!message.isSendToUnicom())
+                    {
+                        notification = CNotificationSounds::NotificationTextMessageFrequency;
+                    }
                     relevantForMe = true;
                 }
                 if (message.isSendToFrequency(ownAircraft.getCom2System().getFrequencyActive()))
                 {
                     ui->tep_TextMessagesCOM2->insertTextMessage(message);
+                    if (!message.isSendToUnicom())
+                    {
+                        notification = CNotificationSounds::NotificationTextMessageFrequency;
+                    }
                     relevantForMe = true;
                 }
 
                 // callsign mentioned notification
                 if (relevantForMe && audioCsMentioned && ownAircraft.hasCallsign() && message.mentionsCallsign(ownAircraft.getCallsign()))
                 {
-                    sGui->getCContextAudioBase()->playNotification(CNotificationSounds::NotificationTextCallsignMentioned, false);
+                    notification = CNotificationSounds::NotificationTextCallsignMentioned;
                     // Flash taskbar icon
                     QApplication::alert(QWidget::topLevelWidget());
                 }
@@ -269,6 +284,12 @@ namespace BlackGui::Components
                 addedToAllMessages = true;
             }
             if (!relevantForMe) { continue; }
+
+            // Play notification
+            if (playNotification && notification != CNotificationSounds::NoNotifications)
+            {
+                sGui->getCContextAudioBase()->playNotification(notification, true);
+            }
 
             // overlay message if this channel is not selected
             if (message.isServerMessage())    { continue; }
