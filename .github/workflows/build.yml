@@ -13,7 +13,7 @@ env:
   do_symbols:    true
   eol_months:    12
   qt_version:    5.15.2
-  bitrock_version: qt-professional-22.3.0
+  bitrock_version: qt-professional-22.8.0
   bitrock_url:     https://installbuilder.com/
 
 jobs:
