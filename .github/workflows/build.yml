@@ -2,10 +2,6 @@ name: Build swift
 
 on:
   push:
-    branches-ignore:
-      - stable/**
-      - nobuild/**
-      - readthedocs
   pull_request:
 
 concurrency:
@@ -13,8 +9,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  do_vatsim_key: ${{ github.event_name == 'push' }}
-  do_symbols:    ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/heads/develop/') }}
+  do_vatsim_key: false
+  do_symbols:    true
   eol_months:    12
   qt_version:    5.15.2
   bitrock_version: qt-professional-22.3.0
