@@ -667,7 +667,6 @@ namespace BlackMisc::Aviation
 
     CAircraftSituation::IsOnGround CAircraftSituation::isOnGroundByElevation(const CLength &cg) const
     {
-        Q_ASSERT_X(!cg.isNegativeWithEpsilonConsidered(), Q_FUNC_INFO, "CG must not be negative");
         const CLength groundDistance = this->getGroundDistance(cg);
         if (groundDistance.isNull()) { return OnGroundSituationUnknown; }
         if (groundDistance.isNegativeWithEpsilonConsidered()) { return OnGround; }
@@ -676,7 +675,7 @@ namespace BlackMisc::Aviation
         {
             // smaller than percentage from CG
             const CLength cgFactor(cg * 0.1);
-            if (groundDistance.abs() < cgFactor) { return OnGround; }
+            if (groundDistance.abs() < cgFactor.abs()) { return OnGround; }
         }
         return NotOnGround;
     }
