@@ -51,7 +51,7 @@ namespace BlackMisc
         {
             // Fatal message means this thread is about to crash the application. A queued connection would be useless.
             // Blocking queued connection means we pause this thread just long enough to let the main thread handle the message.
-            QMetaObject::invokeMethod(CLogHandler::instance(), invokee, Qt::BlockingQueuedConnection);
+            QMetaObject::invokeMethod(CLogHandler::instance(), [ & ] { messageHandler(type, context, message); }, Qt::BlockingQueuedConnection);
             return;
         }
 #if defined(Q_CC_MSVC) && defined(QT_NO_DEBUG)
