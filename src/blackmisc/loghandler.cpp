@@ -45,8 +45,6 @@ namespace BlackMisc
     //! Qt message handler
     void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message)
     {
-        const CStatusMessage statusMessage(type, context, message);
-        const auto invokee = [statusMessage] { CLogHandler::instance()->logLocalMessage(statusMessage); };
         if (type == QtFatalMsg && CLogHandler::instance()->thread() != QThread::currentThread())
         {
             // Fatal message means this thread is about to crash the application. A queued connection would be useless.
@@ -76,7 +74,10 @@ namespace BlackMisc
 #   endif
         }
 #endif
-        QMetaObject::invokeMethod(CLogHandler::instance(), invokee);
+        QMetaObject::invokeMethod(CLogHandler::instance(), [statusMessage = CStatusMessage(type, context, message)]
+        {
+            CLogHandler::instance()->logLocalMessage(statusMessage);
+        });
     }
 
     void CLogHandler::install(bool skipIfAlreadyInstalled)
