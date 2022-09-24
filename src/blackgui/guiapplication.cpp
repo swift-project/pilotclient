@@ -385,7 +385,7 @@ namespace BlackGui
     {
         const QWidget *w = CGuiApplication::mainApplicationWidget();
         const int s = QApplication::desktop()->screenNumber(w);
-        if (s < QGuiApplication::screens().size()) { return QGuiApplication::screens().at(s); }
+        if (s >= 0 && s < QGuiApplication::screens().size()) { return QGuiApplication::screens().at(s); }
         return QGuiApplication::primaryScreen();
     }
 
