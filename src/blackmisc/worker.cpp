@@ -103,7 +103,17 @@ namespace BlackMisc
         this->moveToThread(workerThread->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
         // must not access the worker beyond this point, as it now lives in the owner's thread and could be deleted at any moment
 
-        workerThread->deleteLater();
+        QMetaObject::invokeMethod(workerThread, [workerThread]
+        {
+            // quit and wait is redundant as the CRegularThread dtor will do that anyway, but put here for debugging
+            workerThread->quit();
+            const bool ok = workerThread->wait(5000);
+            const QString as = QStringLiteral("Worker thread '%2' refuses to stop after worker finished").arg(workerThread->objectName());
+            const QByteArray asBA = as.toLatin1();
+            BLACK_AUDIT_X(ok, Q_FUNC_INFO, asBA);
+
+            workerThread->deleteLater();
+        });
     }
 
     CWorkerBase::CWorkerBase()
@@ -282,6 +292,16 @@ namespace BlackMisc
         this->moveToThread(m_owner->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
         // must not access the worker beyond this point, as it now lives in the owner's thread and could be deleted at any moment
 
-        workerThread->deleteLater();
+        QMetaObject::invokeMethod(workerThread, [workerThread]
+        {
+            // quit and wait is redundant as the CRegularThread dtor will do that anyway, but put here for debugging
+            workerThread->quit();
+            const bool ok = workerThread->wait(5000);
+            const QString as = QStringLiteral("Worker thread '%2' refuses to stop after worker finished").arg(workerThread->objectName());
+            const QByteArray asBA = as.toLatin1();
+            BLACK_AUDIT_X(ok, Q_FUNC_INFO, asBA);
+
+            workerThread->deleteLater();
+        });
     }
 } // ns
