@@ -98,12 +98,12 @@ namespace BlackMisc
 
         // MS 2018-09 Now we post the DeferredDelete event from within the worker thread, but rely on it being dispatched
         //            by the owner thread. Posted events are moved along with the object when moveToThread is called.
-        //            We also connect its destroyed signal to delete the worker thread at the same time.
         this->deleteLater();
-        connect(this, &QObject::destroyed, workerThread, &QObject::deleteLater);
 
         this->moveToThread(workerThread->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
         // must not access the worker beyond this point, as it now lives in the owner's thread and could be deleted at any moment
+
+        workerThread->deleteLater();
     }
 
     CWorkerBase::CWorkerBase()
@@ -272,15 +272,16 @@ namespace BlackMisc
     {
         this->setFinished();
 
+        QThread *workerThread = this->thread();
         Q_ASSERT_X(m_owner->thread()->isRunning(), Q_FUNC_INFO, "Owner thread's event loop already ended");
 
         // MS 2018-09 Now we post the DeferredDelete event from within the worker thread, but rely on it being dispatched
         //            by the owner thread. Posted events are moved along with the object when moveToThread is called.
-        //            We also connect its destroyed signal to delete the worker thread at the same time.
         this->deleteLater();
-        connect(this, &QObject::destroyed, this->thread(), &QObject::deleteLater);
 
         this->moveToThread(m_owner->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
         // must not access the worker beyond this point, as it now lives in the owner's thread and could be deleted at any moment
+
+        workerThread->deleteLater();
     }
 } // ns
