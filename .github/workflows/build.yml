@@ -87,7 +87,6 @@ jobs:
         with:
           version: ${{ env.qt_version }}
       - name: Download InstallBuilder
-        timeout-minutes: 20
         run: |
           wget -O ~/installbuilder.run ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-linux-x64-installer.run
           chmod 700 ~/installbuilder.run
@@ -178,15 +177,14 @@ jobs:
           modules: debug_info
           extra: --archives qtbase
       - name: Download InstallBuilder
-        timeout-minutes: 20
+        shell: C:\msys64\usr\bin\bash.exe -le {0}
         run: |
-          $tries = 0
-          while ($tries -lt 20 -and -not (Test-Path "$HOME\installbuilder.exe")) {
-            $tries++
-            curl.exe --output "$HOME\installbuilder.exe" -L --url ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-windows-x64-installer.exe
-            sleep -s 5
-          }
-          start -wait "$HOME\installbuilder.exe" @("--mode", "unattended", "--prefix", "$HOME\installbuilder")
+          wget -O /c/installbuilder.exe ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-windows-x64-installer.exe
+        env:
+          MSYSTEM: MSYS2
+      - name: Install InstallBuilder
+        run: |
+          start -wait "C:\installbuilder.exe" @("--mode", "unattended", "--prefix", "$HOME\installbuilder")
           echo >$HOME\license.xml @"
           $env:BITROCK_LICENSE
           "@
@@ -266,15 +264,14 @@ jobs:
           modules: debug_info
           extra: --archives qtbase
       - name: Download InstallBuilder
-        timeout-minutes: 20
+        shell: C:\msys64\usr\bin\bash.exe -le {0}
         run: |
-          $tries = 0
-          while ($tries -lt 20 -and -not (Test-Path "$HOME\installbuilder.exe")) {
-            $tries++
-            curl.exe --output "$HOME\installbuilder.exe" -L --url ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-windows-installer.exe
-            sleep -s 5
-          }
-          start -wait "$HOME\installbuilder.exe" @("--mode", "unattended", "--prefix", "$HOME\installbuilder")
+          wget -O /c/installbuilder.exe ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-windows-installer.exe
+        env:
+          MSYSTEM: MSYS2
+      - name: Install InstallBuilder
+        run: |
+          start -wait "C:\installbuilder.exe" @("--mode", "unattended", "--prefix", "$HOME\installbuilder")
           echo >$HOME\license.xml @"
           $env:BITROCK_LICENSE
           "@
@@ -340,7 +337,6 @@ jobs:
         with:
           version: ${{ env.qt_version }}
       - name: Download InstallBuilder
-        timeout-minutes: 20
         run: |
           wget -O $HOME/installbuilder.dmg ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-osx-installer.dmg
           chmod 700 $HOME/installbuilder.dmg
