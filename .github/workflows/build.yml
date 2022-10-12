@@ -36,7 +36,7 @@ jobs:
       - name: Get version number
         id: version
         run: |
-          echo "::set-output name=value::$(python3 -u scripts/build.py --version)"
+          echo "value=$(python3 -u scripts/build.py --version)" >>$GITHUB_OUTPUT
       - name: Remove artifacts
         uses: swift-project/delete-artifact@swift
         with:
