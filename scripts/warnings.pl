@@ -33,9 +33,11 @@ while (<<>>)
         ++$cmds{"::warning file=$result{file}::$result{msg}"};
     }
 }
-my $bool = %cmds ? 'true' : 'false';
 print "$_\n" for sort keys %cmds;
-print "::set-output name=warnings::$bool\n";
+
+my $bool = %cmds ? 'true' : 'false';
+open my $GITHUB_OUTPUT, ">> $ENV{GITHUB_OUTPUT}" or die "open: $!";
+print $GITHUB_OUTPUT "warnings=$bool\n";
 
 sub extractWarning
 {
