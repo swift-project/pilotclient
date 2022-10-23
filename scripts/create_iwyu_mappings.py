@@ -39,7 +39,7 @@ filename = scriptDir + '/swift.imp'
 if os.path.exists(filename):
     os.remove(filename)
 
-print filename
+print(filename)
 imp = open(filename, 'w')
 imp.write('[\n')
 for mapping in mappings:
