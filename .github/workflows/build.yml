@@ -83,7 +83,7 @@ jobs:
 
     steps:
       - name: Install Qt
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v3
         with:
           version: ${{ env.qt_version }}
       - name: Download InstallBuilder
@@ -165,12 +165,12 @@ jobs:
 
     steps:
       - name: Install Qt
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v3
         with:
           version: ${{ env.qt_version }}
           arch: win64_msvc2019_64
       - name: Install Qt debug info
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v3
         with:
           version: ${{ env.qt_version }}
           arch: win64_msvc2019_64
@@ -252,12 +252,12 @@ jobs:
 
     steps:
       - name: Install Qt
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v3
         with:
           version: ${{ env.qt_version }}
           arch: win32_msvc2019
       - name: Install Qt debug info
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v3
         with:
           version: ${{ env.qt_version }}
           arch: win32_msvc2019
@@ -333,7 +333,7 @@ jobs:
 
     steps:
       - name: Install Qt
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v3
         with:
           version: ${{ env.qt_version }}
       - name: Download InstallBuilder
