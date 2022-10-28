@@ -137,18 +137,18 @@ jobs:
         run: |
           perl scripts/warnings.pl error.log
       - name: Upload installer
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: swiftinstaller-linux-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: ${{ env.do_symbols == 'true' }}
         with:
           name: swiftsymbols-allos-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftsymbols-*
       - name: Upload xswiftbus
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: xswiftbus-thin-allos-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/xswiftbus-*
@@ -224,18 +224,18 @@ jobs:
         run: |
           perl.exe scripts\warnings.pl error.log
       - name: Upload installer
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: swiftinstaller-windows-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: ${{ env.do_symbols == 'true' }}
         with:
           name: swiftsymbols-allos-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftsymbols-*
       - name: Upload xswiftbus
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: xswiftbus-thin-allos-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/xswiftbus-*
@@ -310,12 +310,12 @@ jobs:
         run: |
           perl.exe scripts\warnings.pl error.log
       - name: Upload installer
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: swiftinstaller-windows-32-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: ${{ env.do_symbols == 'true' }}
         with:
           name: swiftsymbols-allos-${{ needs.preBuild.outputs.version }}
@@ -384,18 +384,18 @@ jobs:
         run: |
           perl scripts/warnings.pl error.log
       - name: Upload installer
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: swiftinstaller-macos-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: ${{ env.do_symbols == 'true' }}
         with:
           name: swiftsymbols-allos-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftsymbols-*
       - name: Upload xswiftbus
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: xswiftbus-thin-allos-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/xswiftbus-*
@@ -416,7 +416,7 @@ jobs:
           7z x -y xswiftbus-macos-64-*.7z
           7z a -y -mx=9 xswiftbus-fat-allos-${{ needs.preBuild.outputs.version }}.7z xswiftbus
       - name: Upload xswiftbus-fat
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: xswiftbus-fat-allos-${{ needs.preBuild.outputs.version }}
           path: xswiftbus-fat-allos-*
