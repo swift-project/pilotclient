@@ -406,7 +406,7 @@ jobs:
 
     steps:
       - name: Download xswiftbus-thin
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: xswiftbus-thin-allos-${{ needs.preBuild.outputs.version }}
       - name: Repackage xswiftbus
@@ -434,7 +434,7 @@ jobs:
 
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
       - name: Flatten directories
         run: |
           mv swiftinstaller-*/* .
