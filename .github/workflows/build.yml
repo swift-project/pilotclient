@@ -88,7 +88,7 @@ jobs:
           version: ${{ env.qt_version }}
       - name: Download InstallBuilder
         run: |
-          wget -O ~/installbuilder.run ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-linux-x64-installer.run
+          wget --retry-connrefused -t 10 -w 10 -T 60 -O ~/installbuilder.run ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-linux-x64-installer.run
           chmod 700 ~/installbuilder.run
           ~/installbuilder.run --mode unattended --prefix ~/installbuilder
           cat >~/license.xml <<EOF
@@ -179,7 +179,7 @@ jobs:
       - name: Download InstallBuilder
         shell: C:\msys64\usr\bin\bash.exe -le {0}
         run: |
-          wget -O /c/installbuilder.exe ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-windows-x64-installer.exe
+          wget --retry-connrefused -t 10 -w 10 -T 60 -O /c/installbuilder.exe ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-windows-x64-installer.exe
         env:
           MSYSTEM: MSYS2
       - name: Install InstallBuilder
@@ -266,7 +266,7 @@ jobs:
       - name: Download InstallBuilder
         shell: C:\msys64\usr\bin\bash.exe -le {0}
         run: |
-          wget -O /c/installbuilder.exe ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-windows-installer.exe
+          wget --retry-connrefused -t 10 -w 10 -T 60 -O /c/installbuilder.exe ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-windows-installer.exe
         env:
           MSYSTEM: MSYS2
       - name: Install InstallBuilder
@@ -338,7 +338,7 @@ jobs:
           version: ${{ env.qt_version }}
       - name: Download InstallBuilder
         run: |
-          wget -O $HOME/installbuilder.dmg ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-osx-installer.dmg
+          wget --retry-connrefused -t 10 -w 10 -T 60 -O $HOME/installbuilder.dmg ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-osx-installer.dmg
           chmod 700 $HOME/installbuilder.dmg
           sudo hdiutil attach $HOME/installbuilder.dmg
           sudo cp -rf "/Volumes/InstallBuilder Qt/installbuilder-${{ env.bitrock_version }}-osx-installer.app" /Applications
