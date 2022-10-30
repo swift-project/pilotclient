@@ -75,6 +75,7 @@ namespace BlackSimPlugin::XPlane
         double latitudeDeg = 0;             //!< Longitude [deg]
         double longitudeDeg = 0;            //!< Latitude  [deg]
         double altitudeM = 0;               //!< Altitude  [m]
+        double pressureAltitudeFt = 0;      //!< Pressure altitude [ft, XP12]
         double heightAglM = 0;              //!< Height AGL [m]
         double groundspeedMs = 0;           //!< Ground speed [m/s]
         double pitchDeg = 0;                //!< Pitch [deg]
@@ -283,6 +284,7 @@ namespace BlackSimPlugin::XPlane
         BlackMisc::Simulation::CSimulatedAircraftList m_aircraftAddedFailed;           //!< aircraft for which adding failed
         BlackMisc::PhysicalQuantities::CLength m_minSuspicousTerrainProbe { nullptr }; //!< min. distance of "failed" (suspicious) terrain probe requests
         XPlaneData m_xplaneData; //!< XPlane data
+        BlackMisc::PhysicalQuantities::CLength m_altitudeDelta;     //!< XP12 altitude difference cause by temperature effect
 
         // statistics
         qint64 m_statsAddMaxTimeMs     = -1;

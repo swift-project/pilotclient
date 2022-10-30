@@ -23,6 +23,7 @@
 #include <XPLM/XPLMNavigation.h>
 #include <string>
 #include <chrono>
+#include <limits>
 
 //! \cond PRIVATE
 #define XSWIFTBUS_SERVICE_INTERFACENAME "org.swift_project.xswiftbus.service"
@@ -133,6 +134,10 @@ namespace XSwiftBus
 
         //! Get aircraft altitude in meters
         double getAltitudeMslM() const { return m_elevation.get(); }
+
+        //! Get aircraft pressure altitude in feet in standard atmosphere in X-Plane 12.
+        //! NaN in earlier versions of X-Plane.
+        double getPressureAltitudeFt() const { return m_pressureAlt.isValid() ? m_pressureAlt.get() : std::numeric_limits<double>::quiet_NaN(); }
 
         //! Get aircraft height in meters
         double getHeightAglM() const { return m_agl.get(); }
@@ -359,6 +364,7 @@ namespace XSwiftBus
         DataRef<xplane::data::sim::flightmodel::position::latitude> m_latitude;
         DataRef<xplane::data::sim::flightmodel::position::longitude> m_longitude;
         DataRef<xplane::data::sim::flightmodel::position::elevation> m_elevation;
+        DataRef<xplane::data::sim::flightmodel2::position::pressure_altitude> m_pressureAlt;
         DataRef<xplane::data::sim::flightmodel::position::y_agl> m_agl;
         DataRef<xplane::data::sim::flightmodel::position::groundspeed> m_groundSpeed;
         DataRef<xplane::data::sim::flightmodel::position::indicated_airspeed2> m_indicatedAirspeed;

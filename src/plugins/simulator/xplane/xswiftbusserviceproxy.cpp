@@ -409,6 +409,15 @@ namespace BlackSimPlugin::XPlane
         m_dbusInterface->callDBusAsync(QLatin1String("getAltitudeMslM"), setterCallback(o_altitude));
     }
 
+    double CXSwiftBusServiceProxy::getPressureAltitudeFt() const
+    {
+        return m_dbusInterface->callDBusRet<double>(QLatin1String("getPressureAltitudeFt"));
+    }
+    void CXSwiftBusServiceProxy::getPressureAltitudeFtAsync(double* o_altitude)
+    {
+        m_dbusInterface->callDBusAsync(QLatin1String("getPressureAltitudeFt"), setterCallback(o_altitude));
+    }
+
     double CXSwiftBusServiceProxy::getHeightAglM() const
     {
         return m_dbusInterface->callDBusRet<double>(QLatin1String("getHeightAglM"));
