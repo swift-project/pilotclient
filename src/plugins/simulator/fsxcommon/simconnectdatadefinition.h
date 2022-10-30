@@ -77,6 +77,8 @@ namespace BlackSimPlugin::FsxCommon
         double rotationVelocityBodyY;   //!< Rotation Velocity Body Y
         double rotationVelocityBodyZ;   //!< Rotation Velocity Body Z
         // 44
+        double altitudeCalibratedFt;    //!< Altitude without temperature effect (ft, FS2020)
+        // 45
     };
 
     //! Data struct of aircraft position

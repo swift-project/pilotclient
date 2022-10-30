@@ -655,6 +655,11 @@ namespace BlackSimPlugin::FsxCommon
         return true;
     }
 
+    void CSimulatorFsxCommon::setTrueAltitude(CAircraftSituation &aircraftSituation, const DataDefinitionOwnAircraft &simulatorOwnAircraft)
+    {
+        aircraftSituation.setAltitude(CAltitude(simulatorOwnAircraft.altitudeFt, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
+    }
+
     void CSimulatorFsxCommon::updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft)
     {
         const qint64 ts = QDateTime::currentMSecsSinceEpoch();
@@ -677,7 +682,7 @@ namespace BlackSimPlugin::FsxCommon
         aircraftSituation.setHeading(CHeading(simulatorOwnAircraft.trueHeadingDeg, CHeading::True, CAngleUnit::deg()));
         aircraftSituation.setGroundSpeed(CSpeed(simulatorOwnAircraft.velocity, CSpeedUnit::kts()));
         aircraftSituation.setGroundElevation(CAltitude(simulatorOwnAircraft.elevationFt, CAltitude::MeanSeaLevel, CLengthUnit::ft()), CAircraftSituation::FromProvider);
-        aircraftSituation.setAltitude(CAltitude(simulatorOwnAircraft.altitudeFt, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
+        setTrueAltitude(aircraftSituation, simulatorOwnAircraft);
         aircraftSituation.setPressureAltitude(CAltitude(simulatorOwnAircraft.pressureAltitudeM, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::m()));
         // set on ground also in situation for consistency and future usage
         // it is duplicated in parts
@@ -1998,7 +2003,13 @@ namespace BlackSimPlugin::FsxCommon
                 // update situation
                 if (forceUpdate || !this->isEqualLastSent(result.getInterpolatedSituation()))
                 {
-                    SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(result, sendGround);
+                    // adjust altitude to compensate for FS2020 temperature effect
+                    CAircraftSituation situation = result;
+                    const CLength relativeAltitude = situation.geodeticHeight() - getOwnAircraftPosition().geodeticHeight();
+                    const double altitudeDeltaWeight = 2 - qBound(3000.0, relativeAltitude.abs().value(CLengthUnit::ft()), 6000.0) / 3000;
+                    situation.setAltitude({ situation.getAltitude() + m_altitudeDelta * altitudeDeltaWeight, situation.getAltitude().getReferenceDatum() });
+
+                    SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(situation, sendGround);
                     const HRESULT hr = this->logAndTraceSendId(
                                             SimConnect_SetDataOnSimObject(
                                                 m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition,
