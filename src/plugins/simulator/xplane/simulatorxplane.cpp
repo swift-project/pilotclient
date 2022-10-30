@@ -322,14 +322,26 @@ namespace BlackSimPlugin::XPlane
             m_serviceProxy->getOwnAircraftXpdrAsync(&m_xplaneData);
             m_serviceProxy->getAllWheelsOnGroundAsync(&m_xplaneData.onGroundAll);
             m_serviceProxy->getHeightAglMAsync(&m_xplaneData.heightAglM);
+            m_serviceProxy->getPressureAltitudeFtAsync(&m_xplaneData.pressureAltitudeFt);
 
             CAircraftSituation situation;
             situation.setPosition({ m_xplaneData.latitudeDeg, m_xplaneData.longitudeDeg, 0 });
             const CAltitude altitude { m_xplaneData.altitudeM, CAltitude::MeanSeaLevel, CLengthUnit::m() };
-            situation.setAltitude(altitude);
             const CPressure seaLevelPressure({ m_xplaneData.seaLevelPressureInHg, CPressureUnit::inHg() });
             const CAltitude pressureAltitude(altitude.toPressureAltitude(seaLevelPressure));
-            situation.setPressureAltitude(pressureAltitude);
+            if (std::isnan(m_xplaneData.pressureAltitudeFt))
+            {
+                situation.setAltitude(altitude);
+                situation.setPressureAltitude(pressureAltitude);
+            }
+            else
+            {
+                const CAltitude pressureAltitudeXP12(m_xplaneData.pressureAltitudeFt, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::ft());
+                m_altitudeDelta = pressureAltitude - pressureAltitudeXP12;
+
+                situation.setAltitude({ altitude - m_altitudeDelta, CAltitude::MeanSeaLevel });
+                situation.setPressureAltitude(pressureAltitudeXP12);
+            }
             situation.setHeading({ m_xplaneData.trueHeadingDeg, CHeading::True, CAngleUnit::deg() });
             situation.setPitch({ m_xplaneData.pitchDeg, CAngleUnit::deg() });
             situation.setBank({ m_xplaneData.rollDeg, CAngleUnit::deg() });
@@ -1076,7 +1088,13 @@ namespace BlackSimPlugin::XPlane
             const CInterpolationResult result = xplaneAircraft.getInterpolation(currentTimestamp, setup, aircraftNumber++);
             if (result.getInterpolationStatus().hasValidSituation())
             {
-                const CAircraftSituation interpolatedSituation(result);
+                CAircraftSituation interpolatedSituation(result);
+
+                // adjust altitude to compensate for XP12 temperature effect
+                const CLength relativeAltitude = interpolatedSituation.geodeticHeight() - getOwnAircraftPosition().geodeticHeight();
+                const double altitudeDeltaWeight = 2 - qBound(3000.0, relativeAltitude.abs().value(CLengthUnit::ft()), 6000.0) / 3000;
+                const CLength alt = interpolatedSituation.getAltitude() + m_altitudeDelta * altitudeDeltaWeight;
+                interpolatedSituation.setAltitude({ alt, interpolatedSituation.getAltitude().getReferenceDatum() });
 
                 // update situation
                 if (updateAllAircraft || !this->isEqualLastSent(interpolatedSituation))

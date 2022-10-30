@@ -239,6 +239,12 @@ namespace BlackSimPlugin::XPlane
         void getAltitudeMslMAsync(double *o_altitude);
         //! @}
 
+        //! \copydoc XSwiftBus::CService::getPressureAltitudeFt
+        //! @{
+        double getPressureAltitudeFt() const;
+        void getPressureAltitudeFtAsync(double *o_altitude);
+        //! @}
+
         //! \copydoc XSwiftBus::CService::getHeightAglM
         //! @{
         double getHeightAglM() const;
