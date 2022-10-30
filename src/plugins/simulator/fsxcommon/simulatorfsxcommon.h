@@ -337,6 +337,8 @@ namespace BlackSimPlugin::FsxCommon
         int  m_addedProbes = 0;                //!< added probes
         QMap<DWORD, BlackMisc::Aviation::CCallsign> m_pendingProbeRequests; //!< pending elevation requests: requestId/aircraft callsign
 
+        BlackMisc::PhysicalQuantities::CLength m_altitudeDelta; //!< FS2020 effect of temperature on altitude
+
     private:
         //! Reason for adding an aircraft
         enum AircraftAddMode
@@ -470,6 +472,9 @@ namespace BlackSimPlugin::FsxCommon
 
         //! Probe data sent from simulator
         void updateProbeFromSimulator(const BlackMisc::Aviation::CCallsign &callsign, const DataDefinitionPosData &remoteAircraftData);
+
+        //! Customization point for adjusting altitude to compensate for temperature effect
+        virtual void setTrueAltitude(BlackMisc::Aviation::CAircraftSituation &aircraftSituation, const BlackSimPlugin::FsxCommon::DataDefinitionOwnAircraft &simulatorOwnAircraft);
 
         //! Called when data about our own aircraft are received
         void updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft);

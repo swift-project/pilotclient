@@ -18,6 +18,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Weather;
 using namespace BlackCore;
+using namespace BlackSimPlugin::FsxCommon;
 
 namespace BlackSimPlugin::Msfs
 {
@@ -47,6 +48,12 @@ namespace BlackSimPlugin::Msfs
         if (!loadAndResolveFsxSimConnect(true)) { return false; }
         return CSimulatorFsxCommon::connectTo();
     #endif
+    }
+
+    void CSimulatorMsFs::setTrueAltitude(CAircraftSituation &aircraftSituation, const DataDefinitionOwnAircraft &simulatorOwnAircraft)
+    {
+        aircraftSituation.setAltitude(CAltitude(simulatorOwnAircraft.altitudeCalibratedFt, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
+        m_altitudeDelta = { simulatorOwnAircraft.altitudeFt - simulatorOwnAircraft.altitudeCalibratedFt, CLengthUnit::ft() };
     }
 
     void CSimulatorMsFsListener::startImpl()

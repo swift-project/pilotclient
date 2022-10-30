@@ -33,6 +33,8 @@ namespace BlackSimPlugin::Msfs
         //! @{
         virtual bool connectTo() override;
         //! @}
+
+        virtual void setTrueAltitude(BlackMisc::Aviation::CAircraftSituation &aircraftSituation, const BlackSimPlugin::FsxCommon::DataDefinitionOwnAircraft &simulatorOwnAircraft) override;
     };
 
     //! Listener for MSFS

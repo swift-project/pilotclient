@@ -136,6 +136,8 @@ namespace BlackSimPlugin::FsxCommon
         hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "ROTATION VELOCITY BODY X", "Radians per second");
         hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "ROTATION VELOCITY BODY Y", "Radians per second");
         hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "ROTATION VELOCITY BODY Z", "Radians per second");
+        // FS2020
+        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "INDICATED ALTITUDE CALIBRATED", "Feet");
 
         hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE", nullptr, SIMCONNECT_DATATYPE_STRING256);
         if (isFailure(hr))

@@ -241,7 +241,7 @@ namespace BlackSimPlugin::FsxCommon
                 {
                 case CSimConnectDefinitions::RequestOwnAircraft:
                     {
-                        static_assert(sizeof(DataDefinitionOwnAircraft) == 44 * sizeof(double), "DataDefinitionOwnAircraft has an incorrect size.");
+                        static_assert(sizeof(DataDefinitionOwnAircraft) == 45 * sizeof(double), "DataDefinitionOwnAircraft has an incorrect size.");
                         const DataDefinitionOwnAircraft *ownAircaft = reinterpret_cast<const DataDefinitionOwnAircraft *>(&pObjData->dwData);
                         simulatorFsxP3D->updateOwnAircraftFromSimulator(*ownAircaft);
                         break;
