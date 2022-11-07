@@ -2006,7 +2006,7 @@ namespace BlackSimPlugin::FsxCommon
                     // adjust altitude to compensate for FS2020 temperature effect
                     CAircraftSituation situation = result;
                     const CLength relativeAltitude = situation.geodeticHeight() - getOwnAircraftPosition().geodeticHeight();
-                    const double altitudeDeltaWeight = qBound(3000.0, relativeAltitude.abs().value(CLengthUnit::ft()), 6000.0) / 3000 - 1;
+                    const double altitudeDeltaWeight = 2 - qBound(3000.0, relativeAltitude.abs().value(CLengthUnit::ft()), 6000.0) / 3000;
                     situation.setAltitude({ situation.getAltitude() + m_altitudeDelta * altitudeDeltaWeight, situation.getAltitude().getReferenceDatum() });
 
                     SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(situation, sendGround);
