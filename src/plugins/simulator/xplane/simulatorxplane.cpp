@@ -1092,7 +1092,7 @@ namespace BlackSimPlugin::XPlane
 
                 // adjust altitude to compensate for XP12 temperature effect
                 const CLength relativeAltitude = interpolatedSituation.geodeticHeight() - getOwnAircraftPosition().geodeticHeight();
-                const double altitudeDeltaWeight = qBound(3000.0, relativeAltitude.abs().value(CLengthUnit::ft()), 6000.0) / 3000 - 1;
+                const double altitudeDeltaWeight = 2 - qBound(3000.0, relativeAltitude.abs().value(CLengthUnit::ft()), 6000.0) / 3000;
                 const CLength alt = interpolatedSituation.getAltitude() + m_altitudeDelta * altitudeDeltaWeight;
                 interpolatedSituation.setAltitude({ alt, interpolatedSituation.getAltitude().getReferenceDatum() });
 
