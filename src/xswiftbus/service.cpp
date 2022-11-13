@@ -661,6 +661,13 @@ namespace XSwiftBus
                     sendDBusReply(sender, serial, getAltitudeMslM());
                 });
             }
+            else if (message.getMethodName() == "getPressureAltitudeFt")
+            {
+                queueDBusCall([=]()
+                {
+                    sendDBusReply(sender, serial, getPressureAltitudeFt());
+                });
+            }
             else if (message.getMethodName() == "getHeightAglM")
             {
                 queueDBusCall([ = ]()
