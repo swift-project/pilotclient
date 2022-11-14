@@ -48,3 +48,7 @@ desktop.ini
 
 # other
 /swift_config.cookie
+
+# Jetbrains stuff
+.idea/**
+cmake-build-*/
