@@ -331,6 +331,7 @@ namespace BlackSimPlugin::XPlane
             const CAltitude pressureAltitude(altitude.toPressureAltitude(seaLevelPressure));
             if (std::isnan(m_xplaneData.pressureAltitudeFt))
             {
+                m_altitudeDelta = {};
                 situation.setAltitude(altitude);
                 situation.setPressureAltitude(pressureAltitude);
             }
