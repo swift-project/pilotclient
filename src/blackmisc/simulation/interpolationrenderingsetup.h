@@ -49,7 +49,8 @@ namespace BlackMisc
             enum InterpolatorMode
             {
                 Spline,
-                Linear
+                Linear,
+                Velocity
             };
 
             //! Debugging messages for simulation

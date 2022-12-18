@@ -93,7 +93,8 @@ namespace BlackGui::Editors
     CInterpolationAndRenderingSetupBase::InterpolatorMode CInterpolationSetupForm::getInterpolatorMode() const
     {
         if (ui->rb_Linear->isChecked()) { return CInterpolationAndRenderingSetupBase::Linear; }
-        return CInterpolationAndRenderingSetupBase::Spline;
+        if (ui->rb_Spline->isChecked()) { return CInterpolationAndRenderingSetupBase::Spline; }
+        return CInterpolationAndRenderingSetupBase::Velocity;
     }
 
     void CInterpolationSetupForm::setInterpolatorMode(CInterpolationAndRenderingSetupBase::InterpolatorMode mode)
@@ -101,9 +102,9 @@ namespace BlackGui::Editors
         switch (mode)
         {
         case CInterpolationAndRenderingSetupBase::Linear : ui->rb_Linear->setChecked(true); break;
-        case CInterpolationAndRenderingSetupBase::Spline:
+        case CInterpolationAndRenderingSetupBase::Spline: ui->rb_Spline->setChecked(true); break;
         default:
-            ui->rb_Spline->setChecked(true);
+            ui->rb_Velocity->setChecked(true);
             break;
         }
     }

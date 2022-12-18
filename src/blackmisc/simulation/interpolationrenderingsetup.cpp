@@ -61,6 +61,7 @@ namespace BlackMisc::Simulation
     {
         if (mode.contains("spline", Qt::CaseInsensitive)) { return this->setInterpolatorMode(Spline); }
         if (mode.contains("linear", Qt::CaseInsensitive)) { return this->setInterpolatorMode(Linear); }
+        if (mode.contains("velocity", Qt::CaseInsensitive)) { return this->setInterpolatorMode(Velocity); }
         return false;
     }
 
@@ -68,11 +69,13 @@ namespace BlackMisc::Simulation
     {
         static const QString l("linear");
         static const QString s("spline");
+        static const QString v("velocity");
 
         switch (mode)
         {
         case Linear: return l;
         case Spline: return s;
+        case Velocity: return v;
         default: return s;
         }
     }

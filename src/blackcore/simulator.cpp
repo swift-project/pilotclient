@@ -512,7 +512,7 @@ namespace BlackCore
             }
         } // logint
 
-        if (part1.startsWith("spline") || part1.startsWith("linear"))
+        if (part1.startsWith("spline") || part1.startsWith("linear") || part1.startsWith("velocity"))
         {
             if (parser.hasPart(2))
             {

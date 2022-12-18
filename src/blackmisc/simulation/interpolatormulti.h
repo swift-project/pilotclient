@@ -13,6 +13,7 @@
 
 #include "blackmisc/simulation/interpolatorlinear.h"
 #include "blackmisc/simulation/interpolatorspline.h"
+#include "blackmisc/simulation/interpolatorvelocity.h"
 #include "blackmisc/statusmessagelist.h"
 
 namespace BlackMisc::Simulation
@@ -47,6 +48,7 @@ namespace BlackMisc::Simulation
     private:
         CInterpolatorSpline m_spline;
         CInterpolatorLinear m_linear;
+        CInterpolatorVelocity m_velocity;
     };
 
     /*!

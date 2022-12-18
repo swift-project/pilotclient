@@ -151,6 +151,13 @@
        </widget>
       </item>
       <item>
+        <widget class="QRadioButton" name="rb_Velocity">
+         <property name="text">
+          <string>velocity</string>
+         </property>
+        </widget>
+       </item>
+      <item>
        <spacer name="hs_InterpolatorType">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>

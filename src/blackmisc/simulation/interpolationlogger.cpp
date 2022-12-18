@@ -578,9 +578,11 @@ namespace BlackMisc::Simulation
     {
         static const QString s("spline");
         static const QString l("linear");
+        static const QString v("velocity");
         static const QString u("unknown");
         if (interpolator == 's') { return s; }
         if (interpolator == 'l') { return l; }
+        if (interpolator == 'v') { return v; }
         return u;
     }
 

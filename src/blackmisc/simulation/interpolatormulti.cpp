@@ -16,7 +16,8 @@ namespace BlackMisc::Simulation
 {
     CInterpolatorMulti::CInterpolatorMulti(const CCallsign &callsign, ISimulationEnvironmentProvider *p1, IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3, CInterpolationLogger *logger) :
         m_spline(callsign, p1, p2, p3, logger),
-        m_linear(callsign, p1, p2, p3, logger)
+        m_linear(callsign, p1, p2, p3, logger),
+        m_velocity(callsign, p1, p2, p3, logger)
     {}
 
     CInterpolationResult CInterpolatorMulti::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber)
@@ -25,6 +26,7 @@ namespace BlackMisc::Simulation
         {
         case CInterpolationAndRenderingSetupBase::Linear: return m_linear.getInterpolation(currentTimeSinceEpoc, setup, aircraftNumber);
         case CInterpolationAndRenderingSetupBase::Spline: return m_spline.getInterpolation(currentTimeSinceEpoc, setup, aircraftNumber);
+        case CInterpolationAndRenderingSetupBase::Velocity: return m_velocity.getInterpolation(currentTimeSinceEpoc, setup, aircraftNumber);
         default: break;
         }
 
@@ -37,6 +39,7 @@ namespace BlackMisc::Simulation
         {
         case CInterpolationAndRenderingSetupBase::Linear: return m_linear.getLastInterpolatedSituation();
         case CInterpolationAndRenderingSetupBase::Spline: return m_spline.getLastInterpolatedSituation();
+        case CInterpolationAndRenderingSetupBase::Velocity: return m_velocity.getLastInterpolatedSituation();
         default: break;
         }
         return CAircraftSituation::null();
@@ -46,12 +49,14 @@ namespace BlackMisc::Simulation
     {
         m_linear.attachLogger(logger);
         m_spline.attachLogger(logger);
+        m_velocity.attachLogger(logger);
     }
 
     void CInterpolatorMulti::initCorrespondingModel(const CAircraftModel &model)
     {
         m_linear.initCorrespondingModel(model);
         m_spline.initCorrespondingModel(model);
+        m_velocity.initCorrespondingModel(model);
     }
 
     const CStatusMessageList &CInterpolatorMulti::getInterpolationMessages(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
@@ -60,6 +65,7 @@ namespace BlackMisc::Simulation
         {
         case CInterpolationAndRenderingSetupBase::Spline: return m_spline.getInterpolationMessages();
         case CInterpolationAndRenderingSetupBase::Linear: return m_linear.getInterpolationMessages();
+        case CInterpolationAndRenderingSetupBase::Velocity: return m_velocity.getInterpolationMessages();
         default: break;
         }
         static const CStatusMessageList empty;
@@ -72,6 +78,7 @@ namespace BlackMisc::Simulation
         {
         case CInterpolationAndRenderingSetupBase::Spline: return m_spline.getInterpolatorInfo();
         case CInterpolationAndRenderingSetupBase::Linear: return m_linear.getInterpolatorInfo();
+        case CInterpolationAndRenderingSetupBase::Velocity: return m_velocity.getInterpolatorInfo();
         default: break;
         }
         return ("Illegal mode");
