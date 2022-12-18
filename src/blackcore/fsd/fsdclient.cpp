@@ -1317,10 +1317,9 @@ namespace BlackCore::Fsd
             CAngle(dataUpdate.m_pitch, CAngleUnit::deg()),
             CAngle(dataUpdate.m_bank, CAngleUnit::deg()));
 
-        // not used
-        //situation.setVelocity(CAircraftVelocity(
-        //    dataUpdate.m_xVelocity, dataUpdate.m_yVelocity, dataUpdate.m_zVelocity, CSpeedUnit::m_s(),
-        //    dataUpdate.m_pitchRadPerSec, dataUpdate.m_bankRadPerSec, dataUpdate.m_headingRadPerSec, CAngleUnit::rad(), CTimeUnit::s()));
+        situation.setVelocity(CAircraftVelocity(
+           dataUpdate.m_xVelocity, dataUpdate.m_yVelocity, dataUpdate.m_zVelocity, CSpeedUnit::m_s(),
+           dataUpdate.m_pitchRadPerSec, dataUpdate.m_bankRadPerSec, dataUpdate.m_headingRadPerSec, CAngleUnit::rad(), CTimeUnit::s()));
 
         // Ref T297, default offset time
         situation.setCurrentUtcTime();

@@ -11,6 +11,7 @@
 #include "blackmisc/simulation/interpolationlogger.h"
 #include "blackmisc/simulation/interpolatorlinear.h"
 #include "blackmisc/simulation/interpolatorspline.h"
+#include "blackmisc/simulation/interpolatorvelocity.h"
 #include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/network/fsdsetup.h"
@@ -889,5 +890,6 @@ namespace BlackMisc::Simulation
     //! \cond PRIVATE
     template class CInterpolator<CInterpolatorLinear>;
     template class CInterpolator<CInterpolatorSpline>;
+    template class CInterpolator<CInterpolatorVelocity>;
     //! \endcond
 } // namespace

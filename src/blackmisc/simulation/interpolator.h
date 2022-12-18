@@ -40,6 +40,7 @@ namespace BlackMisc
         class CInterpolationLogger;
         class CInterpolatorLinear;
         class CInterpolatorSpline;
+        class CInterpolatorVelocity;
 
         //! Status of interpolation
         struct BLACKMISC_EXPORT CInterpolationStatus
@@ -350,6 +351,7 @@ namespace BlackMisc
         //! \cond PRIVATE
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CInterpolator<CInterpolatorLinear>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CInterpolator<CInterpolatorSpline>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CInterpolator<CInterpolatorVelocity>;
         //! \endcond
     } // namespace
 } // namespace

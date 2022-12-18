@@ -289,6 +289,7 @@ namespace BlackCore
         BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings { this }; //!< settings
         QQueue<BlackMisc::Aviation::CCallsign> m_queryAtis;  //!< query the ATIS
         QQueue<BlackMisc::Aviation::CCallsign> m_queryPilot; //!< query the pilot data
+        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituation> m_fullSituations; //!< last reported full position
         Fsd::CFSDClient   *m_fsdClient = nullptr;            //!< corresponding network interface
         CAirspaceAnalyzer *m_analyzer  = nullptr;            //!< owned analyzer
         bool m_bookingsRequested       = false;              //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal

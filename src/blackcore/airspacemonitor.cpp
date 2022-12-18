@@ -549,6 +549,7 @@ namespace BlackCore
         m_flightPlanCache.clear();
         m_readiness.clear();
         m_queryPilot.clear();
+        m_fullSituations.clear();
     }
 
     void CAirspaceMonitor::removeFromAircraftCachesAndLogs(const CCallsign &callsign)
@@ -556,6 +557,7 @@ namespace BlackCore
         if (callsign.isEmpty()) { return; }
         m_flightPlanCache.remove(callsign);
         m_readiness.remove(callsign);
+        m_fullSituations.remove(callsign);
         this->removeReverseLookupMessages(callsign);
     }
 
@@ -1271,7 +1273,26 @@ namespace BlackCore
         this->autoAdjustCientGndCapability(situation);
 
         // store situation history
-        this->storeAircraftSituation(situation); // updates situation
+        Q_ASSERT_X(m_fsdClient, Q_FUNC_INFO, "Empty fsd client");
+        const bool isVatsim = m_fsdClient->getServer().getEcosystem().isSystem(CEcosystem::VATSIM);
+
+        if (isVatsim)
+        {
+            // We are not using PilotDataUpdate (@) for VATSIM with velocity to update position
+            // but store this situation to use some data of it with visual pilot updates
+            m_fullSituations[callsign] = situation;
+            if (!existsInRange && validMaxRange)
+            {
+                // On first recv packet, add position with 0 velocity
+                CAircraftSituation sit(situation);
+                sit.setVelocity(CAircraftVelocity());
+                this->storeAircraftSituation(sit);
+            }
+        }
+        else
+        {
+            this->storeAircraftSituation(situation); // updates situation
+        }
 
         // in case we only have
         if (!existsInRange && validMaxRange)
@@ -1370,21 +1391,50 @@ namespace BlackCore
 
         // Visual packets do not have groundspeed, hence set the last known value.
         // If there is no full position available yet, throw this interim position away.
-        //! \todo Also use the onGround flag of the last known situation?
         CAircraftSituation visualSituation(situation);
-        CAircraftSituationList history = this->remoteAircraftSituations(callsign);
-        if (history.empty()) { return; } // we need one full situation at least
-        const CAircraftSituation lastSituation = history.latestObject();
 
         // changed position, continue and copy values
         visualSituation.setCurrentUtcTime();
-        visualSituation.setGroundSpeed(lastSituation.getGroundSpeed());
+
+        // Use data from last full position update (@) if newer or from last stored situation if nothing changed
+        // If non of the following cases catches (no full update received in the past), use default initialized values
+        CAircraftSituation lastFullUpdate{};
+        auto lastData = m_fullSituations.find(callsign);
+        CAircraftSituationList history = this->remoteAircraftSituations(callsign);
+        if (lastData != m_fullSituations.end())
+        {
+            // New full update in last data.
+            lastFullUpdate = *lastData;
+            m_fullSituations.erase(lastData);
+        }
+        else if (!history.empty())
+        {
+            // Use full update info from last position/visual update
+            lastFullUpdate = history.latestObject();
+        }
+        else
+        {
+            // No full update received yet. Should never happen because the aircraft must be in range (PilotUpdate received)
+            // before even getting here.
+            Q_ASSERT_X(false, Q_FUNC_INFO, "No information about this aircraft yet");
+            // Throw away visual update
+            return;
+        }
+        visualSituation.setPressureAltitude(lastFullUpdate.getPressureAltitude());
+        visualSituation.setOnGround(lastFullUpdate.isOnGround());
+        visualSituation.setGroundSpeed(lastFullUpdate.getGroundSpeed());
+
 
         // store situation history
         this->storeAircraftSituation(visualSituation);
 
-        const bool samePosition = lastSituation.equalNormalVectorDouble(visualSituation);
-        if (samePosition) { return; } // nothing to update
+        history = this->remoteAircraftSituations(callsign);
+        if (!history.empty())
+        { 
+            const CAircraftSituation lastSituation = history.latestObject();
+            const bool samePosition = lastSituation.equalNormalVectorDouble(visualSituation);
+            if (samePosition) { return; } // nothing to update
+         }
 
         // update aircraft
         this->updateAircraftInRangeDistanceBearing(
