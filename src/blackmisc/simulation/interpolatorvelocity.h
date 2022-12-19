@@ -65,8 +65,8 @@ namespace BlackMisc
                 qint64 m_creationTimeMsSinceEpoch;
                 qint64 m_currentTimeMsSinceEpoch;
                 double m_altitudeDelta = 0;
-                double m_latDelta = 0;
-                double m_lonDelta = 0;
+                double m_latDeltaRad = 0;
+                double m_lonDeltaRad = 0;
                 double m_bankDelta = 0;
                 double m_headingDelta = 0;
                 double m_pitchDelta = 0;

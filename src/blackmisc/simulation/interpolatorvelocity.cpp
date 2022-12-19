@@ -49,12 +49,16 @@ namespace BlackMisc::Simulation
         m_creationTimeMsSinceEpoch = currentSituation.getMSecsSinceEpoch();
         m_currentTimeMsSinceEpoch = currentSituation.getMSecsSinceEpoch();
 
-        // Delta to last shown position (correction vectors)
+        // Get the situation of the aircraft that the old interpolant would show at the current timestamp
+        // and calculate delta to to this position (correction vectors)
+        CInterpolant oldCopy(old);
+        oldCopy.update(currentSituation.getMSecsSinceEpoch());
         CAircraftSituation unusedSituation;
-        CAircraftSituation lastSitutation = old.interpolatePositionAndAltitude(unusedSituation, true);
-        m_altitudeDelta = lastSitutation.getAltitude().value(CLengthUnit::ft()) - currentSituation.getCorrectedAltitude().value(CLengthUnit::ft());
-        m_latDelta = lastSitutation.getPosition().latitude().value(CAngleUnit::deg()) - currentSituation.getPosition().latitude().value(CAngleUnit::deg()); 
-        m_lonDelta = lastSitutation.getPosition().longitude().value(CAngleUnit::deg()) - currentSituation.getPosition().longitude().value(CAngleUnit::deg());
+        const CAircraftSituation lastSitutation = oldCopy.interpolatePositionAndAltitude(unusedSituation, true);
+
+        m_altitudeDelta = lastSitutation.getAltitude().value(CLengthUnit::m()) - currentSituation.getCorrectedAltitude().value(CLengthUnit::m());
+        m_latDeltaRad = lastSitutation.getPosition().latitude().value(CAngleUnit::rad()) - currentSituation.getPosition().latitude().value(CAngleUnit::rad());
+        m_lonDeltaRad = lastSitutation.getPosition().longitude().value(CAngleUnit::rad()) - currentSituation.getPosition().longitude().value(CAngleUnit::rad());
 
         auto correctTurnDirection = [](double delta) -> double
         {
@@ -130,40 +134,42 @@ namespace BlackMisc::Simulation
 
         {
             // Altitude
-            const double currentAltitude = m_currentSitutation.getCorrectedAltitude().value(CLengthUnit::ft());
+            const double currentAltitude = m_currentSitutation.getCorrectedAltitude().value(CLengthUnit::m());
             const double altVelo = m_currentSitutation.getVelocity().getVelocityY(CSpeedUnit::m_s());
 
-            sit.setAltitude(CAltitude(currentAltitude + diffMs/1000.0 * altVelo + errorOffsetFraction * m_altitudeDelta, CLengthUnit::ft()));
+            sit.setAltitude(CAltitude(currentAltitude + diffMs/1000.0 * altVelo + errorOffsetFraction * m_altitudeDelta, CLengthUnit::m()));
         }
 
         {
             // Position
-            const CCoordinateGeodetic pos = m_currentSitutation.getPosition();
+            CCoordinateGeodetic pos = m_currentSitutation.getPosition();
 
             // Latitude
-            const double latVelo = m_currentSitutation.getVelocity().getVelocityZ(CSpeedUnit::m_s());
-            CLength extrapolateLengthLat = CLength(latVelo * diffMs/1000.0, CLengthUnit::m());
-            CCoordinateGeodetic latShifted = pos;
-            // Extrapolate
-            double degLat = (extrapolateLengthLat.value(CLengthUnit::m()) >= 0 ? 0 : 180);
-            latShifted = pos.calculatePosition(extrapolateLengthLat.abs(), CAngle(degLat, CAngleUnit::deg()));
-            // Account delta since last update (error)
-            latShifted.setLatitude(latShifted.latitude() + CLatitude(errorOffsetFraction * m_latDelta, CAngleUnit::deg()));            
+            {
+                const double latVelo = m_currentSitutation.getVelocity().getVelocityZ(CSpeedUnit::m_s());
+                const CLength extrapolateLengthLat = CLength(latVelo * diffMs/1000.0, CLengthUnit::m());
+                const double shiftDirectionLat = (extrapolateLengthLat.value(CLengthUnit::m()) >= 0 ? 0 : 180);
+                pos = pos.calculatePosition(extrapolateLengthLat.abs(), CAngle(shiftDirectionLat, CAngleUnit::deg()));
+            }
 
             // Longitude
-            const double lonVelo = m_currentSitutation.getVelocity().getVelocityX(CSpeedUnit::m_s());
-            CLength extrapolateLengthLon = CLength(lonVelo * diffMs/1000.0, CLengthUnit::m());
-            CCoordinateGeodetic lonShifted = pos;
-            // Extrapolate
-            double degLon = (extrapolateLengthLon.value(CLengthUnit::m()) >= 0 ? 90 : 270);
-            lonShifted = pos.calculatePosition(extrapolateLengthLon.abs(), CAngle(degLon, CAngleUnit::deg()));
-            // Account delta since last update (error)
-            lonShifted.setLongitude(lonShifted.longitude() + CLongitude(errorOffsetFraction * m_lonDelta, CAngleUnit::deg()));
+            {
+                const double lonVelo = m_currentSitutation.getVelocity().getVelocityX(CSpeedUnit::m_s());
+                const CLength extrapolateLengthLon = CLength(lonVelo * diffMs/1000.0, CLengthUnit::m());
+                const double shiftDirectionLon = (extrapolateLengthLon.value(CLengthUnit::m()) >= 0 ? 90 : 270);
+                pos = pos.calculatePosition(extrapolateLengthLon.abs(), CAngle(shiftDirectionLon, CAngleUnit::deg()));
+            }
 
-            CCoordinateGeodetic combined = sit.getPosition();
-            combined.setLatLong(latShifted.latitude(), lonShifted.longitude());
+            // Apply error
+            const CLatitude latError(errorOffsetFraction * m_latDeltaRad, CAngleUnit::rad());
+            pos.setLatitude(pos.latitude() + latError);
+            const CLongitude lonError(errorOffsetFraction * m_lonDeltaRad, CAngleUnit::rad());
+            pos.setLongitude(pos.longitude() + lonError);
 
-            sit.setPosition(combined);
+            // Copy altitude to avoid overriding with new position
+            const CAltitude altitude = sit.getAltitude();
+            sit.setPosition(pos);
+            sit.setAltitude(altitude);
         }
 
         // Set ground factor directly from update (no extra/interpolation for now)
