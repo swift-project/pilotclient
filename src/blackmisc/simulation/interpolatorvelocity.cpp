@@ -186,7 +186,22 @@ namespace BlackMisc::Simulation
 
     CInterpolatorVelocity::CInterpolant CInterpolatorVelocity::getInterpolant(SituationLog &log)
     {
-        CAircraftSituation current = *m_currentSituations.begin();
+        Q_ASSERT_X(m_currentSituations.size() >= 1, Q_FUNC_INFO, "Velocity interpolator needs at least one situation");
+        CAircraftSituation current{};
+        // Find first (latest) situation with velocity data
+        auto it = std::find_if(m_currentSituations.begin(), m_currentSituations.end(), [](const CAircraftSituation &sit){ return sit.hasVelocity(); });
+        if (it != m_currentSituations.end())
+        {
+            current = *it;
+        }
+        else
+        {
+            // No situation with velocity data available. Take the latest full update with velocities set to 0
+            current = *m_currentSituations.begin();
+            current.setVelocity(CAircraftVelocity(0, 0, 0, CSpeedUnit::m_s(), 0, 0, 0, CAngleUnit::rad(), CTimeUnit::s()));
+        }
+
+        Q_ASSERT_X(current.hasVelocity(), Q_FUNC_INFO, "Velocity interpolator needs situation with valid velocities");
 
         // adjust ground if required
         if (!current.canLikelySkipNearGroundInterpolation() && !current.hasGroundElevation())
@@ -194,7 +209,7 @@ namespace BlackMisc::Simulation
             // The elevation needs to be requested again when we do not receive any velocity updates of an aircraft
             // for some time and the elevation is therefore discarded from the cache.
             // This happens when the aircraft is not moving and we only receive a #ST packet once.
-            const CElevationPlane planeOld = this->findClosestElevationWithinRangeOrRequest(current, CElevationPlane::singlePointRadius(), current.getCallsign());
+            const CElevationPlane planeOld = this->findClosestElevationWithinRange(current, CElevationPlane::singlePointRadius());
             current.setGroundElevationChecked(planeOld, CAircraftSituation::FromCache);
         }
 

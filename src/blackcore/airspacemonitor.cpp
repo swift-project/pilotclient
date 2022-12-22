@@ -1272,27 +1272,15 @@ namespace BlackCore
         // update client info
         this->autoAdjustCientGndCapability(situation);
 
-        // store situation history
-        Q_ASSERT_X(m_fsdClient, Q_FUNC_INFO, "Empty fsd client");
-        const bool isVatsim = m_fsdClient->getServer().getEcosystem().isSystem(CEcosystem::VATSIM);
+        Q_ASSERT_X(!situation.hasVelocity(), Q_FUNC_INFO, "Velocity of aircraft updates must be invalid");
 
-        if (isVatsim)
-        {
-            // We are not using PilotDataUpdate (@) for VATSIM with velocity to update position
-            // but store this situation to use some data of it with visual pilot updates
-            m_fullSituations[callsign] = situation;
-            if (!existsInRange && validMaxRange)
-            {
-                // On first recv packet, add position with 0 velocity
-                CAircraftSituation sit(situation);
-                sit.setVelocity(CAircraftVelocity());
-                this->storeAircraftSituation(sit);
-            }
-        }
-        else
-        {
-            this->storeAircraftSituation(situation); // updates situation
-        }
+        // store situation history
+        this->storeAircraftSituation(situation); // updates situation
+
+        // The packet is only stored above, if previously no velocity packet was added.
+        // To transfer data from the @ update to velocity updates, store this situation separatly
+        // TODO: Not needed anymore if all packets would be added to the history
+        m_fullSituations[callsign] = situation;
 
         // in case we only have
         if (!existsInRange && validMaxRange)
@@ -1389,28 +1377,23 @@ namespace BlackCore
             Q_ASSERT_X(situation.isValidVectorRange(), Q_FUNC_INFO, "out of range [-1,1]");
         }
 
-        // Visual packets do not have groundspeed, hence set the last known value.
-        // If there is no full position available yet, throw this interim position away.
+        // Visual packets do not have groundspeed, pressure altitude and onGround flag,
+        // hence set the last known value from last full update or last visual update.
+        // If there is no full position available yet, throw this visual position away.
         CAircraftSituation visualSituation(situation);
-
-        // changed position, continue and copy values
-        visualSituation.setCurrentUtcTime();
-
-        // Use data from last full position update (@) if newer or from last stored situation if nothing changed
-        // If non of the following cases catches (no full update received in the past), use default initialized values
-        CAircraftSituation lastFullUpdate{};
-        auto lastData = m_fullSituations.find(callsign);
+        CAircraftSituation lastSituation{};
+        auto lastDataIt = m_fullSituations.find(callsign);
         CAircraftSituationList history = this->remoteAircraftSituations(callsign);
-        if (lastData != m_fullSituations.end())
+        if (lastDataIt != m_fullSituations.end())
         {
             // New full update in last data.
-            lastFullUpdate = *lastData;
-            m_fullSituations.erase(lastData);
+            lastSituation = *lastDataIt;
+            m_fullSituations.erase(lastDataIt);
         }
         else if (!history.empty())
         {
             // Use full update info from last position/visual update
-            lastFullUpdate = history.latestObject();
+            lastSituation = history.latestObject();
         }
         else
         {
@@ -1420,21 +1403,20 @@ namespace BlackCore
             // Throw away visual update
             return;
         }
-        visualSituation.setPressureAltitude(lastFullUpdate.getPressureAltitude());
-        visualSituation.setOnGround(lastFullUpdate.isOnGround());
-        visualSituation.setGroundSpeed(lastFullUpdate.getGroundSpeed());
 
+        // changed position, continue and copy values
+        visualSituation.setCurrentUtcTime();
+        visualSituation.setPressureAltitude(lastSituation.getPressureAltitude());
+        visualSituation.setOnGround(lastSituation.isOnGround());
+        visualSituation.setGroundSpeed(lastSituation.getGroundSpeed());
+
+        Q_ASSERT_X(visualSituation.hasVelocity(), Q_FUNC_INFO, "Velocity of visual updates must be valid");
 
         // store situation history
         this->storeAircraftSituation(visualSituation);
 
-        history = this->remoteAircraftSituations(callsign);
-        if (!history.empty())
-        { 
-            const CAircraftSituation lastSituation = history.latestObject();
-            const bool samePosition = lastSituation.equalNormalVectorDouble(visualSituation);
-            if (samePosition) { return; } // nothing to update
-         }
+        const bool samePosition = lastSituation.equalNormalVectorDouble(visualSituation);
+        if (samePosition) { return; } // nothing to update
 
         // update aircraft
         this->updateAircraftInRangeDistanceBearing(
