@@ -186,19 +186,31 @@ namespace BlackMisc::Simulation
 
     CInterpolatorVelocity::CInterpolant CInterpolatorVelocity::getInterpolant(SituationLog &log)
     {
+        CAircraftSituation current = *m_currentSituations.begin();
+
+        // adjust ground if required
+        if (!current.canLikelySkipNearGroundInterpolation() && !current.hasGroundElevation())
+        {
+            // The elevation needs to be requested again when we do not receive any velocity updates of an aircraft
+            // for some time and the elevation is therefore discarded from the cache.
+            // This happens when the aircraft is not moving and we only receive a #ST packet once.
+            const CElevationPlane planeOld = this->findClosestElevationWithinRangeOrRequest(current, CElevationPlane::singlePointRadius(), current.getCallsign());
+            current.setGroundElevationChecked(planeOld, CAircraftSituation::FromCache);
+        }
+
         if(!m_interpolant.isValid()) 
         {
-            m_interpolant = CInterpolant{ *m_currentSituations.begin() };
-            m_lastSituation = *m_currentSituations.begin();
+            m_interpolant = CInterpolant{ current };
+            m_lastSituation = current;
         }
-        else if (m_lastSituation == *m_currentSituations.begin())
+        else if (m_lastSituation == current)
         {
             m_interpolant.update(m_currentTimeMsSinceEpoch);
         }
         else
         {
-            m_interpolant = CInterpolant{ m_interpolant, *m_currentSituations.begin() };
-            m_lastSituation = *m_currentSituations.begin();
+            m_interpolant = CInterpolant{ m_interpolant, current };
+            m_lastSituation = current;
         }
 
         // Always changed (at least time)
