@@ -86,6 +86,12 @@ namespace BlackMisc::Simulation
         m_pitchDelta = correctTurnDirection(m_pitchDelta);
     }
 
+    void CInterpolatorVelocity::CInterpolant::update(qint64 currentMsSinceEpoch) 
+    {
+        Q_ASSERT_X(currentMsSinceEpoch >= m_creationTimeMsSinceEpoch, Q_FUNC_INFO, "Updated current time must be greater creation time");
+        m_currentTimeMsSinceEpoch = currentMsSinceEpoch;
+    }
+
     void CInterpolatorVelocity::anchor()
     { }
 

@@ -289,14 +289,10 @@ namespace BlackMisc::Simulation
             {
                 newSituationsList.prefillLatestAdjustedFirst(situationCorrected, IRemoteAircraftProvider::MaxSituationsPerCallsign);
             }
-            else if (!situationCorrected.hasVelocity() && newSituationsList.front().hasVelocity())
-            {
-                return situationCorrected;
-            }
             else
             {
-                // newSituationsList.push_frontKeepLatestFirstIgnoreOverlapping(situationCorrected, true, IRemoteAircraftProvider::MaxSituationsPerCallsign);
-                newSituationsList.push_frontKeepLatestFirstAdjustOffset(situationCorrected, true, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+                newSituationsList.push_frontKeepLatestFirstIgnoreOverlapping(situationCorrected, true, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+                // newSituationsList.push_frontKeepLatestFirstAdjustOffset(situationCorrected, true, IRemoteAircraftProvider::MaxSituationsPerCallsign);
                 newSituationsList.setAdjustedSortHint(CAircraftSituationList::AdjustedTimestampLatestFirst);
                 newSituationsList.transferElevationForward(); // transfer elevations, will do nothing if elevations already exist
 

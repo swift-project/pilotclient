@@ -58,7 +58,7 @@ namespace BlackMisc
 
                 //! Update interpolant to given timestamp. Every following call to
                 //! interpolatePositionAndAltitude(..) will return the situation according to this timestamp.
-                void update(qint64 currentMsSinceEpoch) { m_currentTimeMsSinceEpoch = currentMsSinceEpoch; }
+                void update(qint64 currentMsSinceEpoch);
 
             private:
                 Aviation::CAircraftSituation m_currentSitutation;

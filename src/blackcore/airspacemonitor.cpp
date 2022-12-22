@@ -549,7 +549,6 @@ namespace BlackCore
         m_flightPlanCache.clear();
         m_readiness.clear();
         m_queryPilot.clear();
-        m_fullSituations.clear();
     }
 
     void CAirspaceMonitor::removeFromAircraftCachesAndLogs(const CCallsign &callsign)
@@ -557,7 +556,6 @@ namespace BlackCore
         if (callsign.isEmpty()) { return; }
         m_flightPlanCache.remove(callsign);
         m_readiness.remove(callsign);
-        m_fullSituations.remove(callsign);
         this->removeReverseLookupMessages(callsign);
     }
 
@@ -1272,15 +1270,10 @@ namespace BlackCore
         // update client info
         this->autoAdjustCientGndCapability(situation);
 
-        Q_ASSERT_X(!situation.hasVelocity(), Q_FUNC_INFO, "Velocity of aircraft updates must be invalid");
+        Q_ASSERT_X(!situation.hasVelocity(), Q_FUNC_INFO, "Velocity of full aircraft updates must be invalid");
 
         // store situation history
         this->storeAircraftSituation(situation); // updates situation
-
-        // The packet is only stored above, if previously no velocity packet was added.
-        // To transfer data from the @ update to velocity updates, store this situation separatly
-        // TODO: Not needed anymore if all packets would be added to the history
-        m_fullSituations[callsign] = situation;
 
         // in case we only have
         if (!existsInRange && validMaxRange)
@@ -1381,28 +1374,9 @@ namespace BlackCore
         // hence set the last known value from last full update or last visual update.
         // If there is no full position available yet, throw this visual position away.
         CAircraftSituation visualSituation(situation);
-        CAircraftSituation lastSituation{};
-        auto lastDataIt = m_fullSituations.find(callsign);
         CAircraftSituationList history = this->remoteAircraftSituations(callsign);
-        if (lastDataIt != m_fullSituations.end())
-        {
-            // New full update in last data.
-            lastSituation = *lastDataIt;
-            m_fullSituations.erase(lastDataIt);
-        }
-        else if (!history.empty())
-        {
-            // Use full update info from last position/visual update
-            lastSituation = history.latestObject();
-        }
-        else
-        {
-            // No full update received yet. Should never happen because the aircraft must be in range (PilotUpdate received)
-            // before even getting here.
-            Q_ASSERT_X(false, Q_FUNC_INFO, "No information about this aircraft yet");
-            // Throw away visual update
-            return;
-        }
+        if (history.empty()) { return; } // we need one full situation at least
+        const CAircraftSituation lastSituation = history.latestObject();
 
         // changed position, continue and copy values
         visualSituation.setCurrentUtcTime();
