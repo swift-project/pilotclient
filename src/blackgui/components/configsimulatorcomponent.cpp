@@ -72,7 +72,8 @@ namespace BlackGui::Components
         ui->cb_FG->setChecked(fg);
 
         ui->cb_P3D->setEnabled(CBuildConfig::isCompiledWithP3DSupport());
-        ui->cb_FSX->setEnabled(CBuildConfig::isCompiledWithFsxSupport());
+        // TOOO remove MSFS check once it has its own entry
+        ui->cb_FSX->setEnabled(CBuildConfig::isCompiledWithFsxSupport() || CBuildConfig::isCompiledWithMsFlightSimulatorSupport());
         ui->cb_FS9->setEnabled(CBuildConfig::isCompiledWithFs9Support());
         ui->cb_XP->setEnabled(CBuildConfig::isCompiledWithXPlaneSupport());
         ui->cb_FG->setEnabled(CBuildConfig::isCompiledWithFGSupport());
