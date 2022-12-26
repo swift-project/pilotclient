@@ -65,6 +65,15 @@ constexpr bool BlackConfig::CBuildConfig::isCompiledWithFsxSupport()
 !!ENDIF
 }
 
+constexpr bool BlackConfig::CBuildConfig::isCompiledWithMsFlightSimulatorSupport()
+{
+!!IF swiftConfig(sims.msfs)
+    return true;
+!!ELSE
+    return false;
+!!ENDIF
+}
+
 constexpr bool BlackConfig::CBuildConfig::isCompiledWithFsuipcSupport()
 {
 !!IF swiftConfig(sims.fsuipc)

@@ -17,11 +17,6 @@
 
 namespace BlackConfig
 {
-    constexpr bool CBuildConfig::isCompiledWithMsFlightSimulatorSupport()
-    {
-        return CBuildConfig::isCompiledWithFs9Support() || CBuildConfig::isCompiledWithFsxSupport() || CBuildConfig::isCompiledWithP3DSupport();
-    }
-
     constexpr bool CBuildConfig::isCompiledWithFlightSimulatorSupport()
     {
         return CBuildConfig::isCompiledWithFsxSupport() || CBuildConfig::isCompiledWithXPlaneSupport();
