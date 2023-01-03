@@ -7,6 +7,8 @@ CONFIG -= qt
 
 CONFIG += c++17
 
+QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
+
 INCLUDEPATH += $$EXTERNALSROOT/common/include/XPLM
 
 LIBS += -levent_core -ldbus-1
