@@ -99,7 +99,7 @@ namespace BlackMisc::Network
 
         // cross dependency
         if (ecosystem.isSystem(CEcosystem::VATSIM)) { m_serverType = FSDServerVatsim; }
-        if (ecosystem.isSystem(CEcosystem::SwiftTest)) { m_serverType = FSDServerVatsim; }
+        if (ecosystem.isSystem(CEcosystem::SwiftTest)) { m_serverType = FSDServer; }
         return true;
     }
 
