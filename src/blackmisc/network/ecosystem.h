@@ -34,7 +34,6 @@ namespace BlackMisc::Network
             NoSystem, //!< no relevant ecosystem
             VATSIM, //!< VATSIM
             SwiftTest, //!< swift test server
-            Swift, //!< Future usage
             PrivateFSD //!< Private FSD environment
         };
 
@@ -79,9 +78,6 @@ namespace BlackMisc::Network
 
         //! VATSIM eco system
         static const CEcosystem &vatsim();
-
-        //! swift eco system
-        static const CEcosystem &swift();
 
         //! swift test eco system
         static const CEcosystem &swiftTest();

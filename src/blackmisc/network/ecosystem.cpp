@@ -28,12 +28,6 @@ namespace BlackMisc::Network
         return e;
     }
 
-    const CEcosystem &CEcosystem::swift()
-    {
-        static const CEcosystem e(Swift);
-        return e;
-    }
-
     const CEcosystem &CEcosystem::swiftTest()
     {
         static const CEcosystem e(SwiftTest);
@@ -58,7 +52,6 @@ namespace BlackMisc::Network
         switch (this->getSystem())
         {
         case VATSIM: return v;
-        case Swift: return s;
         case SwiftTest: return st;
         case PrivateFSD: return fsd;
         case NoSystem: return no;
@@ -72,7 +65,6 @@ namespace BlackMisc::Network
         switch (this->getSystem())
         {
         case VATSIM: return CIcons::NetworkVatsimLogo;
-        case Swift: return CIcons::Swift24;
         case SwiftTest: return CIcons::Swift24;
         case PrivateFSD: return CIcons::StandardIconAppAircraft16;
         case NoSystem: return CIcons::StandardIconCrossCircle16;

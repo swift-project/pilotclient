@@ -77,8 +77,7 @@ namespace BlackCore::Data
         const CServer server(this->getLastServer());
         if (server.isNull()) { return false; }
         return server.getEcosystem() == CEcosystem::privateFsd() ||
-               server.getEcosystem() == CEcosystem::swiftTest() ||
-               server.getEcosystem() == CEcosystem::swift();
+               server.getEcosystem() == CEcosystem::swiftTest();
     }
 
     void CNetworkSetup::onSettingsChanged()

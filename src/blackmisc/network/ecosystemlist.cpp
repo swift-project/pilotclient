@@ -24,7 +24,7 @@ namespace BlackMisc::Network
 
     const CEcosystemList &CEcosystemList::allKnownSystems()
     {
-        static const CEcosystemList s({ CEcosystem::vatsim(), CEcosystem::swift(), CEcosystem::swiftTest(), CEcosystem::privateFsd() });
+        static const CEcosystemList s({ CEcosystem::vatsim(), CEcosystem::swiftTest(), CEcosystem::privateFsd() });
         return s;
     }
 } // namespace
