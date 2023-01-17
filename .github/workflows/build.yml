@@ -466,6 +466,9 @@ jobs:
     if: always()
 
     steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get -y install jo
       - name: Prepare Discord build message
         run: |
           result=SKIPPED
@@ -494,20 +497,22 @@ jobs:
             const release = await octokit.rest.repos.getRelease(query);
             core.exportVariable('url', release.data.html_url);
       - name: Send Discord build message
-        uses: appleboy/discord-action@0.0.3
-        with:
-          webhook_id: ${{ secrets.DISCORD_ID }}
-          webhook_token: ${{ secrets.DISCORD_TOKEN }}
-          message: |
-            > :${{ env.emoji }}: `${{ github.ref }}`
-            > **${{ env.result }}** (triggered by ${{ github.event_name }})
-            > <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}>
+        run: |
+          cat >message <<EOF
+          > :${{ env.emoji }}: \`${{ github.ref }}\`
+          > **${{ env.result }}** (triggered by ${{ github.event_name }})
+          > <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}>
+          EOF
+          jo content=@message | curl -i -H "Accept: application/json" -H "Content-Type: application/json" $WEBHOOK -d @-
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       - name: Send Discord release message
-        uses: appleboy/discord-action@0.0.3
         if: ${{ needs.release.result == 'success' }}
-        with:
-          webhook_id: ${{ secrets.DISCORD_ID }}
-          webhook_token: ${{ secrets.DISCORD_TOKEN }}
-          message: |
-            > :package: Created draft release `v${{ needs.preBuild.outputs.version }}`
-            > <${{ env.url }}>
+        run: |
+          cat >message <<EOF
+          > :package: Created draft release \`v${{ needs.preBuild.outputs.version }}\`
+          > <${{ env.url }}>
+          EOF
+          jo content=@message | curl -i -H "Accept: application/json" -H "Content-Type: application/json" $WEBHOOK -d @-
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
