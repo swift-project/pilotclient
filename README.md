@@ -35,7 +35,7 @@ Contributing
 _swift_ is written in modern C++17 using the Qt framework.
 
 [![Development version](https://img.shields.io/badge/version-0.12-blue)](.)
-[![Build status](https://img.shields.io/github/workflow/status/swift-project/pilotclient/Build%20swift/develop/0.12)][3]
+[![Build status](https://img.shields.io/github/actions/workflow/status/swift-project/pilotclient/build.yml?branch=develop/0.12)][3]
 
 [3]: https://github.com/swift-project/pilotclient/actions
 
