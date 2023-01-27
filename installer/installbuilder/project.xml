@@ -5,6 +5,7 @@
 
     <!-- <version>0.7.0</version> -->
     <licenseFile>../../dist/bin/LICENSE</licenseFile>
+    <htmlLicenseFile>../../dist/bin/LICENSE.html</htmlLicenseFile>
     <leftImage>../images/leftimage.png</leftImage>
     <logoImage>../images/logo.png</logoImage>
     <splashImage>../images/splashscreen.png</splashImage>
@@ -333,6 +334,7 @@ https://swift-project.org/</text>
             <code>en</code>
             <encoding>utf-8</encoding>
             <file>../../dist/bin/LICENSE</file>
+            <htmlFile>../../dist/bin/LICENSE.html</htmlFile>
         </licenseFile>
     </licenseFileList>
     <parameterList>

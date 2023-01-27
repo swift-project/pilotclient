@@ -3,6 +3,7 @@
 text_files_target.path = $${PREFIX}/bin
 text_files_target.files *= README.md
 text_files_target.files *= LICENSE
+text_files_target.files *= LICENSE.html
 
 INSTALLS += text_files_target
 
