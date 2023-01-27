@@ -72,7 +72,7 @@ jobs:
           perl scripts/warnings.pl error.log
 
   buildLinux:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     needs: preBuild
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
