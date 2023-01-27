@@ -18,7 +18,7 @@ env:
   eol_months:    12
   qt_version:    5.15.2
   bitrock_version: qt-professional-23.1.0
-  bitrock_url:     https://installbuilder.com/
+  bitrock_url:     https://releases.bitrock.com/installbuilder
 
 jobs:
 
