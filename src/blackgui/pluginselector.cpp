@@ -7,6 +7,7 @@
  */
 
 #include "blackgui/pluginselector.h"
+#include "blackmisc/icons.h"
 #include "blackmisc/verify.h"
 
 #include <QCheckBox>
@@ -59,13 +60,15 @@ namespace BlackGui
 
         if (hasConfig)
         {
-            QPushButton *config = new QPushButton("...");
+            QPushButton *config = new QPushButton(BlackMisc::CIcons::wrench16(), "");
+            config->setToolTip("Plugin configuration");
             m_configButtonMapper->setMapping(config, identifier);
             connect(config, &QPushButton::clicked, m_configButtonMapper, qOverload<>(&QSignalMapper::map));
             pw->layout()->addWidget(config);
         }
 
         QPushButton *details = new QPushButton("?");
+        details->setToolTip("Plugin details");
         m_detailsButtonMapper->setMapping(details, identifier);
         connect(details, &QPushButton::clicked, m_detailsButtonMapper, qOverload<>(&QSignalMapper::map));
         pw->layout()->addWidget(details);
