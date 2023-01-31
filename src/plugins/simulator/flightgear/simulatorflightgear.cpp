@@ -334,7 +334,7 @@ namespace BlackSimPlugin::Flightgear
     bool CSimulatorFlightgear::connectTo()
     {
         if (isConnected()) { return true; }
-        QString dbusAddress = m_fgswiftbusServerSetting.getThreadLocal();
+        QString dbusAddress = m_fgswiftbusServerSetting.getThreadLocal().getDBusServerAddress();
 
         if (CDBusServer::isSessionOrSystemAddress(dbusAddress))
         {
@@ -1060,7 +1060,7 @@ namespace BlackSimPlugin::Flightgear
         if (this->isShuttingDown()) { return; }
         Q_ASSERT_X(!CThreadUtils::thisIsMainThread(), Q_FUNC_INFO, "Expect to run in background");
 
-        QString dbusAddress = m_fgSswiftBusServerSetting.getThreadLocal();
+        QString dbusAddress = m_fgSswiftBusServerSetting.getThreadLocal().getDBusServerAddress();
         if (CDBusServer::isSessionOrSystemAddress(dbusAddress))
         {
             checkConnectionViaSessionBus();

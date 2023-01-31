@@ -28,6 +28,7 @@
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include "blackmisc/simulation/fscommon/vpilotmodelruleset.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
+#include "blackmisc/simulation/settings/fgswiftbussettings.h"
 #include "blackmisc/simulation/settings/modelsettings.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/settings/swiftpluginsettings.h"
@@ -74,6 +75,7 @@ namespace BlackMisc::Simulation
         CVPilotModelRuleSet::registerMetadata();
         CAircraftMatcherSetup::registerMetadata();
         CXSwiftBusSettings::registerMetadata();
+        CFGSwiftBusSettings::registerMetadata();
 
         qRegisterMetaType<CSimulatorSettings::CGSource>();
         qRegisterMetaType<CAircraftMatcherSetup::MatchingAlgorithm>();

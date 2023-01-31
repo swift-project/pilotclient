@@ -123,6 +123,7 @@ namespace BlackMisc
             GlobalIndexCMatchingStatisticsEntry         = 16100,
             GlobalIndexCAircraftMatcherSetup            = 16200,
             GlobalIndexCXSwiftBusSettings               = 16300,
+            GlobalIndexCFGSwiftBusSettings              = 16400,
             GlobalIndexSwiftPilotClient                 = 17000,
             GlobalIndexSwiftCore                        = 17100,
             GlobalIndexSwiftLauncher                    = 17200,

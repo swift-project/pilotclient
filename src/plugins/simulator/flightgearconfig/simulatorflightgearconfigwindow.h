@@ -38,8 +38,14 @@ namespace BlackSimPlugin::Flightgear
         //! Settings have been accepted
         void onSettingsAccepted();
 
+        //! Settings changed
+        void onSettingsChanged();
+
+        //! Get settings object with values from UI
+        BlackMisc::Simulation::Settings::CFGSwiftBusSettings getSettingsFromUI() const;
+
         QScopedPointer<Ui::CSimulatorFlightgearConfigWindow> ui;
-        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TFGSwiftBusServer> m_fgswiftbusServerSetting { this };
+        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TFGSwiftBusServer> m_fgswiftbusServerSetting { this, &CSimulatorFlightgearConfigWindow::onSettingsChanged };
     };
 } // ns
 
