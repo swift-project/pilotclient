@@ -37,14 +37,23 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0" alignment="Qt::AlignTop">
-    <widget class="BlackGui::Components::CDBusServerAddressSelector" name="comp_SettingsFGSwiftBus">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>100</height>
-      </size>
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="gb_dbus">
+     <property name="title">
+      <string>FGSwiftBus DBus</string>
      </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="BlackGui::Components::CDBusServerAddressSelector" name="comp_SettingsFGSwiftBus">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>100</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>
