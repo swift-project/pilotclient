@@ -141,6 +141,13 @@ namespace BlackMisc::Aviation
                                             const PhysicalQuantities::CFrequency &compareFrequency,
                                             ChannelSpacing channelSpacing);
 
+        //! Is passed frequency in kHz a valid 8.33 channel. This does not check if
+        //! the frequency is within the correct bounds.
+        static bool isValid8_33kHzChannel(int fKHz);
+
+        //! Round passed frequency in kHz to 8.33 frequency spacing
+        static int round8_33kHzChannel(int fKHz);
+
         //! Parses almost any shitty string to a valid COM frequency
         static PhysicalQuantities::CFrequency parseComFrequency(const QString &input, PhysicalQuantities::CPqString::SeparatorMode sep);
 
