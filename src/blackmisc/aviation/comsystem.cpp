@@ -129,18 +129,56 @@ namespace BlackMisc::Aviation
         return isValidCivilAviationFrequency(f) || isValidMilitaryFrequency(f);
     }
 
+    bool CComSystem::isValid8_33kHzChannel(int fKHz)
+    {
+        const int lastDigits = static_cast<int>(fKHz) % 100;
+        return fKHz % 5 == 0 && lastDigits != 20 && lastDigits != 45 && lastDigits != 70 && lastDigits != 95;
+    }
+
+    int CComSystem::round8_33kHzChannel(int fKHz)
+    {
+        if (!isValid8_33kHzChannel(fKHz))
+        {
+            const int diff = static_cast<int>(fKHz) % 5;
+            int lower = fKHz - diff;
+            if (!isValid8_33kHzChannel(lower)) { lower -= 5; }
+            Q_ASSERT_X(isValid8_33kHzChannel(lower), Q_FUNC_INFO, "Lower frequency not valid");
+
+            int upper = fKHz + (5 - diff);
+            if (!isValid8_33kHzChannel(upper)) { upper += 5; }
+            Q_ASSERT_X(isValid8_33kHzChannel(upper), Q_FUNC_INFO, "Upper frequency not valid");
+
+            const int lowerDiff = abs(fKHz - lower);
+            const int upperDiff = abs(fKHz - upper);
+
+            fKHz = lowerDiff < upperDiff ? lower : upper;
+            fKHz = std::clamp(fKHz, 118000, 136990);
+        }
+        return fKHz;
+    }
+
     void CComSystem::roundToChannelSpacing(CFrequency &frequency, ChannelSpacing channelSpacing)
     {
         if (frequency.isNull()) { return; }
         const double channelSpacingKHz = CComSystem::channelSpacingToFrequencyKHz(channelSpacing);
         const double fKHz = frequency.valueRounded(CFrequencyUnit::kHz(), 0);
-        const int dDown = static_cast<int>(fKHz / channelSpacingKHz);
-        const double fDownKHz = dDown * channelSpacingKHz;
-        const double fUpKHz = (dDown + 1) * channelSpacingKHz;
-        const bool down = qAbs(fKHz - fDownKHz) < qAbs(fUpKHz - fKHz); // which is the closest value
-        const double fMHz(CMathUtils::round((down ? fDownKHz : fUpKHz) / 1000.0, 3));
-        frequency.switchUnit(CFrequencyUnit::MHz());
-        frequency.setCurrentUnitValue(fMHz);
+
+        if (channelSpacing == ChannelSpacing8_33KHz)
+        {
+            const int freqKHz = round8_33kHzChannel(fKHz);
+            frequency.switchUnit(CFrequencyUnit::kHz());
+            frequency.setCurrentUnitValue(freqKHz);
+        }
+        else
+        {
+            const int dDown = static_cast<int>(fKHz / channelSpacingKHz);
+            const double fDownKHz = dDown * channelSpacingKHz;
+            const double fUpKHz = (dDown + 1) * channelSpacingKHz;
+            const bool down = qAbs(fKHz - fDownKHz) < qAbs(fUpKHz - fKHz); // which is the closest value
+            const double fMHz(CMathUtils::round((down ? fDownKHz : fUpKHz) / 1000.0, 3));
+            frequency.switchUnit(CFrequencyUnit::MHz());
+            frequency.setCurrentUnitValue(fMHz);
+        }
     }
 
     bool CComSystem::isWithinChannelSpacing(const CFrequency &setFrequency, const CFrequency &compareFrequency, CComSystem::ChannelSpacing channelSpacing)
