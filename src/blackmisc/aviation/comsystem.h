@@ -155,7 +155,7 @@ namespace BlackMisc::Aviation
         static void registerMetadata();
 
     private:
-        ChannelSpacing m_channelSpacing = ChannelSpacing25KHz; //!< channel spacing
+        ChannelSpacing m_channelSpacing = ChannelSpacing8_33KHz; //!< channel spacing
 
         //! Give me channel spacing in KHz
         //! \remarks Just a helper method, that is why no CFrequency is returned
