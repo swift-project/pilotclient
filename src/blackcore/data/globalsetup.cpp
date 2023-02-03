@@ -54,15 +54,12 @@ namespace BlackCore::Data
         m_vatsimDataFileUrls    = CUrlList{ "https://data.vatsim.net/v3/vatsim-data.json" };
         m_sharedUrls = CUrlList
         {
-            "https://datastore.swift-project.net/shared/",
             "http://download.swift-project.org/shared/",
-            "https://swift.fir-berlin.de/shared"
         };
 
         m_onlineHelpUrls = CUrlList
         {
             "https://datastore.swift-project.org/page/swifthelpdispatcher.html",
-            "https://datastore.swift-project.net/page/swifthelpdispatcher.html"
         };
         m_ncepGlobalForecastSystemUrl   = CUrl("http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p50.pl");
         m_ncepGlobalForecastSystemUrl25 = CUrl("http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl");

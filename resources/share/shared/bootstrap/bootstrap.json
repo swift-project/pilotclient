@@ -32,9 +32,6 @@
         "containerbase": [
             {
                 "url": "https://datastore.swift-project.org/page/swifthelpdispatcher.html"
-            },
-            {
-                "url": "https://datastore.swift-project.net/page/swifthelpdispatcher.html"
             }
         ]
     },
@@ -46,13 +43,7 @@
     "sharedUrls": {
         "containerbase": [
             {
-                "url": "https://datastore.swift-project.net/shared/"
-            },
-            {
                 "url": "http://download.swift-project.org/shared/"
-            },
-            {
-                "url": "https://swift.fir-berlin.de/shared"
             }
         ]
     },
