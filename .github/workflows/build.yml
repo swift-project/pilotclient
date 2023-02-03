@@ -71,7 +71,7 @@ jobs:
           perl scripts/warnings.pl error.log
 
   buildLinux:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     needs: preBuild
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
@@ -106,8 +106,8 @@ jobs:
           fetch-depth: 0
       - name: Copy dependencies to externals
         run: |
-          dpkg-query -s libsodium23 libevent-core-2.1-6 libpng16-16
-          cp $(dpkg-query -L libsodium23 libevent-core-2.1-6 libpng16-16 | grep -E '^/usr/lib/.*\.so\.[0-9]+$') externals/linux-g++/64/lib/
+          dpkg-query -s libsodium23 libevent-core-2.1-7 libpng16-16
+          cp $(dpkg-query -L libsodium23 libevent-core-2.1-7 libpng16-16 | grep -E '^/usr/lib/.*\.so\.[0-9]+$') externals/linux-g++/64/lib/
       - name: Start DBus session bus
         run: |
           dbus-launch --sh-syntax | tee session.sh
