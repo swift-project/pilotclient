@@ -33,7 +33,7 @@ namespace BlackMisc::Aviation
     {
         return this->findBy([&](const CAtcStation & atcStation)
         {
-            return atcStation.isComUnitTunedInChannelSpacing(comUnit);
+            return atcStation.isComUnitTunedToFrequency(comUnit);
         });
     }
 
@@ -41,7 +41,7 @@ namespace BlackMisc::Aviation
     {
         return this->containsBy([&](const CAtcStation & atcStation)
         {
-            return atcStation.isComUnitTunedInChannelSpacing(comUnit);
+            return atcStation.isComUnitTunedToFrequency(comUnit);
         });
     }
 
@@ -50,7 +50,7 @@ namespace BlackMisc::Aviation
         if (frequency.isNull()) { return CAtcStationList(); }
         return this->findBy([&](const CAtcStation & atcStation)
         {
-            return atcStation.isFrequencyWithinChannelSpacing(frequency, spacing);
+            return atcStation.isAtcStationFrequency(frequency);
         });
     }
 
