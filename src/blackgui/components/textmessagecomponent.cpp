@@ -448,9 +448,8 @@ namespace BlackGui::Components
         CAtcStationList f2Stations;
         if (sGui && sGui->getIContextNetwork())
         {
-            const CComSystem::ChannelSpacing spacing = CComSystem::ChannelSpacing8_33KHz;
-            f1Stations = sGui->getIContextNetwork()->getOnlineStationsForFrequency(freq1, spacing);
-            f2Stations = sGui->getIContextNetwork()->getOnlineStationsForFrequency(freq2, spacing);
+            f1Stations = sGui->getIContextNetwork()->getOnlineStationsForFrequency(freq1);
+            f2Stations = sGui->getIContextNetwork()->getOnlineStationsForFrequency(freq2);
         }
 
         const QString f1n = QString::asprintf("%03.3f", freq1.valueRounded(CFrequencyUnit::MHz(), 3));
