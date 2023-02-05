@@ -504,8 +504,8 @@ namespace BlackGui
             //! Settings have been changed
             void settingsChanged();
 
-            //! Change selection modes
             //! @{
+            //! Change selection modes
             void setMultiSelection();
             void setExtendedSelection();
             void setSingleSelection();
@@ -519,8 +519,8 @@ namespace BlackGui
             //! \remark Default implementation, can be overridden with specifi implementation
             virtual QString getRememberedLastJsonDirectory() const;
 
-            //! Clipboard cut/copy/paste
             //! @{
+            //! Clipboard cut/copy/paste
             virtual void copy() = 0;
             virtual void cut() = 0;
             virtual void paste() = 0;

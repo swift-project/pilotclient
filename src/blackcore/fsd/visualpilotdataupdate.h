@@ -43,8 +43,8 @@ namespace BlackCore::Fsd
         //! Return a stopped update with the same values
         VisualPilotDataStopped toStopped() const;
 
-        //! Properties
         //! @{
+        //! Properties
         double m_latitude      = 0.0;
         double m_longitude     = 0.0;
         double m_altitudeTrue  = 0.0;

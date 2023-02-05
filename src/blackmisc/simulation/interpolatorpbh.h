@@ -23,15 +23,15 @@ namespace BlackMisc::Simulation
     class BLACKMISC_EXPORT CInterpolatorPbh
     {
     public:
-        //! Constructor
         //! @{
+        //! Constructor
         CInterpolatorPbh() {}
         CInterpolatorPbh(const Aviation::CAircraftSituation &older, const Aviation::CAircraftSituation &newer) : m_oldSituation(older), m_newSituation(newer) {}
         CInterpolatorPbh(double time, const Aviation::CAircraftSituation &older, const Aviation::CAircraftSituation &newer) : m_simulationTimeFraction(time), m_oldSituation(older), m_newSituation(newer) {}
         //! @}
 
-        //! Getter
         //! @{
+        //! Getter
         Aviation::CHeading getHeading() const;
         PhysicalQuantities::CAngle getPitch() const;
         PhysicalQuantities::CAngle getBank() const;

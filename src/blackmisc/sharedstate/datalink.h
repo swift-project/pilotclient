@@ -80,14 +80,14 @@ namespace BlackMisc::SharedState
         //! Get a connection status watcher.
         CDataLinkConnectionWatcher *watcher() { return &m_watcher; }
 
-        //! Register a mutator with this transport mechanism.
         //! @{
+        //! Register a mutator with this transport mechanism.
         virtual void publish(const CPassiveMutator *mutator) = 0;
         virtual void publish(const CActiveMutator *mutator) = 0;
         //! @}
 
-        //! Register an observer with this transport mechanism.
         //! @{
+        //! Register an observer with this transport mechanism.
         virtual void subscribe(const CPassiveObserver *observer) = 0;
         virtual void subscribe(const CActiveObserver *observer) = 0;
         //! @}

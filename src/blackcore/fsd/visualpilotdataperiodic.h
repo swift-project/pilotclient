@@ -39,8 +39,8 @@ namespace BlackCore::Fsd
         //! Return a regular visual update with the same values
         VisualPilotDataUpdate toUpdate() const;
 
-        //! Properties
         //! @{
+        //! Properties
         double m_latitude      = 0.0;
         double m_longitude     = 0.0;
         double m_altitudeTrue  = 0.0;

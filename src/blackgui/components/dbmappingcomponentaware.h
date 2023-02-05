@@ -42,8 +42,8 @@ namespace BlackGui::Components
         //! Copy assignment operator
         CDbMappingComponentAware &operator =(const CDbMappingComponentAware &) = default;
 
-        //! Overlay messages
         //! @{
+        //! Overlay messages
         bool showMappingComponentOverlayMessage(const BlackMisc::CStatusMessage &message, int timeoutMs = -1);
         bool showMappingComponentOverlayHtmlMessage(const BlackMisc::CStatusMessage &message, int timeoutMs = -1);
         //! @}

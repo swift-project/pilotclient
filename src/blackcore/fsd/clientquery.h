@@ -37,8 +37,8 @@ namespace BlackCore::Fsd
         //! PDU identifier
         static QString pdu() { return "$CQ"; }
 
-        //! Properties
         //! @{
+        //! Properties
         ClientQueryType m_queryType = ClientQueryType::Unknown;
         QStringList m_queryData;
         //! @}

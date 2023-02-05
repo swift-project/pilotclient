@@ -92,16 +92,16 @@ namespace BlackCore::Afv::Audio
             this->stop();
         }
 
-        //! Number of encoded bytes
         //! @{
+        //! Number of encoded bytes
         int opusBytesEncoded() const { return m_opusBytesEncoded; }
         void setOpusBytesEncoded(int opusBytesEncoded) { m_opusBytesEncoded = opusBytesEncoded; }
         //! @}
 
+        //! @{
         //! Gain ratio, value a amplitude need to be multiplied with
         //! \see http://www.sengpielaudio.com/calculator-amplification.htm
         //! \remark gain ratio is voltage ratio/or amplitude ratio, something between 0.001-7.95 for -60dB to 80dB
-        //! @{
         double getGainRatio() const { return m_gainRatio; }
         bool setGainRatio(double gainRatio);
         //! @}
@@ -110,8 +110,8 @@ namespace BlackCore::Afv::Audio
         // bool setVolume(double volume);
 
         /* disabled as not needed
-        //! The device's volume 0..1
         //! @{
+        //! The device's volume 0..1
         double getDeviceInputVolume() const;
         bool setDeviceInputVolume(double volume);
         //! @}

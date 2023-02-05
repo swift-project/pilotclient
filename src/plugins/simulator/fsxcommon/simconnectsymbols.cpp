@@ -71,7 +71,6 @@ typedef HRESULT(__stdcall *PfnSimConnect_SetObserverLookAt)(HANDLE, const char *
 
 //! The SimConnect Symbols
 //! \private
-//! @{
 struct SimConnectSymbols
 {
     PfnSimConnect_Open SimConnect_Open = nullptr;
@@ -114,7 +113,6 @@ struct SimConnectSymbols
     PfnSimConnect_CloseView SimConnect_CloseView = nullptr;
 #endif
 };
-//! @}
 
 static SimConnectSymbols gSymbols;
 

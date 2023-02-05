@@ -23,8 +23,8 @@ namespace BlackMisc::Simulation
         //! Set models
         virtual void setModels(const CAircraftModelList &models) = 0;
 
-        //! Ctor, dtor, copy operators (CLANG warnings)
         //! @{
+        //! Ctor, dtor, copy operators (CLANG warnings)
         IModelsSetable() {}
         virtual ~IModelsSetable() {}
         IModelsSetable(const IModelsSetable &) = default;
@@ -39,8 +39,8 @@ namespace BlackMisc::Simulation
         //! Update models
         virtual int updateModels(const CAircraftModelList &models) = 0;
 
-        //! Ctor, dtor, copy operators (CLANG warnings)
         //! @{
+        //! Ctor, dtor, copy operators (CLANG warnings)
         IModelsUpdatable() {}
         virtual ~IModelsUpdatable() {}
         IModelsUpdatable(const IModelsUpdatable &) = default;
@@ -55,8 +55,8 @@ namespace BlackMisc::Simulation
         //! Set models
         virtual void setModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) = 0;
 
-        //! Ctor, dtor, copy operators (CLANG warnings)
         //! @{
+        //! Ctor, dtor, copy operators (CLANG warnings)
         IModelsForSimulatorSetable() {}
         virtual ~IModelsForSimulatorSetable() {}
         IModelsForSimulatorSetable(const IModelsForSimulatorSetable &) = default;
@@ -71,8 +71,8 @@ namespace BlackMisc::Simulation
         //! Set models
         virtual int updateModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) = 0;
 
-        //! Ctor, dtor, copy operators (CLANG warnings)
         //! @{
+        //! Ctor, dtor, copy operators (CLANG warnings)
         IModelsForSimulatorUpdatable() {}
         virtual ~IModelsForSimulatorUpdatable() {}
         IModelsForSimulatorUpdatable(const IModelsForSimulatorUpdatable &) = default;
@@ -87,8 +87,8 @@ namespace BlackMisc::Simulation
         //! Simulator
         virtual BlackMisc::Simulation::CSimulatorInfo getSelectedSimulator() const = 0;
 
-        //! Ctor, dtor, copy operators (CLANG warnings)
         //! @{
+        //! Ctor, dtor, copy operators (CLANG warnings)
         ISimulatorSelectable() {}
         virtual ~ISimulatorSelectable() {}
         ISimulatorSelectable(const ISimulatorSelectable &) = default;

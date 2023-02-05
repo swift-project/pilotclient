@@ -60,9 +60,9 @@ namespace BlackMisc::Network
         };
         Q_DECLARE_FLAGS(SendReceiveDetails, SendReceiveDetailsFlag)
 
+        //! @{
         //! Offset times basically telling when to expect the next value from network plus some reserve
         //! \remark related to CNetworkVatlib::c_updatePostionIntervalMsec / c_updateInterimPostionIntervalMsec
-        //! @{
         static constexpr qint64 c_positionTimeOffsetMsec = 6000;        //!< offset time for received position updates Ref T297
         static constexpr qint64 c_minimumPositionTimeOffsetMsec = 700;  //!< offset time for vatsim high frequency position updates
         //! @}
@@ -97,8 +97,8 @@ namespace BlackMisc::Network
         //! Set send / receive details
         void setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive, bool visualSend, bool euroscopeSimDataReceive);
 
-        //! FSD setup flags
         //! @{
+        //! FSD setup flags
         bool sendAircraftParts() const { return this->getSendReceiveDetails().testFlag(SendAircraftParts); }
         bool sendGndFlag() const { return this->getSendReceiveDetails().testFlag(SendGndFlag); }
         bool sendInterimPositions() const { return this->getSendReceiveDetails().testFlag(SendInterimPositions); }
@@ -110,8 +110,8 @@ namespace BlackMisc::Network
         bool receiveEuroscopeSimData() const { return this->getSendReceiveDetails().testFlag(ReceiveEuroscopeSimData); }
         //! @}
 
-        //! Airline codes
         //! @{
+        //! Airline codes
         bool force3LetterAirlineCodes() const { return this->getSendReceiveDetails().testFlag(Force3LetterAirlineICAO); }
         void setForce3LetterAirlineCodes(bool force);
         //! @}

@@ -35,8 +35,8 @@ namespace BlackCore::Fsd
         //! PDU identifier
         static QString pdu() { return "@"; }
 
-        //! Properties
         //! @{
+        //! Properties
         BlackMisc::Aviation::CTransponder::TransponderMode m_transponderMode = BlackMisc::Aviation::CTransponder::StateStandby;
         int m_transponderCode  = 0;
         PilotRating m_rating   = PilotRating::Unknown;

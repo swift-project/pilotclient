@@ -69,8 +69,8 @@ namespace BlackGui::Editors
         //! Airline group changed
         void onAirlineGroupChanged();
 
-        //! Reset
         //! @{
+        //! Reset
         void resetByAlgorithm();
         void resetAll();
         //! @}

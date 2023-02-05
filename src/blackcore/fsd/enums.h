@@ -176,8 +176,8 @@ namespace BlackCore::Fsd
         AircraftConfig   = (1 << 9)
     };
 
-    //! Operators
     //! @{
+    //! Operators
     inline Capabilities operator | (Capabilities lhs, Capabilities rhs)
     {
         return static_cast<Capabilities>(static_cast<int>(lhs) | static_cast<int>(rhs));

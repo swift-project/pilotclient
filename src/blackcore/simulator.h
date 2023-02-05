@@ -286,7 +286,6 @@ namespace BlackCore
         bool isEmulatedDriver() const;
 
         //! \addtogroup swiftdotcommands
-        //! @{
         //! <pre>
         //! .drv cg length clear|modelstring  set overridden CG for model string      BlackCore::ISimulator
         //! .drv unload                       unload plugin                           BlackCore::ISimulator
@@ -302,7 +301,6 @@ namespace BlackCore
         //! .drv aircraft rm callsign         remove aircraft                         BlackCore::ISimulator
         //! .drv fsuipc   on|off              enable/disable FSUIPC (if applicable)   BlackSimPlugin::FsCommon::CSimulatorFsCommon
         //! </pre>
-        //! @}
         //! Parse command line for simulator drivers, derived classes can add specific parsing by overriding ISimulator::parseDetails
         virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator);
 
@@ -423,8 +421,8 @@ namespace BlackCore
                    BlackMisc::Network::IClientProvider *clientProvider,
                    QObject *parent = nullptr);
 
-        //! When swift DB data are read
         //! @{
+        //! When swift DB data are read
         virtual void onSwiftDbAllDataRead();
         virtual void onSwiftDbModelMatchingEntitiesRead();
         virtual void onSwiftDbAirportsRead();
@@ -445,11 +443,8 @@ namespace BlackCore
         //! Max.airports in range
         int maxAirportsInRange() const;
 
-        //! Connected with remote aircraft provider signals
-        //! @{
         //! Recalculate the rendered aircraft, this happens when restrictions are applied (max. aircraft, range)
         virtual void onRecalculatedRenderedAircraft(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
-        //! @}
 
         //! Add new remote aircraft physically to the simulator
         //! \sa changeRemoteAircraftEnabled to hide a remote aircraft
@@ -738,8 +733,8 @@ namespace BlackCore
         //! ISimulatorVirtual destructor
         virtual ~ISimulatorFactory() {}
 
-        //! Not copyable
         //! @{
+        //! Not copyable
         ISimulatorFactory(const ISimulatorFactory &) = delete;
         ISimulatorFactory &operator=(const ISimulatorFactory &) = delete;
         //! @}

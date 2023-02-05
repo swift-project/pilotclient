@@ -33,8 +33,8 @@ namespace XSwiftBus
     class CDBusMessage
     {
     public:
-        //! Constructor
         //! @{
+        //! Constructor
         CDBusMessage(DBusMessage *message);
         CDBusMessage(const CDBusMessage &other);
         //! @}
@@ -69,8 +69,8 @@ namespace XSwiftBus
         //! Begin writing argument
         void beginArgumentWrite();
 
-        //! Append argument. Make sure to call \sa beginArgumentWrite() before.
         //! @{
+        //! Append argument. Make sure to call \sa beginArgumentWrite() before.
         void appendArgument(bool value);
         void appendArgument(const char *value);
         void appendArgument(const std::string &value);
@@ -84,8 +84,8 @@ namespace XSwiftBus
         //! Begin reading arguments
         void beginArgumentRead();
 
-        //! Read single argument. Make sure to call \sa beginArgumentRead() before.
         //! @{
+        //! Read single argument. Make sure to call \sa beginArgumentRead() before.
         void getArgument(int &value);
         void getArgument(bool &value);
         void getArgument(double &value);

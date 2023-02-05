@@ -137,20 +137,20 @@ namespace BlackCore::Afv::Crypto
                 return {};
             }
 
-            //! Header data
             //! @{
+            //! Header data
             quint16 m_headerLength;
             CryptoDtoHeaderDto m_header;
             //! @}
 
-            //! Name data
             //! @{
+            //! Name data
             quint16 m_dtoNameLength;
             QByteArray m_dtoNameBuffer;
             //! @}
 
-            //! Data
             //! @{
+            //! Data
             quint16 m_dataLength;
             QByteArray m_dataBuffer;
             //! @}

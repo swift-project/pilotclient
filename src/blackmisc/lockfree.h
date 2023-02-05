@@ -41,8 +41,8 @@ namespace BlackMisc
     class LockFreeReader
     {
     public:
-        //! Return the value that was present when the reader was created.
         //! @{
+        //! Return the value that was present when the reader was created.
         const T &get() const { return *m_ptr; }
         const T *operator ->() const { return m_ptr.get(); }
         const T &operator *() const { return *m_ptr; }
@@ -70,8 +70,8 @@ namespace BlackMisc
     class LockFreeUniqueWriter
     {
     public:
-        //! The value can be modified through the returned reference. The modification is applied in the destructor.
         //! @{
+        //! The value can be modified through the returned reference. The modification is applied in the destructor.
         T &get() { return *m_ptr; }
         T *operator ->() { return m_ptr.get(); }
         T &operator *() { return *m_ptr; }
@@ -84,8 +84,8 @@ namespace BlackMisc
         //! Replace the stored value by moving from a T. The change is applied in the destructor.
         LockFreeUniqueWriter &operator =(T &&other) noexcept(std::is_nothrow_move_assignable_v<T>) { *m_ptr = std::move(other); return *this; }
 
-        //! LockFreeUniqueWriter cannot be copied.
         //! @{
+        //! LockFreeUniqueWriter cannot be copied.
         LockFreeUniqueWriter(const LockFreeUniqueWriter &) = delete;
         LockFreeUniqueWriter &operator =(const LockFreeUniqueWriter &) = delete;
         //! @}
@@ -125,8 +125,8 @@ namespace BlackMisc
     class LockFreeSharedWriter
     {
     public:
-        //! The value can be modified through the returned reference. The modification is applied by evaluating in a bool context.
         //! @{
+        //! The value can be modified through the returned reference. The modification is applied by evaluating in a bool context.
         T &get() { return *m_ptr; }
         T *operator ->() { return m_ptr.get(); }
         T &operator *() { return *m_ptr; }
@@ -165,8 +165,8 @@ namespace BlackMisc
             Q_ASSERT_X(m_ptr.use_count() == 0, Q_FUNC_INFO, "SharedWriter destroyed without committing changes");
         }
 
-        //! LockFreeSharedWriter cannot be copied.
         //! @{
+        //! LockFreeSharedWriter cannot be copied.
         LockFreeSharedWriter(const LockFreeSharedWriter &) = delete;
         LockFreeSharedWriter &operator =(const LockFreeSharedWriter &) = delete;
         //! @}
@@ -208,8 +208,8 @@ namespace BlackMisc
         //! Construct by moving from a T.
         LockFree(T &&other) noexcept(std::is_nothrow_move_assignable_v<T>) : m_ptr(std::make_shared<const T>(std::move(other))) {}
 
-        //! LockFree cannot be copied or moved.
         //! @{
+        //! LockFree cannot be copied or moved.
         LockFree(const LockFree &) = delete;
         LockFree &operator =(const LockFree &) = delete;
         LockFree(LockFree &&) = delete;
@@ -308,10 +308,10 @@ namespace BlackMisc
         return { std::forward_as_tuple(vs.uniqueWrite()...) };
     }
 
+    //! @{
     /*!
      * Non-member begin() and end() for so LockFree containers can be used in ranged for loops.
      */
-    //! @{
     template <typename T>
     typename T::const_iterator begin(const LockFreeReader<T> &reader) { return reader->begin();}
 
@@ -331,12 +331,12 @@ namespace BlackMisc
     typename T::iterator end(const LockFreeSharedWriter<T> &writer) { return writer->end(); }
     //! @}
 
+    //! @{
     /*!
      * Deleted overloads of begin() and end() for rvalue readers and writers.
      *
      * Attempting to call begin() or end() on an rvalue reader or writer would be a common source of mistakes.
      */
-    //! @{
     template <typename T>
     typename T::const_iterator begin(const LockFreeReader<T> &&) = delete;
 

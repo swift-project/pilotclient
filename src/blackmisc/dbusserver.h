@@ -137,9 +137,9 @@ namespace BlackMisc
         //! Is the given connection one of the default connections?
         static bool isQtDefaultConnection(const QDBusConnection &connection);
 
+        //! @{
         //! Is there a DBus server running at the given address?
         //! \note This is an incomplete test showing too optimistic results for session DBus
-        //! @{
         static bool isDBusAvailable(const QString &host, int port, int timeoutMs = 1500);
         static bool isDBusAvailable(const QString &host, int port, QString &message, int timeoutMs = 1500);
         static bool isDBusAvailable(const QString &dbusAddress, QString &message, int timeoutMs = 1500);

@@ -33,17 +33,17 @@ namespace BlackMisc::Simulation
         //! Constructor
         CRemoteAircraftProviderDummy(QObject *parent = nullptr);
 
-        //! For testing, add new situation and fire signals
         //! @{
+        //! For testing, add new situation and fire signals
         void insertNewSituation(const Aviation::CAircraftSituation &situation);
         void insertNewSituations(const Aviation::CAircraftSituationList &situations);
         void insertNewAircraftParts(const Aviation::CCallsign &callsign, const Aviation::CAircraftParts &parts, bool removeOutdatedParts);
         void insertNewAircraftParts(const Aviation::CCallsign &callsign, const Aviation::CAircraftPartsList &partsList, bool removeOutdatedParts);
         //! @}
 
+        //! @{
         //! Members not implenented or fully implenented by CRemoteAircraftProvider
         //! \ingroup remoteaircraftprovider
-        //! @{
         virtual QObject *asQObject() override { return this; }
         virtual CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
         //! @}

@@ -37,8 +37,8 @@ namespace XSwiftBus
             XPLMUnregisterCommandHandler(m_command, callback, false, static_cast<void*>(this));
         }
 
-        //! Not copyable.
         //! @{
+        //! Not copyable.
         CCommand(const CCommand &) = delete;
         CCommand &operator =(const CCommand &) = delete;
         //! @}

@@ -158,14 +158,14 @@ namespace BlackMisc::PhysicalQuantities
         //! Set value in current unit
         void setCurrentUnitValue(double value);
 
-        //! As integer value
         //! @{
+        //! As integer value
         int valueInteger(MU unit) const;
         QString valueIntegerAsString(MU unit) const { return QString::number(this->valueInteger(unit)); }
         //! @}
 
-        //! As integer value in current unit
         //! @{
+        //! As integer value in current unit
         int valueInteger() const;
         QString valueIntegerAsString() const { return QString::number(this->valueInteger()); }
         //! @}

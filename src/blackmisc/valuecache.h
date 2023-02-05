@@ -88,8 +88,8 @@ namespace BlackMisc
         //! Values have been changed.
         bool valuesChanged() const { return m_valuesChanged; }
 
-        //! Values are to be saved.
         //! @{
+        //! Values are to be saved.
         bool isSaved() const { return m_saved; }
         void setSaved(bool saved = true) { m_saved = saved; }
         //! @}
@@ -134,8 +134,8 @@ namespace BlackMisc
             qint64 timestamp() const { return CDictionary::const_iterator::value().second; }
         };
 
-        //! Iterators.
         //! @{
+        //! Iterators.
         const_iterator cbegin() const { return CDictionary::cbegin(); }
         const_iterator cend() const { return CDictionary::cend(); }
         const_iterator begin() const { return CDictionary::cbegin(); }
@@ -270,8 +270,8 @@ namespace BlackMisc
         void valuesSaveRequested(const BlackMisc::CValueCachePacket &values);
 
     protected:
-        //! Returns a range referring to all elements which start with the given prefix.
         //! @{
+        //! Returns a range referring to all elements which start with the given prefix.
         auto elementsStartingWith(const QString &keyPrefix)
         {
             return makeRange(m_elements.lowerBound(keyPrefix), m_elements.lowerBound(keyPrefix + QChar(QChar::LastValidCodePoint)));

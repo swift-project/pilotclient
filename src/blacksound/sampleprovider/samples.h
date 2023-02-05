@@ -30,8 +30,8 @@ namespace BlackSound::SampleProvider
         //! Avoid to copy
         Samples(const Samples &) = delete;
 
-        //! Various samples (sounds)
         //! @{
+        //! Various samples (sounds)
         const CResourceSound &crackle()    const { return m_crackle; }
         const CResourceSound &click()      const { return m_click; }
         const CResourceSound &whiteNoise() const { return m_whiteNoise; }
@@ -41,8 +41,8 @@ namespace BlackSound::SampleProvider
         //! Play the click sound
         bool playClick() const { return m_audioSettings.get().pttClickUp(); }
 
-        //! File names
         //! @{
+        //! File names
         static const QString &fnCrackle()    { static const QString f = "afv_crackle_f32.wav"; return f; }
         static const QString &fnClick()      { static const QString f = "afv_click_f32.wav"; return f; }
         static const QString &fnWhiteNoise() { static const QString f = "afv_whitenoise_f32.wav"; return f; }

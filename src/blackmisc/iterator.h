@@ -27,8 +27,8 @@ namespace BlackMisc::Iterators
     template <class F> class OutputIterator
     {
     public:
-        //! Types
         //! @{
+        //! Types
         using iterator_category = std::output_iterator_tag;
         using value_type = void;
         using difference_type = void;
@@ -36,15 +36,15 @@ namespace BlackMisc::Iterators
         using reference = void;
         //! @}
 
-        //! Constructor
         //! @{
+        //! Constructor
         explicit OutputIterator(const F &func) : m_func(func) {}
         explicit OutputIterator(F &&func) : m_func(std::move(func)) {}
         OutputIterator(const OutputIterator &other) : m_func(other.m_func) {}
         //! @}
 
-        //! Advance the iterator (no-op)
         //! @{
+        //! Advance the iterator (no-op)
         OutputIterator &operator ++() { return *this; }
         OutputIterator operator ++(int) { return *this; }
         //! @}
@@ -103,8 +103,8 @@ namespace BlackMisc::Iterators
     template <class I, class F> class TransformIterator
     {
     public:
-        //! Types
         //! @{
+        //! Types
         using iterator_category = std::forward_iterator_tag;
         using value_type = std::decay_t<decltype(std::declval<F>()(std::declval<typename std::iterator_traits<I>::value_type>()))>;
         using difference_type = typename std::iterator_traits<I>::difference_type;
@@ -136,9 +136,9 @@ namespace BlackMisc::Iterators
         //! Implicit conversion from an end iterator.
         TransformIterator(I end) : m_iterator(end) {}
 
+        //! @{
         //! Advance to the next element.
         //! Undefined if iterator is at the end.
-        //! @{
         TransformIterator &operator ++() { ++m_iterator; return *this; }
         TransformIterator operator ++(int) { auto copy = *this; ++m_iterator; return copy; }
         //! @}
@@ -152,8 +152,8 @@ namespace BlackMisc::Iterators
         //! Undefined if iterator is at the end.
         pointer operator ->() { Q_ASSERT(m_function); auto &&obj = (*m_function)(*m_iterator); return &obj; }
 
-        //! Comparison operators.
         //! @{
+        //! Comparison operators.
         bool operator ==(const TransformIterator &other) const { return m_iterator == other.m_iterator; }
         bool operator !=(const TransformIterator &other) const { return m_iterator != other.m_iterator; }
         bool operator <(const TransformIterator &other) const { return m_iterator < other.m_iterator; }
@@ -175,8 +175,8 @@ namespace BlackMisc::Iterators
     template <class I, class F> class ConditionalIterator
     {
     public:
-        //! Types
         //! @{
+        //! Types
         using iterator_category = std::forward_iterator_tag;
         using value_type = typename std::iterator_traits<I>::value_type;
         using difference_type = typename std::iterator_traits<I>::difference_type;
@@ -196,9 +196,9 @@ namespace BlackMisc::Iterators
         //! Implicit conversion from an end iterator.
         ConditionalIterator(I end) : m_iterator(end), m_end(end) {}
 
+        //! @{
         //! Advance the iterator to the next element which matches the predicate, or the end if there are none remaining.
         //! Undefined if the iterator is already at the end.
-        //! @{
         ConditionalIterator &operator ++()
         {
             Q_ASSERT(m_predicate);
@@ -219,8 +219,8 @@ namespace BlackMisc::Iterators
         //! Undefined if iterator is at the end.
         typename std::iterator_traits<I>::reference operator *() { return *m_iterator; }
 
-        //! Comparison operators.
         //! @{
+        //! Comparison operators.
         bool operator ==(const ConditionalIterator &other) const { return m_iterator == other.m_iterator; }
         bool operator !=(const ConditionalIterator &other) const { return m_iterator != other.m_iterator; }
         bool operator <(const ConditionalIterator &other) const { return m_iterator < other.m_iterator; }
@@ -248,8 +248,8 @@ namespace BlackMisc::Iterators
     template <class I> class ConcatIterator
     {
     public:
-        //! Types
         //! @{
+        //! Types
         using iterator_category = std::forward_iterator_tag;
         using value_type = typename std::iterator_traits<I>::value_type;
         using difference_type = typename std::iterator_traits<I>::difference_type;
@@ -267,9 +267,9 @@ namespace BlackMisc::Iterators
         //! Implicit conversion from an end iterator.
         ConcatIterator(I end) { Q_UNUSED(end); }
 
+        //! @{
         //! Advance to the next element.
         //! Undefined if iterator is at the end.
-        //! @{
         ConcatIterator &operator ++()
         {
             ++(m_iterators[0]);
@@ -287,8 +287,8 @@ namespace BlackMisc::Iterators
         //! Undefined if iterator is at the end.
         typename std::iterator_traits<I>::reference operator *() { return *(m_iterators[0]); }
 
-        //! Comparison operators.
         //! @{
+        //! Comparison operators.
         bool operator ==(const ConcatIterator &other) const { return m_iterators == other.m_iterators; }
         bool operator !=(const ConcatIterator &other) const { return m_iterators != other.m_iterators; }
         bool operator <(const ConcatIterator &other) const { return m_iterators < other.m_iterators; }

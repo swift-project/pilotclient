@@ -414,11 +414,11 @@ namespace BlackMisc
         }
     }
 
+    //! @{
     /*!
      * 2 functions required for unmarshallFromDbus
      * \internal
      */
-    //! @{
     QVariant fixQVariantFromDbusArgument(const QVariant &variant, int localUserType, const QString &typeName);
     QVariant complexQtTypeFromDbusArgument(const QDBusArgument &argument, int type);
     //! @}

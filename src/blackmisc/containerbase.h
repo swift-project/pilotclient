@@ -73,12 +73,14 @@ namespace BlackMisc
 
         //! Return a new container of a different type, containing the same elements as this one.
         //! \tparam Other the type of the new container.
-        //! @{
         template <template <class> class Other>
         auto to() const
         {
             return to(Other<typename Derived::value_type>());
         }
+
+        //! Return a new container of a different type, containing the same elements as this one.
+        //! \tparam Other the type of the new container.
         //! \tparam T element type of the new container.
         //! \param other an initial value for the new container; will be copied.
         template <template <class> class Other, class T>
@@ -87,7 +89,6 @@ namespace BlackMisc
             for (auto it = derived().cbegin(); it != derived().cend(); ++it) { other.push_back(*it); }
             return other;
         }
-        //! @}
 
         //! Remove elements matching some particular key/value pair(s).
         //! \param k0 A pointer to a member function of T.

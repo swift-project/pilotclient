@@ -87,8 +87,7 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CClientProvider : public IClientProvider
         {
         public:
-            //! \ingroup clientprovider
-            //! @{
+            //! clientprovider
             virtual CClientList getClients() const override;
             virtual void setClients(const CClientList &clients) override;
             virtual void clearClients() override;
@@ -103,7 +102,6 @@ namespace BlackMisc
             virtual bool addClientGndCapability(const Aviation::CCallsign &callsign) override;
             virtual bool setClientGndCapability(const Aviation::CCallsign &callsign, bool supportGndFlag) override;
             virtual void markAsSwiftClient(const Aviation::CCallsign &callsign) override;
-            //! @}
 
         private:
             CClientPerCallsign m_clients;

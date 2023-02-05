@@ -82,12 +82,10 @@ namespace BlackSimPlugin::Emulated
 
         // functions logged and used
         //! \addtogroup swiftdotcommands
-        //! @{
         //! <pre>
         //! .drv show   show emulated driver window     BlackSimPlugin::Swift::CSimulatorEmulated
         //! .drv hide   hide emulated driver window     BlackSimPlugin::Swift::CSimulatorEmulated
         //! </pre>
-        //! @}
         //! \copydoc BlackCore::ISimulator::parseCommandLine
         virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
 

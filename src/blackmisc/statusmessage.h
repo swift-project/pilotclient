@@ -107,20 +107,20 @@ namespace BlackMisc
         //! Hash value.
         friend uint qHash(const CStrongStringView &obj, uint seed = 0) { return ::qHash(obj.m_view, seed); }
 
-        //! DBus marshalling.
         //! @{
+        //! DBus marshalling.
         void marshallToDbus(QDBusArgument &arg) const { arg << toQString(); }
         void unmarshallFromDbus(const QDBusArgument &arg) { arg >> m_string; m_view = m_string; }
         //! @}
 
-        //! QDataStream marshalling.
         //! @{
+        //! QDataStream marshalling.
         void marshalToDataStream(QDataStream &stream) const { stream << toQString(); }
         void unmarshalFromDataStream(QDataStream &stream) { stream >> m_string; m_view = m_string; }
         //! @}
 
-        //! JSON conversion.
         //! @{
+        //! JSON conversion.
         QJsonObject toJson() const { QJsonObject json; json.insert(QStringLiteral("value"), toQString()); return json; }
         void convertFromJson(const QJsonObject &json) { *this = json.value(QLatin1String("value")).toString(); }
         //! @}
@@ -152,8 +152,8 @@ namespace BlackMisc
         //! Construct a message with some specific categories.
         CMessageBase(const CLogCategoryList &categories, const CLogCategoryList &extra) : CMessageBase(categories) { this->addIfNotExisting(extra); }
 
-        //! Set the severity and format string.
         //! @{
+        //! Set the severity and format string.
         template <size_t N>
         Derived &log(StatusSeverity s, const char16_t (&m)[N]) { m_message = m; m_severity = s; return derived(); }
         Derived &log(StatusSeverity s, const QString &m) { m_message = m; m_severity = s; return derived(); }
@@ -162,64 +162,64 @@ namespace BlackMisc
         //! Set the severity to debug.
         Derived &debug() { return log(SeverityDebug, QString()); }
 
-        //! Set the severity to debug, providing a format string.
         //! @{
+        //! Set the severity to debug, providing a format string.
         template <size_t N>
         Derived &debug(const char16_t (&format)[N]) { return log(SeverityDebug, format); }
         Derived &debug(const QString &format) { return log(SeverityDebug, format); }
         //! @}
 
-        //! Set the severity to info, providing a format string.
         //! @{
+        //! Set the severity to info, providing a format string.
         template <size_t N>
         Derived &info(const char16_t (&format)[N]) { return log(SeverityInfo, format); }
         Derived &info(const QString &format) { return log(SeverityInfo, format); }
         //! @}
 
-        //! Set the severity to warning, providing a format string.
         //! @{
+        //! Set the severity to warning, providing a format string.
         template <size_t N>
         Derived &warning(const char16_t (&format)[N]) { return log(SeverityWarning, format); }
         Derived &warning(const QString &format) { return log(SeverityWarning, format); }
         //! @}
 
-        //! Set the severity to error, providing a format string.
         //! @{
+        //! Set the severity to error, providing a format string.
         template <size_t N>
         Derived &error(const char16_t (&format)[N]) { return log(SeverityError, format); }
         Derived &error(const QString &format) { return log(SeverityError, format); }
         //! @}
 
-        //! Set the severity to s, providing a format string, and adding the validation category.
         //! @{
+        //! Set the severity to s, providing a format string, and adding the validation category.
         template <size_t N>
         Derived &validation(StatusSeverity s, const char16_t (&format)[N]) { setValidation(); return log(s, format); }
         Derived &validation(StatusSeverity s, const QString &format) { setValidation(); return log(s, format); }
         //! @}
 
-        //! Set the severity to info, providing a format string, and adding the validation category.
         //! @{
+        //! Set the severity to info, providing a format string, and adding the validation category.
         template <size_t N>
         Derived &validationInfo(const char16_t (&format)[N]) { setValidation(); return log(SeverityInfo, format); }
         Derived &validationInfo(const QString &format) { setValidation(); return log(SeverityInfo, format); }
         //! @}
 
-        //! Set the severity to warning, providing a format string, and adding the validation category.
         //! @{
+        //! Set the severity to warning, providing a format string, and adding the validation category.
         template <size_t N>
         Derived &validationWarning(const char16_t (&format)[N]) { setValidation(); return log(SeverityWarning, format); }
         Derived &validationWarning(const QString &format) { setValidation(); return log(SeverityWarning, format); }
         //! @}
 
-        //! Set the severity to error, providing a format string, and adding the validation category.
         //! @{
+        //! Set the severity to error, providing a format string, and adding the validation category.
         template <size_t N>
         Derived &validationError(const char16_t (&format)[N]) { setValidation(); return log(SeverityError, format); }
         Derived &validationError(const QString &format) { setValidation(); return log(SeverityError, format); }
         //! @}
 
-        //! Deleted methods to avoid accidental implicit conversion from Latin-1 or UTF-8 string literals.
         //! @{
+        //! Deleted methods to avoid accidental implicit conversion from Latin-1 or UTF-8 string literals.
         Derived &log(StatusSeverity, const char *) = delete;
         Derived &debug(const char *) = delete;
         Derived &info(const char *) = delete;
@@ -231,11 +231,11 @@ namespace BlackMisc
         Derived &validationError(const char *) = delete;
         //! @}
 
+        //! @{
         //! Streaming operators.
         //! \details If the format string is empty, the message will consist of all streamed values separated by spaces.
         //!          Otherwise, the streamed values will replace the place markers %1, %2, %3... in the format string.
         //! \see QString::arg
-        //! @{
         template <class T, std::enable_if_t<TParameter<std::decay_t<T>>::passBy == ParameterPassBy::Value, int> = 0>
         Derived &operator <<(T v) { return arg(TString<T>::toQString(v)); }
         template <class T, std::enable_if_t<TParameter<std::decay_t<T>>::passBy == ParameterPassBy::ConstRef, int> = 0>
@@ -275,8 +275,8 @@ namespace BlackMisc
         }
 
     protected:
-        //! \private
         //! @{
+        //! \private
         CStrongStringView m_message;
         QStringList m_args;
         CLogCategoryList m_categories = CLogCategoryList { CLogCategories::uncategorized() };
@@ -296,8 +296,8 @@ namespace BlackMisc
         public IOrderable
     {
     public:
-        //! \copydoc BlackMisc::StatusSeverity
         //! @{
+        //! \copydoc BlackMisc::StatusSeverity
         using StatusSeverity = BlackMisc::StatusSeverity;
         constexpr static auto SeverityDebug   = BlackMisc::SeverityDebug;
         constexpr static auto SeverityInfo    = BlackMisc::SeverityInfo;
@@ -341,8 +341,8 @@ namespace BlackMisc
         //! Destructor.
         ~CStatusMessage() = default;
 
-        //! Constructor
         //! @{
+        //! Constructor
         template <size_t N>
         CStatusMessage(const char16_t (&message)[N]) : CStatusMessage(QStringView(message)) {}
         CStatusMessage(const QString &message);
@@ -351,16 +351,16 @@ namespace BlackMisc
         CStatusMessage(StatusSeverity severity, const QString &message);
         //! @}
 
-        //! Constructor, also a validation messsage can be directly created
         //! @{
+        //! Constructor, also a validation messsage can be directly created
         template <size_t N>
         CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const char16_t (&message)[N], bool validation = false) : CStatusMessage(categories, severity, QStringView(message), validation) {}
         CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const QString &message, bool validation = false);
         //! @}
 
+        //! @{
         //! Deleted constructor, to prevent inefficient construction from byte string literal.
         //! Explicit so as to avoid ambiguities with functions overloaded on QString and CStatusMessage.
-        //! @{
         explicit CStatusMessage(const char *message) = delete;
         explicit CStatusMessage(StatusSeverity severity, const char *message) = delete;
         explicit CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const char *message, bool validation = false) = delete;

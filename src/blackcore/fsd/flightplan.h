@@ -35,8 +35,8 @@ namespace BlackCore::Fsd
         //! PDU identifier
         static QString pdu() { return "$FP"; }
 
-        //! Properties
         //! @{
+        //! Properties
         FlightType m_flightType {};
         QString m_aircraftIcaoType;
         int m_trueCruisingSpeed = 0;

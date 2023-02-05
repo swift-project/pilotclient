@@ -217,8 +217,8 @@ namespace BlackGui::Models
         //! Clear
         void clear() { m_columns.clear(); }
 
-        //! Set columns
         //! @{
+        //! Set columns
         void setColumns(const QList<CColumn> &columns) { m_columns = columns; }
         void setColumns(const CColumns &columns) { m_columns = columns.m_columns; }
         //! @}

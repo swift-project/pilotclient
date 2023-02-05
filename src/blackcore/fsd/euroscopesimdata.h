@@ -35,8 +35,8 @@ namespace BlackCore::Fsd
         //! PDU identifier
         static QString pdu() { return QStringLiteral("SIMDATA"); }
 
-        //! Properties
         //! @{
+        //! Properties
         QString m_model;
         QString m_livery;
         quint64 m_timestamp = 0;

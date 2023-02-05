@@ -62,8 +62,6 @@ namespace BlackCore
             static void unitTestRelaySignals();
 
         public slots:
-            //! \publicsection
-            //! @{
             virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const override;
             virtual BlackMisc::Aviation::CComSystem getOwnComSystem(BlackMisc::Aviation::CComSystem::ComUnit unit) const override;
             virtual BlackMisc::Aviation::CTransponder getOwnTransponder() const override;
@@ -79,7 +77,6 @@ namespace BlackCore
             virtual void toggleTransponderMode() override;
             virtual bool setTransponderMode(BlackMisc::Aviation::CTransponder::TransponderMode mode) override;
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
-            //! @}
 
         protected:
             //! \brief Constructor

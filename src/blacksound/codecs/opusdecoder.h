@@ -28,8 +28,8 @@ namespace BlackSound::Codecs
         //! Dtor
         ~COpusDecoder();
 
-        //! Not copyable and assignable
         //! @{
+        //! Not copyable and assignable
         COpusDecoder(const COpusDecoder &decoder) = delete;
         COpusDecoder& operator=(COpusDecoder const&) = delete;
         //! @}

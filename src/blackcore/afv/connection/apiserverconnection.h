@@ -79,8 +79,8 @@ namespace BlackCore::Afv::Connection
         //! Get the URL
         const QString &getUrl() const { return m_addressUrl; }
 
-        //! User data
         //! @{
+        //! User data
         const QString &getUserName() const { return m_username; }
         const QString &getPassword() const { return m_password; }
         const QString &getClient()   const { return m_client; }

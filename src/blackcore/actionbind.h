@@ -50,8 +50,8 @@ namespace BlackCore
         //! Signature just to set an icon for an action
         CActionBind(const QString &action, BlackMisc::CIcons::IconIndex icon, QObject *parent = nullptr);
 
-        //! Not copyable
         //! @{
+        //! Not copyable
         CActionBind(const CActionBind &) = delete;
         CActionBind &operator =(const CActionBind &) = delete;
         //! @}

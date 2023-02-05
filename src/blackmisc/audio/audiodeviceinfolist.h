@@ -85,8 +85,8 @@ namespace BlackMisc::Audio
         //! Has same devices
         bool hasSameDevices(const CAudioDeviceInfoList &compareDevices) const;
 
-        //! Lists of all available devices
         //! @{
+        //! Lists of all available devices
         static CAudioDeviceInfoList allInputDevices();
         static CAudioDeviceInfoList allOutputDevices();
         static CAudioDeviceInfoList allDevices();

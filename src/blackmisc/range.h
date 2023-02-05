@@ -165,8 +165,8 @@ namespace BlackMisc
     class CRange : public CRangeBase<CRange<I>>
     {
     public:
-        //! STL compatibility
         //! @{
+        //! STL compatibility
         typedef typename std::iterator_traits<I>::value_type value_type;
         typedef typename std::iterator_traits<I>::reference reference;
         typedef typename std::iterator_traits<I>::difference_type difference_type;
@@ -182,16 +182,16 @@ namespace BlackMisc
         //! Constructor.
         CRange(I begin, I end) : m_begin(begin), m_end(end) { check(&begin, &end); }
 
-        //! Begin and end iterators.
         //! @{
+        //! Begin and end iterators.
         const_iterator begin() const { return m_begin; }
         const_iterator cbegin() const { return m_begin; }
         const_iterator end() const { return m_end; }
         const_iterator cend() const { return m_end; }
         //! @}
 
-        //! Reverse begin and end iterators.
         //! @{
+        //! Reverse begin and end iterators.
         const_reverse_iterator rbegin() const { return const_reverse_iterator(m_end); }
         const_reverse_iterator crbegin() const { return const_reverse_iterator(m_end); }
         const_reverse_iterator rend() const { return const_reverse_iterator(m_begin); }
@@ -212,8 +212,8 @@ namespace BlackMisc
             return to<T>();
         }
 
-        //! Explicit conversion to any container of value_type which supports push_back. This will copy elements.
         //! @{
+        //! Explicit conversion to any container of value_type which supports push_back. This will copy elements.
         template <class T>
         T to() const
         {
@@ -228,8 +228,8 @@ namespace BlackMisc
         }
         //! @}
 
-        //! Returns true if the range is empty.
         //! @{
+        //! Returns true if the range is empty.
         bool empty() const { return begin() == end(); }
         bool isEmpty() const { return empty(); }
         //! @}
@@ -264,10 +264,10 @@ namespace BlackMisc
         }
     };
 
+    //! @{
     /*!
      * Streaming operators for CRange to qDebug.
      */
-    //! @{
     template <class I>
     QDebug operator <<(QDebug d, const CRange<I> &range)
     {
@@ -292,10 +292,10 @@ namespace BlackMisc
         return { begin, static_cast<I>(end) };
     }
 
+    //! @{
     /*!
      * Returns a CRange constructed from the begin and end iterators of the given container.
      */
-    //! @{
     template <class T>
     auto makeRange(T &container) -> CRange<decltype(container.begin())>
     {
@@ -317,12 +317,12 @@ namespace BlackMisc
         return { container.cbegin(), container.cend() };
     }
 
+    //! @{
     /*!
      * Returns a const CRange for iterating over the keys of a Qt associative container.
      *
      * This is more efficient than the keys() method of the container, as it doesn't allocate memory.
      */
-    //! @{
     template <class T>
     auto makeKeysRange(const T &container)
     {
@@ -336,6 +336,7 @@ namespace BlackMisc
     }
     //! @}
 
+    //! @{
     /*!
      * Returns a const CRange for iterating over the keys and values of a Qt associative container.
      * The value_type of the returned range is std::pair<T::key_type &, T::value_type &>.
@@ -343,7 +344,6 @@ namespace BlackMisc
      * This is more efficient than using the keys() method of the container and thereafter looking up each key,
      * as it neither allocates memory, nor performs any key lookups.
      */
-    //! @{
     template <class T>
     auto makePairsRange(const T &container)
     {

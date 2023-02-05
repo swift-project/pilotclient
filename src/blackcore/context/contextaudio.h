@@ -43,16 +43,13 @@
 
 // clazy:excludeall=const-signal-or-slot
 
-//! \addtogroup dbus
-//! @{
-
 //! DBus interface for context
+//! \addtogroup dbus
 #define BLACKCORE_CONTEXTAUDIO_INTERFACENAME "org.swift_project.blackcore.contextaudio"
 
 //! DBus object path for context
+//! \addtogroup dbus
 #define BLACKCORE_CONTEXTAUDIO_OBJECTPATH "/audio"
-
-//! @}
 
 class QDBusConnection;
 
@@ -144,23 +141,23 @@ namespace BlackCore
             //! Graceful shutdown
             void gracefulShutdown();
 
-            //! Enable/disable
             //! @{
+            //! Enable/disable
             void enableVoiceClient()  { this->initVoiceClient(); }
             void enableVoiceClientAndStart();
             void disableVoiceClient() { this->terminateVoiceClient(); }
             //! @}
 
-            //! Receive/transmit
             //! @{
+            //! Receive/transmit
             void setRxTx(bool  rx1, bool  tx1, bool  rx2, bool  tx2);
             void getRxTx(bool &rx1, bool &tx1, bool &rx2, bool &tx2) const;
             //! @}
 
             // -------- parts which can run in core and GUI, referring to local voice client ------------
 
-            //! Audio devices
             //! @{
+            //! Audio devices
             BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const;
             BlackMisc::Audio::CAudioDeviceInfoList getAudioInputDevices()  const;
             BlackMisc::Audio::CAudioDeviceInfoList getAudioOutputDevices() const;
@@ -176,8 +173,8 @@ namespace BlackCore
             //! Set current audio devices
             void setCurrentAudioDevices(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
 
-            //! Volume
             //! @{
+            //! Volume
             void setMasterOutputVolume(int volume);
             void setComOutputVolume(BlackMisc::Aviation::CComSystem::ComUnit comUnit, int volume);
             int getMasterOutputVolume() const;
@@ -192,14 +189,14 @@ namespace BlackCore
             //! Notification sounds
             void playNotification(BlackMisc::Audio::CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume = -1);
 
-            //! Loopback
             //! @{
+            //! Loopback
             void enableAudioLoopback(bool enable = true);
             bool isAudioLoopbackEnabled() const;
             //! @}
 
-            //! Voice setup
             //! @{
+            //! Voice setup
             BlackMisc::Audio::CVoiceSetup getVoiceSetup() const;
             void setVoiceSetup(const BlackMisc::Audio::CVoiceSetup &setup);
             //! @}
@@ -295,8 +292,8 @@ namespace BlackCore
              * Workaround those must be invisible for DBus
              *
 
-            //! VU levels
             //! @{
+            //! VU levels
             void inputVolumePeakVU (double value);
             void outputVolumePeakVU(double value);
             //! @}
@@ -318,8 +315,8 @@ namespace BlackCore
             //! Terminate the voice client
             void terminateVoiceClient();
 
-            //! Enable/disable voice transmission, nornally used with hotkey
             //! @{
+            //! Enable/disable voice transmission, nornally used with hotkey
             void setVoiceTransmission(bool enable, BlackMisc::Audio::PTTCOM com);
             void setVoiceTransmissionComActive(bool enabled);
             //! @}
@@ -333,8 +330,8 @@ namespace BlackCore
             //! Changed voice settings
             void onChangedVoiceSettings();
 
-            //! Audio increase/decrease volume
             //! @{
+            //! Audio increase/decrease volume
             void audioIncreaseVolume(bool enabled);
             void audioDecreaseVolume(bool enabled);
             void audioIncreaseVolumeCom1(bool enabled);

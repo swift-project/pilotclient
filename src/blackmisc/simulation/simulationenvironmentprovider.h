@@ -161,9 +161,9 @@ namespace BlackMisc::Simulation
         //! Ctor
         ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo, const Settings::CSimulatorSettings &settings, bool supportElevation, bool supportCG);
 
+        //! @{
         //! Provider enabled
         //! \threadsafe
-        //! @{
         bool isCgProviderEnabled() const;
         bool isElevationProviderEnabled() const;
         void setCgProviderEnabled(bool enabled);

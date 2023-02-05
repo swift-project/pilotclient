@@ -163,8 +163,8 @@ namespace BlackMisc::Simulation::Settings
         }
 
     protected:
-        //! The JSON members
         //! @{
+        //! The JSON members
         static constexpr char JsonDBusServerAddress[] = "dbusserveradress";
         static constexpr char JsonDrawingLabels[]     = "drawinglabels";
         static constexpr char JsonLabelColor[]        = "labelcolor";

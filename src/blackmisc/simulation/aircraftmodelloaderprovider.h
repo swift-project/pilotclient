@@ -32,8 +32,8 @@ namespace BlackMisc::Simulation
         //! Singleton
         static CMultiAircraftModelLoaderProvider &multiModelLoaderInstance();
 
-        //! Simulator specific loaders
         //! @{
+        //! Simulator specific loaders
         IAircraftModelLoader *modelLoaderFsx() const { return m_loaderFsx; }
         IAircraftModelLoader *modelLoaderP3D() const { return m_loaderP3D; }
         IAircraftModelLoader *modelLoaderXP()  const { return m_loaderXP;  }

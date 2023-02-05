@@ -315,6 +315,8 @@ namespace BlackCore
         //! cmd line arguments as string
         virtual QString cmdLineArgumentsAsString(bool withExecutable = true);
 
+        //! @}
+
         //! Simulate a crash
         //! \private only for testing purposes
         void simulateCrash();
@@ -378,15 +380,15 @@ namespace BlackCore
         //! Get the facade
         CCoreFacade *getCoreFacade() { return m_coreFacade.data(); }
 
-        //! Local or DBus application?
-        //! @{
+        //! Local application? (not DBus)
         bool isLocalContext() const;
+
+        //! DBus application? (not Local)
         bool isDBusContext()  const;
-        //! @}
 
         //! Get the facade
-        //! @{
         const CCoreFacade *getCoreFacade() const { return m_coreFacade.data(); }
+
         //! @}
 
         //! Direct access to contexts if a CCoreFacade has been initialized
@@ -449,6 +451,9 @@ namespace BlackCore
         virtual bool start();
 
         // ------------------------- network -----------------------------------------------
+
+        //! \name network
+        //! @{
 
         static constexpr int NoRedirects         = -1; //!< network request not allowing redirects
         static constexpr int NoLogRequestId      = -1; //!< network request without logging
@@ -565,6 +570,7 @@ namespace BlackCore
         //! \threadsafe
         QNetworkReply *downloadFromNetwork(const BlackMisc::Network::CUrl &url, const QString &saveAsFileName,
                                            const BlackMisc::CSlot<void(const BlackMisc::CStatusMessage &)> &callback, int maxRedirects = DefaultMaxRedirects);
+        //! @}
 
     signals:
         //! Setup available (cache, web load, ..) or failed to load setup

@@ -32,8 +32,8 @@ namespace BlackCore::Afv::Audio
         //! Success
         void success(const QString &callsign);
 
-        //! Delay plus/minus
         //! @{
+        //! Delay plus/minus
         void increaseDelayMs(const QString &callsign);
         void decreaseDelayMs(const QString &callsign);
         //! @}

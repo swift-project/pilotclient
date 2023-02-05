@@ -74,8 +74,8 @@ namespace BlackMisc::Test
         //! Ping via DBus, tests object marshalling/unmarshalling
         static int pingTests(ITestServiceInterface &testServiceInterface, bool verbose);
 
-        //! DBus calls
         //! @{
+        //! DBus calls
         QDBusPendingReply<BlackMisc::Aviation::CAtcStation> getAtcStation()
         {
             QList<QVariant> argumentList;
@@ -397,8 +397,8 @@ namespace BlackMisc::Test
             return equal;
         }
 
-        //! Extra comparison step for some types
         //! @{
+        //! Extra comparison step for some types
         template<class ValueObject>
         static bool extraCompare(const ValueObject &, const ValueObject &) { return true; }
 

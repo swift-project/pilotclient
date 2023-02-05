@@ -40,8 +40,8 @@ namespace XSwiftBus
     };
 }
 
-//! Logger convenience macros
 //! @{
+//! Logger convenience macros
 // *INDENT-OFF*
 #define DEBUG_LOG(msg) (XSwiftBus::Logger::print(__FILE__, __LINE__, XSwiftBus::Logger::DebugMsg, (msg)))
 #define DEBUG_LOG_C(msg, doLog) ((doLog) ? XSwiftBus::Logger::print(__FILE__, __LINE__, XSwiftBus::Logger::DebugMsg, (msg)) : static_cast<void>(0))

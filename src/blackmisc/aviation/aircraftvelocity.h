@@ -45,14 +45,14 @@ namespace BlackMisc::Aviation
         CAircraftVelocity(double x, double y, double z, PhysicalQuantities::CSpeedUnit xyzUnit,
             double pitch, double roll, double heading, PhysicalQuantities::CAngleUnit pbhAngleUnit, PhysicalQuantities::CTimeUnit pbhTimeUnit);
 
-        //! Setter
         //! @{
+        //! Setter
         void setLinearVelocity(double x, double y, double z, PhysicalQuantities::CSpeedUnit xyzUnit);
         void setAngularVelocity(double pitch, double roll, double heading, PhysicalQuantities::CAngleUnit pbhAngleUnit, PhysicalQuantities::CTimeUnit pbhTimeUnit);
         //! @}
 
-        //! Getter
         //! @{
+        //! Getter
         double getVelocityX(PhysicalQuantities::CSpeedUnit unit) const;
         double getVelocityY(PhysicalQuantities::CSpeedUnit unit) const;
         double getVelocityZ(PhysicalQuantities::CSpeedUnit unit) const;
@@ -73,8 +73,8 @@ namespace BlackMisc::Aviation
         //! \copydoc Mixin::Index::comparePropertyByIndex
         int comparePropertyByIndex(CPropertyIndexRef index, const CAircraftVelocity &compareValue) const;
 
-        //! Unit constants
         //! @{
+        //! Unit constants
         static const PhysicalQuantities::CSpeedUnit c_xyzSpeedUnit;
         static const PhysicalQuantities::CLengthUnit c_xyzLengthUnit;
         static const PhysicalQuantities::CAngleUnit c_pbhAngleUnit; // TODO Create a dedicated PQ class for angular velocity

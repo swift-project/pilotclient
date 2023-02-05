@@ -245,11 +245,9 @@ namespace BlackSimPlugin::FsxCommon
         virtual HRESULT initEventsP3D();
 
         //! \addtogroup swiftdotcommands
-        //! @{
         //! <pre>
         //! .drv sendid  on|off      tracing simConnect sendId on/off
         //! </pre>
-        //! @}
         virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
 
         //! Trigger tracing ids for some while
@@ -299,8 +297,8 @@ namespace BlackSimPlugin::FsxCommon
         //! Register help
         static void registerHelp();
 
-        //! Word size
         //! @{
+        //! Word size
         static bool is32bit() { return (BlackConfig::CBuildConfig::buildWordSize() == 32); }
         static bool is64bit() { return (BlackConfig::CBuildConfig::buildWordSize() == 64); }
         //! @}
@@ -646,8 +644,8 @@ namespace BlackSimPlugin::FsxCommon
         static QString requestIdToString(DWORD requestId);
 
     public:
-        //! Offsets
         //! @{
+        //! Offsets
         static DWORD offsetSimObjAircraft(CSimConnectDefinitions::SimObjectRequest req) { return MaxSimObjAircraft * static_cast<DWORD>(req); }
         static DWORD offsetSimObjTerrainProbe(CSimConnectDefinitions::SimObjectRequest req) { return MaxSimObjProbes * static_cast<DWORD>(req); }
         //! @}

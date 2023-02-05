@@ -206,8 +206,8 @@ namespace BlackMisc::Aviation
         //! \remark https://en.wikipedia.org/wiki/Flight_level
         CAltitude roundedToNearest100ft(bool roundDown) const;
 
-        //! Search the corresponding feet <-> metric / metric <-> feet
         //! @{
+        //! Search the corresponding feet <-> metric / metric <-> feet
         static int findMetricAltitude(int feet);
         static int findAltitudeForMetricAltitude(int metric);
         //! @}

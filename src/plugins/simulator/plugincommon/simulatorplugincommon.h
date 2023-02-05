@@ -45,11 +45,9 @@ namespace BlackSimPlugin::Common
                                 QObject *parent = nullptr);
 
         //! \addtogroup swiftdotcommands
-        //! @{
         //! <pre>
         //! .drv intdisplay interpolation log display
         //! </pre>
-        //! @}
         virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
 
         //! Register help

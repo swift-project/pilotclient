@@ -36,9 +36,9 @@ class QStringList;
  * \defgroup JSON Streaming operators for JSON
  */
 
-//! \name Streaming operators for QJsonValue (to value)
-//! \ingroup JSON
 //! @{
+//! Streaming operators for QJsonValue (to value)
+//! \ingroup JSON
 BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, int &value);
 BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, qlonglong &value);
 BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, qulonglong &value);
@@ -68,10 +68,10 @@ BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, QByteArray &value
 
 //! @}
 
+//! @{
 //! \brief Specialized JSON serialization for enum
 //! \remarks needs to be in global namespace
 //! \ingroup JSON
-//! @{
 template<class ENUM>
 std::enable_if_t<std::is_enum_v<ENUM>, QJsonObject>
 &operator<<(QJsonObject &json, std::pair<QString, const ENUM &> value)
@@ -88,9 +88,9 @@ std::enable_if_t<std::is_enum_v<ENUM>, QJsonObject>
 }
 //! @}
 
+//! @{
 //! \brief Specialized JSON serialization for QFlags generated enum
 //! \ingroup JSON
-//! @{
 template<class ENUM>
 QJsonObject &operator<<(QJsonObject &json, std::pair<QString, const QFlags<ENUM> &> value)
 {
@@ -160,9 +160,9 @@ QJsonArray &operator<<(QJsonArray &json, const std::pair<FIRST, SECOND> &pair)
     return json << QJsonValue(array << pair.first << pair.second);
 }
 
-//! \name Streaming operators for QJsonArray (from value)
-//! \ingroup JSON
 //! @{
+//! Streaming operators for QJsonArray (from value)
+//! \ingroup JSON
 BLACKMISC_EXPORT QJsonArray &operator<<(QJsonArray &json, const int value);
 BLACKMISC_EXPORT QJsonArray &operator<<(QJsonArray &json, const std::pair<QString, qint16> &value);
 BLACKMISC_EXPORT QJsonArray &operator<<(QJsonArray &json, const qlonglong value);
@@ -177,9 +177,9 @@ BLACKMISC_EXPORT QJsonArray &operator<<(QJsonArray &json, const QPixmap &value);
 BLACKMISC_EXPORT QJsonArray &operator<<(QJsonArray &json, const QByteArray &value);
 //! @}
 
-//! \name Streaming operators for QJsonObject (from value)
-//! \ingroup JSON
 //! @{
+//! Streaming operators for QJsonObject (from value)
+//! \ingroup JSON
 BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const int &> &value);
 BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const qint16 &> &value);
 BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const qlonglong &> &value);
@@ -208,9 +208,9 @@ BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<Blac
 BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const QByteArray &> &value);
 //! @}
 
-//! \name Streaming operators for QDataStream
-//! \ingroup JSON
 //! @{
+//! Streaming operators for QDataStream
+//! \ingroup JSON
 QDataStream &operator<<(QDataStream &s, const std::string &v);
 QDataStream &operator>>(QDataStream &s, std::string &v);
 //! @}

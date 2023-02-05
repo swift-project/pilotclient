@@ -99,8 +99,8 @@ namespace BlackMisc
         public Mixin::Icon<CCollection<T>>
     {
     public:
-        //! STL compatibility
         //! @{
+        //! STL compatibility
         typedef T key_type;
         typedef T value_type;
         typedef T &reference;

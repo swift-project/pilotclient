@@ -36,20 +36,20 @@ namespace BlackCore::Afv::Connection
         //! Time since authentication
         qint64 secondsSinceAuthentication() const;
 
-        //!  Servers alive
         //! @{
+        //!  Servers alive
         bool isVoiceServerAlive() const;
         bool isDataServerAlive()  const;
         //! @}
 
-        //! Is connected?
         //! @{
+        //! Is connected?
         bool isConnected() const { return m_connected; }
         void setConnected(bool connected) { m_connected = connected; }
         //! @}
 
-        //! Receiving audio?
         //! @{
+        //! Receiving audio?
         bool isReceivingAudio() const { return m_receiveAudio; }
         void setReceiveAudio(bool receive) { m_receiveAudio = receive; }
         //! @}
@@ -57,26 +57,26 @@ namespace BlackCore::Afv::Connection
         //! Crypto channels for voice and data
         void createCryptoChannels();
 
-        //! Tokens
         //! @{
+        //! Tokens
         const PostCallsignResponseDto &getTokens() const { return m_tokens; }
         void setTokens(const PostCallsignResponseDto &dto) { m_tokens = dto; }
         //! @}
 
-        //! Callsign
         //! @{
+        //! Callsign
         const QString &getCallsign() const { return m_callsign; }
         void setCallsign(const QString &callsign) { m_callsign = callsign; }
         //! @}
 
-        //! Uername
         //! @{
+        //! Uername
         const QString &getUserName() const { return m_userName; }
         void setUserName(const QString &un) { m_userName = un; }
         //! @}
 
-        //! Timestamps
         //! @{
+        //! Timestamps
         void setTsAuthenticatedToNow();
         void setTsHeartbeatToNow();
         //! @}

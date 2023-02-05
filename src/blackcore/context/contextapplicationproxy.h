@@ -49,8 +49,6 @@ namespace BlackCore
             virtual ~CContextApplicationProxy() override {}
 
         public slots:
-            //! \publicsection
-            //! @{
             virtual void changeSettings(const BlackMisc::CValueCachePacket &settings, const BlackMisc::CIdentifier &origin) override;
             virtual BlackMisc::CValueCachePacket getAllSettings() const override;
             virtual QStringList getUnsavedSettingsKeys() const override;
@@ -70,7 +68,6 @@ namespace BlackCore
             virtual bool removeFile(const QString &fileName) override;
             virtual bool existsFile(const QString &fileName) const override;
             virtual QString dotCommandsHtmlHelp() const override;
-            //! @}
 
             //! Used to test if there is a core running?
             //! \note creates and connects via proxy object, so not meant for very frequent tests

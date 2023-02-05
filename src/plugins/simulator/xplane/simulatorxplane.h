@@ -205,15 +205,15 @@ namespace BlackSimPlugin::XPlane
         //! Update airports
         void updateAirportsInRange();
 
-        //! Request elevation and CG from XPlane
         //! @{
+        //! Request elevation and CG from XPlane
         void requestRemoteAircraftDataFromXPlane();
         void requestRemoteAircraftDataFromXPlane(const BlackMisc::Aviation::CCallsignSet &callsigns);
         void triggerRequestRemoteAircraftDataFromXPlane(const BlackMisc::Aviation::CCallsignSet &callsigns);
         //! @}
 
-        //! Adding new aircraft
         //! @{
+        //! Adding new aircraft
         void addNextPendingAircraft();
         void triggerAddNextPendingAircraft();
         //! @}
@@ -230,8 +230,8 @@ namespace BlackSimPlugin::XPlane
         //! Can the next aircraft be added? No other aircraft adding in progress?
         bool canAddAircraft() const;
 
-        //! Callbacks from simulator
         //! @{
+        //! Callbacks from simulator
         void onRemoteAircraftAdded(const QString &callsign);
         void onRemoteAircraftAddingFailed(const QString &callsign);
         void updateRemoteAircraftFromSimulator(const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
@@ -241,8 +241,8 @@ namespace BlackSimPlugin::XPlane
         //! Disconnect from DBus
         void disconnectFromDBus();
 
-        //! Send/receive settings
         //! @{
+        //! Send/receive settings
         bool sendXSwiftBusSettings();
         BlackMisc::Simulation::Settings::CXSwiftBusSettings receiveXSwiftBusSettings(bool &ok);
         //! @}

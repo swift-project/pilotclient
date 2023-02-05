@@ -45,8 +45,8 @@ namespace BlackCore::Afv::Clients
     {
         Q_OBJECT
 
-        //! AFV client properties
         //! @{
+        //! AFV client properties
         Q_PROPERTY(double inputVolumePeakVU  READ getInputVolumePeakVU  NOTIFY inputVolumePeakVU)
         Q_PROPERTY(double outputVolumePeakVU READ getOutputVolumePeakVU NOTIFY outputVolumePeakVU)
         Q_PROPERTY(BlackCore::Afv::Clients::CAfvClient::ConnectionStatus connectionStatus READ getConnectionStatus NOTIFY connectionStatusChanged)
@@ -68,9 +68,9 @@ namespace BlackCore::Afv::Clients
         //! Dtor
         virtual ~CAfvClient() override { this->stopAudio(); }
 
+        //! @{
         //! Corresponding callsign
         //! \threadsafe
-        //! @{
         QString getCallsign() const;
         void setCallsign(const QString &getCallsign);
         //! @}
@@ -88,17 +88,17 @@ namespace BlackCore::Afv::Clients
         //! \remark runs in thread of CAfvClient object and is ASYNC when called from another thread
         Q_INVOKABLE void connectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client);
 
+        //! @{
         //! Disconnect from network
         //! \threadsafe
         //! \remark runs in thread of CAfvClient object and is ASYNC when called from another thread
-        //! @{
         void disconnectFrom(bool stop);
         Q_INVOKABLE void disconnectFrom() { this->disconnectFrom(false); }
         void disconnectFromAndStop()      { this->disconnectFrom(true); }
         //! @}
 
-        //! Audio devices
         //! @{
+        //! Audio devices
         Q_INVOKABLE QStringList availableInputDevices() const;
         Q_INVOKABLE QStringList availableOutputDevices() const;
         //! @}
@@ -109,15 +109,15 @@ namespace BlackCore::Afv::Clients
         //! Client started?
         bool isStarted() const { return m_isStarted; }
 
+        //! @{
         //! Muted
         //! \threadsafe
-        //! @{
         bool isMuted() const;
         void setMuted(bool mute);
         //! @}
 
-        //! Start/stop client
         //! @{
+        //! Start/stop client
         void startAudio();
         void startAudio(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
         Q_INVOKABLE void startAudio(const QString &inputDeviceName, const QString &outputDeviceName);
@@ -130,8 +130,8 @@ namespace BlackCore::Afv::Clients
         bool isComUnitIntegrated() const { return m_integratedComUnit; }
 
         /* NOT used
-        //! The device's volume 0..1
         //! @{
+        //! The device's volume 0..1
         double getDeviceInputVolume() const;
         bool   setDeviceInputVolume(double volume);
         double getDeviceOutputVolume() const;
@@ -143,55 +143,55 @@ namespace BlackCore::Afv::Clients
         //! \threadsafe
         void setReceiveAudio(bool receive);
 
+        //! @{
         //! Enable COM unit/transceiver
         //! \threadsafe
-        //! @{
         Q_INVOKABLE void enableTransceiver(quint16 id, bool enable);
         void enableComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit, bool enable);
         bool isEnabledTransceiver(quint16 id) const;
         bool isEnabledComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
         //! @}
 
+        //! @{
         //! Set transmitting transceivers
         //! \threadsafe
-        //! @{
         void setTransmittingTransceiver(quint16 transceiverID);
         void setTransmittingComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit);
         void setTransmittingTransceivers(const QVector<TxTransceiverDto> &transceivers);
         //! @}
 
+        //! @{
         //! Transmitting transceiver/COM unit
         //! \threadsafe
-        //! @{
         bool isTransmittingTransceiver(quint16 id) const;
         bool isTransmittingComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
         //! @}
 
+        //! @{
         //! Simplified enable/disable
         //! \threadsafe
-        //! @{
         void setRxTx(bool  rx1, bool  tx1, bool rx2,  bool  tx2);
         void getRxTx(bool &rx1, bool &tx1, bool &rx2, bool &tx2) const;
         //! @}
 
+        //! @{
         //! Get transceivers
         //! \threadsafe
-        //! @{
         QVector<TransceiverDto>   getTransceivers() const;
         QVector<TxTransceiverDto> getTransmittingTransceivers() const;
         QSet<quint16> getEnabledTransceivers() const;
         //! @}
 
+        //! @{
         //! Aliased stations enabled?
         //! \threadsafe
-        //! @{
         bool isAliasedStationsEnabled() const    { return m_enableAliased; }
         void enableAliasedStations(bool enabled) { m_enableAliased = enabled; }
         //! @}
 
+        //! @{
         //! Update frequency
         //! \threadsafe
-        //! @{
         Q_INVOKABLE void updateComFrequency(quint16 id, quint32 frequencyHz);
         void updateComFrequency(BlackMisc::Aviation::CComSystem::ComUnit comUnit, const BlackMisc::PhysicalQuantities::CFrequency &comFrequency);
         void updateComFrequency(BlackMisc::Aviation::CComSystem::ComUnit comUnit, const BlackMisc::Aviation::CComSystem &comSystem);
@@ -206,30 +206,30 @@ namespace BlackCore::Afv::Clients
         //! \threadsafe
         void updateFromOwnAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool withSignals = true);
 
+        //! @{
         //! Push to talk
         //! \threadsafe
-        //! @{
         Q_INVOKABLE void setPtt(bool active);
         void setPttForCom(bool active, BlackMisc::Audio::PTTCOM com);
         //! @}
 
+        //! @{
         //! Loopback
         //! \threadsafe
-        //! @{
         Q_INVOKABLE void setLoopBack(bool on) { m_loopbackOn = on; }
         Q_INVOKABLE bool isLoopback() const   { return m_loopbackOn; }
         //! @}
 
+        //! @{
         //! Input volume in dB, [MinDbIn, MaxDbIn]dB
         //! \threadsafe
-        //! @{
         double getInputVolumeDb() const;
         Q_INVOKABLE bool setInputVolumeDb(double valueDb);
         //! @}
 
+        //! @{
         //! Output volume for each COM in dB, [MinDbOut, MaxDbOut]dB
         //! \threadsafe
-        //! @{
         double getComOutputVolumeDb(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
         Q_INVOKABLE bool setComOutputVolumeDb(BlackMisc::Aviation::CComSystem::ComUnit comUnit, double valueDb);
         //! @}
@@ -238,9 +238,9 @@ namespace BlackCore::Afv::Clients
         //! \threadsafe
         double getOutputGainRatio(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
 
+        //! @{
         //! Normalized volumes 0..100
         //! \threadsafe
-        //! @{
         int getNormalizedInputVolume() const;
         int getNormalizedComOutputVolume(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
         int getNormalizedMasterOutputVolume() const;
@@ -249,24 +249,24 @@ namespace BlackCore::Afv::Clients
         bool setNormalizedMasterOutputVolume(int volume);
         //! @}
 
+        //! @{
         //! VU values, 0..1
         //! \threadsafe
-        //! @{
         double getInputVolumePeakVU() const;
         double getOutputVolumePeakVU() const;
         //! @}
 
+        //! @{
         //! Recently used device
         //! \threadsafe
-        //! @{
         const BlackMisc::Audio::CAudioDeviceInfo &getInputDevice()  const;
         const BlackMisc::Audio::CAudioDeviceInfo &getOutputDevice() const;
         bool usesSameDevices(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
         //! @}
 
+        //! @{
         //! Callsigns currently received
         //! \threadsafe
-        //! @{
         QString getReceivingCallsignsStringCom1() const;
         QString getReceivingCallsignsStringCom2() const;
         BlackMisc::Aviation::CCallsignSet getReceivingCallsignsCom1() const;
@@ -301,8 +301,8 @@ namespace BlackCore::Afv::Clients
         //! PTT status in this particular AFV client
         void ptt(bool active, BlackMisc::Audio::PTTCOM pttcom, const BlackMisc::CIdentifier &identifier);
 
-        //! VU levels
         //! @{
+        //! VU levels
         void inputVolumePeakVU(double value);
         void outputVolumePeakVU(double value);
         //! @}
@@ -344,9 +344,9 @@ namespace BlackCore::Afv::Clients
         //! Connect again in given ms
         void reconnectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client, int delayMs, const BlackMisc::CStatusMessage &msg);
 
+        //! @{
         //! All aliased stations
         //! \threadsafe
-        //! @{
         QVector<StationDto> getAliasedStations() const;
         void setAliasedStations(const QVector<StationDto> &stations);
         //! @}

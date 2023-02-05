@@ -80,9 +80,9 @@ namespace BlackCore
                          Fsd::CFSDClient *fsdClient,
                          QObject         *parent);
 
+        //! @{
         //! Members not implenented or fully implenented by CRemoteAircraftProvider
         //! \ingroup remoteaircraftprovider
-        //! @{
         virtual QObject *asQObject() override { return this; }
         virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
         virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;
@@ -167,18 +167,16 @@ namespace BlackCore
         };
         Q_DECLARE_FLAGS(MatchingReadiness, MatchingReadinessFlag)
 
-        //! As string
         //! @{
+        //! As string
         static const QString &enumFlagToString(MatchingReadinessFlag r);
         static QString enumToString(MatchingReadiness r);
         //! @}
 
         //! \addtogroup swiftdotcommands
-        //! @{
         //! <pre>
         //! .fsd range distance        max.range e.g. ".fsd range 100NM"
         //! </pre>
-        //! @}
         //! \copydoc BlackCore::Context::IContextNetwork::parseCommandLine
         bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator);
 

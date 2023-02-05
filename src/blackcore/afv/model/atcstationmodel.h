@@ -31,8 +31,8 @@ namespace BlackCore::Afv::Model
         //! Ctor
         CSampleAtcStation(const QString &callsign, const BlackCore::Afv::TransceiverDto &transceiver);
 
-        //! Getter
         //! @{
+        //! Getter
         const QString &callsign() const { return m_callsign; }
         QString formattedFrequency() const;
         double latitude() const;

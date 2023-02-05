@@ -42,8 +42,8 @@ namespace BlackMisc
             class BLACKMISC_EXPORT CInterpolant : public IInterpolant
             {
             public:
-                //! Constructor
                 //! @{
+                //! Constructor
                 CInterpolant() {}
                 CInterpolant(const Aviation::CAircraftSituation &oldSituation);
                 CInterpolant(const Aviation::CAircraftSituation &oldSituation, const CInterpolatorPbh &pbh);

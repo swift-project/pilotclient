@@ -93,8 +93,8 @@
     )
 // *INDENT-ON*
 
-//! std::string qHash
 //! @{
+//! std::string qHash
 inline uint qHash(const std::string &key, uint seed) { return qHash(QString::fromStdString(key), seed); }
 inline uint qHash(const std::string &key) { return qHash(QString::fromStdString(key)); }
 //! @}
@@ -218,8 +218,8 @@ namespace BlackMisc
     class CMetaClass
     {
     protected:
-        //! Flags wrapped as compile-time constants.
         //! @{
+        //! Flags wrapped as compile-time constants.
         constexpr static MetaFlags<MetaFlag::DisabledForComparison> DisabledForComparison {};
         constexpr static MetaFlags<MetaFlag::DisabledForMarshalling> DisabledForMarshalling {};
         constexpr static MetaFlags<MetaFlag::DisabledForDebugging> DisabledForDebugging {};

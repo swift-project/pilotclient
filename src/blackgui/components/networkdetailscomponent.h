@@ -85,8 +85,8 @@ namespace BlackGui::Components
         //! Reset state
         void resetState();
 
-        //! Selected server
         //! @{
+        //! Selected server
         bool isVatsimServerSelected() const;
         bool isOtherServerSelected() const;
         //! @}

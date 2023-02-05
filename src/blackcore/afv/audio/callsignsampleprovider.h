@@ -49,8 +49,8 @@ namespace BlackCore::Afv::Audio
         //! Type
         const QString &type() const { return m_aircraftType; }
 
-        //! Is active?
         //! @{
+        //! Is active?
         void active(const QString &callsign, const QString &aircraftType);
         void activeSilent(const QString &callsign, const QString &aircraftType);
         //! @}
@@ -58,8 +58,8 @@ namespace BlackCore::Afv::Audio
         //! Clean
         void clear();
 
-        //! Add samples
         //! @{
+        //! Add samples
         void addOpusSamples(const IAudioDto &audioDto, float distanceRatio);
         void addSilentSamples(const IAudioDto &audioDto);
         //! @}

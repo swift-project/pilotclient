@@ -60,17 +60,13 @@ namespace BlackSimPlugin::FsCommon
         //! Init the internal objects
         virtual void initSimulatorInternals() override;
 
-        //! \name When swift DB data are read
-        //! @{
+        //! When swift DB data are read
         virtual void onSwiftDbAirportsRead() override;
-        //! @}
 
         //! \addtogroup swiftdotcommands
-        //! @{
         //! <pre>
         //! .drv fsuipc  on|off      FSUIPC on/off
         //! </pre>
-        //! @}
         virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
 
         //! \copydoc BlackCore::ISimulator::reset

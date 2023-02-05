@@ -85,8 +85,8 @@ namespace BlackMisc
         public Mixin::Icon<CSequence<T>>
     {
     public:
-        //! STL compatibility
         //! @{
+        //! STL compatibility
         typedef T key_type;
         typedef T value_type;
         typedef T &reference;
@@ -107,8 +107,8 @@ namespace BlackMisc
         //! Initializer list constructor.
         CSequence(std::initializer_list<T> il) : m_impl(il) {}
 
-        //! By QVector of type T.
         //! @{
+        //! By QVector of type T.
         CSequence(const QVector<T> &vector) : m_impl(vector) {}
         CSequence(QVector<T> &&vector) : m_impl(std::move(vector)) {}
         //! @}
@@ -135,8 +135,8 @@ namespace BlackMisc
         //! Destructor.
         ~CSequence() = default;
 
-        //! Copy of internal vector.
         //! @{
+        //! Copy of internal vector.
         QVector<T> toVector() const & { return m_impl; }
         QVector<T> toVector() && { return std::move(m_impl); }
         //! @}

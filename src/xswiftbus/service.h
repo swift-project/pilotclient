@@ -160,15 +160,15 @@ namespace XSwiftBus
         //! Get aircraft true heading in degrees
         double getTrueHeadingDeg() const { return m_heading.get(); }
 
-        //! Get aircraft local velocity in world coordinates meters per second
         //! @{
+        //! Get aircraft local velocity in world coordinates meters per second
         double getLocalXVelocityMps() const { return isPaused() ? 0 : m_velocityX.get(); }
         double getLocalYVelocityMps() const { return isPaused() ? 0 : m_velocityY.get(); }
         double getLocalZVelocityMps() const { return isPaused() ? 0 : m_velocityZ.get(); }
         //! @}
 
-        //! Get aircraft angular velocity in radians per second
         //! @{
+        //! Get aircraft angular velocity in radians per second
         double getPitchRadPerSec() const { return isPaused() ? 0 : m_pitchVelocity.get(); }
         double getRollRadPerSec() const { return isPaused() ? 0 : m_rollVelocity.get(); }
         double getHeadingRadPerSec() const { return isPaused() ? 0 : m_headingVelocity.get(); }
@@ -183,8 +183,8 @@ namespace XSwiftBus
         //! Get elevation of ground under the plane in meters
         double getGroundElevation() const { return m_terrainProbe.getElevation(m_latitude.get(), m_longitude.get(), m_elevation.get())[0]; }
 
-        //! COM Selection 6/7
         //! @{
+        //! COM Selection 6/7
         int getComSelection() const { return m_comAudioSelection.get(); }
         bool isCom1Selected() const { return this->getComSelection() == 6; }
         bool isCom2Selected() const { return this->getComSelection() == 7; }

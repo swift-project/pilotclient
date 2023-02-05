@@ -36,8 +36,8 @@ namespace BlackCore::Fsd
         //! PDU identifier
         static QString pdu() { return QStringLiteral("#SB"); }
 
-        //! Properties
         //! @{
+        //! Properties
         QString m_airlineIcao;
         QString m_aircraftIcao;
         QString m_aircraftIcaoCombinedType;

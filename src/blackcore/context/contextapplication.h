@@ -33,16 +33,13 @@
 
 // clazy:excludeall=const-signal-or-slot
 
-//! \addtogroup dbus
-//! @{
-
 //! DBus interface for context
+//! \addtogroup dbus
 #define BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME "org.swift_project.blackcore.contextapplication"
 
 //! DBus object path for context
+//! \addtogroup dbus
 #define BLACKCORE_CONTEXTAPPLICATION_OBJECTPATH "/application"
-
-//! @}
 
 class QDBusConnection;
 namespace BlackMisc { class CDBusServer; }

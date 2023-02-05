@@ -40,24 +40,24 @@ namespace BlackGui::Components
         //! Destructor
         virtual ~CAudioDeviceVolumeSetupComponent() override;
 
-        //! Get input and output volume values
         //! @{
+        //! Get input and output volume values
         int getInValue(int from  = BlackMisc::Audio::CSettings::InMin,  int to = BlackMisc::Audio::CSettings::InMax) const;
         int getOutValue(int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax) const;
         int getOutValueCom1(int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax) const;
         int getOutValueCom2(int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax) const;
         //! @}
 
-        //! Set input and output volume values
         //! @{
+        //! Set input and output volume values
         void setInValue(int value,  int from = BlackMisc::Audio::CSettings::InMin,  int to = BlackMisc::Audio::CSettings::InMax);
         void setOutValue(int value,  int from = BlackMisc::Audio::CSettings::InMin,  int to = BlackMisc::Audio::CSettings::InMax);
         void setOutValueCom1(int value, int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax);
         void setOutValueCom2(int value, int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax);
         //! @}
 
-        //! Set input and output level values 0..1
         //! @{
+        //! Set input and output level values 0..1
         void setInLevel(double value);
         void setOutLevel(double value);
         //! @}
@@ -134,8 +134,8 @@ namespace BlackGui::Components
         BlackMisc::Audio::CAudioDeviceInfo getSelectedInputDevice() const;
         BlackMisc::Audio::CAudioDeviceInfo getSelectedOutputDevice() const;
 
-        //! Transmit and receive state
         //! @{
+        //! Transmit and receive state
         void setTransmitReceiveInUi(bool tx1, bool rec1, bool tx2, bool rec2, bool integrated);
         void setTransmitReceiveInUiFromVoiceClient();
         //! @}

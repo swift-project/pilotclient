@@ -36,15 +36,10 @@ namespace BlackCore::Fsd
         //! PDU identifier
         static QString pdu() { return "-MD"; }
 
-        //! Properties
         //! @{
+        //! Properties
         ClientQueryType m_queryType = ClientQueryType::Unknown;
         QStringList m_queryData;
-        //! @}
-
-
-        //! Properties
-        //! @{
         QString  m_partsval1;
         QString  m_partsval2;
         QString  m_partsval3;

@@ -124,10 +124,8 @@ namespace BlackCore::Vatsim
         void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
     protected:
-        //! \name BlackCore::CThreadedReader overrides
-        //! @{
+        // CThreadedReader overrides
         virtual void doWorkImpl() override;
-        //! @}
 
     private:
         //! Section in file

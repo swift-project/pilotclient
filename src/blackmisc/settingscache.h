@@ -119,8 +119,8 @@ namespace BlackMisc
         //! Inherited constructor.
         using CSetting<Trait>::CSetting;
 
-        //! Deleted mutators.
         //! @{
+        //! Deleted mutators.
         CStatusMessage set(const typename Trait::type &value, qint64 timestamp = 0) = delete;
         CStatusMessage setAndSave(const typename Trait::type &value, qint64 timestamp = 0) = delete;
         CStatusMessage save() = delete;

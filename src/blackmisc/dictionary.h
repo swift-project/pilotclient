@@ -98,8 +98,8 @@ namespace BlackMisc
         //! The implementation container
         using impl_type = Impl<Key, Value>;
 
-        //! STL compatibility
         //! @{
+        //! STL compatibility
         typedef Key key_type;
         typedef Value value_type;
         typedef Value &reference;
@@ -304,20 +304,20 @@ namespace BlackMisc
         //! Returns const iterator at the end of the dictionary
         const_iterator cend() const { return m_impl.cend(); }
 
-        //! Returns const iterator for iterating over keys
         //! @{
+        //! Returns const iterator for iterating over keys
         auto keyBegin() const { return m_impl.keyBegin(); }
         auto keyEnd() const { return m_impl.keyEnd(); }
         //! @}
 
-        //! Returns iterator for iterating over keys and values together
         //! @{
+        //! Returns iterator for iterating over keys and values together
         auto keyValueBegin() { return m_impl.keyValueBegin(); }
         auto keyValueEnd() { return m_impl.keyValueEnd(); }
         //! @}
 
-        //! Returns const iterator for iterating over keys and values together
         //! @{
+        //! Returns const iterator for iterating over keys and values together
         auto keyValueBegin() const { return m_impl.keyValueBegin(); }
         auto constKeyValueBegin() const { return m_impl.constKeyValueBegin(); }
         auto keyValueEnd() const { return m_impl.keyValueEnd(); }

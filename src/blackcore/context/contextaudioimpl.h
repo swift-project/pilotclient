@@ -42,9 +42,6 @@ namespace BlackCore
             friend class IContextAudio;
 
         public slots:
-            // Interface implementations for DBus
-            //! \publicsection
-            //! @{
             virtual BlackMisc::Audio::CAudioDeviceInfoList getRegisteredDevices() const override;
             virtual void registerDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices)   override;
             virtual void unRegisterDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) override;
@@ -52,7 +49,6 @@ namespace BlackCore
             virtual void registerAudioCallsign(const BlackMisc::Aviation::CCallsign   &callsign,  const BlackMisc::CIdentifier &identifier) override;
             virtual void unRegisterAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign,  const BlackMisc::CIdentifier &identifier) override;
             virtual bool hasRegisteredAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
-            //! @}
 
         protected:
             //! Constructor

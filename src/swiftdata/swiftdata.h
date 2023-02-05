@@ -58,8 +58,8 @@ private:
     //! Menu clicked
     void onMenuClicked();
 
-    //! Init functions
     //! @{
+    //! Init functions
     void init();
     void initLogDisplay();
     void initStyleSheet();

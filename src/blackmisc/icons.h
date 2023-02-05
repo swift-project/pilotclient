@@ -508,32 +508,32 @@ namespace BlackMisc
         // -- Simulators
         // --------------------------------------------------
 
-        //! Simulator FSX
         //! @{
+        //! Simulator FSX
         static const QPixmap &simulatorFSX();
         static const QPixmap &simulatorFSX16();
         //! @}
 
-        //! Simulator P3D
         //! @{
+        //! Simulator P3D
         static const QPixmap &simulatorP3D();
         static const QPixmap &simulatorP3D16();
         //! @}
 
-        //! Simulator FS9
         //! @{
+        //! Simulator FS9
         static const QPixmap &simulatorFS9();
         static const QPixmap &simulatorFS916();
         //! @}
 
-        //! Simulator FG
         //! @{
+        //! Simulator FG
         static const QPixmap &simulatorFG();
         static const QPixmap &simulatorFG16();
         //! @}
 
-        //! Simulator XPlane
         //! @{
+        //! Simulator XPlane
         static const QPixmap &simulatorXPlane();
         static const QPixmap &simulatorXPlane16();
         //! @}
@@ -542,8 +542,8 @@ namespace BlackMisc
         // -- swift
         // --------------------------------------------------
 
-        //! swift icon
         //! @{
+        //! swift icon
         static const QPixmap &swift16();
         static const QPixmap &swift24();
         static const QPixmap &swift48();

@@ -75,8 +75,6 @@ namespace BlackCore
 
         public slots:
             // ----------------------------- context interface -----------------------------
-            //! \publicsection
-            //! @{
             virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const override;
             virtual BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const override;
             virtual BlackMisc::Simulation::Settings::CSimulatorSettings getSimulatorSettings() const override;
@@ -135,10 +133,8 @@ namespace BlackCore
             // also in IAircraftModelSetProvider
             virtual BlackMisc::Simulation::CAircraftModelList getModelSet() const override;
             virtual int getModelSetCount() const override;
-            //! @}
 
             //! \addtogroup swiftdotcommands
-            //! @{
             //! <pre>
             //! .plugin           forwarded to plugin, see details there
             //! .driver .drv      forwarded to plugin (same as above)
@@ -146,7 +142,6 @@ namespace BlackCore
             //! .ris debug on|off interpolation/rendering setup, debug messages
             //! .ris parts on|off interpolation/rendering setup, aircraft parts
             //! </pre>
-            //! @}
             //! \copydoc IContextSimulator::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
             // ----------------------------- context interface -----------------------------
@@ -189,39 +184,46 @@ namespace BlackCore
             static constexpr int MaxModelAddedFailoverTrials = 3;   //!< if model cannot be added, try again max <n> times
 
             //  ------------ slots connected with network or other contexts ---------
-            //! \ingroup crosscontextfunction
-            //! @{
 
             //! Remote aircraft added and ready for model matching
+            //! \ingroup crosscontextfunction
             void xCtxAddedRemoteAircraftReadyForModelMatching(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
 
             //! Remove remote aircraft
+            //! \ingroup crosscontextfunction
             void xCtxRemovedRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Changed remote aircraft model
+            //! \ingroup crosscontextfunction
             void xCtxChangedRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
             //! Changed own aircraft model
+            //! \ingroup crosscontextfunction
             void xCtxChangedOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &aircraftModel, const BlackMisc::CIdentifier &originator);
 
             //! Enable / disable aircraft
+            //! \ingroup crosscontextfunction
             void xCtxChangedRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Network connection status
+            //! \ingroup crosscontextfunction
             void xCtxNetworkConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
 
             //! Update simulator cockpit from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
+            //! \ingroup crosscontextfunction
             void xCtxUpdateSimulatorCockpitFromContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
 
             //! Update simulator SELCAL from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
+            //! \ingroup crosscontextfunction
             void xCtxUpdateSimulatorSelcalFromContext(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator);
 
             //! Raw data when a new aircraft was requested, used for statistics
+            //! \ingroup crosscontextfunction
             void xCtxNetworkRequestedNewAircraft(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);
 
             //! Text message received
+            //! \ingroup crosscontextfunction
             void xCtxTextMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);
-            //! @}
             //  ------------ slots connected with network or other contexts ---------
 
             //! Handle new connection status of simulator

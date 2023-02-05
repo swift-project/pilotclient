@@ -122,13 +122,11 @@ namespace BlackGui
         //! Set window title
         QString setExtraWindowTitle(const QString &extraInfo, QWidget *mainWindowWidget = mainApplicationWidget()) const;
 
-        //! \name print warning message
-        //! @{
+        //! print warning message
         virtual bool cmdLineWarningMessage(const QString &text, const QString &informativeText) const override;
-        //! @}
 
-        //! \name print messages generated during parsing / cmd handling
         //! @{
+        //! print messages generated during parsing / cmd handling
         virtual bool cmdLineErrorMessage(const QString &text, const QString &informativeText = "", bool retry = false) const override;
         virtual bool cmdLineErrorMessage(const BlackMisc::CStatusMessageList &msgs, bool retry = false) const override;
         //! @}
@@ -136,8 +134,8 @@ namespace BlackGui
         //! Window size reset mode set
         bool isCmdWindowSizeResetSet() const;
 
-        //! \name direct access to main application window
         //! @{
+        //! direct access to main application window
         virtual bool displayInStatusBar(const BlackMisc::CStatusMessage &message) override;
         virtual bool displayTextInConsole(const QString &text) override;
         virtual bool displayInOverlayWindow(const BlackMisc::CStatusMessage &message, int timeOutMs = -1) override;
@@ -152,8 +150,8 @@ namespace BlackGui
         //! Add a splash screen based on resource, empty means remove splash screen
         void splashScreen(const QPixmap &pixmap);
 
-        //! Display splash screen messages if screen is available and visible
         //! @{
+        //! Display splash screen messages if screen is available and visible
         void displaySplashMessage(const BlackMisc::CStatusMessage &msg);
         void displaySplashMessages(const BlackMisc::CStatusMessageList &msgs);
         //! @}
@@ -242,8 +240,8 @@ namespace BlackGui
         //! Toggle stay on top
         bool toggleStayOnTop();
 
-        //! Window to front/back
         //! @{
+        //! Window to front/back
         void windowToFront();
         void windowToBack();
         void windowToFrontBackToggle();
@@ -327,8 +325,8 @@ namespace BlackGui
         void alwaysOnTop(bool onTop);
 
     protected:
-        //! \name print messages generated during parsing / cmd handling
         //! @{
+        //! print messages generated during parsing / cmd handling
         virtual void cmdLineHelpMessage() override;
         virtual void cmdLineVersionMessage() const override;
         //! @}

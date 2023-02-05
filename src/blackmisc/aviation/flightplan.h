@@ -414,14 +414,14 @@ namespace BlackMisc::Aviation
         //! All rules as string
         static const QStringList &flightRules();
 
-        //! Is rule a VFR rule?
         //! @{
+        //! Is rule a VFR rule?
         static bool isVFRRules(FlightRules rule);
         static bool isVFRRules(const QString &rule);
         //! @}
 
-        //! Is rule a IFR rule?
         //! @{
+        //! Is rule a IFR rule?
         static bool isIFRRules(FlightRules rule);
         static bool isIFRRules(const QString &rule);
         //! @}

@@ -62,8 +62,8 @@ namespace BlackMisc::Simulation
     class BLACKMISC_EXPORT CAutoPublishData
     {
     public:
-        //! Insert values we might want to update in the DB
         //! @{
+        //! Insert values we might want to update in the DB
         void insert(const QString &modelString, const PhysicalQuantities::CLength &cg);
         void insert(const QString &modelString, const CSimulatorInfo &simulator);
         //! @}
@@ -80,8 +80,8 @@ namespace BlackMisc::Simulation
         //! Read from database JSON
         int fromDatabaseJson(const QString &jsonData, bool clear = true);
 
-        //! Write to file
         //! @{
+        //! Write to file
         bool writeJsonToFile() const;
         bool writeJsonToFile(const QString &pathAndFile) const;
         //! @}

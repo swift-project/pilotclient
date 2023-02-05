@@ -51,8 +51,8 @@ public:
     virtual ~CSwiftCore() override;
 
 private:
-    //! Init
     //! @{
+    //! Init
     void initLogDisplay();
     void initStyleSheet();
     void initMenus();

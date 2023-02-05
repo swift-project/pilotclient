@@ -32,8 +32,8 @@ namespace BlackCore::Fsd
         //! PDU identifier
         static QString pdu() { return "$SF"; }
 
-        //! Properties
         //! @{
+        //! Properties
         QString m_client;
         bool m_active = false;
         //! @}

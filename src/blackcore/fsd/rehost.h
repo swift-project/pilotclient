@@ -32,8 +32,8 @@ namespace BlackCore::Fsd
         //! PDU identifier
         static QString pdu() { return "$XX"; }
 
-        //! Properties
         //! @{
+        //! Properties
         QString m_hostname;
         //! @}
 

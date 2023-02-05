@@ -30,8 +30,8 @@ namespace BlackMisc
     class CSetBuilder
     {
     public:
-        //! Add an element to the set. Runs in amortized constant time.
         //! @{
+        //! Add an element to the set. Runs in amortized constant time.
         void insert(const T &value) { m_list.push_back(value); }
         void insert(T &&value) { m_list.push_back(std::move(value)); }
         //! @}
@@ -39,8 +39,8 @@ namespace BlackMisc
         //! True if no elements have been inserted.
         bool isEmpty() const { return m_list.isEmpty(); }
 
-        //! Return a container of unique elements. Runs in log-linear time.
         //! @{
+        //! Return a container of unique elements. Runs in log-linear time.
         operator QList<T>() const & { return sortAndDeduplicate(m_list); }
         operator QList<T>() && { return sortAndDeduplicate(std::move(m_list)); }
         operator QSet<T>() const & { return convertTo<QSet>(sortAndDeduplicate(m_list)); }

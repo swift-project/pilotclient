@@ -95,8 +95,7 @@ namespace BlackCore
             //! Destructor
             virtual ~CContextNetwork() override;
 
-            //! \ingroup remoteaircraftprovider
-            //! @{
+            // remoteaircraftprovider
             virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Aviation::CAircraftSituation remoteAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, int index) const override;
             virtual BlackMisc::MillisecondsMinMaxMean remoteAircraftSituationsTimestampDifferenceMinMaxMean(const BlackMisc::Aviation::CCallsign &callsign) const override;
@@ -126,10 +125,8 @@ namespace BlackCore
                 std::function<void(const BlackMisc::Aviation::CCallsign &)> removedAircraftSlot,
                 std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
             ) override;
-            //! @}
 
-            //! \ingroup clientprovider
-            //! @{
+            // clientprovider
             virtual void setClients(const BlackMisc::Network::CClientList &clients) override;
             virtual void clearClients() override;
             virtual BlackMisc::Network::CClient getClientOrDefaultForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
@@ -141,7 +138,6 @@ namespace BlackCore
             virtual bool addClientGndCapability(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual bool setClientGndCapability(const BlackMisc::Aviation::CCallsign &callsign, bool supportGndFlag) override;
             virtual void markAsSwiftClient(const BlackMisc::Aviation::CCallsign &callsign) override;
-            //! @}
 
             //! \copydoc IContextNetwork::connectRawFsdMessageSignal
             virtual QMetaObject::Connection connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot) override;
@@ -149,21 +145,20 @@ namespace BlackCore
             //! Gracefully shut down, e.g. for thread safety
             void gracefulShutdown();
 
+            //! Network library
             //! \protected
             //! \remarks normally only for core facade internal usage
             //! \remarks public so values can be logged/monitored
-            //! @{
-            //! Network library
             Fsd::CFSDClient *fsdClient() const { return m_fsdClient; }
 
             //! Airspace
+            //! \protected
+            //! \remarks normally only for core facade internal usage
+            //! \remarks public so values can be logged/monitored
             CAirspaceMonitor *airspace() const { return m_airspace; }
-            //! @}
 
         public slots:
-            // ------------ from context and provider interface -------------
-            //! \ingroup remoteaircraftprovider
-            //! @{
+            // remoteaircraftprovider
 
             // emit signal when changed
             virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override;
@@ -203,14 +198,11 @@ namespace BlackCore
             virtual bool testAddAltitudeOffset(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CLength &offset = BlackMisc::PhysicalQuantities::CLength::null()) override;
             virtual QStringList getNetworkPresetValues() const override;
             virtual BlackMisc::Aviation::CCallsign getPartnerCallsign() const override;
-            //! @}
 
-            //! \ingroup clientprovider
-            //! @{
+            // clientprovider
             virtual BlackMisc::Network::CClientList getClients() const override;
             virtual BlackMisc::Network::CClientList getClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override;
             virtual bool setOtherClient(const BlackMisc::Network::CClient &client) override;
-            //! @}
 
             //! In transition state, e.g. connecting, disconnecting.
             //! \details In such a state it is advisable to wait until an end state (connected/disconnected) is reached
@@ -219,7 +211,6 @@ namespace BlackCore
 
             // --------------------- IContextNetwork implementations ---------------------
             //! \addtogroup swiftdotcommands
-            //! @{
             //! <pre>
             //! .m .msg .chat callsign|freq. message   message text
             //! .altos .altoffset                      altitude offset for testing
@@ -228,7 +219,6 @@ namespace BlackCore
             //! .watchdog on|off                       watchdog on/off
             //! .wallop message                        send wallop message
             //! </pre>
-            //! @}
             //! \copydoc IContextNetwork::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
 
@@ -250,8 +240,6 @@ namespace BlackCore
                 BlackMisc::CSimpleCommandParser::registerCommand({".disable callsign", "disable/ignore callsign"});
             }
 
-            //! \publicsection
-            //! @{
             virtual void requestAtcBookingsUpdate() const override;
             virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked(bool recalculateDistance) const override;
             virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline(bool recalculateDistance) const override;
@@ -284,7 +272,6 @@ namespace BlackCore
             virtual void testReceivedAtisMessage(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &msg) override;
             virtual void testReceivedTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;
             virtual void testRequestAircraftConfig(const BlackMisc::Aviation::CCallsign &callsign) override;
-            //! @}
             // --------------------- IContextNetwork implementations ---------------------
 
         protected:

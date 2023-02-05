@@ -43,12 +43,10 @@ namespace BlackMisc::Simulation
             static const PosArray &zeroPosArray();
 
             //! 3 coordinates for spline interpolation
-            //! @{
             std::array<double, 3> x, y, z, a, gnd, t, dx, dy, dz, da, dgnd;
 
             //! Array size
             int size() const { return static_cast<int>(x.size()); }
-            //! @}
         };
 
         //! Cubic function that performs the actual interpolation

@@ -295,8 +295,8 @@ namespace BlackMisc::Simulation::Data
         //! Emit cacheChanged() utility function (allows breakpoint)
         void emitCacheChanged(const CSimulatorInfo &simulator);
 
-        //! Cache synchronized flag
         //! @{
+        //! Cache synchronized flag
         std::atomic_bool m_syncFsx { false };
         std::atomic_bool m_syncP3D { false };
         std::atomic_bool m_syncFS9 { false };
@@ -454,8 +454,8 @@ namespace BlackMisc::Simulation::Data
         public IModelsForSimulatorUpdatable
     {
     public:
-        //! Look like IMultiSimulatorModelCaches interface
         //! @{
+        //! Look like IMultiSimulatorModelCaches interface
         CAircraftModelList getCachedModels(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().getCachedModels(simulator); }
         int getCachedModelsCount(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().getCachedModelsCount(simulator); }
         QString getCacheCountAndTimestamp(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().getCacheCountAndTimestamp(simulator); }
@@ -507,8 +507,8 @@ namespace BlackMisc::Simulation::Data
         public IModelsForSimulatorUpdatable
     {
     public:
-        //! Look like IMultiSimulatorModelCaches interface
         //! @{
+        //! Look like IMultiSimulatorModelCaches interface
         CAircraftModelList getCachedModels(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator); }
         int getCachedModelsCount(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModelsCount(simulator); }
         QString getCacheCountAndTimestamp(const CSimulatorInfo &simulator) const { return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().getCacheCountAndTimestamp(simulator); }

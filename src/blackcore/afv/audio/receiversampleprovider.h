@@ -56,8 +56,8 @@ namespace BlackCore::Afv::Audio
         //! Volume
         double volume() const { return 1.0; }
 
-        //! Mute
         //! @{
+        //! Mute
         bool getMute() const { return m_mute; }
         void setMute(bool value);
         //! @}
@@ -65,8 +65,8 @@ namespace BlackCore::Afv::Audio
         //! \copydoc BlackSound::SampleProvider::ISampleProvider::readSamples
         virtual int readSamples(QVector<float> &samples, qint64 count) override;
 
-        //! Add samples
         //! @{
+        //! Add samples
         void addOpusSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio);
         void addSilentSamples(const IAudioDto &audioDto, uint frequency, float distanceRatio);
         //! @}

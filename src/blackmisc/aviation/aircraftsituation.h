@@ -322,8 +322,8 @@ namespace BlackMisc
             //! \sa CAircraftSituation::presetGroundElevation
             bool interpolateElevation(const Aviation::CAircraftSituation &oldSituation, const Aviation::CAircraftSituation &newSituation);
 
-            //! Is on ground by elevation data, requires elevation and CG
             //! @{
+            //! Is on ground by elevation data, requires elevation and CG
             IsOnGround isOnGroundByElevation() const;
             IsOnGround isOnGroundByElevation(const PhysicalQuantities::CLength &cg) const;
             //! @}
@@ -368,15 +368,15 @@ namespace BlackMisc
             //! Get altitude unit
             PhysicalQuantities::CLengthUnit getAltitudeOrDefaultUnit() const;
 
+            //! @{
             //! Get altitude under consideration of ground elevation and ground flag
             //! \remark with dragToGround it will also compensate overflows, otherwise only underflow
-            //! @{
             CAltitude getCorrectedAltitude(bool enableDragToGround = true, AltitudeCorrection *correction = nullptr) const;
             CAltitude getCorrectedAltitude(const PhysicalQuantities::CLength &centerOfGravity, bool enableDragToGround = true, AltitudeCorrection *correction = nullptr) const;
             //! @}
 
-            //! Set the corrected altitude from CAircraftSituation::getCorrectedAltitude
             //! @{
+            //! Set the corrected altitude from CAircraftSituation::getCorrectedAltitude
             AltitudeCorrection correctAltitude(bool enableDragToGround = true);
             AltitudeCorrection correctAltitude(const PhysicalQuantities::CLength &centerOfGravity = PhysicalQuantities::CLength::null(), bool enableDragToGround = true);
             //! @}
@@ -521,7 +521,7 @@ namespace BlackMisc
             //! A default CG if not other value is available
             static const PhysicalQuantities::CLength &defaultCG();
 
-            //! Ground flag comparisons
+            //! \name Ground flag comparisons
             //! @{
 
             //! Both on ground

@@ -131,8 +131,8 @@ namespace BlackMisc::Simulation::FsCommon
         static const QString &airFileFilter();
 
     private:
-        //! Utility functions
         //! @{
+        //! Utility functions
         static QSet<QString> findP3dConfigFiles(const QString &configFile, const QString &versionHint = "v5");
         //! @}
 

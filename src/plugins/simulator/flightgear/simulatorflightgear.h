@@ -185,15 +185,15 @@ namespace BlackSimPlugin::Flightgear
         //! \remark this is where the interpolated data are set
         void updateRemoteAircraft();
 
-        //! Request elevation and CG from Flightgear
         //! @{
+        //! Request elevation and CG from Flightgear
         void requestRemoteAircraftDataFromFlightgear();
         void requestRemoteAircraftDataFromFlightgear(const BlackMisc::Aviation::CCallsignSet &callsigns);
         void triggerRequestRemoteAircraftDataFromFlightgear(const BlackMisc::Aviation::CCallsignSet &callsigns);
         //! @}
 
-        //! Adding new aircraft
         //! @{
+        //! Adding new aircraft
         void addNextPendingAircraft();
         void triggerAddNextPendingAircraft();
         //! @}
@@ -210,8 +210,8 @@ namespace BlackSimPlugin::Flightgear
         //! Can the next aircraft be added?
         bool canAddAircraft() const;
 
-        //! Callbacks from simulator
         //! @{
+        //! Callbacks from simulator
         void onRemoteAircraftAdded(const QString &callsign);
         void onRemoteAircraftAddingFailed(const QString &callsign);
         void updateRemoteAircraftFromSimulator(const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,

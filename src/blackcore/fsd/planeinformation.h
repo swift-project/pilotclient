@@ -32,8 +32,8 @@ namespace BlackCore::Fsd
         //! PDU identifier
         static QString pdu() { return "#SB"; }
 
-        //! Properties
         //! @{
+        //! Properties
         QString m_aircraft;
         QString m_airline;
         QString m_livery;

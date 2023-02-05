@@ -204,9 +204,9 @@ namespace BlackMisc
             //! \threadsafe
             virtual bool updateCGAndModelString(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg, const QString &modelString) = 0;
 
+            //! @{
             //! CG values from DB
             //! \threadsafe
-            //! @{
             virtual PhysicalQuantities::CLength getCGFromDB(const Aviation::CCallsign &callsign) const = 0;
             virtual PhysicalQuantities::CLength getCGFromDB(const QString &modelString) const = 0;
             virtual void rememberCGFromDB(const PhysicalQuantities::CLength &cgFromDB, const Aviation::CCallsign &callsign) = 0;
@@ -302,8 +302,7 @@ namespace BlackMisc::Simulation
         //! Constructor
         CRemoteAircraftProvider(QObject *parent);
 
-        //! \ingroup remoteaircraftprovider
-        //! @{
+        // remoteaircraftprovider
         virtual CSimulatedAircraftList getAircraftInRange() const override;
         virtual Aviation::CCallsignSet getAircraftInRangeCallsigns() const override;
         virtual CSimulatedAircraft getAircraftInRangeForCallsign(const Aviation::CCallsign &callsign) const override;
@@ -356,20 +355,15 @@ namespace BlackMisc::Simulation
             std::function<void(const Aviation::CCallsign &)> removedAircraftSlot,
             std::function<void(const CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
         ) override;
-        //! @}
 
-        //! \ingroup remoteaircraftprovider
-        //! \ingroup reverselookup
-        //! @{
         virtual void enableReverseLookupMessages(ReverseLookupLogging enable) override;
         virtual ReverseLookupLogging isReverseLookupMessagesEnabled() const override;
         virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
-        //! @}
 
+        //! @{
         //! Reverse lookup messages
         //! \threadsafe
         //! \ingroup reverselookup
-        //! @{
         void addReverseLookupMessages(const Aviation::CCallsign &callsign, const CStatusMessageList &messages);
         void addReverseLookupMessage(const Aviation::CCallsign &callsign, const CStatusMessage &message);
         void addReverseLookupMessage(
@@ -452,10 +446,10 @@ namespace BlackMisc::Simulation
         //! \threadsafe
         virtual Aviation::CAircraftSituation storeAircraftSituation(const Aviation::CAircraftSituation &situation, bool allowTestAltitudeOffset = true);
 
+        //! @{
         //! Store an aircraft part
         //! \remark latest parts are kept first
         //! \threadsafe
-        //! @{
         void storeAircraftParts(const Aviation::CCallsign &callsign, const Aviation::CAircraftParts &parts, bool removeOutdated);
         void storeAircraftParts(const Aviation::CCallsign &callsign, const QJsonObject &jsonObject, qint64 currentOffsetMs);
         //! @}

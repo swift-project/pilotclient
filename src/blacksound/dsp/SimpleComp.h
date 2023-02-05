@@ -46,15 +46,15 @@ namespace chunkware_simple
         //! Dtor
         virtual ~SimpleComp() {}
 
-        //! set parameters
         //! @{
+        //! set parameters
         virtual void setThresh(double dB);
         virtual void setRatio(double dB);
         void setMakeUpGain(double gain);
         //! @}
 
-        //! get parameters
         //! @{
+        //! get parameters
         virtual double getThresh(void) const { return threshdB_; }
         virtual double getRatio(void)  const { return ratio_; }
         double getMakeUpGain(void) const     { return makeUpGain_; }
@@ -94,14 +94,14 @@ namespace chunkware_simple
         //! Sample rate
         virtual void setSampleRate(double sampleRate) override;
 
-        //! RMS window
         //! @{
+        //! RMS window
         virtual void setWindow(double ms);
         virtual double getWindow(void) const  { return ave_.getTc(); }
         //! @}
 
-        //! Runtime process
         //! @{
+        //! Runtime process
         virtual void initRuntime(void) override; // call before runtime (in resume())
         void process(double &in1, double &in2);  // compressor runtime process
         //! @}

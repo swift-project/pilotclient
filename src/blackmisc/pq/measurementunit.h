@@ -144,55 +144,47 @@ namespace BlackMisc::PhysicalQuantities
             }
         };
 
-        //! Metapolicy that can be used to modify template parameters of converters
         //! @{
+        //! Metapolicy that can be used to modify template parameters of converters
         struct One
         {
             static double factor() { return 1; } //!< factor
         };
-        //! 2 (two)
         template <class Policy>
         struct Two
         {
             static double factor() { return Policy::factor() * 2.0; } //!< factor
         };
-        //! 10^-3
         template <class Policy>
         struct Milli
         {
             static double factor() { return Policy::factor() / 1000.0; } //!< factor
         };
         template <class Policy>
-        //! 10^-2
         struct Centi
         {
             static double factor() { return Policy::factor() / 100.0; } //!< factor
         };
-        //! 10^2
         template <class Policy>
         struct Hecto
         {
             static double factor() { return Policy::factor() * 100.0; } //!< factor
         };
-        //! 10^3
         template <class Policy>
         struct Kilo
         {
             static double factor() { return Policy::factor() * 1000.0; } //!< factor
         };
-        //! 10^6
         template <class Policy>
         struct Mega
         {
             static double factor() { return Policy::factor() * 1e+6; } //!< factor
         };
-        //! 10^9
         template <class Policy>
         struct Giga
         {
             static double factor() { return Policy::factor() * 1e+9; } //!< factor
         };
-        //! in each hundred
         template <int Subfactor>
         struct InEachHundred
         {

@@ -144,8 +144,8 @@ namespace BlackGui::Models
         //! \copydoc CDefaultFormatter::decorationRole
         virtual BlackMisc::CVariant decorationRole(const BlackMisc::CVariant &dataCVariant) const override;
 
-        //! Width/height
         //! @{
+        //! Width/height
         int getMaxWidth()  const { return m_maxWidth; }
         int getMaxHeight() const { return m_maxHeight; }
         void setMaxWidth(int w)  { m_maxWidth = w; }

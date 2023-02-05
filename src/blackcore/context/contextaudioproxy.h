@@ -58,10 +58,6 @@ namespace BlackCore
             static void unitTestRelaySignals();
 
         public slots:
-            //! All DBus interface overrides
-            //! \publicsection
-            //! @{
-            //! Register a device on a machine (for core/GUI it will return all known devices on all machines)
             virtual BlackMisc::Audio::CAudioDeviceInfoList getRegisteredDevices() const override;
             virtual void registerDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) override;
             virtual void unRegisterDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) override;
@@ -69,7 +65,6 @@ namespace BlackCore
             virtual void registerAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign,  const BlackMisc::CIdentifier &identifier)   override;
             virtual void unRegisterAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign,  const BlackMisc::CIdentifier &identifier) override;
             virtual bool hasRegisteredAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
-            //! @}
 
         private:
             BlackMisc::CGenericDBusInterface *m_dBusInterface;

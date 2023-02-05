@@ -148,8 +148,8 @@ namespace BlackMisc::Simulation
         //! Force mode as string
         QString getForceModeAsString() const { return forceToString(this->getForceMode()); }
 
-        //! Reverse lookup
         //! @{
+        //! Reverse lookup
         bool isReverseLookupModelString() const;
         bool isReverseLookupSwiftLiveryIds() const;
         void resetReverseLookup();
@@ -158,32 +158,32 @@ namespace BlackMisc::Simulation
         //! DB data?
         bool isDbDataOnly() const { return this->getMatchingMode().testFlag(ExcludeNoDbData); }
 
-        //! Get matching files
         //! @{
+        //! Get matching files
         const QString &getMsReverseLookupFile() const { return m_msReverseLookupFile; }
         const QString &getMsMatchingStageFile() const { return m_msMatchingStageFile; }
         //! @}
 
-        //! Set matching files
         //! @{
+        //! Set matching files
         void setMsReverseLookupFile(const QString &file) { m_msReverseLookupFile = file; }
         void setMsMatchingStageFile(const QString &file) { m_msMatchingStageFile = file; }
         //! @}
 
-        //! Is matching script enabled
         //! @{
+        //! Is matching script enabled
         bool isMsReverseLookupEnabled() const { return m_msReverseEnabled; }
         bool isMsMatchingStageEnabled() const { return m_msMatchingEnabled; }
         //! @}
 
-        //! Run the scripts
         //! @{
+        //! Run the scripts
         bool doRunMsReverseLookupScript() const;
         bool doRunMsMatchingStageScript() const;
         //! @}
 
-        //! Is matching script enabled
         //! @{
+        //! Is matching script enabled
         void setMsReverseLookupEnabled(bool enabled) { m_msReverseEnabled  = enabled; }
         void setMsMatchingStageEnabled(bool enabled) { m_msMatchingEnabled = enabled; }
         //! @}

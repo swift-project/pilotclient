@@ -22,21 +22,21 @@ namespace BlackMisc::Private
     BLACKMISC_EXPORT BLACK_NO_INLINE void failedVerify(const char *condition, const char *filename, int line, const char *context, const char *message, bool audit);
 }
 
+//! @{
 /*!
  * A weaker kind of assert. Still indicates a programmer mistake, but one which is recoverable.
  * In debug builds, triggers a debugger breakpoint. In release builds, generates a warning.
  */
-//! @{
 #define BLACK_VERIFY_X(COND, WHERE, WHAT) ((COND) ? BlackMisc::Private::noop() : BlackMisc::Private::failedVerify(#COND, __FILE__, __LINE__, WHERE, WHAT, false))
 #define BLACK_VERIFY(COND) BLACK_VERIFY_X(COND, nullptr, nullptr)
 //! @}
 
+//! @{
 /*!
  * A weaker kind of verify. Indicative of a serious but recoverable problem originating in an external data source.
  * In debug builds under debugging, triggers a debugger breakpoint. Otherwise generates a warning.
  * Not a substitute for proper validation. A failed audit in production is suggestive of insufficient validation.
  */
-//! @{
 #define BLACK_AUDIT_X(COND, WHERE, WHAT) ((COND) ? BlackMisc::Private::noop() : BlackMisc::Private::failedVerify(#COND, __FILE__, __LINE__, WHERE, WHAT, true))
 #define BLACK_AUDIT(COND) BLACK_AUDIT_X(COND, nullptr, nullptr)
 //! @}

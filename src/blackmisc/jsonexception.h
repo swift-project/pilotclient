@@ -52,8 +52,8 @@ namespace BlackMisc
     class BLACKMISC_EXPORT CJsonScope
     {
     public:
-        //! Construct a scope with the given name and optional index subscript.
         //! @{
+        //! Construct a scope with the given name and optional index subscript.
         CJsonScope(const QString &name, int index = -1) noexcept : m_index(index), m_string(&name) { push(); }
         CJsonScope(QLatin1String name, int index = -1) noexcept : m_index(index), m_latin1(name) { push(); }
         template <size_t N> CJsonScope(const char (&name)[N], int index = -1) noexcept : CJsonScope(QLatin1String(name, N), index) {}
@@ -62,8 +62,8 @@ namespace BlackMisc
         //! QString constructor argument must be an lvalue.
         CJsonScope(const QString &&, int = -1) = delete;
 
-        //! Not copyable.
         //! @{
+        //! Not copyable.
         CJsonScope(const CJsonScope &) = delete;
         CJsonScope &operator =(const CJsonScope &) = delete;
         //! @}

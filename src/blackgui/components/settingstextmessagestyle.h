@@ -42,8 +42,8 @@ namespace BlackGui::Components
         //! Style
         void setStyle(const QString &style) { m_style = style; }
 
-        //! Font size
         //! @{
+        //! Font size
         void fontSizeMinus();
         void fontSizePlus();
         //! @}

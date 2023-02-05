@@ -124,8 +124,8 @@ namespace BlackMisc::Simulation
         //! Object from JSON
         static CDistributor fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
 
-        //! Hardcoded keys for standard models
         //! @{
+        //! Hardcoded keys for standard models
         static const QString &standardFSX();
         static const QString &standardP3D();
         static const QString &standardFS9();

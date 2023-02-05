@@ -29,16 +29,16 @@ namespace BlackMisc::Audio
     class BLACKMISC_EXPORT CSettings : public CValueObject<CSettings>
     {
     public:
-        //! Ranges for audio
         //! @{
+        //! Ranges for audio
         static constexpr int InMax  =  100;
         static constexpr int InMin  =  0;
         static constexpr int OutMax =  100;
         static constexpr int OutMin =  0;
         //! @}
 
-        //! Make sure the volume is within the range
         //! @{
+        //! Make sure the volume is within the range
         static int fixOutVolume(int v);
         static int fixInVolume(int v);
         //! @}
@@ -58,8 +58,8 @@ namespace BlackMisc::Audio
         //! Set notification
         void setNotification(CNotificationSounds::Notification notification) { m_notification = static_cast<int>(notification); }
 
-        //! Simplified functions
         //! @{
+        //! Simplified functions
         bool textMessagePrivate()    const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextMessagePrivate); }
         bool textMessageSupervisor() const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextMessageSupervisor); }
         bool textCallsignMentioned() const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextCallsignMentioned); }

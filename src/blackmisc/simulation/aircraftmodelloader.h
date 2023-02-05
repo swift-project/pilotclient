@@ -125,11 +125,9 @@ namespace BlackMisc::Simulation
         //! Supported simulator
         bool supportsSimulator(const CSimulatorInfo &simulator) const { return m_simulator == simulator; }
 
-        //! Interface implementations
-        //! @{
+        // Interface implementations
         virtual void setModels(const CAircraftModelList &models) override;
         virtual int updateModels(const CAircraftModelList &models) override;
-        //! @}
 
     signals:
         //! Disk loading started

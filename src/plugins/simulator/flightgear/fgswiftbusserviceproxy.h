@@ -126,188 +126,188 @@ namespace BlackSimPlugin::Flightgear
         //! Add a text message to the on-screen display
         void addTextMessage(const QString &text);
 
-        //! Get full path to current aircraft model
         //! @{
+        //! Get full path to current aircraft model
         QString getAircraftModelPath() const;
         void getAircraftModelPathAsync(QString *o_modelPath);
         //! @}
 
-        //! Get base filename of current aircraft model
         //! @{
+        //! Get base filename of current aircraft model
         QString getAircraftModelFilename() const;
         void getAircraftModelFilenameAsync(QString *o_modelFilename);
         //! @}
 
-        //! Get current aircraft livery
         //! @{
+        //! Get current aircraft livery
         QString getAircraftLivery() const;
         void getAircraftLiveryAsync(QString *o_modelLivery);
         //! @}
 
-        //! Get the ICAO code of the current aircraft model
         //! @{
+        //! Get the ICAO code of the current aircraft model
         QString getAircraftIcaoCode() const;
         void getAircraftIcaoCodeAsync(QString *o_icaoCode);
         //! @}
 
-        //! Get the description of the current aircraft model
         //! @{
+        //! Get the description of the current aircraft model
         QString getAircraftDescription() const;
         void getAircraftDescriptionAsync(QString *o_description);
         //! @}
 
-        //! Get canonical swift model string of current aircraft model
         //! @{
+        //! Get canonical swift model string of current aircraft model
         QString getAircraftModelString() const;
         void getAircraftModelStringAsync(QString *o_modelString);
         //! @}
 
-        //! Get name of current aircraft model
         //! @{
+        //! Get name of current aircraft model
         QString getAircraftName() const;
         void getAircraftNameAsync(QString *o_name);
         //! @}
 
-        //! True if sim is paused
         //! @{
+        //! True if sim is paused
         bool isPaused() const;
         void isPausedAsync(bool *o_paused);
         //! @}
 
-        //! Get aircraft latitude in degrees
         //! @{
+        //! Get aircraft latitude in degrees
         double getLatitudeDeg() const;
         void getLatitudeDegAsync(double *o_latitude);
         //! @}
 
-        //! Get aircraft longitude in degrees
         //! @{
+        //! Get aircraft longitude in degrees
         double getLongitudeDeg() const;
         void getLongitudeDegAsync(double *o_longitude);
         //! @}
 
-        //! Get aircraft altitude in feet
         //! @{
+        //! Get aircraft altitude in feet
         double getAltitudeMslFt() const;
         void getAltitudeMslFtAsync(double *o_altitude);
         //! @}
 
-        //! Get aircraft height in feet
         //! @{
+        //! Get aircraft height in feet
         double getHeightAglFt() const;
         void getHeightAglFtAsync(double *o_height);
         //! @}
 
-        //! Get aircraft groundspeed in knots
         //! @{
+        //! Get aircraft groundspeed in knots
         double getGroundSpeedKts() const;
         void getGroundSpeedKtsAsync(double *o_groundspeed);
         //! @}
 
-        //! Get aircraft pitch in degrees above horizon
         //! @{
+        //! Get aircraft pitch in degrees above horizon
         double getPitchDeg() const;
         void getPitchDegAsync(double *o_pitch);
         //! @}
 
-        //! Get aircraft roll in degrees
         //! @{
+        //! Get aircraft roll in degrees
         double getRollDeg() const;
         void getRollDegAsync(double *o_roll);
         //! @}
 
-        //! Get whether all wheels are on the ground
         //! @{
+        //! Get whether all wheels are on the ground
         bool getAllWheelsOnGround() const;
         void getAllWheelsOnGroundAsync(bool *o_allWheels);
         //! @}
 
-        //! Get the current COM1 active frequency in kHz
         //! @{
+        //! Get the current COM1 active frequency in kHz
         int getCom1ActiveKhz() const;
         void getCom1ActiveKhzAsync(int *o_com1Active);
         //! @}
 
-        //! Get the current COM1 standby frequency in kHz
         //! @{
+        //! Get the current COM1 standby frequency in kHz
         int getCom1StandbyKhz() const;
         void getCom1StandbyKhzAsync(int *o_com1Standby);
         //! @}
 
-        //! Get Com1 volume [0..1]
         //! @{
+        //! Get Com1 volume [0..1]
         double getCom1Volume() const;
         void getCom1VolumeAsync(double *o_com1Volume);
         //! @}
 
-        //! Get Com2 volume [0..1]
         //! @{
+        //! Get Com2 volume [0..1]
         double getCom2Volume() const;
         void getCom2VolumeAsync(double *o_com2Volume);
         //! @}
 
-        //! Get the current COM2 active frequency in kHz
         //! @{
+        //! Get the current COM2 active frequency in kHz
         int getCom2ActiveKhz() const;
         void getCom2ActiveKhzAsync(int *o_com2Active);
         //! @}
 
-        //! Get the current COM2 standby frequency in kHz
         //! @{
+        //! Get the current COM2 standby frequency in kHz
         int getCom2StandbyKhz() const;
         void getCom2StandbyKhzAsync(int *o_com2Standby);
         //! @}
 
-        //! Get the current transponder code in decimal
         //! @{
+        //! Get the current transponder code in decimal
         int getTransponderCode() const;
         void getTransponderCodeAsync(int *o_xpdrCode);
         //! @}
 
-        //! Get the current transponder mode (depends on the aircraft, 0 and 1 usually mean standby, >1 active)
         //! @{
+        //! Get the current transponder mode (depends on the aircraft, 0 and 1 usually mean standby, >1 active)
         int getTransponderMode() const;
         void getTransponderModeAsync(int *o_xpdrMode);
         //! @}
 
-        //! Get whether we are currently squawking ident
         //! @{
+        //! Get whether we are currently squawking ident
         bool getTransponderIdent() const;
         void getTransponderIdentAsync(bool *o_ident);
         //! @}
 
-        //! Get whether beacon lights are on
         //! @{
+        //! Get whether beacon lights are on
         bool getBeaconLightsOn() const;
         void getBeaconLightsOnAsync(bool *o_beaconLightsOn);
         //! @}
 
-        //! Get whether landing lights are on
         //! @{
+        //! Get whether landing lights are on
         bool getLandingLightsOn() const;
         void getLandingLightsOnAsync(bool *o_landingLightsOn);
         //! @}
 
-        //! Get whether nav lights are on
         //! @{
+        //! Get whether nav lights are on
         bool getNavLightsOn() const;
         void getNavLightsOnAsync(bool *o_navLightsOn);
         //! @}
 
-        //! Get whether strobe lights are on
         //! @{
+        //! Get whether strobe lights are on
         bool getStrobeLightsOn() const;
         void getStrobeLightsOnAsync(bool *o_strobeLightsOn);
         //! @}
 
-        //! Get whether taxi lights are on
         //! @{
+        //! Get whether taxi lights are on
         bool getTaxiLightsOn() const;
         void getTaxiLightsOnAsync(bool *o_taxiLightsOn);
         //! @}
 
-        //! Get pressure altitude in feet.
         //! @{
+        //! Get pressure altitude in feet.
         double getPressureAltitudeFt() const;
         void getPressureAltitudeFtAsync(double *o_qnh);
         //! @}
@@ -330,32 +330,32 @@ namespace BlackSimPlugin::Flightgear
         //! Set the current transponder mode (depends on the aircraft, 0 and 1 usually mean standby, >1 active)
         void setTransponderMode(int mode);
 
-        //! Get flaps deploy ratio, where 0.0 is flaps fully retracted, and 1.0 is flaps fully extended.
         //! @{
+        //! Get flaps deploy ratio, where 0.0 is flaps fully retracted, and 1.0 is flaps fully extended.
         double getFlapsDeployRatio() const;
         void getFlapsDeployRatioAsync(double *o_flapsDeployRatio);
         //! @}
 
-        //! Get gear deploy ratio, where 0 is up and 1 is down
         //! @{
+        //! Get gear deploy ratio, where 0 is up and 1 is down
         double getGearDeployRatio() const;
         void getGearDeployRatioAsync(double *o_gearDeployRatio);
         //! @}
 
-        //! Get the N1 speed as percent of max (per engine)
         //! @{
+        //! Get the N1 speed as percent of max (per engine)
         QList<double> getEngineN1Percentage() const;
         void getEngineN1PercentageAsync(QList<double> *o_engineN1Percentage);
         //! @}
 
-        //! Get the ratio how much the speedbrakes surfaces are extended (0.0 is fully retracted, and 1.0 is fully extended)
         //! @{
+        //! Get the ratio how much the speedbrakes surfaces are extended (0.0 is fully retracted, and 1.0 is fully extended)
         double getSpeedBrakeRatio() const;
         void getSpeedBrakeRatioAsync(double *o_speedBrakeRatio);
         //! @}
 
-        //! Get ground elevation [m] for current airplane position
         //! @{
+        //! Get ground elevation [m] for current airplane position
         double getGroundElevation() const;
         void getGroundElevationAsync(double *o_groundElevation);
         //! @}

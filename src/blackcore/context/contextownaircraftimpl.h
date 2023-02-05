@@ -177,14 +177,12 @@ namespace BlackCore
             virtual bool setTransponderMode(BlackMisc::Aviation::CTransponder::TransponderMode mode) override;
 
             //! \addtogroup swiftdotcommands
-            //! @{
             //! <pre>
             //! .x    .xpdr  code       set transponder code    BlackCore::Context::CContextOwnAircraft
             //! .x    .xpdr  mode       set transponder mode    BlackCore::Context::CContextOwnAircraft
             //! .com1 .com2  frequency  set COM1/2 frequency    BlackCore::Context::CContextOwnAircraft
             //! .selcal      code       set SELCAL code         BlackCore::Context::CContextOwnAircraft
             //! </pre>
-            //! @}
             //! \copydoc IContextOwnAircraft::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
 
@@ -237,8 +235,8 @@ namespace BlackCore
             //! \ingroup crosscontextfunction
             void xCtxChangedSimulatorStatus(int status);
 
-            //! Actions
             //! @{
+            //! Actions
             void actionToggleTransponder(bool keydown);
             void actionIdent(bool keydown);
             //! @}

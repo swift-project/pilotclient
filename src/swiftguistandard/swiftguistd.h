@@ -103,8 +103,8 @@ protected:
 
     //! Get a minimize action which minimizes the window
 
-    //! Actions for navigator
     //! @{
+    //! Actions for navigator
     QAction *getWindowMinimizeAction(QObject *parent);
     QAction *getWindowNormalAction(QObject *parent);
     QAction *getToggleWindowVisibilityAction(QObject *parent);
@@ -321,8 +321,8 @@ private:
     //! Start AFV map
     bool startAFVMap();
 
-    //! Request overlay inline text message
     //! @{
+    //! Request overlay inline text message
     void onShowOverlayVariant(const BlackMisc::CVariant &variant, int durationMs);
     void onShowOverlayInlineTextMessageTab(BlackGui::Components::TextMessageTab tab);
     void onShowOverlayInlineTextMessageCallsign(const BlackMisc::Aviation::CCallsign &callsign);

@@ -22,8 +22,8 @@ namespace BlackCore::Afv::Model
     {
         Q_OBJECT
 
-        //! Map reader properties
         //! @{
+        //! Map reader properties
         Q_PROPERTY(CSampleAtcStationModel *atcStationModel READ getAtcStationModel CONSTANT)
         //! @}
 

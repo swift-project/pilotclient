@@ -155,8 +155,8 @@ namespace BlackSimPlugin::FsxCommon
         //! Marked as confirmed, means the simulator has "confirmed" the objectId as added and not instantly removed the object
         void setConfirmedAdded(bool confirm);
 
-        //! Special states
         //! @{
+        //! Special states
         bool isAddedWhileRemoving() { return m_addedWhileRemoving; }
         void setAddedWhileRemoving(bool addedWileRemoved);
         bool isRemovedWhileAdding() const { return m_removedWhileAdding; }

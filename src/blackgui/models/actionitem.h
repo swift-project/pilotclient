@@ -34,8 +34,8 @@ namespace BlackGui::Models
         //! Destructor
         ~CActionItem();
 
-        //! Not copyable
         //! @{
+        //! Not copyable
         CActionItem(const CActionItem &) = delete;
         CActionItem &operator =(const CActionItem &) = delete;
         //! @}

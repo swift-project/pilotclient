@@ -249,8 +249,8 @@ namespace BlackMisc::Simulation::XPlane::QtFreeUtils
     template <typename I>
     struct Utf8Iterator
     {
-        //! STL compatibility
         //! @{
+        //! STL compatibility
         using value_type = typename std::iterator_traits<I>::value_type;
         using difference_type = typename std::iterator_traits<I>::difference_type;
         using reference = typename std::iterator_traits<I>::reference;
@@ -264,8 +264,8 @@ namespace BlackMisc::Simulation::XPlane::QtFreeUtils
         //! Constructor
         Utf8Iterator(I base, I end) : base(base), end(end) {}
 
-        //! Equality
         //! @{
+        //! Equality
         friend bool operator ==(Utf8Iterator a, Utf8Iterator b) { return a.base == b.base; }
         friend bool operator !=(Utf8Iterator a, Utf8Iterator b) { return a.base != b.base; }
         friend bool operator ==(Utf8Iterator a, I b) { return a.base == b; }

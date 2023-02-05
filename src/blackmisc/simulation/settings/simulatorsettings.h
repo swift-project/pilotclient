@@ -503,8 +503,8 @@ namespace BlackMisc::Simulation::Settings
         CSetting<Settings::TSimulatorXP>  m_simSettingsXP  { this, &CMultiSimulatorSettings::onXPSettingsChanged  }; //!< XP settings
         CSetting<Settings::TSimulatorFG>  m_simSettingsFG  { this, &CMultiSimulatorSettings::onFGSettingsChanged  }; //!< FG settings
 
-        //! Settings changed, this will only detect if settings are changed elsewhere
         //! @{
+        //! Settings changed, this will only detect if settings are changed elsewhere
         void onFsxSettingsChanged();
         void onFs9SettingsChanged();
         void onP3DSettingsChanged();

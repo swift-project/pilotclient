@@ -91,8 +91,8 @@ namespace BlackMisc
         //! Destructor.
         ~CDataCacheRevision();
 
-        //! Non-copyable.
         //! @{
+        //! Non-copyable.
         CDataCacheRevision(const CDataCacheRevision &) = delete;
         CDataCacheRevision &operator =(const CDataCacheRevision &) = delete;
         //! @}
@@ -405,8 +405,8 @@ namespace BlackMisc
             }
         }
 
-        //! Data cache doesn't support setAndSave (because set() already causes save anyway).
         //! @{
+        //! Data cache doesn't support setAndSave (because set() already causes save anyway).
         CStatusMessage setAndSave(const typename Trait::type &value, qint64 timestamp = 0) = delete;
         CStatusMessage setAndSaveProperty(CPropertyIndexRef index, const CVariant &value, qint64 timestamp = 0) = delete;
         //! @}
@@ -426,8 +426,8 @@ namespace BlackMisc
         //! Inherited constructor.
         using CData<Trait>::CData;
 
-        //! Deleted mutators.
         //! @{
+        //! Deleted mutators.
         CStatusMessage set(const typename Trait::type &value, qint64 timestamp = 0) = delete;
         CStatusMessage setProperty(CPropertyIndexRef index, const CVariant &value, qint64 timestamp = 0) = delete;
         CStatusMessage setDefault() = delete;

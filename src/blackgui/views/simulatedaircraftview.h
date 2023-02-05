@@ -86,14 +86,14 @@ namespace BlackGui
             //! Follow in simulator
             void requestFollowInSimulator();
 
-            //! Enable/disable parts
             //! @{
+            //! Enable/disable parts
             void requestEnableParts();
             void requestDisableParts();
             //! @}
 
-            //! Enable/disable parts
             //! @{
+            //! Enable/disable parts
             void request0PitchOnGround();
             void requestNullPitchOnGround();
             //! @}

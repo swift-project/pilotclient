@@ -36,8 +36,8 @@ namespace BlackMisc
         //! True if no pairs have been inserted.
         bool isEmpty() const { return m_list.isEmpty(); }
 
-        //! Return a container with unique keys. Runs in log-linear time.
         //! @{
+        //! Return a container with unique keys. Runs in log-linear time.
         operator QMap<K, V>() const & { return convertToMap(sortAndDeduplicate(m_list)); }
         operator QMap<K, V>() && { return convertToMap(sortAndDeduplicate(std::move(m_list))); }
         operator QHash<K, V>() const & { return convertTo<QHash>(sortAndDeduplicate(m_list)); }
