@@ -85,17 +85,8 @@ namespace BlackMisc::Aviation
         //! \remarks will be rounded to channel spacing
         void setFrequencyStandby(const PhysicalQuantities::CFrequency &frequency);
 
-        //! Is active frequency within 8.3383kHz channel?
-        bool isActiveFrequencyWithin8_33kHzChannel(const PhysicalQuantities::CFrequency &comFrequency) const;
-
-        //! Is active frequency within 25kHz channel?
-        bool isActiveFrequencyWithin25kHzChannel(const PhysicalQuantities::CFrequency &comFrequency) const;
-
-        //! Is active frequency within 25kHz channel?
-        bool isActiveFrequencyWithin50kHzChannel(const PhysicalQuantities::CFrequency &comFrequency) const;
-
-        //! Is active frequency within the channel spacing?
-        bool isActiveFrequencyWithinChannelSpacing(const PhysicalQuantities::CFrequency &comFrequency) const;
+        //! Is active frequency the same frequency
+        bool isActiveFrequencySameFrequency(const PhysicalQuantities::CFrequency &comFrequency) const;
 
         //! Set UNICOM frequency as active
         void setActiveUnicom();
@@ -136,10 +127,10 @@ namespace BlackMisc::Aviation
         static void roundToChannelSpacing(PhysicalQuantities::CFrequency &frequency,
                                             ChannelSpacing channelSpacing);
 
-        //! Is compareFrequency within channel spacing of setFrequency
-        static bool isWithinChannelSpacing(const PhysicalQuantities::CFrequency &setFrequency,
-                                            const PhysicalQuantities::CFrequency &compareFrequency,
-                                            ChannelSpacing channelSpacing);
+        //! Compare frequencies under consideration that on VATSIM
+        //! frequencies .x20/.x25 and .x70/.x75 are the same
+        static bool isSameFrequency(const PhysicalQuantities::CFrequency &freq1,
+                                            const PhysicalQuantities::CFrequency &freq2);
 
         //! Is passed frequency in kHz a valid 8.33 channel. This does not check if
         //! the frequency is within the correct bounds.

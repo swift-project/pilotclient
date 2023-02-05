@@ -577,8 +577,8 @@ namespace BlackMisc::Simulation
 
     bool CSimulatedAircraft::isActiveFrequencyWithinChannelSpacing(const CFrequency &comFrequency) const
     {
-        return m_com1system.isActiveFrequencyWithinChannelSpacing(comFrequency) ||
-                m_com2system.isActiveFrequencyWithinChannelSpacing(comFrequency);
+        return m_com1system.isActiveFrequencySameFrequency(comFrequency) ||
+                m_com2system.isActiveFrequencySameFrequency(comFrequency);
     }
 
     bool CSimulatedAircraft::setTransponderMode(CTransponder::TransponderMode mode)

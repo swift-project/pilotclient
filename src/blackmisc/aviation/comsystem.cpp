@@ -55,24 +55,9 @@ namespace BlackMisc::Aviation
         this->CModulator::setFrequencyStandby(fRounded);
     }
 
-    bool CComSystem::isActiveFrequencyWithin8_33kHzChannel(const CFrequency &comFrequency) const
+    bool CComSystem::isActiveFrequencySameFrequency(const CFrequency &comFrequency) const
     {
-        return isWithinChannelSpacing(this->getFrequencyActive(), comFrequency, ChannelSpacing8_33KHz);
-    }
-
-    bool CComSystem::isActiveFrequencyWithin25kHzChannel(const CFrequency &comFrequency) const
-    {
-        return isWithinChannelSpacing(this->getFrequencyActive(), comFrequency, ChannelSpacing25KHz);
-    }
-
-    bool CComSystem::isActiveFrequencyWithin50kHzChannel(const CFrequency &comFrequency) const
-    {
-        return isWithinChannelSpacing(this->getFrequencyActive(), comFrequency, ChannelSpacing50KHz);
-    }
-
-    bool CComSystem::isActiveFrequencyWithinChannelSpacing(const CFrequency &comFrequency) const
-    {
-        return isWithinChannelSpacing(this->getFrequencyActive(), comFrequency, m_channelSpacing);
+        return isSameFrequency(this->getFrequencyActive(), comFrequency);
     }
 
     void CComSystem::setActiveUnicom()
@@ -194,15 +179,16 @@ namespace BlackMisc::Aviation
         return end == 0 || end == 25 || end == 50 || end == 75;
     }
 
-    bool CComSystem::isWithinChannelSpacing(const CFrequency &setFrequency, const CFrequency &compareFrequency, CComSystem::ChannelSpacing channelSpacing)
+    bool CComSystem::isSameFrequency(const CFrequency &freq1, const CFrequency &freq2)
     {
-        if (setFrequency.isNull() || compareFrequency.isNull()) { return false; }
-        if (setFrequency == compareFrequency) { return true; } // shortcut for many of such comparisons
-        const double channelSpacingKHz = 0.5 * CComSystem::channelSpacingToFrequencyKHz(channelSpacing);
-        const double compareFrequencyKHz = compareFrequency.value(CFrequencyUnit::kHz());
-        const double setFrequencyKHz = setFrequency.value(CFrequencyUnit::kHz());
-        return (setFrequencyKHz - channelSpacingKHz < compareFrequencyKHz) &&
-                (setFrequencyKHz + channelSpacingKHz > compareFrequencyKHz);
+        if (freq1.isNull() || freq2.isNull()) { return false; }
+        if (freq1 == freq2) { return true; } // shortcut for many of such comparisons
+        // .x20 == .x25 and .x70 == .x75
+        const int freq1End = static_cast<int>(freq1.value(CFrequencyUnit::kHz())) % 100;
+        const int freq2End = static_cast<int>(freq2.value(CFrequencyUnit::kHz())) % 100;
+        if (freq1End != 20 && freq1End != 25 && freq1End != 70 && freq1End != 75) { return false; }
+        if (freq2End != 20 && freq2End != 25 && freq2End != 70 && freq2End != 75) { return false; }
+        return std::abs(freq1End - freq2End) == 5;
     }
 
     CFrequency CComSystem::parseComFrequency(const QString &input, CPqString::SeparatorMode sep)

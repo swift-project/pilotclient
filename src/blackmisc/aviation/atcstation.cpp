@@ -287,12 +287,12 @@ namespace BlackMisc::Aviation
 
     bool CAtcStation::isComUnitTunedInChannelSpacing(const CComSystem &comUnit) const
     {
-        return comUnit.isActiveFrequencyWithinChannelSpacing(this->getFrequency());
+        return comUnit.isActiveFrequencySameFrequency(this->getFrequency());
     }
 
     bool CAtcStation::isFrequencyWithinChannelSpacing(const CFrequency &frequency, CComSystem::ChannelSpacing spacing) const
     {
-        return CComSystem::isWithinChannelSpacing(frequency, this->getFrequency(), spacing);
+        return CComSystem::isSameFrequency(frequency, this->getFrequency());
     }
 
     CTime CAtcStation::bookedWhen() const

@@ -633,11 +633,11 @@ namespace BlackGui::Components
         if (!station.getCallsign().isEmpty())
         {
             const CSimulatedAircraft ownAircraft(this->getOwnAircraft());
-            if (ownAircraft.getCom1System().isActiveFrequencyWithinChannelSpacing(station.getFrequency()))
+            if (ownAircraft.getCom1System().isActiveFrequencySameFrequency(station.getFrequency()))
             {
                 return this->getTabWidget(TextMessagesCom1);
             }
-            else if (ownAircraft.getCom2System().isActiveFrequencyWithinChannelSpacing(station.getFrequency()))
+            else if (ownAircraft.getCom2System().isActiveFrequencySameFrequency(station.getFrequency()))
             {
                 return this->getTabWidget(TextMessagesCom2);
             }
