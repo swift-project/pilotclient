@@ -290,12 +290,6 @@ namespace BlackMisc
             //! Identical COM system?
             bool hasSameComData(const Aviation::CComSystem &com1, const Aviation::CComSystem &com2, const Aviation::CTransponder &transponder);
 
-            //! Is any (COM1/2) active frequency within 8.3383kHz channel?
-            bool isActiveFrequencyWithin8_33kHzChannel(const PhysicalQuantities::CFrequency &comFrequency) const;
-
-            //! Is any (COM1/2) active frequency within 25kHz channel?
-            bool isActiveFrequencyWithin25kHzChannel(const PhysicalQuantities::CFrequency &comFrequency) const;
-
             //! Is any (COM1/2) active frequency within the COM units channel spacing?
             bool isActiveFrequencyWithinChannelSpacing(const PhysicalQuantities::CFrequency &comFrequency) const;
 

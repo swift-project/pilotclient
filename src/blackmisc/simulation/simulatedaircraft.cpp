@@ -563,18 +563,6 @@ namespace BlackMisc::Simulation
         m_pilot.setCallsign(callsign);
     }
 
-    bool CSimulatedAircraft::isActiveFrequencyWithin8_33kHzChannel(const CFrequency &comFrequency) const
-    {
-        return m_com1system.isActiveFrequencyWithin8_33kHzChannel(comFrequency) ||
-                m_com2system.isActiveFrequencyWithin8_33kHzChannel(comFrequency);
-    }
-
-    bool CSimulatedAircraft::isActiveFrequencyWithin25kHzChannel(const CFrequency &comFrequency) const
-    {
-        return m_com1system.isActiveFrequencyWithin25kHzChannel(comFrequency) ||
-                m_com2system.isActiveFrequencyWithin25kHzChannel(comFrequency);
-    }
-
     bool CSimulatedAircraft::isActiveFrequencyWithinChannelSpacing(const CFrequency &comFrequency) const
     {
         return m_com1system.isActiveFrequencySameFrequency(comFrequency) ||

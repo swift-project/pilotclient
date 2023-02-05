@@ -197,9 +197,6 @@ namespace BlackMisc::Aviation
         //! Booked now?
         bool isBookedNow() const;
 
-        //! Tuned in within 25KHz channel spacing
-        bool isComUnitTunedIn25KHz(const Aviation::CComSystem &comUnit) const;
-
         //! Tuned in within channel spacing
         bool isComUnitTunedInChannelSpacing(const Aviation::CComSystem &comUnit) const;
 

@@ -29,14 +29,6 @@ namespace BlackMisc::Aviation
         CSequence<CAtcStation>(other)
     { }
 
-    CAtcStationList CAtcStationList::findIfComUnitTunedIn25KHz(const CComSystem &comUnit) const
-    {
-        return this->findBy([&](const CAtcStation & atcStation)
-        {
-            return atcStation.isComUnitTunedIn25KHz(comUnit);
-        });
-    }
-
     CAtcStationList CAtcStationList::findIfComUnitTunedInChannelSpacing(const CComSystem &comUnit) const
     {
         return this->findBy([&](const CAtcStation & atcStation)
