@@ -563,7 +563,7 @@ namespace BlackMisc::Simulation
         m_pilot.setCallsign(callsign);
     }
 
-    bool CSimulatedAircraft::isActiveFrequencyWithinChannelSpacing(const CFrequency &comFrequency) const
+    bool CSimulatedAircraft::hasComActiveFrequency(const CFrequency &comFrequency) const
     {
         return m_com1system.isActiveFrequencySameFrequency(comFrequency) ||
                 m_com2system.isActiveFrequencySameFrequency(comFrequency);
