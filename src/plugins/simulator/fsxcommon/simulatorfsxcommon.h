@@ -27,6 +27,7 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/network/client.h"
 #include "blackmisc/pixmap.h"
+#include "blackmisc/pq/frequency.h"
 #include "blackconfig/buildconfig.h"
 
 #include <QObject>
@@ -558,6 +559,12 @@ namespace BlackSimPlugin::FsxCommon
             const BlackMisc::Simulation::CSimulatedAircraft &aircraft, DWORD requestId,
             CSimConnectObject::SimObjectType type, const CSimConnectObject &removedPendingObject = {});
 
+        //! Update simulator COM from swift data. Returns true if simulator frequency was changed
+        bool updateCOMFromSwiftToSimulator(const BlackMisc::PhysicalQuantities::CFrequency &newFreq,
+            const BlackMisc::PhysicalQuantities::CFrequency &lastSimFreq,
+            BlackMisc::PhysicalQuantities::CFrequency &last25kHzSimFreq,
+            EventIds id);
+
         //! Used for terrain probes
         static const BlackMisc::Aviation::CAltitude &terrainProbeAltitude();
 
@@ -628,6 +635,12 @@ namespace BlackSimPlugin::FsxCommon
         SIMCONNECT_DATA_REQUEST_ID m_requestIdSimObjAircraft     = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimObjAircraftStart);     //!< request id, use obtainRequestIdForSimObjAircraft to get id
         SIMCONNECT_DATA_REQUEST_ID m_requestIdSimObjTerrainProbe = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimObjTerrainProbeStart); //!< request id, use obtainRequestIdForSimObjTerrainProbe to get id
         QTimer m_simObjectTimer; //!< updating of SimObjects awaiting to be added
+
+        // Last selected frequencies in simulator before setting 8.33 kHz spacing frequency
+        BlackMisc::PhysicalQuantities::CFrequency m_lastCom1Active{ 0, BlackMisc::PhysicalQuantities::CFrequencyUnit::nullUnit() }; //!< last COM1 active frequency
+        BlackMisc::PhysicalQuantities::CFrequency m_lastCom1Standby{ 0, BlackMisc::PhysicalQuantities::CFrequencyUnit::nullUnit() }; //!< last COM1 standby frequency
+        BlackMisc::PhysicalQuantities::CFrequency m_lastCom2Active{ 0, BlackMisc::PhysicalQuantities::CFrequencyUnit::nullUnit() }; //!< last COM2 active frequency
+        BlackMisc::PhysicalQuantities::CFrequency m_lastCom2Standby{ 0, BlackMisc::PhysicalQuantities::CFrequencyUnit::nullUnit() }; //!< last COM2 standby frequency
 
         //! Request id to string
         static QString requestIdToString(DWORD requestId);
