@@ -148,6 +148,13 @@ namespace BlackMisc::Aviation
         //! Round passed frequency in kHz to 8.33 frequency spacing
         static int round8_33kHzChannel(int fKHz);
 
+        //! Is frequency a "new" 8.33 kHz frequency and not within 25 kHz spacing
+        //! E.g. returns false for 122.825 but true for 118.305
+        static bool isExclusiveWithin8_33kHzChannel(const PhysicalQuantities::CFrequency &freq);
+
+        //! Is frequency within 25 kHz frequency spacing
+        static bool isWithin25kHzChannel(const PhysicalQuantities::CFrequency &freq);
+
         //! Parses almost any shitty string to a valid COM frequency
         static PhysicalQuantities::CFrequency parseComFrequency(const QString &input, PhysicalQuantities::CPqString::SeparatorMode sep);
 

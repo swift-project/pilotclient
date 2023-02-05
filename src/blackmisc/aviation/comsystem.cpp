@@ -181,6 +181,19 @@ namespace BlackMisc::Aviation
         }
     }
 
+    bool CComSystem::isExclusiveWithin8_33kHzChannel(const PhysicalQuantities::CFrequency &freq)
+    {
+        const int freqKHz = freq.value(CFrequencyUnit::kHz());
+        if (freqKHz < 118000 || freqKHz >= 137000 || !isValid8_33kHzChannel(freqKHz)) { return false; }
+        return !isWithin25kHzChannel(freq);
+    }
+
+    bool CComSystem::isWithin25kHzChannel(const PhysicalQuantities::CFrequency &freq)
+    {
+        const int end = static_cast<int>(freq.value(CFrequencyUnit::kHz())) % 100;
+        return end == 0 || end == 25 || end == 50 || end == 75;
+    }
+
     bool CComSystem::isWithinChannelSpacing(const CFrequency &setFrequency, const CFrequency &compareFrequency, CComSystem::ChannelSpacing channelSpacing)
     {
         if (setFrequency.isNull() || compareFrequency.isNull()) { return false; }
