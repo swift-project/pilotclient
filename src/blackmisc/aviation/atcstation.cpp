@@ -280,11 +280,6 @@ namespace BlackMisc::Aviation
         return true;
     }
 
-    bool CAtcStation::isComUnitTunedIn25KHz(const CComSystem &comUnit) const
-    {
-        return comUnit.isActiveFrequencyWithin25kHzChannel(this->getFrequency());
-    }
-
     bool CAtcStation::isComUnitTunedInChannelSpacing(const CComSystem &comUnit) const
     {
         return comUnit.isActiveFrequencySameFrequency(this->getFrequency());
