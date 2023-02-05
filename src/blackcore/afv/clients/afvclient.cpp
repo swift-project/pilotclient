@@ -13,6 +13,7 @@
 #include "blackcore/application.h"
 #include "blacksound/audioutilities.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
+#include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/verify.h"
@@ -1336,14 +1337,15 @@ namespace BlackCore::Afv::Clients
         // change to aliased frequency if needed
         {
             QMutexLocker lock(&m_mutex);
-            const auto it = std::find_if(m_aliasedStations.constBegin(), m_aliasedStations.constEnd(), [roundedFrequencyHz](const StationDto & d)
+            CFrequency roundedFrequency(static_cast<int>(roundedFrequencyHz), CFrequencyUnit::Hz());
+            const auto it = std::find_if(m_aliasedStations.constBegin(), m_aliasedStations.constEnd(), [roundedFrequency](const StationDto & d)
             {
-                if (d.frequencyAliasHz > 100000000 && roundedFrequencyHz > 100000000) // both VHF
+                if (d.frequencyAliasHz > 100000000 && roundedFrequency.value(CFrequencyUnit::Hz()) > 100000000) // both VHF
                 {
-                    // disregard 6th digit (e.g. 132.070 == 132.075)
-                    return (d.frequencyAliasHz / 10000 * 10000) == (roundedFrequencyHz / 10000 * 10000);
+                    const int aliasedFreqHz = static_cast<int>(qRound(d.frequencyAliasHz / 1000.0)) * 1000;
+                    return CComSystem::isSameFrequency(CFrequency(aliasedFreqHz, CFrequencyUnit::Hz()), roundedFrequency);
                 }
-                return d.frequencyAliasHz == roundedFrequencyHz;
+                return d.frequencyAliasHz == roundedFrequency.value(CFrequencyUnit::Hz());
             });
 
             if (it != m_aliasedStations.constEnd())
