@@ -45,7 +45,7 @@ namespace BlackMisc::Aviation
         });
     }
 
-    CAtcStationList CAtcStationList::findIfFrequencyIsWithinSpacing(const CFrequency &frequency, CComSystem::ChannelSpacing spacing)
+    CAtcStationList CAtcStationList::findIfFrequencyIsWithinSpacing(const CFrequency &frequency)
     {
         if (frequency.isNull()) { return CAtcStationList(); }
         return this->findBy([&](const CAtcStation & atcStation)

@@ -630,7 +630,7 @@ namespace BlackCore::Fsd
         for (const auto &message : radioMessages)
         {
             // Adjust to nearest frequency, in case of 5kHz difference
-            const CAtcStationList stations = m_atcStations.findIfFrequencyIsWithinSpacing(message.getFrequency(), CComSystem::ChannelSpacing25KHz);
+            const CAtcStationList stations = m_atcStations.findIfFrequencyIsWithinSpacing(message.getFrequency());
             const CFrequency freq = stations.isEmpty() ? message.getFrequency() : stations.findClosest(1, getOwnAircraftPosition()).front().getFrequency();
 
             // I could send the same message to n frequencies in one step
