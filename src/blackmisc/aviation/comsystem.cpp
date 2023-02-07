@@ -98,7 +98,7 @@ namespace BlackMisc::Aviation
 
         // comparsion in int avoids double compare issues
         const int fr = f.valueInteger(PhysicalQuantities::CFrequencyUnit::kHz());
-        return fr >= 118000 && fr <= 136975;
+        return fr >= 118000 && fr <= 136990;
     }
 
     bool CComSystem::isValidMilitaryFrequency(const CFrequency &f)
