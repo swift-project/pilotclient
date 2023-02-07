@@ -1217,8 +1217,7 @@ namespace BlackCore::Fsd
             for (int freqKhz : textMessage.m_frequencies)
             {
                 CFrequency f(freqKhz, CFrequencyUnit::kHz());
-                // VATSIM always drops the last 5 kHz. So round it to the correct channel spacing.
-                CComSystem::roundToChannelSpacing(f, CComSystem::ChannelSpacing25KHz);
+                CComSystem::roundToChannelSpacing(f, CComSystem::ChannelSpacing8_33KHz);
                 if (f == com1 || f == com2)
                 {
                     frequencies.push_back(f);
