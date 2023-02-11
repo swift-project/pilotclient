@@ -741,7 +741,6 @@ namespace BlackSimPlugin::FsxCommon
 
             const bool changedCom1Active = myAircraft.getCom1System().getFrequencyActive() != com1.getFrequencyActive() && com1.getFrequencyActive() != m_lastCom1Active;
             const bool changedCom1Standby = myAircraft.getCom1System().getFrequencyStandby() != com1.getFrequencyStandby() && com1.getFrequencyStandby() != m_lastCom1Standby;
-            const bool changedCom1 = changedCom1Active || changedCom1Standby;
 
             // Avoid overwrite of 8.33 kHz frequency with data from simulator
             if (!changedCom1Active)
@@ -762,6 +761,8 @@ namespace BlackSimPlugin::FsxCommon
                 m_lastCom1Standby.setNull();
             }
 
+            const bool changedCom1 = myAircraft.getCom1System() != com1;
+
             m_simCom1 = com1;
             Q_UNUSED(com1Test)
 
@@ -774,7 +775,6 @@ namespace BlackSimPlugin::FsxCommon
             com2.setReceiveEnabled(com2Status == 0 && (comReceiveAll || com2Transmit));
             const bool changedCom2Active = myAircraft.getCom2System().getFrequencyActive() != com2.getFrequencyActive() && com2.getFrequencyActive() != m_lastCom2Active;
             const bool changedCom2Standby = myAircraft.getCom2System().getFrequencyStandby() != com2.getFrequencyStandby() && com2.getFrequencyStandby() != m_lastCom2Standby;
-            const bool changedCom2 = changedCom2Active || changedCom2Standby;
 
             // Avoid overwrite of 8.33 kHz frequency with data from simulator
             if (!changedCom2Active)
@@ -794,6 +794,8 @@ namespace BlackSimPlugin::FsxCommon
             {
                 m_lastCom2Standby.setNull();
             }
+
+            const bool changedCom2 = myAircraft.getCom2System() != com2;
 
             m_simCom2 = com2;
             Q_UNUSED(com2Test)
