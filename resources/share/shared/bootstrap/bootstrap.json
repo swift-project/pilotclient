@@ -58,6 +58,9 @@
             }
         ]
     },
+    "vatsimServerFileUrl": {
+                "url": "https://data.vatsim.net/v3/vatsim-servers.json"
+    },
     "vatsimMetarsUrls": {
         "containerbase": [
             {
