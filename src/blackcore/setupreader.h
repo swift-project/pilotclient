@@ -161,20 +161,8 @@ namespace BlackCore
         BlackMisc::CStatusMessageList m_setupReadErrorMsgs;      //!< last parsing error messages
         BlackMisc::CData<Data::TGlobalSetup> m_setup { this };   //!< data cache setup
 
-        //! Setup has been read (aka bootstrap file)
-        void parseBootstrapFile(QNetworkReply *nwReplyPtr);
-
-        //! Update info has been read
-        void parseUpdateInfoFile(QNetworkReply *nwReplyPtr);
-
-        //! Do reading
-        void readSetup();
-
         //! Read by local individual file and update cache from that
         BlackMisc::CStatusMessageList readLocalBootstrapFile(const QString &fileName);
-
-        //! Trigger reading
-        BlackMisc::CStatusMessageList triggerReadSetup();
 
         //! Emit the availability signal and state and trigger follow up actions
         //! \threadsafe
