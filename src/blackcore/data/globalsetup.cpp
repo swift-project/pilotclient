@@ -367,7 +367,7 @@ namespace BlackCore::Data
         case IndexDbClientPingService:   return QVariant::fromValue(this->getDbClientPingServiceUrl());
         case IndexVatsimStatus:          return QVariant::fromValue(m_vatsimStatusFileUrls);
         case IndexVatsimData:            return QVariant::fromValue(m_vatsimDataFileUrls);
-        case IndexVatsimBookings:        return QVariant::fromValue(m_vatsimDataFileUrls);
+        case IndexVatsimBookings:        return QVariant::fromValue(m_vatsimBookingsUrl);
         case IndexVatsimMetars:          return QVariant::fromValue(m_vatsimMetarsUrls);
         case IndexBootstrapFileUrls:     return QVariant::fromValue(this->getSwiftBootstrapFileUrls());
         case IndexUpdateInfoFileUrls:    return QVariant::fromValue(this->getSwiftUpdateInfoFileUrls());
