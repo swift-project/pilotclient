@@ -439,6 +439,9 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Network::CUrlList getVatsimDataFileUrls() const;
 
+        //! Get URL to file which contains the list of VATSIM servers
+        BlackMisc::Network::CUrl getVatsimServerFileUrl() const;
+
         //! Start services, if not yet parsed call CApplication::parse
         virtual bool start();
 

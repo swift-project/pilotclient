@@ -1737,6 +1737,13 @@ namespace BlackCore
         return CUrlList();
     }
 
+    CUrl CApplication::getVatsimServerFileUrl() const
+    {
+        if (m_shutdown || !m_setupReader) { return {}; }
+
+        return m_setupReader->getSetup().getVatsimServerFileUrl();
+    }
+
     void CApplication::onCrashDumpUploadEnabledChanged()
     {
         const bool enabled = CBuildConfig::isReleaseBuild() && m_crashDumpSettings.getThreadLocal().isEnabled();
