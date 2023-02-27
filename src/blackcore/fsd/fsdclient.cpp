@@ -270,7 +270,39 @@ namespace BlackCore::Fsd
         this->updateConnectionStatus(CConnectionStatus::Connecting);
 
         const CServer s = this->getServer();
-        const QString host = s.getAddress();
+
+        QHostAddress serverAddress(s.getAddress());
+
+        if (serverAddress.isNull() && s.getName() == "AUTOMATIC" && s.getEcosystem() == CEcosystem::VATSIM)
+        {
+            // Not an IP -> Get IP for loadbalancing via HTTP
+            Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need app");
+            CUrl url = sApp->getVatsimFsdHttpUrl();
+            sApp->getFromNetwork(url, { this, &CFSDClient::handleVatsimServerIpResponse });
+        }
+        else
+        {
+            const QString host = s.getAddress();
+            const quint16 port = static_cast<quint16>(s.getPort());
+            m_socket->connectToHost(host, port);
+            this->startPositionTimers();
+        }
+    }
+
+    void CFSDClient::handleVatsimServerIpResponse(QNetworkReply *nwReplyPtr)
+    {
+        QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+        const CServer s = this->getServer();
+
+        QString host = s.getAddress();
+
+        if (nwReply->error() == QNetworkReply::NoError)
+        {
+            QHostAddress addr(static_cast<QString>(nwReply->readAll()));
+            if (!addr.isNull()) { host = addr.toString(); }
+
+        }
+
         const quint16 port = static_cast<quint16>(s.getPort());
         m_socket->connectToHost(host, port);
         this->startPositionTimers();

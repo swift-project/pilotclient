@@ -58,6 +58,8 @@
 #define PROTOCOL_REVISION_VATSIM_VELOCITY 101
 //! @}
 
+class QNetworkReply;
+
 namespace BlackFsdTest { class CTestFSDClient; }
 namespace BlackCore::Fsd
 {
@@ -386,6 +388,8 @@ namespace BlackCore::Fsd
         void handleUnknownPacket(const QString &line);
         void handleUnknownPacket(const QStringList &tokens);
         //! @}
+
+        void handleVatsimServerIpResponse(QNetworkReply *nwReplyPtr);
 
         void printSocketError(QAbstractSocket::SocketError socketError);
         void handleSocketError(QAbstractSocket::SocketError socketError);

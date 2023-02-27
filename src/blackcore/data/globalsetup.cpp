@@ -53,6 +53,7 @@ namespace BlackCore::Data
         m_vatsimStatusFileUrls  = CUrlList{ "https://status.vatsim.net" };
         m_vatsimDataFileUrls    = CUrlList{ "https://data.vatsim.net/v3/vatsim-data.json" };
         m_vatsimServerFileUrl   = CUrl("https://data.vatsim.net/v3/vatsim-servers.json");
+        m_vatsimFsdHttpUrl      = CUrl("http://fsd-http.connect.vatsim.net");
         m_sharedUrls = CUrlList
         {
             "http://download.swift-project.org/shared/",
@@ -373,6 +374,7 @@ namespace BlackCore::Data
         case IndexVatsimData:            return QVariant::fromValue(m_vatsimDataFileUrls);
         case IndexVatsimBookings:        return QVariant::fromValue(m_vatsimBookingsUrl);
         case IndexVatsimServer:          return QVariant::fromValue(m_vatsimServerFileUrl);
+        case IndexVatsimHttpFsd:         return QVariant::fromValue(m_vatsimFsdHttpUrl);
         case IndexVatsimMetars:          return QVariant::fromValue(m_vatsimMetarsUrls);
         case IndexBootstrapFileUrls:     return QVariant::fromValue(this->getSwiftBootstrapFileUrls());
         case IndexUpdateInfoFileUrls:    return QVariant::fromValue(this->getSwiftUpdateInfoFileUrls());
@@ -407,6 +409,7 @@ namespace BlackCore::Data
         case IndexVatsimData:            m_vatsimDataFileUrls = variant.value<CUrlList>(); break;
         case IndexVatsimBookings:        m_vatsimBookingsUrl.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexVatsimServer:          m_vatsimServerFileUrl = variant.value<CUrl>(); break;
+        case IndexVatsimHttpFsd:         m_vatsimFsdHttpUrl = variant.value<CUrl>(); break;
         case IndexVatsimMetars:          m_vatsimMetarsUrls = variant.value<CUrlList>(); break;
         case IndexSharedUrls:            m_sharedUrls = variant.value<CUrlList>(); break;
         case IndexOnlineHelpUrls:        m_onlineHelpUrls = variant.value<CUrlList>(); break;

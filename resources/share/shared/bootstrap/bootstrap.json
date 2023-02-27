@@ -61,6 +61,9 @@
     "vatsimServerFileUrl": {
                 "url": "https://data.vatsim.net/v3/vatsim-servers.json"
     },
+    "vatsimFsdHttpUrl": {
+        "url": "http://fsd-http.connect.vatsim.net"
+    },
     "vatsimMetarsUrls": {
         "containerbase": [
             {

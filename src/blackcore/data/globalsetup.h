@@ -51,6 +51,7 @@ namespace BlackCore::Data
             IndexVatsimMetars,
             IndexVatsimData,
             IndexVatsimServer,
+            IndexVatsimHttpFsd,
             IndexSwiftDbFiles,
             IndexBootstrapFileUrls,
             IndexUpdateInfoFileUrls,
@@ -185,6 +186,9 @@ namespace BlackCore::Data
         //! VATSIM server file URL
         BlackMisc::Network::CUrl getVatsimServerFileUrl() const { return m_vatsimServerFileUrl; }
 
+        //! VATSIM server file URL
+        BlackMisc::Network::CUrl getVatsimFsdHttpUrl() const { return m_vatsimFsdHttpUrl; }
+
         //! Help page URL
         //! \remark working URL evaluated at runtime, based on getOnlineHelpUrls
         BlackMisc::Network::CUrl getHelpPageUrl(const QString &context = {}) const;
@@ -253,7 +257,8 @@ namespace BlackCore::Data
         BlackMisc::Network::CUrlList    m_vatsimMetarsUrls;            //!< METAR data
         BlackMisc::Network::CUrlList    m_vatsimStatusFileUrls;        //!< Status file, where to find the VATSIM files (METAR, data, ATIS, other status files)
         BlackMisc::Network::CUrlList    m_vatsimDataFileUrls;          //!< Overall VATSIM data file / merely for bootstrapping the first time
-        BlackMisc::Network::CUrl        m_vatsimServerFileUrl;          //!< UR to list of VATSIM servers
+        BlackMisc::Network::CUrl        m_vatsimServerFileUrl;         //!< URL to list of VATSIM servers
+        BlackMisc::Network::CUrl        m_vatsimFsdHttpUrl;            //!< URL to HTTP FSD server (for load-balancing and automatic server selection)
         BlackMisc::Network::CUrlList    m_sharedUrls;                  //!< where we can obtain shared info files such as bootstrap, ..
         BlackMisc::Network::CUrlList    m_onlineHelpUrls;              //!< online help URLs
         BlackMisc::Network::CServerList m_predefinedServers;           //!< Predefined servers loaded from setup file
@@ -279,6 +284,7 @@ namespace BlackCore::Data
             BLACK_METAMEMBER(vatsimStatusFileUrls),
             BLACK_METAMEMBER(vatsimDataFileUrls),
             BLACK_METAMEMBER(vatsimServerFileUrl),
+            BLACK_METAMEMBER(vatsimFsdHttpUrl),
             BLACK_METAMEMBER(vatsimBookingsUrl),
             BLACK_METAMEMBER(vatsimMetarsUrls),
             BLACK_METAMEMBER(sharedUrls),
