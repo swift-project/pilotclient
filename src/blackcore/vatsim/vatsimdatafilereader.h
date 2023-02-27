@@ -69,10 +69,6 @@ namespace BlackCore::Vatsim
         //! \threadsafe
         BlackMisc::Network::CServerList getVoiceServers() const;
 
-        //! Get all VATSIM FSD servers
-        //! \threadsafe
-        BlackMisc::Network::CServerList getFsdServers() const;
-
         //! Users for callsign(s)
         //! \threadsafe
         BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const;
@@ -146,7 +142,6 @@ namespace BlackCore::Vatsim
 
         BlackMisc::Aviation::CAtcStationList m_atcStations;
         BlackMisc::Simulation::CSimulatedAircraftList m_aircraft;
-        BlackMisc::CData<BlackCore::Data::TVatsimSetup> m_lastGoodSetup { this };
         BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TVatsimDataFile> m_settings { this, &CVatsimDataFileReader::reloadSettings };
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlanRemarks> m_flightPlanRemarks; //!< cache for flight plan remarks
 
@@ -156,7 +151,6 @@ namespace BlackCore::Vatsim
         BlackMisc::Simulation::CSimulatedAircraft parsePilot(const QJsonObject &, QStringList &o_illegalEquipmentCodes) const;
         BlackMisc::Aviation::CFlightPlanRemarks parseFlightPlanRemarks(const QJsonObject &) const;
         BlackMisc::Aviation::CAtcStation parseController(const QJsonObject &) const;
-        BlackMisc::Network::CServer parseServer(const QJsonObject &) const;
 
         //! Read / re-read data file
         void read();

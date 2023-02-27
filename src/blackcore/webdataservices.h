@@ -67,6 +67,7 @@ namespace BlackCore
         class CVatsimDataFileReader;
         class CVatsimMetarReader;
         class CVatsimStatusFileReader;
+        class CVatsimServerFileReader;
     }
 
     namespace Db
@@ -581,6 +582,12 @@ namespace BlackCore
         //! VATSIM status file has been read
         void vatsimStatusFileRead(int lines);
 
+        //! VATSIM server file has been read
+        void vatsimServerFileRead(int lines);
+
+        //! Initialize and start VATSIM server file reader
+        void startVatsimServerFileReader();
+
         //! Read finished from reader
         void readFromSwiftReader(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
@@ -643,15 +650,16 @@ namespace BlackCore
         QSet<BlackMisc::Network::CEntityFlags::Entity> m_signalledEntities;  //!< remember signalled entites
 
         // for reading XML and VATSIM data files
-        Vatsim::CVatsimStatusFileReader *m_vatsimStatusReader   = nullptr;
-        Vatsim::CVatsimBookingReader    *m_vatsimBookingReader  = nullptr;
-        Vatsim::CVatsimDataFileReader   *m_vatsimDataFileReader = nullptr;
-        Vatsim::CVatsimMetarReader      *m_vatsimMetarReader    = nullptr;
-        Db::CIcaoDataReader             *m_icaoDataReader       = nullptr;
-        Db::CModelDataReader            *m_modelDataReader      = nullptr;
-        Db::CAirportDataReader          *m_airportDataReader    = nullptr;
-        Db::CInfoDataReader             *m_dbInfoDataReader     = nullptr;
-        Db::CInfoDataReader             *m_sharedInfoDataReader = nullptr;
+        Vatsim::CVatsimStatusFileReader *m_vatsimStatusReader     = nullptr;
+        Vatsim::CVatsimBookingReader    *m_vatsimBookingReader    = nullptr;
+        Vatsim::CVatsimDataFileReader   *m_vatsimDataFileReader   = nullptr;
+        Vatsim::CVatsimMetarReader      *m_vatsimMetarReader      = nullptr;
+        Vatsim::CVatsimServerFileReader *m_vatsimServerFileReader = nullptr;
+        Db::CIcaoDataReader             *m_icaoDataReader         = nullptr;
+        Db::CModelDataReader            *m_modelDataReader        = nullptr;
+        Db::CAirportDataReader          *m_airportDataReader      = nullptr;
+        Db::CInfoDataReader             *m_dbInfoDataReader       = nullptr;
+        Db::CInfoDataReader             *m_sharedInfoDataReader   = nullptr;
 
         // writing objects directly into DB
         Db::CDatabaseWriter *m_databaseWriter = nullptr;

@@ -18,6 +18,7 @@
 #include "blackcore/vatsim/vatsimdatafilereader.h"
 #include "blackcore/vatsim/vatsimmetarreader.h"
 #include "blackcore/vatsim/vatsimstatusfilereader.h"
+#include "blackcore/vatsim/vatsimserverfilereader.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/setupreader.h"
 #include "blackcore/application.h"
@@ -120,7 +121,7 @@ namespace BlackCore
 
     CServerList CWebDataServices::getVatsimFsdServers() const
     {
-        if (m_vatsimDataFileReader) { return m_vatsimDataFileReader->getFsdServers(); }
+        if (m_vatsimServerFileReader) { return m_vatsimServerFileReader->getFsdServers(); }
         return CServerList();
     }
 
@@ -971,14 +972,15 @@ namespace BlackCore
         if (m_shuttingDown) { return; }
         m_shuttingDown = true;
         this->disconnect(); // all signals
-        if (m_vatsimMetarReader)    { m_vatsimMetarReader->quitAndWait(); m_vatsimMetarReader = nullptr; }
-        if (m_vatsimBookingReader)  { m_vatsimBookingReader->quitAndWait(); m_vatsimBookingReader = nullptr; }
-        if (m_vatsimDataFileReader) { m_vatsimDataFileReader->quitAndWait(); m_vatsimDataFileReader = nullptr; }
-        if (m_vatsimStatusReader)   { m_vatsimStatusReader->quitAndWait(); m_vatsimStatusReader = nullptr; }
-        if (m_modelDataReader)      { m_modelDataReader->quitAndWait(); m_modelDataReader = nullptr; }
-        if (m_airportDataReader)    { m_airportDataReader->quitAndWait(); m_airportDataReader = nullptr; }
-        if (m_icaoDataReader)       { m_icaoDataReader->quitAndWait(); m_icaoDataReader = nullptr; }
-        if (m_dbInfoDataReader)     { m_dbInfoDataReader->quitAndWait(); m_dbInfoDataReader = nullptr; }
+        if (m_vatsimMetarReader)      { m_vatsimMetarReader->quitAndWait(); m_vatsimMetarReader = nullptr; }
+        if (m_vatsimBookingReader)    { m_vatsimBookingReader->quitAndWait(); m_vatsimBookingReader = nullptr; }
+        if (m_vatsimDataFileReader)   { m_vatsimDataFileReader->quitAndWait(); m_vatsimDataFileReader = nullptr; }
+        if (m_vatsimStatusReader)     { m_vatsimStatusReader->quitAndWait(); m_vatsimStatusReader = nullptr; }
+        if (m_vatsimServerFileReader) { m_vatsimServerFileReader->quitAndWait(); m_vatsimServerFileReader = nullptr; }
+        if (m_modelDataReader)        { m_modelDataReader->quitAndWait(); m_modelDataReader = nullptr; }
+        if (m_airportDataReader)      { m_airportDataReader->quitAndWait(); m_airportDataReader = nullptr; }
+        if (m_icaoDataReader)         { m_icaoDataReader->quitAndWait(); m_icaoDataReader = nullptr; }
+        if (m_dbInfoDataReader)       { m_dbInfoDataReader->quitAndWait(); m_dbInfoDataReader = nullptr; }
 
         // DB writer is no threaded reader, it has a special role
         if (m_databaseWriter)       { m_databaseWriter->gracefulShutdown(); m_databaseWriter = nullptr; }
@@ -1050,7 +1052,7 @@ namespace BlackCore
             this->initSharedInfoObjectReaderAndTriggerRead();
         }
 
-        // 2. Status file, updating the VATSIM related caches
+        // 2. Status and server file, updating the VATSIM related caches
         // Read as soon as initReaders is done
         if (readersNeeded.testFlag(CWebReaderFlags::VatsimStatusReader) || readersNeeded.testFlag(CWebReaderFlags::VatsimDataReader) || readersNeeded.testFlag(CWebReaderFlags::VatsimMetarReader))
         {
@@ -1061,12 +1063,14 @@ namespace BlackCore
 
             // run single shot in main loop, so readInBackgroundThread is not called before initReaders completes
             const QPointer<CWebDataServices> myself(this);
-            QTimer::singleShot(100, this, [ = ]()
+            QTimer::singleShot(0, this, [ = ]()
             {
                 if (!myself || m_shuttingDown) { return; }
                 if (!sApp || sApp->isShuttingDown()) { return; }
                 m_vatsimStatusReader->readInBackgroundThread();
             });
+
+            startVatsimServerFileReader();
         }
 
         // ---- "normal data", triggerRead will start read, not starting directly
@@ -1166,6 +1170,23 @@ namespace BlackCore
             // Rational: we cannot read shared info objects, but we have and use cached objects
             m_sharedInfoDataReader->setSeverityNoWorkingUrl(CStatusMessage::SeverityWarning);
         }
+    }
+
+    void CWebDataServices::startVatsimServerFileReader()
+    {
+        m_vatsimServerFileReader = new CVatsimServerFileReader(this);
+        connect(m_vatsimServerFileReader, &CVatsimServerFileReader::dataFileRead, this, &CWebDataServices::vatsimServerFileRead, Qt::QueuedConnection);
+        CLogMessage(this).info(u"Trigger read of VATSIM server file");
+        m_vatsimServerFileReader->start(QThread::LowPriority);
+
+        // run single shot in main loop, so readInBackgroundThread is not called before initReaders completes
+        const QPointer<CWebDataServices> myself(this);
+        QTimer::singleShot(0, this, [ = ]()
+        {
+            if (!myself || m_shuttingDown) { return; }
+            if (!sApp || sApp->isShuttingDown()) { return; }
+            m_vatsimServerFileReader->readInBackgroundThread();
+        });
     }
 
     void CWebDataServices::initDbInfoObjectReaderAndTriggerRead()
@@ -1330,6 +1351,11 @@ namespace BlackCore
     void CWebDataServices::vatsimStatusFileRead(int lines)
     {
         CLogMessage(this).info(u"Read VATSIM status file, %1 lines") << lines;
+    }
+
+    void CWebDataServices::vatsimServerFileRead(int lines)
+    {
+        CLogMessage(this).info(u"Read VATSIM server file, %1 lines") << lines;
     }
 
     void CWebDataServices::readFromSwiftReader(CEntityFlags::Entity entities, CEntityFlags::ReadState state, int number, const QUrl &url)

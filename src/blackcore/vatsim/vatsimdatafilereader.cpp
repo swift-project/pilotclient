@@ -88,12 +88,7 @@ namespace BlackCore::Vatsim
 
     CServerList CVatsimDataFileReader::getVoiceServers() const
     {
-        return m_lastGoodSetup.get().getVoiceServers();
-    }
-
-    CServerList CVatsimDataFileReader::getFsdServers() const
-    {
-        return m_lastGoodSetup.get().getFsdServers();
+        return {}; // TODO: Method not used anymore with AFV.
     }
 
     CUserList CVatsimDataFileReader::getPilotsForCallsigns(const CCallsignSet &callsigns) const
@@ -275,16 +270,6 @@ namespace BlackCore::Vatsim
                 }
                 atcStations.push_back(parseController(atis.toObject()));
             }
-            for (QJsonValueRef server : jsonDoc["servers"].toArray())
-            {
-                if (!this->doWorkCheck())
-                {
-                    CLogMessage(this).info(u"Terminated VATSIM file parsing process");
-                    return;
-                }
-                fsdServers.push_back(parseServer(server.toObject()));
-                if (!fsdServers.back().hasName()) { fsdServers.pop_back(); }
-            }
 
             // Setup for VATSIM servers and sorting for comparison
             fsdServers.sortBy(&CServer::getName, &CServer::getDescription);
@@ -296,15 +281,6 @@ namespace BlackCore::Vatsim
                 m_aircraft = aircraft;
                 m_atcStations = atcStations;
                 m_flightPlanRemarks = flightPlanRemarksMap;
-            }
-
-            // update cache itself is thread safe
-            CVatsimSetup vs(m_lastGoodSetup.get());
-            const bool changedSetup = vs.setServers(fsdServers, {});
-            if (changedSetup)
-            {
-                vs.setUtcTimestamp(updateTimestampFromFile);
-                m_lastGoodSetup.set(vs);
             }
 
             // warnings, if required
@@ -366,14 +342,6 @@ namespace BlackCore::Vatsim
         const auto atisText = makeRange(atisLines).transform([](auto line) { return line.toString(); });
         const CInformationMessage atis(CInformationMessage::ATIS, atisText.to<QStringList>().join('\n'));
         return CAtcStation(callsign, user, freq, {}, range, true, {}, {}, atis);
-    }
-
-    CServer CVatsimDataFileReader::parseServer(const QJsonObject &server) const
-    {
-        return CServer(server["name"].toString(), server["location"].toString(),
-            server["hostname_or_ip"].toString(), 6809, CUser("id", "real name", "email", "password"),
-            CFsdSetup::vatsimStandard(), CVoiceSetup::vatsimStandard(), CEcosystem::VATSIM,
-            CServer::FSDServerVatsim, server["clients_connection_allowed"].toInt());
     }
 
     void CVatsimDataFileReader::reloadSettings()
