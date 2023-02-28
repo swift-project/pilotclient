@@ -236,14 +236,6 @@ class DbDataSync(BaseSync):
         write_json_to_file(file_path, j, timestamp)
 
 
-class BootstrapSync(BaseSync):
-    def __init__(self, host, version, target_path):
-        BaseSync.__init__(self, host, version, target_path)
-
-    def sync(self):
-        self.sync_file('bootstrap', 'bootstrap.json')
-
-
 class UpdateInfoSync(BaseSync):
     def __init__(self, host, version, target_path):
         BaseSync.__init__(self, host, version, target_path)
@@ -254,7 +246,6 @@ class UpdateInfoSync(BaseSync):
 
 def update_shared(host, version, target_path):
     DbDataSync(host, version, target_path).sync()
-    BootstrapSync(host, version, target_path).sync()
     UpdateInfoSync(host, version, target_path).sync()
 
 
@@ -264,7 +255,6 @@ def main():
     target_path = os.path.abspath(os.curdir)
 
     DbDataSync(host, version, target_path).sync()
-    BootstrapSync(host, version, target_path).sync()
     UpdateInfoSync(host, version, target_path).sync()
 
 
