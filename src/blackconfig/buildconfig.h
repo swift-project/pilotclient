@@ -103,15 +103,6 @@ namespace BlackConfig
         //! Known executable
         static bool isKnownExecutableName(const QString &executable);
 
-        //! End of lifetime
-        static const QDateTime &getEol(); // defined in buildconfig_gen.cpp.in
-
-        //! Lifetime ended?
-        static bool isLifetimeExpired();
-
-        //! Days till lifetime end
-        static int daysTillLifetimeExpiry();
-
         //! Vatsim client id
         static int vatsimClientId(); // defined in buildconfig_gen.cpp.in
 

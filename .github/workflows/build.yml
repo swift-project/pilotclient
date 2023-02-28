@@ -15,7 +15,6 @@ concurrency:
 env:
   do_vatsim_key: ${{ github.event_name == 'push' }}
   do_symbols:    ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/heads/develop/') }}
-  eol_months:    12
   qt_version:    5.15.2
   bitrock_version: qt-professional-23.1.0
   bitrock_url:     https://releases.bitrock.com/installbuilder
@@ -127,11 +126,11 @@ jobs:
       - name: Build swift (without symbols)
         if: ${{ env.do_symbols != 'true' }}
         run: |
-          python3 -u scripts/build.py -w 64 -t gcc -d -j2 -e $eol_months -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" 2> >(tee error.log >&2)
+          python3 -u scripts/build.py -w 64 -t gcc -d -j2 -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" 2> >(tee error.log >&2)
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' }}
         run: |
-          python3 -u scripts/build.py -w 64 -t gcc -d -j2 -e $eol_months -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" --upload 2> >(tee error.log >&2)
+          python3 -u scripts/build.py -w 64 -t gcc -d -j2 -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" --upload 2> >(tee error.log >&2)
       - name: Check warnings
         id: warnings
         run: |
@@ -213,12 +212,12 @@ jobs:
         if: ${{ env.do_symbols != 'true' }}
         shell: bash
         run: |
-          python -u scripts/build.py -w 64 -t msvc -d -e $eol_months -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" 2>&1 | tee error.log
+          python -u scripts/build.py -w 64 -t msvc -d -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" 2>&1 | tee error.log
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' }}
         shell: bash
         run: |
-          python -u scripts/build.py -w 64 -t msvc -d -e $eol_months -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" --upload 2>&1 | tee error.log
+          python -u scripts/build.py -w 64 -t msvc -d -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" --upload 2>&1 | tee error.log
       - name: Check warnings
         id: warnings
         run: |
@@ -299,12 +298,12 @@ jobs:
         if: ${{ env.do_symbols != 'true' }}
         shell: bash
         run: |
-          python -u scripts/build.py -w 32 -t msvc -d -e $eol_months -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" 2>&1 | tee error.log
+          python -u scripts/build.py -w 32 -t msvc -d -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" 2>&1 | tee error.log
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' }}
         shell: bash
         run: |
-          python -u scripts/build.py -w 32 -t msvc -d -e $eol_months -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" --upload 2>&1 | tee error.log
+          python -u scripts/build.py -w 32 -t msvc -d -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" --upload 2>&1 | tee error.log
       - name: Check warnings
         id: warnings
         run: |
@@ -374,11 +373,11 @@ jobs:
       - name: Build swift (without symbols)
         if: ${{ env.do_symbols != 'true' }}
         run: |
-          python3 -u scripts/build.py -w 64 -t clang -d -j2 -e $eol_months -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" 2> >(tee error.log >&2)
+          python3 -u scripts/build.py -w 64 -t clang -d -j2 -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" 2> >(tee error.log >&2)
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' }}
         run: |
-          python3 -u scripts/build.py -w 64 -t clang -d -j2 -e $eol_months -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" --upload 2> >(tee error.log >&2)
+          python3 -u scripts/build.py -w 64 -t clang -d -j2 -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" --upload 2> >(tee error.log >&2)
       - name: Check warnings
         id: warnings
         run: |

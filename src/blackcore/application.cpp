@@ -1430,19 +1430,6 @@ namespace BlackCore
         if (m_parsed) { return m_parsed; } // already done
 
         // checks
-        if (CBuildConfig::isLifetimeExpired())
-        {
-            this->cmdLineErrorMessage("Program expired since " + CBuildConfig::getEol().date().toString(),
-                                      "This version is no longer supported and usable. You have to install a newer version.");
-            return false;
-        }
-
-        if(CBuildConfig::daysTillLifetimeExpiry() <= 30)
-        {
-            this->cmdLineWarningMessage("This version will expire in " + QString::number(CBuildConfig::daysTillLifetimeExpiry()) + " days!",
-                                            "You'll need to update swift in order to use it thereafter.");
-        }
-
         const QStringList verifyErrors = CSwiftDirectories::verifyRuntimeDirectoriesAndFiles();
         if (!verifyErrors.isEmpty() && !m_applicationInfo.isUnitTest())
         {

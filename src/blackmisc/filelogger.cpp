@@ -131,8 +131,6 @@ namespace BlackMisc
         m_stream << " and running with Qt " << qVersion();
         m_stream << " " << QSysInfo::buildAbi() << Qt::endl;
 
-        m_stream << "Program is going to expire on " + CBuildConfig::getEol().toString() << "." << Qt::endl;
-
         m_stream << "Application started." << Qt::endl;
     }
 

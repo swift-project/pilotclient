@@ -41,7 +41,7 @@ class Builder:
         shared_path = os.path.abspath(os.path.join(source_path, 'resources', 'share'))
         datastore.update_shared(host, datastore_version, shared_path)
 
-    def build(self, jobs, qmake_args, dev_build, eolInMonth):
+    def build(self, jobs, qmake_args, dev_build):
         """
         Run the build itself. Pass dev_build=True to enable a dev build
         """
@@ -54,15 +54,6 @@ class Builder:
         qmake_call = ['qmake'] + qmake_args
         if dev_build:
             qmake_call += ['SWIFT_CONFIG.devBranch=true']
-
-        if eolInMonth > 0:
-            eolYear = date.today().year
-            eolMonth = date.today().month + eolInMonth - 1
-            eolYear = eolYear + ( eolMonth / 12 )
-            eolMonth = eolMonth % 12 + 1
-            eolDate = date(int(eolYear), int(eolMonth), 1)
-            print('Setting EOL date to ' + eolDate.strftime('%Y%m%d'))
-            qmake_call += ['SWIFT_CONFIG.endOfLife=' + eolDate.strftime('%Y%m%d')]
 
         qmake_call += ['-r', os.pardir]
         subprocess.check_call(qmake_call, env=dict(os.environ))
@@ -353,7 +344,7 @@ def print_help():
                            'Windows': ['msvc', 'mingw']
                            }
     compiler_help = '|'.join(supported_compilers[platform.system()])
-    print('build.py -w <32|64> -t <' + compiler_help + '> [-v] [-d] [-e <end of life in month>] [-q <extra qmake argument>]')
+    print('build.py -w <32|64> -t <' + compiler_help + '> [-v] [-d] [-q <extra qmake argument>]')
 
 
 # Entry point if called as a standalone program
@@ -363,11 +354,10 @@ def main(argv):
     dev_build = False
     jobs = None
     upload_symbols = False
-    eolInMonth = 0
     qmake_args = []
 
     try:
-        opts, args = getopt.getopt(argv, 'hw:t:j:due:q:v', ['wordsize=', 'toolchain=', 'jobs=', 'dev', 'upload', 'eol', 'qmake-arg=', 'version'])
+        opts, args = getopt.getopt(argv, 'hw:t:j:duq:v', ['wordsize=', 'toolchain=', 'jobs=', 'dev', 'upload', 'qmake-arg=', 'version'])
     except getopt.GetoptError:
         print_help()
         sys.exit(2)
@@ -393,8 +383,6 @@ def main(argv):
             dev_build = True
         elif opt in ('-u', '--upload'):
             upload_symbols = True
-        elif opt in ('-e', '--eol'):
-            eolInMonth = int(arg)
         elif opt in ('-q', '--qmake-arg'):
             qmake_args += [arg]
 
@@ -419,7 +407,7 @@ def main(argv):
     builder = builders[platform.system()][tool_chain](word_size)
 
     builder.prepare()
-    builder.build(jobs, qmake_args, dev_build, eolInMonth)
+    builder.build(jobs, qmake_args, dev_build)
     builder.checks()
     builder.install()
     builder.publish()

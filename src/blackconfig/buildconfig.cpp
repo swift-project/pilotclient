@@ -91,17 +91,6 @@ namespace BlackConfig
         return devBuild;
     }
 
-    bool CBuildConfig::isLifetimeExpired()
-    {
-        if (!getEol().isValid()) { return true; }
-        return QDateTime::currentDateTime() > getEol();
-    }
-
-    int CBuildConfig::daysTillLifetimeExpiry()
-    {
-        return QDateTime::currentDateTime().daysTo(getEol());
-    }
-
     static QString boolToYesNo(bool v)
     {
         return v ? QStringLiteral("yes") : QStringLiteral("no");

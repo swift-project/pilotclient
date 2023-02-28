@@ -11,13 +11,6 @@
 #include <QString>
 #include <QDateTime>
 
-const QDateTime &BlackConfig::CBuildConfig::getEol()
-{
-    static const QString eol(\"$$swiftConfig(endOfLife)\"); // config.pri, defaults in default.json
-    static const QDateTime dt(eol.isEmpty() ? QDateTime() : QDateTime::fromString(eol, \"yyyyMMdd\"));
-    return dt;
-}
-
 int BlackConfig::CBuildConfig::vatsimClientId()
 {
     static const int id { $$swiftConfig(vatsim.id) };
