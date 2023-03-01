@@ -269,24 +269,7 @@ namespace BlackCore::Fsd
 
         this->updateConnectionStatus(CConnectionStatus::Connecting);
 
-        const CServer s = this->getServer();
-
-        QHostAddress serverAddress(s.getAddress());
-
-        if (serverAddress.isNull() && s.getName() == "AUTOMATIC" && s.getEcosystem() == CEcosystem::VATSIM)
-        {
-            // Not an IP -> Get IP for loadbalancing via HTTP
-            Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need app");
-            CUrl url = sApp->getVatsimFsdHttpUrl();
-            sApp->getFromNetwork(url, { this, &CFSDClient::handleVatsimServerIpResponse });
-        }
-        else
-        {
-            const QString host = s.getAddress();
-            const quint16 port = static_cast<quint16>(s.getPort());
-            m_socket->connectToHost(host, port);
-            this->startPositionTimers();
-        }
+        initiateConnection();
     }
 
     void CFSDClient::handleVatsimServerIpResponse(QNetworkReply *nwReplyPtr)
@@ -303,9 +286,16 @@ namespace BlackCore::Fsd
 
         }
 
-        const quint16 port = static_cast<quint16>(s.getPort());
-        m_socket->connectToHost(host, port);
-        this->startPositionTimers();
+        if (m_rehosting)
+        {
+            m_rehosting_socket->connectToHost(host, m_socket->peerPort());
+        }
+        else
+        {
+            const quint16 port = static_cast<quint16>(s.getPort());
+            m_socket->connectToHost(host, port);
+            this->startPositionTimers();
+        }
     }
 
     void CFSDClient::disconnectFromServer()
@@ -1687,26 +1677,63 @@ namespace BlackCore::Fsd
 
         CLogMessage(this).info(u"Server requested we switch server to %1") << rehost.m_hostname;
 
+        Q_ASSERT_X(m_rehosting_host.isEmpty(), Q_FUNC_INFO, "Rehosting already in progress");
+        Q_ASSERT_X(!m_rehosting_socket, Q_FUNC_INFO, "Rehosting already in progress");
+
+        m_rehosting_host = rehost.m_hostname;
         m_rehosting = true;
-        auto newSocket = new QTcpSocket(this);
-        connect(newSocket, &QTcpSocket::connected, this, [this, newSocket]
+        m_rehosting_socket = new QTcpSocket(this);
+        connect(m_rehosting_socket, &QTcpSocket::connected, this, [this]
         {
             readDataFromSocket();
             CLogMessage(this).debug(u"Successfully switched server");
-            QObject::disconnect(newSocket);
-            m_socket.reset(newSocket);
+            QObject::disconnect(m_rehosting_socket);
+            m_socket.reset(m_rehosting_socket);
+            m_rehosting_socket = nullptr;
             m_rehosting = false;
+            m_rehosting_host = "";
             connectSocketSignals();
             readDataFromSocket();
         });
-        connect(newSocket, &QTcpSocket::errorOccurred, this, [this, newSocket]
+        connect(m_rehosting_socket, &QTcpSocket::errorOccurred, this, [this]
         {
-            CLogMessage(this).warning(u"Failed to switch server: %1") << newSocket->errorString();
+            CLogMessage(this).warning(u"Failed to switch server: %1") << m_rehosting_socket->errorString();
             m_rehosting = false;
-            delete newSocket;
+            delete m_rehosting_socket;
+            m_rehosting_host = "";
             if (m_socket->state() != QAbstractSocket::ConnectedState) { updateConnectionStatus(CConnectionStatus::Disconnected); }
         });
-        newSocket->connectToHost(rehost.m_hostname, m_socket->peerPort());
+
+        initiateConnection();
+    }
+
+    void CFSDClient::initiateConnection()
+    {
+        const CServer s = this->getServer();
+
+        QHostAddress serverAddress(m_rehosting ? m_rehosting_host : s.getAddress());
+
+        if (serverAddress.isNull() && (s.getName() == "AUTOMATIC" || m_rehosting) && s.getEcosystem() == CEcosystem::VATSIM)
+        {
+            // Not an IP -> Get IP for loadbalancing via HTTP
+            Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need app");
+            CUrl url = sApp->getVatsimFsdHttpUrl();
+            sApp->getFromNetwork(url, { this, &CFSDClient::handleVatsimServerIpResponse });
+        }
+        else
+        {
+            if (m_rehosting)
+            {
+                m_rehosting_socket->connectToHost(m_rehosting_host, m_socket->peerPort());
+            }
+            else
+            {
+                const QString host = s.getAddress();
+                const quint16 port = static_cast<quint16>(s.getPort());
+                m_socket->connectToHost(host, port);
+                this->startPositionTimers();
+            }
+        }
     }
 
     void CFSDClient::handleCustomPilotPacket(const QStringList &tokens)
