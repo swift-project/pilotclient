@@ -46,9 +46,6 @@ namespace BlackGui::Components
         //! Setup reader?
         bool hasSetupReader() const;
 
-        //! Set info fields
-        void displayBootstrapUrls();
-
         //! Display bootstrap URL
         void displayCmdBoostrapUrl();
 

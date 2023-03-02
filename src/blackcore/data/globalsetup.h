@@ -78,17 +78,11 @@ namespace BlackCore::Data
         //! Default constructor
         CGlobalSetup();
 
-        //! Has data loaded from web
-        bool wasLoadedFromWeb() const { return m_wasLoadedFromWeb; }
-
         //! Has data loaded from file
         bool wasLoadedFromFile() const { return m_wasLoadedFromFile; }
 
         //! Loaded (web/file)
         bool wasLoaded() const;
-
-        //! Mark as loaded from web
-        void markAsLoadedFromWeb(bool loaded) { m_wasLoadedFromWeb = loaded; }
 
         //! Mark as loaded from file
         void markAsLoadedFromFile(bool loaded) { m_wasLoadedFromFile = loaded; }
@@ -244,7 +238,6 @@ namespace BlackCore::Data
         static CGlobalSetup fromJsonFile(const QString &fileNameAndPath, bool acceptCacheFormat);
 
     private:
-        bool                            m_wasLoadedFromWeb = false;    //!< Loaded from web
         bool                            m_wasLoadedFromFile = false;   //!< Loaded from local file
         int                             m_dbHttpPort  = 80;            //!< port
         int                             m_dbHttpsPort = 443;           //!< SSL port
@@ -273,7 +266,6 @@ namespace BlackCore::Data
 
         BLACK_METACLASS(
             CGlobalSetup,
-            BLACK_METAMEMBER(wasLoadedFromWeb),
             BLACK_METAMEMBER(wasLoadedFromFile),
             BLACK_METAMEMBER(timestampMSecsSinceEpoch),
             BLACK_METAMEMBER(crashReportServerUrl),

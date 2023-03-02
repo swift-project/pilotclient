@@ -53,7 +53,6 @@ namespace BlackGui::Components
 
         this->displaySetupCacheInfo();
         this->displayCmdBoostrapUrl();
-        this->displayBootstrapUrls();
         this->displayGlobalSetup();
         this->displayOtherVersionsInfo();
 
@@ -75,35 +74,6 @@ namespace BlackGui::Components
     bool CSetupLoadingDialog::hasSetupReader() const
     {
         return sApp && sApp->hasSetupReader();
-    }
-
-    void CSetupLoadingDialog::displayBootstrapUrls()
-    {
-        if (!sApp || sApp->isShuttingDown()) { return; }
-        const CGlobalSetup setup = sApp->getGlobalSetup();
-        if (setup.wasLoadedFromWeb())
-        {
-            QPointer<CSetupLoadingDialog> myself(this);
-            QTimer::singleShot(250, this, [ = ]
-            {
-                if (!myself) { return; }
-                const CUrlList bootstrapUrls = setup.getSwiftBootstrapFileUrls();
-                for (const CUrl &url : bootstrapUrls)
-                {
-                    const bool cc = CNetworkUtils::canConnect(url);
-                    if (!myself) { return; } // because of CEventLoop::processEventsUntil
-                    const CStatusMessage msg = cc ?
-                                                CStatusMessage(this).info(u"Can connect to '%1'") << url.getFullUrl() :
-                                                CStatusMessage(this).warning(u"Cannot connect to '%1'") << url.getFullUrl();
-                    ui->comp_Messages->appendStatusMessageToList(msg);
-                }
-            });
-        }
-        else
-        {
-            const CStatusMessage msg = CStatusMessage(this).warning(u"No loaded bootstrap setup available, skipping URL test");
-            ui->comp_Messages->appendStatusMessageToList(msg);
-        }
     }
 
     void CSetupLoadingDialog::displayCmdBoostrapUrl()

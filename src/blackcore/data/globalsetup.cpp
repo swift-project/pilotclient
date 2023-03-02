@@ -41,7 +41,7 @@ namespace BlackCore::Data
 
     bool CGlobalSetup::wasLoaded() const
     {
-        return this->wasLoadedFromWeb() || this->wasLoadedFromFile();
+        return this->wasLoadedFromFile();
     }
 
     void CGlobalSetup::initDefaultValues()
@@ -272,7 +272,6 @@ namespace BlackCore::Data
 
     bool CGlobalSetup::isSwiftVersionMinimumMappingVersion() const
     {
-        if (!this->wasLoadedFromWeb()) { return false; } // only allowed from web
         if (m_mappingMinimumVersion.isEmpty()) { return false; }
         const QVersionNumber min = QVersionNumber::fromString(this->getMappingMinimumVersionString());
         return CBuildConfig::getVersion() >= min;
@@ -290,8 +289,6 @@ namespace BlackCore::Data
             % this->getFormattedUtcTimestampYmdhms()
             % separator
             % u"Global setup loaded: "
-            % boolToYesNo(this->wasLoadedFromWeb())
-            % u'/'
             % boolToYesNo(this->wasLoadedFromFile())
             % separator
 
@@ -381,7 +378,6 @@ namespace BlackCore::Data
         case IndexSharedUrls:            return QVariant::fromValue(m_sharedUrls);
         case IndexOnlineHelpUrls:        return QVariant::fromValue(m_onlineHelpUrls);
         case IndexCrashReportServerUrl:  return QVariant::fromValue(m_crashReportServerUrl);
-        case IndexWasLoadedFromWeb:      return QVariant::fromValue(m_wasLoadedFromWeb);
         case IndexWasLoadedFromFile:     return QVariant::fromValue(m_wasLoadedFromFile);
         case IndexMappingMinimumVersion: return QVariant::fromValue(m_mappingMinimumVersion);
         case IndexPredefinedServers:     return QVariant::fromValue(m_predefinedServers);
@@ -414,7 +410,6 @@ namespace BlackCore::Data
         case IndexSharedUrls:            m_sharedUrls = variant.value<CUrlList>(); break;
         case IndexOnlineHelpUrls:        m_onlineHelpUrls = variant.value<CUrlList>(); break;
         case IndexCrashReportServerUrl:  m_crashReportServerUrl = variant.value<CUrl>(); break;
-        case IndexWasLoadedFromWeb:      m_wasLoadedFromWeb = variant.toBool(); break;
         case IndexWasLoadedFromFile:     m_wasLoadedFromFile = variant.toBool(); break;
         case IndexMappingMinimumVersion: m_mappingMinimumVersion = variant.toString(); break;
         case IndexPredefinedServers:     m_predefinedServers = variant.value<CServerList>(); break;

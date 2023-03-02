@@ -186,7 +186,6 @@ namespace BlackCore
         {
             CGlobalSetup s;
             s.convertFromJson(content);
-            s.markAsLoadedFromWeb(false);
             s.markAsLoadedFromFile(true);
             const CStatusMessage setMsg = m_setup.set(s);
             const CStatusMessage setInfo = CStatusMessage(this).info(u"Setup cache updated from local file '%1'") << fn;
