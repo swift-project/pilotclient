@@ -31,7 +31,6 @@ class Builder:
         Build processes will be called with the environment modified by this function.
         """
         print('Preparing environment ...')
-        self.make_cmd = self._get_make_cmd()
         self._specific_prepare()
 
         print('Updating from datastore ...')
@@ -41,7 +40,7 @@ class Builder:
         shared_path = os.path.abspath(os.path.join(source_path, 'resources', 'share'))
         datastore.update_shared(host, datastore_version, shared_path)
 
-    def build(self, jobs, qmake_args, dev_build):
+    def build(self, jobs, cmake_args, dev_build):
         """
         Run the build itself. Pass dev_build=True to enable a dev build
         """
@@ -51,17 +50,21 @@ class Builder:
             os.makedirs(build_path)
         os.chdir(build_path)
 
-        qmake_call = ['qmake'] + qmake_args
-        if dev_build:
-            qmake_call += ['SWIFT_CONFIG.devBranch=true']
+        cmake_call = ['cmake',
+                      '..',
+                      '-G {}'.format(self._get_generator()),
+                      '-DCMAKE_BUILD_TYPE=RelWithDebInfo',
+                      '-DCMAKE_INSTALL_PREFIX=../dist'] + cmake_args
+        subprocess.check_call(cmake_call, env=dict(os.environ))
 
-        qmake_call += ['-r', os.pardir]
-        subprocess.check_call(qmake_call, env=dict(os.environ))
-
-        if not jobs:
-            jobs = multiprocessing.cpu_count()
-        jobs_arg = '-j{0}'.format(jobs)
-        subprocess.check_call([self.make_cmd, jobs_arg], env=dict(os.environ))
+        # Workaround while using Make for MacOS to pass number of jobs
+        if self.__class__.__name__ == 'MacOSBuilder':
+            subprocess.check_call(["cmake", "--build", ".", "-j3"], env=dict(os.environ))
+        elif self.__class__.__name__ == 'MSVCBuilder':
+            # it seems that ninja does not automatically spawn the correct number of jobs on Windows
+            subprocess.check_call(["cmake", "--build", ".", "-j2"], env=dict(os.environ))
+        else:
+            subprocess.check_call(["cmake", "--build", "."], env=dict(os.environ))
 
     def checks(self):
         """
@@ -74,6 +77,36 @@ class Builder:
             subprocess.check_call([self.make_cmd, 'check', '-j1'], env=dict(os.environ))
             pass
 
+    def create_installer(self):
+        bitrock_builder_bin = os.environ["BITROCK_BUILDER"]
+        os.chdir(self._get_swift_source_path())
+        os_map = {'Linux': 'linux', 'Darwin': 'macos', 'Windows': 'windows'}
+        installer_platform_map = {'Linux': 'linux-x{}'.format(self.word_size), 'Darwin': 'osx', 'Windows': 'windows'}
+        extension_map = {'Linux': 'run', 'Darwin': 'dmg', 'Windows': 'exe'}
+        extension = extension_map[platform.system()]
+        os_name = os_map[platform.system()]
+        version_full = self.__get_swift_version_base()
+        version_rev = self.__get_rev_count()
+        windows64 = 1 if os_name == 'windows' and int(self.word_size) == 64 else 0
+        installer_platform = installer_platform_map[platform.system()]
+
+        subprocess.check_call([bitrock_builder_bin,
+                                "quickbuild",
+                                "installer/installbuilder/project.xml",
+                                "{}".format(installer_platform),
+                                "--verbose",
+                                "--license",
+                                "~/license.xml",
+                                "--setvars",
+                                "project.outputDirectory=build",
+                                "project.installerFilename=swiftinstaller-{}-{}-{}.{}".format(os_name, self.word_size, version_full, extension),
+                                "project.version={}".format(version_full),
+                                "versionFull={}.{}".format(version_full, version_rev),
+                                "project.windows64bitMode={}".format(windows64),
+                                "project.enableDebugger=0",
+                                "architecture={}".format(self.word_size)
+                                ], env=dict(os.environ))
+
     def install(self):
         """
         Installs all products to the default path.
@@ -81,12 +114,11 @@ class Builder:
         print('Running install ...')
         build_path = self._get_swift_build_path()
         os.chdir(build_path)
+        subprocess.check_call(["cmake", "--install", "."], env=dict(os.environ))
+
         if self._should_publish():
-            subprocess.check_call([self.make_cmd, 'create_installer'], env=dict(os.environ))
-            pass
-        else:
-            subprocess.check_call([self.make_cmd, 'install'], env=dict(os.environ))
-            pass
+            self._strip_debug()
+            self.create_installer()
 
     def publish(self):
         if self._should_publish():
@@ -113,7 +145,7 @@ class Builder:
         os_map = {'Linux': 'linux', 'Darwin': 'macos', 'Windows': 'windows'}
         archive_name = '-'.join(['xswiftbus', os_map[platform.system()], self.word_size, self.version]) + '.7z'
         archive_path = path.abspath(path.join(os.pardir, archive_name))
-        content_path = path.abspath(path.join(os.curdir, 'dist', 'xswiftbus'))
+        content_path = path.abspath(path.join(self._get_swift_source_path(), 'dist', 'xswiftbus'))
         subprocess.check_call(['7z', 'a', '-mx=9', archive_path, content_path], env=dict(os.environ))
 
     def symbols(self, upload_symbols):
@@ -128,7 +160,13 @@ class Builder:
             build_path = self._get_swift_build_path()
             os.chdir(build_path)
             print('Creating symbols')
-            binary_path = path.abspath(path.join(build_path, 'out'))
+
+            # Debug symbols for Windows are in the build folder
+            # and for OSX and Linux in dist/install folder (after splitting)
+            if platform.system() == 'Windows':
+                binary_path = path.abspath(path.join(build_path, 'out'))
+            else:
+                binary_path = path.abspath(path.join(self._get_swift_source_path(), 'dist'))
 
             os_map = {'Linux': 'linux', 'Darwin': 'macos', 'Windows': 'windows'}
             tar_filename = '-'.join(
@@ -181,7 +219,7 @@ class Builder:
     def _get_qmake_spec(self):
         raise NotImplementedError()
 
-    def _get_make_cmd(self):
+    def _get_generator(self):
         raise NotImplementedError()
 
     def _should_run_checks(self):
@@ -200,9 +238,10 @@ class Builder:
         self.__source_path = path.abspath(path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
         self.__build_path = path.abspath(path.join(self.__source_path, 'build'))
 
-        swift_project_file = path.join(self.__source_path, 'swift.pro')
-        if not os.path.isfile(swift_project_file):
-            raise RuntimeError('Cannot find swift.pro! Are we in the right directory?')
+        files = os.listdir(self.__source_path)
+        for dir in ['src', 'installer', 'externals']:
+            if dir not in files:
+                raise RuntimeError('Cannot find {} folder! Are we in the right directory?'.format(dir))
 
         self.word_size = word_size
         self.version = self.__get_swift_version()
@@ -270,33 +309,11 @@ class MSVCBuilder(Builder):
     def _get_qmake_spec(self):
         return 'win32-msvc'
 
-    def _get_make_cmd(self):
-        return "C:/ProgramData/chocolatey/lib/jom/tools/jom.exe"
+    def _get_generator(self):
+        return "Ninja"
 
-    def __init__(self, word_size):
-        Builder.__init__(self, word_size)
-
-
-class MinGWBuilder(Builder):
-
-    def _specific_prepare(self):
-        # See comment in MSVCBuilder.
-        os.environ['QT_FORCE_STDERR_LOGGING'] = '1'
-
-    def _get_qmake_spec(self):
-        return 'win32-g++'
-
-    def _get_make_cmd(self):
-        return 'mingw32-make'
-
-    def _should_run_checks(self):
-        return False
-
-    def _should_publish(self):
-        return True
-
-    def _should_create_symbols(self):
-        return False
+    def _strip_debug(self):
+        pass
 
     def __init__(self, word_size):
         Builder.__init__(self, word_size)
@@ -312,8 +329,36 @@ class LinuxBuilder(Builder):
     def _get_qmake_spec(self):
         return 'linux-g++'
 
-    def _get_make_cmd(self):
-        return 'make'
+    def _get_generator(self):
+        return 'Ninja'
+
+    def _strip_debug(self):
+        files = [
+            "bin/swiftcore",
+            "bin/swiftdata",
+            "bin/swiftguistd",
+            "bin/swiftlauncher",
+            "lib/libcore.so",
+            "lib/libgui.so",
+            "lib/libinput.so",
+            "lib/libmisc.so",
+            "lib/libplugincommon.so",
+            "lib/libsound.so",
+            "bin/plugins/simulator/libsimulatoremulated.so",
+            "bin/plugins/simulator/libsimulatoremulatedconfig.so",
+            "bin/plugins/simulator/libsimulatorflightgear.so",
+            "bin/plugins/simulator/libsimulatorflightgearconfig.so",
+            "bin/plugins/simulator/libsimulatorxplane.so",
+            "bin/plugins/simulator/libsimulatorxplaneconfig.so",
+            "bin/plugins/weatherdata/libweatherdatagfs.so",
+            "xswiftbus/64/lin.xpl",
+        ]
+        dist_path = path.join(self._get_swift_source_path(), "dist")
+        for file in files:
+            subprocess.check_call(["objcopy", "--only-keep-debug",
+                                   path.join(dist_path, file),
+                                   path.join(dist_path, file + ".debug")], env=dict(os.environ))
+            subprocess.check_call(["objcopy", "--strip-debug", path.join(dist_path, file)], env=dict(os.environ))
 
     def __init__(self, word_size):
         Builder.__init__(self, word_size)
@@ -328,11 +373,14 @@ class MacOSBuilder(Builder):
     def _get_qmake_spec(self):
         return 'macx-clang'
 
-    def _get_make_cmd(self):
-        return 'make'
+    def _get_generator(self):
+        return 'Unix Makefiles'
 
     def _should_create_symbols(self):
         return True
+
+    def _strip_debug(self):
+        pass # TOOD
 
     def __init__(self, word_size):
         Builder.__init__(self, word_size)
@@ -341,7 +389,7 @@ class MacOSBuilder(Builder):
 def print_help():
     supported_compilers = {'Linux': ['gcc'],
                            'Darwin': ['clang'],
-                           'Windows': ['msvc', 'mingw']
+                           'Windows': ['msvc']
                            }
     compiler_help = '|'.join(supported_compilers[platform.system()])
     print('build.py -w <32|64> -t <' + compiler_help + '> [-v] [-d] [-q <extra qmake argument>]')
@@ -354,7 +402,7 @@ def main(argv):
     dev_build = False
     jobs = None
     upload_symbols = False
-    qmake_args = []
+    cmake_args = []
 
     try:
         opts, args = getopt.getopt(argv, 'hw:t:j:duq:v', ['wordsize=', 'toolchain=', 'jobs=', 'dev', 'upload', 'qmake-arg=', 'version'])
@@ -384,7 +432,7 @@ def main(argv):
         elif opt in ('-u', '--upload'):
             upload_symbols = True
         elif opt in ('-q', '--qmake-arg'):
-            qmake_args += [arg]
+            cmake_args += [arg]
 
     if word_size not in ['32', '64']:
         print('Unsupported word size. Choose 32 or 64')
@@ -396,7 +444,6 @@ def main(argv):
                     'clang': MacOSBuilder},
                 'Windows': {
                     'msvc': MSVCBuilder,
-                    'mingw': MinGWBuilder
                 }
     }
 
@@ -407,8 +454,8 @@ def main(argv):
     builder = builders[platform.system()][tool_chain](word_size)
 
     builder.prepare()
-    builder.build(jobs, qmake_args, dev_build)
-    builder.checks()
+    builder.build(jobs, cmake_args, dev_build)
+    #builder.checks()
     builder.install()
     builder.publish()
     if word_size == '64':

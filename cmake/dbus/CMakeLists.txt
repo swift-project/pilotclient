@@ -1,0 +1,32 @@
+add_library(externals_dbus SHARED IMPORTED GLOBAL)
+
+
+if(UNIX AND NOT APPLE)
+    find_package(PkgConfig REQUIRED)
+    pkg_search_module(DBUS REQUIRED dbus-1)
+    target_include_directories(externals_dbus INTERFACE ${DBUS_INCLUDE_DIRS})
+    set_target_properties(externals_dbus PROPERTIES IMPORTED_LOCATION ${DBUS_LINK_LIBRARIES})
+elseif(SWIFT_WIN32)
+    target_include_directories(externals_dbus INTERFACE ${PROJECT_SOURCE_DIR}/externals/common/include)
+    target_include_directories(externals_dbus INTERFACE ${PROJECT_SOURCE_DIR}/externals/win32-msvc/32/include)
+
+    set_target_properties(externals_dbus PROPERTIES IMPORTED_IMPLIB ${PROJECT_SOURCE_DIR}/externals/win32-msvc/32/lib/dbus-1.lib)
+    set_target_properties(externals_dbus PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/externals/win32-msvc/32/lib/dbus-1-3.dll)
+    install(IMPORTED_RUNTIME_ARTIFACTS externals_dbus DESTINATION xswiftbus/64)
+    install(IMPORTED_RUNTIME_ARTIFACTS externals_dbus DESTINATION bin)
+elseif(SWIFT_WIN64)
+    target_include_directories(externals_dbus INTERFACE ${PROJECT_SOURCE_DIR}/externals/common/include)
+    target_include_directories(externals_dbus INTERFACE ${PROJECT_SOURCE_DIR}/externals/win32-msvc/64/include)
+
+    set_target_properties(externals_dbus PROPERTIES IMPORTED_IMPLIB ${PROJECT_SOURCE_DIR}/externals/win32-msvc/64/lib/dbus-1.lib)
+    set_target_properties(externals_dbus PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/externals/win32-msvc/64/lib/dbus-1-3.dll)
+    install(IMPORTED_RUNTIME_ARTIFACTS externals_dbus DESTINATION xswiftbus/64)
+    install(IMPORTED_RUNTIME_ARTIFACTS externals_dbus DESTINATION bin)
+elseif(APPLE)
+    target_include_directories(externals_dbus INTERFACE ${PROJECT_SOURCE_DIR}/externals/common/include)
+    target_include_directories(externals_dbus INTERFACE ${PROJECT_SOURCE_DIR}/externals/macx-clang/64/include/)
+
+    set_target_properties(externals_dbus PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/externals/macx-clang/64/lib/libdbus-1.dylib)
+    install(IMPORTED_RUNTIME_ARTIFACTS externals_dbus DESTINATION xswiftbus/64)
+    install(IMPORTED_RUNTIME_ARTIFACTS externals_dbus DESTINATION bin)
+endif()

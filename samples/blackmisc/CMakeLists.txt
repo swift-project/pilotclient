@@ -1,0 +1,19 @@
+add_executable(samples_misc
+        main.cpp
+        sampleblackmisc.h
+        samplesalgorithm.cpp
+        samplesalgorithm.h
+        sampleschangeobject.cpp
+        sampleschangeobject.h
+        samplescontainer.cpp
+        samplescontainer.h
+        samplesfile.cpp
+        samplesfile.h
+        samplesjson.cpp
+        samplesjson.h
+        samplesmetadata.cpp
+        samplesmetadata.h
+        samplesperformance.cpp
+        samplesperformance.h
+)
+target_link_libraries(samples_misc core misc Qt::Core)

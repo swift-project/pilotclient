@@ -1,0 +1,19 @@
+add_executable(samples_miscsim
+        main.cpp
+        sampleblackmiscsim.h
+        samplesfscommon.cpp
+        samplesfscommon.h
+        samplesfsuipc.cpp
+        samplesfsuipc.h
+        samplesfsx.cpp
+        samplesfsx.h
+        samplesmodelmapping.cpp
+        samplesmodelmapping.h
+        samplesp3d.cpp
+        samplesp3d.h
+        samplesvpilotrules.cpp
+        samplesvpilotrules.h
+        sampleutils.cpp
+        sampleutils.h
+        )
+target_link_libraries(samples_miscsim core misc Qt::Core)

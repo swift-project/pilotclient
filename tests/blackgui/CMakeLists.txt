@@ -1,0 +1,2 @@
+add_executable(tests_blackgui_guiutility testguiutility/testguiutility.cpp testguiutility/testguiutility.h)
+target_link_libraries(tests_blackgui_guiutility PUBLIC gui tests_test Qt::Core)
