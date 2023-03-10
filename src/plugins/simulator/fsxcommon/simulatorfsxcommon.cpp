@@ -702,7 +702,7 @@ namespace BlackSimPlugin::FsxCommon
 
         for (int index = 0; index < simulatorOwnAircraft.numberOfEngines; ++index)
         {
-            engines.push_back(CAircraftEngine(index + 1, helperList.at(index)));
+            engines.push_back(CAircraftEngine(index + 1, helperList.value(index, true)));
         }
 
         const CAircraftParts parts(lights,
