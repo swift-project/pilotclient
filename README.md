@@ -8,7 +8,7 @@ such as VATSIM, supporting the following simulators and operating systems:
 - Flight Simulator X (Windows)
 - Flight Simulator 2004 (Windows)
 - Flight Simulator 2020 (Windows)
-- X-Plane 11 (Windows, Linux, macOS)
+- X-Plane 11 & 12 (Windows, Linux, macOS)
 - FlightGear (Windows, Linux, macOS)
 
 Downloads
