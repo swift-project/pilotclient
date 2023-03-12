@@ -389,8 +389,6 @@ namespace BlackCore::Fsd
         void handleUnknownPacket(const QStringList &tokens);
         //! @}
 
-        void handleVatsimServerIpResponse(QNetworkReply *nwReplyPtr);
-
         void printSocketError(QAbstractSocket::SocketError socketError);
         void handleSocketError(QAbstractSocket::SocketError socketError);
         void handleSocketConnected();
@@ -479,9 +477,11 @@ namespace BlackCore::Fsd
         // Parser
         QHash<QString, MessageType> m_messageTypeMapping;
 
-        std::unique_ptr<QTcpSocket> m_socket = std::make_unique<QTcpSocket>(this); //!< used TCP socket, parent needed as it runs in worker thread
+        std::shared_ptr<QTcpSocket> m_socket = std::make_shared<QTcpSocket>(this); //!< used TCP socket, parent needed as it runs in worker thread
         void connectSocketSignals();
-        void initiateConnection();
+        void initiateConnection(std::shared_ptr<QTcpSocket> rehostingSocket = {}, const QString &rehostingHost = {});
+        void resolveLoadBalancing(const QString &host, std::function<void(const QString &)> callback);
+        bool m_rehosting = false;
 
         std::atomic_bool m_unitTestMode   { false };
         std::atomic_bool m_printToConsole { false };
@@ -557,11 +557,6 @@ namespace BlackCore::Fsd
         int m_protocolRevision = 0;
         ServerType   m_serverType   = ServerType::LegacyFsd;
         Capabilities m_capabilities = Capabilities::None;
-
-        // Current rehosting
-        QTcpSocket* m_rehosting_socket = nullptr;
-        QString m_rehosting_host = "";
-        bool m_rehosting = false;
 
         // buffered data for FSD
         BlackMisc::Aviation::CCallsign              m_ownCallsign;          //!< "buffered callsign", as this must not change when connected
