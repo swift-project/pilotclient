@@ -483,18 +483,13 @@ jobs:
           echo "result=$result"  >>$GITHUB_ENV
           echo "emoji=$emoji"    >>$GITHUB_ENV
       - name: Prepare Discord release message
-        uses: satackey/action-js-inline@v0.0.2
+        uses: octokit/request-action@v2.x
         if: ${{ needs.release.result == 'success' }}
+        id: release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          script: |
-            const core = require('@actions/core');
-            const github = require('@actions/github');
-            const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
-            const query = { owner: 'swift-project', repo: 'pilotclient', release_id: ${{ needs.release.outputs.id }} };
-            const release = await octokit.rest.repos.getRelease(query);
-            core.exportVariable('url', release.data.html_url);
+          route: GET /repos/swift-project/pilotclient/releases/${{ needs.release.outputs.id }}
       - name: Send Discord build message
         run: |
           cat >message <<EOF
@@ -510,7 +505,7 @@ jobs:
         run: |
           cat >message <<EOF
           > :package: Created draft release \`v${{ needs.preBuild.outputs.version }}\`
-          > <${{ env.url }}>
+          > <${{ fromJson(steps.release.outputs.data).html_url }}>
           EOF
           jo content=@message | curl -i -H "Accept: application/json" -H "Content-Type: application/json" $WEBHOOK -d @-
         env:
