@@ -183,6 +183,7 @@ namespace BlackMisc::Aviation
     {
         if (freq1.isNull() || freq2.isNull()) { return false; }
         if (freq1 == freq2) { return true; } // shortcut for many of such comparisons
+        if (freq1.valueInteger(CFrequencyUnit::kHz()) == freq2.valueInteger(CFrequencyUnit::kHz())) { return true; }
         // .x20 == .x25 and .x70 == .x75
         const int freq1End = static_cast<int>(freq1.value(CFrequencyUnit::kHz())) % 100;
         const int freq2End = static_cast<int>(freq2.value(CFrequencyUnit::kHz())) % 100;
