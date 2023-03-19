@@ -71,6 +71,7 @@ namespace BlackMisc::PhysicalQuantities
         m_value(unit.isNull() ? 0.0 : value), m_unit(unit)
     {
         Q_ASSERT_X(!std::isnan(value), Q_FUNC_INFO, "nan value");
+        Q_ASSERT_X(!std::isinf(value), Q_FUNC_INFO, "infinity");
     }
 
     template <class MU, class PQ>
