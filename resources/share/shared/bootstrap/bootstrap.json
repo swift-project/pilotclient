@@ -55,7 +55,7 @@
                 "url": "https://data.vatsim.net/v3/vatsim-servers.json"
     },
     "vatsimFsdHttpUrl": {
-        "url": "http://fsd-http.connect.vatsim.net"
+        "url": "http://fsd.vatsim.net"
     },
     "vatsimMetarsUrls": {
         "containerbase": [
