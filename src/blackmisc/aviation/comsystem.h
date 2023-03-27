@@ -85,8 +85,17 @@ namespace BlackMisc::Aviation
         //! \remarks will be rounded to channel spacing
         void setFrequencyStandby(const PhysicalQuantities::CFrequency &frequency);
 
-        //! Is active frequency the same frequency
-        bool isActiveFrequencySameFrequency(const PhysicalQuantities::CFrequency &comFrequency) const;
+        //! Is active frequency within 8.3383kHz channel?
+        bool isActiveFrequencyWithin8_33kHzChannel(const PhysicalQuantities::CFrequency &comFrequency) const;
+
+        //! Is active frequency within 25kHz channel?
+        bool isActiveFrequencyWithin25kHzChannel(const PhysicalQuantities::CFrequency &comFrequency) const;
+
+        //! Is active frequency within 25kHz channel?
+        bool isActiveFrequencyWithin50kHzChannel(const PhysicalQuantities::CFrequency &comFrequency) const;
+
+        //! Is active frequency within the channel spacing?
+        bool isActiveFrequencyWithinChannelSpacing(const PhysicalQuantities::CFrequency &comFrequency) const;
 
         //! Set UNICOM frequency as active
         void setActiveUnicom();
@@ -127,24 +136,10 @@ namespace BlackMisc::Aviation
         static void roundToChannelSpacing(PhysicalQuantities::CFrequency &frequency,
                                             ChannelSpacing channelSpacing);
 
-        //! Compare frequencies under consideration that on VATSIM
-        //! frequencies .x20/.x25 and .x70/.x75 are the same
-        static bool isSameFrequency(const PhysicalQuantities::CFrequency &freq1,
-                                            const PhysicalQuantities::CFrequency &freq2);
-
-        //! Is passed frequency in kHz a valid 8.33 channel. This does not check if
-        //! the frequency is within the correct bounds.
-        static bool isValid8_33kHzChannel(int fKHz);
-
-        //! Round passed frequency in kHz to 8.33 frequency spacing
-        static int round8_33kHzChannel(int fKHz);
-
-        //! Is frequency a "new" 8.33 kHz frequency and not within 25 kHz spacing
-        //! E.g. returns false for 122.825 but true for 118.305
-        static bool isExclusiveWithin8_33kHzChannel(const PhysicalQuantities::CFrequency &freq);
-
-        //! Is frequency within 25 kHz frequency spacing
-        static bool isWithin25kHzChannel(const PhysicalQuantities::CFrequency &freq);
+        //! Is compareFrequency within channel spacing of setFrequency
+        static bool isWithinChannelSpacing(const PhysicalQuantities::CFrequency &setFrequency,
+                                            const PhysicalQuantities::CFrequency &compareFrequency,
+                                            ChannelSpacing channelSpacing);
 
         //! Parses almost any shitty string to a valid COM frequency
         static PhysicalQuantities::CFrequency parseComFrequency(const QString &input, PhysicalQuantities::CPqString::SeparatorMode sep);
@@ -153,7 +148,7 @@ namespace BlackMisc::Aviation
         static void registerMetadata();
 
     private:
-        ChannelSpacing m_channelSpacing = ChannelSpacing8_33KHz; //!< channel spacing
+        ChannelSpacing m_channelSpacing = ChannelSpacing25KHz; //!< channel spacing
 
         //! Give me channel spacing in KHz
         //! \remarks Just a helper method, that is why no CFrequency is returned

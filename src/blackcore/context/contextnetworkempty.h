@@ -75,9 +75,10 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextNetwork::getOnlineStationsForFrequency
-        virtual BlackMisc::Aviation::CAtcStationList getOnlineStationsForFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency) const override
+        virtual BlackMisc::Aviation::CAtcStationList getOnlineStationsForFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ChannelSpacing channelSpacing) const override
         {
             Q_UNUSED(frequency)
+            Q_UNUSED(channelSpacing)
             logEmptyContextWarning(Q_FUNC_INFO);
             return BlackMisc::Aviation::CAtcStationList();
         }

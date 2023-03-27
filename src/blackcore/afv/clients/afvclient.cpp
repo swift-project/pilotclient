@@ -13,7 +13,6 @@
 #include "blackcore/application.h"
 #include "blacksound/audioutilities.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
-#include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/verify.h"
@@ -1337,15 +1336,14 @@ namespace BlackCore::Afv::Clients
         // change to aliased frequency if needed
         {
             QMutexLocker lock(&m_mutex);
-            CFrequency roundedFrequency(static_cast<int>(roundedFrequencyHz), CFrequencyUnit::Hz());
-            const auto it = std::find_if(m_aliasedStations.constBegin(), m_aliasedStations.constEnd(), [roundedFrequency](const StationDto & d)
+            const auto it = std::find_if(m_aliasedStations.constBegin(), m_aliasedStations.constEnd(), [roundedFrequencyHz](const StationDto & d)
             {
-                if (d.frequencyAliasHz > 100000000 && roundedFrequency.value(CFrequencyUnit::Hz()) > 100000000) // both VHF
+                if (d.frequencyAliasHz > 100000000 && roundedFrequencyHz > 100000000) // both VHF
                 {
-                    const int aliasedFreqHz = static_cast<int>(qRound(d.frequencyAliasHz / 1000.0)) * 1000;
-                    return CComSystem::isSameFrequency(CFrequency(aliasedFreqHz, CFrequencyUnit::Hz()), roundedFrequency);
+                    // disregard 6th digit (e.g. 132.070 == 132.075)
+                    return (d.frequencyAliasHz / 10000 * 10000) == (roundedFrequencyHz / 10000 * 10000);
                 }
-                return d.frequencyAliasHz == roundedFrequency.value(CFrequencyUnit::Hz());
+                return d.frequencyAliasHz == roundedFrequencyHz;
             });
 
             if (it != m_aliasedStations.constEnd())
@@ -1353,8 +1351,10 @@ namespace BlackCore::Afv::Clients
                 if (sApp && sApp->getIContextNetwork())
                 {
                     // Get the callsign for this frequency and fuzzy compare with our alias station
+                    // !\todo KB 2019-10 replace by COM unit channel spacing
+                    const CComSystem::ChannelSpacing spacing = CComSystem::ChannelSpacing25KHz;
                     const CFrequency f(static_cast<int>(roundedFrequencyHz), CFrequencyUnit::Hz());
-                    const CAtcStationList matchingAtcStations = sApp->getIContextNetwork()->getOnlineStationsForFrequency(f);
+                    const CAtcStationList matchingAtcStations = sApp->getIContextNetwork()->getOnlineStationsForFrequency(f, spacing);
                     const CAtcStation closest = matchingAtcStations.findClosest(1, sApp->getIContextOwnAircraft()->getOwnAircraftSituation().getPosition()).frontOrDefault();
 
                     if (fuzzyMatchCallsign(it->name, closest.getCallsign().asString()))

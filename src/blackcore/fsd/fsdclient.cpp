@@ -626,7 +626,7 @@ namespace BlackCore::Fsd
         for (const auto &message : radioMessages)
         {
             // Adjust to nearest frequency, in case of 5kHz difference
-            const CAtcStationList stations = m_atcStations.findIfFrequencyIsWithinSpacing(message.getFrequency());
+            const CAtcStationList stations = m_atcStations.findIfFrequencyIsWithinSpacing(message.getFrequency(), CComSystem::ChannelSpacing25KHz);
             const CFrequency freq = stations.isEmpty() ? message.getFrequency() : stations.findClosest(1, getOwnAircraftPosition()).front().getFrequency();
 
             // I could send the same message to n frequencies in one step
@@ -1213,7 +1213,8 @@ namespace BlackCore::Fsd
             for (int freqKhz : textMessage.m_frequencies)
             {
                 CFrequency f(freqKhz, CFrequencyUnit::kHz());
-                CComSystem::roundToChannelSpacing(f, CComSystem::ChannelSpacing8_33KHz);
+                // VATSIM always drops the last 5 kHz. So round it to the correct channel spacing.
+                CComSystem::roundToChannelSpacing(f, CComSystem::ChannelSpacing25KHz);
                 if (f == com1 || f == com2)
                 {
                     frequencies.push_back(f);

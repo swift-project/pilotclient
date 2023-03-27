@@ -448,8 +448,9 @@ namespace BlackGui::Components
         CAtcStationList f2Stations;
         if (sGui && sGui->getIContextNetwork())
         {
-            f1Stations = sGui->getIContextNetwork()->getOnlineStationsForFrequency(freq1);
-            f2Stations = sGui->getIContextNetwork()->getOnlineStationsForFrequency(freq2);
+            const CComSystem::ChannelSpacing spacing = CComSystem::ChannelSpacing25KHz;
+            f1Stations = sGui->getIContextNetwork()->getOnlineStationsForFrequency(freq1, spacing);
+            f2Stations = sGui->getIContextNetwork()->getOnlineStationsForFrequency(freq2, spacing);
         }
 
         const QString f1n = QString::asprintf("%03.3f", freq1.valueRounded(CFrequencyUnit::MHz(), 3));
@@ -632,11 +633,11 @@ namespace BlackGui::Components
         if (!station.getCallsign().isEmpty())
         {
             const CSimulatedAircraft ownAircraft(this->getOwnAircraft());
-            if (ownAircraft.getCom1System().isActiveFrequencySameFrequency(station.getFrequency()))
+            if (ownAircraft.getCom1System().isActiveFrequencyWithinChannelSpacing(station.getFrequency()))
             {
                 return this->getTabWidget(TextMessagesCom1);
             }
-            else if (ownAircraft.getCom2System().isActiveFrequencySameFrequency(station.getFrequency()))
+            else if (ownAircraft.getCom2System().isActiveFrequencyWithinChannelSpacing(station.getFrequency()))
             {
                 return this->getTabWidget(TextMessagesCom2);
             }

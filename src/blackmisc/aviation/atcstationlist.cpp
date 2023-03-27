@@ -29,11 +29,19 @@ namespace BlackMisc::Aviation
         CSequence<CAtcStation>(other)
     { }
 
+    CAtcStationList CAtcStationList::findIfComUnitTunedIn25KHz(const CComSystem &comUnit) const
+    {
+        return this->findBy([&](const CAtcStation & atcStation)
+        {
+            return atcStation.isComUnitTunedIn25KHz(comUnit);
+        });
+    }
+
     CAtcStationList CAtcStationList::findIfComUnitTunedInChannelSpacing(const CComSystem &comUnit) const
     {
         return this->findBy([&](const CAtcStation & atcStation)
         {
-            return atcStation.isComUnitTunedToFrequency(comUnit);
+            return atcStation.isComUnitTunedInChannelSpacing(comUnit);
         });
     }
 
@@ -41,16 +49,16 @@ namespace BlackMisc::Aviation
     {
         return this->containsBy([&](const CAtcStation & atcStation)
         {
-            return atcStation.isComUnitTunedToFrequency(comUnit);
+            return atcStation.isComUnitTunedInChannelSpacing(comUnit);
         });
     }
 
-    CAtcStationList CAtcStationList::findIfFrequencyIsWithinSpacing(const CFrequency &frequency)
+    CAtcStationList CAtcStationList::findIfFrequencyIsWithinSpacing(const CFrequency &frequency, CComSystem::ChannelSpacing spacing)
     {
         if (frequency.isNull()) { return CAtcStationList(); }
         return this->findBy([&](const CAtcStation & atcStation)
         {
-            return atcStation.isAtcStationFrequency(frequency);
+            return atcStation.isFrequencyWithinChannelSpacing(frequency, spacing);
         });
     }
 

@@ -197,11 +197,14 @@ namespace BlackMisc::Aviation
         //! Booked now?
         bool isBookedNow() const;
 
-        //! Is Com unit tuned to this stations frequency
-        bool isComUnitTunedToFrequency(const Aviation::CComSystem &comUnit) const;
+        //! Tuned in within 25KHz channel spacing
+        bool isComUnitTunedIn25KHz(const Aviation::CComSystem &comUnit) const;
 
-        //! Is passed frequency the frequency of this station
-        bool isAtcStationFrequency(const PhysicalQuantities::CFrequency &frequency) const;
+        //! Tuned in within channel spacing
+        bool isComUnitTunedInChannelSpacing(const Aviation::CComSystem &comUnit) const;
+
+        //! Is frequency within channel spacing
+        bool isFrequencyWithinChannelSpacing(const PhysicalQuantities::CFrequency &frequency, CComSystem::ChannelSpacing spacing) const;
 
         //! When booked, 0 means now,
         //! negative values mean booking in past,

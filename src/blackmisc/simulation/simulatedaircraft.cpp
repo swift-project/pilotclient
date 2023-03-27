@@ -563,10 +563,22 @@ namespace BlackMisc::Simulation
         m_pilot.setCallsign(callsign);
     }
 
-    bool CSimulatedAircraft::hasComActiveFrequency(const CFrequency &comFrequency) const
+    bool CSimulatedAircraft::isActiveFrequencyWithin8_33kHzChannel(const CFrequency &comFrequency) const
     {
-        return m_com1system.isActiveFrequencySameFrequency(comFrequency) ||
-                m_com2system.isActiveFrequencySameFrequency(comFrequency);
+        return m_com1system.isActiveFrequencyWithin8_33kHzChannel(comFrequency) ||
+                m_com2system.isActiveFrequencyWithin8_33kHzChannel(comFrequency);
+    }
+
+    bool CSimulatedAircraft::isActiveFrequencyWithin25kHzChannel(const CFrequency &comFrequency) const
+    {
+        return m_com1system.isActiveFrequencyWithin25kHzChannel(comFrequency) ||
+                m_com2system.isActiveFrequencyWithin25kHzChannel(comFrequency);
+    }
+
+    bool CSimulatedAircraft::isActiveFrequencyWithinChannelSpacing(const CFrequency &comFrequency) const
+    {
+        return m_com1system.isActiveFrequencyWithinChannelSpacing(comFrequency) ||
+                m_com2system.isActiveFrequencyWithinChannelSpacing(comFrequency);
     }
 
     bool CSimulatedAircraft::setTransponderMode(CTransponder::TransponderMode mode)

@@ -211,7 +211,7 @@ namespace BlackCore::Context
         virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
         //! Online stations for frequency
-        virtual BlackMisc::Aviation::CAtcStationList getOnlineStationsForFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency) const = 0;
+        virtual BlackMisc::Aviation::CAtcStationList getOnlineStationsForFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ChannelSpacing channelSpacing) const = 0;
 
         //! Online station for callsign?
         virtual bool isOnlineStation(const BlackMisc::Aviation::CCallsign &callsign) const = 0;

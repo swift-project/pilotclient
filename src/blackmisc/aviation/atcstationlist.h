@@ -45,14 +45,17 @@ namespace BlackMisc::Aviation
         //! Construct from a base class object.
         CAtcStationList(const CSequence<CAtcStation> &other);
 
+        //! Find 0..n stations tuned in frequency of COM unit (with 25kHz channel spacing)
+        CAtcStationList findIfComUnitTunedIn25KHz(const CComSystem &comUnit) const;
+
         //! Find 0..n stations tuned in frequency of COM unit (with channel spacing)
         CAtcStationList findIfComUnitTunedInChannelSpacing(const CComSystem &comUnit) const;
 
         //! Any stations tuned in frequency of COM unit (with channel spacing)
         bool hasComUnitTunedInChannelSpacing(const CComSystem &comUnit) const;
 
-        //! Find 0..n stations with frequency (with 5 kHz spacing for .x20/.x25 and .x70/.x75)
-        CAtcStationList findIfFrequencyIsWithinSpacing(const PhysicalQuantities::CFrequency &frequency);
+        //! Find 0..n stations within channel spacing
+        CAtcStationList findIfFrequencyIsWithinSpacing(const PhysicalQuantities::CFrequency &frequency, CComSystem::ChannelSpacing spacing);
 
         //! Update if message changed
         bool updateIfMessageChanged(const CInformationMessage &im, const CCallsign &callsign, bool overrideWithNewer);

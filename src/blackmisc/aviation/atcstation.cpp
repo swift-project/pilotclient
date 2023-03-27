@@ -280,14 +280,19 @@ namespace BlackMisc::Aviation
         return true;
     }
 
-    bool CAtcStation::isComUnitTunedToFrequency(const CComSystem &comUnit) const
+    bool CAtcStation::isComUnitTunedIn25KHz(const CComSystem &comUnit) const
     {
-        return comUnit.isActiveFrequencySameFrequency(this->getFrequency());
+        return comUnit.isActiveFrequencyWithin25kHzChannel(this->getFrequency());
     }
 
-    bool CAtcStation::isAtcStationFrequency(const CFrequency &frequency) const
+    bool CAtcStation::isComUnitTunedInChannelSpacing(const CComSystem &comUnit) const
     {
-        return CComSystem::isSameFrequency(frequency, this->getFrequency());
+        return comUnit.isActiveFrequencyWithinChannelSpacing(this->getFrequency());
+    }
+
+    bool CAtcStation::isFrequencyWithinChannelSpacing(const CFrequency &frequency, CComSystem::ChannelSpacing spacing) const
+    {
+        return CComSystem::isWithinChannelSpacing(frequency, this->getFrequency(), spacing);
     }
 
     CTime CAtcStation::bookedWhen() const

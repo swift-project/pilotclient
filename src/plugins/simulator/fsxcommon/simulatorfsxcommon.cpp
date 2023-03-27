@@ -143,31 +143,6 @@ namespace BlackSimPlugin::FsxCommon
         return this->physicallyAddRemoteAircraftImpl(newRemoteAircraft, ExternalCall);
     }
 
-    bool CSimulatorFsxCommon::updateCOMFromSwiftToSimulator(const CFrequency &newFreq, const CFrequency &lastSimFreq, CFrequency &last25kHzSimFreq, EventIds id)
-    {
-        if (newFreq == lastSimFreq) { return false; }
-
-        if (CComSystem::isExclusiveWithin8_33kHzChannel(newFreq) && last25kHzSimFreq.isNull())
-        {
-            // Switch from 25 to 8.33
-            // Store last 25 kHz frequency and do not send to simulator
-            last25kHzSimFreq = lastSimFreq;
-            return false;
-        }
-
-        if (CComSystem::isWithin25kHzChannel(newFreq))
-        {
-            // Send to simulator
-            last25kHzSimFreq.setNull();
-            SimConnect_TransmitClientEvent(m_hSimConnect, 0, id,
-                CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-            return true;
-        }
-
-        // Already 8.33 -> nothing to do
-        return false;
-    }
-
     bool CSimulatorFsxCommon::updateOwnSimulatorCockpit(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
     {
         if (originator == this->identifier()) { return false; }
@@ -179,11 +154,43 @@ namespace BlackSimPlugin::FsxCommon
         const CTransponder newTransponder = ownAircraft.getTransponder();
 
         bool changed = false;
+        if (newCom1.getFrequencyActive() != m_simCom1.getFrequencyActive())
+        {
+            const CFrequency newFreq = newCom1.getFrequencyActive();
+            SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom1Active,
+                                            CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            changed = true;
 
-        changed |= updateCOMFromSwiftToSimulator(newCom1.getFrequencyActive(), m_simCom1.getFrequencyActive(), m_lastCom1Active, EventSetCom1Active);
-        changed |= updateCOMFromSwiftToSimulator(newCom1.getFrequencyStandby(), m_simCom1.getFrequencyStandby(), m_lastCom1Standby, EventSetCom1Standby);
-        changed |= updateCOMFromSwiftToSimulator(newCom2.getFrequencyActive(), m_simCom2.getFrequencyActive(), m_lastCom2Active, EventSetCom2Active);
-        changed |= updateCOMFromSwiftToSimulator(newCom2.getFrequencyStandby(), m_simCom2.getFrequencyStandby(), m_lastCom2Standby, EventSetCom2Standby);
+        }
+        if (newCom1.getFrequencyStandby() != m_simCom1.getFrequencyStandby())
+        {
+            const CFrequency newFreq = newCom1.getFrequencyStandby();
+            SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom1Standby,
+                                            CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            changed = true;
+        }
+
+        if (newCom2.getFrequencyActive() != m_simCom2.getFrequencyActive())
+        {
+            const CFrequency newFreq = newCom2.getFrequencyActive();
+            SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom2Active,
+                                            CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            changed = true;
+        }
+        if (newCom2.getFrequencyStandby() != m_simCom2.getFrequencyStandby())
+        {
+            const CFrequency newFreq = newCom2.getFrequencyStandby();
+            SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom2Standby,
+                                            CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            changed = true;
+        }
+
+        if (newTransponder.getTransponderCode() != m_simTransponder.getTransponderCode())
+        {
+            SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTransponderCode,
+                                            CBcdConversions::transponderCodeToBcd(newTransponder), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            changed = true;
+        }
 
         if (newTransponder.getTransponderMode() != m_simTransponder.getTransponderMode())
         {
@@ -738,31 +745,7 @@ namespace BlackSimPlugin::FsxCommon
             const int  com1Status    = qRound(simulatorOwnAircraft.comStatus1); // Radio status flag : -1 =Invalid 0 = OK 1 = Does not exist 2 = No electricity 3 = Failed
             com1.setTransmitEnabled(com1Status == 0 && com1Transmit);
             com1.setReceiveEnabled(com1Status == 0 && (comReceiveAll || com1Transmit));
-
-            const bool changedCom1Active = myAircraft.getCom1System().getFrequencyActive() != com1.getFrequencyActive() && com1.getFrequencyActive() != m_lastCom1Active;
-            const bool changedCom1Standby = myAircraft.getCom1System().getFrequencyStandby() != com1.getFrequencyStandby() && com1.getFrequencyStandby() != m_lastCom1Standby;
-
-            // Avoid overwrite of 8.33 kHz frequency with data from simulator
-            if (!changedCom1Active)
-            {
-                com1.setFrequencyActive(myAircraft.getCom1System().getFrequencyActive());
-            }
-            else
-            {
-                m_lastCom1Active.setNull();
-            }
-
-            if (!changedCom1Standby)
-            {
-                com1.setFrequencyStandby(myAircraft.getCom1System().getFrequencyStandby());
-            }
-            else
-            {
-                m_lastCom1Standby.setNull();
-            }
-
             const bool changedCom1 = myAircraft.getCom1System() != com1;
-
             m_simCom1 = com1;
             Q_UNUSED(com1Test)
 
@@ -773,30 +756,7 @@ namespace BlackSimPlugin::FsxCommon
             const int  com2Status   = qRound(simulatorOwnAircraft.comStatus2); // Radio status flag : -1 =Invalid 0 = OK 1 = Does not exist 2 = No electricity 3 = Failed
             com2.setTransmitEnabled(com2Status == 0 && com2Transmit);
             com2.setReceiveEnabled(com2Status == 0 && (comReceiveAll || com2Transmit));
-            const bool changedCom2Active = myAircraft.getCom2System().getFrequencyActive() != com2.getFrequencyActive() && com2.getFrequencyActive() != m_lastCom2Active;
-            const bool changedCom2Standby = myAircraft.getCom2System().getFrequencyStandby() != com2.getFrequencyStandby() && com2.getFrequencyStandby() != m_lastCom2Standby;
-
-            // Avoid overwrite of 8.33 kHz frequency with data from simulator
-            if (!changedCom2Active)
-            {
-                com2.setFrequencyActive(myAircraft.getCom2System().getFrequencyActive());
-            }
-            else
-            {
-                m_lastCom2Active.setNull();
-            }
-
-            if (!changedCom2Standby)
-            {
-                com2.setFrequencyStandby(myAircraft.getCom2System().getFrequencyStandby());
-            }
-            else
-            {
-                m_lastCom2Standby.setNull();
-            }
-
             const bool changedCom2 = myAircraft.getCom2System() != com2;
-
             m_simCom2 = com2;
             Q_UNUSED(com2Test)
 

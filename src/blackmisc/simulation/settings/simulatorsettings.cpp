@@ -493,11 +493,11 @@ namespace BlackMisc::Simulation::Settings
             const CFrequency f(msg.getFrequency());
             if (mt.testFlag(TextMessagesCom1))
             {
-                if (aircraft.getCom1System().isActiveFrequencySameFrequency(f)) { return true; }
+                if (aircraft.getCom1System().isActiveFrequencyWithin8_33kHzChannel(f)) { return true; }
             }
             if (mt.testFlag(TextMessagesCom2))
             {
-                if (aircraft.getCom2System().isActiveFrequencySameFrequency(f)) { return true; }
+                if (aircraft.getCom2System().isActiveFrequencyWithin8_33kHzChannel(f)) { return true; }
             }
         }
         return false;

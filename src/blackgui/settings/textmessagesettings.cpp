@@ -66,7 +66,7 @@ namespace BlackGui::Settings
         if (textMessage.isRadioMessage())
         {
             if (!this->popupFrequencyMessages()) { return false; }
-            if (ownAircraft.hasComActiveFrequency(textMessage.getFrequency())) { return true; }
+            if (ownAircraft.isActiveFrequencyWithinChannelSpacing(textMessage.getFrequency())) { return true; }
         }
         return false;
     }
