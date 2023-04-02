@@ -43,12 +43,12 @@
 
 // clazy:excludeall=const-signal-or-slot
 
+//! \ingroup dbus
 //! DBus interface for context
-//! \addtogroup dbus
 #define BLACKCORE_CONTEXTAUDIO_INTERFACENAME "org.swift_project.blackcore.contextaudio"
 
+//! \ingroup dbus
 //! DBus object path for context
-//! \addtogroup dbus
 #define BLACKCORE_CONTEXTAUDIO_OBJECTPATH "/audio"
 
 class QDBusConnection;
@@ -255,7 +255,7 @@ namespace BlackCore
 
             //! \cond
             //! Parse command line
-            //! \addtogroup swiftdotcommands
+            //! \ingroup swiftdotcommands
             //! <pre>
             //! .mute                          mute             BlackCore::Context::CContextAudioBase
             //! .unmute                        unmute           BlackCore::Context::CContextAudioBase

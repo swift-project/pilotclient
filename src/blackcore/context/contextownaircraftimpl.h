@@ -176,7 +176,7 @@ namespace BlackCore
             //! \copydoc IContextOwnAircraft::setTransponderMode
             virtual bool setTransponderMode(BlackMisc::Aviation::CTransponder::TransponderMode mode) override;
 
-            //! \addtogroup swiftdotcommands
+            //! \ingroup swiftdotcommands
             //! <pre>
             //! .x    .xpdr  code       set transponder code    BlackCore::Context::CContextOwnAircraft
             //! .x    .xpdr  mode       set transponder mode    BlackCore::Context::CContextOwnAircraft

@@ -85,21 +85,41 @@ namespace BlackMisc
         public Mixin::Icon<CSequence<T>>
     {
     public:
-        //! @{
         //! STL compatibility
         typedef T key_type;
+
+        //! STL compatilibty
         typedef T value_type;
+
+        //! STL compatibility
         typedef T &reference;
+
+        //! STL compatibility
         typedef const T &const_reference;
+
+        //! STL compatibility
         typedef T *pointer;
+
+        //! STL compatibility
         typedef const T *const_pointer;
+
+        //! STL compatibility
         typedef typename QVector<T>::const_iterator const_iterator;
+
+        //! STL compatibility
         typedef typename QVector<T>::iterator iterator;
+
+        //! STL compatibility
         typedef typename QVector<T>::const_reverse_iterator const_reverse_iterator;
+
+        //! STL compatibility
         typedef typename QVector<T>::reverse_iterator reverse_iterator;
+
+        //! STL compatibility
         typedef ptrdiff_t difference_type;
+
+        //! STL compatibility
         typedef int size_type;
-        //! @}
 
         //! Default constructor.
         CSequence() = default;
@@ -107,11 +127,11 @@ namespace BlackMisc
         //! Initializer list constructor.
         CSequence(std::initializer_list<T> il) : m_impl(il) {}
 
-        //! @{
         //! By QVector of type T.
         CSequence(const QVector<T> &vector) : m_impl(vector) {}
+
+        //! By QVector of type T.
         CSequence(QVector<T> &&vector) : m_impl(std::move(vector)) {}
-        //! @}
 
         //! By QList of type T.
         CSequence(const QList<T> &list) : m_impl(list.toVector()) {}
@@ -135,11 +155,11 @@ namespace BlackMisc
         //! Destructor.
         ~CSequence() = default;
 
-        //! @{
         //! Copy of internal vector.
         QVector<T> toVector() const & { return m_impl; }
+
+        //! Copy of internal vector.
         QVector<T> toVector() && { return std::move(m_impl); }
-        //! @}
 
         //! Returns iterator at the beginning of the sequence.
         iterator begin() { return m_impl.begin(); }

@@ -81,12 +81,26 @@ namespace BlackGui::Components
     protected:
         //! \name Base class events
         //! @{
+
+        //! \copydoc QDialog::mouseMoveEvent
         virtual void mouseMoveEvent(QMouseEvent *event) override;
+
+        //! \copydoc QDialog::mousePressEvent
         virtual void mousePressEvent(QMouseEvent *event) override;
+
+        //! \copydoc QDialog::mouseReleaseEvent
         virtual void mouseReleaseEvent(QMouseEvent *event) override;
+
+        //! \copydoc QDialog::changeEvent
         virtual void changeEvent(QEvent *evt) override;
+
+        //! \copydoc CEnableForFramelessWindow::windowFlagsChanged
         virtual void windowFlagsChanged() override;
+
+        //! \copydoc QDialog::paintEvent
         virtual void paintEvent(QPaintEvent *event) override;
+
+        //! \copydoc QDialog::enterEvent
         virtual void enterEvent(QEvent *event) override;
         //! @}
 

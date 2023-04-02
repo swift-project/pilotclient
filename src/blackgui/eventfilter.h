@@ -21,6 +21,7 @@ namespace BlackGui
         Q_OBJECT
 
     public:
+        //! \copydoc QObject::QObject
         using QObject::QObject;
 
         //! Not allowed characters

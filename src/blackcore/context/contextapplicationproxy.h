@@ -49,24 +49,61 @@ namespace BlackCore
             virtual ~CContextApplicationProxy() override {}
 
         public slots:
+            //! \copydoc BlackCore::Context::IContextApplication::changeSettings
             virtual void changeSettings(const BlackMisc::CValueCachePacket &settings, const BlackMisc::CIdentifier &origin) override;
+
+            //! \copydoc BlackCore::Context::IContextApplication::getAllSettings
             virtual BlackMisc::CValueCachePacket getAllSettings() const override;
+
+            //! \copydoc BlackCore::Context::IContextApplication::getUnsavedSettingsKeys
             virtual QStringList getUnsavedSettingsKeys() const override;
+
+            //! \copydoc BlackCore::Context::IContextApplication::getUnsavedSettingsKeysDescribed
             virtual BlackCore::Context::CSettingsDictionary getUnsavedSettingsKeysDescribed() const override;
+
+            //! \copydoc BlackCore::Context::IContextApplication::synchronizeLocalSettings
             virtual void synchronizeLocalSettings() override;
+
+            //! \copydoc BlackCore::Context::IContextApplication::saveSettings
             virtual BlackMisc::CStatusMessage saveSettings(const QString &keyPrefix = {}) override;
+
+            //! \copydoc BlackCore::Context::IContextApplication::saveSettingsByKey
             virtual BlackMisc::CStatusMessage saveSettingsByKey(const QStringList &keys) override;
+
+            //! \copydoc BlackCore::Context::IContextApplication::loadSettings
             virtual BlackMisc::CStatusMessage loadSettings() override;
+
+            //! \copydoc BlackCore::Context::IContextApplication::registerHotkeyActions
             virtual void registerHotkeyActions(const QStringList &actions, const BlackMisc::CIdentifier &origin) override;
+
+            //! \copydoc BlackCore::Context::IContextApplication::callHotkeyActionRemotely
             virtual void callHotkeyActionRemotely(const QString &action, bool argument, const BlackMisc::CIdentifier &origin) override;
+
+            //! \copydoc BlackCore::Context::IContextApplication::registerApplication
             virtual BlackMisc::CIdentifier registerApplication(const BlackMisc::CIdentifier &application) override;
+
+            //! \copydoc BlackCore::Context::IContextApplication::unregisterApplication
             virtual void unregisterApplication(const BlackMisc::CIdentifier &application) override;
+
+            //! \copydoc BlackCore::Context::IContextApplication::getRegisteredApplications
             virtual BlackMisc::CIdentifierList getRegisteredApplications() const override;
+
+            //! \copydoc BlackCore::Context::IContextApplication::getApplicationIdentifier
             virtual BlackMisc::CIdentifier getApplicationIdentifier() const override;
+
+            //! \copydoc BlackCore::Context::IContextApplication::writeToFile
             virtual bool writeToFile(const QString &fileName, const QString &content) override;
+
+            //! \copydoc BlackCore::Context::IContextApplication::readFromFile
             virtual QString readFromFile(const QString &fileName) const override;
+
+            //! \copydoc BlackCore::Context::IContextApplication::removeFile
             virtual bool removeFile(const QString &fileName) override;
+
+            //! \copydoc BlackCore::Context::IContextApplication::existsFile
             virtual bool existsFile(const QString &fileName) const override;
+
+            //! \copydoc BlackCore::Context::IContextApplication::dotCommandsHtmlHelp
             virtual QString dotCommandsHtmlHelp() const override;
 
             //! Used to test if there is a core running?

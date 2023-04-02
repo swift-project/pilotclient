@@ -98,17 +98,26 @@ namespace BlackMisc
         //! The implementation container
         using impl_type = Impl<Key, Value>;
 
-        //! @{
         //! STL compatibility
         typedef Key key_type;
+
+        //! STL compatibility
         typedef Value value_type;
+
+        //! STL compatibility
         typedef Value &reference;
+
+        //! STL compatibility
         typedef const Value &const_reference;
+
+        //! STL compatibility
         typedef typename Impl<Key, Value>::size_type size_type;
 
+        //! STL compatibility
         typedef typename Impl<Key, Value>::iterator iterator;
+
+        //! STL compatibility
         typedef typename Impl<Key, Value>::const_iterator const_iterator;
-        //! @}
 
         //! Return a copy containing only those elements for which the dictionary keys return true for a given predicate.
         template <class Predicate>
@@ -304,25 +313,29 @@ namespace BlackMisc
         //! Returns const iterator at the end of the dictionary
         const_iterator cend() const { return m_impl.cend(); }
 
-        //! @{
         //! Returns const iterator for iterating over keys
         auto keyBegin() const { return m_impl.keyBegin(); }
-        auto keyEnd() const { return m_impl.keyEnd(); }
-        //! @}
 
-        //! @{
+        //! Returns const iterator for iterating over keys
+        auto keyEnd() const { return m_impl.keyEnd(); }
+
         //! Returns iterator for iterating over keys and values together
         auto keyValueBegin() { return m_impl.keyValueBegin(); }
-        auto keyValueEnd() { return m_impl.keyValueEnd(); }
-        //! @}
 
-        //! @{
+        //! Returns iterator for iterating over keys and values together
+        auto keyValueEnd() { return m_impl.keyValueEnd(); }
+
         //! Returns const iterator for iterating over keys and values together
         auto keyValueBegin() const { return m_impl.keyValueBegin(); }
+
+        //! Returns const iterator for iterating over keys and values together
         auto constKeyValueBegin() const { return m_impl.constKeyValueBegin(); }
+
+        //! Returns const iterator for iterating over keys and values together
         auto keyValueEnd() const { return m_impl.keyValueEnd(); }
+
+        //! Returns const iterator for iterating over keys and values together
         auto constKeyValueEnd() const { return m_impl.constKeyValueEnd(); }
-        //! @}
 
         //! Removes all items from the dictionary
         void clear() { m_impl.clear(); }

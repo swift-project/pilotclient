@@ -128,6 +128,4 @@ namespace BlackGui
     } // namespace
 } // namespace
 
-//! \endcond
-
 #endif // guard

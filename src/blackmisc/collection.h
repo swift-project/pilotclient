@@ -99,19 +99,35 @@ namespace BlackMisc
         public Mixin::Icon<CCollection<T>>
     {
     public:
-        //! @{
         //! STL compatibility
         typedef T key_type;
+
+        //! STL compatibility
         typedef T value_type;
+
+        //! STL compatibility
         typedef T &reference;
+
+        //! STL compatibility
         typedef const T &const_reference;
+
+        //! STL compatibility
         typedef T *pointer;
+
+        //! STL compatibility
         typedef const T *const_pointer;
+
+        //! STL compatibility
         typedef typename QOrderedSet<T>::const_iterator const_iterator;
+
+        //! STL compatibility
         typedef const_iterator iterator; // can't modify elements in-place
+
+        //! STL compatibility
         typedef ptrdiff_t difference_type;
+
+        //! STL compatibility
         typedef int size_type;
-        //! @}
 
         //! Default constructor.
         CCollection() {}

@@ -117,26 +117,26 @@ namespace BlackCore::Data
     //! Trait for global setup data
     struct TVatsimSetup : public BlackMisc::TDataTrait<CVatsimSetup>
     {
-        //! \copydoc BlackCore::TDataTrait::key
+        //! \copydoc BlackMisc::TDataTrait::key
         static const char *key() { return "vatsimsetup"; }
 
-        //! \copydoc BlackCore::TDataTrait::isPinned
+        //! \copydoc BlackMisc::TDataTrait::isPinned
         static constexpr bool isPinned() { return true; }
 
-        //! \copydoc BlackCore::TDataTrait::humanReadable
+        //! \copydoc BlackMisc::TDataTrait::humanReadable
         static const QString &humanReadable() { static const QString name("VATSIM setup"); return name; }
     };
 
     //! Trait for last (most recently) used VATSIM server and user
     struct TVatsimLastServer : public BlackMisc::TDataTrait<BlackMisc::Network::CServer>
     {
-        //! \copydoc BlackCore::TDataTrait::isPinned
+        //! \copydoc BlackMisc::TDataTrait::isPinned
         static const char *key() { return "vatsimserver"; }
 
-        //! \copydoc BlackCore::TDataTrait::isPinned
+        //! \copydoc BlackMisc::TDataTrait::isPinned
         static constexpr bool isPinned() { return true; }
 
-        //! \copydoc BlackCore::TDataTrait::humanReadable
+        //! \copydoc BlackMisc::TDataTrait::humanReadable
         static const QString &humanReadable() { static const QString name("Last VATSIM server"); return name; }
     };
 } // ns

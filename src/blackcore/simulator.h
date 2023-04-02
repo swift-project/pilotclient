@@ -285,7 +285,7 @@ namespace BlackCore
         //! Is this the emulated driver just pretending to be P3D, FSX, or XPlane
         bool isEmulatedDriver() const;
 
-        //! \addtogroup swiftdotcommands
+        //! \ingroup swiftdotcommands
         //! <pre>
         //! .drv cg length clear|modelstring  set overridden CG for model string      BlackCore::ISimulator
         //! .drv unload                       unload plugin                           BlackCore::ISimulator

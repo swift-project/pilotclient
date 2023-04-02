@@ -103,9 +103,11 @@ namespace BlackSample
         void sendPingCmd(QTextStream &args);
         void sendMetarQueryCmd(QTextStream &args);
 
-    signals: //to send to INetwork
+    signals:
         //! \name Signals to INetwork
         //! @{
+
+        //! to send to INetwork
         void presetServer(const BlackMisc::Network::CServer &server);
         void presetCallsign(const BlackMisc::Aviation::CCallsign &callsign);
         void presetRealName(const QString &name);
@@ -134,6 +136,8 @@ namespace BlackSample
     public slots:
         //! \name Slots connected to INetwork
         //! @{
+
+        //! Slots connected to INetwork
         void atcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq,
                                const BlackMisc::Geo::CCoordinateGeodetic &pos, const BlackMisc::PhysicalQuantities::CLength &range);
         void atcDisconnected(const BlackMisc::Aviation::CCallsign &callsign);

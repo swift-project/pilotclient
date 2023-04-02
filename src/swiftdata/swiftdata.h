@@ -48,6 +48,8 @@ public:
 protected:
     //! \name QMainWindow events
     //! @{
+
+    //! \copydoc QMainWindow::closeEvent
     virtual void closeEvent(QCloseEvent *event) override;
     //! @}
 

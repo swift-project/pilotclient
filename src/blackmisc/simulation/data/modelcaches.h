@@ -393,14 +393,32 @@ namespace BlackMisc::Simulation::Data
     public:
         //! \name Interface implementations
         //! @{
+
+        //! \copydoc BlackMisc::Simulation::Data::IMultiSimulatorModelCaches::getCachedModels
         virtual CAircraftModelList getCachedModels(const CSimulatorInfo &simulator) const override { return instanceCaches().getCachedModels(simulator); }
+
+        //! \copydoc BlackMisc::Simulation::Data::IMultiSimulatorModelCaches::setCachedModels
         virtual CStatusMessage setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator) override { return instanceCaches().setCachedModels(models, simulator); }
+
+        //! \copydoc BlackMisc::Simulation::Data::IMultiSimulatorModelCaches::getCacheTimestamp
         virtual QDateTime getCacheTimestamp(const CSimulatorInfo &simulator) const override { return instanceCaches().getCacheTimestamp(simulator); }
+
+        //! \copydoc BlackMisc::Simulation::Data::IMultiSimulatorModelCaches::setCacheTimestamp
         virtual CStatusMessage setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator) override { return instanceCaches().setCacheTimestamp(ts, simulator); }
+
+        //! \copydoc BlackMisc::Simulation::Data::IMultiSimulatorModelCaches::synchronizeCache
         virtual void synchronizeCache(const CSimulatorInfo &simulator) override { return instanceCaches().synchronizeCache(simulator); }
+
+        //! \copydoc BlackMisc::Simulation::Data::IMultiSimulatorModelCaches::admitCache
         virtual void admitCache(const CSimulatorInfo &simulator) override { return instanceCaches().admitCache(simulator); }
+
+        //! \copydoc BlackMisc::Simulation::Data::IMultiSimulatorModelCaches::getFilename
         virtual QString getFilename(const CSimulatorInfo &simulator) const override { return instanceCaches().getFilename(simulator); }
+
+        //! \copydoc BlackMisc::Simulation::Data::IMultiSimulatorModelCaches::isSaved
         virtual bool isSaved(const CSimulatorInfo &simulator) const override { return instanceCaches().isSaved(simulator); }
+
+        //! \copydoc BlackMisc::Simulation::Data::IMultiSimulatorModelCaches::getDescription
         virtual QString getDescription() const override { return instanceCaches().getDescription(); }
         //! @}
 

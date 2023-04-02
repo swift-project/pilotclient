@@ -33,6 +33,8 @@ namespace BlackGui::Views
 
         //! \name Proxy style overrides
         //! @{
+
+        //! \copydoc QProxyStyle::drawPrimitive
         virtual void drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const override;
         //! @}
 

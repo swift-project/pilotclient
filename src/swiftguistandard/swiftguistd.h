@@ -94,10 +94,20 @@ signals:
 protected:
     //! \name QMainWindow events
     //! @{
+
+    //! \copydoc QMainWindow::mouseMoveEvent
     virtual void mouseMoveEvent(QMouseEvent *event) override;
+
+    //! \copydoc QMainWindow::mousePressEvent
     virtual void mousePressEvent(QMouseEvent *event) override;
+
+    //! \copydoc QMainWindow::mouseReleaseEvent
     virtual void mouseReleaseEvent(QMouseEvent *event) override;
+
+    //! \copydoc QMainWindow::closeEvent
     virtual void closeEvent(QCloseEvent *event) override;
+
+    //! \copydoc QMainWindow::changeEvent
     virtual void changeEvent(QEvent *event) override;
     //! @}
 

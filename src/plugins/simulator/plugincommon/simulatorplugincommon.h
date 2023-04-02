@@ -44,7 +44,7 @@ namespace BlackSimPlugin::Common
                                 BlackMisc::Network::IClientProvider            *clientProvider,
                                 QObject *parent = nullptr);
 
-        //! \addtogroup swiftdotcommands
+        //! \ingroup swiftdotcommands
         //! <pre>
         //! .drv intdisplay interpolation log display
         //! </pre>

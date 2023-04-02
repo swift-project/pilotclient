@@ -81,7 +81,7 @@ namespace BlackSimPlugin::Emulated
         virtual int physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) override;
 
         // functions logged and used
-        //! \addtogroup swiftdotcommands
+        //! \ingroup swiftdotcommands
         //! <pre>
         //! .drv show   show emulated driver window     BlackSimPlugin::Swift::CSimulatorEmulated
         //! .drv hide   hide emulated driver window     BlackSimPlugin::Swift::CSimulatorEmulated

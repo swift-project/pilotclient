@@ -63,7 +63,7 @@ namespace BlackSimPlugin::FsCommon
         //! When swift DB data are read
         virtual void onSwiftDbAirportsRead() override;
 
-        //! \addtogroup swiftdotcommands
+        //! \ingroup swiftdotcommands
         //! <pre>
         //! .drv fsuipc  on|off      FSUIPC on/off
         //! </pre>

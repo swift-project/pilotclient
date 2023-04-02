@@ -36,9 +36,9 @@ class QStringList;
  * \defgroup JSON Streaming operators for JSON
  */
 
+//! \ingroup JSON
 //! @{
 //! Streaming operators for QJsonValue (to value)
-//! \ingroup JSON
 BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, int &value);
 BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, qlonglong &value);
 BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, qulonglong &value);

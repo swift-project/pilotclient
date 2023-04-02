@@ -34,12 +34,26 @@ namespace BlackMisc
         public slots:
             //! \name Interface implementations
             //! @{
+
+            //! \copydoc BlackMisc::SharedState::DBus::IDuplex::postEvent
             virtual void postEvent(const QString &channel, const BlackMisc::CVariant &param) override;
+
+            //! \copydoc BlackMisc::SharedState::DBus::IDuplex::setSubscription
             virtual void setSubscription(const QString &channel, const BlackMisc::CVariantList &filters) override;
+
+            //! \copydoc BlackMisc::SharedState::DBus::IDuplex::requestPeerSubscriptions
             virtual void requestPeerSubscriptions() override;
+
+            //! \copydoc BlackMisc::SharedState::DBus::IDuplex::submitRequest
             virtual void submitRequest(const QString &channel, const BlackMisc::CVariant &param, quint32 token) override;
+
+            //! \copydoc BlackMisc::SharedState::DBus::IDuplex::reply
             virtual void reply(const BlackMisc::CVariant &param, quint32 token) override;
+
+            //! \copydoc BlackMisc::SharedState::DBus::IDuplex::advertise
             virtual void advertise(const QString &channel) override;
+
+            //! \copydoc BlackMisc::SharedState::DBus::IDuplex::withdraw
             virtual void withdraw(const QString &channel) override;
             //! @}
 

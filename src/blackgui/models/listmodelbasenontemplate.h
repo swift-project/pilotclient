@@ -50,13 +50,28 @@ namespace BlackGui::Models
 
         //! \name Functions from QStandardItemModel
         //! @{
+        //! \copydoc QStandardItemModel::columnCount
         virtual int columnCount(const QModelIndex &modelIndex = QModelIndex()) const final override;
+
+        //! \copydoc QStandardItemModel::headerData
         virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const final override;
+
+        //! \copydoc QStandardItemModel::index
         virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const final override;
+
+        //! \copydoc QStandardItemModel::parent
         virtual QModelIndex parent(const QModelIndex &child) const final override;
+
+        //! \copydoc QStandardItemModel::flags
         virtual Qt::ItemFlags flags(const QModelIndex &index) const final override;
+
+        //! \copydoc QStandardItemModel::supportedDragActions
         virtual Qt::DropActions supportedDragActions() const final override;
+
+        //! \copydoc QStandardItemModel::supportedDropActions
         virtual Qt::DropActions supportedDropActions() const final override;
+
+        //! \copydoc QStandardItemModel::mimeTypes
         virtual QStringList mimeTypes() const final override;
         //! @}
 

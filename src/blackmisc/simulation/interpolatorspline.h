@@ -42,8 +42,20 @@ namespace BlackMisc::Simulation
             //! Zero initialized position array
             static const PosArray &zeroPosArray();
 
+            //! @{
             //! 3 coordinates for spline interpolation
-            std::array<double, 3> x, y, z, a, gnd, t, dx, dy, dz, da, dgnd;
+            std::array<double, 3> x;
+            std::array<double, 3> y;
+            std::array<double, 3> z;
+            std::array<double, 3> a;
+            std::array<double, 3> gnd;
+            std::array<double, 3> t;
+            std::array<double, 3> dx;
+            std::array<double, 3> dy;
+            std::array<double, 3> dz;
+            std::array<double, 3> da;
+            std::array<double, 3> dgnd;
+            //! @}
 
             //! Array size
             int size() const { return static_cast<int>(x.size()); }

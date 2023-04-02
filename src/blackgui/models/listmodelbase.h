@@ -46,19 +46,39 @@ namespace BlackGui::Models
 
         //! \name Functions from QStandardItemModel
         //! @{
+
+        //! \copydoc QStandardItemModel::data
         virtual QVariant data(const QModelIndex &index, int role) const override;
+
+        //! \copydoc QStandardItemModel::setData
         virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) final override;
+
+        //! \copydoc QStandardItemModel::mimeData
         virtual QMimeData *mimeData(const QModelIndexList &indexes) const final override;
+
+        //! \copydoc QStandardItemModel::sort
         virtual void sort(int column, Qt::SortOrder order) final override;
+
+        //! \copydoc QStandardItemModel::rowCount
         virtual int rowCount(const QModelIndex &parentIndex = QModelIndex()) const final override;
+
+        //! \copydoc QStandardItemModel::canDropMimeData
         virtual bool canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) const final override;
+
+        //! \copydoc QStandardItemModel::dropMimeData
         virtual bool dropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row, int column, const QModelIndex &parent) final override;
         //! @}
 
         //! \name Functions from CListModelBaseNonTemplate
         //! @{
+
+        //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::toJson
         virtual QJsonObject toJson(bool selectedOnly = false) const override;
+
+        //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::toJsonString
         virtual QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented, bool selectedOnly = false) const override;
+
+        //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::isOrderable
         virtual bool isOrderable() const override;
         //! @}
 
@@ -169,7 +189,11 @@ namespace BlackGui::Models
 
         //! \name Base class overrides
         //! @{
+
+        //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::onDataChanged
         virtual void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomLeft, const QVector<int> &roles) override;
+
+        //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::onDataChanged
         virtual void onChangedDigest() override;
         //! @}
 

@@ -256,9 +256,11 @@ namespace BlackCore::Fsd
     private:
         //! \cond
         friend BlackFsdTest::CTestFSDClient;
+        //! \endcond
 
-        // Convenience functions for sendClientQuery
-        // really private, ONLY used by UNIT test, not CAirspaceMonitor
+        //! @{
+        //! Convenience functions for sendClientQuery
+        //! really private, ONLY used by UNIT test, not CAirspaceMonitor
         void sendLogin(const QString &token = {});
         void sendDeletePilot();
         void sendDeleteAtc();
@@ -277,7 +279,7 @@ namespace BlackCore::Fsd
         //
         void sendMessageString(const QString &message);
         void sendQueuedMessage();
-        //! \endcond
+        //! @}
 
         //! @{
         //! Increase the statistics value for given identifier

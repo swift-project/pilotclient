@@ -40,12 +40,12 @@
 
 // clazy:excludeall=const-signal-or-slot
 
+//! \ingroup dbus
 //! DBus interface for context
-//! \addtogroup dbus
 #define BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME "org.swift_project.blackcore.contextsimulator"
 
+//! \ingroup dbus
 //! DBus object path for context
-//! \addtogroup dbus
 #define BLACKCORE_CONTEXTSIMULATOR_OBJECTPATH "/simulator"
 
 class QDBusConnection;

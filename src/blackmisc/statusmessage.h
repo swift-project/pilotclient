@@ -152,71 +152,71 @@ namespace BlackMisc
         //! Construct a message with some specific categories.
         CMessageBase(const CLogCategoryList &categories, const CLogCategoryList &extra) : CMessageBase(categories) { this->addIfNotExisting(extra); }
 
-        //! @{
         //! Set the severity and format string.
         template <size_t N>
         Derived &log(StatusSeverity s, const char16_t (&m)[N]) { m_message = m; m_severity = s; return derived(); }
+
+        //! Set the severity and format string.
         Derived &log(StatusSeverity s, const QString &m) { m_message = m; m_severity = s; return derived(); }
-        //! @}
 
         //! Set the severity to debug.
         Derived &debug() { return log(SeverityDebug, QString()); }
 
-        //! @{
         //! Set the severity to debug, providing a format string.
         template <size_t N>
         Derived &debug(const char16_t (&format)[N]) { return log(SeverityDebug, format); }
-        Derived &debug(const QString &format) { return log(SeverityDebug, format); }
-        //! @}
 
-        //! @{
+        //! Set the severity to debug, providing a format string.
+        Derived &debug(const QString &format) { return log(SeverityDebug, format); }
+
         //! Set the severity to info, providing a format string.
         template <size_t N>
         Derived &info(const char16_t (&format)[N]) { return log(SeverityInfo, format); }
-        Derived &info(const QString &format) { return log(SeverityInfo, format); }
-        //! @}
 
-        //! @{
+        //! Set the severity to info, providing a format string.
+        Derived &info(const QString &format) { return log(SeverityInfo, format); }
+
         //! Set the severity to warning, providing a format string.
         template <size_t N>
         Derived &warning(const char16_t (&format)[N]) { return log(SeverityWarning, format); }
-        Derived &warning(const QString &format) { return log(SeverityWarning, format); }
-        //! @}
 
-        //! @{
+        //! Set the severity to warning, providing a format string.
+        Derived &warning(const QString &format) { return log(SeverityWarning, format); }
+
         //! Set the severity to error, providing a format string.
         template <size_t N>
         Derived &error(const char16_t (&format)[N]) { return log(SeverityError, format); }
-        Derived &error(const QString &format) { return log(SeverityError, format); }
-        //! @}
 
-        //! @{
+        //! Set the severity to error, providing a format string.
+        Derived &error(const QString &format) { return log(SeverityError, format); }
+
         //! Set the severity to s, providing a format string, and adding the validation category.
         template <size_t N>
         Derived &validation(StatusSeverity s, const char16_t (&format)[N]) { setValidation(); return log(s, format); }
-        Derived &validation(StatusSeverity s, const QString &format) { setValidation(); return log(s, format); }
-        //! @}
 
-        //! @{
+        //! Set the severity to s, providing a format string, and adding the validation category.
+        Derived &validation(StatusSeverity s, const QString &format) { setValidation(); return log(s, format); }
+
         //! Set the severity to info, providing a format string, and adding the validation category.
         template <size_t N>
         Derived &validationInfo(const char16_t (&format)[N]) { setValidation(); return log(SeverityInfo, format); }
-        Derived &validationInfo(const QString &format) { setValidation(); return log(SeverityInfo, format); }
-        //! @}
 
-        //! @{
+        //! Set the severity to info, providing a format string, and adding the validation category.
+        Derived &validationInfo(const QString &format) { setValidation(); return log(SeverityInfo, format); }
+
         //! Set the severity to warning, providing a format string, and adding the validation category.
         template <size_t N>
         Derived &validationWarning(const char16_t (&format)[N]) { setValidation(); return log(SeverityWarning, format); }
-        Derived &validationWarning(const QString &format) { setValidation(); return log(SeverityWarning, format); }
-        //! @}
 
-        //! @{
+        //! Set the severity to warning, providing a format string, and adding the validation category.
+        Derived &validationWarning(const QString &format) { setValidation(); return log(SeverityWarning, format); }
+
         //! Set the severity to error, providing a format string, and adding the validation category.
         template <size_t N>
         Derived &validationError(const char16_t (&format)[N]) { setValidation(); return log(SeverityError, format); }
+
+        //! Set the severity to error, providing a format string, and adding the validation category.
         Derived &validationError(const QString &format) { setValidation(); return log(SeverityError, format); }
-        //! @}
 
         //! @{
         //! Deleted methods to avoid accidental implicit conversion from Latin-1 or UTF-8 string literals.
@@ -231,16 +231,19 @@ namespace BlackMisc
         Derived &validationError(const char *) = delete;
         //! @}
 
-        //! @{
         //! Streaming operators.
         //! \details If the format string is empty, the message will consist of all streamed values separated by spaces.
         //!          Otherwise, the streamed values will replace the place markers %1, %2, %3... in the format string.
         //! \see QString::arg
         template <class T, std::enable_if_t<TParameter<std::decay_t<T>>::passBy == ParameterPassBy::Value, int> = 0>
         Derived &operator <<(T v) { return arg(TString<T>::toQString(v)); }
+
+        //! Streaming operators.
+        //! \details If the format string is empty, the message will consist of all streamed values separated by spaces.
+        //!          Otherwise, the streamed values will replace the place markers %1, %2, %3... in the format string.
+        //! \see QString::arg
         template <class T, std::enable_if_t<TParameter<std::decay_t<T>>::passBy == ParameterPassBy::ConstRef, int> = 0>
         Derived &operator <<(const T &v) { return arg(TString<T>::toQString(v)); }
-        //! @}
 
         //! Message empty
         bool isEmpty() const { return this->m_message.isEmpty() && this->m_args.isEmpty(); }
@@ -275,15 +278,20 @@ namespace BlackMisc
         }
 
     protected:
-        //! @{
-        //! \private
+        //! Private
         CStrongStringView m_message;
+
+        //! Private
         QStringList m_args;
+
+        //! Private
         CLogCategoryList m_categories = CLogCategoryList { CLogCategories::uncategorized() };
+
+        //! Private
         StatusSeverity m_severity = SeverityDebug;
 
+        //! Private
         QString message() const { return Private::arg(m_message.view(), m_args); }
-        //! @}
     };
 
     /*!

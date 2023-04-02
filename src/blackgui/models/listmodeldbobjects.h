@@ -101,7 +101,11 @@ namespace BlackGui::Models
         //! \name specialized BlackGui::Models::CListModelDbObjects functions for ordering
         //! @{
         using COrderableListModelDbObjects::CListModelDbObjects::update;
+
+        //! \copydoc BlackGui::Models::CListModelDbObjects::update
         virtual int update(const ContainerType &container, bool sort) override;
+
+        //! \copydoc BlackGui::Models::CListModelDbObjects::moveItems
         virtual void moveItems(const ContainerType &items, int position) override;
         //! @}
 

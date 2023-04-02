@@ -42,12 +42,25 @@ namespace BlackCore
             friend class IContextAudio;
 
         public slots:
+            //! \copydoc BlackCore::Context::CContextAudioBase::getRegisteredDevices
             virtual BlackMisc::Audio::CAudioDeviceInfoList getRegisteredDevices() const override;
+
+            //! \copydoc BlackCore::Context::CContextAudioBase::registerDevices
             virtual void registerDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices)   override;
+
+            //! \copydoc BlackCore::Context::CContextAudioBase::unRegisterDevices
             virtual void unRegisterDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) override;
+
+            //! \copydoc BlackCore::Context::CContextAudioBase::unRegisterDevicesFor
             virtual void unRegisterDevicesFor(const BlackMisc::CIdentifier &identifier) override;
+
+            //! \copydoc BlackCore::Context::CContextAudioBase::registerAudioCallsign
             virtual void registerAudioCallsign(const BlackMisc::Aviation::CCallsign   &callsign,  const BlackMisc::CIdentifier &identifier) override;
+
+            //! \copydoc BlackCore::Context::CContextAudioBase::unRegisterAudioCallsign
             virtual void unRegisterAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign,  const BlackMisc::CIdentifier &identifier) override;
+
+            //! \copydoc BlackCore::Context::CContextAudioBase::hasRegisteredAudioCallsign
             virtual bool hasRegisteredAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
         protected:

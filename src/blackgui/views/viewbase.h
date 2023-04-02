@@ -433,10 +433,19 @@ namespace BlackGui
 
             //! \name Functions from QTableView
             //! @{
+            //! \copydoc QTableView::resizeEvent
             virtual void resizeEvent(QResizeEvent *event) override;
+
+            //! \copydoc QTableView::dragEnterEvent
             virtual void dragEnterEvent(QDragEnterEvent *event) override;
+
+            //! \copydoc QTableView::dragMoveEvent
             virtual void dragMoveEvent(QDragMoveEvent *event) override;
+
+            //! \copydoc QTableView::dragLeaveEvent
             virtual void dragLeaveEvent(QDragLeaveEvent *event) override;
+
+            //! \copydoc QTableView::dropEvent
             virtual void dropEvent(QDropEvent *event) override;
             //! @}
 
@@ -686,8 +695,14 @@ namespace BlackGui
 
             //! \name Selection model interface ISelectionModel
             //! @{
+
+            //! \copydoc BlackGui::Models::ISelectionModel::selectObjects
             virtual void selectObjects(const ContainerType &selectedObjects) override;
+
+            //! \copydoc BlackGui::Models::ISelectionModel::selectedObjects
             virtual ContainerType selectedObjects() const override;
+
+            //! \copydoc BlackGui::Models::ISelectionModel::unselectedObjects
             virtual ContainerType unselectedObjects() const override;
             //! @}
 
@@ -726,29 +741,69 @@ namespace BlackGui
 
             //! \name Slot overrides from base class
             //! @{
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::removeSelectedRows
             virtual int removeSelectedRows() override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::presizeOrFullResizeToContents
             virtual void presizeOrFullResizeToContents() override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::clearHighlighting
             virtual void clearHighlighting() override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::materializeFilter
             virtual void materializeFilter() override;
             //! @}
 
             //! \name BlackGui::Views::CViewBaseNonTemplate implementations
             //! @{
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::clear
             virtual void clear() override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::rowCount
             virtual int rowCount() const override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::isEmpty
             virtual bool isEmpty() const override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::isOrderable
             virtual bool isOrderable() const override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::allowDragDrop
             virtual void allowDragDrop(bool allowDrag, bool allowDrop, bool allowDropJsonFile = false) override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::isDropAllowed
             virtual bool isDropAllowed() const override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::dropEvent
             virtual void dropEvent(QDropEvent *event) override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::acceptDrop
             virtual bool acceptDrop(const QMimeData *mimeData) const override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::setSorting
             virtual bool setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::sortByPropertyIndex
             virtual void sortByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::setNoSorting
             virtual void setNoSorting() override { m_model->setNoSorting(); }
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::getSortProperty
             virtual BlackMisc::CPropertyIndex getSortProperty() const override { return m_model->getSortProperty(); }
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::getSortColumn
             virtual int  getSortColumn() const override { return m_model->getSortColumn(); }
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::hasValidSortColumn
             virtual bool hasValidSortColumn() const override { return m_model->hasValidSortColumn(); }
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::endsWithEmptyColumn
             virtual bool endsWithEmptyColumn() const override { return m_model->endsWithEmptyColumn(); }
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::getSortOrder
             virtual Qt::SortOrder getSortOrder() const override { return m_model->getSortOrder(); }
             //! @}
 
@@ -806,19 +861,47 @@ namespace BlackGui
 
             //! \name base class implementations
             //! @{
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::reachedResizeThreshold
             virtual bool reachedResizeThreshold(int containrerSize = -1) const override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::performModeBasedResizeToContent
             virtual void performModeBasedResizeToContent() override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::performUpdateContainer
             virtual int  performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize) override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::updateSortIndicator
             virtual void updateSortIndicator() override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::mouseOverCallback
             virtual void mouseOverCallback(const QModelIndex &index, bool mouseOver) override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::drawDropIndicator
             virtual void drawDropIndicator(bool indicator) override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::copy
             virtual void copy() override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::cut
             virtual void cut() override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::paste
             virtual void paste() override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::displayJsonPopup
             virtual void displayJsonPopup() override { this->displayContainerAsJsonPopup(false); }
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::displaySelectedJsonPopup
             virtual void displaySelectedJsonPopup() override { this->displayContainerAsJsonPopup(true); }
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::filterDialogFinished
             virtual bool filterDialogFinished(int status) override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::filterWidgetChangedFilter
             virtual bool filterWidgetChangedFilter(bool enabled) override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::removeFilter
             virtual void removeFilter() override;
             //! @}
 
@@ -843,10 +926,20 @@ namespace BlackGui
 
             //! \name Overrides from base class
             //! @{
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::removeFilter
             virtual void onClicked(const QModelIndex &index) override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::onDoubleClicked
             virtual void onDoubleClicked(const QModelIndex &index) override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::onRowSelected
             virtual void onRowSelected(const QModelIndex &index) override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::loadJson
             virtual BlackMisc::CStatusMessage loadJson(const QString &directory = {}) override;
+
+            //!\copydoc BlackGui::Views::CViewBaseNonTemplate::saveJson
             virtual BlackMisc::CStatusMessage saveJson(bool selectedOnly = false, const QString &directory = {}) override;
             //! @}
         };

@@ -173,7 +173,7 @@ namespace BlackCore
         static QString enumToString(MatchingReadiness r);
         //! @}
 
-        //! \addtogroup swiftdotcommands
+        //! \ingroup swiftdotcommands
         //! <pre>
         //! .fsd range distance        max.range e.g. ".fsd range 100NM"
         //! </pre>

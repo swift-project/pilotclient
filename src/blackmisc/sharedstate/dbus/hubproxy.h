@@ -44,7 +44,11 @@ namespace BlackMisc
         public slots:
             //! \name Interface implementations
             //! @{
+
+            //! \copydoc BlackMisc::SharedState::DBus::IHub::openDuplex
             virtual bool openDuplex(const BlackMisc::CIdentifier &client) override;
+
+            //! \copydoc BlackMisc::SharedState::DBus::IHub::closeDuplex
             virtual void closeDuplex(const BlackMisc::CIdentifier &client) override;
             //! @}
 

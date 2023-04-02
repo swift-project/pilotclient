@@ -108,7 +108,11 @@ namespace BlackMiscTest
 
         //! \name Interface implementation
         //! @{
+
+        //! \copydoc BlackMisc::SharedState::CListObserver::onElementAdded
         virtual void onElementAdded(const int &) override {}
+
+        //! \copydoc BlackMisc::SharedState::CListObserver::onElementsReplaced
         virtual void onElementsReplaced(const QList<int> &) override {}
         //! @}
     };

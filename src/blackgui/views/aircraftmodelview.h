@@ -139,9 +139,17 @@ namespace BlackGui
 
             //! \name View base class overrides
             //! @{
+
+            //! \copydoc BlackGui::Views::COrderableViewWithDbObjects::customMenu
             virtual void customMenu(Menus::CMenuActions &menuActions) override;
+
+            //! \copydoc BlackGui::Views::COrderableViewWithDbObjects::modifyLoadedJsonData
             virtual BlackMisc::CStatusMessage modifyLoadedJsonData(BlackMisc::Simulation::CAircraftModelList &models) const override;
+
+            //! \copydoc BlackGui::Views::COrderableViewWithDbObjects::validateLoadedJsonData
             virtual BlackMisc::CStatusMessage validateLoadedJsonData(const BlackMisc::Simulation::CAircraftModelList &models) const override;
+
+            //! \copydoc BlackGui::Views::COrderableViewWithDbObjects::jsonLoadedAndModelUpdated
             virtual void jsonLoadedAndModelUpdated(const BlackMisc::Simulation::CAircraftModelList &models) override;
             //! @}
 

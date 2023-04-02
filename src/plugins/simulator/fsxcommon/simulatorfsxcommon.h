@@ -244,7 +244,7 @@ namespace BlackSimPlugin::FsxCommon
         //! Specific P3D events
         virtual HRESULT initEventsP3D();
 
-        //! \addtogroup swiftdotcommands
+        //! \ingroup swiftdotcommands
         //! <pre>
         //! .drv sendid  on|off      tracing simConnect sendId on/off
         //! </pre>

@@ -33,12 +33,12 @@
 
 // clazy:excludeall=const-signal-or-slot
 
+//! \ingroup dbus
 //! DBus interface for context
-//! \addtogroup dbus
 #define BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME "org.swift_project.blackcore.contextapplication"
 
+//! \ingroup dbus
 //! DBus object path for context
-//! \addtogroup dbus
 #define BLACKCORE_CONTEXTAPPLICATION_OBJECTPATH "/application"
 
 class QDBusConnection;
