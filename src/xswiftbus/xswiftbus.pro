@@ -74,6 +74,7 @@ msvc: DEFINES += _CRT_SECURE_NO_WARNINGS
 
 !swiftConfig(allowNoisyWarnings) {
     gcc|llvm:QMAKE_CXXFLAGS_WARN_ON *= -Wno-missing-field-initializers
+    gcc:     QMAKE_CXXFLAGS_WARN_ON *= -Wno-stringop-truncation
 }
 
 # Required by X-Plane SDK and xplanemp2
