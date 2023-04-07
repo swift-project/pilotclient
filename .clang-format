@@ -1,0 +1,84 @@
+---
+Language:        Cpp
+BasedOnStyle: LLVM
+AccessModifierOffset: -4
+AlignTrailingComments: false
+AllowShortBlocksOnASingleLine: Always
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortLoopsOnASingleLine: true
+AlwaysBreakTemplateDeclarations: Yes
+BraceWrapping:
+  AfterCaseLabel:  true
+  AfterClass:      true
+  AfterControlStatement: Always
+  AfterEnum:       true
+  AfterFunction:   true
+  AfterNamespace:  true
+  AfterObjCDeclaration: true
+  AfterStruct:     true
+  AfterUnion:      true
+  AfterExternBlock: true
+  BeforeCatch:     true
+  BeforeElse:      true
+  BeforeLambdaBody: false
+  BeforeWhile:     true
+  IndentBraces:    false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+BreakBeforeBraces: Custom
+BreakInheritanceList: AfterColon
+BreakBeforeTernaryOperators: false
+BreakConstructorInitializers: BeforeColon
+ColumnLimit:     0 # Leave line length untouched
+Cpp11BracedListStyle: false
+FixNamespaceComments: false # TODO Enable
+IncludeBlocks:   Preserve # TODO Reorder
+# Adapted from Google style:
+# IncludeCategories:
+#   - Regex:           '^<ext/.*\.h>'
+#     Priority:        2
+#     SortPriority:    0
+#     CaseSensitive:   false
+#   - Regex:           '^<.*\.h>'
+#     Priority:        1
+#     SortPriority:    0
+#   - Regex:           '^<[a-z].*'
+#     Priority:        2
+#     SortPriority:    0
+#     CaseSensitive:   true
+#   - Regex:           '^<Q.*'
+#     Priority:        3
+#     SortPriority:    0
+#     CaseSensitive:   false
+#   - Regex:           '.*'
+#     Priority:        4
+#     SortPriority:    0
+#     CaseSensitive:   false
+IndentPPDirectives: AfterHash
+IndentWidth:     4
+NamespaceIndentation: All
+SortIncludes:    Never # TODO CaseSensitive
+SortUsingDeclarations: false
+SpaceBeforeCpp11BracedList: true
+SpaceBeforeParens: ControlStatements
+SpaceBeforeParensOptions:
+  AfterControlStatements: false
+  AfterForeachMacros: false
+  AfterFunctionDefinitionName: false
+  AfterFunctionDeclarationName: false
+  AfterIfMacros:   false
+  AfterOverloadedOperator: false
+  BeforeNonEmptyParentheses: false
+Standard:        c++17
+UseTab:          Never
+WhitespaceSensitiveMacros:
+  - STRINGIZE
+  - PP_STRINGIZE
+  - BOOST_PP_STRINGIZE
+  - NS_SWIFT_NAME
+  - CF_SWIFT_NAME
+  - BLACK_METACLASS
+...
+
