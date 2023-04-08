@@ -31,8 +31,7 @@ copyright = '2020, swift Project Community / Contributors'
 author = 'swift Project Community / Contributors'
 
 version = '.'.join([ str(swift_config['version']['major']),
-                     str(swift_config['version']['minor']),
-                     str(swift_config['version']['micro']) ])
+                     str(swift_config['version']['minor']) ])
 release = version
 
 
