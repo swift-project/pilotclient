@@ -23,7 +23,7 @@ using namespace BlackMisc;
 //! main
 int main(int argc, char *argv[])
 {
-    QCoreApplication app (argc, argv);
+    QCoreApplication app(argc, argv);
     BlackMisc::CLogHandler::instance()->install();
 
     Client client(&app);

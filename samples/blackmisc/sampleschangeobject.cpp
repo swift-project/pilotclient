@@ -46,8 +46,8 @@ namespace BlackSample
                                    geoPos, CLength(50, CLengthUnit::km()), false, dtFrom, dtUntil);
         const CAtcStation station2(station1);
         const CAtcStation station3(CCallsign("eddm_app"), CUser("654321", "Jen Doe"),
-                             CFrequency(120.7, CFrequencyUnit::MHz()),
-                             geoPos, CLength(100, CLengthUnit::km()), false, dtFrom2, dtUntil2);
+                                   CFrequency(120.7, CFrequencyUnit::MHz()),
+                                   geoPos, CLength(100, CLengthUnit::km()), false, dtFrom2, dtUntil2);
 
         Q_ASSERT_X(station1 == station2, Q_FUNC_INFO, "Unequal stations");
 
@@ -74,7 +74,7 @@ namespace BlackSample
         // now Jane's time is over
         CPropertyIndexVariantMap anotherController;
         anotherController.addValue(CAtcStation::IndexController, CVariant::fromValue(CUser("445566", "Fuzzy")));
-        atcList.applyIf([ = ](const auto &arg) { return newController.matches(arg); }, anotherController);
+        atcList.applyIf([=](const auto &arg) { return newController.matches(arg); }, anotherController);
 
         qDebug() << "-- after update via value map";
         qDebug() << atcList.toQString();

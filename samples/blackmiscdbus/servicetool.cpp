@@ -73,8 +73,8 @@ namespace BlackSample
         // send data as P2P to server (this can be session bus, too, but usually is P2P)
         const bool sb = address.startsWith("session", Qt::CaseInsensitive);
         QDBusConnection connection = sb ?
-                                     QDBusConnection::sessionBus() :
-                                     QDBusConnection::connectToPeer(address, "p2pConnection");
+                                         QDBusConnection::sessionBus() :
+                                         QDBusConnection::connectToPeer(address, "p2pConnection");
 
         // qtout << "server connection has interface? " << connection.interface(); // returns 0 with server and a real interface with session bus
         // qtout << "address: " << address;
@@ -95,8 +95,8 @@ namespace BlackSample
         while (true)
         {
             QDBusMessage m = QDBusMessage::createSignal(
-                                 CTestService::ObjectPath(), CTestService::InterfaceName(),
-                                 "sendStringMessage");
+                CTestService::ObjectPath(), CTestService::InterfaceName(),
+                "sendStringMessage");
 
             // The << operator is used to add the parameters for the slot
             const QDateTime dtnow = QDateTime::currentDateTimeUtc();
@@ -138,7 +138,7 @@ namespace BlackSample
             QVariant tsqv = QVariant::fromValue(trafficServer);
             QDBusVariant tsv(tsqv);
             testServiceInterface.receiveVariant(tsv, tsqv.userType());
-            qtout << "Send server via interface and variant '" << trafficServer << QLatin1String("' ") <<  tsqv.userType() << Qt::endl;
+            qtout << "Send server via interface and variant '" << trafficServer << QLatin1String("' ") << tsqv.userType() << Qt::endl;
 
             // Aviation
             const CComSystem comSystem = CComSystem("DBUS COM1", CPhysicalQuantitiesConstants::FrequencyInternationalAirDistress(), CPhysicalQuantitiesConstants::FrequencyUnicom());
@@ -263,7 +263,7 @@ namespace BlackSample
             atcStationList = testServiceInterface.getAtcStationList(1000);
             if (atcStationList.size() != 1000) qtout << "wrong list size" << atcStationList.size() << Qt::endl;
             t1000 = timer.elapsed(); // ms
-            qtout << "Reading station list 10/100/1000 in ms: "  << t10 << " " << t100 << " " << t1000 << Qt::endl;
+            qtout << "Reading station list 10/100/1000 in ms: " << t10 << " " << t100 << " " << t1000 << Qt::endl;
 
             // test reading model entries with a realistic size
             timer.restart();
@@ -285,7 +285,7 @@ namespace BlackSample
             objectPaths = testServiceInterface.getObjectPaths(1000);
             if (objectPaths.size() != 1000) qtout << "wrong list size" << objectPaths.size() << Qt::endl;
             t1000 = timer.elapsed(); // ms
-            qtout << "Reading paths list 10/100/1000 in ms: "  << t10 << " " << t100 << " " << t1000 << Qt::endl;
+            qtout << "Reading paths list 10/100/1000 in ms: " << t10 << " " << t100 << " " << t1000 << Qt::endl;
             timer.invalidate();
 
             // next round?

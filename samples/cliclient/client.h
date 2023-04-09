@@ -40,10 +40,17 @@ namespace BlackMisc
         class CInformationMessage;
         class CTransponder;
     }
-    namespace Network { class CServer; }
-    namespace Simulation { class CSimulatedAircraft; }
+    namespace Network
+    {
+        class CServer;
+    }
+    namespace Simulation
+    {
+        class CSimulatedAircraft;
+    }
 }
-template <class T> class QVector;
+template <class T>
+class QVector;
 
 namespace BlackSample
 {
@@ -74,7 +81,7 @@ namespace BlackSample
         //! Handle command
         void command(QString line);
 
-    private: //commands
+    private: // commands
         void help(QTextStream &args);
         void echo(QTextStream &args);
         void exit(QTextStream &args);

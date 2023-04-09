@@ -27,7 +27,7 @@ namespace BlackMisc
             for (int i = 0; i < directoryOptions.size(); i++)
             {
                 if (i > 0) { streamOut << "  "; }
-                streamOut << (i + 1) << ") " << directoryOptions.at(i) ;
+                streamOut << (i + 1) << ") " << directoryOptions.at(i);
             }
             streamOut << Qt::endl;
             streamOut << "Select [1-" << directoryOptions.size() << "]: ";

@@ -62,10 +62,10 @@ int main(int argc, char *argv[])
         const QString s = qtin.readLine().toLower().trimmed();
 
         if (s.startsWith("1")) { CSamplesJson::samples(); }
-        else if (s.startsWith("2"))  { CSamplesChangeObject::samples(); }
+        else if (s.startsWith("2")) { CSamplesChangeObject::samples(); }
         else if (s.startsWith("3a")) { CSamplesContainer::samples(); }
         else if (s.startsWith("3b")) { CSamplesPerformance::sampleQMapVsQHashByCallsign(qtout); }
-        else if (s.startsWith("4"))  { CSamplesMetadata::samples(); }
+        else if (s.startsWith("4")) { CSamplesMetadata::samples(); }
         else if (s.startsWith("6a")) { CSamplesPerformance::samplesMisc(qtout); }
         else if (s.startsWith("6b")) { CSamplesPerformance::interpolatorScenario(qtout, 40, 20); }
         else if (s.startsWith("6c")) { CSamplesPerformance::samplesJson(qtout); }
@@ -73,9 +73,9 @@ int main(int argc, char *argv[])
         else if (s.startsWith("6e")) { CSamplesPerformance::samplesStringUtilsVsRegEx(qtout); }
         else if (s.startsWith("6f")) { CSamplesPerformance::samplesStringConcat(qtout); }
         else if (s.startsWith("6g")) { CSamplesPerformance::samplesStringLiteralVsConstQString(qtout); }
-        else if (s.startsWith("7"))  { CSamplesAlgorithm::samples(); }
-        else if (s.startsWith("8"))  { CSamplesFile::samples(qtout); }
-        else if (s.startsWith("x"))  { break; }
+        else if (s.startsWith("7")) { CSamplesAlgorithm::samples(); }
+        else if (s.startsWith("8")) { CSamplesFile::samples(qtout); }
+        else if (s.startsWith("x")) { break; }
     }
     while (true);
     return 0;

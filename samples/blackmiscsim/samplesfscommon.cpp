@@ -35,10 +35,9 @@ namespace BlackSample
     void CSamplesFsCommon::samples(QTextStream &streamOut, QTextStream &streamIn)
     {
         const QString fsDir = CSampleUtils::selectDirectory(
-        {
-            "C:/Program Files (x86)/Microsoft Games/Microsoft Flight Simulator X/SimObjects",
-            "C:/Flight Simulator 9/Aircraft"
-        }, streamOut, streamIn);
+            { "C:/Program Files (x86)/Microsoft Games/Microsoft Flight Simulator X/SimObjects",
+              "C:/Flight Simulator 9/Aircraft" },
+            streamOut, streamIn);
 
         const QDir dir(fsDir);
         if (!dir.exists())
@@ -74,7 +73,7 @@ namespace BlackSample
         tempFile.open();
         tempFile.write(jsonArray);
         tempFile.close();
-        streamOut << "written to " << tempFile.fileName() << " in " << time.restart() << "ms" <<  Qt::endl;
+        streamOut << "written to " << tempFile.fileName() << " in " << time.restart() << "ms" << Qt::endl;
 
         // re-read
         tempFile.open();

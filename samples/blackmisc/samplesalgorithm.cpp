@@ -45,7 +45,7 @@ namespace BlackSample
                 means.push_back(std::accumulate(randoms.cbegin(), randoms.cend(), 0) / 10);
             }
             int mean = std::accumulate(means.cbegin(), means.cend(), 0) / samples;
-            int stdDev = std::sqrt(std::accumulate(means.cbegin(), means.cend(), 0, [ & ](int a, int n) { return a + (n - mean) * (n - mean); }) / samples);
+            int stdDev = std::sqrt(std::accumulate(means.cbegin(), means.cend(), 0, [&](int a, int n) { return a + (n - mean) * (n - mean); }) / samples);
             qDebug() << "randomElements";
             qDebug() << "means:" << means;
             qDebug() << "mean of the means:" << mean;
@@ -59,7 +59,7 @@ namespace BlackSample
                 means.push_back(std::accumulate(randoms.cbegin(), randoms.cend(), 0) / 10);
             }
             int mean = std::accumulate(means.cbegin(), means.cend(), 0) / samples;
-            int stdDev = std::sqrt(std::accumulate(means.cbegin(), means.cend(), 0, [ & ](int a, int n) { return a + (n - mean) * (n - mean); }) / samples);
+            int stdDev = std::sqrt(std::accumulate(means.cbegin(), means.cend(), 0, [&](int a, int n) { return a + (n - mean) * (n - mean); }) / samples);
             qDebug() << "sampleElements";
             qDebug() << "means:" << means;
             qDebug() << "mean of the means:" << mean;
@@ -72,7 +72,7 @@ namespace BlackSample
         qDebug() << "topologicallySortedInsert";
         QStringList dst;
         int count = 0;
-        auto cmp = [ & ](const QString &a, const QString &b) { count++; return a[0] == b[0] && a[1] < b[1]; };
+        auto cmp = [&](const QString &a, const QString &b) { count++; return a[0] == b[0] && a[1] < b[1]; };
         for (const auto &s : src) { BlackMisc::topologicallySortedInsert(dst, s, cmp); }
         qDebug() << count << "comparisons";
         qDebug() << dst;

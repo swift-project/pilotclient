@@ -41,9 +41,8 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackCore;
 
-
 CWeatherDataPrinter::CWeatherDataPrinter(QObject *parent) : QObject(parent)
-{ }
+{}
 
 void CWeatherDataPrinter::fetchAndPrintWeatherData(const CCoordinateGeodetic &position)
 {

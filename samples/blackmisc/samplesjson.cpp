@@ -54,7 +54,7 @@ namespace BlackSample
         QTextStream cin(stdin);
         CLength l(123.456, CLengthUnit::NM());
         QJsonObject json = l.toJson();
-        l = CLength(); //convert back
+        l = CLength(); // convert back
         l.convertFromJson(json);
         qDebug() << json << l;
         qDebug() << "-------";

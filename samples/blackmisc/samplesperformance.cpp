@@ -105,7 +105,7 @@ namespace BlackSample
         timer.start();
         CSamplesPerformance::accessStationsData(atcs2, false);
         ms = timer.elapsed();
-        out << "Read (getters) " << atcs2.size() << " ATC stations in " << ms << "ms"  << Qt::endl;
+        out << "Read (getters) " << atcs2.size() << " ATC stations in " << ms << "ms" << Qt::endl;
 
         timer.start();
         CSamplesPerformance::accessStationsData(atcs1, true);
@@ -163,26 +163,38 @@ namespace BlackSample
         QString containsStr("aaa");
         number = 0;
         timer.start();
-        for (const auto &str : std::as_const(strList1)) { if (newRegex.match(str).hasMatch()) number++; }
+        for (const auto &str : std::as_const(strList1))
+        {
+            if (newRegex.match(str).hasMatch()) number++;
+        }
         ms = timer.elapsed();
-        out << "new regex matched " << number << " of" << strList1.size() << " strings in " << ms << "ms"  << Qt::endl;
+        out << "new regex matched " << number << " of" << strList1.size() << " strings in " << ms << "ms" << Qt::endl;
         number = 0;
         timer.start();
-        for (const auto &str : std::as_const(strList2)) { if (fullRegex.exactMatch(str)) number++; }
+        for (const auto &str : std::as_const(strList2))
+        {
+            if (fullRegex.exactMatch(str)) number++;
+        }
         ms = timer.elapsed();
-        out << "full regex matched " << number << " of" << strList2.size() << " strings in " << ms << "ms"  << Qt::endl;
+        out << "full regex matched " << number << " of" << strList2.size() << " strings in " << ms << "ms" << Qt::endl;
         number = 0;
         timer.start();
-        for (const auto &str : std::as_const(strList3)) { if (wildcardRegex.exactMatch(str)) number++; }
+        for (const auto &str : std::as_const(strList3))
+        {
+            if (wildcardRegex.exactMatch(str)) number++;
+        }
         ms = timer.elapsed();
-        out << "wildcard matched " << number << " of " << strList3.size() << " strings in " << ms << "ms"  << Qt::endl;
+        out << "wildcard matched " << number << " of " << strList3.size() << " strings in " << ms << "ms" << Qt::endl;
         number = 0;
         timer.start();
-        for (const auto &str : std::as_const(strList4)) { if (str.contains(containsStr)) number++; }
+        for (const auto &str : std::as_const(strList4))
+        {
+            if (str.contains(containsStr)) number++;
+        }
         ms = timer.elapsed();
         out << "contains matched " << number << " of " << strList4.size() << " strings in " << ms << "ms" << Qt::endl;
 
-        out << "-----------------------------------------------"  << Qt::endl;
+        out << "-----------------------------------------------" << Qt::endl;
         return EXIT_SUCCESS;
     }
 
@@ -256,7 +268,8 @@ namespace BlackSample
 
         timer.start();
         situations.convertFromJson(json);
-        out << "Convert 100,000 aircraft situations from JSON:      " << timer.elapsed() << "ms" << endl << Qt::endl;
+        out << "Convert 100,000 aircraft situations from JSON:      " << timer.elapsed() << "ms" << endl
+            << Qt::endl;
 
         timer.start();
         json = models.toJson();
@@ -264,7 +277,8 @@ namespace BlackSample
 
         timer.start();
         models.convertFromJson(json);
-        out << "Convert 10,000 aircraft models from JSON (naive):   " << timer.elapsed() << "ms" << endl << Qt::endl;
+        out << "Convert 10,000 aircraft models from JSON (naive):   " << timer.elapsed() << "ms" << endl
+            << Qt::endl;
 
         timer.start();
         json = models.toMemoizedJson();
@@ -272,7 +286,8 @@ namespace BlackSample
 
         timer.start();
         models.convertFromMemoizedJson(json);
-        out << "Convert 10,000 aircraft models from JSON (memoize): " << timer.elapsed() << "ms" << endl << Qt::endl;
+        out << "Convert 10,000 aircraft models from JSON (memoize): " << timer.elapsed() << "ms" << endl
+            << Qt::endl;
 
         return EXIT_SUCCESS;
     }
@@ -349,8 +364,7 @@ namespace BlackSample
         QElapsedTimer timer;
         static const QString chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789~_-=+!\"@#$%^&*()[]{} \t;:\\/?,.<>";
         QStringList strings;
-        std::generate_n(std::back_inserter(strings), 100000, []
-        {
+        std::generate_n(std::back_inserter(strings), 100000, [] {
             QString s;
             std::generate_n(std::back_inserter(s), 10, [] { return chars[CMathUtils::randomInteger(0, chars.size() - 1)]; });
             return s;
@@ -374,7 +388,8 @@ namespace BlackSample
             auto c = s.contains(upperRegex);
             Q_UNUSED(c);
         }
-        out << "Check 100,000 strings for containing uppercase letter: (regex)       " << timer.elapsed() << "ms" << endl << Qt::endl;
+        out << "Check 100,000 strings for containing uppercase letter: (regex)       " << timer.elapsed() << "ms" << endl
+            << Qt::endl;
 
         timer.start();
         for (const QString &s : std::as_const(strings))
@@ -390,7 +405,8 @@ namespace BlackSample
             auto i = s.indexOf(upperRegex);
             Q_UNUSED(i);
         }
-        out << "Check 100,000 strings for index of first uppercase letter: (regex)   " << timer.elapsed() << "ms" << endl << Qt::endl;
+        out << "Check 100,000 strings for index of first uppercase letter: (regex)   " << timer.elapsed() << "ms" << endl
+            << Qt::endl;
 
         auto temp = strings;
         timer.start();
@@ -406,7 +422,8 @@ namespace BlackSample
         {
             s.remove(upperRegex);
         }
-        out << "Remove from 100,000 strings all uppercase letters: (regex)           " << timer.elapsed() << "ms" << endl << Qt::endl;
+        out << "Remove from 100,000 strings all uppercase letters: (regex)           " << timer.elapsed() << "ms" << endl
+            << Qt::endl;
 
         timer.start();
         {
@@ -714,16 +731,13 @@ namespace BlackSample
         if (n < 1) { return; }
         CAtcStation atc = CTesting::createStation(1);
         const QList<CCoordinateGeodetic> pos(
-        {
-            CCoordinateGeodetic(10.0, 10.0, 10.0),
-            CCoordinateGeodetic(20.0, 20.0, 20.0),
-            CCoordinateGeodetic(30.0, 30.0, 30.0),
-            CCoordinateGeodetic(40.0, 40.0, 40.0),
-            CCoordinateGeodetic(50.0, 50.0, 50.0),
-            CCoordinateGeodetic(60.0, 60.0, 60.0),
-            CCoordinateGeodetic(70.0, 70.0, 70.0)
-        }
-        );
+            { CCoordinateGeodetic(10.0, 10.0, 10.0),
+              CCoordinateGeodetic(20.0, 20.0, 20.0),
+              CCoordinateGeodetic(30.0, 30.0, 30.0),
+              CCoordinateGeodetic(40.0, 40.0, 40.0),
+              CCoordinateGeodetic(50.0, 50.0, 50.0),
+              CCoordinateGeodetic(60.0, 60.0, 60.0),
+              CCoordinateGeodetic(70.0, 70.0, 70.0) });
         const int s = pos.size();
         for (int i = 0; i < n; i++)
         {
@@ -745,13 +759,11 @@ namespace BlackSample
     void CSamplesPerformance::parseWgs(int times)
     {
         static QStringList wgsLatLng(
-        {
-            "12° 11′ 10″ N", "11° 22′ 33″ W",
-            "48° 21′ 13″ N", "11° 47′ 09″ E",
-            " 8° 21′ 13″ N", "11° 47′ 09″ W",
-            "18° 21′ 13″ S", "11° 47′ 09″ E",
-            "09° 12′ 13″ S", "11° 47′ 09″ W"
-        });
+            { "12° 11′ 10″ N", "11° 22′ 33″ W",
+              "48° 21′ 13″ N", "11° 47′ 09″ E",
+              " 8° 21′ 13″ N", "11° 47′ 09″ W",
+              "18° 21′ 13″ S", "11° 47′ 09″ E",
+              "09° 12′ 13″ S", "11° 47′ 09″ W" });
 
         CCoordinateGeodetic c;
         const CAltitude a(333, CLengthUnit::m());
@@ -775,12 +787,12 @@ namespace BlackSample
 
     QStringList CSamplesPerformance::generateList()
     {
-        return QStringList({"1", "2", "3", "4"});
+        return QStringList({ "1", "2", "3", "4" });
     }
 
     QStringList CSamplesPerformance::replacedList()
     {
-        static const QStringList l({"1", "2", "3", "4"});
+        static const QStringList l({ "1", "2", "3", "4" });
         QStringList lc(l);
         lc[1] = QStringLiteral("6");
         lc[3] = QStringLiteral("7");
@@ -840,13 +852,13 @@ namespace BlackSample
         QString r;
         if (byPropertyIndex)
         {
-            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexCallsign, CCallsign::IndexString}).toString());
-            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexController, CUser::IndexRealName}).toString());
-            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLatitudeAsString}).toString());
-            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLongitudeAsString}).toString());
-            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexRelativeDistance, CLength::IndexValueRounded2DigitsWithUnit}).toString());
-            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexBookedFrom}).toDateTime().toString("yyyy-MM-dd hh:mm"));
-            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexBookedUntil}).toDateTime().toString("yyyy-MM-dd hh:mm"));
+            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexCallsign, CCallsign::IndexString }).toString());
+            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexController, CUser::IndexRealName }).toString());
+            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLatitudeAsString }).toString());
+            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLongitudeAsString }).toString());
+            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexRelativeDistance, CLength::IndexValueRounded2DigitsWithUnit }).toString());
+            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexBookedFrom }).toDateTime().toString("yyyy-MM-dd hh:mm"));
+            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexBookedUntil }).toDateTime().toString("yyyy-MM-dd hh:mm"));
         }
         else
         {
