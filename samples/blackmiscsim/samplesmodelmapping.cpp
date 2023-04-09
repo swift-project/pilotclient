@@ -46,11 +46,10 @@ namespace BlackSample
 
         // mapper with rule set, handing over ownership
         const QString fsDir = CSampleUtils::selectDirectory(
-        {
-            QStringLiteral("P:/FlightSimulatorX (MSI)/SimObjects"),
-            QStringLiteral("P:/Temp/SimObjects"),
-            QStringLiteral("C:/Flight Simulator 9/Aircraft")
-        }, streamOut, streamIn);
+            { QStringLiteral("P:/FlightSimulatorX (MSI)/SimObjects"),
+              QStringLiteral("P:/Temp/SimObjects"),
+              QStringLiteral("C:/Flight Simulator 9/Aircraft") },
+            streamOut, streamIn);
 
         const CSimulatorInfo sim = fsDir.contains("simobjects", Qt::CaseInsensitive) ? CSimulatorInfo::FSX : CSimulatorInfo::FS9;
         CMultiSimulatorSettings multiSettings;

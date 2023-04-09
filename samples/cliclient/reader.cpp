@@ -27,7 +27,7 @@ namespace BlackSample
         forever
         {
             QString line = file.readLine().trimmed();
-            if (! line.isEmpty())
+            if (!line.isEmpty())
             {
                 emit command(line);
             }

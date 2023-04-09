@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
         if (mode.startsWith("2"))
         {
             out << "---------------------------------" << Qt::endl;
-            //BlackMisc::CDBusUtils::showDBusSignatures(out);
+            // BlackMisc::CDBusUtils::showDBusSignatures(out);
             out << "---------------------------------" << Qt::endl;
             goto Menu;
         }

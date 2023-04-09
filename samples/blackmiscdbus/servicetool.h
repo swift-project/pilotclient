@@ -22,7 +22,10 @@ class QDBusConnection;
 class QObject;
 class QProcess;
 
-namespace BlackMisc { class CDBusServer; }
+namespace BlackMisc
+{
+    class CDBusServer;
+}
 namespace BlackSample
 {
     class Testservice; // forward declaration

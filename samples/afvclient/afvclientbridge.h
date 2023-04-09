@@ -21,7 +21,7 @@ class CAfvClientBridge : public QObject
 
     //! Bridge properties
     //! @{
-    Q_PROPERTY(double inputVolumePeakVU  READ getInputVolumePeakVU  NOTIFY inputVolumePeakVU)
+    Q_PROPERTY(double inputVolumePeakVU READ getInputVolumePeakVU NOTIFY inputVolumePeakVU)
     Q_PROPERTY(double outputVolumePeakVU READ getOutputVolumePeakVU NOTIFY outputVolumePeakVU)
     Q_PROPERTY(BlackCore::Afv::Clients::CAfvClient::ConnectionStatus connectionStatus READ getConnectionStatus NOTIFY connectionStatusChanged)
     Q_PROPERTY(QString receivingCallsignsCom1 READ getReceivingCallsignsCom1 NOTIFY receivingCallsignsChanged)
@@ -34,7 +34,7 @@ public:
 
     //! VU values, 0..1
     //! @{
-    double getInputVolumePeakVU()  const { return m_afvClient->getInputVolumePeakVU(); }
+    double getInputVolumePeakVU() const { return m_afvClient->getInputVolumePeakVU(); }
     double getOutputVolumePeakVU() const { return m_afvClient->getOutputVolumePeakVU(); }
     //! @}
 
@@ -90,7 +90,7 @@ public:
     //! Loopback
     //! @{
     Q_INVOKABLE void setLoopBack(bool on) { m_afvClient->setLoopBack(on); }
-    Q_INVOKABLE bool isLoopback() const   { return m_afvClient->isLoopback(); }
+    Q_INVOKABLE bool isLoopback() const { return m_afvClient->isLoopback(); }
     //! @}
 
     //! \copydoc BlackCore::Afv::Clients::CAfvClient::setInputVolumeDb

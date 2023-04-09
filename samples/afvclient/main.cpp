@@ -38,8 +38,7 @@ int main(int argc, char *argv[])
     voiceClient->start(QThread::TimeCriticalPriority); // background thread
     CAfvClientBridge *voiceClientBridge = new CAfvClientBridge(voiceClient, &qa);
 
-    QObject::connect(&qa, &QCoreApplication::aboutToQuit, [voiceClient]()
-    {
+    QObject::connect(&qa, &QCoreApplication::aboutToQuit, [voiceClient]() {
         voiceClient->quitAndWait();
     });
 
@@ -54,8 +53,8 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     QQmlContext *ctxt = engine.rootContext();
     ctxt->setContextProperty("afvMapReader", afvMapReader);
-    ctxt->setContextProperty("voiceClient",  voiceClientBridge);
-    ctxt->setContextProperty("userName",     defaultUserName);
+    ctxt->setContextProperty("voiceClient", voiceClientBridge);
+    ctxt->setContextProperty("userName", defaultUserName);
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     return a.exec();

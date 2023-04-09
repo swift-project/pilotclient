@@ -46,19 +46,13 @@ namespace BlackSample
         CLongitude deltaLng = geo.longitude() - lng;
 
         out << latStr << " " << lngStr << Qt::endl;
-        out <<
-            lat.value(CAngleUnit::deg()) << " " << lat.value(CAngleUnit::sexagesimalDeg())  << " " <<
-            lng.value(CAngleUnit::deg()) << " " << lng.value(CAngleUnit::sexagesimalDeg()) << Qt::endl;
-        out <<
-            geo.latitude().value(CAngleUnit::deg()) << " " << geo.latitude().value(CAngleUnit::sexagesimalDeg()) << " " <<
-            geo.longitude().value(CAngleUnit::deg()) << " " << geo.longitude().value(CAngleUnit::sexagesimalDeg()) << Qt::endl;
+        out << lat.value(CAngleUnit::deg()) << " " << lat.value(CAngleUnit::sexagesimalDeg()) << " " << lng.value(CAngleUnit::deg()) << " " << lng.value(CAngleUnit::sexagesimalDeg()) << Qt::endl;
+        out << geo.latitude().value(CAngleUnit::deg()) << " " << geo.latitude().value(CAngleUnit::sexagesimalDeg()) << " " << geo.longitude().value(CAngleUnit::deg()) << " " << geo.longitude().value(CAngleUnit::sexagesimalDeg()) << Qt::endl;
 
         out << deltaLat.valueRoundedWithUnit(digits) << " " << deltaLng.valueRoundedWithUnit(digits) << Qt::endl;
 
         // equal test
-        out << "Equal? " <<
-            BlackMisc::boolToYesNo(lat == geo.latitude()) << " "  <<
-            BlackMisc::boolToYesNo(lng == geo.longitude()) << Qt::endl;
+        out << "Equal? " << BlackMisc::boolToYesNo(lat == geo.latitude()) << " " << BlackMisc::boolToYesNo(lng == geo.longitude()) << Qt::endl;
 
         // check if conversions to xyz have messed something up
         QVector3D geoVector = geo.normalVector();

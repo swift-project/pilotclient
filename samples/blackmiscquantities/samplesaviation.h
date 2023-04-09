@@ -17,7 +17,7 @@ class QTextStream;
 namespace BlackSample
 {
 
-//! Samples for aviation
+    //! Samples for aviation
     class CSamplesAviation
     {
     public:

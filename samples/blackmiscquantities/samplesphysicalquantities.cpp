@@ -53,7 +53,7 @@ namespace BlackSample
 
         l2.switchUnit(CLengthUnit::ft()); // now in ft
         l3 += l3; // 2km now
-        l3 *= 1.5;// 3km now
+        l3 *= 1.5; // 3km now
         out << l2 << " " << l3 << Qt::endl;
 
         l3 = l3 * 2;
@@ -104,7 +104,8 @@ namespace BlackSample
         CTemperature t2(20, CTemperatureUnit::C());
         CTemperature t3(1, CTemperatureUnit::F());
         out << t1 << " " << t2 << " " << t2.valueRoundedWithUnit(CTemperatureUnit::defaultUnit(), -1, true);
-        out << t3.valueRoundedWithUnit(CTemperatureUnit::F(), -1, true)  << " " << t3.valueRoundedWithUnit(CTemperatureUnit::C(), -1, true) << " " << "I18N/UTF" << Qt::endl;
+        out << t3.valueRoundedWithUnit(CTemperatureUnit::F(), -1, true) << " " << t3.valueRoundedWithUnit(CTemperatureUnit::C(), -1, true) << " "
+            << "I18N/UTF" << Qt::endl;
 
         (t1 - t2).switchUnit(CTemperatureUnit::F()); // was not working since wrong return type const
         // CLengthUnit duA(CSpeedUnit::ft_min()); // no longer possible
@@ -125,7 +126,8 @@ namespace BlackSample
         out << ti6 << " " << ti7 << " " << ti8 << Qt::endl;
 
         CAcceleration ac1(10, CAccelerationUnit::m_s2());
-        out << ac1 << " " << ac1.toQString(true) << " " << ac1.valueRoundedWithUnit(-1, true) << " " << "I18N/UTF" << Qt::endl;
+        out << ac1 << " " << ac1.toQString(true) << " " << ac1.valueRoundedWithUnit(-1, true) << " "
+            << "I18N/UTF" << Qt::endl;
 
         // bye
         out << "-----------------------------------------------" << Qt::endl;

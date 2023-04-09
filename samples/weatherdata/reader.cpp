@@ -47,11 +47,11 @@ void CLineReader::run()
         const QStringList parts = line.split(' ');
         if (parts.size() == 2)
         {
-            const CLatitude  latitude(CAngle::parsedFromString(parts.front(), CPqString::SeparatorBestGuess, CAngleUnit::deg()));
+            const CLatitude latitude(CAngle::parsedFromString(parts.front(), CPqString::SeparatorBestGuess, CAngleUnit::deg()));
             const CLongitude longitude(CAngle::parsedFromString(parts.back(), CPqString::SeparatorBestGuess, CAngleUnit::deg()));
-            const CAltitude  alt(600, CLengthUnit::m());
+            const CAltitude alt(600, CLengthUnit::m());
 
-            const CCoordinateGeodetic position { latitude, longitude, alt};
+            const CCoordinateGeodetic position { latitude, longitude, alt };
             emit weatherDataRequest(position);
         }
         else
