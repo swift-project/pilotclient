@@ -93,12 +93,12 @@ namespace BlackMiscTest
         CHotkeyCombination comb1;
         comb1.addKeyboardKey(Key_ControlLeft);
         comb1.addKeyboardKey(Key_D);
-        CActionHotkey actionHotkey1 (CIdentifier::anonymous(), comb1, "action");
+        CActionHotkey actionHotkey1(CIdentifier::anonymous(), comb1, "action");
 
         CHotkeyCombination comb2;
         comb2.addKeyboardKey(Key_ControlLeft);
         comb2.addKeyboardKey(Key_D);
-        CActionHotkey actionHotkey2 (CIdentifier::anonymous(), comb2, "action");
+        CActionHotkey actionHotkey2(CIdentifier::anonymous(), comb2, "action");
         QVERIFY2(actionHotkey1 == actionHotkey2, "Objects should equal");
     }
 
@@ -107,24 +107,24 @@ namespace BlackMiscTest
         CHotkeyCombination comb;
         comb.addKeyboardKey(Key_ControlLeft);
         comb.addKeyboardKey(Key_D);
-        CActionHotkey actionHotkey1 (CIdentifier::anonymous(), comb, "action");
+        CActionHotkey actionHotkey1(CIdentifier::anonymous(), comb, "action");
 
         CHotkeyCombination comb2;
         comb2.addKeyboardKey(Key_ControlLeft);
         comb2.addKeyboardKey(Key_C);
-        CActionHotkey actionHotkey2 (CIdentifier::anonymous(), comb2, "action");
+        CActionHotkey actionHotkey2(CIdentifier::anonymous(), comb2, "action");
         QVERIFY2(actionHotkey1 != actionHotkey2, "Objects should not be equal");
 
         CHotkeyCombination comb3;
         comb3.addKeyboardKey(Key_ShiftLeft);
         comb3.addKeyboardKey(Key_D);
-        CActionHotkey actionHotkey3 (CIdentifier::anonymous(), comb2, "action");
+        CActionHotkey actionHotkey3(CIdentifier::anonymous(), comb2, "action");
         QVERIFY2(actionHotkey1 != actionHotkey3, "Objects should not be equal");
 
         CHotkeyCombination comb4;
         comb4.addKeyboardKey(Key_ControlLeft);
         comb4.addKeyboardKey(Key_D);
-        CActionHotkey actionHotkey4 (CIdentifier::anonymous(), comb2, "other_action");
+        CActionHotkey actionHotkey4(CIdentifier::anonymous(), comb2, "other_action");
         QVERIFY2(actionHotkey1 != actionHotkey4, "Objects should not be equal");
     }
 
@@ -133,14 +133,14 @@ namespace BlackMiscTest
         CHotkeyCombination comb1;
         comb1.addKeyboardKey(Key_ControlLeft);
         comb1.addKeyboardKey(Key_C);
-        CActionHotkey actionHotkey1 (CIdentifier::anonymous(), comb1, "action");
+        CActionHotkey actionHotkey1(CIdentifier::anonymous(), comb1, "action");
         CActionHotkeyList list1;
         list1.push_back(actionHotkey1);
 
         CHotkeyCombination comb2;
         comb2.addKeyboardKey(Key_ControlLeft);
         comb2.addKeyboardKey(Key_D);
-        CActionHotkey actionHotkey2 (CIdentifier::anonymous(), comb2, "action");
+        CActionHotkey actionHotkey2(CIdentifier::anonymous(), comb2, "action");
         CActionHotkeyList list2;
         list2.push_back(actionHotkey2);
         QVERIFY2(CVariant::fromValue(list1) != CVariant::fromValue(list2), "List should not be equal");
@@ -151,16 +151,16 @@ namespace BlackMiscTest
         CHotkeyCombination comb1;
         comb1.addKeyboardKey(Key_ControlLeft);
         comb1.addKeyboardKey(Key_D);
-        CActionHotkey actionHotkey1 (CIdentifier::anonymous(), comb1, "action");
+        CActionHotkey actionHotkey1(CIdentifier::anonymous(), comb1, "action");
 
         CHotkeyCombination comb2;
         comb2.addKeyboardKey(Key_ControlLeft);
-        CActionHotkey actionHotkey2 (CIdentifier::anonymous(), comb2, "action");
+        CActionHotkey actionHotkey2(CIdentifier::anonymous(), comb2, "action");
 
         CHotkeyCombination comb3;
         comb3.addKeyboardKey(Key_ShiftLeft);
         comb3.addKeyboardKey(Key_D);
-        CActionHotkey actionHotkey3 (CIdentifier::anonymous(), comb3, "action");
+        CActionHotkey actionHotkey3(CIdentifier::anonymous(), comb3, "action");
 
         CActionHotkeyList list1;
         list1.push_back(actionHotkey1);
@@ -173,17 +173,17 @@ namespace BlackMiscTest
     {
         CHotkeyCombination comb1;
         comb1.addKeyboardKey(Key_ControlLeft);
-        CActionHotkey actionHotkey1 (CIdentifier::anonymous(), comb1, "action");
+        CActionHotkey actionHotkey1(CIdentifier::anonymous(), comb1, "action");
 
         CHotkeyCombination comb2;
         comb2.addKeyboardKey(Key_ControlLeft);
         comb2.addKeyboardKey(Key_D);
-        CActionHotkey actionHotkey2 (CIdentifier::anonymous(), comb2, "action");
+        CActionHotkey actionHotkey2(CIdentifier::anonymous(), comb2, "action");
 
         CHotkeyCombination comb3;
         comb3.addKeyboardKey(Key_ShiftLeft);
         comb3.addKeyboardKey(Key_D);
-        CActionHotkey actionHotkey3 (CIdentifier::anonymous(), comb3, "action");
+        CActionHotkey actionHotkey3(CIdentifier::anonymous(), comb3, "action");
 
         CActionHotkeyList list1;
         list1.push_back(actionHotkey1);

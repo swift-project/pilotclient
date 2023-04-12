@@ -13,12 +13,10 @@
 //! \file
 //! \ingroup testblackcore
 
-
-
 namespace BlackCoreTest
 {
 
-} //namespace
+} // namespace
 
 //! \endcond
 

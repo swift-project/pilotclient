@@ -160,8 +160,8 @@ namespace BlackMiscTest
         QCOMPARE(f1.valueRounded(CFrequencyUnit::kHz(), 2), 1000.0); // "Mega is 1000kHz
         QCOMPARE(f1.value(), 1.0); // 1MHz
         QCOMPARE(f1.value(CFrequencyUnit::defaultUnit()), 1000000.0); // 1E6 Hz
-        CFrequency f2(1e+6, CFrequencyUnit::Hz()) ; // 1 Megahertz
-        QVERIFY2(f1 == f2 , "MHz is 1E6 Hz");
+        CFrequency f2(1e+6, CFrequencyUnit::Hz()); // 1 Megahertz
+        QVERIFY2(f1 == f2, "MHz is 1E6 Hz");
     }
 
     void CTestPhysicalQuantities::angleTests()
@@ -268,7 +268,8 @@ namespace BlackMiscTest
         a1.switchUnit(CAccelerationUnit::ft_s2());
         QVERIFY2(a1 == a2, "Accelerations should be similar");
         QVERIFY2(CMathUtils::epsilonEqual(BlackMisc::Math::CMathUtils::round(a2.value() * ftFactor, 6),
-                                          a1.valueRounded(6)), "Numerical values should be equal");
+                                          a1.valueRounded(6)),
+                 "Numerical values should be equal");
     }
 
     void CTestPhysicalQuantities::memoryTests()
@@ -293,7 +294,6 @@ namespace BlackMiscTest
         QVERIFY2(CLength(-22.8, CLengthUnit::ft()) != CLength("-22.8 cm"), "Length !=");
         QVERIFY2(CSpeed(123.45, CSpeedUnit::km_h()) == CSpeed("123.45km/h"), "Speed");
         QVERIFY2(CMass(33.45, CMassUnit::kg()) == CMass("33.45000 kg"), "CMass");
-
 
         // parsing via variant
         CSpeed parsedPq1 = CPqString::parseToVariant("100.123 km/h").value<CSpeed>();
@@ -336,7 +336,6 @@ namespace BlackMiscTest
         CAngle a2(1.5 * CAngle::PI(), CAngleUnit::rad());
         a1 += a2;
         QVERIFY2(a1.valueInteger(CAngleUnit::deg()) == 450, "Expect 450 degrees");
-
     }
 
     void CTestPhysicalQuantities::literalsTest()

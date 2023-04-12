@@ -70,7 +70,7 @@ namespace BlackMiscTest
         const CAltitude base1 { 0, CAltitude::AboveGround, CLengthUnit::ft() };
         const CAltitude top1 { 5000, CAltitude::AboveGround, CLengthUnit::ft() };
 
-        CCloudLayer cl1 (base1, top1, CCloudLayer::Scattered);
+        CCloudLayer cl1(base1, top1, CCloudLayer::Scattered);
         QVERIFY(cl1.getBase() == base1);
         QVERIFY(cl1.getTop() == top1);
         QCOMPARE(cl1.getPrecipitationRate(), 0.0);
@@ -94,9 +94,9 @@ namespace BlackMiscTest
         QVERIFY(cll.containsBase(base1));
         QVERIFY(cll.containsBase(base2));
         QVERIFY(!cll.containsBase(base3));
-        QVERIFY(cll.findByBase(base1) != CCloudLayer() );
-        QVERIFY(cll.findByBase(base2) != CCloudLayer() );
-        QVERIFY(cll.findByBase(base3) == CCloudLayer() );
+        QVERIFY(cll.findByBase(base1) != CCloudLayer());
+        QVERIFY(cll.findByBase(base2) != CCloudLayer());
+        QVERIFY(cll.findByBase(base3) == CCloudLayer());
     }
 
     void CTestWeather::temperatureLayer()
@@ -106,7 +106,7 @@ namespace BlackMiscTest
         const CTemperature dp1 { 15, CTemperatureUnit::C() };
         const double rh = 80.0;
 
-        CTemperatureLayer tl1 (level1, temp1, dp1, rh);
+        CTemperatureLayer tl1(level1, temp1, dp1, rh);
         QVERIFY(tl1.getLevel() == level1);
         QVERIFY(tl1.getTemperature() == temp1);
         QVERIFY(tl1.getDewPoint() == dp1);
@@ -116,8 +116,8 @@ namespace BlackMiscTest
         CTemperatureLayerList tll { tl1 };
         QVERIFY(tll.containsLevel(level1));
         QVERIFY(!tll.containsLevel(level2));
-        QVERIFY(tll.findByLevel(level1) != CTemperatureLayer() );
-        QVERIFY(tll.findByLevel(level2) == CTemperatureLayer() );
+        QVERIFY(tll.findByLevel(level1) != CTemperatureLayer());
+        QVERIFY(tll.findByLevel(level2) == CTemperatureLayer());
     }
 
     void CTestWeather::visibilityLayer()
@@ -126,7 +126,7 @@ namespace BlackMiscTest
         const CAltitude top1 { 5000, CAltitude::AboveGround, CLengthUnit::ft() };
         const CLength visibility1 { 10, CLengthUnit::SM() };
 
-        CVisibilityLayer vl1 (base1, top1, visibility1);
+        CVisibilityLayer vl1(base1, top1, visibility1);
         QVERIFY(vl1.getBase() == base1);
         QVERIFY(vl1.getTop() == top1);
         QVERIFY(vl1.getVisibility() == visibility1);
@@ -135,8 +135,8 @@ namespace BlackMiscTest
         CVisibilityLayerList vll { vl1 };
         QVERIFY(vll.containsBase(base1));
         QVERIFY(!vll.containsBase(base2));
-        QVERIFY(vll.findByBase(base1) != CVisibilityLayer() );
-        QVERIFY(vll.findByBase(base2) == CVisibilityLayer() );
+        QVERIFY(vll.findByBase(base1) != CVisibilityLayer());
+        QVERIFY(vll.findByBase(base2) == CVisibilityLayer());
     }
 
     void CTestWeather::windLayer()
@@ -146,7 +146,7 @@ namespace BlackMiscTest
         const CSpeed speed1 { 10, CSpeedUnit::kts() };
         const CSpeed gustSpeed1 { 20, CSpeedUnit::kts() };
 
-        CWindLayer wl1 (level1, direction1, speed1, gustSpeed1);
+        CWindLayer wl1(level1, direction1, speed1, gustSpeed1);
         QVERIFY(wl1.getLevel() == level1);
         QVERIFY(wl1.getDirection() == direction1);
         QVERIFY(wl1.getSpeed() == speed1);
@@ -156,8 +156,8 @@ namespace BlackMiscTest
         CWindLayerList wll { wl1 };
         QVERIFY(wll.containsLevel(level1));
         QVERIFY(!wll.containsLevel(level2));
-        QVERIFY(wll.findByLevel(level1) != CWindLayer() );
-        QVERIFY(wll.findByLevel(level2) == CWindLayer() );
+        QVERIFY(wll.findByLevel(level1) != CWindLayer());
+        QVERIFY(wll.findByLevel(level2) == CWindLayer());
     }
 
     void CTestWeather::metarDecoder()

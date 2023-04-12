@@ -95,9 +95,9 @@ namespace BlackMiscTest
         //! Detect whether the slot was called, for verification.
         bool slotFired();
 
-        std::promise<void> m_slotFired;     //!< Flag marking whether the slot was called.
-        BlackMisc::CCached<int> m_value1;   //!< First cached value.
-        BlackMisc::CCached<int> m_value2;   //!< Second cached value.
+        std::promise<void> m_slotFired; //!< Flag marking whether the slot was called.
+        BlackMisc::CCached<int> m_value1; //!< First cached value.
+        BlackMisc::CCached<int> m_value2; //!< Second cached value.
     };
 
     void CTestValueCache::initTestCase()
@@ -107,19 +107,16 @@ namespace BlackMiscTest
 
     void CTestValueCache::insertAndGet()
     {
-        CVariantMap testData
-        {
+        CVariantMap testData {
             { "value1", CVariant::from(1) },
             { "value2", CVariant::from(2) },
             { "value3", CVariant::from(3) }
         };
-        CVariantMap testData2
-        {
+        CVariantMap testData2 {
             { "value2", CVariant::from(42) },
             { "value4", CVariant::from(4) }
         };
-        CVariantMap testDataCombined
-        {
+        CVariantMap testDataCombined {
             { "value1", CVariant::from(1) },
             { "value2", CVariant::from(42) },
             { "value3", CVariant::from(3) },
@@ -140,7 +137,7 @@ namespace BlackMiscTest
         if (object->thread() != QThread::currentThread())
         {
             std::promise<void> promise;
-            QTimer::singleShot(0, object, [ & ] { promise.set_value(); });
+            QTimer::singleShot(0, object, [&] { promise.set_value(); });
             promise.get_future().wait();
         }
     }
@@ -163,17 +160,17 @@ namespace BlackMiscTest
     {
         user1.m_value1.set(42);
         QVERIFY(user2.slotFired());
-        QVERIFY(! user1.slotFired());
-        singleShotAndWait(&user2, [ & ] { QVERIFY(user2.m_value1.get() == 42); });
+        QVERIFY(!user1.slotFired());
+        singleShotAndWait(&user2, [&] { QVERIFY(user2.m_value1.get() == 42); });
         QVERIFY(user1.m_value1.get() == 42);
 
         user1.m_value2.set(42);
         user2.slotFired();
         auto status = user1.m_value2.set(-1337);
         QVERIFY(status.isFailure());
-        QVERIFY(! user1.slotFired());
-        QVERIFY(! user2.slotFired());
-        singleShotAndWait(&user2, [ & ] { QVERIFY(user2.m_value2.get() == 42); });
+        QVERIFY(!user1.slotFired());
+        QVERIFY(!user2.slotFired());
+        singleShotAndWait(&user2, [&] { QVERIFY(user2.m_value2.get() == 42); });
         QVERIFY(user1.m_value2.get() == 42);
     }
     //! \endcond
@@ -209,13 +206,11 @@ namespace BlackMiscTest
 
         CValueCache thisCache(1);
         CValueCache otherCache(1);
-        connect(&thisCache, &CValueCache::valuesChangedByLocal, &thisCache, [ & ](const CValueCachePacket &values)
-        {
+        connect(&thisCache, &CValueCache::valuesChangedByLocal, &thisCache, [&](const CValueCachePacket &values) {
             QMetaObject::invokeMethod(&thisCache, [=, &thisCache] { thisCache.changeValuesFromRemote(values, thisProcess); });
             QMetaObject::invokeMethod(&otherCache, [=, &otherCache] { otherCache.changeValuesFromRemote(values, otherProcess); });
         });
-        connect(&otherCache, &CValueCache::valuesChangedByLocal, &thisCache, [ & ](const CValueCachePacket &values)
-        {
+        connect(&otherCache, &CValueCache::valuesChangedByLocal, &thisCache, [&](const CValueCachePacket &values) {
             QMetaObject::invokeMethod(&thisCache, [=, &thisCache] { thisCache.changeValuesFromRemote(values, otherProcess); });
             QMetaObject::invokeMethod(&otherCache, [=, &otherCache] { otherCache.changeValuesFromRemote(values, thisProcess); });
         });
@@ -229,13 +224,13 @@ namespace BlackMiscTest
         otherUser.moveToThread(&thread);
         thread.start();
 
-        singleShotAndWait(&otherUser, [ & ] { otherUser.m_value1.set(99); });
+        singleShotAndWait(&otherUser, [&] { otherUser.m_value1.set(99); });
         thisUser.m_value1.set(100);
         QCoreApplication::processEvents();
         waitForQueueOf(&otherUser);
         QVERIFY(thisUser.slotFired() != otherUser.slotFired());
         auto thisValue = thisUser.m_value1.get();
-        singleShotAndWait(&otherUser, [ & ] { QVERIFY(thisValue == otherUser.m_value1.get()); });
+        singleShotAndWait(&otherUser, [&] { QVERIFY(thisValue == otherUser.m_value1.get()); });
     }
 
     void CTestValueCache::batched()
@@ -250,10 +245,9 @@ namespace BlackMiscTest
             user1.m_value1.set(42);
             user1.m_value2.set(42);
         }
-        QVERIFY(! user1.slotFired());
+        QVERIFY(!user1.slotFired());
         QVERIFY(user2.slotFired());
-        singleShotAndWait(&user2, [ & ]
-        {
+        singleShotAndWait(&user2, [&] {
             QVERIFY(user2.m_value1.get() == 42);
             QVERIFY(user2.m_value2.get() == 42);
         });
@@ -261,14 +255,12 @@ namespace BlackMiscTest
 
     void CTestValueCache::json()
     {
-        QJsonObject testJson
-        {
+        QJsonObject testJson {
             { "value1", CVariant::from(1).toJson() },
             { "value2", CVariant::from(2).toJson() },
             { "value3", CVariant::from(3).toJson() }
         };
-        CVariantMap testData
-        {
+        CVariantMap testData {
             { "value1", CVariant::from(1) },
             { "value2", CVariant::from(2) },
             { "value3", CVariant::from(3) }
@@ -284,8 +276,7 @@ namespace BlackMiscTest
     {
         CSimulatedAircraftList aircraft({ CSimulatedAircraft("BAW001", {}, {}) });
         CAtcStationList atcStations({ CAtcStation("EGLL_TWR") });
-        const CVariantMap testData
-        {
+        const CVariantMap testData {
             { "namespace1/value1", CVariant::from(1) },
             { "namespace1/value2", CVariant::from(2) },
             { "namespace1/value3", CVariant::from(3) },
@@ -319,9 +310,8 @@ namespace BlackMiscTest
         return value >= 0 && value <= 100;
     }
 
-    CValueCacheUser::CValueCacheUser(CValueCache *cache) :
-        m_value1(cache, "value1", "", validator, 0, this),
-        m_value2(cache, "value2", "", validator, 0, this)
+    CValueCacheUser::CValueCacheUser(CValueCache *cache) : m_value1(cache, "value1", "", validator, 0, this),
+                                                           m_value2(cache, "value2", "", validator, 0, this)
     {
         m_value1.setNotifySlot(&CValueCacheUser::ps_valueChanged);
         m_value2.setNotifySlot(&CValueCacheUser::ps_valueChanged);

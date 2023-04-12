@@ -20,53 +20,58 @@
 //! Implements a main() function that executes all tests in TestObject
 //! without instantiating a QApplication object.
 //! Also adds arguments automatically to print test results to an xml file.
-#define BLACKTEST_INIT(TestObject) \
-TestObject to; \
-QTEST_SET_MAIN_SOURCE_PATH \
-\
-QStringList args; \
-args.reserve(argc); \
-for (int i = 0; i < argc; ++i) \
-{ \
-    args.append(argv[i]); \
-} \
-\
-/* Output to stdout */ \
-args.append({ "-o", "-,txt" }); \
-\
-/* Output to file */ \
-QString resultsFileName = QString(#TestObject).replace("::", "_").toLower(); \
-args.append({ "-o", resultsFileName + "_testresults.xml,xml" }); \
-
+#define BLACKTEST_INIT(TestObject)                                               \
+    TestObject to;                                                               \
+    QTEST_SET_MAIN_SOURCE_PATH                                                   \
+                                                                                 \
+    QStringList args;                                                            \
+    args.reserve(argc);                                                          \
+    for (int i = 0; i < argc; ++i)                                               \
+    {                                                                            \
+        args.append(argv[i]);                                                    \
+    }                                                                            \
+                                                                                 \
+    /* Output to stdout */                                                       \
+    args.append({ "-o", "-,txt" });                                              \
+                                                                                 \
+    /* Output to file */                                                         \
+    QString resultsFileName = QString(#TestObject).replace("::", "_").toLower(); \
+    args.append({ "-o", resultsFileName + "_testresults.xml,xml" });
 
 //! Implements a main() function that executes all tests in TestObject
 //! without instantiating a QApplication object.
 //! Also adds arguments automatically to print test results to an xml file.
-#define BLACKTEST_APPLESS_MAIN(TestObject) \
-int main(int argc, char *argv[]) \
-{ \
-    try { \
-        BLACKTEST_INIT(TestObject) \
-        return QTest::qExec(&to, args); \
-    } catch (...) { \
-        return EXIT_FAILURE; \
-    } \
-}
+#define BLACKTEST_APPLESS_MAIN(TestObject)  \
+    int main(int argc, char *argv[])        \
+    {                                       \
+        try                                 \
+        {                                   \
+            BLACKTEST_INIT(TestObject)      \
+            return QTest::qExec(&to, args); \
+        }                                   \
+        catch (...)                         \
+        {                                   \
+            return EXIT_FAILURE;            \
+        }                                   \
+    }
 
 //! Implements a main() function that executes all tests in TestObject
 //! including instantiating a QCoreApplication object.
 //! Also adds arguments automatically to print test results to an xml file.
-#define BLACKTEST_MAIN(TestObject) \
-int main(int argc, char *argv[]) \
-{ \
-    try { \
-        QCoreApplication app(argc, argv); \
-        BLACKTEST_INIT(TestObject) \
-        return QTest::qExec(&to, args); \
-    } catch (...) { \
-        return EXIT_FAILURE; \
-    } \
-}
+#define BLACKTEST_MAIN(TestObject)            \
+    int main(int argc, char *argv[])          \
+    {                                         \
+        try                                   \
+        {                                     \
+            QCoreApplication app(argc, argv); \
+            BLACKTEST_INIT(TestObject)        \
+            return QTest::qExec(&to, args);   \
+        }                                     \
+        catch (...)                           \
+        {                                     \
+            return EXIT_FAILURE;              \
+        }                                     \
+    }
 
 //! \endcond
 

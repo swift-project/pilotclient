@@ -34,6 +34,7 @@ namespace BlackMiscTest
         }
         QString convertToQString(bool = false) const { return QString::number(m_mask); }
         CTestFilter(unsigned mask = ~0u) : m_mask(mask) {}
+
     private:
         unsigned m_mask = ~0u;
         BLACK_METACLASS(CTestFilter, BLACK_METAMEMBER(mask));

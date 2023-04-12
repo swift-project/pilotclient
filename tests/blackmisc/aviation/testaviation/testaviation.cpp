@@ -238,8 +238,7 @@ namespace BlackMiscTest
             CCoordinateGeodetic(
                 CLatitude::fromWgs84("N 049° 18' 17"),
                 CLongitude::fromWgs84("E 008° 27' 05"),
-                CAltitude(312, CLengthUnit::ft()))
-        );
+                CAltitude(312, CLengthUnit::ft())));
         const CAircraftSituation situation2(situation1);
         QVERIFY2(situation1 == situation2, "situations shall be equal");
 
@@ -285,8 +284,10 @@ namespace BlackMiscTest
         const CAircraftIcaoCode icaoB737("B737", "L2J");
         const CAircraftIcaoCode icaoB747("B747", "L4J");
 
-        CSpeed s172, sB737, sB747; s172 = sB737 = sB747 = CSpeed::null();
-        CLength cg172, cgB737, cgB747; cg172 = cgB737 = cgB747 = CLength::null();
+        CSpeed s172, sB737, sB747;
+        s172 = sB737 = sB747 = CSpeed::null();
+        CLength cg172, cgB737, cgB747;
+        cg172 = cgB737 = cgB747 = CLength::null();
         icao172.guessModelParameters(cg172, s172);
         icaoB737.guessModelParameters(cgB737, sB737);
         icaoB747.guessModelParameters(cgB747, sB747);

@@ -40,7 +40,6 @@
 #include <set>
 #include <vector>
 
-
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
@@ -182,16 +181,14 @@ namespace BlackMiscTest
             QString name;
             int age;
         };
-        CSequence<Person> list
-        {
+        CSequence<Person> list {
             { "Alice", 33 },
             { "Bob", 32 },
             { "Cathy", 32 },
             { "Dave", 31 },
             { "Emily", 31 }
         };
-        CSequence<Person> sorted
-        {
+        CSequence<Person> sorted {
             { "Dave", 31 },
             { "Emily", 31 },
             { "Bob", 32 },
@@ -204,10 +201,8 @@ namespace BlackMiscTest
     void CTestContainers::removeTests()
     {
         const CSequence<int> base { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-        const CSequence<CSequence<int>> subsets
-        {
-            {}, { 1 }, { 9 }, { 5 }, { 1, 9 }, { 1, 5 }, { 5, 9 }, { 1, 2 },
-            { 8, 9 }, { 4, 5, 6 }, { 1, 5, 9 }, { 3, 7 }, { 3, 5, 7 }, base
+        const CSequence<CSequence<int>> subsets {
+            {}, { 1 }, { 9 }, { 5 }, { 1, 9 }, { 1, 5 }, { 5, 9 }, { 1, 2 }, { 8, 9 }, { 4, 5, 6 }, { 1, 5, 9 }, { 3, 7 }, { 3, 5, 7 }, base
         };
         for (const auto &subset : subsets)
         {
@@ -424,7 +419,7 @@ namespace BlackMiscTest
             }
         }
     }
-} //namespace
+} // namespace
 
 //! main
 BLACKTEST_APPLESS_MAIN(BlackMiscTest::CTestContainers);

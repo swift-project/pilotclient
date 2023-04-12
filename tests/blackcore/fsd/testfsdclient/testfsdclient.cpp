@@ -10,9 +10,9 @@
 //! \cond PRIVATE_TESTS
 
 /*!
-* \file
-* \ingroup testblackfsd
-*/
+ * \file
+ * \ingroup testblackfsd
+ */
 
 #include "blackconfig/buildconfig.h"
 #include "blackcore/fsd/fsdclient.h"
@@ -156,7 +156,6 @@ namespace BlackFsdTest
 
     void CTestFSDClient::testConstructor()
     {
-
     }
 
     void CTestFSDClient::testDeleteAtc()
@@ -868,8 +867,7 @@ namespace BlackFsdTest
         QCOMPARE(CConnectionStatus::Connected, arguments.at(1).value<CConnectionStatus>().getConnectionStatus());
 
         QSignalSpy pongSpy(m_client, &CFSDClient::pongReceived);
-        connect(m_client, &CFSDClient::pongReceived, [](const QString & sender, double elapsedTimeM)
-        {
+        connect(m_client, &CFSDClient::pongReceived, [](const QString &sender, double elapsedTimeM) {
             qDebug() << "Received pong from" << sender << "in" << elapsedTimeM << "ms";
         });
         m_client->sendPing("SERVER");
