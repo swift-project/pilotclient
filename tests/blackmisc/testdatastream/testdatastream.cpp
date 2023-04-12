@@ -48,8 +48,7 @@ namespace BlackMiscTest
 
     void CTestDataStream::marshalUnmarshal()
     {
-        CSimulatedAircraftList testData
-        {
+        CSimulatedAircraftList testData {
             { CCallsign("BAW123"), {}, {} },
             { CCallsign("DLH456"), {}, {} },
             { CCallsign("AAL789"), {}, {} }

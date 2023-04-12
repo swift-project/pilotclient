@@ -80,9 +80,9 @@ namespace BlackMiscTest
     }
 
     CTestIdentifiable::CTestIdentifiable(QObject *nameObject) : CIdentifiable(nameObject)
-    { }
+    {}
 
-} //namespace
+} // namespace
 
 //! main
 BLACKTEST_APPLESS_MAIN(BlackMiscTest::CTestIdentifier);

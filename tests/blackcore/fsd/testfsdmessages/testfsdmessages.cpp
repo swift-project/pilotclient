@@ -10,9 +10,9 @@
 //! \cond PRIVATE_TESTS
 
 /*!
-* \file
-* \ingroup testblackfsd
-*/
+ * \file
+ * \ingroup testblackfsd
+ */
 
 #include "blackconfig/buildconfig.h"
 #include "blackcore/fsd/addatc.h"
@@ -196,7 +196,6 @@ namespace BlackMiscTest
         const QStringList tokens = QString("ABCD:SERVER:7a57f2dd9d360d347b").split(':');
         const AuthResponse messageFromTokens = AuthResponse::fromTokens(tokens);
         QCOMPARE(messageFromTokens, message);
-
     }
 
     void CTestFsdMessages::testClientIdentification()
@@ -225,37 +224,37 @@ namespace BlackMiscTest
 
     void CTestFsdMessages::testClientQuery()
     {
-//        const ClientQuery message("ABCD", "@94835", Client::WhoIsTracking);
-//        QCOMPARE(message.sender(), QString("ABCD"));
-//        QCOMPARE(QString("@94835"), message.receiver());
-//        QCOMPARE(ClientQueryType::WhoIsTracking, message.m_queryType);
-//        QCOMPARE(QStringList(), message.m_payload);
+        //        const ClientQuery message("ABCD", "@94835", Client::WhoIsTracking);
+        //        QCOMPARE(message.sender(), QString("ABCD"));
+        //        QCOMPARE(QString("@94835"), message.receiver());
+        //        QCOMPARE(ClientQueryType::WhoIsTracking, message.m_queryType);
+        //        QCOMPARE(QStringList(), message.m_payload);
 
-//        const ClientQuery pdu2("ABCD", "@94835", ClientQueryType::WhoIsTracking, {"LHA449"});
-//        QCOMPARE(QString("ABCD"), pdu2.sender());
-//        QCOMPARE(QString("@94835"), pdu2.receiver());
-//        QCOMPARE(ClientQueryType::WhoIsTracking, pdu2.m_queryType);
-//        QCOMPARE(QStringList {"LHA449"}, pdu2.m_payload);
+        //        const ClientQuery pdu2("ABCD", "@94835", ClientQueryType::WhoIsTracking, {"LHA449"});
+        //        QCOMPARE(QString("ABCD"), pdu2.sender());
+        //        QCOMPARE(QString("@94835"), pdu2.receiver());
+        //        QCOMPARE(ClientQueryType::WhoIsTracking, pdu2.m_queryType);
+        //        QCOMPARE(QStringList {"LHA449"}, pdu2.m_payload);
 
-//        const ClientQuery message("ABCD", "@94835", ClientQueryType::WhoIsTracking, {"LHA449"});
-//        QString stringRef("ABCD:@94835:WH:LHA449");
-//        QString str = message.toTokens().join(":");
-//        QCOMPARE(str, stringRef);
+        //        const ClientQuery message("ABCD", "@94835", ClientQueryType::WhoIsTracking, {"LHA449"});
+        //        QString stringRef("ABCD:@94835:WH:LHA449");
+        //        QString str = message.toTokens().join(":");
+        //        QCOMPARE(str, stringRef);
 
-//        const ClientQuery reference("ABCD", "@94835", ClientQueryType::WhoIsTracking, {"LHA449"});
+        //        const ClientQuery reference("ABCD", "@94835", ClientQueryType::WhoIsTracking, {"LHA449"});
 
-//        QStringList tokens = QString("ABCD:@94835:WH:LHA449").split(':');
-//        const ClientQuery messageFromTokens = ClientQuery::fromTokens(tokens);
-//        QCOMPARE(messageFromTokens, message);
+        //        QStringList tokens = QString("ABCD:@94835:WH:LHA449").split(':');
+        //        const ClientQuery messageFromTokens = ClientQuery::fromTokens(tokens);
+        //        QCOMPARE(messageFromTokens, message);
     }
 
     void CTestFsdMessages::testClientResponse()
     {
-        const ClientResponse message("ABCD", "SERVER", ClientQueryType::Capabilities, {"MODELDESC=1","ATCINFO=1"});
+        const ClientResponse message("ABCD", "SERVER", ClientQueryType::Capabilities, { "MODELDESC=1", "ATCINFO=1" });
         QCOMPARE(message.sender(), QString("ABCD"));
         QCOMPARE(message.receiver(), QString("SERVER"));
         QCOMPARE(ClientQueryType::Capabilities, message.m_queryType);
-        QStringList reference {"MODELDESC=1","ATCINFO=1"};
+        QStringList reference { "MODELDESC=1", "ATCINFO=1" };
         QCOMPARE(reference, message.m_responseData);
 
         QString stringRef("ABCD:SERVER:CAPS:MODELDESC=1:ATCINFO=1");
@@ -299,7 +298,6 @@ namespace BlackMiscTest
         QStringList tokens = QString("ABCD:1234567").split(':');
         auto messageFromTokens = DeletePilot::fromTokens(tokens);
         QCOMPARE(messageFromTokens, message);
-
     }
 
     void CTestFsdMessages::testEuroscopeSimData()
@@ -344,7 +342,7 @@ namespace BlackMiscTest
     void CTestFsdMessages::testFlightPlan()
     {
         const FlightPlan message("ABCD", "SERVER", FlightType::VFR, "B744", 420, "EGLL", 1530, 1535, "FL350", "KORD", 8, 15,
-                                9, 30, "NONE", "Unit Test", "EGLL.KORD");
+                                 9, 30, "NONE", "Unit Test", "EGLL.KORD");
 
         QCOMPARE(message.sender(), QString("ABCD"));
         QCOMPARE(message.receiver(), QString("SERVER"));
@@ -375,7 +373,6 @@ namespace BlackMiscTest
 
     void CTestFsdMessages::testFSDIdentification()
     {
-
     }
 
     void CTestFsdMessages::testInterimPilotDataUpdate()
@@ -430,10 +427,13 @@ namespace BlackMiscTest
 
     void CTestFsdMessages::testPBH()
     {
-        struct PBH { int pitch, bank, heading; };
+        struct PBH
+        {
+            int pitch, bank, heading;
+        };
         QVector<PBH> testData;
-        for (int pitch = -90; pitch < 90; pitch++)      { testData.push_back({ pitch, 0, 0 }); }
-        for (int bank = -179; bank < 180; bank++)       { testData.push_back({ 0, bank, 0 }); }
+        for (int pitch = -90; pitch < 90; pitch++) { testData.push_back({ pitch, 0, 0 }); }
+        for (int bank = -179; bank < 180; bank++) { testData.push_back({ 0, bank, 0 }); }
         for (int heading = 0; heading < 360; heading++) { testData.push_back({ 0, 0, heading }); }
         for (const auto &input : testData)
         {
@@ -463,7 +463,7 @@ namespace BlackMiscTest
     void CTestFsdMessages::testPilotDataUpdate()
     {
         const PilotDataUpdate message(CTransponder::ModeC, "ABCD", 7000, PilotRating::Student, 43.12578, -72.15841, 12000, 12008,
-                                   125, -2, 3, 280, true);
+                                      125, -2, 3, 280, true);
 
         QCOMPARE(message.sender(), QString("ABCD"));
         QCOMPARE(QString(""), message.receiver());
@@ -706,7 +706,6 @@ namespace BlackMiscTest
 
     void CTestFsdMessages::testTextMessage()
     {
-
     }
 }
 

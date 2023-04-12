@@ -58,8 +58,10 @@ namespace BlackMiscTest
         auto s3 = CStatusMessage().info(u"literal percent: %");
         auto s4 = CStatusMessage().info(u"literal percent: %%");
         auto s5 = CStatusMessage().info(u"literal percents: %%%");
-        auto s6 = CStatusMessage().info(u"will be expanded: %1%2") << "foo" << "bar";
-        auto s7 = CStatusMessage().info(u"will be expanded: %1+%2") << "foo" << "bar";
+        auto s6 = CStatusMessage().info(u"will be expanded: %1%2") << "foo"
+                                                                   << "bar";
+        auto s7 = CStatusMessage().info(u"will be expanded: %1+%2") << "foo"
+                                                                    << "bar";
         auto s8 = CStatusMessage().info(u"will be expanded: %012") << "foo";
 
         QVERIFY(s1.getMessage() == u"literal percent: %1");

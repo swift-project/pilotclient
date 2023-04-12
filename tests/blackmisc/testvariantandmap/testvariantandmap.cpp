@@ -73,10 +73,10 @@ namespace BlackMiscTest
 
         // methods needed for metatype registration
         QString toQString(bool) const { return {}; }
-        friend QDBusArgument &operator <<(QDBusArgument &arg, const CTestMatcher &) { return arg; }
-        friend const QDBusArgument &operator >>(const QDBusArgument &arg, CTestMatcher &) { return arg; }
-        friend QDataStream &operator <<(QDataStream &ds, const CTestMatcher &) { return ds; }
-        friend QDataStream &operator >>(QDataStream &ds, CTestMatcher &) { return ds; }
+        friend QDBusArgument &operator<<(QDBusArgument &arg, const CTestMatcher &) { return arg; }
+        friend const QDBusArgument &operator>>(const QDBusArgument &arg, CTestMatcher &) { return arg; }
+        friend QDataStream &operator<<(QDataStream &ds, const CTestMatcher &) { return ds; }
+        friend QDataStream &operator>>(QDataStream &ds, CTestMatcher &) { return ds; }
     };
 } // namespace
 

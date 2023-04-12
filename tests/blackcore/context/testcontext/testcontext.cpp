@@ -22,7 +22,7 @@
 #include <QTest>
 
 #ifdef Q_OS_WIN
-#include "comdef.h"
+#    include "comdef.h"
 #endif
 
 using namespace BlackMisc;

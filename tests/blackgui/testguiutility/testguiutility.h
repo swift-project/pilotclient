@@ -21,8 +21,7 @@
 namespace BlackGuiTest
 {
 
-
-} //namespace
+} // namespace
 
 //! \endcond
 

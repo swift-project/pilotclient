@@ -14,8 +14,6 @@
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "test.h"
 
-
-
 #include <QDebug>
 #include <QTest>
 #include <QtDebug>

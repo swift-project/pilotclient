@@ -82,7 +82,11 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
         void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CTestValueObject>(); return; }
+            if (index.isMyself())
+            {
+                (*this) = variant.to<CTestValueObject>();
+                return;
+            }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -122,13 +126,13 @@ namespace BlackMisc
     struct CNotHashable
     {
         int n;
-        bool operator <(const CNotHashable &other) const { return n < other.n; }
+        bool operator<(const CNotHashable &other) const { return n < other.n; }
         QString toQString(bool = false) const { return {}; }
     };
-    inline QJsonArray &operator <<(QJsonArray &a, const CNotHashable &) { return a; }
-    inline const QJsonValueRef &operator >>(const QJsonValueRef &v, CNotHashable &) { return v; }
-    inline QDBusArgument &operator <<(QDBusArgument &a, const CNotHashable &) { return a; }
-    inline const QDBusArgument &operator >>(const QDBusArgument &a, const CNotHashable &) { return a; }
+    inline QJsonArray &operator<<(QJsonArray &a, const CNotHashable &) { return a; }
+    inline const QJsonValueRef &operator>>(const QJsonValueRef &v, CNotHashable &) { return v; }
+    inline QDBusArgument &operator<<(QDBusArgument &a, const CNotHashable &) { return a; }
+    inline const QDBusArgument &operator>>(const QDBusArgument &a, const CNotHashable &) { return a; }
     //! \endcond
 
 } // namespace

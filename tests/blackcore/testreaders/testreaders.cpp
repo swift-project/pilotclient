@@ -63,8 +63,8 @@ namespace BlackCoreTest
 
     private:
         BlackCore::Db::CAirportDataReader *m_airportReader = nullptr;
-        BlackCore::Db::CIcaoDataReader    *m_icaoReader = nullptr;
-        BlackCore::Db::CModelDataReader   *m_modelReader = nullptr;
+        BlackCore::Db::CIcaoDataReader *m_icaoReader = nullptr;
+        BlackCore::Db::CModelDataReader *m_modelReader = nullptr;
 
         //! Test if server is available
         static bool connectServer(const BlackMisc::Network::CUrl &url);
@@ -84,7 +84,11 @@ namespace BlackCoreTest
     {
         const CUrl url(sApp->getGlobalSetup().getDbIcaoReaderUrl());
         qDebug() << "Reader URL" << url.toQString();
-        if (!this->connectServer(url)) { QSKIP("Server not reachable."); return; }
+        if (!this->connectServer(url))
+        {
+            QSKIP("Server not reachable.");
+            return;
+        }
         m_icaoReader->start();
         m_icaoReader->readInBackgroundThread(CEntityFlags::AllIcaoEntities, QDateTime());
 
@@ -135,7 +139,11 @@ namespace BlackCoreTest
     {
         const CUrl url(sApp->getGlobalSetup().getDbModelReaderUrl());
         qDebug() << "Reader URL" << url.toQString();
-        if (!this->connectServer(url)) { QSKIP("Server not reachable."); return; }
+        if (!this->connectServer(url))
+        {
+            QSKIP("Server not reachable.");
+            return;
+        }
         m_modelReader->start();
         m_modelReader->readInBackgroundThread(CEntityFlags::ModelEntity, QDateTime());
 
@@ -161,7 +169,11 @@ namespace BlackCoreTest
 
         const CUrl url(sApp->getGlobalSetup().getDbAirportReaderUrl());
         qDebug() << "Reader URL" << url.toQString();
-        if (!this->connectServer(url)) { QSKIP("Server not reachable."); return; }
+        if (!this->connectServer(url))
+        {
+            QSKIP("Server not reachable.");
+            return;
+        }
         m_airportReader->start();
         m_airportReader->readInBackgroundThread(CEntityFlags::AirportEntity, QDateTime());
 

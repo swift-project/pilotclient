@@ -32,7 +32,7 @@ namespace BlackMiscTest
     void CTestProcess::processInfo()
     {
         CProcessInfo invalid;
-        QVERIFY2(! invalid.exists(), "Invalid process shall not exist");
+        QVERIFY2(!invalid.exists(), "Invalid process shall not exist");
 
         CProcessInfo current1(CProcessInfo::currentProcess());
         CProcessInfo current2(QCoreApplication::applicationPid());

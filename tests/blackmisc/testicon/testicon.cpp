@@ -48,7 +48,7 @@ namespace BlackMiscTest
             c++;
         }
     }
-} //namespace
+} // namespace
 
 //! main
 BLACKTEST_MAIN(BlackMiscTest::CTestIcon);

@@ -55,7 +55,7 @@ namespace BlackMiscTest
         interpolator.markAsUnitTest();
 
         // fixed time so everything can be debugged
-        const qint64 ts =  1425000000000; // QDateTime::currentMSecsSinceEpoch()
+        const qint64 ts = 1425000000000; // QDateTime::currentMSecsSinceEpoch()
         const qint64 deltaT = 5000; // ms
         const int number = CRemoteAircraftProviderDummy::MaxPartsPerCallsign;
         // const int numberHalf = number / 2;
@@ -108,7 +108,7 @@ namespace BlackMiscTest
         CCallsign cs("SWIFT");
 
         // fixed time so everything can be debugged
-        const qint64 ts =  1425000000000; // QDateTime::currentMSecsSinceEpoch()
+        const qint64 ts = 1425000000000; // QDateTime::currentMSecsSinceEpoch()
         const qint64 deltaT = 5000; // ms
         const int number = 10;
 

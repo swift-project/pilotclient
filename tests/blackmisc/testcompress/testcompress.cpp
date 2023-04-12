@@ -9,9 +9,9 @@
 //! \cond PRIVATE_TESTS
 
 /*!
-* \file
-* \ingroup testblackmisc
-*/
+ * \file
+ * \ingroup testblackmisc
+ */
 
 #include "blackconfig/buildconfig.h"
 #include "blackmisc/compressutils.h"

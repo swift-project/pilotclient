@@ -64,9 +64,9 @@ namespace BlackMiscTest
     {
         int result = 0;
         CPromise<int> promise;
-        doAfter(promise.future(), nullptr, [ & ](QFuture<int> future) { result = future.result(); });
+        doAfter(promise.future(), nullptr, [&](QFuture<int> future) { result = future.result(); });
         promise.setResult(42);
-        bool ok = qWaitFor([ & ] { return result == 42; });
+        bool ok = qWaitFor([&] { return result == 42; });
         QVERIFY2(ok, "future contains expected result");
     }
 
@@ -81,7 +81,7 @@ namespace BlackMiscTest
         observer.initialize(&dataLink);
 
         mutator.setValue(42);
-        bool ok = qWaitFor([ & ] { return observer.value() == 42; });
+        bool ok = qWaitFor([&] { return observer.value() == 42; });
         QVERIFY2(ok, "expected value received");
         qWait(0);
         QVERIFY2(observer.value() == 42, "still has expected value");
@@ -89,7 +89,7 @@ namespace BlackMiscTest
         CTestScalarObserver observer2(this);
         observer2.initialize(&dataLink);
 
-        ok = qWaitFor([ & ] { return observer2.value() == 42; });
+        ok = qWaitFor([&] { return observer2.value() == 42; });
         QVERIFY2(ok, "new observer got existing value");
         qWait(0);
         QVERIFY2(observer2.value() == 42, "still has correct value");
@@ -107,18 +107,18 @@ namespace BlackMiscTest
 
         observer.setFilter({});
         mutator.addElement(1);
-        bool ok = qWaitFor([ & ] { return observer.allValues() == QList<int> { 1 }; });
+        bool ok = qWaitFor([&] { return observer.allValues() == QList<int> { 1 }; });
         QVERIFY2(ok, "expected value received");
         qWait(0);
         QVERIFY2(observer.allValues() == QList<int> { 1 }, "still has expected value");
 
         for (int e = 2; e <= 6; ++e) { mutator.addElement(e); }
-        ok = qWaitFor([ & ] { return observer.allValues() == QList<int> { 1, 2, 3, 4, 5, 6 }; });
+        ok = qWaitFor([&] { return observer.allValues() == QList<int> { 1, 2, 3, 4, 5, 6 }; });
         QVERIFY2(ok, "expected value received");
 
         observer.allValues() = {};
         observer.setFilter({ 1 });
-        ok = qWaitFor([ & ] { return observer.allValues() == QList<int> { 1, 3, 5 }; });
+        ok = qWaitFor([&] { return observer.allValues() == QList<int> { 1, 3, 5 }; });
         QVERIFY2(ok, "expected value received");
     }
 
@@ -129,8 +129,7 @@ namespace BlackMiscTest
         //! ctor
         Server()
         {
-            QObject::connect(&m_process, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), [](int code, QProcess::ExitStatus status)
-            {
+            QObject::connect(&m_process, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), [](int code, QProcess::ExitStatus status) {
                 qDebug() << "Server process exited" << (status ? "abnormally" : "normally") << "with exit code" << code;
             });
             m_process.start("sharedstatetestserver", QStringList());
@@ -143,6 +142,7 @@ namespace BlackMiscTest
             m_process.kill();
             m_process.waitForFinished();
         }
+
     private:
         QProcess m_process;
     };
@@ -155,7 +155,7 @@ namespace BlackMiscTest
 
         CDataLinkDBus dataLink;
         dataLink.initializeRemote(connection, SWIFT_SERVICENAME);
-        bool ok = qWaitFor([ & ] { return dataLink.watcher()->isConnected(); });
+        bool ok = qWaitFor([&] { return dataLink.watcher()->isConnected(); });
         QVERIFY2(ok, "Connection failed");
 
         CTestScalarObserver observer(this);
@@ -163,13 +163,13 @@ namespace BlackMiscTest
         observer.initialize(&dataLink);
         mutator.initialize(&dataLink);
 
-        ok = qWaitFor([ & ] { return observer.value() == 42; });
+        ok = qWaitFor([&] { return observer.value() == 42; });
         QVERIFY2(ok, "expected value received");
         qWait(1000);
         QVERIFY2(observer.value() == 42, "still has expected value");
 
         mutator.setValue(69);
-        ok = qWaitFor([ & ] { return observer.value() == 69; });
+        ok = qWaitFor([&] { return observer.value() == 69; });
         QVERIFY2(ok, "expected value received");
         qWait(1000);
         QVERIFY2(observer.value() == 69, "still has expected value");
@@ -183,7 +183,7 @@ namespace BlackMiscTest
 
         CDataLinkDBus dataLink;
         dataLink.initializeRemote(connection, SWIFT_SERVICENAME);
-        bool ok = qWaitFor([ & ] { return dataLink.watcher()->isConnected(); });
+        bool ok = qWaitFor([&] { return dataLink.watcher()->isConnected(); });
         QVERIFY2(ok, "Connection failed");
 
         CTestListObserver observer(this);
@@ -192,18 +192,18 @@ namespace BlackMiscTest
         mutator.initialize(&dataLink);
 
         observer.setFilter({});
-        ok = qWaitFor([ & ] { return observer.allValues() == QList<int> { 1, 2, 3, 4, 5, 6 }; });
+        ok = qWaitFor([&] { return observer.allValues() == QList<int> { 1, 2, 3, 4, 5, 6 }; });
         QVERIFY2(ok, "expected value received");
         qWait(1000);
         QVERIFY2(observer.allValues() == QList<int>({ 1, 2, 3, 4, 5, 6 }), "still has expected value");
 
         observer.allValues() = {};
         observer.setFilter({ 1 });
-        ok = qWaitFor([ & ] { return observer.allValues() == QList<int> { 1, 3, 5 }; });
+        ok = qWaitFor([&] { return observer.allValues() == QList<int> { 1, 3, 5 }; });
         QVERIFY2(ok, "expected value received");
 
         mutator.addElement(7);
-        ok = qWaitFor([ & ] { return observer.allValues() == QList<int> { 1, 3, 5, 7 }; });
+        ok = qWaitFor([&] { return observer.allValues() == QList<int> { 1, 3, 5, 7 }; });
         QVERIFY2(ok, "expected value received");
         qWait(1000);
         QVERIFY2(observer.allValues() == QList<int>({ 1, 3, 5, 7 }), "still has expected value");

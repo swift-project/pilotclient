@@ -105,7 +105,7 @@ namespace BlackMiscTest
         double lngOld = 360.0;
 
         qint64 from = ts - 2 * deltaT + offset;
-        qint64 to   = ts; // ts + offset is last value, but we have to consider offset
+        qint64 to = ts; // ts + offset is last value, but we have to consider offset
         qint64 step = deltaT / 20;
         for (qint64 currentTime = from; currentTime < to; currentTime += step)
         {
@@ -139,7 +139,7 @@ namespace BlackMiscTest
         for (int loops = 0; loops < 20; loops++)
         {
             from = startTimeMsSinceEpoch + offset;
-            to   = ts; // ts + offset is last value, but we have to consider offset
+            to = ts; // ts + offset is last value, but we have to consider offset
             step = deltaT / 20;
 
             for (qint64 currentTime = from; currentTime < to; currentTime += step)
@@ -164,7 +164,8 @@ namespace BlackMiscTest
         // this is a risky test as in some situations the values can be exceeded
         int timeMs = timer.elapsed();
         QVERIFY2(timeMs < interpolationNo * 1.5, "Interpolation > 1.5ms");
-        qDebug() << timeMs << "ms" << "for" << interpolationNo << "interpolations";
+        qDebug() << timeMs << "ms"
+                 << "for" << interpolationNo << "interpolations";
 
         int fetchedParts = 0;
         timer.start();
@@ -175,7 +176,8 @@ namespace BlackMiscTest
             QVERIFY2(result.getPartsStatus().isSupportingParts(), "Parts not supported");
         }
         timeMs = timer.elapsed();
-        qDebug() << timeMs << "ms" << "for" << fetchedParts << "fetched parts";
+        qDebug() << timeMs << "ms"
+                 << "for" << fetchedParts << "fetched parts";
     }
 
     void CTestInterpolatorLinear::pbhInterpolatorTest()
@@ -200,7 +202,11 @@ namespace BlackMiscTest
             pbh.setTimeFraction(timeFraction);
             const CHeading heading = pbh.getHeading();
             const double h = heading.value(CAngleUnit::deg());
-            if (i < 1) { lastDeg = h; continue; }
+            if (i < 1)
+            {
+                lastDeg = h;
+                continue;
+            }
             QVERIFY2(h > lastDeg, "Expect increasing heading");
             lastDeg = h;
         }
@@ -218,7 +224,11 @@ namespace BlackMiscTest
             pbh.setTimeFraction(timeFraction);
             const CHeading heading = pbh.getHeading();
             const double h = heading.value(CAngleUnit::deg());
-            if (i < 1) { lastDeg = h; continue; }
+            if (i < 1)
+            {
+                lastDeg = h;
+                continue;
+            }
             QVERIFY2(h > lastDeg, "Expect increasing heading");
             lastDeg = h;
         }
@@ -236,7 +246,11 @@ namespace BlackMiscTest
             pbh.setTimeFraction(timeFraction);
             const CHeading heading = pbh.getHeading();
             const double h = CAngle::normalizeDegrees360(heading.value(CAngleUnit::deg()));
-            if (i < 1) { lastDeg = h; continue; }
+            if (i < 1)
+            {
+                lastDeg = h;
+                continue;
+            }
             QVERIFY2(h < lastDeg, "Expect increasing heading");
             lastDeg = h;
         }
@@ -256,7 +270,11 @@ namespace BlackMiscTest
             pbh.setTimeFraction(timeFraction);
             const CAngle bank = pbh.getBank();
             const double b = bank.value(CAngleUnit::deg());
-            if (i < 1) { lastDeg = b; continue; }
+            if (i < 1)
+            {
+                lastDeg = b;
+                continue;
+            }
             QVERIFY2(b > lastDeg, "Expect increasing bank");
             lastDeg = b;
         }
@@ -274,7 +292,11 @@ namespace BlackMiscTest
             pbh.setTimeFraction(timeFraction);
             const CAngle bank = pbh.getBank();
             const double b = CAngle::normalizeDegrees360(bank.value(CAngleUnit::deg()));
-            if (i < 1) { lastDeg = b; continue; }
+            if (i < 1)
+            {
+                lastDeg = b;
+                continue;
+            }
             QVERIFY2(b > lastDeg, "Expect increasing bank");
             lastDeg = b;
         }
@@ -294,7 +316,11 @@ namespace BlackMiscTest
             pbh.setTimeFraction(timeFraction);
             const CAngle pitch = pbh.getPitch();
             const double p = pitch.value(CAngleUnit::deg());
-            if (i < 1) { lastDeg = p; continue; }
+            if (i < 1)
+            {
+                lastDeg = p;
+                continue;
+            }
             QVERIFY2(p < lastDeg, "Expect decreasing pitch");
             lastDeg = p;
         }
@@ -314,7 +340,11 @@ namespace BlackMiscTest
             pbh.setTimeFraction(timeFraction);
             const CAngle pitch = pbh.getPitch();
             const double p = pitch.value(CAngleUnit::deg());
-            if (i < 1) { lastDeg = p; continue; }
+            if (i < 1)
+            {
+                lastDeg = p;
+                continue;
+            }
             QVERIFY2(p > lastDeg, "Expect increasing pitch");
             lastDeg = p;
         }

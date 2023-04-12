@@ -272,7 +272,7 @@ namespace BlackMiscTest
         const auto hint = std::make_pair(time.elapsed(), getThreadCpuTimeMs() - cpuTime);
         const double ratio = static_cast<double>(hint.second) / static_cast<double>(noHint.second); // expected <1.0
 
-        //qDebug() << "MacOS:" << boolToYesNo(CBuildConfig::isRunningOnMacOSPlatform());
+        // qDebug() << "MacOS:" << boolToYesNo(CBuildConfig::isRunningOnMacOSPlatform());
         qDebug() << "Access without hint" << noHint.first << "ms (CPU time" << noHint.second << "ms)";
         qDebug() << "Access with hint" << hint.first << "ms (CPU time" << hint.second << "ms)";
         qDebug() << "Access ratio" << ratio;
