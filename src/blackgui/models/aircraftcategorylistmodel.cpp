@@ -19,8 +19,7 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackGui::Models
 {
-    CAircraftCategoryListModel::CAircraftCategoryListModel(QObject *parent) :
-        CListModelDbObjects("AircraftCategoryListModel", parent)
+    CAircraftCategoryListModel::CAircraftCategoryListModel(QObject *parent) : CListModelDbObjects("AircraftCategoryListModel", parent)
     {
         m_columns.addColumn(CColumn::standardString("id", CAircraftCategory::IndexDbIntegerKey, CDefaultFormatter::alignRightVCenter()));
         m_columns.addColumn(CColumn::standardString("level", CAircraftCategory::IndexLevelString));

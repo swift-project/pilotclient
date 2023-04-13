@@ -60,10 +60,9 @@ namespace BlackGui::Components
         return cats;
     }
 
-    CMappingComponent::CMappingComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        CIdentifiable(this),
-        ui(new Ui::CMappingComponent)
+    CMappingComponent::CMappingComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                            CIdentifiable(this),
+                                                            ui(new Ui::CMappingComponent)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "need sGui");
         Q_ASSERT_X(sGui->getIContextSimulator(), Q_FUNC_INFO, "need simulator context");
@@ -95,10 +94,10 @@ namespace BlackGui::Components
         connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestTextMessageWidget, this, &CMappingComponent::requestTextMessageWidget);
         connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestTempDisableModelsForMatching, this, &CMappingComponent::onTempDisableModelsForMatchingRequested);
 
-        connect(ui->pb_SaveAircraft,     &QPushButton::clicked, this, &CMappingComponent::onSaveAircraft);
-        connect(ui->pb_ResetAircraft,    &QPushButton::clicked, this, &CMappingComponent::onResetAircraft);
-        connect(ui->pb_LoadModels,       &QPushButton::clicked, this, &CMappingComponent::onModelsUpdateRequested);
-        connect(ui->pb_DoMatchingAgain,  &QPushButton::clicked, this, &CMappingComponent::doMatchingsAgain);
+        connect(ui->pb_SaveAircraft, &QPushButton::clicked, this, &CMappingComponent::onSaveAircraft);
+        connect(ui->pb_ResetAircraft, &QPushButton::clicked, this, &CMappingComponent::onResetAircraft);
+        connect(ui->pb_LoadModels, &QPushButton::clicked, this, &CMappingComponent::onModelsUpdateRequested);
+        connect(ui->pb_DoMatchingAgain, &QPushButton::clicked, this, &CMappingComponent::doMatchingsAgain);
         connect(ui->pb_ValidateModelSet, &QPushButton::clicked, this, &CMappingComponent::requestValidationDialog);
 
         m_currentMappingsViewDelegate = new CCheckBoxDelegate(":/diagona/icons/diagona/icons/tick.png", ":/diagona/icons/diagona/icons/cross.png", this);
@@ -129,19 +128,19 @@ namespace BlackGui::Components
         connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CMappingComponent::onModelSetSimulatorChanged);
 
         // connect
-        connect(sGui->getIContextSimulator(), &IContextSimulator::modelSetChanged,          this, &CMappingComponent::onModelSetChanged,            Qt::QueuedConnection);
-        connect(sGui->getIContextSimulator(), &IContextSimulator::modelMatchingCompleted,   this, &CMappingComponent::tokenBucketUpdateAircraft,    Qt::QueuedConnection);
-        connect(sGui->getIContextSimulator(), &IContextSimulator::aircraftRenderingChanged, this, &CMappingComponent::tokenBucketUpdateAircraft,    Qt::QueuedConnection);
-        connect(sGui->getIContextSimulator(), &IContextSimulator::airspaceSnapshotHandled,  this, &CMappingComponent::tokenBucketUpdate,            Qt::QueuedConnection);
-        connect(sGui->getIContextSimulator(), &IContextSimulator::addingRemoteModelFailed,  this, &CMappingComponent::onAddingRemoteAircraftFailed, Qt::QueuedConnection);
-        connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged,   this, &CMappingComponent::onSimulatorPluginChanged,     Qt::QueuedConnection);
-        connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged,   this, &CMappingComponent::onSimulatorStatusChanged,     Qt::QueuedConnection);
-        connect(sGui->getIContextNetwork(),   &IContextNetwork::changedRemoteAircraftModel, this, &CMappingComponent::onRemoteAircraftModelChanged, Qt::QueuedConnection);
-        connect(sGui->getIContextNetwork(),   &IContextNetwork::changedRemoteAircraftEnabled, this, &CMappingComponent::tokenBucketUpdateAircraft,    Qt::QueuedConnection);
-        connect(sGui->getIContextNetwork(),   &IContextNetwork::changedFastPositionUpdates, this, &CMappingComponent::tokenBucketUpdateAircraft,    Qt::QueuedConnection);
-        connect(sGui->getIContextNetwork(),   &IContextNetwork::changedGndFlagCapability,   this, &CMappingComponent::tokenBucketUpdateAircraft,    Qt::QueuedConnection);
-        connect(sGui->getIContextNetwork(),   &IContextNetwork::removedAircraft,            this, &CMappingComponent::tokenBucketUpdate,            Qt::QueuedConnection);
-        connect(sGui->getIContextNetwork(),   &IContextNetwork::connectionStatusChanged,    this, &CMappingComponent::onConnectionStatusChanged,    Qt::QueuedConnection);
+        connect(sGui->getIContextSimulator(), &IContextSimulator::modelSetChanged, this, &CMappingComponent::onModelSetChanged, Qt::QueuedConnection);
+        connect(sGui->getIContextSimulator(), &IContextSimulator::modelMatchingCompleted, this, &CMappingComponent::tokenBucketUpdateAircraft, Qt::QueuedConnection);
+        connect(sGui->getIContextSimulator(), &IContextSimulator::aircraftRenderingChanged, this, &CMappingComponent::tokenBucketUpdateAircraft, Qt::QueuedConnection);
+        connect(sGui->getIContextSimulator(), &IContextSimulator::airspaceSnapshotHandled, this, &CMappingComponent::tokenBucketUpdate, Qt::QueuedConnection);
+        connect(sGui->getIContextSimulator(), &IContextSimulator::addingRemoteModelFailed, this, &CMappingComponent::onAddingRemoteAircraftFailed, Qt::QueuedConnection);
+        connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CMappingComponent::onSimulatorPluginChanged, Qt::QueuedConnection);
+        connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CMappingComponent::onSimulatorStatusChanged, Qt::QueuedConnection);
+        connect(sGui->getIContextNetwork(), &IContextNetwork::changedRemoteAircraftModel, this, &CMappingComponent::onRemoteAircraftModelChanged, Qt::QueuedConnection);
+        connect(sGui->getIContextNetwork(), &IContextNetwork::changedRemoteAircraftEnabled, this, &CMappingComponent::tokenBucketUpdateAircraft, Qt::QueuedConnection);
+        connect(sGui->getIContextNetwork(), &IContextNetwork::changedFastPositionUpdates, this, &CMappingComponent::tokenBucketUpdateAircraft, Qt::QueuedConnection);
+        connect(sGui->getIContextNetwork(), &IContextNetwork::changedGndFlagCapability, this, &CMappingComponent::tokenBucketUpdateAircraft, Qt::QueuedConnection);
+        connect(sGui->getIContextNetwork(), &IContextNetwork::removedAircraft, this, &CMappingComponent::tokenBucketUpdate, Qt::QueuedConnection);
+        connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMappingComponent::onConnectionStatusChanged, Qt::QueuedConnection);
 
         connect(ui->tw_SpecializedViews, &QTabWidget::currentChanged, this, &CMappingComponent::onTabWidgetChanged);
 
@@ -151,8 +150,7 @@ namespace BlackGui::Components
         // with external core models might be already available
         // nevertheless, wait some time to allow to init
         QPointer<CMappingComponent> myself(this);
-        QTimer::singleShot(10000, this, [ = ]
-        {
+        QTimer::singleShot(10000, this, [=] {
             if (!myself || !sGui || sGui->isShuttingDown()) { return; }
             const CSimulatorInfo simulator(myself->getConnectedOrSelectedSimulator());
             myself->onModelSetSimulatorChanged(simulator);
@@ -161,7 +159,7 @@ namespace BlackGui::Components
     }
 
     CMappingComponent::~CMappingComponent()
-    { }
+    {}
 
     int CMappingComponent::countCurrentMappings() const
     {
@@ -403,8 +401,8 @@ namespace BlackGui::Components
         if (callsign.isEmpty()) { return; }
         const bool reset = sGui->getIContextSimulator()->resetToModelMatchingAircraft(callsign);
         const CStatusMessage msg = reset ?
-                                    CStatusMessage(this).info(u"Model reset for '%1'")  << callsign.toQString() :
-                                    CStatusMessage(this).info(u"Reset failed for '%1'") << callsign.toQString();
+                                       CStatusMessage(this).info(u"Model reset for '%1'") << callsign.toQString() :
+                                       CStatusMessage(this).info(u"Reset failed for '%1'") << callsign.toQString();
         this->showOverlayHTMLMessage(msg, 3000);
     }
 
@@ -483,7 +481,7 @@ namespace BlackGui::Components
         QList<int> sizes = ui->sp_MappingComponentSplitter->sizes();
         Q_ASSERT_X(sizes.size() == 2, Q_FUNC_INFO, "Wrong splitter sizes");
         const int total = sizes[0] + sizes[1];
-        QList<int> newSizes({0, 0});
+        QList<int> newSizes({ 0, 0 });
         if (show)
         {
             newSizes[0] = qRound(total * 0.8);

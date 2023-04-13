@@ -36,11 +36,11 @@ namespace BlackMisc::Network
         enum System
         {
             Unspecified, //!< unspecified
-            NoSystem,    //!< no relevant ecosystem
-            VATSIM,      //!< VATSIM
-            SwiftTest,   //!< swift test server
-            Swift,       //!< Future usage
-            PrivateFSD   //!< Private FSD environment
+            NoSystem, //!< no relevant ecosystem
+            VATSIM, //!< VATSIM
+            SwiftTest, //!< swift test server
+            Swift, //!< Future usage
+            PrivateFSD //!< Private FSD environment
         };
 
         //! Default constructor

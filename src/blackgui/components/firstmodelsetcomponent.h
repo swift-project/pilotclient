@@ -21,7 +21,10 @@
 #include <QFrame>
 #include <QWizardPage>
 
-namespace Ui { class CFirstModelSetComponent; }
+namespace Ui
+{
+    class CFirstModelSetComponent;
+}
 namespace BlackGui::Components
 {
     class CDbOwnModelsDialog;
@@ -46,7 +49,7 @@ namespace BlackGui::Components
 
     private:
         QScopedPointer<Ui::CFirstModelSetComponent> ui;
-        QScopedPointer<CDbOwnModelsDialog>   m_modelsDialog;
+        QScopedPointer<CDbOwnModelsDialog> m_modelsDialog;
         QScopedPointer<CDbOwnModelSetDialog> m_modelSetDialog;
         BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings { this };
 

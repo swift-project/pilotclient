@@ -13,14 +13,13 @@ namespace BlackCore
     bool CCoreFacadeConfig::requiresDBusSever() const
     {
         return (
-                   // those 3 should decide whether we are running the server
-                   m_network == LocalInDBusServer ||
-                   m_ownAircraft == LocalInDBusServer ||
-                   m_simulator == LocalInDBusServer ||
+            // those 3 should decide whether we are running the server
+            m_network == LocalInDBusServer ||
+            m_ownAircraft == LocalInDBusServer ||
+            m_simulator == LocalInDBusServer ||
 
-                   // added as work around
-                   m_audio == LocalInDBusServer
-               );
+            // added as work around
+            m_audio == LocalInDBusServer);
     }
 
     bool CCoreFacadeConfig::requiresDBusConnection() const
@@ -31,19 +30,19 @@ namespace BlackCore
     bool CCoreFacadeConfig::any(CCoreFacadeConfig::ContextMode mode) const
     {
         return (m_application == mode ||
-                m_audio       == mode ||
-                m_network     == mode ||
+                m_audio == mode ||
+                m_network == mode ||
                 m_ownAircraft == mode ||
-                m_simulator   == mode);
+                m_simulator == mode);
     }
 
     bool CCoreFacadeConfig::all(CCoreFacadeConfig::ContextMode mode) const
     {
         return (m_application == mode &&
-                m_audio       == mode &&
-                m_network     == mode &&
+                m_audio == mode &&
+                m_network == mode &&
                 m_ownAircraft == mode &&
-                m_simulator   == mode);
+                m_simulator == mode);
     }
 
     bool CCoreFacadeConfig::anyRemote() const

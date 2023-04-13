@@ -14,7 +14,10 @@
 #include "blackgui/settings/viewupdatesettings.h"
 #include <QFrame>
 
-namespace Ui { class CSettingsViewUpdateTimes; }
+namespace Ui
+{
+    class CSettingsViewUpdateTimes;
+}
 namespace BlackGui::Components
 {
     /*!

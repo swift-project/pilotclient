@@ -38,16 +38,15 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CSettingsHotkeyComponent::CSettingsHotkeyComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CSettingsHotkeyComponent)
+    CSettingsHotkeyComponent::CSettingsHotkeyComponent(QWidget *parent) : QFrame(parent),
+                                                                          ui(new Ui::CSettingsHotkeyComponent)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
         ui->setupUi(this);
         ui->tv_Hotkeys->setModel(&m_model);
 
-        connect(ui->pb_AddHotkey,    &QPushButton::clicked, this, &CSettingsHotkeyComponent::addEntry);
-        connect(ui->pb_EditHotkey,   &QPushButton::clicked, this, &CSettingsHotkeyComponent::editEntry);
+        connect(ui->pb_AddHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::addEntry);
+        connect(ui->pb_EditHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::editEntry);
         connect(ui->pb_RemoveHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::removeEntry);
         connect(ui->tb_ReloadHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::reloadHotkeysFromSettings);
 
@@ -56,7 +55,7 @@ namespace BlackGui::Components
     }
 
     CSettingsHotkeyComponent::~CSettingsHotkeyComponent()
-    { }
+    {}
 
     void CSettingsHotkeyComponent::saveSettings()
     {

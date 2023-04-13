@@ -24,29 +24,28 @@ namespace XSwiftBus
     {
     public:
         //! Constructor.
-        CCommand(const char *name, const char *description, std::function<void()> handler) :
-            m_handler(handler),
-            m_command(XPLMCreateCommand(name, description))
+        CCommand(const char *name, const char *description, std::function<void()> handler) : m_handler(handler),
+                                                                                             m_command(XPLMCreateCommand(name, description))
         {
-            XPLMRegisterCommandHandler(m_command, callback, false, static_cast<void*>(this));
+            XPLMRegisterCommandHandler(m_command, callback, false, static_cast<void *>(this));
         }
 
         //! Destructor.
         ~CCommand()
         {
-            XPLMUnregisterCommandHandler(m_command, callback, false, static_cast<void*>(this));
+            XPLMUnregisterCommandHandler(m_command, callback, false, static_cast<void *>(this));
         }
 
         //! @{
         //! Not copyable.
         CCommand(const CCommand &) = delete;
-        CCommand &operator =(const CCommand &) = delete;
+        CCommand &operator=(const CCommand &) = delete;
         //! @}
 
     private:
         static int callback(XPLMCommandRef, XPLMCommandPhase phase, void *refcon)
         {
-            if (phase == xplm_CommandBegin) { (static_cast<CCommand*>(refcon)->m_handler)(); }
+            if (phase == xplm_CommandBegin) { (static_cast<CCommand *>(refcon)->m_handler)(); }
             return 1;
         }
 

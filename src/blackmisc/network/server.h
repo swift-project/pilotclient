@@ -226,15 +226,15 @@ namespace BlackMisc::Network
         static const CServer &esTowerView();
 
     private:
-        QString     m_name;
-        QString     m_description;
-        QString     m_address;
-        int         m_port = -1;
-        CUser       m_user;
-        CEcosystem  m_ecosystem;
-        int         m_serverType = static_cast<int>(Unspecified);
-        bool        m_isAcceptingConnections = true; //!< disable server for connections
-        CFsdSetup          m_fsdSetup;
+        QString m_name;
+        QString m_description;
+        QString m_address;
+        int m_port = -1;
+        CUser m_user;
+        CEcosystem m_ecosystem;
+        int m_serverType = static_cast<int>(Unspecified);
+        bool m_isAcceptingConnections = true; //!< disable server for connections
+        CFsdSetup m_fsdSetup;
         Audio::CVoiceSetup m_voiceSetup;
 
         BLACK_METACLASS(

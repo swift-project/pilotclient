@@ -31,8 +31,7 @@ namespace BlackCore
 
         const QNetworkRequest request(QUrl(CBuildConfig::gitHubRepoApiUrl() % u"releases"));
         auto reply = sApp->getNetworkAccessManager()->get(request);
-        connect(reply, &QNetworkReply::finished, this, [this, reply]
-        {
+        connect(reply, &QNetworkReply::finished, this, [this, reply] {
             if (reply->error() == QNetworkReply::NoError)
             {
                 const auto updateInfo = CUpdateInfo::fromGitHubReleasesJson(reply->readAll());

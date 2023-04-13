@@ -12,8 +12,7 @@ using namespace BlackGui::Models;
 
 namespace BlackGui::Views
 {
-    CCountryView::CCountryView(QWidget *parent) :
-        CViewBase(parent)
+    CCountryView::CCountryView(QWidget *parent) : CViewBase(parent)
     {
         this->standardInit(new CCountryListModel(this));
         this->setMenu(MenuDefaultDbViews);

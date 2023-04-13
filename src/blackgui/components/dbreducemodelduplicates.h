@@ -19,7 +19,10 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CDbReduceModelDuplicates; }
+namespace Ui
+{
+    class CDbReduceModelDuplicates;
+}
 namespace BlackGui::Components
 {
     //! Reduce modelss
@@ -60,11 +63,11 @@ namespace BlackGui::Components
 
         QScopedPointer<Ui::CDbReduceModelDuplicates> ui;
         bool m_stop = false;
-        BlackMisc::Simulation::CSimulatorInfo     m_simulator;
+        BlackMisc::Simulation::CSimulatorInfo m_simulator;
         BlackMisc::Simulation::CAircraftModelList m_models;
         BlackMisc::Simulation::CAircraftModelList m_removeCandidates;
         BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TDistributorListPreferences> m_distributorPreferences { this }; //!< distributor preferences
     };
-} //ns
+} // ns
 
 #endif // guard

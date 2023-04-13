@@ -16,8 +16,18 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CTransponderModeComponent; }
-namespace BlackMisc { class CIdentifier; namespace Simulation { class CSimulatedAircraft; }}
+namespace Ui
+{
+    class CTransponderModeComponent;
+}
+namespace BlackMisc
+{
+    class CIdentifier;
+    namespace Simulation
+    {
+        class CSimulatedAircraft;
+    }
+}
 namespace BlackGui::Components
 {
     /*!

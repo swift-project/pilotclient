@@ -16,11 +16,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CLivery, CLiveryList)
 
 namespace BlackMisc::Aviation
 {
-    CLiveryList::CLiveryList() { }
+    CLiveryList::CLiveryList() {}
 
-    CLiveryList::CLiveryList(const CSequence<CLivery> &other) :
-        CSequence<CLivery>(other)
-    { }
+    CLiveryList::CLiveryList(const CSequence<CLivery> &other) : CSequence<CLivery>(other)
+    {}
 
     CLiveryList CLiveryList::findByAirlineIcaoDesignator(const QString &icao) const
     {
@@ -53,8 +52,7 @@ namespace BlackMisc::Aviation
     {
         const QString icaoDesignator(icao.trimmed().toUpper());
         if (icaoDesignator.isEmpty()) { return CLivery(); }
-        return this->findFirstByOrDefault([&](const CLivery & livery)
-        {
+        return this->findFirstByOrDefault([&](const CLivery &livery) {
             if (!livery.isAirlineStandardLivery()) { return false; }
             return livery.getAirlineIcaoCode().matchesVDesignator(icaoDesignator);
         });
@@ -63,30 +61,27 @@ namespace BlackMisc::Aviation
     CLiveryList CLiveryList::findStdLiveriesBySimplifiedAirlineName(const QString &containedString) const
     {
         if (containedString.isEmpty()) { return CLiveryList(); }
-        return this->findBy([&](const CLivery & livery)
-        {
+        return this->findBy([&](const CLivery &livery) {
             // keep isAirlineStandardLivery first (faster)
             return livery.isAirlineStandardLivery() &&
-                    livery.isContainedInSimplifiedAirlineName(containedString);
+                   livery.isContainedInSimplifiedAirlineName(containedString);
         });
     }
 
     CLiveryList CLiveryList::findStdLiveriesByNamesOrTelephonyDesignator(const QString &candidate) const
     {
         if (candidate.isEmpty()) { return CLiveryList(); }
-        return this->findBy([&](const CLivery & livery)
-        {
+        return this->findBy([&](const CLivery &livery) {
             // keep isAirlineStandardLivery first (faster)
             return livery.isAirlineStandardLivery() &&
-                    livery.getAirlineIcaoCode().matchesNamesOrTelephonyDesignator(candidate);
+                   livery.getAirlineIcaoCode().matchesNamesOrTelephonyDesignator(candidate);
         });
     }
 
     CLivery CLiveryList::findColorLiveryOrDefault(const CRgbColor &fuselage, const CRgbColor &tail) const
     {
         if (!fuselage.isValid() || !tail.isValid()) { return CLivery(); }
-        return this->findFirstByOrDefault([&](const CLivery & livery)
-        {
+        return this->findFirstByOrDefault([&](const CLivery &livery) {
             if (!livery.isColorLivery()) { return false; }
             return livery.matchesColors(fuselage, tail);
         });
@@ -114,8 +109,7 @@ namespace BlackMisc::Aviation
     CLivery CLiveryList::findByCombinedCode(const QString &combinedCode) const
     {
         if (!CLivery::isValidCombinedCode(combinedCode)) { return CLivery(); }
-        return this->findFirstByOrDefault([&](const CLivery & livery)
-        {
+        return this->findFirstByOrDefault([&](const CLivery &livery) {
             return livery.matchesCombinedCode(combinedCode);
         });
     }
@@ -147,7 +141,7 @@ namespace BlackMisc::Aviation
     CAirlineIcaoCodeList CLiveryList::getAirlines() const
     {
         CAirlineIcaoCodeList icaos;
-        for (const CLivery &livery : * this)
+        for (const CLivery &livery : *this)
         {
             icaos.push_back(livery.getAirlineIcaoCode());
         }
@@ -187,7 +181,7 @@ namespace BlackMisc::Aviation
                 {
                     // reduce by name
                     const CLiveryList liveriesByName = liveries.findStdLiveriesBySimplifiedAirlineName(liveryPattern.getAirlineName());
-                    if (!liveriesByName.isEmpty()) {return liveriesByName.front(); }
+                    if (!liveriesByName.isEmpty()) { return liveriesByName.front(); }
                 }
                 return liveries.front();
             }

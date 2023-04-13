@@ -44,11 +44,9 @@ namespace BlackGui::Components
     const QStringList &CTransponderModeSelector::modes()
     {
         static const QStringList modes(
-        {
-            CTransponderModeSelector::transponderStateStandby(),
-            CTransponderModeSelector::transponderModeC(),
-            CTransponderModeSelector::transponderStateIdent()
-        });
+            { CTransponderModeSelector::transponderStateStandby(),
+              CTransponderModeSelector::transponderModeC(),
+              CTransponderModeSelector::transponderStateIdent() });
         return modes;
     }
 

@@ -46,7 +46,7 @@ namespace BlackMisc
          * \private Destroy an object and reconstruct it with the given constructor arguments.
          */
         template <typename T, typename... Args>
-        void reconstruct(T *object, Args &&... args)
+        void reconstruct(T *object, Args &&...args)
         {
             object->~T();
             new (object) T(std::forward<Args>(args)...);

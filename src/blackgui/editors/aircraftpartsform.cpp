@@ -23,9 +23,8 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackGui::Editors
 {
-    CAircraftPartsForm::CAircraftPartsForm(QWidget *parent) :
-        CForm(parent),
-        ui(new Ui::CAircraftPartsForm)
+    CAircraftPartsForm::CAircraftPartsForm(QWidget *parent) : CForm(parent),
+                                                              ui(new Ui::CAircraftPartsForm)
     {
         ui->setupUi(this);
         connect(ui->pb_AircraftPartsLightsOn, &QPushButton::pressed, this, &CAircraftPartsForm::setAllLights);
@@ -37,7 +36,7 @@ namespace BlackGui::Editors
     }
 
     CAircraftPartsForm::~CAircraftPartsForm()
-    { }
+    {}
 
     void CAircraftPartsForm::setReadOnly(bool readonly)
     {
@@ -138,25 +137,20 @@ namespace BlackGui::Editors
             ui->cb_AircraftPartsLightsTaxi->isChecked(),
             ui->cb_AircraftPartsLightsBeacon->isChecked(),
             ui->cb_AircraftPartsLightsNav->isChecked(),
-            ui->cb_AircraftPartsLightsLogo->isChecked()
-        );
+            ui->cb_AircraftPartsLightsLogo->isChecked());
         const CAircraftEngineList engines(
-        {
-            ui->cb_AircraftPartsEngine1->isChecked(),
-            ui->cb_AircraftPartsEngine2->isChecked(),
-            ui->cb_AircraftPartsEngine3->isChecked(),
-            ui->cb_AircraftPartsEngine4->isChecked(),
-            ui->cb_AircraftPartsEngine5->isChecked(),
-            ui->cb_AircraftPartsEngine6->isChecked()
-        }
-        );
+            { ui->cb_AircraftPartsEngine1->isChecked(),
+              ui->cb_AircraftPartsEngine2->isChecked(),
+              ui->cb_AircraftPartsEngine3->isChecked(),
+              ui->cb_AircraftPartsEngine4->isChecked(),
+              ui->cb_AircraftPartsEngine5->isChecked(),
+              ui->cb_AircraftPartsEngine6->isChecked() });
         const CAircraftParts parts(lights,
-                                    ui->cb_AircraftPartsGearDown->isChecked(),
-                                    ui->sb_AircraftPartsFlapsPercentage->value(),
-                                    ui->cb_AircraftPartsSpoilers->isChecked(),
-                                    engines,
-                                    ui->cb_AircraftPartsIsOnGround->isChecked()
-                                    );
+                                   ui->cb_AircraftPartsGearDown->isChecked(),
+                                   ui->sb_AircraftPartsFlapsPercentage->value(),
+                                   ui->cb_AircraftPartsSpoilers->isChecked(),
+                                   engines,
+                                   ui->cb_AircraftPartsIsOnGround->isChecked());
         return parts;
     }
 

@@ -115,8 +115,7 @@ namespace BlackGui::Models
         }
     };
 
-    CCloudLayerListModel::CCloudLayerListModel(QObject *parent) :
-        CListModelBase("CloudLayerListModel", parent)
+    CCloudLayerListModel::CCloudLayerListModel(QObject *parent) : CListModelBase("CloudLayerListModel", parent)
     {
         this->m_columns.addColumn(CColumn("base", CCloudLayer::IndexBase, new CAltitudeFormatter()));
         this->m_columns.addColumn(CColumn("top", CCloudLayer::IndexTop, new CAltitudeFormatter()));

@@ -63,4 +63,4 @@ namespace BlackMisc::Aviation
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CCallsignSet)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Aviation::CCallsign>)
 
-#endif //guard
+#endif // guard

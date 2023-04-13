@@ -51,4 +51,4 @@ namespace BlackMisc::Simulation
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorInfoList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::CSimulatorInfo>)
 
-#endif //guard
+#endif // guard

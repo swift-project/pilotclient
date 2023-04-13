@@ -17,7 +17,10 @@
 
 class QWidget;
 
-namespace BlackMisc::Weather { class CCloudLayer; }
+namespace BlackMisc::Weather
+{
+    class CCloudLayer;
+}
 
 namespace BlackGui::Views
 {

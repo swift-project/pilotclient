@@ -36,8 +36,7 @@ using namespace BlackCore::Data;
 
 namespace BlackCore::Vatsim
 {
-    CVatsimStatusFileReader::CVatsimStatusFileReader(QObject *owner) :
-        CThreadedReader(owner, "CVatsimStatusFileReader")
+    CVatsimStatusFileReader::CVatsimStatusFileReader(QObject *owner) : CThreadedReader(owner, "CVatsimStatusFileReader")
     {
         // do not connect with time, will be read once at startup
     }
@@ -45,8 +44,7 @@ namespace BlackCore::Vatsim
     void CVatsimStatusFileReader::readInBackgroundThread()
     {
         QPointer<CVatsimStatusFileReader> myself(this);
-        QTimer::singleShot(0, this, [ = ]
-        {
+        QTimer::singleShot(0, this, [=] {
             if (!myself) { return; }
             myself->read();
         });
@@ -73,7 +71,7 @@ namespace BlackCore::Vatsim
         const CUrl url = urls.getRandomUrl();
         if (url.isEmpty()) { return; }
         CLogMessage(this).info(u"Trigger read of VATSIM status file from '%1'") << url.toQString(true);
-        this->getFromNetworkAndLog(url, { this, &CVatsimStatusFileReader::parseVatsimFile});
+        this->getFromNetworkAndLog(url, { this, &CVatsimStatusFileReader::parseVatsimFile });
 
         if (urls.size() < 2) { return; }
         const CUrl secondary = urls.getRandomWithout(url);
@@ -81,14 +79,13 @@ namespace BlackCore::Vatsim
 
         constexpr int DelayMs = 5000;
         const QPointer<CVatsimStatusFileReader> myself(this);
-        QTimer::singleShot(DelayMs, this, [ = ]
-        {
+        QTimer::singleShot(DelayMs, this, [=] {
             if (!myself) { return; }
             const CVatsimSetup vs(m_lastGoodSetup.get());
             if (vs.getTimeDifferenceToNowMs() > 2 * DelayMs)
             {
                 // not yet read
-                this->getFromNetworkAndLog(url, { this, &CVatsimStatusFileReader::parseVatsimFile});
+                this->getFromNetworkAndLog(url, { this, &CVatsimStatusFileReader::parseVatsimFile });
             }
         });
     }
@@ -138,7 +135,7 @@ namespace BlackCore::Vatsim
                 currentLine = clRef.toString().trimmed();
                 if (currentLine.isEmpty()) { continue; }
                 if (currentLine.startsWith(";")) { continue; }
-                if (!currentLine.contains("="))  { continue; }
+                if (!currentLine.contains("=")) { continue; }
 
                 const QStringList parts(currentLine.split('='));
                 if (parts.length() != 2) { continue; }
@@ -172,7 +169,7 @@ namespace BlackCore::Vatsim
             else
             {
                 CLogMessage(this).info(u"Read VATSIM status file from '%1', %2 data file URLs, %3 server file URLs, %4 METAR file URLs")
-                        << urlString << dataFileUrls.size() << serverFileUrls.size() << metarFileUrls.size();
+                    << urlString << dataFileUrls.size() << serverFileUrls.size() << metarFileUrls.size();
             }
             Q_UNUSED(changed);
 

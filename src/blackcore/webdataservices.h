@@ -47,9 +47,13 @@
 namespace BlackMisc
 {
     class CLogCategoryList;
-    template <typename T> class Restricted;
+    template <typename T>
+    class Restricted;
 
-    namespace Aviation { class CCallsign; }
+    namespace Aviation
+    {
+        class CCallsign;
+    }
     namespace Simulation
     {
         class CSimulatedAircraft;
@@ -638,28 +642,28 @@ namespace BlackCore
         //! \remark sets the ecosystem
         void onConnectedNetworkServerChanged(const BlackMisc::Network::CServer &server);
 
-        CWebReaderFlags::WebReader               m_readers = CWebReaderFlags::WebReaderFlag::None; //!< which readers are available
+        CWebReaderFlags::WebReader m_readers = CWebReaderFlags::WebReaderFlag::None; //!< which readers are available
         BlackMisc::Network::CEntityFlags::Entity m_entitiesPeriodicallyRead = BlackMisc::Network::CEntityFlags::NoEntity; //!< entities permanently updated by timers
-        BlackMisc::Network::CEntityFlags::Entity m_swiftDbEntitiesRead      = BlackMisc::Network::CEntityFlags::NoEntity; //!< entities read
-        BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;           //!< how to read DB data
-        bool                                     m_initialRead = false;      //!< initial read started
-        bool                                     m_signalledHeaders = false; //!< headers loading has been signalled
-        std::atomic_bool                         m_shuttingDown { false };   //!< shutting down?
-        QDateTime                                m_dbInfoObjectTimeout;      //!< started reading DB info objects
-        QDateTime                                m_sharedInfoObjectsTimeout; //!< started reading shared info objects
-        QSet<BlackMisc::Network::CEntityFlags::Entity> m_signalledEntities;  //!< remember signalled entites
+        BlackMisc::Network::CEntityFlags::Entity m_swiftDbEntitiesRead = BlackMisc::Network::CEntityFlags::NoEntity; //!< entities read
+        BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig; //!< how to read DB data
+        bool m_initialRead = false; //!< initial read started
+        bool m_signalledHeaders = false; //!< headers loading has been signalled
+        std::atomic_bool m_shuttingDown { false }; //!< shutting down?
+        QDateTime m_dbInfoObjectTimeout; //!< started reading DB info objects
+        QDateTime m_sharedInfoObjectsTimeout; //!< started reading shared info objects
+        QSet<BlackMisc::Network::CEntityFlags::Entity> m_signalledEntities; //!< remember signalled entites
 
         // for reading XML and VATSIM data files
-        Vatsim::CVatsimStatusFileReader *m_vatsimStatusReader     = nullptr;
-        Vatsim::CVatsimBookingReader    *m_vatsimBookingReader    = nullptr;
-        Vatsim::CVatsimDataFileReader   *m_vatsimDataFileReader   = nullptr;
-        Vatsim::CVatsimMetarReader      *m_vatsimMetarReader      = nullptr;
+        Vatsim::CVatsimStatusFileReader *m_vatsimStatusReader = nullptr;
+        Vatsim::CVatsimBookingReader *m_vatsimBookingReader = nullptr;
+        Vatsim::CVatsimDataFileReader *m_vatsimDataFileReader = nullptr;
+        Vatsim::CVatsimMetarReader *m_vatsimMetarReader = nullptr;
         Vatsim::CVatsimServerFileReader *m_vatsimServerFileReader = nullptr;
-        Db::CIcaoDataReader             *m_icaoDataReader         = nullptr;
-        Db::CModelDataReader            *m_modelDataReader        = nullptr;
-        Db::CAirportDataReader          *m_airportDataReader      = nullptr;
-        Db::CInfoDataReader             *m_dbInfoDataReader       = nullptr;
-        Db::CInfoDataReader             *m_sharedInfoDataReader   = nullptr;
+        Db::CIcaoDataReader *m_icaoDataReader = nullptr;
+        Db::CModelDataReader *m_modelDataReader = nullptr;
+        Db::CAirportDataReader *m_airportDataReader = nullptr;
+        Db::CInfoDataReader *m_dbInfoDataReader = nullptr;
+        Db::CInfoDataReader *m_sharedInfoDataReader = nullptr;
 
         // writing objects directly into DB
         Db::CDatabaseWriter *m_databaseWriter = nullptr;

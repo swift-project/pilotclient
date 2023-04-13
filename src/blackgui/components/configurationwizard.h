@@ -15,7 +15,10 @@
 #include <QWizard>
 #include <QScopedPointer>
 
-namespace Ui { class CConfigurationWizard; }
+namespace Ui
+{
+    class CConfigurationWizard;
+}
 namespace BlackGui::Components
 {
     /*!

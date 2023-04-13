@@ -19,13 +19,13 @@
  */
 
 #ifndef WITH_STATIC
-#  if defined(BUILD_BLACKCORE_LIB)
-#    define BLACKCORE_EXPORT Q_DECL_EXPORT
-#  else
-#    define BLACKCORE_EXPORT Q_DECL_IMPORT
-#  endif
+#    if defined(BUILD_BLACKCORE_LIB)
+#        define BLACKCORE_EXPORT Q_DECL_EXPORT
+#    else
+#        define BLACKCORE_EXPORT Q_DECL_IMPORT
+#    endif
 #else
-#  define BLACKCORE_EXPORT
+#    define BLACKCORE_EXPORT
 #endif
 
 #endif // guard

@@ -23,9 +23,18 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CSwiftData; }
-namespace BlackCore { class CWebDataServices; }
-namespace BlackGui::Components { class CAutoPublishDialog; }
+namespace Ui
+{
+    class CSwiftData;
+}
+namespace BlackCore
+{
+    class CWebDataServices;
+}
+namespace BlackGui::Components
+{
+    class CAutoPublishDialog;
+}
 
 /*!
  * swift data entry control (aka mapping tool)

@@ -58,9 +58,9 @@ namespace BlackGui::Menus
         void onFontReset();
 
         QWidget *m_widget = nullptr;
-        QShortcut *m_fontSizePlusShortcut = nullptr;  //! owned by widget
+        QShortcut *m_fontSizePlusShortcut = nullptr; //! owned by widget
         QShortcut *m_fontSizeMinusShortcut = nullptr; //! owned by widget
-        QShortcut *m_fontResetShortcut = nullptr;     //! owned by widget
+        QShortcut *m_fontResetShortcut = nullptr; //! owned by widget
         QScopedPointer<QAction> m_fontDialogAction;
         QScopedPointer<BlackGui::Components::CSettingsFontDialog> m_dialog;
     };

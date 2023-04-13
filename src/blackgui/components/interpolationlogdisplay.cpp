@@ -37,10 +37,9 @@ namespace BlackGui::Components
         return cats;
     }
 
-    CInterpolationLogDisplay::CInterpolationLogDisplay(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        CIdentifiable(this),
-        ui(new Ui::CInterpolationLogDisplay)
+    CInterpolationLogDisplay::CInterpolationLogDisplay(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                                          CIdentifiable(this),
+                                                                          ui(new Ui::CInterpolationLogDisplay)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
 
@@ -68,27 +67,27 @@ namespace BlackGui::Components
         m_elvHistoryCount = elvHistoryCount;
         ui->le_ElvHistoryCount->setText(QString::number(elvHistoryCount));
 
-        connect(&m_updateTimer,              &QTimer::timeout, this, &CInterpolationLogDisplay::updateLog);
-        connect(ui->comp_CallsignCompleter,  &CCallsignCompleter::editingFinishedDigest, this, &CInterpolationLogDisplay::onCallsignEntered);
-        connect(ui->hs_UpdateTime,           &QSlider::valueChanged, this, &CInterpolationLogDisplay::onSliderChanged);
-        connect(ui->pb_StartStop,            &QPushButton::released, this, &CInterpolationLogDisplay::toggleStartStop);
-        connect(ui->pb_ResetLastSent,        &QPushButton::released, this, &CInterpolationLogDisplay::resetLastSentValues);
-        connect(ui->pb_ResetStats,           &QPushButton::released, this, &CInterpolationLogDisplay::resetStatistics);
-        connect(ui->pb_ShowLogInSimulator,   &QPushButton::released, this, &CInterpolationLogDisplay::logPosCommand);
-        connect(ui->pb_FollowInSimulator,    &QPushButton::released, this, &CInterpolationLogDisplay::followInSimulator);
-        connect(ui->pb_RequestElevation1,    &QPushButton::released, this, &CInterpolationLogDisplay::requestElevationClicked);
-        connect(ui->pb_RequestElevation2,    &QPushButton::released, this, &CInterpolationLogDisplay::requestElevationClicked);
+        connect(&m_updateTimer, &QTimer::timeout, this, &CInterpolationLogDisplay::updateLog);
+        connect(ui->comp_CallsignCompleter, &CCallsignCompleter::editingFinishedDigest, this, &CInterpolationLogDisplay::onCallsignEntered);
+        connect(ui->hs_UpdateTime, &QSlider::valueChanged, this, &CInterpolationLogDisplay::onSliderChanged);
+        connect(ui->pb_StartStop, &QPushButton::released, this, &CInterpolationLogDisplay::toggleStartStop);
+        connect(ui->pb_ResetLastSent, &QPushButton::released, this, &CInterpolationLogDisplay::resetLastSentValues);
+        connect(ui->pb_ResetStats, &QPushButton::released, this, &CInterpolationLogDisplay::resetStatistics);
+        connect(ui->pb_ShowLogInSimulator, &QPushButton::released, this, &CInterpolationLogDisplay::logPosCommand);
+        connect(ui->pb_FollowInSimulator, &QPushButton::released, this, &CInterpolationLogDisplay::followInSimulator);
+        connect(ui->pb_RequestElevation1, &QPushButton::released, this, &CInterpolationLogDisplay::requestElevationClicked);
+        connect(ui->pb_RequestElevation2, &QPushButton::released, this, &CInterpolationLogDisplay::requestElevationClicked);
         connect(ui->pb_GetLastInterpolation, &QPushButton::released, this, &CInterpolationLogDisplay::getLogAmdDisplayLastInterpolation);
-        connect(ui->pb_InjectElevation,      &QPushButton::released, this, &CInterpolationLogDisplay::onInjectElevation);
-        connect(ui->pb_ElvClear,             &QPushButton::released, this, &CInterpolationLogDisplay::clearElevationResults);
-        connect(ui->pb_RecalcAllAircraft,    &QPushButton::released, this, &CInterpolationLogDisplay::requestRecalculateAll);
-        connect(ui->pb_ClearLog,             &QPushButton::released, this, &CInterpolationLogDisplay::clearLogCommand);
-        connect(ui->pb_ClearLog2,            &QPushButton::released, this, &CInterpolationLogDisplay::clearLogCommand);
-        connect(ui->pb_WriteLogToFile,       &QPushButton::released, this, &CInterpolationLogDisplay::writeLogCommand);
-        connect(ui->pb_WriteLogToFile2,      &QPushButton::released, this, &CInterpolationLogDisplay::writeLogCommand);
-        connect(ui->le_InjectElevation,      &QLineEdit::returnPressed,   this, &CInterpolationLogDisplay::onInjectElevation);
-        connect(ui->le_ElvHistoryCount,      &QLineEdit::editingFinished, this, &CInterpolationLogDisplay::onElevationHistoryCountFinished);
-        connect(ui->cb_ElvAllowPseudo,       &QCheckBox::toggled,         this, &CInterpolationLogDisplay::onPseudoElevationToggled);
+        connect(ui->pb_InjectElevation, &QPushButton::released, this, &CInterpolationLogDisplay::onInjectElevation);
+        connect(ui->pb_ElvClear, &QPushButton::released, this, &CInterpolationLogDisplay::clearElevationResults);
+        connect(ui->pb_RecalcAllAircraft, &QPushButton::released, this, &CInterpolationLogDisplay::requestRecalculateAll);
+        connect(ui->pb_ClearLog, &QPushButton::released, this, &CInterpolationLogDisplay::clearLogCommand);
+        connect(ui->pb_ClearLog2, &QPushButton::released, this, &CInterpolationLogDisplay::clearLogCommand);
+        connect(ui->pb_WriteLogToFile, &QPushButton::released, this, &CInterpolationLogDisplay::writeLogCommand);
+        connect(ui->pb_WriteLogToFile2, &QPushButton::released, this, &CInterpolationLogDisplay::writeLogCommand);
+        connect(ui->le_InjectElevation, &QLineEdit::returnPressed, this, &CInterpolationLogDisplay::onInjectElevation);
+        connect(ui->le_ElvHistoryCount, &QLineEdit::editingFinished, this, &CInterpolationLogDisplay::onElevationHistoryCountFinished);
+        connect(ui->cb_ElvAllowPseudo, &QCheckBox::toggled, this, &CInterpolationLogDisplay::onPseudoElevationToggled);
         connect(ui->tvp_InboundAircraftSituations, &CAircraftSituationView::requestElevation, this, &CInterpolationLogDisplay::requestElevation);
         connect(ui->editor_ElevationCoordinate, &CCoordinateForm::changedCoordinate, this, &CInterpolationLogDisplay::requestElevationAtPosition);
         connect(sGui, &CGuiApplication::aboutToShutdown, this, &CInterpolationLogDisplay::onAboutToShutdown, Qt::QueuedConnection);
@@ -109,10 +108,10 @@ namespace BlackGui::Components
         }
         m_simulator = simulator;
         if (!simulator) { return; }
-        connect(m_simulator, &ISimulator::receivedRequestedElevation, this, &CInterpolationLogDisplay::onElevationReceived,  Qt::QueuedConnection);
-        connect(m_simulator, &ISimulator::requestedElevation,         this, &CInterpolationLogDisplay::onElevationRequested, Qt::QueuedConnection);
-        connect(m_simulator, &ISimulator::destroyed,                  this, &CInterpolationLogDisplay::onSimulatorUnloaded);
-        connect(m_simulator, &ISimulator::simulatorStatusChanged,     this, &CInterpolationLogDisplay::onSimulatorStatusChanged);
+        connect(m_simulator, &ISimulator::receivedRequestedElevation, this, &CInterpolationLogDisplay::onElevationReceived, Qt::QueuedConnection);
+        connect(m_simulator, &ISimulator::requestedElevation, this, &CInterpolationLogDisplay::onElevationRequested, Qt::QueuedConnection);
+        connect(m_simulator, &ISimulator::destroyed, this, &CInterpolationLogDisplay::onSimulatorUnloaded);
+        connect(m_simulator, &ISimulator::simulatorStatusChanged, this, &CInterpolationLogDisplay::onSimulatorStatusChanged);
     }
 
     void CInterpolationLogDisplay::setAirspaceMonitor(CAirspaceMonitor *airspaceMonitor)
@@ -157,10 +156,7 @@ namespace BlackGui::Components
             static const QString updateTimes("%1ms avg: %2ms max: %3ms");
             const QString avgUpdateTimeRounded = QString::number(m_simulator->getStatisticsAverageUpdateTimeMs(), 'f', 2);
 
-            ui->le_UpdateTimes->setText(updateTimes.
-                                        arg(m_simulator->getStatisticsCurrentUpdateTimeMs()).
-                                        arg(avgUpdateTimeRounded).
-                                        arg(m_simulator->getStatisticsMaxUpdateTimeMs()));
+            ui->le_UpdateTimes->setText(updateTimes.arg(m_simulator->getStatisticsCurrentUpdateTimeMs()).arg(avgUpdateTimeRounded).arg(m_simulator->getStatisticsMaxUpdateTimeMs()));
             ui->le_UpdateTimes->home(false);
             ui->le_UpdateCount->setText(QString::number(m_simulator->getStatisticsUpdateRuns()));
             ui->le_UpdateReqTime->setText(msTimeStr.arg(m_simulator->getStatisticsAircraftUpdatedRequestedDeltaMs()));
@@ -373,9 +369,9 @@ namespace BlackGui::Components
         m_elvReceived++;
         if (m_elvHistoryCount > 0)
         {
-            const QString history = callsign.asString()  %
+            const QString history = callsign.asString() %
                                     QStringLiteral(": ") % QTime::currentTime().toString("hh:mm:ss.zzz") %
-                                    QStringLiteral(" ")  % elevationPlane.toQString(true);
+                                    QStringLiteral(" ") % elevationPlane.toQString(true);
             m_elvHistoryModel->insertRow(0);
             const QModelIndex index = m_elvHistoryModel->index(0, 0);
             m_elvHistoryModel->setData(index, history);
@@ -416,7 +412,7 @@ namespace BlackGui::Components
 
     void CInterpolationLogDisplay::onInjectElevation()
     {
-        if (!this->canLog())  { return; }
+        if (!this->canLog()) { return; }
         const QString elv = ui->le_InjectElevation->text().trimmed();
         if (elv.isEmpty()) { return; }
 
@@ -548,8 +544,7 @@ namespace BlackGui::Components
     {
         // it can take a while until we receive parts, so we init
         QPointer<CInterpolationLogDisplay> myself(this);
-        QTimer::singleShot(250, this, [ = ]
-        {
+        QTimer::singleShot(250, this, [=] {
             if (!myself) { return; }
             if (m_callsign.isEmpty()) { return; }
             myself->onPartsAdded(m_callsign, CAircraftParts());
@@ -561,8 +556,8 @@ namespace BlackGui::Components
         if (!m_airspaceMonitor) { return; }
         static const QString info("req. %1, %2/rec. %3, %4 | found/missed: '%5' | times: %6");
         const QString foundMissed = m_airspaceMonitor->getElevationsFoundMissedInfo();
-        const QString reqTimes    = m_airspaceMonitor->getElevationRequestTimesInfo();
-        const QString reqRec      = info.arg(m_elvRequestedLoggedCs).arg(m_elvRequested).arg(m_elvReceivedLoggedCs).arg(m_elvReceived).arg(foundMissed, reqTimes);
+        const QString reqTimes = m_airspaceMonitor->getElevationRequestTimesInfo();
+        const QString reqRec = info.arg(m_elvRequestedLoggedCs).arg(m_elvRequested).arg(m_elvReceivedLoggedCs).arg(m_elvReceived).arg(foundMissed, reqTimes);
 
         ui->le_ElevationReqRec->setText(reqRec);
         ui->le_ElevationReqRec->setToolTip(reqRec);

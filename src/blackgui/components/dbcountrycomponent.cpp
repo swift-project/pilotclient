@@ -23,9 +23,8 @@ using namespace BlackGui::Views;
 
 namespace BlackGui::Components
 {
-    CDbCountryComponent::CDbCountryComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CDbCountryComponent)
+    CDbCountryComponent::CDbCountryComponent(QWidget *parent) : QFrame(parent),
+                                                                ui(new Ui::CDbCountryComponent)
     {
         ui->setupUi(this);
         this->setViewWithIndicator(ui->tvp_Countries);
@@ -41,7 +40,7 @@ namespace BlackGui::Components
     }
 
     CDbCountryComponent::~CDbCountryComponent()
-    { }
+    {}
 
     void CDbCountryComponent::onCountriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count, const QUrl &url)
     {

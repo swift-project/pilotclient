@@ -108,9 +108,9 @@ namespace BlackCore
             virtual BlackMisc::Aviation::CAircraftSituationChangeList remoteAircraftSituationChanges(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual int remoteAircraftSituationChangesCount(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered) override;
-            virtual int  updateMultipleAircraftRendered(const BlackMisc::Aviation::CCallsignSet &callsigns, bool rendered) override;
-            virtual int  updateMultipleAircraftEnabled(const BlackMisc::Aviation::CCallsignSet &callsigns, bool enabled) override;
-            virtual int  updateAircraftGroundElevation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevation, BlackMisc::Aviation::CAircraftSituation::GndElevationInfo info, bool *setForOnGroundPosition) override;
+            virtual int updateMultipleAircraftRendered(const BlackMisc::Aviation::CCallsignSet &callsigns, bool rendered) override;
+            virtual int updateMultipleAircraftEnabled(const BlackMisc::Aviation::CCallsignSet &callsigns, bool enabled) override;
+            virtual int updateAircraftGroundElevation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevation, BlackMisc::Aviation::CAircraftSituation::GndElevationInfo info, bool *setForOnGroundPosition) override;
             virtual void updateMarkAllAsNotRendered() override;
             virtual BlackMisc::PhysicalQuantities::CLength getCGFromDB(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::PhysicalQuantities::CLength getCGFromDB(const QString &modelString) const override;
@@ -118,15 +118,14 @@ namespace BlackCore
             virtual void rememberCGFromDB(const BlackMisc::PhysicalQuantities::CLength &cgFromDB, const QString &modelString) override;
             virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
             virtual BlackMisc::Geo::CElevationPlane averageElevationOfNonMovingAircraft(const BlackMisc::Aviation::CAircraftSituation &reference, const BlackMisc::PhysicalQuantities::CLength &range, int minValues = 1, int sufficientValues = 2) const override;
-            
+
             //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::connectRemoteAircraftProviderSignals
             virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
                 QObject *receiver,
                 std::function<void(const BlackMisc::Aviation::CAircraftSituation &)> addedSituationSlot,
                 std::function<void(const BlackMisc::Aviation::CCallsign &, const BlackMisc::Aviation::CAircraftParts &)> addedPartsSlot,
                 std::function<void(const BlackMisc::Aviation::CCallsign &)> removedAircraftSlot,
-                std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
-            ) override;
+                std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot) override;
 
             // clientprovider
             virtual void setClients(const BlackMisc::Network::CClientList &clients) override;
@@ -134,8 +133,8 @@ namespace BlackCore
             virtual BlackMisc::Network::CClient getClientOrDefaultForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool hasClientInfo(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool addNewClient(const BlackMisc::Network::CClient &client) override;
-            virtual int  updateOrAddClient(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true) override;
-            virtual int  removeClient(const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual int updateOrAddClient(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true) override;
+            virtual int removeClient(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual bool autoAdjustCientGndCapability(const BlackMisc::Aviation::CAircraftSituation &situation) override;
             virtual bool addClientGndCapability(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual bool setClientGndCapability(const BlackMisc::Aviation::CCallsign &callsign, bool supportGndFlag) override;
@@ -186,7 +185,7 @@ namespace BlackCore
             virtual bool setAircraftEnabledFlag(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::reInitializeAllAircraft
-            virtual int  reInitializeAllAircraft() override;
+            virtual int reInitializeAllAircraft() override;
 
             //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::updateCG
             virtual bool updateCG(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CLength &cg) override;
@@ -204,7 +203,7 @@ namespace BlackCore
             virtual BlackMisc::Aviation::CCallsignSet getAircraftInRangeCallsigns() const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getAircraftInRangeCount
-            virtual int  getAircraftInRangeCount() const override;
+            virtual int getAircraftInRangeCount() const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::isAircraftInRange
             virtual bool isAircraftInRange(const BlackMisc::Aviation::CCallsign &callsign) const override;
@@ -300,18 +299,18 @@ namespace BlackCore
             static void registerHelp()
             {
                 if (BlackMisc::CSimpleCommandParser::registered("BlackCore::CContextNetwork")) { return; }
-                BlackMisc::CSimpleCommandParser::registerCommand({".m", "alias: .msg, .chat"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".m message text", "send text message"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".m callsign message text", "send text message"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".altos callsign|? offsetvalue", "set altitude offset value (testing), ?=all"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".addtimeos offsetvalue", "add (delta) time offset (testing), e.g. 50ms"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".watchdog on|off", "enable/disable network watchdog (testing)"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".wallop message", "send a wallop message"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".reinit", "re-initialize all aircraft"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".enable", "alias: .unignore"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".enable callsign", "enable/unignore callsign"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".disable", "alias: .ignore"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".disable callsign", "disable/ignore callsign"});
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".m", "alias: .msg, .chat" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".m message text", "send text message" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".m callsign message text", "send text message" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".altos callsign|? offsetvalue", "set altitude offset value (testing), ?=all" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".addtimeos offsetvalue", "add (delta) time offset (testing), e.g. 50ms" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".watchdog on|off", "enable/disable network watchdog (testing)" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".wallop message", "send a wallop message" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".reinit", "re-initialize all aircraft" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".enable", "alias: .unignore" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".enable callsign", "enable/unignore callsign" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".disable", "alias: .ignore" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".disable callsign", "disable/ignore callsign" });
             }
 
             //! \copydoc BlackCore::Context::IContextNetwork::requestAtcBookingsUpdate
@@ -381,7 +380,7 @@ namespace BlackCore
             virtual BlackMisc::Network::CServerList getVatsimVoiceServers() const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::requestAircraftDataUpdates
-            virtual void requestAircraftDataUpdates()override;
+            virtual void requestAircraftDataUpdates() override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::requestAtisUpdates
             virtual void requestAtisUpdates() override;
@@ -421,21 +420,21 @@ namespace BlackCore
             void setSimulationEnvironmentProvider(BlackMisc::Simulation::ISimulationEnvironmentProvider *provider);
 
         private:
-            BlackMisc::Network::CLoginMode m_currentMode = BlackMisc::Network::CLoginMode::Pilot;    //!< current modeM
-            CAirspaceMonitor  *m_airspace = nullptr;
-            Fsd::CFSDClient   *m_fsdClient = nullptr;
-            QTimer            *m_requestAircraftDataTimer = nullptr;  //!< general updates such as frequencies, see requestAircraftDataUpdates()
-            QTimer            *m_requestAtisTimer         = nullptr;  //!< general updates such as ATIS
-            QTimer            *m_staggeredMatchingTimer   = nullptr;  //!< staggered update
-            int                m_simulatorConnected = 0;              //!< how often a simulator has been connected
+            BlackMisc::Network::CLoginMode m_currentMode = BlackMisc::Network::CLoginMode::Pilot; //!< current modeM
+            CAirspaceMonitor *m_airspace = nullptr;
+            Fsd::CFSDClient *m_fsdClient = nullptr;
+            QTimer *m_requestAircraftDataTimer = nullptr; //!< general updates such as frequencies, see requestAircraftDataUpdates()
+            QTimer *m_requestAtisTimer = nullptr; //!< general updates such as ATIS
+            QTimer *m_staggeredMatchingTimer = nullptr; //!< staggered update
+            int m_simulatorConnected = 0; //!< how often a simulator has been connected
             BlackMisc::Simulation::CSimulatorInfo m_lastConnectedSim; //!< last connected sim.
 
             // Digest signals, only sending after some time
             BlackMisc::CDigestSignal m_dsAtcStationsBookedChanged { this, &IContextNetwork::changedAtcStationsBooked, &IContextNetwork::changedAtcStationsBookedDigest, 1000, 2 };
             BlackMisc::CDigestSignal m_dsAtcStationsOnlineChanged { this, &IContextNetwork::changedAtcStationsOnline, &IContextNetwork::changedAtcStationsOnlineDigest, 1000, 4 };
-            BlackMisc::CDigestSignal m_dsAircraftsInRangeChanged  { this, &IContextNetwork::changedAircraftInRange, &IContextNetwork::changedAircraftInRangeDigest, 1000, 4 };
+            BlackMisc::CDigestSignal m_dsAircraftsInRangeChanged { this, &IContextNetwork::changedAircraftInRange, &IContextNetwork::changedAircraftInRangeDigest, 1000, 4 };
 
-            QQueue<BlackMisc::Simulation::CSimulatedAircraft> m_readyForModelMatching;  //!< ready for matching
+            QQueue<BlackMisc::Simulation::CSimulatedAircraft> m_readyForModelMatching; //!< ready for matching
 
             //! Own aircraft from \sa CContextOwnAircraft
             BlackMisc::Simulation::CSimulatedAircraft ownAircraft() const;

@@ -17,7 +17,7 @@
 
 namespace BlackGui::Graphs
 {
-    CBarChart::CBarChart(QWidget *parent): QwtPlot(parent)
+    CBarChart::CBarChart(QWidget *parent) : QwtPlot(parent)
     {
         this->setAutoFillBackground(true);
         this->setPalette(Qt::white);
@@ -130,7 +130,7 @@ namespace BlackGui::Graphs
 
     void CBarChart::setSamples1Bar(const QList<double> &samples, const QStringList &labels, Qt::Orientation orientation)
     {
-        QVector< QVector<double> > series;
+        QVector<QVector<double>> series;
         for (double d : samples)
         {
             series << QVector<double> { d };
@@ -171,4 +171,3 @@ namespace BlackGui::Graphs
     }
 
 } // ns
-

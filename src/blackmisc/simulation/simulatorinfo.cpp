@@ -31,10 +31,10 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CSimulatorInfo)
 namespace BlackMisc::Simulation
 {
     CSimulatorInfo::CSimulatorInfo()
-    { }
+    {}
 
     CSimulatorInfo::CSimulatorInfo(const QString &identifierString) : m_simulator(identifierToSimulator(identifierString))
-    { }
+    {}
 
     CSimulatorInfo::CSimulatorInfo(const QStringList &simulators)
     {
@@ -43,15 +43,13 @@ namespace BlackMisc::Simulation
     }
 
     CSimulatorInfo::CSimulatorInfo(Simulator simulator) : m_simulator(static_cast<int>(simulator))
-    { }
+    {}
 
-    CSimulatorInfo::CSimulatorInfo(bool fsx, bool fs9, bool xp, bool p3d, bool fg) :
-        m_simulator(boolToFlag(fsx, fs9, xp, p3d, fg))
-    { }
+    CSimulatorInfo::CSimulatorInfo(bool fsx, bool fs9, bool xp, bool p3d, bool fg) : m_simulator(boolToFlag(fsx, fs9, xp, p3d, fg))
+    {}
 
-    CSimulatorInfo::CSimulatorInfo(int flagsAsInt) :
-        m_simulator(flagsAsInt)
-    { }
+    CSimulatorInfo::CSimulatorInfo(int flagsAsInt) : m_simulator(flagsAsInt)
+    {}
 
     bool CSimulatorInfo::isUnspecified() const
     {
@@ -131,10 +129,10 @@ namespace BlackMisc::Simulation
     int CSimulatorInfo::numberSimulators() const
     {
         int c = isFS9() ? 1 : 0;
-        if (isFSX())    { c++; }
+        if (isFSX()) { c++; }
         if (isXPlane()) { c++; }
-        if (isP3D())    { c++; }
-        if (isFG())     { c++; }
+        if (isP3D()) { c++; }
+        if (isFG()) { c++; }
         return c;
     }
 
@@ -165,11 +163,11 @@ namespace BlackMisc::Simulation
         Q_UNUSED(i18n)
         const Simulator s = getSimulator();
         const QString str =
-            (s.testFlag(FSX)    ? QStringLiteral("FSX ") : QString()) %
-            (s.testFlag(FS9)    ? QStringLiteral("FS9 ") : QString()) %
-            (s.testFlag(P3D)    ? QStringLiteral("P3D ") : QString()) %
+            (s.testFlag(FSX) ? QStringLiteral("FSX ") : QString()) %
+            (s.testFlag(FS9) ? QStringLiteral("FS9 ") : QString()) %
+            (s.testFlag(P3D) ? QStringLiteral("P3D ") : QString()) %
             (s.testFlag(XPLANE) ? QStringLiteral("XPlane ") : QString()) %
-            (s.testFlag(FG)     ? QStringLiteral("FG ")  : QString());
+            (s.testFlag(FG) ? QStringLiteral("FG ") : QString());
         return str.trimmed();
     }
 
@@ -193,7 +191,7 @@ namespace BlackMisc::Simulation
     CSimulatorInfo CSimulatorInfo::add(const CSimulatorInfo &other)
     {
         // anything to add?
-        if (other.isUnspecified())   { return None; }
+        if (other.isUnspecified()) { return None; }
         if (this->matchesAll(other)) { return None; }
 
         this->setSimulator(this->getSimulator() | other.getSimulator());
@@ -207,7 +205,7 @@ namespace BlackMisc::Simulation
         if (m_simulator & FSX) { set.insert(CSimulatorInfo(FSX)); }
         if (m_simulator & FS9) { set.insert(CSimulatorInfo(FS9)); }
         if (m_simulator & P3D) { set.insert(CSimulatorInfo(P3D)); }
-        if (m_simulator & FG)  { set.insert(CSimulatorInfo(FG)); }
+        if (m_simulator & FG) { set.insert(CSimulatorInfo(FG)); }
         if (m_simulator & XPLANE) { set.insert(CSimulatorInfo(XPLANE)); }
         return set;
     }
@@ -231,9 +229,9 @@ namespace BlackMisc::Simulation
     {
         Simulator s = fsx ? FSX : None;
         if (fs9) { s |= FS9; }
-        if (xp)  { s |= XPLANE; }
+        if (xp) { s |= XPLANE; }
         if (p3d) { s |= P3D; }
-        if (fg)  { s |= FG; }
+        if (fg) { s |= FG; }
         return s;
     }
 
@@ -243,11 +241,11 @@ namespace BlackMisc::Simulation
         if (i.isEmpty()) { return None; }
 
         Simulator s = None;
-        if (i.contains("fsx")   || i.contains("fs10")) { s |= FSX; }
-        if (i.contains("fs9")   || i.contains("2004")) { s |= FS9; }
-        if (i.contains("plane") || i.contains("xp"))   { s |= XPLANE; }
-        if (i.contains("gear")  || stringCompare(QStringLiteral("fg"), identifier, Qt::CaseInsensitive)) { s |= FG; }
-        if (i.contains("3d")    || i.contains("prepar") || i.contains("martin") || i.contains("lm") || i.contains("lock"))
+        if (i.contains("fsx") || i.contains("fs10")) { s |= FSX; }
+        if (i.contains("fs9") || i.contains("2004")) { s |= FS9; }
+        if (i.contains("plane") || i.contains("xp")) { s |= XPLANE; }
+        if (i.contains("gear") || stringCompare(QStringLiteral("fg"), identifier, Qt::CaseInsensitive)) { s |= FG; }
+        if (i.contains("3d") || i.contains("prepar") || i.contains("martin") || i.contains("lm") || i.contains("lock"))
         {
             s |= P3D;
         }
@@ -263,8 +261,7 @@ namespace BlackMisc::Simulation
 
     const QStringList &CSimulatorInfo::allSimulatorStrings()
     {
-        static const QStringList sims = []
-        {
+        static const QStringList sims = [] {
             QStringList s;
             for (const CSimulatorInfo &i : CSimulatorInfo::allSimulatorsSet())
             {
@@ -294,7 +291,7 @@ namespace BlackMisc::Simulation
         bool fs9 = false;
         bool fsx = false;
         bool p3d = false;
-        bool fg  = false;
+        bool fg = false;
 
         if (CBuildConfig::isRunningOnWindowsNtPlatform())
         {
@@ -342,16 +339,16 @@ namespace BlackMisc::Simulation
     {
         const QJsonValue jfsx = json.value(prefix % u"simfsx");
         const QJsonValue jfs9 = json.value(prefix % u"simfs9");
-        const QJsonValue jxp  = json.value(prefix % u"simxplane");
+        const QJsonValue jxp = json.value(prefix % u"simxplane");
         const QJsonValue jp3d = json.value(prefix % u"simp3d");
-        const QJsonValue jfg  = json.value(prefix % u"simfg");
+        const QJsonValue jfg = json.value(prefix % u"simfg");
 
         // we handle bool JSON values and bool as string
         const bool fsx = jfsx.isBool() ? jfsx.toBool() : CDatastoreUtility::dbBoolStringToBool(jfsx.toString());
         const bool fs9 = jfs9.isBool() ? jfs9.toBool() : CDatastoreUtility::dbBoolStringToBool(jfs9.toString());
-        const bool xp  = jxp.isBool()  ? jxp.toBool()  : CDatastoreUtility::dbBoolStringToBool(jxp.toString());
+        const bool xp = jxp.isBool() ? jxp.toBool() : CDatastoreUtility::dbBoolStringToBool(jxp.toString());
         const bool p3d = jp3d.isBool() ? jp3d.toBool() : CDatastoreUtility::dbBoolStringToBool(jp3d.toString());
-        const bool fg  = jfg.isBool()  ? jfg.toBool()  : CDatastoreUtility::dbBoolStringToBool(jfg.toString());
+        const bool fg = jfg.isBool() ? jfg.toBool() : CDatastoreUtility::dbBoolStringToBool(jfg.toString());
 
         const CSimulatorInfo simInfo(fsx, fs9, xp, p3d, fg);
         return simInfo;
@@ -418,11 +415,11 @@ namespace BlackMisc::Simulation
 
     QString CCountPerSimulator::toQString() const
     {
-        return u"FSX: "     % QString::number(m_counts[0]) %
-                u" P3D: "    % QString::number(m_counts[1]) %
-                u" FS9: "    % QString::number(m_counts[2]) %
-                u" XPlane: " % QString::number(m_counts[3]) %
-                u" FG: "     % QString::number(m_counts[4]);
+        return u"FSX: " % QString::number(m_counts[0]) %
+               u" P3D: " % QString::number(m_counts[1]) %
+               u" FS9: " % QString::number(m_counts[2]) %
+               u" XPlane: " % QString::number(m_counts[3]) %
+               u" FG: " % QString::number(m_counts[4]);
     }
 
     void CCountPerSimulator::setCount(int count, const CSimulatorInfo &simulator)
@@ -438,11 +435,11 @@ namespace BlackMisc::Simulation
             m_counts[5]++;
             return;
         }
-        if (simulator.isFSX())    { m_counts[0]++; }
-        if (simulator.isP3D())    { m_counts[1]++; }
-        if (simulator.isFS9())    { m_counts[2]++; }
+        if (simulator.isFSX()) { m_counts[0]++; }
+        if (simulator.isP3D()) { m_counts[1]++; }
+        if (simulator.isFS9()) { m_counts[2]++; }
         if (simulator.isXPlane()) { m_counts[3]++; }
-        if (simulator.isFG())     { m_counts[4]++; }
+        if (simulator.isFG()) { m_counts[4]++; }
     }
 
     int CCountPerSimulator::internalIndex(const CSimulatorInfo &simulator)
@@ -450,11 +447,11 @@ namespace BlackMisc::Simulation
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
         switch (simulator.getSimulator())
         {
-        case CSimulatorInfo::FSX:    return 0;
-        case CSimulatorInfo::P3D:    return 1;
-        case CSimulatorInfo::FS9:    return 2;
+        case CSimulatorInfo::FSX: return 0;
+        case CSimulatorInfo::P3D: return 1;
+        case CSimulatorInfo::FS9: return 2;
         case CSimulatorInfo::XPLANE: return 3;
-        case CSimulatorInfo::FG:     return 4;
+        case CSimulatorInfo::FG: return 4;
         default: return CSimulatorInfo::NumberOfSimulators; // unknown
         }
     }

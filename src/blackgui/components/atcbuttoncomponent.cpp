@@ -25,9 +25,8 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CAtcButtonComponent::CAtcButtonComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CAtcButtonComponent)
+    CAtcButtonComponent::CAtcButtonComponent(QWidget *parent) : QFrame(parent),
+                                                                ui(new Ui::CAtcButtonComponent)
     {
         ui->setupUi(this);
         if (sGui && sGui->getIContextNetwork())
@@ -40,7 +39,7 @@ namespace BlackGui::Components
     }
 
     CAtcButtonComponent::~CAtcButtonComponent()
-    { }
+    {}
 
     void CAtcButtonComponent::updateStations()
     {
@@ -110,7 +109,7 @@ namespace BlackGui::Components
     void CAtcButtonComponent::onChangedAtcStations()
     {
         if (!m_backgroundUpdates) { return; }
-        if (!this->isVisible())   { return; }
+        if (!this->isVisible()) { return; }
         this->updateStations();
     }
 

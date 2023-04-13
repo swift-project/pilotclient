@@ -19,7 +19,10 @@
 #include "blackmisc/digestsignal.h"
 #include <QFrame>
 
-namespace Ui { class CUpdateInfoComponent; }
+namespace Ui
+{
+    class CUpdateInfoComponent;
+}
 namespace BlackGui::Components
 {
     class CInstallXSwiftBusDialog;

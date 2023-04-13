@@ -16,7 +16,10 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CShowHideBar; }
+namespace Ui
+{
+    class CShowHideBar;
+}
 namespace BlackGui
 {
     //! Show or hide (expand / collapse) another section

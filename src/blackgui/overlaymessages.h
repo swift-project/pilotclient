@@ -32,8 +32,14 @@ class QKeyEvent;
 class QPaintEvent;
 class QPixmap;
 
-namespace Ui { class COverlayMessages; }
-namespace BlackMisc::Network { class CTextMessage; }
+namespace Ui
+{
+    class COverlayMessages;
+}
+namespace BlackMisc::Network
+{
+    class CTextMessage;
+}
 namespace BlackGui
 {
     /*!
@@ -182,11 +188,11 @@ namespace BlackGui
         QScopedPointer<Ui::COverlayMessages> ui;
         BlackMisc::CSettingReadOnly<Settings::TextMessageSettings> m_messageSettings { this };
         QString m_header;
-        int     m_lastConfirmation     = QMessageBox::Cancel;
-        bool    m_awaitingConfirmation = false;
-        bool    m_hasKillButton        = false;
-        bool    m_forceSmall           = false;
-        QTimer  m_autoCloseTimer { this };
+        int m_lastConfirmation = QMessageBox::Cancel;
+        bool m_awaitingConfirmation = false;
+        bool m_hasKillButton = false;
+        bool m_forceSmall = false;
+        QTimer m_autoCloseTimer { this };
         std::function<void()> m_okLambda; //!< called when confirmed as "OK"
         QList<std::function<void()>> m_pendingMessageCalls;
 

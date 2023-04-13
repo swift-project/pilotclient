@@ -48,16 +48,16 @@ namespace BlackMisc::Simulation
         //! Simulator
         enum SimulatorFlag
         {
-            None        = 0,
-            FSX         = 1 << 0,
-            FS9         = 1 << 1,
-            XPLANE      = 1 << 2,
-            P3D         = 1 << 3,
-            FG          = 1 << 4,
-            MSFS      = 1 << 5,
-            FSX_P3D     = FSX | P3D,
+            None = 0,
+            FSX = 1 << 0,
+            FS9 = 1 << 1,
+            XPLANE = 1 << 2,
+            P3D = 1 << 3,
+            FG = 1 << 4,
+            MSFS = 1 << 5,
+            FSX_P3D = FSX | P3D,
             AllFsFamily = FSX | FS9 | P3D | MSFS,
-            All         = FSX | FS9 | XPLANE | P3D | FG | MSFS
+            All = FSX | FS9 | XPLANE | P3D | FG | MSFS
         };
         Q_DECLARE_FLAGS(Simulator, SimulatorFlag)
 
@@ -205,11 +205,31 @@ namespace BlackMisc::Simulation
 
         //! @{
         //! Const simulator info objects
-        static const CSimulatorInfo &fg()  { static const CSimulatorInfo s(FG);  return s; }
-        static const CSimulatorInfo &fsx() { static const CSimulatorInfo s(FSX); return s; }
-        static const CSimulatorInfo &p3d() { static const CSimulatorInfo s(P3D); return s; }
-        static const CSimulatorInfo &fs9() { static const CSimulatorInfo s(FS9); return s; }
-        static const CSimulatorInfo &xplane() { static const CSimulatorInfo s(XPLANE); return s; }
+        static const CSimulatorInfo &fg()
+        {
+            static const CSimulatorInfo s(FG);
+            return s;
+        }
+        static const CSimulatorInfo &fsx()
+        {
+            static const CSimulatorInfo s(FSX);
+            return s;
+        }
+        static const CSimulatorInfo &p3d()
+        {
+            static const CSimulatorInfo s(P3D);
+            return s;
+        }
+        static const CSimulatorInfo &fs9()
+        {
+            static const CSimulatorInfo s(FS9);
+            return s;
+        }
+        static const CSimulatorInfo &xplane()
+        {
+            static const CSimulatorInfo s(XPLANE);
+            return s;
+        }
         //! @}
 
     private:

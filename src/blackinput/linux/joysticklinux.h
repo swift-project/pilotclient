@@ -50,8 +50,8 @@ namespace BlackInput
         //! Slot for reading the device handle
         void processInput();
 
-        QString m_name;  //!< Device name
-        QString m_path;  //!< Device path, e.g. /dev/input/js0
+        QString m_name; //!< Device name
+        QString m_path; //!< Device path, e.g. /dev/input/js0
         QFile *m_fd = nullptr; //!< Linux file descriptor
     };
 
@@ -62,7 +62,6 @@ namespace BlackInput
         Q_OBJECT
 
     public:
-
         //! Copy Constructor
         CJoystickLinux(CJoystickLinux const &) = delete;
 

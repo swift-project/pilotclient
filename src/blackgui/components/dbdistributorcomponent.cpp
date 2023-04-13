@@ -25,9 +25,8 @@ using namespace BlackGui::Views;
 
 namespace BlackGui::Components
 {
-    CDbDistributorComponent::CDbDistributorComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CDbDistributorComponent)
+    CDbDistributorComponent::CDbDistributorComponent(QWidget *parent) : QFrame(parent),
+                                                                        ui(new Ui::CDbDistributorComponent)
     {
         ui->setupUi(this);
         this->setViewWithIndicator(ui->tvp_Distributors);
@@ -35,10 +34,10 @@ namespace BlackGui::Components
         ui->tvp_Distributors->allowDragDrop(true, false);
         ui->tvp_Distributors->setFilterWidget(ui->filter_Distributor);
 
-        connect(ui->tvp_Distributors,     &CDistributorView::requestNewBackendData, this, &CDbDistributorComponent::reload);
+        connect(ui->tvp_Distributors, &CDistributorView::requestNewBackendData, this, &CDbDistributorComponent::reload);
         connect(ui->pb_SelectAllFsFamily, &QPushButton::released, this, &CDbDistributorComponent::selectStandardModels);
-        connect(ui->pb_SelectXPlaneBB,    &QPushButton::released, this, &CDbDistributorComponent::selectStandardModels);
-        connect(ui->pb_SelectXplaneXCSL,  &QPushButton::released, this, &CDbDistributorComponent::selectStandardModels);
+        connect(ui->pb_SelectXPlaneBB, &QPushButton::released, this, &CDbDistributorComponent::selectStandardModels);
+        connect(ui->pb_SelectXplaneXCSL, &QPushButton::released, this, &CDbDistributorComponent::selectStandardModels);
 
         if (sGui && sGui->getWebDataServices())
         {
@@ -48,7 +47,7 @@ namespace BlackGui::Components
     }
 
     CDbDistributorComponent::~CDbDistributorComponent()
-    { }
+    {}
 
     CDistributorView *CDbDistributorComponent::view() const
     {
@@ -109,8 +108,7 @@ namespace BlackGui::Components
 
         // deferred because filter must first work and update
         const QPointer<CDbDistributorComponent> myself(this);
-        QTimer::singleShot(2000, this, [ = ]
-        {
+        QTimer::singleShot(2000, this, [=] {
             if (!myself || !sApp || sApp->isShuttingDown()) { return; }
             ui->tvp_Distributors->selectDbKeys(keys);
         });

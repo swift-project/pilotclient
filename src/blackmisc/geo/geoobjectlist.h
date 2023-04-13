@@ -23,7 +23,7 @@
 namespace BlackMisc::Geo
 {
     //! List of objects with geo coordinates.
-    template<class OBJ, class CONTAINER>
+    template <class OBJ, class CONTAINER>
     class IGeoObjectList
     {
     public:
@@ -35,8 +35,7 @@ namespace BlackMisc::Geo
         //! \param range      within range of other position
         CONTAINER findWithinRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const
         {
-            return this->container().findBy([&](const OBJ & geoObj)
-            {
+            return this->container().findBy([&](const OBJ &geoObj) {
                 return calculateGreatCircleDistance(geoObj, coordinate) <= range;
             });
         }
@@ -46,8 +45,7 @@ namespace BlackMisc::Geo
         //! \param range      outside range of other position
         CONTAINER findOutsideRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const
         {
-            return this->container().findBy([&](const OBJ & geoObj)
-            {
+            return this->container().findBy([&](const OBJ &geoObj) {
                 return calculateGreatCircleDistance(geoObj, coordinate) > range;
             });
         }
@@ -55,8 +53,7 @@ namespace BlackMisc::Geo
         //! Find first in range
         OBJ findFirstWithinRangeOrDefault(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const
         {
-            return this->container().findFirstByOrDefault([&](const OBJ & geoObj)
-            {
+            return this->container().findFirstByOrDefault([&](const OBJ &geoObj) {
                 return calculateGreatCircleDistance(geoObj, coordinate) <= range;
             });
         }
@@ -70,8 +67,7 @@ namespace BlackMisc::Geo
         //! Any object in range?
         bool containsObjectInRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const
         {
-            return this->container().containsBy([&](const OBJ & geoObj)
-            {
+            return this->container().containsBy([&](const OBJ &geoObj) {
                 const PhysicalQuantities::CLength d = coordinate.calculateGreatCircleDistance(geoObj);
                 return d <= range;
             });
@@ -80,8 +76,7 @@ namespace BlackMisc::Geo
         //! Any object in range?
         bool containsObjectOutsideRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const
         {
-            return this->container().containsBy([&](const OBJ & geoObj)
-            {
+            return this->container().containsBy([&](const OBJ &geoObj) {
                 const PhysicalQuantities::CLength d = coordinate.calculateGreatCircleDistance(geoObj);
                 return d > range;
             });
@@ -90,8 +85,7 @@ namespace BlackMisc::Geo
         //! Any NULL position?
         bool containsNullPosition() const
         {
-            return this->container().containsBy([&](const ICoordinateGeodetic & geoObj)
-            {
+            return this->container().containsBy([&](const ICoordinateGeodetic &geoObj) {
                 return geoObj.isNull();
             });
         }
@@ -99,8 +93,7 @@ namespace BlackMisc::Geo
         //! Any NULL position or NULL height
         bool containsNullPositionOrHeight() const
         {
-            return this->container().containsBy([&](const ICoordinateGeodetic & geoObj)
-            {
+            return this->container().containsBy([&](const ICoordinateGeodetic &geoObj) {
                 return geoObj.isNull() || geoObj.isGeodeticHeightNull();
             });
         }
@@ -108,7 +101,7 @@ namespace BlackMisc::Geo
         //! Find min/max/average height
         MinMaxAverageHeight findMinMaxAverageHeight() const
         {
-            MinMaxAverageHeight stats{ Aviation::CAltitude::null(), Aviation::CAltitude::null(), Aviation::CAltitude::null(), 0 };
+            MinMaxAverageHeight stats { Aviation::CAltitude::null(), Aviation::CAltitude::null(), Aviation::CAltitude::null(), 0 };
             if (this->container().isEmpty()) { return stats; } // avoid div by zero
             int count = 0;
             double avgFt = 0;
@@ -122,7 +115,7 @@ namespace BlackMisc::Geo
                 }
                 if (std::get<1>(stats).isNull() || std::get<1>(stats) < alt)
                 {
-                    std::get<1>(stats) = alt; //max.
+                    std::get<1>(stats) = alt; // max.
                 }
                 avgFt += alt.value(PhysicalQuantities::CLengthUnit::ft()); // add up
                 count++;
@@ -180,8 +173,7 @@ namespace BlackMisc::Geo
         //! Find 0..n objects closest to the given coordinate.
         CONTAINER findClosest(int number, const ICoordinateGeodetic &coordinate) const
         {
-            CONTAINER closest = this->container().partiallySorted(number, [&](const OBJ & a, const OBJ & b)
-            {
+            CONTAINER closest = this->container().partiallySorted(number, [&](const OBJ &a, const OBJ &b) {
                 return calculateEuclideanDistanceSquared(a, coordinate) < calculateEuclideanDistanceSquared(b, coordinate);
             });
             closest.truncate(number);
@@ -191,8 +183,7 @@ namespace BlackMisc::Geo
         //! Find 0..n objects farthest to the given coordinate.
         CONTAINER findFarthest(int number, const ICoordinateGeodetic &coordinate) const
         {
-            CONTAINER farthest = this->container().partiallySorted(number, [&](const OBJ & a, const OBJ & b)
-            {
+            CONTAINER farthest = this->container().partiallySorted(number, [&](const OBJ &a, const OBJ &b) {
                 return calculateEuclideanDistanceSquared(a, coordinate) > calculateEuclideanDistanceSquared(b, coordinate);
             });
             farthest.truncate(number);
@@ -220,8 +211,7 @@ namespace BlackMisc::Geo
         //! Sort by distance
         void sortByEuclideanDistanceSquared(const ICoordinateGeodetic &coordinate)
         {
-            this->container().sort([&](const OBJ & a, const OBJ & b)
-            {
+            this->container().sort([&](const OBJ &a, const OBJ &b) {
                 return calculateEuclideanDistanceSquared(a, coordinate) < calculateEuclideanDistanceSquared(b, coordinate);
             });
         }
@@ -237,7 +227,7 @@ namespace BlackMisc::Geo
     protected:
         //! Constructor
         IGeoObjectList()
-        { }
+        {}
 
         //! Container
         const CONTAINER &container() const
@@ -253,7 +243,7 @@ namespace BlackMisc::Geo
     };
 
     //! List of objects with geo coordinates.
-    template<class OBJ, class CONTAINER>
+    template <class OBJ, class CONTAINER>
     class IGeoObjectWithRelativePositionList : public IGeoObjectList<OBJ, CONTAINER>
     {
     public:
@@ -264,20 +254,20 @@ namespace BlackMisc::Geo
             {
                 this->calculcateAndUpdateRelativeDistanceAndBearing(position);
             }
-            this->container().sort([&](const OBJ & a, const OBJ & b) { return a.getRelativeDistance() < b.getRelativeDistance(); });
+            this->container().sort([&](const OBJ &a, const OBJ &b) { return a.getRelativeDistance() < b.getRelativeDistance(); });
         }
 
         //! If distance is already set, just sort container
         //! \remark requires calculcateAndUpdateRelativeDistanceAndBearing
         void sortByDistanceToReferencePosition()
         {
-            this->container().sort([&](const OBJ & a, const OBJ & b) { return a.getRelativeDistance() < b.getRelativeDistance(); });
+            this->container().sort([&](const OBJ &a, const OBJ &b) { return a.getRelativeDistance() < b.getRelativeDistance(); });
         }
 
         //! Sort the first n closest objects
         void partiallySortByDistanceToReferencePosition(int number)
         {
-            this->container().partiallySort(number, [&](const OBJ & a, const OBJ & b) { return a.getRelativeDistance() < b.getRelativeDistance(); });
+            this->container().partiallySort(number, [&](const OBJ &a, const OBJ &b) { return a.getRelativeDistance() < b.getRelativeDistance(); });
         }
 
         //! Get n closest objects
@@ -294,11 +284,10 @@ namespace BlackMisc::Geo
         //! Calculate distances, remove if outside range
         void removeIfOutsideRange(const ICoordinateGeodetic &position, const PhysicalQuantities::CLength &maxDistance, bool updateValues)
         {
-            this->container().removeIf([&](OBJ & geoObj)
-            {
+            this->container().removeIf([&](OBJ &geoObj) {
                 return updateValues ?
-                    geoObj.calculcateAndUpdateRelativeDistanceAndBearing(position) > maxDistance :
-                geoObj.calculateGreatCircleDistance(position) > maxDistance;
+                           geoObj.calculcateAndUpdateRelativeDistanceAndBearing(position) > maxDistance :
+                           geoObj.calculateGreatCircleDistance(position) > maxDistance;
             });
         }
 
@@ -314,8 +303,8 @@ namespace BlackMisc::Geo
     protected:
         //! Constructor
         IGeoObjectWithRelativePositionList()
-        { }
+        {}
     };
 } // namespace
 
-#endif //guard
+#endif // guard

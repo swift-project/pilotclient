@@ -21,10 +21,10 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc, CPlatform)
 namespace BlackMisc
 {
     CPlatform::CPlatform(const QString &p) : m_platform(stringToPlatform(p))
-    { }
+    {}
 
     CPlatform::CPlatform(Platform p) : m_platform(p)
-    { }
+    {}
 
     CPlatform::PlatformFlag CPlatform::getPlatformFlag() const
     {
@@ -105,7 +105,11 @@ namespace BlackMisc
 
     void CPlatform::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CPlatform>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CPlatform>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

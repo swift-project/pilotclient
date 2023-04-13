@@ -47,9 +47,9 @@ namespace BlackMisc::Weather
 
         //! Constructor
         CTemperatureLayer(const BlackMisc::Aviation::CAltitude &level,
-                            const PhysicalQuantities::CTemperature &temperature,
-                            const PhysicalQuantities::CTemperature &dewPoint,
-                            double relativeHumidity);
+                          const PhysicalQuantities::CTemperature &temperature,
+                          const PhysicalQuantities::CTemperature &dewPoint,
+                          double relativeHumidity);
 
         //! Set level
         void setLevel(const BlackMisc::Aviation::CAltitude &level) { m_level = level; }

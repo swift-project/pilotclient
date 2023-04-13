@@ -43,10 +43,9 @@ using namespace BlackGui;
 using namespace BlackGui::Components;
 using namespace BlackConfig;
 
-CSwiftData::CSwiftData(QWidget *parent) :
-    QMainWindow(parent),
-    CIdentifiable(this),
-    ui(new Ui::CSwiftData)
+CSwiftData::CSwiftData(QWidget *parent) : QMainWindow(parent),
+                                          CIdentifiable(this),
+                                          ui(new Ui::CSwiftData)
 {
 
     Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
@@ -58,18 +57,16 @@ CSwiftData::CSwiftData(QWidget *parent) :
 void CSwiftData::initStyleSheet()
 {
     const QString s = sGui->getStyleSheetUtility().styles(
-    {
-        CStyleSheetUtility::fileNameFonts(),
-        CStyleSheetUtility::fileNameStandardWidget(),
-        CStyleSheetUtility::fileNameSwiftData()
-    });
+        { CStyleSheetUtility::fileNameFonts(),
+          CStyleSheetUtility::fileNameStandardWidget(),
+          CStyleSheetUtility::fileNameSwiftData() });
 
     this->setStyleSheet("");
     this->setStyleSheet(s);
 }
 
 CSwiftData::~CSwiftData()
-{ }
+{}
 
 void CSwiftData::closeEvent(QCloseEvent *event)
 {
@@ -93,7 +90,7 @@ void CSwiftData::init()
     this->initLogDisplay();
 
     m_mwaLogComponent = ui->comp_MainInfoArea->getLogComponent();
-    m_mwaStatusBar    = &m_statusBar;
+    m_mwaStatusBar = &m_statusBar;
     m_mwaOverlayFrame = ui->comp_MainInfoArea->getMappingComponent();
 
     this->initStyleSheet();
@@ -109,8 +106,7 @@ void CSwiftData::init()
 
     sGui->triggerNewVersionCheck(20 * 1000);
     QPointer<CSwiftData> myself(this);
-    QTimer::singleShot(15 * 1000, this, [ = ]
-    {
+    QTimer::singleShot(15 * 1000, this, [=] {
         if (!myself || !sGui || sGui->isShuttingDown()) { return; }
         this->checkMinimumVersion();
         this->checkAutoPublishing();
@@ -124,8 +120,7 @@ void CSwiftData::initLogDisplay()
     m_statusBar.initStatusBar(ui->sb_SwiftData);
     // m_statusBar.setSizeGripEnabled(false);
 
-    connect(&m_logHistory, &CLogHistoryReplica::elementAdded, this, [this](const CStatusMessage &message)
-    {
+    connect(&m_logHistory, &CLogHistoryReplica::elementAdded, this, [this](const CStatusMessage &message) {
         m_statusBar.displayStatusMessage(message);
     });
     m_logHistory.setFilter(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
@@ -142,8 +137,8 @@ void CSwiftData::initMenu()
     this->initDynamicMenus();
     ui->menu_WindowMinimize->setIcon(this->style()->standardIcon(QStyle::SP_TitleBarMinButton));
 
-    connect(ui->menu_WindowFont,        &QAction::triggered, this, &CSwiftData::onMenuClicked);
-    connect(ui->menu_MappingMaxData,    &QAction::triggered, this, &CSwiftData::onMenuClicked);
+    connect(ui->menu_WindowFont, &QAction::triggered, this, &CSwiftData::onMenuClicked);
+    connect(ui->menu_MappingMaxData, &QAction::triggered, this, &CSwiftData::onMenuClicked);
     connect(ui->menu_MappingMaxMapping, &QAction::triggered, this, &CSwiftData::onMenuClicked);
 
     sGui->addMenuFile(*ui->menu_File);

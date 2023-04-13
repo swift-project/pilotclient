@@ -10,7 +10,7 @@
 
 namespace BlackCore::Afv::Crypto
 {
-    CryptoDtoSerializer::CryptoDtoSerializer() { }
+    CryptoDtoSerializer::CryptoDtoSerializer() {}
 
     CryptoDtoSerializer::Deserializer CryptoDtoSerializer::deserialize(CCryptoDtoChannel &channel, const QByteArray &bytes, bool loopback)
     {
@@ -54,10 +54,10 @@ namespace BlackCore::Afv::Crypto
             if (loopback) { key = channel.getTransmitKey(CryptoDtoMode::AEAD_ChaCha20Poly1305); }
             else { key = channel.getReceiveKey(CryptoDtoMode::AEAD_ChaCha20Poly1305); }
             int result = crypto_aead_chacha20poly1305_ietf_decrypt(reinterpret_cast<unsigned char *>(decryptedPayload.data()), &mlen, nullptr,
-                            reinterpret_cast<const unsigned char *>(aePayloadBuffer.constData()), aePayloadBuffer.size(),
-                            reinterpret_cast<const unsigned char *>(adBuffer.constData()), adBuffer.size(),
-                            reinterpret_cast<const unsigned char *>(nonce.constData()),
-                            reinterpret_cast<const unsigned char *>(key.constData()));
+                                                                   reinterpret_cast<const unsigned char *>(aePayloadBuffer.constData()), aePayloadBuffer.size(),
+                                                                   reinterpret_cast<const unsigned char *>(adBuffer.constData()), adBuffer.size(),
+                                                                   reinterpret_cast<const unsigned char *>(nonce.constData()),
+                                                                   reinterpret_cast<const unsigned char *>(key.constData()));
 
             if (result == 0)
             {

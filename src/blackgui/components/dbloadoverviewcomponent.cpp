@@ -26,9 +26,8 @@ using namespace BlackMisc::Network;
 
 namespace BlackGui::Components
 {
-    CDbLoadOverviewComponent::CDbLoadOverviewComponent(QWidget *parent) :
-        QFrame(parent), CLoadIndicatorEnabled(this),
-        ui(new Ui::CDbLoadOverviewComponent)
+    CDbLoadOverviewComponent::CDbLoadOverviewComponent(QWidget *parent) : QFrame(parent), CLoadIndicatorEnabled(this),
+                                                                          ui(new Ui::CDbLoadOverviewComponent)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "missing sGui");
         ui->setupUi(this);
@@ -44,34 +43,33 @@ namespace BlackGui::Components
         ui->lbl_SharedUrls->setTextInteractionFlags(Qt::TextBrowserInteraction);
         ui->lbl_SharedUrls->setOpenExternalLinks(true);
 
-        connect(ui->tb_DbReloadAircraft,     &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
-        connect(ui->tb_DbReloadAirlines,     &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
-        connect(ui->tb_DbReloadAirports,     &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
-        connect(ui->tb_DbReloadCountries,    &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
-        connect(ui->tb_DbReloadLiveries,     &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
-        connect(ui->tb_DbReloadModels,       &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
+        connect(ui->tb_DbReloadAircraft, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
+        connect(ui->tb_DbReloadAirlines, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
+        connect(ui->tb_DbReloadAirports, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
+        connect(ui->tb_DbReloadCountries, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
+        connect(ui->tb_DbReloadLiveries, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
+        connect(ui->tb_DbReloadModels, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
         connect(ui->tb_DbReloadDistributors, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
-        connect(ui->tb_DbReloadCategories,   &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
+        connect(ui->tb_DbReloadCategories, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
 
-        connect(ui->tb_SharedReloadAircraft,     &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
-        connect(ui->tb_SharedReloadAirlines,     &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
-        connect(ui->tb_SharedReloadAirports,     &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
-        connect(ui->tb_SharedReloadCountries,    &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
-        connect(ui->tb_SharedReloadLiveries,     &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
-        connect(ui->tb_SharedReloadModels,       &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
+        connect(ui->tb_SharedReloadAircraft, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
+        connect(ui->tb_SharedReloadAirlines, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
+        connect(ui->tb_SharedReloadAirports, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
+        connect(ui->tb_SharedReloadCountries, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
+        connect(ui->tb_SharedReloadLiveries, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
+        connect(ui->tb_SharedReloadModels, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
         connect(ui->tb_SharedReloadDistributors, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
-        connect(ui->tb_SharedReloadCategories,   &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
+        connect(ui->tb_SharedReloadCategories, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
 
-        connect(ui->pb_LoadAllFromDB,        &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromDb);
-        connect(ui->pb_LoadAllFromShared,    &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromShared);
+        connect(ui->pb_LoadAllFromDB, &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromDb);
+        connect(ui->pb_LoadAllFromShared, &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromShared);
         connect(ui->pb_LoadAllFromResources, &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromResourceFiles);
 
         if (sGui->hasWebDataServices())
         {
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLoadOverviewComponent::dataLoaded);
             QPointer<CDbLoadOverviewComponent> myself(this);
-            QTimer::singleShot(10 * 1000, this, [ = ]
-            {
+            QTimer::singleShot(10 * 1000, this, [=] {
                 if (!myself || !sGui || sGui->isShuttingDown()) { return; }
                 this->loadInfoObjects();
                 this->adjustTextWidth();
@@ -80,7 +78,7 @@ namespace BlackGui::Components
     }
 
     CDbLoadOverviewComponent::~CDbLoadOverviewComponent()
-    { }
+    {}
 
     void CDbLoadOverviewComponent::display()
     {
@@ -247,8 +245,7 @@ namespace BlackGui::Components
             }
             const bool canConnect = CNetworkUtils::canConnect(sharedUrl);
             values.push_back(
-                valueHtml.arg(canConnect ? m_imgOk : m_imgFailed, urlLinkHtml.arg(sharedUrl.getFullUrl(), sharedUrl.getHost()))
-            );
+                valueHtml.arg(canConnect ? m_imgOk : m_imgFailed, urlLinkHtml.arg(sharedUrl.getFullUrl(), sharedUrl.getHost())));
         }
 
         const QString sharedUrlTable = toHtmTable(values, 2);
@@ -256,8 +253,7 @@ namespace BlackGui::Components
         ui->lbl_SharedUrls->setMinimumHeight(10 + (18 * sharedUrls.size()));
         const QString currentlyUsedSharedUrl = sGui->getWorkingSharedUrl().toQString();
         ui->lbl_SharedUrls->setToolTip(
-            currentlyUsedSharedUrl.isEmpty() ? "No shared URL" : "currently used: " + currentlyUsedSharedUrl
-        );
+            currentlyUsedSharedUrl.isEmpty() ? "No shared URL" : "currently used: " + currentlyUsedSharedUrl);
 
         m_sharedLastCheck = QDateTime::currentMSecsSinceEpoch();
         m_sharedValueCheckInProgress = false;

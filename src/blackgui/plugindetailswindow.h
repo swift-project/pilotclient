@@ -20,7 +20,10 @@
 
 class QShowEvent;
 
-namespace Ui { class CPluginDetailsWindow; }
+namespace Ui
+{
+    class CPluginDetailsWindow;
+}
 namespace BlackGui
 {
     /*!

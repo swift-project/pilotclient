@@ -18,22 +18,19 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAircraftIcaoCode, CAircraftIc
 namespace BlackMisc::Aviation
 {
     CAircraftIcaoCodeList::CAircraftIcaoCodeList()
-    { }
+    {}
 
-    CAircraftIcaoCodeList::CAircraftIcaoCodeList(const CSequence<CAircraftIcaoCode> &other) :
-        CSequence<CAircraftIcaoCode>(other)
-    { }
+    CAircraftIcaoCodeList::CAircraftIcaoCodeList(const CSequence<CAircraftIcaoCode> &other) : CSequence<CAircraftIcaoCode>(other)
+    {}
 
-    CAircraftIcaoCodeList::CAircraftIcaoCodeList(std::initializer_list<CAircraftIcaoCode> il) :
-        CSequence<CAircraftIcaoCode>(il)
-    { }
+    CAircraftIcaoCodeList::CAircraftIcaoCodeList(std::initializer_list<CAircraftIcaoCode> il) : CSequence<CAircraftIcaoCode>(il)
+    {}
 
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findByDesignator(const QString &designator, int fuzzySearch) const
     {
         if (!fuzzySearch && !CAircraftIcaoCode::isValidDesignator(designator)) { return CAircraftIcaoCodeList(); }
-        if (fuzzySearch  && designator.length() < CAircraftIcaoCode::DesignatorMinLength) { return CAircraftIcaoCodeList(); }
-        return this->findBy([&](const CAircraftIcaoCode & code)
-        {
+        if (fuzzySearch && designator.length() < CAircraftIcaoCode::DesignatorMinLength) { return CAircraftIcaoCodeList(); }
+        return this->findBy([&](const CAircraftIcaoCode &code) {
             return code.matchesDesignator(designator, fuzzySearch);
         });
     }
@@ -56,16 +53,14 @@ namespace BlackMisc::Aviation
 
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findByValidDesignator() const
     {
-        return this->findBy([](const CAircraftIcaoCode & code)
-        {
+        return this->findBy([](const CAircraftIcaoCode &code) {
             return code.hasValidDesignator();
         });
     }
 
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findByInvalidDesignator() const
     {
-        return this->findBy([](const CAircraftIcaoCode & code)
-        {
+        return this->findBy([](const CAircraftIcaoCode &code) {
             return !code.hasValidDesignator();
         });
     }
@@ -73,8 +68,7 @@ namespace BlackMisc::Aviation
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findByDesignatorOrIataCode(const QString &icaoOrIata) const
     {
         if (icaoOrIata.isEmpty()) { return CAircraftIcaoCodeList(); }
-        return this->findBy([&](const CAircraftIcaoCode & code)
-        {
+        return this->findBy([&](const CAircraftIcaoCode &code) {
             return code.matchesDesignatorOrIata(icaoOrIata);
         });
     }
@@ -82,8 +76,7 @@ namespace BlackMisc::Aviation
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findByDesignatorIataOrFamily(const QString &icaoIataOrFamily) const
     {
         if (icaoIataOrFamily.isEmpty()) { return CAircraftIcaoCodeList(); }
-        return this->findBy([&](const CAircraftIcaoCode & code)
-        {
+        return this->findBy([&](const CAircraftIcaoCode &code) {
             return code.matchesDesignatorIataOrFamily(icaoIataOrFamily);
         });
     }
@@ -111,8 +104,7 @@ namespace BlackMisc::Aviation
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findByIataCode(const QString &iata, int fuzzySearch) const
     {
         if (iata.isEmpty()) { return CAircraftIcaoCodeList(); }
-        return this->findBy([&](const CAircraftIcaoCode & code)
-        {
+        return this->findBy([&](const CAircraftIcaoCode &code) {
             return code.matchesIataCode(iata, fuzzySearch);
         });
     }
@@ -120,8 +112,7 @@ namespace BlackMisc::Aviation
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findByFamily(const QString &family, int fuzzySearch) const
     {
         if (family.isEmpty()) { return CAircraftIcaoCodeList(); }
-        return this->findBy([&](const CAircraftIcaoCode & code)
-        {
+        return this->findBy([&](const CAircraftIcaoCode &code) {
             return code.matchesFamily(family, fuzzySearch);
         });
     }
@@ -129,8 +120,7 @@ namespace BlackMisc::Aviation
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findByManufacturer(const QString &manufacturer) const
     {
         if (manufacturer.isEmpty()) { return CAircraftIcaoCodeList(); }
-        return this->findBy([&](const CAircraftIcaoCode & code)
-        {
+        return this->findBy([&](const CAircraftIcaoCode &code) {
             return code.getManufacturer().startsWith(manufacturer, Qt::CaseInsensitive);
         });
     }
@@ -138,24 +128,21 @@ namespace BlackMisc::Aviation
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findByDescription(const QString &description) const
     {
         if (description.isEmpty()) { return CAircraftIcaoCodeList(); }
-        return this->findBy([&](const CAircraftIcaoCode & code)
-        {
+        return this->findBy([&](const CAircraftIcaoCode &code) {
             return code.getModelDescription().startsWith(description, Qt::CaseInsensitive);
         });
     }
 
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findMatchingByAnyDescription(const QString &description) const
     {
-        return this->findBy([&](const CAircraftIcaoCode & code)
-        {
+        return this->findBy([&](const CAircraftIcaoCode &code) {
             return code.matchesAnyDescription(description);
         });
     }
 
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findWithIataCode(bool removeWhenSameAsDesignator) const
     {
-        return this->findBy([&](const CAircraftIcaoCode & code)
-        {
+        return this->findBy([&](const CAircraftIcaoCode &code) {
             if (!code.hasIataCode()) { return false; }
             return !removeWhenSameAsDesignator || !code.isIataSameAsDesignator();
         });
@@ -163,8 +150,7 @@ namespace BlackMisc::Aviation
 
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findWithFamily(bool removeWhenSameAsDesignator) const
     {
-        return this->findBy([&](const CAircraftIcaoCode & code)
-        {
+        return this->findBy([&](const CAircraftIcaoCode &code) {
             if (!code.hasFamily()) { return false; }
             return !removeWhenSameAsDesignator || !code.isFamilySameAsDesignator();
         });
@@ -172,8 +158,7 @@ namespace BlackMisc::Aviation
 
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findByMilitaryFlag(bool military) const
     {
-        return this->findBy([&](const CAircraftIcaoCode & code)
-        {
+        return this->findBy([&](const CAircraftIcaoCode &code) {
             return (code.isMilitary() == military);
         });
     }
@@ -211,7 +196,7 @@ namespace BlackMisc::Aviation
 
     void CAircraftIcaoCodeList::removeInvalidCombinedCodes()
     {
-        this->removeIf([](const CAircraftIcaoCode & icao) { return !icao.hasValidCombinedType(); });
+        this->removeIf([](const CAircraftIcaoCode &icao) { return !icao.hasValidCombinedType(); });
     }
 
     void CAircraftIcaoCodeList::removeDuplicates()
@@ -317,8 +302,7 @@ namespace BlackMisc::Aviation
     {
         const QMap<QString, int> counts(countManufacturers());
         if (counts.isEmpty()) return { {}, 0 };
-        const auto pair = *std::max_element(counts.keyValueBegin(), counts.keyValueEnd(), [](const auto & a, const auto & b)
-        {
+        const auto pair = *std::max_element(counts.keyValueBegin(), counts.keyValueEnd(), [](const auto &a, const auto &b) {
             return a.second < b.second;
         });
         return { pair.first, pair.second };
@@ -442,7 +426,7 @@ namespace BlackMisc::Aviation
         QString manufacturer;
         for (const CAircraftIcaoCode &code : std::as_const(copy))
         {
-            if (code.getDesignator() != designator ||  code.getManufacturer() != manufacturer)
+            if (code.getDesignator() != designator || code.getManufacturer() != manufacturer)
             {
                 designator = code.getDesignator();
                 manufacturer = code.getManufacturer();

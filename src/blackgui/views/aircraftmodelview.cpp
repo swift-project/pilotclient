@@ -119,13 +119,18 @@ namespace BlackGui::Views
     {
         Q_ASSERT(m_model);
         m_model->setAcceptedMetaTypeIds(
-        {
-            qMetaTypeId<CAirlineIcaoCode>(), qMetaTypeId<CAirlineIcaoCodeList>(),
-            qMetaTypeId<CAircraftIcaoCode>(), qMetaTypeId<CAircraftIcaoCodeList>(),
-            qMetaTypeId<CLivery>(), qMetaTypeId<CLiveryList>(),
-            qMetaTypeId<CDistributor>(), qMetaTypeId<CDistributorList>(),
-            qMetaTypeId<CAircraftModel>(), qMetaTypeId<CAircraftModelList>(),
-        });
+            {
+                qMetaTypeId<CAirlineIcaoCode>(),
+                qMetaTypeId<CAirlineIcaoCodeList>(),
+                qMetaTypeId<CAircraftIcaoCode>(),
+                qMetaTypeId<CAircraftIcaoCodeList>(),
+                qMetaTypeId<CLivery>(),
+                qMetaTypeId<CLiveryList>(),
+                qMetaTypeId<CDistributor>(),
+                qMetaTypeId<CDistributorList>(),
+                qMetaTypeId<CAircraftModel>(),
+                qMetaTypeId<CAircraftModelList>(),
+            });
     }
 
     void CAircraftModelView::addFilterDialog()
@@ -237,7 +242,7 @@ namespace BlackGui::Views
                 {
                     const CAircraftModel model = valueVariant.value<CAircraftModel>();
                     if (!model.hasModelString()) { return; }
-                    const CAircraftModelList models({model});
+                    const CAircraftModelList models({ model });
                     this->derivedModel()->replaceOrAddByModelString(models);
                     return;
                 }

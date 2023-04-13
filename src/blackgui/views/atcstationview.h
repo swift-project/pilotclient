@@ -24,10 +24,16 @@
 
 class QAction;
 
-namespace BlackMisc::Aviation { class CCallsign; }
+namespace BlackMisc::Aviation
+{
+    class CCallsign;
+}
 namespace BlackGui
 {
-    namespace Menus { class CMenuActions; }
+    namespace Menus
+    {
+        class CMenuActions;
+    }
     namespace Views
     {
         //! ATC stations view
@@ -66,7 +72,7 @@ namespace BlackGui
             void tuneInAtcCom2();
             void requestTextMessage();
 
-            QList<QAction *> m_actions;      //!< real actions
+            QList<QAction *> m_actions; //!< real actions
             QList<QAction *> m_debugActions; //!< used for debug context menu
         };
     }

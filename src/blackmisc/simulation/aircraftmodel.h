@@ -52,8 +52,8 @@ namespace BlackMisc
         //! DB ids
         struct DBTripleIds
         {
-            int model  = -1;   //!< model id
-            int livery = -1;   //!< livery id, by that I have airline id
+            int model = -1; //!< model id
+            int livery = -1; //!< livery id, by that I have airline id
             int aircraft = -1; //!< aircraft ICAO id
 
             //! Any valid id?
@@ -81,16 +81,16 @@ namespace BlackMisc
             enum ModelType
             {
                 TypeUnknown,
-                TypeQueriedFromNetwork,        //!< model was queried by network protocol (ICAO data)
-                TypeFSInnData,                 //!< model based on FSD ICAO data
-                TypeReverseLookup,             //!< reverse lookup model
-                TypeModelMatching,             //!< model is result of model matching
+                TypeQueriedFromNetwork, //!< model was queried by network protocol (ICAO data)
+                TypeFSInnData, //!< model based on FSD ICAO data
+                TypeReverseLookup, //!< reverse lookup model
+                TypeModelMatching, //!< model is result of model matching
                 TypeModelMatchingDefaultModel, //!< a default model assigned by model matching
-                TypeDatabaseEntry,             //!< used along with mapping definition
-                TypeManuallySet,               //!< manually set, e.g. from GUI
-                TypeOwnSimulatorModel,         //!< represents own simulator model (AI model, model on disk)
-                TypeVPilotRuleBased,           //!< based on a vPilot rule
-                TypeTerrainProbe               //!< peudo aircraft used for terrain probing (FSX)
+                TypeDatabaseEntry, //!< used along with mapping definition
+                TypeManuallySet, //!< manually set, e.g. from GUI
+                TypeOwnSimulatorModel, //!< represents own simulator model (AI model, model on disk)
+                TypeVPilotRuleBased, //!< based on a vPilot rule
+                TypeTerrainProbe //!< peudo aircraft used for terrain probing (FSX)
             };
 
             //! Mode, decides if a model is supposed to be used in the model set for model matching
@@ -98,9 +98,9 @@ namespace BlackMisc
             enum ModelMode
             {
                 Undefined = 0,
-                Include   = 1 << 0,
-                Exclude   = 1 << 1,
-                All       = Include | Exclude
+                Include = 1 << 0,
+                Exclude = 1 << 1,
+                All = Include | Exclude
             };
 
             //! Supposed to be used only in filter operations
@@ -208,7 +208,11 @@ namespace BlackMisc
             void setDescription(const QString &description) { m_description = description.trimmed(); }
 
             //! Set queried model string
-            void setQueriedModelString(const QString &model) { m_modelString = model; m_modelType = TypeQueriedFromNetwork; }
+            void setQueriedModelString(const QString &model)
+            {
+                m_modelString = model;
+                m_modelType = TypeQueriedFromNetwork;
+            }
 
             //! Aircraft ICAO code
             const Aviation::CAircraftIcaoCode &getAircraftIcaoCode() const { return m_aircraftIcao; }
@@ -274,7 +278,7 @@ namespace BlackMisc
             void setLivery(const Aviation::CLivery &livery) { m_livery = livery; }
 
             //! Livery available?
-            bool hasLivery() const { return m_livery.hasCompleteData();}
+            bool hasLivery() const { return m_livery.hasCompleteData(); }
 
             //! Get distributor
             const CDistributor &getDistributor() const { return m_distributor; }
@@ -554,21 +558,21 @@ namespace BlackMisc
             //! Common implemenation of all fromDatabaseJson functions
             static CAircraftModel fromDatabaseJsonBaseImpl(const QJsonObject &json, const QString &prefix, const Aviation::CAircraftIcaoCode &aircraftIcao, const Aviation::CLivery &livery, const CDistributor &distributor);
 
-            Aviation::CCallsign m_callsign;             //!< aircraft's callsign if any
+            Aviation::CCallsign m_callsign; //!< aircraft's callsign if any
             Aviation::CAircraftIcaoCode m_aircraftIcao; //!< ICAO code if available
-            Aviation::CLivery m_livery;                 //!< livery information
-            CSimulatorInfo m_simulator;                 //!< model for given simulator
-            CDistributor   m_distributor;               //!< who designed or distributed the model
-            QString        m_modelString;               //!< Simulator model key, unique
-            QString        m_modelStringAlias;          //!< Simulator model key alias, unique
-            QString        m_name;                      //!< Model name
-            QString        m_description;               //!< descriptive text
-            QString        m_fileName;                  //!< file name
-            QString        m_iconFile;                  //!< a file representing the aircraft as icon
-            QString        m_supportedParts;            //!< supported parts
-            qint64         m_fileTimestamp = -1;        //!< file timestamp of originating file (if applicable)
-            ModelType      m_modelType = TypeUnknown;   //!< model string is coming representing ...?
-            ModelMode      m_modelMode = Include;       //!< model mode (include / exclude)
+            Aviation::CLivery m_livery; //!< livery information
+            CSimulatorInfo m_simulator; //!< model for given simulator
+            CDistributor m_distributor; //!< who designed or distributed the model
+            QString m_modelString; //!< Simulator model key, unique
+            QString m_modelStringAlias; //!< Simulator model key alias, unique
+            QString m_name; //!< Model name
+            QString m_description; //!< descriptive text
+            QString m_fileName; //!< file name
+            QString m_iconFile; //!< a file representing the aircraft as icon
+            QString m_supportedParts; //!< supported parts
+            qint64 m_fileTimestamp = -1; //!< file timestamp of originating file (if applicable)
+            ModelType m_modelType = TypeUnknown; //!< model string is coming representing ...?
+            ModelMode m_modelMode = Include; //!< model mode (include / exclude)
             PhysicalQuantities::CLength m_cg = PhysicalQuantities::CLength::null(); //!< center of gravity
 
             BLACK_METACLASS(

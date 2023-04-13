@@ -63,8 +63,8 @@ namespace BlackMisc::Aviation
          */
         enum ReferenceNorth
         {
-            Magnetic = 0,   //!< magnetic north
-            True = 1        //!< true north
+            Magnetic = 0, //!< magnetic north
+            True = 1 //!< true north
         };
 
         //! \brief Default constructor: 0 Track magnetic

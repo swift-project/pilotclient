@@ -29,7 +29,7 @@ namespace BlackMisc
         *this = other;
     }
 
-    CPixmap &CPixmap::operator =(const CPixmap &other)
+    CPixmap &CPixmap::operator=(const CPixmap &other)
     {
         if (this == &other) { return *this; }
 

@@ -20,14 +20,13 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CCommandInput::CCommandInput(QWidget *parent) :
-        CLineEditHistory(parent),
-        CIdentifiable(this)
+    CCommandInput::CCommandInput(QWidget *parent) : CLineEditHistory(parent),
+                                                    CIdentifiable(this)
     {
         if (!CSimpleCommandParser::registered("BlackGui::Components::CCommandInput"))
         {
-            CSimpleCommandParser::registerCommand({".tooltip", "toggle dot command tooltip"});
-            CSimpleCommandParser::registerCommand({".help", "show help"});
+            CSimpleCommandParser::registerCommand({ ".tooltip", "toggle dot command tooltip" });
+            CSimpleCommandParser::registerCommand({ ".help", "show help" });
         }
 
         if (this->placeholderText().isEmpty())
@@ -36,8 +35,7 @@ namespace BlackGui::Components
         }
 
         const QPointer<CCommandInput> myself(this);
-        QTimer::singleShot(5000, this, [ = ]
-        {
+        QTimer::singleShot(5000, this, [=] {
             if (!myself) { return; }
             m_dsCommandTooltip.inputSignal();
         });
@@ -68,8 +66,16 @@ namespace BlackGui::Components
         if (c.isEmpty()) { return; }
         if (c.startsWith('.'))
         {
-            if (c.contains("help",    Qt::CaseInsensitive)) { this->setCommandToolTip(); return; }
-            if (c.contains("tooltip", Qt::CaseInsensitive)) { this->showToolTip(!m_showToolTip); return; }
+            if (c.contains("help", Qt::CaseInsensitive))
+            {
+                this->setCommandToolTip();
+                return;
+            }
+            if (c.contains("tooltip", Qt::CaseInsensitive))
+            {
+                this->showToolTip(!m_showToolTip);
+                return;
+            }
             emit this->commandEntered(c, this->identifier());
         }
         else
@@ -84,8 +90,8 @@ namespace BlackGui::Components
         if (m_showToolTip)
         {
             this->setToolTip(context ?
-                                sGui->getIContextApplication()->dotCommandsHtmlHelp() :
-                                CSimpleCommandParser::commandsHtmlHelp());
+                                 sGui->getIContextApplication()->dotCommandsHtmlHelp() :
+                                 CSimpleCommandParser::commandsHtmlHelp());
         }
         else
         {

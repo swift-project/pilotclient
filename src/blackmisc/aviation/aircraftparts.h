@@ -60,11 +60,11 @@ namespace BlackMisc::Aviation
 
         //! Constructor
         CAircraftParts(const CAircraftLights &lights, bool gearDown, int flapsPercent, bool spoilersOut,
-                        const CAircraftEngineList &engines, bool onGround);
+                       const CAircraftEngineList &engines, bool onGround);
 
         //! Constructor
         CAircraftParts(const CAircraftLights &lights, bool gearDown, int flapsPercent, bool spoilersOut,
-                        const CAircraftEngineList &engines, bool onGround, qint64 timestamp);
+                       const CAircraftEngineList &engines, bool onGround, qint64 timestamp);
 
         //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
         QVariant propertyByIndex(CPropertyIndexRef index) const;
@@ -187,10 +187,10 @@ namespace BlackMisc::Aviation
         CAircraftLights m_lights;
         CAircraftEngineList m_engines;
         int m_partsDetails = static_cast<int>(NotSet);
-        int m_flapsPercentage  = 0;
-        bool m_gearDown    = false;
+        int m_flapsPercentage = 0;
+        bool m_gearDown = false;
         bool m_spoilersOut = false;
-        bool m_isOnGround  = false;
+        bool m_isOnGround = false;
         QString m_guessingDetails; //!< just for debugging, not via DBus ...
 
         BLACK_METACLASS(

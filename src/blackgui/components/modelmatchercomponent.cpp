@@ -51,9 +51,8 @@ using namespace BlackCore;
 
 namespace BlackGui::Components
 {
-    CModelMatcherComponent::CModelMatcherComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CModelMatcherComponent)
+    CModelMatcherComponent::CModelMatcherComponent(QWidget *parent) : QFrame(parent),
+                                                                      ui(new Ui::CModelMatcherComponent)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
         Q_ASSERT_X(sGui->getWebDataServices(), Q_FUNC_INFO, "Missing web services");
@@ -73,11 +72,11 @@ namespace BlackGui::Components
         ui->le_Callsign->setValidator(validator);
 
         connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CModelMatcherComponent::onSimulatorChanged);
-        connect(sGui->getWebDataServices(), &CWebDataServices::dataRead,  this, &CModelMatcherComponent::onWebDataRead, Qt::QueuedConnection);
+        connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CModelMatcherComponent::onWebDataRead, Qt::QueuedConnection);
 
         connect(ui->pb_ModelMatching, &QPushButton::pressed, this, &CModelMatcherComponent::testModelMatching);
         connect(ui->pb_ReverseLookup, &QPushButton::pressed, this, &CModelMatcherComponent::reverseLookup);
-        connect(ui->pb_Settings,      &QPushButton::pressed, this, &CModelMatcherComponent::displaySettingsDialog);
+        connect(ui->pb_Settings, &QPushButton::pressed, this, &CModelMatcherComponent::displaySettingsDialog);
 
         connect(ui->cb_UseWorkbench, &QCheckBox::toggled, this, &CModelMatcherComponent::onWorkbenchToggled);
 
@@ -89,7 +88,7 @@ namespace BlackGui::Components
     }
 
     CModelMatcherComponent::~CModelMatcherComponent()
-    { }
+    {}
 
     void CModelMatcherComponent::tabIndexChanged(int index)
     {

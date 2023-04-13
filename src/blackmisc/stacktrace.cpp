@@ -16,20 +16,20 @@
 #include <cstdlib>
 
 #if defined(Q_CC_MSVC)
-#   include <Windows.h>
+#    include <Windows.h>
 
-#   pragma warning(push)
-#   pragma warning(disable:4091)
-#   include <DbgHelp.h>
+#    pragma warning(push)
+#    pragma warning(disable : 4091)
+#    include <DbgHelp.h>
 
-#   pragma warning(pop)
-#elif defined(Q_OS_WIN) && defined (Q_CC_GNU)
-#   include <windows.h>
-#   include <dbghelp.h>
+#    pragma warning(pop)
+#elif defined(Q_OS_WIN) && defined(Q_CC_GNU)
+#    include <windows.h>
+#    include <dbghelp.h>
 #elif defined(Q_CC_GNU)
-#   include <cxxabi.h>
-#   include <execinfo.h>
-#   include <cstring>
+#    include <cxxabi.h>
+#    include <execinfo.h>
+#    include <cstring>
 #endif
 
 namespace BlackMisc
@@ -54,8 +54,7 @@ namespace BlackMisc
         QMutexLocker lock(&mutex);
 
         static std::once_flag flag;
-        std::call_once(flag, []
-        {
+        std::call_once(flag, [] {
             SymInitialize(GetCurrentProcess(), nullptr, true);
             std::atexit([] { SymCleanup(GetCurrentProcess()); });
         });
@@ -63,7 +62,7 @@ namespace BlackMisc
         auto process = GetCurrentProcess();
         SymRefreshModuleList(process);
 
-        using stackarray = std::array<void*, 100>;
+        using stackarray = std::array<void *, 100>;
         stackarray stack;
         auto frames = CaptureStackBackTrace(1, static_cast<DWORD>(stack.size()), stack.data(), nullptr);
 
@@ -91,7 +90,7 @@ namespace BlackMisc
 #elif defined(Q_CC_GNU)
     QStringList getStackTraceAlways()
     {
-        std::array<void*, 100> stack;
+        std::array<void *, 100> stack;
         auto frames = backtrace(stack.data(), stack.size());
         auto *symbols = backtrace_symbols(stack.data(), frames);
 
@@ -102,13 +101,13 @@ namespace BlackMisc
         {
             // Using C string functions to avoid unnecessary dynamic memory allocation
             auto *basename = std::strrchr(symbols[i], '/');
-            if (! basename) { continue; }
+            if (!basename) { continue; }
             basename++;
             auto *symbol = std::strchr(basename, '(');
-            if (! symbol) { continue; }
+            if (!symbol) { continue; }
             auto *basenameEnd = symbol++;
             auto *end = std::strrchr(symbol, ')');
-            if (! end) { continue; }
+            if (!end) { continue; }
             auto *offset = std::strrchr(symbol, '+');
             auto *symbolEnd = offset ? offset++ : end;
 

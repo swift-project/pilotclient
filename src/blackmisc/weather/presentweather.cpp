@@ -21,9 +21,8 @@ namespace BlackMisc::Weather
         qRegisterMetaType<Descriptor>();
     }
 
-    CPresentWeather::CPresentWeather(Intensity intensity, Descriptor descriptor, int weatherPhenomena) :
-        m_intensity(intensity), m_descriptor(descriptor), m_weatherPhenomena(weatherPhenomena)
-    { }
+    CPresentWeather::CPresentWeather(Intensity intensity, Descriptor descriptor, int weatherPhenomena) : m_intensity(intensity), m_descriptor(descriptor), m_weatherPhenomena(weatherPhenomena)
+    {}
 
     QVariant CPresentWeather::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
     {
@@ -44,7 +43,11 @@ namespace BlackMisc::Weather
 
     void CPresentWeather::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CPresentWeather>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CPresentWeather>();
+            return;
+        }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -65,16 +68,14 @@ namespace BlackMisc::Weather
 
     QString CPresentWeather::convertToQString(bool /** i18n **/) const
     {
-        static const QHash<Intensity, QString> intensityHash =
-        {
+        static const QHash<Intensity, QString> intensityHash = {
             { Moderate, "moderate" },
             { Light, "light" },
             { Heavy, "heavy" },
             { InVincinity, "in vincinity" },
         };
 
-        static const QHash<Descriptor, QString> descriptorHash =
-        {
+        static const QHash<Descriptor, QString> descriptorHash = {
             { None, "" },
             { Shallow, "shallow" },
             { Patches, "patches" },
@@ -86,8 +87,7 @@ namespace BlackMisc::Weather
             { Freezing, "freezing" },
         };
 
-        static const QHash<WeatherPhenomenon, QString> weatherPhenomenaHash =
-        {
+        static const QHash<WeatherPhenomenon, QString> weatherPhenomenaHash = {
             { Drizzle, "drizzle" },
             { Rain, "rain" },
             { Snow, "snow" },

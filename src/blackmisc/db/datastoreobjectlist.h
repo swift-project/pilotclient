@@ -25,7 +25,8 @@ namespace BlackMisc::Db
 {
     //! List of objects read from database.
     //! Such objects should implement \sa ITimestampBased and \sa IDatastoreObjectWithIntegerKey or \sa IDatastoreObjectWithStringKey
-    template<class OBJ, class CONTAINER, typename KEYTYPE> class IDatastoreObjectList : public ITimestampObjectList<OBJ, CONTAINER>
+    template <class OBJ, class CONTAINER, typename KEYTYPE>
+    class IDatastoreObjectList : public ITimestampObjectList<OBJ, CONTAINER>
     {
         static constexpr bool hasIntegerKey = std::is_base_of_v<IDatastoreObjectWithIntegerKey, OBJ> && std::is_same_v<int, KEYTYPE>;
         static constexpr bool hasStringKey = std::is_base_of_v<IDatastoreObjectWithStringKey, OBJ> && std::is_base_of_v<QString, KEYTYPE>;
@@ -79,8 +80,7 @@ namespace BlackMisc::Db
         OBJ maxKeyObject() const
         {
             if (this->container().isEmpty()) { return OBJ(); }
-            const OBJ max = *std::max_element(this->container().begin(), this->container().end(), [](const OBJ & obj1, const OBJ & obj2)
-            {
+            const OBJ max = *std::max_element(this->container().begin(), this->container().end(), [](const OBJ &obj1, const OBJ &obj2) {
                 bool v1 = obj1.hasValidDbKey();
                 bool v2 = obj2.hasValidDbKey();
                 if (v1 && v2)
@@ -363,6 +363,6 @@ namespace BlackMisc::Db
         //! Constructor
         IDatastoreObjectList() = default;
     };
-} //ns
+} // ns
 
-#endif //guard
+#endif // guard

@@ -31,7 +31,10 @@
 
 //! \cond
 #define BLACK_TEMPLATE_UNIT_MIXINS(MU, Extern, Export)                              \
-    namespace BlackMisc::PhysicalQuantities { class MU; }                           \
+    namespace BlackMisc::PhysicalQuantities                                         \
+    {                                                                               \
+        class MU;                                                                   \
+    }                                                                               \
     namespace BlackMisc::Private                                                    \
     {                                                                               \
         Extern template struct Export CValueObjectMetaInfo<PhysicalQuantities::MU>; \
@@ -57,14 +60,14 @@
  * Explicit template definition of mixins for a CMeasurementUnit subclass
  */
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)
-#  define BLACK_DECLARE_UNIT_MIXINS(MU)
-#  define BLACK_DEFINE_UNIT_MIXINS(MU)
+#    define BLACK_DECLARE_UNIT_MIXINS(MU)
+#    define BLACK_DEFINE_UNIT_MIXINS(MU)
 #elif defined(Q_OS_WIN) && defined(Q_CC_CLANG)
-#  define BLACK_DECLARE_UNIT_MIXINS(MU) BLACK_TEMPLATE_UNIT_MIXINS(MU, extern, )
-#  define BLACK_DEFINE_UNIT_MIXINS(MU)  BLACK_TEMPLATE_UNIT_MIXINS(MU,       , BLACKMISC_EXPORT)
+#    define BLACK_DECLARE_UNIT_MIXINS(MU) BLACK_TEMPLATE_UNIT_MIXINS(MU, extern, )
+#    define BLACK_DEFINE_UNIT_MIXINS(MU) BLACK_TEMPLATE_UNIT_MIXINS(MU, , BLACKMISC_EXPORT)
 #else
-#  define BLACK_DECLARE_UNIT_MIXINS(MU) BLACK_TEMPLATE_UNIT_MIXINS(MU, extern, )
-#  define BLACK_DEFINE_UNIT_MIXINS(MU)  BLACK_TEMPLATE_UNIT_MIXINS(MU,       , )
+#    define BLACK_DECLARE_UNIT_MIXINS(MU) BLACK_TEMPLATE_UNIT_MIXINS(MU, extern, )
+#    define BLACK_DEFINE_UNIT_MIXINS(MU) BLACK_TEMPLATE_UNIT_MIXINS(MU, , )
 #endif
 
 BLACK_DECLARE_UNIT_MIXINS(CAngleUnit)
@@ -96,10 +99,22 @@ namespace BlackMisc::PhysicalQuantities
     private:
         using CMeasurementUnit::CMeasurementUnit;
 
-        struct NauticalMilesToMeters    { static double factor() { return 1852.0;    } };
-        struct FeetToMeters             { static double factor() { return    0.3048; } };
-        struct MilesToMeters            { static double factor() { return 1609.344;  } };
-        struct StatuteMilesToMeters     { static double factor() { return 1609.3472; } };
+        struct NauticalMilesToMeters
+        {
+            static double factor() { return 1852.0; }
+        };
+        struct FeetToMeters
+        {
+            static double factor() { return 0.3048; }
+        };
+        struct MilesToMeters
+        {
+            static double factor() { return 1609.344; }
+        };
+        struct StatuteMilesToMeters
+        {
+            static double factor() { return 1609.3472; }
+        };
         using MetersToMeters = One;
 
         virtual void anchor();
@@ -150,14 +165,14 @@ namespace BlackMisc::PhysicalQuantities
         //! Kilometer km
         static CLengthUnit km()
         {
-            static constexpr CMeasurementUnit::Data km(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilometer")), constQLatin1("km"), LinearConverter<Kilo<MetersToMeters> >(), 3);
+            static constexpr CMeasurementUnit::Data km(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilometer")), constQLatin1("km"), LinearConverter<Kilo<MetersToMeters>>(), 3);
             return km;
         }
 
         //! Centimeter cm
         static CLengthUnit cm()
         {
-            static constexpr CMeasurementUnit::Data cm(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "centimeter")), constQLatin1("cm"), LinearConverter<Centi<MetersToMeters> >(), 1);
+            static constexpr CMeasurementUnit::Data cm(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "centimeter")), constQLatin1("cm"), LinearConverter<Centi<MetersToMeters>>(), 1);
             return cm;
         }
 
@@ -178,8 +193,7 @@ namespace BlackMisc::PhysicalQuantities
         //! All units
         static const QList<CLengthUnit> &allUnits()
         {
-            static const QList<CLengthUnit> u
-            {
+            static const QList<CLengthUnit> u {
                 CLengthUnit::nullUnit(),
                 CLengthUnit::cm(),
                 CLengthUnit::ft(),
@@ -220,7 +234,10 @@ namespace BlackMisc::PhysicalQuantities
     private:
         using CMeasurementUnit::CMeasurementUnit;
 
-        struct RadiansToDegrees { static double factor() { return 180.0 / M_PI; } };
+        struct RadiansToDegrees
+        {
+            static double factor() { return 180.0 / M_PI; }
+        };
         using DegreesToDegrees = One;
 
     public:
@@ -265,7 +282,7 @@ namespace BlackMisc::PhysicalQuantities
         //! Sexagesimal degree (degrees, minutes, seconds, decimal seconds)
         static CAngleUnit sexagesimalDeg()
         {
-            static constexpr CMeasurementUnit::Data deg(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute, second")), constQLatin1("DMS"), SubdivisionConverter2<DegreesToDegrees, InEachHundred<60> >(), 4);
+            static constexpr CMeasurementUnit::Data deg(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute, second")), constQLatin1("DMS"), SubdivisionConverter2<DegreesToDegrees, InEachHundred<60>>(), 4);
             return deg;
             (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1 %L2 %L3");
             (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1 %L2 %L3");
@@ -274,7 +291,7 @@ namespace BlackMisc::PhysicalQuantities
         //! Sexagesimal degree (degrees, minutes, decimal minutes)
         static CAngleUnit sexagesimalDegMin()
         {
-            static constexpr CMeasurementUnit::Data deg(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute")), constQLatin1("MinDec"), SubdivisionConverter<DegreesToDegrees, InEachHundred<60> >(), 4);
+            static constexpr CMeasurementUnit::Data deg(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute")), constQLatin1("MinDec"), SubdivisionConverter<DegreesToDegrees, InEachHundred<60>>(), 4);
             return deg;
             (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1 %L2");
             (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1 %L2");
@@ -283,8 +300,7 @@ namespace BlackMisc::PhysicalQuantities
         //! All units
         static const QList<CAngleUnit> &allUnits()
         {
-            static const QList<CAngleUnit> u
-            {
+            static const QList<CAngleUnit> u {
                 CAngleUnit::nullUnit(),
                 CAngleUnit::deg(),
                 CAngleUnit::rad(),
@@ -358,29 +374,28 @@ namespace BlackMisc::PhysicalQuantities
         //! Kilohertz
         static CFrequencyUnit kHz()
         {
-            static constexpr CMeasurementUnit::Data kHz(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilohertz")), constQLatin1("kHz"), LinearConverter<Kilo<HertzToHertz> >(), 1);
+            static constexpr CMeasurementUnit::Data kHz(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilohertz")), constQLatin1("kHz"), LinearConverter<Kilo<HertzToHertz>>(), 1);
             return kHz;
         }
 
         //! Megahertz
         static CFrequencyUnit MHz()
         {
-            static constexpr CMeasurementUnit::Data MHz(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "megahertz")), constQLatin1("MHz"), LinearConverter<Mega<HertzToHertz> >(), 2);
+            static constexpr CMeasurementUnit::Data MHz(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "megahertz")), constQLatin1("MHz"), LinearConverter<Mega<HertzToHertz>>(), 2);
             return MHz;
         }
 
         //! Gigahertz
         static CFrequencyUnit GHz()
         {
-            static constexpr CMeasurementUnit::Data GHz(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "gigahertz")), constQLatin1("GHz"), LinearConverter<Giga<HertzToHertz> >(), 2);
+            static constexpr CMeasurementUnit::Data GHz(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "gigahertz")), constQLatin1("GHz"), LinearConverter<Giga<HertzToHertz>>(), 2);
             return GHz;
         }
 
         //! All units
         static const QList<CFrequencyUnit> &allUnits()
         {
-            static const QList<CFrequencyUnit> u
-            {
+            static const QList<CFrequencyUnit> u {
                 CFrequencyUnit::nullUnit(),
                 CFrequencyUnit::GHz(),
                 CFrequencyUnit::Hz(),
@@ -419,7 +434,10 @@ namespace BlackMisc::PhysicalQuantities
         using CMeasurementUnit::CMeasurementUnit;
 
         using GramsToKilograms = Milli<One>;
-        struct PoundsToKilograms { static double factor() { return 0.45359237; } };
+        struct PoundsToKilograms
+        {
+            static double factor() { return 0.45359237; }
+        };
 
         virtual void anchor();
 
@@ -462,14 +480,14 @@ namespace BlackMisc::PhysicalQuantities
         //! Tonne, aka metric ton (1000kg)
         static CMassUnit tonne()
         {
-            static constexpr CMeasurementUnit::Data t(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "tonne")), constQLatin1("t"), LinearConverter<Mega<GramsToKilograms> >(), 3);
+            static constexpr CMeasurementUnit::Data t(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "tonne")), constQLatin1("t"), LinearConverter<Mega<GramsToKilograms>>(), 3);
             return t;
         }
 
         //! Short ton (2000lb) used in the United States
         static CMassUnit shortTon()
         {
-            static constexpr CMeasurementUnit::Data ton(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "short ton")), constQLatin1("ton"), LinearConverter<Two<Kilo<PoundsToKilograms> > >(), 3);
+            static constexpr CMeasurementUnit::Data ton(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "short ton")), constQLatin1("ton"), LinearConverter<Two<Kilo<PoundsToKilograms>>>(), 3);
             return ton;
         }
 
@@ -483,8 +501,7 @@ namespace BlackMisc::PhysicalQuantities
         //! All units
         static const QList<CMassUnit> &allUnits()
         {
-            static const QList<CMassUnit> u
-            {
+            static const QList<CMassUnit> u {
                 CMassUnit::nullUnit(),
                 CMassUnit::g(),
                 CMassUnit::kg(),
@@ -524,9 +541,18 @@ namespace BlackMisc::PhysicalQuantities
         using CMeasurementUnit::CMeasurementUnit;
 
         using PascalsToHectopascals = Centi<One>;
-        struct PsiToHectopascals            { static double factor() { return  68.948;      } };
-        struct InchesToHectopascals         { static double factor() { return  33.86389;    } };
-        struct MillimetersToHectopascals    { static double factor() { return 860.142806;   } };
+        struct PsiToHectopascals
+        {
+            static double factor() { return 68.948; }
+        };
+        struct InchesToHectopascals
+        {
+            static double factor() { return 33.86389; }
+        };
+        struct MillimetersToHectopascals
+        {
+            static double factor() { return 860.142806; }
+        };
 
         virtual void anchor();
 
@@ -576,7 +602,7 @@ namespace BlackMisc::PhysicalQuantities
         //! Bar
         static CPressureUnit bar()
         {
-            static constexpr CMeasurementUnit::Data bar(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "bar")), constQLatin1("bar"), LinearConverter<Kilo<One> >(), 1);
+            static constexpr CMeasurementUnit::Data bar(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "bar")), constQLatin1("bar"), LinearConverter<Kilo<One>>(), 1);
             return bar;
         }
 
@@ -604,8 +630,7 @@ namespace BlackMisc::PhysicalQuantities
         //! All units
         static const QList<CPressureUnit> &allUnits()
         {
-            static const QList<CPressureUnit> u
-            {
+            static const QList<CPressureUnit> u {
                 CPressureUnit::nullUnit(),
                 CPressureUnit::bar(),
                 CPressureUnit::hPa(),
@@ -704,8 +729,7 @@ namespace BlackMisc::PhysicalQuantities
         //! All units
         static const QList<CTemperatureUnit> &allUnits()
         {
-            static const QList<CTemperatureUnit> u
-            {
+            static const QList<CTemperatureUnit> u {
                 CTemperatureUnit::nullUnit(),
                 CTemperatureUnit::C(),
                 CTemperatureUnit::F(),
@@ -732,7 +756,7 @@ namespace BlackMisc::PhysicalQuantities
     };
 
     //! Specialized class for speed units (m/s, ft/s, NM/h).
-    class BLACKMISC_EXPORT CSpeedUnit final:
+    class BLACKMISC_EXPORT CSpeedUnit final :
         public CMeasurementUnit,
         public Mixin::MetaType<CSpeedUnit>,
         public Mixin::DBusOperators<CSpeedUnit>,
@@ -742,10 +766,22 @@ namespace BlackMisc::PhysicalQuantities
     private:
         using CMeasurementUnit::CMeasurementUnit;
 
-        struct KnotsToMps       { static double factor() { return 1852.0    / 3600.0; } };
-        struct KphToMps         { static double factor() { return    1.0    /    3.6; } };
-        struct FtPerSecToMps    { static double factor() { return    0.3048         ; } };
-        struct FtPerMinToMps    { static double factor() { return    0.3048 /   60.0; } };
+        struct KnotsToMps
+        {
+            static double factor() { return 1852.0 / 3600.0; }
+        };
+        struct KphToMps
+        {
+            static double factor() { return 1.0 / 3.6; }
+        };
+        struct FtPerSecToMps
+        {
+            static double factor() { return 0.3048; }
+        };
+        struct FtPerMinToMps
+        {
+            static double factor() { return 0.3048 / 60.0; }
+        };
 
         virtual void anchor();
 
@@ -816,8 +852,7 @@ namespace BlackMisc::PhysicalQuantities
         //! All units
         static const QList<CSpeedUnit> &allUnits()
         {
-            static const QList<CSpeedUnit> u
-            {
+            static const QList<CSpeedUnit> u {
                 CSpeedUnit::nullUnit(),
                 CSpeedUnit::ft_min(),
                 CSpeedUnit::ft_s(),
@@ -847,7 +882,7 @@ namespace BlackMisc::PhysicalQuantities
     };
 
     //! Specialized class for time units (ms, hour, min).
-    class BLACKMISC_EXPORT CTimeUnit final:
+    class BLACKMISC_EXPORT CTimeUnit final :
         public CMeasurementUnit,
         public Mixin::MetaType<CTimeUnit>,
         public Mixin::DBusOperators<CTimeUnit>,
@@ -858,9 +893,18 @@ namespace BlackMisc::PhysicalQuantities
         using CMeasurementUnit::CMeasurementUnit;
 
         using SecondsToSeconds = One;
-        struct DaysToSeconds    { static double factor() { return 60.0 * 60.0 * 24.0;   } };
-        struct HoursToSeconds   { static double factor() { return 60.0 * 60.0;          } };
-        struct MinutesToSeconds { static double factor() { return 60.0;                 } };
+        struct DaysToSeconds
+        {
+            static double factor() { return 60.0 * 60.0 * 24.0; }
+        };
+        struct HoursToSeconds
+        {
+            static double factor() { return 60.0 * 60.0; }
+        };
+        struct MinutesToSeconds
+        {
+            static double factor() { return 60.0; }
+        };
 
     public:
         //! Base type
@@ -897,7 +941,7 @@ namespace BlackMisc::PhysicalQuantities
         //! Millisecond ms
         static CTimeUnit ms()
         {
-            static constexpr CMeasurementUnit::Data ms(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "millisecond")), constQLatin1("ms"), LinearConverter<Milli<SecondsToSeconds> >(), 0);
+            static constexpr CMeasurementUnit::Data ms(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "millisecond")), constQLatin1("ms"), LinearConverter<Milli<SecondsToSeconds>>(), 0);
             return ms;
         }
 
@@ -925,7 +969,7 @@ namespace BlackMisc::PhysicalQuantities
         //! Hours, minutes, seconds
         static CTimeUnit hms()
         {
-            static constexpr CMeasurementUnit::Data hms(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute, second")), constQLatin1("hms"), SubdivisionConverter2<HoursToSeconds, InEachHundred<60> >(), 4);
+            static constexpr CMeasurementUnit::Data hms(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute, second")), constQLatin1("hms"), SubdivisionConverter2<HoursToSeconds, InEachHundred<60>>(), 4);
             return hms;
             (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1h%L2m%L3s");
             (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%-L1h%L2m%L3s");
@@ -934,7 +978,7 @@ namespace BlackMisc::PhysicalQuantities
         //! Hours, minutes
         static CTimeUnit hrmin()
         {
-            static constexpr CMeasurementUnit::Data hrmin(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute")), constQLatin1("hm"), SubdivisionConverter<HoursToSeconds, InEachHundred<60> >(), 3);
+            static constexpr CMeasurementUnit::Data hrmin(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute")), constQLatin1("hm"), SubdivisionConverter<HoursToSeconds, InEachHundred<60>>(), 3);
             return hrmin;
             (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1h%L2m");
             (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1h%L2m");
@@ -943,7 +987,7 @@ namespace BlackMisc::PhysicalQuantities
         //! Minutes, seconds
         static CTimeUnit minsec()
         {
-            static constexpr CMeasurementUnit::Data minsec(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "minute, second")), constQLatin1("minsec"), SubdivisionConverter<MinutesToSeconds, InEachHundred<60> >(), 2);
+            static constexpr CMeasurementUnit::Data minsec(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "minute, second")), constQLatin1("minsec"), SubdivisionConverter<MinutesToSeconds, InEachHundred<60>>(), 2);
             return minsec;
             (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1m%L2s");
             (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1m%L2s");
@@ -952,8 +996,7 @@ namespace BlackMisc::PhysicalQuantities
         //! All units
         static const QList<CTimeUnit> &allUnits()
         {
-            static const QList<CTimeUnit> u
-            {
+            static const QList<CTimeUnit> u {
                 CTimeUnit::nullUnit(),
                 CTimeUnit::d(),
                 CTimeUnit::h(),
@@ -984,7 +1027,7 @@ namespace BlackMisc::PhysicalQuantities
     };
 
     //! Specialized class for acceleration units (m/s2, ft/s2).
-    class BLACKMISC_EXPORT CAccelerationUnit final:
+    class BLACKMISC_EXPORT CAccelerationUnit final :
         public CMeasurementUnit,
         public Mixin::MetaType<CAccelerationUnit>,
         public Mixin::DBusOperators<CAccelerationUnit>,
@@ -994,7 +1037,10 @@ namespace BlackMisc::PhysicalQuantities
     private:
         using CMeasurementUnit::CMeasurementUnit;
 
-        struct FeetToMeters { static double factor() { return 0.3048; } };
+        struct FeetToMeters
+        {
+            static double factor() { return 0.3048; }
+        };
 
         virtual void anchor();
 
@@ -1037,8 +1083,7 @@ namespace BlackMisc::PhysicalQuantities
         //! All units
         static const QList<CAccelerationUnit> &allUnits()
         {
-            static const QList<CAccelerationUnit> u
-            {
+            static const QList<CAccelerationUnit> u {
                 CAccelerationUnit::nullUnit(),
                 CAccelerationUnit::ft_s2(),
                 CAccelerationUnit::m_s2()

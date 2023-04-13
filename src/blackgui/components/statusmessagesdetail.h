@@ -21,7 +21,10 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CStatusMessagesDetail;  }
+namespace Ui
+{
+    class CStatusMessagesDetail;
+}
 namespace BlackGui::Components
 {
     //! Status messages plus detail
@@ -83,7 +86,7 @@ namespace BlackGui::Components
         QScopedPointer<Ui::CStatusMessagesDetail> ui;
         int m_maxLogMessages = -1;
         BlackMisc::CStatusMessageList m_pending; //!< pending messages which will be added with next CStatusMessagesDetail::deferredUpdate
-        BlackMisc::CDigestSignal      m_dsDeferredUpdate { this, &CStatusMessagesDetail::deferredUpdate, 2000, 25 };
+        BlackMisc::CDigestSignal m_dsDeferredUpdate { this, &CStatusMessagesDetail::deferredUpdate, 2000, 25 };
 
         //! Do not update each message, but deferred
         void deferredUpdate();

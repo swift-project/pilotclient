@@ -66,7 +66,7 @@ namespace BlackMisc
 
     void CLogMessage::preformatted(const CStatusMessageList &statusMessages)
     {
-        for(const auto &msg : statusMessages)
+        for (const auto &msg : statusMessages)
         {
             preformatted(msg);
         }

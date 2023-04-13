@@ -16,7 +16,10 @@
 #include "blackgui/views/viewbase.h"
 #include "blackmisc/network/clientlist.h"
 
-namespace BlackMisc::Network { class CClient; }
+namespace BlackMisc::Network
+{
+    class CClient;
+}
 namespace BlackGui::Views
 {
     //! Client view

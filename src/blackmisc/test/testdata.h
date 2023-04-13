@@ -30,7 +30,10 @@ namespace BlackMisc
         class CLivery;
         class CFlightPlan;
     }
-    namespace Geo { class CCoordinateGeodetic; }
+    namespace Geo
+    {
+        class CCoordinateGeodetic;
+    }
     namespace Network
     {
         class CUser;

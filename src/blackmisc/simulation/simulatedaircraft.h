@@ -143,7 +143,7 @@ namespace BlackMisc
             const QString &getAircraftIcaoCombinedType() const;
 
             //! Set aicraft ICAO code
-            bool setAircraftIcaoCode(const Aviation::CAircraftIcaoCode &aircraftIcaoCode) { return m_models[CurrentModel].setAircraftIcaoCode(aircraftIcaoCode);}
+            bool setAircraftIcaoCode(const Aviation::CAircraftIcaoCode &aircraftIcaoCode) { return m_models[CurrentModel].setAircraftIcaoCode(aircraftIcaoCode); }
 
             //! Set ICAO info
             //! \note to be compatible with old version I still allow to set airline here, but I should actually set a livery
@@ -426,7 +426,7 @@ namespace BlackMisc
             bool isRendered() const { return m_rendered; }
 
             //! Support fast position updates
-            bool fastPositionUpdates() const {return m_fastPositionUpdates;}
+            bool fastPositionUpdates() const { return m_fastPositionUpdates; }
 
             //! Support fast position updates
             bool setFastPositionUpdates(bool useFastPositions);
@@ -465,20 +465,20 @@ namespace BlackMisc
         private:
             static constexpr int CurrentModel = 0; //!< m_models
             static constexpr int NetworkModel = 1; //!< m_models
-            Aviation::CCallsign           m_callsign;
-            Network::CUser                m_pilot;
-            Aviation::CAircraftSituation  m_situation;
-            Aviation::CComSystem          m_com1system;
-            Aviation::CComSystem          m_com2system;
-            Aviation::CTransponder        m_transponder;
-            Aviation::CAircraftParts      m_parts;
-            Aviation::CSelcal             m_selcal;
-            CAircraftModelList m_models = {{ CAircraftModel(), CAircraftModel() }}; //!< Shorter DBus signature: current model, and model received from network
-            bool m_enabled = true;              //!< to be displayed in simulator
-            bool m_rendered = false;            //!< really shown in simulator
-            bool m_partsSynchronized = false;   //!< synchronize parts
+            Aviation::CCallsign m_callsign;
+            Network::CUser m_pilot;
+            Aviation::CAircraftSituation m_situation;
+            Aviation::CComSystem m_com1system;
+            Aviation::CComSystem m_com2system;
+            Aviation::CTransponder m_transponder;
+            Aviation::CAircraftParts m_parts;
+            Aviation::CSelcal m_selcal;
+            CAircraftModelList m_models = { { CAircraftModel(), CAircraftModel() } }; //!< Shorter DBus signature: current model, and model received from network
+            bool m_enabled = true; //!< to be displayed in simulator
+            bool m_rendered = false; //!< really shown in simulator
+            bool m_partsSynchronized = false; //!< synchronize parts
             bool m_fastPositionUpdates = false; //!< use fast position updates
-            bool m_supportsGndFlag = false;     //!< supports gnd. flag
+            bool m_supportsGndFlag = false; //!< supports gnd. flag
 
             //! Init, which synchronizes some denormalized values
             void init();

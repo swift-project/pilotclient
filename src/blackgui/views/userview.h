@@ -16,7 +16,10 @@
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/network/userlist.h"
 
-namespace BlackMisc::Network { class CUser; }
+namespace BlackMisc::Network
+{
+    class CUser;
+}
 namespace BlackGui::Views
 {
     //! User view

@@ -41,7 +41,7 @@ namespace BlackConfig
         static constexpr bool isCompiledWithP3DSupport(); // defined in buildconfig_gen.inc.in
 
         //! with FG support?
-        static constexpr bool isCompiledWithFGSupport();  // defined in buildconfig_gen.inc.in
+        static constexpr bool isCompiledWithFGSupport(); // defined in buildconfig_gen.inc.in
 
         //! with FSUIPC support?
         static constexpr bool isCompiledWithFsuipcSupport(); // defined in buildconfig_gen.inc.in

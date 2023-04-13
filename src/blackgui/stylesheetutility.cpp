@@ -114,8 +114,8 @@ namespace BlackGui
         static const QString fontStyleSheetNoColor("%1font-family: \"%3\";%2%1font-size: %4;%2%1font-style: %5;%2%1font-weight: %6;%2");
 
         return fontColor.isEmpty() ?
-               fontStyleSheetNoColor.arg(indent, lf, fontFamily, fontSize, fontStyle, fontWeight) :
-               fontStyleSheet.arg(indent, lf, fontFamily, fontSize, fontStyle, fontWeight, fontColor);
+                   fontStyleSheetNoColor.arg(indent, lf, fontFamily, fontSize, fontStyle, fontWeight) :
+                   fontStyleSheet.arg(indent, lf, fontFamily, fontSize, fontStyle, fontWeight, fontColor);
     }
 
     QString CStyleSheetUtility::asStylesheet(const QWidget *widget, int pointSize)
@@ -123,11 +123,10 @@ namespace BlackGui
         Q_ASSERT_X(widget, Q_FUNC_INFO, "Missing widget");
         const QFont f = widget->font();
         return CStyleSheetUtility::asStylesheet(
-                   f.family(),
-                   QStringLiteral("%1pt").arg(pointSize < 0 ? f.pointSize() : pointSize),
-                   CStyleSheetUtility::fontStyleAsString(f),
-                   CStyleSheetUtility::fontWeightAsString(f)
-               );
+            f.family(),
+            QStringLiteral("%1pt").arg(pointSize < 0 ? f.pointSize() : pointSize),
+            CStyleSheetUtility::fontStyleAsString(f),
+            CStyleSheetUtility::fontWeightAsString(f));
     }
 
     QString CStyleSheetUtility::fontColorString() const
@@ -147,7 +146,7 @@ namespace BlackGui
         // qss/css files
         const bool needsWatcher = m_fileWatcher.files().isEmpty();
         if (needsWatcher) { m_fileWatcher.addPath(CSwiftDirectories::stylesheetsDirectory()); } // directory to deleted file watching
-        directory.setNameFilters({"*.qss", "*.css"});
+        directory.setNameFilters({ "*.qss", "*.css" });
         directory.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 
         QMap<QString, QString> newStyleSheets;
@@ -210,8 +209,8 @@ namespace BlackGui
                 if (fontAdded) { continue; }
                 fontAdded = true;
                 s = hasModifiedFont ?
-                    m_styleSheets[fileNameFontsModified().toLower()] :
-                    m_styleSheets[fileNameFonts()];
+                        m_styleSheets[fileNameFontsModified().toLower()] :
+                        m_styleSheets[fileNameFonts()];
             }
             else
             {
@@ -401,13 +400,13 @@ namespace BlackGui
 
     const QStringList &CStyleSheetUtility::fontWeights()
     {
-        static const QStringList w({"bold", "semibold", "light", "black", "normal"});
+        static const QStringList w({ "bold", "semibold", "light", "black", "normal" });
         return w;
     }
 
     const QStringList &CStyleSheetUtility::fontStyles()
     {
-        static const QStringList s({"italic", "oblique", "normal"});
+        static const QStringList s({ "italic", "oblique", "normal" });
         return s;
     }
 
@@ -433,7 +432,7 @@ namespace BlackGui
         QAbstractScrollArea *sa = qobject_cast<QAbstractScrollArea *>(usedWidget);
         QStylePainter p(
             sa ? sa->viewport() :
-            usedWidget);
+                 usedWidget);
         if (!p.isActive()) { return false; }
 
         QStyleOption opt;

@@ -34,8 +34,7 @@ namespace BlackGui::Models
             const BlackMisc::CRgbColor &tailColor,
             double maxColorDistance,
             bool colorLiveries,
-            bool airlineLiveries
-        );
+            bool airlineLiveries);
 
         //! \copydoc IModelFilter::filter
         virtual BlackMisc::Aviation::CLiveryList filter(const BlackMisc::Aviation::CLiveryList &inContainer) const override;

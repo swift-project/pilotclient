@@ -29,10 +29,10 @@ namespace BlackInput
 
     public:
         //! Copy Constructor
-        CKeyboardMacOS(CKeyboardMacOS const&) = delete;
+        CKeyboardMacOS(CKeyboardMacOS const &) = delete;
 
         //! Assignment operator
-        CKeyboardMacOS &operator=(CKeyboardMacOS const&) = delete;
+        CKeyboardMacOS &operator=(CKeyboardMacOS const &) = delete;
 
         //! Destructor
         virtual ~CKeyboardMacOS() override;
@@ -52,7 +52,7 @@ namespace BlackInput
         static BlackMisc::Input::KeyCode convertToKey(quint32 keyCode);
         static void valueCallback(void *context, IOReturn result, void *sender, IOHIDValueRef value);
 
-        IOHIDManagerRef m_hidManager =  nullptr;
+        IOHIDManagerRef m_hidManager = nullptr;
         BlackMisc::Input::CHotkeyCombination m_keyCombination; //!< Current status of pressed keys;
     };
 } // ns

@@ -19,7 +19,10 @@
 
 //! \file
 
-namespace BlackCore { class ISimulator; }
+namespace BlackCore
+{
+    class ISimulator;
+}
 namespace BlackSimPlugin::Fs9
 {
     //! Class faking a FS9 multiplayer client connection
@@ -37,9 +40,9 @@ namespace BlackSimPlugin::Fs9
 
         //! Constructor
         CFs9Client(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft,
-                    const BlackMisc::PhysicalQuantities::CTime      &updateInterval,
-                    BlackMisc::Simulation::CInterpolationLogger    *logger,
-                    BlackCore::ISimulator *simulator);
+                   const BlackMisc::PhysicalQuantities::CTime &updateInterval,
+                   BlackMisc::Simulation::CInterpolationLogger *logger,
+                   BlackCore::ISimulator *simulator);
 
         //! Destructor
         virtual ~CFs9Client() override;
@@ -52,7 +55,7 @@ namespace BlackSimPlugin::Fs9
 
         //! Get interpolator
         //! @{
-        BlackMisc::Simulation::CInterpolatorMulti       *getInterpolator() { return &m_interpolator; }
+        BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() { return &m_interpolator; }
         const BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() const { return &m_interpolator; }
         //! @}
 
@@ -101,13 +104,13 @@ namespace BlackSimPlugin::Fs9
         const BlackCore::ISimulator *simulator() const;
 
         BlackMisc::Simulation::CSimulatedAircraft m_remoteAircraft;
-        BlackMisc::PhysicalQuantities::CTime      m_updateInterval;
+        BlackMisc::PhysicalQuantities::CTime m_updateInterval;
         BlackMisc::Simulation::CInterpolatorMulti m_interpolator;
         QString m_modelName;
         int m_timerId = 0;
 
-        IDirectPlay8Address *m_hostAddress  = nullptr;
-        ClientStatus         m_clientStatus = Disconnected;
+        IDirectPlay8Address *m_hostAddress = nullptr;
+        ClientStatus m_clientStatus = Disconnected;
 
         PLAYER_INFO_STRUCT m_playerInfo;
         DPN_PLAYER_INFO m_player;

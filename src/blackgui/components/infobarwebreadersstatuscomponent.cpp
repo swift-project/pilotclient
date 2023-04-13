@@ -22,7 +22,7 @@ using namespace BlackMisc::Network;
 namespace BlackGui::Components
 {
     CInfoBarWebReadersStatusBase::CInfoBarWebReadersStatusBase(QWidget *parent) : QFrame(parent)
-    { }
+    {}
 
     void CInfoBarWebReadersStatusBase::init()
     {
@@ -33,7 +33,7 @@ namespace BlackGui::Components
         m_timer.setInterval(30 * 1000);
         m_timer.start();
         m_timer.setObjectName("CInfoBarWebReadersStatusBase::CheckSwiftDbTimer");
-        bool c = connect(&m_timer, &QTimer::timeout, this,  &CInfoBarWebReadersStatusBase::checkServerAndData);
+        bool c = connect(&m_timer, &QTimer::timeout, this, &CInfoBarWebReadersStatusBase::checkServerAndData);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect");
         c = connect(sGui, &CGuiApplication::changedInternetAccessibility, this, &CInfoBarWebReadersStatusBase::networkAccessibilityChanged);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect");
@@ -162,11 +162,11 @@ namespace BlackGui::Components
         if (!sGui) { return false; }
         if (!sGui->hasWebDataServices()) { return false; }
         return sGui->getWebDataServices()->getAirlineIcaoCodesCount() > 0 &&
-                sGui->getWebDataServices()->getAircraftIcaoCodesCount() > 0 &&
-                sGui->getWebDataServices()->getDistributorsCount() > 0 &&
-                sGui->getWebDataServices()->getModelsCount() > 0 &&
-                sGui->getWebDataServices()->getLiveriesCount() > 0 &&
-                sGui->getWebDataServices()->getCountriesCount() > 0;
+               sGui->getWebDataServices()->getAircraftIcaoCodesCount() > 0 &&
+               sGui->getWebDataServices()->getDistributorsCount() > 0 &&
+               sGui->getWebDataServices()->getModelsCount() > 0 &&
+               sGui->getWebDataServices()->getLiveriesCount() > 0 &&
+               sGui->getWebDataServices()->getCountriesCount() > 0;
     }
 
     void CInfoBarWebReadersStatusBase::setLeds(
@@ -184,8 +184,7 @@ namespace BlackGui::Components
         m_ledModels = ledModels;
     }
 
-    CInfoBarWebReadersStatusComponent::CInfoBarWebReadersStatusComponent(QWidget *parent) :
-        CInfoBarWebReadersStatusBase(parent), ui(new Ui::CInfoBarWebReadersStatusComponent)
+    CInfoBarWebReadersStatusComponent::CInfoBarWebReadersStatusComponent(QWidget *parent) : CInfoBarWebReadersStatusBase(parent), ui(new Ui::CInfoBarWebReadersStatusComponent)
     {
         ui->setupUi(this);
         this->setLeds(ui->led_SwiftDb, ui->led_DataReady, ui->led_Consolidation, ui->led_IcaoAircraft, ui->led_IcaoAirline, ui->led_Countries, ui->led_Distributors, ui->led_Liveries, ui->led_Models);
@@ -193,7 +192,7 @@ namespace BlackGui::Components
     }
 
     CInfoBarWebReadersStatusComponent::~CInfoBarWebReadersStatusComponent()
-    { }
+    {}
 
     void CInfoBarWebReadersStatusComponent::showConsolidationStatus(bool show)
     {

@@ -18,9 +18,8 @@
 
 namespace BlackGui::Components
 {
-    CCockpitComponent::CCockpitComponent(QWidget *parent) :
-        COverlayMessagesFrameEnableForDockWidgetInfoArea(parent),
-        ui(new Ui::CCockpitComponent)
+    CCockpitComponent::CCockpitComponent(QWidget *parent) : COverlayMessagesFrameEnableForDockWidgetInfoArea(parent),
+                                                            ui(new Ui::CCockpitComponent)
     {
         ui->setupUi(this);
         ui->wip_CockpitComPanelShowHideBar->setVisible(false);
@@ -32,7 +31,7 @@ namespace BlackGui::Components
     }
 
     CCockpitComponent::~CCockpitComponent()
-    { }
+    {}
 
     bool CCockpitComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
     {
@@ -89,7 +88,7 @@ namespace BlackGui::Components
             if (m_sizeFloatingShown.isValid())
             {
                 this->window()->resize(m_sizeFloatingShown);
-                if (considerCurrentSize) { m_sizeFloatingHidden = manuallySetSize;  } // for next time
+                if (considerCurrentSize) { m_sizeFloatingHidden = manuallySetSize; } // for next time
             }
             else
             {

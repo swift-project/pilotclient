@@ -52,21 +52,21 @@ namespace BlackMisc::Aviation
 
     int CCallsign::suffixToSortOrder(const QString &suffix)
     {
-        if (QStringView(u"FSS")  == suffix) { return 1; }
-        if (QStringView(u"CTR")  == suffix) { return 2; }
-        if (QStringView(u"APP")  == suffix) { return 3; }
-        if (QStringView(u"DEP")  == suffix) { return 4; }
-        if (QStringView(u"TWR")  == suffix) { return 5; }
-        if (QStringView(u"GND")  == suffix) { return 6; }
-        if (QStringView(u"DEL")  == suffix) { return 7; }
+        if (QStringView(u"FSS") == suffix) { return 1; }
+        if (QStringView(u"CTR") == suffix) { return 2; }
+        if (QStringView(u"APP") == suffix) { return 3; }
+        if (QStringView(u"DEP") == suffix) { return 4; }
+        if (QStringView(u"TWR") == suffix) { return 5; }
+        if (QStringView(u"GND") == suffix) { return 6; }
+        if (QStringView(u"DEL") == suffix) { return 7; }
         if (QStringView(u"ATIS") == suffix) { return 8; }
-        if (QStringView(u"SUP")  == suffix) { return 9; }
-        if (QStringView(u"OBS")  == suffix) { return 10; }
-        if (QStringView(u"INS")  == suffix) { return 11; } // instructor/mentor
-        if (QStringView(u"ADM")  == suffix) { return 12; } // admin
+        if (QStringView(u"SUP") == suffix) { return 9; }
+        if (QStringView(u"OBS") == suffix) { return 10; }
+        if (QStringView(u"INS") == suffix) { return 11; } // instructor/mentor
+        if (QStringView(u"ADM") == suffix) { return 12; } // admin
         if (QStringView(u"VATGOV") == suffix) { return 13; } // VATSIM governors
         if (QStringView(u"VATSIM") == suffix) { return 14; } // VATSIM founder
-        if (QStringView(u"EXAM")   == suffix) { return 15; }
+        if (QStringView(u"EXAM") == suffix) { return 15; }
         return std::numeric_limits<int>::max();
     }
 
@@ -78,7 +78,7 @@ namespace BlackMisc::Aviation
         switch (hint)
         {
         // ATC allows "-", aircraft not
-        case Atc:      return removeChars(ucCallsign, [](QChar c) { return !c.isLetterOrNumber() && c != '_' && c != '-'; });
+        case Atc: return removeChars(ucCallsign, [](QChar c) { return !c.isLetterOrNumber() && c != '_' && c != '-'; });
         case Aircraft: return removeChars(ucCallsign, [](QChar c) { return !c.isLetterOrNumber() && c != '_'; });
         default: break;
         }
@@ -98,8 +98,8 @@ namespace BlackMisc::Aviation
         if (callsign.m_callsign.startsWith(QStringView(u"VATGOV"))) { return CIcon::iconByIndex(CIcons::NetworkRolePilot); }
         const bool pilot = callsign.getTypeHint() == CCallsign::Aircraft || !callsign.hasSuffix();
         return pilot ?
-                CIcon::iconByIndex(CIcons::NetworkRolePilot) :
-                CCallsign::atcSuffixToIcon(callsign.getSuffix());
+                   CIcon::iconByIndex(CIcons::NetworkRolePilot) :
+                   CCallsign::atcSuffixToIcon(callsign.getSuffix());
     }
 
     CStatusMessage CCallsign::logMessage(const CCallsign &callsign, const QString &message, const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
@@ -120,16 +120,16 @@ namespace BlackMisc::Aviation
     {
         if (suffix.length() < 3) { return CIcon::iconByIndex(CIcons::NetworkRoleUnknown); }
         const QString sfx = suffix.toUpper();
-        if (QStringView(u"APP")  == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleApproach); }
-        if (QStringView(u"DEP")  == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleDeparture); }
-        if (QStringView(u"GND")  == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleGround); }
-        if (QStringView(u"TWR")  == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleTower); }
-        if (QStringView(u"DEL")  == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleDelivery); }
-        if (QStringView(u"CTR")  == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleCenter); }
-        if (QStringView(u"SUP")  == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleSup); }
-        if (QStringView(u"OBS")  == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleObs); }
-        if (QStringView(u"INS")  == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleMnt); }
-        if (QStringView(u"FSS")  == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleFss); }
+        if (QStringView(u"APP") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleApproach); }
+        if (QStringView(u"DEP") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleDeparture); }
+        if (QStringView(u"GND") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleGround); }
+        if (QStringView(u"TWR") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleTower); }
+        if (QStringView(u"DEL") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleDelivery); }
+        if (QStringView(u"CTR") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleCenter); }
+        if (QStringView(u"SUP") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleSup); }
+        if (QStringView(u"OBS") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleObs); }
+        if (QStringView(u"INS") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleMnt); }
+        if (QStringView(u"FSS") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleFss); }
         if (QStringView(u"ATIS") == sfx) { return CIcon::iconByIndex(CIcons::AviationAtis); }
         if (QStringView(u"EXAM") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleMnt); }
         if (QStringView(u"VATSIM") == sfx) { return CIcon::iconByIndex(CIcons::NetworkVatsimLogoWhite); }
@@ -169,9 +169,9 @@ namespace BlackMisc::Aviation
 
     bool CCallsign::isMaybeCopilotCallsign(const CCallsign &pilotCallsign) const
     {
-        return  m_callsign.startsWith(pilotCallsign.asString()) &&
-                m_callsign.size() == pilotCallsign.asString().size() + 1 &&
-                m_callsign.at(m_callsign.size() - 1) >= 'A' && m_callsign.at(m_callsign.size() - 1) <= 'Z';
+        return m_callsign.startsWith(pilotCallsign.asString()) &&
+               m_callsign.size() == pilotCallsign.asString().size() + 1 &&
+               m_callsign.at(m_callsign.size() - 1) >= 'A' && m_callsign.at(m_callsign.size() - 1) <= 'Z';
     }
 
     QString CCallsign::getFsdCallsignString() const
@@ -248,7 +248,7 @@ namespace BlackMisc::Aviation
 
         flightNumber.clear();
         if (m_callsign.length() < 3) { return {}; }
-        if (this->isAtcCallsign())   { return {}; }
+        if (this->isAtcCallsign()) { return {}; }
 
         thread_local const QRegularExpression regExp("(^[A-Z]{3,})(\\d+)");
         const QRegularExpressionMatch match = regExp.match(m_callsign);
@@ -260,12 +260,12 @@ namespace BlackMisc::Aviation
         // hard facts
         if (airline.length() == 3) // we allow 3 letters
         {
-            flightIdentification = m_callsign.length() > 3 ?  m_callsign.mid(3) : QString();
+            flightIdentification = m_callsign.length() > 3 ? m_callsign.mid(3) : QString();
             return airline;
         }
         if (airline.length() == 4 && airline.startsWith('V')) // we allow virtual 4 letter codes, e.g. VDLD
         {
-            flightIdentification = m_callsign.length() > 4 ?  m_callsign.mid(4) : QString();
+            flightIdentification = m_callsign.length() > 4 ? m_callsign.mid(4) : QString();
             return airline;
         }
 
@@ -332,21 +332,25 @@ namespace BlackMisc::Aviation
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexCallsignString:      return QVariant(this->asString());
+        case IndexCallsignString: return QVariant(this->asString());
         case IndexCallsignStringAsSet: return QVariant(this->getStringAsSet());
         case IndexTelephonyDesignator: return QVariant(this->getTelephonyDesignator());
-        case IndexSuffix:              return QVariant(this->getSuffix());
+        case IndexSuffix: return QVariant(this->getSuffix());
         default: return CValueObject::propertyByIndex(index);
         }
     }
 
     void CCallsign::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CCallsign>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CCallsign>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexCallsignString:      m_callsign = unifyCallsign(variant.toString()); break;
+        case IndexCallsignString: m_callsign = unifyCallsign(variant.toString()); break;
         case IndexCallsignStringAsSet: m_callsignAsSet = variant.toString(); break;
         case IndexTelephonyDesignator: m_telephonyDesignator = variant.toString(); break;
         default:
@@ -361,10 +365,10 @@ namespace BlackMisc::Aviation
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexCallsignString:      return m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive);
+        case IndexCallsignString: return m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive);
         case IndexCallsignStringAsSet: return m_callsignAsSet.compare(compareValue.m_callsignAsSet, Qt::CaseInsensitive);
         case IndexTelephonyDesignator: return m_telephonyDesignator.compare(compareValue.m_telephonyDesignator, Qt::CaseInsensitive);
-        case IndexSuffix:              return this->getSuffix().compare(compareValue.getSuffix(), Qt::CaseInsensitive);
+        case IndexSuffix: return this->getSuffix().compare(compareValue.getSuffix(), Qt::CaseInsensitive);
         default:
             return CValueObject::comparePropertyByIndex(index, compareValue);
         }

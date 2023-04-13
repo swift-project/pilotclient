@@ -33,9 +33,8 @@ namespace BlackGui::Components
         return cats;
     }
 
-    CSettingsSimulatorBasicsComponent::CSettingsSimulatorBasicsComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        ui(new Ui::CSettingsSimulatorBasicsComponent)
+    CSettingsSimulatorBasicsComponent::CSettingsSimulatorBasicsComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                                                            ui(new Ui::CSettingsSimulatorBasicsComponent)
     {
         ui->setupUi(this);
         this->setSmallLayout(true); // no disadvantage, so I always set it
@@ -57,7 +56,7 @@ namespace BlackGui::Components
     }
 
     CSettingsSimulatorBasicsComponent::~CSettingsSimulatorBasicsComponent()
-    { }
+    {}
 
     void CSettingsSimulatorBasicsComponent::hideSelector(bool show)
     {
@@ -67,8 +66,8 @@ namespace BlackGui::Components
     bool CSettingsSimulatorBasicsComponent::hasAnyValues() const
     {
         return !ui->le_SimulatorDirectory->text().isEmpty() ||
-                !ui->pte_ModelDirectories->toPlainText().isEmpty() ||
-                !ui->pte_ExcludeDirectories->toPlainText().isEmpty();
+               !ui->pte_ModelDirectories->toPlainText().isEmpty() ||
+               !ui->pte_ExcludeDirectories->toPlainText().isEmpty();
     }
 
     void CSettingsSimulatorBasicsComponent::setSimulator(const CSimulatorInfo &simulator)
@@ -88,7 +87,7 @@ namespace BlackGui::Components
     {
         const QString startDirectory = CFileUtils::fixWindowsUncPath(this->getFileBrowserSimulatorDirectory());
         const QString dir = QFileDialog::getExistingDirectory(this, tr("Simulator directory"), startDirectory,
-                            QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+                                                              QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
         if (dir.isEmpty()) { return; }
         ui->le_SimulatorDirectory->setText(CFileUtils::normalizeFilePathToQtStandard(dir));
         this->adjustModelDirectory();
@@ -98,7 +97,7 @@ namespace BlackGui::Components
     {
         const QString startDirectory = CFileUtils::fixWindowsUncPath(this->getFileBrowserModelDirectory());
         const QString dir = QFileDialog::getExistingDirectory(this, tr("Model directory"), startDirectory,
-                            QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+                                                              QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
         if (dir.isEmpty()) { return; }
         m_unsavedChanges = true;
         const QStringList newDirs = this->addDirectory(dir, this->parseModelDirectories());
@@ -109,12 +108,11 @@ namespace BlackGui::Components
     {
         const QString startDirectory = this->getFileBrowserModelDirectory();
         const QString dir = QFileDialog::getExistingDirectory(this, tr("Exclude directory"), startDirectory,
-                            QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+                                                              QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
         if (dir.isEmpty()) { return; }
         m_unsavedChanges = true;
         const QStringList newDirs = CFileUtils::stripLeadingSlashOrDriveLetters(
-                                        this->addDirectory(dir, this->parseExcludeDirectories())
-                                    );
+            this->addDirectory(dir, this->parseExcludeDirectories()));
         this->displayExcludeDirectoryPatterns(newDirs);
     }
 
@@ -160,7 +158,6 @@ namespace BlackGui::Components
         {
             this->showOverlayMessagesOrHTMLMessage(msgs);
         }
-
     }
 
     void CSettingsSimulatorBasicsComponent::copyDefaults()
@@ -176,13 +173,25 @@ namespace BlackGui::Components
         // override if values are not empty
         const CSpecializedSimulatorSettings ss = m_settings.getSpecializedSettings(simulator);
         const QString sd = CFileUtils::fixWindowsUncPath(CFileUtils::normalizeFilePathToQtStandard(ss.defaultSimulatorDirectory(simulator)));
-        if (!sd.isEmpty()) { ui->le_SimulatorDirectory->setText(sd); m_unsavedChanges = true; }
+        if (!sd.isEmpty())
+        {
+            ui->le_SimulatorDirectory->setText(sd);
+            m_unsavedChanges = true;
+        }
 
         const QStringList md(m_settings.defaultModelDirectories(simulator));
-        if (!md.isEmpty()) { this->displayModelDirectories(md); m_unsavedChanges = true; }
+        if (!md.isEmpty())
+        {
+            this->displayModelDirectories(md);
+            m_unsavedChanges = true;
+        }
 
         const QStringList excludes(ss.defaultModelExcludeDirectoryPatterns(simulator));
-        if (!excludes.isEmpty()) { this->displayExcludeDirectoryPatterns(excludes); m_unsavedChanges = true; }
+        if (!excludes.isEmpty())
+        {
+            this->displayExcludeDirectoryPatterns(excludes);
+            m_unsavedChanges = true;
+        }
     }
 
     void CSettingsSimulatorBasicsComponent::adjustModelDirectory()
@@ -275,7 +284,7 @@ namespace BlackGui::Components
     QStringList CSettingsSimulatorBasicsComponent::removeDirectory(const QString &directory, const QStringList &existingDirs)
     {
         const QString d(CFileUtils::normalizeFilePathToQtStandard(directory));
-        return this->removeDirectories(QStringList({d}), existingDirs);
+        return this->removeDirectories(QStringList({ d }), existingDirs);
     }
 
     QStringList CSettingsSimulatorBasicsComponent::removeDirectories(const QStringList &removeDirectories, const QStringList &existingDirs)

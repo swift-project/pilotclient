@@ -24,10 +24,10 @@ namespace BlackCore
         //! How to handle a given context
         enum ContextMode
         {
-            NotUsed,           //!< during shutdown or not used at all
-            Local,             //!< in same process
+            NotUsed, //!< during shutdown or not used at all
+            Local, //!< in same process
             LocalInDBusServer, //!< in same process, also registered in DBus, will be accessed by proxy objects too
-            Remote             //!< proxy object
+            Remote //!< proxy object
         };
 
     private:
@@ -37,19 +37,17 @@ namespace BlackCore
         ContextMode m_ownAircraft;
         ContextMode m_settings;
         ContextMode m_simulator;
-        QString     m_dbusAddress; //!< for boot strapping
+        QString m_dbusAddress; //!< for boot strapping
 
     public:
         //! Constructor
-        CCoreFacadeConfig(ContextMode allTheSame = NotUsed, const QString &dbusBootstrapAddress = ""):
-            m_application(allTheSame), m_audio(allTheSame), m_network(allTheSame), m_ownAircraft(allTheSame), m_settings(allTheSame), m_simulator(allTheSame),
-            m_dbusAddress(dbusBootstrapAddress)
+        CCoreFacadeConfig(ContextMode allTheSame = NotUsed, const QString &dbusBootstrapAddress = "") : m_application(allTheSame), m_audio(allTheSame), m_network(allTheSame), m_ownAircraft(allTheSame), m_settings(allTheSame), m_simulator(allTheSame),
+                                                                                                        m_dbusAddress(dbusBootstrapAddress)
         {}
 
         //! Constructor
-        CCoreFacadeConfig(ContextMode application, ContextMode audio, ContextMode network, ContextMode ownAircraft, ContextMode settings, ContextMode simulator, const QString &dbusBootstrapAddress = ""):
-            m_application(application), m_audio(audio), m_network(network), m_ownAircraft(ownAircraft) , m_settings(settings), m_simulator(simulator),
-            m_dbusAddress(dbusBootstrapAddress)
+        CCoreFacadeConfig(ContextMode application, ContextMode audio, ContextMode network, ContextMode ownAircraft, ContextMode settings, ContextMode simulator, const QString &dbusBootstrapAddress = "") : m_application(application), m_audio(audio), m_network(network), m_ownAircraft(ownAircraft), m_settings(settings), m_simulator(simulator),
+                                                                                                                                                                                                             m_dbusAddress(dbusBootstrapAddress)
         {}
 
         //! Application mode

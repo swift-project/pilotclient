@@ -33,7 +33,10 @@
 class QNetworkReply;
 class QFileInfo;
 
-namespace BlackMisc { class CLogCategoryList; }
+namespace BlackMisc
+{
+    class CLogCategoryList;
+}
 namespace BlackCore::Db
 {
     //! Specialized version of threaded reader for DB data
@@ -46,14 +49,14 @@ namespace BlackCore::Db
         struct HeaderResponse
         {
         private:
-            QDateTime  m_lastModified;             //!< when was the latest update?
-            int        m_httpStatusCode = -1;      //!< HTTP status code
-            qulonglong m_contentLengthHeader = 0;  //!< content length
-            qint64     m_requestStarted = -1;      //!< when was request started
-            qint64     m_responseReceived = -1;    //!< response received
-            qint64     m_loadTimeMs = -1;          //!< how long did it take to load
-            BlackMisc::CStatusMessage m_message;   //!< last error or warning
-            BlackMisc::Network::CUrl  m_url;       //!< loaded URL
+            QDateTime m_lastModified; //!< when was the latest update?
+            int m_httpStatusCode = -1; //!< HTTP status code
+            qulonglong m_contentLengthHeader = 0; //!< content length
+            qint64 m_requestStarted = -1; //!< when was request started
+            qint64 m_responseReceived = -1; //!< response received
+            qint64 m_loadTimeMs = -1; //!< how long did it take to load
+            BlackMisc::CStatusMessage m_message; //!< last error or warning
+            BlackMisc::Network::CUrl m_url; //!< loaded URL
 
         public:
             //! Any timestamp?
@@ -127,10 +130,10 @@ namespace BlackCore::Db
         struct JsonDatastoreResponse : public HeaderResponse
         {
         private:
-            QJsonArray m_jsonArray;          //!< JSON array data
-            int        m_arraySize  = -1;    //!< size of array, if applicable (copied to member for debugging purposes)
-            int        m_stringSize =  0;    //!< string size of JSON data
-            bool       m_restricted = false; //!< restricted reponse, only changed data
+            QJsonArray m_jsonArray; //!< JSON array data
+            int m_arraySize = -1; //!< size of array, if applicable (copied to member for debugging purposes)
+            int m_stringSize = 0; //!< string size of JSON data
+            bool m_restricted = false; //!< restricted reponse, only changed data
 
         public:
             //! Any data?
@@ -306,11 +309,11 @@ namespace BlackCore::Db
         void entityDownloadProgress(BlackMisc::Network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
 
     protected:
-        CDatabaseReaderConfigList   m_config;                   //!< DB reder configuration
-        QString                     m_statusMessage;            //!< Returned status message from watchdog
-        bool                        m_1stReplyReceived = false; //!< Successful connection? Does not mean data / authorizations are correct
-        mutable QReadWriteLock      m_statusLock;               //!< Lock
-        QNetworkReply::NetworkError m_1stReplyStatus = QNetworkReply::UnknownServerError;     //!< Successful connection?
+        CDatabaseReaderConfigList m_config; //!< DB reder configuration
+        QString m_statusMessage; //!< Returned status message from watchdog
+        bool m_1stReplyReceived = false; //!< Successful connection? Does not mean data / authorizations are correct
+        mutable QReadWriteLock m_statusLock; //!< Lock
+        QNetworkReply::NetworkError m_1stReplyStatus = QNetworkReply::UnknownServerError; //!< Successful connection?
         QMap<BlackMisc::Network::CEntityFlags::Entity, HeaderResponse> m_sharedFileResponses; //!< file responses of the shared files
         BlackMisc::CStatusMessage::StatusSeverity m_severityNoWorkingUrl = BlackMisc::CStatusMessage::SeverityWarning; //!< severity of message if there is no working URL
 
@@ -382,8 +385,8 @@ namespace BlackCore::Db
         //! Changed URL, means the cache values have been read from elsewhere
         //! \remark testing based on BlackMisc::Db::CDbFlags::DbReading
         virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity,
-                                    BlackMisc::Network::CUrl &oldUrlInfo,
-                                    BlackMisc::Network::CUrl &newUrlInfo) const = 0;
+                                   BlackMisc::Network::CUrl &oldUrlInfo,
+                                   BlackMisc::Network::CUrl &newUrlInfo) const = 0;
 
         //! Cache for given entity has changed
         virtual void cacheHasChanged(BlackMisc::Network::CEntityFlags::Entity entities);

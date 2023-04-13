@@ -16,9 +16,8 @@ using namespace BlackSound::SampleProvider;
 
 namespace BlackCore::Afv::Audio
 {
-    CSoundcardSampleProvider::CSoundcardSampleProvider(int sampleRate, const QVector<quint16> &transceiverIDs, QObject *parent) :
-        ISampleProvider(parent),
-        m_mixer(new CMixingSampleProvider())
+    CSoundcardSampleProvider::CSoundcardSampleProvider(int sampleRate, const QVector<quint16> &transceiverIDs, QObject *parent) : ISampleProvider(parent),
+                                                                                                                                  m_mixer(new CMixingSampleProvider())
     {
         const QString on = QStringLiteral("%1 sample rate: %2, transceivers: %3").arg(classNameShort(this)).arg(sampleRate).arg(transceiverIDs.size());
         this->setObjectName(on);
@@ -60,17 +59,14 @@ namespace BlackCore::Afv::Audio
             {
                 QVector<TxTransceiverDto> txTransceiversFiltered = txTransceivers;
 
-                txTransceiversFiltered.erase(std::remove_if(txTransceiversFiltered.begin(), txTransceiversFiltered.end(), [this](const TxTransceiverDto & d)
-                {
-                    return ! m_receiverIDs.contains(d.id);
-                }),
-                txTransceiversFiltered.end());
-
+                txTransceiversFiltered.erase(std::remove_if(txTransceiversFiltered.begin(), txTransceiversFiltered.end(), [this](const TxTransceiverDto &d) {
+                                                 return !m_receiverIDs.contains(d.id);
+                                             }),
+                                             txTransceiversFiltered.end());
 
                 for (const TxTransceiverDto &txTransceiver : txTransceiversFiltered)
                 {
-                    auto it = std::find_if(m_receiverInputs.begin(), m_receiverInputs.end(), [txTransceiver](const CReceiverSampleProvider * p)
-                    {
+                    auto it = std::find_if(m_receiverInputs.begin(), m_receiverInputs.end(), [txTransceiver](const CReceiverSampleProvider *p) {
                         return p->getId() == txTransceiver.id;
                     });
 
@@ -96,14 +92,12 @@ namespace BlackCore::Afv::Audio
     {
         QVector<RxTransceiverDto> rxTransceiversFilteredAndSorted = rxTransceivers;
 
-        rxTransceiversFilteredAndSorted.erase(std::remove_if(rxTransceiversFilteredAndSorted.begin(), rxTransceiversFilteredAndSorted.end(), [this](const RxTransceiverDto & r)
-        {
-            return !m_receiverIDs.contains(r.id);
-        }),
-        rxTransceiversFilteredAndSorted.end());
+        rxTransceiversFilteredAndSorted.erase(std::remove_if(rxTransceiversFilteredAndSorted.begin(), rxTransceiversFilteredAndSorted.end(), [this](const RxTransceiverDto &r) {
+                                                  return !m_receiverIDs.contains(r.id);
+                                              }),
+                                              rxTransceiversFilteredAndSorted.end());
 
-        std::sort(rxTransceiversFilteredAndSorted.begin(), rxTransceiversFilteredAndSorted.end(), [](const RxTransceiverDto & a, const RxTransceiverDto & b) -> bool
-        {
+        std::sort(rxTransceiversFilteredAndSorted.begin(), rxTransceiversFilteredAndSorted.end(), [](const RxTransceiverDto &a, const RxTransceiverDto &b) -> bool {
             return a.distanceRatio > b.distanceRatio;
         });
 
@@ -119,8 +113,7 @@ namespace BlackCore::Afv::Audio
                     handledTransceiverIDs.push_back(rxTransceiver.id);
 
                     CReceiverSampleProvider *receiverInput = nullptr;
-                    auto it = std::find_if(m_receiverInputs.begin(), m_receiverInputs.end(), [rxTransceiver](const CReceiverSampleProvider * p)
-                    {
+                    auto it = std::find_if(m_receiverInputs.begin(), m_receiverInputs.end(), [rxTransceiver](const CReceiverSampleProvider *p) {
                         return p->getId() == rxTransceiver.id;
                     });
 
@@ -156,8 +149,7 @@ namespace BlackCore::Afv::Audio
     {
         for (const TransceiverDto &radioTransceiver : radioTransceivers)
         {
-            auto it = std::find_if(m_receiverInputs.begin(), m_receiverInputs.end(), [radioTransceiver](const CReceiverSampleProvider * p)
-            {
+            auto it = std::find_if(m_receiverInputs.begin(), m_receiverInputs.end(), [radioTransceiver](const CReceiverSampleProvider *p) {
                 return p->getId() == radioTransceiver.id;
             });
 
@@ -170,7 +162,7 @@ namespace BlackCore::Afv::Audio
         for (CReceiverSampleProvider *receiverInput : std::as_const(m_receiverInputs))
         {
             const quint16 transceiverID = receiverInput->getId();
-            const bool contains = std::any_of(radioTransceivers.cbegin(), radioTransceivers.cend(), [ transceiverID ](const auto &tx) { return transceiverID == tx.id; });
+            const bool contains = std::any_of(radioTransceivers.cbegin(), radioTransceivers.cend(), [transceiverID](const auto &tx) { return transceiverID == tx.id; });
             if (!contains)
             {
                 receiverInput->setFrequency(0);
@@ -186,10 +178,9 @@ namespace BlackCore::Afv::Audio
     bool CSoundcardSampleProvider::setGainRatioForTransceiver(quint16 transceiverID, double gainRatio)
     {
         auto receiverInput = std::find_if(m_receiverInputs.begin(), m_receiverInputs.end(),
-        [&](const auto receiver)
-        {
-            return receiver->getId() == transceiverID;
-        });
+                                          [&](const auto receiver) {
+                                              return receiver->getId() == transceiverID;
+                                          });
         if (receiverInput == m_receiverInputs.end()) { return false; }
         return (*receiverInput)->setGainRatio(gainRatio);
     }

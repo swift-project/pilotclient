@@ -14,7 +14,10 @@
 #include "blackgui/editors/form.h"
 #include <QScopedPointer>
 
-namespace Ui { class CNetworkSetupForm; }
+namespace Ui
+{
+    class CNetworkSetupForm;
+}
 namespace BlackGui::Editors
 {
     //! Setup form

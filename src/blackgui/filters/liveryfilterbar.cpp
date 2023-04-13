@@ -26,9 +26,8 @@ using namespace BlackGui::Components;
 
 namespace BlackGui::Filters
 {
-    CLiveryFilterBar::CLiveryFilterBar(QWidget *parent) :
-        CFilterWidget(parent),
-        ui(new Ui::CLiveryFilterBar)
+    CLiveryFilterBar::CLiveryFilterBar(QWidget *parent) : CFilterWidget(parent),
+                                                          ui(new Ui::CLiveryFilterBar)
     {
         ui->setupUi(this);
         this->setButtonsAndCount(ui->filter_Buttons);
@@ -52,22 +51,21 @@ namespace BlackGui::Filters
     }
 
     CLiveryFilterBar::~CLiveryFilterBar()
-    { }
+    {}
 
-    std::unique_ptr<Models::IModelFilter<CLiveryList> > CLiveryFilterBar::createModelFilter() const
+    std::unique_ptr<Models::IModelFilter<CLiveryList>> CLiveryFilterBar::createModelFilter() const
     {
         const double maxColorDistance = ui->hs_ColorDistance->value() / 100.0;
         return std::make_unique<CLiveryFilter>(
-                    convertDbId(ui->le_Id->text()),
-                    ui->le_LiveryCode->text(),
-                    ui->le_Description->text(),
-                    ui->le_AirlineIcaoCode->text(),
-                    ui->color_Fuselage->getColor(),
-                    ui->color_Tail->getColor(),
-                    maxColorDistance,
-                    ui->cb_Colors->isChecked(),
-                    ui->cb_Airlines->isChecked()
-                );
+            convertDbId(ui->le_Id->text()),
+            ui->le_LiveryCode->text(),
+            ui->le_Description->text(),
+            ui->le_AirlineIcaoCode->text(),
+            ui->color_Fuselage->getColor(),
+            ui->color_Tail->getColor(),
+            maxColorDistance,
+            ui->cb_Colors->isChecked(),
+            ui->cb_Airlines->isChecked());
     }
 
     void CLiveryFilterBar::filter(const CLivery &livery)
@@ -120,7 +118,7 @@ namespace BlackGui::Filters
         ui->le_Description->clear();
         ui->color_Fuselage->clear();
         ui->color_Tail->clear();
-        ui->hs_ColorDistance->setValue(qRound(0.25 *  100.0));
+        ui->hs_ColorDistance->setValue(qRound(0.25 * 100.0));
         ui->cb_Airlines->setChecked(true);
         ui->cb_Colors->setChecked(true);
     }

@@ -20,7 +20,10 @@
 
 class QWidget;
 
-namespace Ui { class CFilterBarButtons; }
+namespace Ui
+{
+    class CFilterBarButtons;
+}
 namespace BlackGui::Filters
 {
     /*!

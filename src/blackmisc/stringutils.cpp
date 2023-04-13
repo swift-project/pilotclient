@@ -18,8 +18,7 @@ namespace BlackMisc
 {
     QString removeDateTimeSeparators(const QString &s)
     {
-        return removeChars(s, [](QChar c)
-        {
+        return removeChars(s, [](QChar c) {
             return c == u' ' || c == u':' || c == u'_' || c == u'-' || c == u'.';
         });
     }
@@ -34,15 +33,14 @@ namespace BlackMisc
         return splitString(s, [](QChar c) { return c == '\n' || c == '\r'; });
     }
 
-    QByteArray utfToPercentEncoding(const QString& s, const QByteArray &allow, char percent)
+    QByteArray utfToPercentEncoding(const QString &s, const QByteArray &allow, char percent)
     {
         QByteArray result;
         for (const QChar &c : s)
         {
             if (const char latin = c.toLatin1())
             {
-                if ((latin >= 'a' && latin <= 'z') || (latin >= 'A' && latin <= 'Z')
-                    || (latin >= '0' && latin <= '9') || allow.contains(latin))
+                if ((latin >= 'a' && latin <= 'z') || (latin >= 'A' && latin <= 'Z') || (latin >= '0' && latin <= '9') || allow.contains(latin))
                 {
                     result += c;
                 }
@@ -67,7 +65,7 @@ namespace BlackMisc
         return result;
     }
 
-    QString utfFromPercentEncoding(const QByteArray& ba, char percent)
+    QString utfFromPercentEncoding(const QByteArray &ba, char percent)
     {
         QString result;
         for (int i = 0; i < ba.size(); ++i)
@@ -142,7 +140,7 @@ namespace BlackMisc
         if (c == '1' || c == 't' || c == 'y' || c == 'x') { return true; }
         if (c == '0' || c == 'f' || c == 'n' || c == '_') { return false; }
 
-        if (c == 'e') { return true;  } // enabled
+        if (c == 'e') { return true; } // enabled
         if (c == 'd') { return false; } // disabled
 
         // full words
@@ -153,7 +151,10 @@ namespace BlackMisc
     int fuzzyShortStringComparision(const QString &str1, const QString &str2, Qt::CaseSensitivity cs)
     {
         // same
-        if (cs == Qt::CaseInsensitive) { if (caseInsensitiveStringCompare(str1, str2)) { return 100; }}
+        if (cs == Qt::CaseInsensitive)
+        {
+            if (caseInsensitiveStringCompare(str1, str2)) { return 100; }
+        }
         else if (str1 == str2) { return 100; }
 
         // one string is empty
@@ -261,7 +262,7 @@ namespace BlackMisc
     QString simplifyAccents(const QString &candidate)
     {
         static const QString diacriticLetters = QString::fromUtf8("ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ");
-        static const QStringList noDiacriticLetters({"S", "OE", "Z", "s", "oe", "z", "Y", "Y", "u", "A", "A", "A", "A", "A", "A", "AE", "C", "E", "E", "E", "E", "I", "I", "I", "I", "D", "N", "O", "O", "O", "O", "O", "O", "U", "U", "U", "U", "Y", "s", "a", "a", "a", "a", "a", "a", "ae", "c", "e", "e", "e", "e", "i", "i", "i", "i", "o", "n", "o", "o", "o", "o", "o", "o", "u", "u", "u", "u", "y", "y"});
+        static const QStringList noDiacriticLetters({ "S", "OE", "Z", "s", "oe", "z", "Y", "Y", "u", "A", "A", "A", "A", "A", "A", "AE", "C", "E", "E", "E", "E", "I", "I", "I", "I", "D", "N", "O", "O", "O", "O", "O", "O", "U", "U", "U", "U", "Y", "s", "a", "a", "a", "a", "a", "a", "ae", "c", "e", "e", "e", "e", "i", "i", "i", "i", "o", "n", "o", "o", "o", "o", "o", "o", "u", "u", "u", "u", "y", "y" });
 
         QString output = "";
         for (int i = 0; i < candidate.length(); i++)
@@ -330,7 +331,7 @@ namespace BlackMisc
         return dt;
     }
 
-    QDateTime fromStringUtc(const QString& dateTimeString, const QLocale& locale, QLocale::FormatType format)
+    QDateTime fromStringUtc(const QString &dateTimeString, const QLocale &locale, QLocale::FormatType format)
     {
         if (dateTimeString.isEmpty()) { return QDateTime(); }
         QDateTime dt = locale.toDateTime(dateTimeString, format);
@@ -348,7 +349,7 @@ namespace BlackMisc
             if (dateTimeString.length() == 17) { return fromStringUtc(dateTimeString, "yyyyMMddHHmmsszzz"); }
             if (dateTimeString.length() == 14) { return fromStringUtc(dateTimeString, "yyyyMMddHHmmss"); }
             if (dateTimeString.length() == 12) { return fromStringUtc(dateTimeString, "yyyyMMddHHmm"); }
-            if (dateTimeString.length() == 8)  { return fromStringUtc(dateTimeString, "yyyyMMdd"); }
+            if (dateTimeString.length() == 8) { return fromStringUtc(dateTimeString, "yyyyMMdd"); }
             return QDateTime();
         }
 

@@ -21,7 +21,10 @@ class QAction;
 
 namespace BlackGui
 {
-    namespace Components { class CDbMappingComponent; }
+    namespace Components
+    {
+        class CDbMappingComponent;
+    }
     namespace Menus
     {
         //! Menu base class for aircraft model view menus
@@ -33,8 +36,7 @@ namespace BlackGui
 
         public:
             //! Constructor
-            IAircraftModelViewMenu(BlackGui::Views::CAircraftModelView *modelView) :
-                IMenuDelegate(modelView)
+            IAircraftModelViewMenu(BlackGui::Views::CAircraftModelView *modelView) : IMenuDelegate(modelView)
             {}
 
             //! Log.categories
@@ -70,8 +72,8 @@ namespace BlackGui
             virtual void customMenu(CMenuActions &menuActions) override;
 
         private:
-            void showSimulatorFile();    //!< simulator file
-            void displayIcon();          //!< aircraft icon if any
+            void showSimulatorFile(); //!< simulator file
+            void displayIcon(); //!< aircraft icon if any
             void startModelConverterX(); //!< show in model converter X
 
             BlackGui::COverlayMessagesFrame *m_messageFrame = nullptr;
@@ -105,10 +107,10 @@ namespace BlackGui
             void consolidateData();
             void consolidateSelectedData();
 
-            BlackMisc::Simulation::IModelsSetable   *modelsTargetSetable() const;
+            BlackMisc::Simulation::IModelsSetable *modelsTargetSetable() const;
             BlackMisc::Simulation::IModelsUpdatable *modelsTargetUpdatable() const;
-            QObject *m_modelsTarget        = nullptr; //!< optional target for setting/updating the models
-            QAction *m_consolidateAll      = nullptr; //!< consolidate data with DB (all)
+            QObject *m_modelsTarget = nullptr; //!< optional target for setting/updating the models
+            QAction *m_consolidateAll = nullptr; //!< consolidate data with DB (all)
             QAction *m_consolidateSelected = nullptr; //!< consolidate data with DB (selected)
         };
 
@@ -145,16 +147,16 @@ namespace BlackGui
             //! Simulator
             BlackMisc::Simulation::CSimulatorInfo getSimulator() const;
 
-            BlackMisc::Simulation::IModelsForSimulatorSetable   *modelsTargetSetable() const;
+            BlackMisc::Simulation::IModelsForSimulatorSetable *modelsTargetSetable() const;
             BlackMisc::Simulation::IModelsForSimulatorUpdatable *modelsTargetUpdatable() const;
-            BlackMisc::Simulation::ISimulatorSelectable         *simulatorSelectable() const;
-            BlackGui::Components::CDbMappingComponent           *getMappingComponent() const;
+            BlackMisc::Simulation::ISimulatorSelectable *simulatorSelectable() const;
+            BlackGui::Components::CDbMappingComponent *getMappingComponent() const;
 
-            QObject *m_modelsTarget        = nullptr; //!< optional target for setting/updating the models
-            QAction *m_consolidateAll      = nullptr; //!< consolidate data with DB (all)
+            QObject *m_modelsTarget = nullptr; //!< optional target for setting/updating the models
+            QAction *m_consolidateAll = nullptr; //!< consolidate data with DB (all)
             QAction *m_consolidateSelected = nullptr; //!< consolidate data with DB (selected)
-            QAction *m_updateDirsAll       = nullptr; //!< consolidate file name/dir (all)
-            QAction *m_updateDirsSelected  = nullptr; //!< consolidate file name/dir (selected)
+            QAction *m_updateDirsAll = nullptr; //!< consolidate file name/dir (all)
+            QAction *m_updateDirsSelected = nullptr; //!< consolidate file name/dir (selected)
         };
     } // ns
 } // ns

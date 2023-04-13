@@ -12,7 +12,7 @@
 #define BLACKSIMPLUGIN_FS9_DIRECTPLAYERROR_H
 
 #ifndef NOMINMAX
-#define NOMINMAX
+#    define NOMINMAX
 #endif
 
 #include <dplay8.h>

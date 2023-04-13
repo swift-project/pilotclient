@@ -19,7 +19,10 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CDbDebugDatabaseSetup; }
+namespace Ui
+{
+    class CDbDebugDatabaseSetup;
+}
 namespace BlackGui::Components
 {
     /*!
@@ -42,7 +45,7 @@ namespace BlackGui::Components
         void onDebugChanged(bool set);
 
         QScopedPointer<Ui::CDbDebugDatabaseSetup> ui;
-        BlackMisc::CData<BlackCore::Data::TGlobalSetup> m_setup {this};   //!< data cache
+        BlackMisc::CData<BlackCore::Data::TGlobalSetup> m_setup { this }; //!< data cache
     };
 } // ns
 

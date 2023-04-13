@@ -6,8 +6,7 @@ using namespace BlackSound::Dsp;
 
 namespace BlackSound::SampleProvider
 {
-    CEqualizerSampleProvider::CEqualizerSampleProvider(ISampleProvider *sourceProvider, EqualizerPresets preset, QObject *parent) :
-        ISampleProvider(parent)
+    CEqualizerSampleProvider::CEqualizerSampleProvider(ISampleProvider *sourceProvider, EqualizerPresets preset, QObject *parent) : ISampleProvider(parent)
     {
         Q_ASSERT_X(sourceProvider, Q_FUNC_INFO, "Need provider");
         const QString on = QStringLiteral("%1 of %2").arg(this->metaObject()->className(), sourceProvider->objectName());

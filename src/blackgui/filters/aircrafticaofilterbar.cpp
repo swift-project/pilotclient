@@ -28,9 +28,8 @@ using namespace BlackCore;
 
 namespace BlackGui::Filters
 {
-    CAircraftIcaoFilterBar::CAircraftIcaoFilterBar(QWidget *parent) :
-        CFilterWidget(parent),
-        ui(new Ui::CAircraftIcaoFilterBar)
+    CAircraftIcaoFilterBar::CAircraftIcaoFilterBar(QWidget *parent) : CFilterWidget(parent),
+                                                                      ui(new Ui::CAircraftIcaoFilterBar)
     {
         ui->setupUi(this);
         this->setButtonsAndCount(ui->filter_Buttons);
@@ -56,18 +55,17 @@ namespace BlackGui::Filters
     }
 
     CAircraftIcaoFilterBar::~CAircraftIcaoFilterBar()
-    { }
+    {}
 
-    std::unique_ptr<BlackGui::Models::IModelFilter<CAircraftIcaoCodeList> > CAircraftIcaoFilterBar::createModelFilter() const
+    std::unique_ptr<BlackGui::Models::IModelFilter<CAircraftIcaoCodeList>> CAircraftIcaoFilterBar::createModelFilter() const
     {
         return std::make_unique<CAircraftIcaoFilter>(
-                    convertDbId(ui->le_Id->text()),
-                    ui->le_Designator->text(),
-                    ui->le_Family->text(),
-                    ui->le_Manufacturer->text(),
-                    ui->le_Description->text(),
-                    ui->combinedType_Selector->getCombinedType()
-                );
+            convertDbId(ui->le_Id->text()),
+            ui->le_Designator->text(),
+            ui->le_Family->text(),
+            ui->le_Manufacturer->text(),
+            ui->le_Description->text(),
+            ui->combinedType_Selector->getCombinedType());
     }
 
     void CAircraftIcaoFilterBar::filter(const CAircraftIcaoCode &icao)

@@ -18,7 +18,10 @@
 #include <QWizardPage>
 #include <QScopedPointer>
 
-namespace Ui { class CCopyModelsFromOtherSwiftVersionsComponent; }
+namespace Ui
+{
+    class CCopyModelsFromOtherSwiftVersionsComponent;
+}
 namespace BlackGui::Components
 {
     /*!
@@ -54,7 +57,7 @@ namespace BlackGui::Components
         QScopedPointer<Ui::CCopyModelsFromOtherSwiftVersionsComponent> ui;
 
         // caches will be explicitly initialized in copy
-        BlackMisc::Simulation::Data::CModelCaches    m_modelCaches    { false, this };
+        BlackMisc::Simulation::Data::CModelCaches m_modelCaches { false, this };
         BlackMisc::Simulation::Data::CModelSetCaches m_modelSetCaches { false, this };
     };
 

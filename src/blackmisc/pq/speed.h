@@ -33,7 +33,7 @@ namespace BlackMisc::PhysicalQuantities
         CSpeed(const QString &unitString) : CPhysicalQuantity(unitString) {}
     };
 
-    using CSpeedPair  = QPair<CSpeed, CSpeed>;   //!< Pair of speeds
+    using CSpeedPair = QPair<CSpeed, CSpeed>; //!< Pair of speeds
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CSpeed)

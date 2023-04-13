@@ -12,9 +12,8 @@
 
 namespace BlackGui::Components
 {
-    CModelBrowserDialog::CModelBrowserDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CModelBrowserDialog)
+    CModelBrowserDialog::CModelBrowserDialog(QWidget *parent) : QDialog(parent),
+                                                                ui(new Ui::CModelBrowserDialog)
     {
         ui->setupUi(this);
     }

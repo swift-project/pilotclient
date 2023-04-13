@@ -29,9 +29,8 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CAircraftPartsHistory::CAircraftPartsHistory(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CAircraftPartsHistory)
+    CAircraftPartsHistory::CAircraftPartsHistory(QWidget *parent) : QFrame(parent),
+                                                                    ui(new Ui::CAircraftPartsHistory)
     {
         ui->setupUi(this);
         ui->cb_PartsHistoryEnabled->setChecked(sApp && sApp->isDeveloperFlagSet()); // default
@@ -51,7 +50,7 @@ namespace BlackGui::Components
     }
 
     CAircraftPartsHistory::~CAircraftPartsHistory()
-    { }
+    {}
 
     void CAircraftPartsHistory::initGui()
     {
@@ -84,7 +83,7 @@ namespace BlackGui::Components
     void CAircraftPartsHistory::updatePartsHistory()
     {
         if (!this->hasContexts()) { return; }
-        if (!this->isVisible())   { return; }
+        if (!this->isVisible()) { return; }
         const CCallsign cs(ui->comp_CallsignCompleter->getCallsign());
         if (cs.isEmpty()) { return; } // no or invalid callsign
         const auto currentAircraftParts = sGui->getIContextNetwork()->getRemoteAircraftParts(cs).frontOrDefault();
@@ -135,7 +134,7 @@ namespace BlackGui::Components
 
         if (ui->cb_AutoScrollEnabled->isChecked())
         {
-            QTextCursor c =  ui->te_Messages->textCursor();
+            QTextCursor c = ui->te_Messages->textCursor();
             c.movePosition(QTextCursor::End);
             ui->te_Messages->setTextCursor(c);
         }

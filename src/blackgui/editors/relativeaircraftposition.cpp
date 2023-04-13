@@ -14,15 +14,14 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackGui::Editors
 {
-    CRelativeAircraftPosition::CRelativeAircraftPosition(QWidget *parent) :
-        CForm(parent),
-        ui(new Ui::CRelativeAircraftPosition)
+    CRelativeAircraftPosition::CRelativeAircraftPosition(QWidget *parent) : CForm(parent),
+                                                                            ui(new Ui::CRelativeAircraftPosition)
     {
         ui->setupUi(this);
     }
 
     CRelativeAircraftPosition::~CRelativeAircraftPosition()
-    { }
+    {}
 
     void CRelativeAircraftPosition::setReadOnly(bool readOnly)
     {
@@ -49,7 +48,6 @@ namespace BlackGui::Editors
     {
         const CCoordinateGeodetic p = relPos.isNull() ? this->getRelativeCoordinate() : relPos;
         ui->le_Info->setText(
-            QStringLiteral("%1 / %2").arg(m_originCoordinate.toQString(true), p.toQString(true))
-        );
+            QStringLiteral("%1 / %2").arg(m_originCoordinate.toQString(true), p.toQString(true)));
     }
 } // ns

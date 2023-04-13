@@ -13,11 +13,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Input, CKeyboardKey, CKeyboardKeyList)
 
 namespace BlackMisc::Input
 {
-    CKeyboardKeyList::CKeyboardKeyList() { }
+    CKeyboardKeyList::CKeyboardKeyList() {}
 
-    CKeyboardKeyList::CKeyboardKeyList(const CSequence<CKeyboardKey> &baseClass) :
-        CSequence<CKeyboardKey>(baseClass)
-    { }
+    CKeyboardKeyList::CKeyboardKeyList(const CSequence<CKeyboardKey> &baseClass) : CSequence<CKeyboardKey>(baseClass)
+    {}
 
     QStringList CKeyboardKeyList::getKeyStrings() const
     {
@@ -31,8 +30,7 @@ namespace BlackMisc::Input
 
     const CKeyboardKeyList &CKeyboardKeyList::allSupportedKeys()
     {
-        static const CKeyboardKeyList allKeys =
-        {
+        static const CKeyboardKeyList allKeys = {
             CKeyboardKey(Key_ControlLeft),
             CKeyboardKey(Key_ControlRight),
             CKeyboardKey(Key_AltLeft),

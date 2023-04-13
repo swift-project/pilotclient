@@ -20,10 +20,9 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Db, CUpdateInfo)
 
 namespace BlackMisc::Db
 {
-    CUpdateInfo::CUpdateInfo(const CArtifactList &artifacts, const CDistributionList &distributions) :
-        m_artifactsPilotClient(artifacts.findByType(CArtifact::PilotClientInstaller)),
-        m_artifactsXSwiftBus(artifacts.findByType(CArtifact::XSwiftBus)),
-        m_distributions(distributions)
+    CUpdateInfo::CUpdateInfo(const CArtifactList &artifacts, const CDistributionList &distributions) : m_artifactsPilotClient(artifacts.findByType(CArtifact::PilotClientInstaller)),
+                                                                                                       m_artifactsXSwiftBus(artifacts.findByType(CArtifact::XSwiftBus)),
+                                                                                                       m_distributions(distributions)
     {
         // void
     }
@@ -100,13 +99,13 @@ namespace BlackMisc::Db
     {
         Q_UNUSED(i18n);
         return u"artifacts (PC): " %
-                this->getArtifactsPilotClient().toQString(i18n) %
-                separator %
-                u"artifacts (XSB): " %
-                this->getArtifactsXSwiftBus().toQString(i18n) %
-                separator %
-                u"distributions: " %
-                this->getDistributions().toQString(i18n);
+               this->getArtifactsPilotClient().toQString(i18n) %
+               separator %
+               u"artifacts (XSB): " %
+               this->getArtifactsXSwiftBus().toQString(i18n) %
+               separator %
+               u"distributions: " %
+               this->getDistributions().toQString(i18n);
     }
 
     QVariant CUpdateInfo::propertyByIndex(CPropertyIndexRef index) const
@@ -124,7 +123,11 @@ namespace BlackMisc::Db
 
     void CUpdateInfo::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CUpdateInfo>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CUpdateInfo>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -183,16 +186,16 @@ namespace BlackMisc::Db
                 int size = asset[QLatin1String("size")].toInt();
 
                 CArtifact::ArtifactType type = CArtifact::UnknownArtifact;
-                if      (name.startsWith(QStringLiteral("swiftinstaller"))) { type = CArtifact::PilotClientInstaller; }
-                else if (name.startsWith(QStringLiteral("swiftsymbols")))   { type = CArtifact::Symbols; }
-                else if (name.startsWith(QStringLiteral("xswiftbus")))      { type = CArtifact::XSwiftBus; }
+                if (name.startsWith(QStringLiteral("swiftinstaller"))) { type = CArtifact::PilotClientInstaller; }
+                else if (name.startsWith(QStringLiteral("swiftsymbols"))) { type = CArtifact::Symbols; }
+                else if (name.startsWith(QStringLiteral("xswiftbus"))) { type = CArtifact::XSwiftBus; }
 
                 CPlatform platform;
-                if      (name.contains(QStringLiteral("windows-32"))) { platform = CPlatform::win32Platform(); }
+                if (name.contains(QStringLiteral("windows-32"))) { platform = CPlatform::win32Platform(); }
                 else if (name.contains(QStringLiteral("windows-64"))) { platform = CPlatform::win64Platform(); }
-                else if (name.contains(QStringLiteral("linux-64")))   { platform = CPlatform::linuxPlatform(); }
-                else if (name.contains(QStringLiteral("macos-64")))   { platform = CPlatform::macOSPlatform(); }
-                else if (name.contains(QStringLiteral("allos")))      { platform = CPlatform::allOs(); }
+                else if (name.contains(QStringLiteral("linux-64"))) { platform = CPlatform::linuxPlatform(); }
+                else if (name.contains(QStringLiteral("macos-64"))) { platform = CPlatform::macOSPlatform(); }
+                else if (name.contains(QStringLiteral("allos"))) { platform = CPlatform::allOs(); }
 
                 CArtifact artifact(filename, version, {}, type, size, existing, platform);
                 artifact.setDistributions({ alpha ? alphaDistribution : betaDistribution });

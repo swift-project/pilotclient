@@ -22,13 +22,16 @@
 #include <QScopedPointer>
 #include <QTimer>
 
-namespace Ui { class CRadarComponent; }
+namespace Ui
+{
+    class CRadarComponent;
+}
 namespace BlackGui::Components
 {
     //! GUI displaying a radar like view with aircrafts nearby
     class BLACKGUI_EXPORT CRadarComponent :
-            public QFrame,
-            public CEnableForDockWidgetInfoArea
+        public QFrame,
+        public CEnableForDockWidgetInfoArea
     {
         Q_OBJECT
 
@@ -63,7 +66,7 @@ namespace BlackGui::Components
         void onInfoAreaTabBarChanged(int index);
 
         QScopedPointer<Ui::CRadarComponent> ui;
-        QGraphicsScene     m_scene;
+        QGraphicsScene m_scene;
         QGraphicsItemGroup m_radarTargets;
         QGraphicsItemGroup m_center;
         QGraphicsItemGroup m_macroGraticule;
@@ -71,15 +74,21 @@ namespace BlackGui::Components
         QGraphicsItemGroup m_radials;
 
         QPen m_radarTargetPen = { Qt::green, 1 };
-        qreal  m_rangeNM      = 10.0;
-        int    m_rotatenAngle = 0;
+        qreal m_rangeNM = 10.0;
+        int m_rotatenAngle = 0;
         QTimer m_updateTimer;
         QTimer m_headingTimer;
 
-        BlackCore::CActionBind m_actionZoomIn  { BlackMisc::Input::radarZoomInHotkeyAction(),  BlackMisc::Input::radarZoomInHotkeyIcon(),  this, &CRadarComponent::rangeZoomIn };
+        BlackCore::CActionBind m_actionZoomIn { BlackMisc::Input::radarZoomInHotkeyAction(), BlackMisc::Input::radarZoomInHotkeyIcon(), this, &CRadarComponent::rangeZoomIn };
         BlackCore::CActionBind m_actionZoomOut { BlackMisc::Input::radarZoomOutHotkeyAction(), BlackMisc::Input::radarZoomOutHotkeyIcon(), this, &CRadarComponent::rangeZoomOut };
-        void rangeZoomIn (bool keydown) { if (keydown) { changeRangeInSteps(true); } }
-        void rangeZoomOut(bool keydown) { if (keydown) { changeRangeInSteps(false); } }
+        void rangeZoomIn(bool keydown)
+        {
+            if (keydown) { changeRangeInSteps(true); }
+        }
+        void rangeZoomOut(bool keydown)
+        {
+            if (keydown) { changeRangeInSteps(false); }
+        }
     };
 } // ns
 

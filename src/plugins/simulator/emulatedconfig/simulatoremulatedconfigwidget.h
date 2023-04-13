@@ -14,7 +14,10 @@
 #include <blackgui/pluginconfigwindow.h>
 #include <QScopedPointer>
 
-namespace Ui { class CSimulatorEmulatedConfigWidget; }
+namespace Ui
+{
+    class CSimulatorEmulatedConfigWidget;
+}
 namespace BlackSimPlugin::Emulated
 {
     /*!
@@ -32,7 +35,7 @@ namespace BlackSimPlugin::Emulated
         virtual ~CSimulatorEmulatedConfigWidget();
 
     private:
-        QScopedPointer <Ui::CSimulatorEmulatedConfigWidget> ui;
+        QScopedPointer<Ui::CSimulatorEmulatedConfigWidget> ui;
     };
 } // ns
 

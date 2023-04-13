@@ -16,9 +16,8 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Weather, CCloudLayer, CCloudLayerList)
 
 namespace BlackMisc::Weather
 {
-    CCloudLayerList::CCloudLayerList(const CSequence<CCloudLayer> &other) :
-        CSequence<CCloudLayer>(other)
-    { }
+    CCloudLayerList::CCloudLayerList(const CSequence<CCloudLayer> &other) : CSequence<CCloudLayer>(other)
+    {}
 
     bool CCloudLayerList::containsBase(const CAltitude &base) const
     {

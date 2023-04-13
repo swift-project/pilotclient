@@ -11,16 +11,15 @@
 
 namespace BlackGui::Components
 {
-    CInitialDataLoadComponent::CInitialDataLoadComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CInitialDataLoadComponent)
+    CInitialDataLoadComponent::CInitialDataLoadComponent(QWidget *parent) : QFrame(parent),
+                                                                            ui(new Ui::CInitialDataLoadComponent)
     {
         ui->setupUi(this);
         ui->comp_DataUpdates->showVisibleLoadAllButtons(true, false, true);
     }
 
     CInitialDataLoadComponent::~CInitialDataLoadComponent()
-    { }
+    {}
 
     void CInitialDataLoadComponent::loadAllFromShared()
     {
@@ -40,7 +39,7 @@ namespace BlackGui::Components
     void CInitialDataLoadWizardPage::initializePage()
     {
         Q_ASSERT_X(m_config, Q_FUNC_INFO, "Missing config");
-        QTimer::singleShot(500, m_config, [ = ] { m_config->loadAllFromShared(); });
+        QTimer::singleShot(500, m_config, [=] { m_config->loadAllFromShared(); });
     }
 
     bool CInitialDataLoadWizardPage::validatePage()

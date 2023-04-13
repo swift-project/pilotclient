@@ -19,28 +19,27 @@ using namespace BlackCore;
 
 namespace BlackGui::Editors
 {
-    CMatchingForm::CMatchingForm(QWidget *parent) :
-        CForm(parent),
-        ui(new Ui::CMatchingForm)
+    CMatchingForm::CMatchingForm(QWidget *parent) : CForm(parent),
+                                                    ui(new Ui::CMatchingForm)
     {
         ui->setupUi(this);
-        connect(ui->rb_Reduction,         &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
+        connect(ui->rb_Reduction, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
 
-        connect(ui->pb_ResetAlgorithm,    &QPushButton::released,  this, &CMatchingForm::resetByAlgorithm,   Qt::QueuedConnection);
-        connect(ui->pb_ResetAll,          &QPushButton::released,  this, &CMatchingForm::resetAll,           Qt::QueuedConnection);
-        connect(ui->pb_MsReverseLookup,   &QPushButton::released,  this, &CMatchingForm::fileDialog, Qt::QueuedConnection);
-        connect(ui->pb_MsMatching,        &QPushButton::released,  this, &CMatchingForm::fileDialog, Qt::QueuedConnection);
+        connect(ui->pb_ResetAlgorithm, &QPushButton::released, this, &CMatchingForm::resetByAlgorithm, Qt::QueuedConnection);
+        connect(ui->pb_ResetAll, &QPushButton::released, this, &CMatchingForm::resetAll, Qt::QueuedConnection);
+        connect(ui->pb_MsReverseLookup, &QPushButton::released, this, &CMatchingForm::fileDialog, Qt::QueuedConnection);
+        connect(ui->pb_MsMatching, &QPushButton::released, this, &CMatchingForm::fileDialog, Qt::QueuedConnection);
 
         connect(ui->rb_ScoreAndReduction, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
-        connect(ui->rb_ScoreOnly,         &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
+        connect(ui->rb_ScoreOnly, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
 
         connect(ui->rb_AirlineGroupIfNoAirline, &QRadioButton::released, this, &CMatchingForm::onAirlineGroupChanged, Qt::QueuedConnection);
-        connect(ui->rb_AirlineGroupAsAirline,   &QRadioButton::released, this, &CMatchingForm::onAirlineGroupChanged, Qt::QueuedConnection);
-        connect(ui->rb_AirlineGroupNo,          &QRadioButton::released, this, &CMatchingForm::onAirlineGroupChanged, Qt::QueuedConnection);
+        connect(ui->rb_AirlineGroupAsAirline, &QRadioButton::released, this, &CMatchingForm::onAirlineGroupChanged, Qt::QueuedConnection);
+        connect(ui->rb_AirlineGroupNo, &QRadioButton::released, this, &CMatchingForm::onAirlineGroupChanged, Qt::QueuedConnection);
     }
 
     CMatchingForm::~CMatchingForm()
-    { }
+    {}
 
     void CMatchingForm::setReadOnly(bool readonly)
     {
@@ -168,7 +167,7 @@ namespace BlackGui::Editors
     {
         const bool nw = (QObject::sender() == ui->pb_MsReverseLookup);
         QString fn = nw ? ui->le_MsReverseLookup->text() : ui->le_MsMatching->text();
-        CDirectories swiftDirs  = m_directories.get();
+        CDirectories swiftDirs = m_directories.get();
 
         fn = QFileDialog::getOpenFileName(nullptr, tr("Matching script"), fn.isEmpty() ? swiftDirs.getMatchingScriptDirectoryOrDefault() : fn, "Matching script (*.js)");
         const QFileInfo fi(fn);
@@ -196,28 +195,27 @@ namespace BlackGui::Editors
     CAircraftMatcherSetup::MatchingMode CMatchingForm::matchingMode() const
     {
         return CAircraftMatcherSetup::matchingMode(
-                    ui->cb_ReverseUseModelString->isChecked(), ui->cb_ReverseUseSwiftLiveryIds->isChecked(),
-                    ui->cb_ByModelString->isChecked(),
-                    ui->rb_ByIcaoDataAircraft1st->isChecked(), ui->rb_ByIcaoDataAirline1st->isChecked(),
-                    ui->cb_ByFamily->isChecked(), ui->cb_ByLivery->isChecked(),
-                    ui->cb_ByCombinedCode->isChecked(),
-                    ui->cb_ByMilitary->isChecked(),
-                    ui->cb_ByCivilian->isChecked(),
-                    ui->cb_ByVtol->isChecked(),
-                    ui->cb_CategoryGlider->isChecked(),
-                    ui->cb_CategoryMilitaryAircraft->isChecked(),
-                    ui->cb_CategorySmallAircraft->isChecked(),
-                    ui->cb_ScoreIgnoreZeros->isChecked(), ui->cb_ScorePreferColorLiveries->isChecked(),
-                    ui->cb_ExclNoDbData->isChecked(), ui->cb_ExclNoExcludedModels->isChecked(),
-                    ui->cb_ModelSetVerification->isChecked(),  ui->cb_ModelSetVerificationOnlyErrorWarning->isChecked(),
-                    ui->cb_ModelSetRemoveFailed->isChecked(),
-                    ui->cb_ModelFailedFailover->isChecked()
-                );
+            ui->cb_ReverseUseModelString->isChecked(), ui->cb_ReverseUseSwiftLiveryIds->isChecked(),
+            ui->cb_ByModelString->isChecked(),
+            ui->rb_ByIcaoDataAircraft1st->isChecked(), ui->rb_ByIcaoDataAirline1st->isChecked(),
+            ui->cb_ByFamily->isChecked(), ui->cb_ByLivery->isChecked(),
+            ui->cb_ByCombinedCode->isChecked(),
+            ui->cb_ByMilitary->isChecked(),
+            ui->cb_ByCivilian->isChecked(),
+            ui->cb_ByVtol->isChecked(),
+            ui->cb_CategoryGlider->isChecked(),
+            ui->cb_CategoryMilitaryAircraft->isChecked(),
+            ui->cb_CategorySmallAircraft->isChecked(),
+            ui->cb_ScoreIgnoreZeros->isChecked(), ui->cb_ScorePreferColorLiveries->isChecked(),
+            ui->cb_ExclNoDbData->isChecked(), ui->cb_ExclNoExcludedModels->isChecked(),
+            ui->cb_ModelSetVerification->isChecked(), ui->cb_ModelSetVerificationOnlyErrorWarning->isChecked(),
+            ui->cb_ModelSetRemoveFailed->isChecked(),
+            ui->cb_ModelFailedFailover->isChecked());
     }
 
     CAircraftMatcherSetup::PickSimilarStrategy CMatchingForm::pickStrategy() const
     {
-        if (ui->rb_PickRandom->isChecked())  { return CAircraftMatcherSetup::PickRandom; }
+        if (ui->rb_PickRandom->isChecked()) { return CAircraftMatcherSetup::PickRandom; }
         if (ui->rb_PickByOrder->isChecked()) { return CAircraftMatcherSetup::PickByOrder; }
         return CAircraftMatcherSetup::PickFirst;
     }
@@ -227,10 +225,11 @@ namespace BlackGui::Editors
         switch (setup.getPickStrategy())
         {
         case CAircraftMatcherSetup::PickByOrder: ui->rb_PickByOrder->setChecked(true); break;
-        case CAircraftMatcherSetup::PickRandom:  ui->rb_PickRandom->setChecked(true);  break;
+        case CAircraftMatcherSetup::PickRandom: ui->rb_PickRandom->setChecked(true); break;
         case CAircraftMatcherSetup::PickFirst:
         default:
-            ui->rb_PickFirst->setChecked(true); break;
+            ui->rb_PickFirst->setChecked(true);
+            break;
         }
     }
 

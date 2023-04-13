@@ -46,7 +46,7 @@ namespace BlackInput
         void buttonChanged(const BlackMisc::Input::CJoystickButton &joystickButton, bool isPressed);
 
     private:
-        friend bool operator == (const CJoystickDevice &lhs, const CJoystickDevice &rhs);
+        friend bool operator==(const CJoystickDevice &lhs, const CJoystickDevice &rhs);
 
         //! Poll the device buttons
         void pollDeviceState();
@@ -55,7 +55,7 @@ namespace BlackInput
 
         static void valueCallback(void *context, IOReturn result, void *sender, IOHIDValueRef value);
 
-        QString m_deviceName = "unknown";  //!< Device name
+        QString m_deviceName = "unknown"; //!< Device name
         // IOHIDDeviceRef is owned by IOHIDManager. Do not release it.
         IOHIDDeviceRef m_deviceRef = nullptr;
         QHash<IOHIDElementRef, BlackMisc::Input::CJoystickButton> m_joystickDeviceInputs;
@@ -96,12 +96,11 @@ namespace BlackInput
 
         void joystickButtonChanged(const BlackMisc::Input::CJoystickButton &joystickButton, bool isPressed);
 
-        static void matchCallback(void* context, IOReturn result, void* sender, IOHIDDeviceRef device);
-        static void removeCallback(void* context, IOReturn result, void* sender, IOHIDDeviceRef device);
+        static void matchCallback(void *context, IOReturn result, void *sender, IOHIDDeviceRef device);
+        static void removeCallback(void *context, IOReturn result, void *sender, IOHIDDeviceRef device);
 
-
-        IOHIDManagerRef m_hidManager =  nullptr;
-        QVector<CJoystickDevice *> m_joystickDevices;  //!< Joystick devices
+        IOHIDManagerRef m_hidManager = nullptr;
+        QVector<CJoystickDevice *> m_joystickDevices; //!< Joystick devices
 
         BlackMisc::Input::CHotkeyCombination m_buttonCombination;
     };

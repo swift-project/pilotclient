@@ -65,15 +65,15 @@ namespace BlackMisc::Aviation
 
         //! Constructor
         CAircraftIcaoCode(const QString &icao, const QString &combinedType, const QString &manufacturer,
-                            const QString &model, const QString &wtc, bool realworld, bool legacy, bool military, int rank);
+                          const QString &model, const QString &wtc, bool realworld, bool legacy, bool military, int rank);
 
         //! Constructor
         CAircraftIcaoCode(const QString &icao, const QString &iata, const QString &combinedType, const QString &manufacturer,
-                            const QString &model, const QString &wtc, bool realworld, bool legacy, bool military, int rank);
+                          const QString &model, const QString &wtc, bool realworld, bool legacy, bool military, int rank);
 
         //! Constructor
         CAircraftIcaoCode(const QString &icao, const QString &iata, const QString &family, const QString &combinedType, const QString &manufacturer,
-                            const QString &model, const QString &modelIata, const QString &modelSwift, const QString &wtc, bool realworld, bool legacy, bool military, int rank);
+                          const QString &model, const QString &modelIata, const QString &modelSwift, const QString &wtc, bool realworld, bool legacy, bool military, int rank);
 
         //! Get ICAO designator, e.g. "B737"
         const QString &getDesignator() const { return m_designator; }
@@ -376,20 +376,20 @@ namespace BlackMisc::Aviation
         static constexpr int DesignatorMaxLength = 5; //!< designator length (max)
 
     private:
-        QString m_designator;            //!< "B737"
-        QString m_iataCode;              //!< "320"
-        QString m_family;                //!< "A350" (not a real ICAO code, but a family)
-        QString m_combinedType;          //!< "L2J"
-        QString m_manufacturer;          //!< "Airbus"
-        QString m_modelDescription;      //!< "A-330-200", the ICAO description
-        QString m_modelIataDescription;  //!< alternative IATA description
+        QString m_designator; //!< "B737"
+        QString m_iataCode; //!< "320"
+        QString m_family; //!< "A350" (not a real ICAO code, but a family)
+        QString m_combinedType; //!< "L2J"
+        QString m_manufacturer; //!< "Airbus"
+        QString m_modelDescription; //!< "A-330-200", the ICAO description
+        QString m_modelIataDescription; //!< alternative IATA description
         QString m_modelSwiftDescription; //!< alternative swift description
-        QString m_wtc;                   //!< wake turbulence like "M","H" "L/M", "L", "J", we only use the one letter versions
-        bool m_realWorld = true;         //!< real world aircraft
-        bool m_legacy = false;           //!< legacy code
-        bool m_military = false;         //!< military aircraft?
-        int  m_rank     = 10;            //!< rank among same codes (0 is best)
-        CAircraftCategory m_category;    //!< aircraft category
+        QString m_wtc; //!< wake turbulence like "M","H" "L/M", "L", "J", we only use the one letter versions
+        bool m_realWorld = true; //!< real world aircraft
+        bool m_legacy = false; //!< legacy code
+        bool m_military = false; //!< military aircraft?
+        int m_rank = 10; //!< rank among same codes (0 is best)
+        CAircraftCategory m_category; //!< aircraft category
 
         //! Create a combined string like L2J
         static QString createdCombinedString(const QString &type, const QString &engineCount, const QString &engine);

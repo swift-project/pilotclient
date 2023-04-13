@@ -49,8 +49,6 @@ namespace BlackSimPlugin::Fs9
         //! Log categories
         static const QStringList &getLogCategories();
 
-
-
     public slots:
         //! Send a custom DirectPlay message
         HRESULT sendMessage(const QByteArray &data);
@@ -83,16 +81,16 @@ namespace BlackSimPlugin::Fs9
 
         const BlackMisc::Aviation::CCallsign m_callsign; //!< Peer callsign
 
-        IDirectPlay8Peer    *m_directPlayPeer = nullptr; //!< DirectPlay peer address
-        IDirectPlay8Address *m_deviceAddress  = nullptr; //!< DirectPlay device address
+        IDirectPlay8Peer *m_directPlayPeer = nullptr; //!< DirectPlay peer address
+        IDirectPlay8Address *m_deviceAddress = nullptr; //!< DirectPlay device address
 
         QList<CHostNode> m_hostNodeList; //!< List of enumerated hosts
         quint32 m_packetIndex = 0; //!< Multiplayer packet index
 
         // DirectPlay Player Id's
-        std::atomic<DPNID> m_playerLocal = {0}; //!< Local player Id
+        std::atomic<DPNID> m_playerLocal = { 0 }; //!< Local player Id
         // We need the Id of the users player, because we are sending packets only to him
-        std::atomic<DPNID> m_playerUser = {0}; //!< User player Id
+        std::atomic<DPNID> m_playerUser = { 0 }; //!< User player Id
 
         using TCallbackWrapper = CallbackWrapper<CDirectPlayPeer, HRESULT, DWORD, void *>; //!< DirectPlay peer message handler wrapper
         TCallbackWrapper m_callbackWrapper; //!< Callback wrapper

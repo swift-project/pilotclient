@@ -44,9 +44,8 @@ using namespace BlackCore::Db;
 
 namespace BlackCore::Db
 {
-    CDatabaseReader::CDatabaseReader(QObject *owner, const CDatabaseReaderConfigList &config, const QString &name) :
-        CThreadedReader(owner, name), m_config(config)
-    { }
+    CDatabaseReader::CDatabaseReader(QObject *owner, const CDatabaseReaderConfigList &config, const QString &name) : CThreadedReader(owner, name), m_config(config)
+    {}
 
     void CDatabaseReader::readInBackgroundThread(CEntityFlags::Entity entities, const QDateTime &newerThan)
     {
@@ -54,13 +53,13 @@ namespace BlackCore::Db
 
         // we accept cached data
         Q_ASSERT_X(!entities.testFlag(CEntityFlags::DbInfoObjectEntity), Q_FUNC_INFO, "Read info objects directly");
-        const bool hasDbInfoObjects     = this->hasDbInfoObjects(); // no info objects is not necessarily an error, but indicates a) either data not available (DB down) or b) only caches are used
+        const bool hasDbInfoObjects = this->hasDbInfoObjects(); // no info objects is not necessarily an error, but indicates a) either data not available (DB down) or b) only caches are used
         // const bool hasSharedInfoObjects = this->hasSharedInfoObjects();
-        CEntityFlags::Entity allEntities    = entities;
+        CEntityFlags::Entity allEntities = entities;
         CEntityFlags::Entity cachedEntities = CEntityFlags::NoEntity;
-        CEntityFlags::Entity dbEntities     = CEntityFlags::NoEntity;
+        CEntityFlags::Entity dbEntities = CEntityFlags::NoEntity;
         CEntityFlags::Entity sharedEntities = CEntityFlags::NoEntity;
-        CEntityFlags::Entity currentEntity  = CEntityFlags::iterateDbEntities(allEntities); // CEntityFlags::InfoObjectEntity will be ignored
+        CEntityFlags::Entity currentEntity = CEntityFlags::iterateDbEntities(allEntities); // CEntityFlags::InfoObjectEntity will be ignored
         while (currentEntity)
         {
             const CDatabaseReaderConfig config(this->getConfigForEntity(currentEntity));
@@ -73,7 +72,7 @@ namespace BlackCore::Db
             const CDbFlags::DataRetrievalModeFlag rmDbOrSharedFlag = CDbFlags::modeToModeFlag(rm & CDbFlags::DbReadingOrShared);
             const QString rmDbOrSharedFlagString = CDbFlags::flagToString(rmDbOrSharedFlag);
             const bool rmDbReadingOrShared = (rmDbOrSharedFlag == CDbFlags::DbReading || rmDbOrSharedFlag == CDbFlags::Shared);
-            const int currentEntityCount   = this->getCacheCount(currentEntity);
+            const int currentEntityCount = this->getCacheCount(currentEntity);
 
             if (rm.testFlag(CDbFlags::Ignore) || rm.testFlag(CDbFlags::Canceled))
             {
@@ -112,8 +111,8 @@ namespace BlackCore::Db
                         if (changedUrl)
                         {
                             CLogMessage(this).info(u"Data location for '%1' changed ('%2'->'%3'), will override cache for reading '%4'")
-                                    << currentEntityName << oldUrlInfo.toQString()
-                                    << newUrlInfo.toQString() << rmDbOrSharedFlagString;
+                                << currentEntityName << oldUrlInfo.toQString()
+                                << newUrlInfo.toQString() << rmDbOrSharedFlagString;
                         }
                         else
                         {
@@ -124,7 +123,7 @@ namespace BlackCore::Db
                 else
                 {
                     if (!rmDbReadingOrShared) { CLogMessage(this).info(u"No DB or shared reading for '%1', read mode is: '%2'") << currentEntityName << rmString; }
-                    if (!hasDbInfoObjects)    { CLogMessage(this).info(u"No DB info objects for '%1', read mode is: '%2'") << currentEntityName << rmString; }
+                    if (!hasDbInfoObjects) { CLogMessage(this).info(u"No DB info objects for '%1', read mode is: '%2'") << currentEntityName << rmString; }
                     if (currentEntityCount > 0)
                     {
                         CLogMessage(this).info(u"Cache for '%1' already read, %2 entries") << currentEntityName << currentEntityCount;
@@ -200,8 +199,7 @@ namespace BlackCore::Db
                 if (validInCacheEntities != CEntityFlags::NoEntity)
                 {
                     QPointer<CDatabaseReader> myself(this);
-                    QTimer::singleShot(0, this, [ = ]
-                    {
+                    QTimer::singleShot(0, this, [=] {
                         if (!myself) { return; }
                         if (!sApp || sApp->isShuttingDown()) { return; }
                         emit this->dataRead(validInCacheEntities, CEntityFlags::ReadFinished, 0, {});
@@ -225,8 +223,7 @@ namespace BlackCore::Db
 
         //! https://dev.swift-project.org/T490
         QPointer<CDatabaseReader> myself(this);
-        QTimer::singleShot(0, this, [ = ]
-        {
+        QTimer::singleShot(0, this, [=] {
             if (!sApp || sApp->isShuttingDown() || !myself) { return; }
             this->read(entities, mode, newerThan);
         });
@@ -286,7 +283,7 @@ namespace BlackCore::Db
             const QString url(nwReply->url().toString());
             nwReply->abort();
             headerResponse.setMessage(CStatusMessage(this, CStatusMessage::SeverityError,
-                                        u"Reading data failed: '" % error % u"' " % url));
+                                                     u"Reading data failed: '" % error % u"' " % url));
             return false;
         }
     }
@@ -482,7 +479,7 @@ namespace BlackCore::Db
         if (cachedEntities == CEntityFlags::NoEntity) { return CEntityFlags::NoEntity; }
         CEntityFlags::Entity emitted = CEntityFlags::NoEntity;
         CEntityFlags::Entity cachedEntitiesToEmit = cachedEntities;
-        CEntityFlags::Entity currentCachedEntity  = CEntityFlags::iterateDbEntities(cachedEntitiesToEmit);
+        CEntityFlags::Entity currentCachedEntity = CEntityFlags::iterateDbEntities(cachedEntitiesToEmit);
         while (currentCachedEntity)
         {
             const int c = this->getCacheCount(currentCachedEntity);
@@ -621,8 +618,8 @@ namespace BlackCore::Db
         {
             const bool s = this->readFromJsonFilesInBackground(CSwiftDirectories::staticDbFilesDirectory(), entities, overrideNewerOnly);
             return s ?
-                    CStatusMessage(this).info(u"Started reading in background from '%1' of entities: '%2'") << CSwiftDirectories::staticDbFilesDirectory() << CEntityFlags::flagToString(entities) :
-                    CStatusMessage(this).error(u"Starting reading in background from '%1' of entities: '%2' failed") << CSwiftDirectories::staticDbFilesDirectory() << CEntityFlags::flagToString(entities);
+                       CStatusMessage(this).info(u"Started reading in background from '%1' of entities: '%2'") << CSwiftDirectories::staticDbFilesDirectory() << CEntityFlags::flagToString(entities) :
+                       CStatusMessage(this).error(u"Starting reading in background from '%1' of entities: '%2' failed") << CSwiftDirectories::staticDbFilesDirectory() << CEntityFlags::flagToString(entities);
         }
         else
         {
@@ -673,8 +670,8 @@ namespace BlackCore::Db
     void CDatabaseReader::logParseMessage(const QString &entity, int size, int msElapsed, const CDatabaseReader::JsonDatastoreResponse &response) const
     {
         CLogMessage(this).info(u"Parsed %1 %2 in %3ms, thread %4 | '%5'")
-                << size << entity << msElapsed
-                << CThreadUtils::currentThreadInfo() << response.toQString();
+            << size << entity << msElapsed
+            << CThreadUtils::currentThreadInfo() << response.toQString();
     }
 
     void CDatabaseReader::networkReplyProgress(int logId, qint64 current, qint64 max, const QUrl &url)
@@ -709,8 +706,7 @@ namespace BlackCore::Db
 
     const QStringList &CDatabaseReader::getLogCategories()
     {
-        static const QStringList cats = CThreadedReader::getLogCategories() + QStringList
-        {
+        static const QStringList cats = CThreadedReader::getLogCategories() + QStringList {
             CLogCategories::swiftDbWebservice(), CLogCategories::webservice()
         };
         return cats;
@@ -759,8 +755,8 @@ namespace BlackCore::Db
         {
             static const QString errorMsg = "Empty JSON string, status: %1, URL: '%2', load time: %3";
             datastoreResponse.setMessage(CStatusMessage(static_cast<CDatabaseReader *>(nullptr),
-                                            CStatusMessage::SeverityError,
-                                            errorMsg.arg(status).arg(datastoreResponse.getUrlString(), datastoreResponse.getLoadTimeStringWithStartedHint())));
+                                                        CStatusMessage::SeverityError,
+                                                        errorMsg.arg(status).arg(datastoreResponse.getUrlString(), datastoreResponse.getLoadTimeStringWithStartedHint())));
             return;
         }
 
@@ -772,15 +768,15 @@ namespace BlackCore::Db
                 static const QString errorMsg = "Looks like PHP errror, status %1, URL: '%2', msg: %3";
                 const QString phpErrorMessage = CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(jsonContent);
                 datastoreResponse.setMessage(CStatusMessage(static_cast<CDatabaseReader *>(nullptr),
-                                                CStatusMessage::SeverityError,
-                                                errorMsg.arg(status).arg(datastoreResponse.getUrlString(), phpErrorMessage)));
+                                                            CStatusMessage::SeverityError,
+                                                            errorMsg.arg(status).arg(datastoreResponse.getUrlString(), phpErrorMessage)));
             }
             else
             {
                 static const QString errorMsg = "Empty JSON document, URL: '%1', load time: %2";
                 datastoreResponse.setMessage(CStatusMessage(static_cast<CDatabaseReader *>(nullptr),
-                                                CStatusMessage::SeverityError,
-                                                errorMsg.arg(datastoreResponse.getUrlString(), datastoreResponse.getLoadTimeStringWithStartedHint())));
+                                                            CStatusMessage::SeverityError,
+                                                            errorMsg.arg(datastoreResponse.getUrlString(), datastoreResponse.getLoadTimeStringWithStartedHint())));
             }
             return;
         }

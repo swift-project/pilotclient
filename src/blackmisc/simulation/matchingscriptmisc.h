@@ -33,8 +33,8 @@ namespace BlackMisc::Simulation
         MatchingScriptReturnValues(const BlackMisc::Simulation::CAircraftModel &model) : model(model) {}
 
         BlackMisc::Simulation::CAircraftModel model; //!< the model
-        bool modified  = false; //!< modified?
-        bool rerun     = false; //!< rerun that matching part?
+        bool modified = false; //!< modified?
+        bool rerun = false; //!< rerun that matching part?
         bool runScript = false; //!< did we run the script
 
         //! Did run the script with modified result

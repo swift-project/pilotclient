@@ -11,27 +11,26 @@
 #include <QStringBuilder>
 
 #ifdef Q_OS_WIN
-#include <windows.h>
-#include <array>
+#    include <windows.h>
+#    include <array>
 #endif
 
 namespace BlackMisc
 {
-    CProcessCtrl::CProcessCtrl(QObject *parent) :
-        QProcess(parent)
-    { }
+    CProcessCtrl::CProcessCtrl(QObject *parent) : QProcess(parent)
+    {}
 
-    #ifdef Q_OS_WIN
+#ifdef Q_OS_WIN
     bool startDetachedWithConsoleWindow(const QString &program, const QStringList &arguments)
     {
         bool inherit = false;
 
         PROCESS_INFORMATION processInfo;
-        memset (&processInfo, 0, sizeof (processInfo));
+        memset(&processInfo, 0, sizeof(processInfo));
 
         STARTUPINFO startupInfo;
-        memset (&startupInfo, 0, sizeof (startupInfo));
-        startupInfo.cb = sizeof (startupInfo);
+        memset(&startupInfo, 0, sizeof(startupInfo));
+        startupInfo.cb = sizeof(startupInfo);
 
         QString command = '"' % QString(program).replace('/', '\\') % '"';
         if (!arguments.isEmpty())
@@ -45,28 +44,28 @@ namespace BlackMisc
         flags |= CREATE_NEW_CONSOLE;
 
         Q_ASSERT(command.length() <= MAX_PATH);
-        std::array<WCHAR, MAX_PATH> wszCommandLine = {{}};
+        std::array<WCHAR, MAX_PATH> wszCommandLine = { {} };
         command.toWCharArray(wszCommandLine.data());
 
-        int result = CreateProcess (nullptr, wszCommandLine.data(), nullptr, nullptr, inherit, flags, nullptr, nullptr, &startupInfo, &processInfo);
+        int result = CreateProcess(nullptr, wszCommandLine.data(), nullptr, nullptr, inherit, flags, nullptr, nullptr, &startupInfo, &processInfo);
 
         if (result == 0)
         {
-            CLogMessage(static_cast<CProcessCtrl*>(nullptr)).warning(u"Failed to start %1: %2") << program << GetLastError();
+            CLogMessage(static_cast<CProcessCtrl *>(nullptr)).warning(u"Failed to start %1: %2") << program << GetLastError();
             return false;
         }
 
-        CloseHandle (processInfo.hProcess);
-        CloseHandle (processInfo.hThread);
+        CloseHandle(processInfo.hProcess);
+        CloseHandle(processInfo.hThread);
         return true;
     }
-    #else
+#else
     bool startDetachedWithConsoleWindow(const QString &program, const QStringList &arguments)
     {
         //! \fixme Handle Linux and OS X here
         return QProcess::startDetached(program, arguments);
     }
-    #endif
+#endif
 
     bool CProcessCtrl::startDetached(const QString &program, const QStringList &arguments, bool withConsoleWindow)
     {

@@ -71,9 +71,8 @@ namespace BlackGui::Components
         return cats;
     }
 
-    CLoginComponent::CLoginComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        ui(new Ui::CLoginComponent)
+    CLoginComponent::CLoginComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                        ui(new Ui::CLoginComponent)
     {
         ui->setupUi(this);
         ui->tw_Details->setCurrentWidget(ui->tb_LoginMode);
@@ -87,14 +86,14 @@ namespace BlackGui::Components
 
         this->setLogoffCountdown();
         connect(&m_logoffCountdownTimer, &QTimer::timeout, this, &CLoginComponent::logoffCountdown);
-        connect(ui->comp_OtherServers,   &CServerListSelector::serverChanged, this, &CLoginComponent::onSelectedServerChanged);
-        connect(ui->comp_VatsimServers,  &CServerListSelector::serverChanged, this, &CLoginComponent::onSelectedServerChanged);
+        connect(ui->comp_OtherServers, &CServerListSelector::serverChanged, this, &CLoginComponent::onSelectedServerChanged);
+        connect(ui->comp_VatsimServers, &CServerListSelector::serverChanged, this, &CLoginComponent::onSelectedServerChanged);
         connect(ui->pb_RefreshOtherServers, &QToolButton::clicked, this, &CLoginComponent::reloadOtherServersSetup);
-        connect(ui->tw_Network, &QTabWidget::currentChanged,       this, &CLoginComponent::onServerTabWidgetChanged);
-        connect(ui->pb_Cancel,  &QPushButton::clicked, this, &CLoginComponent::loginCancelled,          Qt::QueuedConnection);
-        connect(ui->pb_Ok,      &QPushButton::clicked, this, &CLoginComponent::toggleNetworkConnection, Qt::QueuedConnection);
+        connect(ui->tw_Network, &QTabWidget::currentChanged, this, &CLoginComponent::onServerTabWidgetChanged);
+        connect(ui->pb_Cancel, &QPushButton::clicked, this, &CLoginComponent::loginCancelled, Qt::QueuedConnection);
+        connect(ui->pb_Ok, &QPushButton::clicked, this, &CLoginComponent::toggleNetworkConnection, Qt::QueuedConnection);
         connect(ui->pb_OtherServersGotoSettings, &QPushButton::pressed, this, &CLoginComponent::requestNetworkSettings);
-        connect(ui->pb_MappingWizard, &QToolButton::clicked,   this, &CLoginComponent::mappingWizard,           Qt::QueuedConnection);
+        connect(ui->pb_MappingWizard, &QToolButton::clicked, this, &CLoginComponent::mappingWizard, Qt::QueuedConnection);
         connect(&m_networkSetup, &CNetworkSetup::setupChanged, this, &CLoginComponent::reloadOtherServersSetup, Qt::QueuedConnection);
 
         ui->form_FsdDetails->showEnableInfo(true);
@@ -134,10 +133,10 @@ namespace BlackGui::Components
         ui->le_AircraftCombinedType->setMaxLength(3);
         ui->le_AircraftCombinedType->setValidator(new CUpperCaseValidator(this));
         connect(ui->le_AircraftCombinedType, &QLineEdit::editingFinished, this, &CLoginComponent::validateAircraftValues);
-        connect(ui->selector_AircraftIcao,   &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CLoginComponent::onChangedAircraftIcao, Qt::QueuedConnection);
-        connect(ui->selector_AirlineIcao,    &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CLoginComponent::onChangedAirlineIcao, Qt::QueuedConnection);
-        connect(ui->pb_SimulatorLookup,      &QToolButton::clicked, this, &CLoginComponent::lookupOwnAircraftModel);
-        connect(ui->tw_Details,              &QTabWidget::currentChanged, this, &CLoginComponent::onDetailsTabChanged);
+        connect(ui->selector_AircraftIcao, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CLoginComponent::onChangedAircraftIcao, Qt::QueuedConnection);
+        connect(ui->selector_AirlineIcao, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CLoginComponent::onChangedAirlineIcao, Qt::QueuedConnection);
+        connect(ui->pb_SimulatorLookup, &QToolButton::clicked, this, &CLoginComponent::lookupOwnAircraftModel);
+        connect(ui->tw_Details, &QTabWidget::currentChanged, this, &CLoginComponent::onDetailsTabChanged);
 
         if (sGui && sGui->getIContextSimulator())
         {
@@ -185,22 +184,21 @@ namespace BlackGui::Components
         ui->tw_Network->setCurrentIndex(tab);
 
         QPointer<CLoginComponent> myself(this);
-        QTimer::singleShot(5000, this, [ = ]
-        {
+        QTimer::singleShot(5000, this, [=] {
             if (!myself) { return; }
             this->updateGui();
         });
     }
 
     CLoginComponent::~CLoginComponent()
-    { }
+    {}
 
     void CLoginComponent::mainInfoAreaChanged(const QWidget *currentWidget)
     {
         if (!sGui || sGui->isShuttingDown()) { return; }
         if (currentWidget != this && currentWidget != this->parentWidget())
         {
-            //m_logoffCountdownTimer.stop();
+            // m_logoffCountdownTimer.stop();
         }
         else
         {
@@ -374,7 +372,8 @@ namespace BlackGui::Components
         {
             ui->tw_Network->setCurrentWidget(
                 lastServer.getServerType() == CServer::FSDServerVatsim ?
-                ui->tb_NetworkVatsim : ui->tb_OtherServers);
+                    ui->tb_NetworkVatsim :
+                    ui->tb_OtherServers);
         }
 
         const CUser lastUser = lastServer.getUser();
@@ -452,9 +451,9 @@ namespace BlackGui::Components
     bool CLoginComponent::hasValidContexts() const
     {
         if (!sGui || !sGui->supportsContexts()) { return false; }
-        if (sGui->isShuttingDown())          { return false; }
-        if (!sGui->getIContextSimulator())   { return false; }
-        if (!sGui->getIContextNetwork())     { return false; }
+        if (sGui->isShuttingDown()) { return false; }
+        if (!sGui->getIContextSimulator()) { return false; }
+        if (!sGui->getIContextNetwork()) { return false; }
         if (!sGui->getIContextOwnAircraft()) { return false; }
         return true;
     }
@@ -474,7 +473,7 @@ namespace BlackGui::Components
 
         // only override if not yet enabled
         if (!ui->form_FsdDetails->isFsdSetupEnabled()) { ui->form_FsdDetails->setValue(server.getFsdSetup()); }
-        if (!ui->form_Voice->isVoiceSetupEnabled())    { ui->form_Voice->setValue(server.getVoiceSetup()); }
+        if (!ui->form_Voice->isVoiceSetupEnabled()) { ui->form_Voice->setValue(server.getVoiceSetup()); }
 
         ui->tw_Network->setVisible(showNetwork);
         ui->tw_Details->setMinimumHeight(showNetwork ? 0 : 125);
@@ -485,8 +484,8 @@ namespace BlackGui::Components
         CGuiAircraftValues values;
         values.ownCallsign = CCallsign(ui->le_Callsign->text().trimmed().toUpper());
         values.ownAircraftIcao = ui->selector_AircraftIcao->getAircraftIcao();
-        values.ownAirlineIcao  = ui->selector_AirlineIcao->getAirlineIcao();
-        values.ownAircraftCombinedType   = ui->le_AircraftCombinedType->text().trimmed().toUpper();
+        values.ownAirlineIcao = ui->selector_AirlineIcao->getAirlineIcao();
+        values.ownAircraftCombinedType = ui->le_AircraftCombinedType->text().trimmed().toUpper();
         values.ownAircraftSimulatorModel = ui->le_SimulatorModel->text().trimmed().toUpper();
         return values;
     }
@@ -624,8 +623,7 @@ namespace BlackGui::Components
         const QString ac(
             ownAircraft.getAircraftIcaoCodeDesignator() %
             (ownAircraft.hasAirlineDesignator() ? (u' ' % ownAircraft.getAirlineIcaoCodeDesignator()) : QString()) %
-            (ownAircraft.hasModelString() ? (u' ' % ownAircraft.getModelString()) : QString())
-        );
+            (ownAircraft.hasModelString() ? (u' ' % ownAircraft.getModelString()) : QString()));
         const QString cs = ownAircraft.getCallsignAsString();
         ui->le_LoginSince->setText(QDateTime::currentDateTimeUtc().toString());
         ui->le_LoginAsAircaft->setText(ac);
@@ -718,9 +716,7 @@ namespace BlackGui::Components
         if (!this->hasValidContexts()) { return; }
         if (!sGui->getIContextNetwork()->isConnected()) { return; }
 
-        const auto msg = fatal
-            ? CStatusMessage(this, CStatusMessage::SeverityError, u"Sim frame rate too low to maintain constant simulation rate. Disconnecting to avoid disrupting the network.")
-            : CStatusMessage(this, CStatusMessage::SeverityWarning, u"Sim frame rate too low to maintain constant simulation rate. Reduce graphics quality to avoid disconnection.");
+        const auto msg = fatal ? CStatusMessage(this, CStatusMessage::SeverityError, u"Sim frame rate too low to maintain constant simulation rate. Disconnecting to avoid disrupting the network.") : CStatusMessage(this, CStatusMessage::SeverityWarning, u"Sim frame rate too low to maintain constant simulation rate. Reduce graphics quality to avoid disconnection.");
         const int delaySecs = 20;
         this->showOverlayHTMLMessage(msg, qRound(1000 * delaySecs * 0.8));
         if (fatal)
@@ -835,8 +831,7 @@ namespace BlackGui::Components
         static constexpr int blinkTimes = 10;
 
         auto timer = new QTimer(this);
-        connect(timer, &QTimer::timeout, this, [this, timer, count = std::make_shared<int>(0)]
-        {
+        connect(timer, &QTimer::timeout, this, [this, timer, count = std::make_shared<int>(0)] {
             if (++*count <= blinkTimes)
             {
                 ui->pb_Ok->setProperty("blinkOn", !ui->pb_Ok->property("blinkOn").toBool());
@@ -856,9 +851,9 @@ namespace BlackGui::Components
 
     void CLoginComponent::highlightModelField(const CAircraftModel &model)
     {
-        if (!model.hasModelString())      { ui->le_SimulatorModel->setProperty("validation", "error"); }
+        if (!model.hasModelString()) { ui->le_SimulatorModel->setProperty("validation", "error"); }
         else if (!model.isLoadedFromDb()) { ui->le_SimulatorModel->setProperty("validation", "warning"); }
-        else                              { ui->le_SimulatorModel->setProperty("validation", "ok"); }
+        else { ui->le_SimulatorModel->setProperty("validation", "ok"); }
         ui->le_SimulatorModel->setStyleSheet(""); // force update
     }
 
@@ -934,7 +929,7 @@ namespace BlackGui::Components
     void CLoginComponent::updateGui()
     {
         if (!m_networkConnected) { return; }
-        if (!this->hasValidContexts())   { return; }
+        if (!this->hasValidContexts()) { return; }
         if (!sGui->getIContextNetwork()) { return; }
         const IContextNetwork *nwc = sGui->getIContextNetwork();
         const CSimulatedAircraft ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();

@@ -28,15 +28,14 @@ using namespace BlackMisc::Network;
 
 namespace BlackGui::Components
 {
-    CUpdateInfoComponent::CUpdateInfoComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CUpdateInfoComponent)
+    CUpdateInfoComponent::CUpdateInfoComponent(QWidget *parent) : QFrame(parent),
+                                                                  ui(new Ui::CUpdateInfoComponent)
     {
         ui->setupUi(this);
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
 
-        connect(sGui, &CGuiApplication::updateInfoAvailable,     this, &CUpdateInfoComponent::changedUpdateInfo,  Qt::QueuedConnection);
-        connect(ui->pb_CheckForUpdates,   &QPushButton::pressed, this, &CUpdateInfoComponent::requestLoadOfSetup, Qt::QueuedConnection);
+        connect(sGui, &CGuiApplication::updateInfoAvailable, this, &CUpdateInfoComponent::changedUpdateInfo, Qt::QueuedConnection);
+        connect(ui->pb_CheckForUpdates, &QPushButton::pressed, this, &CUpdateInfoComponent::requestLoadOfSetup, Qt::QueuedConnection);
         connect(ui->pb_DownloadXSwiftBus, &QPushButton::pressed, this, &CUpdateInfoComponent::downloadXSwiftBusDialog, Qt::QueuedConnection);
         connect(ui->pb_DownloadInstaller, &QPushButton::pressed, this, &CUpdateInfoComponent::downloadInstallerDialog, Qt::QueuedConnection);
 
@@ -45,14 +44,14 @@ namespace BlackGui::Components
     }
 
     CUpdateInfoComponent::~CUpdateInfoComponent()
-    { }
+    {}
 
     CArtifact CUpdateInfoComponent::getLatestAvailablePilotClientArtifactForSelection() const
     {
         const CUpdateInfo info = m_updateInfo.get();
-        const CPlatform p      = this->getSelectedOrDefaultPlatform();
-        const CDistribution d  = this->getSelectedOrDefaultDistribution();
-        const CArtifact a      = info.getArtifactsPilotClient().findByDistributionAndPlatform(d, p, true).getLatestArtifactOrDefault();
+        const CPlatform p = this->getSelectedOrDefaultPlatform();
+        const CDistribution d = this->getSelectedOrDefaultDistribution();
+        const CArtifact a = info.getArtifactsPilotClient().findByDistributionAndPlatform(d, p, true).getLatestArtifactOrDefault();
         return a;
     }
 
@@ -74,8 +73,7 @@ namespace BlackGui::Components
     void CUpdateInfoComponent::triggerDownload()
     {
         QPointer<CUpdateInfoComponent> myself(this);
-        QTimer::singleShot(10, this, [ = ]
-        {
+        QTimer::singleShot(10, this, [=] {
             if (!myself) { return; }
             ui->pb_DownloadInstaller->click();
         });
@@ -120,7 +118,7 @@ namespace BlackGui::Components
 
         this->uiSelectionChanged();
         connect(ui->cb_Platforms, &QComboBox::currentTextChanged, this, &CUpdateInfoComponent::platformChanged, Qt::QueuedConnection);
-        connect(ui->cb_Channels,  &QComboBox::currentTextChanged, this, &CUpdateInfoComponent::channelChanged,  Qt::QueuedConnection);
+        connect(ui->cb_Channels, &QComboBox::currentTextChanged, this, &CUpdateInfoComponent::channelChanged, Qt::QueuedConnection);
 
         // emit via digest signal
         m_dsDistributionAvailable.inputSignal();
@@ -156,10 +154,11 @@ namespace BlackGui::Components
         if (!CPlatform::isCurrentPlatform(platform))
         {
             const QMessageBox::StandardButton ret = QMessageBox::warning(this, "Download installer",
-                                                    QStringLiteral(
-                                                            "The platform '%1' does not match your current platform '%2'.\n"
-                                                            "Do you want to continue?").arg(platform, CPlatform::currentPlatform().getPlatformName()),
-                                                    QMessageBox::Yes | QMessageBox::No);
+                                                                         QStringLiteral(
+                                                                             "The platform '%1' does not match your current platform '%2'.\n"
+                                                                             "Do you want to continue?")
+                                                                             .arg(platform, CPlatform::currentPlatform().getPlatformName()),
+                                                                         QMessageBox::Yes | QMessageBox::No);
             if (ret != QMessageBox::Yes) { return; }
         }
 
@@ -187,7 +186,7 @@ namespace BlackGui::Components
 
     void CUpdateInfoComponent::saveSettings()
     {
-        const QString channel  = this->getSelectedOrDefaultDistribution().getChannel();
+        const QString channel = this->getSelectedOrDefaultDistribution().getChannel();
         const QString platform = this->getSelectedOrDefaultPlatform().getPlatformName();
         const QStringList settings({ channel, platform });
         const CStatusMessage m = m_updateSettings.setAndSave(settings);
@@ -215,7 +214,7 @@ namespace BlackGui::Components
         // for XSwiftBus we only show public (unrestricted) ones, as the follow up dialog will only show unrestricted
         const CUpdateInfo updateInfo(m_updateInfo.get());
         const CArtifactList artifactsPilotClient = updateInfo.getArtifactsPilotClient().findByDistributionAndPlatform(selectedDistribution, selectedPlatform, true);
-        const CArtifactList artifactsXsb  = updateInfo.getArtifactsXSwiftBus().findWithUnrestrictedDistributions().findByDistributionAndPlatform(selectedDistribution, selectedPlatform, true);
+        const CArtifactList artifactsXsb = updateInfo.getArtifactsXSwiftBus().findWithUnrestrictedDistributions().findByDistributionAndPlatform(selectedDistribution, selectedPlatform, true);
         const CArtifact latestPilotClient = artifactsPilotClient.getLatestArtifactOrDefault();
 
         const QStringList sortedPilotClientVersions = artifactsPilotClient.getSortedVersions();
@@ -235,8 +234,8 @@ namespace BlackGui::Components
         const bool newer = this->isNewPilotClientVersionAvailable();
         ui->lbl_StatusInfo->setText(newer ? "New version available" : "Nothing new");
         ui->lbl_StatusInfo->setStyleSheet(newer ?
-                                            "background-color: green; color: white;" :
-                                            "background-color: red; color: white;");
+                                              "background-color: green; color: white;" :
+                                              "background-color: red; color: white;");
 
         emit this->selectionChanged();
 
@@ -262,7 +261,7 @@ namespace BlackGui::Components
         if (c.isEmpty()) { c = settings.first(); }
         const CUpdateInfo updateInfo(m_updateInfo.get());
         return c.isEmpty() ?
-                updateInfo.getDistributions().getMostStableOrDefault() :
-                updateInfo.getDistributions().findFirstByChannelOrDefault(c);
+                   updateInfo.getDistributions().getMostStableOrDefault() :
+                   updateInfo.getDistributions().findFirstByChannelOrDefault(c);
     }
 } // ns

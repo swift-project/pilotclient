@@ -86,7 +86,11 @@ namespace BlackMisc::Input
         QString convertToQString(bool i18n = false) const;
 
     private:
-        static const QString &buttonIndentifier() { static const QString bn("Button"); return bn; }
+        static const QString &buttonIndentifier()
+        {
+            static const QString bn("Button");
+            return bn;
+        }
         static constexpr int InvalidButtonIndex = -1;
 
         QString m_deviceName;

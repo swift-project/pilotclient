@@ -52,9 +52,15 @@ namespace BlackMisc
         operator std::vector<T>() const & { return convertTo<std::vector>(sortAndDeduplicate(m_list)); }
         operator std::vector<T>() && { return convertTo<std::vector>(sortAndDeduplicate(std::move(m_list))); }
         template <typename U = T, typename = std::enable_if_t<std::is_same_v<U, QString>>>
-        operator QStringList() const & { return sortAndDeduplicate(m_list); }
+        operator QStringList() const &
+        {
+            return sortAndDeduplicate(m_list);
+        }
         template <typename U = T, typename = std::enable_if_t<std::is_same_v<U, QString>>>
-        operator QStringList() && { return sortAndDeduplicate(std::move(m_list)); }
+        operator QStringList() &&
+        {
+            return sortAndDeduplicate(std::move(m_list));
+        }
         //! @}
 
     private:

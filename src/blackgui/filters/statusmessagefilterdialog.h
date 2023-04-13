@@ -21,8 +21,14 @@
 
 class QWidget;
 
-namespace BlackMisc { class CStatusMessageList; }
-namespace Ui { class CStatusMessageFilterDialog; }
+namespace BlackMisc
+{
+    class CStatusMessageList;
+}
+namespace Ui
+{
+    class CStatusMessageFilterDialog;
+}
 
 namespace BlackGui::Filters
 {

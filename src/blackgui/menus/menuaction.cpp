@@ -24,17 +24,14 @@ using namespace BlackMisc;
 
 namespace BlackGui::Menus
 {
-    CMenuAction::CMenuAction(const QIcon &icon, const QString &title, const QString &path, bool separator) :
-        m_icon(icon), m_title(title), m_path(path.trimmed()), m_separator(separator)
-    { }
+    CMenuAction::CMenuAction(const QIcon &icon, const QString &title, const QString &path, bool separator) : m_icon(icon), m_title(title), m_path(path.trimmed()), m_separator(separator)
+    {}
 
-    CMenuAction::CMenuAction(const QString &path, bool separator) :
-        m_path(path.trimmed()), m_separator(separator)
-    { }
+    CMenuAction::CMenuAction(const QString &path, bool separator) : m_path(path.trimmed()), m_separator(separator)
+    {}
 
-    CMenuAction::CMenuAction(QAction *action, const QString &path, bool separator) :
-        m_action(action), m_icon(action->icon()), m_title(action->text()), m_path(path.trimmed()), m_separator(separator)
-    { }
+    CMenuAction::CMenuAction(QAction *action, const QString &path, bool separator) : m_action(action), m_icon(action->icon()), m_title(action->text()), m_path(path.trimmed()), m_separator(separator)
+    {}
 
     bool CMenuAction::isCheckableQAction() const
     {
@@ -272,25 +269,25 @@ namespace BlackGui::Menus
         return menuActions;
     }
 
-    CMenuAction CMenuActions::addAction(QAction *action, const QString &text, const QString &path, const CSlot<void ()> &slot, const QKeySequence &shortcut)
+    CMenuAction CMenuActions::addAction(QAction *action, const QString &text, const QString &path, const CSlot<void()> &slot, const QKeySequence &shortcut)
     {
         if (action) { return this->addAction(action, path); }
         return this->addAction(text, path, slot, shortcut);
     }
 
-    CMenuAction CMenuActions::addAction(QAction *action, const QString &text, const QString &path, QObject *actionOwner, const CSlot<void ()> &slot, const QKeySequence &shortcut)
+    CMenuAction CMenuActions::addAction(QAction *action, const QString &text, const QString &path, QObject *actionOwner, const CSlot<void()> &slot, const QKeySequence &shortcut)
     {
         if (action) { return this->addAction(action, path); }
         return this->addAction(text, path, actionOwner, slot, shortcut);
     }
 
-    CMenuAction CMenuActions::addAction(QAction *action, const QIcon &icon, const QString &text, const QString &path, const CSlot<void ()> &slot, const QKeySequence &shortcut)
+    CMenuAction CMenuActions::addAction(QAction *action, const QIcon &icon, const QString &text, const QString &path, const CSlot<void()> &slot, const QKeySequence &shortcut)
     {
         if (action) { return this->addAction(action, path); }
         return this->addAction(icon, text, path, slot, shortcut);
     }
 
-    CMenuAction CMenuActions::addAction(QAction *action, const QIcon &icon, const QString &text, const QString &path, QObject *actionOwner, const CSlot<void ()> &slot, const QKeySequence &shortcut)
+    CMenuAction CMenuActions::addAction(QAction *action, const QIcon &icon, const QString &text, const QString &path, QObject *actionOwner, const CSlot<void()> &slot, const QKeySequence &shortcut)
     {
         if (action) { return this->addAction(action, path); }
         Q_ASSERT_X(actionOwner, Q_FUNC_INFO, "Need action owner"); // in this case nullptr as actionOwner is not allowed
@@ -310,11 +307,10 @@ namespace BlackGui::Menus
         return this->addAction(ma);
     }
 
-    CMenuAction CMenuActions::addAction(const QIcon &actionIcon, const QString &text, const QString &path, QObject *actionOwner, const CSlot<void ()> &slot, const QKeySequence &shortcut)
+    CMenuAction CMenuActions::addAction(const QIcon &actionIcon, const QString &text, const QString &path, QObject *actionOwner, const CSlot<void()> &slot, const QKeySequence &shortcut)
     {
         CMenuAction action = this->addAction(actionIcon, text, path, actionOwner, shortcut);
-        QAction::connect(action.getQAction(), &QAction::triggered, [slot](bool checked)
-        {
+        QAction::connect(action.getQAction(), &QAction::triggered, [slot](bool checked) {
             slot();
             Q_UNUSED(checked);
         });
@@ -326,17 +322,17 @@ namespace BlackGui::Menus
         return this->addAction(actionIcon, text, path, nullptr);
     }
 
-    CMenuAction CMenuActions::addAction(const QIcon &actionIcon, const QString &text, const QString &path, const CSlot<void ()> &slot, const QKeySequence &shortcut)
+    CMenuAction CMenuActions::addAction(const QIcon &actionIcon, const QString &text, const QString &path, const CSlot<void()> &slot, const QKeySequence &shortcut)
     {
         return this->addAction(actionIcon, text, path, slot.object(), slot, shortcut);
     }
 
-    CMenuAction CMenuActions::addAction(const QString &text, const QString &path, const CSlot<void ()> &slot, const QKeySequence &shortcut)
+    CMenuAction CMenuActions::addAction(const QString &text, const QString &path, const CSlot<void()> &slot, const QKeySequence &shortcut)
     {
         return this->addAction(QIcon(), text, path, slot.object(), slot, shortcut);
     }
 
-    CMenuAction CMenuActions::addAction(const QString &text, const QString &path, QObject *actionOwner, const CSlot<void ()> &slot, const QKeySequence &shortcut)
+    CMenuAction CMenuActions::addAction(const QString &text, const QString &path, QObject *actionOwner, const CSlot<void()> &slot, const QKeySequence &shortcut)
     {
         return this->addAction(QIcon(), text, path, actionOwner, slot, shortcut);
     }
@@ -366,7 +362,7 @@ namespace BlackGui::Menus
             {
                 // no separator a) if there is already one b) key roots are the same (such entries belong together)
                 const bool noSeparator = (!menu.actions().isEmpty() && menu.actions().last()->isSeparator()) ||
-                                            (isSameKeyRoot(key, lastKey));
+                                         (isSameKeyRoot(key, lastKey));
                 if (!noSeparator) { menu.addSeparator(); }
                 handledSeparator = true;
             }

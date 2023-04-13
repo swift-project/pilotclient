@@ -21,9 +21,9 @@ namespace BlackCore::Afv::Crypto
     //! DTO header
     struct CryptoDtoHeaderDto
     {
-        std::string   ChannelTag; //!< channel
-        uint64_t      Sequence;   //!< sequence
-        CryptoDtoMode Mode;       //!< mode
+        std::string ChannelTag; //!< channel
+        uint64_t Sequence; //!< sequence
+        CryptoDtoMode Mode; //!< mode
         MSGPACK_DEFINE(ChannelTag, Sequence, Mode)
     };
 } // ns

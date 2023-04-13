@@ -38,7 +38,10 @@ BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftSituation)
 
 namespace BlackMisc
 {
-    namespace Geo { class CElevationPlane; }
+    namespace Geo
+    {
+        class CElevationPlane;
+    }
     namespace Aviation
     {
         class CAircraftParts;
@@ -93,26 +96,26 @@ namespace BlackMisc
             {
                 NotSetGroundDetails,
                 // interpolated situation
-                OnGroundByInterpolation,  //!< strongest for remote aircraft
+                OnGroundByInterpolation, //!< strongest for remote aircraft
                 OnGroundByElevationAndCG,
                 OnGroundByElevation,
-                OnGroundByGuessing,       //!< weakest
+                OnGroundByGuessing, //!< weakest
                 // received situation
-                InFromNetwork,            //!< received from network
-                InFromParts,              //!< set from aircraft parts
-                InNoGroundInfo,           //!< not known
+                InFromNetwork, //!< received from network
+                InFromParts, //!< set from aircraft parts
+                InNoGroundInfo, //!< not known
                 // send information
-                OutOnGroundOwnAircraft    //!< sending on ground
+                OutOnGroundOwnAircraft //!< sending on ground
             };
 
             //! How was altitude corrected?
             enum AltitudeCorrection
             {
                 NoCorrection,
-                Underflow,       //!< aircraft too low
+                Underflow, //!< aircraft too low
                 DraggedToGround, //!< other scenery too high, but on ground
                 AGL,
-                NoElevation,     //!< no correction as there is no elevation
+                NoElevation, //!< no correction as there is no elevation
                 UnknownCorrection
             };
 
@@ -121,13 +124,13 @@ namespace BlackMisc
             {
                 // best info (most accurate) last
                 NoElevationInfo,
-                Test,                //!< unit test
-                SituationChange,     //!< from BlackMisc::Aviation::CAircraftSituationChange
-                Extrapolated,        //!< extrapolated ("guessing")
-                Average,             //!< average value of "nearby" situation CAircraftSituationList::averageElevationOfNonMovingAircraft
-                Interpolated,        //!< interpolated between 2 elevations
-                FromCache,           //!< from cache
-                FromProvider         //!< from BlackMisc::Simulation::ISimulationEnvironmentProvider
+                Test, //!< unit test
+                SituationChange, //!< from BlackMisc::Aviation::CAircraftSituationChange
+                Extrapolated, //!< extrapolated ("guessing")
+                Average, //!< average value of "nearby" situation CAircraftSituationList::averageElevationOfNonMovingAircraft
+                Interpolated, //!< interpolated between 2 elevations
+                FromCache, //!< from cache
+                FromProvider //!< from BlackMisc::Simulation::ISimulationEnvironmentProvider
             };
 
             //! Default constructor.
@@ -418,7 +421,11 @@ namespace BlackMisc
             QString getPBHInfo() const;
 
             //! Set 6DOF velocity
-            void setVelocity(const CAircraftVelocity &velocity) { m_velocity = velocity; m_hasVelocity = true; }
+            void setVelocity(const CAircraftVelocity &velocity)
+            {
+                m_velocity = velocity;
+                m_hasVelocity = true;
+            }
 
             //! Get 6DOF velocity
             const CAircraftVelocity &getVelocity() const { return m_velocity; }
@@ -569,12 +576,12 @@ namespace BlackMisc
             CCallsign m_correspondingCallsign;
             Geo::CCoordinateGeodetic m_position; //!< NULL position as default
             Geo::CElevationPlane m_groundElevationPlane; //!< NULL elevation as default
-            Aviation::CAltitude m_pressureAltitude      { 0, nullptr };
-            CHeading m_heading                          { 0, nullptr };
-            PhysicalQuantities::CAngle  m_pitch         { 0, nullptr };
-            PhysicalQuantities::CAngle  m_bank          { 0, nullptr };
-            PhysicalQuantities::CSpeed  m_groundSpeed   { 0, nullptr };
-            PhysicalQuantities::CLength m_cg            { 0, nullptr };
+            Aviation::CAltitude m_pressureAltitude { 0, nullptr };
+            CHeading m_heading { 0, nullptr };
+            PhysicalQuantities::CAngle m_pitch { 0, nullptr };
+            PhysicalQuantities::CAngle m_bank { 0, nullptr };
+            PhysicalQuantities::CSpeed m_groundSpeed { 0, nullptr };
+            PhysicalQuantities::CLength m_cg { 0, nullptr };
             PhysicalQuantities::CLength m_sceneryOffset { 0, nullptr };
             bool m_hasVelocity = false;
             CAircraftVelocity m_velocity;
@@ -583,7 +590,7 @@ namespace BlackMisc
             int m_onGround = static_cast<int>(CAircraftSituation::OnGroundSituationUnknown);
             int m_onGroundDetails = static_cast<int>(CAircraftSituation::NotSetGroundDetails);
             int m_elvInfo = static_cast<int>(CAircraftSituation::NoElevationInfo); //!< where did we gnd.elevation from?
-            double m_onGroundFactor = -1;      //!< interpolated ground flag, 1..on ground, 0..not on ground, -1 no info
+            double m_onGroundFactor = -1; //!< interpolated ground flag, 1..on ground, 0..not on ground, -1 no info
             QString m_onGroundGuessingDetails; //!< only for debugging, not transferred via DBus etc.
 
             //! Equal double values?

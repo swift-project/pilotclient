@@ -71,15 +71,14 @@ namespace BlackGui::Components
         return cats;
     }
 
-    CLoginAdvComponent::CLoginAdvComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        ui(new Ui::CLoginAdvComponent)
+    CLoginAdvComponent::CLoginAdvComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                              ui(new Ui::CLoginAdvComponent)
     {
         ui->setupUi(this);
 
-        connect(ui->pb_Cancel,  &QPushButton::clicked, this, &CLoginAdvComponent::loginCancelled,          Qt::QueuedConnection);
+        connect(ui->pb_Cancel, &QPushButton::clicked, this, &CLoginAdvComponent::loginCancelled, Qt::QueuedConnection);
         connect(ui->pb_Connect, &QPushButton::clicked, this, &CLoginAdvComponent::toggleNetworkConnection, Qt::QueuedConnection);
-        connect(ui->comp_NetworkDetails, &CNetworkDetailsComponent::overridePilot,          this, &CLoginAdvComponent::overrideCredentialsToPilot,      Qt::QueuedConnection);
+        connect(ui->comp_NetworkDetails, &CNetworkDetailsComponent::overridePilot, this, &CLoginAdvComponent::overrideCredentialsToPilot, Qt::QueuedConnection);
         connect(ui->comp_NetworkDetails, &CNetworkDetailsComponent::requestNetworkSettings, this, &CLoginAdvComponent::requestNetworkSettings, Qt::QueuedConnection);
 
         // overlay
@@ -115,7 +114,7 @@ namespace BlackGui::Components
     }
 
     CLoginAdvComponent::~CLoginAdvComponent()
-    { }
+    {}
 
     void CLoginAdvComponent::setAutoLogoff(bool autoLogoff)
     {
@@ -173,7 +172,7 @@ namespace BlackGui::Components
             }
 
             // Server
-            currentServer    = this->getCurrentServer();
+            currentServer = this->getCurrentServer();
             const CUser user = this->getUserFromPilotGuiValues();
             currentServer.setUser(user);
 
@@ -293,9 +292,9 @@ namespace BlackGui::Components
     bool CLoginAdvComponent::hasValidContexts() const
     {
         if (!sGui || !sGui->supportsContexts()) { return false; }
-        if (sGui->isShuttingDown())          { return false; }
-        if (!sGui->getIContextSimulator())   { return false; }
-        if (!sGui->getIContextNetwork())     { return false; }
+        if (sGui->isShuttingDown()) { return false; }
+        if (!sGui->getIContextSimulator()) { return false; }
+        if (!sGui->getIContextNetwork()) { return false; }
         if (!sGui->getIContextOwnAircraft()) { return false; }
         return true;
     }
@@ -347,9 +346,7 @@ namespace BlackGui::Components
         if (!this->hasValidContexts()) { return; }
         if (!sGui->getIContextNetwork()->isConnected()) { return; }
 
-        const auto msg = fatal
-            ? CStatusMessage(this, CStatusMessage::SeverityError, u"Sim frame rate too low to maintain constant simulation rate. Disconnecting to avoid disrupting the network.")
-            : CStatusMessage(this, CStatusMessage::SeverityWarning, u"Sim frame rate too low to maintain constant simulation rate. Reduce graphics quality to avoid disconnection.");
+        const auto msg = fatal ? CStatusMessage(this, CStatusMessage::SeverityError, u"Sim frame rate too low to maintain constant simulation rate. Disconnecting to avoid disrupting the network.") : CStatusMessage(this, CStatusMessage::SeverityWarning, u"Sim frame rate too low to maintain constant simulation rate. Reduce graphics quality to avoid disconnection.");
         const int delaySecs = 30;
         this->showOverlayHTMLMessage(msg, qRound(1000 * delaySecs * 0.8));
 
@@ -385,7 +382,7 @@ namespace BlackGui::Components
 
     void CLoginAdvComponent::updateGui()
     {
-        if (!this->hasValidContexts())   { return; }
+        if (!this->hasValidContexts()) { return; }
         if (!sGui->getIContextNetwork()) { return; }
         const IContextNetwork *nwc = sGui->getIContextNetwork();
         const bool connected = nwc->isConnected();

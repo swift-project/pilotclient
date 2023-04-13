@@ -97,11 +97,11 @@ namespace BlackCore::Data
         void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
 
     private:
-        BlackMisc::Network::CUrlList    m_serverFileUrls; //!< only the FSD servers
-        BlackMisc::Network::CUrlList    m_dataFileUrls;   //!< Full VATSIM files
-        BlackMisc::Network::CUrlList    m_metarFileUrls;  //!< METAR files
-        BlackMisc::Network::CServerList m_fsdServers;     //!< FSD test servers
-        BlackMisc::Network::CServerList m_voiceServers;   //!< voice servers
+        BlackMisc::Network::CUrlList m_serverFileUrls; //!< only the FSD servers
+        BlackMisc::Network::CUrlList m_dataFileUrls; //!< Full VATSIM files
+        BlackMisc::Network::CUrlList m_metarFileUrls; //!< METAR files
+        BlackMisc::Network::CServerList m_fsdServers; //!< FSD test servers
+        BlackMisc::Network::CServerList m_voiceServers; //!< voice servers
 
         BLACK_METACLASS(
             CVatsimSetup,
@@ -124,7 +124,11 @@ namespace BlackCore::Data
         static constexpr bool isPinned() { return true; }
 
         //! \copydoc BlackMisc::TDataTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("VATSIM setup"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("VATSIM setup");
+            return name;
+        }
     };
 
     //! Trait for last (most recently) used VATSIM server and user
@@ -137,7 +141,11 @@ namespace BlackCore::Data
         static constexpr bool isPinned() { return true; }
 
         //! \copydoc BlackMisc::TDataTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("Last VATSIM server"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("Last VATSIM server");
+            return name;
+        }
     };
 } // ns
 

@@ -17,13 +17,13 @@
 namespace BlackMisc
 {
     ITimestampBased::ITimestampBased()
-    { }
+    {}
 
     ITimestampBased::ITimestampBased(qint64 msSincePoch) : m_timestampMSecsSinceEpoch(msSincePoch)
-    { }
+    {}
 
     ITimestampBased::ITimestampBased(const QDateTime &timestamp) : m_timestampMSecsSinceEpoch(timestamp.toMSecsSinceEpoch())
-    { }
+    {}
 
     QDateTime ITimestampBased::getUtcTimestamp() const
     {
@@ -113,57 +113,57 @@ namespace BlackMisc
     QString ITimestampBased::getFormattedUtcTimestampMdhms() const
     {
         return this->hasValidTimestamp() ?
-               this->getUtcTimestamp().toString("MM-dd hh:mm:ss") :
-               "";
+                   this->getUtcTimestamp().toString("MM-dd hh:mm:ss") :
+                   "";
     }
 
     QString ITimestampBased::getFormattedUtcTimestampMdhmsz() const
     {
         return this->hasValidTimestamp() ?
-               this->getUtcTimestamp().toString("MM-dd hh:mm:ss.zzz") :
-               "";
+                   this->getUtcTimestamp().toString("MM-dd hh:mm:ss.zzz") :
+                   "";
     }
 
     QString ITimestampBased::getFormattedUtcTimestampDhms() const
     {
         return this->hasValidTimestamp() ?
-               this->getUtcTimestamp().toString("dd hh:mm:ss") :
-               "";
+                   this->getUtcTimestamp().toString("dd hh:mm:ss") :
+                   "";
     }
 
     QString ITimestampBased::getFormattedUtcTimestampHms() const
     {
         return this->hasValidTimestamp() ?
-               this->getUtcTimestamp().toString("hh:mm:ss") :
-               "";
+                   this->getUtcTimestamp().toString("hh:mm:ss") :
+                   "";
     }
 
     QString ITimestampBased::getFormattedUtcTimestampHmsz() const
     {
         return this->hasValidTimestamp() ?
-               this->getUtcTimestamp().toString("hh:mm:ss.zzz") :
-               "";
+                   this->getUtcTimestamp().toString("hh:mm:ss.zzz") :
+                   "";
     }
 
     QString ITimestampBased::getFormattedUtcTimestampHm() const
     {
         return this->hasValidTimestamp() ?
-               this->getUtcTimestamp().toString("hh::mm") :
-               "";
+                   this->getUtcTimestamp().toString("hh::mm") :
+                   "";
     }
 
     QString ITimestampBased::getFormattedUtcTimestampYmdhms() const
     {
         return this->hasValidTimestamp() ?
-               this->getUtcTimestamp().toString("yyyy-MM-dd HH:mm:ss") :
-               "";
+                   this->getUtcTimestamp().toString("yyyy-MM-dd HH:mm:ss") :
+                   "";
     }
 
     QString ITimestampBased::getFormattedUtcTimestampYmdhmsz() const
     {
         return this->hasValidTimestamp() ?
-               this->getUtcTimestamp().toString("yyyy-MM-dd HH:mm:ss.zzz") :
-               "";
+                   this->getUtcTimestamp().toString("yyyy-MM-dd HH:mm:ss.zzz") :
+                   "";
     }
 
     bool ITimestampBased::hasValidTimestamp() const
@@ -190,15 +190,15 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexUtcTimestamp:                 return QVariant::fromValue(this->getUtcTimestamp());
-            case IndexMSecsSinceEpoch:              return QVariant::fromValue(this->getMSecsSinceEpoch());
-            case IndexUtcTimestampFormattedDhms:    return QVariant::fromValue(this->getFormattedUtcTimestampDhms());
-            case IndexUtcTimestampFormattedHm:      return QVariant::fromValue(this->getFormattedUtcTimestampHm());
-            case IndexUtcTimestampFormattedHms:     return QVariant::fromValue(this->getFormattedUtcTimestampHms());
-            case IndexUtcTimestampFormattedYmdhms:  return QVariant::fromValue(this->getFormattedUtcTimestampYmdhms());
+            case IndexUtcTimestamp: return QVariant::fromValue(this->getUtcTimestamp());
+            case IndexMSecsSinceEpoch: return QVariant::fromValue(this->getMSecsSinceEpoch());
+            case IndexUtcTimestampFormattedDhms: return QVariant::fromValue(this->getFormattedUtcTimestampDhms());
+            case IndexUtcTimestampFormattedHm: return QVariant::fromValue(this->getFormattedUtcTimestampHm());
+            case IndexUtcTimestampFormattedHms: return QVariant::fromValue(this->getFormattedUtcTimestampHms());
+            case IndexUtcTimestampFormattedYmdhms: return QVariant::fromValue(this->getFormattedUtcTimestampYmdhms());
             case IndexUtcTimestampFormattedYmdhmsz: return QVariant::fromValue(this->getFormattedUtcTimestampYmdhmsz());
-            case IndexUtcTimestampFormattedMdhms:   return QVariant::fromValue(this->getFormattedUtcTimestampMdhms());
-            case IndexUtcTimestampFormattedMdhmsz:  return QVariant::fromValue(this->getFormattedUtcTimestampMdhmsz());
+            case IndexUtcTimestampFormattedMdhms: return QVariant::fromValue(this->getFormattedUtcTimestampMdhms());
+            case IndexUtcTimestampFormattedMdhmsz: return QVariant::fromValue(this->getFormattedUtcTimestampMdhmsz());
             default: break;
             }
         }
@@ -221,10 +221,10 @@ namespace BlackMisc
             case IndexUtcTimestampFormattedHm:
             case IndexUtcTimestampFormattedHms:
             case IndexUtcTimestampFormattedDhms:
-                {
-                    const QDateTime dt = fromStringUtc(variant.toString());
-                    m_timestampMSecsSinceEpoch = dt.toMSecsSinceEpoch();
-                }
+            {
+                const QDateTime dt = fromStringUtc(variant.toString());
+                m_timestampMSecsSinceEpoch = dt.toMSecsSinceEpoch();
+            }
                 return;
             default: break;
             }
@@ -314,9 +314,18 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexOffsetMs: { return QVariant::fromValue(m_timeOffsetMs); }
-            case IndexAdjustedMsWithOffset: { return QVariant::fromValue(this->getAdjustedMSecsSinceEpoch()); }
-            case IndexOffsetWithUnit: { return QVariant::fromValue(this->getTimeOffsetWithUnit()); }
+            case IndexOffsetMs:
+            {
+                return QVariant::fromValue(m_timeOffsetMs);
+            }
+            case IndexAdjustedMsWithOffset:
+            {
+                return QVariant::fromValue(this->getAdjustedMSecsSinceEpoch());
+            }
+            case IndexOffsetWithUnit:
+            {
+                return QVariant::fromValue(this->getTimeOffsetWithUnit());
+            }
             default: break;
             }
         }
@@ -327,13 +336,21 @@ namespace BlackMisc
 
     void ITimestampWithOffsetBased::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            ITimestampBased::setPropertyByIndex(index, variant);
+            return;
+        }
         if (!index.isEmpty())
         {
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexOffsetMs: { m_timeOffsetMs = variant.value<qint64>(); return; }
+            case IndexOffsetMs:
+            {
+                m_timeOffsetMs = variant.value<qint64>();
+                return;
+            }
             case IndexAdjustedMsWithOffset: return; // read only
             case IndexOffsetWithUnit: return; // read only
             default: break;
@@ -352,8 +369,14 @@ namespace BlackMisc
             switch (i)
             {
             case IndexOffsetWithUnit:
-            case IndexOffsetMs: { return Compare::compare(m_timeOffsetMs, compareValue.m_timeOffsetMs); }
-            case IndexAdjustedMsWithOffset: { return Compare::compare(this->getAdjustedMSecsSinceEpoch(), compareValue.getAdjustedMSecsSinceEpoch()); }
+            case IndexOffsetMs:
+            {
+                return Compare::compare(m_timeOffsetMs, compareValue.m_timeOffsetMs);
+            }
+            case IndexAdjustedMsWithOffset:
+            {
+                return Compare::compare(this->getAdjustedMSecsSinceEpoch(), compareValue.getAdjustedMSecsSinceEpoch());
+            }
             default: break;
             }
         }

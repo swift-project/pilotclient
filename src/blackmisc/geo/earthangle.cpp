@@ -20,28 +20,28 @@ using namespace BlackMisc::PhysicalQuantities;
 namespace BlackMisc::Geo
 {
     template <class LATorLON>
-    CEarthAngle<LATorLON> &CEarthAngle<LATorLON>::operator +=(const CEarthAngle &latOrLon)
+    CEarthAngle<LATorLON> &CEarthAngle<LATorLON>::operator+=(const CEarthAngle &latOrLon)
     {
-        this->PhysicalQuantities::CAngle::operator +=(latOrLon);
+        this->PhysicalQuantities::CAngle::operator+=(latOrLon);
         return *this;
     }
 
     template <class LATorLON>
-    CEarthAngle<LATorLON> &CEarthAngle<LATorLON>::operator -=(const CEarthAngle &latOrLon)
+    CEarthAngle<LATorLON> &CEarthAngle<LATorLON>::operator-=(const CEarthAngle &latOrLon)
     {
-        this->PhysicalQuantities::CAngle::operator -=(latOrLon);
+        this->PhysicalQuantities::CAngle::operator-=(latOrLon);
         return *this;
     }
 
     template <class LATorLON>
-    CEarthAngle<LATorLON> &CEarthAngle<LATorLON>::operator *=(double multiply)
+    CEarthAngle<LATorLON> &CEarthAngle<LATorLON>::operator*=(double multiply)
     {
-        this->PhysicalQuantities::CAngle::operator *=(multiply);
+        this->PhysicalQuantities::CAngle::operator*=(multiply);
         return *this;
     }
 
     template <class LATorLON>
-    LATorLON CEarthAngle<LATorLON>::operator +(const CEarthAngle &latOrLon) const
+    LATorLON CEarthAngle<LATorLON>::operator+(const CEarthAngle &latOrLon) const
     {
         LATorLON l(*this);
         l += latOrLon;
@@ -49,7 +49,7 @@ namespace BlackMisc::Geo
     }
 
     template <class LATorLON>
-    LATorLON CEarthAngle<LATorLON>::operator -(const CEarthAngle &latOrLon) const
+    LATorLON CEarthAngle<LATorLON>::operator-(const CEarthAngle &latOrLon) const
     {
         LATorLON l(*this);
         l -= latOrLon;
@@ -57,7 +57,7 @@ namespace BlackMisc::Geo
     }
 
     template <class LATorLON>
-    LATorLON CEarthAngle<LATorLON>::operator *(double multiply) const
+    LATorLON CEarthAngle<LATorLON>::operator*(double multiply) const
     {
         LATorLON l(*this);
         l *= multiply;
@@ -133,17 +133,17 @@ namespace BlackMisc::Geo
     template <class LATorLON>
     CEarthAngle<LATorLON>::CEarthAngle()
         : PhysicalQuantities::CAngle(0.0, BlackMisc::PhysicalQuantities::CAngleUnit::deg())
-    { }
+    {}
 
     template <class LATorLON>
     CEarthAngle<LATorLON>::CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit)
         : PhysicalQuantities::CAngle(value, unit)
-    { }
+    {}
 
     template <class LATorLON>
     CEarthAngle<LATorLON>::CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle)
         : PhysicalQuantities::CAngle(angle)
-    { }
+    {}
 
     template <class LATorLON>
     QString CEarthAngle<LATorLON>::convertToQString(bool i18n) const
@@ -152,10 +152,16 @@ namespace BlackMisc::Geo
     }
 
     template <class LATorLON>
-    LATorLON const *CEarthAngle<LATorLON>::derived() const { return static_cast<LATorLON const *>(this); }
+    LATorLON const *CEarthAngle<LATorLON>::derived() const
+    {
+        return static_cast<LATorLON const *>(this);
+    }
 
     template <class LATorLON>
-    LATorLON *CEarthAngle<LATorLON>::derived() { return static_cast<LATorLON *>(this); }
+    LATorLON *CEarthAngle<LATorLON>::derived()
+    {
+        return static_cast<LATorLON *>(this);
+    }
 
     template <class LATorLON>
     CIcons::IconIndex CEarthAngle<LATorLON>::toIcon() const
@@ -163,7 +169,7 @@ namespace BlackMisc::Geo
         return CIcons::GeoPosition;
     }
 
-    template<class LATorLON>
+    template <class LATorLON>
     QString CEarthAngle<LATorLON>::toWgs84(const QChar pos, const QChar neg, int fractionalDigits) const
     {
         const CAngle::DegMinSecFractionalSec v = this->asSexagesimalDegMinSec(true);

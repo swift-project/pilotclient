@@ -19,7 +19,10 @@
 #include <QScopedPointer>
 #include <memory>
 
-namespace Ui { class CAircraftIcaoFilterBar; }
+namespace Ui
+{
+    class CAircraftIcaoFilterBar;
+}
 namespace BlackMisc::Aviation
 {
     class CAircraftIcaoCode;
@@ -44,7 +47,7 @@ namespace BlackGui::Filters
         virtual ~CAircraftIcaoFilterBar() override;
 
         //! \copydoc Models::IModelFilterProvider::createModelFilter
-        std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Aviation::CAircraftIcaoCodeList> > createModelFilter() const override;
+        std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Aviation::CAircraftIcaoCodeList>> createModelFilter() const override;
 
         //! Filter by ICAO object as default values
         void filter(const BlackMisc::Aviation::CAircraftIcaoCode &icao);

@@ -19,9 +19,9 @@ namespace BlackMisc::Simulation
     //! Lookup log.messages
     enum ReverseLookupLoggingFlag
     {
-        RevLogDisabled          = 0,
-        RevLogEnabled           = 1 << 0,
-        RevLogSimplifiedInfo    = 1 << 1,
+        RevLogDisabled = 0,
+        RevLogEnabled = 1 << 0,
+        RevLogSimplifiedInfo = 1 << 1,
         RevLogEnabledSimplified = RevLogEnabled | RevLogSimplifiedInfo
     };
     Q_DECLARE_FLAGS(ReverseLookupLogging, ReverseLookupLoggingFlag)

@@ -42,10 +42,10 @@ namespace BlackSimPlugin::FsxCommon
 
         //! Constructor providing initial situation/parts
         CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft,
-                            DWORD requestId,
-                            BlackMisc::Simulation::ISimulationEnvironmentProvider *simEnvProvider, BlackMisc::Simulation::IInterpolationSetupProvider *setupProvider,
-                            BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                            BlackMisc::Simulation::CInterpolationLogger *logger);
+                          DWORD requestId,
+                          BlackMisc::Simulation::ISimulationEnvironmentProvider *simEnvProvider, BlackMisc::Simulation::IInterpolationSetupProvider *setupProvider,
+                          BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                          BlackMisc::Simulation::CInterpolationLogger *logger);
 
         //! Get callsign
         const BlackMisc::Aviation::CCallsign &getCallsign() const { return m_aircraft.getCallsign(); }
@@ -198,7 +198,11 @@ namespace BlackSimPlugin::FsxCommon
         GUID getCameraGUID() const { return m_cameraGuid; }
 
         //! Set camera GUID
-        void setCameraGUID(GUID guid) { m_cameraGuid = guid; m_camera = true; }
+        void setCameraGUID(GUID guid)
+        {
+            m_cameraGuid = guid;
+            m_camera = true;
+        }
 
         //! No camera anymore
         void removeCamera() { m_camera = false; }
@@ -249,7 +253,10 @@ namespace BlackSimPlugin::FsxCommon
         void increaseAddingExceptions() { m_addingExceptions++; }
 
         //! Decrease adding exception
-        void decreaseAddingExceptions() { if (m_addingExceptions > 0) { m_addingExceptions--; } }
+        void decreaseAddingExceptions()
+        {
+            if (m_addingExceptions > 0) { m_addingExceptions--; }
+        }
 
         //! Adding and directly removed
         int getAddingDirectlyRemoved() const { return m_addingDirectlyRemoved; }
@@ -303,25 +310,25 @@ namespace BlackSimPlugin::FsxCommon
         BlackMisc::Simulation::CSimulatedAircraft m_aircraft; //!< corresponding aircraft
         SimObjectType m_type = AircraftNonAtc;
         DWORD m_requestId = 0;
-        DWORD m_objectId  = 0;
+        DWORD m_objectId = 0;
         bool m_validRequestId = false;
-        bool m_validObjectId  = false;
+        bool m_validObjectId = false;
         bool m_confirmedAdded = false;
         bool m_pendingRemoved = false;
-        bool m_camera         = false;
+        bool m_camera = false;
         bool m_removedWhileAdding = false;
         bool m_addedWhileRemoving = false;
-        int  m_addingExceptions      = 0; //!< exception when added
-        int  m_addingDirectlyRemoved = 0; //!< added, but removed directly afterwards
+        int m_addingExceptions = 0; //!< exception when added
+        int m_addingDirectlyRemoved = 0; //!< added, but removed directly afterwards
         qint64 m_tsCreated = -1;
-        GUID   m_cameraGuid;
+        GUID m_cameraGuid;
         SIMCONNECT_DATA_XYZ m_cameraPosition;
         SIMCONNECT_DATA_PBH m_cameraRotation;
         QByteArray m_callsignByteArray;
         QString m_observerName;
-        BlackMisc::Aviation::CAircraftLights m_currentLightsInSim { nullptr };    //!< current lights to know state for toggling
-        BlackMisc::Aviation::CAircraftLights m_lightsAsSent       { nullptr };    //!< lights as sent to simulator
-        SIMCONNECT_PERIOD m_requestSimDataPeriod = SIMCONNECT_PERIOD_NEVER;       //!< how often do we query ground elevation
+        BlackMisc::Aviation::CAircraftLights m_currentLightsInSim { nullptr }; //!< current lights to know state for toggling
+        BlackMisc::Aviation::CAircraftLights m_lightsAsSent { nullptr }; //!< lights as sent to simulator
+        SIMCONNECT_PERIOD m_requestSimDataPeriod = SIMCONNECT_PERIOD_NEVER; //!< how often do we query ground elevation
         QSharedPointer<BlackMisc::Simulation::CInterpolatorMulti> m_interpolator; //!< shared pointer because CSimConnectObject can be copied
     };
 

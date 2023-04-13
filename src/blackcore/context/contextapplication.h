@@ -42,7 +42,10 @@
 #define BLACKCORE_CONTEXTAPPLICATION_OBJECTPATH "/application"
 
 class QDBusConnection;
-namespace BlackMisc { class CDBusServer; }
+namespace BlackMisc
+{
+    class CDBusServer;
+}
 namespace BlackCore
 {
     class CCoreFacade;

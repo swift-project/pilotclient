@@ -40,9 +40,9 @@ namespace BlackMisc
         //! List without front element, or empty list if not applicable
         Q_REQUIRED_RESULT CPropertyIndexList copyFrontRemoved() const;
     };
-} //namespace
+} // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::CPropertyIndexList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::CPropertyIndex>)
 
-#endif //guard
+#endif // guard

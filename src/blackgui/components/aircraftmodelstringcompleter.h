@@ -20,7 +20,10 @@
 #include <QCompleter>
 #include <QFlags>
 
-namespace Ui { class CAircraftModelStringCompleter; }
+namespace Ui
+{
+    class CAircraftModelStringCompleter;
+}
 namespace BlackGui::Components
 {
     /*!
@@ -31,14 +34,13 @@ namespace BlackGui::Components
         Q_OBJECT
 
     public:
-
         //! Sources for string completion
         enum CompleterSourceFlag
         {
-            None        = 0,      //!< normally used to indicate nothing was loaded
-            DB          = 1 << 0,
-            ModelSet    = 1 << 1,
-            OwnModels   = 1 << 2
+            None = 0, //!< normally used to indicate nothing was loaded
+            DB = 1 << 0,
+            ModelSet = 1 << 1,
+            OwnModels = 1 << 2
         };
         Q_DECLARE_FLAGS(CompleterSource, CompleterSourceFlag)
 
@@ -96,7 +98,7 @@ namespace BlackGui::Components
         void onSwiftModelDataRead();
 
     private:
-        QScopedPointer <Ui::CAircraftModelStringCompleter> ui;
+        QScopedPointer<Ui::CAircraftModelStringCompleter> ui;
         // model set completer data are fetched from context
         BlackMisc::Simulation::Data::CModelCaches m_modelCaches { false, this }; //!< all models, works locally only
         BlackMisc::Simulation::CSimulatorInfo m_currentSimulator;

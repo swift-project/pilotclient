@@ -20,26 +20,24 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Weather, CGridPoint)
 namespace BlackMisc::Weather
 {
     CGridPoint::CGridPoint(const QString &identifier,
-                            const ICoordinateGeodetic &position) :
-        m_identifier(identifier),
-        m_position(position)
-    { }
+                           const ICoordinateGeodetic &position) : m_identifier(identifier),
+                                                                  m_position(position)
+    {}
 
     CGridPoint::CGridPoint(const QString &identifier,
-                            const Geo::ICoordinateGeodetic &position,
-                            const CCloudLayerList &cloudLayers,
-                            const CTemperatureLayerList &temperatureLayers,
-                            const CVisibilityLayerList &visibilityLayers,
-                            const CWindLayerList &windLayers,
-                            const CPressure &pressureAtMsl) :
-        m_identifier(identifier),
-        m_position(position),
-        m_cloudLayers(cloudLayers),
-        m_temperatureLayers(temperatureLayers),
-        m_visibilityLayers(visibilityLayers),
-        m_windLayers(windLayers),
-        m_pressureAtMsl(pressureAtMsl)
-    { }
+                           const Geo::ICoordinateGeodetic &position,
+                           const CCloudLayerList &cloudLayers,
+                           const CTemperatureLayerList &temperatureLayers,
+                           const CVisibilityLayerList &visibilityLayers,
+                           const CWindLayerList &windLayers,
+                           const CPressure &pressureAtMsl) : m_identifier(identifier),
+                                                             m_position(position),
+                                                             m_cloudLayers(cloudLayers),
+                                                             m_temperatureLayers(temperatureLayers),
+                                                             m_visibilityLayers(visibilityLayers),
+                                                             m_windLayers(windLayers),
+                                                             m_pressureAtMsl(pressureAtMsl)
+    {}
 
     void CGridPoint::copyWeatherDataFrom(const CGridPoint &other)
     {
@@ -75,7 +73,11 @@ namespace BlackMisc::Weather
 
     void CGridPoint::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CGridPoint>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CGridPoint>();
+            return;
+        }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

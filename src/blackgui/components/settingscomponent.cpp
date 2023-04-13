@@ -38,9 +38,8 @@ using namespace BlackConfig;
 
 namespace BlackGui::Components
 {
-    CSettingsComponent::CSettingsComponent(QWidget *parent) :
-        QTabWidget(parent),
-        ui(new Ui::CSettingsComponent)
+    CSettingsComponent::CSettingsComponent(QWidget *parent) : QTabWidget(parent),
+                                                              ui(new Ui::CSettingsComponent)
     {
         ui->setupUi(this);
 
@@ -67,7 +66,7 @@ namespace BlackGui::Components
     }
 
     CSettingsComponent::~CSettingsComponent()
-    { }
+    {}
 
     void CSettingsComponent::initActions()
     {
@@ -156,17 +155,61 @@ namespace BlackGui::Components
     void CSettingsComponent::onOverviewButtonClicked()
     {
         const QObject *sender = QObject::sender();
-        if (sender == ui->pb_Advanced) { this->setCurrentIndex(SettingTabAdvanced); return; }
-        if (sender == ui->pb_Audio) { this->setCurrentIndex(SettingTabAudio); return; }
-        if (sender == ui->pb_Gui) { this->setCurrentIndex(SettingTabGui); return; }
-        if (sender == ui->pb_Hotkeys) { this->setCurrentIndex(SettingTabHotkeys); return; }
-        if (sender == ui->pb_Network) { this->setCurrentIndex(SettingTabNetwork); return; }
-        if (sender == ui->pb_Servers) { this->setCurrentIndex(SettingTabServers); return; }
-        if (sender == ui->pb_Simulator) { this->setCurrentIndex(SettingTabSimulator); return; }
-        if (sender == ui->pb_SimulatorBasics) { this->setCurrentIndex(SettingTabSimulatorBasics); return; }
-        if (sender == ui->pb_DataLoadAndCaches) { this->setCurrentIndex(SettingTabDataAndCaches); return; }
-        if (sender == ui->pb_SimulatorMessages) { this->setCurrentIndex(SettingTabSimulatorMessages); return; }
-        if (sender == ui->pb_Matching) { this->setCurrentIndex(SettingTabMatching); return; }
+        if (sender == ui->pb_Advanced)
+        {
+            this->setCurrentIndex(SettingTabAdvanced);
+            return;
+        }
+        if (sender == ui->pb_Audio)
+        {
+            this->setCurrentIndex(SettingTabAudio);
+            return;
+        }
+        if (sender == ui->pb_Gui)
+        {
+            this->setCurrentIndex(SettingTabGui);
+            return;
+        }
+        if (sender == ui->pb_Hotkeys)
+        {
+            this->setCurrentIndex(SettingTabHotkeys);
+            return;
+        }
+        if (sender == ui->pb_Network)
+        {
+            this->setCurrentIndex(SettingTabNetwork);
+            return;
+        }
+        if (sender == ui->pb_Servers)
+        {
+            this->setCurrentIndex(SettingTabServers);
+            return;
+        }
+        if (sender == ui->pb_Simulator)
+        {
+            this->setCurrentIndex(SettingTabSimulator);
+            return;
+        }
+        if (sender == ui->pb_SimulatorBasics)
+        {
+            this->setCurrentIndex(SettingTabSimulatorBasics);
+            return;
+        }
+        if (sender == ui->pb_DataLoadAndCaches)
+        {
+            this->setCurrentIndex(SettingTabDataAndCaches);
+            return;
+        }
+        if (sender == ui->pb_SimulatorMessages)
+        {
+            this->setCurrentIndex(SettingTabSimulatorMessages);
+            return;
+        }
+        if (sender == ui->pb_Matching)
+        {
+            this->setCurrentIndex(SettingTabMatching);
+            return;
+        }
         this->setCurrentIndex(SettingTabOverview);
     }
 
@@ -174,14 +217,50 @@ namespace BlackGui::Components
     {
         const QString a = QObject::sender()->objectName().toLower().trimmed();
         if (a.isEmpty()) { return; }
-        if (a.contains("audio")) { this->setCurrentIndex(SettingTabAudio); return; }
-        if (a.contains("data")) { this->setCurrentIndex(SettingTabDataAndCaches); return; }
-        if (a.contains("gui")) { this->setCurrentIndex(SettingTabGui); return; }
-        if (a.contains("hot")) { this->setCurrentIndex(SettingTabHotkeys); return; }
-        if (a.contains("network")) { this->setCurrentIndex(SettingTabNetwork); return; }
-        if (a.contains("overview")) { this->setCurrentIndex(SettingTabOverview); return; }
-        if (a.contains("simulator")) { this->setCurrentIndex(SettingTabSimulator); return; }
-        if (a.contains("matching")) { this->setCurrentIndex(SettingTabMatching); return; }
-        if (a.contains("advanced")) { this->setCurrentIndex(SettingTabAdvanced); return; }
+        if (a.contains("audio"))
+        {
+            this->setCurrentIndex(SettingTabAudio);
+            return;
+        }
+        if (a.contains("data"))
+        {
+            this->setCurrentIndex(SettingTabDataAndCaches);
+            return;
+        }
+        if (a.contains("gui"))
+        {
+            this->setCurrentIndex(SettingTabGui);
+            return;
+        }
+        if (a.contains("hot"))
+        {
+            this->setCurrentIndex(SettingTabHotkeys);
+            return;
+        }
+        if (a.contains("network"))
+        {
+            this->setCurrentIndex(SettingTabNetwork);
+            return;
+        }
+        if (a.contains("overview"))
+        {
+            this->setCurrentIndex(SettingTabOverview);
+            return;
+        }
+        if (a.contains("simulator"))
+        {
+            this->setCurrentIndex(SettingTabSimulator);
+            return;
+        }
+        if (a.contains("matching"))
+        {
+            this->setCurrentIndex(SettingTabMatching);
+            return;
+        }
+        if (a.contains("advanced"))
+        {
+            this->setCurrentIndex(SettingTabAdvanced);
+            return;
+        }
     }
 } // namespace

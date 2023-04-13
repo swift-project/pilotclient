@@ -16,7 +16,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CAudioAdvancedDistributedComponent; }
+namespace Ui
+{
+    class CAudioAdvancedDistributedComponent;
+}
 namespace BlackGui::Components
 {
     //! Adv. and sitributed audio setup

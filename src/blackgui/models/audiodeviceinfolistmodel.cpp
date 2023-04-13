@@ -18,8 +18,7 @@ using namespace BlackMisc::Audio;
 
 namespace BlackGui::Models
 {
-    CAudioDeviceInfoListModel::CAudioDeviceInfoListModel(QObject *parent) :
-        CListModelBase("AudioDeviceInfoListModel", parent)
+    CAudioDeviceInfoListModel::CAudioDeviceInfoListModel(QObject *parent) : CListModelBase("AudioDeviceInfoListModel", parent)
     {
         m_columns.addColumn(CColumn::standardString("type", CAudioDeviceInfo::IndexDeviceTypeAsString));
         m_columns.addColumn(CColumn::standardString("name", CAudioDeviceInfo::IndexName));

@@ -20,8 +20,7 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackGui::Models
 {
-    CAircraftSituationChangeListModel::CAircraftSituationChangeListModel(QObject *parent) :
-        CListModelTimestampWithOffsetObjects<CAircraftSituationChangeList, true>("ViewAircraftPartsList", parent)
+    CAircraftSituationChangeListModel::CAircraftSituationChangeListModel(QObject *parent) : CListModelTimestampWithOffsetObjects<CAircraftSituationChangeList, true>("ViewAircraftPartsList", parent)
     {
         this->addTimestampOffsetColumns();
 
@@ -40,6 +39,5 @@ namespace BlackGui::Models
         m_columns.addColumn(CColumn("push", CAircraftSituationChange::IndexContainsPushBack, new CBoolIconFormatter("contains pushback", "no pushback")));
         m_columns.addColumn(CColumn("to.", CAircraftSituationChange::IndexJustTakingOff, new CBoolIconFormatter("just takeoff", "no takeoff")));
         m_columns.addColumn(CColumn("td.", CAircraftSituationChange::IndexJustTouchingDown, new CBoolIconFormatter("just touching down", "no touchdown")));
-
     }
 } // namespace

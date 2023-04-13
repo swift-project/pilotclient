@@ -22,11 +22,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAircraftSituation, CAircraftS
 namespace BlackMisc::Aviation
 {
     CAircraftSituationList::CAircraftSituationList()
-    { }
+    {}
 
-    CAircraftSituationList::CAircraftSituationList(const CSequence<CAircraftSituation> &other) :
-        CSequence<CAircraftSituation>(other)
-    { }
+    CAircraftSituationList::CAircraftSituationList(const CSequence<CAircraftSituation> &other) : CSequence<CAircraftSituation>(other)
+    {}
 
     CAircraftSituation CAircraftSituationList::frontOrNull() const
     {
@@ -228,7 +227,7 @@ namespace BlackMisc::Aviation
 
     QPair<bool, CAircraftSituation::IsOnGround> CAircraftSituationList::isGndFlagStableChanging(bool alreadySortedLatestFirst) const
     {
-        if (this->size() < 2) { return  QPair<bool, CAircraftSituation::IsOnGround>(false, CAircraftSituation::OnGroundSituationUnknown); }
+        if (this->size() < 2) { return QPair<bool, CAircraftSituation::IsOnGround>(false, CAircraftSituation::OnGroundSituationUnknown); }
 
         const CAircraftSituationList sorted(alreadySortedLatestFirst ? (*this) : this->getSortedAdjustedLatestFirst());
         const CAircraftSituation::IsOnGround f = sorted.front().getOnGround();
@@ -241,7 +240,11 @@ namespace BlackMisc::Aviation
         for (const CAircraftSituation &s : sorted)
         {
             if (!changed && s.getOnGround() == f) { continue; } // find 1st changing
-            if (!changed) { changed = true; continue; } // just changed
+            if (!changed)
+            {
+                changed = true;
+                continue;
+            } // just changed
             if (s.getOnGround() != t) { return ret; } // jitter, something like gnd, no gnd, gnd
         }
         ret.first = changed;
@@ -429,7 +432,6 @@ namespace BlackMisc::Aviation
         }
         return values;
     }
-
 
     QList<double> CAircraftSituationList::elevationValues(const CLengthUnit &unit) const
     {

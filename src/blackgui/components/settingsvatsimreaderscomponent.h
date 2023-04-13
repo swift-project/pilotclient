@@ -15,7 +15,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CSettingsVatsimReadersComponent; }
+namespace Ui
+{
+    class CSettingsVatsimReadersComponent;
+}
 
 namespace BlackGui::Components
 {
@@ -42,7 +45,7 @@ namespace BlackGui::Components
         QScopedPointer<Ui::CSettingsVatsimReadersComponent> ui;
         BlackMisc::CSetting<BlackCore::Vatsim::TVatsimBookings> m_settingsBookings { this, &CSettingsVatsimReadersComponent::onSettingsChanged };
         BlackMisc::CSetting<BlackCore::Vatsim::TVatsimDataFile> m_settingsDataFile { this, &CSettingsVatsimReadersComponent::onSettingsChanged };
-        BlackMisc::CSetting<BlackCore::Vatsim::TVatsimMetars>   m_settingsMetars   { this, &CSettingsVatsimReadersComponent::onSettingsChanged };
+        BlackMisc::CSetting<BlackCore::Vatsim::TVatsimMetars> m_settingsMetars { this, &CSettingsVatsimReadersComponent::onSettingsChanged };
     };
 } // ns
 

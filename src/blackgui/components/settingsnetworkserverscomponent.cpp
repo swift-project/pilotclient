@@ -35,9 +35,8 @@ using namespace BlackMisc::Audio;
 
 namespace BlackGui::Components
 {
-    CSettingsNetworkServersComponent::CSettingsNetworkServersComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CSettingsNetworkServersComponent)
+    CSettingsNetworkServersComponent::CSettingsNetworkServersComponent(QWidget *parent) : QFrame(parent),
+                                                                                          ui(new Ui::CSettingsNetworkServersComponent)
     {
         ui->setupUi(this);
 
@@ -49,7 +48,7 @@ namespace BlackGui::Components
     }
 
     CSettingsNetworkServersComponent::~CSettingsNetworkServersComponent()
-    { }
+    {}
 
     void CSettingsNetworkServersComponent::reloadSettings()
     {

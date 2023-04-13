@@ -47,7 +47,7 @@ namespace BlackCore::Afv::Clients
 
         //! @{
         //! AFV client properties
-        Q_PROPERTY(double inputVolumePeakVU  READ getInputVolumePeakVU  NOTIFY inputVolumePeakVU)
+        Q_PROPERTY(double inputVolumePeakVU READ getInputVolumePeakVU NOTIFY inputVolumePeakVU)
         Q_PROPERTY(double outputVolumePeakVU READ getOutputVolumePeakVU NOTIFY outputVolumePeakVU)
         Q_PROPERTY(BlackCore::Afv::Clients::CAfvClient::ConnectionStatus connectionStatus READ getConnectionStatus NOTIFY connectionStatusChanged)
         Q_PROPERTY(QString receivingCallsignsCom1 READ getReceivingCallsignsStringCom1 NOTIFY receivingCallsignsChanged)
@@ -59,7 +59,11 @@ namespace BlackCore::Afv::Clients
         static const QStringList &getLogCategories();
 
         //! Connection status
-        enum ConnectionStatus { Disconnected, Connected };
+        enum ConnectionStatus
+        {
+            Disconnected,
+            Connected
+        };
         Q_ENUM(ConnectionStatus)
 
         //! Ctor
@@ -94,7 +98,7 @@ namespace BlackCore::Afv::Clients
         //! \remark runs in thread of CAfvClient object and is ASYNC when called from another thread
         void disconnectFrom(bool stop);
         Q_INVOKABLE void disconnectFrom() { this->disconnectFrom(false); }
-        void disconnectFromAndStop()      { this->disconnectFrom(true); }
+        void disconnectFromAndStop() { this->disconnectFrom(true); }
         //! @}
 
         //! @{
@@ -170,14 +174,14 @@ namespace BlackCore::Afv::Clients
         //! @{
         //! Simplified enable/disable
         //! \threadsafe
-        void setRxTx(bool  rx1, bool  tx1, bool rx2,  bool  tx2);
+        void setRxTx(bool rx1, bool tx1, bool rx2, bool tx2);
         void getRxTx(bool &rx1, bool &tx1, bool &rx2, bool &tx2) const;
         //! @}
 
         //! @{
         //! Get transceivers
         //! \threadsafe
-        QVector<TransceiverDto>   getTransceivers() const;
+        QVector<TransceiverDto> getTransceivers() const;
         QVector<TxTransceiverDto> getTransmittingTransceivers() const;
         QSet<quint16> getEnabledTransceivers() const;
         //! @}
@@ -185,7 +189,7 @@ namespace BlackCore::Afv::Clients
         //! @{
         //! Aliased stations enabled?
         //! \threadsafe
-        bool isAliasedStationsEnabled() const    { return m_enableAliased; }
+        bool isAliasedStationsEnabled() const { return m_enableAliased; }
         void enableAliasedStations(bool enabled) { m_enableAliased = enabled; }
         //! @}
 
@@ -217,7 +221,7 @@ namespace BlackCore::Afv::Clients
         //! Loopback
         //! \threadsafe
         Q_INVOKABLE void setLoopBack(bool on) { m_loopbackOn = on; }
-        Q_INVOKABLE bool isLoopback() const   { return m_loopbackOn; }
+        Q_INVOKABLE bool isLoopback() const { return m_loopbackOn; }
         //! @}
 
         //! @{
@@ -259,7 +263,7 @@ namespace BlackCore::Afv::Clients
         //! @{
         //! Recently used device
         //! \threadsafe
-        const BlackMisc::Audio::CAudioDeviceInfo &getInputDevice()  const;
+        const BlackMisc::Audio::CAudioDeviceInfo &getInputDevice() const;
         const BlackMisc::Audio::CAudioDeviceInfo &getOutputDevice() const;
         bool usesSameDevices(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
         //! @}
@@ -324,8 +328,8 @@ namespace BlackCore::Afv::Clients
         virtual void cleanup() override;
 
     private:
-        void opusDataAvailable(const Audio::OpusDataAvailableArgs &args);  // threadsafe
-        void audioOutDataAvailable(const AudioRxOnTransceiversDto &dto);   // threadsafe
+        void opusDataAvailable(const Audio::OpusDataAvailableArgs &args); // threadsafe
+        void audioOutDataAvailable(const AudioRxOnTransceiversDto &dto); // threadsafe
         void inputVolumeStream(const Audio::InputVolumeStreamArgs &args);
         void outputVolumeStream(const Audio::OutputVolumeStreamArgs &args);
         void inputOpusDataAvailable();
@@ -367,13 +371,13 @@ namespace BlackCore::Afv::Clients
         void getPrefixSuffix(const QString &callsign, QString &prefix, QString &suffix) const;
 
         static constexpr int PositionUpdatesMs = 20000; //!< position timer
-        static constexpr int SampleRate   = 48000;
-        static constexpr int FrameSize    = static_cast<int>(SampleRate * 0.02); //!< 20ms
-        static constexpr double MinDbIn   = -18.0;
-        static constexpr double MaxDbIn   =  18.0;
-        static constexpr double MinDbOut  = -60.0;
-        static constexpr double MaxDbOut  =  18.0;
-        static constexpr quint32 UniCom   = 122800000;
+        static constexpr int SampleRate = 48000;
+        static constexpr int FrameSize = static_cast<int>(SampleRate * 0.02); //!< 20ms
+        static constexpr double MinDbIn = -18.0;
+        static constexpr double MaxDbIn = 18.0;
+        static constexpr double MinDbOut = -60.0;
+        static constexpr double MaxDbOut = 18.0;
+        static constexpr quint32 UniCom = 122800000;
 
         static quint16 comUnitToTransceiverId(BlackMisc::Aviation::CComSystem::ComUnit comUnit);
         static BlackMisc::Aviation::CComSystem::ComUnit transceiverIdToComUnit(quint16 id);
@@ -382,42 +386,46 @@ namespace BlackCore::Afv::Clients
         BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &CAfvClient::onSettingsChanged };
         QString m_callsign;
 
-        Audio::CInput  *m_input  = nullptr;
+        Audio::CInput *m_input = nullptr;
         Audio::COutput *m_output = nullptr;
 
         Audio::CSoundcardSampleProvider *m_soundcardSampleProvider = nullptr;
         BlackSound::SampleProvider::CVolumeSampleProvider *m_outputSampleProvider = nullptr;
 
-        std::atomic_bool m_transmit        { false };
+        std::atomic_bool m_transmit { false };
         std::atomic_bool m_transmitHistory { false };
         QVector<TxTransceiverDto> m_transmittingTransceivers;
-        QVector<TransceiverDto>   m_transceivers;
-        QSet<quint16>             m_enabledTransceivers;
-        static const QVector<quint16> &allTransceiverIds() { static const QVector<quint16> transceiverIds{0, 1}; return transceiverIds; }
+        QVector<TransceiverDto> m_transceivers;
+        QSet<quint16> m_enabledTransceivers;
+        static const QVector<quint16> &allTransceiverIds()
+        {
+            static const QVector<quint16> transceiverIds { 0, 1 };
+            return transceiverIds;
+        }
 
-        std::atomic_int  m_fsdConnectMismatches { 0 }; //!< FSD no longer connected?
-        std::atomic_int  m_retryConnectAttempt  { 0 }; //!< try to connect the n-th time
-        std::atomic_int  m_heartBeatFailures    { 0 }; //!< voice server heartbeat failures
-        std::atomic_bool m_isStarted          { false };
-        std::atomic_bool m_loopbackOn         { false };
-        std::atomic_bool m_enableAliased      { true  };
-        std::atomic_bool m_winCoInitialized   { false }; //!< Windows only CoInitializeEx
-        std::atomic_bool m_integratedComUnit  { false }; //!< is COM unit sychronized, integrated?
+        std::atomic_int m_fsdConnectMismatches { 0 }; //!< FSD no longer connected?
+        std::atomic_int m_retryConnectAttempt { 0 }; //!< try to connect the n-th time
+        std::atomic_int m_heartBeatFailures { 0 }; //!< voice server heartbeat failures
+        std::atomic_bool m_isStarted { false };
+        std::atomic_bool m_loopbackOn { false };
+        std::atomic_bool m_enableAliased { true };
+        std::atomic_bool m_winCoInitialized { false }; //!< Windows only CoInitializeEx
+        std::atomic_bool m_integratedComUnit { false }; //!< is COM unit sychronized, integrated?
 
-        double m_inputVolumeDb   = 0.0;
+        double m_inputVolumeDb = 0.0;
         int m_outputMasterVolumeNormalized = 0;
         int m_outputVolumeCom1Normalized = 0;
         int m_outputVolumeCom2Normalized = 0;
-        double m_outputVolumeDbCom1  = 0.0;
+        double m_outputVolumeDbCom1 = 0.0;
         double m_outputGainRatioCom1 = 1.0; //!< 0dB
-        double m_outputVolumeDbCom2  = 0.0;
+        double m_outputVolumeDbCom2 = 0.0;
         double m_outputGainRatioCom2 = 1.0; //!< 0dB
         double m_maxDbReadingInPTTInterval = -100;
 
-        QTimer             *m_voiceServerTimer = nullptr;
+        QTimer *m_voiceServerTimer = nullptr;
         QVector<StationDto> m_aliasedStations;
 
-        Audio::InputVolumeStreamArgs  m_inputVolumeStream;
+        Audio::InputVolumeStreamArgs m_inputVolumeStream;
         Audio::OutputVolumeStreamArgs m_outputVolumeStream;
 
         void checkServerHeartbeat();
@@ -437,7 +445,6 @@ namespace BlackCore::Afv::Clients
         mutable QRecursiveMutex m_mutexConnection;
         mutable QRecursiveMutex m_mutexVolume;
         mutable QRecursiveMutex m_mutexSampleProviders;
-
     };
 } // ns
 

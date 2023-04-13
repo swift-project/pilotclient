@@ -30,7 +30,7 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAtcStation)
 namespace BlackMisc::Aviation
 {
     CAtcStation::CAtcStation()
-    { }
+    {}
 
     CAtcStation::CAtcStation(const QString &callsign) : m_callsign(callsign)
     {
@@ -38,12 +38,11 @@ namespace BlackMisc::Aviation
     }
 
     CAtcStation::CAtcStation(const CCallsign &callsign, const CUser &controller, const CFrequency &frequency,
-                                const CCoordinateGeodetic &pos, const CLength &range, bool isOnline,
-                                const QDateTime &bookedFromUtc, const QDateTime &bookedUntilUtc,
-                                const CInformationMessage &atis, const CInformationMessage &metar) :
-        m_callsign(callsign), m_controller(controller), m_frequency(frequency), m_position(pos),
-        m_range(range), m_isOnline(isOnline), m_bookedFromUtc(bookedFromUtc), m_bookedUntilUtc(bookedUntilUtc),
-        m_atis(atis), m_metar(metar)
+                             const CCoordinateGeodetic &pos, const CLength &range, bool isOnline,
+                             const QDateTime &bookedFromUtc, const QDateTime &bookedUntilUtc,
+                             const CInformationMessage &atis, const CInformationMessage &metar) : m_callsign(callsign), m_controller(controller), m_frequency(frequency), m_position(pos),
+                                                                                                  m_range(range), m_isOnline(isOnline), m_bookedFromUtc(bookedFromUtc), m_bookedUntilUtc(bookedUntilUtc),
+                                                                                                  m_atis(atis), m_metar(metar)
     {
         // sync callsigns
         m_callsign.setTypeHint(CCallsign::Atc);
@@ -107,42 +106,42 @@ namespace BlackMisc::Aviation
         static const QString untilUtcI18n(QCoreApplication::translate("Aviation", "until(UTC)"));
 
         const QString s = (i18n ? atcI18n : QStringLiteral("ATC station")) %
-                            u' ' % m_callsign.toQString(i18n) %
-                            u' ' % m_position.toQString(i18n) %
-                            u" online: " % boolToYesNo(m_isOnline) %
+                          u' ' % m_callsign.toQString(i18n) %
+                          u' ' % m_position.toQString(i18n) %
+                          u" online: " % boolToYesNo(m_isOnline) %
 
-                            // controller
-                            (m_controller.isNull() ? QString() :
-                            u' ' % m_controller.toQString(i18n)) %
+                          // controller
+                          (m_controller.isNull() ? QString() :
+                                                   u' ' % m_controller.toQString(i18n)) %
 
-                            // frequency
-                            u' ' % m_frequency.valueRoundedWithUnit(3, i18n) %
+                          // frequency
+                          u' ' % m_frequency.valueRoundedWithUnit(3, i18n) %
 
-                            // ATIS
-                            (!this->hasAtis() ? QString() :
-                            u' ' % m_atis.toQString(i18n)) %
+                          // ATIS
+                          (!this->hasAtis() ? QString() :
+                                              u' ' % m_atis.toQString(i18n)) %
 
-                            // METAR
-                            (!this->hasMetar() ? QString() :
-                            u' ' % m_metar.toQString(i18n)) %
+                          // METAR
+                          (!this->hasMetar() ? QString() :
+                                               u' ' % m_metar.toQString(i18n)) %
 
-                            // range
-                            u' ' % (i18n ? rangeI18n : QStringLiteral("range")) %
-                            u' ' % m_range.toQString(i18n) %
+                          // range
+                          u' ' % (i18n ? rangeI18n : QStringLiteral("range")) %
+                          u' ' % m_range.toQString(i18n) %
 
-                            // distance / bearing
-                            u' ' % ICoordinateWithRelativePosition::convertToQString(i18n) %
+                          // distance / bearing
+                          u' ' % ICoordinateWithRelativePosition::convertToQString(i18n) %
 
-                            // booking from/until
-                            u' ' %
-                            (i18n ? fromUtcI18n : QStringLiteral("from(UTC)")) %
-                            u' ' %
-                            (m_bookedFromUtc.isNull() ? QStringLiteral("-") : m_bookedFromUtc.toString("yy-MM-dd HH:mm")) %
+                          // booking from/until
+                          u' ' %
+                          (i18n ? fromUtcI18n : QStringLiteral("from(UTC)")) %
+                          u' ' %
+                          (m_bookedFromUtc.isNull() ? QStringLiteral("-") : m_bookedFromUtc.toString("yy-MM-dd HH:mm")) %
 
-                            u' ' %
-                            (i18n ? untilUtcI18n : QStringLiteral("until(UTC)")) %
-                            u' ' %
-                            (m_bookedUntilUtc.isNull() ? QStringLiteral("-") : m_bookedUntilUtc.toString("yy-MM-dd HH:mm"));
+                          u' ' %
+                          (i18n ? untilUtcI18n : QStringLiteral("until(UTC)")) %
+                          u' ' %
+                          (m_bookedUntilUtc.isNull() ? QStringLiteral("-") : m_bookedUntilUtc.toString("yy-MM-dd HH:mm"));
 
         return s;
 
@@ -262,7 +261,7 @@ namespace BlackMisc::Aviation
     bool CAtcStation::hasValidBookingTimes() const
     {
         return !m_bookedFromUtc.isNull() && m_bookedFromUtc.isValid() &&
-                !m_bookedUntilUtc.isNull() && m_bookedUntilUtc.isValid();
+               !m_bookedUntilUtc.isNull() && m_bookedUntilUtc.isValid();
     }
 
     void CAtcStation::setBookedFromUntil(const CAtcStation &otherStation)
@@ -275,7 +274,7 @@ namespace BlackMisc::Aviation
     {
         if (!this->hasValidBookingTimes()) { return false; }
         QDateTime now = QDateTime::currentDateTimeUtc();
-        if (m_bookedFromUtc > now)  { return false; }
+        if (m_bookedFromUtc > now) { return false; }
         if (now > m_bookedUntilUtc) { return false; }
         return true;
     }
@@ -367,54 +366,58 @@ namespace BlackMisc::Aviation
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexBookedFrom:  return QVariant::fromValue(m_bookedFromUtc);
+        case IndexBookedFrom: return QVariant::fromValue(m_bookedFromUtc);
         case IndexBookedUntil: return QVariant::fromValue(m_bookedUntilUtc);
-        case IndexCallsign:    return m_callsign.propertyByIndex(index.copyFrontRemoved());
-        case IndexCallsignString:             return this->getCallsignAsString();
+        case IndexCallsign: return m_callsign.propertyByIndex(index.copyFrontRemoved());
+        case IndexCallsignString: return this->getCallsignAsString();
         case IndexCallsignStringCrossCopuled: return this->getCallsignAsStringCrossCoupled();
-        case IndexController:  return m_controller.propertyByIndex(index.copyFrontRemoved());
-        case IndexFrequency:   return m_frequency.propertyByIndex(index.copyFrontRemoved());
-        case IndexIsOnline:    return QVariant::fromValue(m_isOnline);
-        case IndexLatitude:    return this->latitude().propertyByIndex(index.copyFrontRemoved());
-        case IndexLongitude:   return this->longitude().propertyByIndex(index.copyFrontRemoved());
-        case IndexPosition:    return m_position.propertyByIndex(index.copyFrontRemoved());
-        case IndexRange:       return m_range.propertyByIndex(index.copyFrontRemoved());
-        case IndexIsInRange:   return QVariant::fromValue(isInRange());
-        case IndexAtis:        return m_atis.propertyByIndex(index.copyFrontRemoved());
-        case IndexMetar:       return m_metar.propertyByIndex(index.copyFrontRemoved());
+        case IndexController: return m_controller.propertyByIndex(index.copyFrontRemoved());
+        case IndexFrequency: return m_frequency.propertyByIndex(index.copyFrontRemoved());
+        case IndexIsOnline: return QVariant::fromValue(m_isOnline);
+        case IndexLatitude: return this->latitude().propertyByIndex(index.copyFrontRemoved());
+        case IndexLongitude: return this->longitude().propertyByIndex(index.copyFrontRemoved());
+        case IndexPosition: return m_position.propertyByIndex(index.copyFrontRemoved());
+        case IndexRange: return m_range.propertyByIndex(index.copyFrontRemoved());
+        case IndexIsInRange: return QVariant::fromValue(isInRange());
+        case IndexAtis: return m_atis.propertyByIndex(index.copyFrontRemoved());
+        case IndexMetar: return m_metar.propertyByIndex(index.copyFrontRemoved());
         case IndexIsAfvCrossCoupled: return QVariant::fromValue(m_isAfvCrossCoupled);
         default:
             return (ICoordinateWithRelativePosition::canHandleIndex(index)) ?
-                    ICoordinateWithRelativePosition::propertyByIndex(index) :
-                    CValueObject::propertyByIndex(index);
+                       ICoordinateWithRelativePosition::propertyByIndex(index) :
+                       CValueObject::propertyByIndex(index);
         }
     }
 
     void CAtcStation::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CAtcStation>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CAtcStation>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexBookedFrom:  this->setBookedFromUtc(variant.value<QDateTime>()); break;
+        case IndexBookedFrom: this->setBookedFromUtc(variant.value<QDateTime>()); break;
         case IndexBookedUntil: this->setBookedUntilUtc(variant.value<QDateTime>()); break;
-        case IndexCallsign:    m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-        case IndexController:  m_controller.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-        case IndexFrequency:   m_frequency.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-        case IndexIsOnline:    this->setOnline(variant.value<bool>()); break;
-        case IndexPosition:    m_position.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-        case IndexRange:       m_range.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-        case IndexAtis:        m_atis.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-        case IndexMetar:       m_metar.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexCallsign: m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexController: m_controller.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexFrequency: m_frequency.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexIsOnline: this->setOnline(variant.value<bool>()); break;
+        case IndexPosition: m_position.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexRange: m_range.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexAtis: m_atis.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexMetar: m_metar.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexIsAfvCrossCoupled: this->setAfvCrossCoupled(variant.value<bool>()); break;
         case IndexCallsignString:
         case IndexCallsignStringCrossCopuled:
-            {
-                const QString cs = variant.toString();
-                *this = CAtcStation();
-                this->setAfvCrossCoupled(cs.startsWith('*'));
-            }
-            break;
+        {
+            const QString cs = variant.toString();
+            *this = CAtcStation();
+            this->setAfvCrossCoupled(cs.startsWith('*'));
+        }
+        break;
         default:
             if (ICoordinateWithRelativePosition::canHandleIndex(index))
             {
@@ -434,23 +437,23 @@ namespace BlackMisc::Aviation
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexBookedFrom:  return Compare::compare(this->getBookedFromUtc(), compareValue.getBookedFromUtc());
+        case IndexBookedFrom: return Compare::compare(this->getBookedFromUtc(), compareValue.getBookedFromUtc());
         case IndexBookedUntil: return Compare::compare(this->getBookedUntilUtc(), compareValue.getBookedUntilUtc());
         case IndexCallsignString:
         case IndexCallsignStringCrossCopuled:
             return m_callsign.comparePropertyByIndex(CPropertyIndexRef::empty(), compareValue.getCallsign());
-        case IndexCallsign:    return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
-        case IndexController:  return m_controller.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getController());
-        case IndexFrequency:   return m_frequency.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getFrequency());
-        case IndexIsOnline:    return Compare::compare(this->isOnline(), compareValue.isOnline());
-        case IndexLatitude:    return this->latitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.latitude());
-        case IndexLongitude:   return this->longitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.longitude());
-        case IndexPosition:    return m_position.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPosition());
-        case IndexRange:       return m_range.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRange());
-        case IndexIsInRange:   return Compare::compare(this->isInRange(), compareValue.isInRange());
-        case IndexAtis:        return m_atis.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getAtis());
-        case IndexMetar:       return m_metar.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getMetar());
-        case IndexIsAfvCrossCoupled:   return Compare::compare(this->isAfvCrossCoupled(), compareValue.isAfvCrossCoupled());
+        case IndexCallsign: return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
+        case IndexController: return m_controller.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getController());
+        case IndexFrequency: return m_frequency.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getFrequency());
+        case IndexIsOnline: return Compare::compare(this->isOnline(), compareValue.isOnline());
+        case IndexLatitude: return this->latitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.latitude());
+        case IndexLongitude: return this->longitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.longitude());
+        case IndexPosition: return m_position.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPosition());
+        case IndexRange: return m_range.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRange());
+        case IndexIsInRange: return Compare::compare(this->isInRange(), compareValue.isInRange());
+        case IndexAtis: return m_atis.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getAtis());
+        case IndexMetar: return m_metar.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getMetar());
+        case IndexIsAfvCrossCoupled: return Compare::compare(this->isAfvCrossCoupled(), compareValue.isAfvCrossCoupled());
         default:
             if (ICoordinateWithRelativePosition::canHandleIndex(index))
             {

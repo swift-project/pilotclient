@@ -23,26 +23,22 @@ namespace BlackMisc::Aviation
         qDBusRegisterMetaType<CTransponder::TransponderMode>();
     }
 
-    CTransponder::CTransponder(int transponderCode, CTransponder::TransponderMode transponderMode) :
-        m_transponderCode(transponderCode), m_transponderMode(transponderMode)
-    {  }
+    CTransponder::CTransponder(int transponderCode, CTransponder::TransponderMode transponderMode) : m_transponderCode(transponderCode), m_transponderMode(transponderMode)
+    {}
 
-    CTransponder::CTransponder(int transponderCode, const QString &transponderMode) :
-        m_transponderCode(transponderCode), m_transponderMode(StateStandby)
+    CTransponder::CTransponder(int transponderCode, const QString &transponderMode) : m_transponderCode(transponderCode), m_transponderMode(StateStandby)
     {
         this->setModeAsString(transponderMode);
     }
 
-    CTransponder::CTransponder(const QString &transponderCode, CTransponder::TransponderMode transponderMode) :
-        m_transponderCode(0), m_transponderMode(transponderMode)
+    CTransponder::CTransponder(const QString &transponderCode, CTransponder::TransponderMode transponderMode) : m_transponderCode(0), m_transponderMode(transponderMode)
     {
         bool ok = false;
         m_transponderCode = transponderCode.toInt(&ok);
         if (!ok) m_transponderCode = -1; // will cause assert / exception
     }
 
-    CTransponder::CTransponder(const QString &transponderCode, const QString &transponderMode) :
-        m_transponderCode(0), m_transponderMode(StateStandby)
+    CTransponder::CTransponder(const QString &transponderCode, const QString &transponderMode) : m_transponderCode(0), m_transponderMode(StateStandby)
     {
         bool ok = false;
         m_transponderCode = transponderCode.toInt(&ok);
@@ -177,10 +173,10 @@ namespace BlackMisc::Aviation
 
         switch (mode)
         {
-        case StateIdent:   return i;
+        case StateIdent: return i;
         case StateStandby: return s;
-        case ModeC:    return mc;
-        case ModeS:    return ms;
+        case ModeC: return mc;
+        case ModeS: return ms;
         case ModeMil1: return m1;
         case ModeMil2: return m2;
         case ModeMil3: return m3;
@@ -205,10 +201,10 @@ namespace BlackMisc::Aviation
 
         switch (mode)
         {
-        case StateIdent:   return i;
+        case StateIdent: return i;
         case StateStandby: return s;
-        case ModeC:    return mc;
-        case ModeS:    return ms;
+        case ModeC: return mc;
+        case ModeS: return ms;
         case ModeMil1: return m1;
         case ModeMil2: return m2;
         case ModeMil3: return m3;
@@ -240,7 +236,11 @@ namespace BlackMisc::Aviation
 
     void CTransponder::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CTransponder>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CTransponder>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

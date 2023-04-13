@@ -66,12 +66,11 @@ using namespace BlackGui::Menus;
 
 namespace BlackGui::Components
 {
-    CDbMappingComponent::CDbMappingComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        ui(new Ui::CDbMappingComponent),
-        m_autoStashDialog(new CDbAutoStashingComponent(this)),
-        m_autoSimulatorDialog(new CDbAutoSimulatorStashingComponent(this)),
-        m_modelModifyDialog(new CDbModelMappingModifyDialog(this))
+    CDbMappingComponent::CDbMappingComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                                ui(new Ui::CDbMappingComponent),
+                                                                m_autoStashDialog(new CDbAutoStashingComponent(this)),
+                                                                m_autoSimulatorDialog(new CDbAutoSimulatorStashingComponent(this)),
+                                                                m_modelModifyDialog(new CDbModelMappingModifyDialog(this))
     {
         ui->setupUi(this);
         ui->comp_StashAircraft->setMappingComponent(this);
@@ -104,25 +103,25 @@ namespace BlackGui::Components
         // connects
         connect(ui->editor_ModelMapping, &CModelMappingForm::requestStash, this, &CDbMappingComponent::stashCurrentModel);
 
-        connect(ui->comp_OwnAircraftModels,         &CDbOwnModelsComponent::ownModelsSimulatorChanged,  this, &CDbMappingComponent::onOwnModelsSimulatorChanged, Qt::QueuedConnection);
-        connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::doubleClicked,                 this, &CDbMappingComponent::onModelRowSelected);
-        connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::modelDataChangedDigest,        this, &CDbMappingComponent::onOwnModelsChangedDigest, Qt::QueuedConnection);
-        connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::requestStash,                  this, &CDbMappingComponent::stashSelectedModels);
+        connect(ui->comp_OwnAircraftModels, &CDbOwnModelsComponent::ownModelsSimulatorChanged, this, &CDbMappingComponent::onOwnModelsSimulatorChanged, Qt::QueuedConnection);
+        connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::onModelRowSelected);
+        connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::modelDataChangedDigest, this, &CDbMappingComponent::onOwnModelsChangedDigest, Qt::QueuedConnection);
+        connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
         connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
 
-        connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::doubleClicked,                 this, &CDbMappingComponent::onModelRowSelected);
-        connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::modelDataChangedDigest,        this, &CDbMappingComponent::onWorkbenchDataChanged, Qt::QueuedConnection);
-        connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::requestStash,                  this, &CDbMappingComponent::stashSelectedModels);
+        connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::onModelRowSelected);
+        connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::modelDataChangedDigest, this, &CDbMappingComponent::onWorkbenchDataChanged, Qt::QueuedConnection);
+        connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
         connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
 
-        connect(ui->comp_StashAircraft->view(), &CAircraftModelView::modelDataChangedDigest,     this, &CDbMappingComponent::onStashedModelsDataChangedDigest);
-        connect(ui->comp_StashAircraft->view(), &CAircraftModelView::doubleClicked,              this, &CDbMappingComponent::onModelRowSelected);
+        connect(ui->comp_StashAircraft->view(), &CAircraftModelView::modelDataChangedDigest, this, &CDbMappingComponent::onStashedModelsDataChangedDigest);
+        connect(ui->comp_StashAircraft->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::onModelRowSelected);
         connect(ui->comp_StashAircraft->view(), &CAircraftModelView::requestHandlingOfStashDrop, this, &CDbMappingComponent::handleStashDropRequest);
-        connect(ui->comp_StashAircraft,         &CDbStashComponent::stashedModelsChanged,        this, &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
-        connect(ui->comp_StashAircraft,         &CDbStashComponent::modelsSuccessfullyPublished, this, &CDbMappingComponent::onModelsSuccessfullyPublished, Qt::QueuedConnection);
+        connect(ui->comp_StashAircraft, &CDbStashComponent::stashedModelsChanged, this, &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
+        connect(ui->comp_StashAircraft, &CDbStashComponent::modelsSuccessfullyPublished, this, &CDbMappingComponent::onModelsSuccessfullyPublished, Qt::QueuedConnection);
 
         connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::modelDataChangedDigest, this, &CDbMappingComponent::onModelSetChangedDigest, Qt::QueuedConnection);
-        connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::requestStash,           this, &CDbMappingComponent::stashSelectedModels);
+        connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
 
         connect(ui->tw_ModelsToBeMapped, &QTabWidget::currentChanged, this, &CDbMappingComponent::onTabIndexChanged);
         connect(ui->tw_ModelsToBeMapped, &QTabWidget::currentChanged, ui->comp_ModelMatcher, &CModelMatcherComponent::tabIndexChanged);
@@ -247,10 +246,10 @@ namespace BlackGui::Components
     {
         switch (tab)
         {
-        case TabOwnModels:   return ui->comp_OwnAircraftModels->view();
-        case TabVPilot:      return ui->tvp_AircraftModelsForVPilot;
-        case TabWorkbench:   return ui->comp_ModelWorkbench->view();
-        case TabStash:       return ui->comp_StashAircraft->view();
+        case TabOwnModels: return ui->comp_OwnAircraftModels->view();
+        case TabVPilot: return ui->tvp_AircraftModelsForVPilot;
+        case TabWorkbench: return ui->comp_ModelWorkbench->view();
+        case TabStash: return ui->comp_StashAircraft->view();
         case TabOwnModelSet: return ui->comp_OwnModelSet->view();
         default: return nullptr;
         }
@@ -377,8 +376,7 @@ namespace BlackGui::Components
             // from stash, do not consolidate, because we want to keep data as they are from the editor
             const bool consolidate = !this->isStashTab();
             msgs.push_back(
-                ui->comp_StashAircraft->stashModel(editorModel, true, consolidate)
-            );
+                ui->comp_StashAircraft->stashModel(editorModel, true, consolidate));
         }
         if (msgs.hasErrorMessages())
         {
@@ -496,7 +494,7 @@ namespace BlackGui::Components
             h1 = h / 3;
             h2 = h / 3 * 2;
         }
-        const QList<int> sizes({h1, h2});
+        const QList<int> sizes({ h1, h2 });
         ui->sp_MappingComponent->setSizes(sizes);
     }
 
@@ -505,7 +503,7 @@ namespace BlackGui::Components
         const int h = this->height();
         const int h1 = h;
         const int h2 = 0;
-        const QList<int> sizes({h1, h2});
+        const QList<int> sizes({ h1, h2 });
         ui->sp_MappingComponent->setSizes(sizes);
     }
 
@@ -572,10 +570,10 @@ namespace BlackGui::Components
 
     void CDbMappingComponent::onStashedModelsChangedDigest()
     {
-        const bool highlightVPilot    = ui->tvp_AircraftModelsForVPilot->derivedModel()->highlightModels();
+        const bool highlightVPilot = ui->tvp_AircraftModelsForVPilot->derivedModel()->highlightModels();
         const bool highlightOwnModels = ui->comp_OwnAircraftModels->view()->derivedModel()->highlightModels();
-        const bool highlightModelSet  = ui->comp_OwnModelSet->view()->derivedModel()->highlightModels();
-        const bool highlight          = highlightOwnModels || highlightModelSet || highlightVPilot;
+        const bool highlightModelSet = ui->comp_OwnModelSet->view()->derivedModel()->highlightModels();
+        const bool highlight = highlightOwnModels || highlightModelSet || highlightVPilot;
         if (!highlight) { return; }
         const QStringList stashedModels(ui->comp_StashAircraft->getStashedModelStrings());
         if (highlightVPilot)
@@ -598,31 +596,31 @@ namespace BlackGui::Components
         switch (ti)
         {
         case CDbMappingComponent::TabOwnModelSet:
-            {
-                ui->frp_Editors->setVisible(true);
-                ui->editor_ModelMapping->setVisible(true);
-                this->resizeForSelect();
-            }
-            break;
+        {
+            ui->frp_Editors->setVisible(true);
+            ui->editor_ModelMapping->setVisible(true);
+            this->resizeForSelect();
+        }
+        break;
         case CDbMappingComponent::TabModelMatcher:
-            {
-                ui->editor_ModelMapping->setVisible(false);
-                ui->frp_Editors->setVisible(false);
-                this->resizeForSelect();
-            }
-            break;
+        {
+            ui->editor_ModelMapping->setVisible(false);
+            ui->frp_Editors->setVisible(false);
+            this->resizeForSelect();
+        }
+        break;
         case CDbMappingComponent::TabVPilot:
-            {
-                // fall thru intended
-                this->formatVPilotView();
-            }
+        {
+            // fall thru intended
+            this->formatVPilotView();
+        }
             [[fallthrough]];
         default:
-            {
-                ui->frp_Editors->setVisible(true);
-                ui->editor_ModelMapping->setVisible(true);
-            }
-            break;
+        {
+            ui->frp_Editors->setVisible(true);
+            ui->editor_ModelMapping->setVisible(true);
+        }
+        break;
         }
         emit this->tabIndexChanged(index);
     }
@@ -747,8 +745,7 @@ namespace BlackGui::Components
         if (!this->hasSelectedModelsToStash()) { return; }
         CStatusMessageList msgs =
             ui->comp_StashAircraft->stashModels(
-                this->getSelectedModelsToStash()
-            );
+                this->getSelectedModelsToStash());
         if (msgs.hasWarningOrErrorMessages())
         {
             this->showOverlayMessagesOrHTMLMessage(msgs);
@@ -921,8 +918,7 @@ namespace BlackGui::Components
         return qobject_cast<CDbMappingComponent *>(this->parent());
     }
 
-    CDbMappingComponent::CStashToolsMenu::CStashToolsMenu(CDbMappingComponent *mappingComponent) :
-        Menus::IMenuDelegate(mappingComponent)
+    CDbMappingComponent::CStashToolsMenu::CStashToolsMenu(CDbMappingComponent *mappingComponent) : Menus::IMenuDelegate(mappingComponent)
     {}
 
     void CDbMappingComponent::CStashToolsMenu::customMenu(CMenuActions &menuActions)
@@ -964,10 +960,10 @@ namespace BlackGui::Components
 
             // we have keys and data by which we could delete them from view
             const QString msgDelete("Delete " + QString::number(dbModels) + " DB model(s) from '" + mapComp->currentTabText() + "'");
-            menuActions.addAction(CIcons::delete16(), msgDelete, CMenuAction::pathModelStash(), nullptr, { mapComp, &CDbMappingComponent::removeDbModelsFromView});
+            menuActions.addAction(CIcons::delete16(), msgDelete, CMenuAction::pathModelStash(), nullptr, { mapComp, &CDbMappingComponent::removeDbModelsFromView });
 
             // attribute info
-            menuActions.addAction(CIcons::info16(), "Show changed attributes", CMenuAction::pathModelStash(), nullptr, { mapComp, &CDbMappingComponent::showChangedAttributes});
+            menuActions.addAction(CIcons::info16(), "Show changed attributes", CMenuAction::pathModelStash(), nullptr, { mapComp, &CDbMappingComponent::showChangedAttributes });
         }
     }
 
@@ -984,10 +980,10 @@ namespace BlackGui::Components
         {
             menuActions.addMenuModelSet();
             m_menuAction = menuActions.addAction(m_menuAction, CIcons::appModels16(),
-                                                    "Add to own model set " + CShortcut::toParenthesisString(CShortcut::keyAddToModelSet()),
-                                                    CMenuAction::pathModelSet(),
-                                                    this, { mapComp, &CDbMappingComponent::ps_addToOwnModelSet },
-                                                    CShortcut::keyAddToModelSet());
+                                                 "Add to own model set " + CShortcut::toParenthesisString(CShortcut::keyAddToModelSet()),
+                                                 CMenuAction::pathModelSet(),
+                                                 this, { mapComp, &CDbMappingComponent::ps_addToOwnModelSet },
+                                                 CShortcut::keyAddToModelSet());
         }
         this->nestedCustomMenu(menuActions);
     }
@@ -1022,8 +1018,7 @@ namespace BlackGui::Components
         return qobject_cast<CDbMappingComponent *>(this->parent());
     }
 
-    CDbMappingComponent::CMergeWithVPilotMenu::CMergeWithVPilotMenu(CDbMappingComponent *mappingComponent) :
-        IMenuDelegate(mappingComponent)
+    CDbMappingComponent::CMergeWithVPilotMenu::CMergeWithVPilotMenu(CDbMappingComponent *mappingComponent) : IMenuDelegate(mappingComponent)
     {
         Q_ASSERT_X(mappingComponent, Q_FUNC_INFO, "Missing vPilot reader");
     }
@@ -1056,7 +1051,7 @@ namespace BlackGui::Components
         {
             menuActions.addMenuModelSet();
             m_menuAction = menuActions.addAction(m_menuAction, CIcons::appModels16(), "Removed models", CMenuAction::pathModel(),
-                                                    this, { mapComp, &CDbMappingComponent::loadRemovedModels });
+                                                 this, { mapComp, &CDbMappingComponent::loadRemovedModels });
         }
         this->nestedCustomMenu(menuActions);
     }

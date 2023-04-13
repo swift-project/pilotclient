@@ -22,7 +22,7 @@
 namespace BlackMisc::Aviation
 {
     //! List of objects with callsign.
-    template<class OBJ, class CONTAINER>
+    template <class OBJ, class CONTAINER>
     class ICallsignObjectList
     {
     public:
@@ -98,8 +98,7 @@ namespace BlackMisc::Aviation
             CONTAINER r;
             if (suffix.isEmpty()) { return r; }
             const QString sfxUpper(suffix.trimmed().toUpper());
-            r = this->container().findBy([=](const OBJ & csObj)
-            {
+            r = this->container().findBy([=](const OBJ &csObj) {
                 return (csObj.getCallsign().getSuffix() == sfxUpper);
             });
             return r;
@@ -124,7 +123,7 @@ namespace BlackMisc::Aviation
         //! Remove all objects with callsigns
         int removeByCallsigns(const CCallsignSet &callsigns)
         {
-            return this->container().removeIf([&](const OBJ & obj) { return callsigns.contains(obj.getCallsign()); });
+            return this->container().removeIf([&](const OBJ &obj) { return callsigns.contains(obj.getCallsign()); });
         }
 
         //! All suffixes with their respective count
@@ -286,7 +285,7 @@ namespace BlackMisc::Aviation
     protected:
         //! Constructor
         ICallsignObjectList()
-        { }
+        {}
 
         //! Container
         const CONTAINER &container() const
@@ -302,4 +301,4 @@ namespace BlackMisc::Aviation
     };
 } // namespace
 
-#endif //guard
+#endif // guard

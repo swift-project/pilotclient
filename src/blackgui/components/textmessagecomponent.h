@@ -27,7 +27,10 @@
 #include <QScopedPointer>
 #include <QString>
 
-namespace Ui { class CTextMessageComponent; }
+namespace Ui
+{
+    class CTextMessageComponent;
+}
 namespace BlackGui
 {
     class CDockWidgetInfoArea;
@@ -127,11 +130,11 @@ namespace BlackGui
             QScopedPointer<Ui::CTextMessageComponent> ui;
             BlackMisc::CIdentifier m_identifier { "TextMessageComponent", this };
             BlackMisc::CSetting<Settings::TextMessageSettings> m_messageSettings { this, &CTextMessageComponent::onSettingsChanged };
-            BlackMisc::CSetting<BlackMisc::Audio::TSettings>   m_audioSettings   { this };
+            BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this };
             bool m_usedAsOverlayWidget = false; //!< disables dockwidget parts if used as overlay widget
-            bool m_activeSend          = true;  //!< ignore sent messages
-            bool m_activeReceive       = true;  //!< ignore received messages
-            bool m_showRealNames       = true;
+            bool m_activeSend = true; //!< ignore sent messages
+            bool m_activeReceive = true; //!< ignore received messages
+            bool m_showRealNames = true;
 
             //! Enum to widget
             QWidget *getTabWidget(TextMessageTab tab) const;

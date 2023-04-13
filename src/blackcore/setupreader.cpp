@@ -40,22 +40,23 @@ using namespace BlackCore::Data;
 namespace BlackCore
 {
     CSetupReader::CSetupReader(QObject *parent) : QObject(parent),
-        m_cmdBootstrapUrl
-    {
-        { "url", "bootstrapurl" },
-        QCoreApplication::translate("application", "Bootstrap URL, e.g. https://datastore.swift-project.org/shared"),
-        "bootstrapurl", (sApp->getApplicationInfo().isUnitTest()) ? unitTestBootstrapUrl() : ""
-    },  m_cmdBootstrapMode
-    {
-        { "bmode", "bootstrapmode" },
-        QCoreApplication::translate("application", "Bootstrap mode: explicit, implicit, cache(-only)"),
-        "bootstrapmode", "explicit"
-    }
-    { }
+                                                  m_cmdBootstrapUrl {
+                                                      { "url", "bootstrapurl" },
+                                                      QCoreApplication::translate("application", "Bootstrap URL, e.g. https://datastore.swift-project.org/shared"),
+                                                      "bootstrapurl",
+                                                      (sApp->getApplicationInfo().isUnitTest()) ? unitTestBootstrapUrl() : ""
+                                                  },
+                                                  m_cmdBootstrapMode {
+                                                      { "bmode", "bootstrapmode" },
+                                                      QCoreApplication::translate("application", "Bootstrap mode: explicit, implicit, cache(-only)"),
+                                                      "bootstrapmode",
+                                                      "explicit"
+                                                  }
+    {}
 
     QList<QCommandLineOption> CSetupReader::getCmdLineOptions() const
     {
-        return QList<QCommandLineOption> {{ m_cmdBootstrapUrl, m_cmdBootstrapMode }};
+        return QList<QCommandLineOption> { { m_cmdBootstrapUrl, m_cmdBootstrapMode } };
     }
 
     CStatusMessageList CSetupReader::asyncLoad()
@@ -199,7 +200,7 @@ namespace BlackCore
 
     const QStringList &CSetupReader::getLogCategories()
     {
-        static const QStringList cats({ "swift.setupreader", CLogCategories::webservice(), CLogCategories::startup()});
+        static const QStringList cats({ "swift.setupreader", CLogCategories::webservice(), CLogCategories::startup() });
         return cats;
     }
 
@@ -282,8 +283,8 @@ namespace BlackCore
         switch (m_bootstrapMode)
         {
         case CacheOnly: return QStringLiteral("cache only");
-        case Explicit:  return QStringLiteral("explicit");
-        case Implicit:  return QStringLiteral("implicit");
+        case Explicit: return QStringLiteral("explicit");
+        case Implicit: return QStringLiteral("implicit");
         default: break;
         }
         return {};

@@ -53,17 +53,20 @@
 
 namespace BlackCore
 {
-    namespace Fsd { class CFSDClient; }
+    namespace Fsd
+    {
+        class CFSDClient;
+    }
     class CAirspaceAnalyzer;
 
     //! Keeps track of other entities in the airspace: aircraft, ATC stations, etc.
     //! Central instance of data for \sa IRemoteAircraftProvider.
     class BLACKCORE_EXPORT CAirspaceMonitor :
-        public BlackMisc::Simulation::CRemoteAircraftProvider,     // those data will be provided from the class CAirspaceMonitor
-        public BlackMisc::Network::CClientProvider,                // those data will be provided from the class CAirspaceMonitor
-        public BlackMisc::Simulation::COwnAircraftAware,           // used to obtain in memory information about own aircraft
+        public BlackMisc::Simulation::CRemoteAircraftProvider, // those data will be provided from the class CAirspaceMonitor
+        public BlackMisc::Network::CClientProvider, // those data will be provided from the class CAirspaceMonitor
+        public BlackMisc::Simulation::COwnAircraftAware, // used to obtain in memory information about own aircraft
         public BlackMisc::Simulation::CSimulationEnvironmentAware, // elevation info etc. from simulator
-        public BlackMisc::Simulation::CAircraftModelSetAware       // model set for reverse lookup
+        public BlackMisc::Simulation::CAircraftModelSetAware // model set for reverse lookup
     {
         // CRemoteAircraftProvider is QObject
         Q_OBJECT
@@ -75,10 +78,10 @@ namespace BlackCore
         static const QStringList &getLogCategories();
 
         //! Constructor
-        CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider      *ownAircraft,
+        CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft,
                          BlackMisc::Simulation::IAircraftModelSetProvider *modelSetProvider,
                          Fsd::CFSDClient *fsdClient,
-                         QObject         *parent);
+                         QObject *parent);
 
         //! @{
         //! Members not implenented or fully implenented by CRemoteAircraftProvider
@@ -157,13 +160,13 @@ namespace BlackCore
         //! Matching readiness
         enum MatchingReadinessFlag
         {
-            NotReady             = 0,       //!< no data at all
-            ReceivedIcaoCodes    = 1 << 0,  //!< ICAO codes received
-            ReceivedFsInnPacket  = 1 << 1,  //!< FsInn pcket received
-            ReadyForMatchingSent = 1 << 2,  //!< Read for matching sending
-            RecursiveCall        = 1 << 3,  //!< recursion
-            ReceivedAll          = ReceivedIcaoCodes | ReceivedFsInnPacket,
-            Verified             = 1 << 4,  //!< verified already
+            NotReady = 0, //!< no data at all
+            ReceivedIcaoCodes = 1 << 0, //!< ICAO codes received
+            ReceivedFsInnPacket = 1 << 1, //!< FsInn pcket received
+            ReadyForMatchingSent = 1 << 2, //!< Read for matching sending
+            RecursiveCall = 1 << 3, //!< recursion
+            ReceivedAll = ReceivedIcaoCodes | ReceivedFsInnPacket,
+            Verified = 1 << 4, //!< verified already
         };
         Q_DECLARE_FLAGS(MatchingReadiness, MatchingReadinessFlag)
 
@@ -184,7 +187,7 @@ namespace BlackCore
         static void registerHelp()
         {
             if (BlackMisc::CSimpleCommandParser::registered("BlackCore::Fsd::CFSDClient")) { return; }
-            BlackMisc::CSimpleCommandParser::registerCommand({".fsd range distance", "FSD max. range"});
+            BlackMisc::CSimpleCommandParser::registerCommand({ ".fsd range distance", "FSD max. range" });
         }
 
     signals:
@@ -281,19 +284,19 @@ namespace BlackCore
 
         BlackMisc::Aviation::CAtcStationList m_atcStationsOnline; //!< online ATC stations
         BlackMisc::Aviation::CAtcStationList m_atcStationsBooked; //!< booked ATC stations
-        QHash<BlackMisc::Aviation::CCallsign, FsInnPacket>                      m_tempFsInnPackets; //!< unhandled FsInn packets
-        QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache;  //!< flight plan information retrieved from network and cached
-        QHash<BlackMisc::Aviation::CCallsign, Readiness>                        m_readiness;        //!< readiness
+        QHash<BlackMisc::Aviation::CCallsign, FsInnPacket> m_tempFsInnPackets; //!< unhandled FsInn packets
+        QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache; //!< flight plan information retrieved from network and cached
+        QHash<BlackMisc::Aviation::CCallsign, Readiness> m_readiness; //!< readiness
         BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings { this }; //!< settings
-        QQueue<BlackMisc::Aviation::CCallsign> m_queryAtis;  //!< query the ATIS
+        QQueue<BlackMisc::Aviation::CCallsign> m_queryAtis; //!< query the ATIS
         QQueue<BlackMisc::Aviation::CCallsign> m_queryPilot; //!< query the pilot data
-        Fsd::CFSDClient   *m_fsdClient = nullptr;            //!< corresponding network interface
-        CAirspaceAnalyzer *m_analyzer  = nullptr;            //!< owned analyzer
-        bool m_bookingsRequested       = false;              //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
-        int m_maxDistanceNM            = 125;                //!< position range / FSD range
-        int m_maxDistanceNMHysteresis  = qRound(1.1 * m_maxDistanceNM);
+        Fsd::CFSDClient *m_fsdClient = nullptr; //!< corresponding network interface
+        CAirspaceAnalyzer *m_analyzer = nullptr; //!< owned analyzer
+        bool m_bookingsRequested = false; //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
+        int m_maxDistanceNM = 125; //!< position range / FSD range
+        int m_maxDistanceNMHysteresis = qRound(1.1 * m_maxDistanceNM);
         int m_foundInNonMovingAircraft = 0;
-        int m_foundInElevationsOnGnd   = 0;
+        int m_foundInElevationsOnGnd = 0;
 
         // Processing for queries etc. (fast)
         static constexpr int FastProcessIntervalMs = 50; //!< interval in ms
@@ -310,10 +313,10 @@ namespace BlackCore
         void slowProcessing();
 
         // model matching times
-        static constexpr qint64 MMCheckAgainMs      = 2000;
-        static constexpr qint64 MMMaxAgeMs          = MMCheckAgainMs * 3;
+        static constexpr qint64 MMCheckAgainMs = 2000;
+        static constexpr qint64 MMMaxAgeMs = MMCheckAgainMs * 3;
         static constexpr qint64 MMMaxAgeThresholdMs = MMCheckAgainMs * 10;
-        static constexpr qint64 MMVerifyMs          = MMCheckAgainMs * 12;
+        static constexpr qint64 MMVerifyMs = MMCheckAgainMs * 12;
 
         //! Remove ATC online stations
         void removeAllOnlineAtcStations();
@@ -425,7 +428,7 @@ namespace BlackCore
         //! \remark normally used if situationToBeUpdated is not between oldSituation and olderSituation (that would be interpolation)
         //! \return false if there are no two elevations, there is already an elevation, or no extrapolation is possible (too much deviation)
         static bool extrapolateElevation(BlackMisc::Aviation::CAircraftSituation &situationToBeUpdated, const BlackMisc::Aviation::CAircraftSituation &oldSituation,
-            const BlackMisc::Aviation::CAircraftSituation &olderSituation, const BlackMisc::Aviation::CAircraftSituationChange &oldChange);
+                                         const BlackMisc::Aviation::CAircraftSituation &olderSituation, const BlackMisc::Aviation::CAircraftSituationChange &oldChange);
 
         //! Create aircraft in range, this is the only place where a new aircraft should be added
         void onAircraftUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
@@ -456,7 +459,6 @@ namespace BlackCore
         void onAircraftSimDataUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts, qint64 currentOffsetMs, const QString &aircraftIcao, const QString &airlineIcao);
         void onConnectionStatusChanged(BlackMisc::Network::CConnectionStatus oldStatus, BlackMisc::Network::CConnectionStatus newStatus);
         void onRevBAircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &config, qint64 currentOffsetMs);
-
     };
 } // namespace
 

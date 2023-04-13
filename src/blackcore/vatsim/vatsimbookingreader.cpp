@@ -41,9 +41,8 @@ using namespace BlackMisc::Network;
 
 namespace BlackCore::Vatsim
 {
-    CVatsimBookingReader::CVatsimBookingReader(QObject *owner) :
-        CThreadedReader(owner, "CVatsimBookingReader"),
-        CEcosystemAware(CEcosystemAware::providerIfPossible(owner))
+    CVatsimBookingReader::CVatsimBookingReader(QObject *owner) : CThreadedReader(owner, "CVatsimBookingReader"),
+                                                                 CEcosystemAware(CEcosystemAware::providerIfPossible(owner))
     {
         this->settingsChanged();
     }
@@ -51,8 +50,7 @@ namespace BlackCore::Vatsim
     void CVatsimBookingReader::readInBackgroundThread()
     {
         QPointer<CVatsimBookingReader> myself(this);
-        QTimer::singleShot(0, this, [ = ]
-        {
+        QTimer::singleShot(0, this, [=] {
             if (!myself) { return; }
             myself->read();
         });
@@ -73,7 +71,7 @@ namespace BlackCore::Vatsim
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "No application");
         const QUrl url(sApp->getGlobalSetup().getVatsimBookingsUrl());
         if (url.isEmpty()) { return; }
-        this->getFromNetworkAndLog(url, { this, &CVatsimBookingReader::parseBookings});
+        this->getFromNetworkAndLog(url, { this, &CVatsimBookingReader::parseBookings });
     }
 
     void CVatsimBookingReader::parseBookings(QNetworkReply *nwReplyPtr)
@@ -192,8 +190,8 @@ namespace BlackCore::Vatsim
                     }
                     // time checks
                     const QDateTime now = QDateTime::currentDateTimeUtc();
-                    if (now.msecsTo(bookedStation.getBookedUntilUtc()) < (1000 * 60 * 15))      { continue; } // until n mins in past
-                    if (now.msecsTo(bookedStation.getBookedFromUtc())  > (1000 * 60 * 60 * 24)) { continue; } // to far in the future, n hours
+                    if (now.msecsTo(bookedStation.getBookedUntilUtc()) < (1000 * 60 * 15)) { continue; } // until n mins in past
+                    if (now.msecsTo(bookedStation.getBookedFromUtc()) > (1000 * 60 * 60 * 24)) { continue; } // to far in the future, n hours
                     bookedStation.setController(user);
                     bookedStations.push_back(bookedStation);
                 }

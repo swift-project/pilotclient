@@ -37,13 +37,13 @@ namespace BlackSimPlugin::Fs9
     public:
         //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
         CSimulatorFs9(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                        const QSharedPointer<CFs9Host>     &fs9Host,
-                        const QSharedPointer<CLobbyClient> &lobbyClient,
-                        BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
-                        BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                        BlackMisc::Weather::IWeatherGridProvider       *weatherGridProvider,
-                        BlackMisc::Network::IClientProvider            *clientProvider,
-                        QObject *parent = nullptr);
+                      const QSharedPointer<CFs9Host> &fs9Host,
+                      const QSharedPointer<CLobbyClient> &lobbyClient,
+                      BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                      BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                      BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+                      BlackMisc::Network::IClientProvider *clientProvider,
+                      QObject *parent = nullptr);
 
         //! Destructor
         virtual ~CSimulatorFs9() override = default;
@@ -54,7 +54,7 @@ namespace BlackSimPlugin::Fs9
         virtual bool disconnectFrom() override;
         virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
         virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
-        virtual int  physicallyRemoveAllRemoteAircraft() override;
+        virtual int physicallyRemoveAllRemoteAircraft() override;
         virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
         virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
         virtual bool updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator) override;
@@ -102,9 +102,9 @@ namespace BlackSimPlugin::Fs9
         void synchronizeTime();
 
         QHash<BlackMisc::Aviation::CCallsign, QPointer<CFs9Client>> m_hashFs9Clients;
-        QMetaObject::Connection      m_connectionHostMessages;
-        bool                         m_simConnected = false; //!< Is simulator connected?
-        QSharedPointer<CFs9Host>     m_fs9Host;
+        QMetaObject::Connection m_connectionHostMessages;
+        bool m_simConnected = false; //!< Is simulator connected?
+        QSharedPointer<CFs9Host> m_fs9Host;
         QSharedPointer<CLobbyClient> m_lobbyClient;
 
         static constexpr int SkipUpdateCyclesForCockpit = 10;
@@ -121,8 +121,8 @@ namespace BlackSimPlugin::Fs9
     public:
         //! Constructor
         CSimulatorFs9Listener(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                                const QSharedPointer<CFs9Host> &fs9Host,
-                                const QSharedPointer<CLobbyClient> &lobbyClient);
+                              const QSharedPointer<CFs9Host> &fs9Host,
+                              const QSharedPointer<CLobbyClient> &lobbyClient);
 
     protected:
         //! \copydoc BlackCore::ISimulatorListener::startImpl
@@ -138,9 +138,9 @@ namespace BlackSimPlugin::Fs9
         //! Check connection to FS9
         bool checkConnection(bool canLobbyConnect);
 
-        QTimer *m_timer     = nullptr;
+        QTimer *m_timer = nullptr;
         bool m_isConnecting = false;
-        bool m_isStarted    = false;
+        bool m_isStarted = false;
         QSharedPointer<CFs9Host> m_fs9Host;
         QSharedPointer<CLobbyClient> m_lobbyClient;
         FsCommon::CFsuipc *m_fsuipc = nullptr;
@@ -163,11 +163,10 @@ namespace BlackSimPlugin::Fs9
         //! \copydoc BlackCore::ISimulatorFactory::create
         virtual BlackCore::ISimulator *create(
             const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-            BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
+            BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
             BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-            BlackMisc::Weather::IWeatherGridProvider       *weatherGridProvider,
-            BlackMisc::Network::IClientProvider            *clientProvider
-        ) override;
+            BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+            BlackMisc::Network::IClientProvider *clientProvider) override;
 
         //! \copydoc BlackCore::ISimulatorFactory::createListener
         virtual BlackCore::ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) override;

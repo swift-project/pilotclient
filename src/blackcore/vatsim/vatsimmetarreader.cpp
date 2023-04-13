@@ -36,9 +36,8 @@ using namespace BlackCore::Data;
 
 namespace BlackCore::Vatsim
 {
-    CVatsimMetarReader::CVatsimMetarReader(QObject *owner) :
-        CThreadedReader(owner, "CVatsimMetarReader"),
-        CEcosystemAware(CEcosystemAware::providerIfPossible(owner))
+    CVatsimMetarReader::CVatsimMetarReader(QObject *owner) : CThreadedReader(owner, "CVatsimMetarReader"),
+                                                             CEcosystemAware(CEcosystemAware::providerIfPossible(owner))
     {
         this->reloadSettings();
     }
@@ -46,8 +45,7 @@ namespace BlackCore::Vatsim
     void CVatsimMetarReader::readInBackgroundThread()
     {
         QPointer<CVatsimMetarReader> myself(this);
-        QTimer::singleShot(0, this, [ = ]
-        {
+        QTimer::singleShot(0, this, [=] {
             if (!myself) { return; }
             myself->read();
         });
@@ -87,7 +85,7 @@ namespace BlackCore::Vatsim
         const CUrl url(urls.obtainNextWorkingUrl(true));
         if (url.isEmpty()) { return; }
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "No Application");
-        this->getFromNetworkAndLog(url.withAppendedQuery("id=all"), { this, &CVatsimMetarReader::decodeMetars});
+        this->getFromNetworkAndLog(url.withAppendedQuery("id=all"), { this, &CVatsimMetarReader::decodeMetars });
     }
 
     void CVatsimMetarReader::decodeMetars(QNetworkReply *nwReplyPtr)

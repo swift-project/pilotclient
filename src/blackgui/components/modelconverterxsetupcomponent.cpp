@@ -16,9 +16,8 @@ using namespace BlackMisc;
 
 namespace BlackGui::Components
 {
-    CModelConverterXSetupComponent::CModelConverterXSetupComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CModelConverterXSetupComponent)
+    CModelConverterXSetupComponent::CModelConverterXSetupComponent(QWidget *parent) : QFrame(parent),
+                                                                                      ui(new Ui::CModelConverterXSetupComponent)
     {
         ui->setupUi(this);
         connect(ui->pb_DirBrowser, &QPushButton::clicked, this, &CModelConverterXSetupComponent::selectBinary);
@@ -27,7 +26,7 @@ namespace BlackGui::Components
     }
 
     CModelConverterXSetupComponent::~CModelConverterXSetupComponent()
-    { }
+    {}
 
     void CModelConverterXSetupComponent::selectBinary()
     {
@@ -37,8 +36,8 @@ namespace BlackGui::Components
             defaultValue = QDir::currentPath();
         }
         const QString fileName = QFileDialog::getOpenFileName(nullptr,
-                                    tr("ModelConverterX binary"), defaultValue,
-                                    "*.exe");
+                                                              tr("ModelConverterX binary"), defaultValue,
+                                                              "*.exe");
         ui->le_McxBinary->setText(fileName);
         this->saveSettings();
     }

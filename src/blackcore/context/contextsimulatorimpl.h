@@ -49,8 +49,14 @@
 namespace BlackMisc
 {
     class CDBusServer;
-    namespace Aviation { class CCallsign; }
-    namespace Simulation { class CSimulatedAircraft; }
+    namespace Aviation
+    {
+        class CCallsign;
+    }
+    namespace Simulation
+    {
+        class CSimulatedAircraft;
+    }
 }
 
 namespace BlackCore
@@ -204,7 +210,7 @@ namespace BlackCore
             virtual BlackMisc::Geo::CElevationPlane findClosestElevationWithinRange(const BlackMisc::Geo::CCoordinateGeodetic &reference, const BlackMisc::PhysicalQuantities::CLength &range) const override;
 
             //! \copydoc BlackCore::Context::IContextSimulator::doMatchingsAgain
-            virtual int  doMatchingsAgain() override;
+            virtual int doMatchingsAgain() override;
 
             //! \copydoc BlackCore::Context::IContextSimulator::doMatchingAgain
             virtual bool doMatchingAgain(const BlackMisc::Aviation::CCallsign &callsign) override;
@@ -271,10 +277,10 @@ namespace BlackCore
             static void registerHelp()
             {
                 if (BlackMisc::CSimpleCommandParser::registered("BlackCore::CContextSimulator")) { return; }
-                BlackMisc::CSimpleCommandParser::registerCommand({".ris", "rendering/interpolation setup (global setup)"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".ris show", "display rendering/interpolation setup on console (global setup)"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".ris debug on|off", "rendering/interpolation debug messages (global setup)"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".ris parts on|off", "aircraft parts (global setup)"});
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".ris", "rendering/interpolation setup (global setup)" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".ris show", "display rendering/interpolation setup on console (global setup)" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".ris debug on|off", "rendering/interpolation debug messages (global setup)" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".ris parts on|off", "aircraft parts (global setup)" });
             }
 
         protected:
@@ -288,8 +294,8 @@ namespace BlackCore
             bool isSimulatorPluginAvailable() const;
 
         private:
-            static constexpr int MatchingLogMaxModelSetSize  = 250; //!< default value for switching matching log on
-            static constexpr int MaxModelAddedFailoverTrials = 3;   //!< if model cannot be added, try again max <n> times
+            static constexpr int MatchingLogMaxModelSetSize = 250; //!< default value for switching matching log on
+            static constexpr int MaxModelAddedFailoverTrials = 3; //!< if model cannot be added, try again max <n> times
 
             //  ------------ slots connected with network or other contexts ---------
 
@@ -389,28 +395,28 @@ namespace BlackCore
             void setValidator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             QPair<BlackMisc::Simulation::CSimulatorPluginInfo, QPointer<ISimulator>> m_simulatorPlugin; //!< Currently loaded simulator plugin
-            QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_matchingMessages;     //!< all matching log messages per callsign
+            QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_matchingMessages; //!< all matching log messages per callsign
             QMap<BlackMisc::Aviation::CCallsign, int> m_failoverAddingCounts;
-            CPluginManagerSimulator  *m_plugins = nullptr; //!< plugin manager
-            BlackMisc::CRegularThread m_listenersThread;   //!< waiting for plugin
-            CWeatherManager  m_weatherManager  { this };   //!< weather management
-            CAircraftMatcher m_aircraftMatcher { this };   //!< model matcher
+            CPluginManagerSimulator *m_plugins = nullptr; //!< plugin manager
+            BlackMisc::CRegularThread m_listenersThread; //!< waiting for plugin
+            CWeatherManager m_weatherManager { this }; //!< weather management
+            CAircraftMatcher m_aircraftMatcher { this }; //!< model matcher
 
-            bool m_wasSimulating          = false;
-            bool m_initallyAddAircraft    = false;
-            bool m_isWeatherActivated     = false; // used to activate after plugin is loaded
+            bool m_wasSimulating = false;
+            bool m_initallyAddAircraft = false;
+            bool m_isWeatherActivated = false; // used to activate after plugin is loaded
             BlackMisc::Simulation::MatchingLog m_logMatchingMessages = BlackMisc::Simulation::MatchingLogSimplified;
 
             QString m_networkSessionId; //!< Network session of CServer::getServerSessionId, if not connected empty (for statistics, ..)
             BlackMisc::Simulation::CBackgroundValidation *m_validator = nullptr;
 
             // settings
-            BlackMisc::CSettingReadOnly<Application::TEnabledSimulators>           m_enabledSimulators { this, &CContextSimulator::changeEnabledSimulators };
-            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TModelMatching>   m_matchingSettings  { this }; //!< matching settings (all simulators)
+            BlackMisc::CSettingReadOnly<Application::TEnabledSimulators> m_enabledSimulators { this, &CContextSimulator::changeEnabledSimulators };
+            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings { this }; //!< matching settings (all simulators)
             BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelection> m_modelSetSimulator { this }; //!< current simulator used for model set
-            BlackMisc::Simulation::Settings::CMultiSimulatorSettings               m_multiSimulatorSettings               { this }; //!< individual for simulator, for validation of models
-            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TInterpolationAndRenderingSetupGlobal> m_renderSettings  { this }; //!< rendering/interpolation settings (all simulators)
-            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSimulatorMessages>            m_messageSettings { this }; //!< settings for messages (all simulators)
+            BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_multiSimulatorSettings { this }; //!< individual for simulator, for validation of models
+            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TInterpolationAndRenderingSetupGlobal> m_renderSettings { this }; //!< rendering/interpolation settings (all simulators)
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSimulatorMessages> m_messageSettings { this }; //!< settings for messages (all simulators)
         };
     } // namespace
 } // namespace

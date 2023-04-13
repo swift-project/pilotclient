@@ -40,9 +40,8 @@ using namespace BlackGui::Models;
 
 namespace BlackGui::Components
 {
-    CDistributorPreferencesComponent::CDistributorPreferencesComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        ui(new Ui::CDistributorPreferencesComponent)
+    CDistributorPreferencesComponent::CDistributorPreferencesComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                                                          ui(new Ui::CDistributorPreferencesComponent)
     {
         ui->setupUi(this);
         ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
@@ -63,7 +62,7 @@ namespace BlackGui::Components
     }
 
     CDistributorPreferencesComponent::~CDistributorPreferencesComponent()
-    { }
+    {}
 
     void CDistributorPreferencesComponent::onPreferencesChanged()
     {
@@ -139,8 +138,7 @@ namespace BlackGui::Components
     void CDistributorPreferencesComponent::triggerDeferredSimulatorChange()
     {
         QPointer<CDistributorPreferencesComponent> myself(this);
-        QTimer::singleShot(1000, this, [ = ]
-        {
+        QTimer::singleShot(1000, this, [=] {
             if (!myself) { return; }
             if (!sApp || sApp->isShuttingDown()) { return; }
             const CSimulatorInfo sim = ui->comp_SimulatorSelector->getValue();

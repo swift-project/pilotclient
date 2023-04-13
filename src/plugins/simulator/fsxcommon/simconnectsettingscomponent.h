@@ -19,7 +19,10 @@
 
 #include <QScopedPointer>
 
-namespace Ui { class CSimConnectSettingsComponent; }
+namespace Ui
+{
+    class CSimConnectSettingsComponent;
+}
 namespace BlackSimPlugin::FsxCommon
 {
     /*!

@@ -15,7 +15,10 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CModelBrowserDialog; }
+namespace Ui
+{
+    class CModelBrowserDialog;
+}
 namespace BlackGui::Components
 {
     //! Model browser as dialog

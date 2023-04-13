@@ -15,7 +15,10 @@
 #include <QScopedPointer>
 #include "blackmisc/simulation/aircraftmodellist.h"
 
-namespace Ui { class CAircraftModelValidationDialog; }
+namespace Ui
+{
+    class CAircraftModelValidationDialog;
+}
 namespace BlackGui::Views
 {
     /*!
@@ -37,8 +40,7 @@ namespace BlackGui::Views
         void setModels(
             const BlackMisc::Simulation::CAircraftModelList &models,
             const BlackMisc::Simulation::CSimulatorInfo &simulator,
-            const QString &simulatorDir
-        );
+            const QString &simulatorDir);
 
         //! Trigger a validation
         void triggerValidation(int delayMs = 2500);

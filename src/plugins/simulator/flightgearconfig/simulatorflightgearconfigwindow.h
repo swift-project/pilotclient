@@ -17,7 +17,10 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CSimulatorFlightgearConfigWindow; }
+namespace Ui
+{
+    class CSimulatorFlightgearConfigWindow;
+}
 namespace BlackSimPlugin::Flightgear
 {
     /*!

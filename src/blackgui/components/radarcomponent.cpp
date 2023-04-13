@@ -26,9 +26,8 @@ using namespace BlackGui::Views;
 
 namespace BlackGui::Components
 {
-    CRadarComponent::CRadarComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CRadarComponent)
+    CRadarComponent::CRadarComponent(QWidget *parent) : QFrame(parent),
+                                                        ui(new Ui::CRadarComponent)
     {
         ui->setupUi(this);
 
@@ -48,15 +47,15 @@ namespace BlackGui::Components
 
         connect(ui->gv_RadarView, &CRadarView::radarViewResized, this, &CRadarComponent::fitInView);
         connect(ui->gv_RadarView, &CRadarView::zoomEvent, this, &CRadarComponent::changeRangeInSteps);
-        connect(&m_updateTimer,   &QTimer::timeout, this, &CRadarComponent::refreshTargets);
-        connect(&m_headingTimer,  &QTimer::timeout, this, &CRadarComponent::rotateView);
+        connect(&m_updateTimer, &QTimer::timeout, this, &CRadarComponent::refreshTargets);
+        connect(&m_headingTimer, &QTimer::timeout, this, &CRadarComponent::rotateView);
 
-        connect(ui->cb_RadarRange,  qOverload<int>(&QComboBox::currentIndexChanged), this, &CRadarComponent::changeRangeFromUserSelection);
-        connect(ui->cb_Callsign,    &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
-        connect(ui->cb_Heading,     &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
-        connect(ui->cb_Altitude,    &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
+        connect(ui->cb_RadarRange, qOverload<int>(&QComboBox::currentIndexChanged), this, &CRadarComponent::changeRangeFromUserSelection);
+        connect(ui->cb_Callsign, &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
+        connect(ui->cb_Heading, &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
+        connect(ui->cb_Altitude, &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
         connect(ui->cb_GroundSpeed, &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
-        connect(ui->cb_Grid,        &QCheckBox::toggled, this, &CRadarComponent::toggleGrid);
+        connect(ui->cb_Grid, &QCheckBox::toggled, this, &CRadarComponent::toggleGrid);
 
         prepareScene();
 
@@ -65,7 +64,7 @@ namespace BlackGui::Components
     }
 
     CRadarComponent::~CRadarComponent()
-    { }
+    {}
 
     bool CRadarComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
     {
@@ -93,7 +92,7 @@ namespace BlackGui::Components
     {
         QPen pen(Qt::white, 1);
         pen.setCosmetic(true);
-        QGraphicsLineItem *lix = new QGraphicsLineItem{QLineF(-5.0, 0.0, 5.0, 0.0), &m_center};
+        QGraphicsLineItem *lix = new QGraphicsLineItem { QLineF(-5.0, 0.0, 5.0, 0.0), &m_center };
         lix->setFlags(QGraphicsItem::ItemIgnoresTransformations);
         lix->setPen(pen);
 
@@ -151,8 +150,8 @@ namespace BlackGui::Components
                 const CSimulatedAircraftList aircraft = sGui->getIContextNetwork()->getAircraftInRange();
                 for (const CSimulatedAircraft &sa : aircraft)
                 {
-                    const double distanceNM  = sa.getRelativeDistance().value(CLengthUnit::NM());
-                    const double bearingRad  = sa.getRelativeBearing().value(CAngleUnit::rad());
+                    const double distanceNM = sa.getRelativeDistance().value(CLengthUnit::NM());
+                    const double bearingRad = sa.getRelativeBearing().value(CAngleUnit::rad());
                     const int groundSpeedKts = sa.getGroundSpeed().valueInteger(CSpeedUnit::kts());
 
                     QPointF position(polarPoint(distanceNM, bearingRad));
@@ -206,7 +205,7 @@ namespace BlackGui::Components
             if (isVisibleWidget())
             {
                 int headingDegree = 0;
-                if (! ui->cb_LockNorth->isChecked())
+                if (!ui->cb_LockNorth->isChecked())
                 {
                     headingDegree = sGui->getIContextOwnAircraft()->getOwnAircraftSituation().getHeading().valueInteger(CAngleUnit::deg());
                 }
@@ -258,7 +257,7 @@ namespace BlackGui::Components
     void CRadarComponent::changeRangeFromUserSelection(int index)
     {
         double range = ui->cb_RadarRange->itemData(index).toDouble();
-        if (! qFuzzyCompare(m_rangeNM, range))
+        if (!qFuzzyCompare(m_rangeNM, range))
         {
             m_rangeNM = range;
             fitInView();
@@ -276,8 +275,7 @@ namespace BlackGui::Components
 
         // here I know I am the selected widget, update, but keep GUI responsive (hence I use a timer)
         QPointer<CRadarComponent> myself(this);
-        QTimer::singleShot(1000, this, [ = ]
-        {
+        QTimer::singleShot(1000, this, [=] {
             if (!myself) { return; }
             myself->refreshTargets();
         });

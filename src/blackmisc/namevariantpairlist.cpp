@@ -13,13 +13,12 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc, CNameVariantPair, CNameVariantPairList)
 
 namespace BlackMisc
 {
-    CNameVariantPairList::CNameVariantPairList() { }
+    CNameVariantPairList::CNameVariantPairList() {}
 
-    CNameVariantPairList::CNameVariantPairList(const CSequence<CNameVariantPair> &other) :
-        CSequence<CNameVariantPair>(other)
-    { }
+    CNameVariantPairList::CNameVariantPairList(const CSequence<CNameVariantPair> &other) : CSequence<CNameVariantPair>(other)
+    {}
 
-    bool CNameVariantPairList::containsName(const QString &name)const
+    bool CNameVariantPairList::containsName(const QString &name) const
     {
         return this->contains(&CNameVariantPair::getName, name);
     }

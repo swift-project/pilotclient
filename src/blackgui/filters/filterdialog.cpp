@@ -23,7 +23,7 @@ namespace BlackGui::Filters
     }
 
     CFilterDialog::~CFilterDialog()
-    { }
+    {}
 
     void CFilterDialog::onStyleSheetChanged()
     {

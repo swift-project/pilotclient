@@ -82,14 +82,14 @@ namespace BlackMisc
         //! Result of directory comparison
         struct DirComparison
         {
-            bool ok = false;                 //!< comparison ok
-            QSet<QString> source;            //!< all source files
-            QSet<QString> missingInSource;   //!< files not in source, but in target
-            QSet<QString> missingInTarget;   //!< files not in target, but in source
-            QSet<QString> newerInSource;     //!< file exists in target, but source is newer
-            QSet<QString> newerInTarget;     //!< file in target is newer
-            QSet<QString> sameNameInSource;  //!< file exists in source and target, source name
-            QSet<QString> sameNameInTarget;  //!< file exists in source and target, target name
+            bool ok = false; //!< comparison ok
+            QSet<QString> source; //!< all source files
+            QSet<QString> missingInSource; //!< files not in source, but in target
+            QSet<QString> missingInTarget; //!< files not in target, but in source
+            QSet<QString> newerInSource; //!< file exists in target, but source is newer
+            QSet<QString> newerInTarget; //!< file in target is newer
+            QSet<QString> sameNameInSource; //!< file exists in source and target, source name
+            QSet<QString> sameNameInTarget; //!< file exists in source and target, target name
 
             //! Insert values of another comparison
             void insert(const DirComparison &otherComparison);

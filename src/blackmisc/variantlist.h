@@ -50,11 +50,17 @@ namespace BlackMisc
 
         //! Convert to a sequence type by converting all elements.
         template <typename T>
-        T to() const { return CVariant::from(*this).template to<T>(); }
+        T to() const
+        {
+            return CVariant::from(*this).template to<T>();
+        }
 
         //! Convert from a sequence type by converting all elements.
         template <typename T>
-        static CVariantList from(const T &list) { return CVariant::from(list).template to<CVariantList>(); }
+        static CVariantList from(const T &list)
+        {
+            return CVariant::from(list).template to<CVariantList>();
+        }
 
         //! \copydoc BlackMisc::CValueObject::registerMetadata
         static void registerMetadata();

@@ -18,15 +18,14 @@ using namespace BlackMisc;
 
 namespace BlackGui::Components
 {
-    CStatusMessageFormSmall::CStatusMessageFormSmall(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CStatusMessageFormSmall)
+    CStatusMessageFormSmall::CStatusMessageFormSmall(QWidget *parent) : QFrame(parent),
+                                                                        ui(new Ui::CStatusMessageFormSmall)
     {
         ui->setupUi(this);
     }
 
     CStatusMessageFormSmall::~CStatusMessageFormSmall()
-    { }
+    {}
 
     void CStatusMessageFormSmall::setVariant(const CVariant &messageVariant)
     {

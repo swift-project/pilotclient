@@ -23,25 +23,24 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CInterpolationSetupComponent::CInterpolationSetupComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        ui(new Ui::CInterpolationSetupComponent)
+    CInterpolationSetupComponent::CInterpolationSetupComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                                                  ui(new Ui::CInterpolationSetupComponent)
     {
         ui->setupUi(this);
         ui->cb_IgnoreGlobal->setChecked(true);
         ui->tvp_InterpolationSetup->menuAddItems(CInterpolationSetupView::MenuRemoveSelectedRows);
 
         connect(ui->pb_RenderingSetup, &QPushButton::clicked, this, &CInterpolationSetupComponent::requestRenderingRestrictionsWidget);
-        connect(ui->pb_Save, &QPushButton::clicked,           this, &CInterpolationSetupComponent::saveSetup);
-        connect(ui->pb_DeleteOrReset, &QPushButton::clicked,  this, &CInterpolationSetupComponent::removeOrResetSetup);
-        connect(ui->pb_Reload, &QPushButton::clicked,         this, &CInterpolationSetupComponent::reloadSetup, Qt::QueuedConnection);
-        connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::doubleClicked,    this, &CInterpolationSetupComponent::onRowDoubleClicked);
-        connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::modelChanged,     this, &CInterpolationSetupComponent::onModelChanged, Qt::QueuedConnection);
+        connect(ui->pb_Save, &QPushButton::clicked, this, &CInterpolationSetupComponent::saveSetup);
+        connect(ui->pb_DeleteOrReset, &QPushButton::clicked, this, &CInterpolationSetupComponent::removeOrResetSetup);
+        connect(ui->pb_Reload, &QPushButton::clicked, this, &CInterpolationSetupComponent::reloadSetup, Qt::QueuedConnection);
+        connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::doubleClicked, this, &CInterpolationSetupComponent::onRowDoubleClicked);
+        connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::modelChanged, this, &CInterpolationSetupComponent::onModelChanged, Qt::QueuedConnection);
         connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::modelDataChanged, this, &CInterpolationSetupComponent::onModelChanged, Qt::QueuedConnection);
-        connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::objectsDeleted,   this, &CInterpolationSetupComponent::onObjectsDeleted, Qt::QueuedConnection);
+        connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::objectsDeleted, this, &CInterpolationSetupComponent::onObjectsDeleted, Qt::QueuedConnection);
         connect(ui->rb_Callsign, &QRadioButton::released, this, &CInterpolationSetupComponent::onModeChanged);
-        connect(ui->rb_Global, &QRadioButton::released,   this, &CInterpolationSetupComponent::onModeChanged);
-        if (sGui &&  sGui->getIContextSimulator())
+        connect(ui->rb_Global, &QRadioButton::released, this, &CInterpolationSetupComponent::onModeChanged);
+        if (sGui && sGui->getIContextSimulator())
         {
             connect(sGui->getIContextSimulator(), &IContextSimulator::interpolationAndRenderingSetupChanged, this, &CInterpolationSetupComponent::onSetupChanged, Qt::QueuedConnection);
         }
@@ -49,15 +48,13 @@ namespace BlackGui::Components
         ui->rb_Global->setChecked(true);
 
         QPointer<CInterpolationSetupComponent> myself(this);
-        QTimer::singleShot(1000, this, [ = ]
-        {
+        QTimer::singleShot(1000, this, [=] {
             if (!sGui || sGui->isShuttingDown()) { return; }
             if (!myself) { return; }
             this->onModeChanged();
         });
 
-        QTimer::singleShot(30 * 1000, this, [ = ]
-        {
+        QTimer::singleShot(30 * 1000, this, [=] {
             if (!sGui || sGui->isShuttingDown()) { return; }
             if (!myself) { return; }
             this->onSetupChanged();
@@ -65,7 +62,7 @@ namespace BlackGui::Components
     }
 
     CInterpolationSetupComponent::~CInterpolationSetupComponent()
-    { }
+    {}
 
     CInterpolationSetupComponent::Mode CInterpolationSetupComponent::getSetupMode() const
     {
@@ -112,7 +109,7 @@ namespace BlackGui::Components
 
     void CInterpolationSetupComponent::reloadSetup()
     {
-        const bool global  = (this->getSetupMode() == CInterpolationSetupComponent::SetupGlobal);
+        const bool global = (this->getSetupMode() == CInterpolationSetupComponent::SetupGlobal);
         const bool overlay = QObject::sender() == ui->pb_Reload;
         if (!this->checkPrerequisites(!global, overlay)) { return; }
         if (global)
@@ -143,8 +140,7 @@ namespace BlackGui::Components
             CLogMessage(this).info(u"Set global setup: '%1'") << gs.toQString(true);
 
             const QPointer<CInterpolationSetupComponent> myself(this);
-            QTimer::singleShot(250, this, [ = ]
-            {
+            QTimer::singleShot(250, this, [=] {
                 if (!myself) { return; }
                 this->reloadSetup();
             });
@@ -169,8 +165,7 @@ namespace BlackGui::Components
             if (!set) { return; }
 
             const QPointer<CInterpolationSetupComponent> myself(this);
-            QTimer::singleShot(250, this, [ = ]
-            {
+            QTimer::singleShot(250, this, [=] {
                 if (!myself) { return; }
                 this->displaySetupsPerCallsign();
             });
@@ -180,7 +175,7 @@ namespace BlackGui::Components
     void CInterpolationSetupComponent::removeOrResetSetup()
     {
         const bool global = (this->getSetupMode() == CInterpolationSetupComponent::SetupGlobal);
-        if (!this->checkPrerequisites(!global, true)) { }
+        if (!this->checkPrerequisites(!global, true)) {}
         if (global)
         {
             // reset
@@ -199,8 +194,7 @@ namespace BlackGui::Components
             if (!set) { return; }
 
             const QPointer<CInterpolationSetupComponent> myself(this);
-            QTimer::singleShot(100, this, [ = ]
-            {
+            QTimer::singleShot(100, this, [=] {
                 if (!myself) { return; }
                 this->displaySetupsPerCallsign();
             });

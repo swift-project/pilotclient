@@ -14,12 +14,11 @@ using namespace BlackMisc::Aviation;
 namespace BlackGui::Models
 {
     CAirlineIcaoFilter::CAirlineIcaoFilter(int id, const QString &vDesignator, const QString &name,
-                                            const QString &countryIso, bool isReal, bool isVa) :
-        m_id(id), m_vDesignator(vDesignator.trimmed().toUpper()), m_name(name.trimmed()),
-        m_countryIso(countryIso.trimmed().toUpper()), m_real(isReal), m_va(isVa)
+                                           const QString &countryIso, bool isReal, bool isVa) : m_id(id), m_vDesignator(vDesignator.trimmed().toUpper()), m_name(name.trimmed()),
+                                                                                                m_countryIso(countryIso.trimmed().toUpper()), m_real(isReal), m_va(isVa)
     {
-        this->m_valid =  !(m_id < 0 && this->m_countryIso.isEmpty() && this->m_vDesignator.isEmpty() &&
-                            this->m_name.isEmpty() && !this->m_va && !this->m_real);
+        this->m_valid = !(m_id < 0 && this->m_countryIso.isEmpty() && this->m_vDesignator.isEmpty() &&
+                          this->m_name.isEmpty() && !this->m_va && !this->m_real);
     }
 
     CAirlineIcaoCodeList CAirlineIcaoFilter::filter(const CAirlineIcaoCodeList &inContainer) const

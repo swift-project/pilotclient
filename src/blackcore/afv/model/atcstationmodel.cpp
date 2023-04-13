@@ -13,10 +13,9 @@ using namespace BlackCore::Afv;
 
 namespace BlackCore::Afv::Model
 {
-    CSampleAtcStation::CSampleAtcStation(const QString &callsign, const TransceiverDto &transceiver) :
-        m_callsign(callsign),
-        m_transceiver(transceiver)
-    { }
+    CSampleAtcStation::CSampleAtcStation(const QString &callsign, const TransceiverDto &transceiver) : m_callsign(callsign),
+                                                                                                       m_transceiver(transceiver)
+    {}
 
     double CSampleAtcStation::latitude() const
     {
@@ -45,9 +44,8 @@ namespace BlackCore::Afv::Model
         return radioFactor * sqrtAltM;
     }
 
-    CSampleAtcStationModel::CSampleAtcStationModel(QObject *parent) :
-        QAbstractListModel(parent)
-    { }
+    CSampleAtcStationModel::CSampleAtcStationModel(QObject *parent) : QAbstractListModel(parent)
+    {}
 
     CSampleAtcStationModel::~CSampleAtcStationModel() {}
 
@@ -56,7 +54,7 @@ namespace BlackCore::Afv::Model
         // Add stations which didn't exist yet
         for (const auto &station : atcStations)
         {
-            if (! m_atcStations.contains(station)) { addStation(station); }
+            if (!m_atcStations.contains(station)) { addStation(station); }
         }
 
         // Remove all stations which are no longer there
@@ -96,24 +94,24 @@ namespace BlackCore::Afv::Model
             return QVariant();
 
         const CSampleAtcStation &atcStation = m_atcStations[index.row()];
-        if (role == CallsignRole)      return atcStation.callsign();
-        if (role == LatitudeRole)      return atcStation.latitude();
-        if (role == LongitudeRole)     return atcStation.longitude();
+        if (role == CallsignRole) return atcStation.callsign();
+        if (role == LatitudeRole) return atcStation.latitude();
+        if (role == LongitudeRole) return atcStation.longitude();
         if (role == RadioDistanceRole) return atcStation.radioDistanceM();
-        if (role == FrequencyRole)     return atcStation.formattedFrequency();
-        if (role == FrequencyKhzRole)  return atcStation.frequency() / 1000;
+        if (role == FrequencyRole) return atcStation.formattedFrequency();
+        if (role == FrequencyKhzRole) return atcStation.frequency() / 1000;
         return QVariant();
     }
 
     QHash<int, QByteArray> CSampleAtcStationModel::roleNames() const
     {
         QHash<int, QByteArray> roles;
-        roles[CallsignRole]      = "callsign";
-        roles[LatitudeRole]      = "latitude";
-        roles[LongitudeRole]     = "longitude";
+        roles[CallsignRole] = "callsign";
+        roles[LatitudeRole] = "latitude";
+        roles[LongitudeRole] = "longitude";
         roles[RadioDistanceRole] = "radioDistanceM";
-        roles[FrequencyRole]     = "frequencyAsString";
-        roles[FrequencyKhzRole]  = "frequencyKhz";
+        roles[FrequencyRole] = "frequencyAsString";
+        roles[FrequencyKhzRole] = "frequencyKhz";
         return roles;
     }
 }

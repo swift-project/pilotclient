@@ -13,11 +13,11 @@
 namespace BlackCore::Fsd
 {
     PlaneInfoRequest::PlaneInfoRequest() : MessageBase()
-    { }
+    {}
 
     PlaneInfoRequest::PlaneInfoRequest(const QString &sender, const QString &receiver)
         : MessageBase(sender, receiver)
-    { }
+    {}
 
     QStringList PlaneInfoRequest::toTokens() const
     {

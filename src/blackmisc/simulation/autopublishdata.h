@@ -34,7 +34,11 @@ namespace BlackMisc::Simulation
             static constexpr bool isPinned() { return true; }
 
             //! Default simulator
-            static const qint64 &defaultValue() { static constexpr qint64 d = -1; return d; }
+            static const qint64 &defaultValue()
+            {
+                static constexpr qint64 d = -1;
+                return d;
+            }
 
             //! Key
             static const char *key() { return "autopublishlast"; }
@@ -45,14 +49,14 @@ namespace BlackMisc::Simulation
     struct ChangedAutoPublishData
     {
         bool modelKnown = false; //!< model known in DB
-        bool changedCG  = false; //!< CG changed
+        bool changedCG = false; //!< CG changed
         bool changedSim = false; //!< simulator changed
 
         //! Set all to true;
         void setAllTrue()
         {
             modelKnown = true;
-            changedCG  = true;
+            changedCG = true;
             changedSim = true;
         }
     };

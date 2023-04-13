@@ -23,7 +23,10 @@
 #include <QWizard>
 #include <QScopedPointer>
 
-namespace Ui { class CInstallXSwiftBusComponent; }
+namespace Ui
+{
+    class CInstallXSwiftBusComponent;
+}
 namespace BlackGui::Components
 {
     /*!

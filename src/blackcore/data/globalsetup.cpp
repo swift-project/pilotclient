@@ -32,9 +32,8 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackCore::Data, CGlobalSetup)
 
 namespace BlackCore::Data
 {
-    CGlobalSetup::CGlobalSetup() :
-        CIdentifiable("CGlobalSetup"),
-        ITimestampBased(0)
+    CGlobalSetup::CGlobalSetup() : CIdentifiable("CGlobalSetup"),
+                                   ITimestampBased(0)
     {
         this->initDefaultValues();
     }
@@ -47,23 +46,21 @@ namespace BlackCore::Data
     void CGlobalSetup::initDefaultValues()
     {
         m_mappingMinimumVersion = CBuildConfig::getVersionString();
-        m_dbRootDirectoryUrl    = CUrl("https://datastore.swift-project.org/");
-        m_vatsimBookingsUrl     = CUrl("http://vatbook.euroutepro.com/xml2.php");
-        m_vatsimMetarsUrls      = CUrlList{"http://metar.vatsim.net/metar.php"};
-        m_vatsimStatusFileUrls  = CUrlList{ "https://status.vatsim.net" };
-        m_vatsimDataFileUrls    = CUrlList{ "https://data.vatsim.net/v3/vatsim-data.json" };
-        m_vatsimServerFileUrl   = CUrl("https://data.vatsim.net/v3/vatsim-servers.json");
-        m_vatsimFsdHttpUrl      = CUrl("http://fsd-http.connect.vatsim.net");
-        m_sharedUrls = CUrlList
-        {
+        m_dbRootDirectoryUrl = CUrl("https://datastore.swift-project.org/");
+        m_vatsimBookingsUrl = CUrl("http://vatbook.euroutepro.com/xml2.php");
+        m_vatsimMetarsUrls = CUrlList { "http://metar.vatsim.net/metar.php" };
+        m_vatsimStatusFileUrls = CUrlList { "https://status.vatsim.net" };
+        m_vatsimDataFileUrls = CUrlList { "https://data.vatsim.net/v3/vatsim-data.json" };
+        m_vatsimServerFileUrl = CUrl("https://data.vatsim.net/v3/vatsim-servers.json");
+        m_vatsimFsdHttpUrl = CUrl("http://fsd-http.connect.vatsim.net");
+        m_sharedUrls = CUrlList {
             "http://download.swift-project.org/shared/",
         };
 
-        m_onlineHelpUrls = CUrlList
-        {
+        m_onlineHelpUrls = CUrlList {
             "https://datastore.swift-project.org/page/swifthelpdispatcher.html",
         };
-        m_ncepGlobalForecastSystemUrl   = CUrl("http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p50.pl");
+        m_ncepGlobalForecastSystemUrl = CUrl("http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p50.pl");
         m_ncepGlobalForecastSystemUrl25 = CUrl("http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl");
 
         // hardcoded based on RR's information
@@ -144,16 +141,12 @@ namespace BlackCore::Data
 
     CUrl CGlobalSetup::getDbLoginServiceUrl() const
     {
-        return getDbRootDirectoryUrl().
-                withAppendedPath("/service/jsonauthenticate.php").
-                withSwitchedScheme("https", m_dbHttpsPort);
+        return getDbRootDirectoryUrl().withAppendedPath("/service/jsonauthenticate.php").withSwitchedScheme("https", m_dbHttpsPort);
     }
 
     CUrl CGlobalSetup::getDbClientPingServiceUrl() const
     {
-        return getDbRootDirectoryUrl().
-                withAppendedPath("/service/clientping.php").
-                withSwitchedScheme("https", m_dbHttpsPort);
+        return getDbRootDirectoryUrl().withAppendedPath("/service/clientping.php").withSwitchedScheme("https", m_dbHttpsPort);
     }
 
     CUrl CGlobalSetup::getDbClientPingServiceUrl(PingType type) const
@@ -162,9 +155,9 @@ namespace BlackCore::Data
         if (pingUrl.isEmpty()) { CUrl(); }
 
         pingUrl.appendQuery("uuid", QSysInfo::machineUniqueId());
-        if (type.testFlag(PingLogoff))   { pingUrl.appendQuery("logoff", "true"); }
+        if (type.testFlag(PingLogoff)) { pingUrl.appendQuery("logoff", "true"); }
         if (type.testFlag(PingShutdown)) { pingUrl.appendQuery("shutdown", "true"); }
-        if (type.testFlag(PingStarted))  { pingUrl.appendQuery("started", "true"); }
+        if (type.testFlag(PingStarted)) { pingUrl.appendQuery("started", "true"); }
         pingUrl.appendQuery("os", CBuildConfig::getPlatformString());
         if (CBuildConfig::isLocalDeveloperDebugBuild()) { pingUrl.appendQuery("dev", "true"); }
         if (sApp)
@@ -179,9 +172,7 @@ namespace BlackCore::Data
 
     CUrl CGlobalSetup::getAlphaXSwiftBusFilesServiceUrl() const
     {
-        return getDbRootDirectoryUrl().
-                withAppendedPath("/service/jsonalphaxswiftbusfiles.php").
-                withSwitchedScheme("https", m_dbHttpsPort);
+        return getDbRootDirectoryUrl().withAppendedPath("/service/jsonalphaxswiftbusfiles.php").withSwitchedScheme("https", m_dbHttpsPort);
     }
 
     bool CGlobalSetup::dbDebugFlag() const
@@ -259,12 +250,12 @@ namespace BlackCore::Data
     CServerList CGlobalSetup::getPredefinedServersPlusHardcodedServers() const
     {
         static const CServerList hardcoded(
-        {
-            CServer::swiftFsdTestServer(),
-            CServer::fscFsdServer(),
-            CServer::esTowerView()
-            // CServer::afvFsdTestServer(),
-        });
+            {
+                CServer::swiftFsdTestServer(),
+                CServer::fscFsdServer(),
+                CServer::esTowerView()
+                // CServer::afvFsdTestServer(),
+            });
         CServerList testServers(m_predefinedServers);
         testServers.addIfAddressNotExists(hardcoded);
         return testServers;
@@ -285,71 +276,21 @@ namespace BlackCore::Data
     QString CGlobalSetup::convertToQString(const QString &separator, bool i18n) const
     {
         QString s =
-            u"timestamp: "
-            % this->getFormattedUtcTimestampYmdhms()
-            % separator
-            % u"Global setup loaded: "
-            % boolToYesNo(this->wasLoadedFromFile())
-            % separator
+            u"timestamp: " % this->getFormattedUtcTimestampYmdhms() % separator % u"Global setup loaded: " % boolToYesNo(this->wasLoadedFromFile()) % separator
 
-            % u"For development: "
-            % boolToYesNo(isDevelopment())
-            % separator
+            % u"For development: " % boolToYesNo(isDevelopment()) % separator
 
-            % u"Mapping min.version: "
-            % this->getMappingMinimumVersionString()
-            % separator
+            % u"Mapping min.version: " % this->getMappingMinimumVersionString() % separator
 
-            % u"Distribution URLs: "
-            % getSwiftUpdateInfoFileUrls().toQString(i18n)
-            % separator
-            % u"Bootstrap URLs: "
-            % getSwiftBootstrapFileUrls().toQString(i18n)
-            % separator
-            % u"Help URLs: "
-            % m_onlineHelpUrls.toQString(i18n)
-            % separator;
+            % u"Distribution URLs: " % getSwiftUpdateInfoFileUrls().toQString(i18n) % separator % u"Bootstrap URLs: " % getSwiftBootstrapFileUrls().toQString(i18n) % separator % u"Help URLs: " % m_onlineHelpUrls.toQString(i18n) % separator;
         s +=
-            u"DB root directory: "
-            % getDbRootDirectoryUrl().toQString(i18n)
-            % separator
-            % u"ICAO DB reader: "
-            % getDbIcaoReaderUrl().toQString(i18n)
-            % separator
-            % u"Model DB reader: "
-            % getDbModelReaderUrl().toQString(i18n)
-            % separator
-            % u"Airport DB reader: "
-            % getDbAirportReaderUrl().toQString(i18n)
-            % separator
-            % u"DB home page: "
-            % getDbHomePageUrl().toQString(i18n)
-            % separator
-            % u"DB login service: "
-            % getDbLoginServiceUrl().toQString(i18n)
-            % separator
-            % u"DB client ping service: "
-            % getDbClientPingServiceUrl().toQString(i18n);
+            u"DB root directory: " % getDbRootDirectoryUrl().toQString(i18n) % separator % u"ICAO DB reader: " % getDbIcaoReaderUrl().toQString(i18n) % separator % u"Model DB reader: " % getDbModelReaderUrl().toQString(i18n) % separator % u"Airport DB reader: " % getDbAirportReaderUrl().toQString(i18n) % separator % u"DB home page: " % getDbHomePageUrl().toQString(i18n) % separator % u"DB login service: " % getDbLoginServiceUrl().toQString(i18n) % separator % u"DB client ping service: " % getDbClientPingServiceUrl().toQString(i18n);
         s +=
-            u"VATSIM bookings: "
-            % getVatsimBookingsUrl().toQString(i18n)
-            % separator
-            % u"VATSIM METARs: "
-            % getVatsimMetarsUrls().toQString(i18n)
-            % separator
-            % u"VATSIM data file: "
-            % getVatsimDataFileUrls().toQString(i18n)
-            % separator
-            % u"VATSIM server file: "
-            % getVatsimServerFileUrl().toQString(i18n)
-            % separator
+            u"VATSIM bookings: " % getVatsimBookingsUrl().toQString(i18n) % separator % u"VATSIM METARs: " % getVatsimMetarsUrls().toQString(i18n) % separator % u"VATSIM data file: " % getVatsimDataFileUrls().toQString(i18n) % separator % u"VATSIM server file: " % getVatsimServerFileUrl().toQString(i18n) % separator
 
-            % u"Predefined servers: "
-            % getPredefinedServers().toQString(i18n)
-            % separator
+            % u"Predefined servers: " % getPredefinedServers().toQString(i18n) % separator
 
-            % u"Crash report server: "
-            % getCrashReportServerUrl().toQString(i18n);
+            % u"Crash report server: " % getCrashReportServerUrl().toQString(i18n);
 
         return s;
     }
@@ -362,32 +303,36 @@ namespace BlackCore::Data
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexDbRootDirectory:       return QVariant::fromValue(m_dbRootDirectoryUrl);
-        case IndexDbHttpPort:            return QVariant::fromValue(m_dbHttpPort);
-        case IndexDbHttpsPort:           return QVariant::fromValue(m_dbHttpsPort);
-        case IndexDbLoginService:        return QVariant::fromValue(this->getDbLoginServiceUrl());
-        case IndexDbClientPingService:   return QVariant::fromValue(this->getDbClientPingServiceUrl());
-        case IndexVatsimStatus:          return QVariant::fromValue(m_vatsimStatusFileUrls);
-        case IndexVatsimData:            return QVariant::fromValue(m_vatsimDataFileUrls);
-        case IndexVatsimBookings:        return QVariant::fromValue(m_vatsimBookingsUrl);
-        case IndexVatsimServer:          return QVariant::fromValue(m_vatsimServerFileUrl);
-        case IndexVatsimHttpFsd:         return QVariant::fromValue(m_vatsimFsdHttpUrl);
-        case IndexVatsimMetars:          return QVariant::fromValue(m_vatsimMetarsUrls);
-        case IndexBootstrapFileUrls:     return QVariant::fromValue(this->getSwiftBootstrapFileUrls());
-        case IndexUpdateInfoFileUrls:    return QVariant::fromValue(this->getSwiftUpdateInfoFileUrls());
-        case IndexSharedUrls:            return QVariant::fromValue(m_sharedUrls);
-        case IndexOnlineHelpUrls:        return QVariant::fromValue(m_onlineHelpUrls);
-        case IndexCrashReportServerUrl:  return QVariant::fromValue(m_crashReportServerUrl);
-        case IndexWasLoadedFromFile:     return QVariant::fromValue(m_wasLoadedFromFile);
+        case IndexDbRootDirectory: return QVariant::fromValue(m_dbRootDirectoryUrl);
+        case IndexDbHttpPort: return QVariant::fromValue(m_dbHttpPort);
+        case IndexDbHttpsPort: return QVariant::fromValue(m_dbHttpsPort);
+        case IndexDbLoginService: return QVariant::fromValue(this->getDbLoginServiceUrl());
+        case IndexDbClientPingService: return QVariant::fromValue(this->getDbClientPingServiceUrl());
+        case IndexVatsimStatus: return QVariant::fromValue(m_vatsimStatusFileUrls);
+        case IndexVatsimData: return QVariant::fromValue(m_vatsimDataFileUrls);
+        case IndexVatsimBookings: return QVariant::fromValue(m_vatsimBookingsUrl);
+        case IndexVatsimServer: return QVariant::fromValue(m_vatsimServerFileUrl);
+        case IndexVatsimHttpFsd: return QVariant::fromValue(m_vatsimFsdHttpUrl);
+        case IndexVatsimMetars: return QVariant::fromValue(m_vatsimMetarsUrls);
+        case IndexBootstrapFileUrls: return QVariant::fromValue(this->getSwiftBootstrapFileUrls());
+        case IndexUpdateInfoFileUrls: return QVariant::fromValue(this->getSwiftUpdateInfoFileUrls());
+        case IndexSharedUrls: return QVariant::fromValue(m_sharedUrls);
+        case IndexOnlineHelpUrls: return QVariant::fromValue(m_onlineHelpUrls);
+        case IndexCrashReportServerUrl: return QVariant::fromValue(m_crashReportServerUrl);
+        case IndexWasLoadedFromFile: return QVariant::fromValue(m_wasLoadedFromFile);
         case IndexMappingMinimumVersion: return QVariant::fromValue(m_mappingMinimumVersion);
-        case IndexPredefinedServers:     return QVariant::fromValue(m_predefinedServers);
-        default:                         return CValueObject::propertyByIndex(index);
+        case IndexPredefinedServers: return QVariant::fromValue(m_predefinedServers);
+        default: return CValueObject::propertyByIndex(index);
         }
     }
 
     void CGlobalSetup::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CGlobalSetup>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CGlobalSetup>();
+            return;
+        }
         if (ITimestampBased::canHandleIndex(index))
         {
             ITimestampBased::setPropertyByIndex(index, variant);
@@ -397,22 +342,22 @@ namespace BlackCore::Data
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexDbRootDirectory:       m_dbRootDirectoryUrl.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-        case IndexDbHttpPort:            m_dbHttpPort = variant.toInt(); break;
-        case IndexDbHttpsPort:           m_dbHttpsPort = variant.toInt(); break;
-        case IndexDbLoginService:        break; // cannot be changed
-        case IndexDbClientPingService:   break; // cannot be changed
-        case IndexVatsimData:            m_vatsimDataFileUrls = variant.value<CUrlList>(); break;
-        case IndexVatsimBookings:        m_vatsimBookingsUrl.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-        case IndexVatsimServer:          m_vatsimServerFileUrl = variant.value<CUrl>(); break;
-        case IndexVatsimHttpFsd:         m_vatsimFsdHttpUrl = variant.value<CUrl>(); break;
-        case IndexVatsimMetars:          m_vatsimMetarsUrls = variant.value<CUrlList>(); break;
-        case IndexSharedUrls:            m_sharedUrls = variant.value<CUrlList>(); break;
-        case IndexOnlineHelpUrls:        m_onlineHelpUrls = variant.value<CUrlList>(); break;
-        case IndexCrashReportServerUrl:  m_crashReportServerUrl = variant.value<CUrl>(); break;
-        case IndexWasLoadedFromFile:     m_wasLoadedFromFile = variant.toBool(); break;
+        case IndexDbRootDirectory: m_dbRootDirectoryUrl.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexDbHttpPort: m_dbHttpPort = variant.toInt(); break;
+        case IndexDbHttpsPort: m_dbHttpsPort = variant.toInt(); break;
+        case IndexDbLoginService: break; // cannot be changed
+        case IndexDbClientPingService: break; // cannot be changed
+        case IndexVatsimData: m_vatsimDataFileUrls = variant.value<CUrlList>(); break;
+        case IndexVatsimBookings: m_vatsimBookingsUrl.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexVatsimServer: m_vatsimServerFileUrl = variant.value<CUrl>(); break;
+        case IndexVatsimHttpFsd: m_vatsimFsdHttpUrl = variant.value<CUrl>(); break;
+        case IndexVatsimMetars: m_vatsimMetarsUrls = variant.value<CUrlList>(); break;
+        case IndexSharedUrls: m_sharedUrls = variant.value<CUrlList>(); break;
+        case IndexOnlineHelpUrls: m_onlineHelpUrls = variant.value<CUrlList>(); break;
+        case IndexCrashReportServerUrl: m_crashReportServerUrl = variant.value<CUrl>(); break;
+        case IndexWasLoadedFromFile: m_wasLoadedFromFile = variant.toBool(); break;
         case IndexMappingMinimumVersion: m_mappingMinimumVersion = variant.toString(); break;
-        case IndexPredefinedServers:     m_predefinedServers = variant.value<CServerList>(); break;
+        case IndexPredefinedServers: m_predefinedServers = variant.value<CServerList>(); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }

@@ -142,7 +142,7 @@ namespace BlackMisc::Simulation
     {
         static const CLogCategoryList cats({ CLogCategories::mapping(), CLogCategories::webservice() });
         if (dbModels.isEmpty()) { return CStatusMessage(this).validationError(u"No DB data"); }
-        if (this->isEmpty())    { return CStatusMessage(this).validationWarning(u"No data"); }
+        if (this->isEmpty()) { return CStatusMessage(this).validationWarning(u"No data"); }
 
         CStatusMessageList msgs;
         msgs.push_back(CStatusMessage(cats).validationInfo(u"DB models: %1") << dbModels.size());
@@ -255,7 +255,6 @@ namespace BlackMisc::Simulation
             if (f.remove()) { c++; }
         }
         return c;
-
     }
 
     QStringList CAutoPublishData::findAndCleanupPublishFiles(const QString &dirPath)

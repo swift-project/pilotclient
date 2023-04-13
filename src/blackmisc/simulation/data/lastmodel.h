@@ -23,7 +23,11 @@ namespace BlackMisc::Simulation::Data
         static const char *key() { return "lastaircraftmodel"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("Own aircraft model"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("Own aircraft model");
+            return name;
+        }
     };
 } // ns
 

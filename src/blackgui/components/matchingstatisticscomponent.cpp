@@ -17,9 +17,8 @@ using namespace BlackGui::Views;
 
 namespace BlackGui::Components
 {
-    CMatchingStatisticsComponent::CMatchingStatisticsComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CMatchingStatisticsComponent)
+    CMatchingStatisticsComponent::CMatchingStatisticsComponent(QWidget *parent) : QFrame(parent),
+                                                                                  ui(new Ui::CMatchingStatisticsComponent)
     {
         ui->setupUi(this);
         connect(ui->pb_Generate, &QPushButton::clicked, this, &CMatchingStatisticsComponent::onGenerateClicked);
@@ -28,7 +27,7 @@ namespace BlackGui::Components
     }
 
     CMatchingStatisticsComponent::~CMatchingStatisticsComponent()
-    { }
+    {}
 
     void CMatchingStatisticsComponent::onGenerateClicked()
     {

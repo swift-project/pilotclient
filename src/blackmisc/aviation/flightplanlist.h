@@ -43,4 +43,4 @@ namespace BlackMisc::Aviation
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CFlightPlanList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Aviation::CFlightPlan>)
 
-#endif //guard
+#endif // guard

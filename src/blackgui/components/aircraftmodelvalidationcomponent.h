@@ -19,7 +19,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CAircraftModelValidationComponent; }
+namespace Ui
+{
+    class CAircraftModelValidationComponent;
+}
 namespace BlackMisc
 {
     class CStatusMessageList;

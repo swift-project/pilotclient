@@ -18,10 +18,10 @@ BLACK_DEFINE_COLLECTION_MIXINS(BlackMisc, CPlatform, CPlatformSet)
 
 namespace BlackMisc
 {
-    CPlatformSet::CPlatformSet() { }
+    CPlatformSet::CPlatformSet() {}
 
     CPlatformSet::CPlatformSet(const CCollection<CPlatform> &other) : CCollection<CPlatform>(other)
-    { }
+    {}
 
     QStringList CPlatformSet::getPlatformNames() const
     {

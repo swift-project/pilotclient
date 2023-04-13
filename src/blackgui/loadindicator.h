@@ -111,13 +111,13 @@ namespace BlackGui
         bool isParentVisible() const;
 
     private:
-        int m_angle                 = 0;
-        int m_timerId               = -1;
-        int m_delayMs               = 1000;
-        int m_currentId             = 1;        //!< id indicating request starting this indicator
-        QList<int> m_pendingIds;                //!< ids not finished yet
+        int m_angle = 0;
+        int m_timerId = -1;
+        int m_delayMs = 1000;
+        int m_currentId = 1; //!< id indicating request starting this indicator
+        QList<int> m_pendingIds; //!< ids not finished yet
         bool m_displayedWhenStopped = false;
-        QColor m_color              = Qt::blue;
+        QColor m_color = Qt::blue;
     };
 
     /*!
@@ -136,7 +136,7 @@ namespace BlackGui
         CLoadIndicatorEnabled(const CLoadIndicatorEnabled &) = delete;
 
         //! Copy assignment operator
-        CLoadIndicatorEnabled &operator =(const CLoadIndicatorEnabled &) = delete;
+        CLoadIndicatorEnabled &operator=(const CLoadIndicatorEnabled &) = delete;
 
         //! Showing load indicator?
         bool isShowingLoadIndicator() const;
@@ -158,10 +158,10 @@ namespace BlackGui
         //! \remark override for usage
         virtual void indicatorTimedOut();
 
-        QWidget        *m_usingWidget = nullptr;   //!< widget which uses load indicator
+        QWidget *m_usingWidget = nullptr; //!< widget which uses load indicator
         CLoadIndicator *m_loadIndicator = nullptr; //!< indicator itself
-        bool            m_loadInProgress = false;  //!< flag indicating loading
-        int             m_indicatorId = -1;        //!< last indicator id returned
+        bool m_loadInProgress = false; //!< flag indicating loading
+        int m_indicatorId = -1; //!< last indicator id returned
     };
 } // ns
 

@@ -16,9 +16,8 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Weather, CTemperatureLayer, CTemperature
 
 namespace BlackMisc::Weather
 {
-    CTemperatureLayerList::CTemperatureLayerList(const CSequence<CTemperatureLayer> &other) :
-        CSequence<CTemperatureLayer>(other)
-    { }
+    CTemperatureLayerList::CTemperatureLayerList(const CSequence<CTemperatureLayer> &other) : CSequence<CTemperatureLayer>(other)
+    {}
 
     bool CTemperatureLayerList::containsLevel(const CAltitude &level) const
     {

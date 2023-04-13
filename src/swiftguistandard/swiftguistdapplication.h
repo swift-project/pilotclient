@@ -41,12 +41,11 @@ protected:
     virtual BlackMisc::CStatusMessageList startHookIn() override;
 
 private:
-    QCommandLineOption m_cmdFacadeMode
-    {
-        { "c" , "core" },
+    QCommandLineOption m_cmdFacadeMode {
+        { "c", "core" },
         QCoreApplication::translate("main", "Core mode: (d)istributed, (s)tandalone."),
         "coremode"
-    };  //!< Facade startup mode
+    }; //!< Facade startup mode
 };
 
 #endif // guard

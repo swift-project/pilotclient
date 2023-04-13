@@ -43,7 +43,10 @@ namespace BlackMisc
 
     //! Used in asserts to protect against signed integer overflow.
     template <typename T>
-    bool isSafeToIncrement(const T &value) { return value < std::numeric_limits<T>::max(); }
+    bool isSafeToIncrement(const T &value)
+    {
+        return value < std::numeric_limits<T>::max();
+    }
 
     //! \private
     std::pair<QString &, std::atomic<bool> &> getCacheRootDirectoryMutable()
@@ -55,7 +58,7 @@ namespace BlackMisc
 
     void setMockCacheRootDirectory(const QString &dir)
     {
-        Q_ASSERT_X(! getCacheRootDirectoryMutable().second, Q_FUNC_INFO, "Too late to call this function");
+        Q_ASSERT_X(!getCacheRootDirectoryMutable().second, Q_FUNC_INFO, "Too late to call this function");
         getCacheRootDirectoryMutable().first = dir;
     }
 
@@ -65,13 +68,11 @@ namespace BlackMisc
         return getCacheRootDirectoryMutable().first;
     }
 
-
     ////////////////////////////////
     // CValueCachePacket
     ////////////////////////////////
 
-    CValueCachePacket::CValueCachePacket(const CVariantMap &values, qint64 timestamp, bool saved, bool valuesChanged) :
-        m_saved(saved), m_valuesChanged(valuesChanged)
+    CValueCachePacket::CValueCachePacket(const CVariantMap &values, qint64 timestamp, bool saved, bool valuesChanged) : m_saved(saved), m_valuesChanged(valuesChanged)
     {
         for (auto it = values.cbegin(); it != values.cend(); ++it)
         {
@@ -127,7 +128,7 @@ namespace BlackMisc
     {
         for (auto it = times.cbegin(); it != times.cend(); ++it)
         {
-            if (! contains(it.key())) { continue; }
+            if (!contains(it.key())) { continue; }
             (*this)[it.key()].second = it.value();
         }
     }
@@ -136,7 +137,7 @@ namespace BlackMisc
     {
         auto copy = *this;
         remove(key);
-        copy.removeByKeyIf([ = ](const QString &key2) { return key2 != key; });
+        copy.removeByKeyIf([=](const QString &key2) { return key2 != key; });
         return copy;
     }
 
@@ -153,7 +154,7 @@ namespace BlackMisc
 
     const QStringList &CValueCache::getLogCategories()
     {
-        static const QStringList cats({ "swift.valuecache" , CLogCategories::services()} );
+        static const QStringList cats({ "swift.valuecache", CLogCategories::services() });
         return cats;
     }
 
@@ -200,7 +201,7 @@ namespace BlackMisc
         CVariantMap map;
         for (const auto &element : elementsStartingWith(keyPrefix))
         {
-            if (! element->m_value.isValid()) { continue; }
+            if (!element->m_value.isValid()) { continue; }
             implementationOf(map).insert(map.cend(), element->m_key, element->m_value);
         }
         return map;
@@ -214,7 +215,7 @@ namespace BlackMisc
         {
             auto it = m_elements.constFind(key);
             if (it == m_elements.cend()) { continue; }
-            if (! (*it)->m_value.isValid()) { continue; }
+            if (!(*it)->m_value.isValid()) { continue; }
             map.insert(key, (*it)->m_value);
         }
         return map;
@@ -226,7 +227,7 @@ namespace BlackMisc
         CValueCachePacket map;
         for (const auto &element : elementsStartingWith(keyPrefix))
         {
-            if (! element->m_value.isValid()) { continue; }
+            if (!element->m_value.isValid()) { continue; }
             map.insert(element->m_key, element->m_value, element->m_timestamp);
         }
         return map;
@@ -238,7 +239,7 @@ namespace BlackMisc
         QStringList keys;
         for (const auto &element : elementsStartingWith(keyPrefix))
         {
-            if (element->m_value.isValid() && ! element->m_saved) { keys.push_back(element->m_key); }
+            if (element->m_value.isValid() && !element->m_saved) { keys.push_back(element->m_key); }
         }
         return keys;
     }
@@ -273,7 +274,7 @@ namespace BlackMisc
         if (values.valuesChanged()) { emit valuesChanged(values, sender()); }
         emit valuesChangedByLocal(values);
 
-        if (! isSignalConnected(QMetaMethod::fromSignal(&CValueCache::valuesChangedByLocal)))
+        if (!isSignalConnected(QMetaMethod::fromSignal(&CValueCache::valuesChangedByLocal)))
         {
             changeValuesFromRemote(values, CIdentifier());
         }
@@ -283,7 +284,7 @@ namespace BlackMisc
     {
         QMutexLocker lock(&m_mutex);
         if (values.isEmpty()) { return; }
-        if (! values.valuesChanged())
+        if (!values.valuesChanged())
         {
             if (values.isSaved()) { emit valuesSaveRequested(values); }
             return;
@@ -312,12 +313,12 @@ namespace BlackMisc
                 ratifiedChanges.insert(in.key(), in.value(), in.timestamp());
             }
         }
-        if (! ratifiedChanges.isEmpty())
+        if (!ratifiedChanges.isEmpty())
         {
             if (ratifiedChanges.isSaved()) { emit valuesSaveRequested(ratifiedChanges); }
             emit valuesChanged(ratifiedChanges, nullptr);
         }
-        if (! ackedChanges.isEmpty() && ackedChanges.isSaved()) { emit valuesSaveRequested(ackedChanges); }
+        if (!ackedChanges.isEmpty() && ackedChanges.isSaved()) { emit valuesSaveRequested(ackedChanges); }
     }
 
     QJsonObject CValueCache::saveToJson(const QString &keyPrefix) const
@@ -329,14 +330,14 @@ namespace BlackMisc
     {
         CVariantMap map;
         map.convertFromMemoizedJson(json);
-        if (! map.isEmpty()) { insertValues({ map, QDateTime::currentMSecsSinceEpoch() }); }
+        if (!map.isEmpty()) { insertValues({ map, QDateTime::currentMSecsSinceEpoch() }); }
     }
 
     CStatusMessageList CValueCache::loadFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix)
     {
         CVariantMap map;
         auto messages = map.convertFromMemoizedJsonNoThrow(json, categories, prefix);
-        if (! map.isEmpty()) { insertValues({ map, QDateTime::currentMSecsSinceEpoch() }); }
+        if (!map.isEmpty()) { insertValues({ map, QDateTime::currentMSecsSinceEpoch() }); }
         return messages;
     }
 
@@ -366,23 +367,23 @@ namespace BlackMisc
             Q_ASSERT(it.value().isValid());
             namespaces[it.key().section('/', 0, m_fileSplitDepth - 1)].insert(it.key(), it.value());
         }
-        if (! QDir::root().mkpath(dir))
+        if (!QDir::root().mkpath(dir))
         {
             return CStatusMessage(this).error(u"Failed to create directory '%1'") << dir;
         }
         for (auto it = namespaces.cbegin(); it != namespaces.cend(); ++it)
         {
             CAtomicFile file(dir + "/" + it.key() + ".json");
-            if (! QDir::root().mkpath(QFileInfo(file).path()))
+            if (!QDir::root().mkpath(QFileInfo(file).path()))
             {
                 return CStatusMessage(this).error(u"Failed to create directory '%1'") << QFileInfo(file).path();
             }
-            if (! file.open(QFile::ReadWrite | QFile::Text))
+            if (!file.open(QFile::ReadWrite | QFile::Text))
             {
                 return CStatusMessage(this).error(u"Failed to open %1: %2") << file.fileName() << file.errorString();
             }
             auto json = QJsonDocument::fromJson(file.readAll());
-            if (json.isArray() || (json.isNull() && ! json.isEmpty()))
+            if (json.isArray() || (json.isNull() && !json.isEmpty()))
             {
                 return CStatusMessage(this).error(u"Invalid JSON format in %1") << file.fileName();
             }
@@ -394,8 +395,7 @@ namespace BlackMisc
                 return CStatusMessage(this).error(u"Failed to write to %1: %2") << file.fileName() << file.errorString();
             }
         }
-        return CStatusMessage(this).info(u"Written '%1' to value cache in '%2'") <<
-            (keysMessage.isEmpty() ? values.keys().to<QStringList>().join(",") : keysMessage) << dir;
+        return CStatusMessage(this).info(u"Written '%1' to value cache in '%2'") << (keysMessage.isEmpty() ? values.keys().to<QStringList>().join(",") : keysMessage) << dir;
     }
 
     CStatusMessage CValueCache::loadFromFiles(const QString &dir)
@@ -410,11 +410,11 @@ namespace BlackMisc
 
     CStatusMessage CValueCache::loadFromFiles(const QString &dir, const QSet<QString> &keys, const CVariantMap &currentValues, CValueCachePacket &o_values, const QString &keysMessage, bool keysOnly) const
     {
-        if (! QDir(dir).exists())
+        if (!QDir(dir).exists())
         {
             return CStatusMessage(this).warning(u"No such directory '%1'") << dir;
         }
-        if (! QDir(dir).isReadable())
+        if (!QDir(dir).isReadable())
         {
             return CStatusMessage(this).error(u"Failed to read from directory '%1'") << dir;
         }
@@ -436,16 +436,16 @@ namespace BlackMisc
         for (auto it = keysInFiles.cbegin(); it != keysInFiles.cend(); ++it)
         {
             QFile file(QDir(dir).absoluteFilePath(it.key()));
-            if (! file.exists())
+            if (!file.exists())
             {
                 continue;
             }
-            if (! file.open(QFile::ReadOnly | QFile::Text))
+            if (!file.open(QFile::ReadOnly | QFile::Text))
             {
                 return CStatusMessage(this).error(u"Failed to open %1: %2") << file.fileName() << file.errorString();
             }
             auto json = QJsonDocument::fromJson(file.readAll());
-            if (json.isArray() || (json.isNull() && ! json.isEmpty()))
+            if (json.isArray() || (json.isNull() && !json.isEmpty()))
             {
                 return CStatusMessage(this).error(u"Invalid JSON format in %1") << file.fileName();
             }
@@ -460,7 +460,7 @@ namespace BlackMisc
                 const QString messagePrefix = QStringLiteral("Parsing %1").arg(it.key());
                 auto messages = temp.convertFromMemoizedJsonNoThrow(json.object(), it.value(), this, messagePrefix);
                 if (it.value().isEmpty()) { messages.push_back(temp.convertFromMemoizedJsonNoThrow(json.object(), this, messagePrefix)); }
-                if (! messages.isEmpty())
+                if (!messages.isEmpty())
                 {
                     ok = false;
                     backupFile(file);
@@ -470,8 +470,7 @@ namespace BlackMisc
             temp.removeDuplicates(currentValues);
             o_values.insert(temp, QFileInfo(file).lastModified().toMSecsSinceEpoch());
         }
-        return CStatusMessage(this).info(u"Loaded cache values '%1' from '%2' '%3'") <<
-            (keysMessage.isEmpty() ? o_values.keys().to<QStringList>().join(",") : keysMessage) << dir << (ok ? "successfully" : "with errors");
+        return CStatusMessage(this).info(u"Loaded cache values '%1' from '%2' '%3'") << (keysMessage.isEmpty() ? o_values.keys().to<QStringList>().join(",") : keysMessage) << dir << (ok ? "successfully" : "with errors");
     }
 
     void CValueCache::backupFile(QFile &file) const
@@ -481,12 +480,12 @@ namespace BlackMisc
         QString absolute = dir.absoluteFilePath(relative);
         absolute += "." + QDateTime::currentDateTime().toString(QStringLiteral("yyMMddhhmmss"));
         if (QFile::exists(absolute)) { return; }
-        if (! dir.mkpath(QFileInfo(relative).path()))
+        if (!dir.mkpath(QFileInfo(relative).path()))
         {
             CLogMessage(this).error(u"Failed to create %1") << QFileInfo(absolute).path();
             return;
         }
-        if (! file.copy(absolute))
+        if (!file.copy(absolute))
         {
             CLogMessage(this).error(u"Failed to back up %1: %2") << QFileInfo(file).fileName() << file.errorString();
             return;
@@ -549,7 +548,7 @@ namespace BlackMisc
     void CValueCache::setHumanReadableName(const QString &key, const QString &name)
     {
         QMutexLocker lock(&m_mutex);
-        if (! m_humanReadable.contains(key)) { m_humanReadable.insert(key, name); }
+        if (!m_humanReadable.contains(key)) { m_humanReadable.insert(key, name); }
     }
 
     CValueCache::BatchGuard CValueCache::batchChanges(QObject *owner)
@@ -576,7 +575,6 @@ namespace BlackMisc
         connect(this, &CValueCache::valuesChanged, page, &CValuePage::setValuesFromCache);
     }
 
-
     ////////////////////////////////
     // Private :: CValuePage
     ////////////////////////////////
@@ -586,9 +584,8 @@ namespace BlackMisc
         return CValueCache::getLogCategories();
     }
 
-    CValuePage::CValuePage(QObject *parent, CValueCache *cache) :
-        QObject(parent),
-        m_cache(cache)
+    CValuePage::CValuePage(QObject *parent, CValueCache *cache) : QObject(parent),
+                                                                  m_cache(cache)
     {
         m_cache->connectPage(this);
     }
@@ -596,15 +593,14 @@ namespace BlackMisc
     CValuePage &CValuePage::getPageFor(QObject *parent, CValueCache *cache)
     {
         auto pages = parent->findChildren<CValuePage *>("", Qt::FindDirectChildrenOnly);
-        auto it = std::find_if(pages.cbegin(), pages.cend(), [cache](CValuePage * page) { return page->m_cache == cache; });
+        auto it = std::find_if(pages.cbegin(), pages.cend(), [cache](CValuePage *page) { return page->m_cache == cache; });
         if (it == pages.cend()) { return *new CValuePage(parent, cache); }
         else { return **it; }
     }
 
     struct CValuePage::Element
     {
-        Element(const QString &key, const QString &name, int metaType, const Validator &validator, const CVariant &defaultValue) :
-            m_key(key), m_name(name), m_metaType(metaType), m_validator(validator), m_default(defaultValue)
+        Element(const QString &key, const QString &name, int metaType, const Validator &validator, const CVariant &defaultValue) : m_key(key), m_name(name), m_metaType(metaType), m_validator(validator), m_default(defaultValue)
         {}
         const QString m_key;
         const QString m_name;
@@ -633,7 +629,7 @@ namespace BlackMisc
         key.replace("%OwnerName%", parent()->objectName(), Qt::CaseInsensitive);
 
         QString unused;
-        Q_ASSERT_X(! m_elements.contains(key), "CValuePage", "Can't have two CCached in the same object referring to the same value");
+        Q_ASSERT_X(!m_elements.contains(key), "CValuePage", "Can't have two CCached in the same object referring to the same value");
         Q_ASSERT_X(defaultValue.isValid() ? defaultValue.userType() == metaType : true, "CValuePage", "Metatype mismatch for default value");
         Q_ASSERT_X(defaultValue.isValid() && validator ? validator(defaultValue, unused) : true, "CValuePage", "Validator rejects default value");
         Q_UNUSED(unused)
@@ -649,7 +645,7 @@ namespace BlackMisc
             if (status.getSeverity() == CStatusMessage::SeverityDebug)
             {
                 QMutexLocker lock(&m_cache->m_warnedKeysMutex);
-                if (! m_cache->m_warnedKeys.contains(key))
+                if (!m_cache->m_warnedKeys.contains(key))
                 {
                     m_cache->m_warnedKeys.insert(key);
                     CLogMessage::preformatted(status);
@@ -671,7 +667,7 @@ namespace BlackMisc
 
     bool CValuePage::isInitialized(const Element &element) const
     {
-        return ! element.m_key.isEmpty();
+        return !element.m_key.isEmpty();
     }
 
     bool CValuePage::isValid(const Element &element, int typeId) const
@@ -682,7 +678,7 @@ namespace BlackMisc
 
     const CVariant &CValuePage::getValue(const Element &element) const
     {
-        Q_ASSERT_X(! element.m_key.isEmpty(), Q_FUNC_INFO, "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
+        Q_ASSERT_X(!element.m_key.isEmpty(), Q_FUNC_INFO, "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
         Q_ASSERT(QThread::currentThread() == thread());
 
         return element.m_value.read();
@@ -690,20 +686,20 @@ namespace BlackMisc
 
     CVariant CValuePage::getValueCopy(const Element &element) const
     {
-        Q_ASSERT_X(! element.m_key.isEmpty(), Q_FUNC_INFO, "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
+        Q_ASSERT_X(!element.m_key.isEmpty(), Q_FUNC_INFO, "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
         return element.m_value.read();
     }
 
     CStatusMessage CValuePage::setValue(Element &element, CVariant value, qint64 timestamp, bool save)
     {
-        Q_ASSERT_X(! element.m_key.isEmpty(), Q_FUNC_INFO, "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
+        Q_ASSERT_X(!element.m_key.isEmpty(), Q_FUNC_INFO, "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
         Q_ASSERT(QThread::currentThread() == thread());
 
         if (timestamp == 0) { timestamp = QDateTime::currentMSecsSinceEpoch(); }
-        if (! value.isValid()) { value = element.m_value.read(); }
+        if (!value.isValid()) { value = element.m_value.read(); }
 
         bool changed = element.m_timestamp != timestamp || element.m_value.read() != value;
-        if (! changed && ! save)
+        if (!changed && !save)
         {
             return CStatusMessage(this).info(u"Value '%1' not set, same timestamp and value") << element.m_nameWithKey;
         }
@@ -711,7 +707,7 @@ namespace BlackMisc
         auto status = validate(element, value, CStatusMessage::SeverityError);
         if (status.isSuccess())
         {
-            if (! changed)
+            if (!changed)
             {
                 element.m_saved = save;
                 emit valuesWantToCache({ { { element.m_key, value } }, 0, save, false });
@@ -743,13 +739,13 @@ namespace BlackMisc
 
     qint64 CValuePage::getTimestamp(const Element &element) const
     {
-        Q_ASSERT_X(! element.m_key.isEmpty(), Q_FUNC_INFO, "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
+        Q_ASSERT_X(!element.m_key.isEmpty(), Q_FUNC_INFO, "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
         return element.m_timestamp;
     }
 
     bool CValuePage::isSaved(const Element &element) const
     {
-        return element.m_saved && ! element.m_pendingChanges;
+        return element.m_saved && !element.m_pendingChanges;
     }
 
     bool CValuePage::isSaving(const Element &element) const
@@ -764,8 +760,7 @@ namespace BlackMisc
 
         CSequence<NotifySlot *> notifySlots;
 
-        forEachIntersection(m_elements, values, [changedBy, this, &notifySlots, &values](const QString &, const ElementPtr & element, CValueCachePacket::const_iterator it)
-        {
+        forEachIntersection(m_elements, values, [changedBy, this, &notifySlots, &values](const QString &, const ElementPtr &element, CValueCachePacket::const_iterator it) {
             if (changedBy == this) // round trip
             {
                 element->m_pendingChanges--;
@@ -779,7 +774,7 @@ namespace BlackMisc
                     element->m_value.uniqueWrite() = it.value();
                     element->m_timestamp = it.timestamp();
                     element->m_saved = values.isSaved();
-                    if (element->m_notifySlot.first && (! element->m_notifySlot.second || ! notifySlots.containsBy([ & ](auto slot) { return slot->second == element->m_notifySlot.second; })))
+                    if (element->m_notifySlot.first && (!element->m_notifySlot.second || !notifySlots.containsBy([&](auto slot) { return slot->second == element->m_notifySlot.second; })))
                     {
                         notifySlots.push_back(&element->m_notifySlot);
                     }
@@ -818,11 +813,10 @@ namespace BlackMisc
         Q_ASSERT(m_batchMode >= 0);
         m_batchMode--;
 
-        if (m_batchMode <= 0 && ! m_batchedValues.isEmpty())
+        if (m_batchMode <= 0 && !m_batchedValues.isEmpty())
         {
             qint64 timestamp = QDateTime::currentMSecsSinceEpoch();
-            forEachIntersection(m_elements, m_batchedValues, [timestamp](const QString &, const ElementPtr & element, CVariantMap::const_iterator it)
-            {
+            forEachIntersection(m_elements, m_batchedValues, [timestamp](const QString &, const ElementPtr &element, CVariantMap::const_iterator it) {
                 Q_ASSERT(isSafeToIncrement(element->m_pendingChanges));
                 element->m_pendingChanges++;
                 element->m_value.uniqueWrite() = it.value();
@@ -836,7 +830,7 @@ namespace BlackMisc
     CStatusMessage CValuePage::validate(const Element &element, const CVariant &value, CStatusMessage::StatusSeverity invalidSeverity) const
     {
         QString reason;
-        if (! value.isValid())
+        if (!value.isValid())
         {
             return CStatusMessage(this, invalidSeverity, u"Empty cache value %1", true) << element.m_nameWithKey;
         }
@@ -844,7 +838,7 @@ namespace BlackMisc
         {
             return CStatusMessage(this).error(u"Expected %1 but got %2 for %3") << QMetaType::typeName(element.m_metaType) << value.typeName() << element.m_nameWithKey;
         }
-        else if (element.m_validator && ! element.m_validator(value, reason))
+        else if (element.m_validator && !element.m_validator(value, reason))
         {
             if (reason.isEmpty())
             {

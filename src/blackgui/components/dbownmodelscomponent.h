@@ -34,12 +34,24 @@
 
 class QAction;
 
-namespace Ui { class CDbOwnModelsComponent; }
+namespace Ui
+{
+    class CDbOwnModelsComponent;
+}
 namespace BlackGui
 {
-    namespace Menus  { class CMenuActions; }
-    namespace Models { class CAircraftModelListModel; }
-    namespace Views  { class CAircraftModelView; }
+    namespace Menus
+    {
+        class CMenuActions;
+    }
+    namespace Models
+    {
+        class CAircraftModelListModel;
+    }
+    namespace Views
+    {
+        class CAircraftModelView;
+    }
     namespace Components
     {
         /*!
@@ -121,9 +133,9 @@ namespace BlackGui
 
             //! \name Implementations of the models interfaces
             //! @{
-            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->setModelsForSimulator(models, this->getOwnModelsSimulator()); }
+            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models) override { this->setModelsForSimulator(models, this->getOwnModelsSimulator()); }
             virtual void setModelsForSimulator(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
-            virtual int updateModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { return this->updateModelsForSimulator(models, this->getOwnModelsSimulator()); }
+            virtual int updateModels(const BlackMisc::Simulation::CAircraftModelList &models) override { return this->updateModelsForSimulator(models, this->getOwnModelsSimulator()); }
             virtual int updateModelsForSimulator(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
             //! @}
 
@@ -139,7 +151,7 @@ namespace BlackGui
             BlackMisc::Simulation::IAircraftModelLoader *m_modelLoader = nullptr; //!< read own aircraft models, aka models on disk
             BlackMisc::Simulation::CSimulatorInfo m_simulator; //!< currently init to simulator
             BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_directorySettings { this }; //!< the swift directories
-            BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings     { this }; //!< for directories
+            BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for directories
 
             //! Request own models
             void requestOwnModelsUpdate();
@@ -202,18 +214,17 @@ namespace BlackGui
             {
             public:
                 //! Constructor
-                CLoadModelsMenu(CDbOwnModelsComponent *ownModelsComponent) :
-                    BlackGui::Menus::IMenuDelegate(ownModelsComponent)
+                CLoadModelsMenu(CDbOwnModelsComponent *ownModelsComponent) : BlackGui::Menus::IMenuDelegate(ownModelsComponent)
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu
                 virtual void customMenu(Menus::CMenuActions &menuActions) override;
 
             private:
-                QList<QAction *> m_loadActions;       //!< load actions
-                QList<QAction *> m_reloadActions;     //!< reload actions
+                QList<QAction *> m_loadActions; //!< load actions
+                QList<QAction *> m_reloadActions; //!< reload actions
                 QList<QAction *> m_clearCacheActions; //!< clear own models cahce if ever needed
-                QAction *m_csl2xsbAction = nullptr;   //!< run csl2xsb script
+                QAction *m_csl2xsbAction = nullptr; //!< run csl2xsb script
             };
         };
     } // ns

@@ -18,10 +18,10 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Input, CHotkeyCombination)
 namespace BlackMisc::Input
 {
     CHotkeyCombination::CHotkeyCombination(CKeyboardKey key) : CHotkeyCombination(CKeyboardKeyList { key })
-    { }
+    {}
 
     CHotkeyCombination::CHotkeyCombination(const CKeyboardKeyList &keys) : m_keyboardKeys(keys)
-    { }
+    {}
 
     void CHotkeyCombination::addKeyboardKey(const CKeyboardKey &key)
     {
@@ -77,8 +77,8 @@ namespace BlackMisc::Input
 
     bool CHotkeyCombination::isSubsetOf(const CHotkeyCombination &other) const
     {
-        return std::all_of(m_keyboardKeys.begin(), m_keyboardKeys.end(), [&other](const CKeyboardKey & k) { return other.m_keyboardKeys.contains(k); }) &&
-                std::all_of(m_joystickButtons.begin(), m_joystickButtons.end(), [&other](const CJoystickButton & b) { return other.m_joystickButtons.contains(b); });
+        return std::all_of(m_keyboardKeys.begin(), m_keyboardKeys.end(), [&other](const CKeyboardKey &k) { return other.m_keyboardKeys.contains(k); }) &&
+               std::all_of(m_joystickButtons.begin(), m_joystickButtons.end(), [&other](const CJoystickButton &b) { return other.m_joystickButtons.contains(b); });
     }
 
     CHotkeyCombination CHotkeyCombination::getDeltaComparedTo(const CHotkeyCombination &other) const

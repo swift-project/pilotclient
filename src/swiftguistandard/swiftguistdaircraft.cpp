@@ -31,7 +31,7 @@ using namespace BlackMisc::Audio;
 
 bool SwiftGuiStd::reloadOwnAircraft()
 {
-    if (!sApp || sApp->isShuttingDown())  { return false; }
+    if (!sApp || sApp->isShuttingDown()) { return false; }
     if (!sApp->getIContextOwnAircraft() || !sApp->getIContextNetwork()) { return false; }
 
     // check for changed aircraft

@@ -21,7 +21,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class COwnAircraftComponent; }
+namespace Ui
+{
+    class COwnAircraftComponent;
+}
 namespace BlackGui::Components
 {
     class CDbQuickMappingWizard;
@@ -35,15 +38,15 @@ namespace BlackGui::Components
         //! GUI aircraft values, formatted
         struct CGuiAircraftValues
         {
-            BlackMisc::Aviation::CCallsign         ownCallsign;     //!< own aircraft callsign
+            BlackMisc::Aviation::CCallsign ownCallsign; //!< own aircraft callsign
             BlackMisc::Aviation::CAircraftIcaoCode ownAircraftIcao; //!< ICAO aircraft
-            BlackMisc::Aviation::CAirlineIcaoCode  ownAirlineIcao;  //!< ICAO airline
-            QString ownAircraftCombinedType;          //!< own aircraft combined type
-            QString ownAircraftSimulatorModelString;  //!< own aircraft model string
-            QString ownAircraftModelStringSend;       //!< send model string
-            QString ownLiverySend;                    //!< send livery
-            bool useModelString = true;               //!< use model string
-            bool useLivery = true;                    //!< use livery
+            BlackMisc::Aviation::CAirlineIcaoCode ownAirlineIcao; //!< ICAO airline
+            QString ownAircraftCombinedType; //!< own aircraft combined type
+            QString ownAircraftSimulatorModelString; //!< own aircraft model string
+            QString ownAircraftModelStringSend; //!< send model string
+            QString ownLiverySend; //!< send livery
+            bool useModelString = true; //!< use model string
+            bool useLivery = true; //!< use livery
         };
 
         //! Constructor
@@ -76,7 +79,6 @@ namespace BlackGui::Components
         void aircraftDataChanged();
 
     private:
-
         //! Launch mapping wizard
         void mappingWizard();
 

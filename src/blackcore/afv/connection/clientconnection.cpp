@@ -18,11 +18,10 @@ using namespace BlackCore::Afv::Crypto;
 
 namespace BlackCore::Afv::Connection
 {
-    CClientConnection::CClientConnection(const QString &apiServer, QObject *parent) :
-        QObject(parent),
-        m_udpSocket(new QUdpSocket(this)),
-        m_voiceServerTimer(new QTimer(this)),
-        m_apiServerConnection(new CApiServerConnection(apiServer, this))
+    CClientConnection::CClientConnection(const QString &apiServer, QObject *parent) : QObject(parent),
+                                                                                      m_udpSocket(new QUdpSocket(this)),
+                                                                                      m_voiceServerTimer(new QTimer(this)),
+                                                                                      m_apiServerConnection(new CApiServerConnection(apiServer, this))
     {
         CLogMessage(this).debug(u"ClientConnection instantiated");
 
@@ -31,7 +30,7 @@ namespace BlackCore::Afv::Connection
         // connect(&m_apiServerConnection, &ApiServerConnection::removeCallsignFinished, this, &ClientConnection::removeCallsignFinished);
 
         connect(m_voiceServerTimer, &QTimer::timeout, this, &CClientConnection::voiceServerHeartbeat); // sends heartbeat to server
-        connect(m_udpSocket, &QUdpSocket::readyRead,  this, &CClientConnection::readPendingDatagrams);
+        connect(m_udpSocket, &QUdpSocket::readyRead, this, &CClientConnection::readPendingDatagrams);
         connect(m_udpSocket, qOverload<QAbstractSocket::SocketError>(&QUdpSocket::error), this, &CClientConnection::handleSocketError);
     }
 
@@ -48,37 +47,34 @@ namespace BlackCore::Afv::Connection
 
         QPointer<CClientConnection> myself(this);
         m_apiServerConnection->connectTo(userName, password, client, m_networkVersion,
-        {
-            // callback called when connected
-            this, [ = ](bool authenticated)
-            {
-                // callback when connection has been established
-                if (!myself) { return; }
+                                         { // callback called when connected
+                                           this, [=](bool authenticated) {
+                                               // callback when connection has been established
+                                               if (!myself) { return; }
 
-                if (authenticated)
-                {
-                    const QString cs = m_connection.getCallsign();
-                    m_connection.setTokens(m_apiServerConnection->addCallsign(cs));
-                    m_connection.setTsAuthenticatedToNow();
-                    m_connection.createCryptoChannels();
-                    m_connection.setTsHeartbeatToNow();
-                    this->connectToVoiceServer();
-                    // taskServerConnectionCheck.Start();
+                                               if (authenticated)
+                                               {
+                                                   const QString cs = m_connection.getCallsign();
+                                                   m_connection.setTokens(m_apiServerConnection->addCallsign(cs));
+                                                   m_connection.setTsAuthenticatedToNow();
+                                                   m_connection.createCryptoChannels();
+                                                   m_connection.setTsHeartbeatToNow();
+                                                   this->connectToVoiceServer();
+                                                   // taskServerConnectionCheck.Start();
 
-                    CLogMessage(this).info(u"Connected: '%1' to voice server, socket open: %2") << cs << boolToYesNo(m_udpSocket->isOpen());
-                }
-                else
-                {
-                    m_connection.reset();
-                }
+                                                   CLogMessage(this).info(u"Connected: '%1' to voice server, socket open: %2") << cs << boolToYesNo(m_udpSocket->isOpen());
+                                               }
+                                               else
+                                               {
+                                                   m_connection.reset();
+                                               }
 
-                // Make sure crypto channels etc. are created
-                m_connection.setConnected(authenticated);
+                                               // Make sure crypto channels etc. are created
+                                               m_connection.setConnected(authenticated);
 
-                // callback of the calling parent
-                if (callback) { callback(authenticated); }
-            }
-        });
+                                               // callback of the calling parent
+                                               if (callback) { callback(authenticated); }
+                                           } });
     }
 
     void CClientConnection::disconnectFrom(const QString &reason)

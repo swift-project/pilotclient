@@ -20,11 +20,17 @@
 #include <QScopedPointer>
 #include <memory>
 
-namespace Ui { class CAirlineIcaoFilterBar; }
+namespace Ui
+{
+    class CAirlineIcaoFilterBar;
+}
 namespace BlackMisc
 {
     class CCountry;
-    namespace Aviation { class CAirlineIcaoCodeList; }
+    namespace Aviation
+    {
+        class CAirlineIcaoCodeList;
+    }
 }
 namespace BlackGui::Filters
 {

@@ -51,9 +51,9 @@ namespace BlackMisc
         //! Remove duplicates
         int removeDuplicates();
     };
-} //namespace
+} // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::CIdentifierList)
 // in set: Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::CIdentifier>)
 
-#endif //guard
+#endif // guard

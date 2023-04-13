@@ -211,7 +211,7 @@ namespace BlackCore::Context
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             // normally 2 entries
-            return BlackMisc::Aviation::CAtcStationList({ BlackMisc::Aviation::CAtcStation(), BlackMisc::Aviation::CAtcStation()});
+            return BlackMisc::Aviation::CAtcStationList({ BlackMisc::Aviation::CAtcStation(), BlackMisc::Aviation::CAtcStation() });
         }
 
         //! \copydoc IContextNetwork::getUsers()
@@ -261,7 +261,7 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextNetwork::requestAircraftDataUpdates
-        virtual void requestAircraftDataUpdates()override
+        virtual void requestAircraftDataUpdates() override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
         }
@@ -318,7 +318,6 @@ namespace BlackCore::Context
             logEmptyContextWarning(Q_FUNC_INFO);
             return false;
         }
-
 
         //! \copydoc IContextNetwork::testReceivedAtisMessage
         virtual void testReceivedAtisMessage(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &msg) override

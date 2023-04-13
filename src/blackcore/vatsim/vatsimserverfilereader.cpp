@@ -34,10 +34,9 @@ using namespace BlackCore::Data;
 
 namespace BlackCore::Vatsim
 {
-    CVatsimServerFileReader::CVatsimServerFileReader(QObject *owner) :
-            CThreadedReader(owner, "CVatsimServerFileReader"),
-            CEcosystemAware(CEcosystemAware::providerIfPossible(owner))
-    { }
+    CVatsimServerFileReader::CVatsimServerFileReader(QObject *owner) : CThreadedReader(owner, "CVatsimServerFileReader"),
+                                                                       CEcosystemAware(CEcosystemAware::providerIfPossible(owner))
+    {}
 
     CServerList CVatsimServerFileReader::getFsdServers() const
     {
@@ -47,8 +46,7 @@ namespace BlackCore::Vatsim
     void CVatsimServerFileReader::readInBackgroundThread()
     {
         QPointer<CVatsimServerFileReader> myself(this);
-        QTimer::singleShot(0, this, [ = ]
-        {
+        QTimer::singleShot(0, this, [=] {
             if (!myself) { return; }
             myself->read();
         });
@@ -69,7 +67,7 @@ namespace BlackCore::Vatsim
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing application");
         const QUrl url = sApp->getVatsimServerFileUrl();
         if (url.isEmpty()) { return; }
-        this->getFromNetworkAndLog(url, { this, &CVatsimServerFileReader::parseVatsimFile});
+        this->getFromNetworkAndLog(url, { this, &CVatsimServerFileReader::parseVatsimFile });
     }
 
     void CVatsimServerFileReader::parseVatsimFile(QNetworkReply *nwReplyPtr)

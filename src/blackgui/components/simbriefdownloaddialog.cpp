@@ -13,16 +13,15 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackGui::Components
 {
-    CSimBriefDownloadDialog::CSimBriefDownloadDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CSimBriefDownloadDialog)
+    CSimBriefDownloadDialog::CSimBriefDownloadDialog(QWidget *parent) : QDialog(parent),
+                                                                        ui(new Ui::CSimBriefDownloadDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
     CSimBriefDownloadDialog::~CSimBriefDownloadDialog()
-    { }
+    {}
 
     CSimBriefData CSimBriefDownloadDialog::getSimBriefData() const
     {

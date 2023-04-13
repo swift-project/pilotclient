@@ -72,7 +72,11 @@ namespace BlackGui::Settings
         static const char *key() { return "atcstations"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("ATC stations"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("ATC stations");
+            return name;
+        }
     };
 } // ns
 

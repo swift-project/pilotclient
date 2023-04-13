@@ -24,8 +24,7 @@ namespace BlackSimPlugin::Fs9
         using MemberFunction = ReturnType (Object::*)(Argument1, Argument2);
 
         //! Constructor
-        CallbackWrapper(Object *obj, MemberFunction memberFunction) :
-            m_object(obj), m_memberFunction(memberFunction)
+        CallbackWrapper(Object *obj, MemberFunction memberFunction) : m_object(obj), m_memberFunction(memberFunction)
         {}
 
         //! FS9 message handler callback

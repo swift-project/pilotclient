@@ -27,9 +27,8 @@ using namespace BlackConfig;
 
 namespace BlackGui::Components
 {
-    CLegalInfoComponent::CLegalInfoComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        ui(new Ui::CLegalInfoComponent)
+    CLegalInfoComponent::CLegalInfoComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                                ui(new Ui::CLegalInfoComponent)
     {
         ui->setupUi(this);
         this->setChecklistInfo();
@@ -41,15 +40,14 @@ namespace BlackGui::Components
         connect(ui->cb_CrashDumps, &QCheckBox::toggled, this, &CLegalInfoComponent::onAllowCrashDumps);
 
         QPointer<CLegalInfoComponent> myself(this);
-        QTimer::singleShot(5000, this, [ = ]
-        {
+        QTimer::singleShot(5000, this, [=] {
             if (!sApp || sApp->isShuttingDown() || !myself) { return; }
             myself->showCrashDumpHint();
         });
     }
 
     CLegalInfoComponent::~CLegalInfoComponent()
-    { }
+    {}
 
     bool CLegalInfoComponent::isAgreedTo() const
     {

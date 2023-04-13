@@ -25,7 +25,7 @@ namespace BlackCore::Fsd
     public:
         //! Constructor
         AddAtc(const QString &callsign, const QString &realName, const QString &cid,
-                const QString &password, AtcRating rating, int protocolRevision);
+               const QString &password, AtcRating rating, int protocolRevision);
 
         //! Message converted to tokens
         QStringList toTokens() const;
@@ -64,13 +64,13 @@ namespace BlackCore::Fsd
     //! Equal operator
     inline bool operator==(const AddAtc &lhs, const AddAtc &rhs)
     {
-        return  lhs.sender() == rhs.sender() &&
-                lhs.receiver() == rhs.receiver() &&
-                lhs.cid() == rhs.cid() &&
-                lhs.password() == rhs.password() &&
-                lhs.rating() == rhs.rating() &&
-                lhs.protocolRevision() == rhs.protocolRevision() &&
-                lhs.realName() == rhs.realName();
+        return lhs.sender() == rhs.sender() &&
+               lhs.receiver() == rhs.receiver() &&
+               lhs.cid() == rhs.cid() &&
+               lhs.password() == rhs.password() &&
+               lhs.rating() == rhs.rating() &&
+               lhs.protocolRevision() == rhs.protocolRevision() &&
+               lhs.realName() == rhs.realName();
     }
 
     //! Not equal operator

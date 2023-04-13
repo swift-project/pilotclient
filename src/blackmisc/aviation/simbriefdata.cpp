@@ -23,11 +23,10 @@ namespace BlackMisc::Aviation
     }
 
     CSimBriefData::CSimBriefData() : m_url("https://www.simbrief.com/api/xml.fetcher.php")
-    { }
+    {}
 
-    CSimBriefData::CSimBriefData(const QString &url, const QString &username) :
-        m_url(url), m_username(username)
-    { }
+    CSimBriefData::CSimBriefData(const QString &url, const QString &username) : m_url(url), m_username(username)
+    {}
 
     CUrl CSimBriefData::getUrlAndUsername() const
     {
@@ -42,7 +41,7 @@ namespace BlackMisc::Aviation
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexUrl:      return QVariant::fromValue(m_url);
+        case IndexUrl: return QVariant::fromValue(m_url);
         case IndexUsername: return QVariant::fromValue(m_username);
         default: return CValueObject::propertyByIndex(index);
         }
@@ -50,11 +49,15 @@ namespace BlackMisc::Aviation
 
     void CSimBriefData::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CSimBriefData>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CSimBriefData>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexUrl:      m_url = variant.toString(); break;
+        case IndexUrl: m_url = variant.toString(); break;
         case IndexUsername: m_username = variant.toString(); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }

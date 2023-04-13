@@ -13,7 +13,6 @@
 #include "blackmisc/stringutils.h"
 #include "blackmisc/worker.h"
 
-
 #include <QEvent>
 #include <QFlags>
 #include <QHBoxLayout>
@@ -36,8 +35,7 @@ using namespace BlackMisc;
 
 namespace BlackGui
 {
-    CEnableForFramelessWindow::CEnableForFramelessWindow(CEnableForFramelessWindow::WindowMode mode, bool isMainApplicationWindow, const char *framelessPropertyName, QWidget *correspondingWidget) :
-        m_windowMode(mode), m_isMainApplicationWindow(isMainApplicationWindow), m_widget(correspondingWidget), m_framelessPropertyName(framelessPropertyName)
+    CEnableForFramelessWindow::CEnableForFramelessWindow(CEnableForFramelessWindow::WindowMode mode, bool isMainApplicationWindow, const char *framelessPropertyName, QWidget *correspondingWidget) : m_windowMode(mode), m_isMainApplicationWindow(isMainApplicationWindow), m_widget(correspondingWidget), m_framelessPropertyName(framelessPropertyName)
     {
         Q_ASSERT(correspondingWidget);
         Q_ASSERT(!m_framelessPropertyName.isEmpty());
@@ -65,7 +63,7 @@ namespace BlackGui
 
         QWidget *w = this->getWidget();
         if (!w) { return; }
-        const QRect oldFrameGeometry =  w->frameGeometry();
+        const QRect oldFrameGeometry = w->frameGeometry();
         const QRect oldGeometry = w->geometry();
 
         WindowMode nonFrameLessMode = m_originalWindowMode; // Tool/Normal Window
@@ -76,7 +74,7 @@ namespace BlackGui
         {
             // from framed to frameless
             w->setGeometry(oldFrameGeometry);
-            m_windowFrameSizeW = oldFrameGeometry.width()  - oldGeometry.width();
+            m_windowFrameSizeW = oldFrameGeometry.width() - oldGeometry.width();
             m_windowFrameSizeH = oldFrameGeometry.height() - oldGeometry.height();
         }
         else
@@ -132,8 +130,8 @@ namespace BlackGui
         switch (m)
         {
         case WindowFrameless: return f;
-        case WindowNormal:    return n;
-        case WindowTool:      return t;
+        case WindowNormal: return n;
+        case WindowTool: return t;
         default: break;
         }
         return n;
@@ -249,8 +247,7 @@ namespace BlackGui
             // still tool, force normal window
             // decouple, otherwise we end up in infinite loop as it triggers a new changeEvent
 
-            QTimer::singleShot(0, m_widget, [ = ]
-            {
+            QTimer::singleShot(0, m_widget, [=] {
                 if (!widgetSelf) { return; }
                 this->showMinimizedModeChecked();
             });
@@ -259,8 +256,7 @@ namespace BlackGui
         {
             // not tool, force tool window
             // decouple, otherwise we end up in infinite loop as it triggers a new changeEvent
-            QTimer::singleShot(0, m_widget, [ = ]
-            {
+            QTimer::singleShot(0, m_widget, [=] {
                 if (!widgetSelf) { return; }
                 this->showNormalModeChecked();
             });

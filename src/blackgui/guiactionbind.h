@@ -77,7 +77,7 @@ namespace BlackGui
         static QString appendPath(const QString &path, const QString &name);
 
         int m_index = -1;
-        QAction         *m_action = nullptr;
+        QAction *m_action = nullptr;
         QAbstractButton *m_button = nullptr;
     };
 } // namespace

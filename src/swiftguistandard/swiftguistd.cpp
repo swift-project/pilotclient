@@ -56,7 +56,10 @@ namespace BlackGui
     class CEnableForFramelessWindow;
     class IMainWindowAccess;
 }
-namespace BlackMisc { class CIdentifiable; }
+namespace BlackMisc
+{
+    class CIdentifiable;
+}
 
 using namespace BlackCore;
 using namespace BlackCore::Context;
@@ -73,11 +76,10 @@ using namespace BlackMisc::Simulation;
 using namespace BlackConfig;
 
 // Constructor
-SwiftGuiStd::SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowMode, QWidget *parent) :
-    QMainWindow(parent, CEnableForFramelessWindow::modeToWindowFlags(windowMode)),
-    CIdentifiable(this),
-    CEnableForFramelessWindow(windowMode, true, "framelessMainWindow", this),
-    ui(new Ui::SwiftGuiStd)
+SwiftGuiStd::SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowMode, QWidget *parent) : QMainWindow(parent, CEnableForFramelessWindow::modeToWindowFlags(windowMode)),
+                                                                                                        CIdentifiable(this),
+                                                                                                        CEnableForFramelessWindow(windowMode, true, "framelessMainWindow", this),
+                                                                                                        ui(new Ui::SwiftGuiStd)
 {
     // GUI
     Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
@@ -88,7 +90,7 @@ SwiftGuiStd::SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowM
 }
 
 SwiftGuiStd::~SwiftGuiStd()
-{ }
+{}
 
 void SwiftGuiStd::mouseMoveEvent(QMouseEvent *event)
 {
@@ -157,8 +159,7 @@ void SwiftGuiStd::closeEvent(QCloseEvent *event)
             // we do not just logoff, but give the user a chance to respond
             event->ignore();
             QPointer<SwiftGuiStd> myself(this);
-            QTimer::singleShot(500, this, [ = ]
-            {
+            QTimer::singleShot(500, this, [=] {
                 if (!myself) { return; }
                 myself->loginRequested();
             });
@@ -273,8 +274,8 @@ void SwiftGuiStd::onKickedFromNetwork(const QString &kickMessage)
     this->updateGuiStatusInformation();
 
     const QString msgText = kickMessage.isEmpty() ?
-                            QStringLiteral("You have been kicked from the network") :
-                            QStringLiteral("You have been kicked: '%1'").arg(kickMessage);
+                                QStringLiteral("You have been kicked from the network") :
+                                QStringLiteral("You have been kicked: '%1'").arg(kickMessage);
     CLogMessage(this).error(msgText);
     // this->displayInOverlayWindow(CStatusMessage(this, CStatusMessage::SeverityError, msgText));
 }
@@ -287,7 +288,7 @@ void SwiftGuiStd::onConnectionStatusChanged(const CConnectionStatus &from, const
     // sounds
     switch (to.getConnectionStatus())
     {
-    case CConnectionStatus::Connected:    this->playNotifcationSound(CNotificationSounds::NotificationLogin); break;
+    case CConnectionStatus::Connected: this->playNotifcationSound(CNotificationSounds::NotificationLogin); break;
     case CConnectionStatus::Disconnected: this->playNotifcationSound(CNotificationSounds::NotificationLogoff); break;
     default: break;
     }
@@ -329,7 +330,7 @@ void SwiftGuiStd::setContextAvailability()
         this->displayDBusReconnectDialog();
     }
     m_contextNetworkAvailable = m_coreAvailable && sGui->getIContextNetwork() && !sGui->getIContextNetwork()->isEmptyObject();
-    m_contextAudioAvailable   = m_coreAvailable && sGui->getIContextAudio()   && !sGui->getIContextAudio()->isEmptyObject();
+    m_contextAudioAvailable = m_coreAvailable && sGui->getIContextAudio() && !sGui->getIContextAudio()->isEmptyObject();
 
     // react to a change in core's availability
     if (m_coreAvailable != corePreviouslyAvailable)
@@ -378,7 +379,11 @@ void SwiftGuiStd::toggleWindowStayOnTop()
 
 void SwiftGuiStd::toggleWindowVisibility()
 {
-    if (this->isVisible()) { this->hide(); return; }
+    if (this->isVisible())
+    {
+        this->hide();
+        return;
+    }
     this->show();
 }
 
@@ -622,10 +627,10 @@ bool SwiftGuiStd::triggerAutoPublishDialog()
     if (!showAutoPublish) { return false; }
 
     const QMessageBox::StandardButton reply = QMessageBox::question(
-                this,
-                QStringLiteral("Upload data?"),
-                QStringLiteral("Do you want to help improving swift by uploading anonymized data?"),
-                QMessageBox::Yes | QMessageBox::No);
+        this,
+        QStringLiteral("Upload data?"),
+        QStringLiteral("Do you want to help improving swift by uploading anonymized data?"),
+        QMessageBox::Yes | QMessageBox::No);
 
     if (reply != QMessageBox::Yes)
     {
@@ -663,7 +668,6 @@ bool SwiftGuiStd::startAFVMap()
     {
         sGui->openUrl("https://afv-map.vatsim.net/");
     }
-
 
     return true;
 }

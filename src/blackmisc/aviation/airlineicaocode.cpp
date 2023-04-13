@@ -58,8 +58,8 @@ namespace BlackMisc::Aviation
     QString CAirlineIcaoCode::getVDesignatorDbKey() const
     {
         return this->isLoadedFromDb() ?
-                this->getVDesignator() % this->getDbKeyAsStringInParentheses(" ") :
-                this->getVDesignator();
+                   this->getVDesignator() % this->getDbKeyAsStringInParentheses(" ") :
+                   this->getVDesignator();
     }
 
     void CAirlineIcaoCode::setDesignator(const QString &icaoDesignator)
@@ -76,15 +76,15 @@ namespace BlackMisc::Aviation
     QString CAirlineIcaoCode::getDesignatorDbKey() const
     {
         return (this->isLoadedFromDb()) ?
-                this->getDesignator() % QStringLiteral(" ") % this->getDbKeyAsStringInParentheses() :
-                this->getDesignator();
+                   this->getDesignator() % QStringLiteral(" ") % this->getDbKeyAsStringInParentheses() :
+                   this->getDesignator();
     }
 
     QString CAirlineIcaoCode::getDesignatorNameCountry() const
     {
         return this->getDesignator() %
-                (this->hasName() ? (u' ' % this->getName()) : QString()) %
-                (this->hasValidCountry() ? (u' ' % this->getCountryIso()) : QString());
+               (this->hasName() ? (u' ' % this->getName()) : QString()) %
+               (this->hasValidCountry() ? (u' ' % this->getCountryIso()) : QString());
     }
 
     QString CAirlineIcaoCode::getSimplifiedName() const
@@ -170,12 +170,12 @@ namespace BlackMisc::Aviation
 
     CIcons::IconIndex CAirlineIcaoCode::toIcon() const
     {
-        //if (this->hasValidDbKey() && CAirlineIcaoCode::iconIds().contains(this->getDbKey()))
+        // if (this->hasValidDbKey() && CAirlineIcaoCode::iconIds().contains(this->getDbKey()))
         //{
-        //    static const QString p("airlines/%1_%2.png");
-        //    const QString n(p.arg(this->getDbKey(), 5, 10, QChar('0')).arg(this->getDesignator()));
-        //    return CIcon(n, this->convertToQString());
-        //}
+        //     static const QString p("airlines/%1_%2.png");
+        //     const QString n(p.arg(this->getDbKey(), 5, 10, QChar('0')).arg(this->getDesignator()));
+        //     return CIcon(n, this->convertToQString());
+        // }
         return CIcons::StandardIconEmpty;
     }
 
@@ -203,10 +203,10 @@ namespace BlackMisc::Aviation
     {
         Q_UNUSED(i18n);
         const QString s = this->getDesignatorDbKey() %
-                            (this->hasName() ? u' ' % m_name : QString()) %
-                            u" Op: " % boolToYesNo(this->isOperating()) %
-                            u" VA: " % boolToYesNo(this->isVirtualAirline()) %
-                            u" Mil: " % boolToYesNo(this->isMilitary());
+                          (this->hasName() ? u' ' % m_name : QString()) %
+                          u" Op: " % boolToYesNo(this->isOperating()) %
+                          u" VA: " % boolToYesNo(this->isVirtualAirline()) %
+                          u" Mil: " % boolToYesNo(this->isMilitary());
         return s.trimmed();
     }
 
@@ -237,8 +237,16 @@ namespace BlackMisc::Aviation
 
     void CAirlineIcaoCode::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CAirlineIcaoCode>(); return; }
-        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CAirlineIcaoCode>();
+            return;
+        }
+        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
+        {
+            IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant);
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -260,7 +268,7 @@ namespace BlackMisc::Aviation
     int CAirlineIcaoCode::comparePropertyByIndex(CPropertyIndexRef index, const CAirlineIcaoCode &compareValue) const
     {
         if (index.isMyself()) { return m_designator.compare(compareValue.getDesignator(), Qt::CaseInsensitive); }
-        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);}
+        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue); }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -310,7 +318,7 @@ namespace BlackMisc::Aviation
 
     QSet<QString> CAirlineIcaoCode::specialValidDesignators()
     {
-        static const QSet<QString> valid({ "VV", "VM"});
+        static const QSet<QString> valid({ "VV", "VM" });
         return valid;
     }
 
@@ -338,14 +346,14 @@ namespace BlackMisc::Aviation
     QString CAirlineIcaoCode::getCombinedStringWithKey() const
     {
         return (this->hasValidDesignator() ? this->getVDesignator() : QString()) %
-                (this->hasName() ? u' ' % m_name : QString()) %
-                this->getDbKeyAsStringInParentheses(" ");
+               (this->hasName() ? u' ' % m_name : QString()) %
+               this->getDbKeyAsStringInParentheses(" ");
     }
 
     CAirlineIcaoCode CAirlineIcaoCode::thisOrCallsignCode(const CCallsign &callsign) const
     {
         if (this->hasValidDbKey()) { return *this; }
-        if (callsign.isEmpty())    { return *this; }
+        if (callsign.isEmpty()) { return *this; }
         const QString callsignAirline = callsign.getAirlinePrefix();
         if (callsignAirline.isEmpty()) { return *this; }
         if (callsignAirline == m_designator) { return *this; }
@@ -370,8 +378,8 @@ namespace BlackMisc::Aviation
     {
         if (!this->hasValidDbKey()) { return this->getName(); }
         return this->hasName() ?
-                QString(this->getName()).append(" ").append(this->getDbKeyAsStringInParentheses()) :
-                this->getDbKeyAsStringInParentheses();
+                   QString(this->getName()).append(" ").append(this->getDbKeyAsStringInParentheses()) :
+                   this->getDbKeyAsStringInParentheses();
     }
 
     void CAirlineIcaoCode::updateMissingParts(const CAirlineIcaoCode &otherIcaoCode)
@@ -483,8 +491,7 @@ namespace BlackMisc::Aviation
         CAirlineIcaoCode code(
             designator, name,
             CCountry(countryIso, countryName),
-            telephony, va, operating
-        );
+            telephony, va, operating);
         code.setIataCode(iata);
         code.setMilitary(military);
         code.setGroupDesignator(groupDesignator);

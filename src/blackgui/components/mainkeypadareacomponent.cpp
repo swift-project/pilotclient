@@ -31,58 +31,56 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CMainKeypadAreaComponent::CMainKeypadAreaComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CMainKeypadAreaComponent)
+    CMainKeypadAreaComponent::CMainKeypadAreaComponent(QWidget *parent) : QFrame(parent),
+                                                                          ui(new Ui::CMainKeypadAreaComponent)
     {
         ui->setupUi(this);
 
         // Info areas
         // pressed collides, as this toggles button again
         // using toggle collides, as checking/unchecking toggles again -> infinite loop
-        connect(ui->pb_MainAircrafts,     &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-        connect(ui->pb_MainAtc,           &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-        connect(ui->pb_MainCockpit,       &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-        connect(ui->pb_MainFlightplan,    &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-        connect(ui->pb_MainLog,           &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-        connect(ui->pb_MainMappings,      &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+        connect(ui->pb_MainAircrafts, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+        connect(ui->pb_MainAtc, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+        connect(ui->pb_MainCockpit, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+        connect(ui->pb_MainFlightplan, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+        connect(ui->pb_MainLog, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+        connect(ui->pb_MainMappings, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
         connect(ui->pb_MainInterpolation, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-        connect(ui->pb_MainRadar,         &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-        connect(ui->pb_MainSettings,      &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-        connect(ui->pb_MainSimulator,     &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-        connect(ui->pb_MainTextMessages,  &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-        connect(ui->pb_MainUsers,         &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-        connect(ui->pb_MainWeather,       &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+        connect(ui->pb_MainRadar, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+        connect(ui->pb_MainSettings, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+        connect(ui->pb_MainSimulator, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+        connect(ui->pb_MainTextMessages, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+        connect(ui->pb_MainUsers, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+        connect(ui->pb_MainWeather, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
 
         // non info areas
-        connect(ui->pb_Connect,        &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-        connect(ui->pb_Opacity050,     &QPushButton::pressed,  this, &CMainKeypadAreaComponent::buttonSelected);
-        connect(ui->pb_Opacity100,     &QPushButton::pressed,  this, &CMainKeypadAreaComponent::buttonSelected);
-        connect(ui->pb_SoundMaxVolume, &QPushButton::pressed,  this, &CMainKeypadAreaComponent::buttonSelected);
-        connect(ui->pb_CockpitIdent,   &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-        connect(ui->pb_SoundMute,      &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-        connect(ui->pb_Audio,          &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+        connect(ui->pb_Connect, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+        connect(ui->pb_Opacity050, &QPushButton::pressed, this, &CMainKeypadAreaComponent::buttonSelected);
+        connect(ui->pb_Opacity100, &QPushButton::pressed, this, &CMainKeypadAreaComponent::buttonSelected);
+        connect(ui->pb_SoundMaxVolume, &QPushButton::pressed, this, &CMainKeypadAreaComponent::buttonSelected);
+        connect(ui->pb_CockpitIdent, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+        connect(ui->pb_SoundMute, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+        connect(ui->pb_Audio, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
 
         // command line
         ui->lep_CommandLineInput->setIdentifier(m_identifier);
         connect(ui->lep_CommandLineInput, &CCommandInput::commandEntered, this, &CMainKeypadAreaComponent::commandEntered);
-        connect(ui->lep_CommandLineInput, &CCommandInput::textEntered,    this, &CMainKeypadAreaComponent::textEntered);
+        connect(ui->lep_CommandLineInput, &CCommandInput::textEntered, this, &CMainKeypadAreaComponent::textEntered);
 
-        connect(sGui->getIContextNetwork(),     &IContextNetwork::connectionStatusChanged, this, &CMainKeypadAreaComponent::connectionStatusChanged);
+        connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMainKeypadAreaComponent::connectionStatusChanged);
         connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CMainKeypadAreaComponent::ownAircraftCockpitChanged);
-        connect(sGui->getCContextAudioBase(),   &CContextAudioBase::changedMute, this, &CMainKeypadAreaComponent::muteChanged);
+        connect(sGui->getCContextAudioBase(), &CContextAudioBase::changedMute, this, &CMainKeypadAreaComponent::muteChanged);
         connect(this, &CMainKeypadAreaComponent::commandEntered, sGui->getCoreFacade(), &CCoreFacade::parseCommandLine);
 
         QPointer<CMainKeypadAreaComponent> myself(this);
-        QTimer::singleShot(5000, this, [ = ]
-        {
+        QTimer::singleShot(5000, this, [=] {
             if (!myself || !sGui) { return; }
             this->update();
         });
     }
 
     CMainKeypadAreaComponent::~CMainKeypadAreaComponent()
-    { }
+    {}
 
     void CMainKeypadAreaComponent::onMainInfoAreaChanged(int currentTabIndex, const QList<int> &dockedIndexes, const QList<int> &floatingIndexes)
     {
@@ -184,7 +182,7 @@ namespace BlackGui::Components
         Q_UNUSED(originator)
         bool ident = aircraft.getTransponder().getTransponderMode() == CTransponder::StateIdent;
 
-        //check state to avoid undelibarate signals
+        // check state to avoid undelibarate signals
         if (ident != ui->pb_CockpitIdent->isChecked())
         {
             ui->pb_CockpitIdent->setChecked(ident);
@@ -193,7 +191,7 @@ namespace BlackGui::Components
 
     void CMainKeypadAreaComponent::muteChanged(bool muted)
     {
-        //check state to avoid undelibarate signals
+        // check state to avoid undelibarate signals
         if (muted != ui->pb_SoundMute->isChecked())
         {
             ui->pb_SoundMute->setChecked(muted);

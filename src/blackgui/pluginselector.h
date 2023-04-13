@@ -56,7 +56,7 @@ namespace BlackGui
         void handlePluginStateChange();
 
         QSignalMapper *m_detailsButtonMapper = new QSignalMapper(this);
-        QSignalMapper *m_configButtonMapper  = new QSignalMapper(this);
+        QSignalMapper *m_configButtonMapper = new QSignalMapper(this);
     };
 } // ns
 

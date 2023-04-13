@@ -25,8 +25,8 @@ namespace BlackSound
     public:
         //! Play two tones with frequencies f for t milliseconds
         CTonePair(const BlackMisc::PhysicalQuantities::CFrequency &frequency,
-              const BlackMisc::PhysicalQuantities::CFrequency &secondaryFrequency,
-              const BlackMisc::PhysicalQuantities::CTime &duration);
+                  const BlackMisc::PhysicalQuantities::CFrequency &secondaryFrequency,
+                  const BlackMisc::PhysicalQuantities::CTime &duration);
 
         //! Get frequency of the first tone
         int getFirstFrequencyHz() const { return m_firstFrequencyHz; }
@@ -38,16 +38,15 @@ namespace BlackSound
         qint64 getDurationMs() const { return m_durationMs; }
 
         //! Comparison operator
-        friend bool operator <(const CTonePair& lhs, const CTonePair& rhs)
+        friend bool operator<(const CTonePair &lhs, const CTonePair &rhs)
         {
-            return std::tie(lhs.m_firstFrequencyHz, lhs.m_secondFrequencyHz, lhs.m_durationMs)
-                    < std::tie(rhs.m_firstFrequencyHz, rhs.m_secondFrequencyHz, rhs.m_durationMs);
+            return std::tie(lhs.m_firstFrequencyHz, lhs.m_secondFrequencyHz, lhs.m_durationMs) < std::tie(rhs.m_firstFrequencyHz, rhs.m_secondFrequencyHz, rhs.m_durationMs);
         }
 
     private:
-        int m_firstFrequencyHz;  //!< first tone's frequency, use 0 for silence
+        int m_firstFrequencyHz; //!< first tone's frequency, use 0 for silence
         int m_secondFrequencyHz; //!< second tone's frequency, or 0
-        qint64 m_durationMs;     //!< How long to play (duration)
+        qint64 m_durationMs; //!< How long to play (duration)
     };
 }
 

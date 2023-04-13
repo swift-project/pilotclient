@@ -42,7 +42,7 @@ namespace BlackGui::Menus
         //! Log categories
         const QStringList &getLogCategories()
         {
-            static const QStringList cats({BlackMisc::CLogCategories::guiComponent()});
+            static const QStringList cats({ BlackMisc::CLogCategories::guiComponent() });
             return cats;
         }
 

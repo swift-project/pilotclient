@@ -17,7 +17,8 @@
 namespace XSwiftBus
 {
     //! "safe" cast from integer to void*
-    template <typename T> void *voidptr_cast(T i)
+    template <typename T>
+    void *voidptr_cast(T i)
     {
         static_assert(std::is_integral_v<T>, "voidptr_cast expects an integer");
         using intptr_type = std::conditional_t<std::is_signed_v<T>, intptr_t, uintptr_t>;
@@ -25,7 +26,8 @@ namespace XSwiftBus
     }
 
     //! "safe" cast from void* to integer
-    template <typename T> T intptr_cast(void *p)
+    template <typename T>
+    T intptr_cast(void *p)
     {
         static_assert(std::is_integral<T>::value, "voidptr_cast returns an integer");
         using intptr_type = std::conditional_t<std::is_signed_v<T>, intptr_t, uintptr_t>;
@@ -38,7 +40,7 @@ namespace XSwiftBus
 
     CMenu::Data::~Data()
     {
-        if (! isMainMenu)
+        if (!isMainMenu)
         {
             XPLMDestroyMenu(id);
         }
@@ -51,10 +53,9 @@ namespace XSwiftBus
 
     CMenuItem CMenu::item(const std::string &name, std::function<void()> callback)
     {
-        assert(! name.empty());
+        assert(!name.empty());
         m_data->items->emplace_back(
-            CMenuItem { m_data->id, 0, false, [callback](bool) { callback(); } }
-        );
+            CMenuItem { m_data->id, 0, false, [callback](bool) { callback(); } });
         auto &menuItem = m_data->items->back();
         menuItem.setIndex(XPLMAppendMenuItem(m_data->id, name.c_str(), &menuItem, false));
         return menuItem;
@@ -64,8 +65,7 @@ namespace XSwiftBus
     {
         assert(!name.empty());
         m_data->items->emplace_back(
-            CMenuItem{ m_data->id, 0, true, callback }
-        );
+            CMenuItem { m_data->id, 0, true, callback });
         auto &menuItem = m_data->items->back();
         menuItem.setIndex(XPLMAppendMenuItem(m_data->id, name.c_str(), &menuItem, false));
         menuItem.setChecked(checked);
@@ -74,8 +74,7 @@ namespace XSwiftBus
 
     void CMenu::removeItem(const CMenuItem &item)
     {
-        auto it = std::find_if(m_data->items->begin(), m_data->items->end(), [ = ](const auto & i)
-        {
+        auto it = std::find_if(m_data->items->begin(), m_data->items->end(), [=](const auto &i) {
             return i.m_data->index == item.m_data->index;
         });
 
@@ -97,7 +96,7 @@ namespace XSwiftBus
 
     CMenu CMenu::subMenu(const std::string &name)
     {
-        assert(! name.empty());
+        assert(!name.empty());
         // auto items = std::make_unique<ItemList>();
         auto items = std::make_unique<ItemList>();
         auto itemsVoidPtr = static_cast<void *>(&*items);

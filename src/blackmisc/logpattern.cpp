@@ -19,46 +19,45 @@ namespace BlackMisc
 {
     const QHash<QString, CLogPattern> &CLogPattern::allHumanReadablePatterns()
     {
-        static const QHash<QString, CLogPattern> patterns
-        {
-            { "uncategorized (swift)",       exactMatch(CLogCategories::uncategorized()) },
-            { "background task",             exactMatch(CLogCategories::worker()) },
-            { "cache",                       exactMatch(CLogCategories::cache()) },
-            { "cmd.line handling",           exactMatch(CLogCategories::cmdLine()) },
-            { "data inconsistency",          exactMatch(CLogCategories::dataInconsistency()) },
-            { "DBus",                        exactMatch(CLogCategories::dbus()) },
-            { "downloading data",            exactMatch(CLogCategories::download()) },
-            { "driver",                      exactMatch(CLogCategories::driver()) },
-            { "flight plan",                 exactMatch(CLogCategories::flightPlan()) },
-            { "FSD",                         exactMatch(CLogCategories::fsd()) },
-            { "interpolator",                exactMatch(CLogCategories::interpolator()) },
-            { "JSON (conversion)",           exactMatch(CLogCategories::json()) },
-            { "model cache",                 exactMatch(CLogCategories::modelCache()) },
-            { "model GUI",                   exactMatch(CLogCategories::modelGui()) },
-            { "model loader",                exactMatch(CLogCategories::modelLoader()) },
-            { "model mapping",               exactMatch(CLogCategories::mapping()) },
-            { "model matching",              exactMatch(CLogCategories::matching()) },
-            { "model set cache",             exactMatch(CLogCategories::modelSetCache()) },
-            { "network (flight)",            exactMatch(CLogCategories::network()) },
-            { "plugin",                      exactMatch(CLogCategories::plugin()) },
-            { "services",                    exactMatch(CLogCategories::services()) },
-            { "settings",                    exactMatch(CLogCategories::settings()) },
-            { "startup phase",               exactMatch(CLogCategories::startup()) },
-            { "swift context slots",         exactMatch(CLogCategories::contextSlot()) },
-            { "swift contexts",              exactMatch(CLogCategories::context()) },
-            { "swift core",                  exactMatch(CLogCategories::swiftCore()) },
-            { "swift data tool",             exactMatch(CLogCategories::swiftDataTool()) },
+        static const QHash<QString, CLogPattern> patterns {
+            { "uncategorized (swift)", exactMatch(CLogCategories::uncategorized()) },
+            { "background task", exactMatch(CLogCategories::worker()) },
+            { "cache", exactMatch(CLogCategories::cache()) },
+            { "cmd.line handling", exactMatch(CLogCategories::cmdLine()) },
+            { "data inconsistency", exactMatch(CLogCategories::dataInconsistency()) },
+            { "DBus", exactMatch(CLogCategories::dbus()) },
+            { "downloading data", exactMatch(CLogCategories::download()) },
+            { "driver", exactMatch(CLogCategories::driver()) },
+            { "flight plan", exactMatch(CLogCategories::flightPlan()) },
+            { "FSD", exactMatch(CLogCategories::fsd()) },
+            { "interpolator", exactMatch(CLogCategories::interpolator()) },
+            { "JSON (conversion)", exactMatch(CLogCategories::json()) },
+            { "model cache", exactMatch(CLogCategories::modelCache()) },
+            { "model GUI", exactMatch(CLogCategories::modelGui()) },
+            { "model loader", exactMatch(CLogCategories::modelLoader()) },
+            { "model mapping", exactMatch(CLogCategories::mapping()) },
+            { "model matching", exactMatch(CLogCategories::matching()) },
+            { "model set cache", exactMatch(CLogCategories::modelSetCache()) },
+            { "network (flight)", exactMatch(CLogCategories::network()) },
+            { "plugin", exactMatch(CLogCategories::plugin()) },
+            { "services", exactMatch(CLogCategories::services()) },
+            { "settings", exactMatch(CLogCategories::settings()) },
+            { "startup phase", exactMatch(CLogCategories::startup()) },
+            { "swift context slots", exactMatch(CLogCategories::contextSlot()) },
+            { "swift contexts", exactMatch(CLogCategories::context()) },
+            { "swift core", exactMatch(CLogCategories::swiftCore()) },
+            { "swift data tool", exactMatch(CLogCategories::swiftDataTool()) },
             { "swift DB webservice related", exactMatch(CLogCategories::swiftDbWebservice()) },
-            { "swift GUI",                   exactMatch(CLogCategories::guiComponent()) },
-            { "swift pilot client",          exactMatch(CLogCategories::swiftPilotClient()) },
-            { "validation",                  exactMatch(CLogCategories::validation()) },
-            { "VATSIM specific",             exactMatch(CLogCategories::vatsimSpecific()) },
-            { "verification",                exactMatch(CLogCategories::verification()) },
-            { "webservice related",          exactMatch(CLogCategories::webservice()) },
-            { "wizard",                      exactMatch(CLogCategories::wizard()) },
-            { "Qt library",                  startsWith("qt.") },
-            { "uncategorized (default)",     exactMatch("default") },
-            { "uncategorized (none)",        empty() }
+            { "swift GUI", exactMatch(CLogCategories::guiComponent()) },
+            { "swift pilot client", exactMatch(CLogCategories::swiftPilotClient()) },
+            { "validation", exactMatch(CLogCategories::validation()) },
+            { "VATSIM specific", exactMatch(CLogCategories::vatsimSpecific()) },
+            { "verification", exactMatch(CLogCategories::verification()) },
+            { "webservice related", exactMatch(CLogCategories::webservice()) },
+            { "wizard", exactMatch(CLogCategories::wizard()) },
+            { "Qt library", startsWith("qt.") },
+            { "uncategorized (default)", exactMatch("default") },
+            { "uncategorized (none)", empty() }
         };
         return patterns;
     }
@@ -96,8 +95,7 @@ namespace BlackMisc
     CLogPattern::CLogPattern(Strategy strategy, const QSet<QString> &strings)
         : m_strategy(strategy), m_strings(strings)
     {
-        static const decltype(m_severities) s
-        {
+        static const decltype(m_severities) s {
             CStatusMessage::SeverityDebug,
             CStatusMessage::SeverityInfo,
             CStatusMessage::SeverityWarning,
@@ -171,13 +169,16 @@ namespace BlackMisc
         switch (minimumSeverity)
         {
         default:
-        case CStatusMessage::SeverityDebug:     result.m_severities.insert(CStatusMessage::SeverityDebug);
-        [[fallthrough]];
-        case CStatusMessage::SeverityInfo:      result.m_severities.insert(CStatusMessage::SeverityInfo);
-        [[fallthrough]];
-        case CStatusMessage::SeverityWarning:   result.m_severities.insert(CStatusMessage::SeverityWarning);
-        [[fallthrough]];
-        case CStatusMessage::SeverityError:     result.m_severities.insert(CStatusMessage::SeverityError);
+        case CStatusMessage::SeverityDebug:
+            result.m_severities.insert(CStatusMessage::SeverityDebug);
+            [[fallthrough]];
+        case CStatusMessage::SeverityInfo:
+            result.m_severities.insert(CStatusMessage::SeverityInfo);
+            [[fallthrough]];
+        case CStatusMessage::SeverityWarning:
+            result.m_severities.insert(CStatusMessage::SeverityWarning);
+            [[fallthrough]];
+        case CStatusMessage::SeverityError: result.m_severities.insert(CStatusMessage::SeverityError);
         }
         return result;
     }
@@ -186,27 +187,27 @@ namespace BlackMisc
     {
         switch (m_strategy)
         {
-        case Everything:    return m_strings.isEmpty();
-        case ExactMatch:    return m_strings.size() == 1;
-        case AnyOf:         return m_strings.size() > 1;
-        case AllOf:         return m_strings.size() > 1;
-        case StartsWith:    return m_strings.size() == 1;
-        case EndsWith:      return m_strings.size() == 1;
-        case Contains:      return m_strings.size() == 1;
-        case Nothing:       return m_strings.isEmpty();
-        default:            return false;
+        case Everything: return m_strings.isEmpty();
+        case ExactMatch: return m_strings.size() == 1;
+        case AnyOf: return m_strings.size() > 1;
+        case AllOf: return m_strings.size() > 1;
+        case StartsWith: return m_strings.size() == 1;
+        case EndsWith: return m_strings.size() == 1;
+        case Contains: return m_strings.size() == 1;
+        case Nothing: return m_strings.isEmpty();
+        default: return false;
         }
     }
 
     bool CLogPattern::match(const CStatusMessage &message) const
     {
-        if (! checkInvariants())
+        if (!checkInvariants())
         {
             Q_ASSERT(false);
             return true;
         }
 
-        if (! m_severities.contains(message.getSeverity()))
+        if (!m_severities.contains(message.getSeverity()))
         {
             return false;
         }
@@ -214,14 +215,14 @@ namespace BlackMisc
         switch (m_strategy)
         {
         default:
-        case Everything:    return true;
-        case ExactMatch:    return message.getCategories().contains(getString());
-        case AnyOf:         return std::any_of(m_strings.begin(), m_strings.end(), [ & ](const QString & s) { return message.getCategories().contains(s); });
-        case AllOf:         return std::all_of(m_strings.begin(), m_strings.end(), [ & ](const QString & s) { return message.getCategories().contains(s); });
-        case StartsWith:    return message.getCategories().containsBy([this](const CLogCategory & cat) { return cat.startsWith(getPrefix()); });
-        case EndsWith:      return message.getCategories().containsBy([this](const CLogCategory & cat) { return cat.endsWith(getSuffix()); });
-        case Contains:      return message.getCategories().containsBy([this](const CLogCategory & cat) { return cat.contains(getSubstring()); });
-        case Nothing:       return message.getCategories().isEmpty();
+        case Everything: return true;
+        case ExactMatch: return message.getCategories().contains(getString());
+        case AnyOf: return std::any_of(m_strings.begin(), m_strings.end(), [&](const QString &s) { return message.getCategories().contains(s); });
+        case AllOf: return std::all_of(m_strings.begin(), m_strings.end(), [&](const QString &s) { return message.getCategories().contains(s); });
+        case StartsWith: return message.getCategories().containsBy([this](const CLogCategory &cat) { return cat.startsWith(getPrefix()); });
+        case EndsWith: return message.getCategories().containsBy([this](const CLogCategory &cat) { return cat.endsWith(getSuffix()); });
+        case Contains: return message.getCategories().containsBy([this](const CLogCategory &cat) { return cat.contains(getSubstring()); });
+        case Nothing: return message.getCategories().isEmpty();
         }
     }
 
@@ -237,7 +238,7 @@ namespace BlackMisc
         // matched by the other, and the categories matched by this pattern must be a subset of the categories matched
         // by the other, and at least one of these two subset relations must be a proper subset relation.
 
-        if (! other.m_severities.contains(m_severities))
+        if (!other.m_severities.contains(m_severities))
         {
             // Severities are not a subset
             return false;
@@ -279,56 +280,56 @@ namespace BlackMisc
         case ExactMatch:
             switch (other.m_strategy)
             {
-            case AnyOf:         return other.m_strings.contains(getString());
-            case StartsWith:    return getString().startsWith(other.getPrefix());
-            case EndsWith:      return getString().endsWith(other.getSuffix());
-            case Contains:      return getString().contains(other.getSubstring());
-            default:            ;
+            case AnyOf: return other.m_strings.contains(getString());
+            case StartsWith: return getString().startsWith(other.getPrefix());
+            case EndsWith: return getString().endsWith(other.getSuffix());
+            case Contains: return getString().contains(other.getSubstring());
+            default:;
             }
             break;
         case AnyOf:
             switch (other.m_strategy)
             {
-            case AnyOf:         return other.m_strings.contains(m_strings) && other.m_strings.size() > m_strings.size();
-            case StartsWith:    return std::all_of(m_strings.begin(), m_strings.end(), [ & ](const QString & s) { return s.startsWith(other.getPrefix()); });
-            case EndsWith:      return std::all_of(m_strings.begin(), m_strings.end(), [ & ](const QString & s) { return s.endsWith(other.getSuffix()); });
-            case Contains:      return std::all_of(m_strings.begin(), m_strings.end(), [ & ](const QString & s) { return s.contains(other.getSubstring()); });
-            default:            ;
+            case AnyOf: return other.m_strings.contains(m_strings) && other.m_strings.size() > m_strings.size();
+            case StartsWith: return std::all_of(m_strings.begin(), m_strings.end(), [&](const QString &s) { return s.startsWith(other.getPrefix()); });
+            case EndsWith: return std::all_of(m_strings.begin(), m_strings.end(), [&](const QString &s) { return s.endsWith(other.getSuffix()); });
+            case Contains: return std::all_of(m_strings.begin(), m_strings.end(), [&](const QString &s) { return s.contains(other.getSubstring()); });
+            default:;
             }
             break;
         case AllOf:
             switch (other.m_strategy)
             {
-            case ExactMatch:    return m_strings.contains(other.getString());
-            case AnyOf:         return !(m_strings & other.m_strings).isEmpty();
-            case AllOf:         return m_strings.contains(other.m_strings) && m_strings.size() > other.m_strings.size();
-            case StartsWith:    return std::any_of(m_strings.begin(), m_strings.end(), [ & ](const QString & s) { return s.startsWith(other.getPrefix()); });
-            case EndsWith:      return std::any_of(m_strings.begin(), m_strings.end(), [ & ](const QString & s) { return s.endsWith(other.getSuffix()); });
-            case Contains:      return std::any_of(m_strings.begin(), m_strings.end(), [ & ](const QString & s) { return s.contains(other.getSubstring()); });
-            default:            ;
+            case ExactMatch: return m_strings.contains(other.getString());
+            case AnyOf: return !(m_strings & other.m_strings).isEmpty();
+            case AllOf: return m_strings.contains(other.m_strings) && m_strings.size() > other.m_strings.size();
+            case StartsWith: return std::any_of(m_strings.begin(), m_strings.end(), [&](const QString &s) { return s.startsWith(other.getPrefix()); });
+            case EndsWith: return std::any_of(m_strings.begin(), m_strings.end(), [&](const QString &s) { return s.endsWith(other.getSuffix()); });
+            case Contains: return std::any_of(m_strings.begin(), m_strings.end(), [&](const QString &s) { return s.contains(other.getSubstring()); });
+            default:;
             }
             break;
         case StartsWith:
             switch (other.m_strategy)
             {
-            case StartsWith:    return getPrefix().startsWith(other.getPrefix()) && getPrefix().size() > other.getPrefix().size();
-            case Contains:      return getPrefix().contains(other.getSubstring());
-            default:            ;
+            case StartsWith: return getPrefix().startsWith(other.getPrefix()) && getPrefix().size() > other.getPrefix().size();
+            case Contains: return getPrefix().contains(other.getSubstring());
+            default:;
             }
             break;
         case EndsWith:
             switch (other.m_strategy)
             {
-            case EndsWith:      return getSuffix().endsWith(other.getSuffix()) && getSuffix().size() > other.getSuffix().size();
-            case Contains:      return getSuffix().contains(other.getSubstring());
-            default:            ;
+            case EndsWith: return getSuffix().endsWith(other.getSuffix()) && getSuffix().size() > other.getSuffix().size();
+            case Contains: return getSuffix().contains(other.getSubstring());
+            default:;
             }
             break;
         case Contains:
             switch (other.m_strategy)
             {
-            case Contains:      return getSubstring().contains(other.getSubstring()) && getSubstring().size() > other.getSubstring().size();
-            default:            ;
+            case Contains: return getSubstring().contains(other.getSubstring()) && getSubstring().size() > other.getSubstring().size();
+            default:;
             }
             break;
         default:;

@@ -15,7 +15,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CInterpolationComponent; }
+namespace Ui
+{
+    class CInterpolationComponent;
+}
 namespace BlackGui::Components
 {
     //! Interpolation

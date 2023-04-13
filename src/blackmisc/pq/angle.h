@@ -31,7 +31,7 @@ namespace BlackMisc::PhysicalQuantities
         CAngle() : CPhysicalQuantity(0, CAngleUnit::defaultUnit()) {}
 
         //! Init by double value
-        CAngle(double value, const CAngleUnit &unit): CPhysicalQuantity(value, unit) {}
+        CAngle(double value, const CAngleUnit &unit) : CPhysicalQuantity(value, unit) {}
 
         //! \copydoc CPhysicalQuantity(const QString &unitString)
         CAngle(const QString &unitString) : CPhysicalQuantity(unitString) {}
@@ -40,9 +40,9 @@ namespace BlackMisc::PhysicalQuantities
         struct DegMinSecFractionalSec
         {
             int sign = 1; //!< 1/-1
-            int deg  = 0; //!< 0-359
-            int min  = 0; //!< 0-59
-            int sec  = 0; //!< 0-59
+            int deg = 0; //!< 0-359
+            int min = 0; //!< 0-59
+            int sec = 0; //!< 0-59
             double fractionalSec = 0; //!< value < 1.0
 
             //! Degrees as string
@@ -114,7 +114,7 @@ namespace BlackMisc::PhysicalQuantities
         static double normalizeDegrees360(double degrees, int roundDigits = -1);
     };
 
-    using CAnglePair  = QPair<CAngle, CAngle>;   //!< Pair of angle
+    using CAnglePair = QPair<CAngle, CAngle>; //!< Pair of angle
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAngle)

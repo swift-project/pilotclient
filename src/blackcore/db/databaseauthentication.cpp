@@ -39,8 +39,7 @@ namespace BlackCore::Db
         return cats;
     }
 
-    CDatabaseAuthenticationService::CDatabaseAuthenticationService(QObject *parent) :
-        QObject(parent)
+    CDatabaseAuthenticationService::CDatabaseAuthenticationService(QObject *parent) : QObject(parent)
     {
         // void
     }
@@ -68,7 +67,11 @@ namespace BlackCore::Db
         CStatusMessageList msgs;
         static const CLogCategoryList cats(CLogCategoryList(this).withValidation());
 
-        if (!sApp || m_shutdown) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Shutdown in progress")); return msgs; }
+        if (!sApp || m_shutdown)
+        {
+            msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Shutdown in progress"));
+            return msgs;
+        }
 
         const QString un(username.trimmed());
         const QString pw(password.trimmed());
@@ -91,7 +94,7 @@ namespace BlackCore::Db
 
         const QString query = params.toString();
         const QNetworkRequest request(CNetworkUtils::getSwiftNetworkRequest(url, CNetworkUtils::PostUrlEncoded, sApp->getApplicationNameAndVersion()));
-        sApp->postToNetwork(request, CApplication::NoLogRequestId, query.toUtf8(), { this, &CDatabaseAuthenticationService::parseServerResponse});
+        sApp->postToNetwork(request, CApplication::NoLogRequestId, query.toUtf8(), { this, &CDatabaseAuthenticationService::parseServerResponse });
         static const QString rm("Sent request to authentication server '%1'");
         msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityInfo, rm.arg(url.toQString())));
         return msgs;

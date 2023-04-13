@@ -17,7 +17,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CCockpitComTransmissionComponent; }
+namespace Ui
+{
+    class CCockpitComTransmissionComponent;
+}
 namespace BlackGui::Components
 {
     //! Transmission for COM units

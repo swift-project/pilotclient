@@ -16,7 +16,10 @@
 #include <QTimer>
 #include <QScopedPointer>
 
-namespace Ui { class CRegisterComponent; }
+namespace Ui
+{
+    class CRegisterComponent;
+}
 namespace BlackGui::Components
 {
     //! Show registered applications (registered with core) in the GUI

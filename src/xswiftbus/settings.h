@@ -56,7 +56,7 @@ namespace XSwiftBus
 
     private:
         mutable std::mutex m_settingsMutex;
-        CSettings          m_pluginSettings; //!< owner of the settings
+        CSettings m_pluginSettings; //!< owner of the settings
     };
 
     //! Something having access to the settings

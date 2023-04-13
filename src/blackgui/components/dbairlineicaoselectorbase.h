@@ -84,7 +84,7 @@ namespace BlackGui::Components
         //! \copydoc QWidget::dropEvent
         virtual void dropEvent(QDropEvent *event) override;
 
-        QScopedPointer<QCompleter>            m_completer;   //!< completer used
+        QScopedPointer<QCompleter> m_completer; //!< completer used
         BlackMisc::Aviation::CAirlineIcaoCode m_currentIcao; //!< current ICAO object
 
     private:

@@ -80,11 +80,11 @@ namespace BlackMisc
         struct CommandHtmlHelp
         {
             QString command; //!< command
-            QString help;    //!< help text
+            QString help; //!< help text
 
             //! Constructor
             CommandHtmlHelp(const QString &command, const QString &help) : command(command), help(help)
-            { }
+            {}
 
             //! Compare by command
             static bool less(const CommandHtmlHelp &a, const CommandHtmlHelp &b)
@@ -103,10 +103,10 @@ namespace BlackMisc
         static QString commandsHtmlHelp();
 
     private:
-        QString m_originalLine;      //!< line as entered by user
-        QString m_cleanedLine;       //!< trimmed, no double spaces etc.
-        QString m_commandPart;       //!< command part (e.g. ".msg", if any)
-        QStringList m_splitParts;    //!< split parts (split by " ")
+        QString m_originalLine; //!< line as entered by user
+        QString m_cleanedLine; //!< trimmed, no double spaces etc.
+        QString m_commandPart; //!< command part (e.g. ".msg", if any)
+        QStringList m_splitParts; //!< split parts (split by " ")
         QStringList m_knownCommands; //!< known / handled commands
         bool m_knownCommand = false; //!< known command
 

@@ -26,8 +26,14 @@
 
 class QPaintEvent;
 
-namespace Ui { class CCockpitComComponent; }
-namespace BlackMisc::Aviation { class CComSystem; }
+namespace Ui
+{
+    class CCockpitComComponent;
+}
+namespace BlackMisc::Aviation
+{
+    class CComSystem;
+}
 namespace BlackGui::Components
 {
     //! The main cockpit area

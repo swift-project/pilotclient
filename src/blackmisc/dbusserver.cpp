@@ -40,52 +40,52 @@ namespace BlackMisc
         switch (m_serverMode)
         {
         case SERVERMODE_SESSIONBUS:
+        {
+            QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SessionBus, coreServiceName());
+            connection.unregisterService(service); // allow reconnecting by removing still registered service
+            if (!connection.isConnected() || !connection.registerService(service))
             {
-                QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SessionBus, coreServiceName());
-                connection.unregisterService(service); // allow reconnecting by removing still registered service
-                if (! connection.isConnected() || ! connection.registerService(service))
-                {
-                    // registration fails can either mean something wrong with DBus or service already exists
-                    CLogMessage(this).warning(u"DBus registration: %1") << connection.lastError().message();
-                    CLogMessage(this).warning(u"Cannot register DBus service, check server running: dbus-daemon.exe --session --address=tcp:host=192.168.0.133,port=45000");
-                }
+                // registration fails can either mean something wrong with DBus or service already exists
+                CLogMessage(this).warning(u"DBus registration: %1") << connection.lastError().message();
+                CLogMessage(this).warning(u"Cannot register DBus service, check server running: dbus-daemon.exe --session --address=tcp:host=192.168.0.133,port=45000");
             }
-            break;
+        }
+        break;
         case SERVERMODE_SYSTEMBUS:
+        {
+            QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SystemBus, coreServiceName());
+            connection.unregisterService(service); // allow reconnecting by removing still registered service
+            if (!connection.isConnected() || !connection.registerService(service))
             {
-                QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SystemBus, coreServiceName());
-                connection.unregisterService(service); // allow reconnecting by removing still registered service
-                if (! connection.isConnected() || ! connection.registerService(service))
-                {
-                    // registration fails can either mean something wrong with DBus or service already exists
-                    CLogMessage(this).warning(u"DBus registration: %1") << connection.lastError().message();
-                    CLogMessage(this).warning(u"Cannot register DBus service, check server running: dbus-daemon.exe --system --address=tcp:host=192.168.0.133,port=45000");
-                }
+                // registration fails can either mean something wrong with DBus or service already exists
+                CLogMessage(this).warning(u"DBus registration: %1") << connection.lastError().message();
+                CLogMessage(this).warning(u"Cannot register DBus service, check server running: dbus-daemon.exe --system --address=tcp:host=192.168.0.133,port=45000");
             }
-            break;
+        }
+        break;
         case SERVERMODE_P2P:
         default:
+        {
+            QString dbusAddress = isQtDBusAddress(address) ? address : "tcp:host=127.0.0.1,port=45000";
+            dbusAddress = dbusAddress.toLower().trimmed().replace(' ', "");
+            if (!dbusAddress.contains("bind=")) { dbusAddress = dbusAddress.append(",bind=*"); } // bind to all network interfaces
+
+            m_busServer.reset(new QDBusServer(dbusAddress, this));
+            m_busServer->setObjectName("QDBusServer: " + this->objectName());
+            m_busServer->setAnonymousAuthenticationAllowed(true);
+
+            // Note: P2P has no service name
+            if (m_busServer->isConnected())
             {
-                QString dbusAddress = isQtDBusAddress(address) ? address : "tcp:host=127.0.0.1,port=45000";
-                dbusAddress = dbusAddress.toLower().trimmed().replace(' ', "");
-                if (! dbusAddress.contains("bind=")) { dbusAddress = dbusAddress.append(",bind=*"); } // bind to all network interfaces
-
-                m_busServer.reset(new QDBusServer(dbusAddress, this));
-                m_busServer->setObjectName("QDBusServer: " + this->objectName());
-                m_busServer->setAnonymousAuthenticationAllowed(true);
-
-                // Note: P2P has no service name
-                if (m_busServer->isConnected())
-                {
-                    CLogMessage(this).info(u"DBus P2P Server listening on address: '%1'") << m_busServer->address();
-                }
-                else
-                {
-                    CLogMessage(this).warning(u"DBus P2P connection failed: %1") << lastQDBusServerError().message();
-                }
-                connect(m_busServer.data(), &QDBusServer::newConnection, this, &CDBusServer::registerObjectsWithP2PConnection);
+                CLogMessage(this).info(u"DBus P2P Server listening on address: '%1'") << m_busServer->address();
             }
-            break;
+            else
+            {
+                CLogMessage(this).warning(u"DBus P2P connection failed: %1") << lastQDBusServerError().message();
+            }
+            connect(m_busServer.data(), &QDBusServer::newConnection, this, &CDBusServer::registerObjectsWithP2PConnection);
+        }
+        break;
         }
     }
 
@@ -144,7 +144,7 @@ namespace BlackMisc
                     const QString p = part.mid(part.lastIndexOf("=") + 1).trimmed();
                     bool ok;
                     port = p.toInt(&ok);
-                    if (! ok) { port = -1; }
+                    if (!ok) { port = -1; }
                 }
             }
             if (port < 0) { port = 45000; }
@@ -185,7 +185,7 @@ namespace BlackMisc
 
     QString CDBusServer::getDBusInterfaceFromClassInfo(QObject *object)
     {
-        if (! object) { return {}; }
+        if (!object) { return {}; }
         const QMetaObject *mo = object->metaObject();
         for (int i = 0; i < mo->classInfoCount(); i++)
         {
@@ -204,7 +204,7 @@ namespace BlackMisc
 
     bool CDBusServer::registerObjectsWithP2PConnection(QDBusConnection connection)
     {
-        Q_ASSERT(! m_objects.isEmpty());
+        Q_ASSERT(!m_objects.isEmpty());
         m_connections.insert(connection.name(), connection);
         CLogMessage(this).info(u"New Connection from: '%1'") << connection.name();
         bool success = true;
@@ -227,7 +227,7 @@ namespace BlackMisc
 
     void CDBusServer::addObject(const QString &path, QObject *object)
     {
-        if (! object) { return; }
+        if (!object) { return; }
         m_objects.insert(path, object); // will be registered when P2P connection is established
 
         QObject::connect(object, &QObject::destroyed, this, [this, path] { m_objects.remove(path); });
@@ -235,46 +235,46 @@ namespace BlackMisc
         switch (m_serverMode)
         {
         case SERVERMODE_SESSIONBUS:
+        {
+            QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SessionBus, coreServiceName());
+            if (connection.registerObject(path, object, registerOptions()))
             {
-                QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SessionBus, coreServiceName());
-                if (connection.registerObject(path, object, registerOptions()))
-                {
-                    CLogMessage(this).info(u"Adding '%1' '%2' to session DBus") << path << getDBusInterfaceFromClassInfo(object);
-                }
-                else
-                {
-                    CLogMessage(this).error(u"Error adding '%1' '%2' to session DBus: '%3'") << path << getDBusInterfaceFromClassInfo(object) << connection.lastError().message();
-                }
+                CLogMessage(this).info(u"Adding '%1' '%2' to session DBus") << path << getDBusInterfaceFromClassInfo(object);
             }
-            break;
+            else
+            {
+                CLogMessage(this).error(u"Error adding '%1' '%2' to session DBus: '%3'") << path << getDBusInterfaceFromClassInfo(object) << connection.lastError().message();
+            }
+        }
+        break;
         case SERVERMODE_SYSTEMBUS:
+        {
+            QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SystemBus, coreServiceName());
+            if (connection.registerObject(path, object, registerOptions()))
             {
-                QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SystemBus, coreServiceName());
+                CLogMessage(this).info(u"Adding '%1' '%2' to system DBus") << path << getDBusInterfaceFromClassInfo(object);
+            }
+            else
+            {
+                CLogMessage(this).error(u"Error adding '%1' '%2' to system DBus: '%3'") << path << getDBusInterfaceFromClassInfo(object) << connection.lastError().message();
+            }
+        }
+        break;
+        case SERVERMODE_P2P:
+        {
+            for (QDBusConnection connection : std::as_const(m_connections))
+            {
                 if (connection.registerObject(path, object, registerOptions()))
                 {
-                    CLogMessage(this).info(u"Adding '%1' '%2' to system DBus") << path << getDBusInterfaceFromClassInfo(object);
+                    CLogMessage(this).info(u"Adding '%1' '%2' to P2P DBus '%3'") << path << getDBusInterfaceFromClassInfo(object) << connection.name();
                 }
                 else
                 {
-                    CLogMessage(this).error(u"Error adding '%1' '%2' to system DBus: '%3'") << path << getDBusInterfaceFromClassInfo(object) << connection.lastError().message();
+                    CLogMessage(this).error(u"Error adding '%1' '%2' to P2P DBus '%3': '%4'") << path << getDBusInterfaceFromClassInfo(object) << connection.name() << connection.lastError().message();
                 }
             }
-            break;
-        case SERVERMODE_P2P:
-            {
-                for (QDBusConnection connection : std::as_const(m_connections))
-                {
-                    if (connection.registerObject(path, object, registerOptions()))
-                    {
-                        CLogMessage(this).info(u"Adding '%1' '%2' to P2P DBus '%3'") << path << getDBusInterfaceFromClassInfo(object) << connection.name();
-                    }
-                    else
-                    {
-                        CLogMessage(this).error(u"Error adding '%1' '%2' to P2P DBus '%3': '%4'") << path << getDBusInterfaceFromClassInfo(object) << connection.name() << connection.lastError().message();
-                    }
-                }
-            }
-            break;
+        }
+        break;
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong server mode");
         }
@@ -282,7 +282,7 @@ namespace BlackMisc
 
     QDBusError CDBusServer::lastQDBusServerError() const
     {
-        if (! hasQDBusServer()) { return {}; }
+        if (!hasQDBusServer()) { return {}; }
         return m_busServer->lastError();
     }
 
@@ -440,9 +440,9 @@ namespace BlackMisc
     CDBusServer::ServerMode CDBusServer::modeOfAddress(QString address)
     {
         address = address.toLower();
-        if (address == systemBusAddress())       { return SERVERMODE_SYSTEMBUS; }
+        if (address == systemBusAddress()) { return SERVERMODE_SYSTEMBUS; }
         else if (address == sessionBusAddress()) { return SERVERMODE_SESSIONBUS; }
-        else                                     { return SERVERMODE_P2P; }
+        else { return SERVERMODE_P2P; }
     }
 
     const QString &CDBusServer::modeToString(CDBusServer::ServerMode mode)
@@ -474,14 +474,18 @@ namespace BlackMisc
 
     bool CDBusServer::isDBusAvailable(const QString &dBusAddress, QString &message, int timeoutMs)
     {
-        if (dBusAddress.isEmpty()) { message = "No address."; return false; }
+        if (dBusAddress.isEmpty())
+        {
+            message = "No address.";
+            return false;
+        }
         if (isP2PAddress(dBusAddress))
         {
             QString host;
             int port = -1;
             return CDBusServer::dBusAddressToHostAndPort(dBusAddress, host, port) ?
-                   CDBusServer::isDBusAvailable(host, port, message, timeoutMs) :
-                   false;
+                       CDBusServer::isDBusAvailable(host, port, message, timeoutMs) :
+                       false;
         }
         else
         {

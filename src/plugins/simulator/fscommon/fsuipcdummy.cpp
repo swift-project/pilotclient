@@ -8,7 +8,7 @@
 
 #if !defined(SWIFT_USING_FSUIPC32) && !defined(SWIFT_USING_FSUIPC64)
 
-#include "fsuipc.h"
+#    include "fsuipc.h"
 
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;
@@ -20,14 +20,14 @@ namespace BlackSimPlugin
     {
         //! Dummy FsuipcWeatherMessage
         struct CFsuipc::FsuipcWeatherMessage
-        { };
+        {};
 
         CFsuipc::CFsuipc(QObject *parent)
             : QObject(parent)
-        { }
+        {}
 
         CFsuipc::~CFsuipc()
-        { }
+        {}
 
         bool CFsuipc::open(bool force)
         {
@@ -36,7 +36,7 @@ namespace BlackSimPlugin
         }
 
         void CFsuipc::close()
-        { }
+        {}
 
         bool CFsuipc::isOpened() const
         {

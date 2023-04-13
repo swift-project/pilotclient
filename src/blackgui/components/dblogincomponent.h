@@ -21,8 +21,14 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace BlackMisc::Network { class CAuthenticatedUser; }
-namespace Ui { class CDbLoginComponent; }
+namespace BlackMisc::Network
+{
+    class CAuthenticatedUser;
+}
+namespace Ui
+{
+    class CDbLoginComponent;
+}
 namespace BlackGui::Components
 {
     /*!
@@ -50,7 +56,7 @@ namespace BlackGui::Components
 
     private:
         QScopedPointer<Ui::CDbLoginComponent> ui;
-        BlackCore::Db::CDatabaseAuthenticationService m_loginService { this };  //!< login service
+        BlackCore::Db::CDatabaseAuthenticationService m_loginService { this }; //!< login service
 
         //! Overlay messages
         void displayOverlayMessages(const BlackMisc::CStatusMessageList &msgs);

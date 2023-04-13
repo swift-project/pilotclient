@@ -16,16 +16,15 @@ namespace BlackGui::Models
     CAircraftIcaoFilter::CAircraftIcaoFilter(
         int id,
         const QString &designator, const QString &family, const QString &manufacturer,
-        const QString &description, const QString &combinedType) :
-        m_id(id),
-        m_designator(designator.trimmed().toUpper()),
-        m_family(family.trimmed().toUpper()),
-        m_manufacturer(manufacturer.trimmed()),
-        m_description(description.trimmed()),
-        m_combinedType(combinedType.trimmed().toUpper())
+        const QString &description, const QString &combinedType) : m_id(id),
+                                                                   m_designator(designator.trimmed().toUpper()),
+                                                                   m_family(family.trimmed().toUpper()),
+                                                                   m_manufacturer(manufacturer.trimmed()),
+                                                                   m_description(description.trimmed()),
+                                                                   m_combinedType(combinedType.trimmed().toUpper())
     {
         m_valid = !(m_id < 0 && m_combinedType.isEmpty() && m_designator.isEmpty() &&
-                            m_family.isEmpty() && m_description.isEmpty() && m_manufacturer.isEmpty());
+                    m_family.isEmpty() && m_description.isEmpty() && m_manufacturer.isEmpty());
     }
 
     CAircraftIcaoCodeList CAircraftIcaoFilter::filter(const CAircraftIcaoCodeList &inContainer) const

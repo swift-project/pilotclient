@@ -16,7 +16,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CAircraftPartsComponent; }
+namespace Ui
+{
+    class CAircraftPartsComponent;
+}
 namespace BlackGui::Components
 {
     //! Allows to display and manipulate parts

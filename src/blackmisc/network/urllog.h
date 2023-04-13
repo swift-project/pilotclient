@@ -83,9 +83,9 @@ namespace BlackMisc::Network
         static const char *propertyNameId();
 
     private:
-        int    m_id = -1;
-        CUrl   m_url;
-        bool   m_success = false;
+        int m_id = -1;
+        CUrl m_url;
+        bool m_success = false;
         qint64 m_responseTimeMSecsSinceEpoch = -1;
         qint64 m_responseTimeMs = -1;
 

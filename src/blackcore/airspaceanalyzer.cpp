@@ -33,10 +33,9 @@ using namespace BlackCore::Fsd;
 
 namespace BlackCore
 {
-    CAirspaceAnalyzer::CAirspaceAnalyzer(IOwnAircraftProvider *ownAircraftProvider, CFSDClient *fsdClient, CAirspaceMonitor *airspaceMonitorParent) :
-        CContinuousWorker(airspaceMonitorParent, "CAirspaceAnalyzer"),
-        COwnAircraftAware(ownAircraftProvider),
-        CRemoteAircraftAware(airspaceMonitorParent)
+    CAirspaceAnalyzer::CAirspaceAnalyzer(IOwnAircraftProvider *ownAircraftProvider, CFSDClient *fsdClient, CAirspaceMonitor *airspaceMonitorParent) : CContinuousWorker(airspaceMonitorParent, "CAirspaceAnalyzer"),
+                                                                                                                                                      COwnAircraftAware(ownAircraftProvider),
+                                                                                                                                                      CRemoteAircraftAware(airspaceMonitorParent)
     {
         Q_ASSERT_X(fsdClient, Q_FUNC_INFO, "Network object required to connect");
 
@@ -95,7 +94,7 @@ namespace BlackCore
     }
 
     CAirspaceAnalyzer::~CAirspaceAnalyzer()
-    { }
+    {}
 
     void CAirspaceAnalyzer::onNetworkPositionUpdate(const CAircraftSituation &situation, const CTransponder &transponder)
     {
@@ -188,11 +187,11 @@ namespace BlackCore
         m_doNotRunAgainBefore = -1;
 
         // checks
-        const qint64 aircraftTimeoutMs      = m_timeoutAircraft.valueInteger(CTimeUnit::ms());
-        const qint64 atcTimeoutMs           = m_timeoutAtc.valueInteger(CTimeUnit::ms());
+        const qint64 aircraftTimeoutMs = m_timeoutAircraft.valueInteger(CTimeUnit::ms());
+        const qint64 atcTimeoutMs = m_timeoutAtc.valueInteger(CTimeUnit::ms());
         const qint64 timeoutAircraftEpochMs = currentTimeMsEpoch - aircraftTimeoutMs;
-        const qint64 timeoutAtcEpochMs      = currentTimeMsEpoch - atcTimeoutMs;
-        const bool enabled                  = m_enabledWatchdog;
+        const qint64 timeoutAtcEpochMs = currentTimeMsEpoch - atcTimeoutMs;
+        const bool enabled = m_enabledWatchdog;
 
         const QList<CCallsign> callsignsAircraft = m_aircraftCallsignTimestamps.keys();
         for (const CCallsign &callsign : callsignsAircraft) // clazy:exclude=container-anti-pattern,range-loop
@@ -240,8 +239,7 @@ namespace BlackCore
         CAirspaceAircraftSnapshot snapshot(
             aircraftInRange,
             restricted, enabled,
-            maxAircraft, maxRenderedDistance
-        );
+            maxAircraft, maxRenderedDistance);
 
         // lock block
         {

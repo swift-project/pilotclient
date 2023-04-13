@@ -12,13 +12,12 @@
 
 namespace BlackCore::Fsd
 {
-    AuthChallenge::AuthChallenge() : MessageBase ()
-    { }
+    AuthChallenge::AuthChallenge() : MessageBase()
+    {}
 
-    AuthChallenge::AuthChallenge(const QString &sender, const QString &target, const QString &challengeKey) :
-        MessageBase(sender, target),
-        m_challengeKey(challengeKey)
-    { }
+    AuthChallenge::AuthChallenge(const QString &sender, const QString &target, const QString &challengeKey) : MessageBase(sender, target),
+                                                                                                              m_challengeKey(challengeKey)
+    {}
 
     QStringList AuthChallenge::toTokens() const
     {
@@ -39,6 +38,3 @@ namespace BlackCore::Fsd
         return AuthChallenge(tokens[0], tokens[1], tokens[2]);
     }
 }
-
-
-

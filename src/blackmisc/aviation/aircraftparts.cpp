@@ -23,12 +23,12 @@ namespace BlackMisc::Aviation
 
     CAircraftParts::CAircraftParts(const CAircraftLights &lights, bool gearDown, int flapsPercent, bool spoilersOut, const CAircraftEngineList &engines, bool onGround)
         : m_lights(lights), m_engines(engines), m_flapsPercentage(flapsPercent), m_gearDown(gearDown),
-            m_spoilersOut(spoilersOut), m_isOnGround(onGround)
+          m_spoilersOut(spoilersOut), m_isOnGround(onGround)
     {}
 
     CAircraftParts::CAircraftParts(const CAircraftLights &lights, bool gearDown, int flapsPercent, bool spoilersOut, const CAircraftEngineList &engines, bool onGround, qint64 timestamp)
         : m_lights(lights), m_engines(engines), m_flapsPercentage(flapsPercent), m_gearDown(gearDown),
-            m_spoilersOut(spoilersOut), m_isOnGround(onGround)
+          m_spoilersOut(spoilersOut), m_isOnGround(onGround)
     {
         this->setMSecsSinceEpoch(timestamp);
     }
@@ -36,14 +36,14 @@ namespace BlackMisc::Aviation
     QString CAircraftParts::convertToQString(bool i18n) const
     {
         return u"ts: " % this->getFormattedTimestampAndOffset(true) %
-                u" details: " % this->getPartsDetailsAsString() %
-                (m_guessingDetails.isEmpty() ? QString() : u" - " % m_guessingDetails) %
-                u" | on ground: " % BlackMisc::boolToYesNo(m_isOnGround) %
-                u" | lights: " % m_lights.toQString(i18n) %
-                u" | gear down: " % BlackMisc::boolToYesNo(m_gearDown) %
-                u" | flaps pct: " % QString::number(m_flapsPercentage) %
-                u" | spoilers out: " % BlackMisc::boolToYesNo(m_spoilersOut) %
-                u" | engines on: " % m_engines.toQString(i18n);
+               u" details: " % this->getPartsDetailsAsString() %
+               (m_guessingDetails.isEmpty() ? QString() : u" - " % m_guessingDetails) %
+               u" | on ground: " % BlackMisc::boolToYesNo(m_isOnGround) %
+               u" | lights: " % m_lights.toQString(i18n) %
+               u" | gear down: " % BlackMisc::boolToYesNo(m_gearDown) %
+               u" | flaps pct: " % QString::number(m_flapsPercentage) %
+               u" | spoilers out: " % BlackMisc::boolToYesNo(m_spoilersOut) %
+               u" | engines on: " % m_engines.toQString(i18n);
     }
 
     QJsonObject CAircraftParts::toIncrementalJson() const
@@ -123,13 +123,21 @@ namespace BlackMisc::Aviation
 
     void CAircraftParts::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CAircraftParts>(); return; }
-        if (ITimestampWithOffsetBased::canHandleIndex(index)) { ITimestampWithOffsetBased::setPropertyByIndex(index, variant); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CAircraftParts>();
+            return;
+        }
+        if (ITimestampWithOffsetBased::canHandleIndex(index))
+        {
+            ITimestampWithOffsetBased::setPropertyByIndex(index, variant);
+            return;
+        }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexEngines: m_engines = variant.value<decltype(m_engines)> (); break;
+        case IndexEngines: m_engines = variant.value<decltype(m_engines)>(); break;
         case IndexFlapsPercentage: m_flapsPercentage = variant.toInt(); break;
         case IndexGearDown: m_gearDown = variant.toBool(); break;
         case IndexLights: m_lights.setPropertyByIndex(index.copyFrontRemoved(), variant); break;

@@ -29,17 +29,17 @@
 
 // Work around MinGW problem with combination of constexpr and extern template
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)
-#define BLACK_NO_EXPORT_CONSTEXPR constexpr inline __attribute__((always_inline))
+#    define BLACK_NO_EXPORT_CONSTEXPR constexpr inline __attribute__((always_inline))
 #else
-#define BLACK_NO_EXPORT_CONSTEXPR constexpr
+#    define BLACK_NO_EXPORT_CONSTEXPR constexpr
 #endif
 
 // MSVC, GCC, Clang all have non-standard extensions for skipping trailing
 // commas in variadic macros, but the MSVC extension differs from the others.
 #ifdef Q_CC_MSVC
-#define BLACK_TRAILING_VA_ARGS(...) ,__VA_ARGS__
+#    define BLACK_TRAILING_VA_ARGS(...) , __VA_ARGS__
 #else
-#define BLACK_TRAILING_VA_ARGS(...) ,##__VA_ARGS__
+#    define BLACK_TRAILING_VA_ARGS(...) , ##__VA_ARGS__
 #endif
 
 //! \endcond
@@ -53,15 +53,15 @@
  * \note A semicolon is needed at the end.
  * \ingroup MetaClass
  */
-#define BLACK_METACLASS(CLASS, ...)                                         \
-    friend struct BlackMisc::Private::CMetaClassAccessor;                   \
-    struct MetaClass : public BlackMisc::CMetaClass                         \
-    {                                                                       \
-        using Class = CLASS;                                                \
-        BLACK_NO_EXPORT_CONSTEXPR static auto getMemberList()               \
-        {                                                                   \
-            return makeMetaMemberList(__VA_ARGS__);                         \
-        }                                                                   \
+#define BLACK_METACLASS(CLASS, ...)                           \
+    friend struct BlackMisc::Private::CMetaClassAccessor;     \
+    struct MetaClass : public BlackMisc::CMetaClass           \
+    {                                                         \
+        using Class = CLASS;                                  \
+        BLACK_NO_EXPORT_CONSTEXPR static auto getMemberList() \
+        {                                                     \
+            return makeMetaMemberList(__VA_ARGS__);           \
+        }                                                     \
     }
 
 /*!
@@ -76,10 +76,9 @@
  * \see BlackMisc::CMetaClass::makeMetaMember
  * \ingroup MetaClass
  */
-#define BLACK_METAMEMBER(MEMBER, ...)                                       \
-    makeMetaMember(                                                         \
-        &Class::m_##MEMBER, #MEMBER BLACK_TRAILING_VA_ARGS(__VA_ARGS__)     \
-    )
+#define BLACK_METAMEMBER(MEMBER, ...) \
+    makeMetaMember(                   \
+        &Class::m_##MEMBER, #MEMBER BLACK_TRAILING_VA_ARGS(__VA_ARGS__))
 
 /*!
  * Same as BLACK_METAMEMBER but the second parameter is a string literal
@@ -87,10 +86,9 @@
  *
  * \ingroup MetaClass
  */
-#define BLACK_METAMEMBER_NAMED(MEMBER, NAME, ...)                           \
-    makeMetaMember(                                                         \
-        &Class::m_##MEMBER, NAME BLACK_TRAILING_VA_ARGS(__VA_ARGS__)        \
-    )
+#define BLACK_METAMEMBER_NAMED(MEMBER, NAME, ...) \
+    makeMetaMember(                               \
+        &Class::m_##MEMBER, NAME BLACK_TRAILING_VA_ARGS(__VA_ARGS__))
 // *INDENT-ON*
 
 //! std::string qHash
@@ -137,14 +135,20 @@ namespace BlackMisc
      * \ingroup MetaClass
      */
     template <quint64 A, quint64 B>
-    constexpr MetaFlags<A | B> operator |(MetaFlags<A>, MetaFlags<B>) { return {}; }
+    constexpr MetaFlags<A | B> operator|(MetaFlags<A>, MetaFlags<B>)
+    {
+        return {};
+    }
 
     /*!
      * Compile-time intersection of MetaFlags.
      * \ingroup MetaClass
      */
     template <quint64 A, quint64 B>
-    constexpr MetaFlags<A & B> operator &(MetaFlags<A>, MetaFlags<B>) { return {}; }
+    constexpr MetaFlags<A & B> operator&(MetaFlags<A>, MetaFlags<B>)
+    {
+        return {};
+    }
 
     /*!
      * Literal aggregate type representing attributes of one member of a value class.
@@ -168,11 +172,14 @@ namespace BlackMisc
 
         //! True if m_flags contains all flags.
         template <typename Flags2>
-        static constexpr bool has(Flags2 flags) { return (MetaFlags<Flags>() & flags) == flags; }
+        static constexpr bool has(Flags2 flags)
+        {
+            return (MetaFlags<Flags>() & flags) == flags;
+        }
 
         //! Invoke the member on an instance of the value class.
         template <typename T, typename... Ts>
-        decltype(auto) in(T &&object, Ts &&... args) const
+        decltype(auto) in(T &&object, Ts &&...args) const
         {
             return std::invoke(m_ptr, std::forward<T>(object), std::forward<Ts>(args)...);
         }
@@ -201,13 +208,13 @@ namespace BlackMisc
      */
     enum MetaFlag
     {
-        DisabledForComparison     = 1 << 0, //!< Element will be ignored by compare() and comparison operators
-        DisabledForMarshalling    = 1 << 1, //!< Element will be ignored during DBus and QDataStream marshalling
-        DisabledForDebugging      = 1 << 2, //!< Element will be ignored when streaming to QDebug
-        DisabledForHashing        = 1 << 3, //!< Element will be ignored by qHash()
-        DisabledForJson           = 1 << 4, //!< Element will be ignored during JSON serialization
+        DisabledForComparison = 1 << 0, //!< Element will be ignored by compare() and comparison operators
+        DisabledForMarshalling = 1 << 1, //!< Element will be ignored during DBus and QDataStream marshalling
+        DisabledForDebugging = 1 << 2, //!< Element will be ignored when streaming to QDebug
+        DisabledForHashing = 1 << 3, //!< Element will be ignored by qHash()
+        DisabledForJson = 1 << 4, //!< Element will be ignored during JSON serialization
         CaseInsensitiveComparison = 1 << 5, //!< Element will be compared case insensitively (must be a QString)
-        LosslessMarshalling       = 1 << 6  //!< Element marshalling will preserve data at the expense of size
+        LosslessMarshalling = 1 << 6 //!< Element marshalling will preserve data at the expense of size
     };
 
     /*!

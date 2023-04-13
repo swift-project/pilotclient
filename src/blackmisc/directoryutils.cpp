@@ -322,11 +322,11 @@ namespace BlackMisc
 
     void CDirectoryUtils::DirComparison::insert(const CDirectoryUtils::DirComparison &otherComparison)
     {
-        source           += otherComparison.source;
-        missingInSource  += otherComparison.missingInSource;
-        missingInTarget  += otherComparison.missingInTarget;
-        newerInSource    += otherComparison.newerInSource;
-        newerInTarget    += otherComparison.newerInTarget;
+        source += otherComparison.source;
+        missingInSource += otherComparison.missingInSource;
+        missingInTarget += otherComparison.missingInTarget;
+        newerInSource += otherComparison.newerInSource;
+        newerInTarget += otherComparison.newerInTarget;
         sameNameInSource += otherComparison.sameNameInSource;
         sameNameInTarget += otherComparison.sameNameInTarget;
     }

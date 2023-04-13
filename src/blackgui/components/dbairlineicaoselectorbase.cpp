@@ -37,7 +37,7 @@ namespace BlackGui::Components
     CDbAirlineIcaoSelectorBase::CDbAirlineIcaoSelectorBase(QWidget *parent) : QFrame(parent)
     {
         this->setAcceptDrops(true);
-        this->setAcceptedMetaTypeIds({qMetaTypeId<CAirlineIcaoCode>(), qMetaTypeId<CAirlineIcaoCodeList>()});
+        this->setAcceptedMetaTypeIds({ qMetaTypeId<CAirlineIcaoCode>(), qMetaTypeId<CAirlineIcaoCodeList>() });
 
         connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAirlineIcaoSelectorBase::onCodesRead, Qt::QueuedConnection);
 
@@ -47,8 +47,7 @@ namespace BlackGui::Components
         if (c > 0)
         {
             QPointer<CDbAirlineIcaoSelectorBase> myself(this);
-            QTimer::singleShot(500, [ = ]()
-            {
+            QTimer::singleShot(500, [=]() {
                 if (!sGui || sGui->isShuttingDown()) { return; }
                 if (!myself) { return; }
                 this->onCodesRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, c, {});
@@ -57,7 +56,7 @@ namespace BlackGui::Components
     }
 
     CDbAirlineIcaoSelectorBase::~CDbAirlineIcaoSelectorBase()
-    { }
+    {}
 
     bool CDbAirlineIcaoSelectorBase::setAirlineIcao(const CAirlineIcaoCode &icao)
     {

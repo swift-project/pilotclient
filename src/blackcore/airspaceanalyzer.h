@@ -127,11 +127,11 @@ namespace BlackCore
 
         // watchdog
         CCallsignTimestampSet m_aircraftCallsignTimestamps; //!< for watchdog (pilots)
-        CCallsignTimestampSet m_atcCallsignTimestamps;      //!< for watchdog (ATC)
+        CCallsignTimestampSet m_atcCallsignTimestamps; //!< for watchdog (ATC)
         BlackMisc::PhysicalQuantities::CTime m_timeoutAircraft = { 15, BlackMisc::PhysicalQuantities::CTimeUnit::s() }; //!< Timeout value for watchdog functionality
-        BlackMisc::PhysicalQuantities::CTime m_timeoutAtc      = { 50, BlackMisc::PhysicalQuantities::CTimeUnit::s() }; //!< Timeout value for watchdog functionality
-        qint64 m_lastWatchdogCallMsSinceEpoch;       //!< when last called
-        qint64 m_doNotRunAgainBefore = -1;           //!< do not run again before, also used to detect debugging
+        BlackMisc::PhysicalQuantities::CTime m_timeoutAtc = { 50, BlackMisc::PhysicalQuantities::CTimeUnit::s() }; //!< Timeout value for watchdog functionality
+        qint64 m_lastWatchdogCallMsSinceEpoch; //!< when last called
+        qint64 m_doNotRunAgainBefore = -1; //!< do not run again before, also used to detect debugging
         std::atomic_bool m_enabledWatchdog { true }; //!< watchdog enabled
 
         // snapshot
@@ -140,7 +140,7 @@ namespace BlackCore
         bool m_simulatorRenderingEnabled = true;
         int m_simulatorMaxRenderedAircraft = -1;
         BlackMisc::PhysicalQuantities::CLength m_simulatorMaxRenderedDistance { 0.0, nullptr };
-        mutable QReadWriteLock m_lockSnapshot;     //!< lock snapshot
+        mutable QReadWriteLock m_lockSnapshot; //!< lock snapshot
         mutable QReadWriteLock m_lockRestrictions; //!< lock simulator restrictions
     };
 } // namespace

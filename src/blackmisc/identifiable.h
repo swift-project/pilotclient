@@ -6,7 +6,6 @@
  * or distributed except according to the terms contained in the LICENSE file.
  */
 
-
 //! \file
 
 #ifndef BLACKMISC_IDENTIFIABLE_H
@@ -54,7 +53,7 @@ namespace BlackMisc
         CIdentifiable(const CIdentifiable &) = default;
 
         //! Copy assignment operator
-        CIdentifiable &operator =(const CIdentifiable &) = default;
+        CIdentifiable &operator=(const CIdentifiable &) = default;
 
     private:
         CIdentifier m_identifier;

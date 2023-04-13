@@ -21,8 +21,7 @@
 namespace BlackGui
 {
 
-    CSystemTrayWindow::CSystemTrayWindow(const QIcon &icon, QWidget *parent) :
-        QMainWindow(parent)
+    CSystemTrayWindow::CSystemTrayWindow(const QIcon &icon, QWidget *parent) : QMainWindow(parent)
     {
         createActions();
         createTrayIcon(icon);

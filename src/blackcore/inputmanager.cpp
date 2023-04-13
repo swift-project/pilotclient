@@ -24,8 +24,7 @@ using namespace BlackMisc::Input;
 
 namespace BlackCore
 {
-    CInputManager::CInputManager(QObject *parent) :
-        QObject(parent)
+    CInputManager::CInputManager(QObject *parent) : QObject(parent)
     {
         reloadHotkeySettings();
     }
@@ -53,7 +52,7 @@ namespace BlackCore
 
     void CInputManager::unbind(int index)
     {
-        auto info = std::find_if(m_boundActions.begin(), m_boundActions.end(), [index](const BindInfo & info) { return info.m_index == index; });
+        auto info = std::find_if(m_boundActions.begin(), m_boundActions.end(), [index](const BindInfo &info) { return info.m_index == index; });
         if (info != m_boundActions.end())
         {
             m_boundActions.erase(info);
@@ -126,7 +125,7 @@ namespace BlackCore
     {
         m_keyboard = IKeyboard::create(this);
         m_joystick = IJoystick::create(this);
-        connect(m_keyboard.get(), &IKeyboard::keyCombinationChanged,    this, &CInputManager::processKeyCombinationChanged,    Qt::QueuedConnection);
+        connect(m_keyboard.get(), &IKeyboard::keyCombinationChanged, this, &CInputManager::processKeyCombinationChanged, Qt::QueuedConnection);
         connect(m_joystick.get(), &IJoystick::buttonCombinationChanged, this, &CInputManager::processButtonCombinationChanged, Qt::QueuedConnection);
     }
 
@@ -141,7 +140,7 @@ namespace BlackCore
         return m_joystick->getAllAvailableJoystickButtons();
     }
 
-    int CInputManager::bindImpl(const QString &action, QObject *receiver, std::function<void (bool)> function)
+    int CInputManager::bindImpl(const QString &action, QObject *receiver, std::function<void(bool)> function)
     {
         static int index = 0;
         Q_ASSERT(index < INT_MAX);
@@ -149,7 +148,7 @@ namespace BlackCore
         info.m_index = index;
         ++index;
         info.m_function = function;
-        info.m_action   = action;
+        info.m_action = action;
         info.m_receiver = receiver;
         m_boundActions.push_back(info);
         return info.m_index;

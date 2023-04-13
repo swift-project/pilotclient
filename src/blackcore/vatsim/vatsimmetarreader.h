@@ -76,7 +76,7 @@ namespace BlackCore::Vatsim
 
     private:
         BlackMisc::Weather::CMetarDecoder m_metarDecoder;
-        BlackMisc::Weather::CMetarList    m_metars;
+        BlackMisc::Weather::CMetarList m_metars;
         BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TVatsimMetars> m_settings { this, &CVatsimMetarReader::reloadSettings };
     };
 } // ns

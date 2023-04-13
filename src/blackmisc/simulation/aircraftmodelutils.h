@@ -39,4 +39,4 @@ namespace BlackMisc::Simulation
     };
 } // namespace
 
-#endif //guard
+#endif // guard

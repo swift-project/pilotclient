@@ -83,13 +83,13 @@ namespace BlackCore::Afv::Connection
         //! User data
         const QString &getUserName() const { return m_username; }
         const QString &getPassword() const { return m_password; }
-        const QString &getClient()   const { return m_client; }
-        const QUuid   &getNetworkVersion() const { return m_networkVersion; }
+        const QString &getClient() const { return m_client; }
+        const QUuid &getNetworkVersion() const { return m_networkVersion; }
         //! @}
 
     private:
         //! Post to resource
-        template<typename TResponse>
+        template <typename TResponse>
         TResponse postNoRequest(const QString &resource)
         {
             if (!this->sendToNetworkIfAuthenticated())
@@ -112,7 +112,7 @@ namespace BlackCore::Afv::Connection
         }
 
         //! Get resource and return as vector
-        template<typename TResponse>
+        template <typename TResponse>
         QVector<TResponse> getAsVector(const QString &resource)
         {
             if (!this->sendToNetworkIfAuthenticated())
@@ -174,15 +174,15 @@ namespace BlackCore::Afv::Connection
         //! Application shutting down
         static bool isShuttingDown();
 
-        QString       m_addressUrl;
-        QByteArray    m_jwt;
-        QString       m_username;
-        QString       m_password;
-        QUuid         m_networkVersion;
-        QString       m_client;
-        QDateTime     m_expiryLocalUtc;
-        qint64        m_serverToUserOffsetMs;
-        bool          m_isAuthenticated = false;
+        QString m_addressUrl;
+        QByteArray m_jwt;
+        QString m_username;
+        QString m_password;
+        QUuid m_networkVersion;
+        QString m_client;
+        QDateTime m_expiryLocalUtc;
+        qint64 m_serverToUserOffsetMs;
+        bool m_isAuthenticated = false;
     };
 } // ns
 

@@ -33,9 +33,9 @@ namespace BlackSimPlugin::Fs9
 
     private:
         //! Alloc and fill up a DPL_CONNECTION_SETTINGS. Call FreeConnectSettings later to free it.
-        HRESULT allocAndInitConnectSettings(const QString &address, GUID* pAppGuid, DPL_CONNECTION_SETTINGS** ppdplConnectSettings );
+        HRESULT allocAndInitConnectSettings(const QString &address, GUID *pAppGuid, DPL_CONNECTION_SETTINGS **ppdplConnectSettings);
 
-        void freeConnectSettings( DPL_CONNECTION_SETTINGS* pSettings );
+        void freeConnectSettings(DPL_CONNECTION_SETTINGS *pSettings);
 
         //! DirectPlay message handler
         HRESULT directPlayMessageHandler(DWORD messageId, void *msgBuffer);
@@ -43,9 +43,9 @@ namespace BlackSimPlugin::Fs9
         //! DirectPlay message handler
         HRESULT directPlayLobbyMessageHandler(DWORD messageId, void *msgBuffer);
 
-        IDirectPlay8Peer    *m_directPlayPeer = nullptr; //!< DirectPlay peer address
-        IDirectPlay8Address *m_deviceAddress  = nullptr; //!< DirectPlay device address
-        IDirectPlay8Address *m_hostAddress    = nullptr; //!< DirectPlay device address
+        IDirectPlay8Peer *m_directPlayPeer = nullptr; //!< DirectPlay peer address
+        IDirectPlay8Address *m_deviceAddress = nullptr; //!< DirectPlay device address
+        IDirectPlay8Address *m_hostAddress = nullptr; //!< DirectPlay device address
         IDirectPlay8LobbyClient *m_dpLobbyClient = nullptr;
 
         QString m_hostname = "localhost";

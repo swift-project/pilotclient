@@ -26,15 +26,14 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftCategory)
 
 namespace BlackMisc::Aviation
 {
-    CAircraftCategory::CAircraftCategory(const QString &name, const QString &description, const QString &path, bool assignable) :
-        m_name(name), m_description(description), m_path(path), m_assignable(assignable)
-    {  }
+    CAircraftCategory::CAircraftCategory(const QString &name, const QString &description, const QString &path, bool assignable) : m_name(name), m_description(description), m_path(path), m_assignable(assignable)
+    {}
 
     QString CAircraftCategory::getNameDbKey() const
     {
         return (this->isLoadedFromDb()) ?
-                this->getName() % u' ' % this->getDbKeyAsStringInParentheses() :
-                this->getName();
+                   this->getName() % u' ' % this->getDbKeyAsStringInParentheses() :
+                   this->getName();
     }
 
     QString CAircraftCategory::convertToQString(bool i18n) const
@@ -83,7 +82,7 @@ namespace BlackMisc::Aviation
 
     bool CAircraftCategory::isLevel(const QList<int> &level) const
     {
-        if (level.size() != 3) { return false;}
+        if (level.size() != 3) { return false; }
         return m_l1 == level[0] && m_l2 == level[1] && m_l3 == level[2];
     }
 
@@ -161,27 +160,35 @@ namespace BlackMisc::Aviation
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexName:        return QVariant::fromValue(m_name);
+        case IndexName: return QVariant::fromValue(m_name);
         case IndexDescription: return QVariant::fromValue(m_description);
-        case IndexAssignable:  return QVariant::fromValue(m_assignable);
-        case IndexPath:        return QVariant::fromValue(m_path);
+        case IndexAssignable: return QVariant::fromValue(m_assignable);
+        case IndexPath: return QVariant::fromValue(m_path);
         case IndexLevelString: return QVariant::fromValue(this->getLevelString());
         case IndexLevelStringAndName: return QVariant::fromValue(this->getLevelAndName());
         case IndexLevelStringAndPath: return QVariant::fromValue(this->getLevelAndPath());
-        default:               return CValueObject::propertyByIndex(index);
+        default: return CValueObject::propertyByIndex(index);
         }
     }
 
     void CAircraftCategory::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CAircraftCategory>(); return; }
-        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CAircraftCategory>();
+            return;
+        }
+        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
+        {
+            IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant);
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexName:        this->setName(variant.value<QString>()); break;
+        case IndexName: this->setName(variant.value<QString>()); break;
         case IndexDescription: this->setDescription(variant.value<QString>()); break;
-        case IndexAssignable:  this->setAssignable(variant.value<bool>()); break;
+        case IndexAssignable: this->setAssignable(variant.value<bool>()); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
@@ -189,14 +196,14 @@ namespace BlackMisc::Aviation
     int CAircraftCategory::comparePropertyByIndex(CPropertyIndexRef index, const CAircraftCategory &compareValue) const
     {
         if (index.isMyself()) { return m_path.compare(compareValue.getPath(), Qt::CaseInsensitive); }
-        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);}
+        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue); }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexName:        return m_name.compare(compareValue.getName(), Qt::CaseInsensitive);
-        case IndexPath:        return m_path.compare(compareValue.getPath(), Qt::CaseInsensitive);
+        case IndexName: return m_name.compare(compareValue.getName(), Qt::CaseInsensitive);
+        case IndexPath: return m_path.compare(compareValue.getPath(), Qt::CaseInsensitive);
         case IndexDescription: return m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
-        case IndexAssignable:  return Compare::compare(this->isAssignable(), compareValue.isAssignable());
+        case IndexAssignable: return Compare::compare(this->isAssignable(), compareValue.isAssignable());
         case IndexLevelStringAndName:
         case IndexLevelStringAndPath:
         case IndexLevelString: return this->compareByLevel(compareValue);

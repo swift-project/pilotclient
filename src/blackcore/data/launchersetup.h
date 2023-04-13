@@ -45,9 +45,9 @@ namespace BlackCore::Data
         enum AudioModeFlag
         {
             AudioNothingDisabled = 0,
-            AudioDisableStandaloneAudio      = 1 << 0,
+            AudioDisableStandaloneAudio = 1 << 0,
             AudioDisableDistributedCoreAudio = 1 << 1,
-            AudioDisableDistributedGuiAudio  = 1 << 2
+            AudioDisableDistributedGuiAudio = 1 << 2
         };
         Q_DECLARE_FLAGS(AudioMode, AudioModeFlag)
 
@@ -92,9 +92,9 @@ namespace BlackCore::Data
 
     private:
         QString m_dBusAddress { "tcp:host=127.0.0.1,port=45000" }; //!< DBus address
-        bool    m_windowFrameless = false;                         //!< frameless window
-        int     m_coreMode  = static_cast<int>(Standalone);        //!< core
-        int     m_audioMode = static_cast<int>(AudioNothingDisabled);
+        bool m_windowFrameless = false; //!< frameless window
+        int m_coreMode = static_cast<int>(Standalone); //!< core
+        int m_audioMode = static_cast<int>(AudioNothingDisabled);
 
         BLACK_METACLASS(
             CLauncherSetup,

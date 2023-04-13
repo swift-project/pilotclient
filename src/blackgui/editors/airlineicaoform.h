@@ -21,7 +21,10 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CAirlineIcaoForm; }
+namespace Ui
+{
+    class CAirlineIcaoForm;
+}
 namespace BlackGui::Editors
 {
     /*!
@@ -84,10 +87,10 @@ namespace BlackGui::Editors
         void emitAirlineChangedDigest();
 
     private:
-        QScopedPointer<Ui::CAirlineIcaoForm>  ui;
+        QScopedPointer<Ui::CAirlineIcaoForm> ui;
         BlackMisc::CDigestSignal m_digestChanges { this, &CAirlineIcaoForm::airlineChanged, &CAirlineIcaoForm::emitAirlineChangedDigest, 500, 3 };
         BlackMisc::Aviation::CAirlineIcaoCode m_currentCode; //!< object allowing to override values
     };
-} //ns
+} // ns
 
 #endif // guard

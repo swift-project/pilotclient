@@ -331,7 +331,7 @@ namespace BlackMisc::Network
 
     CStatusMessageList CNetworkUtils::createNetworkReport(const QUrl &url, const QNetworkAccessManager *qam)
     {
-        static const CLogCategoryList cats({CLogCategories::network()});
+        static const CLogCategoryList cats({ CLogCategories::network() });
         CStatusMessageList msgs;
 
         if (!url.isEmpty())
@@ -466,10 +466,10 @@ namespace BlackMisc::Network
     QString CNetworkUtils::networkStatesToString(QNetworkConfiguration::StateFlags states)
     {
         QStringList statesSl;
-        if (states.testFlag(QNetworkConfiguration::Active))     { statesSl << networkStateToString(QNetworkConfiguration::Active); }
+        if (states.testFlag(QNetworkConfiguration::Active)) { statesSl << networkStateToString(QNetworkConfiguration::Active); }
         if (states.testFlag(QNetworkConfiguration::Discovered)) { statesSl << networkStateToString(QNetworkConfiguration::Discovered); }
-        if (states.testFlag(QNetworkConfiguration::Defined))    { statesSl << networkStateToString(QNetworkConfiguration::Defined); }
-        if (states.testFlag(QNetworkConfiguration::Undefined))  { statesSl << networkStateToString(QNetworkConfiguration::Undefined); }
+        if (states.testFlag(QNetworkConfiguration::Defined)) { statesSl << networkStateToString(QNetworkConfiguration::Defined); }
+        if (states.testFlag(QNetworkConfiguration::Undefined)) { statesSl << networkStateToString(QNetworkConfiguration::Undefined); }
         return statesSl.join(", ");
     }
 
@@ -485,12 +485,12 @@ namespace BlackMisc::Network
 
         switch (operation)
         {
-        case QNetworkAccessManager::HeadOperation:    return h;
-        case QNetworkAccessManager::GetOperation:     return g;
-        case QNetworkAccessManager::PutOperation:     return put;
-        case QNetworkAccessManager::PostOperation:    return post;
-        case QNetworkAccessManager::DeleteOperation:  return d;
-        case QNetworkAccessManager::CustomOperation:  return c;
+        case QNetworkAccessManager::HeadOperation: return h;
+        case QNetworkAccessManager::GetOperation: return g;
+        case QNetworkAccessManager::PutOperation: return put;
+        case QNetworkAccessManager::PostOperation: return post;
+        case QNetworkAccessManager::DeleteOperation: return d;
+        case QNetworkAccessManager::CustomOperation: return c;
         case QNetworkAccessManager::UnknownOperation:
         default:
             break;

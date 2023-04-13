@@ -31,19 +31,18 @@ using namespace BlackGui;
 
 namespace BlackSimPlugin::FsxCommon
 {
-    CSimConnectSettingsComponent::CSimConnectSettingsComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        ui(new Ui::CSimConnectSettingsComponent)
+    CSimConnectSettingsComponent::CSimConnectSettingsComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                                                  ui(new Ui::CSimConnectSettingsComponent)
     {
         ui->setupUi(this);
 
-        connect(ui->pb_OpenSwiftSimConnectCfg,   &QPushButton::clicked, this, &CSimConnectSettingsComponent::openSwiftSimConnectCfgFile);
+        connect(ui->pb_OpenSwiftSimConnectCfg, &QPushButton::clicked, this, &CSimConnectSettingsComponent::openSwiftSimConnectCfgFile);
         connect(ui->pb_DeleteSwiftSimConnectCfg, &QPushButton::clicked, this, &CSimConnectSettingsComponent::deleteSwiftSimConnectCfgFile);
-        connect(ui->pb_ExistsSimConnectCfg,      &QPushButton::clicked, this, &CSimConnectSettingsComponent::checkSwiftSimConnectCfgFile);
-        connect(ui->pb_SaveSwiftSimConnectCfg,   &QPushButton::clicked, this, &CSimConnectSettingsComponent::saveSimConnectCfgFile);
-        connect(ui->pb_OpenUserCfgFile,          &QPushButton::clicked, this, &CSimConnectSettingsComponent::openUserSimConnectCfgFile);
-        connect(ui->pb_TestConnection,           &QPushButton::clicked, this, &CSimConnectSettingsComponent::testSwiftSimConnectConnection);
-        connect(ui->pb_SaveAsSimConnectIni,      &QPushButton::clicked, this, &CSimConnectSettingsComponent::saveSimConnectIniFileDialog);
+        connect(ui->pb_ExistsSimConnectCfg, &QPushButton::clicked, this, &CSimConnectSettingsComponent::checkSwiftSimConnectCfgFile);
+        connect(ui->pb_SaveSwiftSimConnectCfg, &QPushButton::clicked, this, &CSimConnectSettingsComponent::saveSimConnectCfgFile);
+        connect(ui->pb_OpenUserCfgFile, &QPushButton::clicked, this, &CSimConnectSettingsComponent::openUserSimConnectCfgFile);
+        connect(ui->pb_TestConnection, &QPushButton::clicked, this, &CSimConnectSettingsComponent::testSwiftSimConnectConnection);
+        connect(ui->pb_SaveAsSimConnectIni, &QPushButton::clicked, this, &CSimConnectSettingsComponent::saveSimConnectIniFileDialog);
         this->setSimConnectInfo();
 
         if (m_p3d64bit)
@@ -195,11 +194,15 @@ namespace BlackSimPlugin::FsxCommon
         const QString dir = CSimConnectUtilities::getSimConnectIniFileDirectory(m_simulator);
         bool madeDir = false;
         QDir d(dir);
-        if (!d.exists()) { d.mkdir(dir); madeDir = true; }
+        if (!d.exists())
+        {
+            d.mkdir(dir);
+            madeDir = true;
+        }
 
         const QString defaultFileName = CFileUtils::appendFilePaths(dir, CSimConnectUtilities::simConnectIniFilename());
         const QString fileName = QFileDialog::getSaveFileName(this, tr("Save SimConnect.ini"),
-                                    defaultFileName, tr("FSX/P3D ini files (*.ini)"));
+                                                              defaultFileName, tr("FSX/P3D ini files (*.ini)"));
         if (!fileName.isEmpty())
         {
             const bool written = CFileUtils::writeStringToFile(iniFile, fileName);
@@ -245,7 +248,11 @@ namespace BlackSimPlugin::FsxCommon
         for (int index = 0; index < ui->cb_P3DVersion->count(); index++)
         {
             v = ui->cb_P3DVersion->itemText(index);
-            if (v.contains(value, Qt::CaseInsensitive)) { found = true; break; }
+            if (v.contains(value, Qt::CaseInsensitive))
+            {
+                found = true;
+                break;
+            }
         }
         ui->cb_P3DVersion->setCurrentText(found ? v : "");
     }

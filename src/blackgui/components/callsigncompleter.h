@@ -21,7 +21,10 @@
 #include <QTimer>
 #include <QCompleter>
 
-namespace Ui { class CCallsignCompleter; }
+namespace Ui
+{
+    class CCallsignCompleter;
+}
 namespace BlackGui::Components
 {
     /*!
@@ -79,14 +82,14 @@ namespace BlackGui::Components
         //! Shared completer data
         static CSharedStringListCompleter *completer();
 
-        QScopedPointer <Ui::CCallsignCompleter> ui;
+        QScopedPointer<Ui::CCallsignCompleter> ui;
         BlackMisc::CDigestSignal m_dsAircraftsInRangeChanged { this, &CCallsignCompleter::onChangedAircraftInRange, 5000, 5 };
-        BlackMisc::CDigestSignal m_dsEditingFinished         { this, &CCallsignCompleter::editingFinishedDigest, 500, 3 };
-        BlackMisc::CDigestSignal m_dsValidCallsignEntered    { this, &CCallsignCompleter::validCallsignEnteredDigest, 500, 3 };
+        BlackMisc::CDigestSignal m_dsEditingFinished { this, &CCallsignCompleter::editingFinishedDigest, 500, 3 };
+        BlackMisc::CDigestSignal m_dsValidCallsignEntered { this, &CCallsignCompleter::validCallsignEnteredDigest, 500, 3 };
         QString m_lastValue;
 
-        bool m_addOwnCallsign  = false;
-        bool m_onlyWithParts   = false;
+        bool m_addOwnCallsign = false;
+        bool m_onlyWithParts = false;
     };
 } // ns
 #endif // guard

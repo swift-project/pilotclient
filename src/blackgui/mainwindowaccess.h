@@ -19,7 +19,10 @@ namespace BlackGui
 {
     class CManagedStatusBar;
     class COverlayMessagesFrame;
-    namespace Components { class CLogComponent; }
+    namespace Components
+    {
+        class CLogComponent;
+    }
 
     /*!
      * Direct acccess to main window`s status bar, info bar and such
@@ -37,7 +40,7 @@ namespace BlackGui
         IMainWindowAccess(const IMainWindowAccess &) = delete;
 
         //! Copy assignment operator
-        IMainWindowAccess &operator =(const IMainWindowAccess &) = delete;
+        IMainWindowAccess &operator=(const IMainWindowAccess &) = delete;
 
         //! Display in console
         virtual bool displayTextInConsole(const QString &message);
@@ -56,8 +59,8 @@ namespace BlackGui
 
     protected:
         Components::CLogComponent *m_mwaLogComponent = nullptr; //!< the log component if any
-        CManagedStatusBar         *m_mwaStatusBar = nullptr;    //!< status bar if any
-        COverlayMessagesFrame     *m_mwaOverlayFrame = nullptr; //!< overlay messages if any
+        CManagedStatusBar *m_mwaStatusBar = nullptr; //!< status bar if any
+        COverlayMessagesFrame *m_mwaOverlayFrame = nullptr; //!< overlay messages if any
     };
 } // ns
 

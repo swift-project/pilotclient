@@ -101,7 +101,7 @@ namespace BlackMisc::Math
     int CMathUtils::roundToMultipleOf(int value, int divisor)
     {
         Q_ASSERT(divisor != 0);
-        Q_ASSERT(divisor >= - std::numeric_limits<int>::max());
+        Q_ASSERT(divisor >= -std::numeric_limits<int>::max());
         divisor = std::abs(divisor);
         Q_ASSERT(std::abs(value) < std::numeric_limits<int>::max() - divisor / 2);
 

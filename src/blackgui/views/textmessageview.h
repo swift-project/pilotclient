@@ -16,7 +16,10 @@
 #include "blackmisc/network/textmessagelist.h"
 #include "blackgui/blackguiexport.h"
 
-namespace BlackMisc::Network { class CTextMessage; }
+namespace BlackMisc::Network
+{
+    class CTextMessage;
+}
 namespace BlackGui::Views
 {
     //! Airports view

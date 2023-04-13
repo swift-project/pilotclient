@@ -17,16 +17,15 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackGui::Components
 {
-    CDbLiveryColorSearchDialog::CDbLiveryColorSearchDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CDbLiveryColorSearchDialog)
+    CDbLiveryColorSearchDialog::CDbLiveryColorSearchDialog(QWidget *parent) : QDialog(parent),
+                                                                              ui(new Ui::CDbLiveryColorSearchDialog)
     {
         ui->setupUi(this);
         connect(this, &CDbLiveryColorSearchDialog::accepted, this, &CDbLiveryColorSearchDialog::onAccepted);
     }
 
     CDbLiveryColorSearchDialog::~CDbLiveryColorSearchDialog()
-    { }
+    {}
 
     const CLivery &CDbLiveryColorSearchDialog::getLivery() const
     {

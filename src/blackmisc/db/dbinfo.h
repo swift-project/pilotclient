@@ -104,7 +104,7 @@ namespace BlackMisc::Db
 
     private:
         QString m_tableName; //!< table name
-        int     m_entries;   //!< number of entries
+        int m_entries; //!< number of entries
         Network::CEntityFlags::Entity m_entity = Network::CEntityFlags::NoEntity; //!< lazy initialized entity
 
         BLACK_METACLASS(

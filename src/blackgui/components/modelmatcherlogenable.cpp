@@ -22,32 +22,30 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackGui::Components
 {
-    CModelMatcherLogEnable::CModelMatcherLogEnable(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CModelMatcherLogEnable)
+    CModelMatcherLogEnable::CModelMatcherLogEnable(QWidget *parent) : QFrame(parent),
+                                                                      ui(new Ui::CModelMatcherLogEnable)
     {
         ui->setupUi(this);
-        connect(ui->cb_LogReverseLookup,    &QCheckBox::toggled, this, &CModelMatcherLogEnable::enabledCheckboxChanged, Qt::QueuedConnection);
+        connect(ui->cb_LogReverseLookup, &QCheckBox::toggled, this, &CModelMatcherLogEnable::enabledCheckboxChanged, Qt::QueuedConnection);
         connect(ui->cb_LogMatchingMessages, &QCheckBox::toggled, this, &CModelMatcherLogEnable::enabledCheckboxChanged, Qt::QueuedConnection);
-        connect(ui->cb_LogDetailed,         &QCheckBox::toggled, this, &CModelMatcherLogEnable::enabledCheckboxChanged, Qt::QueuedConnection);
+        connect(ui->cb_LogDetailed, &QCheckBox::toggled, this, &CModelMatcherLogEnable::enabledCheckboxChanged, Qt::QueuedConnection);
 
         if (this->hasContexts())
         {
             connect(sGui->getIContextSimulator(), &IContextSimulator::changedLogOrDebugSettings, this, &CModelMatcherLogEnable::valuesChanged, Qt::QueuedConnection);
-            connect(sGui->getIContextNetwork(),   &IContextNetwork::changedLogOrDebugSettings,   this, &CModelMatcherLogEnable::valuesChanged, Qt::QueuedConnection);
-            connect(sGui->getIContextNetwork(),   &IContextNetwork::connectionStatusChanged,     this, &CModelMatcherLogEnable::connectionStatusChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::changedLogOrDebugSettings, this, &CModelMatcherLogEnable::valuesChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CModelMatcherLogEnable::connectionStatusChanged, Qt::QueuedConnection);
         }
 
         QPointer<CModelMatcherLogEnable> myself(this);
-        QTimer::singleShot(5000, this, [ = ]
-        {
+        QTimer::singleShot(5000, this, [=] {
             if (!myself) { return; }
             this->initGui();
         });
     }
 
     CModelMatcherLogEnable::~CModelMatcherLogEnable()
-    { }
+    {}
 
     bool CModelMatcherLogEnable::isReverseLookupLogEnabled() const
     {
@@ -64,9 +62,9 @@ namespace BlackGui::Components
         if (!this->hasContexts()) { return; }
         const QObject *sender = QObject::sender();
 
-        const bool detailed  = (sender == ui->cb_LogDetailed)         ? enabled : ui->cb_LogDetailed->isChecked();
-        const bool reverse   = (sender == ui->cb_LogReverseLookup)    ? enabled : ui->cb_LogReverseLookup->isChecked();
-        const bool matching  = (sender == ui->cb_LogMatchingMessages) ? enabled : ui->cb_LogMatchingMessages->isChecked();
+        const bool detailed = (sender == ui->cb_LogDetailed) ? enabled : ui->cb_LogDetailed->isChecked();
+        const bool reverse = (sender == ui->cb_LogReverseLookup) ? enabled : ui->cb_LogReverseLookup->isChecked();
+        const bool matching = (sender == ui->cb_LogMatchingMessages) ? enabled : ui->cb_LogMatchingMessages->isChecked();
         const bool simplified = !detailed;
 
         if (sender == ui->cb_LogReverseLookup || sender == ui->cb_LogDetailed)

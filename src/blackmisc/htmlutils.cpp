@@ -25,8 +25,8 @@ namespace BlackMisc
             {
                 const bool stillElements = (i < size);
                 html += stillElements ?
-                        u"<td>" % values.at(i) % u"</td>" :
-                        QStringLiteral("<td></td>");
+                            u"<td>" % values.at(i) % u"</td>" :
+                            QStringLiteral("<td></td>");
                 if (c + 1 < columns) i++;
             }
             html += QStringLiteral("</tr>");
@@ -37,8 +37,8 @@ namespace BlackMisc
     QString asHyperlink(const QString &url, const QString &text)
     {
         return text.isEmpty() ?
-               u"<a href=\"" % url % u"\">" % url % u"</a>" :
-               u"<a href=\"" % url % u"\">" % text % u"</a>";
+                   u"<a href=\"" % url % u"\">" % url % u"</a>" :
+                   u"<a href=\"" % url % u"\">" % text % u"</a>";
     }
 
 } // ns

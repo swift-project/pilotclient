@@ -92,16 +92,14 @@ static const QString &swiftDataRoot()
 
 namespace BlackCore
 {
-    CApplication::CApplication(CApplicationInfo::Application application, bool init) :
-        CApplication(executable(), application, init)
-    { }
+    CApplication::CApplication(CApplicationInfo::Application application, bool init) : CApplication(executable(), application, init)
+    {}
 
-    CApplication::CApplication(const QString &applicationName, CApplicationInfo::Application application, bool init) :
-        CIdentifiable(this),
-        m_networkConfigManager(new QNetworkConfigurationManager(this)),
-        m_accessManager(new QNetworkAccessManager(this)),
-        m_applicationInfo(application),
-        m_applicationName(applicationName), m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
+    CApplication::CApplication(const QString &applicationName, CApplicationInfo::Application application, bool init) : CIdentifiable(this),
+                                                                                                                       m_networkConfigManager(new QNetworkConfigurationManager(this)),
+                                                                                                                       m_accessManager(new QNetworkAccessManager(this)),
+                                                                                                                       m_applicationInfo(application),
+                                                                                                                       m_applicationName(applicationName), m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
     {
         Q_ASSERT_X(!sApp, Q_FUNC_INFO, "already initialized");
         Q_ASSERT_X(QCoreApplication::instance(), Q_FUNC_INFO, "no application object");
@@ -177,8 +175,7 @@ namespace BlackCore
                 m_inputManager->createDevices();
             }
 
-            connect(this, &QObject::destroyed, [cat = CLogCategoryList(this)]
-            {
+            connect(this, &QObject::destroyed, [cat = CLogCategoryList(this)] {
                 for (CWorkerBase *worker : CWorkerBase::allWorkers())
                 {
                     CLogMessage(cat).debug(u"Worker named '%1' still exists after application destroyed") << worker->objectName();
@@ -236,7 +233,7 @@ namespace BlackCore
     {
         CApplicationInfoList apps;
         apps.convertFromJsonNoThrow(CFileUtils::readLockedFileToString(swiftDataRoot() + "apps.json"), {}, {});
-        apps.removeIf([](const CApplicationInfo & info) { return !info.getProcessInfo().exists(); });
+        apps.removeIf([](const CApplicationInfo &info) { return !info.getProcessInfo().exists(); });
         return apps;
     }
 
@@ -248,7 +245,7 @@ namespace BlackCore
 
     bool CApplication::isAlreadyRunning() const
     {
-        return getRunningApplications().containsBy([this](const CApplicationInfo & info) { return info.getApplication() == getApplicationInfo().getApplication(); });
+        return getRunningApplications().containsBy([this](const CApplicationInfo &info) { return info.getApplication() == getApplicationInfo().getApplication(); });
     }
 
     bool CApplication::isShuttingDown() const
@@ -294,9 +291,9 @@ namespace BlackCore
         switch (application)
         {
         case CApplicationInfo::PilotClientCore: searchFor = "core"; break;
-        case CApplicationInfo::Laucher:         searchFor = "launcher"; break;
-        case CApplicationInfo::MappingTool:     searchFor = "data"; break;
-        case CApplicationInfo::PilotClientGui:  searchFor = "gui"; break;
+        case CApplicationInfo::Laucher: searchFor = "launcher"; break;
+        case CApplicationInfo::MappingTool: searchFor = "data"; break;
+        case CApplicationInfo::PilotClientGui: searchFor = "gui"; break;
         default: break;
         }
         if (searchFor.isEmpty()) { return {}; }
@@ -383,8 +380,7 @@ namespace BlackCore
             if (this->isSet(m_cmdTestCrashpad))
             {
                 msgs.push_back(CLogMessage(this).info(u"About to simulate crash"));
-                QTimer::singleShot(10 * 1000, [ = ]
-                {
+                QTimer::singleShot(10 * 1000, [=] {
                     if (!sApp || sApp->isShuttingDown()) { return; }
                     this->simulateCrash();
                 });
@@ -448,8 +444,7 @@ namespace BlackCore
         }
         if (m_setupReader->isSetupAvailable())
         {
-            msgs.push_back(CStatusMessage(this).info(forced ? QStringLiteral("Setup available after forcing (so likely web read still pending)")
-                           : QStringLiteral("Setup available")));
+            msgs.push_back(CStatusMessage(this).info(forced ? QStringLiteral("Setup available after forcing (so likely web read still pending)") : QStringLiteral("Setup available")));
             return msgs;
         }
 
@@ -474,7 +469,7 @@ namespace BlackCore
 
     CStatusMessageList CApplication::requestReloadOfSetupAndVersion()
     {
-        if (m_shutdown)     { return CStatusMessage(this).warning(u"Shutting down, not reading"); }
+        if (m_shutdown) { return CStatusMessage(this).warning(u"Shutting down, not reading"); }
         if (!m_setupReader) { return CStatusMessage(this).error(u"No reader for setup/version"); }
         Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Not yet parsed");
         return m_setupReader->asyncLoad();
@@ -585,16 +580,16 @@ namespace BlackCore
     QStringList CApplication::getUnsavedSettingsKeys() const
     {
         return this->supportsContexts() ?
-               this->getIContextApplication()->getUnsavedSettingsKeys() :
-               CSettingsCache::instance()->getAllUnsavedKeys();
+                   this->getIContextApplication()->getUnsavedSettingsKeys() :
+                   CSettingsCache::instance()->getAllUnsavedKeys();
     }
 
     CStatusMessage CApplication::saveSettingsByKey(const QStringList &keys)
     {
         if (keys.isEmpty()) { return CStatusMessage(); }
         return this->supportsContexts() ?
-               this->getIContextApplication()->saveSettingsByKey(keys) :
-               CSettingsCache::instance()->saveToStore(keys);
+                   this->getIContextApplication()->saveSettingsByKey(keys) :
+                   CSettingsCache::instance()->saveToStore(keys);
     }
 
     QString CApplication::getTemporaryDirectory()
@@ -652,7 +647,6 @@ namespace BlackCore
         return str;
     }
 
-
     QNetworkReply *CApplication::getFromNetwork(const CUrl &url, const CApplication::CallbackSlot &callback, int maxRedirects)
     {
         const CApplication::ProgressSlot progress;
@@ -682,8 +676,7 @@ namespace BlackCore
 
     QNetworkReply *CApplication::getFromNetwork(const QNetworkRequest &request, int logId, const CApplication::CallbackSlot &callback, const CApplication::ProgressSlot &progress, int maxRedirects)
     {
-        return this->httpRequestImpl(request, logId, callback, progress, maxRedirects, [](QNetworkAccessManager & qam, const QNetworkRequest & request)
-        {
+        return this->httpRequestImpl(request, logId, callback, progress, maxRedirects, [](QNetworkAccessManager &qam, const QNetworkRequest &request) {
             QNetworkReply *nr = qam.get(request);
             return nr;
         });
@@ -692,8 +685,7 @@ namespace BlackCore
     QNetworkReply *CApplication::deleteResourceFromNetwork(const QNetworkRequest &request, int logId, const CApplication::CallbackSlot &callback, int maxRedirects)
     {
         const CApplication::ProgressSlot progress;
-        return this->httpRequestImpl(request, logId, callback, progress, maxRedirects, [](QNetworkAccessManager & qam, const QNetworkRequest & request)
-        {
+        return this->httpRequestImpl(request, logId, callback, progress, maxRedirects, [](QNetworkAccessManager &qam, const QNetworkRequest &request) {
             QNetworkReply *nr = qam.deleteResource(request);
             return nr;
         });
@@ -701,8 +693,7 @@ namespace BlackCore
 
     QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, int logId, const QByteArray &data, const CSlot<void(QNetworkReply *)> &callback)
     {
-        return this->httpRequestImpl(request, logId, callback, NoRedirects, [ data ](QNetworkAccessManager & qam, const QNetworkRequest & request)
-        {
+        return this->httpRequestImpl(request, logId, callback, NoRedirects, [data](QNetworkAccessManager &qam, const QNetworkRequest &request) {
             QNetworkReply *nr = qam.post(request, data);
             return nr;
         });
@@ -717,8 +708,7 @@ namespace BlackCore
         }
 
         QPointer<CApplication> myself(this);
-        return httpRequestImpl(request, logId, callback, NoRedirects, [ = ](QNetworkAccessManager & qam, const QNetworkRequest & request)
-        {
+        return httpRequestImpl(request, logId, callback, NoRedirects, [=](QNetworkAccessManager &qam, const QNetworkRequest &request) {
             QNetworkReply *nr = nullptr;
             if (!myself) { return nr; }
             if (!multiPart) { return nr; }
@@ -735,10 +725,10 @@ namespace BlackCore
 
     QNetworkReply *CApplication::headerFromNetwork(const QNetworkRequest &request, const CallbackSlot &callback, int maxRedirects)
     {
-        return httpRequestImpl(request, NoLogRequestId, callback, maxRedirects, [ ](QNetworkAccessManager & qam, const QNetworkRequest & request) { return qam.head(request); });
+        return httpRequestImpl(request, NoLogRequestId, callback, maxRedirects, [](QNetworkAccessManager &qam, const QNetworkRequest &request) { return qam.head(request); });
     }
 
-    QNetworkReply *CApplication::downloadFromNetwork(const CUrl &url, const QString &saveAsFileName, const CSlot<void (const CStatusMessage &)> &callback, int maxRedirects)
+    QNetworkReply *CApplication::downloadFromNetwork(const CUrl &url, const QString &saveAsFileName, const CSlot<void(const CStatusMessage &)> &callback, int maxRedirects)
     {
         // upfront checks
         if (url.isEmpty()) { return nullptr; }
@@ -747,8 +737,7 @@ namespace BlackCore
         if (!fi.dir().exists()) { return nullptr; }
 
         // function called with reply when done
-        CallbackSlot callbackSlot(this, [ = ](QNetworkReply * reply)
-        {
+        CallbackSlot callbackSlot(this, [=](QNetworkReply *reply) {
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(reply);
             CStatusMessage msg;
             if (reply->error() != QNetworkReply::NoError)
@@ -759,19 +748,17 @@ namespace BlackCore
             {
                 const bool ok = CFileUtils::writeByteArrayToFile(reply->readAll(), saveAsFileName);
                 msg = ok ?
-                      CStatusMessage(this, CStatusMessage::SeverityInfo,  u"Saved file '%1' downloaded from '%2'") << saveAsFileName << url.getFullUrl() :
-                      CStatusMessage(this, CStatusMessage::SeverityError, u"Saving file '%1' downloaded from '%2' failed") << saveAsFileName << url.getFullUrl();
+                          CStatusMessage(this, CStatusMessage::SeverityInfo, u"Saved file '%1' downloaded from '%2'") << saveAsFileName << url.getFullUrl() :
+                          CStatusMessage(this, CStatusMessage::SeverityError, u"Saving file '%1' downloaded from '%2' failed") << saveAsFileName << url.getFullUrl();
             }
             nwReply->close();
-            QTimer::singleShot(0, callback.object(), [ = ]
-            {
+            QTimer::singleShot(0, callback.object(), [=] {
                 if (!sApp || sApp->isShuttingDown()) { return; }
                 callback(msg);
             });
         });
 
-        ProgressSlot progressSlot(this, [ = ](int, qint64, qint64, const QUrl &)
-        {
+        ProgressSlot progressSlot(this, [=](int, qint64, qint64, const QUrl &) {
             // so far not implemented
         });
 
@@ -974,8 +961,7 @@ namespace BlackCore
         {
             msgs.push_back(CStatusMessage(this).info(u"Will start web data services now"));
             m_webDataServices.reset(
-                new CWebDataServices(m_webReadersUsed, m_dbReaderConfig, {}, this)
-            );
+                new CWebDataServices(m_webReadersUsed, m_dbReaderConfig, {}, this));
             Q_ASSERT_X(m_webDataServices, Q_FUNC_INFO, "Missing web services");
 
             // caches from local files (i.e. the files delivered)
@@ -1097,8 +1083,8 @@ namespace BlackCore
         if (m_parsed && m_saveSettingsOnShutdown)
         {
             const CStatusMessage m = this->supportsContexts() ?
-                                     this->getIContextApplication()->saveSettings() :
-                                     CSettingsCache::instance()->saveToStore();
+                                         this->getIContextApplication()->saveSettings() :
+                                         CSettingsCache::instance()->saveToStore();
             CLogMessage(this).preformatted(m);
         }
 
@@ -1232,10 +1218,14 @@ namespace BlackCore
         else
         {
             int activeCount = 0;
-            int validCount  = 0;
+            int validCount = 0;
             for (const QNetworkConfiguration &config : allConfigurations)
             {
-                if (config.state() == QNetworkConfiguration::Active) { activeCount++; m_noNwAccessPoint = false; }
+                if (config.state() == QNetworkConfiguration::Active)
+                {
+                    activeCount++;
+                    m_noNwAccessPoint = false;
+                }
                 if (config.isValid()) { validCount++; }
             }
             Q_UNUSED(validCount)
@@ -1300,10 +1290,8 @@ namespace BlackCore
         // http://doc.qt.io/qt-5/qnetworkaccessmanager.html#setNetworkAccessible
         m_accessManager->setNetworkAccessible(QNetworkAccessManager::Accessible);
 
-
         // create a network report in the log
-        QTimer::singleShot(4000, this, [ = ]
-        {
+        QTimer::singleShot(4000, this, [=] {
             if (!sApp || sApp->isShuttingDown()) { return; }
             const QString r = CNetworkUtils::createNetworkConfigurationReport(m_networkConfigManager, m_accessManager);
             CLogMessage(this).info(u"Network report:\n%1") << r;
@@ -1344,7 +1332,7 @@ namespace BlackCore
 
     const QStringList &CApplication::getLogCategories()
     {
-        static const QStringList l({ "swift.application", "swift." % executable()});
+        static const QStringList l({ "swift.application", "swift." % executable() });
         return l;
     }
 
@@ -1500,10 +1488,9 @@ namespace BlackCore
     {
         Q_UNUSED(retry) // only works with UI version
         if (msgs.isEmpty()) { return false; }
-        if (!msgs.hasErrorMessages())  { return false; }
+        if (!msgs.hasErrorMessages()) { return false; }
         CApplication::cmdLineErrorMessage(
-            msgs.toQString(true)
-        );
+            msgs.toQString(true));
         return false;
     }
 
@@ -1772,8 +1759,7 @@ namespace BlackCore
     {
         // run in QAM thread
         if (this->isShuttingDown()) { return; }
-        QTimer::singleShot(0, m_accessManager, [ = ]
-        {
+        QTimer::singleShot(0, m_accessManager, [=] {
             // should be now in QAM thread
             if (!sApp || sApp->isShuttingDown()) { return; }
             Q_ASSERT_X(CThreadUtils::isInThisThread(sApp->m_accessManager), Q_FUNC_INFO, "Wrong thread, must be QAM thread");
@@ -1785,8 +1771,7 @@ namespace BlackCore
     {
         if (this->isShuttingDown()) { return; }
         if (!m_networkWatchDog) { return; }
-        QTimer::singleShot(deferredMs, m_accessManager, [ = ]
-        {
+        QTimer::singleShot(deferredMs, m_accessManager, [=] {
             // should be now in QAM thread
             if (!sApp || sApp->isShuttingDown()) { return; }
             Q_ASSERT_X(CThreadUtils::isInThisThread(sApp->m_accessManager), Q_FUNC_INFO, "Wrong thread, must be QAM thread");
@@ -1832,8 +1817,7 @@ namespace BlackCore
 
         if (progress)
         {
-            connect(reply, &QNetworkReply::downloadProgress, progress.object(), [ = ](qint64 current, qint64 max)
-            {
+            connect(reply, &QNetworkReply::downloadProgress, progress.object(), [=](qint64 current, qint64 max) {
                 progress(logId, current, max, url);
             });
         }
@@ -1841,28 +1825,28 @@ namespace BlackCore
         if (callback)
         {
             Q_ASSERT_X(callback.object(), Q_FUNC_INFO, "Need callback object (to determine thread)");
-            connect(reply, &QNetworkReply::finished, callback.object(), [ = ]
-            {
-                // Called when finished!
-                // QNetworkRequest::FollowRedirectsAttribute would allow auto redirect, but we use our approach as it gives us better control
-                // \fixme: Check again on Qt 5.9: Added redirects policy to QNetworkAccessManager (ManualRedirectsPolicy, NoLessSafeRedirectsPolicy, SameOriginRedirectsPolicy, UserVerifiedRedirectsPolicy)
-                const bool isRedirect = CNetworkUtils::isHttpStatusRedirect(reply);
-                if (isRedirect && maxRedirects > 0)
-                {
-                    const QUrl redirectUrl = CNetworkUtils::getHttpRedirectUrl(reply);
-                    if (!redirectUrl.isEmpty())
+            connect(
+                reply, &QNetworkReply::finished, callback.object(), [=] {
+                    // Called when finished!
+                    // QNetworkRequest::FollowRedirectsAttribute would allow auto redirect, but we use our approach as it gives us better control
+                    // \fixme: Check again on Qt 5.9: Added redirects policy to QNetworkAccessManager (ManualRedirectsPolicy, NoLessSafeRedirectsPolicy, SameOriginRedirectsPolicy, UserVerifiedRedirectsPolicy)
+                    const bool isRedirect = CNetworkUtils::isHttpStatusRedirect(reply);
+                    if (isRedirect && maxRedirects > 0)
                     {
-                        QNetworkRequest redirectRequest(redirectUrl);
-                        const int redirectsLeft = maxRedirects - 1;
-                        CLogMessage(sApp).info(u"Redirecting '%1' to '%2'") << urlStr << redirectUrl.toString();
-                        this->httpRequestImplInQAMThread(redirectRequest, logId, callback, progress, redirectsLeft, getPostOrDeleteRequest);
-                        return;
+                        const QUrl redirectUrl = CNetworkUtils::getHttpRedirectUrl(reply);
+                        if (!redirectUrl.isEmpty())
+                        {
+                            QNetworkRequest redirectRequest(redirectUrl);
+                            const int redirectsLeft = maxRedirects - 1;
+                            CLogMessage(sApp).info(u"Redirecting '%1' to '%2'") << urlStr << redirectUrl.toString();
+                            this->httpRequestImplInQAMThread(redirectRequest, logId, callback, progress, redirectsLeft, getPostOrDeleteRequest);
+                            return;
+                        }
                     }
-                }
-                // called when there are no more callbacks
-                callback(reply);
-
-            }, Qt::QueuedConnection); // called in callback thread
+                    // called when there are no more callbacks
+                    callback(reply);
+                },
+                Qt::QueuedConnection); // called in callback thread
         }
         return reply;
     }

@@ -19,7 +19,7 @@
 #include <memory>
 
 #ifndef NOMINMAX
-#define NOMINMAX
+#    define NOMINMAX
 #endif
 
 #include <dinput.h>
@@ -32,7 +32,7 @@ namespace BlackInput
     //! Joystick device input/button
     struct CJoystickDeviceInput
     {
-        int m_offset;                               //!< Input offset
+        int m_offset; //!< Input offset
         BlackMisc::Input::CJoystickButton m_button; //!< Joystick button
     };
 
@@ -66,7 +66,7 @@ namespace BlackInput
         virtual void timerEvent(QTimerEvent *event) override;
 
     private:
-        friend bool operator == (const CJoystickDevice &lhs, const CJoystickDevice &rhs);
+        friend bool operator==(const CJoystickDevice &lhs, const CJoystickDevice &rhs);
 
         struct DirectInputDevice8Deleter
         {
@@ -91,9 +91,9 @@ namespace BlackInput
         //! Joystick button enumeration callback
         static BOOL CALLBACK enumObjectsCallback(const DIDEVICEOBJECTINSTANCE *dev, LPVOID pvRef);
 
-        GUID m_guidDevice;     //!< Device GUID
-        GUID m_guidProduct;    //!< Product GUID
-        QString m_deviceName;  //!< Device name
+        GUID m_guidDevice; //!< Device GUID
+        GUID m_guidProduct; //!< Product GUID
+        QString m_deviceName; //!< Device name
         QString m_productName; //!< Product name
         DirectInput8Ptr m_directInput;
         DirectInputDevice8Ptr m_directInputDevice;
@@ -101,7 +101,7 @@ namespace BlackInput
     };
 
     //! Equal operator
-    bool operator == (CJoystickDevice const &lhs, CJoystickDevice const &rhs);
+    bool operator==(CJoystickDevice const &lhs, CJoystickDevice const &rhs);
 
     //! Windows implemenation of IJoystick with DirectInput
     class BLACKINPUT_EXPORT CJoystickWindows : public IJoystick
@@ -166,8 +166,8 @@ namespace BlackInput
         const TCHAR *helperWindowName = TEXT("JoystickCatcherWindow");
 
         bool m_coInitializeSucceeded = false;
-        DirectInput8Ptr m_directInput;                 //!< DirectInput object
-        QVector<CJoystickDevice *> m_joystickDevices;  //!< Joystick devices
+        DirectInput8Ptr m_directInput; //!< DirectInput object
+        QVector<CJoystickDevice *> m_joystickDevices; //!< Joystick devices
 
         BlackMisc::Input::CHotkeyCombination m_buttonCombination;
     };

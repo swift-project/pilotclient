@@ -19,7 +19,10 @@
 #include <QFrame>
 #include <QFileDialog>
 
-namespace Ui { class CSettingsSimulatorBasicsComponent; }
+namespace Ui
+{
+    class CSettingsSimulatorBasicsComponent;
+}
 namespace BlackGui::Components
 {
     /*!

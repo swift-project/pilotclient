@@ -128,11 +128,11 @@ namespace BlackMisc
         //! Aircraft per callsign
         using CSimulatedAircraftPerCallsign = QHash<Aviation::CCallsign, CSimulatedAircraft>;
 
-    } //namespace
+    } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatedAircraftList)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatedAircraftPerCallsign)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::CSimulatedAircraft>)
 
-#endif //guard
+#endif // guard

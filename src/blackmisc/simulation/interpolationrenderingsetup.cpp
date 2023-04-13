@@ -102,15 +102,15 @@ namespace BlackMisc::Simulation
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexLogInterpolation:       return QVariant::fromValue(m_logInterpolation);
+        case IndexLogInterpolation: return QVariant::fromValue(m_logInterpolation);
         case IndexSimulatorDebugMessages: return QVariant::fromValue(m_simulatorDebugMessages);
         case IndexForceFullInterpolation: return QVariant::fromValue(m_forceFullInterpolation);
-        case IndexEnabledAircraftParts:   return QVariant::fromValue(m_enabledAircraftParts);
+        case IndexEnabledAircraftParts: return QVariant::fromValue(m_enabledAircraftParts);
         case IndexSendGndFlagToSimulator: return QVariant::fromValue(m_sendGndToSim);
-        case IndexInterpolatorMode:       return QVariant::fromValue(m_interpolatorMode);
+        case IndexInterpolatorMode: return QVariant::fromValue(m_interpolatorMode);
         case IndexInterpolatorModeAsString: return QVariant::fromValue(this->getInterpolatorModeAsString());
         case IndexFixSceneryOffset: return QVariant::fromValue(m_fixSceneryOffset);
-        case IndexPitchOnGround:    return QVariant::fromValue(m_pitchOnGround);
+        case IndexPitchOnGround: return QVariant::fromValue(m_pitchOnGround);
         default: break;
         }
         BLACK_VERIFY_X(false, Q_FUNC_INFO, "Cannot handle index");
@@ -122,15 +122,15 @@ namespace BlackMisc::Simulation
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexLogInterpolation:       m_logInterpolation = variant.toBool(); return;
+        case IndexLogInterpolation: m_logInterpolation = variant.toBool(); return;
         case IndexSimulatorDebugMessages: m_simulatorDebugMessages = variant.toBool(); return;
         case IndexForceFullInterpolation: m_forceFullInterpolation = variant.toBool(); return;
-        case IndexEnabledAircraftParts:   m_enabledAircraftParts = variant.toBool(); return;
+        case IndexEnabledAircraftParts: m_enabledAircraftParts = variant.toBool(); return;
         case IndexSendGndFlagToSimulator: m_sendGndToSim = variant.toBool(); return;
-        case IndexInterpolatorMode:       m_interpolatorMode = variant.toInt(); return;
+        case IndexInterpolatorMode: m_interpolatorMode = variant.toInt(); return;
         case IndexInterpolatorModeAsString: this->setInterpolatorMode(variant.toString()); return;
         case IndexFixSceneryOffset: m_fixSceneryOffset = variant.toBool(); return;
-        case IndexPitchOnGround:    m_pitchOnGround.setPropertyByIndex(index.copyFrontRemoved(), variant); return;
+        case IndexPitchOnGround: m_pitchOnGround.setPropertyByIndex(index.copyFrontRemoved(), variant); return;
         default: break;
         }
         BLACK_VERIFY_X(false, Q_FUNC_INFO, "Cannot handle index");
@@ -139,15 +139,14 @@ namespace BlackMisc::Simulation
     QString CInterpolationAndRenderingSetupBase::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n)
-        return
-            QStringLiteral("Interpolator: ") % this->getInterpolatorModeAsString() %
-            QStringLiteral(" | Dbg.sim.msgs: ") % boolToYesNo(m_simulatorDebugMessages) %
-            QStringLiteral(" | log interpolation: ") % boolToYesNo(m_logInterpolation) %
-            QStringLiteral(" | force VTOL interpolation: ") % boolToYesNo(m_forceFullInterpolation) %
-            QStringLiteral(" | enable parts: ") % boolToYesNo(m_enabledAircraftParts) %
-            QStringLiteral(" | send gnd: ") % boolToYesNo(m_sendGndToSim) %
-            QStringLiteral(" | fix.scenery offset: ") % boolToYesNo(m_fixSceneryOffset) %
-            QStringLiteral(" | pitch on gnd.: ") % m_pitchOnGround.valueRoundedWithUnit(CAngleUnit::deg(), 1, true);
+        return QStringLiteral("Interpolator: ") % this->getInterpolatorModeAsString() %
+               QStringLiteral(" | Dbg.sim.msgs: ") % boolToYesNo(m_simulatorDebugMessages) %
+               QStringLiteral(" | log interpolation: ") % boolToYesNo(m_logInterpolation) %
+               QStringLiteral(" | force VTOL interpolation: ") % boolToYesNo(m_forceFullInterpolation) %
+               QStringLiteral(" | enable parts: ") % boolToYesNo(m_enabledAircraftParts) %
+               QStringLiteral(" | send gnd: ") % boolToYesNo(m_sendGndToSim) %
+               QStringLiteral(" | fix.scenery offset: ") % boolToYesNo(m_fixSceneryOffset) %
+               QStringLiteral(" | pitch on gnd.: ") % m_pitchOnGround.valueRoundedWithUnit(CAngleUnit::deg(), 1, true);
     }
 
     bool CInterpolationAndRenderingSetupBase::canHandleIndex(int index)
@@ -156,7 +155,7 @@ namespace BlackMisc::Simulation
     }
 
     CInterpolationAndRenderingSetupGlobal::CInterpolationAndRenderingSetupGlobal()
-    { }
+    {}
 
     int CInterpolationAndRenderingSetupGlobal::InfiniteAircraft()
     {
@@ -165,7 +164,7 @@ namespace BlackMisc::Simulation
 
     bool CInterpolationAndRenderingSetupGlobal::isRenderingEnabled() const
     {
-        if (m_maxRenderedAircraft < 1)  { return false; }
+        if (m_maxRenderedAircraft < 1) { return false; }
         if (!isMaxDistanceRestricted()) { return true; }
         return m_maxRenderedDistance.isPositiveWithEpsilonConsidered();
     }
@@ -220,7 +219,6 @@ namespace BlackMisc::Simulation
         return true;
     }
 
-
     void CInterpolationAndRenderingSetupGlobal::clearMaxRenderedDistance()
     {
         this->setMaxRenderedDistance(CLength(0.0, nullptr));
@@ -258,7 +256,7 @@ namespace BlackMisc::Simulation
         }
         if (this->isMaxDistanceRestricted())
         {
-            if (!rt.isEmpty()) { rt.append(" ");}
+            if (!rt.isEmpty()) { rt.append(" "); }
             rt.append(this->getMaxRenderedDistance().valueRoundedWithUnit(CLengthUnit::NM(), 0));
         }
         return rt;
@@ -266,23 +264,22 @@ namespace BlackMisc::Simulation
 
     void CInterpolationAndRenderingSetupGlobal::setBaseValues(const CInterpolationAndRenderingSetupBase &baseValues)
     {
-        m_logInterpolation       = baseValues.logInterpolation();
+        m_logInterpolation = baseValues.logInterpolation();
         m_simulatorDebugMessages = baseValues.showSimulatorDebugMessages();
         m_forceFullInterpolation = baseValues.isForcingFullInterpolation();
-        m_enabledAircraftParts   = baseValues.isAircraftPartsEnabled();
-        m_sendGndToSim           = baseValues.isSendingGndFlagToSimulator();
-        m_fixSceneryOffset       = baseValues.isFixingSceneryOffset();
-        m_interpolatorMode       = baseValues.getInterpolatorMode();
-        m_pitchOnGround          = baseValues.getPitchOnGround();
+        m_enabledAircraftParts = baseValues.isAircraftPartsEnabled();
+        m_sendGndToSim = baseValues.isSendingGndFlagToSimulator();
+        m_fixSceneryOffset = baseValues.isFixingSceneryOffset();
+        m_interpolatorMode = baseValues.getInterpolatorMode();
+        m_pitchOnGround = baseValues.getPitchOnGround();
     }
 
     QString CInterpolationAndRenderingSetupGlobal::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n)
-        return
-            CInterpolationAndRenderingSetupBase::convertToQString(i18n) %
-            QStringLiteral(" max.aircraft:") % QString::number(m_maxRenderedAircraft) %
-            QStringLiteral(" max.distance:") % m_maxRenderedDistance.valueRoundedWithUnit(CLengthUnit::NM(), 2);
+        return CInterpolationAndRenderingSetupBase::convertToQString(i18n) %
+               QStringLiteral(" max.aircraft:") % QString::number(m_maxRenderedAircraft) %
+               QStringLiteral(" max.distance:") % m_maxRenderedDistance.valueRoundedWithUnit(CLengthUnit::NM(), 2);
     }
 
     QVariant CInterpolationAndRenderingSetupGlobal::propertyByIndex(CPropertyIndexRef index) const
@@ -322,22 +319,22 @@ namespace BlackMisc::Simulation
     }
 
     CInterpolationAndRenderingSetupPerCallsign::CInterpolationAndRenderingSetupPerCallsign()
-    { }
+    {}
 
     CInterpolationAndRenderingSetupPerCallsign::CInterpolationAndRenderingSetupPerCallsign(const CCallsign &callsign, const CInterpolationAndRenderingSetupGlobal &globalSetup)
         : CInterpolationAndRenderingSetupBase(globalSetup), m_callsign(callsign)
-    { }
+    {}
 
     CPropertyIndexList CInterpolationAndRenderingSetupPerCallsign::unequalToGlobal(const CInterpolationAndRenderingSetupGlobal &globalSetup) const
     {
         CPropertyIndexList diff;
-        if (this->logInterpolation()            != globalSetup.logInterpolation())            { diff.push_back(IndexLogInterpolation); }
-        if (this->showSimulatorDebugMessages()  != globalSetup.showSimulatorDebugMessages())  { diff.push_back(IndexSimulatorDebugMessages); }
-        if (this->isForcingFullInterpolation()  != globalSetup.isForcingFullInterpolation())  { diff.push_back(IndexForceFullInterpolation); }
-        if (this->isAircraftPartsEnabled()      != globalSetup.isAircraftPartsEnabled())      { diff.push_back(IndexEnabledAircraftParts); }
+        if (this->logInterpolation() != globalSetup.logInterpolation()) { diff.push_back(IndexLogInterpolation); }
+        if (this->showSimulatorDebugMessages() != globalSetup.showSimulatorDebugMessages()) { diff.push_back(IndexSimulatorDebugMessages); }
+        if (this->isForcingFullInterpolation() != globalSetup.isForcingFullInterpolation()) { diff.push_back(IndexForceFullInterpolation); }
+        if (this->isAircraftPartsEnabled() != globalSetup.isAircraftPartsEnabled()) { diff.push_back(IndexEnabledAircraftParts); }
         if (this->isSendingGndFlagToSimulator() != globalSetup.isSendingGndFlagToSimulator()) { diff.push_back(IndexSendGndFlagToSimulator); }
-        if (this->isFixingSceneryOffset()       != globalSetup.isFixingSceneryOffset())       { diff.push_back(IndexFixSceneryOffset); }
-        if (this->getPitchOnGround()            != globalSetup.getPitchOnGround())            { diff.push_back(IndexPitchOnGround); }
+        if (this->isFixingSceneryOffset() != globalSetup.isFixingSceneryOffset()) { diff.push_back(IndexFixSceneryOffset); }
+        if (this->getPitchOnGround() != globalSetup.getPitchOnGround()) { diff.push_back(IndexPitchOnGround); }
         return diff;
     }
 

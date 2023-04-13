@@ -26,15 +26,20 @@ namespace BlackMisc
     //! Milliseconds minimum/maximum/mean
     struct MillisecondsMinMaxMean
     {
-        qint64 min;  //!< Minimum
-        qint64 max;  //!< Maximum
+        qint64 min; //!< Minimum
+        qint64 max; //!< Maximum
         double mean; //!< Mean (average)
 
         //! Valid?
         bool isValid() const { return min >= 0 && max >= 0; }
 
         //! Reset the values
-        void reset() { min = -1; max = -1; mean = -1;}
+        void reset()
+        {
+            min = -1;
+            max = -1;
+            mean = -1;
+        }
 
         //! As string
         QString asString() const { return QStringLiteral("Min: %1ms Max: %2ms Mean: %3ms").arg(min).arg(max).arg(mean, 0, 'f', 2); }
@@ -42,7 +47,8 @@ namespace BlackMisc
 
     //! List of objects with timestamp.
     //! Such objects should implement \sa ITimestampBased
-    template<class OBJ, class CONTAINER> class ITimestampObjectList
+    template <class OBJ, class CONTAINER>
+    class ITimestampObjectList
     {
         static_assert(std::is_base_of_v<ITimestampBased, OBJ>, "OBJ needs to implement ITimestampBased");
 
@@ -64,8 +70,7 @@ namespace BlackMisc
         //! List of objects before msSinceEpoch (older)
         CONTAINER findBefore(qint64 msSinceEpoch) const
         {
-            return this->container().findBy([&](const OBJ & obj)
-            {
+            return this->container().findBy([&](const OBJ &obj) {
                 return obj.isOlderThan(msSinceEpoch);
             });
         }
@@ -101,8 +106,7 @@ namespace BlackMisc
         //! List of objects after msSinceEpoch (newer)
         CONTAINER findAfter(qint64 msSinceEpoch) const
         {
-            return this->container().findBy([&](const OBJ & obj)
-            {
+            return this->container().findBy([&](const OBJ &obj) {
                 return obj.isNewerThan(msSinceEpoch);
             });
         }
@@ -124,8 +128,7 @@ namespace BlackMisc
         //! Objects without valid timestamp
         CONTAINER findInvalidTimestamps() const
         {
-            return this->container().findBy([&](const OBJ & obj)
-            {
+            return this->container().findBy([&](const OBJ &obj) {
                 return !obj.hasValidTimestamp();
             });
         }
@@ -134,8 +137,7 @@ namespace BlackMisc
         OBJ findClosestTimeDistance(qint64 msSinceEpoch) const
         {
             if (this->container().isEmpty()) { return OBJ(); }
-            const auto closest = std::min_element(this->container().cbegin(), this->container().cend(), [=](const ITimestampBased & a, const ITimestampBased & b)
-            {
+            const auto closest = std::min_element(this->container().cbegin(), this->container().cend(), [=](const ITimestampBased &a, const ITimestampBased &b) {
                 return qAbs(a.getTimeDifferenceMs(msSinceEpoch)) < qAbs(b.getTimeDifferenceMs(msSinceEpoch));
             });
             return *closest;
@@ -207,7 +209,7 @@ namespace BlackMisc
         OBJ latestObject() const
         {
             if (this->container().isEmpty()) { return OBJ(); }
-            const auto latest = std::max_element(this->container().begin(), this->container().end(), [](const OBJ & a, const OBJ & b) { return a.getMSecsSinceEpoch() < b.getMSecsSinceEpoch(); });
+            const auto latest = std::max_element(this->container().begin(), this->container().end(), [](const OBJ &a, const OBJ &b) { return a.getMSecsSinceEpoch() < b.getMSecsSinceEpoch(); });
             return *latest;
         }
 
@@ -215,7 +217,7 @@ namespace BlackMisc
         OBJ oldestObject() const
         {
             if (this->container().isEmpty()) { return OBJ(); }
-            const auto oldest = std::min_element(this->container().begin(), this->container().end(), [](const OBJ & a, const OBJ & b) { return a.getMSecsSinceEpoch() < b.getMSecsSinceEpoch(); });
+            const auto oldest = std::min_element(this->container().begin(), this->container().end(), [](const OBJ &a, const OBJ &b) { return a.getMSecsSinceEpoch() < b.getMSecsSinceEpoch(); });
             return *oldest;
         }
 
@@ -228,8 +230,7 @@ namespace BlackMisc
         //! Remove objects with timestamp before dateTime
         int removeBefore(qint64 msSinceEpoch)
         {
-            return this->container().removeIf([&](const OBJ & obj)
-            {
+            return this->container().removeIf([&](const OBJ &obj) {
                 return obj.isOlderThan(msSinceEpoch);
             });
         }
@@ -238,8 +239,7 @@ namespace BlackMisc
         int removeOlderThanNowMinusOffset(qint64 offsetMs)
         {
             const qint64 epoch = QDateTime::currentMSecsSinceEpoch() - offsetMs;
-            return this->container().removeIf([&](const OBJ & obj)
-            {
+            return this->container().removeIf([&](const OBJ &obj) {
                 return obj.isOlderThan(epoch);
             });
         }
@@ -359,7 +359,7 @@ namespace BlackMisc
         bool isSortedLatestFirst() const
         {
             if (this->container().size() < 2) { return true; }
-            qint64 min = std::numeric_limits <qint64>::max();
+            qint64 min = std::numeric_limits<qint64>::max();
             for (const ITimestampBased &obj : this->container())
             {
                 if (!obj.hasValidTimestamp()) { return false; }
@@ -449,7 +449,8 @@ namespace BlackMisc
 
     //! List of objects with timestamp and offset.
     //! Such objects should implement \sa ITimestampWithOffsetBased
-    template<class OBJ, class CONTAINER> class ITimestampWithOffsetObjectList : public ITimestampObjectList<OBJ, CONTAINER>
+    template <class OBJ, class CONTAINER>
+    class ITimestampWithOffsetObjectList : public ITimestampObjectList<OBJ, CONTAINER>
     {
         static_assert(std::is_base_of_v<ITimestampWithOffsetBased, OBJ>, "OBJ needs to implement ITimestampBased");
 
@@ -627,7 +628,7 @@ namespace BlackMisc
         bool isSortedAdjustedLatestFirst() const
         {
             if (this->container().size() < 2) { return true; }
-            qint64 min = std::numeric_limits <qint64>::max();
+            qint64 min = std::numeric_limits<qint64>::max();
             for (const ITimestampWithOffsetBased &obj : this->container())
             {
                 if (!obj.hasValidTimestamp()) { return false; }
@@ -640,8 +641,7 @@ namespace BlackMisc
         //! List of objects after msSinceEpoch (newer)
         CONTAINER findAfterAdjusted(qint64 msSinceEpoch) const
         {
-            return this->container().findBy([&](const ITimestampWithOffsetBased & obj)
-            {
+            return this->container().findBy([&](const ITimestampWithOffsetBased &obj) {
                 return obj.isNewerThanAdjusted(msSinceEpoch);
             });
         }
@@ -657,8 +657,7 @@ namespace BlackMisc
         //! List of objects before msSinceEpoch (older)
         CONTAINER findBeforeAdjusted(qint64 msSinceEpoch) const
         {
-            return this->container().findBy([&](const ITimestampWithOffsetBased & obj)
-            {
+            return this->container().findBy([&](const ITimestampWithOffsetBased &obj) {
                 return obj.isOlderThanAdjusted(msSinceEpoch);
             });
         }
@@ -675,8 +674,7 @@ namespace BlackMisc
         OBJ findClosestTimeDistanceAdjusted(qint64 msSinceEpoch) const
         {
             if (this->container().isEmpty()) { return OBJ(); }
-            const auto closest = std::min_element(this->container().cbegin(), this->container().cend(), [=](const ITimestampWithOffsetBased & a, const ITimestampWithOffsetBased & b)
-            {
+            const auto closest = std::min_element(this->container().cbegin(), this->container().cend(), [=](const ITimestampWithOffsetBased &a, const ITimestampWithOffsetBased &b) {
                 return qAbs(a.getAdjustedTimeDifferenceMs(msSinceEpoch)) < qAbs(b.getAdjustedTimeDifferenceMs(msSinceEpoch));
             });
             return *closest;
@@ -690,7 +688,7 @@ namespace BlackMisc
             {
                 return this->container().front();
             }
-            const auto latest = std::max_element(this->container().begin(), this->container().end(), [](const OBJ & a, const OBJ & b) { return a.getAdjustedMSecsSinceEpoch() < b.getAdjustedMSecsSinceEpoch(); });
+            const auto latest = std::max_element(this->container().begin(), this->container().end(), [](const OBJ &a, const OBJ &b) { return a.getAdjustedMSecsSinceEpoch() < b.getAdjustedMSecsSinceEpoch(); });
             return *latest;
         }
 
@@ -702,7 +700,7 @@ namespace BlackMisc
             {
                 return this->container().back();
             }
-            const auto oldest = std::min_element(this->container().begin(), this->container().end(), [](const OBJ & a, const OBJ & b) { return a.getAdjustedMSecsSinceEpoch() < b.getAdjustedMSecsSinceEpoch(); });
+            const auto oldest = std::min_element(this->container().begin(), this->container().end(), [](const OBJ &a, const OBJ &b) { return a.getAdjustedMSecsSinceEpoch() < b.getAdjustedMSecsSinceEpoch(); });
             return *oldest;
         }
 
@@ -776,6 +774,6 @@ namespace BlackMisc
 
         HintAdjustedTimestampSort m_tsAdjustedSortHint = NoAdjustedTimestampSortHint; //!< sort hint
     };
-} //namespace
+} // namespace
 
-#endif //guard
+#endif // guard

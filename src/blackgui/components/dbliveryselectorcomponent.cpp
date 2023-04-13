@@ -40,17 +40,16 @@ using namespace BlackMisc::Network;
 
 namespace BlackGui::Components
 {
-    CDbLiverySelectorComponent::CDbLiverySelectorComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CDbLiverySelectorComponent)
+    CDbLiverySelectorComponent::CDbLiverySelectorComponent(QWidget *parent) : QFrame(parent),
+                                                                              ui(new Ui::CDbLiverySelectorComponent)
     {
         ui->setupUi(this);
         this->setAcceptDrops(true);
-        this->setAcceptedMetaTypeIds({qMetaTypeId<CLivery>(), qMetaTypeId<CLiveryList>()});
+        this->setAcceptedMetaTypeIds({ qMetaTypeId<CLivery>(), qMetaTypeId<CLiveryList>() });
 
         ui->le_Livery->setValidator(new CUpperCaseValidator(this));
 
-        connect(ui->le_Livery, &QLineEdit::returnPressed,   this, &CDbLiverySelectorComponent::onDataChanged);
+        connect(ui->le_Livery, &QLineEdit::returnPressed, this, &CDbLiverySelectorComponent::onDataChanged);
         connect(ui->le_Livery, &QLineEdit::editingFinished, this, &CDbLiverySelectorComponent::onDataChanged);
 
         connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLiverySelectorComponent::onLiveriesRead, Qt::QueuedConnection);

@@ -62,7 +62,8 @@ namespace BlackMisc
         {
         public:
             template <class T>
-            CVariantException(const T &, const QString &opName) : CVariantException(qMetaTypeId<T>(), opName) {}
+            CVariantException(const T &, const QString &opName) : CVariantException(qMetaTypeId<T>(), opName)
+            {}
 
             CVariantException(int typeId, const QString &opName) : std::invalid_argument((blurb(typeId, opName)).toStdString()), m_operationName(opName) {}
 
@@ -83,59 +84,126 @@ namespace BlackMisc
         struct CValueObjectMetaInfoHelper
         {
             template <typename T>
-            static QJsonObject toJson(const T &object, decltype(static_cast<void>(object.toJson()), 0)) { return object.toJson(); }
+            static QJsonObject toJson(const T &object, decltype(static_cast<void>(object.toJson()), 0))
+            {
+                return object.toJson();
+            }
             template <typename T>
-            static QJsonObject toJson(const T &object, ...) { throw CVariantException(object, "toJson"); }
+            static QJsonObject toJson(const T &object, ...)
+            {
+                throw CVariantException(object, "toJson");
+            }
 
             template <typename T>
-            static void convertFromJson(const QJsonObject &json, T &object, decltype(static_cast<void>(object.convertFromJson(json)), 0)) { object.convertFromJson(json); }
+            static void convertFromJson(const QJsonObject &json, T &object, decltype(static_cast<void>(object.convertFromJson(json)), 0))
+            {
+                object.convertFromJson(json);
+            }
             template <typename T>
-            static void convertFromJson(const QJsonObject &, T &object, ...) { throw CVariantException(object, "convertFromJson"); }
+            static void convertFromJson(const QJsonObject &, T &object, ...)
+            {
+                throw CVariantException(object, "convertFromJson");
+            }
 
             template <typename T>
-            static QJsonObject toMemoizedJson(const T &object, decltype(static_cast<void>(object.toMemoizedJson()), 0)) { return object.toMemoizedJson(); }
+            static QJsonObject toMemoizedJson(const T &object, decltype(static_cast<void>(object.toMemoizedJson()), 0))
+            {
+                return object.toMemoizedJson();
+            }
             template <typename T>
-            static QJsonObject toMemoizedJson(const T &object, ...) { return toJson(object, 0); }
+            static QJsonObject toMemoizedJson(const T &object, ...)
+            {
+                return toJson(object, 0);
+            }
 
             template <typename T>
-            static void convertFromMemoizedJson(const QJsonObject &json, T &object, bool allowFallbackToJson, decltype(static_cast<void>(object.convertFromMemoizedJson(json, allowFallbackToJson)), 0)) { object.convertFromMemoizedJson(json, allowFallbackToJson); }
+            static void convertFromMemoizedJson(const QJsonObject &json, T &object, bool allowFallbackToJson, decltype(static_cast<void>(object.convertFromMemoizedJson(json, allowFallbackToJson)), 0))
+            {
+                object.convertFromMemoizedJson(json, allowFallbackToJson);
+            }
             template <typename T>
-            static void convertFromMemoizedJson(const QJsonObject &json, T &object, bool allowFallbackToJson, ...) { convertFromJson(json, object, 0); Q_UNUSED(allowFallbackToJson) }
+            static void convertFromMemoizedJson(const QJsonObject &json, T &object, bool allowFallbackToJson, ...)
+            {
+                convertFromJson(json, object, 0);
+                Q_UNUSED(allowFallbackToJson)
+            }
 
             template <typename T>
-            static uint getValueHash(const T &object, decltype(static_cast<void>(qHash(object)), 0)) { return qHash(object); }
+            static uint getValueHash(const T &object, decltype(static_cast<void>(qHash(object)), 0))
+            {
+                return qHash(object);
+            }
             template <typename T>
-            static uint getValueHash(const T &object, ...) { throw CVariantException(object, "getValueHash"); }
+            static uint getValueHash(const T &object, ...)
+            {
+                throw CVariantException(object, "getValueHash");
+            }
 
             template <typename T>
-            static int compareImpl(const T &lhs, const T &rhs, decltype(static_cast<void>(compare(lhs, rhs)), 0)) { return compare(lhs, rhs); }
+            static int compareImpl(const T &lhs, const T &rhs, decltype(static_cast<void>(compare(lhs, rhs)), 0))
+            {
+                return compare(lhs, rhs);
+            }
             template <typename T>
-            static int compareImpl(const T &lhs, const T &, ...) { throw CVariantException(lhs, "compare"); }
+            static int compareImpl(const T &lhs, const T &, ...)
+            {
+                throw CVariantException(lhs, "compare");
+            }
 
             template <typename T>
-            static void setPropertyByIndex(T &object, const QVariant &variant, CPropertyIndexRef index, decltype(static_cast<void>(object.setPropertyByIndex(index, variant)), 0)) { object.setPropertyByIndex(index, variant); }
+            static void setPropertyByIndex(T &object, const QVariant &variant, CPropertyIndexRef index, decltype(static_cast<void>(object.setPropertyByIndex(index, variant)), 0))
+            {
+                object.setPropertyByIndex(index, variant);
+            }
             template <typename T>
-            static void setPropertyByIndex(T &object, const QVariant &, CPropertyIndexRef, ...) { throw CVariantException(object, "setPropertyByIndex"); }
+            static void setPropertyByIndex(T &object, const QVariant &, CPropertyIndexRef, ...)
+            {
+                throw CVariantException(object, "setPropertyByIndex");
+            }
 
             template <typename T>
-            static void propertyByIndex(QVariant &o_variant, const T &object, CPropertyIndexRef index, decltype(static_cast<void>(object.propertyByIndex(index)), 0)) { o_variant = object.propertyByIndex(index); }
+            static void propertyByIndex(QVariant &o_variant, const T &object, CPropertyIndexRef index, decltype(static_cast<void>(object.propertyByIndex(index)), 0))
+            {
+                o_variant = object.propertyByIndex(index);
+            }
             template <typename T>
-            static void propertyByIndex(QVariant &, const T &object, CPropertyIndexRef, ...) { throw CVariantException(object, "propertyByIndex"); }
+            static void propertyByIndex(QVariant &, const T &object, CPropertyIndexRef, ...)
+            {
+                throw CVariantException(object, "propertyByIndex");
+            }
 
             template <typename T>
-            static bool equalsPropertyByIndex(const T &object, const QVariant &variant, CPropertyIndexRef index, decltype(static_cast<void>(object.equalsPropertyByIndex(variant, index)), 0)) { return object.equalsPropertyByIndex(variant, index); }
+            static bool equalsPropertyByIndex(const T &object, const QVariant &variant, CPropertyIndexRef index, decltype(static_cast<void>(object.equalsPropertyByIndex(variant, index)), 0))
+            {
+                return object.equalsPropertyByIndex(variant, index);
+            }
             template <typename T>
-            static bool equalsPropertyByIndex(const T &object, const QVariant &, CPropertyIndexRef, ...) { throw CVariantException(object, "equalsPropertyByIndex"); }
+            static bool equalsPropertyByIndex(const T &object, const QVariant &, CPropertyIndexRef, ...)
+            {
+                throw CVariantException(object, "equalsPropertyByIndex");
+            }
 
             template <typename T>
-            static int toIcon(const T &object, std::enable_if_t < ! std::is_same_v<T, CVariant>, decltype(static_cast<void>(object.toIcon()), 0) >) { return object.toIcon(); }
+            static int toIcon(const T &object, std::enable_if_t<!std::is_same_v<T, CVariant>, decltype(static_cast<void>(object.toIcon()), 0)>)
+            {
+                return object.toIcon();
+            }
             template <typename T>
-            static int toIcon(const T &object, ...) { throw CVariantException(object, "toIcon"); }
+            static int toIcon(const T &object, ...)
+            {
+                throw CVariantException(object, "toIcon");
+            }
 
             template <typename T>
-            static bool matches(const T &object, const CVariant &value, decltype(static_cast<void>(object.matches(value)), 0)) { return object.matches(value); }
+            static bool matches(const T &object, const CVariant &value, decltype(static_cast<void>(object.matches(value)), 0))
+            {
+                return object.matches(value);
+            }
             template <typename T>
-            static bool matches(const T &object, const CVariant &, ...) { throw CVariantException(object, "matches"); }
+            static bool matches(const T &object, const CVariant &, ...)
+            {
+                throw CVariantException(object, "matches");
+            }
         };
 
         //! \private Implementation of IValueObjectMetaInfo representing the set of operations supported by T.
@@ -147,7 +215,7 @@ namespace BlackMisc
             static CValueObjectMetaInfo *instance(const T &);
 
             CValueObjectMetaInfo(const CValueObjectMetaInfo &) = delete;
-            CValueObjectMetaInfo &operator =(const CValueObjectMetaInfo &) = delete;
+            CValueObjectMetaInfo &operator=(const CValueObjectMetaInfo &) = delete;
 
             virtual QString toQString(const void *object, bool i18n) const override;
             virtual QJsonObject toJson(const void *object) const override;
@@ -169,85 +237,110 @@ namespace BlackMisc
             static T &cast(void *object);
         };
 
-        template <typename T> CValueObjectMetaInfo<T>::CValueObjectMetaInfo()
+        template <typename T>
+        CValueObjectMetaInfo<T>::CValueObjectMetaInfo()
         {}
-        template <typename T> CValueObjectMetaInfo<T>::~CValueObjectMetaInfo()
+        template <typename T>
+        CValueObjectMetaInfo<T>::~CValueObjectMetaInfo()
         {}
-        template <typename T> CValueObjectMetaInfo<T> *CValueObjectMetaInfo<T>::instance(const T &)
+        template <typename T>
+        CValueObjectMetaInfo<T> *CValueObjectMetaInfo<T>::instance(const T &)
         {
             static CValueObjectMetaInfo mi;
             return &mi;
         }
-        template <typename T> QString CValueObjectMetaInfo<T>::toQString(const void *object, bool i18n) const
+        template <typename T>
+        QString CValueObjectMetaInfo<T>::toQString(const void *object, bool i18n) const
         {
             return cast(object).toQString(i18n);
         }
-        template <typename T> QJsonObject CValueObjectMetaInfo<T>::toJson(const void *object) const
+        template <typename T>
+        QJsonObject CValueObjectMetaInfo<T>::toJson(const void *object) const
         {
             return CValueObjectMetaInfoHelper::toJson(cast(object), 0);
         }
-        template <typename T> void CValueObjectMetaInfo<T>::convertFromJson(const QJsonObject &json, void *object) const
+        template <typename T>
+        void CValueObjectMetaInfo<T>::convertFromJson(const QJsonObject &json, void *object) const
         {
             CValueObjectMetaInfoHelper::convertFromJson(json, cast(object), 0);
         }
-        template <typename T> QJsonObject CValueObjectMetaInfo<T>::toMemoizedJson(const void *object) const
+        template <typename T>
+        QJsonObject CValueObjectMetaInfo<T>::toMemoizedJson(const void *object) const
         {
             return CValueObjectMetaInfoHelper::toMemoizedJson(cast(object), 0);
         }
-        template <typename T> void CValueObjectMetaInfo<T>::convertFromMemoizedJson(const QJsonObject &json, void *object, bool allowFallbackToJson) const
+        template <typename T>
+        void CValueObjectMetaInfo<T>::convertFromMemoizedJson(const QJsonObject &json, void *object, bool allowFallbackToJson) const
         {
             CValueObjectMetaInfoHelper::convertFromMemoizedJson(json, cast(object), allowFallbackToJson, 0);
         }
-        template <typename T> void CValueObjectMetaInfo<T>::unmarshall(const QDBusArgument &arg, void *object) const
+        template <typename T>
+        void CValueObjectMetaInfo<T>::unmarshall(const QDBusArgument &arg, void *object) const
         {
             arg >> cast(object);
         }
-        template <typename T> uint CValueObjectMetaInfo<T>::getValueHash(const void *object) const
+        template <typename T>
+        uint CValueObjectMetaInfo<T>::getValueHash(const void *object) const
         {
             return CValueObjectMetaInfoHelper::getValueHash(cast(object), 0);
         }
-        template <typename T> int CValueObjectMetaInfo<T>::getMetaTypeId() const
+        template <typename T>
+        int CValueObjectMetaInfo<T>::getMetaTypeId() const
         {
-            if constexpr (QMetaTypeId<T>::Defined) { return qMetaTypeId<T>(); } else { return QMetaType::UnknownType; }
+            if constexpr (QMetaTypeId<T>::Defined) { return qMetaTypeId<T>(); }
+            else { return QMetaType::UnknownType; }
         }
-        template <typename T> const void *CValueObjectMetaInfo<T>::upCastTo(const void *object, int metaTypeId) const
+        template <typename T>
+        const void *CValueObjectMetaInfo<T>::upCastTo(const void *object, int metaTypeId) const
         {
             if constexpr (THasMetaBaseV<T>)
             {
                 const auto base = static_cast<const void *>(static_cast<const TMetaBaseOfT<T> *>(&cast(object)));
                 return metaTypeId == getMetaTypeId() ? object : CValueObjectMetaInfo<TMetaBaseOfT<T>>::instance(cast(object))->upCastTo(base, metaTypeId);
             }
-            else { Q_UNUSED(metaTypeId); return object; }
+            else
+            {
+                Q_UNUSED(metaTypeId);
+                return object;
+            }
         }
-        template <typename T> int CValueObjectMetaInfo<T>::compareImpl(const void *lhs, const void *rhs) const
+        template <typename T>
+        int CValueObjectMetaInfo<T>::compareImpl(const void *lhs, const void *rhs) const
         {
             return CValueObjectMetaInfoHelper::compareImpl(cast(lhs), cast(rhs), 0);
         }
-        template <typename T> void CValueObjectMetaInfo<T>::setPropertyByIndex(void *object, const QVariant &variant, CPropertyIndexRef index) const
+        template <typename T>
+        void CValueObjectMetaInfo<T>::setPropertyByIndex(void *object, const QVariant &variant, CPropertyIndexRef index) const
         {
             CValueObjectMetaInfoHelper::setPropertyByIndex(cast(object), variant, index, 0);
         }
-        template <typename T> void CValueObjectMetaInfo<T>::propertyByIndex(const void *object, QVariant &o_variant, BlackMisc::CPropertyIndexRef index) const
+        template <typename T>
+        void CValueObjectMetaInfo<T>::propertyByIndex(const void *object, QVariant &o_variant, BlackMisc::CPropertyIndexRef index) const
         {
             CValueObjectMetaInfoHelper::propertyByIndex(o_variant, cast(object), index, 0);
         }
-        template <typename T> bool CValueObjectMetaInfo<T>::equalsPropertyByIndex(const void *object, const QVariant &compareValue, CPropertyIndexRef index) const
+        template <typename T>
+        bool CValueObjectMetaInfo<T>::equalsPropertyByIndex(const void *object, const QVariant &compareValue, CPropertyIndexRef index) const
         {
             return CValueObjectMetaInfoHelper::equalsPropertyByIndex(cast(object), compareValue, index, 0);
         }
-        template <typename T> int CValueObjectMetaInfo<T>::toIcon(const void *object) const
+        template <typename T>
+        int CValueObjectMetaInfo<T>::toIcon(const void *object) const
         {
             return CValueObjectMetaInfoHelper::toIcon(cast(object), 0);
         }
-        template <typename T> bool CValueObjectMetaInfo<T>::matches(const void *object, const CVariant &value) const
+        template <typename T>
+        bool CValueObjectMetaInfo<T>::matches(const void *object, const CVariant &value) const
         {
             return CValueObjectMetaInfoHelper::matches(cast(object), value, 0);
         }
-        template <typename T> const T &CValueObjectMetaInfo<T>::cast(const void *object)
+        template <typename T>
+        const T &CValueObjectMetaInfo<T>::cast(const void *object)
         {
             return *static_cast<const T *>(object);
         }
-        template <typename T> T &CValueObjectMetaInfo<T>::cast(void *object)
+        template <typename T>
+        T &CValueObjectMetaInfo<T>::cast(void *object)
         {
             return *static_cast<T *>(object);
         }
@@ -260,13 +353,22 @@ namespace BlackMisc
 
         //! \private Getter to obtain the IValueObjectMetaInfo which was stored by BlackMisc::registerMetaValueType.
         template <typename T>
-        IValueObjectMetaInfo *getValueObjectMetaInfo() { return getValueObjectMetaInfo(qMetaTypeId<T>()); }
+        IValueObjectMetaInfo *getValueObjectMetaInfo()
+        {
+            return getValueObjectMetaInfo(qMetaTypeId<T>());
+        }
 
         //! \cond PRIVATE
-        template <typename T, typename = std::enable_if_t<std::is_base_of_v<CSequence<typename T::value_type>, T> && ! std::is_same_v<typename T::value_type, CVariant>>>
-        constexpr bool canConvertVariantList(int) { return true; }
+        template <typename T, typename = std::enable_if_t<std::is_base_of_v<CSequence<typename T::value_type>, T> && !std::is_same_v<typename T::value_type, CVariant>>>
+        constexpr bool canConvertVariantList(int)
+        {
+            return true;
+        }
         template <typename T>
-        constexpr bool canConvertVariantList(...) { return false; }
+        constexpr bool canConvertVariantList(...)
+        {
+            return false;
+        }
 
         template <typename T>
         struct MetaTypeHelper

@@ -39,16 +39,15 @@ using namespace BlackMisc::Weather;
 
 namespace BlackGui::Components
 {
-    CWeatherComponent::CWeatherComponent(QWidget *parent) :
-        COverlayMessagesFrameEnableForDockWidgetInfoArea(parent),
-        CIdentifiable(this),
-        ui(new Ui::CWeatherComponent)
+    CWeatherComponent::CWeatherComponent(QWidget *parent) : COverlayMessagesFrameEnableForDockWidgetInfoArea(parent),
+                                                            CIdentifiable(this),
+                                                            ui(new Ui::CWeatherComponent)
     {
         ui->setupUi(this);
         m_coordinateDialog->showElevation(false);
         m_coordinateDialog->setReadOnly(ui->cb_UseOwnAcftPosition->isChecked());
         connect(ui->pb_SetPosition, &QPushButton::clicked, this, &CWeatherComponent::showCoordinateDialog);
-        connect(ui->pb_Update,      &QPushButton::clicked, this, &CWeatherComponent::updateWeatherInformationForced);
+        connect(ui->pb_Update, &QPushButton::clicked, this, &CWeatherComponent::updateWeatherInformationForced);
 
         m_weatherScenarios = CWeatherGrid::getAllScenarios();
         for (const auto &scenario : std::as_const(m_weatherScenarios))
@@ -73,8 +72,7 @@ namespace BlackGui::Components
 
         // Call this method deferred in order to have the component fully initialized, e.g. object name set by the parent
         QPointer<CWeatherComponent> myself(this);
-        QTimer::singleShot(1000, this, [ = ]
-        {
+        QTimer::singleShot(1000, this, [=] {
             if (!myself) { return; }
             myself->updateWeatherInformation(true);
             myself->updateWeatherInfoLine();
@@ -82,7 +80,7 @@ namespace BlackGui::Components
     }
 
     CWeatherComponent::~CWeatherComponent()
-    { }
+    {}
 
     bool CWeatherComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
     {
@@ -100,7 +98,7 @@ namespace BlackGui::Components
         if (this->isParentDockWidgetFloating()) { return; }
 
         // here I know I am the selected widget, update, but keep GUI responsive (-> timer)
-        //QTimer::singleShot(1000, this, &CWeatherComponent::update);
+        // QTimer::singleShot(1000, this, &CWeatherComponent::update);
         Q_UNUSED(index)
     }
 
@@ -163,7 +161,7 @@ namespace BlackGui::Components
             if (m_weatherScenarios[index].getIndex() == CWeatherScenario::ClearSky)
             {
                 // call queued
-                QTimer::singleShot(0, this, [ = ] { if (myself) { myself->setWeatherScenario(index); }});
+                QTimer::singleShot(0, this, [=] { if (myself) { myself->setWeatherScenario(index); } });
                 break;
             }
         }
@@ -210,7 +208,7 @@ namespace BlackGui::Components
         if (CWeatherScenario::isRealWeatherScenario(scenario))
         {
             if (m_lastOwnAircraftPosition.isNull() || forceRealWeatherReload ||
-                    calculateGreatCircleDistance(position, m_lastOwnAircraftPosition).value(CLengthUnit::km()) > 20)
+                calculateGreatCircleDistance(position, m_lastOwnAircraftPosition).value(CLengthUnit::km()) > 20)
             {
                 this->requestWeatherGrid(position);
                 m_lastOwnAircraftPosition = position;
@@ -241,11 +239,11 @@ namespace BlackGui::Components
     void CWeatherComponent::setupConnections()
     {
         // UI connections
-        connect(m_coordinateDialog.data(), &CCoordinateDialog::changedCoordinate,           this, &CWeatherComponent::updateWeatherInformationForced);
-        connect(&m_weatherUpdateTimer,     &QTimer::timeout,      this, &CWeatherComponent::updateWeatherInformationChecked);
-        connect(ui->cb_weatherScenario,    qOverload<int>(&QComboBox::currentIndexChanged), this, &CWeatherComponent::setWeatherScenario);
-        connect(ui->cb_UseOwnAcftPosition, &QCheckBox::toggled,   this, &CWeatherComponent::toggleUseOwnAircraftPosition);
-        connect(ui->pb_ActivateWeather,    &QPushButton::clicked, this, &CWeatherComponent::toggleWeatherActivation);
+        connect(m_coordinateDialog.data(), &CCoordinateDialog::changedCoordinate, this, &CWeatherComponent::updateWeatherInformationForced);
+        connect(&m_weatherUpdateTimer, &QTimer::timeout, this, &CWeatherComponent::updateWeatherInformationChecked);
+        connect(ui->cb_weatherScenario, qOverload<int>(&QComboBox::currentIndexChanged), this, &CWeatherComponent::setWeatherScenario);
+        connect(ui->cb_UseOwnAcftPosition, &QCheckBox::toggled, this, &CWeatherComponent::toggleUseOwnAircraftPosition);
+        connect(ui->pb_ActivateWeather, &QPushButton::clicked, this, &CWeatherComponent::toggleWeatherActivation);
 
         // Context connections
         Q_ASSERT(sGui->getIContextSimulator());

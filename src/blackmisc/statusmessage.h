@@ -65,7 +65,8 @@ namespace BlackMisc
 
         //! Construct from a UTF-16 character array.
         template <size_t N>
-        CStrongStringView(const char16_t (&string)[N]) : m_view(string) {}
+        CStrongStringView(const char16_t (&string)[N]) : m_view(string)
+        {}
 
         //! Construct from a QString.
         CStrongStringView(const QString &string) : m_string(string), m_view(m_string) {}
@@ -80,9 +81,14 @@ namespace BlackMisc
         CStrongStringView(const CStrongStringView &other) { *this = other; }
 
         //! Copy assignment operator.
-        CStrongStringView &operator =(const CStrongStringView &other)
+        CStrongStringView &operator=(const CStrongStringView &other)
         {
-            if (other.isOwning()) { m_view = m_string = other.m_string; } else { m_view = other.m_view; m_string.clear(); }
+            if (other.isOwning()) { m_view = m_string = other.m_string; }
+            else
+            {
+                m_view = other.m_view;
+                m_string.clear();
+            }
             return *this;
         }
 
@@ -99,7 +105,11 @@ namespace BlackMisc
         QStringView view() const { return m_view; }
 
         //! Return a copy as a QString.
-        QString convertToQString(bool i18n = false) const { Q_UNUSED(i18n); return isOwning() ? m_string : m_view.toString(); }
+        QString convertToQString(bool i18n = false) const
+        {
+            Q_UNUSED(i18n);
+            return isOwning() ? m_string : m_view.toString();
+        }
 
         //! Compare two strings.
         friend int compare(const CStrongStringView &a, const CStrongStringView &b) { return a.m_view.compare(b.m_view); }
@@ -110,18 +120,31 @@ namespace BlackMisc
         //! @{
         //! DBus marshalling.
         void marshallToDbus(QDBusArgument &arg) const { arg << toQString(); }
-        void unmarshallFromDbus(const QDBusArgument &arg) { arg >> m_string; m_view = m_string; }
+        void unmarshallFromDbus(const QDBusArgument &arg)
+        {
+            arg >> m_string;
+            m_view = m_string;
+        }
         //! @}
 
         //! @{
         //! QDataStream marshalling.
         void marshalToDataStream(QDataStream &stream) const { stream << toQString(); }
-        void unmarshalFromDataStream(QDataStream &stream) { stream >> m_string; m_view = m_string; }
+        void unmarshalFromDataStream(QDataStream &stream)
+        {
+            stream >> m_string;
+            m_view = m_string;
+        }
         //! @}
 
         //! @{
         //! JSON conversion.
-        QJsonObject toJson() const { QJsonObject json; json.insert(QStringLiteral("value"), toQString()); return json; }
+        QJsonObject toJson() const
+        {
+            QJsonObject json;
+            json.insert(QStringLiteral("value"), toQString());
+            return json;
+        }
         void convertFromJson(const QJsonObject &json) { *this = json.value(QLatin1String("value")).toString(); }
         //! @}
 
@@ -154,69 +177,123 @@ namespace BlackMisc
 
         //! Set the severity and format string.
         template <size_t N>
-        Derived &log(StatusSeverity s, const char16_t (&m)[N]) { m_message = m; m_severity = s; return derived(); }
+        Derived &log(StatusSeverity s, const char16_t (&m)[N])
+        {
+            m_message = m;
+            m_severity = s;
+            return derived();
+        }
 
         //! Set the severity and format string.
-        Derived &log(StatusSeverity s, const QString &m) { m_message = m; m_severity = s; return derived(); }
+        Derived &log(StatusSeverity s, const QString &m)
+        {
+            m_message = m;
+            m_severity = s;
+            return derived();
+        }
 
         //! Set the severity to debug.
         Derived &debug() { return log(SeverityDebug, QString()); }
 
         //! Set the severity to debug, providing a format string.
         template <size_t N>
-        Derived &debug(const char16_t (&format)[N]) { return log(SeverityDebug, format); }
+        Derived &debug(const char16_t (&format)[N])
+        {
+            return log(SeverityDebug, format);
+        }
 
         //! Set the severity to debug, providing a format string.
         Derived &debug(const QString &format) { return log(SeverityDebug, format); }
 
         //! Set the severity to info, providing a format string.
         template <size_t N>
-        Derived &info(const char16_t (&format)[N]) { return log(SeverityInfo, format); }
+        Derived &info(const char16_t (&format)[N])
+        {
+            return log(SeverityInfo, format);
+        }
 
         //! Set the severity to info, providing a format string.
         Derived &info(const QString &format) { return log(SeverityInfo, format); }
 
         //! Set the severity to warning, providing a format string.
         template <size_t N>
-        Derived &warning(const char16_t (&format)[N]) { return log(SeverityWarning, format); }
+        Derived &warning(const char16_t (&format)[N])
+        {
+            return log(SeverityWarning, format);
+        }
 
         //! Set the severity to warning, providing a format string.
         Derived &warning(const QString &format) { return log(SeverityWarning, format); }
 
         //! Set the severity to error, providing a format string.
         template <size_t N>
-        Derived &error(const char16_t (&format)[N]) { return log(SeverityError, format); }
+        Derived &error(const char16_t (&format)[N])
+        {
+            return log(SeverityError, format);
+        }
 
         //! Set the severity to error, providing a format string.
         Derived &error(const QString &format) { return log(SeverityError, format); }
 
         //! Set the severity to s, providing a format string, and adding the validation category.
         template <size_t N>
-        Derived &validation(StatusSeverity s, const char16_t (&format)[N]) { setValidation(); return log(s, format); }
+        Derived &validation(StatusSeverity s, const char16_t (&format)[N])
+        {
+            setValidation();
+            return log(s, format);
+        }
 
         //! Set the severity to s, providing a format string, and adding the validation category.
-        Derived &validation(StatusSeverity s, const QString &format) { setValidation(); return log(s, format); }
+        Derived &validation(StatusSeverity s, const QString &format)
+        {
+            setValidation();
+            return log(s, format);
+        }
 
         //! Set the severity to info, providing a format string, and adding the validation category.
         template <size_t N>
-        Derived &validationInfo(const char16_t (&format)[N]) { setValidation(); return log(SeverityInfo, format); }
+        Derived &validationInfo(const char16_t (&format)[N])
+        {
+            setValidation();
+            return log(SeverityInfo, format);
+        }
 
         //! Set the severity to info, providing a format string, and adding the validation category.
-        Derived &validationInfo(const QString &format) { setValidation(); return log(SeverityInfo, format); }
+        Derived &validationInfo(const QString &format)
+        {
+            setValidation();
+            return log(SeverityInfo, format);
+        }
 
         //! Set the severity to warning, providing a format string, and adding the validation category.
         template <size_t N>
-        Derived &validationWarning(const char16_t (&format)[N]) { setValidation(); return log(SeverityWarning, format); }
+        Derived &validationWarning(const char16_t (&format)[N])
+        {
+            setValidation();
+            return log(SeverityWarning, format);
+        }
 
         //! Set the severity to warning, providing a format string, and adding the validation category.
-        Derived &validationWarning(const QString &format) { setValidation(); return log(SeverityWarning, format); }
+        Derived &validationWarning(const QString &format)
+        {
+            setValidation();
+            return log(SeverityWarning, format);
+        }
 
         //! Set the severity to error, providing a format string, and adding the validation category.
         template <size_t N>
-        Derived &validationError(const char16_t (&format)[N]) { setValidation(); return log(SeverityError, format); }
+        Derived &validationError(const char16_t (&format)[N])
+        {
+            setValidation();
+            return log(SeverityError, format);
+        }
 
         //! Set the severity to error, providing a format string, and adding the validation category.
-        Derived &validationError(const QString &format) { setValidation(); return log(SeverityError, format); }
+        Derived &validationError(const QString &format)
+        {
+            setValidation();
+            return log(SeverityError, format);
+        }
 
         //! @{
         //! Deleted methods to avoid accidental implicit conversion from Latin-1 or UTF-8 string literals.
@@ -236,21 +313,35 @@ namespace BlackMisc
         //!          Otherwise, the streamed values will replace the place markers %1, %2, %3... in the format string.
         //! \see QString::arg
         template <class T, std::enable_if_t<TParameter<std::decay_t<T>>::passBy == ParameterPassBy::Value, int> = 0>
-        Derived &operator <<(T v) { return arg(TString<T>::toQString(v)); }
+        Derived &operator<<(T v)
+        {
+            return arg(TString<T>::toQString(v));
+        }
 
         //! Streaming operators.
         //! \details If the format string is empty, the message will consist of all streamed values separated by spaces.
         //!          Otherwise, the streamed values will replace the place markers %1, %2, %3... in the format string.
         //! \see QString::arg
         template <class T, std::enable_if_t<TParameter<std::decay_t<T>>::passBy == ParameterPassBy::ConstRef, int> = 0>
-        Derived &operator <<(const T &v) { return arg(TString<T>::toQString(v)); }
+        Derived &operator<<(const T &v)
+        {
+            return arg(TString<T>::toQString(v));
+        }
 
         //! Message empty
         bool isEmpty() const { return this->m_message.isEmpty() && this->m_args.isEmpty(); }
 
     private:
-        void setValidation() { m_categories.remove(CLogCategories::uncategorized()); this->addIfNotExisting(CLogCategories::validation()); }
-        Derived &arg(const QString &value) { m_args.push_back(value); return derived(); }
+        void setValidation()
+        {
+            m_categories.remove(CLogCategories::uncategorized());
+            this->addIfNotExisting(CLogCategories::validation());
+        }
+        Derived &arg(const QString &value)
+        {
+            m_args.push_back(value);
+            return derived();
+        }
         Derived &derived() { return static_cast<Derived &>(*this); }
 
     protected:
@@ -307,10 +398,10 @@ namespace BlackMisc
         //! @{
         //! \copydoc BlackMisc::StatusSeverity
         using StatusSeverity = BlackMisc::StatusSeverity;
-        constexpr static auto SeverityDebug   = BlackMisc::SeverityDebug;
-        constexpr static auto SeverityInfo    = BlackMisc::SeverityInfo;
+        constexpr static auto SeverityDebug = BlackMisc::SeverityDebug;
+        constexpr static auto SeverityInfo = BlackMisc::SeverityInfo;
         constexpr static auto SeverityWarning = BlackMisc::SeverityWarning;
-        constexpr static auto SeverityError   = BlackMisc::SeverityError;
+        constexpr static auto SeverityError = BlackMisc::SeverityError;
         //! @}
 
         //! Properties by index
@@ -344,7 +435,7 @@ namespace BlackMisc
         CStatusMessage(const CStatusMessage &other);
 
         //! Copy assignment (because of mutex)
-        CStatusMessage &operator =(const CStatusMessage &other);
+        CStatusMessage &operator=(const CStatusMessage &other);
 
         //! Destructor.
         ~CStatusMessage() = default;
@@ -352,17 +443,20 @@ namespace BlackMisc
         //! @{
         //! Constructor
         template <size_t N>
-        CStatusMessage(const char16_t (&message)[N]) : CStatusMessage(QStringView(message)) {}
+        CStatusMessage(const char16_t (&message)[N]) : CStatusMessage(QStringView(message))
+        {}
         CStatusMessage(const QString &message);
         template <size_t N>
-        CStatusMessage(StatusSeverity severity, const char16_t (&message)[N]) : CStatusMessage(severity, QStringView(message)) {}
+        CStatusMessage(StatusSeverity severity, const char16_t (&message)[N]) : CStatusMessage(severity, QStringView(message))
+        {}
         CStatusMessage(StatusSeverity severity, const QString &message);
         //! @}
 
         //! @{
         //! Constructor, also a validation messsage can be directly created
         template <size_t N>
-        CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const char16_t (&message)[N], bool validation = false) : CStatusMessage(categories, severity, QStringView(message), validation) {}
+        CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const char16_t (&message)[N], bool validation = false) : CStatusMessage(categories, severity, QStringView(message), validation)
+        {}
         CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const QString &message, bool validation = false);
         //! @}
 
@@ -429,7 +523,7 @@ namespace BlackMisc
         bool isFromClass(const T *pointer = nullptr) const
         {
             CLogCategoryList classCategories(pointer);
-            return std::all_of(classCategories.begin(), classCategories.end(), [this](const CLogCategory & cat) { return m_categories.contains(cat); });
+            return std::all_of(classCategories.begin(), classCategories.end(), [this](const CLogCategory &cat) { return m_categories.contains(cat); });
         }
 
         //! Mark the message as having been handled by the given object
@@ -516,7 +610,7 @@ namespace BlackMisc
         CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, QStringView message, bool validation);
 
         mutable QVector<quintptr> m_handledByObjects;
-        mutable QReadWriteLock    m_lock;  //!< lock (because of mutable member)
+        mutable QReadWriteLock m_lock; //!< lock (because of mutable member)
 
         //! \fixme KB 2019-01 order and timestamp "disabled" for Ref T184 token bucket. Would it be better to enable those and use a special comparison function for that (e.g. "equalMessageAndSeverity")?
         BLACK_METACLASS(

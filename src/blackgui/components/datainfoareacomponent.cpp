@@ -37,9 +37,8 @@ using namespace BlackGui::Components;
 
 namespace BlackGui::Components
 {
-    CDataInfoAreaComponent::CDataInfoAreaComponent(QWidget *parent) :
-        CInfoArea(parent),
-        ui(new Ui::CDataInfoAreaComponent)
+    CDataInfoAreaComponent::CDataInfoAreaComponent(QWidget *parent) : CInfoArea(parent),
+                                                                      ui(new Ui::CDataInfoAreaComponent)
     {
         ui->setupUi(this);
         this->initInfoArea(); // init base class
@@ -48,7 +47,7 @@ namespace BlackGui::Components
     }
 
     CDataInfoAreaComponent::~CDataInfoAreaComponent()
-    { }
+    {}
 
     CDbModelComponent *CDataInfoAreaComponent::getModelComponent() const
     {
@@ -153,11 +152,11 @@ namespace BlackGui::Components
         switch (area)
         {
         case InfoAreaAircraftIcao: return CIcons::appAircraftIcao16();
-        case InfoAreaAirlineIcao:  return CIcons::appAirlineIcao16();
-        case InfoAreaLiveries:     return CIcons::appLiveries16();
+        case InfoAreaAirlineIcao: return CIcons::appAirlineIcao16();
+        case InfoAreaLiveries: return CIcons::appLiveries16();
         case InfoAreaDistributors: return CIcons::appDistributors16();
-        case InfoAreaModels:       return CIcons::appModels16();
-        case InfoAreaCountries:    return CIcons::appCountries16();
+        case InfoAreaModels: return CIcons::appModels16();
+        case InfoAreaCountries: return CIcons::appCountries16();
         case InfoAreaAircraftCategories: return CIcons::appAircraftCategories16();
         default: return CIcons::empty();
         }

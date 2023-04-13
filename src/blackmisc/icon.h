@@ -52,10 +52,10 @@ namespace BlackMisc
         CIcon(CIcons::IconIndex index);
 
         //! Constructor for generated icon
-        //CIcon(const QPixmap &pixmap, const QString &descriptiveText);
+        // CIcon(const QPixmap &pixmap, const QString &descriptiveText);
 
         //! Constructor for file icons
-        //CIcon(const QString &resourceFilePath, const QString &descriptiveText);
+        // CIcon(const QString &resourceFilePath, const QString &descriptiveText);
 
         //! Get descriptive text
         const QString &getDescriptiveText() const { return m_descriptiveText; }
@@ -116,10 +116,10 @@ namespace BlackMisc
         CIcon(CIcons::IconIndex index, const QString &descriptiveText);
 
         CIcons::IconIndex m_index = CIcons::NotSet;
-        int m_rotateDegrees = 0;    //!< Rotation
-        QString m_descriptiveText;  //!< what does it represent?
+        int m_rotateDegrees = 0; //!< Rotation
+        QString m_descriptiveText; //!< what does it represent?
         QString m_fileResourcePath; //!< file resource path
-        QPixmap m_pixmap;           //!< Used with generated pixmaps, when not used with index
+        QPixmap m_pixmap; //!< Used with generated pixmaps, when not used with index
 
         BLACK_METACLASS(
             CIcon,

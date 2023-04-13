@@ -38,7 +38,7 @@ namespace BlackMisc
         static CProcessInfo currentProcess() { return CProcessInfo(QCoreApplication::applicationPid()); }
 
         //! True if this object identifies a process that exists.
-        bool exists() const { return ! m_name.isEmpty() && *this == CProcessInfo(m_pid); }
+        bool exists() const { return !m_name.isEmpty() && *this == CProcessInfo(m_pid); }
 
         //! Get the pid.
         qint64 processId() const { return m_pid; }

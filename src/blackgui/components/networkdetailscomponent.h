@@ -24,7 +24,10 @@
 #include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/network/loginmode.h"
 
-namespace Ui { class CNetworkDetailsComponent; }
+namespace Ui
+{
+    class CNetworkDetailsComponent;
+}
 namespace BlackGui::Components
 {
     //! FSD details

@@ -23,7 +23,10 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CDbModelComponent; }
+namespace Ui
+{
+    class CDbModelComponent;
+}
 namespace BlackGui::Components
 {
     /*!

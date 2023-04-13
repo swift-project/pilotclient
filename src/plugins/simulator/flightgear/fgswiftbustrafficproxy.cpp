@@ -25,22 +25,22 @@ namespace BlackSimPlugin::Flightgear
         {
             bool s;
             s = connection.connect(QString(), "/fgswiftbus/traffic", "org.swift_project.fgswiftbus.traffic",
-                                    "simFrame", this, SIGNAL(simFrame()));
+                                   "simFrame", this, SIGNAL(simFrame()));
             Q_ASSERT(s);
 
             s = connection.connect(QString(), "/fgswiftbus/traffic", "org.swift_project.fgswiftbus.traffic",
-                                    "remoteAircraftAdded", this, SIGNAL(remoteAircraftAdded(QString)));
+                                   "remoteAircraftAdded", this, SIGNAL(remoteAircraftAdded(QString)));
             Q_ASSERT(s);
 
             s = connection.connect(QString(), "/fgswiftbus/traffic", "org.swift_project.fgswiftbus.traffic",
-                                    "remoteAircraftAddingFailed", this, SIGNAL(remoteAircraftAddingFailed(QString)));
+                                   "remoteAircraftAddingFailed", this, SIGNAL(remoteAircraftAddingFailed(QString)));
             Q_ASSERT(s);
         }
     }
 
     MultiplayerAcquireInfo CFGSwiftBusTrafficProxy::acquireMultiplayerPlanes()
     {
-        QDBusPendingReply<bool, QString> reply =  m_dbusInterface->asyncCall(QLatin1String("acquireMultiplayerPlanes"));
+        QDBusPendingReply<bool, QString> reply = m_dbusInterface->asyncCall(QLatin1String("acquireMultiplayerPlanes"));
         reply.waitForFinished();
         if (reply.isError())
         {
@@ -80,44 +80,42 @@ namespace BlackSimPlugin::Flightgear
     void CFGSwiftBusTrafficProxy::setPlanesPositions(const PlanesPositions &planesPositions)
     {
         m_dbusInterface->callDBus(QLatin1String("setPlanesPositions"),
-                                    planesPositions.callsigns, planesPositions.latitudesDeg, planesPositions.longitudesDeg,
-                                    planesPositions.altitudesFt, planesPositions.pitchesDeg, planesPositions.rollsDeg,
-                                    planesPositions.headingsDeg, planesPositions.groundSpeedKts, planesPositions.onGrounds);
+                                  planesPositions.callsigns, planesPositions.latitudesDeg, planesPositions.longitudesDeg,
+                                  planesPositions.altitudesFt, planesPositions.pitchesDeg, planesPositions.rollsDeg,
+                                  planesPositions.headingsDeg, planesPositions.groundSpeedKts, planesPositions.onGrounds);
     }
 
     void CFGSwiftBusTrafficProxy::setPlanesSurfaces(const PlanesSurfaces &planesSurfaces)
     {
         m_dbusInterface->callDBus(QLatin1String("setPlanesSurfaces"),
-                                    planesSurfaces.callsigns, planesSurfaces.gears, planesSurfaces.flaps,
-                                    planesSurfaces.spoilers, planesSurfaces.speedBrakes, planesSurfaces.slats,
-                                    planesSurfaces.wingSweeps, planesSurfaces.thrusts, planesSurfaces.elevators,
-                                    planesSurfaces.rudders, planesSurfaces.ailerons,
-                                    planesSurfaces.landLights, planesSurfaces.taxiLights,
-                                    planesSurfaces.beaconLights, planesSurfaces.strobeLights,
-                                    planesSurfaces.navLights, planesSurfaces.lightPatterns);
+                                  planesSurfaces.callsigns, planesSurfaces.gears, planesSurfaces.flaps,
+                                  planesSurfaces.spoilers, planesSurfaces.speedBrakes, planesSurfaces.slats,
+                                  planesSurfaces.wingSweeps, planesSurfaces.thrusts, planesSurfaces.elevators,
+                                  planesSurfaces.rudders, planesSurfaces.ailerons,
+                                  planesSurfaces.landLights, planesSurfaces.taxiLights,
+                                  planesSurfaces.beaconLights, planesSurfaces.strobeLights,
+                                  planesSurfaces.navLights, planesSurfaces.lightPatterns);
     }
 
     void CFGSwiftBusTrafficProxy::setPlanesTransponders(const PlanesTransponders &planesTransponders)
     {
         m_dbusInterface->callDBus(QLatin1String("setPlanesTransponders"),
-                                    planesTransponders.callsigns, planesTransponders.codes,
-                                    planesTransponders.modeCs, planesTransponders.idents);
+                                  planesTransponders.callsigns, planesTransponders.codes,
+                                  planesTransponders.modeCs, planesTransponders.idents);
     }
-
 
     void CFGSwiftBusTrafficProxy::getRemoteAircraftData(const QStringList &callsigns, const RemoteAircraftDataCallback &setter) const
     {
-        std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
-        {
+        std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
             QDBusPendingReply<QStringList, QList<double>, QList<double>, QList<double>, QList<double>> reply = *watcher;
             if (!reply.isError())
             {
-                const QStringList   callsigns       = reply.argumentAt<0>();
-                const QList<double> latitudesDeg    = reply.argumentAt<1>();
-                const QList<double> longitudesDeg   = reply.argumentAt<2>();
-                const QList<double> elevationsM     = reply.argumentAt<3>();
+                const QStringList callsigns = reply.argumentAt<0>();
+                const QList<double> latitudesDeg = reply.argumentAt<1>();
+                const QList<double> longitudesDeg = reply.argumentAt<2>();
+                const QList<double> elevationsM = reply.argumentAt<3>();
                 const QList<double> verticalOffsets = reply.argumentAt<4>();
-                setter(callsigns,   latitudesDeg, longitudesDeg, elevationsM, verticalOffsets);
+                setter(callsigns, latitudesDeg, longitudesDeg, elevationsM, verticalOffsets);
             }
             watcher->deleteLater();
         };
@@ -125,10 +123,9 @@ namespace BlackSimPlugin::Flightgear
     }
 
     void CFGSwiftBusTrafficProxy::getElevationAtPosition(const CCallsign &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters,
-            const ElevationCallback &setter) const
+                                                         const ElevationCallback &setter) const
     {
-        std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
-        {
+        std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
             QDBusPendingReply<QString, double> reply = *watcher;
             if (!reply.isError())
             {

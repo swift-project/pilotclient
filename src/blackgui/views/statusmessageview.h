@@ -21,7 +21,10 @@
 
 namespace BlackGui
 {
-    namespace Filters { class CStatusMessageFilterDialog; }
+    namespace Filters
+    {
+        class CStatusMessageFilterDialog;
+    }
     namespace Views
     {
         //! Status message view

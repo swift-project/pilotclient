@@ -26,7 +26,11 @@ namespace BlackMisc::Network::Settings
         static const char *key() { return "network/trafficservers"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("Traffic servers"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("Traffic servers");
+            return name;
+        }
     };
 
     /*!
@@ -38,7 +42,11 @@ namespace BlackMisc::Network::Settings
         static const char *key() { return "network/currenttrafficserver"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("Current traffic servers"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("Current traffic servers");
+            return name;
+        }
 
         //! \copydoc BlackMisc::TSettingTrait::defaultValue
         static const BlackMisc::Network::CServer &defaultValue()
@@ -57,7 +65,11 @@ namespace BlackMisc::Network::Settings
         static const char *key() { return "network/autologoff"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("Auto logoff"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("Auto logoff");
+            return name;
+        }
     };
 } // ns
 

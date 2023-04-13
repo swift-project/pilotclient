@@ -36,12 +36,12 @@ namespace BlackMisc
         CConnectionGuard(CConnectionGuard &&) = default;
 
         //! Move assignment operator
-        CConnectionGuard &operator =(CConnectionGuard &&) = default;
+        CConnectionGuard &operator=(CConnectionGuard &&) = default;
 
         //! @{
         //! Not copyable
         CConnectionGuard(const CConnectionGuard &) = delete;
-        CConnectionGuard &operator =(const CConnectionGuard &) = delete;
+        CConnectionGuard &operator=(const CConnectionGuard &) = delete;
         //! @}
 
         //! Destructor

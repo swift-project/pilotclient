@@ -12,8 +12,8 @@
 #include <QCoreApplication>
 
 #ifdef Q_OS_WIN
-#include <windows.h>
-#include <tlhelp32.h>
+#    include <windows.h>
+#    include <tlhelp32.h>
 #endif
 
 namespace BlackMisc
@@ -43,9 +43,9 @@ namespace BlackMisc
             constexpr int fieldWidth = 4;
             constexpr int base = 16;
             QString subBlockNameBuffer = QStringLiteral("\\StringFileInfo\\%1%2\\%3")
-                    .arg(codePage.wLanguage, fieldWidth, base, QLatin1Char('0'))
-                    .arg(codePage.wCodePage, fieldWidth, base, QLatin1Char('0'))
-                    .arg(stringName);
+                                             .arg(codePage.wLanguage, fieldWidth, base, QLatin1Char('0'))
+                                             .arg(codePage.wCodePage, fieldWidth, base, QLatin1Char('0'))
+                                             .arg(stringName);
             UINT dwBytes = 0;
             wchar_t *szQueryString = nullptr;
             VerQueryValue(pbVersionInfo, subBlockNameBuffer.toStdWString().c_str(), reinterpret_cast<LPVOID *>(&szQueryString), &dwBytes);
@@ -69,10 +69,10 @@ namespace BlackMisc
         // temp std:string object, disposed at end of function
         const std::wstring dllStr(dll.toStdWString());
 
-        DWORD            dwSize         = 0;
-        UINT             puLenFileInfo  = 0;
-        const TCHAR      *pszFilePath   = dllStr.c_str();
-        VS_FIXEDFILEINFO *pFileInfo     = nullptr;
+        DWORD dwSize = 0;
+        UINT puLenFileInfo = 0;
+        const TCHAR *pszFilePath = dllStr.c_str();
+        VS_FIXEDFILEINFO *pFileInfo = nullptr;
 
         // Get the version info for the file requested
         dwSize = GetFileVersionInfoSize(pszFilePath, nullptr);
@@ -99,18 +99,18 @@ namespace BlackMisc
         // pFileInfo->dwFileVersionMS is usually zero.
         // However, you should check this if your version numbers seem to be wrong
         result.fileVersion = QStringLiteral("%1.%2.%3.%4")
-                                   .arg((pFileInfo->dwFileVersionMS >> 16) & 0xffff)
-                                   .arg((pFileInfo->dwFileVersionMS >>  0) & 0xffff)
-                                   .arg((pFileInfo->dwFileVersionLS >> 16) & 0xffff)
-                                   .arg((pFileInfo->dwFileVersionLS >>  0) & 0xffff);
+                                 .arg((pFileInfo->dwFileVersionMS >> 16) & 0xffff)
+                                 .arg((pFileInfo->dwFileVersionMS >> 0) & 0xffff)
+                                 .arg((pFileInfo->dwFileVersionLS >> 16) & 0xffff)
+                                 .arg((pFileInfo->dwFileVersionLS >> 0) & 0xffff);
 
         // pFileInfo->dwProductVersionMS is usually zero. However, you should check
         // this if your version numbers seem to be wrong
         result.productVersion = QStringLiteral("%1.%2.%3.%4")
-                                      .arg((pFileInfo->dwProductVersionMS >> 16) & 0xffff)
-                                      .arg((pFileInfo->dwProductVersionMS >>  0) & 0xffff)
-                                      .arg((pFileInfo->dwProductVersionLS >> 16) & 0xffff)
-                                      .arg((pFileInfo->dwProductVersionLS >>  0) & 0xffff);
+                                    .arg((pFileInfo->dwProductVersionMS >> 16) & 0xffff)
+                                    .arg((pFileInfo->dwProductVersionMS >> 0) & 0xffff)
+                                    .arg((pFileInfo->dwProductVersionLS >> 16) & 0xffff)
+                                    .arg((pFileInfo->dwProductVersionLS >> 0) & 0xffff);
 
         PrivateWindows::LanguageCodePage *lpTranslate;
 
@@ -162,7 +162,7 @@ namespace BlackMisc
         if (!Module32First(hModuleSnap, &me32))
         {
             // printError(TEXT("Module32First")); // show cause of failure
-            CloseHandle(hModuleSnap);             // clean the snapshot object
+            CloseHandle(hModuleSnap); // clean the snapshot object
             return results;
         }
 

@@ -18,8 +18,7 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CSimulatorPluginInfo)
 
 namespace BlackMisc::Simulation
 {
-    CSimulatorPluginInfo::CSimulatorPluginInfo(const QString &identifier, const QString &name, const QString &simulator, const QString &description, bool valid) :
-        m_identifier(identifier), m_name(name), m_simulator(simulator), m_description(description), m_info(simulator), m_valid(valid)
+    CSimulatorPluginInfo::CSimulatorPluginInfo(const QString &identifier, const QString &name, const QString &simulator, const QString &description, bool valid) : m_identifier(identifier), m_name(name), m_simulator(simulator), m_description(description), m_info(simulator), m_valid(valid)
     {
         Q_ASSERT_X(m_info.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
     }
@@ -28,7 +27,7 @@ namespace BlackMisc::Simulation
     {
         if (json.contains("IID")) // comes from the plugin
         {
-            if (! json.contains("MetaData")) { throw CJsonException("Missing 'MetaData'"); }
+            if (!json.contains("MetaData")) { throw CJsonException("Missing 'MetaData'"); }
 
             // json data is already validated by CPluginManagerSimulator
             CJsonScope scope("MetaData");
@@ -72,11 +71,11 @@ namespace BlackMisc::Simulation
         static const QString e;
         if (!simInfo.isSingleSimulator()) { return e; }
         const CSimulatorInfo::Simulator s = simInfo.getSimulator();
-        if (s.testFlag(CSimulatorInfo::FSX))    { return CSimulatorPluginInfo::fsxPluginIdentifier(); }
-        if (s.testFlag(CSimulatorInfo::FS9))    { return CSimulatorPluginInfo::fs9PluginIdentifier(); }
-        if (s.testFlag(CSimulatorInfo::P3D))    { return CSimulatorPluginInfo::p3dPluginIdentifier(); }
+        if (s.testFlag(CSimulatorInfo::FSX)) { return CSimulatorPluginInfo::fsxPluginIdentifier(); }
+        if (s.testFlag(CSimulatorInfo::FS9)) { return CSimulatorPluginInfo::fs9PluginIdentifier(); }
+        if (s.testFlag(CSimulatorInfo::P3D)) { return CSimulatorPluginInfo::p3dPluginIdentifier(); }
         if (s.testFlag(CSimulatorInfo::XPLANE)) { return CSimulatorPluginInfo::xplanePluginIdentifier(); }
-        if (s.testFlag(CSimulatorInfo::FG))     { return CSimulatorPluginInfo::fgPluginIdentifier(); }
+        if (s.testFlag(CSimulatorInfo::FG)) { return CSimulatorPluginInfo::fgPluginIdentifier(); }
         return e;
     }
 
@@ -125,15 +124,13 @@ namespace BlackMisc::Simulation
     const QStringList &CSimulatorPluginInfo::allIdentifiers()
     {
         static const QStringList identifiers(
-        {
-            fsxPluginIdentifier(),
-            p3dPluginIdentifier(),
-            xplanePluginIdentifier(),
-            fs9PluginIdentifier(),
-            emulatedPluginIdentifier(),
-            fgPluginIdentifier(),
-            msfsPluginIdentifier()
-        });
+            { fsxPluginIdentifier(),
+              p3dPluginIdentifier(),
+              xplanePluginIdentifier(),
+              fs9PluginIdentifier(),
+              emulatedPluginIdentifier(),
+              fgPluginIdentifier(),
+              msfsPluginIdentifier() });
         return identifiers;
     }
 
@@ -145,8 +142,7 @@ namespace BlackMisc::Simulation
             return QStringList { xplanePluginIdentifier(), fgPluginIdentifier() };
         }
 
-        return QStringList
-        {
+        return QStringList {
             fsxPluginIdentifier(),
             msfsPluginIdentifier(),
             p3dPluginIdentifier(),

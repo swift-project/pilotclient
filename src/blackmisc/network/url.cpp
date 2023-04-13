@@ -26,18 +26,16 @@ namespace BlackMisc::Network
         }
     }
 
-    CUrl::CUrl(const char *url) :
-        CUrl(QString(url))
-    { }
+    CUrl::CUrl(const char *url) : CUrl(QString(url))
+    {}
 
     CUrl::CUrl(const QUrl &url)
     {
         this->setQUrl(url);
     }
 
-    CUrl::CUrl(const QString &address, int port) :
-        CUrl("", address, port, "")
-    { }
+    CUrl::CUrl(const QString &address, int port) : CUrl("", address, port, "")
+    {}
 
     CUrl::CUrl(const QString &scheme, const QString &address, int port, const QString &path)
         : m_host(address.trimmed()), m_port(port), m_path(path.trimmed())
@@ -99,7 +97,7 @@ namespace BlackMisc::Network
     {
         if (queryToAppend.isEmpty()) { return; }
         const QString q(stripQueryString(queryToAppend));
-        if (q.isEmpty()) { return;  }
+        if (q.isEmpty()) { return; }
         m_query += hasQuery() ? "&" + q : q;
     }
 
@@ -211,7 +209,7 @@ namespace BlackMisc::Network
         const int i = f.lastIndexOf('.');
         if (i < 0) return {};
         if (f.length() <= i + 1) return {}; // ends with "."
-        return f.mid(i);  // suffix with dot
+        return f.mid(i); // suffix with dot
     }
 
     bool CUrl::isHavingHtmlSuffix() const
@@ -290,22 +288,26 @@ namespace BlackMisc::Network
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexHost:   return QVariant::fromValue(m_host);
-        case IndexPort:   return QVariant::fromValue(m_port);
+        case IndexHost: return QVariant::fromValue(m_host);
+        case IndexPort: return QVariant::fromValue(m_port);
         case IndexScheme: return QVariant::fromValue(m_scheme);
-        case IndexPath:   return QVariant::fromValue(m_path);
-        default:          return CValueObject::propertyByIndex(index);
+        case IndexPath: return QVariant::fromValue(m_path);
+        default: return CValueObject::propertyByIndex(index);
         }
     }
 
     void CUrl::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CUrl>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CUrl>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexHost: this->setHost(variant.value<QString>()); break;
-        case IndexPort: this->setPort(variant.value<qint32>());  break;
+        case IndexPort: this->setPort(variant.value<qint32>()); break;
         case IndexPath: this->setPath(variant.value<QString>()); break;
         case IndexScheme: this->setScheme(variant.value<QString>()); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;

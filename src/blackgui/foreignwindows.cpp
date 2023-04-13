@@ -55,9 +55,12 @@ namespace BlackGui
 
     QWindow *CForeignWindows::getFirstFoundSimulatorWindow()
     {
-        QWindow *w = CForeignWindows::getP3DWindow(); if (w) { return w; }
-        w = CForeignWindows::getXPlaneWindow(); if (w) { return w; }
-        w = CForeignWindows::getFSXWindow(); if (w) { return w; }
+        QWindow *w = CForeignWindows::getP3DWindow();
+        if (w) { return w; }
+        w = CForeignWindows::getXPlaneWindow();
+        if (w) { return w; }
+        w = CForeignWindows::getFSXWindow();
+        if (w) { return w; }
         w = CForeignWindows::getFS9Window();
         return w;
     }
@@ -78,11 +81,11 @@ namespace BlackGui
     bool CForeignWindows::setSimulatorAsParent(QWindow *simulatorWindow, QWidget *child)
     {
         if (!simulatorWindow) { return false; }
-        if (!child) {return false; }
+        if (!child) { return false; }
 
         // If visible, hide it during the reparent. Otherwise setting the parent will have no effect.
         const bool isVisible = child->isVisible();
-        if (isVisible) {child->hide(); }
+        if (isVisible) { child->hide(); }
 
         QWindow *childWindow = child->windowHandle();
         Q_ASSERT_X(childWindow, Q_FUNC_INFO, "Native resources for child widget have not yet been allocated. Did you call QWidget::show() before?");

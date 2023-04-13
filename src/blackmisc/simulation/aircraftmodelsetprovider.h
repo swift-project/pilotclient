@@ -55,4 +55,4 @@ namespace BlackMisc::Simulation
 
 Q_DECLARE_INTERFACE(BlackMisc::Simulation::IAircraftModelSetProvider, "org.swift-project.blackmisc.simulation.iaircraftmodelsetprovider")
 
-#endif //guard
+#endif // guard

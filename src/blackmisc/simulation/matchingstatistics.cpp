@@ -13,11 +13,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Simulation, CMatchingStatisticsEntry, CM
 namespace BlackMisc::Simulation
 {
     CMatchingStatistics::CMatchingStatistics()
-    { }
+    {}
 
-    CMatchingStatistics::CMatchingStatistics(const CSequence<CMatchingStatisticsEntry> &other) :
-        CSequence<CMatchingStatisticsEntry>(other)
-    { }
+    CMatchingStatistics::CMatchingStatistics(const CSequence<CMatchingStatisticsEntry> &other) : CSequence<CMatchingStatisticsEntry>(other)
+    {}
 
     CMatchingStatistics CMatchingStatistics::findBySessionId(const QString &sessionId) const
     {
@@ -37,15 +36,15 @@ namespace BlackMisc::Simulation
     bool CMatchingStatistics::containsAircraftAirlineCombination(const QString &aircraftDesignator, const QString &airlineDesignator) const
     {
         return aircraftDesignator.isEmpty() ?
-                this->contains(&CMatchingStatisticsEntry::getAircraftDesignator, aircraftDesignator) :
-                this->contains(&CMatchingStatisticsEntry::getAircraftDesignator, aircraftDesignator, &CMatchingStatisticsEntry::getAirlineDesignator, airlineDesignator);
+                   this->contains(&CMatchingStatisticsEntry::getAircraftDesignator, aircraftDesignator) :
+                   this->contains(&CMatchingStatisticsEntry::getAircraftDesignator, aircraftDesignator, &CMatchingStatisticsEntry::getAirlineDesignator, airlineDesignator);
     }
 
     bool CMatchingStatistics::containsAircraftAirlineCombination(const QString &sessionId, const QString &aircraftDesignator, const QString &airlineDesignator) const
     {
         return aircraftDesignator.isEmpty() ?
-                this->contains(&CMatchingStatisticsEntry::getSessionId, sessionId, &CMatchingStatisticsEntry::getAircraftDesignator, aircraftDesignator) :
-                this->contains(&CMatchingStatisticsEntry::getSessionId, sessionId, &CMatchingStatisticsEntry::getAircraftDesignator, aircraftDesignator, &CMatchingStatisticsEntry::getAirlineDesignator, airlineDesignator);
+                   this->contains(&CMatchingStatisticsEntry::getSessionId, sessionId, &CMatchingStatisticsEntry::getAircraftDesignator, aircraftDesignator) :
+                   this->contains(&CMatchingStatisticsEntry::getSessionId, sessionId, &CMatchingStatisticsEntry::getAircraftDesignator, aircraftDesignator, &CMatchingStatisticsEntry::getAirlineDesignator, airlineDesignator);
     }
 
     bool CMatchingStatistics::increaseCountIfFound(CMatchingStatisticsEntry::EntryType type, const QString &sessionId, const QString &aircraftDesignator, const QString &airlineDesignator)

@@ -17,19 +17,18 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackGui::Models
 {
-    template<typename T, bool UseCompare>
-    CListModelTimestampObjects<T, UseCompare>::CListModelTimestampObjects(const QString &translationContext, QObject *parent) :
-        CListModelBase<ContainerType, UseCompare>(translationContext, parent)
-    { }
+    template <typename T, bool UseCompare>
+    CListModelTimestampObjects<T, UseCompare>::CListModelTimestampObjects(const QString &translationContext, QObject *parent) : CListModelBase<ContainerType, UseCompare>(translationContext, parent)
+    {}
 
-    template<typename T, bool UseCompare>
+    template <typename T, bool UseCompare>
     bool CListModelTimestampObjects<T, UseCompare>::isSortedByTimestampProperty() const
     {
         const CPropertyIndex pi = this->getSortProperty();
         return ITimestampBased::canHandleIndex(pi);
     }
 
-    template<typename T, bool UseCompare>
+    template <typename T, bool UseCompare>
     void CListModelTimestampObjects<T, UseCompare>::addTimestampColumns()
     {
         CListModelBaseNonTemplate::m_columns.addColumn(CColumn::standardString("timestamp", ObjectType::IndexUtcTimestampFormattedMdhmsz));
@@ -43,11 +42,10 @@ namespace BlackGui::Models
     template class CListModelTimestampObjects<BlackMisc::Aviation::CAircraftSituationChangeList, true>;
 
     template <typename T, bool UseCompare>
-    CListModelTimestampWithOffsetObjects<T, UseCompare>::CListModelTimestampWithOffsetObjects(const QString &translationContext, QObject *parent) :
-        CListModelTimestampObjects<ContainerType, UseCompare>(translationContext, parent)
-    { }
+    CListModelTimestampWithOffsetObjects<T, UseCompare>::CListModelTimestampWithOffsetObjects(const QString &translationContext, QObject *parent) : CListModelTimestampObjects<ContainerType, UseCompare>(translationContext, parent)
+    {}
 
-    template<typename T, bool UseCompare>
+    template <typename T, bool UseCompare>
     void CListModelTimestampWithOffsetObjects<T, UseCompare>::push_frontKeepLatestAdjustedFirst(const ObjectType &object, int max)
     {
         this->beginInsertRows(QModelIndex(), 0, 0);
@@ -55,7 +53,7 @@ namespace BlackGui::Models
         this->endInsertRows();
     }
 
-    template<typename T, bool UseCompare>
+    template <typename T, bool UseCompare>
     void CListModelTimestampWithOffsetObjects<T, UseCompare>::addTimestampOffsetColumns()
     {
         CListModelTimestampObjects<ContainerType, UseCompare>::addTimestampColumns();

@@ -48,7 +48,7 @@ namespace BlackMisc::Weather
 
     void CMetar::setDayTime(int reportDay, const PhysicalQuantities::CTime &reportTime)
     {
-        m_reportDay  = reportDay;
+        m_reportDay = reportDay;
         m_reportTime = reportTime;
     }
 
@@ -89,8 +89,6 @@ namespace BlackMisc::Weather
         m_cloudLayers.push_back(cloudLayer);
     }
 
-
-
     void CMetar::setTemperature(const PhysicalQuantities::CTemperature &temperature)
     {
         m_temperature = temperature;
@@ -105,7 +103,6 @@ namespace BlackMisc::Weather
     {
         m_dewPoint = dewPoint;
     }
-
 
     void CMetar::setAltimeter(const PhysicalQuantities::CPressure &altimeter)
     {
@@ -129,20 +126,7 @@ namespace BlackMisc::Weather
         }
 
         const QString metarDescription =
-            QStringLiteral("Station: %1 \n").arg(m_airport.getIcaoCode())
-            % QStringLiteral("Date/Time: %1 %2 UTC\n").arg(m_reportDay).arg(m_reportTime.formattedHrsMin())
-            % m_windLayer.toQString()
-            % u'\n'
-            % QStringLiteral("Visibility: %1\n").arg(m_visibility.toQString())
-            % u"Weather: "
-            % presentWeathers.simplified()
-            % u'\n'
-            % u"Clouds:"
-            % clouds
-            % u'\n'
-            % QStringLiteral("Temperature: %1\n").arg(m_temperature.toQString())
-            % QStringLiteral("Dewpoint: %1\n").arg(m_dewPoint.toQString())
-            % QStringLiteral("Altimeter: %1\n").arg(m_altimeter.toQString());
+            QStringLiteral("Station: %1 \n").arg(m_airport.getIcaoCode()) % QStringLiteral("Date/Time: %1 %2 UTC\n").arg(m_reportDay).arg(m_reportTime.formattedHrsMin()) % m_windLayer.toQString() % u'\n' % QStringLiteral("Visibility: %1\n").arg(m_visibility.toQString()) % u"Weather: " % presentWeathers.simplified() % u'\n' % u"Clouds:" % clouds % u'\n' % QStringLiteral("Temperature: %1\n").arg(m_temperature.toQString()) % QStringLiteral("Dewpoint: %1\n").arg(m_dewPoint.toQString()) % QStringLiteral("Altimeter: %1\n").arg(m_altimeter.toQString());
 
         return metarDescription;
     }

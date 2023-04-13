@@ -17,10 +17,19 @@
 
 namespace BlackCore::Afv
 {
-    namespace Model { class CAfvMapReader; }
-    namespace Clients { class CAfvClient;  }
+    namespace Model
+    {
+        class CAfvMapReader;
+    }
+    namespace Clients
+    {
+        class CAfvClient;
+    }
 }
-namespace Ui { class CAfvMapDialog; }
+namespace Ui
+{
+    class CAfvMapDialog;
+}
 namespace BlackGui::Components
 {
     //! QML map to display ATC stations
@@ -38,7 +47,7 @@ namespace BlackGui::Components
     private:
         QScopedPointer<Ui::CAfvMapDialog> ui;
         BlackCore::Afv::Model::CAfvMapReader *m_afvMapReader = nullptr;
-        BlackCore::Afv::Clients::CAfvClient  *m_afvClient    = nullptr;
+        BlackCore::Afv::Clients::CAfvClient *m_afvClient = nullptr;
     };
 } // ns
 

@@ -33,7 +33,7 @@ namespace BlackMisc::Simulation
 
         //! Constructor (used with unit tests)
         CSimulatorPluginInfo(const QString &identifier, const QString &name,
-                                const QString &simulator, const QString &description, bool valid);
+                             const QString &simulator, const QString &description, bool valid);
 
         //! \copydoc BlackMisc::CValueObject::convertFromJson
         void convertFromJson(const QJsonObject &json);

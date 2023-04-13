@@ -17,8 +17,7 @@ using namespace BlackMisc;
 
 namespace BlackGui::Models
 {
-    CIdentifierListModel::CIdentifierListModel(QObject *parent) :
-        CListModelBase("ModelIdentifierList", parent)
+    CIdentifierListModel::CIdentifierListModel(QObject *parent) : CListModelBase("ModelIdentifierList", parent)
     {
         this->m_columns.addColumn(CColumn::standardString("name", CIdentifier::IndexName));
         this->m_columns.addColumn(CColumn::standardString("machine", CIdentifier::IndexMachineName));

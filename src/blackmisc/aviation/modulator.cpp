@@ -24,7 +24,7 @@ namespace BlackMisc::Aviation
     void CModulator<AVIO>::toggleActiveStandby()
     {
         const CFrequency a = m_frequencyActive;
-        m_frequencyActive  = m_frequencyStandby;
+        m_frequencyActive = m_frequencyStandby;
         m_frequencyStandby = a;
     }
 
@@ -67,7 +67,7 @@ namespace BlackMisc::Aviation
     template <class AVIO>
     void CModulator<AVIO>::setVolumeReceive(int volume)
     {
-        if (volume >= 100)    { m_volumeReceive = 100; }
+        if (volume >= 100) { m_volumeReceive = 100; }
         else if (volume <= 0) { m_volumeReceive = 0; }
         else { m_volumeReceive = volume; }
     }
@@ -75,7 +75,7 @@ namespace BlackMisc::Aviation
     template <class AVIO>
     void CModulator<AVIO>::setVolumeTransmit(int volume)
     {
-        if (volume >= 100)    { m_volumeTransmit = 100; }
+        if (volume >= 100) { m_volumeTransmit = 100; }
         else if (volume <= 0) { m_volumeTransmit = 0; }
         else { m_volumeTransmit = volume; }
     }
@@ -86,7 +86,7 @@ namespace BlackMisc::Aviation
         return m_transmitEnabled;
     }
 
-    template<class AVIO>
+    template <class AVIO>
     bool CModulator<AVIO>::isReceiveEnabled() const
     {
         return m_receiveEnabled;
@@ -98,7 +98,7 @@ namespace BlackMisc::Aviation
         m_transmitEnabled = enable;
     }
 
-    template<class AVIO>
+    template <class AVIO>
     void CModulator<AVIO>::setReceiveEnabled(bool enable)
     {
         m_receiveEnabled = enable;
@@ -117,12 +117,12 @@ namespace BlackMisc::Aviation
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexActiveFrequency:  return this->getFrequencyActive().propertyByIndex(index.copyFrontRemoved());
+        case IndexActiveFrequency: return this->getFrequencyActive().propertyByIndex(index.copyFrontRemoved());
         case IndexStandbyFrequency: return this->getFrequencyStandby().propertyByIndex(index.copyFrontRemoved());
-        case IndexEnabledTransmit:  return QVariant::fromValue(this->isTransmitEnabled());
-        case IndexEnabledReceive:   return QVariant::fromValue(this->isReceiveEnabled());
-        case IndexTransmitVolume:   return QVariant::fromValue(this->getVolumeTransmit());
-        case IndexReceiveVolume:    return QVariant::fromValue(this->getVolumeReceive());
+        case IndexEnabledTransmit: return QVariant::fromValue(this->isTransmitEnabled());
+        case IndexEnabledReceive: return QVariant::fromValue(this->isReceiveEnabled());
+        case IndexTransmitVolume: return QVariant::fromValue(this->getVolumeTransmit());
+        case IndexReceiveVolume: return QVariant::fromValue(this->getVolumeReceive());
         default:
             return CValueObject<CModulator<AVIO>>::propertyByIndex(index);
         }
@@ -131,16 +131,20 @@ namespace BlackMisc::Aviation
     template <class AVIO>
     void CModulator<AVIO>::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong index to base template"); return; }
+        if (index.isMyself())
+        {
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong index to base template");
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexActiveFrequency:  m_frequencyActive.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexActiveFrequency: m_frequencyActive.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexStandbyFrequency: m_frequencyStandby.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-        case IndexEnabledTransmit:  this->setTransmitEnabled(variant.toBool()); break;
-        case IndexEnabledReceive:   this->setReceiveEnabled(variant.toBool()); break;
-        case IndexTransmitVolume:   this->setVolumeTransmit(variant.toInt());  break;
-        case IndexReceiveVolume:    this->setVolumeReceive(variant.toInt()); break;
+        case IndexEnabledTransmit: this->setTransmitEnabled(variant.toBool()); break;
+        case IndexEnabledReceive: this->setReceiveEnabled(variant.toBool()); break;
+        case IndexTransmitVolume: this->setVolumeTransmit(variant.toInt()); break;
+        case IndexReceiveVolume: this->setVolumeReceive(variant.toInt()); break;
         default:
             CValueObject<CModulator<AVIO>>::setPropertyByIndex(index, variant);
             break;
@@ -154,12 +158,12 @@ namespace BlackMisc::Aviation
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexActiveFrequency:  return m_frequencyActive.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_frequencyActive);
+        case IndexActiveFrequency: return m_frequencyActive.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_frequencyActive);
         case IndexStandbyFrequency: return m_frequencyStandby.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_frequencyStandby);
-        case IndexEnabledTransmit:  return Compare::compare(this->isTransmitEnabled(), compareValue.isTransmitEnabled());
-        case IndexEnabledReceive:   return Compare::compare(this->isReceiveEnabled(), compareValue.isReceiveEnabled());
-        case IndexTransmitVolume:   return Compare::compare(this->getVolumeTransmit(), compareValue.getVolumeTransmit());
-        case IndexReceiveVolume:    return Compare::compare(this->getVolumeReceive(), compareValue.getVolumeReceive());
+        case IndexEnabledTransmit: return Compare::compare(this->isTransmitEnabled(), compareValue.isTransmitEnabled());
+        case IndexEnabledReceive: return Compare::compare(this->isReceiveEnabled(), compareValue.isReceiveEnabled());
+        case IndexTransmitVolume: return Compare::compare(this->getVolumeTransmit(), compareValue.getVolumeTransmit());
+        case IndexReceiveVolume: return Compare::compare(this->getVolumeReceive(), compareValue.getVolumeReceive());
         default: break;
         }
         Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
@@ -173,8 +177,7 @@ namespace BlackMisc::Aviation
     }
 
     template <class AVIO>
-    CModulator<AVIO>::CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency) :
-        m_name(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency)
+    CModulator<AVIO>::CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency) : m_name(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency)
     {
         static_assert(!std::is_polymorphic_v<AVIO>, "Must not use virtual functions for value classes");
     }

@@ -14,7 +14,7 @@ using namespace BlackMisc;
 
 namespace BlackGui::Models
 {
-    template<class ContainerType>
+    template <class ContainerType>
     bool IModelFilter<ContainerType>::stringMatchesFilterExpression(const QString &value, const QString &filter, Qt::CaseSensitivity cs) const
     {
         QString v = value.trimmed();
@@ -63,7 +63,7 @@ namespace BlackGui::Models
         return false;
     }
 
-    template<class ContainerType>
+    template <class ContainerType>
     QString IModelFilter<ContainerType>::stripWildcard(const QString &value) const
     {
         QString sw(value);

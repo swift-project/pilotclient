@@ -56,8 +56,7 @@ using namespace BlackMisc::Weather;
 
 namespace BlackCore
 {
-    CWebDataServices::CWebDataServices(CWebReaderFlags::WebReader readers, const CDatabaseReaderConfigList &dbReaderConfig, BlackMisc::Restricted<CApplication>, QObject *parent) :
-        QObject(parent), m_readers(readers), m_dbReaderConfig(dbReaderConfig)
+    CWebDataServices::CWebDataServices(CWebReaderFlags::WebReader readers, const CDatabaseReaderConfigList &dbReaderConfig, BlackMisc::Restricted<CApplication>, QObject *parent) : QObject(parent), m_readers(readers), m_dbReaderConfig(dbReaderConfig)
     {
         if (!sApp) { return; } // shutting down
 
@@ -70,7 +69,7 @@ namespace BlackCore
 
         // check if I need info objects
         const bool readFromSwiftDb = dbReaderConfig.possiblyReadsFromSwiftDb(); // DB read access
-        const bool writeToSwiftDb  = dbReaderConfig.possiblyWritesToSwiftDb();  // DB write access
+        const bool writeToSwiftDb = dbReaderConfig.possiblyWritesToSwiftDb(); // DB write access
         if (!readFromSwiftDb && readers.testFlag(CWebReaderFlags::DbInfoDataReader))
         {
             // will remove info reader because not needed
@@ -100,12 +99,12 @@ namespace BlackCore
 
         // make sure this is called in event queue, so pending tasks cam be performed
         entities &= ~CEntityFlags::DbInfoObjectEntity; // triggered in init readers
-        entities &= ~CEntityFlags::VatsimStatusFile;   // triggered in init readers
+        entities &= ~CEntityFlags::VatsimStatusFile; // triggered in init readers
         entities &= ~m_entitiesPeriodicallyRead; // will be triggered by timers
 
         // trigger reading
         // but do not start all at the same time
-        const CEntityFlags::Entity icaoPart  = entities & CEntityFlags::AllIcaoCountriesCategory;
+        const CEntityFlags::Entity icaoPart = entities & CEntityFlags::AllIcaoCountriesCategory;
         const CEntityFlags::Entity modelPart = entities & CEntityFlags::DistributorLiveryModel;
         CEntityFlags::Entity remainingEntities = entities & ~icaoPart;
         remainingEntities &= ~modelPart;
@@ -168,13 +167,13 @@ namespace BlackCore
 
     CStatusMessageList CWebDataServices::asyncPublishModels(const CAircraftModelList &modelsToBePublished) const
     {
-        if (m_databaseWriter) { return m_databaseWriter->asyncPublishModels(modelsToBePublished, "");}
+        if (m_databaseWriter) { return m_databaseWriter->asyncPublishModels(modelsToBePublished, ""); }
         return CStatusMessageList();
     }
 
     CStatusMessageList CWebDataServices::asyncAutoPublish(const CAutoPublishData &data) const
     {
-        if (m_databaseWriter) { return m_databaseWriter->asyncAutoPublish(data);}
+        if (m_databaseWriter) { return m_databaseWriter->asyncAutoPublish(data); }
         return CStatusMessageList();
     }
 
@@ -193,9 +192,9 @@ namespace BlackCore
         if (!m_icaoDataReader && !m_modelDataReader && !m_airportDataReader && !m_dbInfoDataReader) { return false; }
 
         // use the first one to test
-        if (m_dbInfoDataReader)  { return m_dbInfoDataReader->hasReceivedOkReply(); }
-        if (m_icaoDataReader)    { return m_icaoDataReader->hasReceivedOkReply(); }
-        if (m_modelDataReader)   { return m_modelDataReader->hasReceivedOkReply(); }
+        if (m_dbInfoDataReader) { return m_dbInfoDataReader->hasReceivedOkReply(); }
+        if (m_icaoDataReader) { return m_icaoDataReader->hasReceivedOkReply(); }
+        if (m_modelDataReader) { return m_modelDataReader->hasReceivedOkReply(); }
         if (m_airportDataReader) { return m_airportDataReader->hasReceivedOkReply(); }
         return false;
     }
@@ -230,8 +229,8 @@ namespace BlackCore
         // if (m_sharedInfoDataReader) { m_sharedInfoDataReader->admitCaches(entities); }
 
         // hint: all the readers use own threads
-        if (m_modelDataReader)   { m_modelDataReader->admitCaches(entities); }
-        if (m_icaoDataReader)    { m_icaoDataReader->admitCaches(entities); }
+        if (m_modelDataReader) { m_modelDataReader->admitCaches(entities); }
+        if (m_icaoDataReader) { m_icaoDataReader->admitCaches(entities); }
         if (m_airportDataReader) { m_airportDataReader->admitCaches(entities); }
     }
 
@@ -244,8 +243,8 @@ namespace BlackCore
         // if (m_sharedInfoDataReader) { m_sharedInfoDataReader->synchronizeCaches(entities); }
 
         // hint: all the readers use own threads
-        if (m_modelDataReader)   { m_modelDataReader->synchronizeCaches(entities); }
-        if (m_icaoDataReader)    { m_icaoDataReader->synchronizeCaches(entities); }
+        if (m_modelDataReader) { m_modelDataReader->synchronizeCaches(entities); }
+        if (m_icaoDataReader) { m_icaoDataReader->synchronizeCaches(entities); }
         if (m_airportDataReader) { m_airportDataReader->synchronizeCaches(entities); }
     }
 
@@ -536,13 +535,13 @@ namespace BlackCore
     QString CWebDataServices::getDbReadersLog(const QString &separator) const
     {
         QStringList report;
-        if (m_dbInfoDataReader)     { report << m_dbInfoDataReader->getName() + ": " + m_dbInfoDataReader->getReadLog().getSummary(); }
+        if (m_dbInfoDataReader) { report << m_dbInfoDataReader->getName() + ": " + m_dbInfoDataReader->getReadLog().getSummary(); }
         if (m_sharedInfoDataReader) { report << m_sharedInfoDataReader->getName() + ": " + m_sharedInfoDataReader->getReadLog().getSummary(); }
 
         if (m_airportDataReader) { report << m_airportDataReader->getName() + ": " + m_airportDataReader->getReadLog().getSummary(); }
-        if (m_icaoDataReader)    { report << m_icaoDataReader->getName() + ": " + m_icaoDataReader->getReadLog().getSummary(); }
-        if (m_modelDataReader)   { report << m_modelDataReader->getName() + ": " + m_modelDataReader->getReadLog().getSummary(); }
-        if (m_databaseWriter)    { report << m_databaseWriter->getName() + ": " + m_databaseWriter->getWriteLog().getSummary(); }
+        if (m_icaoDataReader) { report << m_icaoDataReader->getName() + ": " + m_icaoDataReader->getReadLog().getSummary(); }
+        if (m_modelDataReader) { report << m_modelDataReader->getName() + ": " + m_modelDataReader->getReadLog().getSummary(); }
+        if (m_databaseWriter) { report << m_databaseWriter->getName() + ": " + m_databaseWriter->getWriteLog().getSummary(); }
         return report.join(separator);
     }
 
@@ -551,8 +550,8 @@ namespace BlackCore
         const QString db = this->getDbReadersLog(separator);
         QStringList report;
         if (m_vatsimBookingReader) { report << m_vatsimBookingReader->getName() + ": " + m_vatsimBookingReader->getReadLog().getSummary(); }
-        if (m_vatsimMetarReader)   { report << m_vatsimMetarReader->getName() + ": " + m_vatsimMetarReader->getReadLog().getSummary(); }
-        if (m_vatsimStatusReader)  { report << m_vatsimStatusReader->getName() + ": " + m_vatsimStatusReader->getReadLog().getSummary(); }
+        if (m_vatsimMetarReader) { report << m_vatsimMetarReader->getName() + ": " + m_vatsimMetarReader->getReadLog().getSummary(); }
+        if (m_vatsimStatusReader) { report << m_vatsimStatusReader->getName() + ": " + m_vatsimStatusReader->getReadLog().getSummary(); }
         if (report.isEmpty()) { return db; }
         return report.join(separator) + separator + db;
     }
@@ -951,8 +950,8 @@ namespace BlackCore
     bool CWebDataServices::isDbModelEqualForPublishing(const CAircraftModel &modelToBeChecked, CStatusMessageList *details) const
     {
         const CAircraftModel compareDbModel = modelToBeChecked.isLoadedFromDb() ?
-                                              this->getModelForDbKey(modelToBeChecked.getDbKey()) :
-                                              this->getModelForModelString(modelToBeChecked.getModelString());
+                                                  this->getModelForDbKey(modelToBeChecked.getDbKey()) :
+                                                  this->getModelForModelString(modelToBeChecked.getModelString());
         return modelToBeChecked.isEqualForPublishing(compareDbModel, details);
     }
 
@@ -972,26 +971,66 @@ namespace BlackCore
         if (m_shuttingDown) { return; }
         m_shuttingDown = true;
         this->disconnect(); // all signals
-        if (m_vatsimMetarReader)      { m_vatsimMetarReader->quitAndWait(); m_vatsimMetarReader = nullptr; }
-        if (m_vatsimBookingReader)    { m_vatsimBookingReader->quitAndWait(); m_vatsimBookingReader = nullptr; }
-        if (m_vatsimDataFileReader)   { m_vatsimDataFileReader->quitAndWait(); m_vatsimDataFileReader = nullptr; }
-        if (m_vatsimStatusReader)     { m_vatsimStatusReader->quitAndWait(); m_vatsimStatusReader = nullptr; }
-        if (m_vatsimServerFileReader) { m_vatsimServerFileReader->quitAndWait(); m_vatsimServerFileReader = nullptr; }
-        if (m_modelDataReader)        { m_modelDataReader->quitAndWait(); m_modelDataReader = nullptr; }
-        if (m_airportDataReader)      { m_airportDataReader->quitAndWait(); m_airportDataReader = nullptr; }
-        if (m_icaoDataReader)         { m_icaoDataReader->quitAndWait(); m_icaoDataReader = nullptr; }
-        if (m_dbInfoDataReader)       { m_dbInfoDataReader->quitAndWait(); m_dbInfoDataReader = nullptr; }
+        if (m_vatsimMetarReader)
+        {
+            m_vatsimMetarReader->quitAndWait();
+            m_vatsimMetarReader = nullptr;
+        }
+        if (m_vatsimBookingReader)
+        {
+            m_vatsimBookingReader->quitAndWait();
+            m_vatsimBookingReader = nullptr;
+        }
+        if (m_vatsimDataFileReader)
+        {
+            m_vatsimDataFileReader->quitAndWait();
+            m_vatsimDataFileReader = nullptr;
+        }
+        if (m_vatsimStatusReader)
+        {
+            m_vatsimStatusReader->quitAndWait();
+            m_vatsimStatusReader = nullptr;
+        }
+        if (m_vatsimServerFileReader)
+        {
+            m_vatsimServerFileReader->quitAndWait();
+            m_vatsimServerFileReader = nullptr;
+        }
+        if (m_modelDataReader)
+        {
+            m_modelDataReader->quitAndWait();
+            m_modelDataReader = nullptr;
+        }
+        if (m_airportDataReader)
+        {
+            m_airportDataReader->quitAndWait();
+            m_airportDataReader = nullptr;
+        }
+        if (m_icaoDataReader)
+        {
+            m_icaoDataReader->quitAndWait();
+            m_icaoDataReader = nullptr;
+        }
+        if (m_dbInfoDataReader)
+        {
+            m_dbInfoDataReader->quitAndWait();
+            m_dbInfoDataReader = nullptr;
+        }
 
         // DB writer is no threaded reader, it has a special role
-        if (m_databaseWriter)       { m_databaseWriter->gracefulShutdown(); m_databaseWriter = nullptr; }
+        if (m_databaseWriter)
+        {
+            m_databaseWriter->gracefulShutdown();
+            m_databaseWriter = nullptr;
+        }
     }
 
     CEntityFlags::Entity CWebDataServices::allDbEntitiesForUsedReaders() const
     {
         // obtain entities from real readers (means when reader is really used)
         CEntityFlags::Entity entities = CEntityFlags::NoEntity;
-        if (m_icaoDataReader)    { entities |= CWebReaderFlags::allEntitiesForReaders(CWebReaderFlags::IcaoDataReader); }
-        if (m_modelDataReader)   { entities |= CWebReaderFlags::allEntitiesForReaders(CWebReaderFlags::ModelReader); }
+        if (m_icaoDataReader) { entities |= CWebReaderFlags::allEntitiesForReaders(CWebReaderFlags::IcaoDataReader); }
+        if (m_modelDataReader) { entities |= CWebReaderFlags::allEntitiesForReaders(CWebReaderFlags::ModelReader); }
         if (m_airportDataReader) { entities |= CWebReaderFlags::allEntitiesForReaders(CWebReaderFlags::AirportReader); }
 
         // when we have a config, we ignore the ones not from cache or DB
@@ -1063,8 +1102,7 @@ namespace BlackCore
 
             // run single shot in main loop, so readInBackgroundThread is not called before initReaders completes
             const QPointer<CWebDataServices> myself(this);
-            QTimer::singleShot(0, this, [ = ]()
-            {
+            QTimer::singleShot(0, this, [=]() {
                 if (!myself || m_shuttingDown) { return; }
                 if (!sApp || sApp->isShuttingDown()) { return; }
                 m_vatsimStatusReader->readInBackgroundThread();
@@ -1181,8 +1219,7 @@ namespace BlackCore
 
         // run single shot in main loop, so readInBackgroundThread is not called before initReaders completes
         const QPointer<CWebDataServices> myself(this);
-        QTimer::singleShot(0, this, [ = ]()
-        {
+        QTimer::singleShot(0, this, [=]() {
             if (!myself || m_shuttingDown) { return; }
             if (!sApp || sApp->isShuttingDown()) { return; }
             m_vatsimServerFileReader->readInBackgroundThread();
@@ -1196,8 +1233,7 @@ namespace BlackCore
         if (!CThreadUtils::isInThisThread(this))
         {
             const QPointer<CWebDataServices> myself(this);
-            QTimer::singleShot(0, this, [ = ]
-            {
+            QTimer::singleShot(0, this, [=] {
                 if (!myself || m_shuttingDown) { return; }
                 if (!sApp || sApp->isShuttingDown()) { return; }
                 this->initDbInfoObjectReaderAndTriggerRead();
@@ -1222,8 +1258,7 @@ namespace BlackCore
             m_dbInfoDataReader->start(QThread::LowPriority);
 
             const QPointer<CWebDataServices> myself(this);
-            QTimer::singleShot(25, m_dbInfoDataReader, [ = ]()
-            {
+            QTimer::singleShot(25, m_dbInfoDataReader, [=]() {
                 if (!myself || m_shuttingDown) { return; }
                 if (!sApp || sApp->isShuttingDown()) { return; }
                 m_dbInfoDataReader->readInfoData(); // trigger read of info objects
@@ -1238,8 +1273,7 @@ namespace BlackCore
         if (!CThreadUtils::isInThisThread(this))
         {
             const QPointer<CWebDataServices> myself(this);
-            QTimer::singleShot(0, this, [ = ]
-            {
+            QTimer::singleShot(0, this, [=] {
                 if (!myself || m_shuttingDown) { return; }
                 this->initSharedInfoObjectReaderAndTriggerRead();
             });
@@ -1264,8 +1298,7 @@ namespace BlackCore
 
         // and trigger read
         const QPointer<CWebDataServices> myself(this);
-        QTimer::singleShot(25, m_sharedInfoDataReader, [ = ]()
-        {
+        QTimer::singleShot(25, m_sharedInfoDataReader, [=]() {
             if (!myself || m_shuttingDown) { return; }
             m_sharedInfoDataReader->readInfoData();
         });
@@ -1280,8 +1313,8 @@ namespace BlackCore
         switch (wr)
         {
         case CWebReaderFlags::IcaoDataReader: return m_icaoDataReader;
-        case CWebReaderFlags::ModelReader:    return m_modelDataReader;
-        case CWebReaderFlags::AirportReader:  return m_airportDataReader;
+        case CWebReaderFlags::ModelReader: return m_modelDataReader;
+        case CWebReaderFlags::AirportReader: return m_airportDataReader;
         default: break;
         }
         return nullptr;
@@ -1319,8 +1352,8 @@ namespace BlackCore
     {
         CEntityFlags::Entity entities = CEntityFlags::NoEntity;
         if (m_airportDataReader) { entities |= m_airportDataReader->getEntitiesWithCacheCount(); }
-        if (m_icaoDataReader)    { entities |= m_icaoDataReader->getEntitiesWithCacheCount(); }
-        if (m_modelDataReader)   { entities |= m_modelDataReader->getEntitiesWithCacheCount(); }
+        if (m_icaoDataReader) { entities |= m_icaoDataReader->getEntitiesWithCacheCount(); }
+        if (m_modelDataReader) { entities |= m_modelDataReader->getEntitiesWithCacheCount(); }
         return entities;
     }
 
@@ -1328,8 +1361,8 @@ namespace BlackCore
     {
         CEntityFlags::Entity entities = CEntityFlags::NoEntity;
         if (m_airportDataReader) { entities |= m_airportDataReader->getEntitiesWithCacheTimestampNewerThan(threshold); }
-        if (m_icaoDataReader)    { entities |= m_icaoDataReader->getEntitiesWithCacheTimestampNewerThan(threshold); }
-        if (m_modelDataReader)   { entities |= m_modelDataReader->getEntitiesWithCacheTimestampNewerThan(threshold); }
+        if (m_icaoDataReader) { entities |= m_icaoDataReader->getEntitiesWithCacheTimestampNewerThan(threshold); }
+        if (m_modelDataReader) { entities |= m_modelDataReader->getEntitiesWithCacheTimestampNewerThan(threshold); }
         return entities;
     }
 
@@ -1362,7 +1395,7 @@ namespace BlackCore
     {
         if (state == CEntityFlags::ReadStarted) { return; } // just started
 
-        const QString from   = url.isEmpty() ? QStringLiteral("") : QStringLiteral(" from '%1'").arg(url.toString());
+        const QString from = url.isEmpty() ? QStringLiteral("") : QStringLiteral(" from '%1'").arg(url.toString());
         const QString entStr = CEntityFlags::flagToString(entities);
 
         if (CEntityFlags::isWarningOrAbove(state))
@@ -1394,9 +1427,9 @@ namespace BlackCore
         {
             // emit one time only
             if (entities.testFlag(CEntityFlags::AirportEntity) && signalEntitiesAlreadyRead(CEntityFlags::AirportEntity)) { emit swiftDbAirportsRead(); }
-            if (entities.testFlag(CEntityFlags::AirlineIcaoEntity) && signalEntitiesAlreadyRead(CEntityFlags::AirlineIcaoEntity))   { emit swiftDbAirlineIcaoRead(); }
+            if (entities.testFlag(CEntityFlags::AirlineIcaoEntity) && signalEntitiesAlreadyRead(CEntityFlags::AirlineIcaoEntity)) { emit swiftDbAirlineIcaoRead(); }
             if (entities.testFlag(CEntityFlags::AircraftIcaoEntity) && signalEntitiesAlreadyRead(CEntityFlags::AircraftIcaoEntity)) { emit swiftDbAircraftIcaoRead(); }
-            if (entities.testFlag(CEntityFlags::ModelEntity) && signalEntitiesAlreadyRead(CEntityFlags::ModelEntity))               { emit swiftDbModelsRead(); }
+            if (entities.testFlag(CEntityFlags::ModelEntity) && signalEntitiesAlreadyRead(CEntityFlags::ModelEntity)) { emit swiftDbModelsRead(); }
             if (entities.testFlag(CEntityFlags::SharedInfoObjectEntity)) { emit sharedInfoObjectsRead(); }
 
             if (m_swiftDbEntitiesRead.testFlag(CEntityFlags::AllIcaoEntities) && signalEntitiesAlreadyRead(CEntityFlags::AllIcaoEntities))
@@ -1415,11 +1448,11 @@ namespace BlackCore
         if (m_shuttingDown) { return; }
         if (entities == CEntityFlags::NoEntity) { return; }
         const QPointer<CWebDataServices> myself(this);
-        QTimer::singleShot(delayMs, [ = ]() // clazy:exclude=connect-3arg-lambda
-        {
-            if (!myself || m_shuttingDown) { return; }
-            this->readInBackground(entities); // deferred
-        });
+        QTimer::singleShot(delayMs, [=]() // clazy:exclude=connect-3arg-lambda
+                           {
+                               if (!myself || m_shuttingDown) { return; }
+                               this->readInBackground(entities); // deferred
+                           });
     }
 
     void CWebDataServices::readInBackground(CEntityFlags::Entity entities)
@@ -1594,8 +1627,7 @@ namespace BlackCore
 
         for (const auto &pair : fileContents)
         {
-            CWorker::fromTask(this, Q_FUNC_INFO, [pair, directory]
-            {
+            CWorker::fromTask(this, Q_FUNC_INFO, [pair, directory] {
                 CFileUtils::writeStringToFile(CFileUtils::appendFilePaths(directory.absolutePath(), pair.first), pair.second);
             });
         }
@@ -1670,19 +1702,16 @@ namespace BlackCore
         CStatusMessageList msgs;
         msgs.push_back(
             m_icaoDataReader ?
-            m_icaoDataReader->initFromLocalResourceFiles(inBackground) :
-            CStatusMessage(this).info(u"No ICAO reader")
-        );
+                m_icaoDataReader->initFromLocalResourceFiles(inBackground) :
+                CStatusMessage(this).info(u"No ICAO reader"));
         msgs.push_back(
             m_modelDataReader ?
-            m_modelDataReader->initFromLocalResourceFiles(inBackground) :
-            CStatusMessage(this).info(u"No model reader")
-        );
+                m_modelDataReader->initFromLocalResourceFiles(inBackground) :
+                CStatusMessage(this).info(u"No model reader"));
         msgs.push_back(
             m_airportDataReader ?
-            m_airportDataReader->initFromLocalResourceFiles(inBackground) :
-            CStatusMessage(this).info(u"No airport reader")
-        );
+                m_airportDataReader->initFromLocalResourceFiles(inBackground) :
+                CStatusMessage(this).info(u"No airport reader"));
         return msgs;
     }
 
@@ -1692,19 +1721,16 @@ namespace BlackCore
         CStatusMessageList msgs;
         msgs.push_back(
             m_icaoDataReader && m_icaoDataReader->supportsAnyOfEntities(entities) ?
-            m_icaoDataReader->initFromLocalResourceFiles(entities, inBackground) :
-            CStatusMessage(this).info(u"No ICAO reader or not supporting entities")
-        );
+                m_icaoDataReader->initFromLocalResourceFiles(entities, inBackground) :
+                CStatusMessage(this).info(u"No ICAO reader or not supporting entities"));
         msgs.push_back(
             m_modelDataReader && m_modelDataReader->supportsAnyOfEntities(entities) ?
-            m_modelDataReader->initFromLocalResourceFiles(entities, inBackground) :
-            CStatusMessage(this).info(u"No model reader or not supporting entities")
-        );
+                m_modelDataReader->initFromLocalResourceFiles(entities, inBackground) :
+                CStatusMessage(this).info(u"No model reader or not supporting entities"));
         msgs.push_back(
             m_airportDataReader && m_airportDataReader->supportsAnyOfEntities(entities) ?
-            m_airportDataReader->initFromLocalResourceFiles(entities, inBackground) :
-            CStatusMessage(this).info(u"No airport reader or not supporting entities")
-        );
+                m_airportDataReader->initFromLocalResourceFiles(entities, inBackground) :
+                CStatusMessage(this).info(u"No airport reader or not supporting entities"));
         return msgs;
     }
     //! \endcond

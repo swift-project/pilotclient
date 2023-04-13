@@ -22,20 +22,17 @@ using namespace BlackCore;
 namespace BlackSimPlugin::Fsx
 {
     CSimulatorFsx::CSimulatorFsx(const CSimulatorPluginInfo &info,
-                                    IOwnAircraftProvider *ownAircraftProvider,
-                                    IRemoteAircraftProvider *remoteAircraftProvider,
-                                    IWeatherGridProvider *weatherGridProvider,
-                                    IClientProvider *clientProvider,
-                                    QObject *parent) :
-        CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
+                                 IOwnAircraftProvider *ownAircraftProvider,
+                                 IRemoteAircraftProvider *remoteAircraftProvider,
+                                 IWeatherGridProvider *weatherGridProvider,
+                                 IClientProvider *clientProvider,
+                                 QObject *parent) : CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
     {
         this->setDefaultModel(
-        {
-            "Boeing 737-800 Paint1",
-            CAircraftModel::TypeModelMatchingDefaultModel,
-            "B737-800 default model",
-            CAircraftIcaoCode("B738", "L2J")
-        });
+            { "Boeing 737-800 Paint1",
+              CAircraftModel::TypeModelMatchingDefaultModel,
+              "B737-800 default model",
+              CAircraftIcaoCode("B738", "L2J") });
     }
 
     bool CSimulatorFsx::connectTo()

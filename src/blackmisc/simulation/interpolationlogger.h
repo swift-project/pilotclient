@@ -30,24 +30,24 @@ namespace BlackMisc
         //! Log entry for situation interpolation
         struct BLACKMISC_EXPORT SituationLog
         {
-            QChar interpolator;             //!< what interpolator is used
-            qint64 tsCurrent          = -1; //!< current timestamp
-            qint64 tsInterpolated     = -1; //!< timestamp interpolated
-            double groundFactor       = -1; //!< current ground factor
-            double simTimeFraction    = -1; //!< time fraction, expected 0..1
+            QChar interpolator; //!< what interpolator is used
+            qint64 tsCurrent = -1; //!< current timestamp
+            qint64 tsInterpolated = -1; //!< timestamp interpolated
+            double groundFactor = -1; //!< current ground factor
+            double simTimeFraction = -1; //!< time fraction, expected 0..1
             double deltaSampleTimesMs = -1; //!< delta time between samples (i.e. 2 situations)
-            bool useParts          = false; //!< supporting aircraft parts
-            bool vtolAircraft      = false; //!< VTOL aircraft
+            bool useParts = false; //!< supporting aircraft parts
+            bool vtolAircraft = false; //!< VTOL aircraft
             bool interpolantRecalc = false; //!< interpolant recalculated
-            int noNetworkSituations = 0;    //!< available network situations
-            int noInvalidSituations = 0;    //!< invalid situations, missing situations for timestampd
-            QString elevationInfo;          //!< info about elevation retrieval
-            QString altCorrection;          //!< info about altitude correction as CAircraftSituation::AltitudeCorrection
-            Aviation::CCallsign callsign;   //!< current callsign
+            int noNetworkSituations = 0; //!< available network situations
+            int noInvalidSituations = 0; //!< invalid situations, missing situations for timestampd
+            QString elevationInfo; //!< info about elevation retrieval
+            QString altCorrection; //!< info about altitude correction as CAircraftSituation::AltitudeCorrection
+            Aviation::CCallsign callsign; //!< current callsign
             Aviation::CAircraftParts parts; //!< corresponding parts used in interpolator
             Aviation::CAircraftSituationList interpolationSituations; //!< the interpolator uses 2, 3 situations (latest at end)
             Aviation::CAircraftSituation situationCurrent; //!< interpolated situation
-            Aviation::CAircraftSituationChange change;     //!< change
+            Aviation::CAircraftSituationChange change; //!< change
             PhysicalQuantities::CLength cgAboveGround = PhysicalQuantities::CLength::null(); //!< center of gravity (CG)
             PhysicalQuantities::CLength sceneryOffset = PhysicalQuantities::CLength::null(); //!< scenery offset
             CInterpolationAndRenderingSetupPerCallsign usedSetup; //!< used setup
@@ -79,20 +79,20 @@ namespace BlackMisc
             //! To string
             QString toQString(bool withSetup,
                               bool withCurrentSituation, bool withElevation,
-                              bool withOtherPositions, bool withDeltaTimes, const QString &separator = {" "}) const;
+                              bool withOtherPositions, bool withDeltaTimes, const QString &separator = { " " }) const;
         };
 
         //! Log entry for parts interpolation
         struct BLACKMISC_EXPORT PartsLog
         {
-            qint64 tsCurrent = -1;  //!< current timestamp
-            bool empty = false;     //!< empty parts?
+            qint64 tsCurrent = -1; //!< current timestamp
+            bool empty = false; //!< empty parts?
             int noNetworkParts = 0; //!< available network situations
-            Aviation::CCallsign callsign;   //!< current callsign
+            Aviation::CCallsign callsign; //!< current callsign
             Aviation::CAircraftParts parts; //!< parts to be logged
 
             //! To string
-            QString toQString(const QString &separator = {" "}) const;
+            QString toQString(const QString &separator = { " " }) const;
         };
 
         //! Record internal state of interpolator for debugging
@@ -221,10 +221,10 @@ namespace BlackMisc
             static CStatusMessage logStatusFileWriting(bool success, const QString &fileName);
 
             mutable QReadWriteLock m_lockSituations; //!< lock logging situations
-            mutable QReadWriteLock m_lockParts;      //!< lock logging parts
-            int m_maxSituations = 2500;              //!< max.number of situations
-            QList<PartsLog> m_partsLogs;             //!< logs of parts
-            QList<SituationLog> m_situationLogs;     //!< logs of interpolation
+            mutable QReadWriteLock m_lockParts; //!< lock logging parts
+            int m_maxSituations = 2500; //!< max.number of situations
+            QList<PartsLog> m_partsLogs; //!< logs of parts
+            QList<SituationLog> m_situationLogs; //!< logs of interpolation
         };
     } // namespace
 } // namespace

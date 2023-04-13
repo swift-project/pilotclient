@@ -42,7 +42,7 @@ namespace BlackMisc
         CPixmap(const CPixmap &other);
 
         //! Copy assignment (because of mutex)
-        CPixmap &operator =(const CPixmap &other);
+        CPixmap &operator=(const CPixmap &other);
 
         //! Destructor.
         ~CPixmap() = default;
@@ -66,10 +66,10 @@ namespace BlackMisc
         //! Init the byte array with data
         void fillByteArray();
 
-        QByteArray m_array;                     //!< data of pixmap
-        mutable QPixmap m_pixmap;               //!< cached pixmap, mutable because of lazy initialization
+        QByteArray m_array; //!< data of pixmap
+        mutable QPixmap m_pixmap; //!< cached pixmap, mutable because of lazy initialization
         mutable bool m_hasCachedPixmap = false; //!< pixmap? Mutable because of lazy initialization
-        mutable QReadWriteLock m_lock;          //!< lock (because of mutable members)
+        mutable QReadWriteLock m_lock; //!< lock (because of mutable members)
 
         BLACK_METACLASS(
             CPixmap,

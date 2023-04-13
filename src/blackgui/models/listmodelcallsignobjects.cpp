@@ -20,9 +20,8 @@ using namespace BlackMisc::Aviation;
 namespace BlackGui::Models
 {
     template <typename T, bool UseCompare>
-    CListModelCallsignObjects<T, UseCompare>::CListModelCallsignObjects(const QString &translationContext, QObject *parent) :
-        CListModelBase<ContainerType, UseCompare>(translationContext, parent)
-    { }
+    CListModelCallsignObjects<T, UseCompare>::CListModelCallsignObjects(const QString &translationContext, QObject *parent) : CListModelBase<ContainerType, UseCompare>(translationContext, parent)
+    {}
 
     template <typename T, bool UseCompare>
     QVariant CListModelCallsignObjects<T, UseCompare>::data(const QModelIndex &index, int role) const

@@ -17,10 +17,10 @@ using namespace BlackMisc::Network;
 namespace BlackSimPlugin::P3D
 {
     BlackCore::ISimulator *CSimulatorP3DFactory::create(const CSimulatorPluginInfo &info,
-            IOwnAircraftProvider *ownAircraftProvider,
-            IRemoteAircraftProvider *remoteAircraftProvider,
-            IWeatherGridProvider *weatherGridProvider,
-            IClientProvider *clientProvider)
+                                                        IOwnAircraftProvider *ownAircraftProvider,
+                                                        IRemoteAircraftProvider *remoteAircraftProvider,
+                                                        IWeatherGridProvider *weatherGridProvider,
+                                                        IClientProvider *clientProvider)
     {
         Q_ASSERT(ownAircraftProvider);
         return new CSimulatorP3D(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, this);

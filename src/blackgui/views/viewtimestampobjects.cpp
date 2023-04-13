@@ -19,15 +19,14 @@ using namespace BlackGui::Models;
 
 namespace BlackGui::Views
 {
-    template<class T>
+    template <class T>
     void CViewWithTimestampWithOffsetObjects<T>::push_frontKeepLatestAdjustedFirst(const ObjectType &object, int max)
     {
         this->derivedModel()->push_frontKeepLatestAdjustedFirst(object, max);
     }
 
     template <class T>
-    CViewWithTimestampWithOffsetObjects<T>::CViewWithTimestampWithOffsetObjects(QWidget *parent) :
-        CViewBase<ModelClass>(parent)
+    CViewWithTimestampWithOffsetObjects<T>::CViewWithTimestampWithOffsetObjects(QWidget *parent) : CViewBase<ModelClass>(parent)
     {
         // void
     }

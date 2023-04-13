@@ -28,19 +28,19 @@ namespace BlackMisc::Db
         //! Which data to read, requires corresponding readers
         enum DataRetrievalModeFlag
         {
-            Unspecified           = 0,       //!< Unspecified
-            DbReading             = 1 << 0,  //!< directly from DB
-            DbWriting             = 1 << 1,  //!< DB writing
-            Shared                = 1 << 2,  //!< shared directory
-            SharedInfoOnly        = 1 << 3,  //!< shared info file only
-            Cached                = 1 << 4,  //!< from cache
-            Canceled              = 1 << 5,  //!< canceled DB reading
-            Ignore                = 1 << 6,  //!< ignore this entity
-            CacheThenDb           = DbReading | Cached,      //!< Cache where possible, otherwise DB
-            CacheThenShared       = Shared | Cached,         //!< Cache where possible, otherwise shared
-            CacheAndSharedInfo    = SharedInfoOnly | Cached, //!< Cached data plus shared info file
-            DbReadingOrShared     = DbReading | Shared,      //!< read from DB or shared
-            DbReadingOrAnyShared  = DbReading | Shared | SharedInfoOnly //!< read from DB or shared/shared info
+            Unspecified = 0, //!< Unspecified
+            DbReading = 1 << 0, //!< directly from DB
+            DbWriting = 1 << 1, //!< DB writing
+            Shared = 1 << 2, //!< shared directory
+            SharedInfoOnly = 1 << 3, //!< shared info file only
+            Cached = 1 << 4, //!< from cache
+            Canceled = 1 << 5, //!< canceled DB reading
+            Ignore = 1 << 6, //!< ignore this entity
+            CacheThenDb = DbReading | Cached, //!< Cache where possible, otherwise DB
+            CacheThenShared = Shared | Cached, //!< Cache where possible, otherwise shared
+            CacheAndSharedInfo = SharedInfoOnly | Cached, //!< Cached data plus shared info file
+            DbReadingOrShared = DbReading | Shared, //!< read from DB or shared
+            DbReadingOrAnyShared = DbReading | Shared | SharedInfoOnly //!< read from DB or shared/shared info
         };
         Q_DECLARE_FLAGS(DataRetrievalMode, DataRetrievalModeFlag)
 

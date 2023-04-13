@@ -19,8 +19,15 @@
 #include <QScopedPointer>
 #include <memory>
 
-namespace Ui { class CDistributorFilterBar; }
-namespace BlackMisc::Simulation { class CDistributorList; class CSimulatorInfo; }
+namespace Ui
+{
+    class CDistributorFilterBar;
+}
+namespace BlackMisc::Simulation
+{
+    class CDistributorList;
+    class CSimulatorInfo;
+}
 namespace BlackGui::Filters
 {
     /*!

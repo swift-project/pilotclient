@@ -12,7 +12,7 @@ BLACK_DEFINE_COLLECTION_MIXINS(BlackMisc, CIdentifier, CIdentifierSet)
 
 namespace BlackMisc
 {
-    CIdentifierSet::CIdentifierSet() { }
+    CIdentifierSet::CIdentifierSet() {}
 
     CIdentifierSet::CIdentifierSet(const CCollection<CIdentifier> &other) : CCollection<CIdentifier>(other)
     {
@@ -21,7 +21,7 @@ namespace BlackMisc
 
     bool CIdentifierSet::containsAnyNotIn(const CIdentifierSet &other) const
     {
-        return containsBy([&other](const CIdentifier & id) { return ! other.contains(id); });
+        return containsBy([&other](const CIdentifier &id) { return !other.contains(id); });
     }
 
     CIdentifierSet CIdentifierSet::getMachinesUnique() const
@@ -29,8 +29,7 @@ namespace BlackMisc
         CIdentifierSet il;
         for (const CIdentifier &identifier : *this)
         {
-            const bool contained = il.containsBy([ = ](const CIdentifier & ident)
-            {
+            const bool contained = il.containsBy([=](const CIdentifier &ident) {
                 return identifier.hasSameMachineName(ident);
             });
             if (!contained) { il.push_back(identifier); }

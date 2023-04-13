@@ -20,7 +20,10 @@
 
 class QShowEvent;
 
-namespace Ui { class CInternalsComponent; }
+namespace Ui
+{
+    class CInternalsComponent;
+}
 namespace BlackGui::Components
 {
     //! Internals for debugging, statistics

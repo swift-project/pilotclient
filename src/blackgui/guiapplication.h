@@ -37,7 +37,10 @@ class QWidget;
 class QMainWindow;
 class CSplashScreen;
 
-namespace BlackMisc { class CLogCategoryList; }
+namespace BlackMisc
+{
+    class CLogCategoryList;
+}
 namespace BlackGui::Components
 {
     class CApplicationCloseDialog;
@@ -350,23 +353,23 @@ namespace BlackGui
         static void registerMetadata();
 
     private:
-        QPixmap m_windowIcon;      //!< the window icon
-        QString m_fontFamily;      //!< current font family
-        int m_fontPointSize;       //!< current font size
-        int m_minWidthChars  = -1; //!< min. width characters (based on current font metrics)
+        QPixmap m_windowIcon; //!< the window icon
+        QString m_fontFamily; //!< current font family
+        int m_fontPointSize; //!< current font size
+        int m_minWidthChars = -1; //!< min. width characters (based on current font metrics)
         int m_minHeightChars = -1; //!< min. height characters (based on current font metrics)
         QCommandLineOption m_cmdWindowStateMinimized { "emptyMinimized" }; //!< window state (minimized)
-        QCommandLineOption m_cmdWindowMode      { "emptyWindowMode" };     //!< window mode (flags: frameless ...)
-        QCommandLineOption m_cmdWindowSizeReset { "emptySizeReset" };      //!< window size reset
-        QCommandLineOption m_cmdWindowScaleSize { "emptyScale" };          //!< window scale size
-        CStyleSheetUtility m_styleSheetUtility {{}, this};                 //!< style sheet utility
-        bool m_uiSetupCompleted = false;                                   //!< ui setup completed
-        bool m_saveMainWidgetState = true;                                 //!< save/restore main widget's state
-        bool m_frontBack = true;                                           //!< for front/back toggle
-        bool m_normalizeMinimize = true;                                   //!< for normalize/minimize toggle
-        QScopedPointer<CSplashScreen>  m_splashScreen;                     //!< splash screen
-        Components::CUpdateInfoDialog *m_updateDialog = nullptr;           //!< software installation dialog
-        Components::CApplicationCloseDialog *m_closeDialog = nullptr;      //!< close dialog (no QScopedPointer because I need to set parent)
+        QCommandLineOption m_cmdWindowMode { "emptyWindowMode" }; //!< window mode (flags: frameless ...)
+        QCommandLineOption m_cmdWindowSizeReset { "emptySizeReset" }; //!< window size reset
+        QCommandLineOption m_cmdWindowScaleSize { "emptyScale" }; //!< window scale size
+        CStyleSheetUtility m_styleSheetUtility { {}, this }; //!< style sheet utility
+        bool m_uiSetupCompleted = false; //!< ui setup completed
+        bool m_saveMainWidgetState = true; //!< save/restore main widget's state
+        bool m_frontBack = true; //!< for front/back toggle
+        bool m_normalizeMinimize = true; //!< for normalize/minimize toggle
+        QScopedPointer<CSplashScreen> m_splashScreen; //!< splash screen
+        Components::CUpdateInfoDialog *m_updateDialog = nullptr; //!< software installation dialog
+        Components::CApplicationCloseDialog *m_closeDialog = nullptr; //!< close dialog (no QScopedPointer because I need to set parent)
         BlackMisc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings { this, &CGuiApplication::settingsChanged };
         BlackMisc::CSettingReadOnly<Settings::TUpdateNotificationSettings> m_updateSetting { this }; //!< update notification settings
 

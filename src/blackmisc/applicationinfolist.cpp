@@ -1,10 +1,10 @@
 /* Copyright (C) 2016
-* swift project Community / Contributors
-*
-* This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
-* directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
  * or distributed except according to the terms contained in the LICENSE file.
-*/
+ */
 
 #include "blackmisc/applicationinfolist.h"
 #include "blackmisc/swiftdirectories.h"
@@ -20,8 +20,7 @@ namespace BlackMisc
 {
     CApplicationInfoList::CApplicationInfoList() {}
 
-    CApplicationInfoList::CApplicationInfoList(const CSequence<CApplicationInfo> &other) :
-        CSequence<CApplicationInfo>(other)
+    CApplicationInfoList::CApplicationInfoList(const CSequence<CApplicationInfo> &other) : CSequence<CApplicationInfo>(other)
     {}
 
     bool CApplicationInfoList::containsApplication(CApplicationInfo::Application application) const
@@ -49,8 +48,8 @@ namespace BlackMisc
     {
         this->clear();
         const QMap<QString, CApplicationInfo> otherVersions = reinit ?
-                currentApplicationDataDirectoryMapWithoutCurrentVersion() :
-                applicationDataDirectoryMapWithoutCurrentVersion();
+                                                                  currentApplicationDataDirectoryMapWithoutCurrentVersion() :
+                                                                  applicationDataDirectoryMapWithoutCurrentVersion();
 
         for (const CApplicationInfo &info : otherVersions)
         {

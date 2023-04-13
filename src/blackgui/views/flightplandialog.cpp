@@ -19,9 +19,8 @@ using namespace BlackGui::Components;
 
 namespace BlackGui::Views
 {
-    CFlightPlanDialog::CFlightPlanDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CFlightPlanDialog)
+    CFlightPlanDialog::CFlightPlanDialog(QWidget *parent) : QDialog(parent),
+                                                            ui(new Ui::CFlightPlanDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
@@ -31,7 +30,7 @@ namespace BlackGui::Views
     }
 
     CFlightPlanDialog::~CFlightPlanDialog()
-    { }
+    {}
 
     void CFlightPlanDialog::showFlightPlan(const CCallsign &callsign)
     {
@@ -46,7 +45,11 @@ namespace BlackGui::Views
 
     void CFlightPlanDialog::setDialogTitle(const CCallsign &callsign)
     {
-        if (callsign.isEmpty()) { this->setWindowTitle("Flight plan"); return; }
+        if (callsign.isEmpty())
+        {
+            this->setWindowTitle("Flight plan");
+            return;
+        }
         this->setWindowTitle("Flight plan for " + callsign.asString());
     }
 

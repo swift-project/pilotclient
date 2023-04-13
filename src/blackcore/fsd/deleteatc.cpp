@@ -13,12 +13,12 @@
 namespace BlackCore::Fsd
 {
     DeleteAtc::DeleteAtc() : MessageBase()
-    { }
+    {}
 
     DeleteAtc::DeleteAtc(const QString &sender, const QString &cid)
         : MessageBase(sender),
-            m_cid(cid)
-    { }
+          m_cid(cid)
+    {}
 
     QStringList DeleteAtc::toTokens() const
     {

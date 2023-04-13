@@ -29,7 +29,7 @@ namespace BlackSimPlugin::Fs9
     CHostNode &CHostNode::operator=(const CHostNode &other)
     {
         // check for self-assignment
-        if(&other == this) { return *this; }
+        if (&other == this) { return *this; }
 
         m_appDesc = other.m_appDesc;
         m_sessionName = other.m_sessionName;

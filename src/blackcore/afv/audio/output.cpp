@@ -23,9 +23,8 @@ using namespace BlackSound::SampleProvider;
 
 namespace BlackCore::Afv::Audio
 {
-    CAudioOutputBuffer::CAudioOutputBuffer(ISampleProvider *sampleProvider, QObject *parent) :
-        QIODevice(parent),
-        m_sampleProvider(sampleProvider)
+    CAudioOutputBuffer::CAudioOutputBuffer(ISampleProvider *sampleProvider, QObject *parent) : QIODevice(parent),
+                                                                                               m_sampleProvider(sampleProvider)
     {
         Q_ASSERT_X(sampleProvider, Q_FUNC_INFO, "need sample provide");
         const QString on = QStringLiteral("%1 for %2").arg(classNameShort(this), sampleProvider->objectName());
@@ -34,9 +33,9 @@ namespace BlackCore::Afv::Audio
 
     qint64 CAudioOutputBuffer::readData(char *data, qint64 maxlen)
     {
-        const int sampleBytes  = m_outputFormat.sampleSize() / 8;
+        const int sampleBytes = m_outputFormat.sampleSize() / 8;
         const int channelCount = m_outputFormat.channelCount();
-        const qint64 count     = maxlen / (sampleBytes * channelCount);
+        const qint64 count = maxlen / (sampleBytes * channelCount);
         QVector<float> buffer;
         m_sampleProvider->readSamples(buffer, count);
 
@@ -51,14 +50,14 @@ namespace BlackCore::Afv::Audio
         {
             OutputVolumeStreamArgs outputVolumeStreamArgs;
             outputVolumeStreamArgs.PeakRaw = m_maxSampleOutput / 1.0;
-            outputVolumeStreamArgs.PeakDb  = static_cast<float>(20 * std::log10(outputVolumeStreamArgs.PeakRaw));
+            outputVolumeStreamArgs.PeakDb = static_cast<float>(20 * std::log10(outputVolumeStreamArgs.PeakRaw));
             const double db = qBound(m_minDb, outputVolumeStreamArgs.PeakDb, m_maxDb);
             double ratio = (db - m_minDb) / (m_maxDb - m_minDb);
             if (ratio < 0.30) { ratio = 0.0; }
-            if (ratio > 1.0)  { ratio = 1.0; }
+            if (ratio > 1.0) { ratio = 1.0; }
             outputVolumeStreamArgs.PeakVU = ratio;
             emit outputVolumeStream(outputVolumeStreamArgs);
-            m_sampleCount     = 0;
+            m_sampleCount = 0;
             m_maxSampleOutput = 0;
         }
 

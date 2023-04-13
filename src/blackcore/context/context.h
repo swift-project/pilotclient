@@ -24,7 +24,10 @@
 #include <QtGlobal>
 #include <QStringBuilder>
 
-namespace BlackMisc { class CLogCategoryList; }
+namespace BlackMisc
+{
+    class CLogCategoryList;
+}
 namespace BlackCore::Context
 {
     class IContextApplication;
@@ -139,8 +142,8 @@ namespace BlackCore::Context
 
     protected:
         CCoreFacadeConfig::ContextMode m_mode; //!< How context is used
-        qint64 m_contextId;                    //!< unique identifer, avoid redirection rountrips
-        bool   m_debugEnabled = false;         //!< debug messages enabled
+        qint64 m_contextId; //!< unique identifer, avoid redirection rountrips
+        bool m_debugEnabled = false; //!< debug messages enabled
 
         //! Constructor
         IContext(CCoreFacadeConfig::ContextMode mode, QObject *parent);

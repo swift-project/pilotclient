@@ -12,7 +12,7 @@
 
 namespace BlackMisc::SharedState
 {
-    QFuture<CVariant> CActiveMutator::handleRequest(const CVariant& param) const
+    QFuture<CVariant> CActiveMutator::handleRequest(const CVariant &param) const
     {
         return m_requestHandler(param);
     }

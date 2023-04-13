@@ -26,9 +26,8 @@ using namespace BlackGui::Components;
 
 namespace BlackGui::Editors
 {
-    CPilotForm::CPilotForm(QWidget *parent) :
-        CForm(parent),
-        ui(new Ui::CPilotForm)
+    CPilotForm::CPilotForm(QWidget *parent) : CForm(parent),
+                                              ui(new Ui::CPilotForm)
     {
         ui->setupUi(this);
         ui->lblp_HomeAirport->setToolTips("ok", "wrong");
@@ -44,7 +43,7 @@ namespace BlackGui::Editors
     }
 
     CPilotForm::~CPilotForm()
-    { }
+    {}
 
     void CPilotForm::setVatsimValidation(bool vatsim)
     {

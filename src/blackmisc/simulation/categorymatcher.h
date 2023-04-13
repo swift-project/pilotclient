@@ -40,7 +40,7 @@ namespace BlackMisc
             //! @{
             //! Specialized categories
             const Aviation::CAircraftCategoryList &gliderCategories() const { return m_gliders; }
-            const Aviation::CAircraftCategoryList &militaryWingCategories()  const { return m_militaryWingAircraft; }
+            const Aviation::CAircraftCategoryList &militaryWingCategories() const { return m_militaryWingAircraft; }
             const Aviation::CAircraftCategoryList &militaryRotorCategories() const { return m_militaryRotorAircraft; }
             //! @}
 

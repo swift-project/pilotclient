@@ -49,52 +49,52 @@ namespace BlackCore::Context
                                     "connectionStatusChanged", this, SIGNAL(connectionStatusChanged(BlackMisc::Network::CConnectionStatus, BlackMisc::Network::CConnectionStatus)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                                "changedAtcStationsBooked", this, SIGNAL(changedAtcStationsBooked()));
+                               "changedAtcStationsBooked", this, SIGNAL(changedAtcStationsBooked()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                                "changedAtcStationsOnline", this, SIGNAL(changedAtcStationsOnline()));
+                               "changedAtcStationsOnline", this, SIGNAL(changedAtcStationsOnline()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                                "changedAtcStationsBookedDigest", this, SIGNAL(changedAtcStationsBookedDigest()));
+                               "changedAtcStationsBookedDigest", this, SIGNAL(changedAtcStationsBookedDigest()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                                "changedAtcStationsOnlineDigest", this, SIGNAL(changedAtcStationsOnlineDigest()));
+                               "changedAtcStationsOnlineDigest", this, SIGNAL(changedAtcStationsOnlineDigest()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                                "changedAircraftInRange", this, SIGNAL(changedAircraftInRange()));
+                               "changedAircraftInRange", this, SIGNAL(changedAircraftInRange()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                                "changedAtcStationOnlineConnectionStatus", this, SIGNAL(changedAtcStationOnlineConnectionStatus(BlackMisc::Aviation::CAtcStation, bool)));
+                               "changedAtcStationOnlineConnectionStatus", this, SIGNAL(changedAtcStationOnlineConnectionStatus(BlackMisc::Aviation::CAtcStation, bool)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                                "changedAircraftInRangeDigest", this, SIGNAL(changedAircraftInRangeDigest()));
+                               "changedAircraftInRangeDigest", this, SIGNAL(changedAircraftInRangeDigest()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                                "kicked", this, SIGNAL(kicked(QString)));
+                               "kicked", this, SIGNAL(kicked(QString)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                                "textMessagesReceived", this, SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)));
+                               "textMessagesReceived", this, SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                                "textMessageSent", this, SIGNAL(textMessageSent(BlackMisc::Network::CTextMessage)));
+                               "textMessageSent", this, SIGNAL(textMessageSent(BlackMisc::Network::CTextMessage)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                                "changedRemoteAircraftEnabled", this, SIGNAL(changedRemoteAircraftEnabled(BlackMisc::Simulation::CSimulatedAircraft)));
+                               "changedRemoteAircraftEnabled", this, SIGNAL(changedRemoteAircraftEnabled(BlackMisc::Simulation::CSimulatedAircraft)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                                "changedFastPositionUpdates", this, SIGNAL(changedFastPositionUpdates(BlackMisc::Simulation::CSimulatedAircraft)));
+                               "changedFastPositionUpdates", this, SIGNAL(changedFastPositionUpdates(BlackMisc::Simulation::CSimulatedAircraft)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                                "changedGndFlagCapability", this, SIGNAL(changedGndFlagCapability(BlackMisc::Simulation::CSimulatedAircraft)));
+                               "changedGndFlagCapability", this, SIGNAL(changedGndFlagCapability(BlackMisc::Simulation::CSimulatedAircraft)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                                "addedAircraft", this, SIGNAL(addedAircraft(BlackMisc::Simulation::CSimulatedAircraft)));
+                               "addedAircraft", this, SIGNAL(addedAircraft(BlackMisc::Simulation::CSimulatedAircraft)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                                "removedAircraft", this, SIGNAL(removedAircraft(BlackMisc::Aviation::CCallsign)));
+                               "removedAircraft", this, SIGNAL(removedAircraft(BlackMisc::Aviation::CCallsign)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                                "connectedServerChanged", this, SIGNAL(connectedServerChanged(BlackMisc::Network::CServer)));
+                               "connectedServerChanged", this, SIGNAL(connectedServerChanged(BlackMisc::Network::CServer)));
         Q_ASSERT(s);
         Q_UNUSED(s);
         this->relayBaseClassSignals(serviceName, connection, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName());

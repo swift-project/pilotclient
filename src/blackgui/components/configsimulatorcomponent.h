@@ -17,7 +17,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CConfigSimulatorComponent; }
+namespace Ui
+{
+    class CConfigSimulatorComponent;
+}
 namespace BlackGui::Components
 {
     /*!

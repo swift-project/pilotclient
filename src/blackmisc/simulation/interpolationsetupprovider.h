@@ -100,7 +100,7 @@ namespace BlackMisc::Simulation
 
     private:
         CInterpolationAndRenderingSetupGlobal m_globalSetup;
-        SetupsPerCallsign      m_setupsPerCallsign;
+        SetupsPerCallsign m_setupsPerCallsign;
         mutable QReadWriteLock m_lockSetup; //!< lock clients
     };
 
@@ -121,7 +121,7 @@ namespace BlackMisc::Simulation
         CInterpolationSetupAware() {}
 
         //! Constructor
-        CInterpolationSetupAware(IInterpolationSetupProvider *setupProvider) : IProviderAware(setupProvider) { }
+        CInterpolationSetupAware(IInterpolationSetupProvider *setupProvider) : IProviderAware(setupProvider) {}
 
         //! Provider
         void setInterpolationSetupProvider(IInterpolationSetupProvider *provider) { this->setProvider(provider); }

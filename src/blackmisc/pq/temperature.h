@@ -27,7 +27,7 @@ namespace BlackMisc::PhysicalQuantities
         CTemperature() : CPhysicalQuantity(0, CTemperatureUnit::defaultUnit()) {}
 
         //! Init by double value
-        CTemperature(double value, const CTemperatureUnit &unit): CPhysicalQuantity(value, unit) {}
+        CTemperature(double value, const CTemperatureUnit &unit) : CPhysicalQuantity(value, unit) {}
 
         //! \copydoc CPhysicalQuantity(const QString &unitString)
         CTemperature(const QString &unitString) : CPhysicalQuantity(unitString) {}

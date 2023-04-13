@@ -102,7 +102,7 @@ namespace BlackGui::Views
         if (!this->categoryModel()) { return; }
         if (this->categoryModel()->container().isEmpty()) { return; }
 
-        QMenu *menu = new QMenu(this);  // menu
+        QMenu *menu = new QMenu(this); // menu
         QAction *resize = new QAction(CIcons::resize16(), "Resize", this);
         connect(resize, &QAction::triggered, this, &CAircraftCategoryTreeView::fullResizeToContentsImpl);
 

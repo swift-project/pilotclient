@@ -19,23 +19,22 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CAudioAdvancedDistributedComponent::CAudioAdvancedDistributedComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CAudioAdvancedDistributedComponent)
+    CAudioAdvancedDistributedComponent::CAudioAdvancedDistributedComponent(QWidget *parent) : QFrame(parent),
+                                                                                              ui(new Ui::CAudioAdvancedDistributedComponent)
     {
         ui->setupUi(this);
 
-        connect(sGui->getCContextAudioBase(), &CContextAudioBase::startedAudio, this, &CAudioAdvancedDistributedComponent::onAudioStarted,  Qt::QueuedConnection);
+        connect(sGui->getCContextAudioBase(), &CContextAudioBase::startedAudio, this, &CAudioAdvancedDistributedComponent::onAudioStarted, Qt::QueuedConnection);
         connect(sGui->getCContextAudioBase(), &CContextAudioBase::stoppedAudio, this, &CAudioAdvancedDistributedComponent::onAudioStoppend, Qt::QueuedConnection);
-        connect(ui->pb_EnableDisable,         &QPushButton::pressed,            this, &CAudioAdvancedDistributedComponent::toggleAudioEnableDisable, Qt::QueuedConnection);
-        connect(ui->pb_StartStop,             &QPushButton::pressed,            this, &CAudioAdvancedDistributedComponent::toggleAudioStartStop,     Qt::QueuedConnection);
-        connect(ui->pb_ReloadRegistered,      &QPushButton::pressed,            this, &CAudioAdvancedDistributedComponent::reloadRegisteredDevices,  Qt::QueuedConnection);
+        connect(ui->pb_EnableDisable, &QPushButton::pressed, this, &CAudioAdvancedDistributedComponent::toggleAudioEnableDisable, Qt::QueuedConnection);
+        connect(ui->pb_StartStop, &QPushButton::pressed, this, &CAudioAdvancedDistributedComponent::toggleAudioStartStop, Qt::QueuedConnection);
+        connect(ui->pb_ReloadRegistered, &QPushButton::pressed, this, &CAudioAdvancedDistributedComponent::reloadRegisteredDevices, Qt::QueuedConnection);
 
         this->setButtons();
     }
 
     CAudioAdvancedDistributedComponent::~CAudioAdvancedDistributedComponent()
-    { }
+    {}
 
     void CAudioAdvancedDistributedComponent::toggleAudioStartStop()
     {
@@ -97,8 +96,7 @@ namespace BlackGui::Components
     {
         if (!hasContexts()) { return; }
         QPointer<CAudioAdvancedDistributedComponent> myself(this);
-        QTimer::singleShot(delayMs, this, [ = ]
-        {
+        QTimer::singleShot(delayMs, this, [=] {
             if (!sGui || !myself || sGui->isShuttingDown()) { return; }
             this->setButtons();
         });

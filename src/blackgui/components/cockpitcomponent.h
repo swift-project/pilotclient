@@ -19,7 +19,10 @@
 #include <QScopedPointer>
 #include <QSize>
 
-namespace Ui { class CCockpitComponent; }
+namespace Ui
+{
+    class CCockpitComponent;
+}
 namespace BlackGui
 {
     class CDockWidgetInfoArea;
@@ -74,8 +77,8 @@ namespace BlackGui
             void onATCStationsChanged();
 
             QScopedPointer<Ui::CCockpitComponent> ui;
-            QSize m_sizeFloatingShown;    //! size when info area is shown
-            QSize m_sizeFloatingHidden;   //! size when info area is hidden
+            QSize m_sizeFloatingShown; //! size when info area is shown
+            QSize m_sizeFloatingHidden; //! size when info area is hidden
             int m_minHeightInfoArea = -1; //! minimum height of the info area
         };
     } // namespace

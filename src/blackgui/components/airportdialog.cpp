@@ -5,16 +5,15 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackGui::Components
 {
-    CAirportDialog::CAirportDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CAirportDialog)
+    CAirportDialog::CAirportDialog(QWidget *parent) : QDialog(parent),
+                                                      ui(new Ui::CAirportDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
     CAirportDialog::~CAirportDialog()
-    { }
+    {}
 
     void CAirportDialog::setAirport(const CAirport &airport)
     {

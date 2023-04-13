@@ -19,7 +19,7 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackGui::Settings, CDockWidgetSettings)
 namespace BlackGui::Settings
 {
     CDockWidgetSettings::CDockWidgetSettings()
-    { }
+    {}
 
     void CDockWidgetSettings::resetMarginsToDefault()
     {
@@ -34,7 +34,7 @@ namespace BlackGui::Settings
         this->resetMarginsToDefault();
         m_geometry = "";
         m_frameless = false;
-        m_floating  = false;
+        m_floating = false;
     }
 
     void CDockWidgetSettings::setMarginsWhenFramelessFloating(const QMargins &margins)
@@ -125,7 +125,11 @@ namespace BlackGui::Settings
 
     void CDockWidgetSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CDockWidgetSettings>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CDockWidgetSettings>();
+            return;
+        }
 
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)

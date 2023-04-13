@@ -25,13 +25,13 @@ namespace BlackSimPlugin::Flightgear
         {
             bool s;
             s = connection.connect(QString(), "/fgswiftbus/service", "org.swift_project.fgswiftbus.service",
-                                    "aircraftModelChanged", this,
-                                    SIGNAL(aircraftModelChanged(QString, QString, QString, QString, QString, QString, QString)));
+                                   "aircraftModelChanged", this,
+                                   SIGNAL(aircraftModelChanged(QString, QString, QString, QString, QString, QString, QString)));
             Q_ASSERT(s);
 
             s = connection.connect(QString(), "/fgswiftbus/service", "org.swift_project.fgswiftbus.service",
-                                    "airportsInRangeUpdated", this,
-                                    SIGNAL(airportsInRangeUpdated(QStringList, QStringList, QList<double>, QList<double>, QList<double>)));
+                                   "airportsInRangeUpdated", this,
+                                   SIGNAL(airportsInRangeUpdated(QStringList, QStringList, QList<double>, QList<double>, QList<double>)));
             Q_ASSERT(s);
         }
     }
@@ -45,8 +45,7 @@ namespace BlackSimPlugin::Flightgear
     {
         if (!o_flightgearData) { return; }
         QPointer<CFGSwiftBusServiceProxy> myself(this);
-        std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
-        {
+        std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
             if (!myself) { return; }
             QDBusPendingReply<double, double, double, double, double, double, double, double> reply = *watcher;
             if (!reply.isError())
@@ -69,8 +68,7 @@ namespace BlackSimPlugin::Flightgear
     {
         if (!o_flightgearData) { return; }
         QPointer<CFGSwiftBusServiceProxy> myself(this);
-        std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
-        {
+        std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
             if (!myself) { return; }
             QDBusPendingReply<double, double, double, double, double, double> reply = *watcher;
             if (!reply.isError())
@@ -281,7 +279,6 @@ namespace BlackSimPlugin::Flightgear
         m_dbusInterface->callDBusAsync(QLatin1String("getCom2Volume"), setterCallbackWithDefault(o_com2Volume, 0.5));
     }
 
-
     int CFGSwiftBusServiceProxy::getCom2StandbyKhz() const
     {
         return m_dbusInterface->callDBusRet<int>(QLatin1String("getCom2StandbyKhz"));
@@ -378,7 +375,6 @@ namespace BlackSimPlugin::Flightgear
         m_dbusInterface->callDBusAsync(QLatin1String("getPressureAltitudeFt"), setterCallback(o_qnh));
     }
 
-
     void CFGSwiftBusServiceProxy::setCom1ActiveKhz(int freq)
     {
         m_dbusInterface->callDBus(QLatin1String("setCom1ActiveKhz"), freq);
@@ -455,6 +451,6 @@ namespace BlackSimPlugin::Flightgear
 
     void CFGSwiftBusServiceProxy::getGroundElevationAsync(double *o_groundElevation)
     {
-        m_dbusInterface->callDBusAsync(QLatin1String("getGroundElevation"),setterCallback(o_groundElevation));
+        m_dbusInterface->callDBusAsync(QLatin1String("getGroundElevation"), setterCallback(o_groundElevation));
     }
 } // ns

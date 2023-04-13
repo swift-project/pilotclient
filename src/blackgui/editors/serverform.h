@@ -21,7 +21,10 @@
 #include <QScopedPointer>
 #include <QString>
 
-namespace Ui { class CNetworkServerForm; }
+namespace Ui
+{
+    class CNetworkServerForm;
+}
 namespace BlackGui::Editors
 {
     //! Server form

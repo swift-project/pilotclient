@@ -17,11 +17,10 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackCore::Vatsim, CRawFsdMessageSettings)
 namespace BlackCore::Vatsim
 {
     CReaderSettings::CReaderSettings()
-    { }
+    {}
 
-    CReaderSettings::CReaderSettings(const CTime &initialTime, const CTime &periodicTime, bool neverUpdate) :
-        m_initialTime(initialTime), m_periodicTime(periodicTime), m_neverUpdate(neverUpdate)
-    { }
+    CReaderSettings::CReaderSettings(const CTime &initialTime, const CTime &periodicTime, bool neverUpdate) : m_initialTime(initialTime), m_periodicTime(periodicTime), m_neverUpdate(neverUpdate)
+    {}
 
     QString CReaderSettings::convertToQString(bool i18n) const
     {
@@ -33,7 +32,7 @@ namespace BlackCore::Vatsim
 
     const CReaderSettings &CReaderSettings::neverUpdateSettings()
     {
-        static const CReaderSettings s(CTime{ 1.0, CTimeUnit::d()}, CTime{ 1.0, CTimeUnit::d()}, true);
+        static const CReaderSettings s(CTime { 1.0, CTimeUnit::d() }, CTime { 1.0, CTimeUnit::d() }, true);
         return s;
     }
 
@@ -56,7 +55,11 @@ namespace BlackCore::Vatsim
 
     void CReaderSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CReaderSettings>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CReaderSettings>();
+            return;
+        }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -76,11 +79,10 @@ namespace BlackCore::Vatsim
     }
 
     CRawFsdMessageSettings::CRawFsdMessageSettings()
-    { }
+    {}
 
-    CRawFsdMessageSettings::CRawFsdMessageSettings(bool enabled, const QString &FileDir) :
-        m_rawFsdMessagesEnabled(enabled), m_FileDir(FileDir)
-    { }
+    CRawFsdMessageSettings::CRawFsdMessageSettings(bool enabled, const QString &FileDir) : m_rawFsdMessagesEnabled(enabled), m_FileDir(FileDir)
+    {}
 
     QString CRawFsdMessageSettings::convertToQString(bool i18n) const
     {
@@ -106,7 +108,11 @@ namespace BlackCore::Vatsim
 
     void CRawFsdMessageSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CRawFsdMessageSettings>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CRawFsdMessageSettings>();
+            return;
+        }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

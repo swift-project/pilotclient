@@ -94,4 +94,4 @@ namespace BlackMisc::Network
 Q_DECLARE_METATYPE(BlackMisc::Network::CUrlLogList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Network::CUrlLog>)
 
-#endif //guard
+#endif // guard

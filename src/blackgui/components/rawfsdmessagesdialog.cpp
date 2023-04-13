@@ -11,13 +11,12 @@
 
 namespace BlackGui::Components
 {
-    CRawFsdMessagesDialog::CRawFsdMessagesDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CRawFsdMessagesDialog)
+    CRawFsdMessagesDialog::CRawFsdMessagesDialog(QWidget *parent) : QDialog(parent),
+                                                                    ui(new Ui::CRawFsdMessagesDialog)
     {
         ui->setupUi(this);
     }
 
     CRawFsdMessagesDialog::~CRawFsdMessagesDialog()
-    { }
+    {}
 } // ns

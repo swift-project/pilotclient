@@ -32,8 +32,8 @@ namespace BlackSound::SampleProvider
 
         //! @{
         //! Various samples (sounds)
-        const CResourceSound &crackle()    const { return m_crackle; }
-        const CResourceSound &click()      const { return m_click; }
+        const CResourceSound &crackle() const { return m_crackle; }
+        const CResourceSound &click() const { return m_click; }
         const CResourceSound &whiteNoise() const { return m_whiteNoise; }
         const CResourceSound &hfWhiteNoise() const { return m_hfWhiteNoise; }
         //! @}
@@ -43,10 +43,26 @@ namespace BlackSound::SampleProvider
 
         //! @{
         //! File names
-        static const QString &fnCrackle()    { static const QString f = "afv_crackle_f32.wav"; return f; }
-        static const QString &fnClick()      { static const QString f = "afv_click_f32.wav"; return f; }
-        static const QString &fnWhiteNoise() { static const QString f = "afv_whitenoise_f32.wav"; return f; }
-        static const QString &fnHfWhiteNoise() { static const QString f = "afv_hf_whiteNoise_f32.wav"; return f; }
+        static const QString &fnCrackle()
+        {
+            static const QString f = "afv_crackle_f32.wav";
+            return f;
+        }
+        static const QString &fnClick()
+        {
+            static const QString f = "afv_click_f32.wav";
+            return f;
+        }
+        static const QString &fnWhiteNoise()
+        {
+            static const QString f = "afv_whitenoise_f32.wav";
+            return f;
+        }
+        static const QString &fnHfWhiteNoise()
+        {
+            static const QString f = "afv_hf_whiteNoise_f32.wav";
+            return f;
+        }
         //! @}
 
     private:

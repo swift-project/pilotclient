@@ -17,24 +17,23 @@ using namespace BlackMisc::Simulation;
 namespace BlackGui::Models
 {
     CAircraftModelFilter::CAircraftModelFilter(int id, const QString &modelKey, const QString &description,
-            CAircraftModel::ModelModeFilter modelMode, BlackMisc::Db::DbKeyStateFilter dbKeyFilter,
-            Qt::CheckState military, Qt::CheckState colorLiveries,
-            const QString &aircraftIcao, const QString &aircraftManufacturer,
-            const QString &airlineIcao,  const QString &airlineName,
-            const QString &liveryCode,   const QString &fileName,
-            const QString &combinedType,
-            const CSimulatorInfo &simInfo,
-            const CDistributor &distributor) :
-        m_id(id),
-        m_modelKey(modelKey.trimmed().toUpper()), m_description(description.trimmed()),
-        m_modelMode(modelMode), m_dbKeyFilter(dbKeyFilter), m_military(military), m_colorLiveries(colorLiveries),
-        m_aircraftIcao(aircraftIcao.trimmed().toUpper()), m_aircraftManufacturer(aircraftManufacturer.trimmed().toUpper()),
-        m_airlineIcao(airlineIcao.trimmed().toUpper()), m_airlineName(airlineName.trimmed().toUpper()),
-        m_liveryCode(liveryCode.trimmed().toUpper()),
-        m_fileName(fileName),
-        m_combinedType(combinedType),
-        m_simulatorInfo(simInfo),
-        m_distributor(distributor)
+                                               CAircraftModel::ModelModeFilter modelMode, BlackMisc::Db::DbKeyStateFilter dbKeyFilter,
+                                               Qt::CheckState military, Qt::CheckState colorLiveries,
+                                               const QString &aircraftIcao, const QString &aircraftManufacturer,
+                                               const QString &airlineIcao, const QString &airlineName,
+                                               const QString &liveryCode, const QString &fileName,
+                                               const QString &combinedType,
+                                               const CSimulatorInfo &simInfo,
+                                               const CDistributor &distributor) : m_id(id),
+                                                                                  m_modelKey(modelKey.trimmed().toUpper()), m_description(description.trimmed()),
+                                                                                  m_modelMode(modelMode), m_dbKeyFilter(dbKeyFilter), m_military(military), m_colorLiveries(colorLiveries),
+                                                                                  m_aircraftIcao(aircraftIcao.trimmed().toUpper()), m_aircraftManufacturer(aircraftManufacturer.trimmed().toUpper()),
+                                                                                  m_airlineIcao(airlineIcao.trimmed().toUpper()), m_airlineName(airlineName.trimmed().toUpper()),
+                                                                                  m_liveryCode(liveryCode.trimmed().toUpper()),
+                                                                                  m_fileName(fileName),
+                                                                                  m_combinedType(combinedType),
+                                                                                  m_simulatorInfo(simInfo),
+                                                                                  m_distributor(distributor)
     {
         m_valid = this->valid();
     }
@@ -165,7 +164,7 @@ namespace BlackGui::Models
         if (!allEmpty) { return true; }
         const bool noSim = m_simulatorInfo.isNoSimulator() || m_simulatorInfo.isAllSimulators();
         const bool noModelMode = (m_modelMode == CAircraftModel::Undefined || m_modelMode == CAircraftModel::All);
-        const bool noDbState   = (m_dbKeyFilter == BlackMisc::Db::Undefined || m_dbKeyFilter == BlackMisc::Db::All);
+        const bool noDbState = (m_dbKeyFilter == BlackMisc::Db::Undefined || m_dbKeyFilter == BlackMisc::Db::All);
         const bool noKey = !m_distributor.hasValidDbKey();
         const bool noColorRestriction = (m_colorLiveries == Qt::PartiallyChecked);
         const bool noMilitary = (m_military == Qt::PartiallyChecked);

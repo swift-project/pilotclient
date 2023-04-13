@@ -33,10 +33,9 @@ namespace BlackSimPlugin::Emulated
         return cats;
     }
 
-    CSimulatorEmulatedMonitorDialog::CSimulatorEmulatedMonitorDialog(CSimulatorEmulated *simulator, QWidget *parent) :
-        QDialog(parent),
-        CIdentifiable("Emulated driver dialog"),
-        ui(new Ui::CSimulatorEmulatedMonitorDialog)
+    CSimulatorEmulatedMonitorDialog::CSimulatorEmulatedMonitorDialog(CSimulatorEmulated *simulator, QWidget *parent) : QDialog(parent),
+                                                                                                                       CIdentifiable("Emulated driver dialog"),
+                                                                                                                       ui(new Ui::CSimulatorEmulatedMonitorDialog)
     {
         Q_ASSERT_X(simulator, Q_FUNC_INFO, "Need simulator");
 
@@ -52,8 +51,8 @@ namespace BlackSimPlugin::Emulated
         connect(m_simulator, &CSimulatorEmulated::internalAircraftChanged, this, &CSimulatorEmulatedMonitorDialog::setInternalAircraftUiValues, Qt::QueuedConnection);
         connect(&m_uiUpdateTimer, &QTimer::timeout, this, &CSimulatorEmulatedMonitorDialog::timerBasedUiUpdates);
 
-        connect(ui->cb_Connected, & QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
-        connect(ui->cb_Paused,     &QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
+        connect(ui->cb_Connected, &QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
+        connect(ui->cb_Paused, &QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
         connect(ui->cb_Simulating, &QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
 
         connect(ui->editor_Situation, &CSituationForm::changeAircraftSituation, this, &CSimulatorEmulatedMonitorDialog::changeSituationFromUi, Qt::QueuedConnection);
@@ -62,16 +61,16 @@ namespace BlackSimPlugin::Emulated
         connect(ui->editor_Com, &CCockpitComForm::changedSelcal, this, &CSimulatorEmulatedMonitorDialog::changeSelcalFromUi, Qt::QueuedConnection);
         connect(ui->comp_ComTransmissions, &CCockpitComTransmissionComponent::changedValues, this, &CSimulatorEmulatedMonitorDialog::onSavedComTransmissionValues, Qt::QueuedConnection);
 
-        connect(ui->pb_ResetStatistics,      &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::resetStatistics);
-        connect(ui->pb_InterpolatorStopLog,  &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
+        connect(ui->pb_ResetStatistics, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::resetStatistics);
+        connect(ui->pb_InterpolatorStopLog, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
         connect(ui->pb_InterpolatorWriteLog, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
         connect(ui->pb_InterpolatorClearLog, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
         connect(ui->pb_InterpolatorShowLogs, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
         connect(ui->pb_InterpolatorStartLog, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
-        connect(ui->pb_InterpolatorFetch,    &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
-        connect(ui->pb_EmitAddedFailed,      &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::emitSignal);
-        connect(ui->pb_AddAutoPublishData,   &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::addAutoPublishTestData);
-        connect(ui->pb_RequestWeather,       &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::requestWeather);
+        connect(ui->pb_InterpolatorFetch, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
+        connect(ui->pb_EmitAddedFailed, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::emitSignal);
+        connect(ui->pb_AddAutoPublishData, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::addAutoPublishTestData);
+        connect(ui->pb_RequestWeather, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::requestWeather);
 
         ui->led_Receiving->setToolTips("receiving", "idle");
         ui->led_Receiving->setShape(CLedWidget::Rounded);
@@ -89,7 +88,7 @@ namespace BlackSimPlugin::Emulated
     }
 
     CSimulatorEmulatedMonitorDialog::~CSimulatorEmulatedMonitorDialog()
-    { }
+    {}
 
     void CSimulatorEmulatedMonitorDialog::appendStatusMessageToList(const BlackMisc::CStatusMessage &statusMessage)
     {
@@ -166,8 +165,7 @@ namespace BlackSimPlugin::Emulated
         m_simulator->setCombinedStatus(
             ui->cb_Connected->isChecked(),
             ui->cb_Simulating->isChecked(),
-            ui->cb_Paused->isChecked()
-        );
+            ui->cb_Paused->isChecked());
     }
 
     void CSimulatorEmulatedMonitorDialog::onSavedComTransmissionValues(CComSystem::ComUnit unit)

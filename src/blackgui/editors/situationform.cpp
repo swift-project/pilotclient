@@ -23,9 +23,8 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackGui::Editors
 {
-    CSituationForm::CSituationForm(QWidget *parent) :
-        CForm(parent),
-        ui(new Ui::CSituationForm)
+    CSituationForm::CSituationForm(QWidget *parent) : CForm(parent),
+                                                      ui(new Ui::CSituationForm)
     {
         ui->setupUi(this);
 
@@ -53,7 +52,7 @@ namespace BlackGui::Editors
     }
 
     CSituationForm::~CSituationForm()
-    { }
+    {}
 
     void CSituationForm::setSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
     {

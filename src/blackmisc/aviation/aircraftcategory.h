@@ -158,9 +158,9 @@ namespace BlackMisc::Aviation
         static CAircraftCategory fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
 
     private:
-        QString m_name;           //!< name
-        QString m_description;    //!< description
-        QString m_path;           //!< path
+        QString m_name; //!< name
+        QString m_description; //!< description
+        QString m_path; //!< path
         bool m_assignable = true; //!< can assign to category?
         int m_l1 = 0;
         int m_l2 = 0;

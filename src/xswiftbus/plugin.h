@@ -17,7 +17,7 @@
  */
 
 #ifndef NOMINMAX
-#define NOMINMAX
+#    define NOMINMAX
 #endif
 
 #include "dbusconnection.h"
@@ -72,9 +72,9 @@ namespace XSwiftBus
         virtual bool writeConfig(bool tcas, bool debug) override { return m_pluginConfig.writeConfig(tcas, debug); }
 
     private:
-        CConfig         m_pluginConfig;
+        CConfig m_pluginConfig;
         CDBusDispatcher m_dbusDispatcher;
-        std::unique_ptr<CDBusServer>     m_dbusP2PServer;
+        std::unique_ptr<CDBusServer> m_dbusP2PServer;
         std::shared_ptr<CDBusConnection> m_dbusConnection;
         std::unique_ptr<CService> m_service;
         std::unique_ptr<CTraffic> m_traffic;
@@ -83,18 +83,18 @@ namespace XSwiftBus
         CMenuItem m_startServerMenuItem;
         CMenuItem m_showHideLabelsMenuItem;
         CMenuItem m_enableDisableXPlaneAtisMenuItem;
-        CMenu     m_messageWindowSubMenu;
+        CMenu m_messageWindowSubMenu;
         CMenuItem m_toggleMessageWindowMenuItem;
         CMenuItem m_popupMessageWindowMenuItem;
         CMenuItem m_disappearMessageWindowMenuItem;
-        CMenu     m_planeViewSubMenu;
+        CMenu m_planeViewSubMenu;
         CMenuItem m_planeViewOwnAircraftMenuItem;
 
         DataRef<xplane::data::sim::atc::atis_enabled> m_atisEnabled;
         decltype(m_atisEnabled.get()) m_atisSaved = 0;
 
         std::thread m_dbusThread;
-        bool m_isRunning  = false;
+        bool m_isRunning = false;
         bool m_shouldStop = false;
 
         void readConfig();

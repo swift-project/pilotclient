@@ -23,7 +23,7 @@ namespace XSwiftBus
         //! Constructor
         CNavDataReference(int id, double latitudeDegrees, double longitudeDegrees)
             : m_id(id), m_latitudeDegrees(latitudeDegrees), m_longitudeDegrees(longitudeDegrees)
-        { }
+        {}
 
         //! \copydoc BlackMisc::Simulation::XPlane::CNavDataReference::id
         int id() const { return m_id; }

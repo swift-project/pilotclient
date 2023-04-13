@@ -28,7 +28,7 @@ namespace XSwiftBus
     public:
         DataRefImpl(char const *name) : m_ref(XPLMFindDataRef(name))
         {
-            if (! m_ref)
+            if (!m_ref)
             {
                 XPLMDebugString("Missing dataref:");
                 XPLMDebugString(name);
@@ -54,7 +54,7 @@ namespace XSwiftBus
     public:
         ArrayDataRefImpl(char const *name, int size) : m_ref(XPLMFindDataRef(name)), m_size(size)
         {
-            if (! m_ref)
+            if (!m_ref)
             {
                 XPLMDebugString("Missing dataref:");
                 XPLMDebugString(name);
@@ -65,10 +65,10 @@ namespace XSwiftBus
         bool isValid() const { return m_ref; }
 
         template <typename T>
-        void implSetAll(T* const);
+        void implSetAll(T *const);
 
         template <typename T>
-        void implGetAll(T*) const;
+        void implGetAll(T *) const;
 
         template <typename T>
         void implSetAt(int index, T);
@@ -86,7 +86,7 @@ namespace XSwiftBus
      * \tparam DataRefTraits The trait class representing the dataref.
      * See the xplane::data namespace and http://www.xsquawkbox.net/xpsdk/docs/DataRefs.html
      */
-    template<class DataRefTraits>
+    template <class DataRefTraits>
     class DataRef : private DataRefImpl
     {
         static_assert(!DataRefTraits::is_array, "this is an array dataref");
@@ -102,7 +102,11 @@ namespace XSwiftBus
         using DataRefType = typename DataRefTraits::type;
 
         //! Set the value of the dataref (if it is writable)
-        void set(DataRefType d) { static_assert(DataRefTraits::writable, "read-only dataref"); DataRefImpl::implSet(d); }
+        void set(DataRefType d)
+        {
+            static_assert(DataRefTraits::writable, "read-only dataref");
+            DataRefImpl::implSet(d);
+        }
 
         //! Set as integer, avoids cast warnings such as "possible loss of data"
         void setAsInt(int d) { this->set(static_cast<DataRefType>(d)); }
@@ -121,7 +125,7 @@ namespace XSwiftBus
      * \tparam DataRefTraits The trait class representing the dataref.
      * See the xplane::data namespace and http://www.xsquawkbox.net/xpsdk/docs/DataRefs.html
      */
-    template<class DataRefTraits>
+    template <class DataRefTraits>
     class ArrayDataRef : private ArrayDataRefImpl
     {
         static_assert(DataRefTraits::is_array, "not an array dataref");
@@ -140,13 +144,26 @@ namespace XSwiftBus
         static constexpr auto DataRefSize = DataRefTraits::size;
 
         //! Set the value of the whole array (if it is writable)
-        void setAll(std::array<DataRefType, DataRefSize> const &a) { static_assert(DataRefTraits::writable, "read-only dataref"); ArrayDataRefImpl::implSetAll<DataRefType>(a.data()); }
+        void setAll(std::array<DataRefType, DataRefSize> const &a)
+        {
+            static_assert(DataRefTraits::writable, "read-only dataref");
+            ArrayDataRefImpl::implSetAll<DataRefType>(a.data());
+        }
 
         //! Get the value of the whole array
-        std::array<DataRefType, DataRefSize> getAll() const { std::array<DataRefType, DataRefSize> result; ArrayDataRefImpl::implGetAll<DataRefType>(result.data()); return result; }
+        std::array<DataRefType, DataRefSize> getAll() const
+        {
+            std::array<DataRefType, DataRefSize> result;
+            ArrayDataRefImpl::implGetAll<DataRefType>(result.data());
+            return result;
+        }
 
         //! Set the value of a single element (if it is writable)
-        void setAt(int index, DataRefType d) { static_assert(DataRefTraits::writable, "read-only dataref"); ArrayDataRefImpl::implSetAt(index, d); }
+        void setAt(int index, DataRefType d)
+        {
+            static_assert(DataRefTraits::writable, "read-only dataref");
+            ArrayDataRefImpl::implSetAt(index, d);
+        }
 
         //! Get the value of a single element
         DataRefType getAt(int index) const { return ArrayDataRefImpl::implGetAt<DataRefType>(index); }
@@ -159,7 +176,7 @@ namespace XSwiftBus
      * \tparam DataRefTraits The trait class representing the dataref.
      * See the xplane::data namespace and http://www.xsquawkbox.net/xpsdk/docs/DataRefs.html
      */
-    template<class DataRefTraits>
+    template <class DataRefTraits>
     class StringDataRef
     {
         static_assert(DataRefTraits::is_array, "not an array dataref");
@@ -168,7 +185,7 @@ namespace XSwiftBus
         //! Constructor
         StringDataRef() : m_ref(XPLMFindDataRef(DataRefTraits::name()))
         {
-            if (! m_ref)
+            if (!m_ref)
             {
                 XPLMDebugString("Missing dataref:");
                 XPLMDebugString(DataRefTraits::name());
@@ -208,35 +225,85 @@ namespace XSwiftBus
     };
 
     template <>
-    inline void DataRefImpl::implSet<int>(int d) { XPLMSetDatai(m_ref, d); }
+    inline void DataRefImpl::implSet<int>(int d)
+    {
+        XPLMSetDatai(m_ref, d);
+    }
     template <>
-    inline void DataRefImpl::implSet<float>(float d) { XPLMSetDataf(m_ref, d); }
+    inline void DataRefImpl::implSet<float>(float d)
+    {
+        XPLMSetDataf(m_ref, d);
+    }
     template <>
-    inline void DataRefImpl::implSet<double>(double d) { XPLMSetDatad(m_ref, d); }
+    inline void DataRefImpl::implSet<double>(double d)
+    {
+        XPLMSetDatad(m_ref, d);
+    }
     template <>
-    inline int DataRefImpl::implGet<int>() const { return XPLMGetDatai(m_ref); }
+    inline int DataRefImpl::implGet<int>() const
+    {
+        return XPLMGetDatai(m_ref);
+    }
     template <>
-    inline float DataRefImpl::implGet<float>() const { return XPLMGetDataf(m_ref); }
+    inline float DataRefImpl::implGet<float>() const
+    {
+        return XPLMGetDataf(m_ref);
+    }
     template <>
-    inline double DataRefImpl::implGet<double>() const { return XPLMGetDatad(m_ref); }
+    inline double DataRefImpl::implGet<double>() const
+    {
+        return XPLMGetDatad(m_ref);
+    }
 
     template <>
-    inline void ArrayDataRefImpl::implSetAll(int const *v) { XPLMSetDatavi(m_ref, const_cast<int *>(v), 0, m_size); }
+    inline void ArrayDataRefImpl::implSetAll(int const *v)
+    {
+        XPLMSetDatavi(m_ref, const_cast<int *>(v), 0, m_size);
+    }
     template <>
-    inline void ArrayDataRefImpl::implSetAll(float const *v) { XPLMSetDatavf(m_ref, const_cast<float *>(v), 0, m_size); }
+    inline void ArrayDataRefImpl::implSetAll(float const *v)
+    {
+        XPLMSetDatavf(m_ref, const_cast<float *>(v), 0, m_size);
+    }
     template <>
-    inline void ArrayDataRefImpl::implGetAll(int *v) const { XPLMGetDatavi(m_ref, &v[0], 0, m_size); }
+    inline void ArrayDataRefImpl::implGetAll(int *v) const
+    {
+        XPLMGetDatavi(m_ref, &v[0], 0, m_size);
+    }
     template <>
-    inline void ArrayDataRefImpl::implGetAll(float *v) const { XPLMGetDatavf(m_ref, &v[0], 0, m_size); }
+    inline void ArrayDataRefImpl::implGetAll(float *v) const
+    {
+        XPLMGetDatavf(m_ref, &v[0], 0, m_size);
+    }
 
     template <>
-    inline void ArrayDataRefImpl::implSetAt<int>(int i, int d) { assert(i <= m_size); XPLMSetDatavi(m_ref, &d, i, 1); }
+    inline void ArrayDataRefImpl::implSetAt<int>(int i, int d)
+    {
+        assert(i <= m_size);
+        XPLMSetDatavi(m_ref, &d, i, 1);
+    }
     template <>
-    inline void ArrayDataRefImpl::implSetAt<float>(int i, float d) { assert(i <= m_size); XPLMSetDatavf(m_ref, &d, i, 1); }
+    inline void ArrayDataRefImpl::implSetAt<float>(int i, float d)
+    {
+        assert(i <= m_size);
+        XPLMSetDatavf(m_ref, &d, i, 1);
+    }
     template <>
-    inline int ArrayDataRefImpl::implGetAt<int>(int i) const { assert(i <= m_size); int d; XPLMGetDatavi(m_ref, &d, i, 1); return d; }
+    inline int ArrayDataRefImpl::implGetAt<int>(int i) const
+    {
+        assert(i <= m_size);
+        int d;
+        XPLMGetDatavi(m_ref, &d, i, 1);
+        return d;
+    }
     template <>
-    inline float ArrayDataRefImpl::implGetAt<float>(int i) const { assert(i <= m_size); float d; XPLMGetDatavf(m_ref, &d, i, 1); return d; }
+    inline float ArrayDataRefImpl::implGetAt<float>(int i) const
+    {
+        assert(i <= m_size);
+        float d;
+        XPLMGetDatavf(m_ref, &d, i, 1);
+        return d;
+    }
 
 } // namespace
 

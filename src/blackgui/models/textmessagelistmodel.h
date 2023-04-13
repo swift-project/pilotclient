@@ -17,7 +17,10 @@
 
 class QObject;
 
-namespace BlackMisc::Network { class CTextMessage; }
+namespace BlackMisc::Network
+{
+    class CTextMessage;
+}
 namespace BlackGui::Models
 {
     //! Text message list model

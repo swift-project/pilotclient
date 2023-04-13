@@ -128,8 +128,7 @@ namespace BlackMisc::Weather
     private:
         const QHash<QString, CMetar::ReportType> &getReportTypeHash() const
         {
-            static const QHash<QString, CMetar::ReportType> hash =
-            {
+            static const QHash<QString, CMetar::ReportType> hash = {
                 { "METAR", CMetar::METAR },
                 { "SPECI", CMetar::SPECI }
             };
@@ -175,13 +174,13 @@ namespace BlackMisc::Weather
         bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const override
         {
             bool ok = false;
-            int day    = match.captured("day").toInt(&ok);
-            int hour   = match.captured("hour").toInt(&ok);
+            int day = match.captured("day").toInt(&ok);
+            int hour = match.captured("hour").toInt(&ok);
             int minute = match.captured("minute").toInt(&ok);
             if (!ok) return false;
 
-            if (day < 1    || day > 31)    return false;
-            if (hour < 0   || hour > 23)   return false;
+            if (day < 1 || day > 31) return false;
+            if (hour < 0 || hour > 23) return false;
             if (minute < 0 || minute > 59) return false;
 
             PhysicalQuantities::CTime time(hour, minute, 0);
@@ -210,9 +209,19 @@ namespace BlackMisc::Weather
 
         bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const override
         {
-            if (match.captured(1) == "AUTO") { metar.setAutomated(true); return true; }
-            else if (match.captured(1) == "NIL") { /* todo */ return true; }
-            else if (match.captured(1).size() == 3) { /* todo */ return true; }
+            if (match.captured(1) == "AUTO")
+            {
+                metar.setAutomated(true);
+                return true;
+            }
+            else if (match.captured(1) == "NIL")
+            { /* todo */
+                return true;
+            }
+            else if (match.captured(1).size() == 3)
+            { /* todo */
+                return true;
+            }
             else { return false; }
         }
 
@@ -227,8 +236,7 @@ namespace BlackMisc::Weather
     protected:
         const QHash<QString, CSpeedUnit> &getWindUnitHash() const
         {
-            static const QHash<QString, CSpeedUnit> hash =
-            {
+            static const QHash<QString, CSpeedUnit> hash = {
                 { "KT", CSpeedUnit::kts() },
                 { "MPS", CSpeedUnit::m_s() },
                 { "KPH", CSpeedUnit::km_h() },
@@ -275,7 +283,7 @@ namespace BlackMisc::Weather
             if (!getWindUnitHash().contains(unitAsString)) return false;
 
             CWindLayer windLayer(CAltitude(0, CAltitude::AboveGround, CLengthUnit::ft()), CAngle(direction, CAngleUnit::deg()), CSpeed(speed, getWindUnitHash().value(unitAsString)),
-                                    CSpeed(gustSpeed, getWindUnitHash().value(unitAsString)));
+                                 CSpeed(gustSpeed, getWindUnitHash().value(unitAsString)));
             windLayer.setDirectionVariable(directionVariable);
             metar.setWindLayer(windLayer);
             return true;
@@ -354,8 +362,7 @@ namespace BlackMisc::Weather
     protected:
         const QHash<QString, QString> &getCardinalDirections() const
         {
-            static const QHash<QString, QString> hash =
-            {
+            static const QHash<QString, QString> hash = {
                 { "N", "north" },
                 { "NE", "north-east" },
                 { "E", "east" },
@@ -377,7 +384,11 @@ namespace BlackMisc::Weather
         bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const override
         {
             bool ok = false;
-            if (!match.captured("cavok").isEmpty()) { metar.setCavok(); return true; }
+            if (!match.captured("cavok").isEmpty())
+            {
+                metar.setCavok();
+                return true;
+            }
             QString visibilityAsString = match.captured("visibility");
             if (visibilityAsString == "////") return true;
 
@@ -439,7 +450,7 @@ namespace BlackMisc::Weather
             // 1 1/2SM.
             // Auto only: M prefixed to value < 1/4 mile, e.g., M1/4S
             const QString visibility_us = QStringLiteral("(?<distance>\\d{0,2}) ?M?((?<numerator>\\d)/(?<denominator>\\d))?(?<unit>SM|KM)");
-            const QString regexp = "^(" + cavok + "|" + visibility_eu + "|" +  visibility_us + ") ";
+            const QString regexp = "^(" + cavok + "|" + visibility_eu + "|" + visibility_us + ") ";
             return regexp;
         }
     };
@@ -509,8 +520,7 @@ namespace BlackMisc::Weather
     protected:
         const QHash<QString, CPresentWeather::Intensity> &getIntensityHash() const
         {
-            static const QHash<QString, CPresentWeather::Intensity> hash =
-            {
+            static const QHash<QString, CPresentWeather::Intensity> hash = {
                 { "-", CPresentWeather::Light },
                 { "+", CPresentWeather::Heavy },
                 { "VC", CPresentWeather::InVincinity }
@@ -520,8 +530,7 @@ namespace BlackMisc::Weather
 
         const QHash<QString, CPresentWeather::Descriptor> &getDescriptorHash() const
         {
-            static const QHash<QString, CPresentWeather::Descriptor> hash =
-            {
+            static const QHash<QString, CPresentWeather::Descriptor> hash = {
                 { "MI", CPresentWeather::Shallow },
                 { "BC", CPresentWeather::Patches },
                 { "PR", CPresentWeather::Partial },
@@ -536,8 +545,7 @@ namespace BlackMisc::Weather
 
         const QHash<QString, CPresentWeather::WeatherPhenomenon> &getWeatherPhenomenaHash() const
         {
-            static const QHash<QString, CPresentWeather::WeatherPhenomenon> hash =
-            {
+            static const QHash<QString, CPresentWeather::WeatherPhenomenon> hash = {
                 { "DZ", CPresentWeather::Drizzle },
                 { "RA", CPresentWeather::Rain },
                 { "SN", CPresentWeather::Snow },
@@ -627,8 +635,7 @@ namespace BlackMisc::Weather
     protected:
         const QStringList &getClearSkyTokens() const
         {
-            static const QStringList list =
-            {
+            static const QStringList list = {
                 "SKC",
                 "NSC",
                 "CLR",
@@ -639,8 +646,7 @@ namespace BlackMisc::Weather
 
         const QHash<QString, CCloudLayer::Coverage> &getCoverage() const
         {
-            static const QHash<QString, CCloudLayer::Coverage> hash =
-            {
+            static const QHash<QString, CCloudLayer::Coverage> hash = {
                 { "///", CCloudLayer::None },
                 { "FEW", CCloudLayer::Few },
                 { "SCT", CCloudLayer::Scattered },
@@ -682,7 +688,7 @@ namespace BlackMisc::Weather
             CCloudLayer cloudLayer(CAltitude(base, CAltitude::AboveGround, CLengthUnit::ft()), {}, getCoverage().value(coverageAsString));
             metar.addCloudLayer(cloudLayer);
             QString cb_tcu = match.captured("cb_tcu");
-            if (!cb_tcu.isEmpty()) { }
+            if (!cb_tcu.isEmpty()) {}
             return true;
         }
 
@@ -717,7 +723,7 @@ namespace BlackMisc::Weather
             return re;
         }
 
-        bool validateAndSet(const QRegularExpressionMatch &/* match */, CMetar &/* metar */) const override
+        bool validateAndSet(const QRegularExpressionMatch & /* match */, CMetar & /* metar */) const override
         {
             // todo
             return true;
@@ -806,8 +812,7 @@ namespace BlackMisc::Weather
     protected:
         const QHash<QString, CPressureUnit> &getPressureUnits() const
         {
-            static const QHash<QString, CPressureUnit> hash =
-            {
+            static const QHash<QString, CPressureUnit> hash = {
                 { "Q", CPressureUnit::hPa() },
                 { "A", CPressureUnit::inHg() }
             };
@@ -879,7 +884,7 @@ namespace BlackMisc::Weather
             return re;
         }
 
-        bool validateAndSet(const QRegularExpressionMatch &/** match **/, CMetar &/** metar **/) const override
+        bool validateAndSet(const QRegularExpressionMatch & /** match **/, CMetar & /** metar **/) const override
         {
             // Ignore for now
             return true;
@@ -903,10 +908,9 @@ namespace BlackMisc::Weather
         }
 
         const QStringList m_descriptor = QStringList { "MI", "BC", "PR", "DR", "BL", "SH", "TS", "FZ" };
-        const QStringList m_phenomina = QStringList  { "DZ", "RA", "SN", "SG", "IC", "PE", "GR", "GS",
-                                                        "BR", "FG", "FU", "VA", "IC", "DU", "SA", "HZ",
-                                                        "PY", "PO", "SQ", "FC", "SS", "DS"
-                                                        };
+        const QStringList m_phenomina = QStringList { "DZ", "RA", "SN", "SG", "IC", "PE", "GR", "GS",
+                                                      "BR", "FG", "FU", "VA", "IC", "DU", "SA", "HZ",
+                                                      "PY", "PO", "SQ", "FC", "SS", "DS" };
     };
 
     class CMetarDecoderWindShear : public IMetarDecoderPart
@@ -954,7 +958,7 @@ namespace BlackMisc::Weather
     }
 
     CMetarDecoder::~CMetarDecoder()
-    { }
+    {}
 
     CMetar CMetarDecoder::decode(const QString &metarString) const
     {

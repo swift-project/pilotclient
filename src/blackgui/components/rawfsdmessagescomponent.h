@@ -18,7 +18,10 @@
 
 #include <QFrame>
 
-namespace Ui { class CRawFsdMessagesComponent; }
+namespace Ui
+{
+    class CRawFsdMessagesComponent;
+}
 namespace BlackGui::Components
 {
     //! GUI displaying raw FSD messages
@@ -53,7 +56,7 @@ namespace BlackGui::Components
         BlackMisc::CSetting<BlackCore::Vatsim::TRawFsdMessageSetting> m_setting { this };
 
         QScopedPointer<Ui::CRawFsdMessagesComponent> ui;
-        BlackMisc::CConnectionGuard m_signalConnections;  //!< connected signal/slots
+        BlackMisc::CConnectionGuard m_signalConnections; //!< connected signal/slots
 
         QString m_filterString;
         QString m_filterPacketType;

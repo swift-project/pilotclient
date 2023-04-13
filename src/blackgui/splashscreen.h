@@ -43,9 +43,9 @@ namespace BlackGui
         //! Hide text
         void hideText();
 
-        QString  m_message;
-        QTimer   m_hideTextTimer;
-        QLabel  *m_label = nullptr;
+        QString m_message;
+        QTimer m_hideTextTimer;
+        QLabel *m_label = nullptr;
     };
 } // ns
 

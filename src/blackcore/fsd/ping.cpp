@@ -13,12 +13,12 @@
 namespace BlackCore::Fsd
 {
     Ping::Ping() : MessageBase()
-    { }
+    {}
 
     Ping::Ping(const QString &sender, const QString &receiver, const QString &timestamp)
         : MessageBase(sender, receiver),
-            m_timestamp(timestamp)
-    { }
+          m_timestamp(timestamp)
+    {}
 
     QStringList Ping::toTokens() const
     {

@@ -35,7 +35,10 @@
 
 namespace BlackMisc
 {
-    namespace Geo { class CElevationPlane; }
+    namespace Geo
+    {
+        class CElevationPlane;
+    }
     namespace Simulation
     {
         //! Direct thread safe in memory access to remote aircraft
@@ -45,8 +48,8 @@ namespace BlackMisc
         class BLACKMISC_EXPORT IRemoteAircraftProvider : public IProvider
         {
         public:
-            static constexpr int MaxSituationsPerCallsign   = 50; //!< How many situations we keep per callsign
-            static constexpr int MaxPartsPerCallsign        = 50; //!< How many parts we keep per callsign
+            static constexpr int MaxSituationsPerCallsign = 50; //!< How many situations we keep per callsign
+            static constexpr int MaxPartsPerCallsign = 50; //!< How many parts we keep per callsign
             static constexpr int MaxPartsAgePerCallsignSecs = 60; //!< How many seconds to keep parts for interpolation
 
             //! Destructor
@@ -56,7 +59,7 @@ namespace BlackMisc
             IRemoteAircraftProvider(const IRemoteAircraftProvider &) = delete;
 
             //! Copy assignment operator
-            IRemoteAircraftProvider &operator =(const IRemoteAircraftProvider &) = delete;
+            IRemoteAircraftProvider &operator=(const IRemoteAircraftProvider &) = delete;
 
             //! All remote aircraft
             //! \threadsafe
@@ -266,8 +269,7 @@ namespace BlackMisc
                 std::function<void(const Aviation::CAircraftSituation &)> addedSituationSlot,
                 std::function<void(const Aviation::CCallsign &, const Aviation::CAircraftParts &)> addedPartsSlot,
                 std::function<void(const Aviation::CCallsign &)> removedAircraftSlot,
-                std::function<void(const CAirspaceAircraftSnapshot &)> aircraftSnapshot
-            ) = 0;
+                std::function<void(const CAirspaceAircraftSnapshot &)> aircraftSnapshot) = 0;
 
             //! Remove outdated aircraft parts, but never the most recent one
             static void removeOutdatedParts(Aviation::CAircraftPartsList &partsList);
@@ -279,7 +281,7 @@ namespace BlackMisc
             //! Constructor
             IRemoteAircraftProvider();
         };
-    } //s
+    } // s
 } // ns
 
 Q_DECLARE_INTERFACE(BlackMisc::Simulation::IRemoteAircraftProvider, "org.swift-project.iremoteaircraftprovider")
@@ -353,8 +355,7 @@ namespace BlackMisc::Simulation
             std::function<void(const Aviation::CAircraftSituation &)> addedSituationSlot,
             std::function<void(const Aviation::CCallsign &, const Aviation::CAircraftParts &)> addedPartsSlot,
             std::function<void(const Aviation::CCallsign &)> removedAircraftSlot,
-            std::function<void(const CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
-        ) override;
+            std::function<void(const CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot) override;
 
         virtual void enableReverseLookupMessages(ReverseLookupLogging enable) override;
         virtual ReverseLookupLogging isReverseLookupMessagesEnabled() const override;
@@ -475,33 +476,33 @@ namespace BlackMisc::Simulation
         //! \threadsafe
         void storeChange(const Aviation::CAircraftSituationChange &change);
 
-        Aviation::CAircraftSituationListPerCallsign m_situationsByCallsign;        //!< situations, for performance reasons per callsign, thread safe access required
-        Aviation::CAircraftSituationPerCallsign m_latestSituationByCallsign;       //!< latest situations, for performance reasons per callsign, thread safe access required
+        Aviation::CAircraftSituationListPerCallsign m_situationsByCallsign; //!< situations, for performance reasons per callsign, thread safe access required
+        Aviation::CAircraftSituationPerCallsign m_latestSituationByCallsign; //!< latest situations, for performance reasons per callsign, thread safe access required
         Aviation::CAircraftSituationPerCallsign m_latestOnGroundProviderElevation; //!< situations on ground with elevation from provider
-        Aviation::CAircraftPartsListPerCallsign m_partsByCallsign;                 //!< parts, for performance reasons per callsign, thread safe access required
-        Aviation::CAircraftSituationChangeListPerCallsign m_changesByCallsign;     //!< changes, for performance reasons per callsign, thread safe access required (same timestamps as corresponding situations)
-        Aviation::CCallsignSet m_aircraftWithParts;                                //!< aircraft supporting parts, thread safe access required
+        Aviation::CAircraftPartsListPerCallsign m_partsByCallsign; //!< parts, for performance reasons per callsign, thread safe access required
+        Aviation::CAircraftSituationChangeListPerCallsign m_changesByCallsign; //!< changes, for performance reasons per callsign, thread safe access required (same timestamps as corresponding situations)
+        Aviation::CCallsignSet m_aircraftWithParts; //!< aircraft supporting parts, thread safe access required
         int m_situationsAdded = 0; //!< total number of situations added, thread safe access required
-        int m_partsAdded      = 0; //!< total number of parts added, thread safe access required
+        int m_partsAdded = 0; //!< total number of parts added, thread safe access required
 
-        ReverseLookupLogging m_enableReverseLookupMsgs = RevLogSimplifiedInfo;     //!< shall we log. information about the matching process
-        Simulation::CSimulatedAircraftPerCallsign m_aircraftInRange;      //!< aircraft, thread safe access required
-        Aviation::CStatusMessageListPerCallsign m_reverseLookupMessages;  //!< reverse lookup messages
-        Aviation::CStatusMessageListPerCallsign m_aircraftPartsMessages;  //!< status messages for parts history
-        Aviation::CTimestampPerCallsign m_situationsLastModified;         //!< when situations last modified
-        Aviation::CTimestampPerCallsign m_partsLastModified;              //!< when parts last modified
-        Aviation::CLengthPerCallsign    m_testOffset;                     //!< offsets
-        Aviation::CLengthPerCallsign    m_dbCGPerCallsign;                //!< DB CG per callsign
+        ReverseLookupLogging m_enableReverseLookupMsgs = RevLogSimplifiedInfo; //!< shall we log. information about the matching process
+        Simulation::CSimulatedAircraftPerCallsign m_aircraftInRange; //!< aircraft, thread safe access required
+        Aviation::CStatusMessageListPerCallsign m_reverseLookupMessages; //!< reverse lookup messages
+        Aviation::CStatusMessageListPerCallsign m_aircraftPartsMessages; //!< status messages for parts history
+        Aviation::CTimestampPerCallsign m_situationsLastModified; //!< when situations last modified
+        Aviation::CTimestampPerCallsign m_partsLastModified; //!< when parts last modified
+        Aviation::CLengthPerCallsign m_testOffset; //!< offsets
+        Aviation::CLengthPerCallsign m_dbCGPerCallsign; //!< DB CG per callsign
         QHash<QString, PhysicalQuantities::CLength> m_dbCGPerModelString; //!< DB CG per model string
 
-        bool m_enableAircraftPartsHistory = true;  //!< shall we keep a history of aircraft parts
+        bool m_enableAircraftPartsHistory = true; //!< shall we keep a history of aircraft parts
 
         // locks
-        mutable QReadWriteLock m_lockSituations;   //!< lock for situations: m_situationsByCallsign
-        mutable QReadWriteLock m_lockParts;        //!< lock for parts: m_partsByCallsign, m_aircraftSupportingParts
-        mutable QReadWriteLock m_lockChanges;      //!< lock for changes: m_changesByCallsign
-        mutable QReadWriteLock m_lockAircraft;     //!< lock aircraft: m_aircraftInRange, m_dbCGPerCallsign
-        mutable QReadWriteLock m_lockMessages;     //!< lock for messages
+        mutable QReadWriteLock m_lockSituations; //!< lock for situations: m_situationsByCallsign
+        mutable QReadWriteLock m_lockParts; //!< lock for parts: m_partsByCallsign, m_aircraftSupportingParts
+        mutable QReadWriteLock m_lockChanges; //!< lock for changes: m_changesByCallsign
+        mutable QReadWriteLock m_lockAircraft; //!< lock aircraft: m_aircraftInRange, m_dbCGPerCallsign
+        mutable QReadWriteLock m_lockMessages; //!< lock for messages
         mutable QReadWriteLock m_lockPartsHistory; //!< lock for aircraft parts
     };
 

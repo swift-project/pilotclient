@@ -107,11 +107,11 @@ namespace BlackMisc
         static QString fileNameToDirectory(const QString &fileName);
 
     private:
-        QString m_dirFlightPlan;         //!< directory for flight plans
-        QString m_dirLastViewJson;       //!< last JSON save directory
-        QString m_dirLastModelJson;      //!< last JSON model directory
+        QString m_dirFlightPlan; //!< directory for flight plans
+        QString m_dirLastViewJson; //!< last JSON save directory
+        QString m_dirLastModelJson; //!< last JSON model directory
         QString m_dirLastModelStashJson; //!< last JSON model stash save directory
-        QString m_dirMatchingScript;     //!< matching script dir
+        QString m_dirMatchingScript; //!< matching script dir
 
         //! Return checkDir if existing, defaultDir otherwise
         QString existingOrDefaultDir(const QString &checkDir, const QString &defaultDir) const;
@@ -135,7 +135,11 @@ namespace BlackMisc
             static const char *key() { return "swiftdirectories"; }
 
             //! \copydoc BlackMisc::TSettingTrait::humanReadable
-            static const QString &humanReadable() { static const QString name("swift directories"); return name; }
+            static const QString &humanReadable()
+            {
+                static const QString name("swift directories");
+                return name;
+            }
         };
     }
 } // namespace

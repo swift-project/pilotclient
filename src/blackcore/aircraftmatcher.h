@@ -34,8 +34,14 @@ namespace BlackMisc
 {
     class CLogCategoryList;
     class CStatusMessageList;
-    namespace Aviation   { class CCallsign; }
-    namespace Simulation { class CSimulatedAircraft; }
+    namespace Aviation
+    {
+        class CCallsign;
+    }
+    namespace Simulation
+    {
+        class CSimulatedAircraft;
+    }
 }
 
 namespace BlackCore
@@ -68,7 +74,7 @@ namespace BlackCore
         CAircraftMatcher(const CAircraftMatcher &) = delete;
 
         //! Copy assignment operator
-        CAircraftMatcher &operator =(const CAircraftMatcher &) = delete;
+        CAircraftMatcher &operator=(const CAircraftMatcher &) = delete;
 
         //! Set the setup
         bool setSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
@@ -108,11 +114,11 @@ namespace BlackCore
         //! \remarks model list could be the model set
         //! \threadsafe
         static BlackMisc::Aviation::CAirlineIcaoCode failoverValidAirlineIcaoDesignatorModelsFirst(const BlackMisc::Aviation::CCallsign &callsign,
-                const QString &primaryIcao, const QString &secondaryIcao,
-                bool airlineFromCallsign,
-                const QString &airlineName, const QString &airlineTelephony,
-                const BlackMisc::Simulation::CAircraftModelList &models,
-                BlackMisc::CStatusMessageList *log = nullptr);
+                                                                                                   const QString &primaryIcao, const QString &secondaryIcao,
+                                                                                                   bool airlineFromCallsign,
+                                                                                                   const QString &airlineName, const QString &airlineTelephony,
+                                                                                                   const BlackMisc::Simulation::CAircraftModelList &models,
+                                                                                                   BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Run the network reverse lookup script
         //! \threadsafe
@@ -126,21 +132,21 @@ namespace BlackCore
         //! Run the matching script
         //! \threadsafe
         static BlackMisc::Simulation::MatchingScriptReturnValues matchingScript(const QString &js,
-                const BlackMisc::Simulation::CAircraftModel &inModel, const BlackMisc::Simulation::CAircraftModel &matchedModel, const BlackMisc::Simulation::CAircraftMatcherSetup &setup,
-                const BlackMisc::Simulation::CAircraftModelList &modelSet, BlackMisc::Simulation::MatchingScript ms,
-                BlackMisc::CStatusMessageList *log);
+                                                                                const BlackMisc::Simulation::CAircraftModel &inModel, const BlackMisc::Simulation::CAircraftModel &matchedModel, const BlackMisc::Simulation::CAircraftMatcherSetup &setup,
+                                                                                const BlackMisc::Simulation::CAircraftModelList &modelSet, BlackMisc::Simulation::MatchingScript ms,
+                                                                                BlackMisc::CStatusMessageList *log);
 
         //! Try to find the corresponding data in DB and get best information for given data
         //! \threadsafe
         //! \ingroup reverselookup
         //! \remark NOT running matching script
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Aviation::CCallsign &callsign,
-                const BlackMisc::Aviation::CAircraftIcaoCode &networkAircraftIcao,
-                const BlackMisc::Aviation::CAirlineIcaoCode &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString,
-                const BlackMisc::Simulation::CAircraftMatcherSetup &setup,
-                const BlackMisc::Simulation::CAircraftModelList &modelSet,
-                BlackMisc::Simulation::CAircraftModel::ModelType type,
-                BlackMisc::CStatusMessageList *log);
+                                                                        const BlackMisc::Aviation::CAircraftIcaoCode &networkAircraftIcao,
+                                                                        const BlackMisc::Aviation::CAirlineIcaoCode &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString,
+                                                                        const BlackMisc::Simulation::CAircraftMatcherSetup &setup,
+                                                                        const BlackMisc::Simulation::CAircraftModelList &modelSet,
+                                                                        BlackMisc::Simulation::CAircraftModel::ModelType type,
+                                                                        BlackMisc::CStatusMessageList *log);
 
         //! Try to find the corresponding data in DB and get best information for following matching
         //! \threadsafe
@@ -399,14 +405,14 @@ namespace BlackCore
         //! Use pseudo family
         static bool constexpr UsePseudoFamily = true;
 
-        BlackMisc::Simulation::CAircraftMatcherSetup m_setup;           //!< setup
-        BlackMisc::Simulation::CAircraftModel        m_defaultModel;    //!< model to be used as default model
-        BlackMisc::Simulation::CAircraftModelList    m_modelSet;        //!< models used for model matching
-        BlackMisc::Simulation::CAircraftModelList    m_disabledModels;  //!< disabled models for matching
-        BlackMisc::Simulation::CSimulatorInfo        m_simulator;       //!< simulator (optional)
-        BlackMisc::Simulation::CMatchingStatistics   m_statistics;      //!< matching statistics
-        BlackMisc::Simulation::CCategoryMatcher      m_categoryMatcher; //!< the category matcher
-        QString                                      m_modelSetInfo;    //!< info string
+        BlackMisc::Simulation::CAircraftMatcherSetup m_setup; //!< setup
+        BlackMisc::Simulation::CAircraftModel m_defaultModel; //!< model to be used as default model
+        BlackMisc::Simulation::CAircraftModelList m_modelSet; //!< models used for model matching
+        BlackMisc::Simulation::CAircraftModelList m_disabledModels; //!< disabled models for matching
+        BlackMisc::Simulation::CSimulatorInfo m_simulator; //!< simulator (optional)
+        BlackMisc::Simulation::CMatchingStatistics m_statistics; //!< matching statistics
+        BlackMisc::Simulation::CCategoryMatcher m_categoryMatcher; //!< the category matcher
+        QString m_modelSetInfo; //!< info string
     };
 } // namespace
 

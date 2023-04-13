@@ -76,10 +76,9 @@ namespace BlackMisc
         //! Constructor.
         //! \param owner Will be the parent of the internal QObject used to access the value.
         template <typename T>
-        CSetting(T *owner) :
-            CSetting::CCached(CSettingsCache::instance(), Trait::key(), Trait::humanReadable(), Trait::isValid, Trait::defaultValue(), owner)
+        CSetting(T *owner) : CSetting::CCached(CSettingsCache::instance(), Trait::key(), Trait::humanReadable(), Trait::isValid, Trait::defaultValue(), owner)
         {
-            if (! this->isInitialized())
+            if (!this->isInitialized())
             {
                 this->onOwnerNameChanged([this, owner] { Private::reconstruct(this, owner); });
             }
@@ -140,18 +139,35 @@ namespace BlackMisc
         using type = T;
 
         //! Key string of the value. Reimplemented in derived class.
-        static const char *key() { qFatal("Not implemented"); return ""; }
+        static const char *key()
+        {
+            qFatal("Not implemented");
+            return "";
+        }
 
         //! Optional human readable name.
-        static const QString &humanReadable() { static const QString name; return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name;
+            return name;
+        }
 
         //! Validator function. Return true if the argument is valid, false otherwise. Default
         //! implementation just returns true. Reimplemented in derived class to support validation of the value.
-        static bool isValid(const T &value, QString &reason) { Q_UNUSED(value); Q_UNUSED(reason); return true; }
+        static bool isValid(const T &value, QString &reason)
+        {
+            Q_UNUSED(value);
+            Q_UNUSED(reason);
+            return true;
+        }
 
         //! Return the value to use in case the supplied value does not satisfy the validator.
         //! Default implementation returns a default-constructed value.
-        static const T &defaultValue() { static const T def {}; return def; }
+        static const T &defaultValue()
+        {
+            static const T def {};
+            return def;
+        }
 
         //! Deleted default constructor.
         TSettingTrait() = delete;
@@ -160,7 +176,7 @@ namespace BlackMisc
         TSettingTrait(const TSettingTrait &) = delete;
 
         //! Deleted copy assignment operator.
-        TSettingTrait &operator =(const TSettingTrait &) = delete;
+        TSettingTrait &operator=(const TSettingTrait &) = delete;
     };
 }
 

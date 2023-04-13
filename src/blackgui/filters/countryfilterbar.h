@@ -21,8 +21,14 @@
 
 class QWidget;
 
-namespace BlackMisc { class CCountryList; }
-namespace Ui { class CCountryFilterBar; }
+namespace BlackMisc
+{
+    class CCountryList;
+}
+namespace Ui
+{
+    class CCountryFilterBar;
+}
 namespace BlackGui::Filters
 {
     /*!

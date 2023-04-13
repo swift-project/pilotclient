@@ -36,8 +36,7 @@ namespace BlackGui::Models
     {
     public:
         //! Constructor
-        CDefaultFormatter(int alignment = alignDefault(), bool i18n = true, const QList<int> &supportedRoles = { Qt::DisplayRole }) :
-            m_supportedRoles(supportedRoles), m_alignment(alignment), m_useI18n(i18n)
+        CDefaultFormatter(int alignment = alignDefault(), bool i18n = true, const QList<int> &supportedRoles = { Qt::DisplayRole }) : m_supportedRoles(supportedRoles), m_alignment(alignment), m_useI18n(i18n)
         {}
 
         //! Virtual destructor
@@ -47,7 +46,7 @@ namespace BlackGui::Models
         CDefaultFormatter(const CDefaultFormatter &) = default;
 
         //! Copy assignment operator
-        CDefaultFormatter &operator =(const CDefaultFormatter &) = default;
+        CDefaultFormatter &operator=(const CDefaultFormatter &) = default;
 
         //! Flags
         virtual Qt::ItemFlags flags(Qt::ItemFlags flags, bool editable) const;
@@ -99,19 +98,39 @@ namespace BlackGui::Models
         static int alignRightVCenter() { return Qt::AlignVCenter | Qt::AlignRight; }
 
         //! Display role
-        static const QList<int> &roleDisplay() { static const QList<int> r({ Qt::DisplayRole}); return r; }
+        static const QList<int> &roleDisplay()
+        {
+            static const QList<int> r({ Qt::DisplayRole });
+            return r;
+        }
 
         //! Display role
-        static const QList<int> &rolesDisplayAndEdit() { static const QList<int> r({ Qt::DisplayRole, Qt::EditRole}); return r; }
+        static const QList<int> &rolesDisplayAndEdit()
+        {
+            static const QList<int> r({ Qt::DisplayRole, Qt::EditRole });
+            return r;
+        }
 
         //! Decoration + ToolTip role
-        static const QList<int> &rolesDecorationAndToolTip() { static const QList<int> r({ Qt::DecorationRole, Qt::ToolTipRole}); return r; }
+        static const QList<int> &rolesDecorationAndToolTip()
+        {
+            static const QList<int> r({ Qt::DecorationRole, Qt::ToolTipRole });
+            return r;
+        }
 
         //! CheckState role
-        static const QList<int> &roleCheckState() { static const QList<int> r({ Qt::CheckStateRole}); return r; }
+        static const QList<int> &roleCheckState()
+        {
+            static const QList<int> r({ Qt::CheckStateRole });
+            return r;
+        }
 
         //! No roles
-        static const QList<int> &rolesNone() { static const QList<int> r; return r; }
+        static const QList<int> &rolesNone()
+        {
+            static const QList<int> r;
+            return r;
+        }
 
     protected:
         //! Standard conversion
@@ -123,9 +142,9 @@ namespace BlackGui::Models
         //! Empty pixmap CVariant
         static const BlackMisc::CVariant &emptyPixmapVariant();
 
-        QList<int>  m_supportedRoles = roleDisplay();  //!< supports decoration roles
-        int  m_alignment = -1;     //!< alignment horizontal/vertically / Qt::Alignment
-        bool m_useI18n   = true;   //!< i18n?
+        QList<int> m_supportedRoles = roleDisplay(); //!< supports decoration roles
+        int m_alignment = -1; //!< alignment horizontal/vertically / Qt::Alignment
+        bool m_useI18n = true; //!< i18n?
     };
 
     //! Pixmap formatter
@@ -146,14 +165,14 @@ namespace BlackGui::Models
 
         //! @{
         //! Width/height
-        int getMaxWidth()  const { return m_maxWidth; }
+        int getMaxWidth() const { return m_maxWidth; }
         int getMaxHeight() const { return m_maxHeight; }
-        void setMaxWidth(int w)  { m_maxWidth = w; }
+        void setMaxWidth(int w) { m_maxWidth = w; }
         void setMaxHeight(int h) { m_maxHeight = h; }
         //! @}
 
     private:
-        int m_maxWidth  = -1;
+        int m_maxWidth = -1;
         int m_maxHeight = -1;
     };
 
@@ -195,8 +214,7 @@ namespace BlackGui::Models
     {
     public:
         //! Constructor
-        CDelegateFormatter(int alignment = alignCentered(), const QList<int> &supportedRoles = rolesDecorationAndToolTip()) :
-            CDefaultFormatter(alignment, false, supportedRoles) {}
+        CDelegateFormatter(int alignment = alignCentered(), const QList<int> &supportedRoles = rolesDecorationAndToolTip()) : CDefaultFormatter(alignment, false, supportedRoles) {}
 
         //! \copydoc CDefaultFormatter::flags
         virtual Qt::ItemFlags flags(Qt::ItemFlags flags, bool editable) const override;
@@ -207,10 +225,9 @@ namespace BlackGui::Models
     {
     public:
         //! Constructor
-        CBoolTextFormatter(int alignment = alignDefault(), const QString &trueName = "true", const QString &falseName = "false", const QList<int> &supportedRoles = roleDisplay()) :
-            CDefaultFormatter(alignment, false, supportedRoles),
-            m_trueNameVariant(BlackMisc::CVariant::from(trueName)),
-            m_falseNameVariant(BlackMisc::CVariant::from(falseName)) {}
+        CBoolTextFormatter(int alignment = alignDefault(), const QString &trueName = "true", const QString &falseName = "false", const QList<int> &supportedRoles = roleDisplay()) : CDefaultFormatter(alignment, false, supportedRoles),
+                                                                                                                                                                                     m_trueNameVariant(BlackMisc::CVariant::from(trueName)),
+                                                                                                                                                                                     m_falseNameVariant(BlackMisc::CVariant::from(falseName)) {}
 
         //! \copydoc CDefaultFormatter::displayRole
         virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
@@ -219,7 +236,7 @@ namespace BlackGui::Models
         virtual Qt::ItemFlags flags(Qt::ItemFlags flags, bool editable) const override;
 
     protected:
-        const BlackMisc::CVariant m_trueNameVariant  = "true";  //!< displayed when true
+        const BlackMisc::CVariant m_trueNameVariant = "true"; //!< displayed when true
         const BlackMisc::CVariant m_falseNameVariant = "false"; //!< displayed when false
     };
 
@@ -227,7 +244,6 @@ namespace BlackGui::Models
     class CBoolLedFormatter : public CBoolTextFormatter
     {
     public:
-
         //! Constructor
         CBoolLedFormatter(int alignment = alignDefault());
 
@@ -247,7 +263,7 @@ namespace BlackGui::Models
         }
 
     protected:
-        BlackMisc::CVariant m_pixmapOnLedVariant;  //!< Pixmap used when on
+        BlackMisc::CVariant m_pixmapOnLedVariant; //!< Pixmap used when on
         BlackMisc::CVariant m_pixmapOffLedVariant; //!< Pixmap used when off
 
     private:
@@ -262,7 +278,6 @@ namespace BlackGui::Models
     class CBoolIconFormatter : public CBoolTextFormatter
     {
     public:
-
         //! Constructor
         CBoolIconFormatter(int alignment = alignCentered());
 
@@ -285,7 +300,7 @@ namespace BlackGui::Models
         virtual BlackMisc::CVariant tooltipRole(const BlackMisc::CVariant &dataCVariant) const override;
 
     protected:
-        const BlackMisc::CVariant m_iconOnVariant;  //!< Used when on
+        const BlackMisc::CVariant m_iconOnVariant; //!< Used when on
         const BlackMisc::CVariant m_iconOffVariant; //!< Used when off
     };
 
@@ -314,19 +329,39 @@ namespace BlackGui::Models
         virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dateTime) const override;
 
         //! Year month day
-        static const QString &formatYmd() { static const QString f = "yyyy-MM-dd"; return f; }
+        static const QString &formatYmd()
+        {
+            static const QString f = "yyyy-MM-dd";
+            return f;
+        }
 
         //! Year month day hour minute
-        static const QString &formatYmdhm() { static const QString f = "yyyy-MM-dd HH:mm"; return f; }
+        static const QString &formatYmdhm()
+        {
+            static const QString f = "yyyy-MM-dd HH:mm";
+            return f;
+        }
 
         //! Hour minute
-        static const QString &formatHm() { static const QString f = "HH:mm"; return f; }
+        static const QString &formatHm()
+        {
+            static const QString f = "HH:mm";
+            return f;
+        }
 
         //! Hour minute second
-        static const QString &formatHms() { static const QString f = "HH:mm:ss"; return f; }
+        static const QString &formatHms()
+        {
+            static const QString f = "HH:mm:ss";
+            return f;
+        }
 
         //! Hour minute second and milliseconds
-        static const QString &formatHmsz() { static const QString f = "HH:mm:ss.zzz"; return f; }
+        static const QString &formatHmsz()
+        {
+            static const QString f = "HH:mm:ss.zzz";
+            return f;
+        }
 
     private:
         const QString m_formatString = "yyyy-MM-dd HH:mm"; //!< how the value is displayed
@@ -382,7 +417,8 @@ namespace BlackGui::Models
     };
 
     //! Formatter for physical quantities
-    template<class MU, class PQ> class CPhysiqalQuantiyFormatter : public CValueObjectFormatter
+    template <class MU, class PQ>
+    class CPhysiqalQuantiyFormatter : public CValueObjectFormatter
     {
     public:
         //! Constructor
@@ -424,8 +460,8 @@ namespace BlackGui::Models
         virtual void setDigits(int digits) { m_digits = digits; }
 
     protected:
-        MU   m_unit;            //!< unit
-        int  m_digits = 2;      //!< digits
+        MU m_unit; //!< unit
+        int m_digits = 2; //!< digits
         bool m_withUnit = true; //!< format with unit?
     };
 

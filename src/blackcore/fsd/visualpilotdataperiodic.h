@@ -41,20 +41,20 @@ namespace BlackCore::Fsd
 
         //! @{
         //! Properties
-        double m_latitude      = 0.0;
-        double m_longitude     = 0.0;
-        double m_altitudeTrue  = 0.0;
-        double m_heightAgl     = 0.0;
-        double m_pitch         = 0.0;
-        double m_bank          = 0.0;
-        double m_heading       = 0.0;
-        double m_xVelocity     = 0.0;
-        double m_yVelocity     = 0.0;
-        double m_zVelocity     = 0.0;
-        double m_pitchRadPerSec     = 0.0;
-        double m_bankRadPerSec      = 0.0;
-        double m_headingRadPerSec   = 0.0;
-        double m_noseGearAngle      = 0.0;
+        double m_latitude = 0.0;
+        double m_longitude = 0.0;
+        double m_altitudeTrue = 0.0;
+        double m_heightAgl = 0.0;
+        double m_pitch = 0.0;
+        double m_bank = 0.0;
+        double m_heading = 0.0;
+        double m_xVelocity = 0.0;
+        double m_yVelocity = 0.0;
+        double m_zVelocity = 0.0;
+        double m_pitchRadPerSec = 0.0;
+        double m_bankRadPerSec = 0.0;
+        double m_headingRadPerSec = 0.0;
+        double m_noseGearAngle = 0.0;
         //! @}
 
     private:
@@ -64,20 +64,20 @@ namespace BlackCore::Fsd
     //! Equal to operator
     inline bool operator==(const VisualPilotDataPeriodic &lhs, const VisualPilotDataPeriodic &rhs)
     {
-        return  qFuzzyCompare(lhs.m_latitude, rhs.m_latitude) &&
-                qFuzzyCompare(lhs.m_longitude, rhs.m_longitude) &&
-                qFuzzyCompare(lhs.m_altitudeTrue, rhs.m_altitudeTrue) &&
-                qFuzzyCompare(lhs.m_heightAgl, rhs.m_heightAgl) &&
-                qFuzzyCompare(lhs.m_pitch, rhs.m_pitch) &&
-                qFuzzyCompare(lhs.m_bank, rhs.m_bank) &&
-                qFuzzyCompare(lhs.m_heading, rhs.m_heading) &&
-                qFuzzyCompare(lhs.m_xVelocity, rhs.m_xVelocity) &&
-                qFuzzyCompare(lhs.m_yVelocity, rhs.m_yVelocity) &&
-                qFuzzyCompare(lhs.m_zVelocity, rhs.m_zVelocity) &&
-                qFuzzyCompare(lhs.m_pitchRadPerSec, rhs.m_pitchRadPerSec) &&
-                qFuzzyCompare(lhs.m_bankRadPerSec, rhs.m_bankRadPerSec) &&
-                qFuzzyCompare(lhs.m_headingRadPerSec, rhs.m_headingRadPerSec) &&
-                qFuzzyCompare(lhs.m_noseGearAngle, rhs.m_noseGearAngle);
+        return qFuzzyCompare(lhs.m_latitude, rhs.m_latitude) &&
+               qFuzzyCompare(lhs.m_longitude, rhs.m_longitude) &&
+               qFuzzyCompare(lhs.m_altitudeTrue, rhs.m_altitudeTrue) &&
+               qFuzzyCompare(lhs.m_heightAgl, rhs.m_heightAgl) &&
+               qFuzzyCompare(lhs.m_pitch, rhs.m_pitch) &&
+               qFuzzyCompare(lhs.m_bank, rhs.m_bank) &&
+               qFuzzyCompare(lhs.m_heading, rhs.m_heading) &&
+               qFuzzyCompare(lhs.m_xVelocity, rhs.m_xVelocity) &&
+               qFuzzyCompare(lhs.m_yVelocity, rhs.m_yVelocity) &&
+               qFuzzyCompare(lhs.m_zVelocity, rhs.m_zVelocity) &&
+               qFuzzyCompare(lhs.m_pitchRadPerSec, rhs.m_pitchRadPerSec) &&
+               qFuzzyCompare(lhs.m_bankRadPerSec, rhs.m_bankRadPerSec) &&
+               qFuzzyCompare(lhs.m_headingRadPerSec, rhs.m_headingRadPerSec) &&
+               qFuzzyCompare(lhs.m_noseGearAngle, rhs.m_noseGearAngle);
     }
 
     //! Not equal to operator

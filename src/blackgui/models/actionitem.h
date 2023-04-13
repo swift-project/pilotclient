@@ -37,7 +37,7 @@ namespace BlackGui::Models
         //! @{
         //! Not copyable
         CActionItem(const CActionItem &) = delete;
-        CActionItem &operator =(const CActionItem &) = delete;
+        CActionItem &operator=(const CActionItem &) = delete;
         //! @}
 
         //! Append a new child

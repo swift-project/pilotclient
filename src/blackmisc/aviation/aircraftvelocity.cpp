@@ -76,8 +76,8 @@ namespace BlackMisc::Aviation
     QString CAircraftVelocity::convertToQString(bool i18n) const
     {
         return u"Velocity: " % QStringLiteral("%1 %2 %3 ").arg(m_x).arg(m_y).arg(m_z) % c_xyzSpeedUnit.convertToQString(i18n) %
-                u" | Rotation: " % QStringLiteral("%1 %2 %3 ").arg(m_pitch).arg(m_roll).arg(m_heading) %
-                c_pbhAngleUnit.convertToQString(i18n) % u"/" % c_timeUnit.convertToQString(i18n);
+               u" | Rotation: " % QStringLiteral("%1 %2 %3 ").arg(m_pitch).arg(m_roll).arg(m_heading) %
+               c_pbhAngleUnit.convertToQString(i18n) % u"/" % c_timeUnit.convertToQString(i18n);
     }
 
     QVariant CAircraftVelocity::propertyByIndex(CPropertyIndexRef index) const

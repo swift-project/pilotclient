@@ -14,7 +14,10 @@
 #include <QString>
 #include <QDialog>
 
-namespace Ui { class CInstallXSwiftBusDialog; }
+namespace Ui
+{
+    class CInstallXSwiftBusDialog;
+}
 namespace BlackGui::Components
 {
     /*!

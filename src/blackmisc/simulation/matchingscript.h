@@ -29,31 +29,31 @@ namespace BlackMisc::Simulation
 
         //! @{
         //! MSNetworkValues properties
-        Q_PROPERTY(QString callsign           READ getCallsign           WRITE setCallsign           NOTIFY callsignChanged)
-        Q_PROPERTY(QString callsignAsSet      READ getCallsignAsSet)
-        Q_PROPERTY(QString flightNumber       READ getFlightNumber)
-        Q_PROPERTY(int     dbAircraftIcaoId   READ getDbAircraftIcaoId   WRITE setDbAircraftIcaoId   NOTIFY dbAircraftIcaoIdChanged)
-        Q_PROPERTY(int     dbAirlineIcaoId    READ getDbAirlineIcaoId    WRITE setDbAirlineIcaoId    NOTIFY dbAirlineIcaoIdChanged)
-        Q_PROPERTY(int     dbLiveryId         READ getDbLiveryId         WRITE setDbLiveryId         NOTIFY dbLiveryIdChanged)
-        Q_PROPERTY(int     dbModelId          READ getDbModelId          WRITE setDbModelId          NOTIFY dbModelIdChanged)
-        Q_PROPERTY(QString aircraftIcao       READ getAircraftIcao       WRITE setAircraftIcao       NOTIFY aircraftIcaoChanged)
-        Q_PROPERTY(QString aircraftFamily     READ getAircraftFamily)
-        Q_PROPERTY(QString airlineIcao        READ getAirlineIcao        WRITE setAirlineIcao        NOTIFY airlineIcaoChanged)
+        Q_PROPERTY(QString callsign READ getCallsign WRITE setCallsign NOTIFY callsignChanged)
+        Q_PROPERTY(QString callsignAsSet READ getCallsignAsSet)
+        Q_PROPERTY(QString flightNumber READ getFlightNumber)
+        Q_PROPERTY(int dbAircraftIcaoId READ getDbAircraftIcaoId WRITE setDbAircraftIcaoId NOTIFY dbAircraftIcaoIdChanged)
+        Q_PROPERTY(int dbAirlineIcaoId READ getDbAirlineIcaoId WRITE setDbAirlineIcaoId NOTIFY dbAirlineIcaoIdChanged)
+        Q_PROPERTY(int dbLiveryId READ getDbLiveryId WRITE setDbLiveryId NOTIFY dbLiveryIdChanged)
+        Q_PROPERTY(int dbModelId READ getDbModelId WRITE setDbModelId NOTIFY dbModelIdChanged)
+        Q_PROPERTY(QString aircraftIcao READ getAircraftIcao WRITE setAircraftIcao NOTIFY aircraftIcaoChanged)
+        Q_PROPERTY(QString aircraftFamily READ getAircraftFamily)
+        Q_PROPERTY(QString airlineIcao READ getAirlineIcao WRITE setAirlineIcao NOTIFY airlineIcaoChanged)
         Q_PROPERTY(QString virtualAirlineIcao READ getVirtualAirlineIcao WRITE setVirtualAirlineIcao NOTIFY virtualAirlineIcaoChanged)
-        Q_PROPERTY(QString livery             READ getLivery             WRITE setLivery             NOTIFY liveryChanged)
-        Q_PROPERTY(QString modelString        READ getModelString        WRITE setModelString        NOTIFY modelStringChanged)
-        Q_PROPERTY(QString combinedType       READ getCombinedType       WRITE setCombinedType       NOTIFY combinedTypeChanged)
-        Q_PROPERTY(QString logMessage         READ getLogMessage         WRITE setLogMessage         NOTIFY logMessageChanged)
-        Q_PROPERTY(bool    hasAircraftFamily  READ hasAircraftFamily)
-        Q_PROPERTY(bool    modified           READ isModified            WRITE setModified           NOTIFY modifiedChanged)
-        Q_PROPERTY(bool    rerun              READ isRerun               WRITE setRerun              NOTIFY rerunChanged)
+        Q_PROPERTY(QString livery READ getLivery WRITE setLivery NOTIFY liveryChanged)
+        Q_PROPERTY(QString modelString READ getModelString WRITE setModelString NOTIFY modelStringChanged)
+        Q_PROPERTY(QString combinedType READ getCombinedType WRITE setCombinedType NOTIFY combinedTypeChanged)
+        Q_PROPERTY(QString logMessage READ getLogMessage WRITE setLogMessage NOTIFY logMessageChanged)
+        Q_PROPERTY(bool hasAircraftFamily READ hasAircraftFamily)
+        Q_PROPERTY(bool modified READ isModified WRITE setModified NOTIFY modifiedChanged)
+        Q_PROPERTY(bool rerun READ isRerun WRITE setRerun NOTIFY rerunChanged)
         // ----- status values -------
-        Q_PROPERTY(bool    hasAirlineIcao     READ hasAirlineIcao)
-        Q_PROPERTY(bool    hasAircraftIcao    READ hasAircraftIcao)
-        Q_PROPERTY(bool    hasModifiedAircraftIcaoDesignator READ hasModifiedAircraftIcaoDesignator)
-        Q_PROPERTY(bool    hasModifiedAircraftFamily         READ hasModifiedAircraftFamily)
-        Q_PROPERTY(bool    hasModifiedAirlineIcaoDesignator  READ hasModifiedAirlineIcaoDesignator)
-        Q_PROPERTY(bool    hasUnmodifiedDesignators          READ hasUnmodifiedDesignators)
+        Q_PROPERTY(bool hasAirlineIcao READ hasAirlineIcao)
+        Q_PROPERTY(bool hasAircraftIcao READ hasAircraftIcao)
+        Q_PROPERTY(bool hasModifiedAircraftIcaoDesignator READ hasModifiedAircraftIcaoDesignator)
+        Q_PROPERTY(bool hasModifiedAircraftFamily READ hasModifiedAircraftFamily)
+        Q_PROPERTY(bool hasModifiedAirlineIcaoDesignator READ hasModifiedAirlineIcaoDesignator)
+        Q_PROPERTY(bool hasUnmodifiedDesignators READ hasUnmodifiedDesignators)
         //! @}
 
     public:
@@ -61,31 +61,30 @@ namespace BlackMisc::Simulation
         Q_INVOKABLE MSInOutValues() {}
 
         //! Ctor
-        Q_INVOKABLE MSInOutValues(const QString &cs,           const QString &csAsSet,            const QString &flightNumber,
-                                    const QString &aircraftIcao, const QString &aircraftFamily,     const QString &combinedType,       int idAircraftIcao,
-                                    const QString &airlineIcao,  const QString &virtualAirlineIcao, int idAirlineIcao,
-                                    const QString &livery,       int liveryId,
-                                    const QString &logMsg = {},
-                                    bool  modified = false, bool rerun = false) :
-            m_callsign(cs.trimmed().toUpper()),               m_callsignAsSet(csAsSet),                              m_flightNumber(flightNumber),
-            m_aircraftIcao(aircraftIcao.trimmed().toUpper()), m_aircraftFamily(aircraftFamily.trimmed().toUpper()),  m_combinedType(combinedType.trimmed().toUpper()),
-            m_airlineIcao(airlineIcao.trimmed().toUpper()),   m_vAirlineIcao(virtualAirlineIcao),
-            m_livery(livery.trimmed().toUpper()),
-            m_dbAircraftIcaoId(idAircraftIcao), m_dbAirlineIcaoId(idAirlineIcao), m_dbLiveryId(liveryId),
-            m_logMessage(logMsg),
-            m_modified(modified), m_rerun(rerun)
+        Q_INVOKABLE MSInOutValues(const QString &cs, const QString &csAsSet, const QString &flightNumber,
+                                  const QString &aircraftIcao, const QString &aircraftFamily, const QString &combinedType, int idAircraftIcao,
+                                  const QString &airlineIcao, const QString &virtualAirlineIcao, int idAirlineIcao,
+                                  const QString &livery, int liveryId,
+                                  const QString &logMsg = {},
+                                  bool modified = false, bool rerun = false) : m_callsign(cs.trimmed().toUpper()), m_callsignAsSet(csAsSet), m_flightNumber(flightNumber),
+                                                                               m_aircraftIcao(aircraftIcao.trimmed().toUpper()), m_aircraftFamily(aircraftFamily.trimmed().toUpper()), m_combinedType(combinedType.trimmed().toUpper()),
+                                                                               m_airlineIcao(airlineIcao.trimmed().toUpper()), m_vAirlineIcao(virtualAirlineIcao),
+                                                                               m_livery(livery.trimmed().toUpper()),
+                                                                               m_dbAircraftIcaoId(idAircraftIcao), m_dbAirlineIcaoId(idAirlineIcao), m_dbLiveryId(liveryId),
+                                                                               m_logMessage(logMsg),
+                                                                               m_modified(modified), m_rerun(rerun)
         {}
 
         //! Ctor
         MSInOutValues(const BlackMisc::Aviation::CCallsign &cs,
-                        const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcao,
-                        const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao,
-                        const QString &livery, int liveryId);
+                      const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcao,
+                      const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao,
+                      const QString &livery, int liveryId);
 
         //! Ctor
         MSInOutValues(const BlackMisc::Aviation::CCallsign &cs,
-                        const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcao,
-                        const BlackMisc::Aviation::CLivery &livery);
+                      const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcao,
+                      const BlackMisc::Aviation::CLivery &livery);
 
         //! Ctor
         MSInOutValues(const BlackMisc::Simulation::CAircraftModel &model);
@@ -95,22 +94,22 @@ namespace BlackMisc::Simulation
 
         //! @{
         //! Callsign values
-        const QString &getCallsign()      const { return m_callsign; }
+        const QString &getCallsign() const { return m_callsign; }
         const QString &getCallsignAsSet() const { return m_callsignAsSet; }
-        const QString &getFlightNumber()  const { return m_flightNumber; }
+        const QString &getFlightNumber() const { return m_flightNumber; }
         void setCallsign(const QString &callsign);
         //! @}
 
         //! @{
         //! Values found in DB?
         bool isFoundDbAircraftIcao() const { return m_dbAircraftIcaoId >= 0; }
-        bool isFoundDbAirlineIcao()  const { return m_dbAirlineIcaoId  >= 0; }
-        bool isFoundDbLivery()       const { return m_dbLiveryId       >= 0; }
-        bool isFoundDbModel()        const { return m_dbModelId        >= 0; }
-        int getDbAircraftIcaoId()    const { return m_dbAircraftIcaoId; }
-        int getDbAirlineIcaoId()     const { return m_dbAirlineIcaoId; }
-        int getDbLiveryId()          const { return m_dbLiveryId; }
-        int getDbModelId()           const { return m_dbModelId; }
+        bool isFoundDbAirlineIcao() const { return m_dbAirlineIcaoId >= 0; }
+        bool isFoundDbLivery() const { return m_dbLiveryId >= 0; }
+        bool isFoundDbModel() const { return m_dbModelId >= 0; }
+        int getDbAircraftIcaoId() const { return m_dbAircraftIcaoId; }
+        int getDbAirlineIcaoId() const { return m_dbAirlineIcaoId; }
+        int getDbLiveryId() const { return m_dbLiveryId; }
+        int getDbModelId() const { return m_dbModelId; }
         void setDbAircraftIcaoId(int id);
         void setDbAirlineIcaoId(int id);
         void setDbLiveryId(int id);
@@ -119,21 +118,21 @@ namespace BlackMisc::Simulation
 
         //! @{
         //! Livery, airline, aircraft, model string
-        const QString &getAircraftIcao()       const { return m_aircraftIcao; }
-        const QString &getAircraftFamily()     const { return m_aircraftFamily; }
-        const QString &getAirlineIcao()        const { return m_airlineIcao; }
+        const QString &getAircraftIcao() const { return m_aircraftIcao; }
+        const QString &getAircraftFamily() const { return m_aircraftFamily; }
+        const QString &getAirlineIcao() const { return m_airlineIcao; }
         const QString &getVirtualAirlineIcao() const { return m_vAirlineIcao; }
-        const QString &getLivery()             const { return m_livery; }
-        const QString &getModelString()        const { return m_modelString; }
-        const QString &getCombinedType()       const { return m_combinedType; }
+        const QString &getLivery() const { return m_livery; }
+        const QString &getModelString() const { return m_modelString; }
+        const QString &getCombinedType() const { return m_combinedType; }
         void setAircraftIcao(const QString &aircraftIcao);
         void setAirlineIcao(const QString &airlineIcao);
         void setVirtualAirlineIcao(const QString &virtualAirlineIcao);
         void setLivery(const QString &livery);
         void setModelString(const QString &modelString);
         void setCombinedType(const QString &type);
-        bool hasAircraftIcao()   const { return !m_aircraftIcao.isEmpty();   }
-        bool hasAirlineIcao()    const { return !m_airlineIcao.isEmpty();    }
+        bool hasAircraftIcao() const { return !m_aircraftIcao.isEmpty(); }
+        bool hasAirlineIcao() const { return !m_airlineIcao.isEmpty(); }
         bool hasAircraftFamily() const { return !m_aircraftFamily.isEmpty(); }
         //! @}
 
@@ -161,9 +160,9 @@ namespace BlackMisc::Simulation
         //! @{
         //! Changed values
         bool hasModifiedAircraftIcaoDesignator() const { return m_modifiedAircraftDesignator; }
-        bool hasModifiedAirlineIcaoDesignator()  const { return m_modifiedAirlineDesignator;  }
+        bool hasModifiedAirlineIcaoDesignator() const { return m_modifiedAirlineDesignator; }
         bool hasModifiedAircraftFamily() const { return m_modifiedAircraftFamily; }
-        bool hasUnmodifiedDesignators()  const { return !this->hasModifiedAirlineIcaoDesignator() && !this->hasModifiedAircraftIcaoDesignator();  }
+        bool hasUnmodifiedDesignators() const { return !this->hasModifiedAirlineIcaoDesignator() && !this->hasModifiedAircraftIcaoDesignator(); }
         bool hasChangedAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcao) const;
         bool hasChangedAircraftIcaoId(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcao) const;
         bool hasChangedAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao) const;
@@ -217,15 +216,15 @@ namespace BlackMisc::Simulation
         QString m_livery;
         QString m_modelString;
         int m_dbAircraftIcaoId = -1;
-        int m_dbAirlineIcaoId  = -1;
-        int m_dbLiveryId       = -1;
-        int m_dbModelId        = -1;
+        int m_dbAirlineIcaoId = -1;
+        int m_dbLiveryId = -1;
+        int m_dbModelId = -1;
         QString m_logMessage;
         bool m_modifiedAircraftDesignator = false;
-        bool m_modifiedAircraftFamily     = false;
-        bool m_modifiedAirlineDesignator  = false;
+        bool m_modifiedAircraftFamily = false;
+        bool m_modifiedAirlineDesignator = false;
         bool m_modified = false;
-        bool m_rerun    = false;
+        bool m_rerun = false;
     };
 
     //! The model set values
@@ -235,15 +234,15 @@ namespace BlackMisc::Simulation
 
         //! @{
         //! MSModelSet properties
-        Q_PROPERTY(QString simulator  READ getSimulator  WRITE setSimulator  NOTIFY simulatorChanged)
-        Q_PROPERTY(bool available     READ isAvailable   WRITE setAvailable  NOTIFY availabilityChanged)
-        Q_PROPERTY(int inputAircraftAndAirlineCount READ getInputAircraftAndAirlineCount WRITE setInputAircraftAndAirlineCount  NOTIFY inputAircraftAndAirlineCountChanged)
-        Q_PROPERTY(int modelSetSize   READ getModelSetSize)
-        Q_PROPERTY(int countDifferentAirlines  READ countVtolAircraft)
-        Q_PROPERTY(int countVtolAircraft       READ countCivilianAircraft)
-        Q_PROPERTY(int countCivilianAircraft   READ countCivilianAircraft)
-        Q_PROPERTY(int countMilitaryAircraft   READ countMilitaryAircraft)
-        Q_PROPERTY(int countModelsWithColorLivery   READ countModelsWithColorLivery)
+        Q_PROPERTY(QString simulator READ getSimulator WRITE setSimulator NOTIFY simulatorChanged)
+        Q_PROPERTY(bool available READ isAvailable WRITE setAvailable NOTIFY availabilityChanged)
+        Q_PROPERTY(int inputAircraftAndAirlineCount READ getInputAircraftAndAirlineCount WRITE setInputAircraftAndAirlineCount NOTIFY inputAircraftAndAirlineCountChanged)
+        Q_PROPERTY(int modelSetSize READ getModelSetSize)
+        Q_PROPERTY(int countDifferentAirlines READ countVtolAircraft)
+        Q_PROPERTY(int countVtolAircraft READ countCivilianAircraft)
+        Q_PROPERTY(int countCivilianAircraft READ countCivilianAircraft)
+        Q_PROPERTY(int countMilitaryAircraft READ countMilitaryAircraft)
+        Q_PROPERTY(int countModelsWithColorLivery READ countModelsWithColorLivery)
         Q_PROPERTY(int countModelsWithAirlineLivery READ countModelsWithAirlineLivery)
         //! @}
 

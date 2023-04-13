@@ -53,9 +53,8 @@ using namespace BlackCore::Db;
 
 namespace BlackCore::Context
 {
-    CContextOwnAircraft::CContextOwnAircraft(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
-        IContextOwnAircraft(mode, runtime),
-        CIdentifiable(this)
+    CContextOwnAircraft::CContextOwnAircraft(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextOwnAircraft(mode, runtime),
+                                                                                                          CIdentifiable(this)
     {
         Q_ASSERT(this->getRuntime());
 
@@ -76,7 +75,7 @@ namespace BlackCore::Context
         this->initOwnAircraft();
     }
 
-    CContextOwnAircraft::~CContextOwnAircraft() { }
+    CContextOwnAircraft::~CContextOwnAircraft() {}
 
     CContextOwnAircraft *CContextOwnAircraft::registerWithDBus(CDBusServer *server)
     {
@@ -87,21 +86,21 @@ namespace BlackCore::Context
 
     CSimulatedAircraft CContextOwnAircraft::getOwnAircraft() const
     {
-        if (m_debugEnabled) {CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         QReadLocker l(&m_lockAircraft);
         return m_ownAircraft;
     }
 
     CComSystem CContextOwnAircraft::getOwnComSystem(CComSystem::ComUnit unit) const
     {
-        if (m_debugEnabled) {CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         QReadLocker l(&m_lockAircraft);
         return m_ownAircraft.getComSystem(unit);
     }
 
     CTransponder CContextOwnAircraft::getOwnTransponder() const
     {
-        if (m_debugEnabled) {CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         QReadLocker l(&m_lockAircraft);
         return m_ownAircraft.getTransponder();
     }
@@ -273,8 +272,8 @@ namespace BlackCore::Context
         const bool atcCom1 = atcs.hasComUnitTunedInChannelSpacing(com1);
         const bool atcCom2 = atcs.hasComUnitTunedInChannelSpacing(com2);
 
-        const bool tunedIn1  = atcCom1 && !lastCom1.isReceiveEnabled();
-        const bool tunedIn2  = atcCom2 && !lastCom2.isReceiveEnabled();
+        const bool tunedIn1 = atcCom1 && !lastCom1.isReceiveEnabled();
+        const bool tunedIn2 = atcCom2 && !lastCom2.isReceiveEnabled();
         const bool tunedOut1 = !atcCom1 && lastCom1.isReceiveEnabled();
         const bool tunedOut2 = !atcCom2 && lastCom2.isReceiveEnabled();
 
@@ -523,17 +522,15 @@ namespace BlackCore::Context
         Q_UNUSED(originator)
         if (commandLine.isEmpty()) { return false; }
         CSimpleCommandParser parser(
-        {
-            ".x", ".xpdr",    // transponder
-            ".com1", ".com2", // com1, com2 frequencies
-            ".c1", ".c2",     // com1, com2 frequencies
-            ".selcal"
-        });
+            { ".x", ".xpdr", // transponder
+              ".com1", ".com2", // com1, com2 frequencies
+              ".c1", ".c2", // com1, com2 frequencies
+              ".selcal" });
         parser.parse(commandLine);
         if (!parser.isKnownCommand()) { return false; }
 
         CSimulatedAircraft myAircraft(this->getOwnAircraft());
-        if (parser.matchesCommand(".x", ".xpdr")  && parser.countParts() > 1)
+        if (parser.matchesCommand(".x", ".xpdr") && parser.countParts() > 1)
         {
             CTransponder transponder = myAircraft.getTransponder();
             int xprCode = parser.toInt(1);

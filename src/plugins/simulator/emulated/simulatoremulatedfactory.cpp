@@ -17,9 +17,9 @@ using namespace BlackMisc::Simulation;
 namespace BlackSimPlugin::Emulated
 {
     BlackCore::ISimulator *CSimulatorEmulatedFactory::create(const CSimulatorPluginInfo &info,
-            IOwnAircraftProvider *ownAircraftProvider,
-            IRemoteAircraftProvider *remoteAircraftProvider,
-            BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider, Network::IClientProvider *clientProvider)
+                                                             IOwnAircraftProvider *ownAircraftProvider,
+                                                             IRemoteAircraftProvider *remoteAircraftProvider,
+                                                             BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider, Network::IClientProvider *clientProvider)
     {
         Q_ASSERT(ownAircraftProvider);
         return new CSimulatorEmulated(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, this);

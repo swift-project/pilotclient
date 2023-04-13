@@ -282,36 +282,36 @@ namespace BlackMisc::Simulation
 
     private:
         CSimulatorPluginInfo m_simulatorPluginInfo; //!< info object
-        Settings::CSimulatorSettings m_settings;    //!< simulator settings
-        QString m_simulatorName;       //!< name of simulator
-        QString m_simulatorDetails;    //!< describes version etc.
-        QString m_simulatorVersion;    //!< simulator version
+        Settings::CSimulatorSettings m_settings; //!< simulator settings
+        QString m_simulatorName; //!< name of simulator
+        QString m_simulatorDetails; //!< describes version etc.
+        QString m_simulatorVersion; //!< simulator version
         CAircraftModel m_defaultModel; //!< default model
 
         // idea: the elevations on gnd are likely taxiways and runways, so we keep those
-        int m_maxElevations    = 100;   //!< How many elevations we keep
-        int m_maxElevationsGnd = 400;   //!< How many elevations we keep for elevations on gnd.
-        Geo::CCoordinateGeodeticList    m_elvCoordinates;    //!< elevation cache
-        Geo::CCoordinateGeodeticList    m_elvCoordinatesGnd; //!< elevation cache for on ground situations
+        int m_maxElevations = 100; //!< How many elevations we keep
+        int m_maxElevationsGnd = 400; //!< How many elevations we keep for elevations on gnd.
+        Geo::CCoordinateGeodeticList m_elvCoordinates; //!< elevation cache
+        Geo::CCoordinateGeodeticList m_elvCoordinatesGnd; //!< elevation cache for on ground situations
 
         Aviation::CTimestampPerCallsign m_pendingElevationRequests; //!< pending elevation requests for aircraft callsign
-        Aviation::CLengthPerCallsign    m_cgsPerCallsign;           //!< CGs per callsign
-        Aviation::CLengthPerCallsign    m_cgsPerCallsignOverridden; //!< CGs per callsign overridden (manually forced)
-        QHash<QString, PhysicalQuantities::CLength> m_cgsPerModel;  //!< CGs per model string
+        Aviation::CLengthPerCallsign m_cgsPerCallsign; //!< CGs per callsign
+        Aviation::CLengthPerCallsign m_cgsPerCallsignOverridden; //!< CGs per callsign overridden (manually forced)
+        QHash<QString, PhysicalQuantities::CLength> m_cgsPerModel; //!< CGs per model string
         QHash<QString, PhysicalQuantities::CLength> m_cgsPerModelOverridden; //!< CGs per model string (manually forced)
-        qint64 m_statsMaxElevRequestTimeMs     = -1;
+        qint64 m_statsMaxElevRequestTimeMs = -1;
         qint64 m_statsCurrentElevRequestTimeMs = -1;
 
         bool m_enableElevation = true;
-        bool m_enableCG        = true;
+        bool m_enableCG = true;
 
-        mutable int m_elvFound  = 0;   //!< statistics only
-        mutable int m_elvMissed = 0;   //!< statistics only
+        mutable int m_elvFound = 0; //!< statistics only
+        mutable int m_elvMissed = 0; //!< statistics only
 
         mutable QReadWriteLock m_lockElvCoordinates { QReadWriteLock::Recursive }; //!< lock m_coordinates, m_pendingElevationRequests
-        mutable QReadWriteLock m_lockCG             { QReadWriteLock::Recursive }; //!< lock CGs
-        mutable QReadWriteLock m_lockModel          { QReadWriteLock::Recursive }; //!< lock models
-        mutable QReadWriteLock m_lockSimInfo        { QReadWriteLock::Recursive }; //!< lock plugin info
+        mutable QReadWriteLock m_lockCG { QReadWriteLock::Recursive }; //!< lock CGs
+        mutable QReadWriteLock m_lockModel { QReadWriteLock::Recursive }; //!< lock models
+        mutable QReadWriteLock m_lockSimInfo { QReadWriteLock::Recursive }; //!< lock plugin info
     };
 
     //! Class which can be directly used to access an \sa ISimulationEnvironmentProvider object

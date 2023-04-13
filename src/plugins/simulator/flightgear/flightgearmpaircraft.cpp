@@ -18,12 +18,11 @@ using namespace BlackMisc::Simulation;
 namespace BlackSimPlugin::Flightgear
 {
     CFlightgearMPAircraft::CFlightgearMPAircraft()
-    { }
+    {}
 
     CFlightgearMPAircraft::CFlightgearMPAircraft(
-        const CSimulatedAircraft &aircraft, ISimulator *simulator, CInterpolationLogger *logger) :
-        m_aircraft(aircraft),
-        m_interpolator(QSharedPointer<CInterpolatorMulti>::create(aircraft.getCallsign(), simulator, simulator, simulator->getRemoteAircraftProvider(), logger))
+        const CSimulatedAircraft &aircraft, ISimulator *simulator, CInterpolationLogger *logger) : m_aircraft(aircraft),
+                                                                                                   m_interpolator(QSharedPointer<CInterpolatorMulti>::create(aircraft.getCallsign(), simulator, simulator, simulator->getRemoteAircraftProvider(), logger))
     {
         m_interpolator->attachLogger(logger);
         m_interpolator->initCorrespondingModel(aircraft.getModel());

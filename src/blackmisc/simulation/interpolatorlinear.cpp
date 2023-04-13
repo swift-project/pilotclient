@@ -34,26 +34,23 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackMisc::Simulation
 {
-    CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &oldSituation) :
-        IInterpolant(1, CInterpolatorPbh(0, oldSituation, oldSituation)),
-        m_oldSituation(oldSituation)
-    { }
+    CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &oldSituation) : IInterpolant(1, CInterpolatorPbh(0, oldSituation, oldSituation)),
+                                                                                              m_oldSituation(oldSituation)
+    {}
 
-    CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &oldSituation, const CInterpolatorPbh &pbh) :
-        IInterpolant(1, pbh),
-        m_oldSituation(oldSituation)
-    { }
+    CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &oldSituation, const CInterpolatorPbh &pbh) : IInterpolant(1, pbh),
+                                                                                                                           m_oldSituation(oldSituation)
+    {}
 
-    CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, double timeFraction, qint64 interpolatedTime) :
-        IInterpolant(interpolatedTime, 2),
-        m_oldSituation(oldSituation), m_newSituation(newSituation),
-        m_simulationTimeFraction(timeFraction)
+    CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, double timeFraction, qint64 interpolatedTime) : IInterpolant(interpolatedTime, 2),
+                                                                                                                                                                                    m_oldSituation(oldSituation), m_newSituation(newSituation),
+                                                                                                                                                                                    m_simulationTimeFraction(timeFraction)
     {
         m_pbh = CInterpolatorPbh(m_simulationTimeFraction, oldSituation, newSituation);
     }
 
     void CInterpolatorLinear::anchor()
-    { }
+    {}
 
     CAircraftSituation CInterpolatorLinear::CInterpolant::interpolatePositionAndAltitude(const CAircraftSituation &situation, bool interpolateGndFactor) const
     {
@@ -84,10 +81,8 @@ namespace BlackMisc::Simulation
         const CAltitude oldAlt(m_oldSituation.getCorrectedAltitude());
         const CAltitude newAlt(m_newSituation.getCorrectedAltitude());
         Q_ASSERT_X(oldAlt.getReferenceDatum() == CAltitude::MeanSeaLevel && oldAlt.getReferenceDatum() == newAlt.getReferenceDatum(), Q_FUNC_INFO, "mismatch in reference"); // otherwise no calculation is possible
-        const CAltitude altitude((newAlt - oldAlt)
-                                    * tf
-                                    + oldAlt,
-                                    oldAlt.getReferenceDatum());
+        const CAltitude altitude((newAlt - oldAlt) * tf + oldAlt,
+                                 oldAlt.getReferenceDatum());
 
         CAircraftSituation newSituation(situation);
         newSituation.setPosition(newPosition);
@@ -100,8 +95,16 @@ namespace BlackMisc::Simulation
             const double newGroundFactor = m_newSituation.getOnGroundFactor();
             do
             {
-                if (CAircraftSituation::isGfEqualAirborne(oldGroundFactor, newGroundFactor)) { newSituation.setOnGround(false); break; }
-                if (CAircraftSituation::isGfEqualOnGround(oldGroundFactor, newGroundFactor)) { newSituation.setOnGround(true);  break; }
+                if (CAircraftSituation::isGfEqualAirborne(oldGroundFactor, newGroundFactor))
+                {
+                    newSituation.setOnGround(false);
+                    break;
+                }
+                if (CAircraftSituation::isGfEqualOnGround(oldGroundFactor, newGroundFactor))
+                {
+                    newSituation.setOnGround(true);
+                    break;
+                }
                 const double groundFactor = (newGroundFactor - oldGroundFactor) * tf + oldGroundFactor;
                 newSituation.setOnGroundFactor(groundFactor);
                 newSituation.setOnGroundFromGroundFactorFromInterpolation(groundInterpolationFactor());
@@ -128,7 +131,7 @@ namespace BlackMisc::Simulation
             m_situationsLastModifiedUsed = m_situationsLastModified;
 
             // find the first situation earlier than the current time
-            const auto pivot = std::partition_point(m_currentSituations.begin(), m_currentSituations.end(), [ = ](auto &&s) { return s.getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch; });
+            const auto pivot = std::partition_point(m_currentSituations.begin(), m_currentSituations.end(), [=](auto &&s) { return s.getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch; });
             const auto situationsNewer = makeRange(m_currentSituations.begin(), pivot);
             const auto situationsOlder = makeRange(pivot, m_currentSituations.end());
 

@@ -23,7 +23,7 @@
 #include "blackmisc/loghistory.h"
 
 #ifdef Q_OS_MAC
-#include "blackmisc/macos/microphoneaccess.h"
+#    include "blackmisc/macos/microphoneaccess.h"
 #endif
 
 #include <QDialog>
@@ -31,7 +31,10 @@
 #include <QScopedPointer>
 #include <QNetworkReply>
 
-namespace Ui { class CSwiftLauncher; }
+namespace Ui
+{
+    class CSwiftLauncher;
+}
 namespace BlackGui::Components
 {
     class CConfigurationWizard;
@@ -99,19 +102,19 @@ private slots:
 private:
     QScopedPointer<Ui::CSwiftLauncher> ui;
     QScopedPointer<BlackGui::Components::CConfigurationWizard> m_wizard;
-    QScopedPointer<BlackGui::Components::CTextEditDialog>      m_textEditDialog;
-    BlackMisc::CData<BlackCore::Data::TLauncherSetup>          m_setup { this }; //!< setup, i.e. last user selection
-    BlackMisc::CLogHistoryReplica                              m_logHistory { this }; //!< for the overlay
+    QScopedPointer<BlackGui::Components::CTextEditDialog> m_textEditDialog;
+    BlackMisc::CData<BlackCore::Data::TLauncherSetup> m_setup { this }; //!< setup, i.e. last user selection
+    BlackMisc::CLogHistoryReplica m_logHistory { this }; //!< for the overlay
 #ifdef Q_OS_MAC
     BlackMisc::CMacOSMicrophoneAccess m_micAccess;
 #endif
 
-    QString     m_executable;
+    QString m_executable;
     QStringList m_executableArgs;
-    QTimer      m_checkTimer { this };
-    int         m_startCoreWaitCycles = 0;
-    int         m_startMappingToolWaitCycles = 0;
-    int         m_startGuiWaitCycles = 0;
+    QTimer m_checkTimer { this };
+    int m_startCoreWaitCycles = 0;
+    int m_startMappingToolWaitCycles = 0;
+    int m_startGuiWaitCycles = 0;
 
     //! Get core mode
     BlackCore::CoreModes::CoreMode getCoreMode() const;

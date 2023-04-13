@@ -14,9 +14,8 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc, CIcon, CIconList)
 
 namespace BlackMisc
 {
-    CIconList::CIconList(const CSequence<CIcon> &other) :
-        CSequence<CIcon>(other)
-    { }
+    CIconList::CIconList(const CSequence<CIcon> &other) : CSequence<CIcon>(other)
+    {}
 
     CIcon CIconList::findByIndex(CIcons::IconIndex index) const
     {

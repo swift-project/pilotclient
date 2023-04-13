@@ -51,59 +51,59 @@ namespace BlackCore::Context
                                     "simulatorStatusChanged", this, SIGNAL(simulatorStatusChanged(int)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                "simulatorPluginChanged", this, SIGNAL(simulatorPluginChanged(BlackMisc::Simulation::CSimulatorPluginInfo)));
+                               "simulatorPluginChanged", this, SIGNAL(simulatorPluginChanged(BlackMisc::Simulation::CSimulatorPluginInfo)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                "simulatorChanged", this, SIGNAL(simulatorChanged(BlackMisc::Simulation::CSimulatorInfo)));
+                               "simulatorChanged", this, SIGNAL(simulatorChanged(BlackMisc::Simulation::CSimulatorInfo)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                "simulatorSettingsChanged", this, SIGNAL(simulatorSettingsChanged()));
+                               "simulatorSettingsChanged", this, SIGNAL(simulatorSettingsChanged()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                "vitalityLost", this, SIGNAL(vitalityLost()));
+                               "vitalityLost", this, SIGNAL(vitalityLost()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                "renderRestrictionsChanged", this, SIGNAL(renderRestrictionsChanged(bool, bool, int, BlackMisc::PhysicalQuantities::CLength)));
+                               "renderRestrictionsChanged", this, SIGNAL(renderRestrictionsChanged(bool, bool, int, BlackMisc::PhysicalQuantities::CLength)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                "interpolationAndRenderingSetupChanged", this, SIGNAL(interpolationAndRenderingSetupChanged()));
+                               "interpolationAndRenderingSetupChanged", this, SIGNAL(interpolationAndRenderingSetupChanged()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                "matchingSetupChanged", this, SIGNAL(matchingSetupChanged()));
+                               "matchingSetupChanged", this, SIGNAL(matchingSetupChanged()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                "modelSetChanged", this, SIGNAL(modelSetChanged(BlackMisc::Simulation::CSimulatorInfo)));
+                               "modelSetChanged", this, SIGNAL(modelSetChanged(BlackMisc::Simulation::CSimulatorInfo)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                "modelMatchingCompleted", this, SIGNAL(modelMatchingCompleted(BlackMisc::Simulation::CSimulatedAircraft)));
+                               "modelMatchingCompleted", this, SIGNAL(modelMatchingCompleted(BlackMisc::Simulation::CSimulatedAircraft)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                "addingRemoteModelFailed", this, SIGNAL(addingRemoteModelFailed(BlackMisc::Simulation::CSimulatedAircraft, bool, bool, BlackMisc::CStatusMessage)));
+                               "addingRemoteModelFailed", this, SIGNAL(addingRemoteModelFailed(BlackMisc::Simulation::CSimulatedAircraft, bool, bool, BlackMisc::CStatusMessage)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                "aircraftRenderingChanged", this, SIGNAL(aircraftRenderingChanged(BlackMisc::Simulation::CSimulatedAircraft)));
+                               "aircraftRenderingChanged", this, SIGNAL(aircraftRenderingChanged(BlackMisc::Simulation::CSimulatedAircraft)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                "ownAircraftModelChanged", this, SIGNAL(ownAircraftModelChanged(BlackMisc::Simulation::CAircraftModel)));
+                               "ownAircraftModelChanged", this, SIGNAL(ownAircraftModelChanged(BlackMisc::Simulation::CAircraftModel)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                "airspaceSnapshotHandled", this, SIGNAL(airspaceSnapshotHandled()));
+                               "airspaceSnapshotHandled", this, SIGNAL(airspaceSnapshotHandled()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                "weatherGridReceived", this, SIGNAL(weatherGridReceived(BlackMisc::Weather::CWeatherGrid, BlackMisc::CIdentifier)));
+                               "weatherGridReceived", this, SIGNAL(weatherGridReceived(BlackMisc::Weather::CWeatherGrid, BlackMisc::CIdentifier)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                "driverMessages", this, SIGNAL(driverMessages(BlackMisc::CStatusMessageList)));
+                               "driverMessages", this, SIGNAL(driverMessages(BlackMisc::CStatusMessageList)));
 
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                "requestUiConsoleMessage", this, SIGNAL(requestUiConsoleMessage(QString, bool)));
+                               "requestUiConsoleMessage", this, SIGNAL(requestUiConsoleMessage(QString, bool)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                "validatedModelSet", this, SIGNAL(validatedModelSet(BlackMisc::Simulation::CSimulatorInfo, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModelList, bool, BlackMisc::CStatusMessageList)));
+                               "validatedModelSet", this, SIGNAL(validatedModelSet(BlackMisc::Simulation::CSimulatorInfo, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModelList, bool, BlackMisc::CStatusMessageList)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                "insufficientFrameRateDetected", this, SIGNAL(insufficientFrameRateDetected(bool)));
+                               "insufficientFrameRateDetected", this, SIGNAL(insufficientFrameRateDetected(bool)));
         Q_ASSERT(s);
         Q_UNUSED(s)
         this->relayBaseClassSignals(serviceName, connection, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName());

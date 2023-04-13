@@ -21,8 +21,14 @@
 
 namespace BlackMisc
 {
-    namespace Aviation { class CCallsign; }
-    namespace Simulation { class CSimulatedAircraft; }
+    namespace Aviation
+    {
+        class CCallsign;
+    }
+    namespace Simulation
+    {
+        class CSimulatedAircraft;
+    }
 }
 
 namespace BlackCore::Context
@@ -32,7 +38,10 @@ namespace BlackCore::Context
 }
 namespace BlackGui
 {
-    namespace Menus { class CMenuActions; }
+    namespace Menus
+    {
+        class CMenuActions;
+    }
     namespace Views
     {
         class CFlightPlanDialog;
@@ -158,12 +167,12 @@ namespace BlackGui
             //! Network context
             static BlackCore::Context::IContextNetwork *networkContext();
 
-            bool m_withRecalculate            = true;
+            bool m_withRecalculate = true;
             bool m_withMenuHighlightAndFollow = true;
-            bool m_withMenuEnableAircraft     = true;
-            bool m_withMenuEnableGndFlag      = true;
-            bool m_withMenuFastPosition       = true;
-            bool m_withMenuFlightPlan         = true;
+            bool m_withMenuEnableAircraft = true;
+            bool m_withMenuEnableGndFlag = true;
+            bool m_withMenuFastPosition = true;
+            bool m_withMenuFlightPlan = true;
 
             CFlightPlanDialog *m_fpDialog = nullptr;
         };

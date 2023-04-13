@@ -19,11 +19,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Network, CUrl, CUrlList)
 
 namespace BlackMisc::Network
 {
-    CUrlList::CUrlList() { }
+    CUrlList::CUrlList() {}
 
-    CUrlList::CUrlList(const CSequence<CUrl> &other) :
-        CSequence<CUrl>(other)
-    { }
+    CUrlList::CUrlList(const CSequence<CUrl> &other) : CSequence<CUrl>(other)
+    {}
 
     CUrlList::CUrlList(const QStringList &listOfUrls, bool removeDuplicates)
     {
@@ -38,7 +37,7 @@ namespace BlackMisc::Network
     CUrl CUrlList::getRandomUrl() const
     {
         if (this->isEmpty()) { return CUrl(); }
-        if (this->size() == 1) { return this->front();}
+        if (this->size() == 1) { return this->front(); }
         const int i = CMathUtils::randomInteger(0, this->size() - 1);
         return (*this)[i];
     }
@@ -46,7 +45,7 @@ namespace BlackMisc::Network
     CUrl CUrlList::getRandomWorkingUrl(int maxTrials, int timeoutMs) const
     {
         if (this->isEmpty()) { return CUrl(); }
-        if (maxTrials < 1) { return CUrl();}
+        if (maxTrials < 1) { return CUrl(); }
         CUrlList trials;
 
         if (timeoutMs < 0) { timeoutMs = CNetworkUtils::getTimeoutMs(); }
@@ -126,17 +125,14 @@ namespace BlackMisc::Network
         return r;
     }
 
-    CFailoverUrlList::CFailoverUrlList(int maxTrials) :
-        m_maxTrials(maxTrials)
-    { }
+    CFailoverUrlList::CFailoverUrlList(int maxTrials) : m_maxTrials(maxTrials)
+    {}
 
-    CFailoverUrlList::CFailoverUrlList(const QStringList &listOfUrls, int maxTrials) :
-        CUrlList(listOfUrls), m_maxTrials(maxTrials)
-    { }
+    CFailoverUrlList::CFailoverUrlList(const QStringList &listOfUrls, int maxTrials) : CUrlList(listOfUrls), m_maxTrials(maxTrials)
+    {}
 
-    CFailoverUrlList::CFailoverUrlList(const CUrlList &urlIst, int maxTrials) :
-        CUrlList(urlIst), m_maxTrials(maxTrials)
-    { }
+    CFailoverUrlList::CFailoverUrlList(const CUrlList &urlIst, int maxTrials) : CUrlList(urlIst), m_maxTrials(maxTrials)
+    {}
 
     CUrlList CFailoverUrlList::getWithoutFailed() const
     {
@@ -206,11 +202,11 @@ namespace BlackMisc::Network
     CUrl CFailoverUrlList::obtainNextUrl(bool randomStart)
     {
         if (this->isEmpty()) { return CUrl(); }
-        if (this->size() == 1) { return this->front();}
+        if (this->size() == 1) { return this->front(); }
         if (m_currentIndexDistributedLoad < 0)
         {
             // random start point
-            m_currentIndexDistributedLoad =  randomStart ?
+            m_currentIndexDistributedLoad = randomStart ?
                                                 CMathUtils::randomInteger(0, this->size() - 1) :
                                                 0;
         }

@@ -47,8 +47,7 @@ namespace BlackMisc
         template <typename T, typename F1, typename F2>
         void stopWhen(const T *sender, F1 signal, F2 &&condition)
         {
-            QObject::connect(sender, signal, &m_eventLoop, [this, condition = std::forward<F2>(condition)](auto &&... args)
-            {
+            QObject::connect(sender, signal, &m_eventLoop, [this, condition = std::forward<F2>(condition)](auto &&...args) {
                 if (condition(std::forward<decltype(args)>(args)...)) { m_eventLoop.exit(GotSignal); }
             });
         }

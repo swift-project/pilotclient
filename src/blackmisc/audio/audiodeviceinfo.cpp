@@ -20,44 +20,42 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Audio, CAudioDeviceInfo)
 
 namespace BlackMisc::Audio
 {
-    CAudioDeviceInfo::CAudioDeviceInfo() :
-        m_type(Unknown)
-    { }
+    CAudioDeviceInfo::CAudioDeviceInfo() : m_type(Unknown)
+    {}
 
-    CAudioDeviceInfo::CAudioDeviceInfo(DeviceType type, const QString &name) :
-        m_type(static_cast<int>(type)),
-        m_deviceName(name)
-    { }
+    CAudioDeviceInfo::CAudioDeviceInfo(DeviceType type, const QString &name) : m_type(static_cast<int>(type)),
+                                                                               m_deviceName(name)
+    {}
 
     bool CAudioDeviceInfo::isDefault() const
     {
-        if (m_deviceName.isEmpty())   { return false; }
+        if (m_deviceName.isEmpty()) { return false; }
         if (m_deviceName == "default") { return true; }
-        if (this->isInputDevice()  &&  m_deviceName == QAudioDeviceInfo::defaultInputDevice().deviceName())  { return true; }
-        if (this->isOutputDevice() &&  m_deviceName == QAudioDeviceInfo::defaultOutputDevice().deviceName()) { return true; }
+        if (this->isInputDevice() && m_deviceName == QAudioDeviceInfo::defaultInputDevice().deviceName()) { return true; }
+        if (this->isOutputDevice() && m_deviceName == QAudioDeviceInfo::defaultOutputDevice().deviceName()) { return true; }
         return false;
     }
 
     bool CAudioDeviceInfo::matchesNameTypeMachineName(const CAudioDeviceInfo &device) const
     {
         return device.getType() == this->getType() &&
-                stringCompare(device.getName(), this->getName(), Qt::CaseInsensitive) &&
-                stringCompare(device.getMachineName(), this->getMachineName(), Qt::CaseInsensitive);
+               stringCompare(device.getName(), this->getName(), Qt::CaseInsensitive) &&
+               stringCompare(device.getMachineName(), this->getMachineName(), Qt::CaseInsensitive);
     }
 
     bool CAudioDeviceInfo::matchesNameTypeMachineProcess(const CAudioDeviceInfo &device) const
     {
         return device.getType() == this->getType() &&
-                device.getIdentifier().getProcessId() == this->getIdentifier().getProcessId() &&
-                stringCompare(device.getName(), this->getName(), Qt::CaseInsensitive) &&
-                stringCompare(device.getMachineName(), this->getMachineName(), Qt::CaseInsensitive);
+               device.getIdentifier().getProcessId() == this->getIdentifier().getProcessId() &&
+               stringCompare(device.getName(), this->getName(), Qt::CaseInsensitive) &&
+               stringCompare(device.getMachineName(), this->getMachineName(), Qt::CaseInsensitive);
     }
 
     CAudioDeviceInfo::DeviceType CAudioDeviceInfo::fromQtMode(QAudio::Mode m)
     {
         switch (m)
         {
-        case QAudio::AudioInput:  return InputDevice;
+        case QAudio::AudioInput: return InputDevice;
         case QAudio::AudioOutput: return OutputDevice;
         default: break;
         }
@@ -80,10 +78,10 @@ namespace BlackMisc::Audio
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexDeviceType:  return QVariant::fromValue(this->getType());
+        case IndexDeviceType: return QVariant::fromValue(this->getType());
         case IndexDeviceTypeAsString: return QVariant::fromValue(this->getTypeAsString());
-        case IndexName:        return QVariant::fromValue(this->getName());
-        case IndexIdentifier:  return m_identifier.propertyByIndex(index.copyFrontRemoved());
+        case IndexName: return QVariant::fromValue(this->getName());
+        case IndexIdentifier: return m_identifier.propertyByIndex(index.copyFrontRemoved());
         default: break;
         }
         return CValueObject::propertyByIndex(index);
@@ -91,12 +89,16 @@ namespace BlackMisc::Audio
 
     void CAudioDeviceInfo::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CAudioDeviceInfo>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CAudioDeviceInfo>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDeviceType: m_type = static_cast<DeviceType>(variant.toInt()); return;
-        case IndexName:       m_deviceName = variant.toString(); return;
+        case IndexName: m_deviceName = variant.toString(); return;
         case IndexIdentifier: m_identifier.setPropertyByIndex(index.copyFrontRemoved(), variant); return;
         default: break;
         }
@@ -111,7 +113,7 @@ namespace BlackMisc::Audio
         {
         case IndexDeviceTypeAsString:
         case IndexDeviceType: return Compare::compare(m_type, compareValue.m_type);
-        case IndexName:       return m_deviceName.compare(compareValue.m_deviceName, Qt::CaseInsensitive);
+        case IndexName: return m_deviceName.compare(compareValue.m_deviceName, Qt::CaseInsensitive);
         case IndexIdentifier: return m_identifier.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIdentifier());
         default: break;
         }
@@ -127,7 +129,7 @@ namespace BlackMisc::Audio
 
         switch (t)
         {
-        case InputDevice:  return i;
+        case InputDevice: return i;
         case OutputDevice: return o;
         default: break;
         }

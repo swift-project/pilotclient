@@ -96,7 +96,8 @@ namespace BlackMisc
         bool contains(int index) const;
 
         //! Compare with index given by enum
-        template<class EnumType> bool contains(EnumType ev) const
+        template <class EnumType>
+        bool contains(EnumType ev) const
         {
             static_assert(std::is_enum_v<EnumType>, "Argument must be an enum");
             return this->contains(static_cast<int>(ev));
@@ -109,14 +110,16 @@ namespace BlackMisc
         bool startsWith(int index) const;
 
         //! First element casted to given type, usually the PropertIndex enum
-        template<class CastType> CastType frontCasted() const
+        template <class CastType>
+        CastType frontCasted() const
         {
             static_assert(std::is_enum_v<CastType> || std::is_integral_v<CastType>, "CastType must be an enum or integer");
             return static_cast<CastType>(frontToInt());
         }
 
         //! Compare with index given by enum
-        template<class EnumType> bool startsWithPropertyIndexEnum(EnumType ev) const
+        template <class EnumType>
+        bool startsWithPropertyIndexEnum(EnumType ev) const
         {
             static_assert(std::is_enum_v<EnumType>, "Argument must be an enum");
             return this->startsWith(static_cast<int>(ev));
@@ -125,8 +128,7 @@ namespace BlackMisc
         //! Return a predicate function which can compare two objects based on this index
         auto comparator() const
         {
-            return [index = *this](const auto & a, const auto & b)
-            {
+            return [index = *this](const auto &a, const auto &b) {
                 using T = std::decay_t<decltype(a)>;
                 if constexpr (THasComparePropertyByIndex<T>::value)
                 {
@@ -136,7 +138,11 @@ namespace BlackMisc
                 {
                     return compare(a.propertyByIndex(index), b.propertyByIndex(index));
                 }
-                else { qFatal("Not implemented"); return 0; }
+                else
+                {
+                    qFatal("Not implemented");
+                    return 0;
+                }
             };
         }
 
@@ -150,7 +156,11 @@ namespace BlackMisc
         void convertFromJson(const QJsonObject &json);
 
         //! an empty property index
-        static const CPropertyIndex &empty() { static const CPropertyIndex pi; return pi; }
+        static const CPropertyIndex &empty()
+        {
+            static const CPropertyIndex pi;
+            return pi;
+        }
 
     protected:
         //! Parse indexes from string
@@ -164,8 +174,8 @@ namespace BlackMisc
             BLACK_METAMEMBER(indexes)
         );
     };
-} //namespace
+} // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::CPropertyIndex)
 
-#endif //guard
+#endif // guard

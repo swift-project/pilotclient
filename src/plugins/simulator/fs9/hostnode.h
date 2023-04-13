@@ -53,10 +53,10 @@ namespace BlackSimPlugin::Fs9
         CHostNode &operator=(const CHostNode &other);
 
     private:
-        IDirectPlay8Address  *m_hostAddress = nullptr;
-        DPN_APPLICATION_DESC  m_appDesc;
-        QString               m_sessionName;
+        IDirectPlay8Address *m_hostAddress = nullptr;
+        DPN_APPLICATION_DESC m_appDesc;
+        QString m_sessionName;
     };
 }
 
-#endif //guard
+#endif // guard

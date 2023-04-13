@@ -562,10 +562,10 @@ namespace BlackMisc
 
             //! Newer version
             static CAircraftModelList fromDatabaseJsonCaching(const QJsonArray &array,
-                    const Aviation::CAircraftIcaoCodeList &aircraftIcaos = {},
-                    const Aviation::CAircraftCategoryList &aircraftCategories = {},
-                    const Aviation::CLiveryList &liveries = {},
-                    const CDistributorList &distributors = {});
+                                                              const Aviation::CAircraftIcaoCodeList &aircraftIcaos = {},
+                                                              const Aviation::CAircraftCategoryList &aircraftCategories = {},
+                                                              const Aviation::CLiveryList &liveries = {},
+                                                              const CDistributorList &distributors = {});
 
         private:
             //! Validate UNC paths (Windows)
@@ -582,4 +582,4 @@ Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftModelList)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftModelPerCallsign)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::CAircraftModel>)
 
-#endif //guard
+#endif // guard

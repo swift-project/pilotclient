@@ -24,9 +24,8 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackGui::Views
 {
-    CAircraftModelStatisticsDialog::CAircraftModelStatisticsDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CAircraftModelStatisticsDialog)
+    CAircraftModelStatisticsDialog::CAircraftModelStatisticsDialog(QWidget *parent) : QDialog(parent),
+                                                                                      ui(new Ui::CAircraftModelStatisticsDialog)
     {
         ui->setupUi(this);
         ui->tw_ModelStatistics->setCurrentIndex(0);
@@ -37,7 +36,7 @@ namespace BlackGui::Views
     }
 
     CAircraftModelStatisticsDialog::~CAircraftModelStatisticsDialog()
-    { }
+    {}
 
     void CAircraftModelStatisticsDialog::analyzeModels(const CAircraftModelList &models)
     {
@@ -54,8 +53,16 @@ namespace BlackGui::Views
 
     void CAircraftModelStatisticsDialog::showChart()
     {
-        if (ui->rb_Distributors->isChecked()) { this->chartDistributors(); return; }
-        if (ui->rb_AircraftIcao->isChecked()) { this->chartAircraftIcao(); return; }
+        if (ui->rb_Distributors->isChecked())
+        {
+            this->chartDistributors();
+            return;
+        }
+        if (ui->rb_AircraftIcao->isChecked())
+        {
+            this->chartAircraftIcao();
+            return;
+        }
     }
 
     void CAircraftModelStatisticsDialog::chartDistributors()
@@ -95,7 +102,11 @@ namespace BlackGui::Views
         {
             const int c = icaos[icao];
             if (c < 1) { continue; }
-            if (!icao.hasKnownDesignator()) { unknown += c; continue; }
+            if (!icao.hasKnownDesignator())
+            {
+                unknown += c;
+                continue;
+            }
             icaosForAxis << (icao.getDesignatorDbKey() % u" (" % QString::number(c) % u")");
             series << c;
         }

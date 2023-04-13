@@ -35,11 +35,20 @@ namespace BlackMisc::Aviation
     class CAircraftIcaoCode;
     class CLivery;
 }
-namespace BlackMisc::Simulation { class CAircraftModel; }
+namespace BlackMisc::Simulation
+{
+    class CAircraftModel;
+}
 namespace BlackGui
 {
-    namespace Filters { class CAircraftModelFilterDialog; }
-    namespace Menus   { class CMenuActions; }
+    namespace Filters
+    {
+        class CAircraftModelFilterDialog;
+    }
+    namespace Menus
+    {
+        class CMenuActions;
+    }
     namespace Views
     {
         class CAircraftModelStatisticsDialog;
@@ -89,7 +98,7 @@ namespace BlackGui
             int removeModelsWithModelString(const BlackMisc::Simulation::CAircraftModelList &models, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive);
 
             //! Replace models with sme model string, otherwise add
-            int replaceOrAddModelsWithString(const BlackMisc::Simulation::CAircraftModelList &models, Qt::CaseSensitivity sensitivity  = Qt::CaseInsensitive);
+            int replaceOrAddModelsWithString(const BlackMisc::Simulation::CAircraftModelList &models, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive);
 
             //! \copydoc BlackGui::Models::CAircraftModelListModel::setHighlightModels
             void setHighlightModels(const BlackMisc::Simulation::CAircraftModelList &highlightModels);
@@ -175,10 +184,10 @@ namespace BlackGui
             //! File validation dialog
             void displayModelValidationDialog();
 
-            bool m_stashingClearsSelection   = true; //!< stashing unselects
+            bool m_stashingClearsSelection = true; //!< stashing unselects
             bool m_withValidationContextMenu = true; //!< validation didalog context menu
-            CAircraftModelStatisticsDialog       *m_statisticsDialog     = nullptr;
-            CAircraftModelValidationDialog       *m_fileValidationDialog = nullptr;
+            CAircraftModelStatisticsDialog *m_statisticsDialog = nullptr;
+            CAircraftModelValidationDialog *m_fileValidationDialog = nullptr;
             BlackMisc::Simulation::CSimulatorInfo m_correspondingSimulator; //!< validation, simulator required when loading
             QString m_correspondingSimulatorDir;
         };

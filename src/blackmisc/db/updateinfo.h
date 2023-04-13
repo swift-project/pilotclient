@@ -102,8 +102,8 @@ namespace BlackMisc::Db
 
     private:
         CArtifactList m_artifactsPilotClient; //!< artifacts pilot client
-        CArtifactList m_artifactsXSwiftBus;   //!< artifacts XSwiftBus
-        CDistributionList m_distributions;    //!< all distributions (for any artifacts)
+        CArtifactList m_artifactsXSwiftBus; //!< artifacts XSwiftBus
+        CDistributionList m_distributions; //!< all distributions (for any artifacts)
 
         BLACK_METACLASS(
             CUpdateInfo,

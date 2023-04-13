@@ -23,24 +23,27 @@
 #include <initializer_list>
 
 //! \cond
-#define BLACK_TEMPLATE_COLLECTION_MIXINS(NS, T, Set, Extern)                \
-    namespace NS { class Set; }                                             \
-    namespace BlackMisc::Private                                            \
-    {                                                                       \
-        Extern template struct CValueObjectMetaInfo<NS::Set>;               \
-        Extern template struct CValueObjectMetaInfo<CCollection<NS::T>>;    \
-        Extern template struct MetaTypeHelper<NS::Set>;                     \
-        Extern template struct MetaTypeHelper<CCollection<NS::T>>;          \
-    }                                                                       \
-    namespace BlackMisc::Mixin                                              \
-    {                                                                       \
-        Extern template class MetaType<NS::Set>;                            \
-        Extern template class MetaType<CCollection<NS::T>>;                 \
-        Extern template class DBusOperators<CCollection<NS::T>>;            \
-        Extern template class JsonOperators<CCollection<NS::T>>;            \
-        Extern template class String<CCollection<NS::T>>;                   \
-        Extern template class DataStreamOperators<CCollection<NS::T>>;      \
-        Extern template class Icon<CCollection<NS::T>>;                     \
+#define BLACK_TEMPLATE_COLLECTION_MIXINS(NS, T, Set, Extern)             \
+    namespace NS                                                         \
+    {                                                                    \
+        class Set;                                                       \
+    }                                                                    \
+    namespace BlackMisc::Private                                         \
+    {                                                                    \
+        Extern template struct CValueObjectMetaInfo<NS::Set>;            \
+        Extern template struct CValueObjectMetaInfo<CCollection<NS::T>>; \
+        Extern template struct MetaTypeHelper<NS::Set>;                  \
+        Extern template struct MetaTypeHelper<CCollection<NS::T>>;       \
+    }                                                                    \
+    namespace BlackMisc::Mixin                                           \
+    {                                                                    \
+        Extern template class MetaType<NS::Set>;                         \
+        Extern template class MetaType<CCollection<NS::T>>;              \
+        Extern template class DBusOperators<CCollection<NS::T>>;         \
+        Extern template class JsonOperators<CCollection<NS::T>>;         \
+        Extern template class String<CCollection<NS::T>>;                \
+        Extern template class DataStreamOperators<CCollection<NS::T>>;   \
+        Extern template class Icon<CCollection<NS::T>>;                  \
     }
 //! \endcond
 
@@ -55,11 +58,11 @@
  * Explicit template definition of mixins for a CCollection subclass
  */
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)
-#  define BLACK_DECLARE_COLLECTION_MIXINS(Namespace, T, Set)
-#  define BLACK_DEFINE_COLLECTION_MIXINS(Namespace, T, Set)
+#    define BLACK_DECLARE_COLLECTION_MIXINS(Namespace, T, Set)
+#    define BLACK_DEFINE_COLLECTION_MIXINS(Namespace, T, Set)
 #else
-#  define BLACK_DECLARE_COLLECTION_MIXINS(Namespace, T, Set) BLACK_TEMPLATE_COLLECTION_MIXINS(Namespace, T, Set, extern)
-#  define BLACK_DEFINE_COLLECTION_MIXINS(Namespace, T, Set)  BLACK_TEMPLATE_COLLECTION_MIXINS(Namespace, T, Set, )
+#    define BLACK_DECLARE_COLLECTION_MIXINS(Namespace, T, Set) BLACK_TEMPLATE_COLLECTION_MIXINS(Namespace, T, Set, extern)
+#    define BLACK_DEFINE_COLLECTION_MIXINS(Namespace, T, Set) BLACK_TEMPLATE_COLLECTION_MIXINS(Namespace, T, Set, )
 #endif
 
 namespace BlackMisc
@@ -82,10 +85,16 @@ namespace BlackMisc
         QOrderedSet() {}
 
         //! Initializer list constructor.
-        QOrderedSet(std::initializer_list<T> il) { for (const auto &v : il) { insert(v); } }
+        QOrderedSet(std::initializer_list<T> il)
+        {
+            for (const auto &v : il) { insert(v); }
+        }
 
         //! Constructor from QList
-        QOrderedSet(const QList<T> &list) { for (const auto &v : list) { insert(v); }}
+        QOrderedSet(const QList<T> &list)
+        {
+            for (const auto &v : list) { insert(v); }
+        }
     };
 
     /*!
@@ -145,10 +154,10 @@ namespace BlackMisc
         CCollection(CCollection &&other) = default;
 
         //! Copy assignment.
-        CCollection &operator =(const CCollection &other) = default;
+        CCollection &operator=(const CCollection &other) = default;
 
         //! Move assignment.
-        CCollection &operator =(CCollection &&other) = default;
+        CCollection &operator=(CCollection &&other) = default;
 
         //! Destructor.
         ~CCollection() = default;
@@ -189,12 +198,20 @@ namespace BlackMisc
         //! For compatibility with std::inserter.
         //! \param hint Ignored.
         //! \param value The value to insert.
-        iterator insert(const_iterator hint, const T &value) { Q_UNUSED(hint); return insert(value); }
+        iterator insert(const_iterator hint, const T &value)
+        {
+            Q_UNUSED(hint);
+            return insert(value);
+        }
 
         //! For compatibility with std::inserter.
         //! \param hint Ignored.
         //! \param value The value to move in.
-        iterator insert(const_iterator hint, T &&value) { Q_UNUSED(hint); return insert(std::move(value)); }
+        iterator insert(const_iterator hint, T &&value)
+        {
+            Q_UNUSED(hint);
+            return insert(std::move(value));
+        }
 
         //! Inserts an element into the collection.
         //! \return An iterator to the position where value was inserted.
@@ -213,7 +230,10 @@ namespace BlackMisc
 
         //! Appends all elements from a range at the end of this collection.
         template <typename I>
-        void insert(const CRange<I> &range) { std::copy(range.begin(), range.end(), std::back_inserter(*this)); }
+        void insert(const CRange<I> &range)
+        {
+            std::copy(range.begin(), range.end(), std::back_inserter(*this));
+        }
 
         //! Synonym for insert.
         //! \return An iterator to the position where value was inserted.
@@ -231,7 +251,10 @@ namespace BlackMisc
 
         //! Synonym for insert.
         template <typename I>
-        void push_back(const CRange<I> &range) { std::copy(range.begin(), range.end(), std::back_inserter(*this)); }
+        void push_back(const CRange<I> &range)
+        {
+            std::copy(range.begin(), range.end(), std::back_inserter(*this));
+        }
 
         //! Returns a collection which is the union of this collection and another container.
         template <class C>
@@ -287,7 +310,11 @@ namespace BlackMisc
 
         //! Efficient remove using the find and erase of the implementation container. Typically O(log n).
         //! \pre The sequence must be initialized.
-        void remove(const T &object) { auto it = find(object); if (it != end()) { erase(it); } }
+        void remove(const T &object)
+        {
+            auto it = find(object);
+            if (it != end()) { erase(it); }
+        }
 
         //! Removes from this collection all of the elements of another collection.
         //! \pre This sequence must be initialized.
@@ -302,7 +329,11 @@ namespace BlackMisc
             int count = 0;
             for (auto it = begin(); it != end();)
             {
-                if (p(*it)) { it = erase(it); count++; }
+                if (p(*it))
+                {
+                    it = erase(it);
+                    count++;
+                }
                 else { ++it; }
             }
             return count;
@@ -326,10 +357,10 @@ namespace BlackMisc
         void detach() { m_impl.detach(); }
 
         //! Test for equality.
-        friend bool operator ==(const CCollection &a, const CCollection &b) { return a.m_impl == b.m_impl; }
+        friend bool operator==(const CCollection &a, const CCollection &b) { return a.m_impl == b.m_impl; }
 
         //! Test for inequality.
-        friend bool operator !=(const CCollection &a, const CCollection &b) { return a.m_impl != b.m_impl; }
+        friend bool operator!=(const CCollection &a, const CCollection &b) { return a.m_impl != b.m_impl; }
 
         //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::marshalToDataStream
         void marshalToDataStream(QDataStream &stream) const { stream << m_impl; }
@@ -341,7 +372,7 @@ namespace BlackMisc
         QOrderedSet<T> m_impl;
     };
 
-} //namespace BlackMisc
+} // namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::CCollection<int>)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<uint>)

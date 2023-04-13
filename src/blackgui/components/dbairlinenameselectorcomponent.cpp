@@ -26,9 +26,8 @@ using namespace BlackMisc::Db;
 
 namespace BlackGui::Components
 {
-    CDbAirlineNameSelectorComponent::CDbAirlineNameSelectorComponent(QWidget *parent) :
-        CDbAirlineIcaoSelectorBase(parent),
-        ui(new Ui::CDbAirlineNameSelectorComponent)
+    CDbAirlineNameSelectorComponent::CDbAirlineNameSelectorComponent(QWidget *parent) : CDbAirlineIcaoSelectorBase(parent),
+                                                                                        ui(new Ui::CDbAirlineNameSelectorComponent)
     {
         ui->setupUi(this);
         this->setFocusProxy(ui->le_AirlineName);

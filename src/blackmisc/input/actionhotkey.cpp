@@ -13,12 +13,10 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Input, CActionHotkey)
 
 namespace BlackMisc::Input
 {
-    CActionHotkey::CActionHotkey(const QString &action) :
-        m_action(action)
+    CActionHotkey::CActionHotkey(const QString &action) : m_action(action)
     {}
 
-    CActionHotkey::CActionHotkey(const CIdentifier &identifier, const CHotkeyCombination &combination, const QString &action) :
-        m_identifier(identifier), m_combination(combination), m_action(action)
+    CActionHotkey::CActionHotkey(const CIdentifier &identifier, const CHotkeyCombination &combination, const QString &action) : m_identifier(identifier), m_combination(combination), m_action(action)
     {}
 
     QString CActionHotkey::convertToQString(bool /* i18n */) const
@@ -70,27 +68,31 @@ namespace BlackMisc::Input
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexIdentifier:          return QVariant::fromValue(m_identifier);
-        case IndexIdentifierAsString:  return QVariant::fromValue(m_identifier.getMachineName());
-        case IndexAction:              return QVariant::fromValue(m_action);
-        case IndexActionAsString:      return QVariant::fromValue(m_action);
-        case IndexCombination:         return QVariant::fromValue(m_combination);
+        case IndexIdentifier: return QVariant::fromValue(m_identifier);
+        case IndexIdentifierAsString: return QVariant::fromValue(m_identifier.getMachineName());
+        case IndexAction: return QVariant::fromValue(m_action);
+        case IndexActionAsString: return QVariant::fromValue(m_action);
+        case IndexCombination: return QVariant::fromValue(m_combination);
         case IndexCombinationAsString: return QVariant::fromValue(QString(m_combination.toQString()));
-        default:                       return CValueObject::propertyByIndex(index);
+        default: return CValueObject::propertyByIndex(index);
         }
     }
 
     void CActionHotkey::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CActionHotkey>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CActionHotkey>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAction:
-            {
-                m_action = variant.value<QString>();
-                break;
-            }
+        {
+            m_action = variant.value<QString>();
+            break;
+        }
         case IndexCombination:
         case IndexCombinationAsString:
             m_combination = variant.value<CHotkeyCombination>();

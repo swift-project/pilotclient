@@ -18,13 +18,13 @@
  * Export a class or function from the library
  */
 #ifndef WITH_STATIC
-#  if defined(BUILD_BLACKMISC_LIB)
-#    define BLACKMISC_EXPORT Q_DECL_EXPORT
-#  else
-#    define BLACKMISC_EXPORT Q_DECL_IMPORT
-#  endif
+#    if defined(BUILD_BLACKMISC_LIB)
+#        define BLACKMISC_EXPORT Q_DECL_EXPORT
+#    else
+#        define BLACKMISC_EXPORT Q_DECL_IMPORT
+#    endif
 #else
-#  define BLACKMISC_EXPORT
+#    define BLACKMISC_EXPORT
 #endif
 
 /*!
@@ -32,9 +32,9 @@
  * Export explicit template declaration
  */
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)
-#  define BLACKMISC_EXPORT_DECLARE_TEMPLATE BLACKMISC_EXPORT
+#    define BLACKMISC_EXPORT_DECLARE_TEMPLATE BLACKMISC_EXPORT
 #else
-#  define BLACKMISC_EXPORT_DECLARE_TEMPLATE
+#    define BLACKMISC_EXPORT_DECLARE_TEMPLATE
 #endif
 
 /*!
@@ -42,9 +42,9 @@
  * Prevent function inlining
  */
 #ifdef Q_CC_MSVC
-#define BLACK_NO_INLINE __declspec(noinline)
+#    define BLACK_NO_INLINE __declspec(noinline)
 #else
-#define BLACK_NO_INLINE __attribute__((noinline))
+#    define BLACK_NO_INLINE __attribute__((noinline))
 #endif
 
 #endif // guard

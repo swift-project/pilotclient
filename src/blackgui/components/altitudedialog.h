@@ -16,7 +16,10 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CAltitudeDialog; }
+namespace Ui
+{
+    class CAltitudeDialog;
+}
 namespace BlackGui::Components
 {
     /*!

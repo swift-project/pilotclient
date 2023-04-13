@@ -326,7 +326,6 @@ namespace BlackCore::Context
             return false;
         }
 
-
         //! \copydoc IContextSimulator::doMatchingsAgain
         virtual int doMatchingsAgain() override
         {
@@ -457,7 +456,6 @@ namespace BlackCore::Context
             Q_UNUSED(simulator)
             return BlackMisc::CStatusMessageList();
         }
-
     };
 } // namespace
 

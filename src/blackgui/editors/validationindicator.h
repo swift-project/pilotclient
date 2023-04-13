@@ -23,7 +23,10 @@
 class QPaintEvent;
 class QWidget;
 
-namespace Ui { class CValidationIndicator; }
+namespace Ui
+{
+    class CValidationIndicator;
+}
 
 namespace BlackGui::Editors
 {

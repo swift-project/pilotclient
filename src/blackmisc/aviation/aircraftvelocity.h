@@ -43,7 +43,7 @@ namespace BlackMisc::Aviation
 
         //! Constructor
         CAircraftVelocity(double x, double y, double z, PhysicalQuantities::CSpeedUnit xyzUnit,
-            double pitch, double roll, double heading, PhysicalQuantities::CAngleUnit pbhAngleUnit, PhysicalQuantities::CTimeUnit pbhTimeUnit);
+                          double pitch, double roll, double heading, PhysicalQuantities::CAngleUnit pbhAngleUnit, PhysicalQuantities::CTimeUnit pbhTimeUnit);
 
         //! @{
         //! Setter

@@ -38,26 +38,26 @@ namespace BlackMisc::Simulation
 {
     template <typename Derived>
     CInterpolator<Derived>::CInterpolator(const CCallsign &callsign,
-                                            ISimulationEnvironmentProvider *simEnvProvider,
-                                            IInterpolationSetupProvider    *setupProvider,
-                                            IRemoteAircraftProvider *remoteProvider,
-                                            CInterpolationLogger    *logger) : m_callsign(callsign)
+                                          ISimulationEnvironmentProvider *simEnvProvider,
+                                          IInterpolationSetupProvider *setupProvider,
+                                          IRemoteAircraftProvider *remoteProvider,
+                                          CInterpolationLogger *logger) : m_callsign(callsign)
     {
         // normally when created m_cg is still null since there is no CG in the provider yet
 
         if (simEnvProvider) { this->setSimulationEnvironmentProvider(simEnvProvider); }
-        if (setupProvider)  { this->setInterpolationSetupProvider(setupProvider); }
+        if (setupProvider) { this->setInterpolationSetupProvider(setupProvider); }
         if (remoteProvider)
         {
             this->setRemoteAircraftProvider(remoteProvider);
-            QObject::connect(&m_initTimer, &QTimer::timeout, [ = ] { this->deferredInit(); });
+            QObject::connect(&m_initTimer, &QTimer::timeout, [=] { this->deferredInit(); });
             m_initTimer.setSingleShot(true);
             m_initTimer.start(2500);
         }
         this->attachLogger(logger);
     }
 
-    template<typename Derived>
+    template <typename Derived>
     CLength CInterpolator<Derived>::getAndFetchModelCG(const CLength &dbCG)
     {
         CLength cgDb = dbCG;
@@ -79,7 +79,7 @@ namespace BlackMisc::Simulation
         return cg;
     }
 
-    template<typename Derived>
+    template <typename Derived>
     double CInterpolator<Derived>::groundInterpolationFactor()
     {
         // done here so we can change value without "larfer" recompilations
@@ -87,7 +87,7 @@ namespace BlackMisc::Simulation
         return f;
     }
 
-    template<typename Derived>
+    template <typename Derived>
     CAircraftSituationList CInterpolator<Derived>::remoteAircraftSituationsAndChange(const CInterpolationAndRenderingSetupPerCallsign &setup)
     {
         // const bool vtol = setup.isForcingFullInterpolation() || m_model.isVtol();
@@ -117,7 +117,7 @@ namespace BlackMisc::Simulation
         return validSituations;
     }
 
-    template<typename Derived>
+    template <typename Derived>
     bool CInterpolator<Derived>::presetGroundElevation(CAircraftSituation &situationToPreset, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const CAircraftSituationChange &change)
     {
         // IMPORTANT: we do not know what the situation will be (interpolated to), so we cannot transfer
@@ -165,14 +165,14 @@ namespace BlackMisc::Simulation
         return situationToPreset.hasGroundElevation();
     }
 
-    template<typename Derived>
+    template <typename Derived>
     void CInterpolator<Derived>::deferredInit()
     {
         if (m_model.hasModelString()) { return; } // set in-between
         this->initCorrespondingModel();
     }
 
-    template<typename Derived>
+    template <typename Derived>
     bool CInterpolator<Derived>::verifyInterpolationSituations(const CAircraftSituation &oldest, const CAircraftSituation &newer, const CAircraftSituation &latest, const CInterpolationAndRenderingSetupPerCallsign &setup)
     {
         if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return true; }
@@ -180,7 +180,7 @@ namespace BlackMisc::Simulation
 
         // oldest last, null ignored
         if (!latest.isNull()) { situations.push_back(latest); }
-        if (!newer.isNull())  { situations.push_back(newer);  }
+        if (!newer.isNull()) { situations.push_back(newer); }
         if (!oldest.isNull()) { situations.push_back(oldest); }
 
         const bool sorted = situations.isSortedAdjustedLatestFirstWithoutNullPositions();
@@ -217,7 +217,7 @@ namespace BlackMisc::Simulation
         return cats;
     }
 
-    template<typename Derived>
+    template <typename Derived>
     CInterpolationResult CInterpolator<Derived>::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber)
     {
         CInterpolationResult result;
@@ -346,14 +346,12 @@ namespace BlackMisc::Simulation
                 CStatusMessage m;
                 if (noSituation)
                 {
-                    m = CStatusMessage(this).warning(u"No situation #%1 for interpolation reported for '%2' (Interpolant: %3 interpolation: %4)") <<
-                        m_invalidSituations << m_callsign.asString() << boolToTrueFalse(isValidInterpolant) << boolToTrueFalse(isValidInterpolation);
+                    m = CStatusMessage(this).warning(u"No situation #%1 for interpolation reported for '%2' (Interpolant: %3 interpolation: %4)") << m_invalidSituations << m_callsign.asString() << boolToTrueFalse(isValidInterpolant) << boolToTrueFalse(isValidInterpolation);
                 }
                 else
                 {
                     const qint64 diff = m_currentTimeMsSinceEpoch - currentSituation.getAdjustedMSecsSinceEpoch();
-                    m = CStatusMessage(this).warning(u"Invalid situation, diff. %1ms #%2 for interpolation reported for '%3' (Interpolant: %4 interpolation: %5)") <<
-                        diff << m_invalidSituations << m_callsign.asString() << boolToTrueFalse(isValidInterpolant) << boolToTrueFalse(isValidInterpolation);
+                    m = CStatusMessage(this).warning(u"Invalid situation, diff. %1ms #%2 for interpolation reported for '%3' (Interpolant: %4 interpolation: %5)") << diff << m_invalidSituations << m_callsign.asString() << boolToTrueFalse(isValidInterpolant) << boolToTrueFalse(isValidInterpolation);
                 }
                 if (!m.isEmpty())
                 {
@@ -367,7 +365,7 @@ namespace BlackMisc::Simulation
                     m_interpolationMessages.push_back(m);
                 }
             }
-        }// valid?
+        } // valid?
 
         // situation and status
         if (valid)
@@ -387,13 +385,13 @@ namespace BlackMisc::Simulation
         if (this->doLogging())
         {
             log.tsCurrent = m_currentTimeMsSinceEpoch;
-            log.callsign  = m_callsign;
-            log.groundFactor      = currentSituation.getOnGroundFactor();
-            log.altCorrection     = CAircraftSituation::altitudeCorrectionToString(altCorrection);
-            log.situationCurrent  = currentSituation;
+            log.callsign = m_callsign;
+            log.groundFactor = currentSituation.getOnGroundFactor();
+            log.altCorrection = CAircraftSituation::altitudeCorrectionToString(altCorrection);
+            log.situationCurrent = currentSituation;
             log.interpolantRecalc = interpolant.isRecalculated();
-            log.change        = m_pastSituationsChange;
-            log.usedSetup     = m_currentSetup;
+            log.change = m_pastSituationsChange;
+            log.usedSetup = m_currentSetup;
             log.elevationInfo = this->getElevationsFoundMissedInfo();
             log.cgAboveGround = currentSituation.getCG();
             log.sceneryOffset = m_currentSceneryOffset;
@@ -430,12 +428,16 @@ namespace BlackMisc::Simulation
         do
         {
             // find the first parts earlier than the current time
-            const auto pivot = std::partition_point(validParts.begin(), validParts.end(), [ = ](auto &&p) { return p.getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch; });
+            const auto pivot = std::partition_point(validParts.begin(), validParts.end(), [=](auto &&p) { return p.getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch; });
             const auto partsNewer = makeRange(validParts.begin(), pivot).reverse();
             const auto partsOlder = makeRange(pivot, validParts.end());
 
             // if (partsOlder.isEmpty()) { currentParts = *(partsNewer.end() - 1); break; }
-            if (partsOlder.isEmpty()) { currentParts = *(partsNewer.begin()); break; }
+            if (partsOlder.isEmpty())
+            {
+                currentParts = *(partsNewer.begin());
+                break;
+            }
             currentParts = partsOlder.front(); // latest older parts
         }
         while (false);
@@ -444,7 +446,7 @@ namespace BlackMisc::Simulation
         return currentParts;
     }
 
-    template<typename Derived>
+    template <typename Derived>
     CAircraftParts CInterpolator<Derived>::getInterpolatedOrGuessedParts(int aircraftNumber)
     {
         Q_ASSERT_X(m_partsToSituationInterpolationRatio >= 1 && m_partsToSituationInterpolationRatio < 11, Q_FUNC_INFO, "Wrong ratio");
@@ -491,7 +493,7 @@ namespace BlackMisc::Simulation
         return parts;
     }
 
-    template<typename Derived>
+    template <typename Derived>
     const CAircraftParts &CInterpolator<Derived>::logAndReturnNullParts(const QString &info, bool log)
     {
         if (!m_lastParts.isNull())
@@ -500,7 +502,6 @@ namespace BlackMisc::Simulation
             m_currentPartsStatus.setReusedParts(true);
             return m_lastParts;
         }
-
 
         if (log)
         {
@@ -512,13 +513,13 @@ namespace BlackMisc::Simulation
         return CAircraftParts::null();
     }
 
-    template<typename Derived>
+    template <typename Derived>
     bool CInterpolator<Derived>::doLogging() const
     {
-        return this->hasAttachedLogger() &&  m_currentSetup.logInterpolation();
+        return this->hasAttachedLogger() && m_currentSetup.logInterpolation();
     }
 
-    template<typename Derived>
+    template <typename Derived>
     CAircraftParts CInterpolator<Derived>::guessParts(const CAircraftSituation &situation, const CAircraftSituationChange &change, const CAircraftModel &model)
     {
         CAircraftParts parts;
@@ -575,7 +576,7 @@ namespace BlackMisc::Simulation
         }
         else
         {
-            if (details) { *details = QStringLiteral("no ground info");  }
+            if (details) { *details = QStringLiteral("no ground info"); }
 
             // no idea if on ground or not
             engines.initEngines(engineCount, true);
@@ -585,7 +586,7 @@ namespace BlackMisc::Simulation
         }
 
         const double pitchDeg = situation.getPitch().value(CAngleUnit::deg());
-        const bool isLikelyTakeOffOrClimbing = change.isNull() ?  pitchDeg > 20 : (change.isRotatingUp() || change.isConstAscending());
+        const bool isLikelyTakeOffOrClimbing = change.isNull() ? pitchDeg > 20 : (change.isRotatingUp() || change.isConstAscending());
         const bool isLikelyLanding = change.isNull() ? false : change.isConstDescending();
 
         if (situation.hasGroundElevation())
@@ -602,7 +603,7 @@ namespace BlackMisc::Simulation
             const double aGroundFt = aboveGnd.value(CLengthUnit::ft());
             static const QString detailsInfo("above ground: %1ft near grounds: %2ft %3ft likely takeoff: %4 likely landing: %5");
 
-            if (details) { *details = detailsInfo.arg(aGroundFt).arg(nearGround1Ft).arg(nearGround2Ft).arg(boolToYesNo(isLikelyTakeOffOrClimbing), boolToYesNo(isLikelyLanding));  }
+            if (details) { *details = detailsInfo.arg(aGroundFt).arg(nearGround1Ft).arg(nearGround2Ft).arg(boolToYesNo(isLikelyTakeOffOrClimbing), boolToYesNo(isLikelyLanding)); }
             if (aGroundFt < nearGround1Ft)
             {
                 if (details) { details->prepend(QStringLiteral("near ground: ")); }
@@ -631,7 +632,7 @@ namespace BlackMisc::Simulation
                 if (situation.getOnGroundDetails() == CAircraftSituation::OnGroundByGuessing)
                 {
                     // should be OK
-                    if (details) { *details = QStringLiteral("on ground, no elv.");  }
+                    if (details) { *details = QStringLiteral("on ground, no elv."); }
                 }
                 else
                 {
@@ -639,7 +640,7 @@ namespace BlackMisc::Simulation
                     {
                         const bool gearDown = situation.getGroundSpeed() < guessedVRotate;
                         parts.setGearDown(gearDown);
-                        if (details) { *details = QStringLiteral("not on ground elv., gs < ") + guessedVRotate.valueRoundedWithUnit(1);  }
+                        if (details) { *details = QStringLiteral("not on ground elv., gs < ") + guessedVRotate.valueRoundedWithUnit(1); }
                     }
                 }
             }
@@ -648,7 +649,7 @@ namespace BlackMisc::Simulation
         return parts;
     }
 
-    template<typename Derived>
+    template <typename Derived>
     void CInterpolator<Derived>::logParts(const CAircraftParts &parts, int partsNo, bool empty) const
     {
         if (!this->doLogging()) { return; }
@@ -661,26 +662,26 @@ namespace BlackMisc::Simulation
         m_logger->logParts(logInfo);
     }
 
-    template<typename Derived>
+    template <typename Derived>
     QString CInterpolator<Derived>::getInterpolatorInfo() const
     {
         return QStringLiteral("Callsign: ") %
-                m_callsign.asString() %
-                QStringLiteral(" situations: ") %
-                QString::number(this->remoteAircraftSituationsCount(m_callsign)) %
-                QStringLiteral(" parts: ") %
-                QString::number(this->remoteAircraftPartsCount(m_callsign)) %
-                QStringLiteral(" 1st interpolation: ") %
-                boolToYesNo(m_lastSituation.isNull());
+               m_callsign.asString() %
+               QStringLiteral(" situations: ") %
+               QString::number(this->remoteAircraftSituationsCount(m_callsign)) %
+               QStringLiteral(" parts: ") %
+               QString::number(this->remoteAircraftPartsCount(m_callsign)) %
+               QStringLiteral(" 1st interpolation: ") %
+               boolToYesNo(m_lastSituation.isNull());
     }
 
-    template<typename Derived>
+    template <typename Derived>
     void CInterpolator<Derived>::resetLastInterpolation()
     {
         m_lastSituation.setNull();
     }
 
-    template<typename Derived>
+    template <typename Derived>
     void CInterpolator<Derived>::clear()
     {
         this->resetLastInterpolation();
@@ -699,12 +700,12 @@ namespace BlackMisc::Simulation
         m_interpolationMessages.clear();
     }
 
-    template<typename Derived>
+    template <typename Derived>
     bool CInterpolator<Derived>::initIniterpolationStepData(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber)
     {
         Q_ASSERT_X(!m_callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
 
-        const qint64 lastModifed  = this->situationsLastModified(m_callsign);
+        const qint64 lastModifed = this->situationsLastModified(m_callsign);
         const bool slowUpdateStep = (((m_interpolatedSituationsCounter + aircraftNumber) % 25) == 0); // flag when parts are updated, which need not to be updated every time
         const bool changedSituations = lastModifed > m_situationsLastModified;
 
@@ -752,7 +753,7 @@ namespace BlackMisc::Simulation
         return success;
     }
 
-    template<typename Derived>
+    template <typename Derived>
     CAircraftSituation CInterpolator<Derived>::initInterpolatedSituation(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation) const
     {
         if (m_currentSituations.isEmpty()) { return CAircraftSituation::null(); }
@@ -779,7 +780,7 @@ namespace BlackMisc::Simulation
         return currentSituation;
     }
 
-    template<typename Derived>
+    template <typename Derived>
     void CInterpolator<Derived>::initCorrespondingModel(const CAircraftModel &model)
     {
         if (model.hasModelString())
@@ -797,7 +798,7 @@ namespace BlackMisc::Simulation
         this->getAndFetchModelCG(model.getCG());
     }
 
-    template<typename Derived>
+    template <typename Derived>
     void CInterpolator<Derived>::markAsUnitTest()
     {
         m_unitTest = true;
@@ -854,20 +855,18 @@ namespace BlackMisc::Simulation
     {
         m_extraInfo.clear();
         m_isValidSituation = false;
-        m_isInterpolated   = false;
-        m_isSameSituation  = false;
+        m_isInterpolated = false;
+        m_isSameSituation = false;
         m_situations = -1;
     }
 
     QString CInterpolationStatus::toQString() const
     {
         return QStringLiteral("Interpolated: ") % boolToYesNo(m_isInterpolated) %
-                QStringLiteral(" | situations: ") % QString::number(m_situations) %
-                QStringLiteral(" | situation valid: ") % boolToYesNo(m_isValidSituation) %
-                QStringLiteral(" | same: ") % boolToYesNo(m_isSameSituation) %
-                (
-                    m_extraInfo.isEmpty() ? QString() : QStringLiteral(" info: ") % m_extraInfo
-                );
+               QStringLiteral(" | situations: ") % QString::number(m_situations) %
+               QStringLiteral(" | situation valid: ") % boolToYesNo(m_isValidSituation) %
+               QStringLiteral(" | same: ") % boolToYesNo(m_isSameSituation) %
+               (m_extraInfo.isEmpty() ? QString() : QStringLiteral(" info: ") % m_extraInfo);
     }
 
     void CPartsStatus::reset()
@@ -880,8 +879,8 @@ namespace BlackMisc::Simulation
     QString CPartsStatus::toQString() const
     {
         return QStringLiteral("Supported parts: ") % boolToYesNo(m_supportsParts) %
-                QStringLiteral(" | reused: ") % boolToYesNo(m_resusedParts) %
-                QStringLiteral(" | same: ") % boolToYesNo(m_isSameParts);
+               QStringLiteral(" | reused: ") % boolToYesNo(m_resusedParts) %
+               QStringLiteral(" | same: ") % boolToYesNo(m_isSameParts);
     }
 
     // see here for the reason of thess forward instantiations

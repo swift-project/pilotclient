@@ -40,18 +40,17 @@ namespace BlackCore::Fsd
         //! @}
 
     private:
-
         PlaneInformation();
     };
 
     //! Equal to operator
     inline bool operator==(const PlaneInformation &lhs, const PlaneInformation &rhs)
     {
-        return  lhs.sender() == rhs.sender() &&
-                lhs.receiver() == rhs.receiver() &&
-                lhs.m_aircraft == rhs.m_aircraft &&
-                lhs.m_airline == rhs.m_airline &&
-                lhs.m_livery == rhs.m_livery;
+        return lhs.sender() == rhs.sender() &&
+               lhs.receiver() == rhs.receiver() &&
+               lhs.m_aircraft == rhs.m_aircraft &&
+               lhs.m_airline == rhs.m_airline &&
+               lhs.m_livery == rhs.m_livery;
     }
 
     //! Not equal to operator

@@ -25,8 +25,7 @@ using namespace BlackCore::Data;
 
 namespace BlackCore::Db
 {
-    CInfoDataReader::CInfoDataReader(QObject *owner, const CDatabaseReaderConfigList &config, CDbFlags::DataRetrievalModeFlag mode) :
-        CDatabaseReader(owner, config, "CInfoDataReader"), m_mode(mode)
+    CInfoDataReader::CInfoDataReader(QObject *owner, const CDatabaseReaderConfigList &config, CDbFlags::DataRetrievalModeFlag mode) : CDatabaseReader(owner, config, "CInfoDataReader"), m_mode(mode)
     {
         Q_ASSERT_X(mode == CDbFlags::DbReading || mode == CDbFlags::Shared, Q_FUNC_INFO, "Wrong mode");
     }
@@ -148,7 +147,7 @@ namespace BlackCore::Db
         }
         if (!url.isEmpty())
         {
-            this->getFromNetworkAndLog(url, { this, &CInfoDataReader::parseInfoObjectsData});
+            this->getFromNetworkAndLog(url, { this, &CInfoDataReader::parseInfoObjectsData });
             emit this->dataRead(this->getEntityForMode(), CEntityFlags::ReadStarted, 0, url);
         }
         else
@@ -203,7 +202,7 @@ namespace BlackCore::Db
     CEntityFlags::EntityFlag CInfoDataReader::getEntityForMode() const
     {
         if (m_mode == CDbFlags::DbReading) { return CEntityFlags::DbInfoObjectEntity; }
-        if (m_mode == CDbFlags::Shared)    { return CEntityFlags::SharedInfoObjectEntity; }
+        if (m_mode == CDbFlags::Shared) { return CEntityFlags::SharedInfoObjectEntity; }
         qFatal("Wrong mode");
         return CEntityFlags::NoEntity;
     }
@@ -221,7 +220,7 @@ namespace BlackCore::Db
         switch (m_mode)
         {
         case CDbFlags::DbReading: return getDbInfoObjectsUrl();
-        case CDbFlags::Shared:    return getSharedInfoObjectsUrl();
+        case CDbFlags::Shared: return getSharedInfoObjectsUrl();
         default: qFatal("Wrong mode");
         }
         return CUrl();

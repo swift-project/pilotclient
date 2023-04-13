@@ -106,4 +106,4 @@ namespace BlackMisc::Audio
 Q_DECLARE_METATYPE(BlackMisc::Audio::CAudioDeviceInfoList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Audio::CAudioDeviceInfo>)
 
-#endif //guard
+#endif // guard

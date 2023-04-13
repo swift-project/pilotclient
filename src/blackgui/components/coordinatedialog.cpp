@@ -16,9 +16,8 @@ using namespace BlackGui::Editors;
 
 namespace BlackGui::Components
 {
-    CCoordinateDialog::CCoordinateDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CCoordinateDialog)
+    CCoordinateDialog::CCoordinateDialog(QWidget *parent) : QDialog(parent),
+                                                            ui(new Ui::CCoordinateDialog)
     {
         ui->setupUi(this);
         ui->editor_Coordinate->showSetButton(false);
@@ -28,7 +27,7 @@ namespace BlackGui::Components
     }
 
     CCoordinateDialog::~CCoordinateDialog()
-    { }
+    {}
 
     CCoordinateGeodetic CCoordinateDialog::getCoordinate() const
     {

@@ -46,10 +46,9 @@ using namespace BlackGui::Views;
 
 namespace BlackGui::Components
 {
-    CDbStashComponent::CDbStashComponent(QWidget *parent) :
-        QFrame(parent),
-        CDbMappingComponentAware(parent),
-        ui(new Ui::CDbStashComponent)
+    CDbStashComponent::CDbStashComponent(QWidget *parent) : QFrame(parent),
+                                                            CDbMappingComponentAware(parent),
+                                                            ui(new Ui::CDbStashComponent)
     {
         ui->setupUi(this);
 
@@ -62,10 +61,10 @@ namespace BlackGui::Components
 
         // copy over buttons
         connect(ui->pb_AircraftIcao, &QPushButton::pressed, this, &CDbStashComponent::copyOverValuesToSelectedModels);
-        connect(ui->pb_AirlineIcao,  &QPushButton::pressed, this, &CDbStashComponent::copyOverValuesToSelectedModels);
-        connect(ui->pb_Livery,       &QPushButton::pressed, this, &CDbStashComponent::copyOverValuesToSelectedModels);
-        connect(ui->pb_Distributor,  &QPushButton::pressed, this, &CDbStashComponent::copyOverValuesToSelectedModels);
-        connect(ui->pb_Model,        &QPushButton::pressed, this, &CDbStashComponent::modifyModelDialog);
+        connect(ui->pb_AirlineIcao, &QPushButton::pressed, this, &CDbStashComponent::copyOverValuesToSelectedModels);
+        connect(ui->pb_Livery, &QPushButton::pressed, this, &CDbStashComponent::copyOverValuesToSelectedModels);
+        connect(ui->pb_Distributor, &QPushButton::pressed, this, &CDbStashComponent::copyOverValuesToSelectedModels);
+        connect(ui->pb_Model, &QPushButton::pressed, this, &CDbStashComponent::modifyModelDialog);
 
         ui->tvp_StashAircraftModels->setAircraftModelMode(CAircraftModelListModel::StashModel);
         ui->tvp_StashAircraftModels->allowDragDrop(false, true, true);
@@ -82,7 +81,7 @@ namespace BlackGui::Components
     }
 
     CDbStashComponent::~CDbStashComponent()
-    { }
+    {}
 
     CStatusMessage CDbStashComponent::validateStashModel(const CAircraftModel &model, bool allowReplace) const
     {
@@ -247,7 +246,7 @@ namespace BlackGui::Components
 
     void CDbStashComponent::onValidatePressed()
     {
-        if (ui->tvp_StashAircraftModels->isEmpty()) {return; }
+        if (ui->tvp_StashAircraftModels->isEmpty()) { return; }
         CAircraftModelList validModels;
         CAircraftModelList invalidModels;
         this->validateAndDisplay(validModels, invalidModels, true);
@@ -255,7 +254,7 @@ namespace BlackGui::Components
 
     void CDbStashComponent::onRemoveInvalidPressed()
     {
-        if (ui->tvp_StashAircraftModels->isEmpty()) {return; }
+        if (ui->tvp_StashAircraftModels->isEmpty()) { return; }
         CAircraftModelList validModels;
         CAircraftModelList invalidModels;
         this->validate(validModels, invalidModels);
@@ -266,7 +265,7 @@ namespace BlackGui::Components
     {
         if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
         if (ui->tvp_StashAircraftModels->isEmpty()) { return; }
-        if (!sGui->hasMinimumMappingVersion())    { return; }
+        if (!sGui->hasMinimumMappingVersion()) { return; }
 
         // get models right here, because later steps might affect selection
         const CAircraftModelList models(getSelectedOrAllModels());
@@ -313,8 +312,7 @@ namespace BlackGui::Components
             {
                 QPointer<CDbStashComponent> myself(this);
                 const QString confirm("Remove %1 published models from stash?");
-                auto lambda = [ = ]()
-                {
+                auto lambda = [=]() {
                     if (!myself) { return; }
                     myself->unstashModels(publishedModels.getModelStringList(false));
                 };
@@ -325,7 +323,7 @@ namespace BlackGui::Components
 
     CStatusMessageList CDbStashComponent::validate(CAircraftModelList &validModels, CAircraftModelList &invalidModels) const
     {
-        if (ui->tvp_StashAircraftModels->isEmpty()) {return CStatusMessageList(); }
+        if (ui->tvp_StashAircraftModels->isEmpty()) { return CStatusMessageList(); }
         Q_ASSERT_X(sGui->getWebDataServices(), Q_FUNC_INFO, "No web services");
         const CAircraftModelList models(getSelectedOrAllModels());
         if (models.isEmpty()) { return CStatusMessageList(); }
@@ -336,9 +334,7 @@ namespace BlackGui::Components
         if (msgs.isEmpty())
         {
             return CStatusMessageList(
-            {
-                CStatusMessage(validationCategories(), CStatusMessage::SeverityInfo, u"No errors in %1 model(s)") << models.size()
-            });
+                { CStatusMessage(validationCategories(), CStatusMessage::SeverityInfo, u"No errors in %1 model(s)") << models.size() });
         }
         else
         {
@@ -541,7 +537,7 @@ namespace BlackGui::Components
 
     bool CDbStashComponent::showOverlayMessagesWithConfirmation(
         const CStatusMessageList &msgs, bool appendOldMessages,
-        const QString &confirmation, std::function<void ()> okLambda, QMessageBox::StandardButton defaultButton, bool onlyErrors, int timeoutMs)
+        const QString &confirmation, std::function<void()> okLambda, QMessageBox::StandardButton defaultButton, bool onlyErrors, int timeoutMs)
     {
         if (msgs.isEmpty()) { return false; }
         if (!msgs.hasErrorMessages() && onlyErrors) { return false; }

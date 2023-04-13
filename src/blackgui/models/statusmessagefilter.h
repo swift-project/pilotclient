@@ -16,7 +16,10 @@
 #include "blackmisc/statusmessagelist.h"
 #include <QString>
 
-namespace BlackMisc { class CLogPattern; }
+namespace BlackMisc
+{
+    class CLogPattern;
+}
 
 namespace BlackGui::Models
 {

@@ -24,7 +24,10 @@
 #include <QWizardPage>
 #include <QScopedPointer>
 
-namespace Ui { class CSettingsHotkeyComponent; }
+namespace Ui
+{
+    class CSettingsHotkeyComponent;
+}
 namespace BlackGui::Components
 {
     //! Configure hotkeys

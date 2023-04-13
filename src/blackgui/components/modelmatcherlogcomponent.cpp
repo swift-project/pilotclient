@@ -26,9 +26,8 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CModelMatcherLogComponent::CModelMatcherLogComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CModelMatcherLogComponent)
+    CModelMatcherLogComponent::CModelMatcherLogComponent(QWidget *parent) : QFrame(parent),
+                                                                            ui(new Ui::CModelMatcherLogComponent)
     {
         ui->setupUi(this);
         m_text.setDefaultStyleSheet(CStatusMessageList::htmlStyleSheet());
@@ -36,7 +35,7 @@ namespace BlackGui::Components
     }
 
     CModelMatcherLogComponent::~CModelMatcherLogComponent()
-    { }
+    {}
 
     bool CModelMatcherLogComponent::hasContexts() const
     {

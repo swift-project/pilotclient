@@ -19,14 +19,18 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui  { class CDbLoadOverviewComponent; }
+namespace Ui
+{
+    class CDbLoadOverviewComponent;
+}
 namespace BlackGui::Components
 {
     /*!
      * Overview about load state of DB data
      */
     class BLACKGUI_EXPORT CDbLoadOverviewComponent :
-        public QFrame, public BlackGui::CLoadIndicatorEnabled
+        public QFrame,
+        public BlackGui::CLoadIndicatorEnabled
     {
         Q_OBJECT
 
@@ -67,7 +71,7 @@ namespace BlackGui::Components
 
     private:
         QScopedPointer<Ui::CDbLoadOverviewComponent> ui;
-        BlackMisc::CDigestSignal m_dsTriggerGuiUpdate  { this, &CDbLoadOverviewComponent::setGuiValues, 2500, 5 };
+        BlackMisc::CDigestSignal m_dsTriggerGuiUpdate { this, &CDbLoadOverviewComponent::setGuiValues, 2500, 5 };
         qint64 m_sharedLastCheck = -1; //!< when shared URLs were last checked
         bool m_sharedValueCheckInProgress = false; //!< setting values in progress, needed because of CNetworkUtils::canConnect check (processing events)
         const QString m_imgOk = ":/diagona/icons/diagona/icons/tick.png";

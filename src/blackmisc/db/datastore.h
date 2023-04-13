@@ -31,9 +31,9 @@ namespace BlackMisc
         enum DbKeyState
         {
             Undefined = 0,
-            Valid     = 1 << 0,
-            Invalid   = 1 << 1,
-            All       = Valid | Invalid
+            Valid = 1 << 0,
+            Invalid = 1 << 1,
+            All = Valid | Invalid
         };
 
         //! Supposed to be used only in filter operations
@@ -126,7 +126,11 @@ namespace BlackMisc
             static int stringToDbKey(const QString &candidate);
 
             //! The key index
-            static const CPropertyIndex &keyIndex() { static const CPropertyIndex k(IndexDbIntegerKey); return k; }
+            static const CPropertyIndex &keyIndex()
+            {
+                static const CPropertyIndex k(IndexDbIntegerKey);
+                return k;
+            }
 
         protected:
             //! Constructor
@@ -210,7 +214,11 @@ namespace BlackMisc
             static QString invalidDbKey() { return {}; }
 
             //! The key index
-            static const CPropertyIndex &keyIndex() { static const CPropertyIndex k(IndexDbStringKey); return k; }
+            static const CPropertyIndex &keyIndex()
+            {
+                static const CPropertyIndex k(IndexDbStringKey);
+                return k;
+            }
 
         protected:
             //! Constructor
@@ -237,8 +245,8 @@ namespace BlackMisc
             //! Can given index be handled
             static bool canHandleIndex(BlackMisc::CPropertyIndexRef index);
 
-            QString m_dbKey;                //!< key
-            bool    m_loadedFromDb = false; //!< as we have no artificial key, it can happen key is set, but not loaded from DB
+            QString m_dbKey; //!< key
+            bool m_loadedFromDb = false; //!< as we have no artificial key, it can happen key is set, but not loaded from DB
         };
     } // ns
 } // ns

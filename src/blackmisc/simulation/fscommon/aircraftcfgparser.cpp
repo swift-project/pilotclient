@@ -45,7 +45,7 @@ namespace BlackMisc::Simulation::FsCommon
     using LoaderResponse = std::tuple<CAircraftCfgEntriesList, CAircraftModelList, CStatusMessageList>;
 
     CAircraftCfgParser::CAircraftCfgParser(const CSimulatorInfo &simInfo, QObject *parent) : IAircraftModelLoader(simInfo, parent)
-    { }
+    {}
 
     CAircraftCfgParser *CAircraftCfgParser::createModelLoader(const CSimulatorInfo &simInfo, QObject *parent)
     {
@@ -72,20 +72,18 @@ namespace BlackMisc::Simulation::FsCommon
             if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
             emit this->diskLoadingStarted(simulator, mode);
             m_parserWorker = CWorker::fromTask(this, "CAircraftCfgParser::startLoadingFromDisk",
-                                                [this, modelDirs, excludedDirectoryPatterns, simulator, modelConsolidation]()
-            {
-                CStatusMessageList msgs;
-                const CAircraftCfgEntriesList aircraftCfgEntriesList = this->performParsing(modelDirs, excludedDirectoryPatterns, msgs);
-                CAircraftModelList models;
-                if (msgs.isSuccess())
-                {
-                    models = aircraftCfgEntriesList.toAircraftModelList(simulator, true, msgs);
-                    if (modelConsolidation) { modelConsolidation(models, true); }
-                }
-                return std::make_tuple(aircraftCfgEntriesList, models, msgs);
-            });
-            m_parserWorker->thenWithResult<LoaderResponse>(this, [this, simulator](const LoaderResponse & tuple)
-            {
+                                               [this, modelDirs, excludedDirectoryPatterns, simulator, modelConsolidation]() {
+                                                   CStatusMessageList msgs;
+                                                   const CAircraftCfgEntriesList aircraftCfgEntriesList = this->performParsing(modelDirs, excludedDirectoryPatterns, msgs);
+                                                   CAircraftModelList models;
+                                                   if (msgs.isSuccess())
+                                                   {
+                                                       models = aircraftCfgEntriesList.toAircraftModelList(simulator, true, msgs);
+                                                       if (modelConsolidation) { modelConsolidation(models, true); }
+                                                   }
+                                                   return std::make_tuple(aircraftCfgEntriesList, models, msgs);
+                                               });
+            m_parserWorker->thenWithResult<LoaderResponse>(this, [this, simulator](const LoaderResponse &tuple) {
                 m_loadingMessages = std::get<2>(tuple);
                 if (m_loadingMessages.isSuccess())
                 {
@@ -174,7 +172,7 @@ namespace BlackMisc::Simulation::FsCommon
         // if not we assume these files can be ignored
         const QDir dirForAir(directory, CFsDirectories::airFileFilter(), QDir::Name, QDir::Files | QDir::NoDotAndDotDot);
         const int airFilesCount = dirForAir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot, QDir::DirsLast).size();
-        const bool hasAirFiles =  airFilesCount > 0;
+        const bool hasAirFiles = airFilesCount > 0;
 
         if (getSimulator().isP3D() && !hasAirFiles)
         {
@@ -269,7 +267,11 @@ namespace BlackMisc::Simulation::FsCommon
             if (lineFixed.isEmpty()) { continue; }
             if (lineFixed.startsWith("["))
             {
-                if (lineFixed.startsWith("[GENERAL]", Qt::CaseInsensitive)) { currentSection = General; continue; }
+                if (lineFixed.startsWith("[GENERAL]", Qt::CaseInsensitive))
+                {
+                    currentSection = General;
+                    continue;
+                }
                 if (lineFixed.startsWith(fltSection, Qt::CaseInsensitive))
                 {
                     CAircraftCfgEntries e(fileName, fltsimCounter);
@@ -288,87 +290,87 @@ namespace BlackMisc::Simulation::FsCommon
             switch (currentSection)
             {
             case General:
+            {
+                if (lineFixed.startsWith("//")) { break; }
+                if (atcType.isEmpty() || atcModel.isEmpty())
                 {
-                    if (lineFixed.startsWith("//")) { break; }
-                    if (atcType.isEmpty() || atcModel.isEmpty())
+                    const QString c = getFixedIniLineContent(lineFixed);
+                    if (lineFixed.startsWith("atc_type", Qt::CaseInsensitive))
                     {
-                        const QString c = getFixedIniLineContent(lineFixed);
-                        if (lineFixed.startsWith("atc_type", Qt::CaseInsensitive))
-                        {
-                            atcType = c;
-                        }
-                        /*else if (lineFixed.startsWith("atc_model", Qt::CaseInsensitive))
-                        {
-                            atcModel = c;
-                        }*/
-                        else if (lineFixed.startsWith("icao_type_designator", Qt::CaseInsensitive))
-                        {
-                            atcModel = c;
-                        }
+                        atcType = c;
+                    }
+                    /*else if (lineFixed.startsWith("atc_model", Qt::CaseInsensitive))
+                    {
+                        atcModel = c;
+                    }*/
+                    else if (lineFixed.startsWith("icao_type_designator", Qt::CaseInsensitive))
+                    {
+                        atcModel = c;
                     }
                 }
-                break;
+            }
+            break;
             case Fltsim:
+            {
+                if (lineFixed.startsWith("//")) { break; }
+                CAircraftCfgEntries &e = tempEntries[tempEntries.size() - 1];
+                if (lineFixed.startsWith("atc_", Qt::CaseInsensitive))
                 {
-                    if (lineFixed.startsWith("//")) { break; }
-                    CAircraftCfgEntries &e = tempEntries[tempEntries.size() - 1];
-                    if (lineFixed.startsWith("atc_", Qt::CaseInsensitive))
+                    if (lineFixed.startsWith("atc_parking_codes", Qt::CaseInsensitive))
                     {
-                        if (lineFixed.startsWith("atc_parking_codes", Qt::CaseInsensitive))
-                        {
-                            e.setAtcParkingCode(getFixedIniLineContent(lineFixed));
-                        }
-                        else if (lineFixed.startsWith("atc_airline", Qt::CaseInsensitive))
-                        {
-                            e.setAtcAirline(getFixedIniLineContent(lineFixed));
-                        }
-                        else if (lineFixed.startsWith("atc_id_color", Qt::CaseInsensitive))
-                        {
-                            e.setAtcIdColor(getFixedIniLineContent(lineFixed));
-                        }
+                        e.setAtcParkingCode(getFixedIniLineContent(lineFixed));
                     }
-                    else if (lineFixed.startsWith("ui_", Qt::CaseInsensitive))
+                    else if (lineFixed.startsWith("atc_airline", Qt::CaseInsensitive))
                     {
-                        if (lineFixed.startsWith("ui_manufacturer", Qt::CaseInsensitive))
-                        {
-                            e.setUiManufacturer(getFixedIniLineContent(lineFixed));
-                        }
-                        else if (lineFixed.startsWith("ui_typerole", Qt::CaseInsensitive))
-                        {
-                            bool r = getFixedIniLineContent(lineFixed).toLower().contains("rotor");
-                            e.setRotorcraft(r);
-                        }
-                        else if (lineFixed.startsWith("ui_type", Qt::CaseInsensitive))
-                        {
-                            e.setUiType(getFixedIniLineContent(lineFixed));
-                        }
-                        else if (lineFixed.startsWith("ui_variation", Qt::CaseInsensitive))
-                        {
-                            e.setUiVariation(getFixedIniLineContent(lineFixed));
-                        }
+                        e.setAtcAirline(getFixedIniLineContent(lineFixed));
                     }
-                    else if (lineFixed.startsWith("description", Qt::CaseInsensitive))
+                    else if (lineFixed.startsWith("atc_id_color", Qt::CaseInsensitive))
                     {
-                        e.setDescription(getFixedIniLineContent(lineFixed));
-                    }
-                    else if (lineFixed.startsWith("texture", Qt::CaseInsensitive))
-                    {
-                        e.setTexture(getFixedIniLineContent(lineFixed));
-                    }
-                    else if (lineFixed.startsWith("createdBy", Qt::CaseInsensitive))
-                    {
-                        e.setCreatedBy(getFixedIniLineContent(lineFixed));
-                    }
-                    else if (lineFixed.startsWith("sim", Qt::CaseInsensitive))
-                    {
-                        e.setSimName(getFixedIniLineContent(lineFixed));
-                    }
-                    else if (lineFixed.startsWith("title", Qt::CaseInsensitive))
-                    {
-                        e.setTitle(getFixedIniLineContent(lineFixed));
+                        e.setAtcIdColor(getFixedIniLineContent(lineFixed));
                     }
                 }
-                break;
+                else if (lineFixed.startsWith("ui_", Qt::CaseInsensitive))
+                {
+                    if (lineFixed.startsWith("ui_manufacturer", Qt::CaseInsensitive))
+                    {
+                        e.setUiManufacturer(getFixedIniLineContent(lineFixed));
+                    }
+                    else if (lineFixed.startsWith("ui_typerole", Qt::CaseInsensitive))
+                    {
+                        bool r = getFixedIniLineContent(lineFixed).toLower().contains("rotor");
+                        e.setRotorcraft(r);
+                    }
+                    else if (lineFixed.startsWith("ui_type", Qt::CaseInsensitive))
+                    {
+                        e.setUiType(getFixedIniLineContent(lineFixed));
+                    }
+                    else if (lineFixed.startsWith("ui_variation", Qt::CaseInsensitive))
+                    {
+                        e.setUiVariation(getFixedIniLineContent(lineFixed));
+                    }
+                }
+                else if (lineFixed.startsWith("description", Qt::CaseInsensitive))
+                {
+                    e.setDescription(getFixedIniLineContent(lineFixed));
+                }
+                else if (lineFixed.startsWith("texture", Qt::CaseInsensitive))
+                {
+                    e.setTexture(getFixedIniLineContent(lineFixed));
+                }
+                else if (lineFixed.startsWith("createdBy", Qt::CaseInsensitive))
+                {
+                    e.setCreatedBy(getFixedIniLineContent(lineFixed));
+                }
+                else if (lineFixed.startsWith("sim", Qt::CaseInsensitive))
+                {
+                    e.setSimName(getFixedIniLineContent(lineFixed));
+                }
+                else if (lineFixed.startsWith("title", Qt::CaseInsensitive))
+                {
+                    e.setTitle(getFixedIniLineContent(lineFixed));
+                }
+            }
+            break;
             default:
             case Unknown: break;
             }
@@ -491,9 +493,9 @@ namespace BlackMisc::Simulation::FsCommon
         if (checkDirectory.isEmpty()) { return false; }
         const QString dir = CFileUtils::lastPathSegment(checkDirectory).toLower();
         if (dir == u"texture" || dir.startsWith("texture.")) { return true; }
-        if (dir == u"sound"   || dir == "soundai") { return true; }
-        if (dir == u"panel")  { return true; }
-        if (dir == u"model")  { return true; }
+        if (dir == u"sound" || dir == "soundai") { return true; }
+        if (dir == u"panel") { return true; }
+        if (dir == u"model") { return true; }
         return false;
     }
 } // ns

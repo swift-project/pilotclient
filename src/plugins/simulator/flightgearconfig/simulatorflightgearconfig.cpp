@@ -15,7 +15,6 @@ namespace BlackSimPlugin::Flightgear
 {
     CSimulatorFlightgearConfig::CSimulatorFlightgearConfig(QObject *parent) : QObject(parent)
     {
-
     }
 
     BlackGui::CPluginConfigWindow *CSimulatorFlightgearConfig::createConfigWindow(QWidget *parent)

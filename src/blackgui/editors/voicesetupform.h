@@ -17,7 +17,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CVoiceSetupForm; }
+namespace Ui
+{
+    class CVoiceSetupForm;
+}
 namespace BlackGui::Editors
 {
     //! Voice form
@@ -71,7 +74,7 @@ namespace BlackGui::Editors
 
         QScopedPointer<Ui::CVoiceSetupForm> ui;
         bool m_alwaysAllowOverride = false;
-        bool m_visibleEnableInfo   = true;
+        bool m_visibleEnableInfo = true;
     };
 } // ns
 

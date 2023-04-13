@@ -24,31 +24,28 @@ using namespace BlackMisc;
 
 namespace BlackGui::Components
 {
-    CAboutHtmlComponent::CAboutHtmlComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CAboutHtmlComponent)
+    CAboutHtmlComponent::CAboutHtmlComponent(QWidget *parent) : QFrame(parent),
+                                                                ui(new Ui::CAboutHtmlComponent)
     {
         ui->setupUi(this);
         const QPointer<CAboutHtmlComponent> myself(this);
         connect(ui->tbr_About, &QTextBrowser::anchorClicked, this, &CAboutHtmlComponent::onAnchorClicked, Qt::QueuedConnection);
 
-        QTimer::singleShot(2500, this, [ = ]
-        {
+        QTimer::singleShot(2500, this, [=] {
             if (!myself) { return; }
             myself->loadAbout();
         });
     }
 
     CAboutHtmlComponent::~CAboutHtmlComponent()
-    { }
+    {}
 
     void CAboutHtmlComponent::loadAbout()
     {
         if (!sGui || sGui->isShuttingDown()) { return; }
 
         // make links absolute
-        static const QString htmlFixed = [ = ]
-        {
+        static const QString htmlFixed = [=] {
             // workaround:
             // 1) Only reading as HTML gives proper formatting
             // 2) Reading the file resource fails (likely because of the style sheet)

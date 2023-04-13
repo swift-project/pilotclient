@@ -168,15 +168,15 @@ namespace BlackMisc::Network
         static CAuthenticatedUser fromDatabaseJson(const QJsonObject &json);
 
     private:
-        int                 m_vatsimId = -1;
-        QString             m_realname;
-        QString             m_username;
-        QString             m_email;
-        QString             m_password;
+        int m_vatsimId = -1;
+        QString m_realname;
+        QString m_username;
+        QString m_email;
+        QString m_password;
         BlackMisc::CCountry m_country;
-        bool                m_enabled = false;
-        bool                m_authenticated = false;
-        CRoleList           m_roles;
+        bool m_enabled = false;
+        bool m_authenticated = false;
+        CRoleList m_roles;
 
         BLACK_METACLASS(
             CAuthenticatedUser,

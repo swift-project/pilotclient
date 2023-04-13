@@ -12,15 +12,14 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Simulation, CInterpolationAndRenderingSe
 
 namespace BlackMisc::Simulation
 {
-    CInterpolationSetupList::CInterpolationSetupList() { }
+    CInterpolationSetupList::CInterpolationSetupList() {}
 
     CInterpolationSetupList::CInterpolationSetupList(const CInterpolationAndRenderingSetupPerCallsign &setup)
     {
         this->push_back(setup);
     }
 
-    CInterpolationSetupList::CInterpolationSetupList(const CSequence<CInterpolationAndRenderingSetupPerCallsign> &other) :
-        CSequence<CInterpolationAndRenderingSetupPerCallsign>(other)
-    { }
+    CInterpolationSetupList::CInterpolationSetupList(const CSequence<CInterpolationAndRenderingSetupPerCallsign> &other) : CSequence<CInterpolationAndRenderingSetupPerCallsign>(other)
+    {}
 
 } // namespace

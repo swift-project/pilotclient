@@ -14,19 +14,18 @@
 namespace BlackCore::Fsd
 {
     ServerError::ServerError()
-    { }
+    {}
 
     ServerError::ServerError(const QString &sender, const QString &receiver, ServerErrorCode errorCode, const QString &causingParameter, const QString &description)
         : MessageBase(sender, receiver),
-            m_errorNumber(errorCode),
-            m_causingParameter(causingParameter),
-            m_description(description)
-    { }
+          m_errorNumber(errorCode),
+          m_causingParameter(causingParameter),
+          m_description(description)
+    {}
 
     bool ServerError::isFatalError() const
     {
-        static const QVector<ServerErrorCode> fatalErrors
-        {
+        static const QVector<ServerErrorCode> fatalErrors {
             ServerErrorCode::CallsignInUse,
             ServerErrorCode::InvalidCallsign,
             ServerErrorCode::AlreadyRegistered,
@@ -40,7 +39,7 @@ namespace BlackCore::Fsd
             ServerErrorCode::AuthTimeout,
         };
 
-        if(fatalErrors.contains(m_errorNumber)) { return true; }
+        if (fatalErrors.contains(m_errorNumber)) { return true; }
         else { return false; }
     }
 
@@ -65,4 +64,3 @@ namespace BlackCore::Fsd
         return ServerError(tokens[0], tokens[1], static_cast<ServerErrorCode>(tokens[2].toInt()), tokens[3], tokens[4]);
     }
 }
-

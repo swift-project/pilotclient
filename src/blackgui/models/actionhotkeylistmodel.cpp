@@ -20,9 +20,8 @@ using namespace BlackMisc::Input;
 
 namespace BlackGui::Models
 {
-    CActionHotkeyListModel::CActionHotkeyListModel(QObject *parent) :
-        QAbstractTableModel(parent)
-    { }
+    CActionHotkeyListModel::CActionHotkeyListModel(QObject *parent) : QAbstractTableModel(parent)
+    {}
 
     int CActionHotkeyListModel::rowCount(const QModelIndex & /** parent **/) const
     {
@@ -113,7 +112,6 @@ namespace BlackGui::Models
         endRemoveRows();
         return true;
     }
-
 
     bool CActionHotkeyListModel::setData(const QModelIndex &index, const QVariant &var, int role)
     {

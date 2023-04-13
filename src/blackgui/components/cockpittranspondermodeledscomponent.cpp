@@ -24,12 +24,11 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CCockpitTransponderModeLedsComponent::CCockpitTransponderModeLedsComponent(QWidget *parent) :
-        QFrame(parent),
-        CIdentifiable(this),
-        m_ledStandby(new CLedWidget(false, CLedWidget::Blue, CLedWidget::Black, CLedWidget::Rounded, "standby", "", LedWidth, this)),
-        m_ledModes(new CLedWidget(false, CLedWidget::Green, CLedWidget::Black, CLedWidget::Rounded, "mode C", "", LedWidth, this)),
-        m_ledIdent(new CLedWidget(false, CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Rounded, "ident", "", LedWidth, this))
+    CCockpitTransponderModeLedsComponent::CCockpitTransponderModeLedsComponent(QWidget *parent) : QFrame(parent),
+                                                                                                  CIdentifiable(this),
+                                                                                                  m_ledStandby(new CLedWidget(false, CLedWidget::Blue, CLedWidget::Black, CLedWidget::Rounded, "standby", "", LedWidth, this)),
+                                                                                                  m_ledModes(new CLedWidget(false, CLedWidget::Green, CLedWidget::Black, CLedWidget::Rounded, "mode C", "", LedWidth, this)),
+                                                                                                  m_ledIdent(new CLedWidget(false, CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Rounded, "ident", "", LedWidth, this))
     {
         this->init(true);
 

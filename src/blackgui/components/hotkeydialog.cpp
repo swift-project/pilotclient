@@ -44,11 +44,10 @@ using namespace BlackGui::Models;
 
 namespace BlackGui::Components
 {
-    CHotkeyDialog::CHotkeyDialog(const CActionHotkey &actionHotkey, const CIdentifierList &identifiers, QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CHotkeyDialog),
-        m_actionHotkey(actionHotkey),
-        m_actionModel(this)
+    CHotkeyDialog::CHotkeyDialog(const CActionHotkey &actionHotkey, const CIdentifierList &identifiers, QWidget *parent) : QDialog(parent),
+                                                                                                                           ui(new Ui::CHotkeyDialog),
+                                                                                                                           m_actionHotkey(actionHotkey),
+                                                                                                                           m_actionModel(this)
     {
         setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
@@ -102,16 +101,16 @@ namespace BlackGui::Components
             ui->cb_Identifier->setCurrentIndex(index);
         }
 
-        connect(ui->pb_AdvancedMode,   &QPushButton::clicked, this, &CHotkeyDialog::advancedModeChanged);
+        connect(ui->pb_AdvancedMode, &QPushButton::clicked, this, &CHotkeyDialog::advancedModeChanged);
         connect(ui->pb_SelectedHotkey, &QPushButton::clicked, this, &CHotkeyDialog::captureHotkey);
-        connect(ui->pb_Accept,         &QPushButton::clicked, this, &CHotkeyDialog::accept);
-        connect(ui->pb_Cancel,         &QPushButton::clicked, this, &CHotkeyDialog::reject);
+        connect(ui->pb_Accept, &QPushButton::clicked, this, &CHotkeyDialog::accept);
+        connect(ui->pb_Cancel, &QPushButton::clicked, this, &CHotkeyDialog::reject);
         connect(ui->tv_Actions->selectionModel(), &QItemSelectionModel::selectionChanged, this, &CHotkeyDialog::changeSelectedAction);
         connect(ui->cb_Identifier, qOverload<int>(&QComboBox::currentIndexChanged), this, &CHotkeyDialog::changeApplicableMachine);
 
         if (sGui && sGui->getInputManager())
         {
-            connect(sGui->getInputManager(), &BlackCore::CInputManager::combinationSelectionChanged,  this, &CHotkeyDialog::combinationSelectionChanged);
+            connect(sGui->getInputManager(), &BlackCore::CInputManager::combinationSelectionChanged, this, &CHotkeyDialog::combinationSelectionChanged);
             connect(sGui->getInputManager(), &BlackCore::CInputManager::combinationSelectionFinished, this, &CHotkeyDialog::combinationSelectionFinished);
         }
 
@@ -119,7 +118,7 @@ namespace BlackGui::Components
     }
 
     CHotkeyDialog::~CHotkeyDialog()
-    { }
+    {}
 
     CKeySelectionBox::CKeySelectionBox(QWidget *parent) : CHorizontalComboBox(parent)
     {
@@ -142,11 +141,8 @@ namespace BlackGui::Components
     {
         if (!sGui) { return; }
         const QString s = sGui->getStyleSheetUtility().styles(
-        {
-            CStyleSheetUtility::fileNameFonts(),
-            CStyleSheetUtility::fileNameStandardWidget()
-        }
-        );
+            { CStyleSheetUtility::fileNameFonts(),
+              CStyleSheetUtility::fileNameStandardWidget() });
         this->setStyleSheet(s);
     }
 
@@ -374,7 +370,7 @@ namespace BlackGui::Components
             CJoystickButton newButton = ksb->itemData(newIndex).value<CJoystickButton>();
 
             CHotkeyCombination combination = m_actionHotkey.getCombination();
-            if (! newButton.isValid()) { combination.removeJoystickButton(oldButton); }
+            if (!newButton.isValid()) { combination.removeJoystickButton(oldButton); }
             else { combination.replaceButton(oldButton, newButton); }
             m_actionHotkey.setCombination(combination);
         }

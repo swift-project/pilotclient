@@ -24,24 +24,27 @@
 #include <functional>
 
 //! \cond
-#define BLACK_TEMPLATE_SEQUENCE_MIXINS(NS, T, List, Extern)             \
-    namespace NS { class List; }                                        \
-    namespace BlackMisc::Private                                        \
-    {                                                                   \
-        Extern template struct CValueObjectMetaInfo<NS::List>;          \
-        Extern template struct CValueObjectMetaInfo<CSequence<NS::T>>;  \
-        Extern template struct MetaTypeHelper<NS::List>;                \
-        Extern template struct MetaTypeHelper<CSequence<NS::T>>;        \
-    }                                                                   \
-    namespace BlackMisc::Mixin                                          \
-    {                                                                   \
-        Extern template class MetaType<NS::List>;                       \
-        Extern template class MetaType<CSequence<NS::T>>;               \
-        Extern template class DBusOperators<CSequence<NS::T>>;          \
-        Extern template class JsonOperators<CSequence<NS::T>>;          \
-        Extern template class String<CSequence<NS::T>>;                 \
-        Extern template class DataStreamOperators<CSequence<NS::T>>;    \
-        Extern template class Icon<CSequence<NS::T>>;                   \
+#define BLACK_TEMPLATE_SEQUENCE_MIXINS(NS, T, List, Extern)            \
+    namespace NS                                                       \
+    {                                                                  \
+        class List;                                                    \
+    }                                                                  \
+    namespace BlackMisc::Private                                       \
+    {                                                                  \
+        Extern template struct CValueObjectMetaInfo<NS::List>;         \
+        Extern template struct CValueObjectMetaInfo<CSequence<NS::T>>; \
+        Extern template struct MetaTypeHelper<NS::List>;               \
+        Extern template struct MetaTypeHelper<CSequence<NS::T>>;       \
+    }                                                                  \
+    namespace BlackMisc::Mixin                                         \
+    {                                                                  \
+        Extern template class MetaType<NS::List>;                      \
+        Extern template class MetaType<CSequence<NS::T>>;              \
+        Extern template class DBusOperators<CSequence<NS::T>>;         \
+        Extern template class JsonOperators<CSequence<NS::T>>;         \
+        Extern template class String<CSequence<NS::T>>;                \
+        Extern template class DataStreamOperators<CSequence<NS::T>>;   \
+        Extern template class Icon<CSequence<NS::T>>;                  \
     }
 //! \endcond
 
@@ -56,11 +59,11 @@
  * Explicit template definition of mixins for a CSequence subclass
  */
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)
-#  define BLACK_DECLARE_SEQUENCE_MIXINS(Namespace, T, List)
-#  define BLACK_DEFINE_SEQUENCE_MIXINS(Namespace, T, List)
+#    define BLACK_DECLARE_SEQUENCE_MIXINS(Namespace, T, List)
+#    define BLACK_DEFINE_SEQUENCE_MIXINS(Namespace, T, List)
 #else
-#  define BLACK_DECLARE_SEQUENCE_MIXINS(Namespace, T, List) BLACK_TEMPLATE_SEQUENCE_MIXINS(Namespace, T, List, extern)
-#  define BLACK_DEFINE_SEQUENCE_MIXINS(Namespace, T, List)  BLACK_TEMPLATE_SEQUENCE_MIXINS(Namespace, T, List, )
+#    define BLACK_DECLARE_SEQUENCE_MIXINS(Namespace, T, List) BLACK_TEMPLATE_SEQUENCE_MIXINS(Namespace, T, List, extern)
+#    define BLACK_DEFINE_SEQUENCE_MIXINS(Namespace, T, List) BLACK_TEMPLATE_SEQUENCE_MIXINS(Namespace, T, List, )
 #endif
 
 namespace BlackMisc
@@ -138,7 +141,8 @@ namespace BlackMisc
 
         //! Range constructor.
         template <typename It>
-        CSequence(It first, It last) : m_impl(first, last) {}
+        CSequence(It first, It last) : m_impl(first, last)
+        {}
 
         //! Copy constructor.
         CSequence(const CSequence &other) = default;
@@ -147,10 +151,10 @@ namespace BlackMisc
         CSequence(CSequence &&other) = default;
 
         //! Copy assignment.
-        CSequence &operator =(const CSequence &other) = default;
+        CSequence &operator=(const CSequence &other) = default;
 
         //! Move assignment.
-        CSequence &operator =(CSequence &&other) = default;
+        CSequence &operator=(CSequence &&other) = default;
 
         //! Destructor.
         ~CSequence() = default;
@@ -201,40 +205,72 @@ namespace BlackMisc
         void swap(CSequence &other) noexcept { m_impl.swap(other.m_impl); }
 
 #ifdef __GNUC__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstrict-overflow"
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wstrict-overflow"
 #endif
 
         //! Access an element by its index.
-        reference operator [](size_type index) { Q_ASSERT(index >= 0 && index < m_impl.size()); return m_impl[index]; }
+        reference operator[](size_type index)
+        {
+            Q_ASSERT(index >= 0 && index < m_impl.size());
+            return m_impl[index];
+        }
 
         //! Access an element by its index.
-        const_reference operator [](size_type index) const { Q_ASSERT(index >= 0 && index < m_impl.size()); return m_impl[index]; }
+        const_reference operator[](size_type index) const
+        {
+            Q_ASSERT(index >= 0 && index < m_impl.size());
+            return m_impl[index];
+        }
 
 #ifdef __GNUC__
-#pragma GCC diagnostic pop
+#    pragma GCC diagnostic pop
 #endif
 
         //! Access the first element.
-        reference front() { Q_ASSERT(!empty()); return m_impl.front(); }
+        reference front()
+        {
+            Q_ASSERT(!empty());
+            return m_impl.front();
+        }
 
         //! Access the first element.
-        const_reference front() const { Q_ASSERT(!empty()); return m_impl.front(); }
+        const_reference front() const
+        {
+            Q_ASSERT(!empty());
+            return m_impl.front();
+        }
 
         //! Access the first element, or a default-initialized value if the sequence is empty.
-        const_reference frontOrDefault() const { static const value_type def {}; return empty() ? def : m_impl.front(); }
+        const_reference frontOrDefault() const
+        {
+            static const value_type def {};
+            return empty() ? def : m_impl.front();
+        }
 
         //! Access the first element, or a default-initialized value if the sequence is empty.
         value_type frontOrDefault(value_type def) const { return empty() ? def : m_impl.front(); }
 
         //! Access the last element.
-        reference back() { Q_ASSERT(!empty()); return m_impl.back(); }
+        reference back()
+        {
+            Q_ASSERT(!empty());
+            return m_impl.back();
+        }
 
         //! Access the last element.
-        const_reference back() const { Q_ASSERT(!empty()); return m_impl.back(); }
+        const_reference back() const
+        {
+            Q_ASSERT(!empty());
+            return m_impl.back();
+        }
 
         //! Access the last element, or a default value if the sequence is empty.
-        const_reference backOrDefault() const { static const value_type def {}; return empty() ? def : m_impl.back(); }
+        const_reference backOrDefault() const
+        {
+            static const value_type def {};
+            return empty() ? def : m_impl.back();
+        }
 
         //! Access the last element, or a default value if the sequence is empty.
         value_type backOrDefault(value_type def) const { return empty() ? def : m_impl.back(); }
@@ -258,7 +294,10 @@ namespace BlackMisc
         void clear() { m_impl.clear(); }
 
         //! Changes the size of the sequence, if it is bigger than the given size.
-        void truncate(size_type maxSize) { if (size() > maxSize) { erase(begin() + maxSize, end()); } }
+        void truncate(size_type maxSize)
+        {
+            if (size() > maxSize) { erase(begin() + maxSize, end()); }
+        }
 
         //! Inserts an element into the sequence.
         //! \return An iterator to the position where value was inserted.
@@ -308,20 +347,41 @@ namespace BlackMisc
 
         //! Appends all elements from a range at the end of this sequence.
         template <typename I>
-        void push_back(const CRange<I> &range) { std::copy(range.begin(), range.end(), std::back_inserter(*this)); }
+        void push_back(const CRange<I> &range)
+        {
+            std::copy(range.begin(), range.end(), std::back_inserter(*this));
+        }
 
         //! Concatenates two sequences and returns the result.
-        CSequence join(const CSequence &other) const { CSequence copy(*this); copy.push_back(other); return copy; }
+        CSequence join(const CSequence &other) const
+        {
+            CSequence copy(*this);
+            copy.push_back(other);
+            return copy;
+        }
 
         //! Concatenates a sequence and a range and returns the result.
         template <typename I>
-        CSequence join(const CRange<I> &range) const { CSequence copy(*this); copy.push_back(range); return copy; }
+        CSequence join(const CRange<I> &range) const
+        {
+            CSequence copy(*this);
+            copy.push_back(range);
+            return copy;
+        }
 
         //! Removes an element at the end of the sequence.
-        void pop_back() { Q_ASSERT(!empty()); m_impl.pop_back(); }
+        void pop_back()
+        {
+            Q_ASSERT(!empty());
+            m_impl.pop_back();
+        }
 
         //! Removes an element at the front of the sequence.
-        void pop_front() { Q_ASSERT(!empty()); erase(begin()); }
+        void pop_front()
+        {
+            Q_ASSERT(!empty());
+            erase(begin());
+        }
 
         //! Remove the element pointed to by the given iterator.
         //! \return An iterator to the position of the next element after the one removed.
@@ -359,7 +419,7 @@ namespace BlackMisc
             int count = 0;
             for (auto &value : *this)
             {
-                if (p(value) && ! value.apply(newValues, skipEqualValues).isEmpty()) { count++; }
+                if (p(value) && !value.apply(newValues, skipEqualValues).isEmpty()) { count++; }
             }
             return count;
         }
@@ -426,7 +486,11 @@ namespace BlackMisc
             int count = 0;
             for (auto &element : *this)
             {
-                if (element == original) { element = replacement; count++; }
+                if (element == original)
+                {
+                    element = replacement;
+                    count++;
+                }
             }
             return count;
         }
@@ -439,7 +503,11 @@ namespace BlackMisc
             int count = 0;
             for (auto &element : *this)
             {
-                if (p(element)) { element = replacement; count++; }
+                if (p(element))
+                {
+                    element = replacement;
+                    count++;
+                }
             }
             return count;
         }
@@ -503,7 +571,8 @@ namespace BlackMisc
         }
 
         //! In-place sort by a given comparator predicate.
-        template <class Predicate> void sort(Predicate p)
+        template <class Predicate>
+        void sort(Predicate p)
         {
             QVector<T> temp;
             temp.reserve(size());
@@ -517,7 +586,8 @@ namespace BlackMisc
         //! In-place sort by some particular key(s).
         //! \param key1 A pointer to a member function of T.
         //! \param keys Zero or more additional pointers to member functions of T.
-        template <class K1, class... Keys> void sortBy(K1 key1, Keys... keys)
+        template <class K1, class... Keys>
+        void sortBy(K1 key1, Keys... keys)
         {
             sort(BlackMisc::Predicates::MemberLess(key1, keys...));
         }
@@ -541,7 +611,8 @@ namespace BlackMisc
         }
 
         //! In-place move the smallest n elements to the beginning and sort them.
-        template <class Predicate> void partiallySort(size_type n, Predicate p)
+        template <class Predicate>
+        void partiallySort(size_type n, Predicate p)
         {
             std::partial_sort(begin(), begin() + std::min(n, size()), end(), p);
         }
@@ -550,7 +621,8 @@ namespace BlackMisc
         //! \param n    size.
         //! \param key1 A pointer to a member function of T.
         //! \param keys Zero or more additional pointers to member functions of T.
-        template <class K1, class... Keys> void partiallySortBy(size_type n, K1 key1, Keys... keys)
+        template <class K1, class... Keys>
+        void partiallySortBy(size_type n, K1 key1, Keys... keys)
         {
             partiallySort(n, BlackMisc::Predicates::MemberLess(key1, keys...));
         }
@@ -591,7 +663,7 @@ namespace BlackMisc
             QMap<decltype(p(std::declval<T>())), CSequence> result;
             auto copy = *this;
             std::stable_sort(copy.begin(), copy.end(), [p](const T &a, const T &b) { return p(a) < p(b); });
-            for (auto it = copy.cbegin(); it != copy.cend(); )
+            for (auto it = copy.cbegin(); it != copy.cend();)
             {
                 auto mid = std::adjacent_find(it, copy.cend(), [p](const T &a, const T &b) { return p(a) != p(b); });
                 result.insert(p(*it), makeRange(it, mid));
@@ -611,22 +683,22 @@ namespace BlackMisc
         void detach() { m_impl.detach(); }
 
         //! Equals operator.
-        friend bool operator ==(const CSequence &a, const CSequence &b) { return a.m_impl == b.m_impl; }
+        friend bool operator==(const CSequence &a, const CSequence &b) { return a.m_impl == b.m_impl; }
 
         //! Not equals operator.
-        friend bool operator !=(const CSequence &a, const CSequence &b) { return a.m_impl != b.m_impl; }
+        friend bool operator!=(const CSequence &a, const CSequence &b) { return a.m_impl != b.m_impl; }
 
         //! Less than operator.
-        friend bool operator <(const CSequence &a, const CSequence &b) { return a.m_impl < b.m_impl; }
+        friend bool operator<(const CSequence &a, const CSequence &b) { return a.m_impl < b.m_impl; }
 
         //! Greater than operator.
-        friend bool operator >(const CSequence &a, const CSequence &b) { return a.m_impl > b.m_impl; }
+        friend bool operator>(const CSequence &a, const CSequence &b) { return a.m_impl > b.m_impl; }
 
         //! Less or equal than operator.
-        friend bool operator <=(const CSequence &a, const CSequence &b) { return a.m_impl <= b.m_impl; }
+        friend bool operator<=(const CSequence &a, const CSequence &b) { return a.m_impl <= b.m_impl; }
 
         //! Greater or equal operator.
-        friend bool operator >=(const CSequence &a, const CSequence &b) { return a.m_impl >= b.m_impl; }
+        friend bool operator>=(const CSequence &a, const CSequence &b) { return a.m_impl >= b.m_impl; }
 
         //! \copydoc BlackMisc::Mixin::DataStreamByMetaClass::marshalToDataStream
         void marshalToDataStream(QDataStream &stream) const { stream << m_impl; }
@@ -637,7 +709,7 @@ namespace BlackMisc
     private:
         QVector<T> m_impl;
     };
-} //namespace BlackMisc
+} // namespace BlackMisc
 
 Q_DECLARE_SEQUENTIAL_CONTAINER_METATYPE(BlackMisc::CSequence)
 

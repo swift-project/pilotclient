@@ -42,9 +42,8 @@ namespace BlackGui::Components
         return cats;
     }
 
-    CCopyConfigurationComponent::CCopyConfigurationComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CCopyConfigurationComponent)
+    CCopyConfigurationComponent::CCopyConfigurationComponent(QWidget *parent) : QFrame(parent),
+                                                                                ui(new Ui::CCopyConfigurationComponent)
     {
         ui->setupUi(this);
         this->initOtherSwiftVersions();
@@ -52,8 +51,8 @@ namespace BlackGui::Components
         m_hasOtherSwiftVersions = CApplicationInfoList::hasOtherSwiftDataDirectories();
 
         ui->cb_ShowAll->setChecked(m_nameFilterDisables);
-        connect(ui->rb_Cache, &QRadioButton::toggled, [ = ](bool) { this->initCurrentDirectories(true); });
-        connect(ui->cb_OtherVersions, &QComboBox::currentTextChanged, [ = ] { this->initCurrentDirectories(true); });
+        connect(ui->rb_Cache, &QRadioButton::toggled, [=](bool) { this->initCurrentDirectories(true); });
+        connect(ui->cb_OtherVersions, &QComboBox::currentTextChanged, [=] { this->initCurrentDirectories(true); });
         connect(ui->pb_SelectAll, &QPushButton::clicked, ui->tv_Source, &QTreeView::selectAll);
         connect(ui->pb_ClearSelection, &QPushButton::clicked, ui->tv_Source, &QTreeView::clearSelection);
         connect(ui->pb_CopyOver, &QPushButton::clicked, this, &CCopyConfigurationComponent::copySelectedFiles);
@@ -74,7 +73,7 @@ namespace BlackGui::Components
     }
 
     CCopyConfigurationComponent::~CCopyConfigurationComponent()
-    { }
+    {}
 
     void CCopyConfigurationComponent::setCacheMode()
     {
@@ -170,25 +169,21 @@ namespace BlackGui::Components
         if (ui->rb_Cache->isChecked())
         {
             // only copy setup and model caches
-            static const QStringList cacheFilter = [ = ]
-            {
-                QStringList cf({
-                    m_modelSetCurrentSimulator.getFilename(),
-                    m_modelsCurrentSimulator.getFilename(),
-                    m_launcherSetup.getFilename(),
-                    m_vatsimSetup.getFilename(),
-                    m_lastVatsimServer.getFilename(),
-                    m_lastServer.getFilename(),
-                    m_lastAircraftModel.getFilename()
-                });
+            static const QStringList cacheFilter = [=] {
+                QStringList cf({ m_modelSetCurrentSimulator.getFilename(),
+                                 m_modelsCurrentSimulator.getFilename(),
+                                 m_launcherSetup.getFilename(),
+                                 m_vatsimSetup.getFilename(),
+                                 m_lastVatsimServer.getFilename(),
+                                 m_lastServer.getFilename(),
+                                 m_lastAircraftModel.getFilename() });
                 cf.append(m_modelSetCaches.getAllFilenames());
                 cf.append(m_modelCaches.getAllFilenames());
                 return CFileUtils::getFileNamesOnly(cf);
             }();
             if (!m_withBootstrapFile) { return cacheFilter; }
 
-            static const QStringList cacheFilterBs = [ = ]
-            {
+            static const QStringList cacheFilterBs = [=] {
                 QStringList f(cacheFilter);
                 f.push_back(CSwiftDirectories::bootstrapFileName());
                 return f;
@@ -233,8 +228,7 @@ namespace BlackGui::Components
                 ui->tv_Destination->setSortingEnabled(true);
 
                 // disconnect when done, there have been problems that the lambda was called when the view was already destroyed
-                connectOnce(destinationModel, &QFileSystemModel::directoryLoaded, this, [ = ](const QString & path)
-                {
+                connectOnce(destinationModel, &QFileSystemModel::directoryLoaded, this, [=](const QString &path) {
                     Q_UNUSED(path);
                     ui->tv_Destination->resizeColumnToContents(0);
                     ui->tv_Destination->expandAll();
@@ -262,8 +256,7 @@ namespace BlackGui::Components
                 sourceModel->setFilter(QDir::NoDotAndDotDot | QDir::Files | QDir::Dirs);
                 ui->tv_Source->setModel(sourceModel);
                 ui->tv_Source->setSortingEnabled(true); // hide/disable only
-                connectOnce(sourceModel, &QFileSystemModel::directoryLoaded, this, [ = ](const QString & path)
-                {
+                connectOnce(sourceModel, &QFileSystemModel::directoryLoaded, this, [=](const QString &path) {
                     Q_UNUSED(path);
                     ui->tv_Source->resizeColumnToContents(0);
                     ui->tv_Source->expandAll();
@@ -337,8 +330,8 @@ namespace BlackGui::Components
         }
         if (dir.isEmpty()) { return {}; }
         dir = CFileUtils::appendFilePaths(dir, ui->rb_Cache->isChecked() ?
-                                            CDataCache::relativeFilePath() :
-                                            CSettingsCache::relativeFilePath());
+                                                   CDataCache::relativeFilePath() :
+                                                   CSettingsCache::relativeFilePath());
         return dir;
     }
 
@@ -346,8 +339,8 @@ namespace BlackGui::Components
     {
         const QObject *s = sender();
         const QString d = (s == ui->tb_OpenOtherVersionsDir) ?
-                            this->getOtherVersionsSelectedDirectory() :
-                            this->getThisVersionDirectory();
+                              this->getOtherVersionsSelectedDirectory() :
+                              this->getThisVersionDirectory();
         if (d.isEmpty()) { return; }
         QDir dir(d);
         if (!dir.exists()) { return; }
@@ -391,7 +384,7 @@ namespace BlackGui::Components
             }
             else if (file.contains(CSwiftDirectories::bootstrapFileName()))
             {
-                CData<TGlobalSetup> setup { this };   //!< data cache setup
+                CData<TGlobalSetup> setup { this }; //!< data cache setup
                 const CGlobalSetup s = CGlobalSetup::fromJsonFile(file, true);
                 setup.set(s);
             }

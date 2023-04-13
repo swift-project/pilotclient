@@ -69,7 +69,7 @@ namespace BlackSound::Dsp
         auto cosw0 = qCos(w0);
         auto sinw0 = qSin(w0);
         auto alpha = sinw0 / (2 * q);
-        auto a = qPow(10, dbGain / 40);     // TODO: should we square root this value?
+        auto a = qPow(10, dbGain / 40); // TODO: should we square root this value?
 
         auto b0 = 1 + alpha * a;
         auto b1 = -2 * cosw0;

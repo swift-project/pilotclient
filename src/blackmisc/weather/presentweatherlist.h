@@ -43,4 +43,4 @@ namespace BlackMisc::Weather
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CPresentWeatherList)
 
-#endif //guard
+#endif // guard

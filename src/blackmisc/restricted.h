@@ -16,7 +16,8 @@ namespace BlackMisc
     /*!
      * Restricted<T> is just an empty class, that can only be constructed by the class T.
      */
-    template <typename T> class Restricted
+    template <typename T>
+    class Restricted
     {
     private:
         friend T;

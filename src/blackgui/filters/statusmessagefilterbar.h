@@ -16,7 +16,10 @@
 #include "blackmisc/statusmessagelist.h"
 #include <QFrame>
 
-namespace Ui { class CStatusMessageFilterBar; }
+namespace Ui
+{
+    class CStatusMessageFilterBar;
+}
 namespace BlackGui::Filters
 {
     /*!

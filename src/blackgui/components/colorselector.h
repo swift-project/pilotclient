@@ -27,7 +27,10 @@ class QDropEvent;
 class QMouseEvent;
 class QWidget;
 
-namespace Ui { class CColorSelector; }
+namespace Ui
+{
+    class CColorSelector;
+}
 
 namespace BlackGui::Components
 {

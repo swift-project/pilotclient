@@ -140,7 +140,7 @@ namespace BlackMisc::Aviation
         bool m_navOn = false;
         bool m_logoOn = false;
         bool m_recognition = false; //!< not supported by aircraft config (VATSIM)
-        bool m_cabin = false;       //!< not supported by aircraft config (VATSIM)
+        bool m_cabin = false; //!< not supported by aircraft config (VATSIM)
 
         BLACK_METACLASS(
             CAircraftLights,

@@ -12,10 +12,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Network, CEcosystem, CEcosystemList)
 
 namespace BlackMisc::Network
 {
-    CEcosystemList::CEcosystemList() { }
+    CEcosystemList::CEcosystemList() {}
 
     CEcosystemList::CEcosystemList(const CSequence &other) : CSequence<CEcosystem>(other)
-    { }
+    {}
 
     QStringList CEcosystemList::allSystemStrings() const
     {

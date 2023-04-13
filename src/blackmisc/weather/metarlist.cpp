@@ -14,9 +14,8 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Weather, CMetar, CMetarList)
 
 namespace BlackMisc::Weather
 {
-    CMetarList::CMetarList(const CSequence<CMetar> &other) :
-        CSequence<CMetar>(other)
-    { }
+    CMetarList::CMetarList(const CSequence<CMetar> &other) : CSequence<CMetar>(other)
+    {}
 
     CMetar CMetarList::getMetarForAirport(const Aviation::CAirportIcaoCode &icao) const
     {

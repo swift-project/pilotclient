@@ -118,8 +118,7 @@ namespace BlackGui
         return true;
     }
 
-    CGuiApplication::CGuiApplication(const QString &applicationName, CApplicationInfo::Application application, const QPixmap &icon) :
-        CApplication(applicationName, application, false)
+    CGuiApplication::CGuiApplication(const QString &applicationName, CApplicationInfo::Application application, const QPixmap &icon) : CApplication(applicationName, application, false)
     {
         this->addWindowModeOption();
         this->addWindowResetSizeOption();
@@ -163,13 +162,13 @@ namespace BlackGui
 
     void CGuiApplication::addWindowModeOption()
     {
-        m_cmdWindowMode = QCommandLineOption({"w", "window"}, QCoreApplication::translate("main", "Windows: (n)ormal, (f)rameless, (t)ool."), "windowtype");
+        m_cmdWindowMode = QCommandLineOption({ "w", "window" }, QCoreApplication::translate("main", "Windows: (n)ormal, (f)rameless, (t)ool."), "windowtype");
         this->addParserOption(m_cmdWindowMode);
     }
 
     void CGuiApplication::addWindowResetSizeOption()
     {
-        m_cmdWindowSizeReset = QCommandLineOption({{"r", "resetsize"}, QCoreApplication::translate("main", "Reset window size (ignore saved values).")});
+        m_cmdWindowSizeReset = QCommandLineOption({ { "r", "resetsize" }, QCoreApplication::translate("main", "Reset window size (ignore saved values).") });
         this->addParserOption(m_cmdWindowSizeReset);
     }
 
@@ -183,7 +182,7 @@ namespace BlackGui
 
     void CGuiApplication::addWindowStateOption()
     {
-        m_cmdWindowStateMinimized =  QCommandLineOption({{"m", "minimized"}, QCoreApplication::translate("main", "Start minimized in system tray.")});
+        m_cmdWindowStateMinimized = QCommandLineOption({ { "m", "minimized" }, QCoreApplication::translate("main", "Start minimized in system tray.") });
         this->addParserOption(m_cmdWindowStateMinimized);
     }
 
@@ -246,7 +245,7 @@ namespace BlackGui
         if (msg.isEmpty()) { return; }
         if (!m_splashScreen) { return; }
         if (this->isShuttingDown()) { return; }
-        if (!m_splashScreen->isVisible())  { return; }
+        if (!m_splashScreen->isVisible()) { return; }
         m_splashScreen->showStatusMessage(msg);
     }
 
@@ -325,8 +324,7 @@ namespace BlackGui
         else
         {
             QPointer<CGuiApplication> myself(this);
-            connectOnce(this, &CGuiApplication::uiObjectTreeReady, this, [ = ]
-            {
+            connectOnce(this, &CGuiApplication::uiObjectTreeReady, this, [=] {
                 if (!myself) { return; }
                 this->addWindowFlags(flags);
             });
@@ -366,7 +364,7 @@ namespace BlackGui
 
         sf = cleanNumber(sf);
 
-        QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);  // DPI support
+        QApplication::setAttribute(Qt::AA_EnableHighDpiScaling); // DPI support
         QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps); // HiDPI pixmaps
 
         // qputenv("QT_ENABLE_HIGHDPI_SCALING", "1");
@@ -402,10 +400,9 @@ namespace BlackGui
         QGuiApplication::modalWindow()->raise();
     }
 
-    const QString& CGuiApplication::fileForWindowGeometryAndStateSettings()
+    const QString &CGuiApplication::fileForWindowGeometryAndStateSettings()
     {
-        static const QString filename = []
-        {
+        static const QString filename = [] {
             QString dir = CFileUtils::appendFilePaths(CSwiftDirectories::normalizedApplicationDataDirectory(), "settings/qgeom");
             return CFileUtils::appendFilePaths(dir, QFileInfo(QCoreApplication::applicationFilePath()).completeBaseName() + ".ini");
         }();
@@ -458,17 +455,16 @@ namespace BlackGui
         {
             const auto pattern = CLogPattern().withSeverity(CStatusMessage::SeverityError);
             const QString parameter = m_cmdWindowSizeReset.names().first();
-            CLogSubscriber logSub(this, [&](const CStatusMessage & message)
-            {
+            CLogSubscriber logSub(this, [&](const CStatusMessage &message) {
                 // handles an error in restoreGeometry/State
                 const int ret = QMessageBox::critical(sGui->mainApplicationWidget(), sGui->getApplicationNameAndVersion(),
                                                       QStringLiteral(
-                                                              "Restoring the window state/geometry failed!\n"
-                                                              "You need to reset the window size (command -%1).\n\n"
-                                                              "Original msg: %2\n\n"
-                                                              "We can try to reset the values and restart\n"
-                                                              "Do you want to try?"
-                                                      ).arg(parameter, message.getMessage()),
+                                                          "Restoring the window state/geometry failed!\n"
+                                                          "You need to reset the window size (command -%1).\n\n"
+                                                          "Original msg: %2\n\n"
+                                                          "We can try to reset the values and restart\n"
+                                                          "Do you want to try?")
+                                                          .arg(parameter, message.getMessage()),
                                                       QMessageBox::Yes | QMessageBox::No);
                 if (ret == QMessageBox::Yes)
                 {
@@ -476,7 +472,6 @@ namespace BlackGui
                     this->restartApplication();
                 }
                 // most likely crashing if we do nothing
-
             });
             logSub.changeSubscription(pattern);
 
@@ -503,7 +498,7 @@ namespace BlackGui
             {
                 // setMinimumSizeInCharacters sets m_minHeightChars/m_minWidthChars
                 QSize cs = mw->size();
-                if (m_minWidthChars > 0)  { cs.setWidth(qRound(fontMetricEstSize.width())); }
+                if (m_minWidthChars > 0) { cs.setWidth(qRound(fontMetricEstSize.width())); }
                 if (m_minHeightChars > 0) { cs.setHeight(qRound(fontMetricEstSize.height())); }
                 mw->resize(cs);
             }
@@ -617,21 +612,21 @@ namespace BlackGui
 
     bool CGuiApplication::cmdLineWarningMessage(const QString &text, const QString &informativeText) const
     {
-        QMessageBox warningBox(QMessageBox::Warning, QGuiApplication::applicationDisplayName(), "<b>" +text + "</b>");
+        QMessageBox warningBox(QMessageBox::Warning, QGuiApplication::applicationDisplayName(), "<b>" + text + "</b>");
         warningBox.setInformativeText(informativeText);
         return warningBox.exec();
     }
 
     bool CGuiApplication::cmdLineErrorMessage(const QString &text, const QString &informativeText, bool retry) const
     {
-        QMessageBox errorBox(QMessageBox::Critical, QGuiApplication::applicationDisplayName(), "<b>" +text + "</b>");
-        if(informativeText.length() < 300)
+        QMessageBox errorBox(QMessageBox::Critical, QGuiApplication::applicationDisplayName(), "<b>" + text + "</b>");
+        if (informativeText.length() < 300)
             errorBox.setInformativeText(informativeText);
         else
             errorBox.setDetailedText(informativeText);
 
         errorBox.addButton(QMessageBox::Abort);
-        if(retry)
+        if (retry)
             errorBox.addButton(QMessageBox::Retry);
 
         const int r = errorBox.exec();
@@ -705,8 +700,7 @@ namespace BlackGui
         QMenu *sm = menu.addMenu(CIcons::appSettings16(), "Settings");
         sm->setIcon(CIcons::appSettings16());
         QAction *a = sm->addAction(CIcons::disk16(), "Settings directory");
-        bool c = connect(a, &QAction::triggered, this, [ = ]()
-        {
+        bool c = connect(a, &QAction::triggered, this, [=]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             const QString path(QDir::toNativeSeparators(CSettingsCache::persistentStore()));
             if (QDir(path).exists())
@@ -717,8 +711,7 @@ namespace BlackGui
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = sm->addAction("Reset settings");
-        c = connect(a, &QAction::triggered, this, [ = ]
-        {
+        c = connect(a, &QAction::triggered, this, [=] {
             if (!sGui || sGui->isShuttingDown()) { return; }
             CSettingsCache::instance()->clearAllValues();
             this->displayTextInConsole("Cleared all settings!");
@@ -726,8 +719,7 @@ namespace BlackGui
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = sm->addAction("List settings files");
-        c = connect(a, &QAction::triggered, this, [ = ]()
-        {
+        c = connect(a, &QAction::triggered, this, [=]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             const QStringList files(CSettingsCache::instance()->enumerateStore());
             this->displayTextInConsole(files.join("\n"));
@@ -737,8 +729,7 @@ namespace BlackGui
         sm = menu.addMenu("Cache");
         sm->setIcon(CIcons::appSettings16());
         a = sm->addAction(CIcons::disk16(), "Cache directory");
-        c = connect(a, &QAction::triggered, this, [ = ]()
-        {
+        c = connect(a, &QAction::triggered, this, [=]() {
             const QString path(QDir::toNativeSeparators(CDataCache::persistentStore()));
             if (QDir(path).exists())
             {
@@ -748,8 +739,7 @@ namespace BlackGui
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = sm->addAction("Reset cache");
-        c = connect(a, &QAction::triggered, this, [ = ]()
-        {
+        c = connect(a, &QAction::triggered, this, [=]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             const QStringList files = CApplication::clearCaches();
             this->displayTextInConsole(u"Cleared caches! " % QString::number(files.size()) + " files");
@@ -757,8 +747,7 @@ namespace BlackGui
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = sm->addAction("List cache files");
-        c = connect(a, &QAction::triggered, this, [ = ]()
-        {
+        c = connect(a, &QAction::triggered, this, [=]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             const QStringList files(CDataCache::instance()->enumerateStore());
             this->displayTextInConsole(files.join("\n"));
@@ -766,16 +755,14 @@ namespace BlackGui
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = menu.addAction(CIcons::disk16(), "Log directory");
-        c = connect(a, &QAction::triggered, this, [ = ]()
-        {
+        c = connect(a, &QAction::triggered, this, [=]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             this->openStandardLogDirectory();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = menu.addAction(CIcons::disk16(), "Crash dumps directory");
-        c = connect(a, &QAction::triggered, this, [ = ]()
-        {
+        c = connect(a, &QAction::triggered, this, [=]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             this->openStandardCrashDumpDirectory();
         });
@@ -786,8 +773,7 @@ namespace BlackGui
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = menu.addAction(CIcons::monitorError16(), "Network config. (console)");
-        c = connect(a, &QAction::triggered, this, [ = ]()
-        {
+        c = connect(a, &QAction::triggered, this, [=]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             const QString r = CNetworkUtils::createNetworkConfigurationReport(this->getNetworkConfigurationManager(), this->getNetworkAccessManager());
             this->displayTextInConsole(r);
@@ -806,16 +792,14 @@ namespace BlackGui
     {
         QMenu *sm = menu.addMenu("Style sheet");
         QAction *aReload = sm->addAction(CIcons::refresh16(), "Reload");
-        bool c = connect(aReload, &QAction::triggered, this, [ = ]()
-        {
+        bool c = connect(aReload, &QAction::triggered, this, [=]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             this->reloadStyleSheets();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         QAction *aOpen = sm->addAction(CIcons::text16(), "Open qss file");
-        c = connect(aOpen, &QAction::triggered, this, [ = ]()
-        {
+        c = connect(aOpen, &QAction::triggered, this, [=]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             this->openStandardWidgetStyleSheet();
         });
@@ -840,18 +824,18 @@ namespace BlackGui
         menu.addSeparator();
         a = menu.addAction("E&xit");
         // a->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Q)); // avoid accidentally closing
-        c = connect(a, &QAction::triggered, this, [ = ]()
-        {
-            // a close event might already trigger a shutdown
-            if (!sGui || sGui->isShuttingDown()) { return; }
-            if (!this->mainApplicationWidget()) { return; }
-            this->mainApplicationWidget()->close();
+        c = connect(
+            a, &QAction::triggered, this, [=]() {
+                // a close event might already trigger a shutdown
+                if (!sGui || sGui->isShuttingDown()) { return; }
+                if (!this->mainApplicationWidget()) { return; }
+                this->mainApplicationWidget()->close();
 
-            // T596, do not shutdown here, as close can be canceled
-            // if shutdown is called, there is no way back
-            // this->gracefulShutdown();
-        },
-        Qt::QueuedConnection);
+                // T596, do not shutdown here, as close can be canceled
+                // if shutdown is called, there is no way back
+                // this->gracefulShutdown();
+            },
+            Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         Q_UNUSED(c)
     }
@@ -860,61 +844,67 @@ namespace BlackGui
     {
         QMenu *sm = menu.addMenu("JSON files/Templates");
         QAction *a = sm->addAction("JSON bootstrap");
-        bool c = connect(a, &QAction::triggered, this, [ = ]()
-        {
-            if (!sGui || sGui->isShuttingDown()) { return; }
-            const CGlobalSetup s = this->getGlobalSetup();
-            this->displayTextInConsole(s.toJsonString());
-        }, Qt::QueuedConnection);
+        bool c = connect(
+            a, &QAction::triggered, this, [=]() {
+                if (!sGui || sGui->isShuttingDown()) { return; }
+                const CGlobalSetup s = this->getGlobalSetup();
+                this->displayTextInConsole(s.toJsonString());
+            },
+            Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = sm->addAction("JSON version update info (for info only)");
-        c = connect(a, &QAction::triggered, this, [ = ]()
-        {
-            if (!sGui || sGui->isShuttingDown()) { return; }
-            const CUpdateInfo info = this->getUpdateInfo();
-            this->displayTextInConsole(info.toJsonString());
-        }, Qt::QueuedConnection);
+        c = connect(
+            a, &QAction::triggered, this, [=]() {
+                if (!sGui || sGui->isShuttingDown()) { return; }
+                const CUpdateInfo info = this->getUpdateInfo();
+                this->displayTextInConsole(info.toJsonString());
+            },
+            Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         if (this->hasWebDataServices())
         {
             a = menu.addAction("Services log.(console)");
-            c = connect(a, &QAction::triggered, this, [ = ]()
-            {
-                if (!sGui || sGui->isShuttingDown()) { return; }
-                this->displayTextInConsole(this->getWebDataServices()->getReadersLog());
-                CLogMessage(this).info(u"Displayed services log.");
-            }, Qt::QueuedConnection);
+            c = connect(
+                a, &QAction::triggered, this, [=]() {
+                    if (!sGui || sGui->isShuttingDown()) { return; }
+                    this->displayTextInConsole(this->getWebDataServices()->getReadersLog());
+                    CLogMessage(this).info(u"Displayed services log.");
+                },
+                Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
             a = sm->addAction("JSON DB info (for info only)");
-            c = connect(a, &QAction::triggered, this, [ = ]()
-            {
-                if (!sGui || sGui->isShuttingDown()) { return; }
-                if (!this->getWebDataServices()->getDbInfoDataReader()) { return; }
-                const CDbInfoList info = this->getWebDataServices()->getDbInfoDataReader()->getInfoObjects();
-                this->displayTextInConsole(u"DB info:\n" % info.toJsonString());
-            }, Qt::QueuedConnection);
+            c = connect(
+                a, &QAction::triggered, this, [=]() {
+                    if (!sGui || sGui->isShuttingDown()) { return; }
+                    if (!this->getWebDataServices()->getDbInfoDataReader()) { return; }
+                    const CDbInfoList info = this->getWebDataServices()->getDbInfoDataReader()->getInfoObjects();
+                    this->displayTextInConsole(u"DB info:\n" % info.toJsonString());
+                },
+                Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
             a = sm->addAction("JSON shared info (for info only)");
-            c = connect(a, &QAction::triggered, this, [ = ]()
-            {
-                if (!sGui || sGui->isShuttingDown()) { return; }
-                if (!this->getWebDataServices()->getDbInfoDataReader()) { return; }
-                const CDbInfoList info = this->getWebDataServices()->getSharedInfoDataReader()->getInfoObjects();
-                this->displayTextInConsole(u"Shared info:\n" % info.toJsonString());
-            }, Qt::QueuedConnection);
+            c = connect(
+                a, &QAction::triggered, this, [=]() {
+                    if (!sGui || sGui->isShuttingDown()) { return; }
+                    if (!this->getWebDataServices()->getDbInfoDataReader()) { return; }
+                    const CDbInfoList info = this->getWebDataServices()->getSharedInfoDataReader()->getInfoObjects();
+                    this->displayTextInConsole(u"Shared info:\n" % info.toJsonString());
+                },
+                Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         }
 
         a = menu.addAction("Metadata (slow)");
-        c = connect(a, &QAction::triggered, this, [ = ]()
-        {
-            if (!sGui || sGui->isShuttingDown()) { return; }
-            this->displayTextInConsole(getAllUserMetatypesTypes());
-        }, Qt::QueuedConnection);
+        c = connect(
+            a, &QAction::triggered, this, [=]() {
+                if (!sGui || sGui->isShuttingDown()) { return; }
+                this->displayTextInConsole(getAllUserMetatypesTypes());
+            },
+            Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         Q_UNUSED(c)
     }
@@ -928,8 +918,7 @@ namespace BlackGui
 
         QPixmap icon = w->style()->standardIcon(QStyle::SP_TitleBarMaxButton).pixmap(iconSize);
         QAction *a = menu.addAction(icon.isNull() ? iconEmpty : icon.scaled(iconSize), "Fullscreen");
-        bool c = connect(a, &QAction::triggered, this, [ = ]()
-        {
+        bool c = connect(a, &QAction::triggered, this, [=]() {
             if (!w) { return; }
             w->showFullScreen();
         });
@@ -937,8 +926,7 @@ namespace BlackGui
 
         icon = w->style()->standardIcon(QStyle::SP_TitleBarMinButton).pixmap(iconSize);
         a = menu.addAction(icon.isNull() ? iconEmpty : icon.scaled(iconSize), "Minimize");
-        c = connect(a, &QAction::triggered, this, [ = ]()
-        {
+        c = connect(a, &QAction::triggered, this, [=]() {
             if (!w) { return; }
             w->showMinimized();
         });
@@ -946,16 +934,14 @@ namespace BlackGui
 
         icon = w->style()->standardIcon(QStyle::SP_TitleBarNormalButton).pixmap(iconSize);
         a = menu.addAction(icon.isNull() ? iconEmpty : icon.scaled(iconSize), "Normal");
-        c = connect(a, &QAction::triggered, this, [ = ]()
-        {
+        c = connect(a, &QAction::triggered, this, [=]() {
             if (!w) { return; }
             w->showNormal();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = menu.addAction("Toggle stay on top");
-        c = connect(a, &QAction::triggered, this, [ = ]()
-        {
+        c = connect(a, &QAction::triggered, this, [=]() {
             if (!w) { return; }
             this->toggleStayOnTop();
         });
@@ -974,8 +960,7 @@ namespace BlackGui
         Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed");
 
         a = menu.addAction("Toggle normal or minimized");
-        c = connect(a, &QAction::triggered, this, [ = ]()
-        {
+        c = connect(a, &QAction::triggered, this, [=]() {
             if (!w) { return; }
             this->windowMinimizeNormalToggle();
         });
@@ -995,16 +980,14 @@ namespace BlackGui
         if (!w) { return; }
         QAction *a = menu.addAction(w->style()->standardIcon(QStyle::SP_TitleBarContextHelpButton), "Online help");
 
-        bool c = connect(a, &QAction::triggered, this, [ = ]()
-        {
+        bool c = connect(a, &QAction::triggered, this, [=]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             this->showHelp();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = menu.addAction(QApplication::windowIcon(), "About swift");
-        c = connect(a, &QAction::triggered, this, [ = ]()
-        {
+        c = connect(a, &QAction::triggered, this, [=]() {
             if (!w) { return; }
             CAboutDialog dialog(w);
             dialog.exec();
@@ -1014,8 +997,7 @@ namespace BlackGui
 
         // https://joekuan.wordpress.com/2015/09/23/list-of-qt-icons/
         a = menu.addAction(QApplication::style()->standardIcon(QStyle::SP_TitleBarMenuButton), "About Qt");
-        c = connect(a, &QAction::triggered, this, []()
-        {
+        c = connect(a, &QAction::triggered, this, []() {
             QApplication::aboutQt();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
@@ -1045,15 +1027,14 @@ namespace BlackGui
     bool CGuiApplication::triggerShowHelp(const QWidget *widget, QEvent *event)
     {
         if (!widget) { return false; }
-        if (!event)  { return false; }
+        if (!event) { return false; }
         const QEvent::Type t = event->type();
         if (t != QEvent::EnterWhatsThisMode) { return false; }
         QWhatsThis::leaveWhatsThisMode();
         event->accept();
         if (!widget->isVisible()) { return true; } // ignore invisble ones
         const QPointer<const QWidget> wp(widget);
-        QTimer::singleShot(0, sGui, [ = ]
-        {
+        QTimer::singleShot(0, sGui, [=] {
             if (!wp || !sGui || sGui->isShuttingDown()) { return; }
             sGui->showHelp(widget);
         });
@@ -1130,10 +1111,8 @@ namespace BlackGui
                 if (sGui)
                 {
                     static const QString style = sGui->getStyleSheetUtility().styles(
-                    {
-                        CStyleSheetUtility::fileNameFonts(),
-                        CStyleSheetUtility::fileNameStandardWidget()
-                    });
+                        { CStyleSheetUtility::fileNameFonts(),
+                          CStyleSheetUtility::fileNameStandardWidget() });
                     dialog.setStyleSheet(style);
                 }
 
@@ -1215,7 +1194,7 @@ namespace BlackGui
             QMessageBox::information(nullptr,
                                      QGuiApplication::applicationDisplayName(),
                                      QGuiApplication::applicationDisplayName() + ' ' +
-                                     QCoreApplication::applicationVersion());
+                                         QCoreApplication::applicationVersion());
         }
         else
         {
@@ -1253,9 +1232,7 @@ namespace BlackGui
     {
         const QWidget *w = this->mainApplicationWidget();
         if (!w) { return QStringLiteral("Font info not available"); }
-        return QStringLiteral("Family: '%1', average width: %2").
-               arg(w->font().family()).
-               arg(w->fontMetrics().averageCharWidth());
+        return QStringLiteral("Family: '%1', average width: %2").arg(w->font().family()).arg(w->fontMetrics().averageCharWidth());
     }
 
     bool CGuiApplication::toggleStayOnTop()
@@ -1273,11 +1250,11 @@ namespace BlackGui
     {
         if (this->isShuttingDown()) { return; }
         QMainWindow *w = sGui->mainApplicationWindow();
-        if (!w)  { return; }
+        if (!w) { return; }
 
         m_frontBack = true;
-        w->showNormal();     // bring window to top on OSX
-        w->raise();          // bring window from minimized state on OSX
+        w->showNormal(); // bring window to top on OSX
+        w->raise(); // bring window from minimized state on OSX
 
         // if (!CGuiUtility::staysOnTop(w)) { CGuiUtility::stayOnTop(true, w); emit this->alwaysOnTop(true); }
         w->activateWindow(); // bring window to front/unminimize on windows
@@ -1302,10 +1279,22 @@ namespace BlackGui
     {
         if (this->isShuttingDown()) { return; }
         QMainWindow *w = sGui->mainApplicationWindow();
-        if (!w)  { return; }
-        if (w->isMinimized()) { this->windowToFront(); return; }
-        if (w->isMaximized()) { this->windowToBack(); return; }
-        if (CGuiUtility::staysOnTop(w)) { this->windowToBack(); return; }
+        if (!w) { return; }
+        if (w->isMinimized())
+        {
+            this->windowToFront();
+            return;
+        }
+        if (w->isMaximized())
+        {
+            this->windowToBack();
+            return;
+        }
+        if (CGuiUtility::staysOnTop(w))
+        {
+            this->windowToBack();
+            return;
+        }
 
         if (m_frontBack)
         {
@@ -1321,7 +1310,7 @@ namespace BlackGui
     {
         if (this->isShuttingDown()) { return; }
         QMainWindow *w = sGui->mainApplicationWindow();
-        if (!w)  { return; }
+        if (!w) { return; }
         if (m_normalizeMinimize)
         {
             w->showMinimized();
@@ -1338,8 +1327,7 @@ namespace BlackGui
     void CGuiApplication::triggerNewVersionCheck(int delayedMs)
     {
         if (!m_updateSetting.get()) { return; }
-        QTimer::singleShot(delayedMs, this, [ = ]
-        {
+        QTimer::singleShot(delayedMs, this, [=] {
             if (!sGui || sGui->isShuttingDown()) { return; }
             if (m_updateDialog) { return; } // already checked elsewhere
             this->checkNewVersion(true);

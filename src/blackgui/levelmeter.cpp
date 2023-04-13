@@ -21,11 +21,11 @@
 namespace BlackGui
 {
     CLevelMeter::CLevelMeter(QWidget *parent)
-        :   QFrame(parent),
-            m_redrawTimer(new QTimer(this)),
-            m_lowColor(Qt::gray),
-            m_highColor(Qt::green),
-            m_peakColor(255, 200, 200, 255)
+        : QFrame(parent),
+          m_redrawTimer(new QTimer(this)),
+          m_lowColor(Qt::gray),
+          m_highColor(Qt::green),
+          m_peakColor(255, 200, 200, 255)
     {
         this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
         this->setMinimumWidth(30);
@@ -36,7 +36,7 @@ namespace BlackGui
     }
 
     CLevelMeter::~CLevelMeter()
-    { }
+    {}
 
     void CLevelMeter::reset()
     {
@@ -77,7 +77,7 @@ namespace BlackGui
         QRect bar = this->contentsRect();
         painter.fillRect(bar, Qt::transparent);
         const int w = bar.width();
-        const int left  = rect().left();
+        const int left = rect().left();
         const int level = qRound(m_level * w);
 
         bar.setLeft(left);

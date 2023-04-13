@@ -55,14 +55,14 @@ namespace BlackMisc
         }
 
         //! Assign a nullptr.
-        Optional &operator =(std::nullptr_t) noexcept
+        Optional &operator=(std::nullptr_t) noexcept
         {
             reset();
             return *this;
         }
 
         //! Copy assignment.
-        Optional &operator =(const Optional &other) noexcept(std::is_nothrow_copy_constructible_v<T>)
+        Optional &operator=(const Optional &other) noexcept(std::is_nothrow_copy_constructible_v<T>)
         {
             reset();
             if (other.m_isValid) { new (m_data.bytes) T(*other); }
@@ -71,7 +71,7 @@ namespace BlackMisc
         }
 
         //! Move assignment.
-        Optional &operator =(Optional &&other) noexcept(std::is_nothrow_move_constructible_v<T>)
+        Optional &operator=(Optional &&other) noexcept(std::is_nothrow_move_constructible_v<T>)
         {
             reset();
             if (other.m_isValid) { new (m_data.bytes) T(std::move(*other)); }
@@ -80,7 +80,10 @@ namespace BlackMisc
         }
 
         //! Destructor.
-        ~Optional() { if (m_isValid) { (*this)->~T(); } }
+        ~Optional()
+        {
+            if (m_isValid) { (*this)->~T(); }
+        }
 
         //! Explicit cast to bool, true if this Optional contains a value.
         explicit operator bool() const noexcept { return m_isValid; }
@@ -93,22 +96,30 @@ namespace BlackMisc
         }
 
         //! Dereference operator, returns reference to contained value, undefined if there is no value contained.
-        T &operator *() { return dereference(); }
+        T &operator*() { return dereference(); }
 
         //! Dereference operator, returns reference to contained value, undefined if there is no value contained.
-        const T &operator *() const { return dereference(); }
+        const T &operator*() const { return dereference(); }
 
         //! Indirection operator, returns pointer to contained value, undefined if there is no value contained.
-        T *operator ->() { return &dereference(); }
+        T *operator->() { return &dereference(); }
 
         //! Indirection operator, returns pointer to contained value, undefined if there is no value contained.
-        const T *operator ->() const { return &dereference(); }
+        const T *operator->() const { return &dereference(); }
 
     private:
         bool m_isValid = false;
 
-        T &dereference() { Q_ASSERT(m_isValid); return m_data.object; }
-        const T &dereference() const { Q_ASSERT(m_isValid); return m_data.object; }
+        T &dereference()
+        {
+            Q_ASSERT(m_isValid);
+            return m_data.object;
+        }
+        const T &dereference() const
+        {
+            Q_ASSERT(m_isValid);
+            return m_data.object;
+        }
         union Data
         {
             Data() {}
@@ -145,6 +156,6 @@ namespace BlackMisc
         }
     }
 
-} //namespace BlackMisc
+} // namespace BlackMisc
 
 #endif // guard

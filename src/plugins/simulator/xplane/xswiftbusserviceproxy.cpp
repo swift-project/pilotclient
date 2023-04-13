@@ -25,18 +25,18 @@ namespace BlackSimPlugin::XPlane
         {
             bool s;
             s = connection.connect(QString(), "/xswiftbus/service", "org.swift_project.xswiftbus.service",
-                                    "aircraftModelChanged", this,
-                                    SIGNAL(aircraftModelChanged(QString, QString, QString, QString, QString, QString, QString)));
+                                   "aircraftModelChanged", this,
+                                   SIGNAL(aircraftModelChanged(QString, QString, QString, QString, QString, QString, QString)));
             Q_ASSERT(s);
 
             s = connection.connect(QString(), "/xswiftbus/service", "org.swift_project.xswiftbus.service",
-                                    "airportsInRangeUpdated", this,
-                                    SIGNAL(airportsInRangeUpdated(QStringList, QStringList, QList<double>, QList<double>, QList<double>)));
+                                   "airportsInRangeUpdated", this,
+                                   SIGNAL(airportsInRangeUpdated(QStringList, QStringList, QList<double>, QList<double>, QList<double>)));
             Q_ASSERT(s);
 
             s = connection.connect(QString(), "/xswiftbus/service", "org.swift_project.xswiftbus.service",
-                                    "sceneryLoaded", this,
-                                    SIGNAL(sceneryLoaded()));
+                                   "sceneryLoaded", this,
+                                   SIGNAL(sceneryLoaded()));
             Q_ASSERT(s);
         }
     }
@@ -55,8 +55,7 @@ namespace BlackSimPlugin::XPlane
     {
         if (!o_xplaneData) { return; }
         QPointer<CXSwiftBusServiceProxy> myself(this);
-        std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
-        {
+        std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
             if (!myself) { return; }
             QDBusPendingReply<double, double, double, double, double, double, double, double> reply = *watcher;
             if (!reply.isError())
@@ -79,8 +78,7 @@ namespace BlackSimPlugin::XPlane
     {
         if (!o_xplaneData) { return; }
         QPointer<CXSwiftBusServiceProxy> myself(this);
-        std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
-        {
+        std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
             if (!myself) { return; }
             QDBusPendingReply<double, double, double, double, double, double> reply = *watcher;
             if (!reply.isError())
@@ -100,8 +98,7 @@ namespace BlackSimPlugin::XPlane
     {
         if (!o_xplaneData) { return; }
         QPointer<CXSwiftBusServiceProxy> myself(this);
-        std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
-        {
+        std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
             if (!myself) { return; }
             QDBusPendingReply<int, int, double, bool, bool> reply = *watcher;
             if (!reply.isError())
@@ -121,8 +118,7 @@ namespace BlackSimPlugin::XPlane
     {
         if (!o_xplaneData) { return; }
         QPointer<CXSwiftBusServiceProxy> myself(this);
-        std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
-        {
+        std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
             if (!myself) { return; }
             QDBusPendingReply<int, int, double, bool, bool> reply = *watcher;
             if (!reply.isError())
@@ -142,14 +138,13 @@ namespace BlackSimPlugin::XPlane
     {
         if (!o_xplaneData) { return; }
         QPointer<CXSwiftBusServiceProxy> myself(this);
-        std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
-        {
+        std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
             if (!myself) { return; }
             QDBusPendingReply<int, int, bool> reply = *watcher;
             if (!reply.isError())
             {
-                o_xplaneData->xpdrCode  = reply.argumentAt<0>();
-                o_xplaneData->xpdrMode  = reply.argumentAt<1>();
+                o_xplaneData->xpdrCode = reply.argumentAt<0>();
+                o_xplaneData->xpdrMode = reply.argumentAt<1>();
                 o_xplaneData->xpdrIdent = reply.argumentAt<2>();
             }
             watcher->deleteLater();
@@ -161,17 +156,16 @@ namespace BlackSimPlugin::XPlane
     {
         if (!o_xplaneData) { return; }
         QPointer<CXSwiftBusServiceProxy> myself(this);
-        std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
-        {
+        std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
             if (!myself) { return; }
             QDBusPendingReply<bool, bool, bool, bool, bool> reply = *watcher;
             if (!reply.isError())
             {
-                o_xplaneData->beaconLightsOn   = reply.argumentAt<0>();
-                o_xplaneData->landingLightsOn  = reply.argumentAt<1>();
-                o_xplaneData->navLightsOn      = reply.argumentAt<2>();
-                o_xplaneData->strobeLightsOn   = reply.argumentAt<3>();
-                o_xplaneData->taxiLightsOn     = reply.argumentAt<4>();
+                o_xplaneData->beaconLightsOn = reply.argumentAt<0>();
+                o_xplaneData->landingLightsOn = reply.argumentAt<1>();
+                o_xplaneData->navLightsOn = reply.argumentAt<2>();
+                o_xplaneData->strobeLightsOn = reply.argumentAt<3>();
+                o_xplaneData->taxiLightsOn = reply.argumentAt<4>();
             }
             watcher->deleteLater();
         };
@@ -182,15 +176,14 @@ namespace BlackSimPlugin::XPlane
     {
         if (!o_xplaneData) { return; }
         QPointer<CXSwiftBusServiceProxy> myself(this);
-        std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
-        {
+        std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
             if (!myself) { return; }
-            QDBusPendingReply<double, double, double, QList<double> > reply = *watcher;
+            QDBusPendingReply<double, double, double, QList<double>> reply = *watcher;
             if (!reply.isError())
             {
                 o_xplaneData->flapsDeployRatio = reply.argumentAt<0>();
-                o_xplaneData->gearDeployRatio  = reply.argumentAt<1>();
-                o_xplaneData->speedBrakeRatio  = reply.argumentAt<2>();
+                o_xplaneData->gearDeployRatio = reply.argumentAt<1>();
+                o_xplaneData->speedBrakeRatio = reply.argumentAt<2>();
                 o_xplaneData->enginesN1Percentage = reply.argumentAt<3>();
             }
             watcher->deleteLater();
@@ -202,14 +195,13 @@ namespace BlackSimPlugin::XPlane
     {
         if (!o_xplaneData) { return; }
         QPointer<CXSwiftBusServiceProxy> myself(this);
-        std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
-        {
+        std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
             if (!myself) { return; }
             QDBusPendingReply<QString, QString> reply = *watcher;
             if (!reply.isError())
             {
                 o_xplaneData->aircraftModelPath = reply.argumentAt<0>(); // this is NOT the model string
-                o_xplaneData->aircraftIcaoCode  = reply.argumentAt<1>();
+                o_xplaneData->aircraftIcaoCode = reply.argumentAt<1>();
             }
             watcher->deleteLater();
         };
@@ -345,8 +337,7 @@ namespace BlackSimPlugin::XPlane
 
     void CXSwiftBusServiceProxy::getFrameStats(double *o_averageFps, double *o_simTimeRatio, double *o_trackMilesShort, double *o_minutesLate) const
     {
-        std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
-        {
+        std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
             QDBusPendingReply<double, double, double, double> reply = *watcher;
             if (!reply.isError())
             {
@@ -362,8 +353,7 @@ namespace BlackSimPlugin::XPlane
 
     void CXSwiftBusServiceProxy::getFrameStatsAsync(double *o_averageFps, double *o_simTimeRatio, double *o_trackMilesShort, double *o_minutesLate)
     {
-        std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
-        {
+        std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
             QDBusPendingReply<double, double, double, double> reply = *watcher;
             if (!reply.isError())
             {
@@ -413,7 +403,7 @@ namespace BlackSimPlugin::XPlane
     {
         return m_dbusInterface->callDBusRet<double>(QLatin1String("getPressureAltitudeFt"));
     }
-    void CXSwiftBusServiceProxy::getPressureAltitudeFtAsync(double* o_altitude)
+    void CXSwiftBusServiceProxy::getPressureAltitudeFtAsync(double *o_altitude)
     {
         m_dbusInterface->callDBusAsync(QLatin1String("getPressureAltitudeFt"), setterCallback(o_altitude));
     }
@@ -558,7 +548,7 @@ namespace BlackSimPlugin::XPlane
         return m_dbusInterface->callDBusRet<double>(QLatin1String("getGroundElevation"));
     }
 
-    void CXSwiftBusServiceProxy::getGroundElevationAsync(double* o_elevationM)
+    void CXSwiftBusServiceProxy::getGroundElevationAsync(double *o_elevationM)
     {
         m_dbusInterface->callDBusAsync(QLatin1String("getGroundElevation"), setterCallback(o_elevationM));
     }
@@ -738,7 +728,6 @@ namespace BlackSimPlugin::XPlane
         m_dbusInterface->callDBusAsync(QLatin1String("getTaxiLightsOn"), setterCallback(o_taxiLightsOn));
     }
 
-
     double CXSwiftBusServiceProxy::getQNHInHg() const
     {
         return m_dbusInterface->callDBusRet<double>(QLatin1String("getQNHInHg"));
@@ -748,7 +737,6 @@ namespace BlackSimPlugin::XPlane
     {
         m_dbusInterface->callDBusAsync(QLatin1String("getQNHInHg"), setterCallback(o_qnh));
     }
-
 
     void CXSwiftBusServiceProxy::setCom1ActiveKhz(int freq)
     {

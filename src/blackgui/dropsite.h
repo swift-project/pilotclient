@@ -73,9 +73,9 @@ namespace BlackGui
         //! Clear
         void resetText();
 
-        QString    m_infoText;           //!< text displayed for drop site
-        bool       m_allowDrop = true;   //!< dropping allowed?
-        QList<int> m_acceptedMetaTypes;  //!< accepted meta types
+        QString m_infoText; //!< text displayed for drop site
+        bool m_allowDrop = true; //!< dropping allowed?
+        QList<int> m_acceptedMetaTypes; //!< accepted meta types
     };
 } // ns
 

@@ -31,7 +31,7 @@ namespace BlackMisc
     }
 
     CRgbColor::CRgbColor(int r, int g, int b) : m_r(r), m_g(g), m_b(b)
-    { }
+    {}
 
     CRgbColor::CRgbColor(const QColor &color)
     {
@@ -50,11 +50,11 @@ namespace BlackMisc
 
     CIcons::IconIndex CRgbColor::toIcon() const
     {
-        //if (this->isValid())
+        // if (this->isValid())
         //{
-        //    return CIcon(toPixmap(), hex());
-        //}
-        //else
+        //     return CIcon(toPixmap(), hex());
+        // }
+        // else
         {
             return CIcons::StandardIconError16;
         }
@@ -162,7 +162,11 @@ namespace BlackMisc
             const QString c(color.trimmed());
             QColor q(c);
             if (this->setQColor(q)) { return; }
-            if (c.startsWith("#")) { this->setInvalid(); return; }
+            if (c.startsWith("#"))
+            {
+                this->setInvalid();
+                return;
+            }
             q.setNamedColor("#" + c);
             this->setQColor(q);
         }
@@ -215,7 +219,11 @@ namespace BlackMisc
 
     void CRgbColor::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CRgbColor>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CRgbColor>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -256,7 +264,7 @@ namespace BlackMisc
     double CRgbColor::colorRange() const
     {
         if (!this->isValid()) { return 255; }
-        if (m_b < 256  && m_g < 256  && m_r < 256) { return 255; }
+        if (m_b < 256 && m_g < 256 && m_r < 256) { return 255; }
         if (m_b < 4096 && m_g < 4096 && m_r < 4096) { return 4095; }
         return 65535;
     }

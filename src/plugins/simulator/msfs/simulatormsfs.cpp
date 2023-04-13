@@ -23,31 +23,34 @@ using namespace BlackSimPlugin::FsxCommon;
 namespace BlackSimPlugin::Msfs
 {
     CSimulatorMsFs::CSimulatorMsFs(const CSimulatorPluginInfo &info,
-                                    IOwnAircraftProvider *ownAircraftProvider,
-                                    IRemoteAircraftProvider *remoteAircraftProvider,
-                                    IWeatherGridProvider *weatherGridProvider,
-                                    IClientProvider *clientProvider,
-                                    QObject *parent) :
-        CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
+                                   IOwnAircraftProvider *ownAircraftProvider,
+                                   IRemoteAircraftProvider *remoteAircraftProvider,
+                                   IWeatherGridProvider *weatherGridProvider,
+                                   IClientProvider *clientProvider,
+                                   QObject *parent) : CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
     {
         this->setDefaultModel(
-        {
-            "Airbus A320 Neo Asobo",
-            CAircraftModel::TypeModelMatchingDefaultModel,
-            "Airbus A320 default model",
-            CAircraftIcaoCode("A320", "L2J")
-        });
+            { "Airbus A320 Neo Asobo",
+              CAircraftModel::TypeModelMatchingDefaultModel,
+              "Airbus A320 default model",
+              CAircraftIcaoCode("A320", "L2J") });
     }
 
     bool CSimulatorMsFs::connectTo()
     {
-    #ifdef Q_OS_WIN64
-        if (!loadAndResolveMSFSimConnect()) { return false; }
+#ifdef Q_OS_WIN64
+        if (!loadAndResolveMSFSimConnect())
+        {
+            return false;
+        }
         return CSimulatorFsxCommon::connectTo();
-    #else
-        if (!loadAndResolveFsxSimConnect(true)) { return false; }
+#else
+        if (!loadAndResolveFsxSimConnect(true))
+        {
+            return false;
+        }
         return CSimulatorFsxCommon::connectTo();
-    #endif
+#endif
     }
 
     void CSimulatorMsFs::setTrueAltitude(CAircraftSituation &aircraftSituation, const DataDefinitionOwnAircraft &simulatorOwnAircraft)
@@ -58,13 +61,19 @@ namespace BlackSimPlugin::Msfs
 
     void CSimulatorMsFsListener::startImpl()
     {
-    #ifdef Q_OS_WIN64
-        if (!loadAndResolveMSFSimConnect()) { return; }
+#ifdef Q_OS_WIN64
+        if (!loadAndResolveMSFSimConnect())
+        {
+            return;
+        }
         CSimulatorFsxCommonListener::startImpl();
-    #else
-        if (!loadAndResolveFsxSimConnect(true)) { return; }
+#else
+        if (!loadAndResolveFsxSimConnect(true))
+        {
+            return;
+        }
         CSimulatorFsxCommonListener::startImpl();
-    #endif
+#endif
     }
 
 } // ns

@@ -41,10 +41,9 @@ using namespace BlackCore;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 
-CSwiftCore::CSwiftCore(QWidget *parent) :
-    CSystemTrayWindow(CIcons::swiftCore24(), parent),
-    CIdentifiable(this),
-    ui(new Ui::CSwiftCore)
+CSwiftCore::CSwiftCore(QWidget *parent) : CSystemTrayWindow(CIcons::swiftCore24(), parent),
+                                          CIdentifiable(this),
+                                          ui(new Ui::CSwiftCore)
 {
     Q_ASSERT(sGui);
     ui->setupUi(this);
@@ -57,11 +56,11 @@ CSwiftCore::CSwiftCore(QWidget *parent) :
     m_mwaOverlayFrame = nullptr;
     m_mwaStatusBar = nullptr;
 
-    connect(ui->pb_Restart, &QPushButton::clicked,           this, &CSwiftCore::restart);
-    connect(ui->pb_Audio,   &QPushButton::clicked,           this, &CSwiftCore::audioDialog,           Qt::QueuedConnection);
-    connect(ui->pb_AudioAdvanced,     &QPushButton::clicked, this, &CSwiftCore::audioAdvancedDialog,   Qt::QueuedConnection);
+    connect(ui->pb_Restart, &QPushButton::clicked, this, &CSwiftCore::restart);
+    connect(ui->pb_Audio, &QPushButton::clicked, this, &CSwiftCore::audioDialog, Qt::QueuedConnection);
+    connect(ui->pb_AudioAdvanced, &QPushButton::clicked, this, &CSwiftCore::audioAdvancedDialog, Qt::QueuedConnection);
     connect(ui->pb_DisconnectNetwork, &QPushButton::clicked, this, &CSwiftCore::disconnectFromNetwork, Qt::QueuedConnection);
-    connect(sGui, &CGuiApplication::styleSheetsChanged,      this, &CSwiftCore::onStyleSheetsChanged,  Qt::QueuedConnection);
+    connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftCore::onStyleSheetsChanged, Qt::QueuedConnection);
 
     this->initLogDisplay();
     this->initStyleSheet();
@@ -76,17 +75,15 @@ CSwiftCore::CSwiftCore(QWidget *parent) :
 }
 
 CSwiftCore::~CSwiftCore()
-{ }
+{}
 
 void CSwiftCore::initStyleSheet()
 {
     if (!sGui || sGui->isShuttingDown()) { return; }
     const QString s = sGui->getStyleSheetUtility().styles(
-    {
-        CStyleSheetUtility::fileNameFonts(),
-        CStyleSheetUtility::fileNameStandardWidget(),
-        CStyleSheetUtility::fileNameSwiftCore()
-    });
+        { CStyleSheetUtility::fileNameFonts(),
+          CStyleSheetUtility::fileNameStandardWidget(),
+          CStyleSheetUtility::fileNameSwiftCore() });
     this->setStyleSheet(""); // avoid crash, need to reset before
     this->setStyleSheet(s);
 }
@@ -142,7 +139,7 @@ void CSwiftCore::restart()
 void CSwiftCore::disconnectFromNetwork()
 {
     if (!sGui || sGui->isShuttingDown()) { return; }
-    if (!sGui->getIContextNetwork())     { return; }
+    if (!sGui->getIContextNetwork()) { return; }
     if (!sGui->getIContextNetwork()->isConnected()) { return; }
 
     const QMessageBox::StandardButton reply = QMessageBox::question(this, "Disconnect", "Disconnect from network?", QMessageBox::Yes | QMessageBox::No);

@@ -55,7 +55,7 @@ namespace BlackCore
     {
         QString n = action.trimmed();
         if (!n.startsWith('/')) { n.insert(0, QChar('/')); }
-        if (n.endsWith('/')) { n.remove(n.length() - 1 , 1);}
+        if (n.endsWith('/')) { n.remove(n.length() - 1, 1); }
         return n;
     }
 }

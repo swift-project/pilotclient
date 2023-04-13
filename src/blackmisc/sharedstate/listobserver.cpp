@@ -29,8 +29,7 @@ namespace BlackMisc::SharedState
 
     void CGenericListObserver::reconstruct()
     {
-        m_observer->requestAsync(m_observer->eventSubscription(), [this](const CVariant &list)
-        {
+        m_observer->requestAsync(m_observer->eventSubscription(), [this](const CVariant &list) {
             QMutexLocker lock(&m_listMutex);
             m_list = list.to<CVariantList>();
             lock.unlock();
@@ -47,8 +46,7 @@ namespace BlackMisc::SharedState
     int CGenericListObserver::cleanValues()
     {
         QMutexLocker lock(&m_listMutex);
-        return m_list.removeIf([filter = m_observer->eventSubscription()](const CVariant &value)
-        {
+        return m_list.removeIf([filter = m_observer->eventSubscription()](const CVariant &value) {
             return !value.matches(filter);
         });
     }

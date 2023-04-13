@@ -59,7 +59,7 @@ namespace BlackMisc::Network
         const Aviation::CCallsign &getSenderCallsign() const { return m_senderCallsign; }
 
         //! Set callsign (from)
-        void setSenderCallsign(const Aviation::CCallsign &callsign) { m_senderCallsign = callsign;}
+        void setSenderCallsign(const Aviation::CCallsign &callsign) { m_senderCallsign = callsign; }
 
         //! Get callsign (to)
         const Aviation::CCallsign &getRecipientCallsign() const { return m_recipientCallsign; }
@@ -101,7 +101,7 @@ namespace BlackMisc::Network
         const PhysicalQuantities::CFrequency &getFrequency() const { return m_frequency; }
 
         //! Set frequency
-        void setFrequency(const PhysicalQuantities::CFrequency &frequency) {  m_frequency = frequency; }
+        void setFrequency(const PhysicalQuantities::CFrequency &frequency) { m_frequency = frequency; }
 
         //! Is private message?
         bool isPrivateMessage() const;
@@ -204,7 +204,7 @@ namespace BlackMisc::Network
         Aviation::CCallsign m_senderCallsign;
         Aviation::CCallsign m_recipientCallsign;
         PhysicalQuantities::CFrequency m_frequency { 0, nullptr };
-        bool m_wasSent        = false; //!< transient
+        bool m_wasSent = false; //!< transient
         bool m_relayedMessage = false; //!< transient
 
         BLACK_METACLASS(

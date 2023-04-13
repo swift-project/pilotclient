@@ -15,7 +15,10 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CDbLiveryColorSearchDialog; }
+namespace Ui
+{
+    class CDbLiveryColorSearchDialog;
+}
 namespace BlackGui::Components
 {
     /*!

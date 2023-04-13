@@ -12,10 +12,9 @@
 
 namespace BlackMisc::SharedState::DBus
 {
-    IDuplex::IDuplex(QObject* parent) : QObject(parent)
+    IDuplex::IDuplex(QObject *parent) : QObject(parent)
     {
-        connect(this, &IDuplex::replyReceived, this, [this](const QString &, const CVariant &param, quint32 token)
-        {
+        connect(this, &IDuplex::replyReceived, this, [this](const QString &, const CVariant &param, quint32 token) {
             const auto it = m_submittedRequests.find(token);
             if (it == m_submittedRequests.end()) { return; }
             it->setResult(param);

@@ -35,8 +35,12 @@ namespace BlackMisc::Aviation
         enum TransponderMode
         {
             StateStandby = 0, //!< not a real mode, more a state
-            ModeMil1 = 1, ModeMil2 = 2, ModeMil3 = 3, ModeMil4 = 4, ModeMil5 = 5, //!< military modes
-            StateIdent = 10,  //!< not a real mode, more a state
+            ModeMil1 = 1,
+            ModeMil2 = 2,
+            ModeMil3 = 3,
+            ModeMil4 = 4,
+            ModeMil5 = 5, //!< military modes
+            StateIdent = 10, //!< not a real mode, more a state
             ModeA = 11,
             ModeC = 12,
             ModeS = 20

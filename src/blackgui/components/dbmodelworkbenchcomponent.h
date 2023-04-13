@@ -23,12 +23,24 @@
 #include <QScopedPointer>
 #include <QStringList>
 
-namespace Ui { class CDbModelWorkbenchComponent; }
+namespace Ui
+{
+    class CDbModelWorkbenchComponent;
+}
 namespace BlackGui
 {
-    namespace Menus  { class CMenuActions; }
-    namespace Models { class CAircraftModelListModel; }
-    namespace Views  { class CAircraftModelView; }
+    namespace Menus
+    {
+        class CMenuActions;
+    }
+    namespace Models
+    {
+        class CAircraftModelListModel;
+    }
+    namespace Views
+    {
+        class CAircraftModelView;
+    }
     namespace Components
     {
         /*!
@@ -77,9 +89,9 @@ namespace BlackGui
 
             //! \name Implementations of the models interfaces
             //! @{
-            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->setModelsForSimulator(models, BlackMisc::Simulation::CSimulatorInfo()); }
+            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models) override { this->setModelsForSimulator(models, BlackMisc::Simulation::CSimulatorInfo()); }
             virtual void setModelsForSimulator(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
-            virtual int updateModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { return this->updateModelsForSimulator(models, BlackMisc::Simulation::CSimulatorInfo()); }
+            virtual int updateModels(const BlackMisc::Simulation::CAircraftModelList &models) override { return this->updateModelsForSimulator(models, BlackMisc::Simulation::CSimulatorInfo()); }
             virtual int updateModelsForSimulator(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
             //! @}
 

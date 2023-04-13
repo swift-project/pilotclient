@@ -16,7 +16,7 @@
 #include "blackmisc/audio/audiodeviceinfo.h"
 
 #ifdef Q_OS_MAC
-#include "blackmisc/macos/microphoneaccess.h"
+#    include "blackmisc/macos/microphoneaccess.h"
 #endif
 
 #include <QAudioInput>
@@ -53,7 +53,7 @@ namespace BlackCore::Afv::Audio
 
     private:
         static constexpr qint64 frameSize = 960;
-        QByteArray   m_buffer;
+        QByteArray m_buffer;
         QAudioFormat m_format;
     };
 
@@ -61,7 +61,7 @@ namespace BlackCore::Afv::Audio
     struct OpusDataAvailableArgs
     {
         uint sequenceCounter = 0; //!< sequence counter
-        QByteArray audio;         //!< audio data
+        QByteArray audio; //!< audio data
     };
 
     //! Input volume stream arguments
@@ -71,10 +71,10 @@ namespace BlackCore::Afv::Audio
         double PeakRaw = 0.0;
 
         //! Peak volume in dB
-        double PeakDB  = -1.0 * std::numeric_limits<double>::infinity();
+        double PeakDB = -1.0 * std::numeric_limits<double>::infinity();
 
         //! Peak volume in VU
-        double PeakVU  = 0.0;
+        double PeakVU = 0.0;
     };
 
     //! Input
@@ -142,19 +142,19 @@ namespace BlackCore::Afv::Audio
         static constexpr qint64 c_frameSize = 960;
         int m_sampleRate = 0;
 
-        BlackSound::Codecs::COpusEncoder   m_encoder;
-        QScopedPointer<QAudioInput>        m_audioInput;
+        BlackSound::Codecs::COpusEncoder m_encoder;
+        QScopedPointer<QAudioInput> m_audioInput;
         BlackMisc::Audio::CAudioDeviceInfo m_device;
-        QAudioFormat                       m_inputFormat;
+        QAudioFormat m_inputFormat;
 
         bool m_started = false;
-        int m_opusBytesEncoded  = 0;
-        int m_sampleCount       = 0;
-        double m_gainRatio         = 1.0;
+        int m_opusBytesEncoded = 0;
+        int m_sampleCount = 0;
+        double m_gainRatio = 1.0;
         qint16 m_maxSampleInput = 0.0;
 
         const int SampleCountPerEvent = 4800;
-        const double maxDb =   0;
+        const double maxDb = 0;
         const double minDb = -40;
 
         uint m_audioSequenceCounter = 0;

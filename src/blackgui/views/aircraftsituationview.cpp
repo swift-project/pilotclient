@@ -15,8 +15,7 @@ using namespace BlackGui::Menus;
 
 namespace BlackGui::Views
 {
-    CAircraftSituationView::CAircraftSituationView(QWidget *parent) :
-        CViewWithTimestampWithOffsetObjects(parent)
+    CAircraftSituationView::CAircraftSituationView(QWidget *parent) : CViewWithTimestampWithOffsetObjects(parent)
     {
         this->standardInit(new CAircraftSituationListModel(this));
         this->setMenu(MenuDefault);

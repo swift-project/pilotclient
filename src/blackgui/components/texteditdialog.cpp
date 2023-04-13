@@ -11,16 +11,15 @@
 
 namespace BlackGui::Components
 {
-    CTextEditDialog::CTextEditDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CTextEditDialog)
+    CTextEditDialog::CTextEditDialog(QWidget *parent) : QDialog(parent),
+                                                        ui(new Ui::CTextEditDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
     CTextEditDialog::~CTextEditDialog()
-    { }
+    {}
 
     QTextEdit *CTextEditDialog::textEdit() const
     {

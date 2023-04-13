@@ -13,7 +13,10 @@
 
 #include <QFrame>
 
-namespace Ui { class CSettingsFontComponent; }
+namespace Ui
+{
+    class CSettingsFontComponent;
+}
 namespace BlackGui::Components
 {
     /*!
@@ -27,8 +30,8 @@ namespace BlackGui::Components
         //! How to update
         enum Mode
         {
-            DirectUpdate,    //!< directly updating a font qss file
-            GenerateQssOnly  //!< builds a qss style string
+            DirectUpdate, //!< directly updating a font qss file
+            GenerateQssOnly //!< builds a qss style string
         };
 
         //! Constructor
@@ -67,12 +70,12 @@ namespace BlackGui::Components
 
     private:
         QScopedPointer<Ui::CSettingsFontComponent> ui;
-        QColor  m_selectedColor;
-        QColor  m_cancelColor;
-        QFont   m_cancelFont;
+        QColor m_selectedColor;
+        QColor m_cancelColor;
+        QFont m_cancelFont;
         QString m_qss;
-        bool    m_noColorDefault = true; //!< as of T571 no color default
-        Mode    m_mode = DirectUpdate;
+        bool m_noColorDefault = true; //!< as of T571 no color default
+        Mode m_mode = DirectUpdate;
 
         void changeFont();
         void resetFont();

@@ -39,19 +39,19 @@ namespace BlackCore::Context
     {
         // signals originating from impl side
         bool s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                                "settingsChanged", this, SIGNAL(settingsChanged(BlackMisc::CValueCachePacket, BlackMisc::CIdentifier)));
+                                    "settingsChanged", this, SIGNAL(settingsChanged(BlackMisc::CValueCachePacket, BlackMisc::CIdentifier)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                                "registrationChanged", this, SIGNAL(registrationChanged()));
+                               "registrationChanged", this, SIGNAL(registrationChanged()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                                "hotkeyActionsRegistered", this, SIGNAL(hotkeyActionsRegistered(QStringList, BlackMisc::CIdentifier)));
+                               "hotkeyActionsRegistered", this, SIGNAL(hotkeyActionsRegistered(QStringList, BlackMisc::CIdentifier)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                                "remoteHotkeyAction", this, SIGNAL(remoteHotkeyAction(QString, bool, BlackMisc::CIdentifier)));
+                               "remoteHotkeyAction", this, SIGNAL(remoteHotkeyAction(QString, bool, BlackMisc::CIdentifier)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                                "requestDisplayOnConsole", this, SIGNAL(requestDisplayOnConsole(QString)));
+                               "requestDisplayOnConsole", this, SIGNAL(requestDisplayOnConsole(QString)));
         Q_UNUSED(s);
         this->relayBaseClassSignals(serviceName, connection, IContextApplication::ObjectPath(), IContextApplication::InterfaceName());
     }

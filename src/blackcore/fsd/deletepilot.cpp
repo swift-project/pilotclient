@@ -14,12 +14,12 @@ using namespace BlackMisc;
 namespace BlackCore::Fsd
 {
     DeletePilot::DeletePilot() : MessageBase()
-    { }
+    {}
 
     DeletePilot::DeletePilot(const QString &callsign, const QString &id)
         : MessageBase(callsign),
-            m_cid(id)
-    { }
+          m_cid(id)
+    {}
 
     QStringList DeletePilot::toTokens() const
     {

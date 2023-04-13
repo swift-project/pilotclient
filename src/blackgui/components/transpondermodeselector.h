@@ -72,7 +72,7 @@ namespace BlackGui::Components
 
     private:
         BlackMisc::Aviation::CTransponder::TransponderMode m_currentMode = BlackMisc::Aviation::CTransponder::StateStandby;
-        BlackMisc::Aviation::CTransponder::TransponderMode m_resetMode   = BlackMisc::Aviation::CTransponder::StateStandby;
+        BlackMisc::Aviation::CTransponder::TransponderMode m_resetMode = BlackMisc::Aviation::CTransponder::StateStandby;
         QTimer m_resetTimer;
     };
 } // ns

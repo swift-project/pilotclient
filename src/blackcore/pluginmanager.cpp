@@ -27,7 +27,7 @@ using namespace BlackMisc;
 namespace BlackCore
 {
     IPluginManager::IPluginManager(QObject *parent) : QObject(parent)
-    { }
+    {}
 
     void IPluginManager::collectPlugins()
     {

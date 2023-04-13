@@ -24,7 +24,8 @@ namespace BlackMisc::Iterators
     /*!
      * Configurable output iterator using a provided functor to do the insertion.
      */
-    template <class F> class OutputIterator
+    template <class F>
+    class OutputIterator
     {
     public:
         //! @{
@@ -45,19 +46,23 @@ namespace BlackMisc::Iterators
 
         //! @{
         //! Advance the iterator (no-op)
-        OutputIterator &operator ++() { return *this; }
-        OutputIterator operator ++(int) { return *this; }
+        OutputIterator &operator++() { return *this; }
+        OutputIterator operator++(int) { return *this; }
         //! @}
 
         //! Dereference (no-op)
-        OutputIterator &operator *() { return *this; }
+        OutputIterator &operator*() { return *this; }
 
         //! Assignment operator performs the output
-        template <typename T, std::enable_if_t<! std::is_convertible_v<T, OutputIterator>, int> = 0>
-        OutputIterator &operator =(T &&value) { m_func(std::forward<T>(value)); return *this; }
+        template <typename T, std::enable_if_t<!std::is_convertible_v<T, OutputIterator>, int> = 0>
+        OutputIterator &operator=(T &&value)
+        {
+            m_func(std::forward<T>(value));
+            return *this;
+        }
 
         //! Copy assignment operator
-        OutputIterator &operator =(const OutputIterator &other)
+        OutputIterator &operator=(const OutputIterator &other)
         {
             // Work around lambda's deleted copy assignment operator
             this->~OutputIterator();
@@ -75,7 +80,8 @@ namespace BlackMisc::Iterators
     /*!
      * Return an output iterator of type deduced from the argument.
      */
-    template <class F> auto makeOutputIterator(F &&func)
+    template <class F>
+    auto makeOutputIterator(F &&func)
     {
         return OutputIterator<std::decay_t<F>>(std::forward<F>(func));
     }
@@ -83,7 +89,8 @@ namespace BlackMisc::Iterators
     /*!
      * Return an insert iterator appropriate to the container type (uses push_back or insert).
      */
-    template <class T> auto makeInsertIterator(T &container)
+    template <class T>
+    auto makeInsertIterator(T &container)
     {
         if constexpr (THasPushBack<T>::value)
         {
@@ -100,7 +107,8 @@ namespace BlackMisc::Iterators
      *
      * By creating a CRange from such iterators, it is possible to perform a transformation on a container without copying elements.
      */
-    template <class I, class F> class TransformIterator
+    template <class I, class F>
+    class TransformIterator
     {
     public:
         //! @{
@@ -118,17 +126,18 @@ namespace BlackMisc::Iterators
         struct PointerWrapper
         {
             PointerWrapper(std::decay_t<undecayed_type> *obj) : m_obj(std::move(*obj)) {}
-            std::decay_t<undecayed_type> const *operator ->() const { return &m_obj; }
-            std::decay_t<undecayed_type> operator *() const & { return m_obj; }
-            std::decay_t<undecayed_type> operator *() && { return std::move(m_obj); }
+            std::decay_t<undecayed_type> const *operator->() const { return &m_obj; }
+            std::decay_t<undecayed_type> operator*() const & { return m_obj; }
+            std::decay_t<undecayed_type> operator*() && { return std::move(m_obj); }
+
         private:
             const std::decay_t<undecayed_type> m_obj;
         };
 
         //! The type returned by this iterator's arrow operator, which may be a pointer or a pointer-like wrapper object
         using pointer = typename std::conditional<std::is_reference_v<undecayed_type>,
-                                                    std::remove_reference_t<undecayed_type> *,
-                                                    PointerWrapper>::type;
+                                                  std::remove_reference_t<undecayed_type> *,
+                                                  PointerWrapper>::type;
 
         //! Constructor.
         TransformIterator(I iterator, F function) : m_iterator(iterator), m_function(function) {}
@@ -139,27 +148,45 @@ namespace BlackMisc::Iterators
         //! @{
         //! Advance to the next element.
         //! Undefined if iterator is at the end.
-        TransformIterator &operator ++() { ++m_iterator; return *this; }
-        TransformIterator operator ++(int) { auto copy = *this; ++m_iterator; return copy; }
+        TransformIterator &operator++()
+        {
+            ++m_iterator;
+            return *this;
+        }
+        TransformIterator operator++(int)
+        {
+            auto copy = *this;
+            ++m_iterator;
+            return copy;
+        }
         //! @}
 
         //! Dereference operator, returns the transformed object reference by the iterator.
         //! Undefined if iterator is at the end.
-        undecayed_type operator *() { Q_ASSERT(m_function); return (*m_function)(*m_iterator); }
+        undecayed_type operator*()
+        {
+            Q_ASSERT(m_function);
+            return (*m_function)(*m_iterator);
+        }
 
         //! Indirection operator, returns a pointer to the transformed object,
         //! or a pointer-like wrapper object if the transformation function returns by value.
         //! Undefined if iterator is at the end.
-        pointer operator ->() { Q_ASSERT(m_function); auto &&obj = (*m_function)(*m_iterator); return &obj; }
+        pointer operator->()
+        {
+            Q_ASSERT(m_function);
+            auto &&obj = (*m_function)(*m_iterator);
+            return &obj;
+        }
 
         //! @{
         //! Comparison operators.
-        bool operator ==(const TransformIterator &other) const { return m_iterator == other.m_iterator; }
-        bool operator !=(const TransformIterator &other) const { return m_iterator != other.m_iterator; }
-        bool operator <(const TransformIterator &other) const { return m_iterator < other.m_iterator; }
-        bool operator <=(const TransformIterator &other) const { return m_iterator <= other.m_iterator; }
-        bool operator >(const TransformIterator &other) const { return m_iterator > other.m_iterator; }
-        bool operator >=(const TransformIterator &other) const { return m_iterator >= other.m_iterator; }
+        bool operator==(const TransformIterator &other) const { return m_iterator == other.m_iterator; }
+        bool operator!=(const TransformIterator &other) const { return m_iterator != other.m_iterator; }
+        bool operator<(const TransformIterator &other) const { return m_iterator < other.m_iterator; }
+        bool operator<=(const TransformIterator &other) const { return m_iterator <= other.m_iterator; }
+        bool operator>(const TransformIterator &other) const { return m_iterator > other.m_iterator; }
+        bool operator>=(const TransformIterator &other) const { return m_iterator >= other.m_iterator; }
         //! @}
 
     private:
@@ -172,7 +199,8 @@ namespace BlackMisc::Iterators
      *
      * By creating a CRange from such iterators, it is possible to return the results of predicate methods without copying elements.
      */
-    template <class I, class F> class ConditionalIterator
+    template <class I, class F>
+    class ConditionalIterator
     {
     public:
         //! @{
@@ -199,34 +227,40 @@ namespace BlackMisc::Iterators
         //! @{
         //! Advance the iterator to the next element which matches the predicate, or the end if there are none remaining.
         //! Undefined if the iterator is already at the end.
-        ConditionalIterator &operator ++()
+        ConditionalIterator &operator++()
         {
             Q_ASSERT(m_predicate);
             do
             {
                 ++m_iterator;
-            } while (m_iterator != m_end && !(*m_predicate)(*m_iterator));
+            }
+            while (m_iterator != m_end && !(*m_predicate)(*m_iterator));
             return *this;
         }
-        ConditionalIterator operator ++(int) { auto copy = *this; ++(*this); return copy; }
+        ConditionalIterator operator++(int)
+        {
+            auto copy = *this;
+            ++(*this);
+            return copy;
+        }
         //! @}
 
         //! Indirection operator, returns the underlying iterator.
         //! Undefined if iterator is at the end.
-        I operator ->() { return m_iterator; }
+        I operator->() { return m_iterator; }
 
         //! Dereference operator, returns the object referenced by the iterator.
         //! Undefined if iterator is at the end.
-        typename std::iterator_traits<I>::reference operator *() { return *m_iterator; }
+        typename std::iterator_traits<I>::reference operator*() { return *m_iterator; }
 
         //! @{
         //! Comparison operators.
-        bool operator ==(const ConditionalIterator &other) const { return m_iterator == other.m_iterator; }
-        bool operator !=(const ConditionalIterator &other) const { return m_iterator != other.m_iterator; }
-        bool operator <(const ConditionalIterator &other) const { return m_iterator < other.m_iterator; }
-        bool operator <=(const ConditionalIterator &other) const { return m_iterator <= other.m_iterator; }
-        bool operator >(const ConditionalIterator &other) const { return m_iterator > other.m_iterator; }
-        bool operator >=(const ConditionalIterator &other) const { return m_iterator >= other.m_iterator; }
+        bool operator==(const ConditionalIterator &other) const { return m_iterator == other.m_iterator; }
+        bool operator!=(const ConditionalIterator &other) const { return m_iterator != other.m_iterator; }
+        bool operator<(const ConditionalIterator &other) const { return m_iterator < other.m_iterator; }
+        bool operator<=(const ConditionalIterator &other) const { return m_iterator <= other.m_iterator; }
+        bool operator>(const ConditionalIterator &other) const { return m_iterator > other.m_iterator; }
+        bool operator>=(const ConditionalIterator &other) const { return m_iterator >= other.m_iterator; }
         //! @}
 
         //! \private
@@ -245,7 +279,8 @@ namespace BlackMisc::Iterators
     /*!
      * Iterator wrapper which concatenates zero or more pairs of begin and end iterators.
      */
-    template <class I> class ConcatIterator
+    template <class I>
+    class ConcatIterator
     {
     public:
         //! @{
@@ -270,31 +305,36 @@ namespace BlackMisc::Iterators
         //! @{
         //! Advance to the next element.
         //! Undefined if iterator is at the end.
-        ConcatIterator &operator ++()
+        ConcatIterator &operator++()
         {
             ++(m_iterators[0]);
             while (!m_iterators.empty() && m_iterators[0] == m_iterators[1]) { m_iterators.remove(0, 2); }
             return *this;
         }
-        ConcatIterator operator ++(int) { auto copy = *this; ++(*this); return copy; }
+        ConcatIterator operator++(int)
+        {
+            auto copy = *this;
+            ++(*this);
+            return copy;
+        }
         //! @}
 
         //! Indirection operator, returns the underlying iterator.
         //! Undefined if iterator is at the end.
-        I operator ->() { return m_iterators[0]; }
+        I operator->() { return m_iterators[0]; }
 
         //! Dereference operator, returns the object referenced by the iterator.
         //! Undefined if iterator is at the end.
-        typename std::iterator_traits<I>::reference operator *() { return *(m_iterators[0]); }
+        typename std::iterator_traits<I>::reference operator*() { return *(m_iterators[0]); }
 
         //! @{
         //! Comparison operators.
-        bool operator ==(const ConcatIterator &other) const { return m_iterators == other.m_iterators; }
-        bool operator !=(const ConcatIterator &other) const { return m_iterators != other.m_iterators; }
-        bool operator <(const ConcatIterator &other) const { return m_iterators < other.m_iterators; }
-        bool operator <=(const ConcatIterator &other) const { return m_iterators <= other.m_iterators; }
-        bool operator >(const ConcatIterator &other) const { return m_iterators > other.m_iterators; }
-        bool operator >=(const ConcatIterator &other) const { return m_iterators >= other.m_iterators; }
+        bool operator==(const ConcatIterator &other) const { return m_iterators == other.m_iterators; }
+        bool operator!=(const ConcatIterator &other) const { return m_iterators != other.m_iterators; }
+        bool operator<(const ConcatIterator &other) const { return m_iterators < other.m_iterators; }
+        bool operator<=(const ConcatIterator &other) const { return m_iterators <= other.m_iterators; }
+        bool operator>(const ConcatIterator &other) const { return m_iterators > other.m_iterators; }
+        bool operator>=(const ConcatIterator &other) const { return m_iterators >= other.m_iterators; }
         //! @}
 
     private:
@@ -304,7 +344,8 @@ namespace BlackMisc::Iterators
     /*!
      * Construct a TransformIterator of the appropriate type from deduced template function arguments.
      */
-    template <class I, class F> auto makeTransformIterator(I iterator, F function) -> TransformIterator<I, F>
+    template <class I, class F>
+    auto makeTransformIterator(I iterator, F function) -> TransformIterator<I, F>
     {
         return { iterator, function };
     }
@@ -312,7 +353,8 @@ namespace BlackMisc::Iterators
     /*!
      * Construct a ConditionalIterator of the appropriate type from deduced template function arguments.
      */
-    template <class I, class F> auto makeConditionalIterator(I iterator, I end, F predicate) -> ConditionalIterator<I, F>
+    template <class I, class F>
+    auto makeConditionalIterator(I iterator, I end, F predicate) -> ConditionalIterator<I, F>
     {
         return { iterator, end, predicate };
     }
@@ -320,11 +362,12 @@ namespace BlackMisc::Iterators
     /*!
      * Construct a ConcatIterator of the appropriate type from deduced template function arguments.
      */
-    template <class I> auto makeConcatIterator(QVector<I> iterators) -> ConcatIterator<I>
+    template <class I>
+    auto makeConcatIterator(QVector<I> iterators) -> ConcatIterator<I>
     {
         return { std::move(iterators) };
     }
 
-} //namespace BlackMisc
+} // namespace BlackMisc
 
-#endif //BLACKMISC_ITERATOR_H
+#endif // BLACKMISC_ITERATOR_H

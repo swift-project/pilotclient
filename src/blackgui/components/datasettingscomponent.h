@@ -18,8 +18,14 @@
 
 class QWidget;
 
-namespace Ui { class CDataSettingsComponent; }
-namespace BlackCore::Db { class CBackgroundDataUpdater; }
+namespace Ui
+{
+    class CDataSettingsComponent;
+}
+namespace BlackCore::Db
+{
+    class CBackgroundDataUpdater;
+}
 namespace BlackGui::Components
 {
     /*!

@@ -16,7 +16,7 @@ namespace BlackGui
 {
     CSingleApplicationUi::CSingleApplicationUi(QWidget *ui) : m_ui(ui)
     {
-        QObject::connect(&m_timer, &QTimer::timeout, [ = ] { this->evaluate(); });
+        QObject::connect(&m_timer, &QTimer::timeout, [=] { this->evaluate(); });
         m_timer.setInterval(5000);
         m_timer.start();
     }

@@ -16,7 +16,10 @@
 #include <QAbstractButton>
 #include "blackcore/context/contextapplication.h"
 
-namespace Ui { class CApplicationCloseDialog; }
+namespace Ui
+{
+    class CApplicationCloseDialog;
+}
 namespace BlackGui::Components
 {
     /*!

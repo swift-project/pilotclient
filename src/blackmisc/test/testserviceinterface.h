@@ -54,13 +54,16 @@ class QDBusVariant;
 namespace BlackMisc
 {
     class CVariant;
-    namespace Simulation::FsCommon { class CAircraftCfgEntriesList; }
+    namespace Simulation::FsCommon
+    {
+        class CAircraftCfgEntriesList;
+    }
 }
 
 namespace BlackMisc::Test
 {
     //! Proxy class for BlackMisc::Test::CTestService. This part is the caller.
-    class BLACKMISC_EXPORT ITestServiceInterface: public QDBusAbstractInterface
+    class BLACKMISC_EXPORT ITestServiceInterface : public QDBusAbstractInterface
     {
         Q_OBJECT
 
@@ -385,22 +388,26 @@ namespace BlackMisc::Test
         static const char *InterfaceName();
 
         //! Compare objects and output info
-        template<class ValueObject>
+        template <class ValueObject>
         static bool pingCompare(const ValueObject &in, const ValueObject &out, QTextStream &ts, bool verbose, int &errors)
         {
             const bool equal = (in == out && extraCompare(in, out));
             if (!equal)
             {
                 errors++;
-                if (verbose) { ts << "I: " << in.toQString() << Qt::endl << "O: " << out.toQString() << Qt::endl; }
+                if (verbose) { ts << "I: " << in.toQString() << Qt::endl
+                                  << "O: " << out.toQString() << Qt::endl; }
             }
             return equal;
         }
 
         //! @{
         //! Extra comparison step for some types
-        template<class ValueObject>
-        static bool extraCompare(const ValueObject &, const ValueObject &) { return true; }
+        template <class ValueObject>
+        static bool extraCompare(const ValueObject &, const ValueObject &)
+        {
+            return true;
+        }
 
         static bool extraCompare(const BlackMisc::Aviation::CFlightPlan &in, const BlackMisc::Aviation::CFlightPlan &out)
         {

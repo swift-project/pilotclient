@@ -11,9 +11,8 @@
 
 namespace BlackGui::Components
 {
-    CStringListDialog::CStringListDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CStringListDialog)
+    CStringListDialog::CStringListDialog(QWidget *parent) : QDialog(parent),
+                                                            ui(new Ui::CStringListDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
@@ -21,7 +20,7 @@ namespace BlackGui::Components
     }
 
     CStringListDialog::~CStringListDialog()
-    { }
+    {}
 
     void CStringListDialog::setStrings(const QStringList &strings)
     {

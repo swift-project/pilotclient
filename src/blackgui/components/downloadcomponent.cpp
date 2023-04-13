@@ -32,10 +32,9 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackGui::Components
 {
-    CDownloadComponent::CDownloadComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        CLoadIndicatorEnabled(this),
-        ui(new Ui::CDownloadComponent)
+    CDownloadComponent::CDownloadComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                              CLoadIndicatorEnabled(this),
+                                                              ui(new Ui::CDownloadComponent)
     {
         ui->setupUi(this);
         this->setOverlaySizeFactors(0.8, 0.9);
@@ -52,13 +51,13 @@ namespace BlackGui::Components
         connect(ui->tb_DialogDownloadDir, &QToolButton::pressed, this, &CDownloadComponent::selectDownloadDirectory);
         connect(ui->tb_ResetDownloadDir, &QToolButton::pressed, this, &CDownloadComponent::resetDownloadDir);
         connect(ui->tb_CancelDownload, &QToolButton::pressed, this, &CDownloadComponent::cancelOngoingDownloads);
-        connect(ui->pb_Download, &QPushButton::pressed, [ = ] { this->triggerDownloadingOfFiles(); });
+        connect(ui->pb_Download, &QPushButton::pressed, [=] { this->triggerDownloadingOfFiles(); });
         connect(ui->pb_OpenDownloadDir, &QPushButton::pressed, this, &CDownloadComponent::openDownloadDir);
         connect(ui->pb_Launch, &QPushButton::pressed, this, &CDownloadComponent::startDownloadedExecutable);
     }
 
     CDownloadComponent::~CDownloadComponent()
-    { }
+    {}
 
     bool CDownloadComponent::setDownloadFile(const CRemoteFile &remoteFile)
     {
@@ -85,7 +84,7 @@ namespace BlackGui::Components
     {
         QString downloadDir = ui->le_DownloadDir->text().trimmed();
         downloadDir = QFileDialog::getExistingDirectory(parentWidget(),
-                        tr("Choose your download directory"), downloadDir, m_fileDialogOptions);
+                                                        tr("Choose your download directory"), downloadDir, m_fileDialogOptions);
 
         if (downloadDir.isEmpty()) { return; } // canceled
         if (!QDir(downloadDir).exists())
@@ -106,8 +105,7 @@ namespace BlackGui::Components
         if (delayMs > 0)
         {
             const QPointer<CDownloadComponent> myself(this);
-            QTimer::singleShot(delayMs, this, [ = ]
-            {
+            QTimer::singleShot(delayMs, this, [=] {
                 if (!myself || !sGui || sGui->isShuttingDown()) { return; }
                 this->triggerDownloadingOfFiles();
             });
@@ -204,8 +202,7 @@ namespace BlackGui::Components
             if (reply != QMessageBox::Yes)
             {
                 const QPointer<CDownloadComponent> myself(this);
-                QTimer::singleShot(10, this, [ = ]
-                {
+                QTimer::singleShot(10, this, [=] {
                     if (!myself || !sGui || sGui->isShuttingDown()) { return; }
                     this->downloadedFile(CStatusMessage(this).info(u"File was already downloaded"));
                 });
@@ -213,7 +210,7 @@ namespace BlackGui::Components
             }
         }
 
-        QNetworkReply *reply = sGui->downloadFromNetwork(download, saveAsFile, { this, &CDownloadComponent::downloadedFile});
+        QNetworkReply *reply = sGui->downloadFromNetwork(download, saveAsFile, { this, &CDownloadComponent::downloadedFile });
         bool success = false;
         if (reply)
         {
@@ -255,8 +252,7 @@ namespace BlackGui::Components
     void CDownloadComponent::lastFileDownloaded()
     {
         const QPointer<CDownloadComponent> myself(this);
-        QTimer::singleShot(0, this, [ = ]
-        {
+        QTimer::singleShot(0, this, [=] {
             if (!myself || !sGui || sGui->isShuttingDown()) { return; }
             myself->ui->pb_Download->setEnabled(true);
             myself->ui->pb_Launch->setEnabled(true);
@@ -280,14 +276,14 @@ namespace BlackGui::Components
         if (CBuildConfig::isRunningOnMacOSPlatform())
         {
             msg = "To install close swift, "
-                    "mount the disk image '%1' and run the installer inside "
-                    "to proceed with the update.";
+                  "mount the disk image '%1' and run the installer inside "
+                  "to proceed with the update.";
         }
         else
         {
             msg = ui->cb_Shutdown->isChecked() ?
-                    QString("Start '%1' and close swift?") :
-                    QString("Start '%1'?");
+                      QString("Start '%1' and close swift?") :
+                      QString("Start '%1'?");
         }
 
         for (const CRemoteFile &rf : executables)
@@ -310,16 +306,14 @@ namespace BlackGui::Components
 
             if (CBuildConfig::isRunningOnLinuxPlatform() && !executableFile.permissions().testFlag(QFile::ExeOwner))
             {
-                executableFile.setPermissions(QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner
-                    | QFile::ReadGroup | QFile::ExeGroup | QFile::ReadOther | QFile::ExeOther);
+                executableFile.setPermissions(QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner | QFile::ReadGroup | QFile::ExeGroup | QFile::ReadOther | QFile::ExeOther);
             }
 
             const bool shutdown = ui->cb_Shutdown->isChecked();
-            const bool started  = QProcess::startDetached(executable, {}, dir.absolutePath());
+            const bool started = QProcess::startDetached(executable, {}, dir.absolutePath());
             if (started && shutdown && sGui)
             {
-                QTimer::singleShot(250, sGui, []
-                {
+                QTimer::singleShot(250, sGui, [] {
                     if (!sGui) { return; }
                     CGuiApplication::exit();
                 });

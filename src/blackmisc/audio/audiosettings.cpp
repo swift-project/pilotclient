@@ -115,7 +115,7 @@ namespace BlackMisc::Audio
     {
         Q_UNUSED(i18n)
         return u"Notification flags: " % CNotificationSounds::toString(this->getNotification()) %
-                u" volume: " % QString::number(m_notificationVolume);
+               u" volume: " % QString::number(m_notificationVolume);
     }
 
     void CSettings::initDefaultValues()

@@ -46,10 +46,9 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackGui::Components
 {
-    CCockpitComComponent::CCockpitComComponent(QWidget *parent) :
-        QFrame(parent),
-        CIdentifiable(this),
-        ui(new Ui::CCockpitComComponent)
+    CCockpitComComponent::CCockpitComComponent(QWidget *parent) : QFrame(parent),
+                                                                  CIdentifiable(this),
+                                                                  ui(new Ui::CCockpitComComponent)
     {
         ui->setupUi(this);
 
@@ -57,14 +56,14 @@ namespace BlackGui::Components
         this->forceCockpitUpdateFromOwnAircraftContext();
 
         // COM form
-        connect(ui->editor_Com, &CCockpitComForm::testSelcal,             this, &CCockpitComComponent::testSelcal);
-        connect(ui->editor_Com, &CCockpitComForm::changedCockpitValues,   this, &CCockpitComComponent::updateOwnCockpitInContext);
-        connect(ui->editor_Com, &CCockpitComForm::changedSelcal,          this, &CCockpitComComponent::updateSelcalInContext);
+        connect(ui->editor_Com, &CCockpitComForm::testSelcal, this, &CCockpitComComponent::testSelcal);
+        connect(ui->editor_Com, &CCockpitComForm::changedCockpitValues, this, &CCockpitComComponent::updateOwnCockpitInContext);
+        connect(ui->editor_Com, &CCockpitComForm::changedSelcal, this, &CCockpitComComponent::updateSelcalInContext);
         connect(ui->editor_Com, &CCockpitComForm::requestCom1TextMessage, this, &CCockpitComComponent::requestCom1TextMessage);
         connect(ui->editor_Com, &CCockpitComForm::requestCom2TextMessage, this, &CCockpitComComponent::requestCom2TextMessage);
 
         // Relay COM form signals
-        connect(ui->editor_Com, &CCockpitComForm::transponderModeChanged,     this, &CCockpitComComponent::transponderModeChanged);
+        connect(ui->editor_Com, &CCockpitComForm::transponderModeChanged, this, &CCockpitComComponent::transponderModeChanged);
         connect(ui->editor_Com, &CCockpitComForm::transponderStateIdentEnded, this, &CCockpitComComponent::transponderStateIdentEnded);
 
         // hook up with changes from own aircraft context
@@ -72,7 +71,7 @@ namespace BlackGui::Components
         {
             // own aircraft
             connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CCockpitComComponent::updateCockpitFromContext, Qt::QueuedConnection);
-            connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedSelcal,          this, &CCockpitComComponent::updateSelcalFromContext,  Qt::QueuedConnection);
+            connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedSelcal, this, &CCockpitComComponent::updateSelcalFromContext, Qt::QueuedConnection);
 
             // hook up with audio context
             // connect(sGui->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CCockpitComComponent::updateVoiceRoomStatusFromContext, Qt::QueuedConnection);
@@ -81,8 +80,7 @@ namespace BlackGui::Components
             connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this, &CCockpitComComponent::onAtcStationsChanged, Qt::QueuedConnection);
 
             QPointer<CCockpitComComponent> myself(this);
-            QTimer::singleShot(10 * 1000, this, [ = ]
-            {
+            QTimer::singleShot(10 * 1000, this, [=] {
                 if (!sGui || sGui->isShuttingDown() || !myself) { return; }
                 const CSimulatedAircraft aircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
                 this->updateCockpitFromContext(aircraft, CIdentifier::fake());
@@ -91,7 +89,7 @@ namespace BlackGui::Components
     }
 
     CCockpitComComponent::~CCockpitComComponent()
-    { }
+    {}
 
     void CCockpitComComponent::setTransponderModeStateIdent()
     {

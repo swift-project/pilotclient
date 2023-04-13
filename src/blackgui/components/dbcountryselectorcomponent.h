@@ -28,7 +28,10 @@ class QDragMoveEvent;
 class QDropEvent;
 class QWidget;
 
-namespace Ui { class CDbCountrySelectorComponent; }
+namespace Ui
+{
+    class CDbCountrySelectorComponent;
+}
 namespace BlackGui::Components
 {
     /*!

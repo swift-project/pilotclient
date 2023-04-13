@@ -42,10 +42,10 @@ namespace BlackSimPlugin::Emulated
         //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
         CSimulatorEmulated(
             const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-            BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
+            BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
             BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-            BlackMisc::Weather::IWeatherGridProvider       *weatherGridProvider,
-            BlackMisc::Network::IClientProvider            *clientProvider,
+            BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+            BlackMisc::Network::IClientProvider *clientProvider,
             QObject *parent = nullptr);
 
         //! Destructor
@@ -135,7 +135,7 @@ namespace BlackSimPlugin::Emulated
     protected:
         virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
         virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
-        virtual int  physicallyRemoveAllRemoteAircraft() override;
+        virtual int physicallyRemoveAllRemoteAircraft() override;
 
         //! \copydoc BlackCore::ISimulator::parseDetails
         virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
@@ -169,19 +169,19 @@ namespace BlackSimPlugin::Emulated
         //! Request weather
         bool requestWeather();
 
-        bool m_log        = false; //!< from settings
-        bool m_paused     = false;
-        bool m_connected  = true;
+        bool m_log = false; //!< from settings
+        bool m_paused = false;
+        bool m_connected = true;
         bool m_simulating = true;
         bool m_timeSyncronized = false;
         int m_countInterpolatedSituations = 0;
-        int m_countInterpolatedParts      = 0;
+        int m_countInterpolatedParts = 0;
         QTimer m_interpolatorFetchTimer; //!< fetch data from interpolator
-        BlackMisc::PhysicalQuantities::CTime            m_offsetTime;
-        BlackMisc::Simulation::CSimulatedAircraft       m_myAircraft;       //!< represents own aircraft of simulator
-        BlackMisc::Simulation::CSimulatedAircraftList   m_renderedAircraft; //!< represents remote aircraft in simulator
-        QPointer<CSimulatorEmulatedMonitorDialog>       m_monitorWidget;    //!< parent will be main window, so we need to destroy widget when destroyed
-        BlackMisc::CConnectionGuard                     m_connectionGuard;  //!< connected with provider
+        BlackMisc::PhysicalQuantities::CTime m_offsetTime;
+        BlackMisc::Simulation::CSimulatedAircraft m_myAircraft; //!< represents own aircraft of simulator
+        BlackMisc::Simulation::CSimulatedAircraftList m_renderedAircraft; //!< represents remote aircraft in simulator
+        QPointer<CSimulatorEmulatedMonitorDialog> m_monitorWidget; //!< parent will be main window, so we need to destroy widget when destroyed
+        BlackMisc::CConnectionGuard m_connectionGuard; //!< connected with provider
         BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSwiftPlugin> m_pluginSettings { this, &CSimulatorEmulated::onSettingsChanged };
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CInterpolatorMultiWrapper> m_interpolators; //!< interpolators per callsign
     };

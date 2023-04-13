@@ -79,7 +79,11 @@ namespace BlackGui::Settings
         static const char *key() { return "guigeneral"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("General GUI"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("General GUI");
+            return name;
+        }
     };
 
     //! Settings for last manual entries of own aircraft mode
@@ -89,13 +93,21 @@ namespace BlackGui::Settings
         static const char *key() { return "backgroundconsolidation"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("Background consolidation"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("Background consolidation");
+            return name;
+        }
 
         //! \copydoc BlackMisc::TSettingTrait::isValid
         static bool isValid(const int &valueInSeconds, QString &) { return valueInSeconds == -1 || (valueInSeconds >= minSecs() && valueInSeconds <= maxSecs()); }
 
         //! \copydoc BlackMisc::TSettingTrait::defaultValue
-        static const int &defaultValue() { static const int i = 60; return i; }
+        static const int &defaultValue()
+        {
+            static const int i = 60;
+            return i;
+        }
 
         //! Minimum
         static int minSecs() { return 30; }

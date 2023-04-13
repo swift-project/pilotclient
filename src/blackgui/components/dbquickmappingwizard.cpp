@@ -32,9 +32,8 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackGui::Components
 {
-    CDbQuickMappingWizard::CDbQuickMappingWizard(QWidget *parent) :
-        QWizard(parent),
-        ui(new Ui::CDbQuickMappingWizard)
+    CDbQuickMappingWizard::CDbQuickMappingWizard(QWidget *parent) : QWizard(parent),
+                                                                    ui(new Ui::CDbQuickMappingWizard)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
         Q_ASSERT_X(sGui->hasWebDataServices(), Q_FUNC_INFO, "Missing web services");
@@ -68,7 +67,7 @@ namespace BlackGui::Components
     }
 
     CDbQuickMappingWizard::~CDbQuickMappingWizard()
-    { }
+    {}
 
     const QStringList &CDbQuickMappingWizard::getLogCategories()
     {
@@ -230,10 +229,10 @@ namespace BlackGui::Components
         switch (page)
         {
         case PageAircraftSelect:
-            {
-                this->setAircraftIcaoFilter();
-            }
-            break;
+        {
+            this->setAircraftIcaoFilter();
+        }
+        break;
         case PageColor:
             if (!colorMode)
             {
@@ -241,55 +240,55 @@ namespace BlackGui::Components
             }
             break;
         case PageLiverySelect:
+        {
+            if (colorMode)
             {
-                if (colorMode)
-                {
-                    this->setColorFilter();
-                }
-                else
-                {
-                    this->setAirlineIcaoFilter();
-                }
+                this->setColorFilter();
             }
-            break;
+            else
+            {
+                this->setAirlineIcaoFilter();
+            }
+        }
+        break;
         case PageDistributorSelect:
-            {
-                this->setDistributorFilter();
-            }
-            break;
+        {
+            this->setDistributorFilter();
+        }
+        break;
         case PageConfirmation:
+        {
+            const CSimulatorInfo sims = this->guessSimulator();
+            ui->selector_Simulator->setValue(sims);
+            ui->editor_AircraftModel->setLivery(this->getFirstSelectedOrDefaultLivery());
+            ui->editor_AircraftModel->setDistributor(this->getFirstSelectedOrDefaultDistributor());
+            ui->editor_AircraftModel->setAircraftIcao(this->getFirstSelectedOrDefaultAircraftIcao());
+            const CStatusMessageList msgs(this->validateData());
+            const bool errorFree = !msgs.hasWarningOrErrorMessages();
+            ui->fr_ConfirmationOk->setVisible(errorFree);
+            ui->fr_ConfirmationStillErrors->setVisible(!errorFree);
+            if (!errorFree)
             {
-                const CSimulatorInfo sims = this->guessSimulator();
-                ui->selector_Simulator->setValue(sims);
-                ui->editor_AircraftModel->setLivery(this->getFirstSelectedOrDefaultLivery());
-                ui->editor_AircraftModel->setDistributor(this->getFirstSelectedOrDefaultDistributor());
-                ui->editor_AircraftModel->setAircraftIcao(this->getFirstSelectedOrDefaultAircraftIcao());
-                const CStatusMessageList msgs(this->validateData());
-                const bool errorFree = !msgs.hasWarningOrErrorMessages();
-                ui->fr_ConfirmationOk->setVisible(errorFree);
-                ui->fr_ConfirmationStillErrors->setVisible(!errorFree);
-                if (!errorFree)
-                {
-                    ui->wp6_Confirmation->showOverlayMessages(msgs);
-                }
+                ui->wp6_Confirmation->showOverlayMessages(msgs);
             }
-            break;
+        }
+        break;
         case PageCredentials:
-            {
-                ui->comp_Log->clear();
-            }
-            break;
+        {
+            ui->comp_Log->clear();
+        }
+        break;
         case PageLastConfirmation:
-            {
-                // void
-            }
-            break;
+        {
+            // void
+        }
+        break;
         case PageSendStatus:
-            {
-                this->writeModelToDb();
-                this->button(BackButton)->hide();
-            }
-            break;
+        {
+            this->writeModelToDb();
+            this->button(BackButton)->hide();
+        }
+        break;
         default:
             break;
         }
@@ -302,29 +301,29 @@ namespace BlackGui::Components
         switch (page)
         {
         case PageConfirmation:
+        {
+            const CStatusMessageList msgs(this->validateData());
+            if (!msgs.isEmpty())
             {
-                const CStatusMessageList msgs(this->validateData());
-                if (!msgs.isEmpty())
-                {
-                    ui->wp6_Confirmation->showOverlayMessages(msgs);
-                }
-                ok = !msgs.hasWarningOrErrorMessages();
+                ui->wp6_Confirmation->showOverlayMessages(msgs);
             }
-            break;
+            ok = !msgs.hasWarningOrErrorMessages();
+        }
+        break;
         case PageCredentials:
+        {
+            ok = ui->comp_DbLogin->isUserAuthenticated();
+            if (!ok)
             {
-                ok = ui->comp_DbLogin->isUserAuthenticated();
-                if (!ok)
-                {
-                    ui->wp7_Credentials->showOverlayHTMLMessage("No user credentials, read login hints!", 10 * 1000);
-                }
+                ui->wp7_Credentials->showOverlayHTMLMessage("No user credentials, read login hints!", 10 * 1000);
             }
-            break;
+        }
+        break;
         default:
-            {
-                ok = true;
-            }
-            break;
+        {
+            ok = true;
+        }
+        break;
         }
 
         return ok;

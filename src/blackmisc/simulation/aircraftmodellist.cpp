@@ -39,11 +39,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Simulation, CAircraftModel, CAircraftMod
 
 namespace BlackMisc::Simulation
 {
-    CAircraftModelList::CAircraftModelList() { }
+    CAircraftModelList::CAircraftModelList() {}
 
-    CAircraftModelList::CAircraftModelList(const CSequence<CAircraftModel> &other) :
-        CSequence<CAircraftModel>(other)
-    { }
+    CAircraftModelList::CAircraftModelList(const CSequence<CAircraftModel> &other) : CSequence<CAircraftModel>(other)
+    {}
 
     bool CAircraftModelList::containsModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
     {
@@ -73,8 +72,7 @@ namespace BlackMisc::Simulation
     {
         if (combinedType.isEmpty()) { return false; }
         const QString ct(combinedType.toUpper().trimmed());
-        return this->containsBy([ & ](const CAircraftModel & model)
-        {
+        return this->containsBy([&](const CAircraftModel &model) {
             return model.getAircraftIcaoCode().getCombinedType() == ct;
         });
     }
@@ -97,16 +95,14 @@ namespace BlackMisc::Simulation
 
     CAircraftModelList CAircraftModelList::findByModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
     {
-        return this->findBy([ & ](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             return model.matchesModelString(modelString, sensitivity);
         });
     }
 
     CAircraftModelList CAircraftModelList::findEmptyModelStrings() const
     {
-        return this->findBy([ & ](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             return !model.hasModelString();
         });
     }
@@ -114,8 +110,7 @@ namespace BlackMisc::Simulation
     CAircraftModel CAircraftModelList::findFirstByModelStringOrDefault(const QString &modelString, Qt::CaseSensitivity sensitivity) const
     {
         if (modelString.isEmpty()) { return CAircraftModel(); }
-        return this->findFirstByOrDefault([ & ](const CAircraftModel & model)
-        {
+        return this->findFirstByOrDefault([&](const CAircraftModel &model) {
             return model.matchesModelString(modelString, sensitivity);
         });
     }
@@ -123,8 +118,7 @@ namespace BlackMisc::Simulation
     CAircraftModel CAircraftModelList::findFirstByModelStringAliasOrDefault(const QString &modelString, Qt::CaseSensitivity sensitivity) const
     {
         if (modelString.isEmpty()) { return CAircraftModel(); }
-        return this->findFirstByOrDefault([ & ](const CAircraftModel & model)
-        {
+        return this->findFirstByOrDefault([&](const CAircraftModel &model) {
             return model.matchesModelStringOrAlias(modelString, sensitivity);
         });
     }
@@ -132,8 +126,7 @@ namespace BlackMisc::Simulation
     CAircraftModel CAircraftModelList::findFirstByCallsignOrDefault(const CCallsign &callsign) const
     {
         if (callsign.isEmpty()) { return CAircraftModel(); }
-        return this->findFirstByOrDefault([ & ](const CAircraftModel & model)
-        {
+        return this->findFirstByOrDefault([&](const CAircraftModel &model) {
             return model.getCallsign() == callsign;
         });
     }
@@ -145,22 +138,19 @@ namespace BlackMisc::Simulation
 
         if (airline.isEmpty())
         {
-            return this->findBy([ & ](const CAircraftModel & model)
-            {
+            return this->findBy([&](const CAircraftModel &model) {
                 return model.getAircraftIcaoCode().getDesignator() == aircraft;
             });
         }
         if (aircraft.isEmpty())
         {
-            return this->findBy([ & ](const CAircraftModel & model)
-            {
+            return this->findBy([&](const CAircraftModel &model) {
                 return model.getAirlineIcaoCode().getDesignator() == airline;
             });
         }
-        return this->findBy([ & ](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             return model.getAirlineIcaoCode().getDesignator() == airline &&
-                    model.getAircraftIcaoCode().getDesignator() == aircraft;
+                   model.getAircraftIcaoCode().getDesignator() == aircraft;
         });
     }
 
@@ -172,8 +162,7 @@ namespace BlackMisc::Simulation
     CAircraftModelList CAircraftModelList::findByAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const
     {
         if (aircraftDesignator.isEmpty()) { return CAircraftModelList(); }
-        return this->findBy([ & ](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             if (!model.getAircraftIcaoCode().matchesDesignator(aircraftDesignator)) { return false; }
             return model.getLivery().matchesCombinedCode(combinedCode);
         });
@@ -188,16 +177,14 @@ namespace BlackMisc::Simulation
     {
         const int id = airline.getGroupId();
         if (id < 0) return {};
-        return this->findBy([ & ](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             return model.getAirlineIcaoCode().getGroupId() == id;
         });
     }
 
     CAircraftModelList CAircraftModelList::findByAirlineNameAndTelephonyDesignator(const QString &name, const QString &telephony, bool onlyIfExistInModel) const
     {
-        return this->findBy([ & ](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             if (!model.hasAirlineDesignator() || !model.hasValidDbKey()) { return false; }
             const CAirlineIcaoCode &icao = model.getAirlineIcaoCode();
             if (!name.isEmpty() && (icao.hasName() || !onlyIfExistInModel))
@@ -215,8 +202,7 @@ namespace BlackMisc::Simulation
 
     CAircraftModelList CAircraftModelList::findByAirlineNamesOrTelephonyDesignator(const QString &name) const
     {
-        return this->findBy([ & ](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             if (!model.hasAirlineDesignator() || !model.hasValidDbKey()) { return false; }
             const CAirlineIcaoCode &icao = model.getAirlineIcaoCode();
             return icao.matchesNamesOrTelephonyDesignator(name);
@@ -227,8 +213,7 @@ namespace BlackMisc::Simulation
     {
         if (!livery.hasCombinedCode()) { return CAircraftModelList(); }
         const QString code(livery.getCombinedCode());
-        return this->findBy([ & ](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             if (!model.getLivery().hasCombinedCode()) return false;
             return model.getLivery().getCombinedCode() == code;
         });
@@ -236,24 +221,21 @@ namespace BlackMisc::Simulation
 
     CAircraftModelList CAircraftModelList::findWithFileName() const
     {
-        return this->findBy([](const CAircraftModel & model)
-        {
+        return this->findBy([](const CAircraftModel &model) {
             return model.hasFileName();
         });
     }
 
     CAircraftModelList CAircraftModelList::findByDistributor(const CDistributor &distributor) const
     {
-        return this->findBy([ & ](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             return model.getDistributor() == distributor;
         });
     }
 
     CAircraftModelList CAircraftModelList::findWithAircraftDesignator() const
     {
-        return this->findBy([](const CAircraftModel & model)
-        {
+        return this->findBy([](const CAircraftModel &model) {
             return model.hasAircraftDesignator();
         });
     }
@@ -261,16 +243,14 @@ namespace BlackMisc::Simulation
     CAircraftModelList CAircraftModelList::findWithAircraftDesignator(const QSet<QString> &designators) const
     {
         if (designators.isEmpty()) { return CAircraftModelList(); }
-        return this->findBy([&](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             return designators.contains(model.getAircraftIcaoCodeDesignator());
         });
     }
 
     CAircraftModelList CAircraftModelList::findWithKnownAircraftDesignator() const
     {
-        return this->findBy([](const CAircraftModel & model)
-        {
+        return this->findBy([](const CAircraftModel &model) {
             return model.hasKnownAircraftDesignator();
         });
     }
@@ -279,8 +259,7 @@ namespace BlackMisc::Simulation
     {
         if (manufacturer.isEmpty()) { return CAircraftModelList(); }
         const QString m(manufacturer.toUpper().trimmed());
-        return this->findBy([ & ](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             return model.getAircraftIcaoCode().getManufacturer() == m;
         });
     }
@@ -289,8 +268,7 @@ namespace BlackMisc::Simulation
     {
         if (family.isEmpty()) { return CAircraftModelList(); }
         const QString f(family.toUpper().trimmed());
-        return this->findBy([ & ](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             const CAircraftIcaoCode icao(model.getAircraftIcaoCode());
             if (!icao.hasFamily()) { return false; }
             return icao.getFamily() == f;
@@ -301,8 +279,7 @@ namespace BlackMisc::Simulation
     {
         if (family.isEmpty()) { return CAircraftModelList(); }
         const QString f(family.toUpper().trimmed());
-        return this->findBy([ & ](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             if (!model.getLivery().isColorLivery()) { return false; }
             const CAircraftIcaoCode icao(model.getAircraftIcaoCode());
             if (!icao.hasFamily()) { return false; }
@@ -312,8 +289,7 @@ namespace BlackMisc::Simulation
 
     CAircraftModelList CAircraftModelList::findByDesignatorOrFamilyWithColorLivery(const CAircraftIcaoCode &icao) const
     {
-        return this->findBy([ & ](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             if (!model.getLivery().isColorLivery()) { return false; }
             const CAircraftIcaoCode modelIcao(model.getAircraftIcaoCode());
             if (modelIcao.getDesignator() == icao.getDesignator()) { return true; }
@@ -323,8 +299,7 @@ namespace BlackMisc::Simulation
 
     CAircraftModelList CAircraftModelList::findByDesignatorsOrFamilyWithColorLivery(const QStringList &designators) const
     {
-        return this->findBy([ & ](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             if (!model.getLivery().isColorLivery()) { return false; }
             const CAircraftIcaoCode modelIcao(model.getAircraftIcaoCode());
             if (designators.contains(modelIcao.getDesignator())) { return true; }
@@ -336,8 +311,7 @@ namespace BlackMisc::Simulation
     {
         const QString cc(combinedType.trimmed().toUpper());
         if (combinedType.length() != 3) { return CAircraftModelList(); }
-        return this->findBy([ & ](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             const CAircraftIcaoCode icao(model.getAircraftIcaoCode());
             return icao.matchesCombinedType(cc);
         });
@@ -348,8 +322,7 @@ namespace BlackMisc::Simulation
         const CAircraftModelList ml = this->findByCombinedType(combinedType);
         if (ml.isEmpty()) { return ml; }
         const QString wtcUc(wtc.toUpper().trimmed());
-        return this->findBy([ & ](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             const CAircraftIcaoCode icao(model.getAircraftIcaoCode());
             return icao.getWtc() == wtcUc;
         });
@@ -374,8 +347,7 @@ namespace BlackMisc::Simulation
     {
         if (manufacturer.isEmpty()) { return this->findByCombinedType(combinedType); }
         if (combinedType.isEmpty()) { return this->findByManufacturer(manufacturer); }
-        return this->findBy([ & ](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             return model.getAircraftIcaoCode().matchesCombinedTypeAndManufacturer(combinedType, manufacturer);
         });
     }
@@ -410,32 +382,28 @@ namespace BlackMisc::Simulation
 
     CAircraftModelList CAircraftModelList::findColorLiveries() const
     {
-        return this->findBy([ = ](const CAircraftModel & model)
-        {
+        return this->findBy([=](const CAircraftModel &model) {
             return model.getLivery().isColorLivery();
         });
     }
 
     CAircraftModelList CAircraftModelList::findByMilitaryFlag(bool military) const
     {
-        return this->findBy([ = ](const CAircraftModel & model)
-        {
+        return this->findBy([=](const CAircraftModel &model) {
             return (model.isMilitary() == military);
         });
     }
 
     CAircraftModelList CAircraftModelList::findByVtolFlag(bool vtol) const
     {
-        return this->findBy([ = ](const CAircraftModel & model)
-        {
+        return this->findBy([=](const CAircraftModel &model) {
             return (model.isVtol() == vtol);
         });
     }
 
     CAircraftModelList CAircraftModelList::findByModelMode(CAircraftModel::ModelMode mode) const
     {
-        return this->findBy([ = ](const CAircraftModel & model)
-        {
+        return this->findBy([=](const CAircraftModel &model) {
             return (model.getModelMode() == mode);
         });
     }
@@ -443,8 +411,7 @@ namespace BlackMisc::Simulation
     CAircraftModelList CAircraftModelList::findByCategoryFirstLevel(int firstLevel) const
     {
         if (firstLevel < 0) { return CAircraftModelList(); }
-        return this->findBy([ = ](const CAircraftModel & model)
-        {
+        return this->findBy([=](const CAircraftModel &model) {
             return (model.hasCategory() && model.getAircraftIcaoCode().getCategory().getFirstLevel() == firstLevel);
         });
     }
@@ -452,8 +419,7 @@ namespace BlackMisc::Simulation
     CAircraftModelList CAircraftModelList::findByCategory(const CAircraftCategory &category) const
     {
         if (category.isNull()) { return CAircraftModelList(); }
-        return this->findBy([ = ](const CAircraftModel & model)
-        {
+        return this->findBy([=](const CAircraftModel &model) {
             return (model.hasCategory() && model.getAircraftIcaoCode().getCategory() == category);
         });
     }
@@ -461,40 +427,35 @@ namespace BlackMisc::Simulation
     CAircraftModelList CAircraftModelList::findByCategories(const CAircraftCategoryList &categories) const
     {
         if (categories.isEmpty()) { return CAircraftModelList(); }
-        return this->findBy([ = ](const CAircraftModel & model)
-        {
+        return this->findBy([=](const CAircraftModel &model) {
             return (model.hasCategory() && categories.contains(model.getAircraftIcaoCode().getCategory()));
         });
     }
 
     CAircraftModelList CAircraftModelList::findFsFamilyModels() const
     {
-        return this->findBy([](const CAircraftModel & model)
-        {
+        return this->findBy([](const CAircraftModel &model) {
             return model.getSimulator().isMicrosoftOrPrepare3DSimulator();
         });
     }
 
     CAircraftModelList CAircraftModelList::findNonFsFamilyModels() const
     {
-        return this->findBy([](const CAircraftModel & model)
-        {
+        return this->findBy([](const CAircraftModel &model) {
             return !model.getSimulator().isMicrosoftOrPrepare3DSimulator();
         });
     }
 
     CAircraftModelList CAircraftModelList::findWithValidDbKey() const
     {
-        return this->findBy([](const CAircraftModel & model)
-        {
+        return this->findBy([](const CAircraftModel &model) {
             return model.hasValidDbKey();
         });
     }
 
     CAircraftModelList CAircraftModelList::findWithoutValidDbKey() const
     {
-        return this->findBy([](const CAircraftModel & model)
-        {
+        return this->findBy([](const CAircraftModel &model) {
             return !model.hasValidDbKey();
         });
     }
@@ -509,8 +470,7 @@ namespace BlackMisc::Simulation
     CAircraftModelList CAircraftModelList::findNonDbModelsForAirline(const QString &airline) const
     {
         const CAircraftModelList noDb = this->findWithoutValidDbKey();
-        return noDb.findBy([&](const CAircraftModel & model)
-        {
+        return noDb.findBy([&](const CAircraftModel &model) {
             return model.getAirlineIcaoCode().matchesDesignator(airline);
         });
     }
@@ -518,8 +478,7 @@ namespace BlackMisc::Simulation
     CAircraftModelList CAircraftModelList::findNonDbModelsForAircraft(const QString &airline) const
     {
         const CAircraftModelList noDb = this->findWithoutValidDbKey();
-        return noDb.findBy([&](const CAircraftModel & model)
-        {
+        return noDb.findBy([&](const CAircraftModel &model) {
             return model.getAircraftIcaoCode().matchesDesignator(airline);
         });
     }
@@ -527,16 +486,14 @@ namespace BlackMisc::Simulation
     CAircraftModelList CAircraftModelList::findNonDbModelsForModelString(const QString &modelString) const
     {
         const CAircraftModelList noDb = this->findWithoutValidDbKey();
-        return noDb.findBy([&](const CAircraftModel & model)
-        {
+        return noDb.findBy([&](const CAircraftModel &model) {
             return model.matchesModelString(modelString, Qt::CaseInsensitive);
         });
     }
 
     CAircraftModelList CAircraftModelList::findAllIncludedModels() const
     {
-        return this->findBy([](const CAircraftModel & model)
-        {
+        return this->findBy([](const CAircraftModel &model) {
             return model.getModelMode() == CAircraftModel::Include;
         });
     }
@@ -550,8 +507,7 @@ namespace BlackMisc::Simulation
 
     CAircraftModelList CAircraftModelList::findAllExcludedModels() const
     {
-        return this->findBy([](const CAircraftModel & model)
-        {
+        return this->findBy([](const CAircraftModel &model) {
             return model.getModelMode() == CAircraftModel::Exclude;
         });
     }
@@ -674,16 +630,14 @@ namespace BlackMisc::Simulation
 
     CAircraftModelList CAircraftModelList::findModelsWithoutExistingFile() const
     {
-        return this->findBy([](const CAircraftModel & model)
-        {
+        return this->findBy([](const CAircraftModel &model) {
             return !model.hasExistingCorrespondingFile();
         });
     }
 
     CAircraftModelList CAircraftModelList::findModelsWithExistingFile() const
     {
-        return this->findBy([](const CAircraftModel & model)
-        {
+        return this->findBy([](const CAircraftModel &model) {
             return model.hasExistingCorrespondingFile();
         });
     }
@@ -705,40 +659,35 @@ namespace BlackMisc::Simulation
 
     CAircraftModelList CAircraftModelList::matchesSimulator(const CSimulatorInfo &simulator) const
     {
-        return this->findBy([ & ](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             return model.matchesSimulator(simulator);
         });
     }
 
     bool CAircraftModelList::containsMatchingSimulator(const CSimulatorInfo &simulators) const
     {
-        return this->containsBy([ & ](const CAircraftModel & model)
-        {
+        return this->containsBy([&](const CAircraftModel &model) {
             return model.matchesSimulator(simulators);
         });
     }
 
     bool CAircraftModelList::containsNotMatchingSimulator(const CSimulatorInfo &simulators) const
     {
-        return this->containsBy([ & ](const CAircraftModel & model)
-        {
+        return this->containsBy([&](const CAircraftModel &model) {
             return !model.matchesSimulator(simulators);
         });
     }
 
     bool CAircraftModelList::containsMilitary() const
     {
-        return this->containsBy([ & ](const CAircraftModel & model)
-        {
+        return this->containsBy([&](const CAircraftModel &model) {
             return model.isMilitary();
         });
     }
 
     bool CAircraftModelList::containsCivilian() const
     {
-        return this->containsBy([ & ](const CAircraftModel & model)
-        {
+        return this->containsBy([&](const CAircraftModel &model) {
             return model.isCivilian();
         });
     }
@@ -750,16 +699,14 @@ namespace BlackMisc::Simulation
 
     bool CAircraftModelList::containsVtol() const
     {
-        return this->containsBy([ & ](const CAircraftModel & model)
-        {
+        return this->containsBy([&](const CAircraftModel &model) {
             return model.isVtol();
         });
     }
 
     bool CAircraftModelList::containsCategory() const
     {
-        return this->containsBy([ & ](const CAircraftModel & model)
-        {
+        return this->containsBy([&](const CAircraftModel &model) {
             return model.hasCategory();
         });
     }
@@ -767,8 +714,7 @@ namespace BlackMisc::Simulation
     bool CAircraftModelList::containsCategory(int firstLevel) const
     {
         if (firstLevel < 0) { return false; }
-        return this->containsBy([ & ](const CAircraftModel & model)
-        {
+        return this->containsBy([&](const CAircraftModel &model) {
             return model.hasCategory() && model.getAircraftIcaoCode().getCategory().getFirstLevel() == firstLevel;
         });
     }
@@ -776,8 +722,7 @@ namespace BlackMisc::Simulation
     CAircraftModelList CAircraftModelList::findByDistributors(const CDistributorList &distributors) const
     {
         if (distributors.isEmpty()) { return CAircraftModelList(); }
-        return this->findBy([ & ](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             return model.matchesAnyDbDistributor(distributors);
         });
     }
@@ -882,7 +827,7 @@ namespace BlackMisc::Simulation
     {
         if (modelString.isEmpty()) { return false; }
         if (this->isEmpty()) { return false; }
-        const int r = this->removeIf([&](const CAircraftModel & model) { return model.matchesModelString(modelString, sensitivity); });
+        const int r = this->removeIf([&](const CAircraftModel &model) { return model.matchesModelString(modelString, sensitivity); });
         return r > 0;
     }
 
@@ -928,7 +873,7 @@ namespace BlackMisc::Simulation
             if (!model.hasModelString()) { continue; }
             withModelStr.push_back(model);
         }
-        const int diff =  s - withModelStr.size();
+        const int diff = s - withModelStr.size();
         if (diff < 1) { return 0; }
         *this = withModelStr;
         return diff;
@@ -944,7 +889,7 @@ namespace BlackMisc::Simulation
             if (model.getModelMode() == CAircraftModel::Exclude) { continue; }
             onlyIncluded.push_back(model);
         }
-        const int diff =  s - onlyIncluded.size();
+        const int diff = s - onlyIncluded.size();
         if (diff < 1) { return 0; }
         *this = onlyIncluded;
         return diff;
@@ -1013,7 +958,7 @@ namespace BlackMisc::Simulation
         CAircraftModelList newModels(*this);
         const QStringList keys(addOrReplaceList.getModelStringList(false));
         newModels.removeModelsWithString(keys, sensitivity);
-        int removed = newModels.size();  // size after removing
+        int removed = newModels.size(); // size after removing
         newModels.push_back(addOrReplaceList);
         *this = newModels;
         return this->size() - removed;
@@ -1021,24 +966,21 @@ namespace BlackMisc::Simulation
 
     CAircraftModelList CAircraftModelList::findModelsStartingWith(const QString &modelString, Qt::CaseSensitivity sensitivity) const
     {
-        return this->findBy([ & ](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             return model.getModelString().startsWith(modelString, sensitivity);
         });
     }
 
     CAircraftModelList CAircraftModelList::findByModelStrings(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity) const
     {
-        return this->findBy([ & ](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             return modelStrings.contains(model.getModelString(), sensitivity);
         });
     }
 
     CAircraftModelList CAircraftModelList::findByNotInModelStrings(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity) const
     {
-        return this->findBy([&](const CAircraftModel & model)
-        {
+        return this->findBy([&](const CAircraftModel &model) {
             const bool c = modelStrings.contains(model.getModelString(), sensitivity);
             return !c;
         });
@@ -1383,12 +1325,12 @@ namespace BlackMisc::Simulation
         for (const CAircraftModel &model : *this)
         {
             const QString s = (model.hasAircraftDesignator() ?
-                                (withDbId ? model.getAircraftIcaoCode().getDesignatorDbKey() : model.getAircraftIcaoCodeDesignator()) :
-                                "no aircraft") %
-                                u"/" %
-                                (model.hasAircraftDesignator() ?
-                                (withDbId ? model.getAirlineIcaoCode().getDesignatorDbKey() : model.getAirlineIcaoCodeVDesignator()) :
-                                "no airline");
+                                   (withDbId ? model.getAircraftIcaoCode().getDesignatorDbKey() : model.getAircraftIcaoCodeDesignator()) :
+                                   "no aircraft") %
+                              u"/" %
+                              (model.hasAircraftDesignator() ?
+                                   (withDbId ? model.getAirlineIcaoCode().getDesignatorDbKey() : model.getAirlineIcaoCodeVDesignator()) :
+                                   "no airline");
             str.insert(s);
         }
         return str;
@@ -1422,7 +1364,7 @@ namespace BlackMisc::Simulation
         int found = 0;
         for (CAircraftModel &model : *this)
         {
-            if (model.setDistributorOrder(distributors)) { found ++; }
+            if (model.setDistributorOrder(distributors)) { found++; }
         }
         return found;
     }
@@ -1502,7 +1444,7 @@ namespace BlackMisc::Simulation
             }
 
             const CStatusMessage msgDb(CStatusMessage::SeverityError, subMsgs.join(", "));
-            CStatusMessage singleMsg(CStatusMessageList({msgModel, msgDb}).toSingleMessage());
+            CStatusMessage singleMsg(CStatusMessageList({ msgModel, msgDb }).toSingleMessage());
             if (!singleMsg.isWarningOrAbove())
             {
                 CAircraftModelList::addAsValidOrInvalidModel(model, true, validModels, invalidModels);
@@ -1568,10 +1510,8 @@ namespace BlackMisc::Simulation
 
         const bool caseSensitive = CFileUtils::isFileNameCaseSensitive();
         const QString simRootDir = CFileUtils::normalizeFilePathToQtStandard(
-                                        CFileUtils::stripLeadingSlashOrDriveLetter(
-                                            caseSensitive ? simRootDirectory : simRootDirectory.toLower()
-                                        )
-                                    );
+            CFileUtils::stripLeadingSlashOrDriveLetter(
+                caseSensitive ? simRootDirectory : simRootDirectory.toLower()));
 
         for (const CAircraftModel &model : std::as_const(sorted))
         {
@@ -1634,7 +1574,7 @@ namespace BlackMisc::Simulation
         }
 
         // Summary
-        if (!validModels.isEmpty())   { msgs.push_back(CStatusMessage(this).validationInfo(u"File validation, valid models: %1") << validModels.size()); }
+        if (!validModels.isEmpty()) { msgs.push_back(CStatusMessage(this).validationInfo(u"File validation, valid models: %1") << validModels.size()); }
         if (!invalidModels.isEmpty()) { msgs.push_back(CStatusMessage(this).validationWarning(u"File validation, invalid models: %1") << invalidModels.size()); }
 
         // done
@@ -1710,8 +1650,8 @@ namespace BlackMisc::Simulation
         }
         else
         {
-            if (undefAc)   { throw CJsonException("Missing 'aircraftIcaos'"); }
-            if (undefLiv)  { throw CJsonException("Missing 'liveries'"); }
+            if (undefAc) { throw CJsonException("Missing 'aircraftIcaos'"); }
+            if (undefLiv) { throw CJsonException("Missing 'liveries'"); }
             if (undefDist) { throw CJsonException("Missing 'distributors'"); }
         }
 
@@ -1768,8 +1708,8 @@ namespace BlackMisc::Simulation
         for (const CAircraftModel &model : *this)
         {
             html += html.isEmpty() ?
-                    model.asHtmlSummary(" ") :
-                    u"<br>" % model.asHtmlSummary(" ");
+                        model.asHtmlSummary(" ") :
+                        u"<br>" % model.asHtmlSummary(" ");
         }
         return html;
     }
@@ -1780,21 +1720,20 @@ namespace BlackMisc::Simulation
 
         const int dbEntries = this->countWithValidDbKey();
         const double dbRatio = CMathUtils::round(static_cast<double>(100 * dbEntries) / this->size(), 1);
-        return
-            u"Entries: " % QString::number(this->size()) %
-            u" | valid DB keys: " % QString::number(dbEntries) %
-            u" (" % QString::number(dbRatio) % u"%)" % separator %
-            u"color liveries: " % QString::number(this->countModelsWithColorLivery()) %
-            u" | airline liveries: " % QString::number(this->countModelsWithAirlineLivery()) % separator %
-            u"VTOL: " % QString::number(this->countVtolAircraft()) %
-            u" | military: " % QString::number(this->countMilitaryAircraft()) %
-            u" | civilian: " % QString::number(this->countCivilianAircraft()) % separator %
-            u"Different airlines: " % QString::number(this->countDifferentAirlines()) % separator %
-            u"Combined types: '" % this->getCombinedTypesAsString() % u'\'' % separator %
-            (this->size() <= 25 ?
-                (u"Aircraft/airlines: " % this->getAicraftAndAirlineDesignatorsAsString(true) % separator) :
-                QString()) %
-            u"Simulators: " % this->countPerSimulator().toQString();
+        return u"Entries: " % QString::number(this->size()) %
+               u" | valid DB keys: " % QString::number(dbEntries) %
+               u" (" % QString::number(dbRatio) % u"%)" % separator %
+               u"color liveries: " % QString::number(this->countModelsWithColorLivery()) %
+               u" | airline liveries: " % QString::number(this->countModelsWithAirlineLivery()) % separator %
+               u"VTOL: " % QString::number(this->countVtolAircraft()) %
+               u" | military: " % QString::number(this->countMilitaryAircraft()) %
+               u" | civilian: " % QString::number(this->countCivilianAircraft()) % separator %
+               u"Different airlines: " % QString::number(this->countDifferentAirlines()) % separator %
+               u"Combined types: '" % this->getCombinedTypesAsString() % u'\'' % separator %
+               (this->size() <= 25 ?
+                    (u"Aircraft/airlines: " % this->getAicraftAndAirlineDesignatorsAsString(true) % separator) :
+                    QString()) %
+               u"Simulators: " % this->countPerSimulator().toQString();
     }
 
     QString CAircraftModelList::coverageSummaryForModel(const CAircraftModel &checkModel, const QString &separator) const
@@ -1802,12 +1741,10 @@ namespace BlackMisc::Simulation
         const bool combinedCodeForModel = this->containsCombinedType(checkModel.getAircraftIcaoCode().getCombinedType());
         const bool airlineForModel = checkModel.hasAirlineDesignator() && this->containsAirlineLivery(checkModel.getAirlineIcaoCode());
         return coverageSummary(separator) % separator %
-                u"Data for input model, has combined: " % boolToYesNo(combinedCodeForModel) %
-                (
-                    checkModel.hasAirlineDesignator() ?
+               u"Data for input model, has combined: " % boolToYesNo(combinedCodeForModel) %
+               (checkModel.hasAirlineDesignator() ?
                     u" airline '" % checkModel.getAirlineIcaoCodeDesignator() % u"': " % boolToYesNo(airlineForModel) :
-                    QString()
-                );
+                    QString());
     }
 
     QString CAircraftModelList::htmlStatistics(bool aircraftStats, bool airlineStats) const
@@ -1821,8 +1758,8 @@ namespace BlackMisc::Simulation
             QStringList designators(icaos.allDesignators().values());
             designators.sort();
             stats += sep % sep %
-                        u"Aircraft ICAOs from DB: " % sep %
-                        designators.join(", ");
+                     u"Aircraft ICAOs from DB: " % sep %
+                     designators.join(", ");
         }
 
         if (airlineStats)
@@ -1830,18 +1767,18 @@ namespace BlackMisc::Simulation
             const CAirlineIcaoCodeList icaos = this->getAirlineIcaoCodesFromDb();
             const QStringList designators = icaos.toIcaoDesignatorCompleterStrings();
             stats += sep % sep %
-                        u"Airline ICAOs from DB: " % sep %
-                        designators.join(", ");
+                     u"Airline ICAOs from DB: " % sep %
+                     designators.join(", ");
         }
 
         if (notOnlyDb)
         {
             const CAircraftModelList dbModels = this->findObjectsWithDbKey();
             stats += sep %
-                        sep %
-                        u"DB objects:<br>---------" %
-                        sep %
-                        dbModels.htmlStatistics(false, false);
+                     sep %
+                     u"DB objects:<br>---------" %
+                     sep %
+                     dbModels.htmlStatistics(false, false);
         }
         return stats;
     }
@@ -1868,12 +1805,11 @@ namespace BlackMisc::Simulation
         const CAircraftIcaoCodeList &icaos,
         const CAircraftCategoryList &categories,
         const CLiveryList &liveries,
-        const CDistributorList &distributors
-    )
+        const CDistributorList &distributors)
     {
         AircraftIcaoIdMap aircraftIcaosMap = icaos.toDbKeyValueMap();
-        LiveryIdMap       liveriesMap = liveries.toDbKeyValueMap();
-        DistributorIdMap  distributorsMap = distributors.toDbKeyValueMap();
+        LiveryIdMap liveriesMap = liveries.toDbKeyValueMap();
+        DistributorIdMap distributorsMap = distributors.toDbKeyValueMap();
         const AircraftCategoryIdMap categoriesMap = categories.toDbKeyValueMap();
 
         CAircraftModelList models;

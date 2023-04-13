@@ -14,8 +14,7 @@ using namespace BlackGui::Models;
 
 namespace BlackGui::Views
 {
-    CDistributorView::CDistributorView(QWidget *parent) :
-        COrderableViewWithDbObjects(parent)
+    CDistributorView::CDistributorView(QWidget *parent) : COrderableViewWithDbObjects(parent)
     {
         this->standardInit(new CDistributorListModel(this));
         this->setMenu(MenuDefaultDbViews);

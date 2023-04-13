@@ -25,8 +25,7 @@ using namespace BlackSound;
 
 namespace BlackCore::Afv::Audio
 {
-    CAudioInputBuffer::CAudioInputBuffer(QObject *parent) :
-        QIODevice(parent)
+    CAudioInputBuffer::CAudioInputBuffer(QObject *parent) : QIODevice(parent)
     {
         this->setObjectName("CAudioInputBuffer");
     }
@@ -66,10 +65,9 @@ namespace BlackCore::Afv::Audio
         return len;
     }
 
-    CInput::CInput(int sampleRate, QObject *parent) :
-        QObject(parent),
-        m_sampleRate(sampleRate),
-        m_encoder(sampleRate, 1, OPUS_APPLICATION_VOIP)
+    CInput::CInput(int sampleRate, QObject *parent) : QObject(parent),
+                                                      m_sampleRate(sampleRate),
+                                                      m_encoder(sampleRate, 1, OPUS_APPLICATION_VOIP)
     {
         this->setObjectName("CInput");
         m_encoder.setBitRate(16 * 1024);
@@ -181,7 +179,7 @@ namespace BlackCore::Afv::Audio
             sample = static_cast<qint16>(value);
 
             qint16 sampleInput = qAbs(sample);
-            m_maxSampleInput   = qMax(qAbs(sampleInput), m_maxSampleInput);
+            m_maxSampleInput = qMax(qAbs(sampleInput), m_maxSampleInput);
         }
 
         int length;
@@ -194,11 +192,11 @@ namespace BlackCore::Afv::Audio
             InputVolumeStreamArgs inputVolumeStreamArgs;
             qint16 maxInt = std::numeric_limits<qint16>::max();
             inputVolumeStreamArgs.PeakRaw = static_cast<float>(m_maxSampleInput) / maxInt;
-            inputVolumeStreamArgs.PeakDB  = static_cast<float>(20 * std::log10(inputVolumeStreamArgs.PeakRaw));
+            inputVolumeStreamArgs.PeakDB = static_cast<float>(20 * std::log10(inputVolumeStreamArgs.PeakRaw));
             double db = qBound(minDb, inputVolumeStreamArgs.PeakDB, maxDb);
             double ratio = (db - minDb) / (maxDb - minDb);
             if (ratio < 0.30) { ratio = 0.0; }
-            if (ratio > 1.0)  { ratio = 1.0; }
+            if (ratio > 1.0) { ratio = 1.0; }
             inputVolumeStreamArgs.PeakVU = ratio;
             emit inputVolumeStream(inputVolumeStreamArgs);
             m_sampleCount = 0;

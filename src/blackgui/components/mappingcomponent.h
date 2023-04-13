@@ -33,15 +33,27 @@
 
 class QModelIndex;
 
-namespace Ui { class CMappingComponent; }
+namespace Ui
+{
+    class CMappingComponent;
+}
 namespace BlackMisc
 {
-    namespace Aviation { class CCallsign; }
-    namespace Simulation { class CSimulatedAircraft; }
+    namespace Aviation
+    {
+        class CCallsign;
+    }
+    namespace Simulation
+    {
+        class CSimulatedAircraft;
+    }
 }
 namespace BlackGui
 {
-    namespace Views { class CCheckBoxDelegate; }
+    namespace Views
+    {
+        class CCheckBoxDelegate;
+    }
     namespace Components
     {
         //! Mappings, models etc.
@@ -180,7 +192,7 @@ namespace BlackGui
             QScopedPointer<Ui::CMappingComponent> ui;
             QTimer m_updateTimer;
             bool m_missedRenderedAircraftUpdate = true; //! Rendered aircraft need update
-            BlackMisc::CTokenBucket m_bucket { 3, 5000, 1};
+            BlackMisc::CTokenBucket m_bucket { 3, 5000, 1 };
             BlackMisc::CSettingReadOnly<Settings::TViewUpdateSettings> m_settings { this, &CMappingComponent::settingsChanged }; //!< settings changed
             Views::CCheckBoxDelegate *m_currentMappingsViewDelegate = nullptr; //! checkbox in view
         };

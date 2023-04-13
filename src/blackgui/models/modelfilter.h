@@ -36,7 +36,8 @@
 namespace BlackGui::Models
 {
     //! Model filter interface
-    template<class ContainerType> class IModelFilter
+    template <class ContainerType>
+    class IModelFilter
     {
     public:
         //! Constructor
@@ -67,14 +68,15 @@ namespace BlackGui::Models
         //! Remove the * wildcards
         QString stripWildcard(const QString &value) const;
 
-        bool m_valid = false;  //!< is filter valid?
+        bool m_valid = false; //!< is filter valid?
 
     private:
         bool m_enabled = true; //!< is filter enabled?
     };
 
     //! Model filter interface for those who can generate such a filter (e.g. a widget or dialog)
-    template<class ContainerType> class IModelFilterProvider
+    template <class ContainerType>
+    class IModelFilterProvider
     {
     public:
         //! Get the filter, this is the filter itself, not its widget or dialog

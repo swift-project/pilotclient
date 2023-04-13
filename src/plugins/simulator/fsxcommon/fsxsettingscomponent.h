@@ -17,8 +17,14 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CFsxSettingsComponent; }
-namespace BlackGui { class COverlayMessagesFrame; }
+namespace Ui
+{
+    class CFsxSettingsComponent;
+}
+namespace BlackGui
+{
+    class COverlayMessagesFrame;
+}
 namespace BlackSimPlugin::FsxCommon
 {
     class CSimulatorFsxCommon;

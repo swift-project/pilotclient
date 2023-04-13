@@ -11,14 +11,13 @@
 
 namespace BlackGui::Components
 {
-    CCopyModelsFromOtherSwiftVersionsDialog::CCopyModelsFromOtherSwiftVersionsDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CCopyModelsFromOtherSwiftVersionsDialog)
+    CCopyModelsFromOtherSwiftVersionsDialog::CCopyModelsFromOtherSwiftVersionsDialog(QWidget *parent) : QDialog(parent),
+                                                                                                        ui(new Ui::CCopyModelsFromOtherSwiftVersionsDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
     CCopyModelsFromOtherSwiftVersionsDialog::~CCopyModelsFromOtherSwiftVersionsDialog()
-    { }
+    {}
 } // ns

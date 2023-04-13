@@ -34,9 +34,8 @@ namespace BlackCore::Afv::Connection
         return cats;
     }
 
-    CApiServerConnection::CApiServerConnection(const QString &address, QObject *parent) :
-        QObject(parent),
-        m_addressUrl(address)
+    CApiServerConnection::CApiServerConnection(const QString &address, QObject *parent) : QObject(parent),
+                                                                                          m_addressUrl(address)
     {
         CLogMessage(this).debug(u"ApiServerConnection instantiated");
     }
@@ -47,19 +46,18 @@ namespace BlackCore::Afv::Connection
 
         m_username = username;
         m_password = password;
-        m_client   = client;
-        m_networkVersion  = networkVersion;
+        m_client = client;
+        m_networkVersion = networkVersion;
         m_isAuthenticated = false;
 
         QUrl url(m_addressUrl);
         url.setPath("/api/v1/auth");
 
-        QJsonObject obj
-        {
-            {"username", username},
-            {"password", password},
-            {"networkversion", networkVersion.toString()},
-            {"client", client}
+        QJsonObject obj {
+            { "username", username },
+            { "password", password },
+            { "networkversion", networkVersion.toString() },
+            { "client", client }
         };
 
         QNetworkRequest request(url);
@@ -68,59 +66,56 @@ namespace BlackCore::Afv::Connection
 
         // posted in QAM thread, reply is nullptr if called from another thread
         sApp->postToNetwork(request, CApplication::NoLogRequestId, QJsonDocument(obj).toJson(),
-        {
-            this, [ = ](QNetworkReply * nwReply)
-            {
-                // called in "this" thread
-                const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
-                if (!myself || isShuttingDown()) { return; }
+                            { this, [=](QNetworkReply *nwReply) {
+                                 // called in "this" thread
+                                 const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
+                                 if (!myself || isShuttingDown()) { return; }
 
-                this->logRequestDuration(reply.data(), "authentication");
-                if (reply->error() != QNetworkReply::NoError)
-                {
-                    this->logReplyErrorMessage(reply.data(), "authentication error");
-                    callback(false);
-                    return;
-                }
+                                 this->logRequestDuration(reply.data(), "authentication");
+                                 if (reply->error() != QNetworkReply::NoError)
+                                 {
+                                     this->logReplyErrorMessage(reply.data(), "authentication error");
+                                     callback(false);
+                                     return;
+                                 }
 
-                // JWT authentication token
-                m_serverToUserOffsetMs = 0;
-                m_expiryLocalUtc = QDateTime(); // clean up
+                                 // JWT authentication token
+                                 m_serverToUserOffsetMs = 0;
+                                 m_expiryLocalUtc = QDateTime(); // clean up
 
-                m_jwt = reply->readAll().trimmed();
-                qint64 lifeTimeSecs = -1;
-                qint64 serverToUserOffsetSecs = -1;
-                do
-                {
-                    const QString jwtToken(m_jwt);
-                    const QJsonWebToken token = QJsonWebToken::fromTokenAndSecret(jwtToken, "");
+                                 m_jwt = reply->readAll().trimmed();
+                                 qint64 lifeTimeSecs = -1;
+                                 qint64 serverToUserOffsetSecs = -1;
+                                 do
+                                 {
+                                     const QString jwtToken(m_jwt);
+                                     const QJsonWebToken token = QJsonWebToken::fromTokenAndSecret(jwtToken, "");
 
-                    // get decoded header and payload
-                    // QString strHeader  = token.getHeaderQStr();
-                    // QString strPayload = token.getPayloadQStr();
-                    const QJsonDocument doc = token.getPayloadJDoc();
-                    if (doc.isEmpty() || !doc.isObject()) { break; }
-                    const qint64 validFromSecs = doc.object().value("nbf").toInt(-1);
-                    if (validFromSecs < 0) { break; }
-                    const qint64 localSecsSinceEpoch = QDateTime::currentSecsSinceEpoch();
-                    serverToUserOffsetSecs        = validFromSecs - localSecsSinceEpoch;
-                    const qint64 serverExpirySecs = doc.object().value("exp").toInt();
-                    const qint64 expiryLocalUtc   = serverExpirySecs - serverToUserOffsetSecs;
-                    lifeTimeSecs = expiryLocalUtc - localSecsSinceEpoch;
-                }
-                while (false);
+                                     // get decoded header and payload
+                                     // QString strHeader  = token.getHeaderQStr();
+                                     // QString strPayload = token.getPayloadQStr();
+                                     const QJsonDocument doc = token.getPayloadJDoc();
+                                     if (doc.isEmpty() || !doc.isObject()) { break; }
+                                     const qint64 validFromSecs = doc.object().value("nbf").toInt(-1);
+                                     if (validFromSecs < 0) { break; }
+                                     const qint64 localSecsSinceEpoch = QDateTime::currentSecsSinceEpoch();
+                                     serverToUserOffsetSecs = validFromSecs - localSecsSinceEpoch;
+                                     const qint64 serverExpirySecs = doc.object().value("exp").toInt();
+                                     const qint64 expiryLocalUtc = serverExpirySecs - serverToUserOffsetSecs;
+                                     lifeTimeSecs = expiryLocalUtc - localSecsSinceEpoch;
+                                 }
+                                 while (false);
 
-                if (lifeTimeSecs > 0)
-                {
-                    m_serverToUserOffsetMs = serverToUserOffsetSecs * 1000;
-                    m_expiryLocalUtc  = QDateTime::currentDateTimeUtc().addSecs(lifeTimeSecs);
-                    m_isAuthenticated = true;
-                }
+                                 if (lifeTimeSecs > 0)
+                                 {
+                                     m_serverToUserOffsetMs = serverToUserOffsetSecs * 1000;
+                                     m_expiryLocalUtc = QDateTime::currentDateTimeUtc().addSecs(lifeTimeSecs);
+                                     m_isAuthenticated = true;
+                                 }
 
-                // connected, callback
-                callback(m_isAuthenticated);
-            }
-        });
+                                 // connected, callback
+                                 callback(m_isAuthenticated);
+                             } });
     }
 
     PostCallsignResponseDto CApiServerConnection::addCallsign(const QString &callsign)
@@ -172,27 +167,24 @@ namespace BlackCore::Afv::Connection
 
         // posted in QAM thread, reply is nullptr if called from another thread
         sApp->getFromNetwork(request,
-        {
-            this, [ =, &receivedData ](QNetworkReply * nwReply)
-            {
-                const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
+                             { this, [=, &receivedData](QNetworkReply *nwReply) {
+                                  const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
 
-                // called in "this" thread
-                if (loop && !isShuttingDown())
-                {
-                    this->logRequestDuration(reply.data());
-                    if (reply->error() == QNetworkReply::NoError)
-                    {
-                        receivedData = reply->readAll();
-                    }
-                    else
-                    {
-                        this->logReplyErrorMessage(reply.data());
-                    }
-                }
-                if (loop) { loop->exit(); }
-            }
-        });
+                                  // called in "this" thread
+                                  if (loop && !isShuttingDown())
+                                  {
+                                      this->logRequestDuration(reply.data());
+                                      if (reply->error() == QNetworkReply::NoError)
+                                      {
+                                          receivedData = reply->readAll();
+                                      }
+                                      else
+                                      {
+                                          this->logReplyErrorMessage(reply.data());
+                                      }
+                                  }
+                                  if (loop) { loop->exit(); }
+                              } });
 
         if (loop) { loop->exec(); }
         return receivedData;
@@ -207,27 +199,24 @@ namespace BlackCore::Afv::Connection
 
         // posted in QAM thread, reply is nullptr if called from another thread
         sApp->postToNetwork(request, CApplication::NoLogRequestId, data,
-        {
-            this, [ =, &receivedData ](QNetworkReply * nwReply)
-            {
-                const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
+                            { this, [=, &receivedData](QNetworkReply *nwReply) {
+                                 const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
 
-                // called in "this" thread
-                if (loop && !isShuttingDown())
-                {
-                    this->logRequestDuration(reply.data());
-                    if (reply->error() == QNetworkReply::NoError)
-                    {
-                        receivedData = reply->readAll();
-                    }
-                    else
-                    {
-                        this->logReplyErrorMessage(reply.data());
-                    }
-                }
-                if (loop) { loop->exit(); }
-            }
-        });
+                                 // called in "this" thread
+                                 if (loop && !isShuttingDown())
+                                 {
+                                     this->logRequestDuration(reply.data());
+                                     if (reply->error() == QNetworkReply::NoError)
+                                     {
+                                         receivedData = reply->readAll();
+                                     }
+                                     else
+                                     {
+                                         this->logReplyErrorMessage(reply.data());
+                                     }
+                                 }
+                                 if (loop) { loop->exit(); }
+                             } });
 
         if (loop) { loop->exec(); }
         return receivedData;
@@ -246,19 +235,16 @@ namespace BlackCore::Afv::Connection
 
         // posted in QAM thread, reply is nullptr if called from another thread
         sApp->postToNetwork(request, CApplication::NoLogRequestId, json.toJson(),
-        {
-            this, [ = ](QNetworkReply * nwReply)
-            {
-                // called in "this" thread
-                const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
-                if (isShuttingDown()) { return; }
-                this->logRequestDuration(reply.data());
-                if (reply->error() != QNetworkReply::NoError)
-                {
-                    this->logReplyErrorMessage(reply.data());
-                }
-            }
-        });
+                            { this, [=](QNetworkReply *nwReply) {
+                                 // called in "this" thread
+                                 const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
+                                 if (isShuttingDown()) { return; }
+                                 this->logRequestDuration(reply.data());
+                                 if (reply->error() != QNetworkReply::NoError)
+                                 {
+                                     this->logReplyErrorMessage(reply.data());
+                                 }
+                             } });
     }
 
     void CApiServerConnection::deleteResource(const QString &resource)
@@ -273,19 +259,16 @@ namespace BlackCore::Afv::Connection
 
         // posted in QAM thread
         sApp->deleteResourceFromNetwork(request, CApplication::NoLogRequestId,
-        {
-            this, [ = ](QNetworkReply * nwReply)
-            {
-                // called in "this" thread
-                const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
-                if (isShuttingDown()) { return; }
-                this->logRequestDuration(reply.data());
-                if (reply->error() != QNetworkReply::NoError)
-                {
-                    this->logReplyErrorMessage(reply.data());
-                }
-            }
-        });
+                                        { this, [=](QNetworkReply *nwReply) {
+                                             // called in "this" thread
+                                             const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
+                                             if (isShuttingDown()) { return; }
+                                             this->logRequestDuration(reply.data());
+                                             if (reply->error() != QNetworkReply::NoError)
+                                             {
+                                                 this->logReplyErrorMessage(reply.data());
+                                             }
+                                         } });
     }
 
     void CApiServerConnection::checkExpiry()
@@ -294,13 +277,10 @@ namespace BlackCore::Afv::Connection
         {
             QPointer<CApiServerConnection> myself(this);
             this->connectTo(m_username, m_password, m_client, m_networkVersion,
-            {
-                this, [ = ](bool authenticated)
-                {
-                    if (!myself) { return; }
-                    CLogMessage(this).info(u"API server authenticated '%1': %2") << m_username << boolToYesNo(authenticated);
-                }
-            });
+                            { this, [=](bool authenticated) {
+                                 if (!myself) { return; }
+                                 CLogMessage(this).info(u"API server authenticated '%1': %2") << m_username << boolToYesNo(authenticated);
+                             } });
         }
     }
 
@@ -354,5 +334,4 @@ namespace BlackCore::Afv::Connection
         return !sApp || sApp->isShuttingDown();
     }
 
-}// ns
-
+} // ns

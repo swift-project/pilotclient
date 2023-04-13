@@ -62,9 +62,9 @@ namespace BlackMisc
         //! If one is sure(!) the name does not exists, \sa push_back() can be used
         bool addOrReplaceValue(const QString &name, const CVariant &value, const CIcon &icon = CIcon());
     };
-} //namespace
+} // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::CNameVariantPairList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::CNameVariantPair>)
 
-#endif //guard
+#endif // guard

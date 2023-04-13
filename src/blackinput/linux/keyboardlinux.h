@@ -60,7 +60,7 @@ namespace BlackInput
         bool isModifier(int keyCode);
         bool isMouseButton(int keyCode);
 
-        BlackMisc::Input::CHotkeyCombination m_keyCombination;    //!< Current status of pressed keys;
+        BlackMisc::Input::CHotkeyCombination m_keyCombination; //!< Current status of pressed keys;
 
         QFileSystemWatcher *m_devInputWatcher; //!< Watches the device file system for input devices
         QHash<QString, QSharedPointer<QFile>> m_keyboardDevices; //!< All known input devices

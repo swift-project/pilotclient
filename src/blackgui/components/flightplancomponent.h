@@ -33,7 +33,10 @@
 #include <QFileDialog>
 #include <QNetworkReply>
 
-namespace Ui { class CFlightPlanComponent; }
+namespace Ui
+{
+    class CFlightPlanComponent;
+}
 namespace BlackGui::Components
 {
     namespace FlightPlanSettings
@@ -45,7 +48,11 @@ namespace BlackGui::Components
             static const char *key() { return "flightplan/remarkshistory"; }
 
             //! \copydoc BlackMisc::TSettingTrait::humanReadable
-            static const QString &humanReadable() { static const QString name("FP remarks history"); return name; }
+            static const QString &humanReadable()
+            {
+                static const QString name("FP remarks history");
+                return name;
+            }
         };
 
         //! Additional remarks history
@@ -55,7 +62,11 @@ namespace BlackGui::Components
             static const char *key() { return "flightplan/remarkshistoryadd"; }
 
             //! \copydoc BlackMisc::TSettingTrait::humanReadable
-            static const QString &humanReadable() { static const QString name("FP remarks history (add)"); return name; }
+            static const QString &humanReadable()
+            {
+                static const QString name("FP remarks history (add)");
+                return name;
+            }
         };
     }
 
@@ -90,26 +101,34 @@ namespace BlackGui::Components
     private:
         static constexpr int OverlayTimeoutMs = 5000;
         QScopedPointer<Ui::CFlightPlanComponent> ui;
-        CAltitudeDialog         *m_altitudeDialog  = nullptr;
-        CStringListDialog       *m_fpRemarksDialog = nullptr;
-        CSimBriefDownloadDialog *m_simBriefDialog  = nullptr;
+        CAltitudeDialog *m_altitudeDialog = nullptr;
+        CStringListDialog *m_fpRemarksDialog = nullptr;
+        CSimBriefDownloadDialog *m_simBriefDialog = nullptr;
         BlackMisc::Aviation::CFlightPlan m_sentFlightPlan; //!< my flight plan
-        BlackMisc::Simulation::CAircraftModel m_model;     //!< currently used model
+        BlackMisc::Simulation::CAircraftModel m_model; //!< currently used model
         BlackMisc::CIdentifier m_identifier { "FlightPlanComponent", this }; //!< Flightplan identifier
-        BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings>       m_directories    { this }; //!< the swift directories
-        BlackMisc::CSetting<FlightPlanSettings::TRemarksHistory>           m_remarksHistory { this }; //!< remarks history
+        BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_directories { this }; //!< the swift directories
+        BlackMisc::CSetting<FlightPlanSettings::TRemarksHistory> m_remarksHistory { this }; //!< remarks history
         BlackMisc::CSetting<FlightPlanSettings::TRemarksHistoryAdditional> m_remarksHistoryAdditional { this }; //!< remarks history
-        BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::TLastModel>  m_lastAircraftModel { this }; //!< recently used aircraft model
-        BlackMisc::CDataReadOnly<BlackMisc::Network::Data::TLastServer>    m_lastServer        { this }; //!< recently used server (VATSIM, other)
+        BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
+        BlackMisc::CDataReadOnly<BlackMisc::Network::Data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
 
         //! Validate, generates status messages
         BlackMisc::CStatusMessageList validateAndInitializeFlightPlan(BlackMisc::Aviation::CFlightPlan &fligtPlan);
 
         //! Default value for ICAO airports
-        static const QString &defaultIcao() { static const QString d("ICAO"); return d; }
+        static const QString &defaultIcao()
+        {
+            static const QString d("ICAO");
+            return d;
+        }
 
         //! Default value for time
-        static const QString &defaultTime() { static const  QString t("00:00"); return t; }
+        static const QString &defaultTime()
+        {
+            static const QString t("00:00");
+            return t;
+        }
 
         //! Identifier
         const BlackMisc::CIdentifier &flightPlanIdentifier() const { return m_identifier; }
@@ -130,7 +149,11 @@ namespace BlackGui::Components
         QString getDefaultFilename(bool load);
 
         //! Call \sa buildRemarksString from combo box signal
-        void currentTextChangedToBuildRemarks(const QString &text) { this->buildRemarksString(); Q_UNUSED(text) }
+        void currentTextChangedToBuildRemarks(const QString &text)
+        {
+            this->buildRemarksString();
+            Q_UNUSED(text)
+        }
 
         //! Voice combo boxes shall display the same
         void syncVoiceComboBoxes(const QString &text);

@@ -45,8 +45,7 @@ namespace BlackMisc::PhysicalQuantities
         const double v = CMathUtils::round(value, digits);
 
         // create locale without separator
-        static const QLocale localeWithoutSeparator = []
-        {
+        static const QLocale localeWithoutSeparator = [] {
             QLocale q = QLocale::system();
             q.setNumberOptions(QLocale::OmitGroupSeparator);
             return q;

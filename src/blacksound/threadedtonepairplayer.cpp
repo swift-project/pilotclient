@@ -21,7 +21,7 @@ namespace BlackSound
     CThreadedTonePairPlayer::CThreadedTonePairPlayer(QObject *owner, const QString &name, const CAudioDeviceInfo &device)
         : CContinuousWorker(owner, name),
           m_deviceInfo(device)
-    { }
+    {}
 
     void CThreadedTonePairPlayer::play(int volume, const QList<CTonePair> &tonePairs)
     {
@@ -31,8 +31,7 @@ namespace BlackSound
 
         m_bufferData = this->getAudioByTonePairs(tonePairs);
         m_audioOutput->setVolume(static_cast<qreal>(0.01 * volume));
-        QTimer::singleShot(0, this, [ = ]
-        {
+        QTimer::singleShot(0, this, [=] {
             if (myself) { myself->playBuffer(); }
         });
     }
@@ -155,9 +154,9 @@ namespace BlackSound
                 // the combination of two frequencies actually would have 2*amplitude,
                 // but I have to normalize with amplitude -1 -> +1
                 amplitude = tonePair.getSecondFrequencyHz() == 0 ?
-                            qSin(2 * M_PI * tonePair.getFirstFrequencyHz() * pseudoTime) :
-                            qSin(M_PI * (tonePair.getFirstFrequencyHz() + tonePair.getSecondFrequencyHz()) * pseudoTime) *
-                            qCos(M_PI * (tonePair.getFirstFrequencyHz() - tonePair.getSecondFrequencyHz()) * pseudoTime);
+                                qSin(2 * M_PI * tonePair.getFirstFrequencyHz() * pseudoTime) :
+                                qSin(M_PI * (tonePair.getFirstFrequencyHz() + tonePair.getSecondFrequencyHz()) * pseudoTime) *
+                                    qCos(M_PI * (tonePair.getFirstFrequencyHz() - tonePair.getSecondFrequencyHz()) * pseudoTime);
             }
 
             // avoid overflow
@@ -204,7 +203,7 @@ namespace BlackSound
     {
         Q_ASSERT(this->m_audioFormat.sampleSize() == 16);
         Q_ASSERT(this->m_audioFormat.sampleType() == QAudioFormat::SignedInt);
-        Q_ASSERT(this->m_audioFormat.byteOrder()  == QAudioFormat::LittleEndian);
+        Q_ASSERT(this->m_audioFormat.byteOrder() == QAudioFormat::LittleEndian);
 
         const qint16 value = static_cast<qint16>(amplitude * 32767);
         qToLittleEndian<qint16>(value, bufferPointer);

@@ -13,8 +13,7 @@ using namespace BlackMisc;
 
 namespace BlackGui
 {
-    CTickLabel::CTickLabel(QWidget *parent) :
-        QLabel(parent)
+    CTickLabel::CTickLabel(QWidget *parent) : QLabel(parent)
     {
         this->setText("");
         this->setMargin(0);

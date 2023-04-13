@@ -32,7 +32,7 @@ namespace BlackMisc::Weather
 
         //! Constructor (used with unit tests)
         CWeatherDataPluginInfo(const QString &identifier, const QString &name,
-                                const QString &description, bool valid);
+                               const QString &description, bool valid);
 
         //! \copydoc BlackMisc::CValueObject::convertFromJson
         void convertFromJson(const QJsonObject &json);

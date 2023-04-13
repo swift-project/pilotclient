@@ -11,9 +11,8 @@
 
 namespace BlackGui::Components
 {
-    CSettingsFontDialog::CSettingsFontDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CSettingsFontDialog)
+    CSettingsFontDialog::CSettingsFontDialog(QWidget *parent) : QDialog(parent),
+                                                                ui(new Ui::CSettingsFontDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
@@ -24,7 +23,7 @@ namespace BlackGui::Components
     }
 
     CSettingsFontDialog::~CSettingsFontDialog()
-    { }
+    {}
 
     const QString &CSettingsFontDialog::getQss() const
     {

@@ -53,7 +53,7 @@ namespace XSwiftBus
         //! Event callback
         static void callback(evutil_socket_t fd, short event, void *data)
         {
-            (void) fd; // Not really unused, but GCC/Clang still complain about it.
+            (void)fd; // Not really unused, but GCC/Clang still complain about it.
             auto *watchHandler = static_cast<WatchHandler *>(data);
 
             unsigned int flags = 0;
@@ -91,8 +91,8 @@ namespace XSwiftBus
         //! Event callback
         static void callback(evutil_socket_t fd, short event, void *data)
         {
-            (void) fd; // unused
-            (void) event; // unused
+            (void)fd; // unused
+            (void)event; // unused
             auto *timeoutHandler = static_cast<TimeoutHandler *>(data);
             dbus_timeout_handle(timeoutHandler->m_timeout);
         }
@@ -119,8 +119,8 @@ namespace XSwiftBus
         //! Event callback
         static void callback(evutil_socket_t fd, short event, void *data)
         {
-            (void) fd; // unused
-            (void) event; // unused
+            (void)fd; // unused
+            (void)event; // unused
             auto *timer = static_cast<Timer *>(data);
             timer->m_func();
             delete timer;
@@ -131,8 +131,7 @@ namespace XSwiftBus
         std::function<void()> m_func;
     };
 
-    CDBusDispatcher::CDBusDispatcher() :
-        m_eventBase(event_base_new())
+    CDBusDispatcher::CDBusDispatcher() : m_eventBase(event_base_new())
     {
         using namespace std::placeholders;
         m_watchCallbacks = WatchCallbacks(std::bind(&CDBusDispatcher::dbusAddWatch, this, _1),
@@ -215,8 +214,7 @@ namespace XSwiftBus
 
     void CDBusDispatcher::dbusRemoveTimeout(DBusTimeout *timeout)
     {
-        auto predicate = [timeout](const std::unique_ptr<TimeoutHandler> &ptr)
-        {
+        auto predicate = [timeout](const std::unique_ptr<TimeoutHandler> &ptr) {
             return ptr->getTimeout() == timeout;
         };
 

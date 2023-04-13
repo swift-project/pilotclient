@@ -122,14 +122,14 @@ namespace BlackMisc::Aviation
         static QString cleanRemarks(const QString &remarksIn);
 
     private:
-        QString m_remarks;        //!< the unparsed string
+        QString m_remarks; //!< the unparsed string
         QString m_radioTelephony; //!< radio telephony designator
         QString m_flightOperator; //!< operator, i.e. normally the airline name
         CCallsign m_registration; //!< callsign of pilot
-        CSelcal m_selcalCode;     //!< SELCAL code
+        CSelcal m_selcalCode; //!< SELCAL code
         CAirlineIcaoCode m_airlineIcao; //!< airline ICAO if provided in flight plan
         Network::CVoiceCapabilities m_voiceCapabilities; //!< voice capabilities
-        bool m_isParsed = false;  //!< marked as parsed
+        bool m_isParsed = false; //!< marked as parsed
 
         BLACK_METACLASS(
             CFlightPlanRemarks,
@@ -162,11 +162,11 @@ namespace BlackMisc::Aviation
         //! Flight rules (VFR or IFR)
         enum FlightRules
         {
-            VFR = 0,    //!< Visual flight rules
-            IFR,        //!< Instrument flight rules
-            SVFR,       //!< Special VFR (reserved for ATC use),
-            DVFR,       //!< Defense VFR
-            UNKNOWN     //!< Unknown
+            VFR = 0, //!< Visual flight rules
+            IFR, //!< Instrument flight rules
+            SVFR, //!< Special VFR (reserved for ATC use),
+            DVFR, //!< Defense VFR
+            UNKNOWN //!< Unknown
         };
 
         //! Properties by index
@@ -182,7 +182,7 @@ namespace BlackMisc::Aviation
         //! \fixme max.length of complete flight plan is 768 characters, this here is an assumption and should be part of the underlying network layers
         //  https://forums.vatsim.net/viewtopic.php?f=6&t=63416
         static constexpr int MaxRemarksLength = 512; //!< Max.remarks length
-        static constexpr int MaxRouteLength   = 512; //!< Max.route length
+        static constexpr int MaxRouteLength = 512; //!< Max.route length
         static constexpr int MaxRouteAndRemarksLength = 624; //!< Max.length for Route and Remarks
 
         //! Default constructor
@@ -223,25 +223,45 @@ namespace BlackMisc::Aviation
         void setTakeoffTimePlanned(const QDateTime &takeoffTimePlanned);
 
         //! Set planned takeoff time hh:mm
-        void setTakeoffTimePlanned(const QString &time) { m_takeoffTimePlanned = QDateTime::currentDateTimeUtc(); m_takeoffTimePlanned.setTime(QTime::fromString(time, "hh:mm"));}
+        void setTakeoffTimePlanned(const QString &time)
+        {
+            m_takeoffTimePlanned = QDateTime::currentDateTimeUtc();
+            m_takeoffTimePlanned.setTime(QTime::fromString(time, "hh:mm"));
+        }
 
         //! Set actual takeoff time (reserved for ATC use)
         void setTakeoffTimeActual(const QDateTime &takeoffTimeActual);
 
         //! Set actual takeoff time hh:mm
-        void setTakeoffTimeActual(const QString &time) { m_takeoffTimeActual = QDateTime::currentDateTimeUtc(); m_takeoffTimeActual.setTime(QTime::fromString(time, "hh:mm"));}
+        void setTakeoffTimeActual(const QString &time)
+        {
+            m_takeoffTimeActual = QDateTime::currentDateTimeUtc();
+            m_takeoffTimeActual.setTime(QTime::fromString(time, "hh:mm"));
+        }
 
         //! Set planned enroute flight time
-        void setEnrouteTime(const PhysicalQuantities::CTime &enrouteTime) { m_enrouteTime = enrouteTime; m_enrouteTime.switchUnit(BlackMisc::PhysicalQuantities::CTimeUnit::hrmin());}
+        void setEnrouteTime(const PhysicalQuantities::CTime &enrouteTime)
+        {
+            m_enrouteTime = enrouteTime;
+            m_enrouteTime.switchUnit(BlackMisc::PhysicalQuantities::CTimeUnit::hrmin());
+        }
 
         //! Set amount of fuel load in time
-        void setFuelTime(const PhysicalQuantities::CTime &fuelTime) { m_fuelTime = fuelTime; m_fuelTime.switchUnit(BlackMisc::PhysicalQuantities::CTimeUnit::hrmin());}
+        void setFuelTime(const PhysicalQuantities::CTime &fuelTime)
+        {
+            m_fuelTime = fuelTime;
+            m_fuelTime.switchUnit(BlackMisc::PhysicalQuantities::CTimeUnit::hrmin());
+        }
 
         //! Set amount of fuel load in time hh:mm
         void setFuelTime(const QString &fuelTime) { m_fuelTime = PhysicalQuantities::CTime(fuelTime); }
 
         //! Set planned cruise altitude
-        void setCruiseAltitude(const CAltitude &cruiseAltitude) { m_cruiseAltitude = cruiseAltitude; m_cruiseAltitudeString.clear(); }
+        void setCruiseAltitude(const CAltitude &cruiseAltitude)
+        {
+            m_cruiseAltitude = cruiseAltitude;
+            m_cruiseAltitudeString.clear();
+        }
 
         //! Cruising altitude already as string
         void setCruiseAltitudeString(const QString &altitudeString) { m_cruiseAltitudeString = altitudeString; }
@@ -328,7 +348,7 @@ namespace BlackMisc::Aviation
         const QString &getRoute() const { return m_route; }
 
         //! When last sent
-        const QDateTime whenLastSentOrLoaded() const { return this->getUtcTimestamp() ; }
+        const QDateTime whenLastSentOrLoaded() const { return this->getUtcTimestamp(); }
 
         //! Flight plan already sent
         bool wasSentOrLoaded() const { return this->hasValidTimestamp(); }
@@ -458,22 +478,22 @@ namespace BlackMisc::Aviation
         static const QStringList &prefixCodes();
 
     private:
-        CCallsign         m_callsign;        //!< aircraft callsign
-        CAircraftIcaoCode m_aircraftIcao;    //!< Aircraft ICAO code
-        QString           m_prefix;          //!< e.g. "T/A320/F" -> the "T"
-        QString           m_equipmentSuffix; //!< e.g. "T/A320/F" -> the "F"
-        CAirportIcaoCode  m_originAirportIcao;
-        CAirportIcaoCode  m_destinationAirportIcao;
-        CAirportIcaoCode  m_alternateAirportIcao;
-        QDateTime         m_takeoffTimePlanned;
-        QDateTime         m_takeoffTimeActual;
+        CCallsign m_callsign; //!< aircraft callsign
+        CAircraftIcaoCode m_aircraftIcao; //!< Aircraft ICAO code
+        QString m_prefix; //!< e.g. "T/A320/F" -> the "T"
+        QString m_equipmentSuffix; //!< e.g. "T/A320/F" -> the "F"
+        CAirportIcaoCode m_originAirportIcao;
+        CAirportIcaoCode m_destinationAirportIcao;
+        CAirportIcaoCode m_alternateAirportIcao;
+        QDateTime m_takeoffTimePlanned;
+        QDateTime m_takeoffTimeActual;
         PhysicalQuantities::CTime m_enrouteTime;
         PhysicalQuantities::CTime m_fuelTime;
         CAltitude m_cruiseAltitude;
-        QString   m_cruiseAltitudeString;
+        QString m_cruiseAltitudeString;
         PhysicalQuantities::CSpeed m_cruiseTrueAirspeed;
-        FlightRules        m_flightRules{};
-        QString            m_route;
+        FlightRules m_flightRules {};
+        QString m_route;
         CFlightPlanRemarks m_remarks;
 
         //! As string

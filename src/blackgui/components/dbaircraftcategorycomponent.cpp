@@ -20,9 +20,8 @@ using namespace BlackGui::Views;
 
 namespace BlackGui::Components
 {
-    CDbAircraftCategoryComponent::CDbAircraftCategoryComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        ui(new Ui::CDbAircraftCategoryComponent)
+    CDbAircraftCategoryComponent::CDbAircraftCategoryComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                                                  ui(new Ui::CDbAircraftCategoryComponent)
     {
         ui->setupUi(this);
         this->setViewWithIndicator(ui->tvp_AircraftCategoryView);
@@ -39,7 +38,7 @@ namespace BlackGui::Components
     }
 
     CDbAircraftCategoryComponent::~CDbAircraftCategoryComponent()
-    { }
+    {}
 
     void CDbAircraftCategoryComponent::onCategoryRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
     {

@@ -14,9 +14,8 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackGui::Components
 {
-    CDbOwnModelsDialog::CDbOwnModelsDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CDbOwnModelsDialog)
+    CDbOwnModelsDialog::CDbOwnModelsDialog(QWidget *parent) : QDialog(parent),
+                                                              ui(new Ui::CDbOwnModelsDialog)
     {
         ui->setupUi(this);
         ui->comp_OwnModels->setSimulatorSelectorMode(CSimulatorSelector::ComboBox);
@@ -25,7 +24,7 @@ namespace BlackGui::Components
     }
 
     CDbOwnModelsDialog::~CDbOwnModelsDialog()
-    { }
+    {}
 
     void CDbOwnModelsDialog::setSimulator(const CSimulatorInfo &simulator)
     {

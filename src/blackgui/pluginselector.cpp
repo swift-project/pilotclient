@@ -29,7 +29,7 @@ namespace BlackGui
         setLayout(layout);
 
         connect(m_detailsButtonMapper, qOverload<const QString &>(&QSignalMapper::mapped), this, &CPluginSelector::pluginDetailsRequested);
-        connect(m_configButtonMapper,  qOverload<const QString &>(&QSignalMapper::mapped), this, &CPluginSelector::pluginConfigRequested);
+        connect(m_configButtonMapper, qOverload<const QString &>(&QSignalMapper::mapped), this, &CPluginSelector::pluginConfigRequested);
     }
 
     void CPluginSelector::addPlugin(const QString &identifier, const QString &name, bool hasConfig, bool enabled)

@@ -15,7 +15,10 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CAirportDialog; }
+namespace Ui
+{
+    class CAirportDialog;
+}
 namespace BlackGui::Components
 {
     //! Dialog for finding an airport

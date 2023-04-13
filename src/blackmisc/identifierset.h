@@ -49,11 +49,10 @@ namespace BlackMisc
         //! Get machine names
         QStringList getMachineNames(bool unique = true, bool sort = true) const;
     };
-} //namespace
+} // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::CIdentifierSet)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::CIdentifier>)
 // in list: Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::CIdentifier>)
 
-
-#endif //guard
+#endif // guard

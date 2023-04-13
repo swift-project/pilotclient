@@ -43,7 +43,7 @@ namespace BlackMisc::Simulation
 
             // check if we have already an elevation within range
             alreadyInRangeGnd = m_elvCoordinatesGnd.findFirstWithinRangeOrDefault(elevationCoordinate, minRange);
-            alreadyInRange    = m_elvCoordinates.findFirstWithinRangeOrDefault(elevationCoordinate, minRange);
+            alreadyInRange = m_elvCoordinates.findFirstWithinRangeOrDefault(elevationCoordinate, minRange);
         }
 
         constexpr double maxDistFt = 30.0;
@@ -98,7 +98,7 @@ namespace BlackMisc::Simulation
             if (m_pendingElevationRequests.contains(requestedForCallsign))
             {
                 const qint64 startedMs = m_pendingElevationRequests.value(requestedForCallsign);
-                const qint64 deltaMs   = now - startedMs;
+                const qint64 deltaMs = now - startedMs;
                 m_pendingElevationRequests.remove(requestedForCallsign);
                 m_statsCurrentElevRequestTimeMs = deltaMs;
                 if (m_statsMaxElevRequestTimeMs < deltaMs) { m_statsMaxElevRequestTimeMs = deltaMs; }
@@ -125,7 +125,7 @@ namespace BlackMisc::Simulation
         {
             QWriteLocker l(&m_lockCG);
             if (remove) { m_cgsPerCallsign.remove(cs); }
-            else        { m_cgsPerCallsign[cs] = cg;   }
+            else { m_cgsPerCallsign[cs] = cg; }
         }
         return true;
     }
@@ -134,7 +134,7 @@ namespace BlackMisc::Simulation
     {
         bool stored = false;
         QWriteLocker l(&m_lockCG);
-        if (!m_enableCG)   { return false; }
+        if (!m_enableCG) { return false; }
         if (!cs.isEmpty())
         {
             if (m_cgsPerCallsignOverridden.contains(cs))
@@ -144,7 +144,8 @@ namespace BlackMisc::Simulation
             }
             else
             {
-                m_cgsPerCallsign[cs] = cg; stored = true;
+                m_cgsPerCallsign[cs] = cg;
+                stored = true;
             }
         }
         if (!modelString.isEmpty())
@@ -264,8 +265,8 @@ namespace BlackMisc::Simulation
     CLength ISimulationEnvironmentProvider::minRange(const CLength &range)
     {
         return (range.isNull() || range < CElevationPlane::singlePointRadius()) ?
-                CElevationPlane::singlePointRadius() :
-                range;
+                   CElevationPlane::singlePointRadius() :
+                   range;
     }
 
     CCoordinateGeodeticList ISimulationEnvironmentProvider::getAllElevationCoordinates() const
@@ -329,12 +330,12 @@ namespace BlackMisc::Simulation
         const bool singlePoint = (&range == &CElevationPlane::singlePointRadius() || range.isNull() || range <= CElevationPlane::singlePointRadius());
         const CCoordinateGeodeticList elevations = this->getAllElevationCoordinates();
         const CCoordinateGeodetic coordinate = singlePoint ?
-                                                elevations.findFirstWithinRangeOrDefault(reference, CElevationPlane::singlePointRadius()) :
-                                                elevations.findClosestWithinRange(reference, range);
+                                                   elevations.findFirstWithinRangeOrDefault(reference, CElevationPlane::singlePointRadius()) :
+                                                   elevations.findClosestWithinRange(reference, range);
         const bool found = !coordinate.isNull();
 
         {
-            QWriteLocker l{&m_lockElvCoordinates };
+            QWriteLocker l { &m_lockElvCoordinates };
             if (found)
             {
                 m_elvFound++;
@@ -387,7 +388,7 @@ namespace BlackMisc::Simulation
         {
             QReadLocker l(&m_lockElvCoordinates);
             elvGnd = m_elvCoordinatesGnd.sizeInt();
-            elv    = m_elvCoordinates.sizeInt();
+            elv = m_elvCoordinates.sizeInt();
         }
         return info.arg(f).arg(m).arg(QString::number(hitRatioPercent, 'f', 1)).arg(elv).arg(elvGnd);
     }
@@ -545,8 +546,8 @@ namespace BlackMisc::Simulation
     {
         QWriteLocker l(&m_lockElvCoordinates);
         m_statsCurrentElevRequestTimeMs = -1;
-        m_statsMaxElevRequestTimeMs     = -1;
-        m_elvFound = m_elvMissed        =  0;
+        m_statsMaxElevRequestTimeMs = -1;
+        m_elvFound = m_elvMissed = 0;
     }
 
     int ISimulationEnvironmentProvider::removeElevationValues(const CAircraftSituation &reference, const CLength &removeRange)
@@ -563,7 +564,7 @@ namespace BlackMisc::Simulation
 
         CCoordinateGeodeticList cleanedKeptElvs;
         bool maxReached = false;
-        bool cleaned    = false;
+        bool cleaned = false;
 
         {
             QReadLocker l(&m_lockElvCoordinates);
@@ -601,13 +602,11 @@ namespace BlackMisc::Simulation
         return cleaned;
     }
 
-    ISimulationEnvironmentProvider::ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo) :
-        m_simulatorPluginInfo(pluginInfo)
-    { }
+    ISimulationEnvironmentProvider::ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo) : m_simulatorPluginInfo(pluginInfo)
+    {}
 
-    ISimulationEnvironmentProvider::ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo, const CSimulatorSettings &settings, bool supportElevation, bool supportCG) :
-        m_simulatorPluginInfo(pluginInfo), m_settings(settings), m_enableElevation(supportElevation), m_enableCG(supportCG)
-    { }
+    ISimulationEnvironmentProvider::ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo, const CSimulatorSettings &settings, bool supportElevation, bool supportCG) : m_simulatorPluginInfo(pluginInfo), m_settings(settings), m_enableElevation(supportElevation), m_enableCG(supportCG)
+    {}
 
     bool ISimulationEnvironmentProvider::isCgProviderEnabled() const
     {
@@ -655,7 +654,7 @@ namespace BlackMisc::Simulation
     void ISimulationEnvironmentProvider::setSimulatorDetails(const QString &name, const QString &details, const QString &version)
     {
         QWriteLocker l(&m_lockSimInfo);
-        m_simulatorName    = name;
+        m_simulatorName = name;
         m_simulatorDetails = details;
         m_simulatorVersion = version;
     }
@@ -697,8 +696,8 @@ namespace BlackMisc::Simulation
         m_elvCoordinatesGnd.clear();
         m_pendingElevationRequests.clear();
         m_statsCurrentElevRequestTimeMs = -1;
-        m_statsMaxElevRequestTimeMs     = -1;
-        m_elvFound = m_elvMissed        =  0;
+        m_statsMaxElevRequestTimeMs = -1;
+        m_elvFound = m_elvMissed = 0;
     }
 
     void ISimulationEnvironmentProvider::clearCGs()
@@ -719,7 +718,7 @@ namespace BlackMisc::Simulation
 
     // pin vtables to this file
     void CSimulationEnvironmentAware::anchor()
-    { }
+    {}
 
     CElevationPlane CSimulationEnvironmentAware::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const
     {

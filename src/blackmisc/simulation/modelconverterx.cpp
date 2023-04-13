@@ -54,7 +54,7 @@ namespace BlackMisc::Simulation
         QProcess *process = new QProcess(parent);
         const QString argument = QDir::toNativeSeparators(model.getFileName());
         process->setProgram(modelConverterX);
-        process->setArguments({argument});
+        process->setArguments({ argument });
         process->start();
         s_proccess = process;
         return process;

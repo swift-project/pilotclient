@@ -20,7 +20,10 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CSimulatorSelector; }
+namespace Ui
+{
+    class CSimulatorSelector;
+}
 namespace BlackGui::Components
 {
     /*!
@@ -34,9 +37,9 @@ namespace BlackGui::Components
         //! How to display
         enum Mode
         {
-            CheckBoxes,    //!< multiple selections
-            RadioButtons,  //!< single
-            ComboBox       //!< single
+            CheckBoxes, //!< multiple selections
+            RadioButtons, //!< single
+            ComboBox //!< single
         };
 
         //! Constructor
@@ -146,9 +149,9 @@ namespace BlackGui::Components
         QScopedPointer<Ui::CSimulatorSelector> ui;
         Mode m_mode = CheckBoxes;
         bool m_noSelectionMeansAll = false; //!< for filters, no selection means all
-        bool m_rememberSelection   = false; //!< remember last selection
+        bool m_rememberSelection = false; //!< remember last selection
         BlackMisc::CDigestSignal m_digestButtonsChanged { this, &CSimulatorSelector::emitChangedSignal, 250, 3 };
-        BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelection>  m_currentSimulator  { this, &CSimulatorSelector::changedLastSelectionRb }; //!< current simulator (used with radio buttons)
+        BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelection> m_currentSimulator { this, &CSimulatorSelector::changedLastSelectionRb }; //!< current simulator (used with radio buttons)
         BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelections> m_currentSimulators { this, &CSimulatorSelector::changedLastSelectionCb }; //!< current simulators (used with multiple checkboxes)
     };
 } // ns

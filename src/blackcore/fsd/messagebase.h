@@ -50,7 +50,7 @@ enum class MessageType
     RegistrationInfo, // IVAO only
     TextMessage,
     PilotClientCom,
-    RevBClientParts,    // IVAO only
+    RevBClientParts, // IVAO only
     RevBPilotDescription, // -PD IVAO only not handled in swift
     Rehost,
 };
@@ -89,10 +89,10 @@ namespace BlackCore::Fsd
         void setValid(bool isValid) { m_isValid = isValid; }
 
     protected:
-        QString m_sender;       //!< message sender
-        QString m_receiver;     //!< message receiver
+        QString m_sender; //!< message sender
+        QString m_receiver; //!< message receiver
 
-        bool m_isValid = true;  //!< is valid?
+        bool m_isValid = true; //!< is valid?
     };
 
     //! String which will be send

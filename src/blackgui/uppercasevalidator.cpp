@@ -16,16 +16,16 @@ using namespace BlackMisc;
 namespace BlackGui
 {
     CUpperCaseValidator::CUpperCaseValidator(QObject *parent) : QValidator(parent)
-    { }
+    {}
 
     CUpperCaseValidator::CUpperCaseValidator(int minLength, int maxLength, QObject *parent) : QValidator(parent),
-        m_minLength(minLength), m_maxLength(maxLength)
+                                                                                              m_minLength(minLength), m_maxLength(maxLength)
     {
         if (minLength < 1) { m_optionalValue = true; };
     }
 
     CUpperCaseValidator::CUpperCaseValidator(bool optionalValue, int minLength, int maxLength, QObject *parent) : QValidator(parent),
-        m_optionalValue(optionalValue), m_minLength(minLength), m_maxLength(maxLength)
+                                                                                                                  m_optionalValue(optionalValue), m_minLength(minLength), m_maxLength(maxLength)
     {
         if (minLength < 1) { m_optionalValue = true; };
     }

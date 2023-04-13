@@ -17,7 +17,10 @@
 #include "blackmisc/statusmessagelist.h"
 #include <QScopedPointer>
 
-namespace Ui { class CSituationForm; }
+namespace Ui
+{
+    class CSituationForm;
+}
 namespace BlackGui::Editors
 {
     /*!

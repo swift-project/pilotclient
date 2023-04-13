@@ -20,7 +20,10 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CDbAutoSimulatorStashingComponent; }
+namespace Ui
+{
+    class CDbAutoSimulatorStashingComponent;
+}
 namespace BlackGui::Components
 {
     /*!

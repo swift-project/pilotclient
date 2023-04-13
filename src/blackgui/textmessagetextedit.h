@@ -22,7 +22,10 @@
 class QAction;
 class QPoint;
 
-namespace BlackMisc::Network { class CTextMessage; }
+namespace BlackMisc::Network
+{
+    class CTextMessage;
+}
 namespace BlackGui
 {
     //! Specialized text edit for displaying text messages
@@ -83,10 +86,10 @@ namespace BlackGui
         BlackMisc::Network::CTextMessageList m_messages;
         QTextDocument m_textDocument;
         int m_keepMaxMessages = -1; //!< max number of messages to keep, or -1 to keep all messages
-        bool m_latestFirst   = false;
-        bool m_withSender    = true;
+        bool m_latestFirst = false;
+        bool m_withSender = true;
         bool m_withRecipient = false;
-        bool m_wordWrap      = true;
+        bool m_wordWrap = true;
 
         QAction *m_actionClearTextEdit = nullptr;
         QAction *m_actionLast10 = nullptr;

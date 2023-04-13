@@ -12,7 +12,7 @@
 //! \file
 
 #ifndef NOMINMAX
-#define NOMINMAX
+#    define NOMINMAX
 #endif
 
 #include "dbusobject.h"
@@ -337,9 +337,9 @@ namespace XSwiftBus
         void emitSceneryLoaded();
 
         CMessageBoxControl m_messages { 16, 16, 16 };
-        bool m_popupMessageWindow     = true;
+        bool m_popupMessageWindow = true;
         bool m_disappearMessageWindow = true;
-        int  m_disapperMessageWindowTimeMs = 5000;
+        int m_disapperMessageWindowTimeMs = 5000;
         std::chrono::system_clock::time_point m_disappearMessageWindowTime;
         std::vector<CNavDataReference> m_airports;
         CTerrainProbe m_terrainProbe;
@@ -409,4 +409,3 @@ namespace XSwiftBus
 }
 
 #endif // guard
-

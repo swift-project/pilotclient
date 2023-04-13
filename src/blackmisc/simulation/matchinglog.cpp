@@ -25,12 +25,12 @@ namespace BlackMisc::Simulation
         switch (logFlag)
         {
         case MatchingLogCombinedDefaultType: return logCombinedDefaultType;
-        case MatchingLogNothing:        return logNothing;
-        case MatchingLogModelstring:    return logModelstring;
+        case MatchingLogNothing: return logNothing;
+        case MatchingLogModelstring: return logModelstring;
         case MatchingLogStepwiseReduce: return logStepwiseReduce;
-        case MatchingLogScoring:        return logScoring;
-        case MatchingLogSimplified:     return logSimplified;
-        case MatchingLogAll:            return logAll;
+        case MatchingLogScoring: return logScoring;
+        case MatchingLogSimplified: return logSimplified;
+        case MatchingLogAll: return logAll;
         default: break;
         }
 
@@ -44,9 +44,9 @@ namespace BlackMisc::Simulation
         if (log == MatchingLogNothing) { return matchingLogFlagToString(MatchingLogNothing); }
         QStringList l;
         if (log.testFlag(MatchingLogCombinedDefaultType)) { l << matchingLogFlagToString(MatchingLogCombinedDefaultType); }
-        if (log.testFlag(MatchingLogModelstring))    { l << matchingLogFlagToString(MatchingLogModelstring); }
+        if (log.testFlag(MatchingLogModelstring)) { l << matchingLogFlagToString(MatchingLogModelstring); }
         if (log.testFlag(MatchingLogStepwiseReduce)) { l << matchingLogFlagToString(MatchingLogStepwiseReduce); }
-        if (log.testFlag(MatchingLogScoring))        { l << matchingLogFlagToString(MatchingLogScoring); }
+        if (log.testFlag(MatchingLogScoring)) { l << matchingLogFlagToString(MatchingLogScoring); }
         return l.join(", ");
     }
 } // ns

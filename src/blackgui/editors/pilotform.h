@@ -19,7 +19,10 @@
 #include <QScopedPointer>
 #include <QIntValidator>
 
-namespace Ui { class CPilotForm; }
+namespace Ui
+{
+    class CPilotForm;
+}
 namespace BlackGui::Editors
 {
     //! Pilot form (name, homebase)

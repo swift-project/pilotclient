@@ -20,7 +20,10 @@
 #include <QUrl>
 #include <QAbstractButton>
 
-namespace Ui { class CDbLoadDataDialog; }
+namespace Ui
+{
+    class CDbLoadDataDialog;
+}
 namespace BlackGui::Components
 {
     /*!
@@ -65,9 +68,9 @@ namespace BlackGui::Components
         QScopedPointer<Ui::CDbLoadDataDialog> ui;
         BlackMisc::Network::CEntityFlags::Entity m_pendingEntities = BlackMisc::Network::CEntityFlags::NoEntity;
         BlackMisc::Simulation::Data::CModelSetCaches m_sets { true, this }; //!< caches
-        BlackMisc::Simulation::Data::CModelCaches m_models  { true, this }; //!< models
+        BlackMisc::Simulation::Data::CModelCaches m_models { true, this }; //!< models
         int m_pendingEntitiesCount = -1;
-        bool m_consolidating   = false; //! currently consolidating
+        bool m_consolidating = false; //! currently consolidating
         bool m_autoConsolidate = false;
     };
 } // ns

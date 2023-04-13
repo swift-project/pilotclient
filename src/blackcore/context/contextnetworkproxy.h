@@ -48,7 +48,10 @@ namespace BlackMisc
         class CAircraftParts;
         class CCallsign;
     }
-    namespace Simulation { class CAircraftModel; }
+    namespace Simulation
+    {
+        class CAircraftModel;
+    }
 }
 
 namespace BlackCore
@@ -169,7 +172,7 @@ namespace BlackCore
             virtual bool setOtherClient(const BlackMisc::Network::CClient &client) override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::requestAircraftDataUpdates
-            virtual void requestAircraftDataUpdates()override;
+            virtual void requestAircraftDataUpdates() override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::requestAtisUpdates
             virtual void requestAtisUpdates() override;

@@ -30,7 +30,10 @@ namespace XSwiftBus
     {
     public:
         //! Bus type
-        enum BusType { SessionBus };
+        enum BusType
+        {
+            SessionBus
+        };
 
         //! Disconnect Callback
         using DisconnectedCallback = std::function<void()>;

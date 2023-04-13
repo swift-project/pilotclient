@@ -31,32 +31,26 @@ namespace XSwiftBus
     {
         // m_startServerMenuItem = m_menu.item("Start XSwiftBus", [this]{ startServer(CDBusConnection::SessionBus); });
 
-        m_showHideLabelsMenuItem = m_menu.item("Show/Hide Aircraft Labels", [this]
-        {
+        m_showHideLabelsMenuItem = m_menu.item("Show/Hide Aircraft Labels", [this] {
             m_traffic->setDrawingLabels(!m_traffic->isDrawingLabels());
         });
-        m_enableDisableXPlaneAtisMenuItem = m_menu.item("Enable/Disable X-Plane ATIS", [this]
-        {
+        m_enableDisableXPlaneAtisMenuItem = m_menu.item("Enable/Disable X-Plane ATIS", [this] {
             m_atisEnabled.set(m_atisEnabled.get() ? 0 : 1);
         });
         m_messageWindowSubMenu = m_menu.subMenu("Message Window");
-        m_toggleMessageWindowMenuItem = m_messageWindowSubMenu.item("Show/Hide", [this]
-        {
+        m_toggleMessageWindowMenuItem = m_messageWindowSubMenu.item("Show/Hide", [this] {
             m_service->toggleMessageBoxVisibility();
         });
-        m_popupMessageWindowMenuItem = m_messageWindowSubMenu.checkableItem("Pop up Window on new Message", true, [this](bool checked)
-        {
+        m_popupMessageWindowMenuItem = m_messageWindowSubMenu.checkableItem("Pop up Window on new Message", true, [this](bool checked) {
             m_popupMessageWindowMenuItem.setChecked(!checked);
             m_service->setPopupMessageWindow(!checked);
         });
-        m_disappearMessageWindowMenuItem = m_messageWindowSubMenu.checkableItem("Hide Message Window automatically", true, [this](bool checked)
-        {
+        m_disappearMessageWindowMenuItem = m_messageWindowSubMenu.checkableItem("Hide Message Window automatically", true, [this](bool checked) {
             m_disappearMessageWindowMenuItem.setChecked(!checked);
             m_service->setDisappearMessageWindow(!checked);
         });
         m_planeViewSubMenu = m_menu.subMenu("Follow Plane View");
-        m_planeViewOwnAircraftMenuItem = m_planeViewSubMenu.item("Own Aircraft", [this]
-        {
+        m_planeViewOwnAircraftMenuItem = m_planeViewSubMenu.item("Own Aircraft", [this] {
             m_traffic->setFollowedAircraft(CTraffic::ownAircraftString());
         });
 
@@ -120,8 +114,7 @@ namespace XSwiftBus
             }
             m_dbusP2PServer->setDispatcher(&m_dbusDispatcher);
 
-            m_dbusP2PServer->setNewConnectionFunc([this](const std::shared_ptr<CDBusConnection> &conn)
-            {
+            m_dbusP2PServer->setNewConnectionFunc([this](const std::shared_ptr<CDBusConnection> &conn) {
                 m_dbusConnection = conn;
                 m_dbusConnection->setDispatcher(&m_dbusDispatcher);
                 m_service->setDBusConnection(m_dbusConnection);

@@ -22,9 +22,8 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CTransponderModeComponent::CTransponderModeComponent(QWidget *parent) :
-        QFrame(parent), CIdentifiable(this),
-        ui(new Ui::CTransponderModeComponent)
+    CTransponderModeComponent::CTransponderModeComponent(QWidget *parent) : QFrame(parent), CIdentifiable(this),
+                                                                            ui(new Ui::CTransponderModeComponent)
     {
         ui->setupUi(this);
 
@@ -38,20 +37,23 @@ namespace BlackGui::Components
         this->init();
 
         QPointer<CTransponderModeComponent> myself(this);
-        QTimer::singleShot(10 * 1000, this, [ = ]
-        {
+        QTimer::singleShot(10 * 1000, this, [=] {
             if (!myself) { return; }
             myself->onChangedAircraftCockpit(sGui->getIContextOwnAircraft()->getOwnAircraft(), CIdentifier::null());
         });
     }
 
     CTransponderModeComponent::~CTransponderModeComponent()
-    { }
+    {}
 
     void CTransponderModeComponent::init()
     {
         if (!sGui || sGui->isShuttingDown()) { return; }
-        if (!sGui->supportsContexts() || !sGui->getIContextOwnAircraft()) { this->setVisible(false); return; }
+        if (!sGui->supportsContexts() || !sGui->getIContextOwnAircraft())
+        {
+            this->setVisible(false);
+            return;
+        }
 
         this->setVisible(true);
         ui->tb_TransponderMode->setText(m_transponder.getModeAsShortString());

@@ -10,19 +10,17 @@
 #include "blackgui/guiapplication.h"
 #include "ui_autopublishdialog.h"
 
-
 namespace BlackGui::Components
 {
-    CAutoPublishDialog::CAutoPublishDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CAutoPublishDialog)
+    CAutoPublishDialog::CAutoPublishDialog(QWidget *parent) : QDialog(parent),
+                                                              ui(new Ui::CAutoPublishDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
     CAutoPublishDialog::~CAutoPublishDialog()
-    { }
+    {}
 
     int CAutoPublishDialog::readFiles()
     {

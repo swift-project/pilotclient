@@ -32,11 +32,11 @@ namespace BlackMisc::Network
     }
 
     CServer::CServer(const QString &name, const QString &description, const QString &address, int port, const CUser &user,
-                        const CFsdSetup &fsdSetup, const CVoiceSetup &voiceSetup, const CEcosystem &ecosytem, ServerType serverType, bool isAcceptingConnections)
+                     const CFsdSetup &fsdSetup, const CVoiceSetup &voiceSetup, const CEcosystem &ecosytem, ServerType serverType, bool isAcceptingConnections)
         : m_name(CObfuscation::decode(name)), m_description(CObfuscation::decode(description)), m_address(CObfuscation::decode(address)), m_port(port), m_user(user),
-            m_ecosystem(ecosytem),
-            m_serverType(serverType), m_isAcceptingConnections(isAcceptingConnections),
-            m_fsdSetup(fsdSetup), m_voiceSetup(voiceSetup)
+          m_ecosystem(ecosytem),
+          m_serverType(serverType), m_isAcceptingConnections(isAcceptingConnections),
+          m_fsdSetup(fsdSetup), m_voiceSetup(voiceSetup)
     {}
 
     CServer::CServer(
@@ -56,10 +56,7 @@ namespace BlackMisc::Network
 
     QString CServer::convertToQString(bool i18n) const
     {
-        return QStringLiteral("%1 %2 %3:%4 %5 %6 accepting: %7 FSD: %8 con.since: %9").
-                arg(m_name, m_description, m_address).arg(m_port).
-                arg(m_user.toQString(i18n), m_ecosystem.getSystemString(),
-                    boolToYesNo(m_isAcceptingConnections), m_fsdSetup.toQString(i18n), this->isConnected() ? this->getFormattedUtcTimestampHms() : "not con.");
+        return QStringLiteral("%1 %2 %3:%4 %5 %6 accepting: %7 FSD: %8 con.since: %9").arg(m_name, m_description, m_address).arg(m_port).arg(m_user.toQString(i18n), m_ecosystem.getSystemString(), boolToYesNo(m_isAcceptingConnections), m_fsdSetup.toQString(i18n), this->isConnected() ? this->getFormattedUtcTimestampHms() : "not con.");
     }
 
     const CServer &CServer::swiftFsdTestServer(bool withPw)
@@ -67,18 +64,17 @@ namespace BlackMisc::Network
         // CUser("guest", "Guest Client project", "", "guest")
         // PW!!!!! => use CObfuscation::endocde to get the strings
         static const CServer dvp("Testserver", "Client project testserver", "fsd.swift-project.org", 6809,
-                                    CUser("OBF:AwJ6BweZqpmtmORL", "OBF:AwI/594lQTJGZnmSwB0=", "", "OBF:AwKi3JkHNAczBno="),
-                                    CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
+                                 CUser("OBF:AwJ6BweZqpmtmORL", "OBF:AwI/594lQTJGZnmSwB0=", "", "OBF:AwKi3JkHNAczBno="),
+                                 CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
         static const CServer dvnWithPw("Testserver", "Client project testserver", "fsd.swift-project.org", 6809,
-                                        CUser("OBF:AwJ6BweZqpmtmORL", "OBF:AwI/594lQTJGZnmSwB0=", "", ""),
-                                        CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
+                                       CUser("OBF:AwJ6BweZqpmtmORL", "OBF:AwI/594lQTJGZnmSwB0=", "", ""),
+                                       CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
         return withPw ? dvp : dvnWithPw;
     }
 
     const CServer &CServer::fscFsdServer()
     {
-        static const CServer fsc = []
-        {
+        static const CServer fsc = [] {
             CServer s = CServer("FSC", "FSC e.V.", "OBF:AwJIKfgkQDJEIRnno29DJlB+UK0=", 6809,
                                 CUser(),
                                 CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::privateFsd()), CServer::FSDServer);
@@ -91,35 +87,35 @@ namespace BlackMisc::Network
     const CServer &CServer::afvFsdTestServer()
     {
         static const CServer afv("AFV testserver", "VATSIM AFV testserver", "afv-beta-fsd.vatsim.net", 6809,
-                                    CUser("OBF:AwLZ7f9hUmpSZhm4=", "OBF:AwJGiYV4GHQSMizchFk2=", "", ""),
-                                    CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::vatsim()), CServer::FSDServerVatsim);
+                                 CUser("OBF:AwLZ7f9hUmpSZhm4=", "OBF:AwJGiYV4GHQSMizchFk2=", "", ""),
+                                 CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::vatsim()), CServer::FSDServerVatsim);
         return afv;
     }
 
     const CServer &CServer::esTowerView()
     {
         static const CServer s = CServer("ES Tower", "Euroscope Tower view", "localhost", 6809,
-                                            CUser(),
-                                            CFsdSetup::vatsimStandard(), CVoiceSetup::vatsimStandard(), CEcosystem(CEcosystem::vatsim()), CServer::VoiceServerVatsim);
+                                         CUser(),
+                                         CFsdSetup::vatsimStandard(), CVoiceSetup::vatsimStandard(), CEcosystem(CEcosystem::vatsim()), CServer::VoiceServerVatsim);
         return s;
     }
 
     bool CServer::matchesName(const QString &name) const
     {
-        return  m_name.length() == name.length() &&
-                m_name.startsWith(name, Qt::CaseInsensitive);
+        return m_name.length() == name.length() &&
+               m_name.startsWith(name, Qt::CaseInsensitive);
     }
 
     bool CServer::matchesAddressPort(const CServer &server) const
     {
         return server.getPort() == this->getPort() &&
-                server.matchesAddress(this->getAddress());
+               server.matchesAddress(this->getAddress());
     }
 
     bool CServer::matchesAddress(const QString &address) const
     {
-        return  m_address.length() == address.length() &&
-                m_address.startsWith(address, Qt::CaseInsensitive);
+        return m_address.length() == address.length() &&
+               m_address.startsWith(address, Qt::CaseInsensitive);
     }
 
     bool CServer::setEcosystem(const CEcosystem &ecosystem)
@@ -209,38 +205,46 @@ namespace BlackMisc::Network
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexAddress:                return QVariant::fromValue(m_address);
-        case IndexDescription:            return QVariant::fromValue(m_description);
-        case IndexName:                   return QVariant::fromValue(m_name);
-        case IndexPort:                   return QVariant::fromValue(m_port);
-        case IndexUser:                   return m_user.propertyByIndex(index.copyFrontRemoved());
-        case IndexFsdSetup:               return m_fsdSetup.propertyByIndex(index.copyFrontRemoved());
-        case IndexVoiceSetup:             return m_voiceSetup.propertyByIndex(index.copyFrontRemoved());
-        case IndexEcosystem:              return m_ecosystem.propertyByIndex(index.copyFrontRemoved());
+        case IndexAddress: return QVariant::fromValue(m_address);
+        case IndexDescription: return QVariant::fromValue(m_description);
+        case IndexName: return QVariant::fromValue(m_name);
+        case IndexPort: return QVariant::fromValue(m_port);
+        case IndexUser: return m_user.propertyByIndex(index.copyFrontRemoved());
+        case IndexFsdSetup: return m_fsdSetup.propertyByIndex(index.copyFrontRemoved());
+        case IndexVoiceSetup: return m_voiceSetup.propertyByIndex(index.copyFrontRemoved());
+        case IndexEcosystem: return m_ecosystem.propertyByIndex(index.copyFrontRemoved());
         case IndexIsAcceptingConnections: return QVariant::fromValue(m_isAcceptingConnections);
-        case IndexServerType:             return QVariant::fromValue(m_serverType);
-        case IndexServerTypeAsString:     return QVariant::fromValue(getServerTypeAsString());
+        case IndexServerType: return QVariant::fromValue(m_serverType);
+        case IndexServerTypeAsString: return QVariant::fromValue(getServerTypeAsString());
         default: return CValueObject::propertyByIndex(index);
         }
     }
 
     void CServer::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CServer>(); return; }
-        if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CServer>();
+            return;
+        }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            ITimestampBased::setPropertyByIndex(index, variant);
+            return;
+        }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexAddress:     this->setAddress(variant.value<QString>()); break;
-        case IndexPort:        this->setPort(variant.value<qint32>()); break;
+        case IndexAddress: this->setAddress(variant.value<QString>()); break;
+        case IndexPort: this->setPort(variant.value<qint32>()); break;
         case IndexDescription: this->setDescription(variant.value<QString>()); break;
-        case IndexName:        this->setName(variant.value<QString>()); break;
-        case IndexUser:        m_user.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-        case IndexFsdSetup:    m_fsdSetup.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-        case IndexVoiceSetup:  m_voiceSetup.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-        case IndexEcosystem:   m_ecosystem.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-        case IndexServerType:  this->setServerType(static_cast<ServerType>(variant.toInt())); break;
+        case IndexName: this->setName(variant.value<QString>()); break;
+        case IndexUser: m_user.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexFsdSetup: m_fsdSetup.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexVoiceSetup: m_voiceSetup.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexEcosystem: m_ecosystem.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexServerType: this->setServerType(static_cast<ServerType>(variant.toInt())); break;
         case IndexIsAcceptingConnections: this->setIsAcceptingConnections(variant.value<bool>()); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
@@ -249,18 +253,18 @@ namespace BlackMisc::Network
     int CServer::comparePropertyByIndex(CPropertyIndexRef index, const CServer &compareValue) const
     {
         if (index.isMyself()) { return this->getName().compare(compareValue.getName()); }
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue);}
+        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexAddress:     return this->getAddress().compare(compareValue.getAddress(), Qt::CaseInsensitive);
+        case IndexAddress: return this->getAddress().compare(compareValue.getAddress(), Qt::CaseInsensitive);
         case IndexDescription: return this->getDescription().compare(compareValue.getDescription(), Qt::CaseInsensitive);
-        case IndexFsdSetup:    return m_fsdSetup.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getFsdSetup());
-        case IndexVoiceSetup:  return m_voiceSetup.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getVoiceSetup());
-        case IndexName:        return this->getName().compare(compareValue.getName(), Qt::CaseInsensitive);
-        case IndexPort:        return Compare::compare(this->getPort(), compareValue.getPort());
-        case IndexUser:        return this->getUser().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getUser());
-        case IndexEcosystem:   return this->getEcosystem().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getEcosystem());
+        case IndexFsdSetup: return m_fsdSetup.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getFsdSetup());
+        case IndexVoiceSetup: return m_voiceSetup.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getVoiceSetup());
+        case IndexName: return this->getName().compare(compareValue.getName(), Qt::CaseInsensitive);
+        case IndexPort: return Compare::compare(this->getPort(), compareValue.getPort());
+        case IndexUser: return this->getUser().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getUser());
+        case IndexEcosystem: return this->getEcosystem().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getEcosystem());
         case IndexIsAcceptingConnections: return Compare::compare(this->isAcceptingConnections(), compareValue.isAcceptingConnections());
         case IndexServerType:
         case IndexServerTypeAsString:
@@ -292,15 +296,18 @@ namespace BlackMisc::Network
         }
     }
 
-    void CServer::setAddress(const QString &address) {
+    void CServer::setAddress(const QString &address)
+    {
         m_address = CObfuscation::decode(address);
     }
 
-    void CServer::setName(const QString &name) {
+    void CServer::setName(const QString &name)
+    {
         m_name = CObfuscation::decode(name);
     }
 
-    void CServer::setDescription(const QString &description) {
+    void CServer::setDescription(const QString &description)
+    {
         m_description = CObfuscation::decode(description).simplified();
     }
 } // namespace

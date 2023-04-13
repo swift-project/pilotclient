@@ -35,8 +35,7 @@ using namespace BlackMisc;
 
 namespace BlackMisc::Simulation::FsCommon
 {
-    CVPilotRulesReader::CVPilotRulesReader(bool standardDirectory, QObject *parent) :
-        QObject(parent)
+    CVPilotRulesReader::CVPilotRulesReader(bool standardDirectory, QObject *parent) : QObject(parent)
     {
         if (standardDirectory) { this->addDirectory(CVPilotRulesReader::standardMappingsDirectory()); }
     }
@@ -69,7 +68,7 @@ namespace BlackMisc::Simulation::FsCommon
     {
         QDir dir(directory);
         if (!dir.exists()) { return; }
-        QStringList nameFilters({"*.vmr"});
+        QStringList nameFilters({ "*.vmr" });
         QFileInfoList entries = dir.entryInfoList(nameFilters, QDir::Files | QDir::Readable);
         for (const QFileInfo &file : entries)
         {
@@ -179,8 +178,7 @@ namespace BlackMisc::Simulation::FsCommon
             if (m_asyncLoadInProgress || m_shutdown) { return nullptr; }
             m_asyncLoadInProgress = true;
         }
-        BlackMisc::CWorker *worker = BlackMisc::CWorker::fromTask(this, "CVPilotRulesReader", [this, convertToModels]()
-        {
+        BlackMisc::CWorker *worker = BlackMisc::CWorker::fromTask(this, "CVPilotRulesReader", [this, convertToModels]() {
             this->read(convertToModels);
         });
         worker->then(this, &CVPilotRulesReader::ps_readInBackgroundFinished);
@@ -221,7 +219,7 @@ namespace BlackMisc::Simulation::FsCommon
     bool CVPilotRulesReader::loadFile(const QString &fileName, CVPilotModelRuleSet &ruleSet)
     {
         QFile f(fileName);
-        if (!f.exists()) { return  false; }
+        if (!f.exists()) { return false; }
         if (!f.open(QFile::ReadOnly | QFile::Text)) { return false; }
         QByteArray fc = f.readAll();
         if (fc.isEmpty()) { return false; }

@@ -18,7 +18,10 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CSettingsNetworkComponent; }
+namespace Ui
+{
+    class CSettingsNetworkComponent;
+}
 namespace BlackGui::Components
 {
     //! General settings for network

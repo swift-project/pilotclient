@@ -51,4 +51,4 @@ namespace BlackMisc::Input
 Q_DECLARE_METATYPE(BlackMisc::Input::CKeyboardKeyList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Input::CKeyboardKey>)
 
-#endif //guard
+#endif // guard

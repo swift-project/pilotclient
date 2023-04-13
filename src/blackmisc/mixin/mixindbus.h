@@ -24,7 +24,8 @@ namespace BlackMisc
     /*!
      * Tag type signifying overloaded marshalling methods that preserve data at the expense of size.
      */
-    class LosslessTag {};
+    class LosslessTag
+    {};
 
     namespace Mixin
     {
@@ -56,7 +57,8 @@ namespace BlackMisc
             }
         };
         template <class Derived>
-        class DBusOperators<Derived, LosslessTag> {};
+        class DBusOperators<Derived, LosslessTag>
+        {};
 
         /*!
          * CRTP class template from which a derived class can inherit common methods dealing with marshalling instances by metaclass.
@@ -77,8 +79,10 @@ namespace BlackMisc
             const Derived *derived() const;
             Derived *derived();
 
-            template <typename T> static void baseMarshall(const T *base, QDBusArgument &arg);
-            template <typename T> static void baseUnmarshall(T *base, const QDBusArgument &arg);
+            template <typename T>
+            static void baseMarshall(const T *base, QDBusArgument &arg);
+            template <typename T>
+            static void baseUnmarshall(T *base, const QDBusArgument &arg);
             static void baseMarshall(const void *, QDBusArgument &);
             static void baseUnmarshall(void *, const QDBusArgument &);
             static void baseMarshall(const CEmpty *, QDBusArgument &);
@@ -89,8 +93,7 @@ namespace BlackMisc
         void DBusByMetaClass<Derived, Tags...>::marshallToDbus(QDBusArgument &arg, Tags...) const
         {
             baseMarshall(static_cast<const TBaseOfT<Derived> *>(derived()), arg);
-            introspect<Derived>().forEachMember([ &, this ](auto member)
-            {
+            introspect<Derived>().forEachMember([&, this](auto member) {
                 if constexpr (!decltype(member)::has(MetaFlags<DisabledForMarshalling>()))
                 {
                     const auto &value = member.in(*this->derived());
@@ -111,8 +114,7 @@ namespace BlackMisc
         void DBusByMetaClass<Derived, Tags...>::unmarshallFromDbus(const QDBusArgument &arg, Tags...)
         {
             baseUnmarshall(static_cast<TBaseOfT<Derived> *>(derived()), arg);
-            introspect<Derived>().forEachMember([ &, this ](auto member)
-            {
+            introspect<Derived>().forEachMember([&, this](auto member) {
                 if constexpr (!decltype(member)::has(MetaFlags<DisabledForMarshalling>()))
                 {
                     auto &value = member.in(*this->derived());
@@ -130,39 +132,55 @@ namespace BlackMisc
         }
 
         template <class Derived, class... Tags>
-        const Derived *DBusByMetaClass<Derived, Tags...>::derived() const { return static_cast<const Derived *>(this); }
+        const Derived *DBusByMetaClass<Derived, Tags...>::derived() const
+        {
+            return static_cast<const Derived *>(this);
+        }
 
         template <class Derived, class... Tags>
-        Derived *DBusByMetaClass<Derived, Tags...>::derived() { return static_cast<Derived *>(this); }
+        Derived *DBusByMetaClass<Derived, Tags...>::derived()
+        {
+            return static_cast<Derived *>(this);
+        }
 
         template <class Derived, class... Tags>
         template <typename T>
-        void DBusByMetaClass<Derived, Tags...>::baseMarshall(const T *base, QDBusArgument &arg) { base->marshallToDbus(arg, Tags()...); }
+        void DBusByMetaClass<Derived, Tags...>::baseMarshall(const T *base, QDBusArgument &arg)
+        {
+            base->marshallToDbus(arg, Tags()...);
+        }
 
         template <class Derived, class... Tags>
         template <typename T>
-        void DBusByMetaClass<Derived, Tags...>::baseUnmarshall(T *base, const QDBusArgument &arg) { base->unmarshallFromDbus(arg, Tags()...); }
+        void DBusByMetaClass<Derived, Tags...>::baseUnmarshall(T *base, const QDBusArgument &arg)
+        {
+            base->unmarshallFromDbus(arg, Tags()...);
+        }
 
         template <class Derived, class... Tags>
-        void DBusByMetaClass<Derived, Tags...>::baseMarshall(const void *, QDBusArgument &) {}
+        void DBusByMetaClass<Derived, Tags...>::baseMarshall(const void *, QDBusArgument &)
+        {}
 
         template <class Derived, class... Tags>
-        void DBusByMetaClass<Derived, Tags...>::baseUnmarshall(void *, const QDBusArgument &) {}
+        void DBusByMetaClass<Derived, Tags...>::baseUnmarshall(void *, const QDBusArgument &)
+        {}
 
         template <class Derived, class... Tags>
-        void DBusByMetaClass<Derived, Tags...>::baseMarshall(const CEmpty *, QDBusArgument &) {}
+        void DBusByMetaClass<Derived, Tags...>::baseMarshall(const CEmpty *, QDBusArgument &)
+        {}
 
         template <class Derived, class... Tags>
-        void DBusByMetaClass<Derived, Tags...>::baseUnmarshall(CEmpty *, const QDBusArgument &) {}
+        void DBusByMetaClass<Derived, Tags...>::baseUnmarshall(CEmpty *, const QDBusArgument &)
+        {}
 
         // *INDENT-OFF*
         /*!
          * When a derived class and a base class both inherit from Mixin::DBusByTuple,
          * the derived class uses this macro to disambiguate the inherited members.
          */
-#       define BLACKMISC_DECLARE_USING_MIXIN_DBUS(DERIVED, ...)                                                         \
-            using ::BlackMisc::Mixin::DBusByMetaClass<DERIVED BLACK_TRAILING_VA_ARGS(__VA_ARGS__)>::marshallToDbus;     \
-            using ::BlackMisc::Mixin::DBusByMetaClass<DERIVED BLACK_TRAILING_VA_ARGS(__VA_ARGS__)>::unmarshallFromDbus;
+#define BLACKMISC_DECLARE_USING_MIXIN_DBUS(DERIVED, ...)                                                    \
+    using ::BlackMisc::Mixin::DBusByMetaClass<DERIVED BLACK_TRAILING_VA_ARGS(__VA_ARGS__)>::marshallToDbus; \
+    using ::BlackMisc::Mixin::DBusByMetaClass<DERIVED BLACK_TRAILING_VA_ARGS(__VA_ARGS__)>::unmarshallFromDbus;
         // *INDENT-ON*
 
     } // Mixin

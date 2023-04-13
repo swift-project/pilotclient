@@ -19,8 +19,7 @@ using namespace BlackMisc;
 
 namespace BlackGui::Models
 {
-    CStatusMessageListModel::CStatusMessageListModel(QObject *parent) :
-        CListModelTimestampObjects<CStatusMessageList, true>("ViewStatusMessageList", parent)
+    CStatusMessageListModel::CStatusMessageListModel(QObject *parent) : CListModelTimestampObjects<CStatusMessageList, true>("ViewStatusMessageList", parent)
     {
         this->setSorting(CStatusMessage::IndexUtcTimestamp, Qt::DescendingOrder);
         m_sortTieBreakers.push_front(CStatusMessage::IndexMessage);
@@ -70,7 +69,7 @@ namespace BlackGui::Models
 
     void CStatusMessageListModel::setMode(CStatusMessageListModel::Mode mode)
     {
-        const Qt::SortOrder  oldOrder = this->getSortOrder();
+        const Qt::SortOrder oldOrder = this->getSortOrder();
         const CPropertyIndex oldIndex = this->getSortProperty();
         m_columns.clear();
         m_mode = mode;
@@ -81,27 +80,27 @@ namespace BlackGui::Models
             m_columns.addColumn(CColumn::orderColumn());
             [[fallthrough]];
         case Detailed:
-            {
-                m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHmsz())));
-                CColumn col = CColumn("severity", CStatusMessage::IndexSeverityAsIcon);
-                col.setSortPropertyIndex(CStatusMessage::IndexSeverityAsString);
-                m_columns.addColumn(col);
-                m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
-                m_columns.addColumn(CColumn::standardString("category", CStatusMessage::IndexCategoriesAsString));
-            }
-            break;
+        {
+            m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHmsz())));
+            CColumn col = CColumn("severity", CStatusMessage::IndexSeverityAsIcon);
+            col.setSortPropertyIndex(CStatusMessage::IndexSeverityAsString);
+            m_columns.addColumn(col);
+            m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
+            m_columns.addColumn(CColumn::standardString("category", CStatusMessage::IndexCategoriesAsString));
+        }
+        break;
         case SimplifiedWithOrder:
             m_columns.addColumn(CColumn::orderColumn());
             [[fallthrough]];
         case Simplified:
-            {
-                m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHmsz())));
-                CColumn col = CColumn("severity", CStatusMessage::IndexSeverityAsIcon);
-                col.setSortPropertyIndex(CStatusMessage::IndexSeverityAsString);
-                m_columns.addColumn(col);
-                m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
-            }
-            break;
+        {
+            m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHmsz())));
+            CColumn col = CColumn("severity", CStatusMessage::IndexSeverityAsIcon);
+            col.setSortPropertyIndex(CStatusMessage::IndexSeverityAsString);
+            m_columns.addColumn(col);
+            m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
+        }
+        break;
         }
         // m_columns.insertEmptyColumn();
 

@@ -21,7 +21,10 @@
 
 class QWidget;
 
-namespace Ui { class CStatusMessageForm; }
+namespace Ui
+{
+    class CStatusMessageForm;
+}
 namespace BlackGui::Components
 {
     /*!

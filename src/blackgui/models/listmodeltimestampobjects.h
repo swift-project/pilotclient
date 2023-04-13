@@ -23,7 +23,8 @@ class QObject;
 namespace BlackGui::Models
 {
     //! List model for timestamp based objects with offset
-    template <typename T, bool UseCompare = false> class CListModelTimestampObjects :
+    template <typename T, bool UseCompare = false>
+    class CListModelTimestampObjects :
         public CListModelBase<T, UseCompare>
     {
     public:
@@ -45,7 +46,8 @@ namespace BlackGui::Models
     };
 
     //! List model for timestamp based objects with offset
-    template <typename T, bool UseCompare = false> class CListModelTimestampWithOffsetObjects :
+    template <typename T, bool UseCompare = false>
+    class CListModelTimestampWithOffsetObjects :
         public CListModelTimestampObjects<T, UseCompare>
     {
     public:

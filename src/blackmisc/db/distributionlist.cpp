@@ -13,11 +13,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Db, CDistribution, CDistributionList)
 
 namespace BlackMisc::Db
 {
-    CDistributionList::CDistributionList() { }
+    CDistributionList::CDistributionList() {}
 
-    CDistributionList::CDistributionList(const CSequence<CDistribution> &other) :
-        CSequence<CDistribution>(other)
-    { }
+    CDistributionList::CDistributionList(const CSequence<CDistribution> &other) : CSequence<CDistribution>(other)
+    {}
 
     QStringList CDistributionList::getChannels() const
     {
@@ -32,8 +31,7 @@ namespace BlackMisc::Db
 
     void CDistributionList::sortByStability(Qt::SortOrder order)
     {
-        this->sort([order](const CDistribution & a, const CDistribution & b)
-        {
+        this->sort([order](const CDistribution &a, const CDistribution &b) {
             const int as = a.getStability();
             const int bs = b.getStability();
             return order == Qt::AscendingOrder ? as < bs : bs < as;
@@ -42,7 +40,7 @@ namespace BlackMisc::Db
 
     bool CDistributionList::containsEqualOrMoreStable(CDistribution &distribution) const
     {
-        return containsBy([&distribution](const CDistribution & dist) { return dist.isStabilitySameOrBetter(distribution); });
+        return containsBy([&distribution](const CDistribution &dist) { return dist.isStabilitySameOrBetter(distribution); });
     }
 
     bool CDistributionList::containsUnrestricted() const

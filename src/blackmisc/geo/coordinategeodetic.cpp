@@ -23,7 +23,7 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Geo, CCoordinateGeodetic)
 namespace BlackMisc::Geo
 {
     ICoordinateGeodetic::~ICoordinateGeodetic()
-    { }
+    {}
 
     QString CCoordinateGeodetic::convertToQString(bool i18n) const
     {
@@ -32,7 +32,7 @@ namespace BlackMisc::Geo
 
     CCoordinateGeodetic CCoordinateGeodetic::fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const CAltitude &geodeticHeight)
     {
-        const CLatitude  lat = CLatitude::fromWgs84(latitudeWgs84);
+        const CLatitude lat = CLatitude::fromWgs84(latitudeWgs84);
         const CLongitude lon = CLongitude::fromWgs84(longitudeWgs84);
         return CCoordinateGeodetic(lat, lon, geodeticHeight);
     }
@@ -137,11 +137,11 @@ namespace BlackMisc::Geo
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexLatitude:  return this->latitude().propertyByIndex(index.copyFrontRemoved());
+            case IndexLatitude: return this->latitude().propertyByIndex(index.copyFrontRemoved());
             case IndexLongitude: return this->longitude().propertyByIndex(index.copyFrontRemoved());
-            case IndexLatitudeAsString:  return QVariant(this->latitudeAsString());
+            case IndexLatitudeAsString: return QVariant(this->latitudeAsString());
             case IndexLongitudeAsString: return QVariant(this->longitudeAsString());
-            case IndexGeodeticHeight:    return this->geodeticHeight().propertyByIndex(index.copyFrontRemoved());
+            case IndexGeodeticHeight: return this->geodeticHeight().propertyByIndex(index.copyFrontRemoved());
             case IndexGeodeticHeightAsString: return QVariant(this->geodeticHeightAsString());
             case IndexNormalVector: return QVariant::fromValue(this->normalVector());
             default: break;
@@ -160,11 +160,11 @@ namespace BlackMisc::Geo
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexLatitude:  return this->latitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.latitude());
+            case IndexLatitude: return this->latitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.latitude());
             case IndexLongitude: return this->longitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.longitude());
-            case IndexLatitudeAsString:  return this->latitudeAsString().compare(compareValue.latitudeAsString());
+            case IndexLatitudeAsString: return this->latitudeAsString().compare(compareValue.latitudeAsString());
             case IndexLongitudeAsString: return this->longitudeAsString().compare(compareValue.longitudeAsString());
-            case IndexGeodeticHeight:    return this->geodeticHeight().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.geodeticHeight());
+            case IndexGeodeticHeight: return this->geodeticHeight().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.geodeticHeight());
             case IndexGeodeticHeightAsString: return this->geodeticHeightAsString().compare(compareValue.geodeticHeightAsString());
             default: break;
             }
@@ -179,11 +179,7 @@ namespace BlackMisc::Geo
     {
         const CLatitude lat = this->latitude();
         const CLongitude lng = this->longitude();
-        return QStringLiteral("Geodetic: {%1/%2, %3/%4, %5}").arg(lat.valueRoundedWithUnit(CAngleUnit::deg(), 6, i18n),
-                lat.valueRoundedWithUnit(CAngleUnit::rad(), 6, i18n),
-                lng.valueRoundedWithUnit(CAngleUnit::deg(), 6, i18n),
-                lng.valueRoundedWithUnit(CAngleUnit::rad(), 6, i18n),
-                this->geodeticHeight().valueRoundedWithUnit(CLengthUnit::ft(), 2, i18n));
+        return QStringLiteral("Geodetic: {%1/%2, %3/%4, %5}").arg(lat.valueRoundedWithUnit(CAngleUnit::deg(), 6, i18n), lat.valueRoundedWithUnit(CAngleUnit::rad(), 6, i18n), lng.valueRoundedWithUnit(CAngleUnit::deg(), 6, i18n), lng.valueRoundedWithUnit(CAngleUnit::rad(), 6, i18n), this->geodeticHeight().valueRoundedWithUnit(CLengthUnit::ft(), 2, i18n));
     }
 
     bool ICoordinateGeodetic::isNaNVector() const
@@ -221,16 +217,43 @@ namespace BlackMisc::Geo
     {
         constexpr double l = 1.00001; // because of interpolation
         return v[0] <= l && v[1] <= l && v[2] <= l &&
-                v[0] >= -l && v[1] >= -l && v[2] >= -l;
+               v[0] >= -l && v[1] >= -l && v[2] >= -l;
     }
 
     int CCoordinateGeodetic::clampVector()
     {
         int c = 0;
         // *INDENT-OFF*
-        if (m_x < -1.0) { m_x = -1.0; c++; } else if (m_x > 1.0) { m_x = 1.0; c++; }
-        if (m_y < -1.0) { m_y = -1.0; c++; } else if (m_y > 1.0) { m_y = 1.0; c++; }
-        if (m_z < -1.0) { m_z = -1.0; c++; } else if (m_z > 1.0) { m_z = 1.0; c++; }
+        if (m_x < -1.0)
+        {
+            m_x = -1.0;
+            c++;
+        }
+        else if (m_x > 1.0)
+        {
+            m_x = 1.0;
+            c++;
+        }
+        if (m_y < -1.0)
+        {
+            m_y = -1.0;
+            c++;
+        }
+        else if (m_y > 1.0)
+        {
+            m_y = 1.0;
+            c++;
+        }
+        if (m_z < -1.0)
+        {
+            m_z = -1.0;
+            c++;
+        }
+        else if (m_z > 1.0)
+        {
+            m_z = 1.0;
+            c++;
+        }
         // *INDENT-ON*
         return c;
     }
@@ -239,20 +262,24 @@ namespace BlackMisc::Geo
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
         return (ICoordinateGeodetic::canHandleIndex(index)) ?
-                ICoordinateGeodetic::propertyByIndex(index) :
-                CValueObject::propertyByIndex(index);
+                   ICoordinateGeodetic::propertyByIndex(index) :
+                   CValueObject::propertyByIndex(index);
     }
 
     void CCoordinateGeodetic::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CCoordinateGeodetic>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CCoordinateGeodetic>();
+            return;
+        }
         const ICoordinateGeodetic::ColumnIndex i = index.frontCasted<ICoordinateGeodetic::ColumnIndex>();
         switch (i)
         {
         case IndexGeodeticHeight: m_geodeticHeight.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-        case IndexLatitude:  this->setLatitude(variant.value<CLatitude>());   break;
+        case IndexLatitude: this->setLatitude(variant.value<CLatitude>()); break;
         case IndexLongitude: this->setLongitude(variant.value<CLongitude>()); break;
-        case IndexLatitudeAsString:  this->setLatitude(CLatitude::fromWgs84(variant.toString()));   break;
+        case IndexLatitudeAsString: this->setLatitude(CLatitude::fromWgs84(variant.toString())); break;
         case IndexLongitudeAsString: this->setLongitude(CLongitude::fromWgs84(variant.toString())); break;
         case IndexGeodeticHeightAsString: m_geodeticHeight.parseFromString(variant.toString()); break;
         case IndexNormalVector: this->setNormalVector(variant.value<QVector3D>()); break;
@@ -263,8 +290,8 @@ namespace BlackMisc::Geo
     int CCoordinateGeodetic::comparePropertyByIndex(CPropertyIndexRef index, const CCoordinateGeodetic &compareValue) const
     {
         return ICoordinateGeodetic::canHandleIndex(index) ?
-                ICoordinateGeodetic::comparePropertyByIndex(index, compareValue) :
-                CValueObject::comparePropertyByIndex(index, compareValue);
+                   ICoordinateGeodetic::comparePropertyByIndex(index, compareValue) :
+                   CValueObject::comparePropertyByIndex(index, compareValue);
     }
 
     CCoordinateGeodetic::CCoordinateGeodetic(const std::array<double, 3> &normalVector)
@@ -277,21 +304,17 @@ namespace BlackMisc::Geo
         // void
     }
 
-    CCoordinateGeodetic::CCoordinateGeodetic(const CLatitude &latitude, const CLongitude &longitude, const CAltitude &geodeticHeight) :
-        m_x(latitude.cos() * longitude.cos()),
-        m_y(latitude.cos() * longitude.sin()),
-        m_z(latitude.sin()),
-        m_geodeticHeight(geodeticHeight)
+    CCoordinateGeodetic::CCoordinateGeodetic(const CLatitude &latitude, const CLongitude &longitude, const CAltitude &geodeticHeight) : m_x(latitude.cos() * longitude.cos()),
+                                                                                                                                        m_y(latitude.cos() * longitude.sin()),
+                                                                                                                                        m_z(latitude.sin()),
+                                                                                                                                        m_geodeticHeight(geodeticHeight)
     {}
 
-    CCoordinateGeodetic::CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees) :
-        CCoordinateGeodetic({ latitudeDegrees, CAngleUnit::deg() }, { longitudeDegrees, CAngleUnit::deg() }, { 0, nullptr }) {}
+    CCoordinateGeodetic::CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees) : CCoordinateGeodetic({ latitudeDegrees, CAngleUnit::deg() }, { longitudeDegrees, CAngleUnit::deg() }, { 0, nullptr }) {}
 
-    CCoordinateGeodetic::CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees, double heightFeet) :
-        CCoordinateGeodetic({ latitudeDegrees, CAngleUnit::deg() }, { longitudeDegrees, CAngleUnit::deg() }, { heightFeet, CLengthUnit::ft() }) {}
+    CCoordinateGeodetic::CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees, double heightFeet) : CCoordinateGeodetic({ latitudeDegrees, CAngleUnit::deg() }, { longitudeDegrees, CAngleUnit::deg() }, { heightFeet, CLengthUnit::ft() }) {}
 
-    CCoordinateGeodetic::CCoordinateGeodetic(const ICoordinateGeodetic &coordinate) :
-        m_geodeticHeight(coordinate.geodeticHeight())
+    CCoordinateGeodetic::CCoordinateGeodetic(const ICoordinateGeodetic &coordinate) : m_geodeticHeight(coordinate.geodeticHeight())
     {
         this->setNormalVector(coordinate.normalVectorDouble());
     }
@@ -308,8 +331,8 @@ namespace BlackMisc::Geo
         constexpr double earthRadiusMeters = 6371000.8;
         const double startLatRad = this->latitude().value(CAngleUnit::rad());
         const double startLngRad = this->longitude().value(CAngleUnit::rad());
-        const double bearingRad  = relBearing.value(CAngleUnit::rad());
-        const double distRatio   = distance.value(CLengthUnit::m()) / earthRadiusMeters;
+        const double bearingRad = relBearing.value(CAngleUnit::rad());
+        const double distRatio = distance.value(CLengthUnit::m()) / earthRadiusMeters;
 
         const double newLatRad = asin(sin(startLatRad) * cos(distRatio) + cos(startLatRad) * sin(distRatio) * cos(bearingRad));
         double newLngRad = 0;
@@ -325,7 +348,7 @@ namespace BlackMisc::Geo
         }
 
         CCoordinateGeodetic copy = *this;
-        const CLatitude  lat(newLatRad, CAngleUnit::rad());
+        const CLatitude lat(newLatRad, CAngleUnit::rad());
         const CLongitude lng(newLngRad, CAngleUnit::rad());
         copy.setLatLong(lat, lng);
         return copy;
@@ -344,8 +367,7 @@ namespace BlackMisc::Geo
 
     QVector3D CCoordinateGeodetic::normalVector() const
     {
-        return
-        {
+        return {
             static_cast<float>(m_x),
             static_cast<float>(m_y),
             static_cast<float>(m_z)
@@ -481,12 +503,12 @@ namespace BlackMisc::Geo
     QString ICoordinateWithRelativePosition::convertToQString(bool i18n) const
     {
         return m_relativeBearing.toQString(i18n) % u' ' %
-                m_relativeDistance.toQString(i18n) % u' ' %
-                ICoordinateGeodetic::convertToQString(i18n);
+               m_relativeDistance.toQString(i18n) % u' ' %
+               ICoordinateGeodetic::convertToQString(i18n);
     }
 
     ICoordinateWithRelativePosition::ICoordinateWithRelativePosition()
-    { }
+    {}
 
     bool ICoordinateWithRelativePosition::canHandleIndex(CPropertyIndexRef index)
     {

@@ -75,7 +75,7 @@ namespace BlackMisc
           m_machineName(cachedLocalHostName()),
           m_processName(cachedEscapedApplicationName()),
           m_processId(QCoreApplication::applicationPid())
-    { }
+    {}
 
     CIdentifier::CIdentifier(const QString &name, QObject *object) : CIdentifier(name)
     {
@@ -88,10 +88,9 @@ namespace BlackMisc
     }
 
     CIdentifier::CIdentifier(const QString &name, const QString &machineId, const QString &machineName,
-                             const QString &processName, qint64 processId) :
-        m_name(name), m_machineIdBase64(machineId), m_machineName(machineName),
-        m_processName(processName), m_processId(processId)
-    { }
+                             const QString &processName, qint64 processId) : m_name(name), m_machineIdBase64(machineId), m_machineName(machineName),
+                                                                             m_processName(processName), m_processId(processId)
+    {}
 
     const CIdentifier &CIdentifier::anonymous()
     {
@@ -138,7 +137,7 @@ namespace BlackMisc
     void CIdentifier::linkWithQObjectName(QObject *object)
     {
         if (!object) { return; }
-        QObject::connect(object, &QObject::objectNameChanged, object, [ = ](const QString & name) { this->appendName(name); });
+        QObject::connect(object, &QObject::objectNameChanged, object, [=](const QString &name) { this->appendName(name); });
     }
 
     QByteArray CIdentifier::getMachineId() const
@@ -217,13 +216,13 @@ namespace BlackMisc
     void CIdentifier::updateToCurrentMachine()
     {
         m_machineIdBase64 = cachedMachineUniqueId().toBase64(QByteArray::OmitTrailingEquals);
-        m_machineName     = cachedLocalHostName();
+        m_machineName = cachedLocalHostName();
     }
 
     void CIdentifier::updateToCurrentProcess()
     {
         m_processName = QCoreApplication::applicationName();
-        m_processId   = QCoreApplication::applicationPid();
+        m_processId = QCoreApplication::applicationPid();
     }
 
     QString CIdentifier::convertToQString(bool i18n) const
@@ -245,14 +244,14 @@ namespace BlackMisc
 
         switch (i)
         {
-        case IndexName:               return QVariant::fromValue(m_name);
-        case IndexMachineIdBase64:    return QVariant::fromValue(m_machineIdBase64);
-        case IndexMachineName:        return QVariant::fromValue(getMachineName());
-        case IndexMachineId:          return QVariant::fromValue(getMachineId());
-        case IndexProcessId:          return QVariant::fromValue(m_processId);
-        case IndexProcessName:        return QVariant::fromValue(m_processName);
+        case IndexName: return QVariant::fromValue(m_name);
+        case IndexMachineIdBase64: return QVariant::fromValue(m_machineIdBase64);
+        case IndexMachineName: return QVariant::fromValue(getMachineName());
+        case IndexMachineId: return QVariant::fromValue(getMachineId());
+        case IndexProcessId: return QVariant::fromValue(m_processId);
+        case IndexProcessName: return QVariant::fromValue(m_processName);
         case IndexIsFromLocalMachine: return QVariant::fromValue(isFromLocalMachine());
-        case IndexIsFromSameProcess:  return QVariant::fromValue(hasApplicationProcessId());
+        case IndexIsFromSameProcess: return QVariant::fromValue(hasApplicationProcessId());
         case IndexIsFromSameProcessName: return QVariant::fromValue(hasApplicationProcessName());
         default: return CValueObject::propertyByIndex(index);
         }
@@ -266,14 +265,14 @@ namespace BlackMisc
 
         switch (i)
         {
-        case IndexName:               return m_name.compare(compareValue.m_name, Qt::CaseInsensitive);
-        case IndexMachineIdBase64:    return m_machineIdBase64.compare(compareValue.m_machineIdBase64);
-        case IndexMachineName:        return m_machineName.compare(compareValue.m_machineName, Qt::CaseInsensitive);
-        case IndexMachineId:          return m_machineName.compare(compareValue.m_machineName, Qt::CaseInsensitive);
-        case IndexProcessId:          return Compare::compare(m_processId, compareValue.m_processId);
-        case IndexProcessName:        return m_processName.compare(compareValue.m_processName, Qt::CaseInsensitive);
+        case IndexName: return m_name.compare(compareValue.m_name, Qt::CaseInsensitive);
+        case IndexMachineIdBase64: return m_machineIdBase64.compare(compareValue.m_machineIdBase64);
+        case IndexMachineName: return m_machineName.compare(compareValue.m_machineName, Qt::CaseInsensitive);
+        case IndexMachineId: return m_machineName.compare(compareValue.m_machineName, Qt::CaseInsensitive);
+        case IndexProcessId: return Compare::compare(m_processId, compareValue.m_processId);
+        case IndexProcessName: return m_processName.compare(compareValue.m_processName, Qt::CaseInsensitive);
         case IndexIsFromLocalMachine: return Compare::compare(this->isFromLocalMachine(), compareValue.isFromLocalMachine());
-        case IndexIsFromSameProcess:  return Compare::compare(this->hasApplicationProcessId(), compareValue.hasApplicationProcessId());
+        case IndexIsFromSameProcess: return Compare::compare(this->hasApplicationProcessId(), compareValue.hasApplicationProcessId());
         case IndexIsFromSameProcessName: return Compare::compare(this->hasApplicationProcessName(), compareValue.hasApplicationProcessName());
         default: return CValueObject::comparePropertyByIndex(index, compareValue);
         }

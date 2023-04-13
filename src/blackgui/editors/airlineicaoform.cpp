@@ -32,9 +32,8 @@ using namespace BlackGui::Components;
 
 namespace BlackGui::Editors
 {
-    CAirlineIcaoForm::CAirlineIcaoForm(QWidget *parent) :
-        CForm(parent),
-        ui(new Ui::CAirlineIcaoForm)
+    CAirlineIcaoForm::CAirlineIcaoForm(QWidget *parent) : CForm(parent),
+                                                          ui(new Ui::CAirlineIcaoForm)
     {
         ui->setupUi(this);
         ui->le_Updated->setReadOnly(true);
@@ -52,11 +51,11 @@ namespace BlackGui::Editors
         connect(ui->tb_Paste, &QToolButton::clicked, this, &CAirlineIcaoForm::pasted);
         connect(ui->drop_DropData, &CDropSite::droppedValueObject, this, &CAirlineIcaoForm::onDroppedCode);
         ui->drop_DropData->setInfoText("<drop airline ICAO code>");
-        ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CAirlineIcaoCode>(), qMetaTypeId<CAirlineIcaoCodeList>()});
+        ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CAirlineIcaoCode>(), qMetaTypeId<CAirlineIcaoCodeList>() });
     }
 
     CAirlineIcaoForm::~CAirlineIcaoForm()
-    { }
+    {}
 
     void CAirlineIcaoForm::setValue(const CAirlineIcaoCode &icao)
     {
@@ -207,8 +206,8 @@ namespace BlackGui::Editors
         else if (variantDropped.canConvert<CAirlineIcaoCodeList>())
         {
             const CAirlineIcaoCodeList icaoList(variantDropped.value<CAirlineIcaoCodeList>());
-            if (icaoList.isEmpty()) { return;  }
-            icao =  icaoList.front();
+            if (icaoList.isEmpty()) { return; }
+            icao = icaoList.front();
         }
         else
         {

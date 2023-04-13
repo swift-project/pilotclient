@@ -75,4 +75,4 @@ namespace BlackMisc::Network
 Q_DECLARE_METATYPE(BlackMisc::Network::CRemoteFileList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Network::CRemoteFile>)
 
-#endif //guard
+#endif // guard

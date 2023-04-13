@@ -19,7 +19,10 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CStatusMessageFormSmall; }
+namespace Ui
+{
+    class CStatusMessageFormSmall;
+}
 namespace BlackGui::Components
 {
     /*!

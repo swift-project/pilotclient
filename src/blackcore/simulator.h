@@ -47,8 +47,14 @@
 
 namespace BlackMisc
 {
-    namespace Aviation { class CCallsign; }
-    namespace Network  { class CTextMessage; }
+    namespace Aviation
+    {
+        class CCallsign;
+    }
+    namespace Network
+    {
+        class CTextMessage;
+    }
 }
 
 namespace BlackCore
@@ -56,12 +62,12 @@ namespace BlackCore
     //! Interface to a simulator.
     class BLACKCORE_EXPORT ISimulator :
         public QObject,
-        public BlackMisc::Simulation::COwnAircraftAware,    // access to in memory own aircraft data
+        public BlackMisc::Simulation::COwnAircraftAware, // access to in memory own aircraft data
         public BlackMisc::Simulation::CRemoteAircraftAware, // access to in memory remote aircraft data
-        public BlackMisc::Weather::CWeatherGridAware,       // access to in memory weather grid
-        public BlackMisc::Network::CClientAware,            // the network client with its capabilities
+        public BlackMisc::Weather::CWeatherGridAware, // access to in memory weather grid
+        public BlackMisc::Network::CClientAware, // the network client with its capabilities
         public BlackMisc::Simulation::ISimulationEnvironmentProvider, // give access to elevation etc.
-        public BlackMisc::Simulation::IInterpolationSetupProvider,    // setup
+        public BlackMisc::Simulation::IInterpolationSetupProvider, // setup
         public BlackMisc::CIdentifiable
     {
         Q_OBJECT
@@ -72,11 +78,11 @@ namespace BlackCore
         //! ISimulator status
         enum SimulatorStatusFlag
         {
-            Unspecified  = 0,      //!< unspecied, needed as default value
+            Unspecified = 0, //!< unspecied, needed as default value
             Disconnected = 1 << 0, //!< not connected, and hence not simulating/paused
-            Connected    = 1 << 1, //!< Is the plugin connected to the simulator?
-            Simulating   = 1 << 2, //!< Is the simulator actually simulating?
-            Paused       = 1 << 3, //!< Is the simulator paused?
+            Connected = 1 << 1, //!< Is the plugin connected to the simulator?
+            Simulating = 1 << 2, //!< Is the simulator actually simulating?
+            Paused = 1 << 3, //!< Is the simulator paused?
         };
         Q_DECLARE_FLAGS(SimulatorStatus, SimulatorStatusFlag)
         Q_FLAG(SimulatorStatus)
@@ -178,7 +184,7 @@ namespace BlackCore
         virtual void recalculateAllAircraft();
 
         //! Weather activated
-        virtual bool isWeatherActivated() const ;
+        virtual bool isWeatherActivated() const;
 
         //! Activates or deactivates simulator weather
         virtual void setWeatherActivated(bool activated);
@@ -254,8 +260,8 @@ namespace BlackCore
         virtual bool isShuttingDownDisconnectedOrNoAircraft(bool isProbe) const
         {
             return isProbe ?
-                   this->isShuttingDownOrDisconnected() :
-                   (this->isShuttingDownOrDisconnected() || this->getAircraftInRangeCount() < 1);
+                       this->isShuttingDownOrDisconnected() :
+                       (this->isShuttingDownOrDisconnected() || this->getAircraftInRangeCount() < 1);
         }
 
         //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
@@ -415,7 +421,7 @@ namespace BlackCore
     protected:
         //! Constructor with all the providers
         ISimulator(const BlackMisc::Simulation::CSimulatorPluginInfo &pluginInfo,
-                   BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
+                   BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                    BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                    BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                    BlackMisc::Network::IClientProvider *clientProvider,
@@ -585,31 +591,31 @@ namespace BlackCore
         //! Lookup against DB data
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
 
-        bool   m_pausedSimFreezesInterpolation  = false;  //!< paused simulator will also pause interpolation (so AI aircraft will hold)
-        bool   m_updateRemoteAircraftInProgress = false;  //!< currently updating remote aircraft
-        bool   m_enablePseudoElevation = false;           //!< return faked elevations (testing)
-        int    m_timerId = -1;                            //!< dispatch timer id
-        int    m_statsUpdateAircraftRuns        = 0;      //!< statistics update count
-        int    m_statsUpdateAircraftLimited     = 0;      //!< skipped because of max.update limitations
-        double m_statsUpdateAircraftTimeAvgMs   = 0;      //!< statistics average update time
-        double m_averageFps                     = -1.0;   //!< FPS
-        double m_simTimeRatio                   = 1.0;    //!< ratio of simulation time to real time, due to low FPS (X-Plane)
-        double m_trackMilesShort                = 0.0;    //!< difference between real and reported groundspeed, multiplied by time
-        double m_minutesLate                    = 0.0;    //!< difference between real and reported groundspeed, integrated over time
-        qint64 m_updateAllRemoteAircraftUntil   = 0;      //!< force an update of all remote aircraft, used when own aircraft is moved, paused to make sure all remote aircraft are updated
-        qint64 m_statsUpdateAircraftTimeTotalMs = 0;      //!< statistics total update time
-        qint64 m_statsCurrentUpdateTimeMs       = 0;      //!< statistics current update time
-        qint64 m_statsMaxUpdateTimeMs           = 0;      //!< statistics max.update time
-        qint64 m_lastRecordedGndElevationMs     = 0;      //!< when gnd.elevation was last modified
-        qint64 m_statsLastUpdateAircraftRequestedMs  = 0; //!< when was the last aircraft update requested
+        bool m_pausedSimFreezesInterpolation = false; //!< paused simulator will also pause interpolation (so AI aircraft will hold)
+        bool m_updateRemoteAircraftInProgress = false; //!< currently updating remote aircraft
+        bool m_enablePseudoElevation = false; //!< return faked elevations (testing)
+        int m_timerId = -1; //!< dispatch timer id
+        int m_statsUpdateAircraftRuns = 0; //!< statistics update count
+        int m_statsUpdateAircraftLimited = 0; //!< skipped because of max.update limitations
+        double m_statsUpdateAircraftTimeAvgMs = 0; //!< statistics average update time
+        double m_averageFps = -1.0; //!< FPS
+        double m_simTimeRatio = 1.0; //!< ratio of simulation time to real time, due to low FPS (X-Plane)
+        double m_trackMilesShort = 0.0; //!< difference between real and reported groundspeed, multiplied by time
+        double m_minutesLate = 0.0; //!< difference between real and reported groundspeed, integrated over time
+        qint64 m_updateAllRemoteAircraftUntil = 0; //!< force an update of all remote aircraft, used when own aircraft is moved, paused to make sure all remote aircraft are updated
+        qint64 m_statsUpdateAircraftTimeTotalMs = 0; //!< statistics total update time
+        qint64 m_statsCurrentUpdateTimeMs = 0; //!< statistics current update time
+        qint64 m_statsMaxUpdateTimeMs = 0; //!< statistics max.update time
+        qint64 m_lastRecordedGndElevationMs = 0; //!< when gnd.elevation was last modified
+        qint64 m_statsLastUpdateAircraftRequestedMs = 0; //!< when was the last aircraft update requested
         qint64 m_statsUpdateAircraftRequestedDeltaMs = 0; //!< delta time between 2 aircraft updates
 
-        BlackMisc::Aviation::CAltitude              m_pseudoElevation { BlackMisc::Aviation::CAltitude::null() }; //!< pseudo elevation for testing purposes
-        BlackMisc::Simulation::CSimulatorInternals  m_simulatorInternals;  //!< setup read from the sim
+        BlackMisc::Aviation::CAltitude m_pseudoElevation { BlackMisc::Aviation::CAltitude::null() }; //!< pseudo elevation for testing purposes
+        BlackMisc::Simulation::CSimulatorInternals m_simulatorInternals; //!< setup read from the sim
         BlackMisc::Simulation::CInterpolationLogger m_interpolationLogger; //!< log.interpolation
-        BlackMisc::Simulation::CAutoPublishData     m_autoPublishing;      //!< for the DB
+        BlackMisc::Simulation::CAutoPublishData m_autoPublishing; //!< for the DB
         BlackMisc::Aviation::CAircraftSituationPerCallsign m_lastSentSituations; //!< last situations sent to simulator
-        BlackMisc::Aviation::CAircraftPartsPerCallsign     m_lastSentParts;      //!< last parts sent to simulator
+        BlackMisc::Aviation::CAircraftPartsPerCallsign m_lastSentParts; //!< last parts sent to simulator
 
         // some optional functionality which can be used by the simulators as needed
         BlackMisc::Simulation::CSimulatedAircraftList m_addAgainAircraftWhenRemoved; //!< add this model again when removed, normally used to change model
@@ -625,7 +631,7 @@ namespace BlackCore
         BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_multiSettings { this }; //!< simulator settings for all simulators
 
         // weather
-        bool m_isWeatherActivated = false;                         //!< Is simulator weather activated?
+        bool m_isWeatherActivated = false; //!< Is simulator weather activated?
         BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
         BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &ISimulator::reloadWeatherSettings }; //!< Selected weather scenario
 
@@ -643,23 +649,23 @@ namespace BlackCore
 
         // statistics values of how often those functions are called
         // those are the added counters, overflow will not be an issue here (discussed in T171 review)
-        int m_statsPhysicallyAddedAircraft   = 0; //!< statistics, how many aircraft added
+        int m_statsPhysicallyAddedAircraft = 0; //!< statistics, how many aircraft added
         int m_statsPhysicallyRemovedAircraft = 0; //!< statistics, how many aircraft removed
 
         // highlighting
-        bool m_blinkCycle = false;                //!< used for highlighting
-        qint64 m_highlightEndTimeMsEpoch = 0;     //!< end highlighting
+        bool m_blinkCycle = false; //!< used for highlighting
+        qint64 m_highlightEndTimeMsEpoch = 0; //!< end highlighting
         BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft; //!< all other aircraft are to be ignored
 
         // timer
-        int m_timerCounter = 0;                   //!< allows to calculate n seconds
-        QTimer m_oneSecondTimer;                  //!< multi purpose timer with 1 sec. interval
+        int m_timerCounter = 0; //!< allows to calculate n seconds
+        QTimer m_oneSecondTimer; //!< multi purpose timer with 1 sec. interval
 
         // misc.
-        bool                              m_networkConnected = false;          //!< flight network connected
-        bool                              m_test = false;                      //!< test mode?
-        BlackMisc::Aviation::CCallsignSet m_callsignsToBeRendered;             //!< callsigns which will be rendered
-        BlackMisc::CConnectionGuard       m_remoteAircraftProviderConnections; //!< connected signal/slots
+        bool m_networkConnected = false; //!< flight network connected
+        bool m_test = false; //!< test mode?
+        BlackMisc::Aviation::CCallsignSet m_callsignsToBeRendered; //!< callsigns which will be rendered
+        BlackMisc::CConnectionGuard m_remoteAircraftProviderConnections; //!< connected signal/slots
     };
 
     //! \brief Interface to a simulator listener.
@@ -722,7 +728,7 @@ namespace BlackCore
         void onAboutToShutdown();
 
         BlackMisc::Simulation::CSimulatorPluginInfo m_info;
-        std::atomic_bool m_isRunning       { false };
+        std::atomic_bool m_isRunning { false };
         std::atomic_bool m_aboutToShutdown { false }; // swift will shutdown
     };
 

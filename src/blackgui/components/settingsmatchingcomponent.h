@@ -15,8 +15,14 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace BlackCore::Context { class IContextSimulator; }
-namespace Ui { class CSettingsMatchingComponent; }
+namespace BlackCore::Context
+{
+    class IContextSimulator;
+}
+namespace Ui
+{
+    class CSettingsMatchingComponent;
+}
 namespace BlackGui::Components
 {
     //! Settings for matching component

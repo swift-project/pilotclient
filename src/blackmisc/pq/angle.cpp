@@ -18,22 +18,21 @@ using namespace BlackMisc::Math;
 
 namespace BlackMisc::PhysicalQuantities
 {
-    CAngle::CAngle(int degrees, int minutes, double seconds) :
-        CPhysicalQuantity(
-            degrees + minutes / 100.0 + seconds / 10000.0,
-            CAngleUnit::sexagesimalDeg())
+    CAngle::CAngle(int degrees, int minutes, double seconds) : CPhysicalQuantity(
+                                                                   degrees + minutes / 100.0 + seconds / 10000.0,
+                                                                   CAngleUnit::sexagesimalDeg())
     {
         Q_ASSERT_X((degrees >= 0 && minutes >= 0 && seconds >= 0) ||
-                    (degrees <= 0 && minutes <= 0 && seconds <= 0), Q_FUNC_INFO, "Same sign required");
+                       (degrees <= 0 && minutes <= 0 && seconds <= 0),
+                   Q_FUNC_INFO, "Same sign required");
     }
 
-    CAngle::CAngle(int degrees, double minutes) :
-        CPhysicalQuantity(
-            degrees + minutes / 100.0,
-            CAngleUnit::sexagesimalDeg())
+    CAngle::CAngle(int degrees, double minutes) : CPhysicalQuantity(
+                                                      degrees + minutes / 100.0,
+                                                      CAngleUnit::sexagesimalDeg())
     {
         Q_ASSERT_X((degrees >= 0 && minutes >= 0) || (degrees <= 0 && minutes <= 0),
-                    Q_FUNC_INFO, "Same sign required");
+                   Q_FUNC_INFO, "Same sign required");
     }
 
     void CAngle::unifySign(int degrees, int &minutes, double &seconds)

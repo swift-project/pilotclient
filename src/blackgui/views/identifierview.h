@@ -16,7 +16,10 @@
 #include "blackgui/views/viewbase.h"
 #include "blackmisc/identifierlist.h"
 
-namespace BlackMisc { class CIdentifier; }
+namespace BlackMisc
+{
+    class CIdentifier;
+}
 namespace BlackGui::Views
 {
     //! Originator servers

@@ -20,7 +20,10 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CDistributorForm; }
+namespace Ui
+{
+    class CDistributorForm;
+}
 namespace BlackGui::Editors
 {
     /*!
@@ -73,6 +76,6 @@ namespace BlackGui::Editors
         QScopedPointer<Ui::CDistributorForm> ui;
         BlackMisc::Simulation::CDistributor m_currentDistributor;
     };
-} //ns
+} // ns
 
 #endif // guard

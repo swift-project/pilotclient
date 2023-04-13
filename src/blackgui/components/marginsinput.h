@@ -15,7 +15,10 @@
 #include <QMargins>
 #include <QScopedPointer>
 
-namespace Ui { class CMarginsInput; }
+namespace Ui
+{
+    class CMarginsInput;
+}
 
 namespace BlackGui::Components
 {

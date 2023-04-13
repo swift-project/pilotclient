@@ -112,7 +112,7 @@ namespace XSwiftBus
 
     void CDBusConnection::registerObjectPath(CDBusObject *object, const std::string &interfaceName, const std::string &objectPath, const DBusObjectPathVTable &dbusObjectPathVTable)
     {
-        (void) interfaceName;
+        (void)interfaceName;
         if (!m_connection) { return; }
 
         dbus_connection_try_register_object_path(m_connection.get(), objectPath.c_str(), &dbusObjectPathVTable, object, nullptr);
@@ -135,7 +135,8 @@ namespace XSwiftBus
         dbus_connection_ref(m_connection.get());
         if (dbus_connection_get_dispatch_status(m_connection.get()) == DBUS_DISPATCH_DATA_REMAINS)
         {
-            while (dbus_connection_dispatch(m_connection.get()) == DBUS_DISPATCH_DATA_REMAINS);
+            while (dbus_connection_dispatch(m_connection.get()) == DBUS_DISPATCH_DATA_REMAINS)
+                ;
         }
         dbus_connection_unref(m_connection.get());
     }
@@ -147,7 +148,7 @@ namespace XSwiftBus
         switch (status)
         {
         case DBUS_DISPATCH_DATA_REMAINS:
-            //m_dispatcher->add(this);
+            // m_dispatcher->add(this);
             break;
         case DBUS_DISPATCH_COMPLETE:
         case DBUS_DISPATCH_NEED_MEMORY:
@@ -170,7 +171,7 @@ namespace XSwiftBus
         DBusError err;
         dbus_error_init(&err);
 
-        if (dbus_message_is_signal (message, DBUS_INTERFACE_LOCAL, "Disconnected"))
+        if (dbus_message_is_signal(message, DBUS_INTERFACE_LOCAL, "Disconnected"))
         {
             for (auto it = obj->m_disconnectedCallbacks.begin(); it != obj->m_disconnectedCallbacks.end(); ++it)
             {

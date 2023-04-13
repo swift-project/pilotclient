@@ -85,14 +85,13 @@ namespace
 namespace BlackSimPlugin::Flightgear
 {
     int FGSWIFTBUS_API_VERSION = -1;
-    QList<int> incompatibleVersions = {1,2};
+    QList<int> incompatibleVersions = { 1, 2 };
     CSimulatorFlightgear::CSimulatorFlightgear(const CSimulatorPluginInfo &info,
-            IOwnAircraftProvider *ownAircraftProvider,
-            IRemoteAircraftProvider *remoteAircraftProvider,
-            IWeatherGridProvider *weatherGridProvider,
-            IClientProvider *clientProvider,
-            QObject *parent) :
-        CSimulatorPluginCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
+                                               IOwnAircraftProvider *ownAircraftProvider,
+                                               IRemoteAircraftProvider *remoteAircraftProvider,
+                                               IWeatherGridProvider *weatherGridProvider,
+                                               IClientProvider *clientProvider,
+                                               QObject *parent) : CSimulatorPluginCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
     {
         m_watcher = new QDBusServiceWatcher(this);
         m_watcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
@@ -112,7 +111,7 @@ namespace BlackSimPlugin::Flightgear
         m_pendingAddedTimer.start(5000);
 
         this->setDefaultModel({ "FG c172p", CAircraftModel::TypeModelMatchingDefaultModel,
-                                "C172", CAircraftIcaoCode("C172", "L1P")});
+                                "C172", CAircraftIcaoCode("C172", "L1P") });
         this->resetFlightgearData();
     }
 
@@ -216,7 +215,7 @@ namespace BlackSimPlugin::Flightgear
             CAircraftSituation situation;
             situation.setPosition({ m_flightgearData.latitudeDeg, m_flightgearData.longitudeDeg, 0 });
             situation.setAltitude({ m_flightgearData.altitudeFt, CAltitude::MeanSeaLevel, CLengthUnit::ft() });
-            situation.setPressureAltitude({m_flightgearData.pressureAltitudeFt, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::ft()});
+            situation.setPressureAltitude({ m_flightgearData.pressureAltitudeFt, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::ft() });
             situation.setHeading({ m_flightgearData.trueHeadingDeg, CHeading::True, CAngleUnit::deg() });
             situation.setPitch({ m_flightgearData.pitchDeg, CAngleUnit::deg() });
             situation.setBank({ m_flightgearData.rollDeg, CAngleUnit::deg() });
@@ -226,14 +225,13 @@ namespace BlackSimPlugin::Flightgear
             if (!m_simulatorPaused)
             {
                 situation.setVelocity({ m_flightgearData.velocityXMs, m_flightgearData.velocityYMs, m_flightgearData.velocityZMs,
-                    CSpeedUnit::m_s(), m_flightgearData.pitchRateRadPerSec, m_flightgearData.rollRateRadPerSec, m_flightgearData.yawRateRadPerSec,
-                    CAngleUnit::rad(), CTimeUnit::s()});
+                                        CSpeedUnit::m_s(), m_flightgearData.pitchRateRadPerSec, m_flightgearData.rollRateRadPerSec, m_flightgearData.yawRateRadPerSec,
+                                        CAngleUnit::rad(), CTimeUnit::s() });
             }
             else
             {
-                situation.setVelocity({ 0.0, 0.0, 0.0, CSpeedUnit::m_s(), 0.0, 0.0, 0.0, CAngleUnit::rad(), CTimeUnit::s()});
+                situation.setVelocity({ 0.0, 0.0, 0.0, CSpeedUnit::m_s(), 0.0, 0.0, 0.0, CAngleUnit::rad(), CTimeUnit::s() });
             }
-
 
             // Updates
             // Do not update ICAO codes, as this overrides reverse lookups
@@ -249,12 +247,12 @@ namespace BlackSimPlugin::Flightgear
             // updates
             com1.setFrequencyActive(CFrequency(m_flightgearData.com1ActiveKhz, CFrequencyUnit::kHz()));
             com1.setFrequencyStandby(CFrequency(m_flightgearData.com1StandbyKhz, CFrequencyUnit::kHz()));
-            com1.setVolumeReceive(qRound(m_flightgearData.volumeCom1*100));
+            com1.setVolumeReceive(qRound(m_flightgearData.volumeCom1 * 100));
             const bool changedCom1 = myAircraft.getCom1System() != com1;
 
             com2.setFrequencyActive(CFrequency(m_flightgearData.com2ActiveKhz, CFrequencyUnit::kHz()));
             com2.setFrequencyStandby(CFrequency(m_flightgearData.com2StandbyKhz, CFrequencyUnit::kHz()));
-            com2.setVolumeReceive(qRound(m_flightgearData.volumeCom2*100));
+            com2.setVolumeReceive(qRound(m_flightgearData.volumeCom2 * 100));
             const bool changedCom2 = myAircraft.getCom2System() != com2;
 
             transponder = CTransponder::getStandardTransponder(m_flightgearData.xpdrCode, xpdrMode(m_flightgearData.xpdrMode, m_flightgearData.xpdrIdent));
@@ -288,17 +286,17 @@ namespace BlackSimPlugin::Flightgear
             {
                 // Engine number start counting at 1
                 // We consider the engine running when N1 is bigger than 5 %
-                CAircraftEngine engine {engineNumber + 1, m_flightgearData.enginesN1Percentage.at(engineNumber) > 5.0};
+                CAircraftEngine engine { engineNumber + 1, m_flightgearData.enginesN1Percentage.at(engineNumber) > 5.0 };
                 engines.push_back(engine);
             }
 
-            CAircraftParts parts { {
-                    m_flightgearData.strobeLightsOn, m_flightgearData.landingLightsOn, m_flightgearData.taxiLightsOn,
-                    m_flightgearData.beaconLightsOn, m_flightgearData.navLightsOn, false
-                },
-                m_flightgearData.gearReployRatio > 0, static_cast<int>(m_flightgearData.flapsReployRatio * 100),
-                m_flightgearData.speedBrakeRatio > 0.5, engines, m_flightgearData.onGroundAll
-            };
+            CAircraftParts parts { { m_flightgearData.strobeLightsOn, m_flightgearData.landingLightsOn, m_flightgearData.taxiLightsOn,
+                                     m_flightgearData.beaconLightsOn, m_flightgearData.navLightsOn, false },
+                                   m_flightgearData.gearReployRatio > 0,
+                                   static_cast<int>(m_flightgearData.flapsReployRatio * 100),
+                                   m_flightgearData.speedBrakeRatio > 0.5,
+                                   engines,
+                                   m_flightgearData.onGroundAll };
 
             this->updateOwnParts(parts);
             this->requestRemoteAircraftDataFromFlightgear();
@@ -344,7 +342,7 @@ namespace BlackSimPlugin::Flightgear
         else if (CDBusServer::isQtDBusAddress(dbusAddress))
         {
             m_dBusConnection = QDBusConnection::connectToPeer(dbusAddress, "fgswiftbus");
-            if (! m_dBusConnection.isConnected()) { return false; }
+            if (!m_dBusConnection.isConnected()) { return false; }
             m_dbusMode = P2P;
         }
 
@@ -405,7 +403,7 @@ namespace BlackSimPlugin::Flightgear
     }
 
     void CSimulatorFlightgear::emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery,
-            const QString &icao, const QString &modelString, const QString &name, const QString &description)
+                                                           const QString &icao, const QString &modelString, const QString &name, const QString &description)
     {
         CAircraftModel model(modelString, CAircraftModel::TypeOwnSimulatorModel, CSimulatorInfo::XPLANE, name, description, icao);
         if (!livery.isEmpty()) { model.setModelString(model.getModelString()); }
@@ -474,7 +472,7 @@ namespace BlackSimPlugin::Flightgear
 
     bool CSimulatorFlightgear::updateOwnSimulatorCockpit(const Simulation::CSimulatedAircraft &aircraft, const CIdentifier &originator)
     {
-        if (originator == this->identifier())     { return false; }
+        if (originator == this->identifier()) { return false; }
         if (this->isShuttingDownOrDisconnected()) { return false; }
 
         auto com1 = CComSystem::getCom1System({ m_flightgearData.com1ActiveKhz, CFrequencyUnit::kHz() }, { m_flightgearData.com1StandbyKhz, CFrequencyUnit::kHz() });
@@ -482,9 +480,9 @@ namespace BlackSimPlugin::Flightgear
         auto xpdr = CTransponder::getStandardTransponder(m_flightgearData.xpdrCode, xpdrMode(m_flightgearData.xpdrMode, m_flightgearData.xpdrIdent));
         if (aircraft.hasChangedCockpitData(com1, com2, xpdr))
         {
-            m_flightgearData.com1ActiveKhz  = aircraft.getCom1System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
+            m_flightgearData.com1ActiveKhz = aircraft.getCom1System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
             m_flightgearData.com1StandbyKhz = aircraft.getCom1System().getFrequencyStandby().valueInteger(CFrequencyUnit::kHz());
-            m_flightgearData.com2ActiveKhz  = aircraft.getCom2System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
+            m_flightgearData.com2ActiveKhz = aircraft.getCom2System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
             m_flightgearData.com2StandbyKhz = aircraft.getCom2System().getFrequencyStandby().valueInteger(CFrequencyUnit::kHz());
             m_flightgearData.xpdrCode = aircraft.getTransponderCode();
             m_flightgearData.xpdrMode = xpdrMode(aircraft.getTransponderMode());
@@ -517,7 +515,7 @@ namespace BlackSimPlugin::Flightgear
         if (this->isShuttingDownOrDisconnected()) { return false; }
 
         // entry checks
-        Q_ASSERT_X(CThreadUtils::isInThisThread(this),  Q_FUNC_INFO, "thread");
+        Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "thread");
         Q_ASSERT_X(!newRemoteAircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "empty callsign");
         Q_ASSERT_X(newRemoteAircraft.hasModelString(), Q_FUNC_INFO, "missing model string");
 
@@ -545,20 +543,19 @@ namespace BlackSimPlugin::Flightgear
             }
             const QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
             m_trafficProxy->addPlane(callsign, aircraftModel.getFileName(),
-                                        newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
-                                        newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
-                                        livery);
+                                     newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
+                                     newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
+                                     livery);
 
             PlanesPositions pos;
             pos.push_back(newRemoteAircraft.getSituation());
             m_trafficProxy->setPlanesPositions(pos);
-            if(Flightgear::FGSWIFTBUS_API_VERSION >= 2)
+            if (Flightgear::FGSWIFTBUS_API_VERSION >= 2)
             {
                 PlanesSurfaces surfaces;
                 surfaces.push_back(newRemoteAircraft.getCallsign(), newRemoteAircraft.getParts());
                 m_trafficProxy->setPlanesSurfaces(surfaces);
             }
-
         }
         else
         {
@@ -606,8 +603,7 @@ namespace BlackSimPlugin::Flightgear
         {
             // we are just about to add that aircraft
             QPointer<CSimulatorFlightgear> myself(this);
-            QTimer::singleShot(TimeoutAdding, this, [ = ]
-            {
+            QTimer::singleShot(TimeoutAdding, this, [=] {
                 if (!myself) { return; }
                 m_addingInProgressAircraft.remove(callsign); // remove as "in progress"
                 this->physicallyRemoveRemoteAircraft(callsign); // and remove from sim. if it was added in the mean time
@@ -722,7 +718,7 @@ namespace BlackSimPlugin::Flightgear
             m_trafficProxy->setPlanesPositions(planesPositions);
         }
 
-        if (! planesSurfaces.isEmpty() && Flightgear::FGSWIFTBUS_API_VERSION >= 2)
+        if (!planesSurfaces.isEmpty() && Flightgear::FGSWIFTBUS_API_VERSION >= 2)
         {
             m_trafficProxy->setPlanesSurfaces(planesSurfaces);
         }
@@ -750,8 +746,7 @@ namespace BlackSimPlugin::Flightgear
         if (!m_trafficProxy || this->isShuttingDown()) { return; }
         const QStringList csStrings = callsigns.getCallsignStrings();
         QPointer<CSimulatorFlightgear> myself(this);
-        m_trafficProxy->getRemoteAircraftData(csStrings, [ = ](const QStringList & callsigns, const QDoubleList & latitudesDeg, const QDoubleList & longitudesDeg, const QDoubleList & elevationsMeters, const QDoubleList & verticalOffsetsMeters)
-        {
+        m_trafficProxy->getRemoteAircraftData(csStrings, [=](const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg, const QDoubleList &elevationsMeters, const QDoubleList &verticalOffsetsMeters) {
             if (!myself) { return; }
             this->updateRemoteAircraftFromSimulator(callsigns, latitudesDeg, longitudesDeg, elevationsMeters, verticalOffsetsMeters);
         });
@@ -761,8 +756,7 @@ namespace BlackSimPlugin::Flightgear
     {
         if (callsigns.isEmpty()) { return; }
         QPointer<CSimulatorFlightgear> myself(this);
-        QTimer::singleShot(0, this, [ = ]
-        {
+        QTimer::singleShot(0, this, [=] {
             if (!myself) { return; }
             this->requestRemoteAircraftDataFromFlightgear(callsigns);
         });
@@ -804,8 +798,8 @@ namespace BlackSimPlugin::Flightgear
 
             const double cgValue = verticalOffsetsMeters[i]; // XP offset is swift CG
             const CLength cg = std::isnan(cgValue) ?
-                                CLength::null() :
-                                CLength(cgValue, CLengthUnit::m(), CLengthUnit::ft());
+                                   CLength::null() :
+                                   CLength(cgValue, CLengthUnit::m(), CLengthUnit::ft());
 
             // if we knew "on ground" here we could set it as parameter of rememberElevationAndSimulatorCG
             this->rememberElevationAndSimulatorCG(cs, fgAircraft.getAircraftModel(), false, elevation, cg);
@@ -898,10 +892,10 @@ namespace BlackSimPlugin::Flightgear
 
         // Request
         m_trafficProxy->getElevationAtPosition(callsign,
-                                                pos.latitude().value(CAngleUnit::deg()),
-                                                pos.longitude().value(CAngleUnit::deg()),
-                                                pos.geodeticHeight().value(CLengthUnit::m()),
-                                                callback);
+                                               pos.latitude().value(CAngleUnit::deg()),
+                                               pos.longitude().value(CAngleUnit::deg()),
+                                               pos.geodeticHeight().value(CLengthUnit::m()),
+                                               callback);
         emit this->requestedElevation(callsign);
         return true;
     }
@@ -954,8 +948,7 @@ namespace BlackSimPlugin::Flightgear
     void CSimulatorFlightgear::triggerAddNextPendingAircraft()
     {
         QPointer<CSimulatorFlightgear> myself(this);
-        QTimer::singleShot(100, this, [ = ]
-        {
+        QTimer::singleShot(100, this, [=] {
             if (!myself) { return; }
             this->addNextPendingAircraft();
         });
@@ -985,8 +978,7 @@ namespace BlackSimPlugin::Flightgear
     void CSimulatorFlightgear::triggerRemoveAircraft(const CCallsign &callsign, qint64 deferMs)
     {
         QPointer<CSimulatorFlightgear> myself(this);
-        QTimer::singleShot(deferMs, this, [ = ]
-        {
+        QTimer::singleShot(deferMs, this, [=] {
             if (!myself) { return; }
             this->physicallyRemoveRemoteAircraft(callsign);
         });
@@ -1015,15 +1007,15 @@ namespace BlackSimPlugin::Flightgear
     }
 
     ISimulator *CSimulatorFlightgearFactory::create(const CSimulatorPluginInfo &info,
-            IOwnAircraftProvider *ownAircraftProvider,
-            IRemoteAircraftProvider *remoteAircraftProvider,
-            IWeatherGridProvider *weatherGridProvider,
-            IClientProvider *clientProvider)
+                                                    IOwnAircraftProvider *ownAircraftProvider,
+                                                    IRemoteAircraftProvider *remoteAircraftProvider,
+                                                    IWeatherGridProvider *weatherGridProvider,
+                                                    IClientProvider *clientProvider)
     {
         return new CSimulatorFlightgear(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, this);
     }
 
-    CSimulatorFlightgearListener::CSimulatorFlightgearListener(const CSimulatorPluginInfo &info): ISimulatorListener(info)
+    CSimulatorFlightgearListener::CSimulatorFlightgearListener(const CSimulatorPluginInfo &info) : ISimulatorListener(info)
     {
         constexpr int QueryInterval = 5 * 1000; // 5 seconds
         m_timer.setInterval(QueryInterval);
@@ -1048,8 +1040,7 @@ namespace BlackSimPlugin::Flightgear
 
         m_timer.start(); // restart because we will check just now
         QPointer<CSimulatorFlightgearListener> myself(this);
-        QTimer::singleShot(0, this, [ = ]
-        {
+        QTimer::singleShot(0, this, [=] {
             if (!myself) { return; }
             checkConnection();
         });
@@ -1102,7 +1093,7 @@ namespace BlackSimPlugin::Flightgear
         CFGSwiftBusTrafficProxy traffic(m_conn);
 
         bool result = service.isValid() && traffic.isValid();
-        if (! result) { return; }
+        if (!result) { return; }
 
         Flightgear::FGSWIFTBUS_API_VERSION = service.getVersionNumber();
 

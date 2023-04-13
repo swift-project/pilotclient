@@ -13,13 +13,12 @@ class QWidget;
 
 namespace BlackGui::Components
 {
-    CCoreStatusComponent::CCoreStatusComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CCoreStatusComponent)
+    CCoreStatusComponent::CCoreStatusComponent(QWidget *parent) : QFrame(parent),
+                                                                  ui(new Ui::CCoreStatusComponent)
     {
         ui->setupUi(this);
     }
 
-    CCoreStatusComponent::~CCoreStatusComponent() { }
+    CCoreStatusComponent::~CCoreStatusComponent() {}
 
 } // namespacee

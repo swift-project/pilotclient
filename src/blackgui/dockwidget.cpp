@@ -45,10 +45,9 @@ using namespace BlackGui::Menus;
 
 namespace BlackGui
 {
-    CDockWidget::CDockWidget(bool allowStatusBar, QWidget *parent) :
-        COverlayMessagesDockWidget(parent),
-        CEnableForFramelessWindow(CEnableForFramelessWindow::WindowTool, false, "framelessDockWidget", this),
-        m_allowStatusBar(allowStatusBar)
+    CDockWidget::CDockWidget(bool allowStatusBar, QWidget *parent) : COverlayMessagesDockWidget(parent),
+                                                                     CEnableForFramelessWindow(CEnableForFramelessWindow::WindowTool, false, "framelessDockWidget", this),
+                                                                     m_allowStatusBar(allowStatusBar)
     {
         // init settings
         this->onStyleSheetsChanged();
@@ -63,15 +62,15 @@ namespace BlackGui
         m_fontMenu = new CFontMenu(this, Qt::WidgetWithChildrenShortcut);
 
         this->setContextMenuPolicy(Qt::CustomContextMenu);
-        connect(this,    &CDockWidget::customContextMenuRequested, this, &CDockWidget::showContextMenu,   Qt::QueuedConnection);
-        connect(m_input, &CMarginsInput::changedMargins,           this, &CDockWidget::menuChangeMargins); // only works direct, as QMargins is not registered:  'QMargins' is registered using qRegisterMetaTyp
+        connect(this, &CDockWidget::customContextMenuRequested, this, &CDockWidget::showContextMenu, Qt::QueuedConnection);
+        connect(m_input, &CMarginsInput::changedMargins, this, &CDockWidget::menuChangeMargins); // only works direct, as QMargins is not registered:  'QMargins' is registered using qRegisterMetaTyp
 
         // connect
         connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDockWidget::onStyleSheetsChanged, Qt::QueuedConnection);
-        connect(this, &QDockWidget::topLevelChanged,   this, &CDockWidget::onTopLevelChanged,   Qt::QueuedConnection);
+        connect(this, &QDockWidget::topLevelChanged, this, &CDockWidget::onTopLevelChanged, Qt::QueuedConnection);
         connect(this, &QDockWidget::visibilityChanged, this, &CDockWidget::onVisibilityChanged, Qt::QueuedConnection);
-        connect(m_fontMenu, &CFontMenu::fontSizeMinus, this, &CDockWidget::fontSizeMinus,       Qt::QueuedConnection);
-        connect(m_fontMenu, &CFontMenu::fontSizePlus,  this, &CDockWidget::fontSizePlus,        Qt::QueuedConnection);
+        connect(m_fontMenu, &CFontMenu::fontSizeMinus, this, &CDockWidget::fontSizeMinus, Qt::QueuedConnection);
+        connect(m_fontMenu, &CFontMenu::fontSizePlus, this, &CDockWidget::fontSizePlus, Qt::QueuedConnection);
     }
 
     void CDockWidget::setMargins()
@@ -86,8 +85,8 @@ namespace BlackGui
         }
     }
 
-    CDockWidget::CDockWidget(QWidget *parent): CDockWidget(true, parent)
-    { }
+    CDockWidget::CDockWidget(QWidget *parent) : CDockWidget(true, parent)
+    {}
 
     void CDockWidget::setOriginalTitleBar()
     {
@@ -350,8 +349,7 @@ namespace BlackGui
         {
             this->toggleFloating();
             QPointer<CDockWidget> myself(this);
-            QTimer::singleShot(500, this, [ = ]
-            {
+            QTimer::singleShot(500, this, [=] {
                 if (myself) { myself->restoreFromSettings(); }
             });
             return true;
@@ -361,8 +359,7 @@ namespace BlackGui
         {
             this->toggleFrameless();
             QPointer<CDockWidget> myself(this);
-            QTimer::singleShot(500, this, [ = ]
-            {
+            QTimer::singleShot(500, this, [=] {
                 if (myself) { myself->restoreFromSettings(); }
             });
             return true;
@@ -454,10 +451,10 @@ namespace BlackGui
         }
 
         // State actions (windows state)
-        contextMenu->addAction(CIcons::load16(),    "Restore from settings", this, &CDockWidget::restoreFromSettings);
-        contextMenu->addAction(CIcons::save16(),    "Save state",            this, &CDockWidget::saveCurrentStateToSettings);
-        contextMenu->addAction(CIcons::refresh16(), "Reset to defaults",     this, &CDockWidget::resetSettings);
-        contextMenu->addAction(CIcons::refresh16(), "Reset position",        this, &CDockWidget::resetPosition);
+        contextMenu->addAction(CIcons::load16(), "Restore from settings", this, &CDockWidget::restoreFromSettings);
+        contextMenu->addAction(CIcons::save16(), "Save state", this, &CDockWidget::saveCurrentStateToSettings);
+        contextMenu->addAction(CIcons::refresh16(), "Reset to defaults", this, &CDockWidget::resetSettings);
+        contextMenu->addAction(CIcons::refresh16(), "Reset position", this, &CDockWidget::resetPosition);
 
         m_input->setMargins(this->contentsMargins());
         contextMenu->addAction(CIcons::tableSheet16(), "Margins", this, &CDockWidget::dummy);
@@ -493,11 +490,11 @@ namespace BlackGui
 
     void CDockWidget::onTopLevelChanged(bool topLevel)
     {
-#       ifdef Q_OS_LINUX
+#ifdef Q_OS_LINUX
         // Give XCB platforms enough time to handle window events before adjusting it.
         // close T593 if this is no longer needed
         QThread::msleep(100);
-#       endif
+#endif
 
         this->setMargins(); // from settings or default
         if (topLevel)
@@ -569,12 +566,20 @@ namespace BlackGui
         Q_ASSERT_X(outerWidget->layout(), "CDockWidget::initStatusBar", "No outer widget layout");
         if (!outerWidget->layout()) { return; }
         Q_ASSERT_X(outerWidget->layout()->itemAt(0) && outerWidget->layout()->itemAt(0)->widget(), "CDockWidget::initStatusBar", "No outer widget layout item");
-        if (!outerWidget->layout()->itemAt(0) ||  !outerWidget->layout()->itemAt(0)->widget()) { m_allowStatusBar = false; return; }
+        if (!outerWidget->layout()->itemAt(0) || !outerWidget->layout()->itemAt(0)->widget())
+        {
+            m_allowStatusBar = false;
+            return;
+        }
 
         // Inner widget is supposed to be a QFrame / promoted QFrame
         QFrame *innerWidget = qobject_cast<QFrame *>(outerWidget->layout()->itemAt(0)->widget()); // the inner widget containing the layout
         Q_ASSERT_X(innerWidget, "CDockWidget::initStatusBar", "No inner widget");
-        if (!innerWidget) { m_allowStatusBar = false; return; }
+        if (!innerWidget)
+        {
+            m_allowStatusBar = false;
+            return;
+        }
         innerWidget->setProperty("dockwidget", propertyInnerWidget());
 
         // status bar
@@ -584,7 +589,11 @@ namespace BlackGui
         // layout
         QVBoxLayout *vLayout = qobject_cast<QVBoxLayout *>(innerWidget->layout());
         Q_ASSERT_X(vLayout, "CDockWidget::initStatusBar", "No outer widget layout");
-        if (!vLayout) { m_allowStatusBar = false; return; }
+        if (!vLayout)
+        {
+            m_allowStatusBar = false;
+            return;
+        }
         vLayout->addWidget(m_statusBar.getStatusBar(), 0, Qt::AlignBottom); // 0->vertical stretch minimum
 
         // adjust stretching of the original widget. It was the only widget so far
@@ -677,8 +686,7 @@ namespace BlackGui
     {
         // if (!m_lastFloatingSize.isValid() || m_lastFloatingPosition.isNull()) { return; }
         QPointer<CDockWidget> myself(this);
-        QTimer::singleShot(2500, this, [ = ]
-        {
+        QTimer::singleShot(2500, this, [=] {
             if (!myself) { return; }
             const Qt::KeyboardModifiers km = QGuiApplication::queryKeyboardModifiers();
             const bool shift = km.testFlag(Qt::ShiftModifier);
@@ -717,8 +725,8 @@ namespace BlackGui
     void CDockWidget::saveCurrentStateToSettings()
     {
         CDockWidgetSettings s = this->getSettings();
-        const bool floating   = this->isFloating();
-        const bool frameless  = this->isFrameless();
+        const bool floating = this->isFloating();
+        const bool frameless = this->isFrameless();
         const QByteArray geo = this->saveGeometry();
         s.setFloating(floating);
         s.setFrameless(frameless);

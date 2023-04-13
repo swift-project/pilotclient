@@ -30,18 +30,20 @@ namespace BlackMisc::SharedState
         friend QSharedPointer<CActiveMutator>;
 
         template <typename T, typename F>
-        CActiveMutator(T *parent, F requestHandler) :
-            CPassiveMutator(parent),
-            m_requestHandler([ = ](const CVariant &param) { return Private::invokeMethod(parent, requestHandler, param); })
+        CActiveMutator(T *parent, F requestHandler) : CPassiveMutator(parent),
+                                                      m_requestHandler([=](const CVariant &param) { return Private::invokeMethod(parent, requestHandler, param); })
         {}
 
     public:
         //! Factory method.
         template <typename T, typename F>
-        static auto create(T *parent, F requestHandler) { return QSharedPointer<CActiveMutator>::create(parent, requestHandler); }
+        static auto create(T *parent, F requestHandler)
+        {
+            return QSharedPointer<CActiveMutator>::create(parent, requestHandler);
+        }
 
         //! Respond to a request and return a reply.
-        QFuture<CVariant> handleRequest(const CVariant& param) const;
+        QFuture<CVariant> handleRequest(const CVariant &param) const;
 
         //! Get a QWeakPointer pointing to this object.
         QWeakPointer<const CActiveMutator> weakRef() const { return qSharedPointerCast<const CActiveMutator>(CPassiveMutator::weakRef()); }

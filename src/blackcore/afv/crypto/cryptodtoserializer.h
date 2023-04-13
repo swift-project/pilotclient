@@ -22,7 +22,7 @@
 
 #ifndef crypto_aead_chacha20poly1305_IETF_ABYTES
 //! Number of a bytes
-#define crypto_aead_chacha20poly1305_IETF_ABYTES 16U
+#    define crypto_aead_chacha20poly1305_IETF_ABYTES 16U
 #endif
 
 namespace BlackCore::Afv::Crypto
@@ -37,7 +37,7 @@ namespace BlackCore::Afv::Crypto
         CryptoDtoSerializer();
 
         //! Serialize a DTO
-        template<typename T>
+        template <typename T>
         static QByteArray serialize(const QString &channelTag, CryptoDtoMode mode, const QByteArray &transmitKey, uint sequenceToBeSent, T dto)
         {
             const CryptoDtoHeaderDto header = { channelTag.toStdString(), sequenceToBeSent, mode };
@@ -86,12 +86,12 @@ namespace BlackCore::Afv::Crypto
                 QByteArray aeadPayload;
                 aeadPayload.fill(0, static_cast<int>(aePayloadBuffer.size() + crypto_aead_chacha20poly1305_IETF_ABYTES));
                 int result = crypto_aead_chacha20poly1305_ietf_encrypt(reinterpret_cast<unsigned char *>(aeadPayload.data()),
-                                &clen,
-                                reinterpret_cast<const unsigned char *>(aePayloadBuffer.buffer().constData()), aePayloadBuffer.size(),
-                                reinterpret_cast<const unsigned char *>(adPayloadBuffer.buffer().constData()), adPayloadBuffer.size(),
-                                nullptr,
-                                reinterpret_cast<const unsigned char *>(nonce.constData()),
-                                reinterpret_cast<const unsigned char *>(transmitKey.constData()));
+                                                                       &clen,
+                                                                       reinterpret_cast<const unsigned char *>(aePayloadBuffer.buffer().constData()), aePayloadBuffer.size(),
+                                                                       reinterpret_cast<const unsigned char *>(adPayloadBuffer.buffer().constData()), adPayloadBuffer.size(),
+                                                                       nullptr,
+                                                                       reinterpret_cast<const unsigned char *>(nonce.constData()),
+                                                                       reinterpret_cast<const unsigned char *>(transmitKey.constData()));
                 if (result != 0) { return {}; }
 
                 QBuffer packetBuffer;
@@ -108,7 +108,7 @@ namespace BlackCore::Afv::Crypto
         }
 
         //! Serialize a DTO
-        template<typename T>
+        template <typename T>
         static QByteArray serialize(CCryptoDtoChannel &channel, CryptoDtoMode mode, T dto)
         {
             uint sequenceToSend = 0;
@@ -123,10 +123,10 @@ namespace BlackCore::Afv::Crypto
             Deserializer(CCryptoDtoChannel &channel, const QByteArray &bytes, bool loopback);
 
             //! Get DTO
-            template<typename T>
+            template <typename T>
             T getDto()
             {
-                if (! m_verified) return {};
+                if (!m_verified) return {};
                 if (m_dtoNameBuffer == T::getDtoName() || m_dtoNameBuffer == T::getShortDtoName())
                 {
                     msgpack::object_handle oh2 = msgpack::unpack(m_dataBuffer.data(), static_cast<std::size_t>(m_dataBuffer.size()));

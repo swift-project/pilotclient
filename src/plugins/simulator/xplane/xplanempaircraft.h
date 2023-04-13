@@ -16,7 +16,10 @@
 #include <QSharedPointer>
 #include <QStringList>
 
-namespace BlackCore { class ISimulator; }
+namespace BlackCore
+{
+    class ISimulator;
+}
 namespace BlackSimPlugin::XPlane
 {
     //! Class representing a X-Plane multiplayer aircraft
@@ -28,8 +31,8 @@ namespace BlackSimPlugin::XPlane
 
         //! Constructor providing initial situation/parts
         CXPlaneMPAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft,
-                            BlackCore::ISimulator *simulator,
-                            BlackMisc::Simulation::CInterpolationLogger *logger);
+                          BlackCore::ISimulator *simulator,
+                          BlackMisc::Simulation::CInterpolationLogger *logger);
 
         //! Destructor
         ~CXPlaneMPAircraft() {}

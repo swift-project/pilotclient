@@ -33,8 +33,8 @@ namespace BlackCore::Afv::Connection
         //! Connection status
         enum ConnectionStatus
         {
-            Disconnected,   //!< Not connected
-            Connected,      //!< Connection established
+            Disconnected, //!< Not connected
+            Connected, //!< Connection established
         };
         Q_ENUM(ConnectionStatus)
 
@@ -57,7 +57,7 @@ namespace BlackCore::Afv::Connection
         //! @{
         //! Receiving audio?
         void setReceiveAudio(bool value) { m_connection.setReceiveAudio(value); }
-        bool receiveAudio()    const { return m_connection.isReceivingAudio(); }
+        bool receiveAudio() const { return m_connection.isReceivingAudio(); }
         bool receiveAudioDto() const { return m_receiveAudioDto; }
         void setReceiveAudioDto(bool receiveAudioDto)
         {
@@ -66,7 +66,7 @@ namespace BlackCore::Afv::Connection
         //! @}
 
         //! Send voice DTO to server
-        template<typename T>
+        template <typename T>
         void sendToVoiceServer(const T &dto)
         {
             if (!m_connection.m_voiceCryptoChannel || !m_udpSocket)
@@ -98,9 +98,17 @@ namespace BlackCore::Afv::Connection
         //! User data
         const QString &getUserName() const { return m_connection.getUserName(); }
         const QString &getCallsign() const { return m_connection.getCallsign(); }
-        const QString &getPassword() const { static const QString e; return m_apiServerConnection ? m_apiServerConnection->getPassword() : e; }
-        const QString &getClient()   const { static const QString e; return m_apiServerConnection ? m_apiServerConnection->getClient()   : e; }
-        const QUuid   &getNetworkVersion() const { return m_networkVersion; }
+        const QString &getPassword() const
+        {
+            static const QString e;
+            return m_apiServerConnection ? m_apiServerConnection->getPassword() : e;
+        }
+        const QString &getClient() const
+        {
+            static const QString e;
+            return m_apiServerConnection ? m_apiServerConnection->getClient() : e;
+        }
+        const QUuid &getNetworkVersion() const { return m_networkVersion; }
         //! @}
 
     signals:
@@ -123,8 +131,8 @@ namespace BlackCore::Afv::Connection
         CClientConnectionData m_connection;
 
         // Voice server
-        QUdpSocket *m_udpSocket        = nullptr;
-        QTimer     *m_voiceServerTimer = nullptr;
+        QUdpSocket *m_udpSocket = nullptr;
+        QTimer *m_voiceServerTimer = nullptr;
 
         // API server
         CApiServerConnection *m_apiServerConnection = nullptr;

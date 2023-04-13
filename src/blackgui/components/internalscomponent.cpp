@@ -49,9 +49,8 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackGui::Components
 {
-    CInternalsComponent::CInternalsComponent(QWidget *parent) :
-        QWidget(parent),
-        ui(new Ui::CInternalsComponent)
+    CInternalsComponent::CInternalsComponent(QWidget *parent) : QWidget(parent),
+                                                                ui(new Ui::CInternalsComponent)
     {
         ui->setupUi(this);
         ui->tw_Internals->setCurrentIndex(0);
@@ -60,32 +59,32 @@ namespace BlackGui::Components
         ui->le_TxtMsgTo->setValidator(new CUpperCaseValidator(ui->le_TxtMsgFrom));
         ui->le_AtisCallsign->setValidator(new CUpperCaseValidator(ui->le_AtisCallsign));
 
-        connect(ui->cb_DebugContextAudio,       &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
+        connect(ui->cb_DebugContextAudio, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
         connect(ui->cb_DebugContextApplication, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
-        connect(ui->cb_DebugContextNetwork,     &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
+        connect(ui->cb_DebugContextNetwork, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
         connect(ui->cb_DebugContextOwnAircraft, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
-        connect(ui->cb_DebugContextSimulator,   &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
+        connect(ui->cb_DebugContextSimulator, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
 
         connect(ui->pb_SendTextMessageDirectly, &QPushButton::released, this, &CInternalsComponent::sendTextMessage, Qt::QueuedConnection);
         connect(ui->pb_SendTextMessageDeferred, &QPushButton::released, this, &CInternalsComponent::sendTextMessage, Qt::QueuedConnection);
 
-        connect(ui->tb_LogStatusMessage,        &QPushButton::released, this, &CInternalsComponent::logStatusMessage);
-        connect(ui->le_StatusMessage,           &QLineEdit::returnPressed, this, &CInternalsComponent::logStatusMessage);
+        connect(ui->tb_LogStatusMessage, &QPushButton::released, this, &CInternalsComponent::logStatusMessage);
+        connect(ui->le_StatusMessage, &QLineEdit::returnPressed, this, &CInternalsComponent::logStatusMessage);
 
-        connect(ui->pb_LatestInterpolationLog,  &QPushButton::released, this, &CInternalsComponent::showLogFiles);
-        connect(ui->pb_LatestPartsLog,          &QPushButton::released, this, &CInternalsComponent::showLogFiles);
-        connect(ui->pb_SendAtis,                &QPushButton::released, this, &CInternalsComponent::sendAtis);
+        connect(ui->pb_LatestInterpolationLog, &QPushButton::released, this, &CInternalsComponent::showLogFiles);
+        connect(ui->pb_LatestPartsLog, &QPushButton::released, this, &CInternalsComponent::showLogFiles);
+        connect(ui->pb_SendAtis, &QPushButton::released, this, &CInternalsComponent::sendAtis);
 
-        connect(ui->pb_NetworkUpdateAndReset,   &QPushButton::released, this, &CInternalsComponent::networkStatistics);
-        connect(ui->pb_NetworkUpdate,           &QPushButton::released, this, &CInternalsComponent::networkStatistics);
-        connect(ui->cb_NetworkStatistics,       &QCheckBox::stateChanged, this, &CInternalsComponent::onNetworkStatisticsToggled);
+        connect(ui->pb_NetworkUpdateAndReset, &QPushButton::released, this, &CInternalsComponent::networkStatistics);
+        connect(ui->pb_NetworkUpdate, &QPushButton::released, this, &CInternalsComponent::networkStatistics);
+        connect(ui->cb_NetworkStatistics, &QCheckBox::stateChanged, this, &CInternalsComponent::onNetworkStatisticsToggled);
 
         if (sGui && sGui->isSupportingCrashpad())
         {
             ui->cb_CrashDumpUpload->setChecked(CCrashHandler::instance()->isCrashDumpUploadEnabled());
-            connect(ui->pb_SimulateCrash,   &QPushButton::released, this, &CInternalsComponent::simulateCrash,  Qt::QueuedConnection);
-            connect(ui->pb_SimulateAssert,  &QPushButton::released, this, &CInternalsComponent::simulateAssert, Qt::QueuedConnection);
-            connect(ui->cb_CrashDumpUpload, &QCheckBox::toggled,    this, &CInternalsComponent::onCrashDumpUploadToggled);
+            connect(ui->pb_SimulateCrash, &QPushButton::released, this, &CInternalsComponent::simulateCrash, Qt::QueuedConnection);
+            connect(ui->pb_SimulateAssert, &QPushButton::released, this, &CInternalsComponent::simulateAssert, Qt::QueuedConnection);
+            connect(ui->cb_CrashDumpUpload, &QCheckBox::toggled, this, &CInternalsComponent::onCrashDumpUploadToggled);
         }
         else
         {
@@ -96,7 +95,7 @@ namespace BlackGui::Components
         this->contextFlagsToGui();
     }
 
-    CInternalsComponent::~CInternalsComponent() { }
+    CInternalsComponent::~CInternalsComponent() {}
 
     void CInternalsComponent::showEvent(QShowEvent *event)
     {
@@ -117,17 +116,17 @@ namespace BlackGui::Components
         const bool debug = (checkState == Qt::Checked);
         const QObject *sender = QObject::sender();
 
-        if (sender == ui->cb_DebugContextApplication)  { sGui->getIContextApplication()->setDebugEnabled(debug); }
-        else if (sender == ui->cb_DebugContextAudio)   { sGui->getIContextAudio()->setDebugEnabled(debug); }
-        else if (sender == ui->cb_DebugContextNetwork) { sGui->getIContextNetwork()->setDebugEnabled(debug);}
+        if (sender == ui->cb_DebugContextApplication) { sGui->getIContextApplication()->setDebugEnabled(debug); }
+        else if (sender == ui->cb_DebugContextAudio) { sGui->getIContextAudio()->setDebugEnabled(debug); }
+        else if (sender == ui->cb_DebugContextNetwork) { sGui->getIContextNetwork()->setDebugEnabled(debug); }
         else if (sender == ui->cb_DebugContextOwnAircraft) { sGui->getIContextOwnAircraft()->setDebugEnabled(debug); }
-        else if (sender == ui->cb_DebugContextSimulator)   { sGui->getIContextSimulator()->setDebugEnabled(debug);}
+        else if (sender == ui->cb_DebugContextSimulator) { sGui->getIContextSimulator()->setDebugEnabled(debug); }
     }
 
     void CInternalsComponent::sendTextMessage()
     {
         if (!sGui || !sGui->getIContextNetwork()) { return; }
-        if (ui->le_TxtMsgFrom->text().isEmpty())  { return; }
+        if (ui->le_TxtMsgFrom->text().isEmpty()) { return; }
         if (ui->pte_TxtMsg->toPlainText().isEmpty()) { return; }
         if (ui->le_TxtMsgTo->text().isEmpty() && ui->dsb_TxtMsgFrequency->text().isEmpty()) { return; }
 
@@ -162,7 +161,7 @@ namespace BlackGui::Components
     void CInternalsComponent::sendAtis()
     {
         if (!sGui || !sGui->getIContextNetwork()) { return; }
-        if (ui->le_AtisCallsign->text().isEmpty())   { return; }
+        if (ui->le_AtisCallsign->text().isEmpty()) { return; }
         if (ui->pte_Atis->toPlainText().isEmpty()) { return; }
         const CCallsign cs(ui->le_AtisCallsign->text());
         const QString text(ui->pte_Atis->toPlainText());

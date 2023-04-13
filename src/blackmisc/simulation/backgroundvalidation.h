@@ -78,22 +78,22 @@ namespace BlackMisc::Simulation
         virtual void beforeQuit() noexcept override;
 
     private:
-        mutable QReadWriteLock m_lock;           //!< lock snapshot
-        std::atomic_bool m_inWork     { false }; //!< indicates a running update
+        mutable QReadWriteLock m_lock; //!< lock snapshot
+        std::atomic_bool m_inWork { false }; //!< indicates a running update
         std::atomic_bool m_wasStopped { false }; //!< has been stopped or should be stopped
-        CSimulatorInfo   m_simulator;            //!< simulator
-        QString          m_simDirectory;         //!< corresponding sim directory
+        CSimulatorInfo m_simulator; //!< simulator
+        QString m_simDirectory; //!< corresponding sim directory
 
         // last result values, mostly needed when running in the distributed swift system and we want to get the values
         CAircraftModelList m_lastResultValid;
         CAircraftModelList m_lastResultInvalid;
-        CSimulatorInfo     m_lastResultSimulator;
+        CSimulatorInfo m_lastResultSimulator;
         CStatusMessageList m_lastResultMsgs;
-        bool               m_lastResultWasStopped = false;
-        std::atomic_int    m_timerBasedRuns{0};
+        bool m_lastResultWasStopped = false;
+        std::atomic_int m_timerBasedRuns { 0 };
 
         QMap<CSimulatorInfo, CStatusMessageList> m_checkedSimulatorMsgs; //!< all simulators ever checked
-        CSetting<Settings::TModelMatching> m_matchingSettings { this };  //!< settings
+        CSetting<Settings::TModelMatching> m_matchingSettings { this }; //!< settings
 
         // Set/caches as member as we are in own thread, central instance will not work
         Data::CModelSetCaches m_modelSets { false, this };

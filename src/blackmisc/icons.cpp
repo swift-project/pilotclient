@@ -412,13 +412,13 @@ namespace BlackMisc
         return pm;
     }
 
-    const QPixmap & CIcons::zoomIn16()
+    const QPixmap &CIcons::zoomIn16()
     {
         static const QPixmap pm(":/diagona/icons/diagona/icons/magnifier-zoom-in.png");
         return pm;
     }
 
-    const QPixmap & CIcons::zoomOut16()
+    const QPixmap &CIcons::zoomOut16()
     {
         static const QPixmap pm(":/diagona/icons/diagona/icons/magnifier-zoom-out.png");
         return pm;

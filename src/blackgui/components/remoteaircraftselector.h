@@ -23,8 +23,14 @@
 class QShowEvent;
 class QWidget;
 
-namespace BlackMisc::Simulation { class CSimulatedAircraft; }
-namespace Ui { class CRemoteAircraftSelector; }
+namespace BlackMisc::Simulation
+{
+    class CSimulatedAircraft;
+}
+namespace Ui
+{
+    class CRemoteAircraftSelector;
+}
 namespace BlackGui::Components
 {
     //! Select a remote aircraft

@@ -23,13 +23,12 @@ namespace BlackGui::Views
 {
 
     CCheckBoxDelegate::CCheckBoxDelegate(QObject *parent) : QItemDelegate(parent)
-    { }
+    {}
 
-    CCheckBoxDelegate::CCheckBoxDelegate(const QString &iconCheckedUrl, const QString &iconUncheckedUrl, QObject *parent) :
-        QItemDelegate(parent), m_iconCheckedUrl(iconCheckedUrl), m_iconUncheckedUrl(iconUncheckedUrl)
-    { }
+    CCheckBoxDelegate::CCheckBoxDelegate(const QString &iconCheckedUrl, const QString &iconUncheckedUrl, QObject *parent) : QItemDelegate(parent), m_iconCheckedUrl(iconCheckedUrl), m_iconUncheckedUrl(iconUncheckedUrl)
+    {}
 
-    CCheckBoxDelegate::~CCheckBoxDelegate() { }
+    CCheckBoxDelegate::~CCheckBoxDelegate() {}
 
     QWidget *CCheckBoxDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {

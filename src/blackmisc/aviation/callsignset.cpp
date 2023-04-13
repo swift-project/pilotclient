@@ -16,7 +16,7 @@ BLACK_DEFINE_COLLECTION_MIXINS(BlackMisc::Aviation, CCallsign, CCallsignSet)
 
 namespace BlackMisc::Aviation
 {
-    CCallsignSet::CCallsignSet() { }
+    CCallsignSet::CCallsignSet() {}
 
     CCallsignSet::CCallsignSet(const QStringList &callsigns, CCallsign::TypeHint typeHint)
     {
@@ -34,9 +34,8 @@ namespace BlackMisc::Aviation
         this->push_back(callsign);
     }
 
-    CCallsignSet::CCallsignSet(const CCollection<CCallsign> &other) :
-        CCollection<CCallsign>(other)
-    { }
+    CCallsignSet::CCallsignSet(const CCollection<CCallsign> &other) : CCollection<CCallsign>(other)
+    {}
 
     bool CCallsignSet::containsCallsign(const QString &callsign) const
     {

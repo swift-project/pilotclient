@@ -17,7 +17,10 @@
 
 #include <QScopedPointer>
 
-namespace Ui { class CMatchingForm; }
+namespace Ui
+{
+    class CMatchingForm;
+}
 namespace BlackGui::Editors
 {
     //! Matching form
@@ -78,10 +81,9 @@ namespace BlackGui::Editors
         //! Directory browser
         void fileDialog();
 
-        BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_directories  { this }; //!< the swift directories
+        BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_directories { this }; //!< the swift directories
         QScopedPointer<Ui::CMatchingForm> ui;
     };
 } // ns
-
 
 #endif // guard

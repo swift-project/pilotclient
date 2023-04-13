@@ -39,8 +39,7 @@ using namespace BlackGui::Menus;
 namespace BlackGui::Views
 {
     template <class T>
-    CViewWithDbObjects<T>::CViewWithDbObjects(QWidget *parent) :
-        CViewBase<ModelClass>(parent)
+    CViewWithDbObjects<T>::CViewWithDbObjects(QWidget *parent) : CViewBase<ModelClass>(parent)
     {
         // void
         CViewBaseNonTemplate::m_enabledLoadIndicator = true; // indicator for DB views
@@ -61,7 +60,7 @@ namespace BlackGui::Views
     template <class T>
     bool CViewWithDbObjects<T>::selectDbKey(const KeyType &key)
     {
-        const QSet<KeyType> set({key});
+        const QSet<KeyType> set({ key });
         return this->selectDbKeys(set) > 0;
     }
 
@@ -118,7 +117,7 @@ namespace BlackGui::Views
         return c;
     }
 
-    template<class T>
+    template <class T>
     void CViewWithDbObjects<T>::selectObjects(const ContainerType &selectedObjects)
     {
         if (selectedObjects.isEmpty()) { return; }
@@ -133,8 +132,7 @@ namespace BlackGui::Views
     }
 
     template <class T>
-    COrderableViewWithDbObjects<T>::COrderableViewWithDbObjects(QWidget *parent) :
-        CViewWithDbObjects<T>::CViewWithDbObjects(parent)
+    COrderableViewWithDbObjects<T>::COrderableViewWithDbObjects(QWidget *parent) : CViewWithDbObjects<T>::CViewWithDbObjects(parent)
     {
         // void
     }
@@ -149,7 +147,7 @@ namespace BlackGui::Views
             if (m_menuActions.isEmpty())
             {
                 // predefine menus
-                m_menuActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr});
+                m_menuActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr });
 
                 if (!m_menuActions[0])
                 {

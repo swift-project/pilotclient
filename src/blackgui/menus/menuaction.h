@@ -64,7 +64,7 @@ namespace BlackGui::Menus
         void setActionEnabled(bool enabled);
 
         //! Path
-        const QString &getPath() const  { return m_path; }
+        const QString &getPath() const { return m_path; }
 
         //! Last part of the path, e.g. "Foo/Bar" -> "Bar"
         QString getLastPathPart() const;
@@ -110,116 +110,256 @@ namespace BlackGui::Menus
         //! @{
 
         //! No key
-        static const QString &pathNone() { static const QString p("_NONE"); return p; }
+        static const QString &pathNone()
+        {
+            static const QString p("_NONE");
+            return p;
+        }
 
         //! Path converter into separator
-        static const QString &pathSeparator() { static const QString p("_SEPARATOR"); return p; }
+        static const QString &pathSeparator()
+        {
+            static const QString p("_SEPARATOR");
+            return p;
+        }
 
         //! Simulator sub menu
-        static const QString &pathSimulator() { static const QString p("Custom.10.Simulator/Simulator"); return p; }
+        static const QString &pathSimulator()
+        {
+            static const QString p("Custom.10.Simulator/Simulator");
+            return p;
+        }
 
         //! Simulator sub menu reload models
-        static const QString &pathSimulatorModelsReload() { static const QString p("Custom.10.Simulator/Simulator/Reload models"); return p; }
+        static const QString &pathSimulatorModelsReload()
+        {
+            static const QString p("Custom.10.Simulator/Simulator/Reload models");
+            return p;
+        }
 
         //! Simulator sub menu reload models
-        static const QString &pathSimulatorModelsClearCache() { static const QString p("Custom.10.Simulator/Simulator/Clear model caches"); return p; }
+        static const QString &pathSimulatorModelsClearCache()
+        {
+            static const QString p("Custom.10.Simulator/Simulator/Clear model caches");
+            return p;
+        }
 
         //! Model
-        static const QString &pathModel() { static const QString p("Custom.11.Model"); return p; }
+        static const QString &pathModel()
+        {
+            static const QString p("Custom.11.Model");
+            return p;
+        }
 
         //! Model set
-        static const QString &pathModelSet() { static const QString p("Custom.11.Model/Model set"); return p; }
+        static const QString &pathModelSet()
+        {
+            static const QString p("Custom.11.Model/Model set");
+            return p;
+        }
 
         //! Model set, new set
-        static const QString &pathModelSetNew() { static const QString p("Custom.11.Model/Model set/New set"); return p; }
+        static const QString &pathModelSetNew()
+        {
+            static const QString p("Custom.11.Model/Model set/New set");
+            return p;
+        }
 
         //! Consolidate
-        static const QString &pathModelConsolidate() { static const QString p("Custom.11.Model/Consolidate"); return p; }
+        static const QString &pathModelConsolidate()
+        {
+            static const QString p("Custom.11.Model/Consolidate");
+            return p;
+        }
 
         //! Stash sub menu
-        static const QString &pathModelStash() { static const QString p("Custom.11.Model/Stash/Stash"); return p; }
+        static const QString &pathModelStash()
+        {
+            static const QString p("Custom.11.Model/Stash/Stash");
+            return p;
+        }
 
         //! Stash editor sub menu
-        static const QString &pathModelStashEditor() { static const QString p("Custom.11.Model/Stash/Editor"); return p; }
+        static const QString &pathModelStashEditor()
+        {
+            static const QString p("Custom.11.Model/Stash/Editor");
+            return p;
+        }
 
         //! vPilot data
         //! \deprecated vPilot functionality likely to be removed in the future
-        static const QString &pathVPilot() { static const QString p("Custom.14.vPilot/vPilot"); return p; }
+        static const QString &pathVPilot()
+        {
+            static const QString p("Custom.14.vPilot/vPilot");
+            return p;
+        }
 
         //! Log functionality
-        static const QString &pathLog() { static const QString p("Custom15.Log"); return p; }
+        static const QString &pathLog()
+        {
+            static const QString p("Custom15.Log");
+            return p;
+        }
 
         //! Font menus (font size etc.)
-        static const QString &pathFont() { static const QString p("Custom20.Font"); return p; }
+        static const QString &pathFont()
+        {
+            static const QString p("Custom20.Font");
+            return p;
+        }
 
         // ---- client ----
 
         //! Client COM related
-        static const QString &pathClientCom() { static const QString p("Client.ATC/COM"); return p; }
+        static const QString &pathClientCom()
+        {
+            static const QString p("Client.ATC/COM");
+            return p;
+        }
 
         //! Client flight plan
-        static const QString &pathClientFlightPlan() { static const QString p("Client.FlightPlan"); return p; }
+        static const QString &pathClientFlightPlan()
+        {
+            static const QString p("Client.FlightPlan");
+            return p;
+        }
 
         //! Client follow in simulator
-        static const QString &pathClientFollowInSim() { static const QString p("Client.FollowInSim"); return p; }
+        static const QString &pathClientFollowInSim()
+        {
+            static const QString p("Client.FollowInSim");
+            return p;
+        }
 
         //! Client simulation related
-        static const QString &pathClientSimulation() { static const QString p("ClientSimulation"); return p; }
+        static const QString &pathClientSimulation()
+        {
+            static const QString p("ClientSimulation");
+            return p;
+        }
 
         //! Client simulation/display related
-        static const QString &pathClientSimulationDisplay() { static const QString p("ClientSimulation.Display/Display"); return p; }
+        static const QString &pathClientSimulationDisplay()
+        {
+            static const QString p("ClientSimulation.Display/Display");
+            return p;
+        }
 
         //! Client simulation/display related
-        static const QString &pathClientSimulationRender() { static const QString p("ClientSimulation.Display/Render"); return p; }
+        static const QString &pathClientSimulationRender()
+        {
+            static const QString p("ClientSimulation.Display/Render");
+            return p;
+        }
 
         //! Client simulation/display related
-        static const QString &pathClientSimulationTransfer() { static const QString p("ClientSimulation.Transfer/Transfer"); return p; }
+        static const QString &pathClientSimulationTransfer()
+        {
+            static const QString p("ClientSimulation.Transfer/Transfer");
+            return p;
+        }
 
         //! Client model set related
-        static const QString &pathClientModelSet() { static const QString p("Client.Model set"); return p; }
+        static const QString &pathClientModelSet()
+        {
+            static const QString p("Client.Model set");
+            return p;
+        }
 
         //! Network data
-        static const QString &pathClientNetwork() { static const QString p("ClientNetwork/Network"); return p; }
+        static const QString &pathClientNetwork()
+        {
+            static const QString p("ClientNetwork/Network");
+            return p;
+        }
 
         // ---- standard view paths --------
 
         //! Database
-        static const QString &pathViewDatabase() { static const QString p("View.10.Database/Database"); return p; }
+        static const QString &pathViewDatabase()
+        {
+            static const QString p("View.10.Database/Database");
+            return p;
+        }
 
         //! Select add remove
-        static const QString &pathViewAddRemove() { static const QString p("View.12.AddRemove"); return p; }
+        static const QString &pathViewAddRemove()
+        {
+            static const QString p("View.12.AddRemove");
+            return p;
+        }
 
         //! View selection mode
-        static const QString &pathViewSelection() { static const QString p("View.13.Selection/Selection"); return p; }
+        static const QString &pathViewSelection()
+        {
+            static const QString p("View.13.Selection/Selection");
+            return p;
+        }
 
         //! Order submenus
-        static const QString &pathViewOrder() { static const QString p("View.14.Order/Order"); return p; }
+        static const QString &pathViewOrder()
+        {
+            static const QString p("View.14.Order/Order");
+            return p;
+        }
 
         //! View resizing
-        static const QString &pathViewResize() { static const QString p("View.15.Resize"); return p; }
+        static const QString &pathViewResize()
+        {
+            static const QString p("View.15.Resize");
+            return p;
+        }
 
         //! View word wrap
-        static const QString &pathViewWordWrap() { static const QString p("View.16.WordWrap"); return p; }
+        static const QString &pathViewWordWrap()
+        {
+            static const QString p("View.16.WordWrap");
+            return p;
+        }
 
         //! View clear highlighting
-        static const QString &pathViewClearHighlighting() { static const QString p("View.17.ClearHighlight"); return p; }
+        static const QString &pathViewClearHighlighting()
+        {
+            static const QString p("View.17.ClearHighlight");
+            return p;
+        }
 
         //! View filter
-        static const QString &pathViewFilter() { static const QString p("View.18.Filter"); return p; }
+        static const QString &pathViewFilter()
+        {
+            static const QString p("View.18.Filter");
+            return p;
+        }
 
         //! View update
-        static const QString &pathViewUpdates() { static const QString p("View.19.Updates"); return p; }
+        static const QString &pathViewUpdates()
+        {
+            static const QString p("View.19.Updates");
+            return p;
+        }
 
         //! View load/save
-        static const QString &pathViewLoadSave() { static const QString p("View.19.LoadSave"); return p; }
+        static const QString &pathViewLoadSave()
+        {
+            static const QString p("View.19.LoadSave");
+            return p;
+        }
 
         //! View cut and paste
-        static const QString &pathViewCutPaste() { static const QString p("View.19.CutPaste"); return p; }
+        static const QString &pathViewCutPaste()
+        {
+            static const QString p("View.19.CutPaste");
+            return p;
+        }
 
         // ---- nested dock widgets ----
 
         //! Nested dock widget
-        static const QString &pathDockWidgetNested() { static const QString p("DockWidget.Nested"); return p; }
+        static const QString &pathDockWidgetNested()
+        {
+            static const QString p("DockWidget.Nested");
+            return p;
+        }
         //! @}
 
         //! @{
@@ -234,12 +374,12 @@ namespace BlackGui::Menus
         //! @}
 
     private:
-        QAction *m_action = nullptr;  //!< the action
-        QIcon    m_icon;              //!< icon
-        QString  m_title;             //!< title
-        QString  m_path;              //!< path in menu
-        bool     m_separator = false; //!< separator
-        bool     m_isMenu = false;    //!< is menu?
+        QAction *m_action = nullptr; //!< the action
+        QIcon m_icon; //!< icon
+        QString m_title; //!< title
+        QString m_path; //!< path in menu
+        bool m_separator = false; //!< separator
+        bool m_isMenu = false; //!< is menu?
     };
 
     /*!

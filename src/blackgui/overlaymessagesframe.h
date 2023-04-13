@@ -46,11 +46,12 @@ namespace BlackGui
      * (nested in this widget).
      * \fixme KB 2017-12 all header version, if someone manages to create a cpp version go ahead, I failed on gcc with "undefined reference to `BlackGui::COverlayMessagesBase<QFrame>::showOverlayMessages`"
      */
-    template <class WIDGET> class COverlayMessagesBase : public WIDGET
+    template <class WIDGET>
+    class COverlayMessagesBase : public WIDGET
     {
     public:
         //! Destructor
-        virtual ~COverlayMessagesBase() override { }
+        virtual ~COverlayMessagesBase() override {}
 
         //! Init, normally we use lazy init, but by calling init explicitly we can force initalization
         //! \remark usefule for text messages, as history will be already available
@@ -82,7 +83,7 @@ namespace BlackGui
         //! Set the size factors
         void setOverlaySizeFactors(double widthFactor, double heightFactor, double middleFactor = 2)
         {
-            m_widthFactor  = widthFactor;
+            m_widthFactor = widthFactor;
             m_heightFactor = heightFactor;
             if (middleFactor >= 0) { m_middleFactor = middleFactor; }
         }
@@ -120,12 +121,11 @@ namespace BlackGui
         //! \copydoc BlackGui::COverlayMessages::showOverlayMessagesWithConfirmation
         void showOverlayMessagesWithConfirmation(
             const BlackMisc::CStatusMessageList &messages,
-            bool                                appendOldMessages,
-            const QString                       &confirmationMessage,
-            std::function<void()>               okLambda,
-            QMessageBox::StandardButton         defaultButton = QMessageBox::Cancel,
-            int                                 timeOutMs = -1
-        )
+            bool appendOldMessages,
+            const QString &confirmationMessage,
+            std::function<void()> okLambda,
+            QMessageBox::StandardButton defaultButton = QMessageBox::Cancel,
+            int timeOutMs = -1)
         {
             if (messages.isEmpty()) { return; }
             this->initInnerFrame();
@@ -165,7 +165,6 @@ namespace BlackGui
             m_overlayMessages->showOverlayMessagesOrSingleMessage(messages, appendOldMessages, timeOutMs);
             WIDGET::repaint();
         }
-
 
         //! \copydoc BlackGui::COverlayMessages::showOverlayMessagesOrHTMLMessage
         void showOverlayMessagesOrHTMLMessage(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1)
@@ -375,25 +374,25 @@ namespace BlackGui
         QSize innerFrameSize(double widthFactor = -1, double heightFactor = -1) const
         {
             // check against minimum if widget is initialized, but not yet resized
-            const int w = std::max(WIDGET::width(),  WIDGET::minimumWidth());
+            const int w = std::max(WIDGET::width(), WIDGET::minimumWidth());
             const int h = std::max(WIDGET::height(), WIDGET::minimumHeight());
 
-            widthFactor  = qMin(widthFactor  < 0 ? m_widthFactor  : widthFactor,  0.95);
+            widthFactor = qMin(widthFactor < 0 ? m_widthFactor : widthFactor, 0.95);
             heightFactor = qMin(heightFactor < 0 ? m_heightFactor : heightFactor, 0.95);
 
-            int wInner = qRound(widthFactor  * w);
+            int wInner = qRound(widthFactor * w);
             int hInner = qRound(heightFactor * h);
-            if (wInner > WIDGET::maximumWidth())  { wInner = WIDGET::maximumWidth();  }
+            if (wInner > WIDGET::maximumWidth()) { wInner = WIDGET::maximumWidth(); }
             if (hInner > WIDGET::maximumHeight()) { hInner = WIDGET::maximumHeight(); }
             return QSize(wInner, hInner);
         }
 
-        bool m_showKillButton = false;     //!< show kill button
-        bool m_forceSmallMsgs = false;     //!< force small messages
-        bool m_reducedInfo    = false;     //!< reduced info (no timestamp ..)
-        double m_widthFactor  = 0.7;       //!< inner frame x factor
-        double m_heightFactor = 0.6;       //!< inner frame x factor
-        double m_middleFactor = 2;         //!< 2 means middle, 1 means on top
+        bool m_showKillButton = false; //!< show kill button
+        bool m_forceSmallMsgs = false; //!< force small messages
+        bool m_reducedInfo = false; //!< reduced info (no timestamp ..)
+        double m_widthFactor = 0.7; //!< inner frame x factor
+        double m_heightFactor = 0.6; //!< inner frame x factor
+        double m_middleFactor = 2; //!< 2 means middle, 1 means on top
     };
 
     /*!

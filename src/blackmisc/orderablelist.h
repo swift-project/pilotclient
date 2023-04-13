@@ -20,7 +20,7 @@ namespace BlackMisc
 
     //! List of orderable IOrderable objects
     //! \remark Orerable objects shall implement BlackMisc::IOrderable
-    template<class OBJ, class CONTAINER>
+    template <class OBJ, class CONTAINER>
     class IOrderableList
     {
         static_assert(std::is_base_of_v<IOrderable, OBJ>, "OBJ needs to implement IOrderable");
@@ -189,6 +189,6 @@ namespace BlackMisc
             return static_cast<CONTAINER &>(*this);
         }
     };
-} //namespace
+} // namespace
 
-#endif //guard
+#endif // guard

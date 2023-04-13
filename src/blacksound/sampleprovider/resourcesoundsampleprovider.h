@@ -43,14 +43,14 @@ namespace BlackSound::SampleProvider
         //! @}
 
     private:
-        double m_gain    = 1.0;
-        bool   m_looping = false;
+        double m_gain = 1.0;
+        bool m_looping = false;
 
-        CResourceSound  m_resourceSound;
-        qint64          m_position = 0;
-        const int       m_tempBufferSize = 24000; //24000 = 500ms (avoid buffer overflow), m_tempBufferSize = 9600; //9600 = 200ms
-        QVector<float>  m_tempBuffer;
-        bool            m_isFinished = false;
+        CResourceSound m_resourceSound;
+        qint64 m_position = 0;
+        const int m_tempBufferSize = 24000; // 24000 = 500ms (avoid buffer overflow), m_tempBufferSize = 9600; //9600 = 200ms
+        QVector<float> m_tempBuffer;
+        bool m_isFinished = false;
     };
 } // ns
 

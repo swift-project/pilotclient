@@ -39,15 +39,14 @@ using namespace BlackMisc;
 
 namespace BlackGui
 {
-    CInfoArea::CInfoArea(QWidget *parent) :
-        QMainWindow(parent),
-        CEnableForFramelessWindow(CEnableForFramelessWindow::WindowTool, false, "framelessInfoArea", this)
+    CInfoArea::CInfoArea(QWidget *parent) : QMainWindow(parent),
+                                            CEnableForFramelessWindow(CEnableForFramelessWindow::WindowTool, false, "framelessInfoArea", this)
     {
         this->setWholeInfoAreaFloating(m_infoAreaFloating);
     }
 
     CInfoArea::~CInfoArea()
-    { }
+    {}
 
     void CInfoArea::initInfoArea()
     {
@@ -80,8 +79,7 @@ namespace BlackGui
 
         // fire an initial status
         QPointer<CInfoArea> myself(this);
-        QTimer::singleShot(5000, this, [ = ]
-        {
+        QTimer::singleShot(5000, this, [=] {
             if (myself) { myself->emitInfoAreaStatus(); }
         });
     }
@@ -92,10 +90,10 @@ namespace BlackGui
         bool hasDockedWidgets = this->countDockedWidgetInfoAreas() > 0;
         if (hasDockedWidgets)
         {
-            menu->addAction(CIcons::dockTop16(),  "Dock all",  this, &CInfoArea::dockAllWidgets);
+            menu->addAction(CIcons::dockTop16(), "Dock all", this, &CInfoArea::dockAllWidgets);
             menu->addAction(CIcons::floatAll16(), "Float all", this, &CInfoArea::floatAllWidgets);
-            menu->addAction(CIcons::refresh16(),  "Reset all floating to defaults", this, &CInfoArea::resetAllFloatingWidgetSettings);
-            menu->addAction(CIcons::refresh16(),  "Reset all to defaults",          this, &CInfoArea::resetAllWidgetSettings);
+            menu->addAction(CIcons::refresh16(), "Reset all floating to defaults", this, &CInfoArea::resetAllFloatingWidgetSettings);
+            menu->addAction(CIcons::refresh16(), "Reset all to defaults", this, &CInfoArea::resetAllWidgetSettings);
 
             menu->addAction(CIcons::floatOne16(), QStringLiteral("Dock / float '%1'").arg(this->windowTitle()), this, &CInfoArea::toggleFloatingWholeInfoArea);
             QAction *lockTabBarMenuAction = new QAction(menu);
@@ -643,7 +641,7 @@ namespace BlackGui
 
                 // signals, use Qt::QueuedConnection to avoid issues during shutdown
                 connect(m_tabBar, &QTabBar::tabBarDoubleClicked, this, &CInfoArea::onTabBarDoubleClicked, Qt::QueuedConnection);
-                connect(m_tabBar, &QTabBar::currentChanged,      this, &CInfoArea::onTabBarIndexChanged,  Qt::QueuedConnection);
+                connect(m_tabBar, &QTabBar::currentChanged, this, &CInfoArea::onTabBarIndexChanged, Qt::QueuedConnection);
             }
             else
             {
@@ -765,7 +763,7 @@ namespace BlackGui
         BLACK_VERIFY_X(!title.isEmpty(), Q_FUNC_INFO, "No title");
         if (title.isEmpty()) { return -1; }
 
-        if (m_tabBar->count() < 1) { return -1;}
+        if (m_tabBar->count() < 1) { return -1; }
         for (int i = 0; i < m_tabBar->count(); i++)
         {
             QString tt = m_tabBar->tabText(i);
@@ -845,8 +843,7 @@ namespace BlackGui
         dw->toggleFloating();
 
         QPointer<CInfoArea> myself(this);
-        QTimer::singleShot(1000, this, [ = ]
-        {
+        QTimer::singleShot(1000, this, [=] {
             if (!myself) { return; }
             myself->emitInfoAreaStatus();
         });
@@ -928,7 +925,8 @@ namespace BlackGui
     void CInfoArea::toggleTabBarPosition()
     {
         QTabWidget::TabPosition p = (this->tabPosition(Qt::TopDockWidgetArea) == QTabWidget::North) ?
-                                    QTabWidget::South : QTabWidget::North;
+                                        QTabWidget::South :
+                                        QTabWidget::North;
         this->setTabBarPosition(p);
     }
 

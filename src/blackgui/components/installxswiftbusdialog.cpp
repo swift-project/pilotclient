@@ -11,15 +11,14 @@
 
 namespace BlackGui::Components
 {
-    CInstallXSwiftBusDialog::CInstallXSwiftBusDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CInstallXSwiftBusDialog)
+    CInstallXSwiftBusDialog::CInstallXSwiftBusDialog(QWidget *parent) : QDialog(parent),
+                                                                        ui(new Ui::CInstallXSwiftBusDialog)
     {
         ui->setupUi(this);
     }
 
     CInstallXSwiftBusDialog::~CInstallXSwiftBusDialog()
-    { }
+    {}
 
     void CInstallXSwiftBusDialog::setDefaultDownloadName(const QString &defaultName)
     {

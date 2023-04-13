@@ -59,8 +59,8 @@ namespace BlackGui::Components
         static BlackMisc::CCountry findCountry(const BlackMisc::Network::CServer &server);
 
         BlackMisc::Network::CServerList m_servers; //!< corresponding servers
-        QStringList m_items;                       //!< items strings
-        QString m_pendingPreselect;                //!< pending preselect value
+        QStringList m_items; //!< items strings
+        QString m_pendingPreselect; //!< pending preselect value
         BlackMisc::CData<BlackMisc::Network::Data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
     };
 } // ns

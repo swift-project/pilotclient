@@ -76,25 +76,25 @@ namespace BlackCore
         this->enableReverseLookupMessages(sApp->isDeveloperFlagSet() || CBuildConfig::isLocalDeveloperDebugBuild() ? RevLogEnabled : RevLogEnabledSimplified);
 
         // FSD runs in its own thread!
-        connect(m_fsdClient, &CFSDClient::atcDataUpdateReceived,           this, &CAirspaceMonitor::onAtcPositionUpdate);
-        connect(m_fsdClient, &CFSDClient::atisReplyReceived,               this, &CAirspaceMonitor::onAtisReceived);
-        connect(m_fsdClient, &CFSDClient::atisLogoffTimeReplyReceived,     this, &CAirspaceMonitor::onAtisLogoffTimeReceived);
-        connect(m_fsdClient, &CFSDClient::flightPlanReceived,              this, &CAirspaceMonitor::onFlightPlanReceived);
-        connect(m_fsdClient, &CFSDClient::realNameResponseReceived,        this, &CAirspaceMonitor::onRealNameReplyReceived);
-        connect(m_fsdClient, &CFSDClient::planeInformationReceived,        this, &CAirspaceMonitor::onIcaoCodesReceived);
-        connect(m_fsdClient, &CFSDClient::deletePilotReceived,             this, &CAirspaceMonitor::onPilotDisconnected);
-        connect(m_fsdClient, &CFSDClient::deleteAtcReceived,               this, &CAirspaceMonitor::onAtcControllerDisconnected);
-        connect(m_fsdClient, &CFSDClient::pilotDataUpdateReceived,         this, &CAirspaceMonitor::onAircraftUpdateReceived);
+        connect(m_fsdClient, &CFSDClient::atcDataUpdateReceived, this, &CAirspaceMonitor::onAtcPositionUpdate);
+        connect(m_fsdClient, &CFSDClient::atisReplyReceived, this, &CAirspaceMonitor::onAtisReceived);
+        connect(m_fsdClient, &CFSDClient::atisLogoffTimeReplyReceived, this, &CAirspaceMonitor::onAtisLogoffTimeReceived);
+        connect(m_fsdClient, &CFSDClient::flightPlanReceived, this, &CAirspaceMonitor::onFlightPlanReceived);
+        connect(m_fsdClient, &CFSDClient::realNameResponseReceived, this, &CAirspaceMonitor::onRealNameReplyReceived);
+        connect(m_fsdClient, &CFSDClient::planeInformationReceived, this, &CAirspaceMonitor::onIcaoCodesReceived);
+        connect(m_fsdClient, &CFSDClient::deletePilotReceived, this, &CAirspaceMonitor::onPilotDisconnected);
+        connect(m_fsdClient, &CFSDClient::deleteAtcReceived, this, &CAirspaceMonitor::onAtcControllerDisconnected);
+        connect(m_fsdClient, &CFSDClient::pilotDataUpdateReceived, this, &CAirspaceMonitor::onAircraftUpdateReceived);
         connect(m_fsdClient, &CFSDClient::interimPilotDataUpdatedReceived, this, &CAirspaceMonitor::onAircraftInterimUpdateReceived);
-        connect(m_fsdClient, &CFSDClient::visualPilotDataUpdateReceived,   this, &CAirspaceMonitor::onAircraftVisualUpdateReceived);
+        connect(m_fsdClient, &CFSDClient::visualPilotDataUpdateReceived, this, &CAirspaceMonitor::onAircraftVisualUpdateReceived);
         connect(m_fsdClient, &CFSDClient::euroscopeSimDataUpdatedReceived, this, &CAirspaceMonitor::onAircraftSimDataUpdateReceived);
-        connect(m_fsdClient, &CFSDClient::com1FrequencyResponseReceived,   this, &CAirspaceMonitor::onFrequencyReceived);
-        connect(m_fsdClient, &CFSDClient::capabilityResponseReceived,      this, &CAirspaceMonitor::onCapabilitiesReplyReceived);
-        connect(m_fsdClient, &CFSDClient::planeInformationFsinnReceived,   this, &CAirspaceMonitor::onCustomFSInnPacketReceived);
-        connect(m_fsdClient, &CFSDClient::serverResponseReceived,          this, &CAirspaceMonitor::onServerReplyReceived);
-        connect(m_fsdClient, &CFSDClient::aircraftConfigReceived,          this, &CAirspaceMonitor::onAircraftConfigReceived);
-        connect(m_fsdClient, &CFSDClient::connectionStatusChanged,         this, &CAirspaceMonitor::onConnectionStatusChanged);
-        connect(m_fsdClient, &CFSDClient::revbAircraftConfigReceived,      this, &CAirspaceMonitor::onRevBAircraftConfigReceived);
+        connect(m_fsdClient, &CFSDClient::com1FrequencyResponseReceived, this, &CAirspaceMonitor::onFrequencyReceived);
+        connect(m_fsdClient, &CFSDClient::capabilityResponseReceived, this, &CAirspaceMonitor::onCapabilitiesReplyReceived);
+        connect(m_fsdClient, &CFSDClient::planeInformationFsinnReceived, this, &CAirspaceMonitor::onCustomFSInnPacketReceived);
+        connect(m_fsdClient, &CFSDClient::serverResponseReceived, this, &CAirspaceMonitor::onServerReplyReceived);
+        connect(m_fsdClient, &CFSDClient::aircraftConfigReceived, this, &CAirspaceMonitor::onAircraftConfigReceived);
+        connect(m_fsdClient, &CFSDClient::connectionStatusChanged, this, &CAirspaceMonitor::onConnectionStatusChanged);
+        connect(m_fsdClient, &CFSDClient::revbAircraftConfigReceived, this, &CAirspaceMonitor::onRevBAircraftConfigReceived);
 
         // AutoConnection: this should also avoid race conditions by updating the bookings
         Q_ASSERT_X(sApp && sApp->hasWebDataServices(), Q_FUNC_INFO, "Missing data reader");
@@ -102,7 +102,7 @@ namespace BlackCore
         // optional readers
         if (sApp && sApp->getWebDataServices()->getBookingReader())
         {
-            connect(sApp->getWebDataServices()->getBookingReader(), &CVatsimBookingReader::atcBookingsRead,          this, &CAirspaceMonitor::onReceivedAtcBookings);
+            connect(sApp->getWebDataServices()->getBookingReader(), &CVatsimBookingReader::atcBookingsRead, this, &CAirspaceMonitor::onReceivedAtcBookings);
             connect(sApp->getWebDataServices()->getBookingReader(), &CVatsimBookingReader::atcBookingsReadUnchanged, this, &CAirspaceMonitor::onReadUnchangedAtcBookings);
         }
 
@@ -115,8 +115,8 @@ namespace BlackCore
         connect(m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, this, &CAirspaceMonitor::airspaceAircraftSnapshot, Qt::QueuedConnection);
 
         // Analyzer
-        connect(m_analyzer, &CAirspaceAnalyzer::timeoutAircraft, this, &CAirspaceMonitor::onPilotDisconnected,         Qt::QueuedConnection);
-        connect(m_analyzer, &CAirspaceAnalyzer::timeoutAtc,      this, &CAirspaceMonitor::onAtcControllerDisconnected, Qt::QueuedConnection);
+        connect(m_analyzer, &CAirspaceAnalyzer::timeoutAircraft, this, &CAirspaceMonitor::onPilotDisconnected, Qt::QueuedConnection);
+        connect(m_analyzer, &CAirspaceAnalyzer::timeoutAtc, this, &CAirspaceMonitor::onAtcControllerDisconnected, Qt::QueuedConnection);
 
         // timers
         connect(&m_fastProcessTimer, &QTimer::timeout, this, &CAirspaceMonitor::fastProcessing);
@@ -135,8 +135,7 @@ namespace BlackCore
         {
             // thread safe update of m_network
             const QPointer<CAirspaceMonitor> myself(this);
-            QTimer::singleShot(0, m_fsdClient, [ = ]
-            {
+            QTimer::singleShot(0, m_fsdClient, [=] {
                 if (!myself) { return; }
                 if (m_fsdClient)
                 {
@@ -184,7 +183,7 @@ namespace BlackCore
             // with this little trick we try to make an asynchronous signal / slot based approach
             // a synchronous return value
             CEventLoop eventLoop(this);
-            eventLoop.stopWhen(m_fsdClient, &CFSDClient::flightPlanReceived, [ = ](const auto &cs, const auto &) { return cs == callsign; });
+            eventLoop.stopWhen(m_fsdClient, &CFSDClient::flightPlanReceived, [=](const auto &cs, const auto &) { return cs == callsign; });
             if (eventLoop.exec(1500))
             {
                 if (!myself || !sApp || sApp->isShuttingDown()) { return CFlightPlan(); }
@@ -375,11 +374,11 @@ namespace BlackCore
         static const QString rec("recursive");
         switch (r)
         {
-        case NotReady:             return nr;
-        case ReceivedIcaoCodes:    return icao;
-        case ReceivedFsInnPacket:  return fsinn;
+        case NotReady: return nr;
+        case ReceivedIcaoCodes: return icao;
+        case ReceivedFsInnPacket: return fsinn;
         case ReadyForMatchingSent: return ready;
-        case RecursiveCall:        return rec;
+        case RecursiveCall: return rec;
         default: break;
         }
         static const QString unknown("????");
@@ -389,11 +388,11 @@ namespace BlackCore
     QString CAirspaceMonitor::enumToString(MatchingReadiness r)
     {
         QStringList s;
-        if (r.testFlag(NotReady))             { s << enumFlagToString(NotReady); }
-        if (r.testFlag(ReceivedIcaoCodes))    { s << enumFlagToString(ReceivedIcaoCodes); }
-        if (r.testFlag(ReceivedFsInnPacket))  { s << enumFlagToString(ReceivedFsInnPacket); }
+        if (r.testFlag(NotReady)) { s << enumFlagToString(NotReady); }
+        if (r.testFlag(ReceivedIcaoCodes)) { s << enumFlagToString(ReceivedIcaoCodes); }
+        if (r.testFlag(ReceivedFsInnPacket)) { s << enumFlagToString(ReceivedFsInnPacket); }
         if (r.testFlag(ReadyForMatchingSent)) { s << enumFlagToString(ReadyForMatchingSent); }
-        if (r.testFlag(RecursiveCall))        { s << enumFlagToString(RecursiveCall); }
+        if (r.testFlag(RecursiveCall)) { s << enumFlagToString(RecursiveCall); }
         return s.join(", ");
     }
 
@@ -425,7 +424,6 @@ namespace BlackCore
         // only send one query
         const bool send = this->sendNextStaggeredAtisQuery();
         if (!send) { this->sendNextStaggeredPilotDataQuery(); }
-
     }
 
     void CAirspaceMonitor::slowProcessing()
@@ -444,7 +442,7 @@ namespace BlackCore
         this->clearClients();
 
         m_foundInNonMovingAircraft = 0;
-        m_foundInElevationsOnGnd   = 0;
+        m_foundInElevationsOnGnd = 0;
     }
 
     void CAirspaceMonitor::gracefulShutdown()
@@ -480,7 +478,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::onRealNameReplyReceived(const CCallsign &callsign, const QString &realname)
     {
-        if (!this->isConnectedAndNotShuttingDown() || realname.isEmpty())   { return; }
+        if (!this->isConnectedAndNotShuttingDown() || realname.isEmpty()) { return; }
         if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return; }
 
         bool wasAtc = false;
@@ -497,7 +495,7 @@ namespace BlackCore
 
         if (!wasAtc)
         {
-            const CPropertyIndexVariantMap vm = CPropertyIndexVariantMap({CSimulatedAircraft::IndexPilot, CUser::IndexRealName}, rn);
+            const CPropertyIndexVariantMap vm = CPropertyIndexVariantMap({ CSimulatedAircraft::IndexPilot, CUser::IndexRealName }, rn);
             this->updateAircraftInRange(callsign, vm);
         }
 
@@ -513,7 +511,7 @@ namespace BlackCore
         if (!this->isConnectedAndNotShuttingDown() || callsign.isEmpty()) { return; }
         const CVoiceCapabilities voiceCaps = sApp->getWebDataServices()->getVoiceCapabilityForCallsign(callsign);
         CPropertyIndexVariantMap vm(CClient::IndexCapabilities, CVariant::from(clientCaps));
-        vm.addValue({CClient::IndexVoiceCapabilities}, voiceCaps);
+        vm.addValue({ CClient::IndexVoiceCapabilities }, voiceCaps);
         this->updateOrAddClient(callsign, vm, false);
 
         // for aircraft parts
@@ -630,12 +628,11 @@ namespace BlackCore
         const bool validRemoteCs = remoteAircraft.hasValidCallsign();
         const bool minSituations = this->remoteAircraftSituationsCount(callsign) > 1;
         const bool complete = validRemoteCs &&
-                              minSituations && (
-                                  readiness.receivedAll() ||
-                                  // disable, because it can be model string is unknown in FsInn data
-                                  // (remoteAircraft.getModel().getModelType() == CAircraftModel::TypeFSInnData) || // here we know we have all data
-                                  (remoteAircraft.hasModelString()) // we cannot expect more info
-                              );
+                              minSituations && (readiness.receivedAll() ||
+                                                // disable, because it can be model string is unknown in FsInn data
+                                                // (remoteAircraft.getModel().getModelType() == CAircraftModel::TypeFSInnData) || // here we know we have all data
+                                                (remoteAircraft.hasModelString()) // we cannot expect more info
+                                               );
 
         const ReverseLookupLogging revLogEnabled = this->whatToReverseLog();
         if (rf != Verified && validRemoteCs && ageMs <= MMMaxAgeMs && !complete)
@@ -645,8 +642,7 @@ namespace BlackCore
             if (!revLogEnabled.testFlag(RevLogSimplifiedInfo)) { this->addReverseLookupMessage(callsign, ws.arg(readiness.toQString()).arg(ageMs).arg(QDateTime::currentDateTimeUtc().toString(format))); }
 
             const QPointer<CAirspaceMonitor> myself(this);
-            QTimer::singleShot(MMCheckAgainMs, this, [ = ]()
-            {
+            QTimer::singleShot(MMCheckAgainMs, this, [=]() {
                 if (!myself || !sApp || sApp->isShuttingDown()) { return; }
                 if (!this->isAircraftInRange(callsign))
                 {
@@ -714,8 +710,7 @@ namespace BlackCore
             // if the queries now yield a result all will be fine
             // otherwise we need to check again
             const QPointer<CAirspaceMonitor> myself(this);
-            QTimer::singleShot(MMVerifyMs, this, [ = ]()
-            {
+            QTimer::singleShot(MMVerifyMs, this, [=]() {
                 // makes sure we have ICAO data
                 if (!myself || !sApp || sApp->isShuttingDown()) { return; }
                 this->verifyReceivedIcaoData(callsign);
@@ -864,8 +859,7 @@ namespace BlackCore
             CStatusMessageList *pReverseLookupMessages = reverseLookupEnabled.testFlag(RevLogEnabled) ? &reverseLookupMessages : nullptr;
 
             CCallsign::addLogDetailsToList(pReverseLookupMessages, callsign,
-                                               QStringLiteral("FsInn data from network: aircraft '%1', airline '%2', model '%3', combined '%4'").
-                                               arg(aircraftIcaoDesignator, airlineIcaoDesignator, modelString, combinedAircraftType));
+                                           QStringLiteral("FsInn data from network: aircraft '%1', airline '%2', model '%3', combined '%4'").arg(aircraftIcaoDesignator, airlineIcaoDesignator, modelString, combinedAircraftType));
 
             QString usedModelString = modelString;
 
@@ -874,7 +868,7 @@ namespace BlackCore
             {
                 usedModelString.clear();
                 CCallsign::addLogDetailsToList(pReverseLookupMessages, callsign,
-                                                   QStringLiteral("FsInn modelstring '%1' ignored because of setuo").arg(modelString));
+                                               QStringLiteral("FsInn modelstring '%1' ignored because of setuo").arg(modelString));
             }
             else if (!CAircraftMatcher::isKnownModelString(modelString, callsign, pReverseLookupMessages))
             {
@@ -882,7 +876,7 @@ namespace BlackCore
                 // this can overrride "swift livery strings", FsInn here only is useful with a known model string
                 usedModelString.clear();
                 CCallsign::addLogDetailsToList(pReverseLookupMessages, callsign,
-                                                   QStringLiteral("FsInn modelstring ignored, as modelstring '%1' is not known").arg(modelString));
+                                               QStringLiteral("FsInn modelstring ignored, as modelstring '%1' is not known").arg(modelString));
             }
 
             // if model string is empty, FsInn data are pointless
@@ -908,9 +902,8 @@ namespace BlackCore
         CStatusMessageList reverseLookupMessages;
         CStatusMessageList *pReverseLookupMessages = reverseLookupEnabled.testFlag(RevLogEnabled) ? &reverseLookupMessages : nullptr;
         CCallsign::addLogDetailsToList(pReverseLookupMessages, callsign,
-                                           QStringLiteral("Data from network: aircraft '%1', airline '%2', livery '%3'").
-                                           arg(aircraftIcaoDesignator, airlineIcaoDesignator, livery),
-                                           CAirspaceMonitor::getLogCategories());
+                                       QStringLiteral("Data from network: aircraft '%1', airline '%2', livery '%3'").arg(aircraftIcaoDesignator, airlineIcaoDesignator, livery),
+                                       CAirspaceMonitor::getLogCategories());
 
         const CClient client = this->getClientOrDefaultForCallsign(callsign);
         this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery, client.getQueriedModelString(), CAircraftModel::TypeQueriedFromNetwork, pReverseLookupMessages);
@@ -1009,15 +1002,15 @@ namespace BlackCore
                     CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("FP rem.parsed: '%1'").arg(fpRemarks.toQString(true)));
 
                     // FP data if any
-                    telephonyFromFp   = CAircraftMatcher::reverseLookupTelephonyDesignator(fpRemarks.getRadioTelephony(), callsign, log);
+                    telephonyFromFp = CAircraftMatcher::reverseLookupTelephonyDesignator(fpRemarks.getRadioTelephony(), callsign, log);
                     airlineNameFromFp = CAircraftMatcher::reverseLookupAirlineName(fpRemarks.getFlightOperator(), callsign, log);
                     airlineIcaoFromFp = fpRemarks.getAirlineIcao().getDesignator();
 
                     // turn into names as in DB
                     airlineNameLookup = CAircraftMatcher::reverseLookupAirlineName(airlineNameFromFp);
-                    telephonyLookup   = CAircraftMatcher::reverseLookupTelephonyDesignator(telephonyFromFp);
+                    telephonyLookup = CAircraftMatcher::reverseLookupTelephonyDesignator(telephonyFromFp);
                     if (!airlineNameLookup.isEmpty()) { CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Using resolved airline name '%1' found by FP name '%2'").arg(airlineNameLookup, airlineNameFromFp), CAirspaceMonitor::getLogCategories()); }
-                    if (!telephonyLookup.isEmpty())   { CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Using resolved telephony designator '%1' found by FP telephoy '%2'").arg(telephonyLookup, telephonyFromFp), CAirspaceMonitor::getLogCategories()); }
+                    if (!telephonyLookup.isEmpty()) { CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Using resolved telephony designator '%1' found by FP telephoy '%2'").arg(telephonyLookup, telephonyFromFp), CAirspaceMonitor::getLogCategories()); }
                 }
 
                 // This code is needed WITH and WITHOUT FP data
@@ -1031,8 +1024,8 @@ namespace BlackCore
                 if (!airlineIcao.isLoadedFromDb())
                 {
                     if (!airlineIcao.hasValidDesignator()) { airlineIcao.setDesignator(airlineIcaoString.isEmpty() ? callsign.getAirlinePrefix() : airlineIcaoString); }
-                    if (!airlineNameLookup.isEmpty())      { airlineIcao.setName(airlineNameLookup); }
-                    if (!telephonyLookup.isEmpty())        { airlineIcao.setTelephonyDesignator(telephonyLookup); }
+                    if (!airlineNameLookup.isEmpty()) { airlineIcao.setName(airlineNameLookup); }
+                    if (!telephonyLookup.isEmpty()) { airlineIcao.setTelephonyDesignator(telephonyLookup); }
 
                     // already try to resolve at this stage by a smart lookup with all the filled data from above
                     airlineIcao = CAircraftMatcher::reverseLookupAirlineIcao(airlineIcao, callsign, log);
@@ -1060,8 +1053,8 @@ namespace BlackCore
                 {
                     CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Matching script: Re-run reverseLookupModelWithFlightplanData"), CAirspaceMonitor::getLogCategories());
                     return CAirspaceMonitor::reverseLookupModelWithFlightplanData(callsign,
-                            rv.model.getAircraftIcaoCodeDesignator(), rv.model.getAirlineIcaoCodeVDesignator(), rv.model.getLivery().getCombinedCode(),
-                            modelString, type, log, false);
+                                                                                  rv.model.getAircraftIcaoCodeDesignator(), rv.model.getAirlineIcaoCodeVDesignator(), rv.model.getLivery().getCombinedCode(),
+                                                                                  modelString, type, log, false);
                 }
                 else
                 {
@@ -1099,8 +1092,7 @@ namespace BlackCore
         if (added)
         {
             const QPointer<CAirspaceMonitor> myself(this);
-            QTimer::singleShot(MMVerifyMs, this, [ = ]()
-            {
+            QTimer::singleShot(MMVerifyMs, this, [=]() {
                 // makes sure we have ICAO data
                 if (!myself || !sApp || sApp->isShuttingDown()) { return; }
                 this->verifyReceivedIcaoData(callsign);
@@ -1128,8 +1120,7 @@ namespace BlackCore
         QPointer<CAirspaceMonitor> myself(this);
         for (const CSimulatedAircraft &ac : aircraft)
         {
-            QTimer::singleShot(c++ * 25, this, [ = ]
-            {
+            QTimer::singleShot(c++ * 25, this, [=] {
                 if (!myself) { return; }
                 myself->addNewAircraftInRange(ac);
                 if (!readyForModelMatching) { return; }
@@ -1165,7 +1156,7 @@ namespace BlackCore
 
     bool CAirspaceMonitor::handleMaxRange(const CAircraftSituation &situation)
     {
-        if (situation.isNull())  { return false; }
+        if (situation.isNull()) { return false; }
         if (m_maxDistanceNM < 0) { return true; }
         const int distanceNM = this->getOwnAircraft().calculateGreatCircleDistance(situation).valueInteger(CLengthUnit::NM());
         if (distanceNM > m_maxDistanceNMHysteresis)
@@ -1217,7 +1208,7 @@ namespace BlackCore
     bool CAirspaceMonitor::extrapolateElevation(CAircraftSituationList &situations, const CAircraftSituationChange &change)
     {
         if (situations.size() < 3) { return false; }
-        //Q_ASSERT_X(situations.m_tsAdjustedSortHint == CAircraftSituationList::AdjustedTimestampLatestFirst, Q_FUNC_INFO, "Need latest first");
+        // Q_ASSERT_X(situations.m_tsAdjustedSortHint == CAircraftSituationList::AdjustedTimestampLatestFirst, Q_FUNC_INFO, "Need latest first");
         const CAircraftSituation old = situations[1];
         const CAircraftSituation older = situations[2];
         return extrapolateElevation(situations.front(), old, older, change);
@@ -1312,7 +1303,7 @@ namespace BlackCore
         // checks
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Empty callsign");
 
-        if (isCopilotAircraft(callsign))        { return; }
+        if (isCopilotAircraft(callsign)) { return; }
         if (!this->isAircraftInRange(callsign)) { return; }
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
@@ -1343,8 +1334,7 @@ namespace BlackCore
         this->updateAircraftInRangeDistanceBearing(
             callsign, interimSituation,
             this->calculateDistanceToOwnAircraft(interimSituation),
-            this->calculateBearingToOwnAircraft(interimSituation)
-        );
+            this->calculateBearingToOwnAircraft(interimSituation));
     }
 
     void CAirspaceMonitor::onAircraftVisualUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation)
@@ -1358,7 +1348,7 @@ namespace BlackCore
         // checks
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Empty callsign");
 
-        if (isCopilotAircraft(callsign))        { return; }
+        if (isCopilotAircraft(callsign)) { return; }
         if (!this->isAircraftInRange(callsign)) { return; }
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
@@ -1390,8 +1380,7 @@ namespace BlackCore
         this->updateAircraftInRangeDistanceBearing(
             callsign, visualSituation,
             this->calculateDistanceToOwnAircraft(visualSituation),
-            this->calculateBearingToOwnAircraft(visualSituation)
-        );
+            this->calculateBearingToOwnAircraft(visualSituation));
     }
 
     void CAirspaceMonitor::onAircraftSimDataUpdateReceived(const CAircraftSituation &situation, const CAircraftParts &parts, qint64 currentOffsetMs, const QString &aircraftIcao, const QString &airlineIcao)
@@ -1441,7 +1430,7 @@ namespace BlackCore
         Q_ASSERT(CThreadUtils::isInThisThread(this));
 
         // update
-        const CPropertyIndexVariantMap vm({CSimulatedAircraft::IndexCom1System, CComSystem::IndexActiveFrequency}, CVariant::from(frequency));
+        const CPropertyIndexVariantMap vm({ CSimulatedAircraft::IndexCom1System, CComSystem::IndexActiveFrequency }, CVariant::from(frequency));
         this->updateAircraftInRange(callsign, vm);
     }
 
@@ -1456,19 +1445,19 @@ namespace BlackCore
         bool ok;
         pp = config.toULong(&ok, 10);
 
-        bool gear              = (pp & 1u);
-        bool landLight         = (pp & 2u);
-        bool navLight          = (pp & 4u);
-        bool strobeLight       = (pp & 8u);
-        bool beaconLight       = (pp & 16u);
-        bool taxiLight         = (pp & 32u);
-        bool engine1Running    = (pp & 64u);
-        bool engine2Running    = (pp & 128u);
-        bool engine3Running    = (pp & 256u);
-        bool engine4Running    = (pp & 512u);
+        bool gear = (pp & 1u);
+        bool landLight = (pp & 2u);
+        bool navLight = (pp & 4u);
+        bool strobeLight = (pp & 8u);
+        bool beaconLight = (pp & 16u);
+        bool taxiLight = (pp & 32u);
+        bool engine1Running = (pp & 64u);
+        bool engine2Running = (pp & 128u);
+        bool engine3Running = (pp & 256u);
+        bool engine4Running = (pp & 512u);
 
-        //CLogMessage(this).info(u"taxiLight %1 landLight %2 beaconLight %3 strobeLight %4 gear %5") << taxiLight << landLight << beaconLight << strobeLight << gear;
-        //CLogMessage(this).info(u"engine1Running %1 engine2Running %2 engine3Running %3 engine4Running %4") << engine1Running << engine2Running << engine3Running << engine4Running;
+        // CLogMessage(this).info(u"taxiLight %1 landLight %2 beaconLight %3 strobeLight %4 gear %5") << taxiLight << landLight << beaconLight << strobeLight << gear;
+        // CLogMessage(this).info(u"engine1Running %1 engine2Running %2 engine3Running %3 engine4Running %4") << engine1Running << engine2Running << engine3Running << engine4Running;
 
         CAircraftParts aircraftparts;
         aircraftparts.setGearDown(gear);
@@ -1503,7 +1492,6 @@ namespace BlackCore
         if (client.hasCapability(CClient::FsdWithAircraftConfig)) { return; }
         client.addCapability(CClient::FsdWithAircraftConfig);
         this->setOtherClient(client);
-
     }
 
     void CAirspaceMonitor::onAircraftConfigReceived(const CCallsign &callsign, const QJsonObject &jsonObject, qint64 currentOffsetMs)
@@ -1530,7 +1518,7 @@ namespace BlackCore
         if (callsign.isEmpty()) { return situation; }
 
         CAircraftSituation correctedSituation(allowTestOffset ? this->addTestAltitudeOffsetToSituation(situation) : situation);
-        bool needToRequestElevation  = false;
+        bool needToRequestElevation = false;
         bool canLikelySkipNearGround = correctedSituation.canLikelySkipNearGroundInterpolation();
         do
         {
@@ -1580,7 +1568,7 @@ namespace BlackCore
             // we NEED elevation
             // actually distance of 200k/h 100ms is just 6.1 meters
             const CLength dpt = correctedSituation.getDistancePerTime(100, CElevationPlane::singlePointRadius());
-            const CAircraftSituationList situationsBeforeStoring   = this->remoteAircraftSituations(callsign);
+            const CAircraftSituationList situationsBeforeStoring = this->remoteAircraftSituations(callsign);
             const CAircraftSituation situationWithElvBeforeStoring = situationsBeforeStoring.findClosestElevationWithinRange(correctedSituation, dpt);
             if (situationWithElvBeforeStoring.transferGroundElevationFromMe(correctedSituation, dpt))
             {
@@ -1592,7 +1580,7 @@ namespace BlackCore
                 // from cache
                 const CLength distance(correctedSituation.getDistancePerTime250ms(CElevationPlane::singlePointRadius())); // distance per ms
                 const CElevationPlane ep = this->findClosestElevationWithinRange(correctedSituation, distance);
-                needToRequestElevation   = ep.isNull();
+                needToRequestElevation = ep.isNull();
                 Q_ASSERT_X(needToRequestElevation || !ep.getRadius().isNull(), Q_FUNC_INFO, "null radius");
 
                 // also can handle NULL elevations
@@ -1612,10 +1600,10 @@ namespace BlackCore
                 // average elevation
                 // 1) from cache
                 // 2) from planes on ground not moving
-                bool fromNonMoving       = false;
-                bool triedExtrapolation  = false;
+                bool fromNonMoving = false;
+                bool triedExtrapolation = false;
                 bool couldNotExtrapolate = false;
-                int fromWhere            = -1; // debugging
+                int fromWhere = -1; // debugging
 
                 CElevationPlane averagePlane = this->averageElevationOfOnGroundAircraft(situation, CElevationPlane::minorAirportRadius(), 2, 3);
                 if (averagePlane.isNull())
@@ -1638,7 +1626,7 @@ namespace BlackCore
                     if (situationsBeforeStoring.size() > 1)
                     {
                         const bool extrapolated = extrapolateElevation(correctedSituation, situationsBeforeStoring[0], situationsBeforeStoring[1], changesBeforeStoring);
-                        triedExtrapolation  = true;
+                        triedExtrapolation = true;
                         couldNotExtrapolate = !extrapolated;
                         fromWhere = 20;
                     }
@@ -1668,7 +1656,7 @@ namespace BlackCore
                 }
             } // gnd. elevation
         }
-        while (false);  // do we need elevation, find on
+        while (false); // do we need elevation, find on
 
         // do we already have ground details?
         if (situation.getOnGroundDetails() == CAircraftSituation::NotSetGroundDetails)
@@ -1744,7 +1732,7 @@ namespace BlackCore
         if (!this->isConnectedAndNotShuttingDown()) { return; }
 
         if (withIcaoQuery) { m_fsdClient->sendPlaneInfoRequest(callsign); }
-        if (withFsInn)     { m_fsdClient->sendPlaneInfoRequestFsinn(callsign); }
+        if (withFsInn) { m_fsdClient->sendPlaneInfoRequestFsinn(callsign); }
 
         m_fsdClient->sendClientQueryCom1Freq(callsign);
         m_fsdClient->sendClientQueryRealName(callsign);
@@ -1824,8 +1812,7 @@ namespace BlackCore
         return ownCallsign.isMaybeCopilotCallsign(callsign);
     }
 
-    CAirspaceMonitor::FsInnPacket::FsInnPacket(const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &combinedCode, const QString &modelString) :
-        aircraftIcaoDesignator(aircraftIcaoDesignator.trimmed().toUpper()), airlineIcaoDesignator(airlineIcaoDesignator.trimmed().toUpper()), combinedCode(combinedCode.trimmed().toUpper()), modelString(modelString.trimmed())
-    { }
+    CAirspaceMonitor::FsInnPacket::FsInnPacket(const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &combinedCode, const QString &modelString) : aircraftIcaoDesignator(aircraftIcaoDesignator.trimmed().toUpper()), airlineIcaoDesignator(airlineIcaoDesignator.trimmed().toUpper()), combinedCode(combinedCode.trimmed().toUpper()), modelString(modelString.trimmed())
+    {}
 
 } // namespace

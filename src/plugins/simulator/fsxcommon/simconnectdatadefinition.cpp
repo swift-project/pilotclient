@@ -36,9 +36,9 @@ namespace BlackSimPlugin::FsxCommon
         {
         case RequestOwnAircraft: return ownAircraft;
         case RequestOwnAircraftTitle: return title;
-        case RequestSimEnvironment:   return simEnv;
-        case RequestSbData:    return sbData;
-        case RequestFacility:  return facility;
+        case RequestSimEnvironment: return simEnv;
+        case RequestSbData: return sbData;
+        case RequestFacility: return facility;
         case RequestEndMarker: return end;
         default: break;
         }
@@ -60,19 +60,19 @@ namespace BlackSimPlugin::FsxCommon
         switch (simObjectRequest)
         {
         case SimObjectBaseId: return baseId;
-        case SimObjectAdd:    return add;
+        case SimObjectAdd: return add;
         case SimObjectRemove: return remove;
         case SimObjectLights: return lights;
         case SimObjectPositionData: return pos;
-        case SimObjectModel:  return model;
-        case SimObjectMisc:   return misc;
+        case SimObjectModel: return model;
+        case SimObjectMisc: return misc;
         case SimObjectEndMarker: return end;
         default: break;
         }
         return unknown;
     }
 
-    CSimConnectDefinitions::CSimConnectDefinitions() { }
+    CSimConnectDefinitions::CSimConnectDefinitions() {}
 
     HRESULT CSimConnectDefinitions::initDataDefinitionsWhenConnected(const HANDLE hSimConnect)
     {
@@ -91,55 +91,55 @@ namespace BlackSimPlugin::FsxCommon
         // FSX vars: https://docs.microsoft.com/en-us/previous-versions/microsoft-esp/cc526981(v%3dmsdn.10)
         // all the VARS here should be FSX/P3D
         HRESULT hr = s_ok();
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE LATITUDE", "Degrees");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE LONGITUDE", "Degrees");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE ALTITUDE", "Feet");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE ALT ABOVE GROUND", "Feet");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PRESSURE ALTITUDE", "Meters");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "STATIC CG TO GROUND", "Feet");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE HEADING DEGREES TRUE", "Degrees");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE PITCH DEGREES", "Degrees");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE BANK DEGREES", "Degrees");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GROUND VELOCITY", "Knots");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GROUND ALTITUDE", "Feet");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "SIM ON GROUND", "Bool");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT STROBE", "Bool");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT LANDING", "Bool");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT TAXI", "Bool");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT BEACON", "Bool");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT NAV", "Bool");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT LOGO", "Bool");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "TRANSPONDER CODE:1", nullptr);
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM ACTIVE FREQUENCY:1", "MHz");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM ACTIVE FREQUENCY:2", "MHz");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM STANDBY FREQUENCY:1", "MHz");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM STANDBY FREQUENCY:2", "MHz");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM TRANSMIT:1", "Bool");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM TRANSMIT:2", "Bool");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM RECEIVE ALL", "Bool");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM TEST:1", "Bool");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM TEST:2", "Bool");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM STATUS:1", "Enum");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM STATUS:2", "Enum");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "FLAPS HANDLE PERCENT", "Percent Over 100");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "SPOILERS HANDLE POSITION", "Percent Over 100");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GEAR HANDLE POSITION", "Bool");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "NUMBER OF ENGINES", "Number");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE LATITUDE", "Degrees");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE LONGITUDE", "Degrees");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE ALTITUDE", "Feet");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE ALT ABOVE GROUND", "Feet");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PRESSURE ALTITUDE", "Meters");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "STATIC CG TO GROUND", "Feet");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE HEADING DEGREES TRUE", "Degrees");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE PITCH DEGREES", "Degrees");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE BANK DEGREES", "Degrees");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GROUND VELOCITY", "Knots");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GROUND ALTITUDE", "Feet");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "SIM ON GROUND", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT STROBE", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT LANDING", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT TAXI", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT BEACON", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT NAV", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT LOGO", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "TRANSPONDER CODE:1", nullptr);
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM ACTIVE FREQUENCY:1", "MHz");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM ACTIVE FREQUENCY:2", "MHz");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM STANDBY FREQUENCY:1", "MHz");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM STANDBY FREQUENCY:2", "MHz");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM TRANSMIT:1", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM TRANSMIT:2", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM RECEIVE ALL", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM TEST:1", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM TEST:2", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM STATUS:1", "Enum");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM STATUS:2", "Enum");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "FLAPS HANDLE PERCENT", "Percent Over 100");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "SPOILERS HANDLE POSITION", "Percent Over 100");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GEAR HANDLE POSITION", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "NUMBER OF ENGINES", "Number");
         // Simconnect supports index 1 - 4
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GENERAL ENG COMBUSTION:1", "Bool");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GENERAL ENG COMBUSTION:2", "Bool");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GENERAL ENG COMBUSTION:3", "Bool");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GENERAL ENG COMBUSTION:4", "Bool");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "VELOCITY WORLD X", "Feet per second");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "VELOCITY WORLD Y", "Feet per second");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "VELOCITY WORLD Z", "Feet per second");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "ROTATION VELOCITY BODY X", "Radians per second");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "ROTATION VELOCITY BODY Y", "Radians per second");
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "ROTATION VELOCITY BODY Z", "Radians per second");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GENERAL ENG COMBUSTION:1", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GENERAL ENG COMBUSTION:2", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GENERAL ENG COMBUSTION:3", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GENERAL ENG COMBUSTION:4", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "VELOCITY WORLD X", "Feet per second");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "VELOCITY WORLD Y", "Feet per second");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "VELOCITY WORLD Z", "Feet per second");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "ROTATION VELOCITY BODY X", "Radians per second");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "ROTATION VELOCITY BODY Y", "Radians per second");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "ROTATION VELOCITY BODY Z", "Radians per second");
         // FS2020
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "INDICATED ALTITUDE CALIBRATED", "Feet");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "INDICATED ALTITUDE CALIBRATED", "Feet");
 
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE", nullptr, SIMCONNECT_DATATYPE_STRING256);
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE", nullptr, SIMCONNECT_DATATYPE_STRING256);
         if (isFailure(hr))
         {
             CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error(u"SimConnect error: initOwnAircraft %1") << hr;
@@ -173,7 +173,7 @@ namespace BlackSimPlugin::FsxCommon
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights, "GENERAL ENG COMBUSTION:4", "Bool");
 
         // Lights (other definition)
-        hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE", nullptr, SIMCONNECT_DATATYPE_STRING256);
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE", nullptr, SIMCONNECT_DATATYPE_STRING256);
 
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT STROBE", "Bool");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT LANDING", "Bool");
@@ -269,11 +269,11 @@ namespace BlackSimPlugin::FsxCommon
         }
 
         //  data definitions
-        hr += SimConnect_AddToClientDataDefinition(hSimConnect, CSimConnectDefinitions::DataClientAreaSb, 0, sbSize);     // whole area
-        hr += SimConnect_AddToClientDataDefinition(hSimConnect, CSimConnectDefinitions::DataClientAreaSbStandby, 17, 1);  // standby
-        hr += SimConnect_AddToClientDataDefinition(hSimConnect, CSimConnectDefinitions::DataClientAreaSbIdent, 19, 1);    // ident
+        hr += SimConnect_AddToClientDataDefinition(hSimConnect, CSimConnectDefinitions::DataClientAreaSb, 0, sbSize); // whole area
+        hr += SimConnect_AddToClientDataDefinition(hSimConnect, CSimConnectDefinitions::DataClientAreaSbStandby, 17, 1); // standby
+        hr += SimConnect_AddToClientDataDefinition(hSimConnect, CSimConnectDefinitions::DataClientAreaSbIdent, 19, 1); // ident
         hr += SimConnect_AddToClientDataDefinition(hSimConnect, CSimConnectDefinitions::DataClientAreaSbConnected, 1, 1); // network connected
-        hr += SimConnect_AddToClientDataDefinition(hSimConnect, CSimConnectDefinitions::DataClientAreaSbRunning, 0, 1);   // SB running
+        hr += SimConnect_AddToClientDataDefinition(hSimConnect, CSimConnectDefinitions::DataClientAreaSbRunning, 0, 1); // SB running
 
         if (isFailure(hr))
         {
@@ -309,7 +309,7 @@ namespace BlackSimPlugin::FsxCommon
         return std::tie(flapsLeadingEdgeLeftPercent, flapsLeadingEdgeRightPercent, flapsTrailingEdgeLeftPercent, flapsTrailingEdgeRightPercent,
                         gearHandlePosition, spoilersHandlePosition,
                         engine1Combustion, engine2Combustion, engine3Combustion, engine4Combustion) ==
-                std::tie(rhs.flapsLeadingEdgeLeftPercent, rhs.flapsLeadingEdgeRightPercent, rhs.flapsTrailingEdgeLeftPercent, rhs.flapsTrailingEdgeRightPercent,
+               std::tie(rhs.flapsLeadingEdgeLeftPercent, rhs.flapsLeadingEdgeRightPercent, rhs.flapsTrailingEdgeLeftPercent, rhs.flapsTrailingEdgeRightPercent,
                         rhs.gearHandlePosition, rhs.spoilersHandlePosition,
                         rhs.engine1Combustion, rhs.engine2Combustion, rhs.engine3Combustion, rhs.engine4Combustion);
     }
@@ -337,9 +337,9 @@ namespace BlackSimPlugin::FsxCommon
 
     void DataDefinitionRemoteAircraftPartsWithoutLights::resetAllFlaps()
     {
-        flapsLeadingEdgeLeftPercent   = 0.0;
-        flapsLeadingEdgeRightPercent  = 0.0;
-        flapsTrailingEdgeLeftPercent  = 0.0;
+        flapsLeadingEdgeLeftPercent = 0.0;
+        flapsLeadingEdgeRightPercent = 0.0;
+        flapsTrailingEdgeLeftPercent = 0.0;
         flapsTrailingEdgeRightPercent = 0.0;
     }
 
@@ -350,9 +350,9 @@ namespace BlackSimPlugin::FsxCommon
 
     void DataDefinitionRemoteAircraftPartsWithoutLights::resetToInvalid()
     {
-        flapsLeadingEdgeLeftPercent   = -1;
-        flapsLeadingEdgeRightPercent  = -1;
-        flapsTrailingEdgeLeftPercent  = -1;
+        flapsLeadingEdgeLeftPercent = -1;
+        flapsLeadingEdgeRightPercent = -1;
+        flapsTrailingEdgeLeftPercent = -1;
         flapsTrailingEdgeRightPercent = -1;
         gearHandlePosition = -1;
         spoilersHandlePosition = -1;
@@ -366,11 +366,11 @@ namespace BlackSimPlugin::FsxCommon
     {
         gearHandlePosition = parts.isFixedGearDown() ? 1.0 : 0.0;
         const double trail = parts.getFlapsPercent() / 100.0;
-        const double lead  = trail;
-        flapsTrailingEdgeLeftPercent  = trail;
+        const double lead = trail;
+        flapsTrailingEdgeLeftPercent = trail;
         flapsTrailingEdgeRightPercent = trail;
-        flapsLeadingEdgeLeftPercent   = lead;
-        flapsLeadingEdgeRightPercent  = lead;
+        flapsLeadingEdgeLeftPercent = lead;
+        flapsLeadingEdgeRightPercent = lead;
         spoilersHandlePosition = parts.isSpoilersOut() ? 1.0 : 0.0;
         this->setAllEngines(false); // init
 
@@ -384,17 +384,17 @@ namespace BlackSimPlugin::FsxCommon
     CAircraftLights DataDefinitionRemoteAircraftLights::toLights() const
     {
         return CAircraftLights(
-                    dtb(lightStrobe), dtb(lightLanding), dtb(lightTaxi),
-                    dtb(lightBeacon), dtb(lightNav), dtb(lightLogo), dtb(lightRecognition),
-                    dtb(lightCabin));
+            dtb(lightStrobe), dtb(lightLanding), dtb(lightTaxi),
+            dtb(lightBeacon), dtb(lightNav), dtb(lightLogo), dtb(lightRecognition),
+            dtb(lightCabin));
     }
 
     QString DataDefinitionClientAreaSb::toQString() const
     {
         return u"0 (running): " % QString::number(data[0]) %
-                u" 1 (connected): " % QString::number(data[1]) %
-                u" 17 (standby): " % QString::number(data[17]) %
-                u" 19 (ident): " % QString::number(data[19]);
+               u" 1 (connected): " % QString::number(data[1]) %
+               u" 17 (standby): " % QString::number(data[17]) %
+               u" 19 (ident): " % QString::number(data[19]);
     }
 
 } // namespace

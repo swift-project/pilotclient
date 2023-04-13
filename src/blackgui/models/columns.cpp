@@ -18,13 +18,11 @@ using namespace BlackMisc;
 
 namespace BlackGui::Models
 {
-    CColumn::CColumn(const QString &headerName, const QString &toolTip, const CPropertyIndex &propertyIndex, CDefaultFormatter *formatter, bool editable) :
-        m_columnName(headerName), m_columnToolTip(toolTip), m_formatter(formatter ? formatter : new CDefaultFormatter()), m_propertyIndex(propertyIndex),
-        m_editable(editable)
+    CColumn::CColumn(const QString &headerName, const QString &toolTip, const CPropertyIndex &propertyIndex, CDefaultFormatter *formatter, bool editable) : m_columnName(headerName), m_columnToolTip(toolTip), m_formatter(formatter ? formatter : new CDefaultFormatter()), m_propertyIndex(propertyIndex),
+                                                                                                                                                            m_editable(editable)
     {}
 
-    CColumn::CColumn(const CPropertyIndex &propertyIndex) :
-        m_formatter(new CPixmapFormatter()), m_propertyIndex(propertyIndex)
+    CColumn::CColumn(const CPropertyIndex &propertyIndex) : m_formatter(new CPixmapFormatter()), m_propertyIndex(propertyIndex)
     {}
 
     bool CColumn::hasSortPropertyIndex() const
@@ -42,12 +40,11 @@ namespace BlackGui::Models
     {
         const bool incogntio = this->isIncognito() && sGui && sGui->isIncognito();
         return incogntio ?
-                CColumn::incongitoFormatter() :
-                m_formatter.data();
+                   CColumn::incongitoFormatter() :
+                   m_formatter.data();
     }
 
-    CColumn::CColumn(const QString &toolTip, const CPropertyIndex &propertyIndex) :
-        m_columnToolTip(toolTip), m_formatter(new CPixmapFormatter()), m_propertyIndex(propertyIndex)
+    CColumn::CColumn(const QString &toolTip, const CPropertyIndex &propertyIndex) : m_columnToolTip(toolTip), m_formatter(new CPixmapFormatter()), m_propertyIndex(propertyIndex)
     {}
 
     CColumn CColumn::standardValueObject(const QString &headerName, const CPropertyIndex &propertyIndex, int alignment)
@@ -95,8 +92,7 @@ namespace BlackGui::Models
 
     // --------------- columns ----------------------------------------------
 
-    CColumns::CColumns(const QString &translationContext, QObject *parent) :
-        QObject(parent), m_translationContext(translationContext)
+    CColumns::CColumns(const QString &translationContext, QObject *parent) : QObject(parent), m_translationContext(translationContext)
     {
         // void
     }
@@ -214,7 +210,10 @@ namespace BlackGui::Models
 
     bool CColumns::hasAnyWidthPercentage() const
     {
-        for (const CColumn &c : m_columns) { if (c.hasWidthPercentage()) { return true; }}
+        for (const CColumn &c : m_columns)
+        {
+            if (c.hasWidthPercentage()) { return true; }
+        }
         return false;
     }
 

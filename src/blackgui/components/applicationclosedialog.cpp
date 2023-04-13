@@ -24,9 +24,8 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CApplicationCloseDialog::CApplicationCloseDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CApplicationCloseDialog)
+    CApplicationCloseDialog::CApplicationCloseDialog(QWidget *parent) : QDialog(parent),
+                                                                        ui(new Ui::CApplicationCloseDialog)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
 
@@ -41,7 +40,7 @@ namespace BlackGui::Components
     }
 
     CApplicationCloseDialog::~CApplicationCloseDialog()
-    { }
+    {}
 
     void CApplicationCloseDialog::onAccepted()
     {

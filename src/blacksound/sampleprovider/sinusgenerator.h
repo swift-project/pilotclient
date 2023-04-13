@@ -37,10 +37,10 @@ namespace BlackSound::SampleProvider
         void setFrequency(double frequencyHz);
 
     private:
-        double m_gain        = 0.0;
+        double m_gain = 0.0;
         double m_frequencyHz = 0.0;
-        double m_sampleRate  = 48000;
-        int m_nSample        = 0;
+        double m_sampleRate = 48000;
+        int m_nSample = 0;
         static constexpr double s_twoPi = 2 * M_PI;
     };
 } // ns

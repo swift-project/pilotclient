@@ -73,8 +73,7 @@ namespace BlackSimPlugin::XPlane
         template <typename T>
         std::function<void(QDBusPendingCallWatcher *)> setterCallback(T *obj)
         {
-            return [this, obj](QDBusPendingCallWatcher * watcher)
-            {
+            return [this, obj](QDBusPendingCallWatcher *watcher) {
                 QDBusPendingReply<T> reply = *watcher;
                 if (reply.isError()) { emit this->asyncMethodError(reply.error()); }
                 else { *obj = reply; }

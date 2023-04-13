@@ -31,9 +31,8 @@ namespace BlackGui::Models
     {
     public:
         //! Constructor
-        CColumn(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, CDefaultFormatter *formatter, bool editable = false) :
-            CColumn(headerName, "", propertyIndex, formatter, editable)
-        { }
+        CColumn(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, CDefaultFormatter *formatter, bool editable = false) : CColumn(headerName, "", propertyIndex, formatter, editable)
+        {}
 
         //! Constructor
         CColumn(const QString &headerName, const QString &toolTip, const BlackMisc::CPropertyIndex &propertyIndex, CDefaultFormatter *formatter, bool editable = false);
@@ -69,7 +68,11 @@ namespace BlackGui::Models
         void setSortPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex);
 
         //! Formatter
-        void setFormatter(CDefaultFormatter *formatter) { Q_ASSERT(formatter); m_formatter.reset(formatter); }
+        void setFormatter(CDefaultFormatter *formatter)
+        {
+            Q_ASSERT(formatter);
+            m_formatter.reset(formatter);
+        }
 
         //! Formatter
         const CDefaultFormatter *getFormatter() const;
@@ -84,7 +87,7 @@ namespace BlackGui::Models
         const QString &getColumnToolTip() const { return m_columnToolTip; }
 
         //! Property index
-        const BlackMisc::CPropertyIndex &getPropertyIndex() const { return m_propertyIndex;}
+        const BlackMisc::CPropertyIndex &getPropertyIndex() const { return m_propertyIndex; }
 
         //! Translation context
         void setTranslationContext(const QString &translationContext) { m_translationContext = translationContext; }
@@ -131,14 +134,14 @@ namespace BlackGui::Models
         QString m_columnToolTip;
         int m_widthPercentage = -1;
         QSharedPointer<CDefaultFormatter> m_formatter; //!< Used formatter
-        BlackMisc::CPropertyIndex m_propertyIndex;     //!< Property index for column
+        BlackMisc::CPropertyIndex m_propertyIndex; //!< Property index for column
         BlackMisc::CPropertyIndex m_sortPropertyIndex; //!< Property index used when sorted (optional alternative)
 
         //! Incognito formatter
         static const CIncognitoFormatter *incongitoFormatter();
 
-        bool m_editable  = false;
-        bool m_sortable  = true;
+        bool m_editable = false;
+        bool m_sortable = true;
         bool m_incognito = false;
     };
 
@@ -242,7 +245,7 @@ namespace BlackGui::Models
         bool endsWithEmptyColumn() const;
 
     private:
-        QList<CColumn> m_columns;     //!< all columns
+        QList<CColumn> m_columns; //!< all columns
         QString m_translationContext; //!< for future usage
     };
 } // ns

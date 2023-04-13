@@ -25,7 +25,7 @@ namespace BlackMisc::SharedState
         CVariantList copy = m_value;
         if (filter.isValid())
         {
-            copy.removeIf([&filter](const CVariant &v) { return ! filter.matches(v); });
+            copy.removeIf([&filter](const CVariant &v) { return !filter.matches(v); });
         }
         return CVariant::from(copy);
     }

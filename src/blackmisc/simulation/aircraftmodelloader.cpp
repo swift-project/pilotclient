@@ -38,10 +38,10 @@ namespace BlackMisc::Simulation
 
         switch (info)
         {
-        case CacheLoaded:    return loaded;
-        case ParsedData:     return parsed;
+        case CacheLoaded: return loaded;
+        case ParsedData: return parsed;
         case LoadingSkipped: return skipped;
-        case LoadingFailed:  return failed;
+        case LoadingFailed: return failed;
         default: break;
         }
 
@@ -76,11 +76,11 @@ namespace BlackMisc::Simulation
     QString IAircraftModelLoader::enumToString(LoadMode mode)
     {
         QStringList modes;
-        if (mode.testFlag(NotSet))           { modes << enumToString(NotSet); }
-        if (mode.testFlag(LoadDirectly))     { modes << enumToString(LoadDirectly); }
+        if (mode.testFlag(NotSet)) { modes << enumToString(NotSet); }
+        if (mode.testFlag(LoadDirectly)) { modes << enumToString(LoadDirectly); }
         if (mode.testFlag(LoadInBackground)) { modes << enumToString(LoadInBackground); }
-        if (mode.testFlag(CacheFirst))       { modes << enumToString(CacheFirst); }
-        if (mode.testFlag(CacheSkipped))     { modes << enumToString(CacheSkipped); }
+        if (mode.testFlag(CacheFirst)) { modes << enumToString(CacheFirst); }
+        if (mode.testFlag(CacheSkipped)) { modes << enumToString(CacheSkipped); }
         return modes.join(", ");
     }
 
@@ -89,9 +89,8 @@ namespace BlackMisc::Simulation
         return mode.testFlag(CacheFirst) || mode.testFlag(CacheOnly);
     }
 
-    IAircraftModelLoader::IAircraftModelLoader(const CSimulatorInfo &simulator, QObject *parent) :
-        QObject(parent),
-        m_simulator(simulator)
+    IAircraftModelLoader::IAircraftModelLoader(const CSimulatorInfo &simulator, QObject *parent) : QObject(parent),
+                                                                                                   m_simulator(simulator)
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
         connect(this, &IAircraftModelLoader::loadingFinished, this, &IAircraftModelLoader::onLoadingFinished, Qt::QueuedConnection);
@@ -101,7 +100,7 @@ namespace BlackMisc::Simulation
         this->setObjectInfo(simulator);
     }
 
-    IAircraftModelLoader::~IAircraftModelLoader() { }
+    IAircraftModelLoader::~IAircraftModelLoader() {}
 
     void IAircraftModelLoader::startLoading(LoadMode mode, const IAircraftModelLoader::ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories)
     {
@@ -136,8 +135,8 @@ namespace BlackMisc::Simulation
         if (m_skipLoadingEmptyModelDir && modelDirs.isEmpty())
         {
             const CStatusMessage status = CStatusMessage(this, CStatusMessage::SeverityWarning,
-                                            u"Empty or not existing '%1' directory '%2', skipping read")
-                                            << simulator.toQString() << modelDirectories.join(", ");
+                                                         u"Empty or not existing '%1' directory '%2', skipping read")
+                                          << simulator.toQString() << modelDirectories.join(", ");
             m_loadingMessages.push_back(status);
             m_loadingMessages.freezeOrder();
             emit this->loadingFinished(m_loadingMessages, simulator, LoadingSkipped);
@@ -191,13 +190,14 @@ namespace BlackMisc::Simulation
         m_loadingInProgress = false;
 
         const QMap<int, int> counts = statusMsgs.countSeverities();
-        const int errors   = counts.value(SeverityError);
+        const int errors = counts.value(SeverityError);
         const int warnings = counts.value(SeverityWarning);
 
         if (statusMsgs.hasWarningOrErrorMessages())
         {
             CLogMessage(this).log(m_loadingMessages.worstSeverity(),
-                                    u"Message loading produced %1 error and %2 warning messages") << errors << warnings;
+                                  u"Message loading produced %1 error and %2 warning messages")
+                << errors << warnings;
         }
         else
         {

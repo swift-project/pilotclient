@@ -59,7 +59,7 @@ namespace BlackGui::Models
         else
         {
             // already in list, update
-            if (skipEqualValues  && this->containsNameValue(name, value)) { return false; }
+            if (skipEqualValues && this->containsNameValue(name, value)) { return false; }
             this->update(index, pair);
             return true;
         }

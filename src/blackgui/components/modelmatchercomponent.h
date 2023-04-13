@@ -25,10 +25,16 @@
 #include <QPointer>
 #include <QScopedPointer>
 
-namespace Ui { class CModelMatcherComponent; }
+namespace Ui
+{
+    class CModelMatcherComponent;
+}
 namespace BlackGui
 {
-    namespace Views { class CAircraftModelView; }
+    namespace Views
+    {
+        class CAircraftModelView;
+    }
     namespace Components
     {
         class CSettingsMatchingDialog;
@@ -100,8 +106,8 @@ namespace BlackGui
             QScopedPointer<Ui::CModelMatcherComponent> ui;
             QPointer<Views::CAircraftModelView> m_workbenchView; //!< an external workbenc
             CSettingsMatchingDialog *m_settingsDialog = nullptr; //!< matching settings as dialog
-            BlackCore::CAircraftMatcher m_matcher { this };      //!< used matcher
-            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings  { this }; //!< settings
+            BlackCore::CAircraftMatcher m_matcher { this }; //!< used matcher
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings { this }; //!< settings
         };
     } // ns
 } // ns

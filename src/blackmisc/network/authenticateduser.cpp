@@ -20,15 +20,15 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network, CAuthenticatedUser)
 namespace BlackMisc::Network
 {
     CAuthenticatedUser::CAuthenticatedUser()
-    { }
+    {}
 
     CAuthenticatedUser::CAuthenticatedUser(int id, const QString &realname)
         : IDatastoreObjectWithIntegerKey(id), m_realname(realname.trimmed())
-    { }
+    {}
 
     CAuthenticatedUser::CAuthenticatedUser(int id, const QString &realname, const QString &email, const QString &password)
         : IDatastoreObjectWithIntegerKey(id), m_realname(realname.trimmed()), m_email(email.trimmed()), m_password(password.trimmed())
-    { }
+    {}
 
     QString CAuthenticatedUser::getRealNameAndId() const
     {
@@ -82,9 +82,9 @@ namespace BlackMisc::Network
         static const CLogCategoryList cats(CLogCategoryList(this).withValidation());
         CStatusMessageList msgs;
         // callsign optional
-        if (!this->hasValidDbKey()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, u"Invalid id"));}
-        if (!this->hasValidRealName()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, u"Invalid real name"));}
-        if (!this->hasValidCredentials()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, u"Invalid credentials"));}
+        if (!this->hasValidDbKey()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, u"Invalid id")); }
+        if (!this->hasValidRealName()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, u"Invalid real name")); }
+        if (!this->hasValidCredentials()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, u"Invalid credentials")); }
         return msgs;
     }
 
@@ -141,8 +141,16 @@ namespace BlackMisc::Network
 
     void CAuthenticatedUser::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CAuthenticatedUser>(); return; }
-        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CAuthenticatedUser>();
+            return;
+        }
+        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
+        {
+            IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant);
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

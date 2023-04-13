@@ -30,12 +30,16 @@ namespace BlackMisc::SharedState
         friend QSharedPointer<CActiveObserver>;
 
         template <typename T, typename F>
-        CActiveObserver(T *parent, F eventHandler) : CPassiveObserver(parent, eventHandler) {}
+        CActiveObserver(T *parent, F eventHandler) : CPassiveObserver(parent, eventHandler)
+        {}
 
     public:
         //! Factory method.
         template <typename T, typename F>
-        static auto create(T *parent, F eventHandler) { return QSharedPointer<CActiveObserver>::create(parent, eventHandler); }
+        static auto create(T *parent, F eventHandler)
+        {
+            return QSharedPointer<CActiveObserver>::create(parent, eventHandler);
+        }
 
         //! Send a request and receive a synchronous reply.
         CVariant request(const CVariant &param);

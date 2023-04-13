@@ -22,7 +22,10 @@
 
 class QModelIndex;
 
-namespace BlackMisc::Simulation { class CAircraftModel; }
+namespace BlackMisc::Simulation
+{
+    class CAircraftModel;
+}
 namespace BlackGui::Models
 {
     //! Aircraft model list model
@@ -37,12 +40,12 @@ namespace BlackGui::Models
         enum AircraftModelMode
         {
             NotSet,
-            OwnAircraftModelClient,      //!< models existing for my simulator
+            OwnAircraftModelClient, //!< models existing for my simulator
             OwnAircraftModelMappingTool, //!< models of my simulator, but in mapping mode
-            OwnModelSet,                 //!< own model set
-            StashModel,                  //!< stashed models
-            Database,                    //!< Database entry
-            VPilotRuleModel              //!< vPilot rule turned into model
+            OwnModelSet, //!< own model set
+            StashModel, //!< stashed models
+            Database, //!< Database entry
+            VPilotRuleModel //!< vPilot rule turned into model
         };
 
         //! Constructor
@@ -91,10 +94,10 @@ namespace BlackGui::Models
         virtual bool isOrderable() const override { return true; }
 
     private:
-        AircraftModelMode m_mode = NotSet;              //!< current mode
-        bool              m_highlightModels = false;    //!< highlight if in m_highlightStrings
-        QStringList       m_highlightStrings;           //!< model strings to highlight
-        QBrush            m_highlightColor{Qt::yellow}; //!< how to highlight
+        AircraftModelMode m_mode = NotSet; //!< current mode
+        bool m_highlightModels = false; //!< highlight if in m_highlightStrings
+        QStringList m_highlightStrings; //!< model strings to highlight
+        QBrush m_highlightColor { Qt::yellow }; //!< how to highlight
     };
 } // ns
 #endif // guard

@@ -59,11 +59,11 @@ namespace BlackMisc::Simulation::Data
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
         switch (simulator.getSimulator())
         {
-        case CSimulatorInfo::FS9:    m_syncFS9 = synchronized; break;
-        case CSimulatorInfo::FSX:    m_syncFsx = synchronized; break;
-        case CSimulatorInfo::P3D:    m_syncP3D = synchronized; break;
+        case CSimulatorInfo::FS9: m_syncFS9 = synchronized; break;
+        case CSimulatorInfo::FSX: m_syncFsx = synchronized; break;
+        case CSimulatorInfo::P3D: m_syncP3D = synchronized; break;
         case CSimulatorInfo::XPLANE: m_syncXPlane = synchronized; break;
-        case CSimulatorInfo::FG:     m_syncFG = synchronized; break;
+        case CSimulatorInfo::FG: m_syncFG = synchronized; break;
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             break;
@@ -92,7 +92,7 @@ namespace BlackMisc::Simulation::Data
         if (this->hasOtherVersionFile(info, CSimulatorInfo::fsx())) { sim.addSimulator(CSimulatorInfo::fsx()); }
         if (this->hasOtherVersionFile(info, CSimulatorInfo::p3d())) { sim.addSimulator(CSimulatorInfo::p3d()); }
         if (this->hasOtherVersionFile(info, CSimulatorInfo::fs9())) { sim.addSimulator(CSimulatorInfo::fs9()); }
-        if (this->hasOtherVersionFile(info, CSimulatorInfo::fg()))  { sim.addSimulator(CSimulatorInfo::fg()); }
+        if (this->hasOtherVersionFile(info, CSimulatorInfo::fg())) { sim.addSimulator(CSimulatorInfo::fg()); }
         if (this->hasOtherVersionFile(info, CSimulatorInfo::xplane())) { sim.addSimulator(CSimulatorInfo::xplane()); }
         return sim;
     }
@@ -100,13 +100,13 @@ namespace BlackMisc::Simulation::Data
     QStringList IMultiSimulatorModelCaches::getAllFilenames() const
     {
         return QStringList(
-        {
-            this->getFilename(CSimulatorInfo::FS9),
-            this->getFilename(CSimulatorInfo::FSX),
-            this->getFilename(CSimulatorInfo::P3D),
-            this->getFilename(CSimulatorInfo::XPLANE),
-            this->getFilename(CSimulatorInfo::FG),
-        });
+            {
+                this->getFilename(CSimulatorInfo::FS9),
+                this->getFilename(CSimulatorInfo::FSX),
+                this->getFilename(CSimulatorInfo::P3D),
+                this->getFilename(CSimulatorInfo::XPLANE),
+                this->getFilename(CSimulatorInfo::FG),
+            });
     }
 
     CSimulatorInfo IMultiSimulatorModelCaches::getSimulatorForFilename(const QString &filename) const
@@ -199,11 +199,11 @@ namespace BlackMisc::Simulation::Data
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
         switch (simulator.getSimulator())
         {
-        case CSimulatorInfo::FS9:    return m_modelCacheFs9.get();
-        case CSimulatorInfo::FSX:    return m_modelCacheFsx.get();
-        case CSimulatorInfo::P3D:    return m_modelCacheP3D.get();
+        case CSimulatorInfo::FS9: return m_modelCacheFs9.get();
+        case CSimulatorInfo::FSX: return m_modelCacheFsx.get();
+        case CSimulatorInfo::P3D: return m_modelCacheP3D.get();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.get();
-        case CSimulatorInfo::FG:     return m_modelCacheFG.get();
+        case CSimulatorInfo::FG: return m_modelCacheFG.get();
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             return CAircraftModelList();
@@ -219,11 +219,11 @@ namespace BlackMisc::Simulation::Data
 
         switch (simulator.getSimulator())
         {
-        case CSimulatorInfo::FS9:    msg = m_modelCacheFs9.set(setModels); break;
-        case CSimulatorInfo::FSX:    msg = m_modelCacheFsx.set(setModels); break;
-        case CSimulatorInfo::P3D:    msg = m_modelCacheP3D.set(setModels); break;
+        case CSimulatorInfo::FS9: msg = m_modelCacheFs9.set(setModels); break;
+        case CSimulatorInfo::FSX: msg = m_modelCacheFsx.set(setModels); break;
+        case CSimulatorInfo::P3D: msg = m_modelCacheP3D.set(setModels); break;
         case CSimulatorInfo::XPLANE: msg = m_modelCacheXP.set(setModels); break;
-        case CSimulatorInfo::FG:     msg = m_modelCacheFG.set(setModels); break;
+        case CSimulatorInfo::FG: msg = m_modelCacheFG.set(setModels); break;
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             return CStatusMessage();
@@ -243,11 +243,11 @@ namespace BlackMisc::Simulation::Data
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
         switch (simulator.getSimulator())
         {
-        case CSimulatorInfo::FS9:    return m_syncFS9;
-        case CSimulatorInfo::FSX:    return m_syncFsx;
-        case CSimulatorInfo::P3D:    return m_syncP3D;
+        case CSimulatorInfo::FS9: return m_syncFS9;
+        case CSimulatorInfo::FSX: return m_syncFsx;
+        case CSimulatorInfo::P3D: return m_syncP3D;
         case CSimulatorInfo::XPLANE: return m_syncXPlane;
-        case CSimulatorInfo::FG:     return m_syncFG;
+        case CSimulatorInfo::FG: return m_syncFG;
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             break;
@@ -276,11 +276,11 @@ namespace BlackMisc::Simulation::Data
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
         switch (simulator.getSimulator())
         {
-        case CSimulatorInfo::FS9:    return m_modelCacheFs9.getAvailableTimestamp();
-        case CSimulatorInfo::FSX:    return m_modelCacheFsx.getAvailableTimestamp();
-        case CSimulatorInfo::P3D:    return m_modelCacheP3D.getAvailableTimestamp();
+        case CSimulatorInfo::FS9: return m_modelCacheFs9.getAvailableTimestamp();
+        case CSimulatorInfo::FSX: return m_modelCacheFsx.getAvailableTimestamp();
+        case CSimulatorInfo::P3D: return m_modelCacheP3D.getAvailableTimestamp();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.getAvailableTimestamp();
-        case CSimulatorInfo::FG:     return m_modelCacheFG.getAvailableTimestamp();
+        case CSimulatorInfo::FG: return m_modelCacheFG.getAvailableTimestamp();
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             return QDateTime();
@@ -290,14 +290,14 @@ namespace BlackMisc::Simulation::Data
     CStatusMessage CModelCaches::setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator)
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-        if (!ts.isValid()) { return CStatusMessage(this).error(u"Invalid timestamp for '%1'") << simulator.toQString() ; }
+        if (!ts.isValid()) { return CStatusMessage(this).error(u"Invalid timestamp for '%1'") << simulator.toQString(); }
         switch (simulator.getSimulator())
         {
-        case CSimulatorInfo::FS9:    return m_modelCacheFs9.set(m_modelCacheFs9.get(), ts.toMSecsSinceEpoch());
-        case CSimulatorInfo::FSX:    return m_modelCacheFsx.set(m_modelCacheFsx.get(), ts.toMSecsSinceEpoch());
-        case CSimulatorInfo::P3D:    return m_modelCacheP3D.set(m_modelCacheP3D.get(), ts.toMSecsSinceEpoch());
+        case CSimulatorInfo::FS9: return m_modelCacheFs9.set(m_modelCacheFs9.get(), ts.toMSecsSinceEpoch());
+        case CSimulatorInfo::FSX: return m_modelCacheFsx.set(m_modelCacheFsx.get(), ts.toMSecsSinceEpoch());
+        case CSimulatorInfo::P3D: return m_modelCacheP3D.set(m_modelCacheP3D.get(), ts.toMSecsSinceEpoch());
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.set(m_modelCacheXP.get(), ts.toMSecsSinceEpoch());
-        case CSimulatorInfo::FG:     return m_modelCacheFG.set(m_modelCacheFG.get(), ts.toMSecsSinceEpoch());
+        case CSimulatorInfo::FG: return m_modelCacheFG.set(m_modelCacheFG.get(), ts.toMSecsSinceEpoch());
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
             break;
@@ -320,11 +320,11 @@ namespace BlackMisc::Simulation::Data
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
         switch (simulator.getSimulator())
         {
-        case CSimulatorInfo::FS9:    return m_modelCacheFs9.getFilename();
-        case CSimulatorInfo::FSX:    return m_modelCacheFsx.getFilename();
-        case CSimulatorInfo::P3D:    return m_modelCacheP3D.getFilename();
+        case CSimulatorInfo::FS9: return m_modelCacheFs9.getFilename();
+        case CSimulatorInfo::FSX: return m_modelCacheFsx.getFilename();
+        case CSimulatorInfo::P3D: return m_modelCacheP3D.getFilename();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.getFilename();
-        case CSimulatorInfo::FG:     return m_modelCacheFG.getFilename();
+        case CSimulatorInfo::FG: return m_modelCacheFG.getFilename();
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             break;
@@ -337,11 +337,11 @@ namespace BlackMisc::Simulation::Data
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
         switch (simulator.getSimulator())
         {
-        case CSimulatorInfo::FS9:    return m_modelCacheFs9.isSaved();
-        case CSimulatorInfo::FSX:    return m_modelCacheFsx.isSaved();
-        case CSimulatorInfo::P3D:    return m_modelCacheP3D.isSaved();
+        case CSimulatorInfo::FS9: return m_modelCacheFs9.isSaved();
+        case CSimulatorInfo::FSX: return m_modelCacheFsx.isSaved();
+        case CSimulatorInfo::P3D: return m_modelCacheP3D.isSaved();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.isSaved();
-        case CSimulatorInfo::FG:     return m_modelCacheFG.isSaved();
+        case CSimulatorInfo::FG: return m_modelCacheFG.isSaved();
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             break;
@@ -356,11 +356,11 @@ namespace BlackMisc::Simulation::Data
         if (this->isCacheAlreadySynchronized(simulator)) { return; }
         switch (simulator.getSimulator())
         {
-        case CSimulatorInfo::FS9:    m_modelCacheFs9.synchronize(); break;
-        case CSimulatorInfo::FSX:    m_modelCacheFsx.synchronize(); break;
-        case CSimulatorInfo::P3D:    m_modelCacheP3D.synchronize(); break;
-        case CSimulatorInfo::XPLANE: m_modelCacheXP.synchronize();  break;
-        case CSimulatorInfo::FG:     m_modelCacheFG.synchronize();  break;
+        case CSimulatorInfo::FS9: m_modelCacheFs9.synchronize(); break;
+        case CSimulatorInfo::FSX: m_modelCacheFsx.synchronize(); break;
+        case CSimulatorInfo::P3D: m_modelCacheP3D.synchronize(); break;
+        case CSimulatorInfo::XPLANE: m_modelCacheXP.synchronize(); break;
+        case CSimulatorInfo::FG: m_modelCacheFG.synchronize(); break;
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             break;
@@ -376,11 +376,11 @@ namespace BlackMisc::Simulation::Data
         if (this->isCacheAlreadySynchronized(simulator)) { return false; }
         switch (simulator.getSimulator())
         {
-        case CSimulatorInfo::FS9:    m_modelCacheFs9.admit(); break;
-        case CSimulatorInfo::FSX:    m_modelCacheFsx.admit(); break;
-        case CSimulatorInfo::P3D:    m_modelCacheP3D.admit(); break;
-        case CSimulatorInfo::XPLANE: m_modelCacheXP.admit();  break;
-        case CSimulatorInfo::FG:     m_modelCacheFG.admit();  break;
+        case CSimulatorInfo::FS9: m_modelCacheFs9.admit(); break;
+        case CSimulatorInfo::FSX: m_modelCacheFsx.admit(); break;
+        case CSimulatorInfo::P3D: m_modelCacheP3D.admit(); break;
+        case CSimulatorInfo::XPLANE: m_modelCacheXP.admit(); break;
+        case CSimulatorInfo::FG: m_modelCacheFG.admit(); break;
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             break;
@@ -418,11 +418,11 @@ namespace BlackMisc::Simulation::Data
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
         switch (simulator.getSimulator())
         {
-        case CSimulatorInfo::FS9:    return m_modelCacheFs9.get();
-        case CSimulatorInfo::FSX:    return m_modelCacheFsx.get();
-        case CSimulatorInfo::P3D:    return m_modelCacheP3D.get();
+        case CSimulatorInfo::FS9: return m_modelCacheFs9.get();
+        case CSimulatorInfo::FSX: return m_modelCacheFsx.get();
+        case CSimulatorInfo::P3D: return m_modelCacheP3D.get();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.get();
-        case CSimulatorInfo::FG:     return m_modelCacheFG.get();
+        case CSimulatorInfo::FG: return m_modelCacheFG.get();
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             return CAircraftModelList();
@@ -455,11 +455,11 @@ namespace BlackMisc::Simulation::Data
         CStatusMessage msg;
         switch (simulator.getSimulator())
         {
-        case CSimulatorInfo::FS9:    msg = m_modelCacheFs9.set(orderedModels); break;
-        case CSimulatorInfo::FSX:    msg = m_modelCacheFsx.set(orderedModels); break;
-        case CSimulatorInfo::P3D:    msg = m_modelCacheP3D.set(orderedModels); break;
-        case CSimulatorInfo::XPLANE: msg = m_modelCacheXP.set(orderedModels);  break;
-        case CSimulatorInfo::FG:     msg = m_modelCacheFG.set(orderedModels);  break;
+        case CSimulatorInfo::FS9: msg = m_modelCacheFs9.set(orderedModels); break;
+        case CSimulatorInfo::FSX: msg = m_modelCacheFsx.set(orderedModels); break;
+        case CSimulatorInfo::P3D: msg = m_modelCacheP3D.set(orderedModels); break;
+        case CSimulatorInfo::XPLANE: msg = m_modelCacheXP.set(orderedModels); break;
+        case CSimulatorInfo::FG: msg = m_modelCacheFG.set(orderedModels); break;
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
             return CStatusMessage();
@@ -473,11 +473,11 @@ namespace BlackMisc::Simulation::Data
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
         switch (simulator.getSimulator())
         {
-        case CSimulatorInfo::FS9:    return m_modelCacheFs9.getAvailableTimestamp();
-        case CSimulatorInfo::FSX:    return m_modelCacheFsx.getAvailableTimestamp();
-        case CSimulatorInfo::P3D:    return m_modelCacheP3D.getAvailableTimestamp();
+        case CSimulatorInfo::FS9: return m_modelCacheFs9.getAvailableTimestamp();
+        case CSimulatorInfo::FSX: return m_modelCacheFsx.getAvailableTimestamp();
+        case CSimulatorInfo::P3D: return m_modelCacheP3D.getAvailableTimestamp();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.getAvailableTimestamp();
-        case CSimulatorInfo::FG:     return m_modelCacheFG.getAvailableTimestamp();
+        case CSimulatorInfo::FG: return m_modelCacheFG.getAvailableTimestamp();
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
             return QDateTime();
@@ -487,14 +487,14 @@ namespace BlackMisc::Simulation::Data
     CStatusMessage CModelSetCaches::setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator)
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-        if (!ts.isValid()) { return CStatusMessage(this).error(u"Invalid timestamp for '%1'") << simulator.toQString() ; }
+        if (!ts.isValid()) { return CStatusMessage(this).error(u"Invalid timestamp for '%1'") << simulator.toQString(); }
         switch (simulator.getSimulator())
         {
-        case CSimulatorInfo::FS9:    return m_modelCacheFs9.set(m_modelCacheFs9.get(), ts.toMSecsSinceEpoch());
-        case CSimulatorInfo::FSX:    return m_modelCacheFsx.set(m_modelCacheFsx.get(), ts.toMSecsSinceEpoch());
-        case CSimulatorInfo::P3D:    return m_modelCacheP3D.set(m_modelCacheP3D.get(), ts.toMSecsSinceEpoch());
+        case CSimulatorInfo::FS9: return m_modelCacheFs9.set(m_modelCacheFs9.get(), ts.toMSecsSinceEpoch());
+        case CSimulatorInfo::FSX: return m_modelCacheFsx.set(m_modelCacheFsx.get(), ts.toMSecsSinceEpoch());
+        case CSimulatorInfo::P3D: return m_modelCacheP3D.set(m_modelCacheP3D.get(), ts.toMSecsSinceEpoch());
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.set(m_modelCacheXP.get(), ts.toMSecsSinceEpoch());
-        case CSimulatorInfo::FG:     return m_modelCacheFG.set(m_modelCacheFG.get(), ts.toMSecsSinceEpoch());
+        case CSimulatorInfo::FG: return m_modelCacheFG.set(m_modelCacheFG.get(), ts.toMSecsSinceEpoch());
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
             break;
@@ -517,11 +517,11 @@ namespace BlackMisc::Simulation::Data
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
         switch (simulator.getSimulator())
         {
-        case CSimulatorInfo::FS9:    return m_modelCacheFs9.getFilename();
-        case CSimulatorInfo::FSX:    return m_modelCacheFsx.getFilename();
-        case CSimulatorInfo::P3D:    return m_modelCacheP3D.getFilename();
+        case CSimulatorInfo::FS9: return m_modelCacheFs9.getFilename();
+        case CSimulatorInfo::FSX: return m_modelCacheFsx.getFilename();
+        case CSimulatorInfo::P3D: return m_modelCacheP3D.getFilename();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.getFilename();
-        case CSimulatorInfo::FG:     return m_modelCacheFG.getFilename();
+        case CSimulatorInfo::FG: return m_modelCacheFG.getFilename();
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
             break;
@@ -534,11 +534,11 @@ namespace BlackMisc::Simulation::Data
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
         switch (simulator.getSimulator())
         {
-        case CSimulatorInfo::FS9:    return m_modelCacheFs9.isSaved();
-        case CSimulatorInfo::FSX:    return m_modelCacheFsx.isSaved();
-        case CSimulatorInfo::P3D:    return m_modelCacheP3D.isSaved();
+        case CSimulatorInfo::FS9: return m_modelCacheFs9.isSaved();
+        case CSimulatorInfo::FSX: return m_modelCacheFsx.isSaved();
+        case CSimulatorInfo::P3D: return m_modelCacheP3D.isSaved();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.isSaved();
-        case CSimulatorInfo::FG:     return m_modelCacheFG.isSaved();
+        case CSimulatorInfo::FG: return m_modelCacheFG.isSaved();
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
             break;
@@ -553,11 +553,11 @@ namespace BlackMisc::Simulation::Data
         if (this->isCacheAlreadySynchronized(simulator)) { return; }
         switch (simulator.getSimulator())
         {
-        case CSimulatorInfo::FS9:    m_modelCacheFs9.synchronize(); break;
-        case CSimulatorInfo::FSX:    m_modelCacheFsx.synchronize(); break;
-        case CSimulatorInfo::P3D:    m_modelCacheP3D.synchronize(); break;
-        case CSimulatorInfo::XPLANE: m_modelCacheXP.synchronize();  break;
-        case CSimulatorInfo::FG:     m_modelCacheFG.synchronize();  break;
+        case CSimulatorInfo::FS9: m_modelCacheFs9.synchronize(); break;
+        case CSimulatorInfo::FSX: m_modelCacheFsx.synchronize(); break;
+        case CSimulatorInfo::P3D: m_modelCacheP3D.synchronize(); break;
+        case CSimulatorInfo::XPLANE: m_modelCacheXP.synchronize(); break;
+        case CSimulatorInfo::FG: m_modelCacheFG.synchronize(); break;
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
             break;
@@ -573,11 +573,11 @@ namespace BlackMisc::Simulation::Data
         if (this->isCacheAlreadySynchronized(simulator)) { return false; }
         switch (simulator.getSimulator())
         {
-        case CSimulatorInfo::FS9:    m_modelCacheFs9.admit(); break;
-        case CSimulatorInfo::FSX:    m_modelCacheFsx.admit(); break;
-        case CSimulatorInfo::P3D:    m_modelCacheP3D.admit(); break;
-        case CSimulatorInfo::XPLANE: m_modelCacheXP.admit();  break;
-        case CSimulatorInfo::FG:     m_modelCacheFG.admit();  break;
+        case CSimulatorInfo::FS9: m_modelCacheFs9.admit(); break;
+        case CSimulatorInfo::FSX: m_modelCacheFsx.admit(); break;
+        case CSimulatorInfo::P3D: m_modelCacheP3D.admit(); break;
+        case CSimulatorInfo::XPLANE: m_modelCacheXP.admit(); break;
+        case CSimulatorInfo::FG: m_modelCacheFG.admit(); break;
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
             break;

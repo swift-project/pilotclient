@@ -31,11 +31,10 @@ namespace BlackGui
         this->init();
     }
 
-    CLedWidget::CLedWidget(bool on, LedColor onColor, LedColor offColor, LedShape shape, const QString &onName, const QString &offName, int targetWidth, QWidget *parent) :
-        QWidget(parent),
-        m_blinkState(on ? On : Off), m_colorOn(onColor), m_colorOff(offColor),
-        m_shape(shape), m_widthTarget(targetWidth), m_tooltipOn(onName), m_tooltipOff(offName),
-        m_renderer(new QSvgRenderer(this))
+    CLedWidget::CLedWidget(bool on, LedColor onColor, LedColor offColor, LedShape shape, const QString &onName, const QString &offName, int targetWidth, QWidget *parent) : QWidget(parent),
+                                                                                                                                                                            m_blinkState(on ? On : Off), m_colorOn(onColor), m_colorOff(offColor),
+                                                                                                                                                                            m_shape(shape), m_widthTarget(targetWidth), m_tooltipOn(onName), m_tooltipOff(offName),
+                                                                                                                                                                            m_renderer(new QSvgRenderer(this))
     {
         this->setLed();
         this->init();
@@ -238,8 +237,7 @@ namespace BlackGui
         if (resetTimeMs > 0)
         {
             QPointer<CLedWidget> myself(this);
-            m_resetTimer.singleShot(resetTimeMs, this, [ = ]
-            {
+            m_resetTimer.singleShot(resetTimeMs, this, [=] {
                 if (!myself) { return; }
                 this->resetState();
             });
@@ -310,7 +308,7 @@ namespace BlackGui
 
     const QStringList &CLedWidget::shapes()
     {
-        static const QStringList shapes({":/qled/icons/qled/circle_", ":/qled/icons/qled/square_", ":/qled/icons/qled/triang_", ":/qled/icons/qled/round_"});
+        static const QStringList shapes({ ":/qled/icons/qled/circle_", ":/qled/icons/qled/square_", ":/qled/icons/qled/triang_", ":/qled/icons/qled/round_" });
         return shapes;
     }
 

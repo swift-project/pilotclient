@@ -48,4 +48,4 @@ namespace BlackMisc::Network
 Q_DECLARE_METATYPE(BlackMisc::Network::CEcosystemList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Network::CEcosystem>)
 
-#endif //guard
+#endif // guard

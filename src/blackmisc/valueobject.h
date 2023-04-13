@@ -36,26 +36,29 @@
 #include <iostream>
 
 //! \cond
-#define BLACK_TEMPLATE_VALUEOBJECT_MIXINS(Namespace, Class, Extern)     \
-    namespace Namespace { class Class; }                                \
-    namespace BlackMisc::Private                                        \
-    {                                                                   \
-        Extern template struct CValueObjectMetaInfo<Namespace::Class>;  \
-        Extern template struct MetaTypeHelper<Namespace::Class>;        \
-    }                                                                   \
-    namespace BlackMisc::Mixin                                          \
-    {                                                                   \
-        Extern template class MetaType<Namespace::Class>;               \
-        Extern template class HashByMetaClass<Namespace::Class>;        \
-        Extern template class DBusByMetaClass<Namespace::Class>;        \
-        Extern template class DataStreamByMetaClass<Namespace::Class>;  \
-        Extern template class JsonByMetaClass<Namespace::Class>;        \
-        Extern template class EqualsByMetaClass<Namespace::Class>;      \
-        Extern template class LessThanByMetaClass<Namespace::Class>;    \
-        Extern template class CompareByMetaClass<Namespace::Class>;     \
-        Extern template class String<Namespace::Class>;                 \
-        Extern template class Index<Namespace::Class>;                  \
-        Extern template class Icon<Namespace::Class>;                   \
+#define BLACK_TEMPLATE_VALUEOBJECT_MIXINS(Namespace, Class, Extern)    \
+    namespace Namespace                                                \
+    {                                                                  \
+        class Class;                                                   \
+    }                                                                  \
+    namespace BlackMisc::Private                                       \
+    {                                                                  \
+        Extern template struct CValueObjectMetaInfo<Namespace::Class>; \
+        Extern template struct MetaTypeHelper<Namespace::Class>;       \
+    }                                                                  \
+    namespace BlackMisc::Mixin                                         \
+    {                                                                  \
+        Extern template class MetaType<Namespace::Class>;              \
+        Extern template class HashByMetaClass<Namespace::Class>;       \
+        Extern template class DBusByMetaClass<Namespace::Class>;       \
+        Extern template class DataStreamByMetaClass<Namespace::Class>; \
+        Extern template class JsonByMetaClass<Namespace::Class>;       \
+        Extern template class EqualsByMetaClass<Namespace::Class>;     \
+        Extern template class LessThanByMetaClass<Namespace::Class>;   \
+        Extern template class CompareByMetaClass<Namespace::Class>;    \
+        Extern template class String<Namespace::Class>;                \
+        Extern template class Index<Namespace::Class>;                 \
+        Extern template class Icon<Namespace::Class>;                  \
     }
 //! \endcond
 
@@ -70,11 +73,11 @@
  * Explicit template definition of mixins for a CValueObject subclass
  */
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)
-#  define BLACK_DECLARE_VALUEOBJECT_MIXINS(Namespace, Class)
-#  define BLACK_DEFINE_VALUEOBJECT_MIXINS(Namespace, Class)
+#    define BLACK_DECLARE_VALUEOBJECT_MIXINS(Namespace, Class)
+#    define BLACK_DEFINE_VALUEOBJECT_MIXINS(Namespace, Class)
 #else
-#  define BLACK_DECLARE_VALUEOBJECT_MIXINS(Namespace, Class) BLACK_TEMPLATE_VALUEOBJECT_MIXINS(Namespace, Class, extern)
-#  define BLACK_DEFINE_VALUEOBJECT_MIXINS(Namespace, Class)  BLACK_TEMPLATE_VALUEOBJECT_MIXINS(Namespace, Class, )
+#    define BLACK_DECLARE_VALUEOBJECT_MIXINS(Namespace, Class) BLACK_TEMPLATE_VALUEOBJECT_MIXINS(Namespace, Class, extern)
+#    define BLACK_DEFINE_VALUEOBJECT_MIXINS(Namespace, Class) BLACK_TEMPLATE_VALUEOBJECT_MIXINS(Namespace, Class, )
 #endif
 
 namespace BlackMisc
@@ -96,7 +99,7 @@ namespace BlackMisc
         CEmpty(const CEmpty &) = default;
 
         //! Protected copy assignment operator
-        CEmpty &operator =(const CEmpty &) = default;
+        CEmpty &operator=(const CEmpty &) = default;
 
         //! Non-virtual protected destructor
         ~CEmpty() = default;
@@ -107,7 +110,8 @@ namespace BlackMisc
      * \see BlackMisc::Mixin
      * \tparam Derived  The class which is inheriting from this one (CRTP).
      */
-    template <class Derived> class CValueObject :
+    template <class Derived>
+    class CValueObject :
         public CEmpty,
         public Mixin::MetaType<Derived>,
         public Mixin::HashByMetaClass<Derived>,
@@ -179,7 +183,7 @@ namespace BlackMisc
         CValueObject(const CValueObject &) = default;
 
         //! Copy assignment operator.
-        CValueObject &operator =(const CValueObject &) = default;
+        CValueObject &operator=(const CValueObject &) = default;
 
         //! Destructor
         ~CValueObject() = default;

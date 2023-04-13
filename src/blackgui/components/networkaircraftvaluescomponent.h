@@ -14,7 +14,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CNetworkAircraftValuesComponent; }
+namespace Ui
+{
+    class CNetworkAircraftValuesComponent;
+}
 namespace BlackGui::Components
 {
     //! Display the network aircraft values as sent

@@ -25,7 +25,8 @@ class QObject;
 namespace BlackGui::Models
 {
     //! List model for DB objects
-    template <typename T, typename K, bool UseCompare = false> class CListModelDbObjects :
+    template <typename T, typename K, bool UseCompare = false>
+    class CListModelDbObjects :
         public CListModelBase<T, UseCompare>
     {
     public:
@@ -78,11 +79,12 @@ namespace BlackGui::Models
 
     private:
         QList<KeyType> m_highlightKeys; //!< keys to be highlighted
-        QColor         m_highlightColor = Qt::green;
+        QColor m_highlightColor = Qt::green;
     };
 
     //! List model for DB objects
-    template <typename T, typename K, bool UseCompare = false> class COrderableListModelDbObjects :
+    template <typename T, typename K, bool UseCompare = false>
+    class COrderableListModelDbObjects :
         public CListModelDbObjects<T, K, UseCompare>
     {
     public:

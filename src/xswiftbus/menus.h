@@ -103,7 +103,7 @@ namespace XSwiftBus
             std::unique_ptr<ItemList> items;
             ~Data();
             Data(const Data &) = delete;
-            Data &operator =(const Data &) = delete;
+            Data &operator=(const Data &) = delete;
         };
         std::shared_ptr<Data> m_data;
     };

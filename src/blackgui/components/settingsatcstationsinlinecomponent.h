@@ -14,7 +14,10 @@
 #include "blackgui/settings/atcstationssettings.h"
 #include <QFrame>
 
-namespace Ui { class CSettingsAtcStationsInlineComponent; }
+namespace Ui
+{
+    class CSettingsAtcStationsInlineComponent;
+}
 namespace BlackGui::Components
 {
     /*!

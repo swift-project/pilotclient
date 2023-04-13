@@ -15,7 +15,10 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CCoreSettingsDialog; }
+namespace Ui
+{
+    class CCoreSettingsDialog;
+}
 namespace BlackGui::Components
 {
     /*!

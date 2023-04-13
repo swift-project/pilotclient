@@ -50,10 +50,9 @@ namespace BlackGui::Components
         return cats;
     }
 
-    CDbAutoStashingComponent::CDbAutoStashingComponent(QWidget *parent) :
-        QDialog(parent, Qt::WindowSystemMenuHint | Qt::WindowTitleHint),
-        CDbMappingComponentAware(qobject_cast<CDbMappingComponent * >(parent)),
-        ui(new Ui::CDbAutoStashingComponent)
+    CDbAutoStashingComponent::CDbAutoStashingComponent(QWidget *parent) : QDialog(parent, Qt::WindowSystemMenuHint | Qt::WindowTitleHint),
+                                                                          CDbMappingComponentAware(qobject_cast<CDbMappingComponent *>(parent)),
+                                                                          ui(new Ui::CDbAutoStashingComponent)
     {
         ui->setupUi(this);
         ui->tvp_StatusMessages->setResizeMode(CAircraftModelView::ResizingAuto);
@@ -68,7 +67,7 @@ namespace BlackGui::Components
     }
 
     CDbAutoStashingComponent::~CDbAutoStashingComponent()
-    { }
+    {}
 
     void CDbAutoStashingComponent::accept()
     {
@@ -76,32 +75,32 @@ namespace BlackGui::Components
         {
         case Running: return;
         case Completed:
+        {
+            if (!m_modelsToStash.isEmpty())
             {
-                if (!m_modelsToStash.isEmpty())
+                // this removes previously stashed models
+                this->getMappingComponent()->replaceStashedModelsUnvalidated(m_modelsToStash);
+                if (ui->cb_RemovedChecked->isChecked())
                 {
-                    // this removes previously stashed models
-                    this->getMappingComponent()->replaceStashedModelsUnvalidated(m_modelsToStash);
-                    if (ui->cb_RemovedChecked->isChecked())
-                    {
-                        this->currentModelView()->removeModelsWithModelString(m_modelsToStash);
-                    }
-                    const CStatusMessage stashedMsg(this, CStatusMessage::SeverityInfo, QStringLiteral("Auto stashed %1 models").arg(m_modelsToStash.size()));
-                    this->addStatusMessage(stashedMsg);
-                    m_modelsToStash.clear();
+                    this->currentModelView()->removeModelsWithModelString(m_modelsToStash);
                 }
-                QDialog::accept();
-                break;
+                const CStatusMessage stashedMsg(this, CStatusMessage::SeverityInfo, QStringLiteral("Auto stashed %1 models").arg(m_modelsToStash.size()));
+                this->addStatusMessage(stashedMsg);
+                m_modelsToStash.clear();
             }
+            QDialog::accept();
+            break;
+        }
         default:
+        {
+            if (this->getSelectedOrAllCount() < 1)
             {
-                if (this->getSelectedOrAllCount() < 1)
-                {
-                    const CStatusMessage m(this, CStatusMessage::SeverityError, u"No data, nothing to do");
-                    this->addStatusMessage(m);
-                    QDialog::accept();
-                }
-                this->tryToStashModels();
+                const CStatusMessage m(this, CStatusMessage::SeverityError, u"No data, nothing to do");
+                this->addStatusMessage(m);
+                QDialog::accept();
             }
+            this->tryToStashModels();
+        }
         }
     }
 

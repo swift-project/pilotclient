@@ -17,15 +17,15 @@ namespace BlackMisc::Network
 {
     CRemoteFile::CRemoteFile(const QString &name, const QString &description)
         : m_name(name), m_description(description)
-    { }
+    {}
 
     CRemoteFile::CRemoteFile(const QString &name, qint64 size)
         : m_name(name), m_size(size)
-    { }
+    {}
 
     CRemoteFile::CRemoteFile(const QString &name, qint64 size, const QString &url)
         : m_name(name), m_url(url), m_size(size)
-    { }
+    {}
 
     QString CRemoteFile::getBaseNameAndSize() const
     {
@@ -45,7 +45,7 @@ namespace BlackMisc::Network
     CUrl CRemoteFile::getSmartUrl() const
     {
         if (!this->hasName()) { return this->getUrl(); }
-        if (!this->hasUrl())  { return this->getUrl(); }
+        if (!this->hasUrl()) { return this->getUrl(); }
         return this->getUrl().withAppendedPath(this->getName());
     }
 
@@ -80,11 +80,11 @@ namespace BlackMisc::Network
     {
         Q_UNUSED(i18n);
         return "Name: " + m_name +
-                " description: " + m_description +
-                " size: " + QString::number(m_size) +
-                " modified: " + this->getFormattedUtcTimestampYmdhms() +
-                " created: " + this->getFormattedUtcTimestampYmdhms() +
-                " URL: " + m_url.getFullUrl();
+               " description: " + m_description +
+               " size: " + QString::number(m_size) +
+               " modified: " + this->getFormattedUtcTimestampYmdhms() +
+               " created: " + this->getFormattedUtcTimestampYmdhms() +
+               " URL: " + m_url.getFullUrl();
     }
 
     QVariant CRemoteFile::propertyByIndex(CPropertyIndexRef index) const
@@ -104,8 +104,16 @@ namespace BlackMisc::Network
 
     void CRemoteFile::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CRemoteFile>(); return; }
-        if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CRemoteFile>();
+            return;
+        }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            ITimestampBased::setPropertyByIndex(index, variant);
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

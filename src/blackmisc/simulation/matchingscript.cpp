@@ -14,36 +14,32 @@ using namespace BlackMisc::Aviation;
 namespace BlackMisc::Simulation
 {
     MSInOutValues::MSInOutValues(const CCallsign &cs,
-                                    const CAircraftIcaoCode &aircraftIcao,
-                                    const CAirlineIcaoCode &airlineIcao,
-                                    const QString &livery, int liveryId) :
-        MSInOutValues(cs.asString(), cs.getStringAsSet(), cs.getFlightNumber(),
-                        aircraftIcao.getDesignator(), aircraftIcao.getFamily(),       aircraftIcao.getCombinedType(), aircraftIcao.getDbKey(),
-                        airlineIcao.getDesignator(),  airlineIcao.getVDesignator(),   airlineIcao.getDbKey(),
-                        livery, liveryId)
-    { }
+                                 const CAircraftIcaoCode &aircraftIcao,
+                                 const CAirlineIcaoCode &airlineIcao,
+                                 const QString &livery, int liveryId) : MSInOutValues(cs.asString(), cs.getStringAsSet(), cs.getFlightNumber(),
+                                                                                      aircraftIcao.getDesignator(), aircraftIcao.getFamily(), aircraftIcao.getCombinedType(), aircraftIcao.getDbKey(),
+                                                                                      airlineIcao.getDesignator(), airlineIcao.getVDesignator(), airlineIcao.getDbKey(),
+                                                                                      livery, liveryId)
+    {}
 
     MSInOutValues::MSInOutValues(const CCallsign &cs,
-                                    const CAircraftIcaoCode &aircraftIcao,
-                                    const CLivery &livery) :
-        MSInOutValues(cs,
-                        aircraftIcao,
-                        livery.getAirlineIcaoCode(),
-                        livery.getCombinedCode(), livery.getDbKey())
-    { }
+                                 const CAircraftIcaoCode &aircraftIcao,
+                                 const CLivery &livery) : MSInOutValues(cs,
+                                                                        aircraftIcao,
+                                                                        livery.getAirlineIcaoCode(),
+                                                                        livery.getCombinedCode(), livery.getDbKey())
+    {}
 
-    MSInOutValues::MSInOutValues(const CAircraftModel &model) :
-        MSInOutValues(model.getCallsign(), model.getAircraftIcaoCode(), model.getLivery())
-    { }
+    MSInOutValues::MSInOutValues(const CAircraftModel &model) : MSInOutValues(model.getCallsign(), model.getAircraftIcaoCode(), model.getLivery())
+    {}
 
-    MSInOutValues::MSInOutValues(const MSInOutValues &sv) :
-        MSInOutValues(sv.m_callsign,        sv.m_callsignAsSet,         sv.m_flightNumber,
-                        sv.getAircraftIcao(), sv.getCombinedType(),       sv.getAircraftFamily(),  sv.getDbAircraftIcaoId(),
-                        sv.getAirlineIcao(),  sv.getVirtualAirlineIcao(), sv.getDbAirlineIcaoId(),
-                        sv.getLivery(),       sv.getDbLiveryId(),
-                        sv.m_logMessage,
-                        sv.isModified(), sv.isRerun())
-    { }
+    MSInOutValues::MSInOutValues(const MSInOutValues &sv) : MSInOutValues(sv.m_callsign, sv.m_callsignAsSet, sv.m_flightNumber,
+                                                                          sv.getAircraftIcao(), sv.getCombinedType(), sv.getAircraftFamily(), sv.getDbAircraftIcaoId(),
+                                                                          sv.getAirlineIcao(), sv.getVirtualAirlineIcao(), sv.getDbAirlineIcaoId(),
+                                                                          sv.getLivery(), sv.getDbLiveryId(),
+                                                                          sv.m_logMessage,
+                                                                          sv.isModified(), sv.isRerun())
+    {}
 
     void MSInOutValues::setCallsign(const QString &callsign)
     {
@@ -146,20 +142,20 @@ namespace BlackMisc::Simulation
     void MSInOutValues::evaluateChanges(const CAircraftIcaoCode &aircraft, const CAirlineIcaoCode &airline)
     {
         m_modifiedAircraftDesignator = aircraft.getDesignator() != m_aircraftIcao;
-        m_modifiedAircraftFamily     = aircraft.getFamily() != m_aircraftFamily;
+        m_modifiedAircraftFamily = aircraft.getFamily() != m_aircraftFamily;
         if (airline.isVirtualAirline())
         {
-            m_modifiedAirlineDesignator  = airline.getVDesignator()  != m_vAirlineIcao;
+            m_modifiedAirlineDesignator = airline.getVDesignator() != m_vAirlineIcao;
         }
         else
         {
-            m_modifiedAirlineDesignator  = airline.getDesignator()  != m_airlineIcao;
+            m_modifiedAirlineDesignator = airline.getDesignator() != m_airlineIcao;
         }
     }
 
     bool MSInOutValues::hasChangedAircraftIcao(const Aviation::CAircraftIcaoCode &aircraftIcao) const
     {
-        if (aircraftIcao.hasValidDbKey() && aircraftIcao.getDbKey() != m_dbAircraftIcaoId)  { return true; }
+        if (aircraftIcao.hasValidDbKey() && aircraftIcao.getDbKey() != m_dbAircraftIcaoId) { return true; }
         if (aircraftIcao.hasDesignator() && aircraftIcao.getDesignator() != m_aircraftIcao) { return true; }
         return true;
     }
@@ -176,8 +172,8 @@ namespace BlackMisc::Simulation
 
     bool MSInOutValues::hasChangedAirlineIcao(const Aviation::CAirlineIcaoCode &airlineIcao) const
     {
-        if (airlineIcao.hasValidDbKey() && airlineIcao.getDbKey() != m_dbAirlineIcaoId)  { return true; }
-        if (airlineIcao.hasValidDesignator() && airlineIcao.getDesignator()  != m_airlineIcao)  { return true; }
+        if (airlineIcao.hasValidDbKey() && airlineIcao.getDbKey() != m_dbAirlineIcaoId) { return true; }
+        if (airlineIcao.hasValidDesignator() && airlineIcao.getDesignator() != m_airlineIcao) { return true; }
         if (airlineIcao.hasValidDesignator() && airlineIcao.getVDesignator() != m_vAirlineIcao) { return true; }
         return false;
     }

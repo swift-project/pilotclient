@@ -71,13 +71,12 @@ namespace BlackGui::Components
         return cats;
     }
 
-    CLoginOverviewComponent::CLoginOverviewComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        ui(new Ui::CLoginOverviewComponent)
+    CLoginOverviewComponent::CLoginOverviewComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                                        ui(new Ui::CLoginOverviewComponent)
     {
         ui->setupUi(this);
 
-        connect(ui->pb_Cancel,     &QPushButton::clicked, this, &CLoginOverviewComponent::cancel,          Qt::QueuedConnection);
+        connect(ui->pb_Cancel, &QPushButton::clicked, this, &CLoginOverviewComponent::cancel, Qt::QueuedConnection);
         connect(ui->pb_Disconnect, &QPushButton::clicked, this, &CLoginOverviewComponent::toggleNetworkConnection, Qt::QueuedConnection);
 
         // overlay
@@ -103,7 +102,7 @@ namespace BlackGui::Components
     }
 
     CLoginOverviewComponent::~CLoginOverviewComponent()
-    { }
+    {}
 
     void CLoginOverviewComponent::setAutoLogoff(bool autoLogoff)
     {
@@ -164,9 +163,9 @@ namespace BlackGui::Components
     bool CLoginOverviewComponent::hasValidContexts() const
     {
         if (!sGui || !sGui->supportsContexts()) { return false; }
-        if (sGui->isShuttingDown())          { return false; }
-        if (!sGui->getIContextSimulator())   { return false; }
-        if (!sGui->getIContextNetwork())     { return false; }
+        if (sGui->isShuttingDown()) { return false; }
+        if (!sGui->getIContextSimulator()) { return false; }
+        if (!sGui->getIContextNetwork()) { return false; }
         if (!sGui->getIContextOwnAircraft()) { return false; }
         return true;
     }

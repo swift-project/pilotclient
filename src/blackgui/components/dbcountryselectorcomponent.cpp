@@ -34,14 +34,13 @@ using namespace BlackMisc::Network;
 
 namespace BlackGui::Components
 {
-    CDbCountrySelectorComponent::CDbCountrySelectorComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CDbCountrySelectorComponent)
+    CDbCountrySelectorComponent::CDbCountrySelectorComponent(QWidget *parent) : QFrame(parent),
+                                                                                ui(new Ui::CDbCountrySelectorComponent)
     {
         ui->setupUi(this);
         this->setFocusProxy(ui->le_CountryIso);
         this->setAcceptDrops(true);
-        this->setAcceptedMetaTypeIds({qMetaTypeId<CCountry>(), qMetaTypeId<CCountryList>()});
+        this->setAcceptedMetaTypeIds({ qMetaTypeId<CCountry>(), qMetaTypeId<CCountryList>() });
 
         connect(ui->le_CountryIso, &QLineEdit::returnPressed, this, &CDbCountrySelectorComponent::onDataChanged);
         connect(ui->le_CountryName, &QLineEdit::returnPressed, this, &CDbCountrySelectorComponent::onDataChanged);
@@ -54,7 +53,7 @@ namespace BlackGui::Components
     }
 
     CDbCountrySelectorComponent::~CDbCountrySelectorComponent()
-    { }
+    {}
 
     void CDbCountrySelectorComponent::setCountry(const BlackMisc::CCountry &country)
     {

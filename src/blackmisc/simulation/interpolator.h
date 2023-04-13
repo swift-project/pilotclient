@@ -82,11 +82,11 @@ namespace BlackMisc
             QString toQString() const;
 
         private:
-            bool m_isInterpolated = false;   //!< position is interpolated (means enough values, etc.)
+            bool m_isInterpolated = false; //!< position is interpolated (means enough values, etc.)
             bool m_isValidSituation = false; //!< is valid situation
-            bool m_isSameSituation = false;  //!< interpolation between 2 same situations
-            int  m_situations = -1;          //!< number of situations used for interpolation
-            QString m_extraInfo;             //!< optional details
+            bool m_isSameSituation = false; //!< interpolation between 2 same situations
+            int m_situations = -1; //!< number of situations used for interpolation
+            QString m_extraInfo; //!< optional details
         };
 
         //! Status regarding parts
@@ -126,8 +126,8 @@ namespace BlackMisc
 
         private:
             bool m_supportsParts = false; //!< supports parts for given callsign
-            bool m_resusedParts  = false; //!< reusing from last step
-            bool m_isSameParts   = false; //!< same as last parts?
+            bool m_resusedParts = false; //!< reusing from last step
+            bool m_isSameParts = false; //!< same as last parts?
         };
 
         //! Combined results
@@ -173,14 +173,14 @@ namespace BlackMisc
             //! @{
             //! Implicit conversion
             operator const Aviation::CAircraftSituation &() const { return m_interpolatedSituation; }
-            operator const Aviation::CAircraftParts &()     const { return m_interpolatedParts; }
+            operator const Aviation::CAircraftParts &() const { return m_interpolatedParts; }
             //! @}
 
         private:
             Aviation::CAircraftSituation m_interpolatedSituation; //!< interpolated situation
-            Aviation::CAircraftParts     m_interpolatedParts;     //!< guessed or interpolated parts
-            CInterpolationStatus         m_interpolationStatus;   //!< interpolation status
-            CPartsStatus                 m_partsStatus;           //!< parts status
+            Aviation::CAircraftParts m_interpolatedParts; //!< guessed or interpolated parts
+            CInterpolationStatus m_interpolationStatus; //!< interpolation status
+            CPartsStatus m_partsStatus; //!< parts status
         };
 
         //! Interpolator, calculation inbetween positions
@@ -279,30 +279,30 @@ namespace BlackMisc
             //! \sa BlackMisc::Aviation::CAircraftSituation::setOnGroundFromGroundFactorFromInterpolation
             static double groundInterpolationFactor();
 
-            const Aviation::CCallsign  m_callsign; //!< corresponding callsign
+            const Aviation::CCallsign m_callsign; //!< corresponding callsign
             CAircraftModel m_model; //!< corresponding model
 
             // values for current interpolation step
-            qint64 m_currentTimeMsSinceEpoch = -1;                      //!< current time
-            qint64 m_lastInvalidLogTs = -1;                             //!< last invalid situation timestamp
-            Aviation::CAircraftSituationList m_currentSituations;       //!< current situations obtained by remoteAircraftSituationsAndChange
-            Aviation::CAircraftSituationChange m_pastSituationsChange;  //!< situations change of provider (i.e. network) situations
-            CInterpolationAndRenderingSetupPerCallsign m_currentSetup;  //!< used setup
-            CInterpolationStatus m_currentInterpolationStatus;          //!< this step's situation status
-            CPartsStatus m_currentPartsStatus;                          //!< this step's parts status
-            CPartsStatus m_lastPartsStatus;                             //!< status for last parts, used when last parts are re-used because of m_partsToSituationInterpolationRatio
-            int m_partsToSituationInterpolationRatio = 2;               //!< ratio between parts and situation interpolation, 1..always, 2..every 2nd situation
-            int m_partsToSituationGuessingRatio = 5;                    //!< ratio between parts guessing and situation interpolation
-            int m_invalidSituations = 0;                                //!< mainly when there are no new situations
-            CStatusMessageList m_interpolationMessages;                 //!< interpolation messages
+            qint64 m_currentTimeMsSinceEpoch = -1; //!< current time
+            qint64 m_lastInvalidLogTs = -1; //!< last invalid situation timestamp
+            Aviation::CAircraftSituationList m_currentSituations; //!< current situations obtained by remoteAircraftSituationsAndChange
+            Aviation::CAircraftSituationChange m_pastSituationsChange; //!< situations change of provider (i.e. network) situations
+            CInterpolationAndRenderingSetupPerCallsign m_currentSetup; //!< used setup
+            CInterpolationStatus m_currentInterpolationStatus; //!< this step's situation status
+            CPartsStatus m_currentPartsStatus; //!< this step's parts status
+            CPartsStatus m_lastPartsStatus; //!< status for last parts, used when last parts are re-used because of m_partsToSituationInterpolationRatio
+            int m_partsToSituationInterpolationRatio = 2; //!< ratio between parts and situation interpolation, 1..always, 2..every 2nd situation
+            int m_partsToSituationGuessingRatio = 5; //!< ratio between parts guessing and situation interpolation
+            int m_invalidSituations = 0; //!< mainly when there are no new situations
+            CStatusMessageList m_interpolationMessages; //!< interpolation messages
 
-            Aviation::CAircraftSituation m_lastSituation { Aviation::CAircraftSituation::null() };      //!< latest interpolation
-            Aviation::CAircraftParts m_lastParts { Aviation::CAircraftParts::null() };                  //!< latest parts
+            Aviation::CAircraftSituation m_lastSituation { Aviation::CAircraftSituation::null() }; //!< latest interpolation
+            Aviation::CAircraftParts m_lastParts { Aviation::CAircraftParts::null() }; //!< latest parts
             PhysicalQuantities::CLength m_currentSceneryOffset { PhysicalQuantities::CLength::null() }; //!< calculated scenery offset if any
 
-            qint64 m_situationsLastModified     { -1 }; //!< when situations were last modified
+            qint64 m_situationsLastModified { -1 }; //!< when situations were last modified
             qint64 m_situationsLastModifiedUsed { -1 }; //!< interpolant based on situations last updated
-            int m_interpolatedSituationsCounter {  0 }; //!< counter for each interpolated situations: used for statistics, every n-th interpolation ....
+            int m_interpolatedSituationsCounter { 0 }; //!< counter for each interpolated situations: used for statistics, every n-th interpolation ....
 
             bool m_unitTest = false; //!< mark as unit test
 

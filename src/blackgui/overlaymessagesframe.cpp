@@ -27,11 +27,10 @@ using namespace BlackMisc::Network;
 namespace BlackGui
 {
     COverlayMessagesFrame::COverlayMessagesFrame(QWidget *parent, Qt::WindowFlags f) : COverlayMessagesBase(parent, f)
-    { }
+    {}
 
-    COverlayMessagesFrameEnableForDockWidgetInfoArea::COverlayMessagesFrameEnableForDockWidgetInfoArea(QWidget *parent, Qt::WindowFlags f) :
-        COverlayMessagesFrame(parent, f)
-    { }
+    COverlayMessagesFrameEnableForDockWidgetInfoArea::COverlayMessagesFrameEnableForDockWidgetInfoArea(QWidget *parent, Qt::WindowFlags f) : COverlayMessagesFrame(parent, f)
+    {}
 
     bool COverlayMessagesFrameEnableForDockWidgetInfoArea::isForwardingOverlayMessages() const
     {
@@ -41,20 +40,18 @@ namespace BlackGui
     }
 
     COverlayMessagesTabWidget::COverlayMessagesTabWidget(QWidget *parent) : COverlayMessagesBase(parent)
-    { }
+    {}
 
     COverlayMessagesWizardPage::COverlayMessagesWizardPage(QWidget *parent) : COverlayMessagesBase(parent)
-    { }
+    {}
 
     COverlayMessagesDockWidget::COverlayMessagesDockWidget(QWidget *parent) : COverlayMessagesBase(parent)
-    { }
+    {}
 
     COverlayMessagesTableView::COverlayMessagesTableView(QWidget *parent) : COverlayMessagesBase(parent)
-    { }
+    {}
 
     COverlayMessagesTreeView::COverlayMessagesTreeView(QWidget *parent) : COverlayMessagesBase<QTreeView>(parent)
-    { }
+    {}
 
 } // ns
-
-

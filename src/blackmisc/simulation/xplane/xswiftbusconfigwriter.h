@@ -51,11 +51,11 @@ namespace BlackMisc::Simulation::XPlane
         void writeTo(const QString &filePath);
 
     private:
-        QString m_dbusMode    = "p2p";
+        QString m_dbusMode = "p2p";
         QString m_dbusAddress = "127.0.0.1";
-        QString m_dbusPort    = "45001";
-        bool m_debug          = false;
-        bool m_tcas           = true;
+        QString m_dbusPort = "45001";
+        bool m_debug = false;
+        bool m_tcas = true;
     };
 }
 

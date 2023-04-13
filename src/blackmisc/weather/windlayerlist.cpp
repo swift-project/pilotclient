@@ -16,9 +16,8 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Weather, CWindLayer, CWindLayerList)
 
 namespace BlackMisc::Weather
 {
-    CWindLayerList::CWindLayerList(const CSequence<CWindLayer> &other) :
-        CSequence<CWindLayer>(other)
-    { }
+    CWindLayerList::CWindLayerList(const CSequence<CWindLayer> &other) : CSequence<CWindLayer>(other)
+    {}
 
     bool CWindLayerList::containsLevel(const CAltitude &level) const
     {

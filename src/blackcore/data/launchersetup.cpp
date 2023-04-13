@@ -27,24 +27,28 @@ namespace BlackCore::Data
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexDBusAddress:     return QVariant::fromValue(m_dBusAddress);
+        case IndexDBusAddress: return QVariant::fromValue(m_dBusAddress);
         case IndexFramelessWindow: return QVariant::fromValue(m_windowFrameless);
-        case IndexCoreMode:        return QVariant::fromValue(m_coreMode);
-        case IndexAudioMode:       return QVariant::fromValue(m_audioMode);
-        default:                   return CValueObject::propertyByIndex(index);
+        case IndexCoreMode: return QVariant::fromValue(m_coreMode);
+        case IndexAudioMode: return QVariant::fromValue(m_audioMode);
+        default: return CValueObject::propertyByIndex(index);
         }
     }
 
     void CLauncherSetup::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CLauncherSetup>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CLauncherSetup>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexDBusAddress:       this->setDBusAddress(variant.toString());   break;
-        case IndexFramelessWindow:   m_windowFrameless = variant.toBool();       break;
-        case IndexCoreMode:          m_coreMode  = variant.toInt();              break;
-        case IndexAudioMode:         m_audioMode = variant.toInt();              break;
+        case IndexDBusAddress: this->setDBusAddress(variant.toString()); break;
+        case IndexFramelessWindow: m_windowFrameless = variant.toBool(); break;
+        case IndexCoreMode: m_coreMode = variant.toInt(); break;
+        case IndexAudioMode: m_audioMode = variant.toInt(); break;
         default:
             CValueObject::setPropertyByIndex(index, variant);
             break;

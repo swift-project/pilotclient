@@ -66,13 +66,13 @@ namespace BlackMisc::Simulation
         void setModelSetId(const QString &modelSetId) { m_modelSetId = modelSetId.trimmed(); }
 
         //! Get missing aircraft designator
-        const QString &getAircraftDesignator() const { return m_aircraftDesignator;}
+        const QString &getAircraftDesignator() const { return m_aircraftDesignator; }
 
         //! Set missing aircraft designator
         void setAircraftDesignator(const QString &designator) { m_aircraftDesignator = designator.trimmed().toUpper(); }
 
         //! Get missing airline designator
-        const QString &getAirlineDesignator() const { return m_airlineDesignator;}
+        const QString &getAirlineDesignator() const { return m_airlineDesignator; }
 
         //! Set missing airline designator
         void setAirlineDesignator(const QString &designator) { m_airlineDesignator = designator.trimmed().toUpper(); }
@@ -87,7 +87,7 @@ namespace BlackMisc::Simulation
         void setEntryType(EntryType type);
 
         //! Get description
-        const QString &getDescription() const { return m_description;}
+        const QString &getDescription() const { return m_description; }
 
         //! Set a description
         void setDescription(const QString &description) { m_description = description; }
@@ -123,13 +123,13 @@ namespace BlackMisc::Simulation
         static const BlackMisc::CIcon &entryTypeToIcon(EntryType type);
 
     private:
-        QString m_sessionId;           //!< Created in session
-        QString m_modelSetId;          //!< represents model set
-        QString m_description;         //!< Arbitrary description
-        QString m_aircraftDesignator;  //!< missing aircraft designator
-        QString m_airlineDesignator;   //!< missing airline designator
-        int     m_entryType = Missing; //!< type
-        int     m_count = 1;           //!< quantity
+        QString m_sessionId; //!< Created in session
+        QString m_modelSetId; //!< represents model set
+        QString m_description; //!< Arbitrary description
+        QString m_aircraftDesignator; //!< missing aircraft designator
+        QString m_airlineDesignator; //!< missing airline designator
+        int m_entryType = Missing; //!< type
+        int m_count = 1; //!< quantity
 
         BLACK_METACLASS(
             CMatchingStatisticsEntry,

@@ -107,7 +107,11 @@ namespace BlackMisc::Simulation
 
     void CSimulatorInternals::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CSimulatorInternals>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CSimulatorInternals>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

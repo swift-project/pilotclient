@@ -37,19 +37,17 @@ namespace BlackMisc::Test
     const CServer &CTestData::getTrafficServer()
     {
         static const CServer trafficServer("fooserver", "a foo server", "localhost", 1234,
-                                            CUser("112233", "Some real name", "email@xyz.com", "secret"),
-                                            CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::VATSIM), CServer::FSDServerVatsim);
+                                           CUser("112233", "Some real name", "email@xyz.com", "secret"),
+                                           CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::VATSIM), CServer::FSDServerVatsim);
         return trafficServer;
     }
 
     const CVariantList &CTestData::getCVariantList()
     {
         static const CVariantList vl(
-        {
-            CVariant::from(CLength(100, CLengthUnit::m())),
-            CVariant::from(CSpeed(200, CSpeedUnit::m_s())),
-            CVariant::from(CTestData::getCoordinateMunichTower())
-        });
+            { CVariant::from(CLength(100, CLengthUnit::m())),
+              CVariant::from(CSpeed(200, CSpeedUnit::m_s())),
+              CVariant::from(CTestData::getCoordinateMunichTower()) });
         return vl;
     }
 
@@ -96,36 +94,34 @@ namespace BlackMisc::Test
     const CAtcStation &CTestData::getMunichTower()
     {
         static const CAtcStation t(CCallsign("EDDM_TWR"), CUser("654321", "John Doe"),
-                                    CFrequency(119.9, CFrequencyUnit::MHz()), CTestData::getCoordinateFrankfurtTower(), CLength(50, CLengthUnit::km()),
-                                    false, QDateTime::currentDateTimeUtc().addSecs(7200), QDateTime::currentDateTimeUtc().addSecs(9500));
+                                   CFrequency(119.9, CFrequencyUnit::MHz()), CTestData::getCoordinateFrankfurtTower(), CLength(50, CLengthUnit::km()),
+                                   false, QDateTime::currentDateTimeUtc().addSecs(7200), QDateTime::currentDateTimeUtc().addSecs(9500));
         return t;
     }
 
     const CAtcStation &CTestData::getFrankfurtTower()
     {
         static const CAtcStation t(CCallsign("EDDF_TWR"), CUser("654321", "Joe Bar"),
-                                    CFrequency(118.7, CFrequencyUnit::MHz()), CTestData::getCoordinateMunichTower(), CLength(50, CLengthUnit::km()),
-                                    true, QDateTime::currentDateTimeUtc().addSecs(-3600), QDateTime::currentDateTimeUtc().addSecs(2400));
+                                   CFrequency(118.7, CFrequencyUnit::MHz()), CTestData::getCoordinateMunichTower(), CLength(50, CLengthUnit::km()),
+                                   true, QDateTime::currentDateTimeUtc().addSecs(-3600), QDateTime::currentDateTimeUtc().addSecs(2400));
         return t;
     }
 
     const CAtcStation &CTestData::getMunichApproach()
     {
         static const CAtcStation t(CCallsign("eddm_app"), CUser("654321", "Jen Doe"),
-                                    CFrequency(120.7, CFrequencyUnit::MHz()),
-                                    CTestData::getCoordinateMunichTower(), CLength(100, CLengthUnit::km()),
-                                    false, QDateTime::currentDateTimeUtc().addSecs(1000), QDateTime::currentDateTimeUtc().addSecs(2000));
+                                   CFrequency(120.7, CFrequencyUnit::MHz()),
+                                   CTestData::getCoordinateMunichTower(), CLength(100, CLengthUnit::km()),
+                                   false, QDateTime::currentDateTimeUtc().addSecs(1000), QDateTime::currentDateTimeUtc().addSecs(2000));
         return t;
     }
 
     const CAtcStationList &CTestData::getAtcStations()
     {
         static const CAtcStationList stations(
-        {
-            CTestData::getFrankfurtTower(),
-            CTestData::getMunichTower(),
-            CTestData::getMunichApproach()
-        });
+            { CTestData::getFrankfurtTower(),
+              CTestData::getMunichTower(),
+              CTestData::getMunichApproach() });
         return stations;
     }
 
@@ -138,10 +134,8 @@ namespace BlackMisc::Test
     const CCallsignSet &CTestData::getPilotCallsigns()
     {
         static const CCallsignSet callsigns(
-        {
-            CCallsign("DEMBZ"), CCallsign("DLH123"), CCallsign("RYR635L"),
-            CCallsign("LGL974"), CCallsign("AUI129"), CCallsign("CLX756")
-        });
+            { CCallsign("DEMBZ"), CCallsign("DLH123"), CCallsign("RYR635L"),
+              CCallsign("LGL974"), CCallsign("AUI129"), CCallsign("CLX756") });
         return callsigns;
     }
 
@@ -154,10 +148,8 @@ namespace BlackMisc::Test
     const CCallsignSet &CTestData::getControllerCallsigns()
     {
         static const CCallsignSet callsigns(
-        {
-            CCallsign("EDDM_TWR"), CCallsign("EDDM_APP"), CCallsign("EDDM_GND"),
-            CCallsign("EDDF_TWR"), CCallsign("EDDF_APP"), CCallsign("EDDF_GND")
-        });
+            { CCallsign("EDDM_TWR"), CCallsign("EDDM_APP"), CCallsign("EDDM_GND"),
+              CCallsign("EDDF_TWR"), CCallsign("EDDF_APP"), CCallsign("EDDF_GND") });
         return callsigns;
     }
 
@@ -171,14 +163,14 @@ namespace BlackMisc::Test
     {
         static const QList<CCallsign> callsigns(CTestData::getPilotCallsigns().toQList());
         static const CUserList pilots(
-        {
-            CUser("100100", "Joe Doe", callsigns[0]),
-            CUser("100101", "Jane Foo", callsigns[1]),
-            CUser("100200", "Frank Sky", callsigns[2]),
-            CUser("100300", "Richard F. Frings", callsigns[3]),
-            CUser("100301", "Torben Frey", callsigns[4]),
-            CUser("100400", "Kay Dòresn", callsigns[5]),
-        });
+            {
+                CUser("100100", "Joe Doe", callsigns[0]),
+                CUser("100101", "Jane Foo", callsigns[1]),
+                CUser("100200", "Frank Sky", callsigns[2]),
+                CUser("100300", "Richard F. Frings", callsigns[3]),
+                CUser("100301", "Torben Frey", callsigns[4]),
+                CUser("100400", "Kay Dòresn", callsigns[5]),
+            });
         return pilots;
     }
 
@@ -192,14 +184,14 @@ namespace BlackMisc::Test
     {
         static const QList<CCallsign> callsigns(CTestData::getControllerCallsigns().toQList());
         static const CUserList controllers(
-        {
-            CUser("300100", "Jeff Doe", callsigns[0]),
-            CUser("300101", "Foo Mister", callsigns[1]),
-            CUser("300200", "Sky Du", callsigns[2]),
-            CUser("300300", "F. Frings", callsigns[3]),
-            CUser("300301", "Ralf Smith", callsigns[4]),
-            CUser("300400", "Doreen Jump", callsigns[5]),
-        });
+            {
+                CUser("300100", "Jeff Doe", callsigns[0]),
+                CUser("300101", "Foo Mister", callsigns[1]),
+                CUser("300200", "Sky Du", callsigns[2]),
+                CUser("300300", "F. Frings", callsigns[3]),
+                CUser("300301", "Ralf Smith", callsigns[4]),
+                CUser("300400", "Doreen Jump", callsigns[5]),
+            });
         return controllers;
     }
 
@@ -212,8 +204,8 @@ namespace BlackMisc::Test
     CAircraftSituation getAircraftSituationAboveMunichTowerImpl()
     {
         CAircraftSituation situation(CTestData::getCoordinateMunichTower(), CHeading(10, CHeading::True, CAngleUnit::deg()),
-                                        CAngle(12, CAngleUnit::deg()), CAngle(5, CAngleUnit::deg()),
-                                        CSpeed(111, CSpeedUnit::km_h()));
+                                     CAngle(12, CAngleUnit::deg()), CAngle(5, CAngleUnit::deg()),
+                                     CSpeed(111, CSpeedUnit::km_h()));
         situation.setAltitude({ 2500, CLengthUnit::ft() });
         situation.setCallsign(CTestData::getRandomPilotCallsign());
         return situation;
@@ -228,8 +220,8 @@ namespace BlackMisc::Test
     CAircraftSituation getAircraftSituationAboveFrankfurtTowerImpl()
     {
         CAircraftSituation situation(CTestData::getCoordinateFrankfurtTower(), CHeading(290, CHeading::True, CAngleUnit::deg()),
-                                        CAngle(4, CAngleUnit::deg()), CAngle(10, CAngleUnit::deg()),
-                                        CSpeed(200, CSpeedUnit::km_h()));
+                                     CAngle(4, CAngleUnit::deg()), CAngle(10, CAngleUnit::deg()),
+                                     CSpeed(200, CSpeedUnit::km_h()));
         situation.setAltitude({ 4000, CLengthUnit::ft() });
         situation.setCallsign(CTestData::getRandomPilotCallsign());
         return situation;

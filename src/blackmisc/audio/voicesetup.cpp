@@ -40,9 +40,8 @@ namespace BlackMisc::Audio
         return s;
     }
 
-    CVoiceSetup::CVoiceSetup(const QString &afvVoiceServerUrl, const QString &afvMapUrl) :
-        m_afvVoiceServerUrl(afvVoiceServerUrl), m_afvMapUrl(afvMapUrl)
-    { }
+    CVoiceSetup::CVoiceSetup(const QString &afvVoiceServerUrl, const QString &afvMapUrl) : m_afvVoiceServerUrl(afvVoiceServerUrl), m_afvMapUrl(afvMapUrl)
+    {}
 
     QVariant CVoiceSetup::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
     {
@@ -51,19 +50,23 @@ namespace BlackMisc::Audio
         switch (i)
         {
         case IndexAfvVoiceServerUrl: return QVariant::fromValue(m_afvVoiceServerUrl);
-        case IndexAfvMapUrl:         return QVariant::fromValue(m_afvMapUrl);
+        case IndexAfvMapUrl: return QVariant::fromValue(m_afvMapUrl);
         default: return CValueObject::propertyByIndex(index);
         }
     }
 
     void CVoiceSetup::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CVoiceSetup>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CVoiceSetup>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAfvVoiceServerUrl: m_afvVoiceServerUrl = variant.toString(); break;
-        case IndexAfvMapUrl:         m_afvMapUrl         = variant.toString(); break;
+        case IndexAfvMapUrl: m_afvMapUrl = variant.toString(); break;
         default:
             CValueObject::setPropertyByIndex(index, variant);
             break;
@@ -77,7 +80,7 @@ namespace BlackMisc::Audio
         switch (i)
         {
         case IndexAfvVoiceServerUrl: return m_afvVoiceServerUrl.compare(compareValue.m_afvVoiceServerUrl, Qt::CaseInsensitive);
-        case IndexAfvMapUrl:         return m_afvMapUrl.compare(compareValue.m_afvMapUrl, Qt::CaseInsensitive);
+        case IndexAfvMapUrl: return m_afvMapUrl.compare(compareValue.m_afvMapUrl, Qt::CaseInsensitive);
         default: break;
         }
         BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable("No comparison for index " + index.toQString()));

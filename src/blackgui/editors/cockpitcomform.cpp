@@ -27,9 +27,8 @@ using namespace BlackGui::Components;
 
 namespace BlackGui::Editors
 {
-    CCockpitComForm::CCockpitComForm(QWidget *parent) :
-        CForm(parent),
-        ui(new Ui::CCockpitComForm)
+    CCockpitComForm::CCockpitComForm(QWidget *parent) : CForm(parent),
+                                                        ui(new Ui::CCockpitComForm)
     {
         ui->setupUi(this);
         this->alignUiElementsHeight();
@@ -40,21 +39,21 @@ namespace BlackGui::Editors
         connect(ui->frp_ComPanelSelcalSelector, &CSelcalCodeSelector::valueChanged, this, &CCockpitComForm::onSelcalChanged);
 
         // XPDR
-        connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderModeChanged,     this, &CCockpitComForm::transponderModeChanged);
+        connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderModeChanged, this, &CCockpitComForm::transponderModeChanged);
         connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderStateIdentEnded, this, &CCockpitComForm::transponderStateIdentEnded);
 
         // COM GUI events
-        connect(ui->tb_ComPanelCom1Toggle,   &QPushButton::clicked, this, &CCockpitComForm::onGuiChangedCockpitValues);
-        connect(ui->tb_ComPanelCom2Toggle,   &QPushButton::clicked, this, &CCockpitComForm::onGuiChangedCockpitValues);
-        connect(ui->ds_ComPanelCom1Active,   &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
-        connect(ui->ds_ComPanelCom2Active,   &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
-        connect(ui->ds_ComPanelCom1Standby,  &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
-        connect(ui->ds_ComPanelCom2Standby,  &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
+        connect(ui->tb_ComPanelCom1Toggle, &QPushButton::clicked, this, &CCockpitComForm::onGuiChangedCockpitValues);
+        connect(ui->tb_ComPanelCom2Toggle, &QPushButton::clicked, this, &CCockpitComForm::onGuiChangedCockpitValues);
+        connect(ui->ds_ComPanelCom1Active, &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
+        connect(ui->ds_ComPanelCom2Active, &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
+        connect(ui->ds_ComPanelCom1Standby, &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
+        connect(ui->ds_ComPanelCom2Standby, &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
         connect(ui->sbp_ComPanelTransponder, &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
         connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderModeChanged, this, &CCockpitComForm::onGuiChangedCockpitValues);
-        connect(ui->frp_ComPanelSelcalSelector,  &CSelcalCodeSelector::valueChanged, this, &CCockpitComForm::onGuiChangedCockpitValues);
-        connect(ui->tb_RequestTextMessageCom1,   &QToolButton::released, this, &CCockpitComForm::requestCom1TextMessage);
-        connect(ui->tb_RequestTextMessageCom2,   &QToolButton::released, this, &CCockpitComForm::requestCom2TextMessage);
+        connect(ui->frp_ComPanelSelcalSelector, &CSelcalCodeSelector::valueChanged, this, &CCockpitComForm::onGuiChangedCockpitValues);
+        connect(ui->tb_RequestTextMessageCom1, &QToolButton::released, this, &CCockpitComForm::requestCom1TextMessage);
+        connect(ui->tb_RequestTextMessageCom2, &QToolButton::released, this, &CCockpitComForm::requestCom2TextMessage);
 
         ui->tb_RequestTextMessageCom1->setIcon(CIcons::appTextMessages16());
         ui->tb_RequestTextMessageCom2->setIcon(CIcons::appTextMessages16());
@@ -63,7 +62,7 @@ namespace BlackGui::Editors
     }
 
     CCockpitComForm::~CCockpitComForm()
-    { }
+    {}
 
     void CCockpitComForm::setReadOnly(bool readonly)
     {
@@ -102,7 +101,6 @@ namespace BlackGui::Editors
         {
             ui->lbl_ComPanelCom1Active->setToolTip(com1Ttation.getCallsign().getStringAsSet());
             ui->led_ComPanelCom1->setOn(true);
-
         }
         if (com2Station.getCallsign().isEmpty())
         {

@@ -12,11 +12,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc, CPropertyIndex, CPropertyIndexList)
 
 namespace BlackMisc
 {
-    CPropertyIndexList::CPropertyIndexList() { }
+    CPropertyIndexList::CPropertyIndexList() {}
 
-    CPropertyIndexList::CPropertyIndexList(const CSequence<CPropertyIndex> &other) :
-        CSequence<CPropertyIndex>(other)
-    { }
+    CPropertyIndexList::CPropertyIndexList(const CSequence<CPropertyIndex> &other) : CSequence<CPropertyIndex>(other)
+    {}
 
     CPropertyIndexList CPropertyIndexList::copyFrontRemoved() const
     {

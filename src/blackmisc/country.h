@@ -137,12 +137,12 @@ namespace BlackMisc
         //! Set a simplified name if not equal to "official name"
         void setSimplifiedNameIfNotSame();
 
-        QString m_iso3;              //!< 3 letter code
-        QString m_name;              //!< country name
-        QString m_simplifiedName;    //!< no accent characters
-        QString m_alias1;            //!< 1st alias
-        QString m_alias2;            //!< 2nd alias
-        bool    m_historic = false;  //!< historic country
+        QString m_iso3; //!< 3 letter code
+        QString m_name; //!< country name
+        QString m_simplifiedName; //!< no accent characters
+        QString m_alias1; //!< 1st alias
+        QString m_alias2; //!< 2nd alias
+        bool m_historic = false; //!< historic country
 
         BLACK_METACLASS(
             CCountry,

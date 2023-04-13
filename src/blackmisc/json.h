@@ -39,32 +39,32 @@ class QStringList;
 //! \ingroup JSON
 //! @{
 //! Streaming operators for QJsonValue (to value)
-BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, int &value);
-BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, qlonglong &value);
-BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, qulonglong &value);
-BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, uint &value);
-BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, qint16 &value);
-BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, QString &value);
-BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, QStringList &value);
-BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, std::string &value);
-BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, double &value);
-BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, bool &value);
-BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, QDateTime &value);
-BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, QPixmap &value);
-BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, QByteArray &value);
-BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, int &value);
-BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, qlonglong &value);
-BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, qulonglong &value);
-BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, uint &value);
-BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, qint16 &value);
-BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, QString &value);
-BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, std::string &value);
-BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, QStringList &value);
-BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, double &value);
-BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, bool &value);
-BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, QDateTime &value);
-BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, QPixmap &value);
-BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, QByteArray &value);
+BLACKMISC_EXPORT const QJsonValue &operator>>(const QJsonValue &json, int &value);
+BLACKMISC_EXPORT const QJsonValue &operator>>(const QJsonValue &json, qlonglong &value);
+BLACKMISC_EXPORT const QJsonValue &operator>>(const QJsonValue &json, qulonglong &value);
+BLACKMISC_EXPORT const QJsonValue &operator>>(const QJsonValue &json, uint &value);
+BLACKMISC_EXPORT const QJsonValue &operator>>(const QJsonValue &json, qint16 &value);
+BLACKMISC_EXPORT const QJsonValue &operator>>(const QJsonValue &json, QString &value);
+BLACKMISC_EXPORT const QJsonValue &operator>>(const QJsonValue &json, QStringList &value);
+BLACKMISC_EXPORT const QJsonValue &operator>>(const QJsonValue &json, std::string &value);
+BLACKMISC_EXPORT const QJsonValue &operator>>(const QJsonValue &json, double &value);
+BLACKMISC_EXPORT const QJsonValue &operator>>(const QJsonValue &json, bool &value);
+BLACKMISC_EXPORT const QJsonValue &operator>>(const QJsonValue &json, QDateTime &value);
+BLACKMISC_EXPORT const QJsonValue &operator>>(const QJsonValue &json, QPixmap &value);
+BLACKMISC_EXPORT const QJsonValue &operator>>(const QJsonValue &json, QByteArray &value);
+BLACKMISC_EXPORT QJsonValueRef operator>>(QJsonValueRef json, int &value);
+BLACKMISC_EXPORT QJsonValueRef operator>>(QJsonValueRef json, qlonglong &value);
+BLACKMISC_EXPORT QJsonValueRef operator>>(QJsonValueRef json, qulonglong &value);
+BLACKMISC_EXPORT QJsonValueRef operator>>(QJsonValueRef json, uint &value);
+BLACKMISC_EXPORT QJsonValueRef operator>>(QJsonValueRef json, qint16 &value);
+BLACKMISC_EXPORT QJsonValueRef operator>>(QJsonValueRef json, QString &value);
+BLACKMISC_EXPORT QJsonValueRef operator>>(QJsonValueRef json, std::string &value);
+BLACKMISC_EXPORT QJsonValueRef operator>>(QJsonValueRef json, QStringList &value);
+BLACKMISC_EXPORT QJsonValueRef operator>>(QJsonValueRef json, double &value);
+BLACKMISC_EXPORT QJsonValueRef operator>>(QJsonValueRef json, bool &value);
+BLACKMISC_EXPORT QJsonValueRef operator>>(QJsonValueRef json, QDateTime &value);
+BLACKMISC_EXPORT QJsonValueRef operator>>(QJsonValueRef json, QPixmap &value);
+BLACKMISC_EXPORT QJsonValueRef operator>>(QJsonValueRef json, QByteArray &value);
 
 //! @}
 
@@ -72,16 +72,16 @@ BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, QByteArray &value
 //! \brief Specialized JSON serialization for enum
 //! \remarks needs to be in global namespace
 //! \ingroup JSON
-template<class ENUM>
+template <class ENUM>
 std::enable_if_t<std::is_enum_v<ENUM>, QJsonObject>
-&operator<<(QJsonObject &json, std::pair<QString, const ENUM &> value)
+    &operator<<(QJsonObject &json, std::pair<QString, const ENUM &> value)
 {
     json.insert(value.first, QJsonValue(static_cast<int>(value.second)));
     return json;
 }
-template<class ENUM>
+template <class ENUM>
 std::enable_if_t<std::is_enum_v<ENUM>, QJsonObject>
-&operator<<(QJsonObject &json, std::pair<BlackMisc::CExplicitLatin1String, const ENUM &> value)
+    &operator<<(QJsonObject &json, std::pair<BlackMisc::CExplicitLatin1String, const ENUM &> value)
 {
     json[value.first] = QJsonValue(static_cast<int>(value.second));
     return json;
@@ -91,13 +91,13 @@ std::enable_if_t<std::is_enum_v<ENUM>, QJsonObject>
 //! @{
 //! \brief Specialized JSON serialization for QFlags generated enum
 //! \ingroup JSON
-template<class ENUM>
+template <class ENUM>
 QJsonObject &operator<<(QJsonObject &json, std::pair<QString, const QFlags<ENUM> &> value)
 {
     json.insert(value.first, QJsonValue(static_cast<int>(value.second)));
     return json;
 }
-template<class ENUM>
+template <class ENUM>
 QJsonObject &operator<<(QJsonObject &json, std::pair<BlackMisc::CExplicitLatin1String, const QFlags<ENUM> &> value)
 {
     json[value.first] = QJsonValue(static_cast<int>(value.second));
@@ -107,9 +107,8 @@ QJsonObject &operator<<(QJsonObject &json, std::pair<BlackMisc::CExplicitLatin1S
 
 //! \brief Specialized JSON deserialization for enum
 //! \ingroup JSON
-template<class ENUM>
-std::enable_if_t<std::is_enum_v<ENUM>, QJsonValue>
-const &operator>>(const QJsonValue &json, ENUM &value)
+template <class ENUM>
+std::enable_if_t<std::is_enum_v<ENUM>, QJsonValue> const &operator>>(const QJsonValue &json, ENUM &value)
 {
     value = static_cast<ENUM>(json.toInt());
     return json;
@@ -117,7 +116,7 @@ const &operator>>(const QJsonValue &json, ENUM &value)
 
 //! \brief Specialized JSON deserialization for QFlags enum
 //! \ingroup JSON
-template<class ENUM>
+template <class ENUM>
 const QJsonValue &operator>>(const QJsonValue &json, QFlags<ENUM> &value)
 {
     value = static_cast<QFlags<ENUM>>(json.toInt());
@@ -126,7 +125,7 @@ const QJsonValue &operator>>(const QJsonValue &json, QFlags<ENUM> &value)
 
 //! \brief Specialized JSON deserialization for enum
 //! \ingroup JSON
-template<class ENUM, typename = std::enable_if_t<std::is_enum_v<ENUM>>>
+template <class ENUM, typename = std::enable_if_t<std::is_enum_v<ENUM>>>
 QJsonValueRef operator>>(QJsonValueRef json, ENUM &value)
 {
     value = static_cast<ENUM>(json.toInt());
@@ -135,7 +134,7 @@ QJsonValueRef operator>>(QJsonValueRef json, ENUM &value)
 
 //! \brief Specialized JSON deserialization for QFlags enum
 //! \ingroup JSON
-template<class ENUM>
+template <class ENUM>
 QJsonValueRef operator>>(QJsonValueRef json, QFlags<ENUM> &value)
 {
     value = static_cast<QFlags<ENUM>>(json.toInt());
@@ -144,7 +143,7 @@ QJsonValueRef operator>>(QJsonValueRef json, QFlags<ENUM> &value)
 
 //! \brief Specialized JSON deserialization for pair
 //! \ingroup JSON
-template<class FIRST, class SECOND>
+template <class FIRST, class SECOND>
 QJsonValueRef operator>>(QJsonValueRef json, std::pair<FIRST, SECOND> &pair)
 {
     json.toArray() >> pair.first >> pair.second;
@@ -153,7 +152,7 @@ QJsonValueRef operator>>(QJsonValueRef json, std::pair<FIRST, SECOND> &pair)
 
 //! \brief Specialized JSON serialization for pair
 //! \ingroup JSON
-template<class FIRST, class SECOND>
+template <class FIRST, class SECOND>
 QJsonArray &operator<<(QJsonArray &json, const std::pair<FIRST, SECOND> &pair)
 {
     QJsonArray array;

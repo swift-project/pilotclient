@@ -24,9 +24,8 @@ using namespace BlackMisc::Simulation::XPlane;
 
 namespace BlackSimPlugin::XPlane
 {
-    CSimulatorXPlaneConfigWindow::CSimulatorXPlaneConfigWindow(QWidget *parent) :
-        CPluginConfigWindow(parent),
-        ui(new Ui::CSimulatorXPlaneConfigWindow)
+    CSimulatorXPlaneConfigWindow::CSimulatorXPlaneConfigWindow(QWidget *parent) : CPluginConfigWindow(parent),
+                                                                                  ui(new Ui::CSimulatorXPlaneConfigWindow)
     {
         ui->setupUi(this);
         ui->comp_SettingsXSwiftBus->setDefaultP2PAddress(m_xSwiftBusServerSettings.getDefault().getDBusServerAddressQt());
@@ -45,7 +44,7 @@ namespace BlackSimPlugin::XPlane
     }
 
     CSimulatorXPlaneConfigWindow::~CSimulatorXPlaneConfigWindow()
-    { }
+    {}
 
     void CSimulatorXPlaneConfigWindow::onSettingsAccepted()
     {
@@ -89,9 +88,9 @@ namespace BlackSimPlugin::XPlane
 
         // left, top, right, bottom, height
         s.setMessageBoxValues(
-            marginToInt(ui->le_MsgBoxMarginsLeft->text(),   20),
-            marginToInt(ui->le_MsgBoxMarginsTop->text(),    20),
-            marginToInt(ui->le_MsgBoxMarginsRight->text(),  20),
+            marginToInt(ui->le_MsgBoxMarginsLeft->text(), 20),
+            marginToInt(ui->le_MsgBoxMarginsTop->text(), 20),
+            marginToInt(ui->le_MsgBoxMarginsRight->text(), 20),
             marginToInt(ui->le_MsgBoxMarginsBottom->text(), 20),
             ui->sb_MessageBoxLines->value(),
             ui->sb_MessageBoxDuration->value(),
@@ -99,8 +98,7 @@ namespace BlackSimPlugin::XPlane
             ui->cs_ColorPriv->getColor().packed(),
             ui->cs_ColorServ->getColor().packed(),
             ui->cs_ColorStat->getColor().packed(),
-            ui->cs_ColorSup->getColor().packed()
-        );
+            ui->cs_ColorSup->getColor().packed());
         return s;
     }
 

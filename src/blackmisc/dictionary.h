@@ -63,7 +63,10 @@ namespace BlackMisc
         struct TAssociativityTraits<false, false>
         {
             template <class Key, class>
-            struct DefaultType { static_assert(std::is_void_v<Key>, "Key does not support either QHash or QMap"); };
+            struct DefaultType
+            {
+                static_assert(std::is_void_v<Key>, "Key does not support either QHash or QMap");
+            };
         };
         //! \endcond
     }
@@ -78,7 +81,7 @@ namespace BlackMisc
      * Associative container with value semantics, chooses a sensible default implementation container type.
      */
     // *INDENT-OFF*
-    template<class Key, class Value, template <class...> class Impl = TDefaultAssociativeType>
+    template <class Key, class Value, template <class...> class Impl = TDefaultAssociativeType>
     class CDictionary :
         public Mixin::DBusOperators<CDictionary<Key, Value, Impl>>,
         public Mixin::DataStreamOperators<CDictionary<Key, Value, Impl>>,
@@ -134,7 +137,7 @@ namespace BlackMisc
 
         //! Return a copy containing only those elements which key matches a particular pair.
         //! \param pairs Pairs of { pointer to member function of Value, return value to compare it against }.
-        template <class... Pairs >
+        template <class... Pairs>
         CDictionary findKeyBy(Pairs... pairs) const
         {
             return findKeyBy(BlackMisc::Predicates::MemberEqual(pairs...));
@@ -155,7 +158,7 @@ namespace BlackMisc
 
         //! Return a copy containing only those elements which value matches a particular pair.
         //! \param pairs Pairs of { pointer to member function of Value, return value to compare it against }.
-        template <class... Pairs >
+        template <class... Pairs>
         CDictionary findValueBy(Pairs... pairs) const
         {
             return findValueBy(BlackMisc::Predicates::MemberEqual(pairs...));
@@ -262,7 +265,11 @@ namespace BlackMisc
             {
                 QJsonValueRef jsonKey = (*it);
                 ++it;
-                if (it == array.end()) { qWarning("Odd number of elements in CDictionary::convertFromJson"); return; }
+                if (it == array.end())
+                {
+                    qWarning("Odd number of elements in CDictionary::convertFromJson");
+                    return;
+                }
                 QJsonValueRef jsonValue = (*it);
                 Key key;
                 Value val;
@@ -359,7 +366,7 @@ namespace BlackMisc
         iterator find(const Key &key) { return m_impl.find(key); }
 
         //! Returns true if dictionary contains an item with key, otherwise false
-        bool contains(const Key &key) const {return m_impl.contains(key); }
+        bool contains(const Key &key) const { return m_impl.contains(key); }
 
         //! Returns the number of items with key
         int count(const Key &key) const { return m_impl.count(key); }
@@ -377,7 +384,10 @@ namespace BlackMisc
         iterator insert(const Key &key, const Value &value) { return m_impl.insert(key, value); }
 
         //! Insert all items of other dictionary into this dictionary
-        void insert(const CDictionary &other) { for (auto i = other.cbegin(); i != other.cend(); ++i) { insert(i.key(), i.value()); } }
+        void insert(const CDictionary &other)
+        {
+            for (auto i = other.cbegin(); i != other.cend(); ++i) { insert(i.key(), i.value()); }
+        }
 
         //! Returns true if dictionary is empty
         bool isEmpty() const { return m_impl.isEmpty(); }
@@ -410,10 +420,18 @@ namespace BlackMisc
         CRange<const_iterator> values() const { return makeRange(begin(), end()); }
 
         //! Copy assignment.
-        CDictionary &operator =(const CDictionary &other) { m_impl = other.m_impl; return *this; }
+        CDictionary &operator=(const CDictionary &other)
+        {
+            m_impl = other.m_impl;
+            return *this;
+        }
 
         //! Move assignment
-        CDictionary &operator =(CDictionary &&other) noexcept { m_impl = std::move(other.m_impl); return *this; }
+        CDictionary &operator=(CDictionary &&other) noexcept
+        {
+            m_impl = std::move(other.m_impl);
+            return *this;
+        }
 
         //! Return reference to the internal implementation object.
         friend impl_type &implementationOf(CDictionary &dict) { return dict.m_impl; }
@@ -423,16 +441,16 @@ namespace BlackMisc
 
         //! Access an element by its key.
         //! \note If dictionary does not contain any item with key, a default constructed value will be inserted.
-        Value &operator [](const Key &key) { return m_impl[key]; }
+        Value &operator[](const Key &key) { return m_impl[key]; }
 
         //! Access an element by its key.
-        const Value operator [](const Key &key) const { return m_impl[key]; }
+        const Value operator[](const Key &key) const { return m_impl[key]; }
 
         //! Test for equality.
-        friend bool operator ==(const CDictionary &a, const CDictionary &b) { return a.m_impl == b.m_impl; }
+        friend bool operator==(const CDictionary &a, const CDictionary &b) { return a.m_impl == b.m_impl; }
 
         //! Test for inequality.
-        friend bool operator !=(const CDictionary &a, const CDictionary &b) { return !(a == b); }
+        friend bool operator!=(const CDictionary &a, const CDictionary &b) { return !(a == b); }
 
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const
@@ -474,13 +492,19 @@ namespace BlackMisc
      * Identity function for API consistency with CDictionary::implementationOf.
      */
     template <class Key, class Value>
-    QMap<Key, Value> &implementationOf(QMap<Key, Value> &dict) { return dict; }
+    QMap<Key, Value> &implementationOf(QMap<Key, Value> &dict)
+    {
+        return dict;
+    }
 
     /*!
      * Identity function for API consistency with CDictionary::implementationOf.
      */
     template <class Key, class Value>
-    const QMap<Key, Value> &implementationOf(const QMap<Key, Value> &dict) { return dict; }
+    const QMap<Key, Value> &implementationOf(const QMap<Key, Value> &dict)
+    {
+        return dict;
+    }
 
     /*!
      * Call a functor for each {key,value1,value2} triple in the keywise intersection of two maps.
@@ -498,10 +522,14 @@ namespace BlackMisc
         {
             if (it1.key() < it2.key()) { ++it1; }
             else if (it2.key() < it1.key()) { ++it2; }
-            else { functor(it1.key(), it1.value(), it2); ++it1; ++it2; }
+            else
+            {
+                functor(it1.key(), it1.value(), it2);
+                ++it1;
+                ++it2;
+            }
         }
     }
 } // namespace BlackMisc
 
 #endif // BLACKMISC_DICTIONARY_H
-

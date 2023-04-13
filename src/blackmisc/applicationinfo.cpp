@@ -1,10 +1,10 @@
 /* Copyright (C) 2016
-* swift project Community / Contributors
-*
-* This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
-* directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
  * or distributed except according to the terms contained in the LICENSE file.
-*/
+ */
 
 #include "blackmisc/applicationinfo.h"
 #include "blackmisc/iconlist.h"
@@ -22,14 +22,13 @@ namespace BlackMisc
 {
     CApplicationInfo::CApplicationInfo() {}
 
-    CApplicationInfo::CApplicationInfo(Application app) :
-        m_app(app),
-        m_wordSize(CBuildConfig::buildWordSize()),
-        m_exePath(QCoreApplication::applicationDirPath()),
-        m_version(CBuildConfig::getVersionString()),
-        m_compileInfo(CBuildConfig::compiledWithInfo()),
-        m_platform(CBuildConfig::getPlatformString()),
-        m_process(CProcessInfo::currentProcess())
+    CApplicationInfo::CApplicationInfo(Application app) : m_app(app),
+                                                          m_wordSize(CBuildConfig::buildWordSize()),
+                                                          m_exePath(QCoreApplication::applicationDirPath()),
+                                                          m_version(CBuildConfig::getVersionString()),
+                                                          m_compileInfo(CBuildConfig::compiledWithInfo()),
+                                                          m_platform(CBuildConfig::getPlatformString()),
+                                                          m_process(CProcessInfo::currentProcess())
     {
         if (app == CApplicationInfo::Unknown)
         {
@@ -86,7 +85,7 @@ namespace BlackMisc
 
     QString CApplicationInfo::asOtherSwiftVersionString(const QString &separator) const
     {
-        return u"Version; "  % this->getVersionString() % u" os: " % this->getPlatform() % separator %
+        return u"Version; " % this->getVersionString() % u" os: " % this->getPlatform() % separator %
                u"exe.path: " % this->getExecutablePath() % separator %
                u"app.data: " % this->getApplicationDataDirectory();
     }
@@ -132,7 +131,11 @@ namespace BlackMisc
 
     void CApplicationInfo::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CApplicationInfo>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CApplicationInfo>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -217,11 +220,11 @@ namespace BlackMisc
     CApplicationInfo::Application CApplicationInfo::guessApplication()
     {
         const QString a(QCoreApplication::instance()->applicationName().toLower());
-        if (a.contains("test"))     { return CApplicationInfo::UnitTest; } // names like testcore
-        if (a.contains("sample"))   { return CApplicationInfo::Sample; }
-        if (a.contains("core"))     { return CApplicationInfo::PilotClientCore; }
+        if (a.contains("test")) { return CApplicationInfo::UnitTest; } // names like testcore
+        if (a.contains("sample")) { return CApplicationInfo::Sample; }
+        if (a.contains("core")) { return CApplicationInfo::PilotClientCore; }
         if (a.contains("launcher")) { return CApplicationInfo::Laucher; }
-        if (a.contains("gui"))      { return CApplicationInfo::PilotClientGui; }
+        if (a.contains("gui")) { return CApplicationInfo::PilotClientGui; }
         if (a.contains("data") || a.contains("mapping")) { return CApplicationInfo::MappingTool; }
         return CApplicationInfo::Unknown;
     }

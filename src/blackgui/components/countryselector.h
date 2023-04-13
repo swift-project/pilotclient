@@ -15,7 +15,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CCountrySelector; }
+namespace Ui
+{
+    class CCountrySelector;
+}
 namespace BlackGui::Components
 {
     /*!

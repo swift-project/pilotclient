@@ -28,7 +28,7 @@ namespace BlackMisc::Simulation
         IModelsSetable() {}
         virtual ~IModelsSetable() {}
         IModelsSetable(const IModelsSetable &) = default;
-        IModelsSetable &operator =(const IModelsSetable &) = default;
+        IModelsSetable &operator=(const IModelsSetable &) = default;
         //! @}
     };
 
@@ -44,7 +44,7 @@ namespace BlackMisc::Simulation
         IModelsUpdatable() {}
         virtual ~IModelsUpdatable() {}
         IModelsUpdatable(const IModelsUpdatable &) = default;
-        IModelsUpdatable &operator =(const IModelsUpdatable &) = default;
+        IModelsUpdatable &operator=(const IModelsUpdatable &) = default;
         //! @}
     };
 
@@ -60,7 +60,7 @@ namespace BlackMisc::Simulation
         IModelsForSimulatorSetable() {}
         virtual ~IModelsForSimulatorSetable() {}
         IModelsForSimulatorSetable(const IModelsForSimulatorSetable &) = default;
-        IModelsForSimulatorSetable &operator =(const IModelsForSimulatorSetable &) = default;
+        IModelsForSimulatorSetable &operator=(const IModelsForSimulatorSetable &) = default;
         //! @}
     };
 
@@ -76,7 +76,7 @@ namespace BlackMisc::Simulation
         IModelsForSimulatorUpdatable() {}
         virtual ~IModelsForSimulatorUpdatable() {}
         IModelsForSimulatorUpdatable(const IModelsForSimulatorUpdatable &) = default;
-        IModelsForSimulatorUpdatable &operator =(const IModelsForSimulatorUpdatable &) = default;
+        IModelsForSimulatorUpdatable &operator=(const IModelsForSimulatorUpdatable &) = default;
         //! @}
     };
 
@@ -92,7 +92,7 @@ namespace BlackMisc::Simulation
         ISimulatorSelectable() {}
         virtual ~ISimulatorSelectable() {}
         ISimulatorSelectable(const ISimulatorSelectable &) = default;
-        ISimulatorSelectable &operator =(const ISimulatorSelectable &) = default;
+        ISimulatorSelectable &operator=(const ISimulatorSelectable &) = default;
         //! @}
     };
 } // namespace

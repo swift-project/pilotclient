@@ -20,8 +20,14 @@
 
 class QCheckBox;
 
-namespace Ui { class CModelMappingModifyForm; }
-namespace BlackMisc::Simulation { class CAircraftModel; }
+namespace Ui
+{
+    class CModelMappingModifyForm;
+}
+namespace BlackMisc::Simulation
+{
+    class CAircraftModel;
+}
 namespace BlackGui::Editors
 {
     /*!

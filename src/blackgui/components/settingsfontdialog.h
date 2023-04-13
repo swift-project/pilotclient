@@ -15,7 +15,10 @@
 #include <QFont>
 #include <QStringList>
 
-namespace Ui { class CSettingsFontDialog; }
+namespace Ui
+{
+    class CSettingsFontDialog;
+}
 namespace BlackGui::Components
 {
     /*!

@@ -108,31 +108,27 @@ namespace BlackSimPlugin::Fs9
     */
 
     CSimulatorFs9::CSimulatorFs9(const CSimulatorPluginInfo &info,
-                                    const QSharedPointer<CFs9Host>     &fs9Host,
-                                    const QSharedPointer<CLobbyClient> &lobbyClient,
-                                    IOwnAircraftProvider    *ownAircraftProvider,
-                                    IRemoteAircraftProvider *remoteAircraftProvider,
-                                    IWeatherGridProvider    *weatherGridProvider,
-                                    IClientProvider         *clientProvider,
-                                    QObject *parent) :
-        CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent),
-        m_fs9Host(fs9Host),
-        m_lobbyClient(lobbyClient)
+                                 const QSharedPointer<CFs9Host> &fs9Host,
+                                 const QSharedPointer<CLobbyClient> &lobbyClient,
+                                 IOwnAircraftProvider *ownAircraftProvider,
+                                 IRemoteAircraftProvider *remoteAircraftProvider,
+                                 IWeatherGridProvider *weatherGridProvider,
+                                 IClientProvider *clientProvider,
+                                 QObject *parent) : CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent),
+                                                    m_fs9Host(fs9Host),
+                                                    m_lobbyClient(lobbyClient)
     {
         // disabled CG/elevation parts
         this->setSimulationProviderEnabled(false, false);
 
         //! \fixme KB 7/2017 change or remove comment when reviewed Could we just use: connect(lobbyClient.data(), &CLobbyClient::disconnected, this, &CSimulatorFs9::disconnectFrom);
-        connect(lobbyClient.data(), &CLobbyClient::disconnected, this, [ = ]
-        {
+        connect(lobbyClient.data(), &CLobbyClient::disconnected, this, [=] {
             this->emitSimulatorCombinedStatus();
         });
 
         this->setDefaultModel(
-        {
-            "Boeing 737-400", CAircraftModel::TypeModelMatchingDefaultModel,
-            "B737-400 default model", CAircraftIcaoCode("B734", "L2J")
-        });
+            { "Boeing 737-400", CAircraftModel::TypeModelMatchingDefaultModel,
+              "B737-400 default model", CAircraftIcaoCode("B734", "L2J") });
     }
 
     bool CSimulatorFs9::isConnected() const
@@ -145,7 +141,7 @@ namespace BlackSimPlugin::Fs9
         Q_ASSERT_X(m_fs9Host, Q_FUNC_INFO, "No FS9 host");
         if (!m_fs9Host->isConnected()) { return false; } // host not available, we quit
 
-        Q_ASSERT_X(m_fsuipc,  Q_FUNC_INFO, "No FSUIPC");
+        Q_ASSERT_X(m_fsuipc, Q_FUNC_INFO, "No FSUIPC");
         m_connectionHostMessages = connect(m_fs9Host.data(), &CFs9Host::customPacketReceived, this, &CSimulatorFs9::processFs9Message);
 
         useFsuipc(true);
@@ -234,9 +230,9 @@ namespace BlackSimPlugin::Fs9
         const CTransponder newTransponder = ownAircraft.getTransponder();
 
         bool changed = false;
-        if (newCom1.getFrequencyActive()  != m_simCom1.getFrequencyActive())  { changed = true; }
+        if (newCom1.getFrequencyActive() != m_simCom1.getFrequencyActive()) { changed = true; }
         if (newCom1.getFrequencyStandby() != m_simCom1.getFrequencyStandby()) { changed = true; }
-        if (newCom2.getFrequencyActive()  != m_simCom2.getFrequencyActive())  { changed = true; }
+        if (newCom2.getFrequencyActive() != m_simCom2.getFrequencyActive()) { changed = true; }
         if (newCom2.getFrequencyStandby() != m_simCom2.getFrequencyStandby()) { changed = true; }
         if (newTransponder.getTransponderCode() != m_simTransponder.getTransponderCode()) { changed = true; }
         if (newTransponder.getTransponderMode() != m_simTransponder.getTransponderMode()) { changed = true; }
@@ -350,26 +346,26 @@ namespace BlackSimPlugin::Fs9
     {
         // for debugging
         QString str;
-        if (old.unknown8    != newParam.unknown8)    str += "unknown8 "    + QString::number(newParam.unknown8)    + "\n";
-        if (old.unknown9    != newParam.unknown9)    str += "unknown9 "    + QString::number(newParam.unknown9)    + "\n";
-        if (old.flaps_left  != newParam.flaps_left)  str  += "flaps_left " + QString::number(newParam.flaps_left)  + "\n";
+        if (old.unknown8 != newParam.unknown8) str += "unknown8 " + QString::number(newParam.unknown8) + "\n";
+        if (old.unknown9 != newParam.unknown9) str += "unknown9 " + QString::number(newParam.unknown9) + "\n";
+        if (old.flaps_left != newParam.flaps_left) str += "flaps_left " + QString::number(newParam.flaps_left) + "\n";
         if (old.flaps_right != newParam.flaps_right) str += "flaps_right " + QString::number(newParam.flaps_right) + "\n";
-        if (old.unknown12   != newParam.unknown12)   str += "unknown12 "   + QString::number(newParam.unknown12)   + "\n";
-        if (old.unknown13   != newParam.unknown13)   str += "unknown13 "   + QString::number(newParam.unknown13)   + "\n";
-        if (old.unknown14   != newParam.unknown14)   str += "unknown14 "   + QString::number(newParam.unknown14)   + "\n";
-        if (old.unknown15   != newParam.unknown15)   str += "unknown15 "   + QString::number(newParam.unknown15)   + "\n";
-        if (old.unknown16   != newParam.unknown16)   str += "unknown16 "   + QString::number(newParam.unknown16)   + "\n";
-        if (old.unknown17   != newParam.unknown17)   str += "unknown17 "   + QString::number(newParam.unknown17)   + "\n";
-        if (old.unknown18   != newParam.unknown18)   str += "unknown18 "   + QString::number(newParam.unknown18)   + "\n";
-        if (old.unknown19   != newParam.unknown19)   str += "unknown19 "   + QString::number(newParam.unknown19)   + "\n";
+        if (old.unknown12 != newParam.unknown12) str += "unknown12 " + QString::number(newParam.unknown12) + "\n";
+        if (old.unknown13 != newParam.unknown13) str += "unknown13 " + QString::number(newParam.unknown13) + "\n";
+        if (old.unknown14 != newParam.unknown14) str += "unknown14 " + QString::number(newParam.unknown14) + "\n";
+        if (old.unknown15 != newParam.unknown15) str += "unknown15 " + QString::number(newParam.unknown15) + "\n";
+        if (old.unknown16 != newParam.unknown16) str += "unknown16 " + QString::number(newParam.unknown16) + "\n";
+        if (old.unknown17 != newParam.unknown17) str += "unknown17 " + QString::number(newParam.unknown17) + "\n";
+        if (old.unknown18 != newParam.unknown18) str += "unknown18 " + QString::number(newParam.unknown18) + "\n";
+        if (old.unknown19 != newParam.unknown19) str += "unknown19 " + QString::number(newParam.unknown19) + "\n";
         if (old.gear_center != newParam.gear_center) str += "gear_center " + QString::number(newParam.gear_center) + "\n";
-        if (old.gear_left   != newParam.gear_left)   str += "gear_left "   + QString::number(newParam.gear_left)   + "\n";
-        if (old.gear_right  != newParam.gear_right)  str += "gear_right "  + QString::number(newParam.gear_right)  + "\n";
-        if (old.engine_1    != newParam.engine_1)    str += "engine_1 "    + QString::number(newParam.engine_1)    + "\n";
-        if (old.engine_2    != newParam.engine_2)    str += "engine_2 "    + QString::number(newParam.engine_2)    + "\n";
-        if (old.unknown25   != newParam.unknown25)   str += "unknown25 "   + QString::number(newParam.unknown25)   + "\n";
-        if (old.unknown26   != newParam.unknown26)   str += "unknown26 "   + QString::number(newParam.unknown26)   + "\n";
-        if (old.unknown27   != newParam.unknown27)   str += "unknown27 "   + QString::number(newParam.unknown27)   + "\n";
+        if (old.gear_left != newParam.gear_left) str += "gear_left " + QString::number(newParam.gear_left) + "\n";
+        if (old.gear_right != newParam.gear_right) str += "gear_right " + QString::number(newParam.gear_right) + "\n";
+        if (old.engine_1 != newParam.engine_1) str += "engine_1 " + QString::number(newParam.engine_1) + "\n";
+        if (old.engine_2 != newParam.engine_2) str += "engine_2 " + QString::number(newParam.engine_2) + "\n";
+        if (old.unknown25 != newParam.unknown25) str += "unknown25 " + QString::number(newParam.unknown25) + "\n";
+        if (old.unknown26 != newParam.unknown26) str += "unknown26 " + QString::number(newParam.unknown26) + "\n";
+        if (old.unknown27 != newParam.unknown27) str += "unknown27 " + QString::number(newParam.unknown27) + "\n";
         return str;
     }
 
@@ -384,37 +380,37 @@ namespace BlackSimPlugin::Fs9
         switch (messageType)
         {
         case CFs9Sdk::MULTIPLAYER_PACKET_ID_PARAMS:
-            {
-                MPParam mpParam;
-                MultiPlayerPacketParser::readMessage(message, mpParam);
-                // For debugging:
-                // QTextStream qtstdout(stdout);
-                // QString paramString = getChangedParamsAsString(m_lastParameters, mpParam);
-                // if (! paramString.isEmpty())
-                // {
-                //     qtstdout << message.mid(4 * sizeof(qint32)).toHex() << Qt::endl;
-                //     qtstdout << paramString << Qt::endl;
-                // }
-                // m_lastParameters = mpParam;
-                break;
-            }
+        {
+            MPParam mpParam;
+            MultiPlayerPacketParser::readMessage(message, mpParam);
+            // For debugging:
+            // QTextStream qtstdout(stdout);
+            // QString paramString = getChangedParamsAsString(m_lastParameters, mpParam);
+            // if (! paramString.isEmpty())
+            // {
+            //     qtstdout << message.mid(4 * sizeof(qint32)).toHex() << Qt::endl;
+            //     qtstdout << paramString << Qt::endl;
+            // }
+            // m_lastParameters = mpParam;
+            break;
+        }
         case CFs9Sdk::MULTIPLAYER_PACKET_ID_CHANGE_PLAYER_PLANE:
-            {
-                MPChangePlayerPlane mpChangePlayerPlane;
-                MultiPlayerPacketParser::readMessage(message, mpChangePlayerPlane);
-                reverseLookupAndUpdateOwnAircraftModel(mpChangePlayerPlane.aircraft_name);
-                break;
-            }
+        {
+            MPChangePlayerPlane mpChangePlayerPlane;
+            MultiPlayerPacketParser::readMessage(message, mpChangePlayerPlane);
+            reverseLookupAndUpdateOwnAircraftModel(mpChangePlayerPlane.aircraft_name);
+            break;
+        }
         case CFs9Sdk::MULTIPLAYER_PACKET_ID_POSITION_VELOCITY:
-            {
-                break;
-            }
+        {
+            break;
+        }
         case CFs9Sdk::MPCHAT_PACKET_ID_CHAT_TEXT_SEND:
-            {
-                MPChatText mpChatText;
-                MultiPlayerPacketParser::readMessage(message, mpChatText);
-                break;
-            }
+        {
+            MPChatText mpChatText;
+            MultiPlayerPacketParser::readMessage(message, mpChatText);
+            break;
+        }
         default: break;
         }
     }
@@ -447,7 +443,7 @@ namespace BlackSimPlugin::Fs9
             if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()))
             {
                 if (m_lastWeatherPosition.isNull() ||
-                        calculateGreatCircleDistance(m_lastWeatherPosition, aircraftSituation).value(CLengthUnit::mi()) > 20)
+                    calculateGreatCircleDistance(m_lastWeatherPosition, aircraftSituation).value(CLengthUnit::mi()) > 20)
                 {
                     m_lastWeatherPosition = aircraftSituation;
                     requestWeatherGrid(aircraftSituation, this->identifier());
@@ -491,7 +487,7 @@ namespace BlackSimPlugin::Fs9
     void CSimulatorFs9::synchronizeTime()
     {
         if (!m_simTimeSynced) { return; }
-        if (!this->isConnected())   { return; }
+        if (!this->isConnected()) { return; }
         if (!m_useFsuipc || !m_fsuipc) { return; }
         if (!m_fsuipc->isOpened()) { return; }
 
@@ -517,8 +513,7 @@ namespace BlackSimPlugin::Fs9
         {
             BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Wrong thread");
             QPointer<CSimulatorFs9> myself(this);
-            QTimer::singleShot(0, this, [ = ]
-            {
+            QTimer::singleShot(0, this, [=] {
                 if (!myself) { return; }
                 myself->injectWeatherGrid(weatherGrid);
             });
@@ -536,13 +531,12 @@ namespace BlackSimPlugin::Fs9
     }
 
     CSimulatorFs9Listener::CSimulatorFs9Listener(const CSimulatorPluginInfo &info,
-            const QSharedPointer<CFs9Host> &fs9Host,
-            const QSharedPointer<CLobbyClient> &lobbyClient) :
-        ISimulatorListener(info),
-        m_timer(new QTimer(this)),
-        m_fs9Host(fs9Host),
-        m_lobbyClient(lobbyClient),
-        m_fsuipc(new CFsuipc(this))
+                                                 const QSharedPointer<CFs9Host> &fs9Host,
+                                                 const QSharedPointer<CLobbyClient> &lobbyClient) : ISimulatorListener(info),
+                                                                                                    m_timer(new QTimer(this)),
+                                                                                                    m_fs9Host(fs9Host),
+                                                                                                    m_lobbyClient(lobbyClient),
+                                                                                                    m_fsuipc(new CFsuipc(this))
     {
         const int QueryInterval = 5 * 1000; // 5 seconds
         m_timer->setInterval(QueryInterval);
@@ -553,8 +547,7 @@ namespace BlackSimPlugin::Fs9
 
         // check connection
         QPointer<CSimulatorFs9Listener> myself(this);
-        connect(m_timer, &QTimer::timeout, [ = ]()
-        {
+        connect(m_timer, &QTimer::timeout, [=]() {
             if (!myself) { return; }
             this->checkConnection(canLobbyConnect);
         });
@@ -577,8 +570,7 @@ namespace BlackSimPlugin::Fs9
         if (m_timer) { m_timer->start(); }
 
         QPointer<CSimulatorFs9Listener> myself(this);
-        QTimer::singleShot(10, this, [ = ]
-        {
+        QTimer::singleShot(10, this, [=] {
             if (!myself) { return; }
             const bool canLobbyConnect = m_lobbyClient->canLobbyConnect();
             this->checkConnection(canLobbyConnect);
@@ -620,10 +612,9 @@ namespace BlackSimPlugin::Fs9
         delete lobbyClient;
     }
 
-    CSimulatorFs9Factory::CSimulatorFs9Factory(QObject *parent) :
-        QObject(parent),
-        m_fs9Host(new CFs9Host, cleanupFs9Host),
-        m_lobbyClient(new CLobbyClient, cleanupLobbyClient)
+    CSimulatorFs9Factory::CSimulatorFs9Factory(QObject *parent) : QObject(parent),
+                                                                  m_fs9Host(new CFs9Host, cleanupFs9Host),
+                                                                  m_lobbyClient(new CLobbyClient, cleanupLobbyClient)
     {
         registerMetadata();
 
@@ -632,13 +623,13 @@ namespace BlackSimPlugin::Fs9
     }
 
     CSimulatorFs9Factory::~CSimulatorFs9Factory()
-    { }
+    {}
 
     ISimulator *CSimulatorFs9Factory::create(const CSimulatorPluginInfo &info,
-            IOwnAircraftProvider    *ownAircraftProvider,
-            IRemoteAircraftProvider *remoteAircraftProvider,
-            IWeatherGridProvider    *weatherGridProvider,
-            IClientProvider         *clientProvider)
+                                             IOwnAircraftProvider *ownAircraftProvider,
+                                             IRemoteAircraftProvider *remoteAircraftProvider,
+                                             IWeatherGridProvider *weatherGridProvider,
+                                             IClientProvider *clientProvider)
     {
         return new CSimulatorFs9(info, m_fs9Host, m_lobbyClient, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, this);
     }

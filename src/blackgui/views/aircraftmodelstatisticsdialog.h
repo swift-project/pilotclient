@@ -15,7 +15,10 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CAircraftModelStatisticsDialog; }
+namespace Ui
+{
+    class CAircraftModelStatisticsDialog;
+}
 namespace QtCharts
 {
     class QBarSeries;

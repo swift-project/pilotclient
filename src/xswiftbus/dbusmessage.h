@@ -13,21 +13,21 @@
 #include <string>
 #include <vector>
 #if defined(_MSC_VER)
-#include <experimental/string>
+#    include <experimental/string>
 #elif defined(__clang__)
-#include <string_view>
+#    include <string_view>
 #else
-#include <experimental/string_view>
+#    include <experimental/string_view>
 #endif
 
 namespace XSwiftBus
 {
 
-    #if defined(_MSC_VER) || defined(__clang__)
+#if defined(_MSC_VER) || defined(__clang__)
     using std::string_view;
-    #else
+#else
     using std::experimental::string_view;
-    #endif
+#endif
 
     //! DBus Message
     class CDBusMessage

@@ -51,8 +51,8 @@ namespace BlackSound::SampleProvider
         void setupPreset(EqualizerPresets preset);
 
         ISampleProvider *m_sourceProvider = nullptr;
-        int    m_channels   = 1;
-        bool   m_bypass     = false;
+        int m_channels = 1;
+        bool m_bypass = false;
         double m_outputGain = 1.0;
         QVector<Dsp::BiQuadFilter> m_filters;
     };

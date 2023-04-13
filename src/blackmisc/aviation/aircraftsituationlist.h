@@ -29,7 +29,10 @@ BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAircraftSituation, CAircraft
 
 namespace BlackMisc
 {
-    namespace Geo { class CElevationPlane; }
+    namespace Geo
+    {
+        class CElevationPlane;
+    }
     namespace Aviation
     {
         class CAircraftParts;

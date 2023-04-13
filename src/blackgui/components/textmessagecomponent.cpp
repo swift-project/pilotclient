@@ -58,9 +58,8 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackGui::Components
 {
-    CTextMessageComponent::CTextMessageComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CTextMessageComponent)
+    CTextMessageComponent::CTextMessageComponent(QWidget *parent) : QFrame(parent),
+                                                                    ui(new Ui::CTextMessageComponent)
     {
         ui->setupUi(this);
         ui->tw_TextMessages->setCurrentIndex(0);
@@ -104,8 +103,7 @@ namespace BlackGui::Components
 
         // init by settings
         const QPointer<CTextMessageComponent> myself(this);
-        QTimer::singleShot(2000, this, [ = ]
-        {
+        QTimer::singleShot(2000, this, [=] {
             // init decoupled when sub components are fully init
             if (!myself || !sGui || sGui->isShuttingDown()) { return; }
             this->onSettingsChanged(); // init
@@ -120,7 +118,7 @@ namespace BlackGui::Components
     }
 
     CTextMessageComponent::~CTextMessageComponent()
-    { }
+    {}
 
     bool CTextMessageComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
     {
@@ -134,9 +132,9 @@ namespace BlackGui::Components
     {
         switch (tab)
         {
-        case TextMessagesAll:    return ui->tb_TextMessagesAll;
-        case TextMessagesCom1:   return ui->tb_TextMessagesCOM1;
-        case TextMessagesCom2:   return ui->tb_TextMessagesCOM2;
+        case TextMessagesAll: return ui->tb_TextMessagesAll;
+        case TextMessagesCom1: return ui->tb_TextMessagesCOM1;
+        case TextMessagesCom2: return ui->tb_TextMessagesCOM2;
         case TextMessagesUnicom: return ui->tb_TextMessagesUnicom;
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong index");
@@ -172,7 +170,7 @@ namespace BlackGui::Components
     bool CTextMessageComponent::isCloseableTab(const QWidget *tabWidget) const
     {
         if (!tabWidget) { return false; }
-        return (tabWidget != ui->tb_TextMessagesAll  && tabWidget != ui->tb_TextMessagesCOM1 &&
+        return (tabWidget != ui->tb_TextMessagesAll && tabWidget != ui->tb_TextMessagesCOM1 &&
                 tabWidget != ui->tb_TextMessagesCOM2 && tabWidget != ui->tb_TextMessagesUnicom);
     }
 
@@ -292,7 +290,7 @@ namespace BlackGui::Components
             }
 
             // overlay message if this channel is not selected
-            if (message.isServerMessage())    { continue; }
+            if (message.isServerMessage()) { continue; }
             if (message.isBroadcastMessage()) { continue; }
 
             if (!message.wasSent() && !message.isSendToUnicom())
@@ -393,8 +391,8 @@ namespace BlackGui::Components
     {
         const QString styleSheet = m_messageSettings.get().getStyleSheet();
         return styleSheet.isEmpty() && sGui ?
-                sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameTextMessage()) :
-                styleSheet;
+                   sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameTextMessage()) :
+                   styleSheet;
     }
 
     bool CTextMessageComponent::isCorrespondingTextMessageTabSelected(const CTextMessage &textMessage) const
@@ -517,7 +515,7 @@ namespace BlackGui::Components
         closeButtonInTab->setProperty("tabName", tabName);
         closeButton->setProperty("tabName", tabName);
 
-        connect(closeButton,      &QPushButton::released, this, &CTextMessageComponent::closeTextMessageTab);
+        connect(closeButton, &QPushButton::released, this, &CTextMessageComponent::closeTextMessageTab);
         connect(closeButtonInTab, &QPushButton::released, this, &CTextMessageComponent::closeTextMessageTab);
 
         this->setTabWidgetDescription(callsign, index);
@@ -575,7 +573,7 @@ namespace BlackGui::Components
         if (isBroadcast) { cs.markAsBroadcastCallsign(); }
 
         const bool isWallopMessage = textMessage.isWallopMessage();
-        if(isWallopMessage) { cs.markAsWallopCallsign(); }
+        if (isWallopMessage) { cs.markAsWallopCallsign(); }
 
         const QWidget *tab = this->findTextMessageTabByCallsign(cs);
         if (!tab) { tab = this->addNewTextMessageTab(cs); }
@@ -751,10 +749,11 @@ namespace BlackGui::Components
         {
             CLogMessage(this).validationError(u"Incorrect message channel");
             return {};
-        } else if (ui->tw_TextMessages->tabText(index) == "SUP")
+        }
+        else if (ui->tw_TextMessages->tabText(index) == "SUP")
         {
             CLogMessage(this).validationError(u"Message cannot be send to SUP channel. To send another wallop message use .wallop instead");
-            return{};
+            return {};
         }
         else
         {
@@ -866,8 +865,16 @@ namespace BlackGui::Components
         const CSimulatedAircraft ownAircraft = this->getOwnAircraft();
         const CFrequency freq1 = ownAircraft.getCom1System().getFrequencyActive();
         const CFrequency freq2 = ownAircraft.getCom2System().getFrequencyActive();
-        if (freq1 == frequency) { this->setTab(TextMessagesCom1); return; }
-        if (freq2 == frequency) { this->setTab(TextMessagesCom2); return; }
+        if (freq1 == frequency)
+        {
+            this->setTab(TextMessagesCom1);
+            return;
+        }
+        if (freq2 == frequency)
+        {
+            this->setTab(TextMessagesCom2);
+            return;
+        }
         this->setTab(TextMessagesAll);
     }
 
@@ -886,7 +893,7 @@ namespace BlackGui::Components
         // set via widget, as ALL can be removed
         switch (tab)
         {
-        case TextMessagesAll : ui->tw_TextMessages->setCurrentWidget(ui->tb_TextMessagesAll);  break;
+        case TextMessagesAll: ui->tw_TextMessages->setCurrentWidget(ui->tb_TextMessagesAll); break;
         case TextMessagesCom1: ui->tw_TextMessages->setCurrentWidget(ui->tb_TextMessagesCOM1); break;
         case TextMessagesCom2: ui->tw_TextMessages->setCurrentWidget(ui->tb_TextMessagesCOM2); break;
         case TextMessagesUnicom: ui->tw_TextMessages->setCurrentWidget(ui->tb_TextMessagesUnicom); break;

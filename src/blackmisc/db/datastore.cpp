@@ -106,11 +106,11 @@ namespace BlackMisc::Db
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexDbIntegerKey:   return QVariant::fromValue(m_dbKey);
-        case IndexDbKeyAsString:  return QVariant::fromValue(this->getDbKeyAsString());
+        case IndexDbIntegerKey: return QVariant::fromValue(m_dbKey);
+        case IndexDbKeyAsString: return QVariant::fromValue(this->getDbKeyAsString());
         case IndexIsLoadedFromDb: return QVariant::fromValue(this->hasValidDbKey());
-        case IndexDatabaseIcon:   return QVariant::fromValue(this->toDatabaseIcon());
-        case IndexVersion:        return QVariant::fromValue(this->getVersion());
+        case IndexDatabaseIcon: return QVariant::fromValue(this->toDatabaseIcon());
+        case IndexVersion: return QVariant::fromValue(this->getVersion());
         default: break;
         }
         return QVariant();
@@ -118,11 +118,15 @@ namespace BlackMisc::Db
 
     void IDatastoreObjectWithIntegerKey::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            ITimestampBased::setPropertyByIndex(index, variant);
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexDbIntegerKey:  m_dbKey = variant.toInt(); break;
+        case IndexDbIntegerKey: m_dbKey = variant.toInt(); break;
         case IndexDbKeyAsString: m_dbKey = stringToDbKey(variant.toString()); break;
         case IndexVersion: this->setVersion(variant.toString()); break;
         default: break;
@@ -138,7 +142,7 @@ namespace BlackMisc::Db
         case IndexDbKeyAsString: // fall thru
         case IndexDbIntegerKey: return Compare::compare(m_dbKey, compareValue.getDbKey());
         case IndexDatabaseIcon: return Compare::compare(this->hasValidDbKey(), compareValue.hasValidDbKey());
-        case IndexVersion:      return this->getVersion().compare(compareValue.getVersion());
+        case IndexVersion: return this->getVersion().compare(compareValue.getVersion());
         default: break;
         }
         Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
@@ -198,10 +202,10 @@ namespace BlackMisc::Db
         switch (i)
         {
         case IndexDbKeyAsString: // fall thru
-        case IndexDbStringKey:    return QVariant::fromValue(m_dbKey);
-        case IndexDatabaseIcon:   return QVariant::fromValue(this->toDatabaseIcon());
+        case IndexDbStringKey: return QVariant::fromValue(m_dbKey);
+        case IndexDatabaseIcon: return QVariant::fromValue(this->toDatabaseIcon());
         case IndexIsLoadedFromDb: return QVariant::fromValue(m_loadedFromDb);
-        case IndexVersion:        return QVariant::fromValue(this->getVersion());
+        case IndexVersion: return QVariant::fromValue(this->getVersion());
         default: break;
         }
         return QVariant();
@@ -209,7 +213,11 @@ namespace BlackMisc::Db
 
     void IDatastoreObjectWithStringKey::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            ITimestampBased::setPropertyByIndex(index, variant);
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -231,9 +239,9 @@ namespace BlackMisc::Db
         switch (i)
         {
         case IndexDbKeyAsString: // fall thru
-        case IndexDbStringKey:  return m_dbKey.compare(compareValue.getDbKey());
+        case IndexDbStringKey: return m_dbKey.compare(compareValue.getDbKey());
         case IndexDatabaseIcon: return Compare::compare(this->hasValidDbKey(), compareValue.hasValidDbKey());
-        case IndexVersion:     return this->getVersion().compare(compareValue.getVersion());
+        case IndexVersion: return this->getVersion().compare(compareValue.getVersion());
         default: break;
         }
         Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
@@ -243,7 +251,7 @@ namespace BlackMisc::Db
     bool IDatastoreObjectWithStringKey::canHandleIndex(CPropertyIndexRef index)
     {
         if (index.isEmpty()) { return false; }
-        if (ITimestampBased::canHandleIndex(index)) { return true;}
+        if (ITimestampBased::canHandleIndex(index)) { return true; }
         const int i = index.frontCasted<int>();
         return (i >= static_cast<int>(IndexDbStringKey)) && (i < static_cast<int>(IndexEndMarker));
     }

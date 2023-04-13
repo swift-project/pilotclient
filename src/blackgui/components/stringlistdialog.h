@@ -14,7 +14,10 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CStringListDialog; }
+namespace Ui
+{
+    class CStringListDialog;
+}
 namespace BlackGui::Components
 {
     /*!

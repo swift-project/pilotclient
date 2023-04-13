@@ -21,8 +21,14 @@
 
 class QWidget;
 
-namespace BlackMisc::Simulation { class CAircraftModelList; }
-namespace Ui { class CAircraftModelFilterDialog; }
+namespace BlackMisc::Simulation
+{
+    class CAircraftModelList;
+}
+namespace Ui
+{
+    class CAircraftModelFilterDialog;
+}
 
 namespace BlackGui::Filters
 {

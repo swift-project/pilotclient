@@ -13,9 +13,8 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Input, CActionHotkey, CActionHotkeyList)
 
 namespace BlackMisc::Input
 {
-    CActionHotkeyList::CActionHotkeyList(const CSequence<CActionHotkey> &baseClass) :
-        CSequence<CActionHotkey>(baseClass)
-    { }
+    CActionHotkeyList::CActionHotkeyList(const CSequence<CActionHotkey> &baseClass) : CSequence<CActionHotkey>(baseClass)
+    {}
 
     CActionHotkeyList CActionHotkeyList::findSubsetsOf(const CActionHotkey &other) const
     {

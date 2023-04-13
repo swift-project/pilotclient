@@ -226,9 +226,9 @@ namespace BlackMisc
             static void registerMetadata();
 
         private:
-            QString  m_callsignAsSet;
-            QString  m_callsign;
-            QString  m_telephonyDesignator;
+            QString m_callsignAsSet;
+            QString m_callsign;
+            QString m_telephonyDesignator;
             TypeHint m_typeHint = NoHint;
 
             BLACK_METACLASS(

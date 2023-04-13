@@ -94,12 +94,11 @@ namespace
 namespace BlackSimPlugin::XPlane
 {
     CSimulatorXPlane::CSimulatorXPlane(const CSimulatorPluginInfo &info,
-                                        IOwnAircraftProvider *ownAircraftProvider,
-                                        IRemoteAircraftProvider *remoteAircraftProvider,
-                                        IWeatherGridProvider *weatherGridProvider,
-                                        IClientProvider *clientProvider,
-                                        QObject *parent) :
-        CSimulatorPluginCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
+                                       IOwnAircraftProvider *ownAircraftProvider,
+                                       IRemoteAircraftProvider *remoteAircraftProvider,
+                                       IWeatherGridProvider *weatherGridProvider,
+                                       IClientProvider *clientProvider,
+                                       QObject *parent) : CSimulatorPluginCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
     {
         m_watcher = new QDBusServiceWatcher(this);
         m_watcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
@@ -112,7 +111,7 @@ namespace BlackSimPlugin::XPlane
         m_pendingAddedTimer.setObjectName(this->objectName().append(":m_pendingAddedTimer"));
         connect(&m_fastTimer, &QTimer::timeout, this, &CSimulatorXPlane::fastTimerTimeout);
         connect(&m_slowTimer, &QTimer::timeout, this, &CSimulatorXPlane::slowTimerTimeout);
-        connect(&m_airportUpdater,    &QTimer::timeout, this, &CSimulatorXPlane::updateAirportsInRange);
+        connect(&m_airportUpdater, &QTimer::timeout, this, &CSimulatorXPlane::updateAirportsInRange);
         connect(&m_pendingAddedTimer, &QTimer::timeout, this, &CSimulatorXPlane::addNextPendingAircraft);
         m_fastTimer.start(100);
         m_slowTimer.start(1000);
@@ -120,7 +119,7 @@ namespace BlackSimPlugin::XPlane
         m_pendingAddedTimer.start(5000);
 
         this->setDefaultModel({ "Jets A320_a A320_a_Austrian_Airlines A320_a_Austrian_Airlines", CAircraftModel::TypeModelMatchingDefaultModel,
-                                "A320 AUA", CAircraftIcaoCode("A320", "L2J")});
+                                "A320 AUA", CAircraftIcaoCode("A320", "L2J") });
         this->resetXPlaneData();
     }
 
@@ -202,12 +201,12 @@ namespace BlackSimPlugin::XPlane
                 // once we get inside range
                 this->setMinTerrainProbeDistance(distance);
                 CLogMessage(this).debug(u"Suspicous XPlane probe [%1] value %2 for '%3' ignored, distance: %4 min.disance: %5 water: %6")
-                        << hint
-                        << plane.getAltitude().valueRoundedAsString(CLengthUnit::m(), 4)
-                        << callsign.asString()
-                        << distance.valueRoundedAsString(CLengthUnit::NM(), 2)
-                        << m_minSuspicousTerrainProbe.valueRoundedAsString(CLengthUnit::NM(), 2)
-                        << boolToYesNo(waterFlag);
+                    << hint
+                    << plane.getAltitude().valueRoundedAsString(CLengthUnit::m(), 4)
+                    << callsign.asString()
+                    << distance.valueRoundedAsString(CLengthUnit::NM(), 2)
+                    << m_minSuspicousTerrainProbe.valueRoundedAsString(CLengthUnit::NM(), 2)
+                    << boolToYesNo(waterFlag);
                 return false;
             }
         }
@@ -287,10 +286,10 @@ namespace BlackSimPlugin::XPlane
 
         // Request
         m_trafficProxy->getElevationAtPosition(callsign,
-                                                pos.latitude().value(CAngleUnit::deg()),
-                                                pos.longitude().value(CAngleUnit::deg()),
-                                                pos.geodeticHeight().value(CLengthUnit::m()),
-                                                callback);
+                                               pos.latitude().value(CAngleUnit::deg()),
+                                               pos.longitude().value(CAngleUnit::deg()),
+                                               pos.geodeticHeight().value(CLengthUnit::m()),
+                                               callback);
         emit this->requestedElevation(callsign);
         return true;
     }
@@ -350,8 +349,8 @@ namespace BlackSimPlugin::XPlane
             const CAltitude elevation { m_xplaneData.altitudeM - m_xplaneData.heightAglM, CAltitude::MeanSeaLevel, CLengthUnit::m() };
             situation.setGroundElevation(elevation, CAircraftSituation::FromProvider);
             situation.setVelocity({ m_xplaneData.localXVelocityMs, m_xplaneData.localYVelocityMs, m_xplaneData.localZVelocityMs,
-                CSpeedUnit::m_s(), m_xplaneData.pitchRadPerSec, m_xplaneData.rollRadPerSec, m_xplaneData.headingRadPerSec,
-                CAngleUnit::rad(), CTimeUnit::s()});
+                                    CSpeedUnit::m_s(), m_xplaneData.pitchRadPerSec, m_xplaneData.rollRadPerSec, m_xplaneData.headingRadPerSec,
+                                    CAngleUnit::rad(), CTimeUnit::s() });
 
             // Updates
             // Do not update ICAO codes, as this overrides reverse lookups
@@ -394,7 +393,7 @@ namespace BlackSimPlugin::XPlane
                 if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()))
                 {
                     if (m_lastWeatherPosition.isNull() ||
-                            calculateGreatCircleDistance(m_lastWeatherPosition, situation).value(CLengthUnit::mi()) > 20)
+                        calculateGreatCircleDistance(m_lastWeatherPosition, situation).value(CLengthUnit::mi()) > 20)
                     {
                         m_lastWeatherPosition = situation;
                         requestWeatherGrid(situation, this->identifier());
@@ -420,17 +419,15 @@ namespace BlackSimPlugin::XPlane
             {
                 // Engine number start counting at 1
                 // We consider the engine running when N1 is bigger than 5 %
-                const CAircraftEngine engine {engineNumber + 1, m_xplaneData.enginesN1Percentage.at(engineNumber) > 5.0};
+                const CAircraftEngine engine { engineNumber + 1, m_xplaneData.enginesN1Percentage.at(engineNumber) > 5.0 };
                 engines.push_back(engine);
             }
 
             const CAircraftLights lights(
                 m_xplaneData.strobeLightsOn, m_xplaneData.landingLightsOn, m_xplaneData.taxiLightsOn,
-                m_xplaneData.beaconLightsOn, m_xplaneData.navLightsOn, false
-            );
+                m_xplaneData.beaconLightsOn, m_xplaneData.navLightsOn, false);
 
-            const CAircraftParts parts
-            {
+            const CAircraftParts parts {
                 lights,
                 m_xplaneData.gearDeployRatio > 0, qRound(m_xplaneData.flapsDeployRatio * 100.0),
                 m_xplaneData.speedBrakeRatio > 0.5, engines, m_xplaneData.onGroundAll
@@ -460,7 +457,6 @@ namespace BlackSimPlugin::XPlane
             {
                 this->triggerRemoveAircraft(cs, ++i * 100);
             }
-
 
             // KB: IMHO those data are pretty useless for XPlane
             // no need to request them all the times
@@ -509,7 +505,7 @@ namespace BlackSimPlugin::XPlane
         else if (CDBusServer::isQtDBusAddress(dBusServerAddress))
         {
             m_dBusConnection = QDBusConnection::connectToPeer(dBusServerAddress, "xswiftbus");
-            if (! m_dBusConnection.isConnected()) { return false; }
+            if (!m_dBusConnection.isConnected()) { return false; }
             m_dbusMode = P2P;
         }
 
@@ -519,7 +515,7 @@ namespace BlackSimPlugin::XPlane
 
         // hook up disconnected slot of connection
         bool s = m_dBusConnection.connect(QString(), DBUS_PATH_LOCAL, DBUS_INTERFACE_LOCAL,
-                                            "Disconnected", this, SLOT(onDBusServiceUnregistered()));
+                                          "Disconnected", this, SLOT(onDBusServiceUnregistered()));
         Q_ASSERT(s);
         if (!m_serviceProxy->isValid() || !m_trafficProxy->isValid() || !m_weatherProxy->isValid())
         {
@@ -528,14 +524,14 @@ namespace BlackSimPlugin::XPlane
         }
 
         emitOwnAircraftModelChanged(m_serviceProxy->getAircraftModelPath(), m_serviceProxy->getAircraftModelFilename(), m_serviceProxy->getAircraftLivery(),
-                                    m_serviceProxy->getAircraftIcaoCode(),  m_serviceProxy->getAircraftModelString(),   m_serviceProxy->getAircraftName(), m_serviceProxy->getAircraftDescription());
+                                    m_serviceProxy->getAircraftIcaoCode(), m_serviceProxy->getAircraftModelString(), m_serviceProxy->getAircraftName(), m_serviceProxy->getAircraftDescription());
         QString xplaneVersion = QStringLiteral("%1.%2").arg(m_serviceProxy->getXPlaneVersionMajor()).arg(m_serviceProxy->getXPlaneVersionMinor());
         setSimulatorDetails("X-Plane", {}, xplaneVersion);
-        connect(m_serviceProxy, &CXSwiftBusServiceProxy::aircraftModelChanged,   this, &CSimulatorXPlane::emitOwnAircraftModelChanged);
+        connect(m_serviceProxy, &CXSwiftBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::emitOwnAircraftModelChanged);
         connect(m_serviceProxy, &CXSwiftBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::setAirportsInRange);
         m_serviceProxy->updateAirportsInRange();
-        connect(m_trafficProxy, &CXSwiftBusTrafficProxy::simFrame,                   this, &CSimulatorXPlane::updateRemoteAircraft);
-        connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAdded,        this, &CSimulatorXPlane::onRemoteAircraftAdded);
+        connect(m_trafficProxy, &CXSwiftBusTrafficProxy::simFrame, this, &CSimulatorXPlane::updateRemoteAircraft);
+        connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAdded, this, &CSimulatorXPlane::onRemoteAircraftAdded);
         connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAddingFailed, this, &CSimulatorXPlane::onRemoteAircraftAddingFailed);
         if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
         m_trafficProxy->removeAllPlanes();
@@ -589,7 +585,7 @@ namespace BlackSimPlugin::XPlane
     }
 
     void CSimulatorXPlane::emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery,
-            const QString &icao, const QString &modelString, const QString &name, const QString &description)
+                                                       const QString &icao, const QString &modelString, const QString &name, const QString &description)
     {
         CAircraftModel model(modelString, CAircraftModel::TypeOwnSimulatorModel, CSimulatorInfo::XPLANE, name, description, icao);
         if (!livery.isEmpty()) { model.setModelString(model.getModelString() + " " + livery); }
@@ -629,9 +625,9 @@ namespace BlackSimPlugin::XPlane
 
         std::vector<int> msgBoxValues = m_xSwiftBusServerSettings.getThreadLocal().getMessageBoxValuesVector();
         QColor color;
-        if (message.isServerMessage())          { color = msgBoxValues[8]; }
+        if (message.isServerMessage()) { color = msgBoxValues[8]; }
         else if (message.isSupervisorMessage()) { color = msgBoxValues[10]; }
-        else if (message.isPrivateMessage())    { color = msgBoxValues[7]; }
+        else if (message.isPrivateMessage()) { color = msgBoxValues[7]; }
         else { color = msgBoxValues[6]; }
 
         m_serviceProxy->addTextMessage(message.getSenderCallsign().toQString() + ": " + message.getMessage(), color.redF(), color.greenF(), color.blueF());
@@ -685,9 +681,9 @@ namespace BlackSimPlugin::XPlane
         auto xpdr = CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent));
         if (aircraft.hasChangedCockpitData(com1, com2, xpdr))
         {
-            m_xplaneData.com1ActiveKhz  = aircraft.getCom1System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
+            m_xplaneData.com1ActiveKhz = aircraft.getCom1System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
             m_xplaneData.com1StandbyKhz = aircraft.getCom1System().getFrequencyStandby().valueInteger(CFrequencyUnit::kHz());
-            m_xplaneData.com2ActiveKhz  = aircraft.getCom2System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
+            m_xplaneData.com2ActiveKhz = aircraft.getCom2System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
             m_xplaneData.com2StandbyKhz = aircraft.getCom2System().getFrequencyStandby().valueInteger(CFrequencyUnit::kHz());
             m_xplaneData.xpdrCode = aircraft.getTransponderCode();
             m_xplaneData.xpdrMode = xpdrMode(aircraft.getTransponderMode());
@@ -745,7 +741,7 @@ namespace BlackSimPlugin::XPlane
         for (const auto &model : models)
         {
             const QString &modelFile = model.getFileName();
-            if (modelFile.isEmpty() || ! QFile::exists(modelFile)) { continue; }
+            if (modelFile.isEmpty() || !QFile::exists(modelFile)) { continue; }
 
             // Check if this model's package was already found
             auto it = std::lower_bound(packages.begin(), packages.end(), modelFile, PrefixComparator());
@@ -807,7 +803,7 @@ namespace BlackSimPlugin::XPlane
         if (this->isShuttingDownOrDisconnected()) { return false; }
 
         // entry checks
-        Q_ASSERT_X(CThreadUtils::isInThisThread(this),  Q_FUNC_INFO, "thread");
+        Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "thread");
         Q_ASSERT_X(!newRemoteAircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "empty callsign");
         Q_ASSERT_X(newRemoteAircraft.hasModelString(), Q_FUNC_INFO, "missing model string");
 
@@ -840,9 +836,9 @@ namespace BlackSimPlugin::XPlane
 
             const QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
             m_trafficProxy->addPlane(callsign, aircraftModel.getModelString(),
-                                        newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
-                                        newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
-                                        livery);
+                                     newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
+                                     newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
+                                     livery);
             PlanesPositions pos;
             pos.push_back(newRemoteAircraft.getSituation());
             m_trafficProxy->setPlanesPositions(pos);
@@ -899,8 +895,7 @@ namespace BlackSimPlugin::XPlane
         {
             // we are just about to add that aircraft
             QPointer<CSimulatorXPlane> myself(this);
-            QTimer::singleShot(TimeoutAdding, this, [ = ]
-            {
+            QTimer::singleShot(TimeoutAdding, this, [=] {
                 if (!myself) { return; }
                 m_addingInProgressAircraft.remove(callsign); // remove as "in progress"
                 this->physicallyRemoveRemoteAircraft(callsign); // and remove from sim. if it was added in the mean time
@@ -932,7 +927,7 @@ namespace BlackSimPlugin::XPlane
 
     bool CSimulatorXPlane::followAircraft(const CCallsign &callsign)
     {
-        if (! m_trafficProxy || ! m_trafficProxy->isValid()) { return false; }
+        if (!m_trafficProxy || !m_trafficProxy->isValid()) { return false; }
         m_trafficProxy->setFollowedAircraft(callsign.toQString());
         return true;
     }
@@ -940,16 +935,15 @@ namespace BlackSimPlugin::XPlane
     void CSimulatorXPlane::injectWeatherGrid(const CWeatherGrid &weatherGrid)
     {
         if (this->isShuttingDownOrDisconnected()) { return; }
-        if (weatherGrid.isEmpty())                { return; }
-        if (!this->isWeatherActivated())          { return; }
+        if (weatherGrid.isEmpty()) { return; }
+        if (!this->isWeatherActivated()) { return; }
 
         if (!CThreadUtils::isInThisThread(this))
         {
 
             BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Wrong thread");
             QPointer<CSimulatorXPlane> myself(this);
-            QTimer::singleShot(0, this, [ = ]
-            {
+            QTimer::singleShot(0, this, [=] {
                 if (!myself) { return; }
                 myself->injectWeatherGrid(weatherGrid);
             });
@@ -1009,8 +1003,8 @@ namespace BlackSimPlugin::XPlane
             switch (cloudLayer.getClouds())
             {
             case CCloudLayer::NoClouds: type = 0; break;
-            case CCloudLayer::Cirrus:   type = 1; break;
-            case CCloudLayer::Stratus:  type = 5; break;
+            case CCloudLayer::Cirrus: type = 1; break;
+            case CCloudLayer::Stratus: type = 5; break;
             default: type = 0; break;
             }
 
@@ -1135,7 +1129,7 @@ namespace BlackSimPlugin::XPlane
             m_trafficProxy->setPlanesPositions(planesPositions);
         }
 
-        if (! planesSurfaces.isEmpty())
+        if (!planesSurfaces.isEmpty())
         {
             m_trafficProxy->setPlanesSurfaces(planesSurfaces);
         }
@@ -1163,8 +1157,7 @@ namespace BlackSimPlugin::XPlane
         if (!m_trafficProxy || this->isShuttingDown()) { return; }
         const QStringList csStrings = callsigns.getCallsignStrings();
         QPointer<CSimulatorXPlane> myself(this);
-        m_trafficProxy->getRemoteAircraftData(csStrings, [ = ](const QStringList & callsigns, const QDoubleList & latitudesDeg, const QDoubleList & longitudesDeg, const QDoubleList & elevationsMeters, const QBoolList & waterFlags, const QDoubleList & verticalOffsetsMeters)
-        {
+        m_trafficProxy->getRemoteAircraftData(csStrings, [=](const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg, const QDoubleList &elevationsMeters, const QBoolList &waterFlags, const QDoubleList &verticalOffsetsMeters) {
             if (!myself) { return; }
             this->updateRemoteAircraftFromSimulator(callsigns, latitudesDeg, longitudesDeg, elevationsMeters, waterFlags, verticalOffsetsMeters);
         });
@@ -1174,16 +1167,15 @@ namespace BlackSimPlugin::XPlane
     {
         if (callsigns.isEmpty()) { return; }
         QPointer<CSimulatorXPlane> myself(this);
-        QTimer::singleShot(0, this, [ = ]
-        {
+        QTimer::singleShot(0, this, [=] {
             if (!myself) { return; }
             this->requestRemoteAircraftDataFromXPlane(callsigns);
         });
     }
 
     void CSimulatorXPlane::updateRemoteAircraftFromSimulator(
-        const QStringList &callsigns,        const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
-        const QDoubleList &elevationsMeters, const QBoolList &waterFlags,     const QDoubleList &verticalOffsetsMeters)
+        const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
+        const QDoubleList &elevationsMeters, const QBoolList &waterFlags, const QDoubleList &verticalOffsetsMeters)
     {
         const int size = callsigns.size();
 
@@ -1191,9 +1183,9 @@ namespace BlackSimPlugin::XPlane
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
             Q_ASSERT_X(elevationsMeters.size() == size, Q_FUNC_INFO, "Wrong elevations");
-            Q_ASSERT_X(waterFlags.size()       == size, Q_FUNC_INFO, "Wrong waterFlags");
-            Q_ASSERT_X(latitudesDeg.size()     == size, Q_FUNC_INFO, "Wrong latitudesDeg");
-            Q_ASSERT_X(longitudesDeg.size()    == size, Q_FUNC_INFO, "Wrong longitudesDeg");
+            Q_ASSERT_X(waterFlags.size() == size, Q_FUNC_INFO, "Wrong waterFlags");
+            Q_ASSERT_X(latitudesDeg.size() == size, Q_FUNC_INFO, "Wrong latitudesDeg");
+            Q_ASSERT_X(longitudesDeg.size() == size, Q_FUNC_INFO, "Wrong longitudesDeg");
             Q_ASSERT_X(verticalOffsetsMeters.size() == size, Q_FUNC_INFO, "Wrong CG");
         }
 
@@ -1220,13 +1212,13 @@ namespace BlackSimPlugin::XPlane
 
             const double cgValue = verticalOffsetsMeters[i]; // XP offset is swift CG
             CLength cg = std::isnan(cgValue) ?
-                            CLength::null() :
-                            CLength(cgValue, CLengthUnit::m(), CLengthUnit::ft());
+                             CLength::null() :
+                             CLength(cgValue, CLengthUnit::m(), CLengthUnit::ft());
             cg = fixSimulatorCg(cg, xpAircraft.getAircraftModel());
 
             // if we knew "on ground" here we could set it as parameter of rememberElevationAndSimulatorCG
             // with T778 we do NOT use this function for elevation here if "isSuspicious"
-            const bool waterFlag    = waterFlags[i];
+            const bool waterFlag = waterFlags[i];
             const bool useElevation = this->handleProbeValue(elevation, cs, waterFlag, hint, true);
             this->rememberElevationAndSimulatorCG(cs, xpAircraft.getAircraftModel(), false, useElevation ? elevation : CElevationPlane::null(), cg);
 
@@ -1331,8 +1323,8 @@ namespace BlackSimPlugin::XPlane
         {
             wasPending = true;
             const qint64 wasStartedMs = m_addingInProgressAircraft.value(cs);
-            const qint64 deltaTimeMs  = QDateTime::currentMSecsSinceEpoch() - wasStartedMs;
-            m_statsAddCurrentTimeMs   = deltaTimeMs;
+            const qint64 deltaTimeMs = QDateTime::currentMSecsSinceEpoch() - wasStartedMs;
+            m_statsAddCurrentTimeMs = deltaTimeMs;
             if (deltaTimeMs > m_statsAddMaxTimeMs) { m_statsAddMaxTimeMs = deltaTimeMs; }
             m_addingInProgressAircraft.remove(cs);
         }
@@ -1412,8 +1404,7 @@ namespace BlackSimPlugin::XPlane
     void CSimulatorXPlane::triggerAddNextPendingAircraft()
     {
         QPointer<CSimulatorXPlane> myself(this);
-        QTimer::singleShot(100, this, [ = ]
-        {
+        QTimer::singleShot(100, this, [=] {
             if (!myself || !sApp || sApp->isShuttingDown()) { return; }
             this->addNextPendingAircraft();
         });
@@ -1443,8 +1434,7 @@ namespace BlackSimPlugin::XPlane
     void CSimulatorXPlane::triggerRemoveAircraft(const CCallsign &callsign, qint64 deferMs)
     {
         QPointer<CSimulatorXPlane> myself(this);
-        QTimer::singleShot(deferMs, this, [ = ]
-        {
+        QTimer::singleShot(deferMs, this, [=] {
             if (!myself) { return; }
             this->physicallyRemoveRemoteAircraft(callsign);
         });
@@ -1472,15 +1462,15 @@ namespace BlackSimPlugin::XPlane
     }
 
     ISimulator *CSimulatorXPlaneFactory::create(const CSimulatorPluginInfo &info,
-            IOwnAircraftProvider *ownAircraftProvider,
-            IRemoteAircraftProvider *remoteAircraftProvider,
-            IWeatherGridProvider *weatherGridProvider,
-            IClientProvider *clientProvider)
+                                                IOwnAircraftProvider *ownAircraftProvider,
+                                                IRemoteAircraftProvider *remoteAircraftProvider,
+                                                IWeatherGridProvider *weatherGridProvider,
+                                                IClientProvider *clientProvider)
     {
         return new CSimulatorXPlane(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, this);
     }
 
-    CSimulatorXPlaneListener::CSimulatorXPlaneListener(const CSimulatorPluginInfo &info): ISimulatorListener(info)
+    CSimulatorXPlaneListener::CSimulatorXPlaneListener(const CSimulatorPluginInfo &info) : ISimulatorListener(info)
     {
         constexpr int QueryInterval = 5 * 1000; // 5 seconds
         m_timer.setInterval(QueryInterval);
@@ -1505,8 +1495,7 @@ namespace BlackSimPlugin::XPlane
 
         m_timer.start(); // restart because we will check just now
         QPointer<CSimulatorXPlaneListener> myself(this);
-        QTimer::singleShot(0, this, [ = ]
-        {
+        QTimer::singleShot(0, this, [=] {
             if (!myself) { return; }
             checkConnection();
         });
@@ -1516,7 +1505,8 @@ namespace BlackSimPlugin::XPlane
     {
         if (this->isShuttingDown()) { return; }
         Q_ASSERT_X(!CThreadUtils::thisIsMainThread(), Q_FUNC_INFO, "Expect to run in background");
-        QElapsedTimer t; t.start();
+        QElapsedTimer t;
+        t.start();
 
         QString via;
         m_dBusServerAddress = m_xSwiftBusServerSettings.getThreadLocal().getDBusServerAddressQt();

@@ -20,7 +20,10 @@
 
 class QWidget;
 
-namespace BlackMisc::Network { class CAuthenticatedUser; }
+namespace BlackMisc::Network
+{
+    class CAuthenticatedUser;
+}
 namespace BlackGui::Editors
 {
     //! Form base class
@@ -85,7 +88,7 @@ namespace BlackGui::Editors
         //! User has been changed
         virtual void userChanged();
 
-        BlackMisc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser {this, &CFormDbUser::userChanged}; //!< authenticated user
+        BlackMisc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this, &CFormDbUser::userChanged }; //!< authenticated user
     };
 } // ns
 

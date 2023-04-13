@@ -14,7 +14,10 @@
 #include "blackmisc/statusmessagelist.h"
 #include <QDialog>
 
-namespace Ui { class CSetupLoadingDialog; }
+namespace Ui
+{
+    class CSetupLoadingDialog;
+}
 namespace BlackGui::Components
 {
     class CCopyModelsFromOtherSwiftVersionsDialog;

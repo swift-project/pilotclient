@@ -34,12 +34,7 @@ namespace BlackMisc
                 continue;
             }
             QMetaType metaType(mt);
-            meta = meta.
-                   append("type: ").append(QString::number(mt)).
-                   append(" name: ").append(QMetaType::typeName(mt)).
-                   append(" | ").append(QString::number(QMetaType::sizeOf(mt))).
-                   append(" / ").append(QString::number(BlackMisc::heapSizeOf(metaType))).
-                   append(separator);
+            meta = meta.append("type: ").append(QString::number(mt)).append(" name: ").append(QMetaType::typeName(mt)).append(" | ").append(QString::number(QMetaType::sizeOf(mt))).append(" / ").append(QString::number(BlackMisc::heapSizeOf(metaType))).append(separator);
         }
         return meta;
     }
@@ -66,7 +61,7 @@ namespace BlackMisc
     }
 
 #ifdef Q_CC_MSVC
-#include <crtdbg.h>
+#    include <crtdbg.h>
 
     size_t heapSizeOf(const QMetaType &metaType)
     {
@@ -84,7 +79,7 @@ namespace BlackMisc
 
     size_t heapSizeOf(const QMetaObject &metaObject)
     {
-        delete metaObject.newInstance(); //ignore one-off allocations of a class being instantiated for the first time
+        delete metaObject.newInstance(); // ignore one-off allocations of a class being instantiated for the first time
         _CrtMemState oldState, newState, diff;
         oldState.lTotalCount = newState.lTotalCount = diff.lTotalCount = 0; // avoid compiler warning
         diff.lSizes[_NORMAL_BLOCK] = 0;
@@ -96,7 +91,7 @@ namespace BlackMisc
         return diff.lSizes[_NORMAL_BLOCK];
     }
 
-#else //!Q_CC_MSVC
+#else //! Q_CC_MSVC
 
     size_t heapSizeOf(const QMetaType &)
     {
@@ -110,6 +105,6 @@ namespace BlackMisc
         return 0;
     }
 
-#endif //!Q_CC_MSVC
+#endif //! Q_CC_MSVC
 
 } // ns

@@ -22,8 +22,7 @@ using namespace BlackMisc::Input;
 namespace BlackInput
 {
     // https://www.cl.cam.ac.uk/~mgk25/ucs/keysymdef.h
-    static QHash<int, Input::KeyCode> keyMapping
-    {
+    static QHash<int, Input::KeyCode> keyMapping {
         { XK_0, Key_0 },
         { XK_1, Key_1 },
         { XK_2, Key_2 },
@@ -129,8 +128,7 @@ namespace BlackInput
         **/
     };
 
-    CKeyboardLinux::CKeyboardLinux(QObject *parent) :
-        IKeyboard(parent)
+    CKeyboardLinux::CKeyboardLinux(QObject *parent) : IKeyboard(parent)
     {
         m_display = XOpenDisplay(nullptr);
     }
@@ -228,9 +226,9 @@ namespace BlackInput
             // Keyboards support EV_SYN and EV_KEY
             // but do NOT support EV_REL and EV_ABS
             if (!(bitmask[EV_SYN / 8] & (1 << (EV_SYN % 8))) &&
-                    !(bitmask[EV_KEY / 8] & (1 << (EV_KEY % 8))) &&
-                    (bitmask[EV_REL / 8] & (1 << (EV_REL % 8))) &&
-                    (bitmask[EV_ABS / 8] & (1 << (EV_ABS % 8))))
+                !(bitmask[EV_KEY / 8] & (1 << (EV_KEY % 8))) &&
+                (bitmask[EV_REL / 8] & (1 << (EV_REL % 8))) &&
+                (bitmask[EV_ABS / 8] & (1 << (EV_ABS % 8))))
             {
                 return;
             }

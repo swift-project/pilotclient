@@ -48,10 +48,9 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CSettingsSimulatorComponent::CSettingsSimulatorComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CSettingsSimulatorComponent),
-        m_plugins(new CPluginManagerSimulator(this))
+    CSettingsSimulatorComponent::CSettingsSimulatorComponent(QWidget *parent) : QFrame(parent),
+                                                                                ui(new Ui::CSettingsSimulatorComponent),
+                                                                                m_plugins(new CPluginManagerSimulator(this))
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
         Q_ASSERT_X(sGui->getIContextSimulator(), Q_FUNC_INFO, "Missing context");
@@ -66,25 +65,25 @@ namespace BlackGui::Components
         ui->le_MaxDistance->setValidator(new QIntValidator(ui->le_MaxDistance));
 
         // connects
-        connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginStateChanged,     this, &CSettingsSimulatorComponent::pluginStateChanged);
+        connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginStateChanged, this, &CSettingsSimulatorComponent::pluginStateChanged);
         connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginDetailsRequested, this, &CSettingsSimulatorComponent::showPluginDetails);
-        connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginConfigRequested,  this, &CSettingsSimulatorComponent::showPluginConfig);
+        connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginConfigRequested, this, &CSettingsSimulatorComponent::showPluginConfig);
 
-        connect(ui->pb_Reload,           &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onReload,                   Qt::QueuedConnection);
+        connect(ui->pb_Reload, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onReload, Qt::QueuedConnection);
         connect(ui->pb_ApplyMaxAircraft, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft, Qt::QueuedConnection);
-        connect(ui->pb_ApplyTimeSync,    &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyTimeSync,            Qt::QueuedConnection);
+        connect(ui->pb_ApplyTimeSync, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyTimeSync, Qt::QueuedConnection);
         connect(ui->pb_ApplyMaxDistance, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance, Qt::QueuedConnection);
-        connect(ui->pb_ApplyComSync,     &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyComSync,             Qt::QueuedConnection);
-        connect(ui->pb_ApplyCGSource,    &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyCGSource,            Qt::QueuedConnection);
-        connect(ui->pb_ApplyRecordOwnAircraftGnd, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyRecordGnd,  Qt::QueuedConnection);
+        connect(ui->pb_ApplyComSync, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyComSync, Qt::QueuedConnection);
+        connect(ui->pb_ApplyCGSource, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyCGSource, Qt::QueuedConnection);
+        connect(ui->pb_ApplyRecordOwnAircraftGnd, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyRecordGnd, Qt::QueuedConnection);
 
         connect(ui->pb_ClearRestrictedRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::clearRestricedRendering);
-        connect(ui->pb_DisableRendering,         &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyDisableRendering);
-        connect(ui->pb_Check,                    &QCheckBox::pressed, this, &CSettingsSimulatorComponent::checkSimulatorPlugins);
+        connect(ui->pb_DisableRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyDisableRendering);
+        connect(ui->pb_Check, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::checkSimulatorPlugins);
         connect(ui->le_MaxAircraft, &QLineEdit::editingFinished, this, &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft);
         connect(ui->le_MaxDistance, &QLineEdit::editingFinished, this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance);
-        connect(ui->le_MaxAircraft, &QLineEdit::returnPressed,   this, &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft);
-        connect(ui->le_MaxDistance, &QLineEdit::returnPressed,   this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance);
+        connect(ui->le_MaxAircraft, &QLineEdit::returnPressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft);
+        connect(ui->le_MaxDistance, &QLineEdit::returnPressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance);
 
         // list all available simulators
         const CSimulatorPluginInfoList plugins = CSettingsSimulatorComponent::getAvailablePlugins();
@@ -104,13 +103,13 @@ namespace BlackGui::Components
         if (sGui && sGui->getIContextSimulator())
         {
             this->simulatorPluginChanged(sGui->getIContextSimulator()->getSimulatorPluginInfo());
-            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged,   this, &CSettingsSimulatorComponent::simulatorPluginChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CSettingsSimulatorComponent::simulatorPluginChanged, Qt::QueuedConnection);
             connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorSettingsChanged, this, &CSettingsSimulatorComponent::onReload, Qt::QueuedConnection);
         }
     }
 
     CSettingsSimulatorComponent::~CSettingsSimulatorComponent()
-    { }
+    {}
 
     void CSettingsSimulatorComponent::setGuiValues()
     {

@@ -15,9 +15,8 @@ using namespace BlackMisc;
 
 namespace BlackSound::SampleProvider
 {
-    CVolumeSampleProvider::CVolumeSampleProvider(ISampleProvider *sourceProvider, QObject *parent) :
-        ISampleProvider(parent),
-        m_sourceProvider(sourceProvider)
+    CVolumeSampleProvider::CVolumeSampleProvider(ISampleProvider *sourceProvider, QObject *parent) : ISampleProvider(parent),
+                                                                                                     m_sourceProvider(sourceProvider)
     {
         Q_ASSERT_X(sourceProvider, Q_FUNC_INFO, "Need source provider");
         const QString on = QStringLiteral("%1 with source: %2").arg(classNameShort(this), sourceProvider->objectName());

@@ -82,29 +82,29 @@ namespace BlackSimPlugin::Fs9
     };
 
     //! Multiplayer packet in slew mode
-        struct MPPositionSlewMode : public MULTIPLAYER_PACKET_POSITION_SLEWMODE
+    struct MPPositionSlewMode : public MULTIPLAYER_PACKET_POSITION_SLEWMODE
+    {
+        //! Return tuple of member variables
+        auto getTuple()
         {
-            //! Return tuple of member variables
-            auto getTuple()
-            {
-                return std::tie(application_time, packet_index,
-                                reserved[0], reserved[1], reserved[2], reserved[3],
-                                pbh, lat_i, lon_hi, alt_i,
-                                lat_f, lon_lo, alt_f);
-            }
+            return std::tie(application_time, packet_index,
+                            reserved[0], reserved[1], reserved[2], reserved[3],
+                            pbh, lat_i, lon_hi, alt_i,
+                            lat_f, lon_lo, alt_f);
+        }
 
-            //! Return const tuple of member variables
-            auto getTuple() const
-            {
-                return std::tie(application_time, packet_index,
-                                reserved[0], reserved[1], reserved[2], reserved[3],
-                                pbh, lat_i, lon_hi, alt_i,
-                                lat_f, lon_lo, alt_f);
-            }
+        //! Return const tuple of member variables
+        auto getTuple() const
+        {
+            return std::tie(application_time, packet_index,
+                            reserved[0], reserved[1], reserved[2], reserved[3],
+                            pbh, lat_i, lon_hi, alt_i,
+                            lat_f, lon_lo, alt_f);
+        }
 
-            //! Struct size
-            qint32 size() const { return 36; }
-        };
+        //! Struct size
+        qint32 size() const { return 36; }
+    };
 
     //! Multiplayer packet - position and velocity
     struct MPPositionVelocity : public MULTIPLAYER_PACKET_POSITION_VELOCITY

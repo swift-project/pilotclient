@@ -9,7 +9,7 @@
 //! \cond PRIVATE
 
 #ifndef NOMINMAX
-#define NOMINMAX
+#    define NOMINMAX
 #endif
 #include "messages.h"
 #include <XPLMGraphics.h>
@@ -19,8 +19,7 @@ namespace XSwiftBus
 {
     int CMessageBox::lineHeight()
     {
-        static const int lh = []
-        {
+        static const int lh = [] {
             int lineHeight = 0;
             XPLMGetFontDimensions(xplmFont_Basic, nullptr, &lineHeight, nullptr);
             return lineHeight;
@@ -36,20 +35,20 @@ namespace XSwiftBus
         const int messageCount = static_cast<int>(m_messages.size());
 
         const int screenHeight = m_screenHeight.get();
-        const int boxRight     = m_screenWidth.get() - m_boxRight;
-        const int boxLeft      = m_boxLeft;
+        const int boxRight = m_screenWidth.get() - m_boxRight;
+        const int boxLeft = m_boxLeft;
         int boxTop;
         int boxBottom;
 
         if (m_boxTop >= 0)
         {
-            boxTop    = screenHeight - m_boxTop;
+            boxTop = screenHeight - m_boxTop;
             boxBottom = boxTop - lineSpace * 2 - (lineHeight + lineSpace) * messageCount;
         }
         else
         {
             boxBottom = m_boxBottom >= 0 ? m_boxBottom : 20;
-            boxTop    = boxBottom + lineSpace * 2 + (lineHeight + lineSpace) * messageCount;
+            boxTop = boxBottom + lineSpace * 2 + (lineHeight + lineSpace) * messageCount;
         }
 
         if (boxTop > screenHeight) { boxTop = screenHeight; }
@@ -58,7 +57,7 @@ namespace XSwiftBus
         XPLMDrawTranslucentDarkBox(boxLeft, boxTop, boxRight, boxBottom);
 
         static int arrowWidth = 0, arrowHeight = 0;
-        if (! arrowHeight)
+        if (!arrowHeight)
         {
             XPGetElementDefaultDimensions(xpElement_LittleUpArrow, &arrowWidth, &arrowHeight, nullptr);
         }
@@ -79,17 +78,17 @@ namespace XSwiftBus
             const int y = boxTop - (lineHeight + lineSpace) * (i + 1);
             const size_t ii = static_cast<size_t>(i);
             XPLMDrawString(m_messages[ii].m_rgb.data(), x + arrowWidth + arrowWidth / 2, y,
-                const_cast<char *>(reinterpret_cast<const char *>(m_messages[ii].m_text.c_str())), nullptr, xplmFont_Basic);
+                           const_cast<char *>(reinterpret_cast<const char *>(m_messages[ii].m_text.c_str())), nullptr, xplmFont_Basic);
         }
     }
 
     void CMessageBox::setValues(int leftPx, int topPx, int rightPx, int bottomPx, int lines, int durationMs)
     {
         m_boxBottom = bottomPx;
-        m_boxLeft  = leftPx;
+        m_boxLeft = leftPx;
         m_boxRight = rightPx;
-        m_boxTop   = topPx;
-        m_lines    = lines;
+        m_boxTop = topPx;
+        m_lines = lines;
         m_durationMs = durationMs;
     }
 
@@ -107,15 +106,14 @@ namespace XSwiftBus
         return len;
     }
 
-    CMessageBoxControl::CMessageBoxControl(int left, int right, int top) :
-        m_messageBox(left, right, top),
-        m_showCommand("org/swift-project/xswiftbus/show_messages", "Show XSwiftBus text messages", [this] { show(); }),
-        m_hideCommand("org/swift-project/xswiftbus/hide_messages", "Hide XSwiftBus text messages", [this] { hide(); }),
-        m_toggleCommand("org/swift-project/xswiftbus/toggle_messages", "Toggle XSwiftBus text messages", [this] { toggle(); }),
-        m_scrollUpCommand("org/swift-project/xswiftbus/scroll_up", "Scroll up XSwiftBus text messages", [this] { scrollUp(); }),
-        m_scrollDownCommand("org/swift-project/xswiftbus/scroll_down", "Scroll down XSwiftBus text messages", [this] { scrollDown(); }),
-        m_scrollToTopCommand("org/swift-project/xswiftbus/scroll_top", "Scroll to top of XSwiftBus text messages", [this] { scrollToTop(); }),
-        m_scrollToBottomCommand("org/swift-project/xswiftbus/scroll_bottom", "Scroll to bottom of XSwiftBus text messages", [this] { scrollToBottom(); })
+    CMessageBoxControl::CMessageBoxControl(int left, int right, int top) : m_messageBox(left, right, top),
+                                                                           m_showCommand("org/swift-project/xswiftbus/show_messages", "Show XSwiftBus text messages", [this] { show(); }),
+                                                                           m_hideCommand("org/swift-project/xswiftbus/hide_messages", "Hide XSwiftBus text messages", [this] { hide(); }),
+                                                                           m_toggleCommand("org/swift-project/xswiftbus/toggle_messages", "Toggle XSwiftBus text messages", [this] { toggle(); }),
+                                                                           m_scrollUpCommand("org/swift-project/xswiftbus/scroll_up", "Scroll up XSwiftBus text messages", [this] { scrollUp(); }),
+                                                                           m_scrollDownCommand("org/swift-project/xswiftbus/scroll_down", "Scroll down XSwiftBus text messages", [this] { scrollDown(); }),
+                                                                           m_scrollToTopCommand("org/swift-project/xswiftbus/scroll_top", "Scroll to top of XSwiftBus text messages", [this] { scrollToTop(); }),
+                                                                           m_scrollToBottomCommand("org/swift-project/xswiftbus/scroll_bottom", "Scroll to bottom of XSwiftBus text messages", [this] { scrollToBottom(); })
     {
         show();
     }
@@ -132,7 +130,7 @@ namespace XSwiftBus
 
     void CMessageBoxControl::scrollUp()
     {
-        if (! m_visible) { return; }
+        if (!m_visible) { return; }
 
         if (m_position - 1 >= std::min(m_messages.size(), m_maxVisibleLines))
         {
@@ -143,7 +141,7 @@ namespace XSwiftBus
 
     void CMessageBoxControl::scrollDown()
     {
-        if (! m_visible) { return; }
+        if (!m_visible) { return; }
 
         if (m_position + 1 <= m_messages.size())
         {
@@ -154,7 +152,7 @@ namespace XSwiftBus
 
     void CMessageBoxControl::scrollToTop()
     {
-        if (! m_visible) { return; }
+        if (!m_visible) { return; }
 
         m_position = std::min(m_messages.size(), m_maxVisibleLines);
         updateVisibleLines();
@@ -171,7 +169,7 @@ namespace XSwiftBus
         const size_t lines = std::min(m_messages.size(), m_maxVisibleLines);
         // const auto end = m_messages.cbegin() +  m_position;
         // m_messageBox.setMessages(end - lines, end);
-        auto end   = m_messages.begin();
+        auto end = m_messages.begin();
         std::advance(end, m_position);
         auto start = end;
         std::advance(start, -1 * static_cast<int>(lines));

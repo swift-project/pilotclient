@@ -22,9 +22,8 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackGui::Filters
 {
-    CDistributorFilterBar::CDistributorFilterBar(QWidget *parent) :
-        CFilterWidget(parent),
-        ui(new Ui::CDistributorFilterBar)
+    CDistributorFilterBar::CDistributorFilterBar(QWidget *parent) : CFilterWidget(parent),
+                                                                    ui(new Ui::CDistributorFilterBar)
     {
         ui->setupUi(this);
         ui->comp_Simulator->setMode(CSimulatorSelector::CheckBoxes);
@@ -39,17 +38,16 @@ namespace BlackGui::Filters
 
         // connect deferred, avoid to filter during the UI "swing in period"
         QPointer<CDistributorFilterBar> myself(this);
-        QTimer::singleShot(2500, this, [ = ]
-        {
+        QTimer::singleShot(2500, this, [=] {
             if (!myself) { return; }
             this->connectTriggerFilterSignals();
         });
     }
 
     CDistributorFilterBar::~CDistributorFilterBar()
-    { }
+    {}
 
-    std::unique_ptr<BlackGui::Models::IModelFilter<CDistributorList> > CDistributorFilterBar::createModelFilter() const
+    std::unique_ptr<BlackGui::Models::IModelFilter<CDistributorList>> CDistributorFilterBar::createModelFilter() const
     {
         return std::make_unique<CDistributorFilter>(ui->comp_Simulator->getValue());
     }

@@ -17,7 +17,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CAutoPublishComponent; }
+namespace Ui
+{
+    class CAutoPublishComponent;
+}
 namespace BlackGui::Components
 {
     //! Data automatically collected and be be sent to backend

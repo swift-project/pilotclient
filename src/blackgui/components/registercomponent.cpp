@@ -20,9 +20,8 @@ using namespace BlackGui::Views;
 
 namespace BlackGui::Components
 {
-    CRegisterComponent::CRegisterComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CRegisterComponent)
+    CRegisterComponent::CRegisterComponent(QWidget *parent) : QFrame(parent),
+                                                              ui(new Ui::CRegisterComponent)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
         Q_ASSERT_X(sGui->getIContextApplication(), Q_FUNC_INFO, "Need application context");
@@ -40,7 +39,7 @@ namespace BlackGui::Components
     }
 
     CRegisterComponent::~CRegisterComponent()
-    { }
+    {}
 
     void CRegisterComponent::update()
     {

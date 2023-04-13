@@ -62,7 +62,7 @@ namespace BlackMisc::Aviation
         m_oldestAdjustedTimestampMSecsSinceEpoch = oldest.getAdjustedMSecsSinceEpoch();
         m_constAscending = sorted.isConstAscending(true);
         m_constDescending = sorted.isConstDescending(true);
-        m_constOnGround =  sorted.isConstOnGround();
+        m_constOnGround = sorted.isConstOnGround();
         m_constNotOnGround = sorted.isConstNotOnGround();
         m_justTakeoff = sorted.isJustTakingOff(true);
         m_justTouchdown = sorted.isJustTouchingDown(true);
@@ -119,7 +119,7 @@ namespace BlackMisc::Aviation
 
         CLength cg = situation.hasCG() ? situation.getCG() : model.getCG();
         CSpeed guessedRotateSpeed = CSpeed::null();
-        CSpeed sureRotateSpeed    = CSpeed(130, CSpeedUnit::kts());
+        CSpeed sureRotateSpeed = CSpeed(130, CSpeedUnit::kts());
         model.getAircraftIcaoCode().guessModelParameters(cg, guessedRotateSpeed);
         if (!guessedRotateSpeed.isNull())
         {
@@ -131,9 +131,21 @@ namespace BlackMisc::Aviation
         }
 
         // "extreme" values for which we are surely not on ground
-        if (qAbs(situation.getPitch().value(CAngleUnit::deg())) > 20)  { if (details) { *details = QStringLiteral("max.pitch"); } return true; } // some tail wheel aircraft already have 11° pitch on ground
-        if (qAbs(situation.getBank().value(CAngleUnit::deg()))  > 10)  { if (details) { *details = QStringLiteral("max.bank"); }  return true; }
-        if (situation.getGroundSpeed() > sureRotateSpeed) { if (details) { *details = u"gs. > vr " % sureRotateSpeed.valueRoundedWithUnit(1); } return true; }
+        if (qAbs(situation.getPitch().value(CAngleUnit::deg())) > 20)
+        {
+            if (details) { *details = QStringLiteral("max.pitch"); }
+            return true;
+        } // some tail wheel aircraft already have 11° pitch on ground
+        if (qAbs(situation.getBank().value(CAngleUnit::deg())) > 10)
+        {
+            if (details) { *details = QStringLiteral("max.bank"); }
+            return true;
+        }
+        if (situation.getGroundSpeed() > sureRotateSpeed)
+        {
+            if (details) { *details = u"gs. > vr " % sureRotateSpeed.valueRoundedWithUnit(1); }
+            return true;
+        }
 
         // use the most accurate or reliable guesses here first
         // ------------------------------------------------------
@@ -222,22 +234,22 @@ namespace BlackMisc::Aviation
         static const QString null("null");
         if (this->isNull()) { return null; }
         return u"CS: '" % this->getCallsign().asString() %
-                u" ' ts: " % this->getTimestampAndOffset(true) %
-                u" | situations:" % QString::number(m_situationsCount) %
-                u" | ts adj.: " % QString::number(m_oldestAdjustedTimestampMSecsSinceEpoch) % u'-' % QString::number(m_latestAdjustedTimestampMSecsSinceEpoch) %
-                u" | just takeoff: " % boolToYesNo(this->isJustTakingOff()) % u" just touchdown: " % boolToYesNo(this->isJustTouchingDown()) %
-                u" | all gnd: " % boolToYesNo(this->isConstOnGround()) % u'/' % boolToYesNo(this->wasConstOnGround()) %
-                u" | all not gnd: " % boolToYesNo(this->isConstNotOnGround()) % u'/' % boolToYesNo(this->wasConstNotOnGround()) %
-                u" | ascending: " % boolToYesNo(this->isConstAscending()) % u" descending: " % boolToYesNo(this->isConstDescending()) %
-                u" | accelerating.: " % boolToYesNo(this->isConstAccelerating()) % u" decelarating: " % boolToYesNo(this->isConstDecelarating()) %
-                u" | rotate up: " % boolToYesNo(this->isRotatingUp()) %
-                u" | push back: " % boolToYesNo(this->containsPushBack()) %
-                u" | scenery delta: " % m_guessedSceneryDeviation.valueRoundedWithUnit(1) % u" [" % this->getSceneryDeviationHintAsString() %
-                u"] | AGL delta: " % m_gndDistMean.valueRoundedWithUnit(1) % u'/' %  m_gndDistStdDev.valueRoundedWithUnit(1) %
-                u" | std.dev/mean: pitch " %  m_pitchMean.valueRoundedWithUnit(1) % u'/' %  m_pitchStdDev.valueRoundedWithUnit(1) %
-                u" gs " % m_gsMean.valueRoundedWithUnit(1) % u'/' % m_gsStdDev.valueRoundedWithUnit(1) %
-                u" alt. " % m_altMean.valueRoundedWithUnit(1) % u'/' % m_altStdDev.valueRoundedWithUnit(1) %
-                u" elv. " % m_elvMean.valueRoundedWithUnit(1) % u'/' % m_elvStdDev.valueRoundedWithUnit(1);
+               u" ' ts: " % this->getTimestampAndOffset(true) %
+               u" | situations:" % QString::number(m_situationsCount) %
+               u" | ts adj.: " % QString::number(m_oldestAdjustedTimestampMSecsSinceEpoch) % u'-' % QString::number(m_latestAdjustedTimestampMSecsSinceEpoch) %
+               u" | just takeoff: " % boolToYesNo(this->isJustTakingOff()) % u" just touchdown: " % boolToYesNo(this->isJustTouchingDown()) %
+               u" | all gnd: " % boolToYesNo(this->isConstOnGround()) % u'/' % boolToYesNo(this->wasConstOnGround()) %
+               u" | all not gnd: " % boolToYesNo(this->isConstNotOnGround()) % u'/' % boolToYesNo(this->wasConstNotOnGround()) %
+               u" | ascending: " % boolToYesNo(this->isConstAscending()) % u" descending: " % boolToYesNo(this->isConstDescending()) %
+               u" | accelerating.: " % boolToYesNo(this->isConstAccelerating()) % u" decelarating: " % boolToYesNo(this->isConstDecelarating()) %
+               u" | rotate up: " % boolToYesNo(this->isRotatingUp()) %
+               u" | push back: " % boolToYesNo(this->containsPushBack()) %
+               u" | scenery delta: " % m_guessedSceneryDeviation.valueRoundedWithUnit(1) % u" [" % this->getSceneryDeviationHintAsString() %
+               u"] | AGL delta: " % m_gndDistMean.valueRoundedWithUnit(1) % u'/' % m_gndDistStdDev.valueRoundedWithUnit(1) %
+               u" | std.dev/mean: pitch " % m_pitchMean.valueRoundedWithUnit(1) % u'/' % m_pitchStdDev.valueRoundedWithUnit(1) %
+               u" gs " % m_gsMean.valueRoundedWithUnit(1) % u'/' % m_gsStdDev.valueRoundedWithUnit(1) %
+               u" alt. " % m_altMean.valueRoundedWithUnit(1) % u'/' % m_altStdDev.valueRoundedWithUnit(1) %
+               u" elv. " % m_elvMean.valueRoundedWithUnit(1) % u'/' % m_elvStdDev.valueRoundedWithUnit(1);
     }
 
     QVariant CAircraftSituationChange::propertyByIndex(CPropertyIndexRef index) const
@@ -269,8 +281,16 @@ namespace BlackMisc::Aviation
 
     void CAircraftSituationChange::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CAircraftSituationChange>(); return; }
-        if (ITimestampWithOffsetBased::canHandleIndex(index)) { ITimestampWithOffsetBased::setPropertyByIndex(index, variant); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CAircraftSituationChange>();
+            return;
+        }
+        if (ITimestampWithOffsetBased::canHandleIndex(index))
+        {
+            ITimestampWithOffsetBased::setPropertyByIndex(index, variant);
+            return;
+        }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
@@ -420,14 +440,26 @@ namespace BlackMisc::Aviation
         {
             do
             {
-                if (this->isConstOnGround()) { this->setSceneryDeviation(m_gndDistMean, cg, AllOnGround); break; }
-                if (this->wasConstNotOnGround()) { this->setSceneryDeviation(m_gndDistMean, cg, WasOnGround); break; }
+                if (this->isConstOnGround())
+                {
+                    this->setSceneryDeviation(m_gndDistMean, cg, AllOnGround);
+                    break;
+                }
+                if (this->wasConstNotOnGround())
+                {
+                    this->setSceneryDeviation(m_gndDistMean, cg, WasOnGround);
+                    break;
+                }
                 if (!m_altStdDev.isNull() && m_altStdDev <= maxDeviation)
                 {
                     // small alt.deviation too!
                     if (!m_maxGroundDistance.isNull() && m_maxGroundDistance < cg)
                     {
-                        if (this->isConstOnGround()) { this->setSceneryDeviation(m_gndDistMean, cg, SmallAGLDeviationNearGround); break; }
+                        if (this->isConstOnGround())
+                        {
+                            this->setSceneryDeviation(m_gndDistMean, cg, SmallAGLDeviationNearGround);
+                            break;
+                        }
                     }
                 }
             }

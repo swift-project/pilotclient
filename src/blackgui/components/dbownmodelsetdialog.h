@@ -15,7 +15,10 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CDbOwnModelSetDialog; }
+namespace Ui
+{
+    class CDbOwnModelSetDialog;
+}
 namespace BlackGui::Components
 {
     class CDbOwnModelSetComponent;

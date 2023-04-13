@@ -78,7 +78,7 @@ namespace BlackGui
 
         // top info areas other than direct parent
         // (parent's parent when nested info areas are used)
-        if (parentInfoAreas.size() < 2)  { return; }
+        if (parentInfoAreas.size() < 2) { return; }
         contextMenu->addSeparator();
         for (int i = 1; i < parentInfoAreas.size(); i++)
         {

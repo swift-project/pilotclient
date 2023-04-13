@@ -36,25 +36,25 @@ namespace BlackMisc::Aviation
         switch (m_type)
         {
         case ATIS:
-            {
-                static const QString atis("ATIS");
-                return atis;
-            }
+        {
+            static const QString atis("ATIS");
+            return atis;
+        }
         case METAR:
-            {
-                static const QString metar("METAR");
-                return metar;
-            }
+        {
+            static const QString metar("METAR");
+            return metar;
+        }
         case TAF:
-            {
-                static const QString taf("TAF");
-                return taf;
-            }
+        {
+            static const QString taf("TAF");
+            return taf;
+        }
         default:
-            {
-                static const QString ds("unknown");
-                return ds;
-            }
+        {
+            static const QString ds("unknown");
+            return ds;
+        }
         }
     }
 
@@ -74,12 +74,20 @@ namespace BlackMisc::Aviation
 
     void CInformationMessage::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CInformationMessage>(); return; }
-        if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CInformationMessage>();
+            return;
+        }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            ITimestampBased::setPropertyByIndex(index, variant);
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexType:    m_type = static_cast<InformationType>(variant.toInt()); break;
+        case IndexType: m_type = static_cast<InformationType>(variant.toInt()); break;
         case IndexMessage: m_message = variant.toString(); break;
         default: break;
         }

@@ -25,8 +25,7 @@ using namespace BlackCore::Afv::Clients;
 
 namespace BlackCore::Context
 {
-    CContextAudioProxy::CContextAudioProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
-        CContextAudioBase(mode, runtime), m_dBusInterface(nullptr)
+    CContextAudioProxy::CContextAudioProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : CContextAudioBase(mode, runtime), m_dBusInterface(nullptr)
     {
         m_dBusInterface = new CGenericDBusInterface(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(), connection, this);
         this->relaySignals(serviceName, connection);

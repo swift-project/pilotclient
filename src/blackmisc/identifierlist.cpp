@@ -15,15 +15,14 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc, CIdentifier, CIdentifierList)
 
 namespace BlackMisc
 {
-    CIdentifierList::CIdentifierList() { }
+    CIdentifierList::CIdentifierList() {}
 
-    CIdentifierList::CIdentifierList(const CSequence<CIdentifier> &other) :
-        CSequence<CIdentifier>(other)
-    { }
+    CIdentifierList::CIdentifierList(const CSequence<CIdentifier> &other) : CSequence<CIdentifier>(other)
+    {}
 
     bool CIdentifierList::containsAnyNotIn(const CIdentifierList &other) const
     {
-        return containsBy([&other](const CIdentifier & id) { return ! other.contains(id); });
+        return containsBy([&other](const CIdentifier &id) { return !other.contains(id); });
     }
 
     CIdentifierList CIdentifierList::getMachinesUnique() const
@@ -31,8 +30,7 @@ namespace BlackMisc
         CIdentifierList il;
         for (const CIdentifier &identifier : *this)
         {
-            bool contained = il.containsBy([ = ] (const CIdentifier &ident)
-            {
+            bool contained = il.containsBy([=](const CIdentifier &ident) {
                 return identifier.hasSameMachineName(ident);
             });
             if (!contained) { il.push_back(identifier); }

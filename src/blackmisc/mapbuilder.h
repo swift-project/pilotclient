@@ -31,7 +31,10 @@ namespace BlackMisc
     public:
         //! Add an key/value pair to the map. Runs in amortized constant time.
         template <typename... Ts>
-        void insert(Ts &&... keyAndValue) { m_list.push_back(std::make_pair(std::forward<Ts>(keyAndValue)...)); }
+        void insert(Ts &&...keyAndValue)
+        {
+            m_list.push_back(std::make_pair(std::forward<Ts>(keyAndValue)...));
+        }
 
         //! True if no pairs have been inserted.
         bool isEmpty() const { return m_list.isEmpty(); }

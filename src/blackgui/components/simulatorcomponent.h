@@ -24,12 +24,18 @@
 #include <QTabWidget>
 #include <QtGlobal>
 
-namespace Ui { class CSimulatorComponent; }
+namespace Ui
+{
+    class CSimulatorComponent;
+}
 namespace BlackMisc
 {
     class CIcon;
     class CStatusMessageList;
-    namespace Simulation { class CSimulatedAircraft; }
+    namespace Simulation
+    {
+        class CSimulatedAircraft;
+    }
 }
 namespace BlackGui::Components
 {

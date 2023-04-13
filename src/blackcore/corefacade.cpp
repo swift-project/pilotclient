@@ -52,8 +52,7 @@ using namespace BlackCore::Context;
 
 namespace BlackCore
 {
-    CCoreFacade::CCoreFacade(const CCoreFacadeConfig &config, QObject *parent) :
-        QObject(parent), m_config(config)
+    CCoreFacade::CCoreFacade(const CCoreFacadeConfig &config, QObject *parent) : QObject(parent), m_config(config)
     {
         this->init();
     }
@@ -279,12 +278,11 @@ namespace BlackCore
                 // identifier is needed because own aircraft context also reports changed aircraft to xCtxChangedOwnAircraftModel
                 // and we avoid roundtrips
                 c = connect(this->getCContextSimulator(), &CContextSimulator::ownAircraftModelChanged,
-                            this->getCContextOwnAircraft(), [ = ](const CAircraftModel & changedModel)
-                {
-                    if (!this->getIContextOwnAircraft()) { return; }
-                    if (!this->getCContextSimulator())   { return; }
-                    this->getCContextOwnAircraft()->xCtxChangedSimulatorModel(changedModel, this->getCContextSimulator()->identifier());
-                });
+                            this->getCContextOwnAircraft(), [=](const CAircraftModel &changedModel) {
+                                if (!this->getIContextOwnAircraft()) { return; }
+                                if (!this->getCContextSimulator()) { return; }
+                                this->getCContextOwnAircraft()->xCtxChangedSimulatorModel(changedModel, this->getCContextSimulator()->identifier());
+                            });
 
                 Q_ASSERT(c);
                 c = connect(this->getCContextSimulator(), &CContextSimulator::simulatorStatusChanged,
@@ -293,7 +291,7 @@ namespace BlackCore
 
                 // this is used if the value in own aircraft is changed, to callback simulator
                 c = connect(this->getCContextOwnAircraft(), &CContextOwnAircraft::ps_changedModel,
-                            this->getCContextSimulator(),   &CContextSimulator::xCtxChangedOwnAircraftModel);
+                            this->getCContextSimulator(), &CContextSimulator::xCtxChangedOwnAircraftModel);
                 Q_ASSERT(c);
             }
 
@@ -306,7 +304,7 @@ namespace BlackCore
         if (m_contextNetwork && m_contextOwnAircraft && m_contextNetwork->isUsingImplementingObject() && m_contextOwnAircraft->isUsingImplementingObject())
         {
             c = connect(m_contextNetwork, &IContextNetwork::changedAtcStationOnlineConnectionStatus,
-                        this->getCContextOwnAircraft(),  &CContextOwnAircraft::xCtxChangedAtcStationOnlineConnectionStatus);
+                        this->getCContextOwnAircraft(), &CContextOwnAircraft::xCtxChangedAtcStationOnlineConnectionStatus);
             Q_ASSERT(c);
             times.insert("Post setup, connects network", time.restart());
         }

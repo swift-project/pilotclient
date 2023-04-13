@@ -20,7 +20,7 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackGui::Settings, CViewUpdateSettings)
 namespace BlackGui::Settings
 {
     CViewUpdateSettings::CViewUpdateSettings()
-    { }
+    {}
 
     void CViewUpdateSettings::reset()
     {
@@ -34,19 +34,17 @@ namespace BlackGui::Settings
     {
         // too fast updates cause CPU overload
         static const CTime min(5.0, CTimeUnit::s());
-        return
-            this->m_updateAircraft >= min &&
-            this->m_updateAtc >= min &&
-            this->m_updateRendering >= min &&
-            this->m_updateUser >= min;
+        return this->m_updateAircraft >= min &&
+               this->m_updateAtc >= min &&
+               this->m_updateRendering >= min &&
+               this->m_updateUser >= min;
     }
 
     QString CViewUpdateSettings::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
         const QString s("Atc: %1 Aircraft: %2 User: %3 Rendering %4");
-        return s.arg(m_updateAtc.valueRounded(CTimeUnit::s(), 2)).arg(m_updateAircraft.valueRounded(CTimeUnit::s(), 2))
-                .arg(m_updateUser.valueRounded(CTimeUnit::s(), 2)).arg(m_updateRendering.valueRounded(CTimeUnit::s(), 2));
+        return s.arg(m_updateAtc.valueRounded(CTimeUnit::s(), 2)).arg(m_updateAircraft.valueRounded(CTimeUnit::s(), 2)).arg(m_updateUser.valueRounded(CTimeUnit::s(), 2)).arg(m_updateRendering.valueRounded(CTimeUnit::s(), 2));
     }
 
     QVariant CViewUpdateSettings::propertyByIndex(CPropertyIndexRef index) const
@@ -70,7 +68,11 @@ namespace BlackGui::Settings
 
     void CViewUpdateSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CViewUpdateSettings>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CViewUpdateSettings>();
+            return;
+        }
 
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)

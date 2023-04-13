@@ -105,23 +105,25 @@ namespace BlackMisc
             void convertFromJson(const QString &jsonString, bool acceptCacheFormat = false);
 
             //! Get object from QJsonObject
-            template<class DerivedObj = Derived>
+            template <class DerivedObj = Derived>
             static DerivedObj fromJson(const QJsonObject &json);
 
             //! Get object from JSON string
-            template<class DerivedObj = Derived>
+            template <class DerivedObj = Derived>
             static DerivedObj fromJson(const QString &jsonString, bool acceptCacheJson = false);
 
             //! Get object from JSON string
-            template<class DerivedObj = Derived>
+            template <class DerivedObj = Derived>
             static DerivedObj fromJsonNoThrow(const QString &jsonString, bool acceptCacheJson, bool &success, QString &errMsg);
 
         private:
             const Derived *derived() const;
             Derived *derived();
 
-            template <typename T> static QJsonObject baseToJson(const T *base);
-            template <typename T> static void baseConvertFromJson(T *base, const QJsonObject &json);
+            template <typename T>
+            static QJsonObject baseToJson(const T *base);
+            template <typename T>
+            static void baseConvertFromJson(T *base, const QJsonObject &json);
             static QJsonObject baseToJson(const void *);
             static void baseConvertFromJson(void *, const QJsonObject &);
             static QJsonObject baseToJson(const CEmpty *);
@@ -132,8 +134,7 @@ namespace BlackMisc
         QJsonObject JsonByMetaClass<Derived>::toJson() const
         {
             QJsonObject json;
-            introspect<Derived>().forEachMember([ &, this ](auto member)
-            {
+            introspect<Derived>().forEachMember([&, this](auto member) {
                 if constexpr (!decltype(member)::has(MetaFlags<DisabledForJson>()))
                 {
                     json << std::make_pair(CExplicitLatin1String(member.latin1Name()), std::cref(member.in(*this->derived())));
@@ -153,8 +154,7 @@ namespace BlackMisc
         void JsonByMetaClass<Derived>::convertFromJson(const QJsonObject &json)
         {
             baseConvertFromJson(static_cast<TBaseOfT<Derived> *>(derived()), json);
-            introspect<Derived>().forEachMember([ &, this ](auto member)
-            {
+            introspect<Derived>().forEachMember([&, this](auto member) {
                 if constexpr (!decltype(member)::has(MetaFlags<DisabledForJson>()))
                 {
                     const auto value = json.value(CExplicitLatin1String(member.latin1Name()));
@@ -224,38 +224,58 @@ namespace BlackMisc
         }
 
         template <class Derived>
-        const Derived *JsonByMetaClass<Derived>::derived() const { return static_cast<const Derived *>(this); }
+        const Derived *JsonByMetaClass<Derived>::derived() const
+        {
+            return static_cast<const Derived *>(this);
+        }
 
         template <class Derived>
-        Derived *JsonByMetaClass<Derived>::derived() { return static_cast<Derived *>(this); }
+        Derived *JsonByMetaClass<Derived>::derived()
+        {
+            return static_cast<Derived *>(this);
+        }
 
         template <class Derived>
         template <typename T>
-        QJsonObject JsonByMetaClass<Derived>::baseToJson(const T *base) { return base->toJson(); }
+        QJsonObject JsonByMetaClass<Derived>::baseToJson(const T *base)
+        {
+            return base->toJson();
+        }
 
         template <class Derived>
         template <typename T>
-        void JsonByMetaClass<Derived>::baseConvertFromJson(T *base, const QJsonObject &json) { base->convertFromJson(json); }
+        void JsonByMetaClass<Derived>::baseConvertFromJson(T *base, const QJsonObject &json)
+        {
+            base->convertFromJson(json);
+        }
 
         template <class Derived>
-        QJsonObject JsonByMetaClass<Derived>::baseToJson(const void *) { return {}; }
+        QJsonObject JsonByMetaClass<Derived>::baseToJson(const void *)
+        {
+            return {};
+        }
 
         template <class Derived>
-        void JsonByMetaClass<Derived>::baseConvertFromJson(void *, const QJsonObject &) {}
+        void JsonByMetaClass<Derived>::baseConvertFromJson(void *, const QJsonObject &)
+        {}
 
         template <class Derived>
-        QJsonObject JsonByMetaClass<Derived>::baseToJson(const CEmpty *) { return {}; }
+        QJsonObject JsonByMetaClass<Derived>::baseToJson(const CEmpty *)
+        {
+            return {};
+        }
 
         template <class Derived>
-        void JsonByMetaClass<Derived>::baseConvertFromJson(CEmpty *, const QJsonObject &) {}
+        void JsonByMetaClass<Derived>::baseConvertFromJson(CEmpty *, const QJsonObject &)
+        {}
 
-        /*!
-         * When a derived class and a base class both inherit from Mixin::JsonByTuple,
-         * the derived class uses this macro to disambiguate the inherited members.
-         */
-        #define BLACKMISC_DECLARE_USING_MIXIN_JSON(DERIVED)                      \
-            using ::BlackMisc::Mixin::JsonByMetaClass<DERIVED>::toJson;          \
-            using ::BlackMisc::Mixin::JsonByMetaClass<DERIVED>::convertFromJson;
+/*!
+ * When a derived class and a base class both inherit from Mixin::JsonByTuple,
+ * the derived class uses this macro to disambiguate the inherited members.
+ */
+#define BLACKMISC_DECLARE_USING_MIXIN_JSON(DERIVED)             \
+    using ::BlackMisc::Mixin::JsonByMetaClass<DERIVED>::toJson; \
+    using ::BlackMisc::Mixin::JsonByMetaClass<DERIVED>::convertFromJson;
     } // Mixin ns
 } // guard
 

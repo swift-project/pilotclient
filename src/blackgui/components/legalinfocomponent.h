@@ -17,7 +17,10 @@
 #include <QScopedPointer>
 #include <QWizardPage>
 
-namespace Ui { class CLegalInfoComponent; }
+namespace Ui
+{
+    class CLegalInfoComponent;
+}
 namespace BlackGui::Components
 {
     /*!

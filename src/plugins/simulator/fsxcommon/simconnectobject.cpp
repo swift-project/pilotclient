@@ -33,11 +33,10 @@ namespace BlackSimPlugin::FsxCommon
     }
 
     CSimConnectObject::CSimConnectObject(const CSimulatedAircraft &aircraft,
-                                            DWORD requestId,
-                                            ISimulationEnvironmentProvider *simEnvProvider, IInterpolationSetupProvider *setupProvider, IRemoteAircraftProvider *remoteAircraftProvider,
-                                            CInterpolationLogger *logger) :
-        m_aircraft(aircraft), m_requestId(requestId), m_validRequestId(true),
-        m_interpolator(QSharedPointer<CInterpolatorMulti>::create(aircraft.getCallsign(), simEnvProvider, setupProvider, remoteAircraftProvider, logger))
+                                         DWORD requestId,
+                                         ISimulationEnvironmentProvider *simEnvProvider, IInterpolationSetupProvider *setupProvider, IRemoteAircraftProvider *remoteAircraftProvider,
+                                         CInterpolationLogger *logger) : m_aircraft(aircraft), m_requestId(requestId), m_validRequestId(true),
+                                                                         m_interpolator(QSharedPointer<CInterpolatorMulti>::create(aircraft.getCallsign(), simEnvProvider, setupProvider, remoteAircraftProvider, logger))
     {
         this->resetCameraPositions();
         m_type = aircraft.isTerrainProbe() ? TerrainProbe : AircraftNonAtc;
@@ -173,10 +172,10 @@ namespace BlackSimPlugin::FsxCommon
         m_currentLightsInSim = CAircraftLights();
         m_lightsAsSent = CAircraftLights();
         m_requestId = 0;
-        m_objectId  = 0;
+        m_objectId = 0;
         m_addingExceptions = 0;
         m_validRequestId = false;
-        m_validObjectId  = false;
+        m_validObjectId = false;
         m_tsCreated = -1;
         this->resetCameraPositions();
     }
@@ -213,7 +212,12 @@ namespace BlackSimPlugin::FsxCommon
 
     CInterpolationResult CSimConnectObject::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber) const
     {
-        if (!m_interpolator) { CInterpolationResult result; result.reset(); return result; }
+        if (!m_interpolator)
+        {
+            CInterpolationResult result;
+            result.reset();
+            return result;
+        }
         return m_interpolator->getInterpolation(currentTimeSinceEpoc, setup, aircraftNumber);
     }
 
@@ -233,13 +237,13 @@ namespace BlackSimPlugin::FsxCommon
     QString CSimConnectObject::toQString() const
     {
         static const QString s("CS: '%1' obj: %2 req: %3 conf.added: %4 pend.rem.: %5 rwa: %6 awr: %7 aEx: %8 aRem: %9");
-        return s.arg(this->getCallsign().asString()). arg(m_objectId).arg(m_requestId).arg(boolToYesNo(m_confirmedAdded), boolToYesNo(m_pendingRemoved), boolToYesNo(m_removedWhileAdding), boolToYesNo(m_addedWhileRemoving)).arg(m_addingExceptions).arg(m_addingDirectlyRemoved);
+        return s.arg(this->getCallsign().asString()).arg(m_objectId).arg(m_requestId).arg(boolToYesNo(m_confirmedAdded), boolToYesNo(m_pendingRemoved), boolToYesNo(m_removedWhileAdding), boolToYesNo(m_addedWhileRemoving)).arg(m_addingExceptions).arg(m_addingDirectlyRemoved);
     }
 
     CSimConnectObject::SimObjectType CSimConnectObject::requestIdToType(DWORD requestId)
     {
         if (CSimulatorFsxCommon::isRequestForSimObjTerrainProbe(requestId)) { return TerrainProbe; }
-        if (CSimulatorFsxCommon::isRequestForSimObjAircraft(requestId))     { return AircraftNonAtc; }
+        if (CSimulatorFsxCommon::isRequestForSimObjAircraft(requestId)) { return AircraftNonAtc; }
         Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong range");
         return AircraftNonAtc;
     }
@@ -252,9 +256,9 @@ namespace BlackSimPlugin::FsxCommon
         static const QString u("unknown");
         switch (type)
         {
-        case AircraftNonAtc:    return a1;
+        case AircraftNonAtc: return a1;
         case AircraftSimulatedObject: return a2;
-        case TerrainProbe:      return p;
+        case TerrainProbe: return p;
         default: break;
         }
         return u;
@@ -290,7 +294,7 @@ namespace BlackSimPlugin::FsxCommon
     bool CSimConnectObjects::setSimConnectObjectIdForRequestId(DWORD requestId, DWORD objectId)
     {
         // First check, if this request id belongs to us
-        auto it = std::find_if(this->begin(), this->end(), [requestId](const CSimConnectObject & obj) { return obj.getRequestId() == requestId; });
+        auto it = std::find_if(this->begin(), this->end(), [requestId](const CSimConnectObject &obj) { return obj.getRequestId() == requestId; });
         if (it == this->end()) { return false; }
 
         // belongs to us
@@ -306,7 +310,7 @@ namespace BlackSimPlugin::FsxCommon
     CCallsignSet CSimConnectObjects::getAllCallsigns(bool withoutProbes) const
     {
         if (this->isEmpty()) { return CCallsignSet(); }
-        if (!withoutProbes)  { return CCallsignSet(this->keys()); }
+        if (!withoutProbes) { return CCallsignSet(this->keys()); }
         CCallsignSet callsigns;
         for (const CSimConnectObject &simObject : *this)
         {
@@ -543,7 +547,7 @@ namespace BlackSimPlugin::FsxCommon
         for (const CSimConnectObject &simObject : std::as_const(*this))
         {
             // verification takes at least a second, so we need some time before outdating
-            if (type != CSimConnectObject::AllTypes && simObject.getType() != type)  { continue; }
+            if (type != CSimConnectObject::AllTypes && simObject.getType() != type) { continue; }
             if (!simObject.isOutdatedPendingAdded(5000, ts)) { continue; }
             removedObjects.insert(simObject);
             removeCallsigns.insert(simObject.getCallsign());

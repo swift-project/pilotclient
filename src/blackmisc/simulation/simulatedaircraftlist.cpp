@@ -28,11 +28,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Simulation, CSimulatedAircraft, CSimulat
 
 namespace BlackMisc::Simulation
 {
-    CSimulatedAircraftList::CSimulatedAircraftList() { }
+    CSimulatedAircraftList::CSimulatedAircraftList() {}
 
-    CSimulatedAircraftList::CSimulatedAircraftList(const CSequence<CSimulatedAircraft> &other) :
-        CSequence<CSimulatedAircraft>(other)
-    { }
+    CSimulatedAircraftList::CSimulatedAircraftList(const CSequence<CSimulatedAircraft> &other) : CSequence<CSimulatedAircraft>(other)
+    {}
 
     CUserList CSimulatedAircraftList::getPilots() const
     {
@@ -269,8 +268,7 @@ namespace BlackMisc::Simulation
 
     void CSimulatedAircraftList::sortByDistanceToReferencePositionRenderedCallsign()
     {
-        this->sort([ & ](const CSimulatedAircraft & a, const CSimulatedAircraft & b)
-        {
+        this->sort([&](const CSimulatedAircraft &a, const CSimulatedAircraft &b) {
             if (a.getRelativeDistance() != b.getRelativeDistance()) { return a.getRelativeDistance() < b.getRelativeDistance(); }
             if (a.isRendered() != b.isRendered()) { return a.isRendered(); } // get the rendered first
             return a.getCallsignAsString() < b.getCallsignAsString();

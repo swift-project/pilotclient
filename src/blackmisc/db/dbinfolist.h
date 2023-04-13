@@ -46,9 +46,9 @@ namespace BlackMisc::Db
         //! From our database JSON format
         static CDbInfoList fromDatabaseJson(const QJsonArray &array);
     };
-} //namespace
+} // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Db::CDbInfoList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Db::CDbInfo>)
 
-#endif //guard
+#endif // guard

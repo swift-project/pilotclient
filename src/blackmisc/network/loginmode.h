@@ -25,8 +25,8 @@ namespace BlackMisc::Network
         //! Login modes
         enum LoginMode
         {
-            Pilot,      //!< Normal login
-            Observer,   //!< Login as observer
+            Pilot, //!< Normal login
+            Observer, //!< Login as observer
         };
 
         //! Default constructor.

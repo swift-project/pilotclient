@@ -21,21 +21,20 @@ using namespace BlackCore;
 
 namespace BlackGui::Models
 {
-    CActionModel::CActionModel(QObject *parent) :
-        QAbstractItemModel(parent),
-        m_rootItem(new CActionItem(QString(), QString()))
+    CActionModel::CActionModel(QObject *parent) : QAbstractItemModel(parent),
+                                                  m_rootItem(new CActionItem(QString(), QString()))
     {
         setupModelData();
     }
 
     CActionModel::~CActionModel()
-    { }
+    {}
 
     int CActionModel::columnCount(const QModelIndex &parent) const
     {
         return parent.isValid() ?
-                static_cast<CActionItem *>(parent.internalPointer())->getColumnCount() :
-                m_rootItem->getColumnCount();
+                   static_cast<CActionItem *>(parent.internalPointer())->getColumnCount() :
+                   m_rootItem->getColumnCount();
     }
 
     QVariant CActionModel::data(const QModelIndex &index, int role) const
@@ -66,13 +65,13 @@ namespace BlackGui::Models
         if (!hasIndex(row, column, parent)) { return QModelIndex(); }
 
         const CActionItem *parentItem = parent.isValid() ?
-                                        static_cast<CActionItem *>(parent.internalPointer()) :
-                                        m_rootItem.data();
+                                            static_cast<CActionItem *>(parent.internalPointer()) :
+                                            m_rootItem.data();
 
         CActionItem *childItem = parentItem->getChildByRow(row);
         return childItem ?
-                createIndex(row, column, childItem) :
-                QModelIndex();
+                   createIndex(row, column, childItem) :
+                   QModelIndex();
     }
 
     QModelIndex CActionModel::parent(const QModelIndex &index) const
@@ -91,8 +90,8 @@ namespace BlackGui::Models
     {
         if (parent.column() > 0) { return 0; }
         const CActionItem *parentItem = parent.isValid() ?
-                                        static_cast<CActionItem *>(parent.internalPointer()) :
-                                        m_rootItem.data();
+                                            static_cast<CActionItem *>(parent.internalPointer()) :
+                                            m_rootItem.data();
         return parentItem->getChildCount();
     }
 

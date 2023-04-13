@@ -32,8 +32,7 @@ namespace BlackCore::Db
         return cats;
     }
 
-    CBackgroundDataUpdater::CBackgroundDataUpdater(QObject *owner) :
-        CContinuousWorker(owner, "Background data updater")
+    CBackgroundDataUpdater::CBackgroundDataUpdater(QObject *owner) : CContinuousWorker(owner, "Background data updater")
     {
         connect(&m_updateTimer, &QTimer::timeout, this, &CBackgroundDataUpdater::doWork);
         m_updateTimer.setInterval(60 * 1000);
@@ -105,8 +104,8 @@ namespace BlackCore::Db
         if (!this->doWorkCheck()) { return; }
         IMultiSimulatorModelCaches &modelCaches = this->modelCaches(modelSetFlag);
         const QDateTime latestDbModelsTs = dbModelsConsidered.isEmpty() ?
-                                            sApp->getWebDataServices()->getCacheTimestamp(CEntityFlags::ModelEntity) :
-                                            dbModelsConsidered.latestTimestamp();
+                                               sApp->getWebDataServices()->getCacheTimestamp(CEntityFlags::ModelEntity) :
+                                               dbModelsConsidered.latestTimestamp();
         if (!latestDbModelsTs.isValid()) { return; }
 
         // newer DB models as cache
@@ -119,8 +118,8 @@ namespace BlackCore::Db
         if (simulators.isNoSimulator()) { return; }
 
         const CAircraftModelList dbModels = dbModelsConsidered.isEmpty() ?
-                                            sApp->getWebDataServices()->getModels() :
-                                            dbModelsConsidered;
+                                                sApp->getWebDataServices()->getModels() :
+                                                dbModelsConsidered;
         if (dbModels.isEmpty()) { return; }
         const QSet<CSimulatorInfo> simulatorsSet = simulators.asSingleSimulatorSet();
         QElapsedTimer time;
@@ -172,12 +171,12 @@ namespace BlackCore::Db
         if (latestDbTs <= latestCacheTs)
         {
             this->addHistory(CLogMessage(this).info(u"Background updater (%1), no auto synchronization with DB, entity '%2', DB ts: %3 cache ts: %4")
-                                << CThreadUtils::currentThreadInfo() << entityStr << latestDbTs.toString(Qt::ISODate) << latestCacheTsStr);
+                             << CThreadUtils::currentThreadInfo() << entityStr << latestDbTs.toString(Qt::ISODate) << latestCacheTsStr);
             return;
         }
 
         this->addHistory(CLogMessage(this).info(u"Background updater (%1) triggering read of '%2' since '%3'")
-                            << CThreadUtils::currentThreadInfo() << entityStr << latestCacheTsStr);
+                         << CThreadUtils::currentThreadInfo() << entityStr << latestCacheTsStr);
         sApp->getWebDataServices()->triggerLoadingDirectlyFromDb(entity, latestCacheTs);
     }
 
@@ -192,7 +191,7 @@ namespace BlackCore::Db
     {
         if (!this->doWorkCheck()) { return; }
         if (modelsPublished.isEmpty()) { return; }
-        if (!m_updatePublishedModels)  { return; }
+        if (!m_updatePublishedModels) { return; }
         if (!directWrite) { return; } // those models are CRs and have to be released first
         if (m_inWork) { return; } // no 2 updates at the same time
 

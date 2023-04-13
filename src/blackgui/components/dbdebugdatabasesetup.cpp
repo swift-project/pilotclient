@@ -17,9 +17,8 @@ using namespace BlackMisc;
 
 namespace BlackGui::Components
 {
-    CDbDebugDatabaseSetup::CDbDebugDatabaseSetup(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CDbDebugDatabaseSetup)
+    CDbDebugDatabaseSetup::CDbDebugDatabaseSetup(QWidget *parent) : QFrame(parent),
+                                                                    ui(new Ui::CDbDebugDatabaseSetup)
     {
         ui->setupUi(this);
         const bool enabled = sGui->isDeveloperFlagSet();
@@ -35,7 +34,7 @@ namespace BlackGui::Components
     }
 
     CDbDebugDatabaseSetup::~CDbDebugDatabaseSetup()
-    { }
+    {}
 
     void CDbDebugDatabaseSetup::onDebugChanged(bool set)
     {

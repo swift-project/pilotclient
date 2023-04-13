@@ -22,19 +22,19 @@
 /*!
  * Non member non-friend streaming for std::string
  */
-QDBusArgument &operator <<(QDBusArgument &arg, const std::string &s);
+QDBusArgument &operator<<(QDBusArgument &arg, const std::string &s);
 
 /*!
  * Operator for std::string from QDBusArgument.
  */
-const QDBusArgument &operator >>(const QDBusArgument &arg, std::string &s);
+const QDBusArgument &operator>>(const QDBusArgument &arg, std::string &s);
 
 // *INDENT-OFF*
 /*!
  * Operator for streaming enums to QDBusArgument.
  */
 template <class E, std::enable_if_t<std::is_enum_v<E>, int> = 0>
-QDBusArgument &operator <<(QDBusArgument &arg, const E &value)
+QDBusArgument &operator<<(QDBusArgument &arg, const E &value)
 {
     arg.beginStructure();
     arg << static_cast<int>(value);
@@ -46,7 +46,7 @@ QDBusArgument &operator <<(QDBusArgument &arg, const E &value)
  * Operator for streaming enums from QDBusArgument.
  */
 template <class E, std::enable_if_t<std::is_enum_v<E>, int> = 0>
-const QDBusArgument &operator >>(const QDBusArgument &arg, E &value)
+const QDBusArgument &operator>>(const QDBusArgument &arg, E &value)
 {
     int temp;
     arg.beginStructure();
@@ -60,7 +60,7 @@ const QDBusArgument &operator >>(const QDBusArgument &arg, E &value)
  * Operator for streaming QFlags to QDBusArgument.
  */
 template <class T>
-QDBusArgument &operator <<(QDBusArgument &arg, const QFlags<T> &value)
+QDBusArgument &operator<<(QDBusArgument &arg, const QFlags<T> &value)
 {
     arg.beginStructure();
     arg << static_cast<typename QFlags<T>::Int>(value);
@@ -72,7 +72,7 @@ QDBusArgument &operator <<(QDBusArgument &arg, const QFlags<T> &value)
  * Operator for streaming QFlags from QDBusArgument.
  */
 template <class T>
-const QDBusArgument &operator >>(const QDBusArgument &arg, QFlags<T> &value)
+const QDBusArgument &operator>>(const QDBusArgument &arg, QFlags<T> &value)
 {
     typename QFlags<T>::Int temp = 0;
     arg.beginStructure();
@@ -86,7 +86,7 @@ const QDBusArgument &operator >>(const QDBusArgument &arg, QFlags<T> &value)
  * Operator for streaming pairs to QDBusArgument.
  */
 template <class A, class B>
-QDBusArgument &operator <<(QDBusArgument &arg, const std::pair<A, B> &pair)
+QDBusArgument &operator<<(QDBusArgument &arg, const std::pair<A, B> &pair)
 {
     arg.beginStructure();
     arg << pair.first << pair.second;
@@ -98,7 +98,7 @@ QDBusArgument &operator <<(QDBusArgument &arg, const std::pair<A, B> &pair)
  * Operator for streaming pairs from QDBusArgument.
  */
 template <class A, class B>
-const QDBusArgument &operator >>(const QDBusArgument &arg, std::pair<A, B> &pair)
+const QDBusArgument &operator>>(const QDBusArgument &arg, std::pair<A, B> &pair)
 {
     arg.beginStructure();
     arg >> pair.first >> pair.second;

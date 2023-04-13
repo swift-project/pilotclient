@@ -17,29 +17,28 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackGui::Editors
 {
-    CPbhsForm::CPbhsForm(QWidget *parent) :
-        CForm(parent),
-        ui(new Ui::CPbhsForm)
+    CPbhsForm::CPbhsForm(QWidget *parent) : CForm(parent),
+                                            ui(new Ui::CPbhsForm)
     {
         ui->setupUi(this);
 
         ui->le_Bank->setValidator(new QDoubleValidator(-180.0 + CAngleUnit::deg().getEpsilon(), 180.0, 3, ui->le_Bank));
         ui->le_Pitch->setValidator(new QDoubleValidator(-180.0 + CAngleUnit::deg().getEpsilon(), 180.0, 3, ui->le_Pitch));
 
-        connect(ui->hs_Bank,      &QSlider::valueChanged,      this, &CPbhsForm::bankSliderChanged);
-        connect(ui->hs_Pitch,     &QSlider::valueChanged,      this, &CPbhsForm::pitchSliderChanged);
-        connect(ui->hs_Heading,   &QSlider::valueChanged,      this, &CPbhsForm::headingSliderChanged);
-        connect(ui->le_Bank,      &QLineEdit::editingFinished, this, &CPbhsForm::bankEntered);
-        connect(ui->le_Pitch,     &QLineEdit::editingFinished, this, &CPbhsForm::pitchEntered);
-        connect(ui->le_Heading,   &QLineEdit::editingFinished, this, &CPbhsForm::headingEntered);
-        connect(ui->tb_ResetBank,      &QToolButton::clicked,  this, &CPbhsForm::resetBank);
-        connect(ui->tb_ResetPitch,     &QToolButton::clicked,  this, &CPbhsForm::resetPitch);
-        connect(ui->tb_ResetHeading,   &QToolButton::clicked,  this, &CPbhsForm::resetHeading);
+        connect(ui->hs_Bank, &QSlider::valueChanged, this, &CPbhsForm::bankSliderChanged);
+        connect(ui->hs_Pitch, &QSlider::valueChanged, this, &CPbhsForm::pitchSliderChanged);
+        connect(ui->hs_Heading, &QSlider::valueChanged, this, &CPbhsForm::headingSliderChanged);
+        connect(ui->le_Bank, &QLineEdit::editingFinished, this, &CPbhsForm::bankEntered);
+        connect(ui->le_Pitch, &QLineEdit::editingFinished, this, &CPbhsForm::pitchEntered);
+        connect(ui->le_Heading, &QLineEdit::editingFinished, this, &CPbhsForm::headingEntered);
+        connect(ui->tb_ResetBank, &QToolButton::clicked, this, &CPbhsForm::resetBank);
+        connect(ui->tb_ResetPitch, &QToolButton::clicked, this, &CPbhsForm::resetPitch);
+        connect(ui->tb_ResetHeading, &QToolButton::clicked, this, &CPbhsForm::resetHeading);
         connect(ui->pb_SetOwnAircraft, &QPushButton::released, this, &CPbhsForm::changeValues);
     }
 
     CPbhsForm::~CPbhsForm()
-    { }
+    {}
 
     CAngle CPbhsForm::getBankAngle() const
     {

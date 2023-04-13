@@ -16,7 +16,10 @@
 #include <QTimer>
 #include <QTextDocument>
 
-namespace Ui { class CModelMatcherLogComponent; }
+namespace Ui
+{
+    class CModelMatcherLogComponent;
+}
 namespace BlackGui::Components
 {
     /*!

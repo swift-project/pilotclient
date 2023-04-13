@@ -19,10 +19,10 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackGui::Settings, CNavigatorSettings)
 namespace BlackGui::Settings
 {
     CNavigatorSettings::CNavigatorSettings()
-    { }
+    {}
 
     void CNavigatorSettings::reset()
-    { }
+    {}
 
     void CNavigatorSettings::setMargins(const QMargins &margins)
     {
@@ -82,7 +82,11 @@ namespace BlackGui::Settings
 
     void CNavigatorSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CNavigatorSettings>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CNavigatorSettings>();
+            return;
+        }
 
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)

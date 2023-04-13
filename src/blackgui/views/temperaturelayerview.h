@@ -15,7 +15,10 @@
 #include "blackgui/models/temperaturelayerlistmodel.h"
 #include "blackgui/views/viewbase.h"
 
-namespace BlackMisc::Weather { class CTemperatureLayer; }
+namespace BlackMisc::Weather
+{
+    class CTemperatureLayer;
+}
 namespace BlackGui::Views
 {
     //! Airports view

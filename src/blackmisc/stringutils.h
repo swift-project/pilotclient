@@ -34,15 +34,17 @@
 #include <string>
 #include <algorithm>
 
-template <class T1, class T2> class QMap;
+template <class T1, class T2>
+class QMap;
 
 namespace BlackMisc
 {
     //! Return a string with characters removed that match the given predicate.
-    template <class F> QString removeChars(const QString &s, F predicate)
+    template <class F>
+    QString removeChars(const QString &s, F predicate)
     {
         QString result;
-        std::copy_if(s.begin(), s.end(), std::back_inserter(result), [ = ](auto c) { return !predicate(c); });
+        std::copy_if(s.begin(), s.end(), std::back_inserter(result), [=](auto c) { return !predicate(c); });
         return result;
     }
 
@@ -68,7 +70,8 @@ namespace BlackMisc
     BLACKMISC_EXPORT QString removeDateTimeSeparators(const QString &s);
 
     //! True if any character in the string matches the given predicate.
-    template <class F> bool containsChar(const QString &s, F predicate)
+    template <class F>
+    bool containsChar(const QString &s, F predicate)
     {
         return std::any_of(s.begin(), s.end(), predicate);
     }
@@ -80,7 +83,8 @@ namespace BlackMisc
     }
 
     //! Index of first character in the string matching the given predicate, or -1 if not found.
-    template <class F> int indexOfChar(const QString &s, F predicate)
+    template <class F>
+    int indexOfChar(const QString &s, F predicate)
     {
         auto it = std::find_if(s.begin(), s.end(), predicate);
         if (it == s.end()) { return -1; }
@@ -92,10 +96,11 @@ namespace BlackMisc
 
     //! Split a string into multiple strings, using a predicate function to identify the split points.
     //! \warning The returned refs are only valid during the lifetime of the original string.
-    template <class F> QList<QStringRef> splitStringRefs(const QString &s, F predicate)
+    template <class F>
+    QList<QStringRef> splitStringRefs(const QString &s, F predicate)
     {
         QList<QStringRef> result;
-        auto notPredicate = [ = ](auto c) { return !predicate(c); };
+        auto notPredicate = [=](auto c) { return !predicate(c); };
         auto begin = s.begin();
         while (true)
         {
@@ -112,13 +117,15 @@ namespace BlackMisc
     BLACKMISC_EXPORT QList<QStringRef> splitLinesRefs(const QString &s);
 
     //! It would be risky to call splitStringRefs with an rvalue, so forbid it.
-    template <class F> void splitStringRefs(const QString &&, F) = delete;
+    template <class F>
+    void splitStringRefs(const QString &&, F) = delete;
 
     //! It would be risky to call splitLinesRefs with an rvalue, so forbid it.
     void splitLinesRefs(const QString &&) = delete;
 
     //! Split a string into multiple strings, using a predicate function to identify the split points.
-    template <class F> QStringList splitString(const QString &s, F predicate)
+    template <class F>
+    QStringList splitString(const QString &s, F predicate)
     {
         return makeRange(splitStringRefs(s, predicate)).transform([](QStringRef sr) { return sr.toString(); });
     }
@@ -133,7 +140,8 @@ namespace BlackMisc
     BLACKMISC_EXPORT QString utfFromPercentEncoding(const QByteArray &ba, char percent = '%');
 
     //! A map converted to string
-    template<class K, class V> QString qmapToString(const QMap<K, V> &map)
+    template <class K, class V>
+    QString qmapToString(const QMap<K, V> &map)
     {
         QString s;
         static const QString kv("%1: %2 ");
@@ -142,8 +150,7 @@ namespace BlackMisc
         {
             i.next();
             s.append(
-                kv.arg(i.key()).arg(i.value())
-            );
+                kv.arg(i.key()).arg(i.value()));
         }
         return s.trimmed();
     }
@@ -320,91 +327,113 @@ namespace BlackMisc
     /*!
      * Stringification traits class.
      */
-    template <typename T, typename = void> struct TString;
+    template <typename T, typename = void>
+    struct TString;
 
     // Stringification traits specializations.
     //! \cond
-    template <> struct TString<QString>
+    template <>
+    struct TString<QString>
     {
         static QString toQString(const QString &s) { return s; }
     };
-    template <> struct TString<QStringRef>
+    template <>
+    struct TString<QStringRef>
     {
         static QString toQString(const QStringRef &sr) { return sr.toString(); }
     };
-    template <> struct TString<QStringView>
+    template <>
+    struct TString<QStringView>
     {
         static QString toQString(QStringView sv) { return sv.toString(); }
     };
-    template <> struct TString<QChar>
+    template <>
+    struct TString<QChar>
     {
         static QString toQString(QChar c) { return c; }
     };
-    template <> struct TString<char>
+    template <>
+    struct TString<char>
     {
         static QString toQString(char c) { return QChar(c); }
     };
-    template <> struct TString<bool>
+    template <>
+    struct TString<bool>
     {
         static QString toQString(bool n) { return QString::number(n); }
     };
-    template <> struct TString<int>
+    template <>
+    struct TString<int>
     {
         static QString toQString(int n) { return QString::number(n); }
     };
-    template <> struct TString<uint>
+    template <>
+    struct TString<uint>
     {
         static QString toQString(uint n) { return QString::number(n); }
     };
-    template <> struct TString<long>
+    template <>
+    struct TString<long>
     {
         static QString toQString(long n) { return QString::number(n); }
     };
-    template <> struct TString<ulong>
+    template <>
+    struct TString<ulong>
     {
         static QString toQString(ulong n) { return QString::number(n); }
     };
-    template <> struct TString<qlonglong>
+    template <>
+    struct TString<qlonglong>
     {
         static QString toQString(qlonglong n) { return QString::number(n); }
     };
-    template <> struct TString<qulonglong>
+    template <>
+    struct TString<qulonglong>
     {
         static QString toQString(qulonglong n) { return QString::number(n); }
     };
-    template <> struct TString<short>
+    template <>
+    struct TString<short>
     {
         static QString toQString(short n) { return QString::number(n); }
     };
-    template <> struct TString<ushort>
+    template <>
+    struct TString<ushort>
     {
         static QString toQString(ushort n) { return QString::number(n); }
     };
-    template <> struct TString<float>
+    template <>
+    struct TString<float>
     {
         static QString toQString(float n) { return QString::number(n); }
     };
-    template <> struct TString<double>
+    template <>
+    struct TString<double>
     {
         static QString toQString(double n) { return QString::number(n); }
     };
-    template <typename T> struct TString<T, std::enable_if_t<std::is_enum_v<T>>>
+    template <typename T>
+    struct TString<T, std::enable_if_t<std::is_enum_v<T>>>
     {
         static QString toQString(T e) { return QString::number(e); }
     };
-    template <typename T> struct TString<T, std::enable_if_t<std::is_convertible_v<T, QString>>>
+    template <typename T>
+    struct TString<T, std::enable_if_t<std::is_convertible_v<T, QString>>>
     {
         static QString toQString(const T &v) { return v; }
     };
-    template <typename T> struct TString<T, std::enable_if_t<THasToQString<T>::value>>
+    template <typename T>
+    struct TString<T, std::enable_if_t<THasToQString<T>::value>>
     {
         static QString toQString(const T &v) { return v.toQString(); }
     };
-    template <typename T> struct TString<QFlags<T>>
+    template <typename T>
+    struct TString<QFlags<T>>
     {
         static QString toQString(QFlags<T> n) { return TString<typename QFlags<T>::Int>::toQString(n); }
     };
-    template <typename T> struct TString<std::atomic<T>>
+    template <typename T>
+    struct TString<std::atomic<T>>
     {
         static QString toQString(const std::atomic<T> &n) { return TString<T>::toQString(n); }
     };

@@ -29,10 +29,9 @@ namespace BlackMisc
         template <class... Ts>
         auto MemberEqual(Ts... vs)
         {
-            return [vs...](const auto &object)
-            {
+            return [vs...](const auto &object) {
                 bool equal = true;
-                tupleForEachPair(std::make_tuple(vs...), [ & ](auto member, const auto &value) { equal = equal && std::invoke(member, object) == value; });
+                tupleForEachPair(std::make_tuple(vs...), [&](auto member, const auto &value) { equal = equal && std::invoke(member, object) == value; });
                 return equal;
             };
         }
@@ -45,8 +44,7 @@ namespace BlackMisc
         template <class... Ts>
         auto MemberLess(Ts... vs)
         {
-            return [vs...](const auto &a, const auto &b)
-            {
+            return [vs...](const auto &a, const auto &b) {
                 return std::forward_as_tuple(std::invoke(vs, a)...) < std::forward_as_tuple(std::invoke(vs, b)...);
             };
         }
@@ -94,13 +92,12 @@ namespace BlackMisc
         template <class... Ts>
         auto EqualsByMembers(Ts... vs)
         {
-            return [vs...](const auto &a, const auto &b)
-            {
+            return [vs...](const auto &a, const auto &b) {
                 return ((std::invoke(vs, a) == std::invoke(vs, b)) && ...);
             };
         }
 
-    } //namespace Predicates
-} //namespace BlackMisc
+    } // namespace Predicates
+} // namespace BlackMisc
 
 #endif // guard

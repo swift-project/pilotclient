@@ -23,9 +23,8 @@
 
 namespace BlackGui::Components
 {
-    CSettingsTextMessageStyle::CSettingsTextMessageStyle(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CSettingsTextMessageStyle)
+    CSettingsTextMessageStyle::CSettingsTextMessageStyle(QWidget *parent) : QFrame(parent),
+                                                                            ui(new Ui::CSettingsTextMessageStyle)
     {
         ui->setupUi(this);
 
@@ -36,19 +35,19 @@ namespace BlackGui::Components
         connect(ui->pb_FontMinus, &QPushButton::released, this, &CSettingsTextMessageStyle::fontSizeMinus);
         connect(ui->pb_FontPlus, &QPushButton::released, this, &CSettingsTextMessageStyle::fontSizePlus);
 
-//        QShortcut *sc = new QShortcut(CShortcut::keyFontMinus(), this);
-//        sc->setContext(Qt::WidgetWithChildrenShortcut);
-//        QObject::connect(sc, &QShortcut::activatedAmbiguously, this, &CSettingsTextMessageStyle::fontSizePlus);
+        //        QShortcut *sc = new QShortcut(CShortcut::keyFontMinus(), this);
+        //        sc->setContext(Qt::WidgetWithChildrenShortcut);
+        //        QObject::connect(sc, &QShortcut::activatedAmbiguously, this, &CSettingsTextMessageStyle::fontSizePlus);
     }
 
     CSettingsTextMessageStyle::~CSettingsTextMessageStyle()
-    { }
+    {}
 
     QStringList CSettingsTextMessageStyle::getFamilySizeStyle() const
     {
         if (m_fontSettingsDialog) { return m_fontSettingsDialog->getFamilySizeStyle(); }
 
-        static const QStringList empty({"", "", ""});
+        static const QStringList empty({ "", "", "" });
         return empty;
     }
 

@@ -48,8 +48,7 @@ namespace BlackGui::Models
         }
     };
 
-    CTemperatureLayerListModel::CTemperatureLayerListModel(QObject *parent) :
-        CListModelBase("TemperatureLayerListModel", parent)
+    CTemperatureLayerListModel::CTemperatureLayerListModel(QObject *parent) : CListModelBase("TemperatureLayerListModel", parent)
     {
         m_columns.addColumn(CColumn("level", CTemperatureLayer::IndexLevel, new CAltitudeFormatter()));
         m_columns.addColumn(CColumn("temperature", CTemperatureLayer::IndexTemperature, new CTemperatureFormatter()));

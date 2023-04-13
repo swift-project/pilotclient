@@ -16,7 +16,7 @@
 #include <QPointer>
 
 #ifdef Q_OS_WIN32
-#include <Windows.h>
+#    include <Windows.h>
 #endif
 
 namespace BlackMisc
@@ -48,7 +48,7 @@ namespace BlackMisc
                 switch (status)
                 {
                 default:
-                case WAIT_FAILED:   qWarning() << "Thread" << name << "unspecified error"; break;
+                case WAIT_FAILED: qWarning() << "Thread" << name << "unspecified error"; break;
                 case WAIT_OBJECT_0: qWarning() << "Thread" << name << "unsafely terminated by program shutdown"; break;
                 case WAIT_TIMEOUT: break;
                 }
@@ -103,8 +103,7 @@ namespace BlackMisc
         this->moveToThread(workerThread->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
         // must not access the worker beyond this point, as it now lives in the owner's thread and could be deleted at any moment
 
-        QMetaObject::invokeMethod(workerThread, [workerThread]
-        {
+        QMetaObject::invokeMethod(workerThread, [workerThread] {
             // quit and wait is redundant as the CRegularThread dtor will do that anyway, but put here for debugging
             workerThread->quit();
             const bool ok = workerThread->wait(5000);
@@ -135,7 +134,7 @@ namespace BlackMisc
     void CWorkerBase::waitForFinished() noexcept
     {
         std::promise<void> promise;
-        then([ & ] { promise.set_value(); });
+        then([&] { promise.set_value(); });
         promise.get_future().wait();
     }
 
@@ -157,8 +156,7 @@ namespace BlackMisc
         return thread()->isInterruptionRequested();
     }
 
-    CContinuousWorker::CContinuousWorker(QObject *owner, const QString &name) :
-        m_owner(owner), m_name(name)
+    CContinuousWorker::CContinuousWorker(QObject *owner, const QString &name) : m_owner(owner), m_name(name)
     {
         Q_ASSERT_X(!name.isEmpty(), Q_FUNC_INFO, "Empty name");
         this->setObjectName(m_name);
@@ -184,7 +182,7 @@ namespace BlackMisc
         }
 
         moveToThread(thread);
-        connect(thread, &QThread::started,  this, &CContinuousWorker::initialize);
+        connect(thread, &QThread::started, this, &CContinuousWorker::initialize);
         connect(thread, &QThread::finished, &m_updateTimer, &QTimer::stop);
         connect(thread, &QThread::finished, this, &CContinuousWorker::cleanup);
         connect(thread, &QThread::finished, this, &CContinuousWorker::finish);
@@ -236,10 +234,9 @@ namespace BlackMisc
         {
             // shift in correct thread
             QPointer<CContinuousWorker> myself(this);
-            QTimer::singleShot(0, this, [ = ]
-            {
+            QTimer::singleShot(0, this, [=] {
                 if (!myself) { return; }
-                this->doIfNotFinished([ = ] { startUpdating(updateTimeSecs); });
+                this->doIfNotFinished([=] { startUpdating(updateTimeSecs); });
             });
             return;
         }
@@ -269,8 +266,7 @@ namespace BlackMisc
         else
         {
             QPointer<CContinuousWorker> myself(this);
-            QTimer::singleShot(0, &m_updateTimer, [ = ]
-            {
+            QTimer::singleShot(0, &m_updateTimer, [=] {
                 // stop timer in timer thread
                 if (!myself) { return; }
                 m_updateTimer.stop();
@@ -292,8 +288,7 @@ namespace BlackMisc
         this->moveToThread(m_owner->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
         // must not access the worker beyond this point, as it now lives in the owner's thread and could be deleted at any moment
 
-        QMetaObject::invokeMethod(workerThread, [workerThread]
-        {
+        QMetaObject::invokeMethod(workerThread, [workerThread] {
             // quit and wait is redundant as the CRegularThread dtor will do that anyway, but put here for debugging
             workerThread->quit();
             const bool ok = workerThread->wait(5000);

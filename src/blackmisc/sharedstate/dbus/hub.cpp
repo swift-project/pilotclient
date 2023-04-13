@@ -15,10 +15,10 @@
 
 namespace BlackMisc::SharedState::DBus
 {
-    IHub::IHub(QObject* parent) : QObject(parent)
+    IHub::IHub(QObject *parent) : QObject(parent)
     {}
 
-    IHub* IHub::create(bool proxy, CDBusServer *server, const QDBusConnection &connection, const QString &service, QObject* parent)
+    IHub *IHub::create(bool proxy, CDBusServer *server, const QDBusConnection &connection, const QString &service, QObject *parent)
     {
         if (proxy) { return new CHubProxy(connection, service, parent); }
         else { return new CHub(server, parent); }

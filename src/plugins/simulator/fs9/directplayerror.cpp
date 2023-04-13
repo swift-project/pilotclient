@@ -14,7 +14,7 @@ namespace BlackSimPlugin::Fs9
     HRESULT logDirectPlayError(HRESULT error)
     {
         QString errorMessage;
-        switch(error)
+        switch (error)
         {
         case DPNERR_BUFFERTOOSMALL:
             errorMessage = "The supplied buffer is not large enough to contain the requested data.";

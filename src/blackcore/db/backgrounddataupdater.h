@@ -45,16 +45,16 @@ namespace BlackCore::Db
         void consolidating(bool running);
 
     private:
-        mutable QReadWriteLock m_lockMsg;    //!< lock history messages
-        std::atomic_int  m_cycle  { 0 };     //!< cycle
+        mutable QReadWriteLock m_lockMsg; //!< lock history messages
+        std::atomic_int m_cycle { 0 }; //!< cycle
         std::atomic_bool m_inWork { false }; //!< indicates a running update
-        std::atomic_bool m_updatePublishedModels { true };   //!< update when models have been updated
+        std::atomic_bool m_updatePublishedModels { true }; //!< update when models have been updated
         QMap<QString, QDateTime> m_syncedModelsLatestChange; //! timestamp per cache when last synced
         BlackMisc::CStatusMessageList m_messageHistory;
 
         // set/caches as member as we are in own thread, central instance will not work
-        BlackMisc::Simulation::Data::CModelCaches    m_modelCaches { false, this };
-        BlackMisc::Simulation::Data::CModelSetCaches m_modelSets   { false, this };
+        BlackMisc::Simulation::Data::CModelCaches m_modelCaches { false, this };
+        BlackMisc::Simulation::Data::CModelSetCaches m_modelSets { false, this };
 
         //! Do the update checks
         void doWork();

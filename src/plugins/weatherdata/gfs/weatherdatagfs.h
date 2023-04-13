@@ -26,7 +26,10 @@
 #include <QPointer>
 #include <array>
 
-namespace BlackMisc::PhysicalQuantities { class CTemperature; }
+namespace BlackMisc::PhysicalQuantities
+{
+    class CTemperature;
+}
 namespace BlackWxPlugin::Gfs
 {
     struct Grib2ParameterKey;
@@ -49,12 +52,12 @@ namespace BlackWxPlugin::Gfs
 
         //! \copydoc BlackCore::IWeatherData::fetchWeatherData
         virtual void fetchWeatherData(const BlackMisc::Weather::CWeatherGrid &initialGrid,
-                                        const BlackMisc::PhysicalQuantities::CLength &range) override;
+                                      const BlackMisc::PhysicalQuantities::CLength &range) override;
 
         //! \copydoc BlackCore::IWeatherData::fetchWeatherDataFromFile
         virtual void fetchWeatherDataFromFile(const QString &filePath,
-                                                const BlackMisc::Weather::CWeatherGrid &grid,
-                                                const BlackMisc::PhysicalQuantities::CLength &range) override;
+                                              const BlackMisc::Weather::CWeatherGrid &grid,
+                                              const BlackMisc::PhysicalQuantities::CLength &range) override;
 
         //! \copydoc BlackCore::IWeatherData::getWeatherData()
         virtual BlackMisc::Weather::CWeatherGrid getWeatherData() const override;

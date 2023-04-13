@@ -17,7 +17,10 @@
 
 class QWidget;
 
-namespace BlackMisc::Weather { class CWindLayer; }
+namespace BlackMisc::Weather
+{
+    class CWindLayer;
+}
 namespace BlackGui::Views
 {
     //! Wind layer view

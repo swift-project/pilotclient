@@ -37,14 +37,14 @@ namespace XSwiftBus
 
     void CDBusObject::sendDBusSignal(const std::string &name)
     {
-        if (! m_dbusConnection) { return; }
+        if (!m_dbusConnection) { return; }
         CDBusMessage signal = CDBusMessage::createSignal(m_objectPath, m_interfaceName, name);
         m_dbusConnection->sendMessage(signal);
     }
 
     void CDBusObject::sendDBusMessage(const CDBusMessage &message)
     {
-        if (! m_dbusConnection) { return; }
+        if (!m_dbusConnection) { return; }
         m_dbusConnection->sendMessage(message);
     }
 
@@ -57,7 +57,7 @@ namespace XSwiftBus
         }
     }
 
-    void CDBusObject::queueDBusCall(const std::function<void ()> &func)
+    void CDBusObject::queueDBusCall(const std::function<void()> &func)
     {
         std::lock_guard<std::mutex> lock(m_mutex);
         m_qeuedDBusCalls.push_back(func);

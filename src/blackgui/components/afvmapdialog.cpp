@@ -21,9 +21,8 @@ using namespace BlackCore::Afv::Clients;
 
 namespace BlackGui::Components
 {
-    CAfvMapDialog::CAfvMapDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CAfvMapDialog)
+    CAfvMapDialog::CAfvMapDialog(QWidget *parent) : QDialog(parent),
+                                                    ui(new Ui::CAfvMapDialog)
     {
         /**
         m_afvMapReader = new CAfvMapReader(this);
@@ -52,5 +51,5 @@ namespace BlackGui::Components
         **/
     }
 
-    CAfvMapDialog::~CAfvMapDialog() { }
+    CAfvMapDialog::~CAfvMapDialog() {}
 } // ns

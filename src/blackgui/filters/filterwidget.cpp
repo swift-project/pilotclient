@@ -24,7 +24,7 @@ namespace BlackGui::Filters
     }
 
     CFilterWidget::~CFilterWidget()
-    { }
+    {}
 
     void CFilterWidget::setButtonsAndCount(CFilterBarButtons *buttons)
     {

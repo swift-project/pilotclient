@@ -15,13 +15,12 @@ using namespace BlackMisc::Aviation;
 namespace BlackGui::Models
 {
     CLiveryFilter::CLiveryFilter(int id, const QString &combinedCode, const QString &descriptiom,
-                                    const QString &airlineDesignator,
-                                    const BlackMisc::CRgbColor &fuselageColor, const BlackMisc::CRgbColor &tailColor, double maxColorDistance, bool colorLiveries, bool airlineLiveries) :
-        m_id(id),
-        m_combinedCode(combinedCode.trimmed().toUpper()), m_description(descriptiom),
-        m_airlineIcaoDesignator(airlineDesignator.trimmed().toUpper()),
-        m_fuselageColor(fuselageColor), m_tailColor(tailColor), m_maxColorDistance(maxColorDistance),
-        m_colorLiveries(colorLiveries), m_airlineLiveries(airlineLiveries)
+                                 const QString &airlineDesignator,
+                                 const BlackMisc::CRgbColor &fuselageColor, const BlackMisc::CRgbColor &tailColor, double maxColorDistance, bool colorLiveries, bool airlineLiveries) : m_id(id),
+                                                                                                                                                                                        m_combinedCode(combinedCode.trimmed().toUpper()), m_description(descriptiom),
+                                                                                                                                                                                        m_airlineIcaoDesignator(airlineDesignator.trimmed().toUpper()),
+                                                                                                                                                                                        m_fuselageColor(fuselageColor), m_tailColor(tailColor), m_maxColorDistance(maxColorDistance),
+                                                                                                                                                                                        m_colorLiveries(colorLiveries), m_airlineLiveries(airlineLiveries)
     {
         m_valid = valid();
     }
@@ -45,7 +44,7 @@ namespace BlackGui::Models
             }
             if (checkLiveryType)
             {
-                if (!m_colorLiveries && livery.isColorLivery()) {continue;}
+                if (!m_colorLiveries && livery.isColorLivery()) { continue; }
                 if (!m_airlineLiveries && livery.isAirlineLivery()) { continue; }
             }
             if (!m_combinedCode.isEmpty())
@@ -78,7 +77,7 @@ namespace BlackGui::Models
         if (filterByLiveryType()) { return true; }
         if (m_fuselageColor.isValid() || m_tailColor.isValid()) { return true; }
         return !(m_id < 0 && m_combinedCode.isEmpty() && m_description.isEmpty() &&
-                    m_airlineIcaoDesignator.isEmpty());
+                 m_airlineIcaoDesignator.isEmpty());
     }
 
     bool CLiveryFilter::filterByLiveryType() const

@@ -22,11 +22,14 @@
 
 class QNetworkReply;
 
-namespace BlackMisc::Network { class CAuthenticatedUser; }
+namespace BlackMisc::Network
+{
+    class CAuthenticatedUser;
+}
 namespace BlackCore::Db
 {
     //! Database user used with swift DB. Features role and cookie handling.
-    class BLACKCORE_EXPORT CDatabaseAuthenticationService: public QObject
+    class BLACKCORE_EXPORT CDatabaseAuthenticationService : public QObject
     {
         Q_OBJECT
 

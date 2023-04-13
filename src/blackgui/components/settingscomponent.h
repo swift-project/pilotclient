@@ -20,7 +20,10 @@
 
 class QWidget;
 
-namespace Ui { class CSettingsComponent; }
+namespace Ui
+{
+    class CSettingsComponent;
+}
 namespace BlackGui::Components
 {
     //! Settings component

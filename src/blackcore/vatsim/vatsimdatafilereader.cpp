@@ -56,9 +56,8 @@ using namespace BlackCore::Data;
 
 namespace BlackCore::Vatsim
 {
-    CVatsimDataFileReader::CVatsimDataFileReader(QObject *owner) :
-        CThreadedReader(owner, "CVatsimDataFileReader"),
-        CEcosystemAware(CEcosystemAware::providerIfPossible(owner))
+    CVatsimDataFileReader::CVatsimDataFileReader(QObject *owner) : CThreadedReader(owner, "CVatsimDataFileReader"),
+                                                                   CEcosystemAware(CEcosystemAware::providerIfPossible(owner))
     {
         this->reloadSettings();
     }
@@ -77,7 +76,7 @@ namespace BlackCore::Vatsim
 
     CAtcStationList CVatsimDataFileReader::getAtcStationsForCallsign(const CCallsign &callsign) const
     {
-        const CCallsignSet cs({callsign});
+        const CCallsignSet cs({ callsign });
         return this->getAtcStationsForCallsigns(cs);
     }
 
@@ -98,7 +97,7 @@ namespace BlackCore::Vatsim
 
     CUserList CVatsimDataFileReader::getPilotsForCallsign(const CCallsign &callsign) const
     {
-        const CCallsignSet callsigns({callsign});
+        const CCallsignSet callsigns({ callsign });
         return this->getPilotsForCallsigns(callsigns);
     }
 
@@ -135,7 +134,7 @@ namespace BlackCore::Vatsim
 
     CUserList CVatsimDataFileReader::getControllersForCallsign(const CCallsign &callsign) const
     {
-        const CCallsignSet cs({callsign});
+        const CCallsignSet cs({ callsign });
         return this->getControllersForCallsigns(cs);
     }
 
@@ -146,7 +145,7 @@ namespace BlackCore::Vatsim
 
     CUserList CVatsimDataFileReader::getUsersForCallsign(const CCallsign &callsign) const
     {
-        const CCallsignSet callsigns({callsign});
+        const CCallsignSet callsigns({ callsign });
         return this->getUsersForCallsigns(callsigns);
     }
 
@@ -165,8 +164,7 @@ namespace BlackCore::Vatsim
     void CVatsimDataFileReader::readInBackgroundThread()
     {
         QPointer<CVatsimDataFileReader> myself(this);
-        QTimer::singleShot(0, this, [ = ]
-        {
+        QTimer::singleShot(0, this, [=] {
             if (!myself) { return; }
             myself->read();
         });
@@ -191,7 +189,7 @@ namespace BlackCore::Vatsim
         CFailoverUrlList urls(sApp->getVatsimDataFileUrls());
         const QUrl url(urls.obtainNextWorkingUrl(true));
         if (url.isEmpty()) { return; }
-        this->getFromNetworkAndLog(url, { this, &CVatsimDataFileReader::parseVatsimFile});
+        this->getFromNetworkAndLog(url, { this, &CVatsimDataFileReader::parseVatsimFile });
     }
 
     void CVatsimDataFileReader::parseVatsimFile(QNetworkReply *nwReplyPtr)
@@ -229,9 +227,9 @@ namespace BlackCore::Vatsim
             if (jsonDoc.isEmpty()) { return; }
 
             // build on local vars for thread safety
-            CServerList                         fsdServers;
-            CAtcStationList                     atcStations;
-            CSimulatedAircraftList              aircraft;
+            CServerList fsdServers;
+            CAtcStationList atcStations;
+            CSimulatedAircraftList aircraft;
             QMap<CCallsign, CFlightPlanRemarks> flightPlanRemarksMap;
             auto updateTimestampFromFile = QDateTime::fromString(jsonDoc["general"]["update_timestamp"].toString(), Qt::ISODateWithMs);
 
@@ -287,8 +285,7 @@ namespace BlackCore::Vatsim
             if (!illegalEquipmentCodes.isEmpty())
             {
                 CVatsimDataFileReader::logInconsistentData(
-                    CStatusMessage(this, CStatusMessage::SeverityInfo, u"Illegal / ignored equipment code(s) in VATSIM data file: %1") << illegalEquipmentCodes.join(", ")
-                );
+                    CStatusMessage(this, CStatusMessage::SeverityInfo, u"Illegal / ignored equipment code(s) in VATSIM data file: %1") << illegalEquipmentCodes.join(", "));
             }
 
             // data read finished

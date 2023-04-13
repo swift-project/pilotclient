@@ -38,33 +38,33 @@ namespace BlackMisc::Network
         //! Send/receive details
         enum SendReceiveDetailsFlag
         {
-            Nothing                 = 0,      //!< nothing
-            SendAircraftParts       = 1 << 0, //!< aircraft parts out
-            SendInterimPositions    = 1 << 1, //!< interim positions out
-            SendGndFlag             = 1 << 2, //!< gnd.flag out (position)
-            ReceiveAircraftParts    = 1 << 3, //!< aircraft parts in
+            Nothing = 0, //!< nothing
+            SendAircraftParts = 1 << 0, //!< aircraft parts out
+            SendInterimPositions = 1 << 1, //!< interim positions out
+            SendGndFlag = 1 << 2, //!< gnd.flag out (position)
+            ReceiveAircraftParts = 1 << 3, //!< aircraft parts in
             ReceiveInterimPositions = 1 << 4, //!< fast position updates in
-            ReceiveGndFlag          = 1 << 5, //!< gnd.flag in (position)
+            ReceiveGndFlag = 1 << 5, //!< gnd.flag in (position)
             Force3LetterAirlineICAO = 1 << 6, //!< force 3 letter airline ICAO code
-            SendVisualPositions     = 1 << 7, //!< visual positions out
+            SendVisualPositions = 1 << 7, //!< visual positions out
             ReceiveEuroscopeSimData = 1 << 8, //!< euroscope SIMDATA in
-            AllSending              = SendAircraftParts | SendInterimPositions | SendVisualPositions | SendGndFlag, //!< all out
-            AllReceive              = ReceiveAircraftParts | ReceiveInterimPositions | ReceiveGndFlag, //!< all in
-            All                     = AllReceive | AllSending, //!< all
-            AllParts                = SendAircraftParts | ReceiveAircraftParts,       //!< send/receive parts
-            AllSendingWithoutGnd    = AllSending - SendGndFlag,                       //!< all out, but no gnd.flag
-            AllReceiveWithoutGnd    = AllReceive - ReceiveGndFlag,                    //!< all in, but no gnd.flag
-            AllInterimPositions     = SendInterimPositions | ReceiveInterimPositions, //!< all interim positions
-            AllWithoutGnd           = AllReceiveWithoutGnd | AllSendingWithoutGnd,    //!< all, but no gnd.flag
-            VATSIMDefault           = AllParts | Force3LetterAirlineICAO | SendVisualPositions
+            AllSending = SendAircraftParts | SendInterimPositions | SendVisualPositions | SendGndFlag, //!< all out
+            AllReceive = ReceiveAircraftParts | ReceiveInterimPositions | ReceiveGndFlag, //!< all in
+            All = AllReceive | AllSending, //!< all
+            AllParts = SendAircraftParts | ReceiveAircraftParts, //!< send/receive parts
+            AllSendingWithoutGnd = AllSending - SendGndFlag, //!< all out, but no gnd.flag
+            AllReceiveWithoutGnd = AllReceive - ReceiveGndFlag, //!< all in, but no gnd.flag
+            AllInterimPositions = SendInterimPositions | ReceiveInterimPositions, //!< all interim positions
+            AllWithoutGnd = AllReceiveWithoutGnd | AllSendingWithoutGnd, //!< all, but no gnd.flag
+            VATSIMDefault = AllParts | Force3LetterAirlineICAO | SendVisualPositions
         };
         Q_DECLARE_FLAGS(SendReceiveDetails, SendReceiveDetailsFlag)
 
         //! @{
         //! Offset times basically telling when to expect the next value from network plus some reserve
         //! \remark related to CNetworkVatlib::c_updatePostionIntervalMsec / c_updateInterimPostionIntervalMsec
-        static constexpr qint64 c_positionTimeOffsetMsec = 6000;        //!< offset time for received position updates Ref T297
-        static constexpr qint64 c_minimumPositionTimeOffsetMsec = 700;  //!< offset time for vatsim high frequency position updates
+        static constexpr qint64 c_positionTimeOffsetMsec = 6000; //!< offset time for received position updates Ref T297
+        static constexpr qint64 c_minimumPositionTimeOffsetMsec = 700; //!< offset time for vatsim high frequency position updates
         //! @}
 
         //! Default constructor.

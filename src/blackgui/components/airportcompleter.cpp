@@ -19,9 +19,8 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackGui::Components
 {
-    CAirportCompleter::CAirportCompleter(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CAirportCompleter)
+    CAirportCompleter::CAirportCompleter(QWidget *parent) : QFrame(parent),
+                                                            ui(new Ui::CAirportCompleter)
     {
         ui->setupUi(this);
         ui->le_Icao->setValidator(new CUpperCaseValidator(ui->le_Icao));
@@ -34,7 +33,7 @@ namespace BlackGui::Components
     }
 
     CAirportCompleter::~CAirportCompleter()
-    { }
+    {}
 
     void CAirportCompleter::setAirport(const CAirport &airport)
     {

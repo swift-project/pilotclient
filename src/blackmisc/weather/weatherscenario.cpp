@@ -18,15 +18,13 @@ namespace BlackMisc::Weather
         qRegisterMetaType<ScenarioIndex>();
     }
 
-    CWeatherScenario::CWeatherScenario(CWeatherScenario::ScenarioIndex index) :
-        CWeatherScenario::CWeatherScenario(index, enumToString(index), enumToDescription(index))
-    { }
+    CWeatherScenario::CWeatherScenario(CWeatherScenario::ScenarioIndex index) : CWeatherScenario::CWeatherScenario(index, enumToString(index), enumToDescription(index))
+    {}
 
-    CWeatherScenario::CWeatherScenario(ScenarioIndex index, const QString &name, const QString &description) :
-        m_scenarioIndex(index),
-        m_scenarioName(name),
-        m_scenarioDescription(description)
-    { }
+    CWeatherScenario::CWeatherScenario(ScenarioIndex index, const QString &name, const QString &description) : m_scenarioIndex(index),
+                                                                                                               m_scenarioName(name),
+                                                                                                               m_scenarioDescription(description)
+    {}
 
     QVariant CWeatherScenario::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
     {
@@ -34,8 +32,8 @@ namespace BlackMisc::Weather
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexScenarioIndex:       return QVariant::fromValue(m_scenarioIndex);
-        case IndexScenarioName:        return QVariant::fromValue(m_scenarioName);
+        case IndexScenarioIndex: return QVariant::fromValue(m_scenarioIndex);
+        case IndexScenarioName: return QVariant::fromValue(m_scenarioName);
         case IndexScenarioDescription: return QVariant::fromValue(m_scenarioDescription);
         default:
             return CValueObject::propertyByIndex(index);
@@ -44,12 +42,16 @@ namespace BlackMisc::Weather
 
     void CWeatherScenario::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CWeatherScenario>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CWeatherScenario>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexScenarioIndex: setIndex(variant.value<ScenarioIndex>()); break;
-        case IndexScenarioName:  setName(variant.value<QString>()); break;
+        case IndexScenarioName: setName(variant.value<QString>()); break;
         case IndexScenarioDescription: setDescription(variant.value<QString>()); break;
         default:
             CValueObject::setPropertyByIndex(index, variant);
@@ -70,9 +72,9 @@ namespace BlackMisc::Weather
         static const QString real("Realtime Weather");
         switch (index)
         {
-        case ClearSky:     return cs;
+        case ClearSky: return cs;
         case Thunderstorm: return thunder;
-        case RealWeather:  return real;
+        case RealWeather: return real;
         default: break;
         }
 
@@ -87,9 +89,9 @@ namespace BlackMisc::Weather
         static const QString real("As real as it gets...");
         switch (index)
         {
-        case ClearSky:     return cs;
+        case ClearSky: return cs;
         case Thunderstorm: return thunder;
-        case RealWeather:  return real;
+        case RealWeather: return real;
         default: break;
         }
 

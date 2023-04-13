@@ -73,8 +73,8 @@ namespace BlackCore::Vatsim
         static const CReaderSettings &neverUpdateSettings();
 
     private:
-        BlackMisc::PhysicalQuantities::CTime m_initialTime  { 30.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()};
-        BlackMisc::PhysicalQuantities::CTime m_periodicTime { 30.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()};
+        BlackMisc::PhysicalQuantities::CTime m_initialTime { 30.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() };
+        BlackMisc::PhysicalQuantities::CTime m_periodicTime { 30.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() };
         bool m_neverUpdate = false;
 
         BLACK_METACLASS(
@@ -92,12 +92,16 @@ namespace BlackCore::Vatsim
         static const char *key() { return "vatsimreaders/bookings"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("VATSIM bookings"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("VATSIM bookings");
+            return name;
+        }
 
         //! \copydoc BlackMisc::TSettingTrait::defaultValue
         static const BlackCore::Vatsim::CReaderSettings &defaultValue()
         {
-            static const BlackCore::Vatsim::CReaderSettings reader {{30.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}, {600.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}};
+            static const BlackCore::Vatsim::CReaderSettings reader { { 30.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() }, { 600.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() } };
             return reader;
         }
     };
@@ -109,12 +113,16 @@ namespace BlackCore::Vatsim
         static const char *key() { return "vatsimreaders/datafile"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("VATSIM data file"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("VATSIM data file");
+            return name;
+        }
 
         //! \copydoc BlackMisc::TSettingTrait::defaultValue
         static const BlackCore::Vatsim::CReaderSettings &defaultValue()
         {
-            static const BlackCore::Vatsim::CReaderSettings reader {{25.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}, {120.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}};
+            static const BlackCore::Vatsim::CReaderSettings reader { { 25.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() }, { 120.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() } };
             return reader;
         }
     };
@@ -126,12 +134,16 @@ namespace BlackCore::Vatsim
         static const char *key() { return "vatsimreaders/metars"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("VATSIM METARs"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("VATSIM METARs");
+            return name;
+        }
 
         //! \copydoc BlackMisc::TSettingTrait::defaultValue
         static const BlackCore::Vatsim::CReaderSettings &defaultValue()
         {
-            static const BlackCore::Vatsim::CReaderSettings reader {{35.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}, {300.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}};
+            static const BlackCore::Vatsim::CReaderSettings reader { { 35.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() }, { 300.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() } };
             return reader;
         }
     };
@@ -170,7 +182,7 @@ namespace BlackCore::Vatsim
         QString getFileDir() const { return m_FileDir; }
 
         //! Get file write mode
-        FileWriteMode getFileWriteMode () const { return m_fileWriteMode; }
+        FileWriteMode getFileWriteMode() const { return m_fileWriteMode; }
 
         //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
         QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
@@ -201,7 +213,11 @@ namespace BlackCore::Vatsim
         static const char *key() { return "network/rawfsdmessagelog"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("FSD message Logging"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("FSD message Logging");
+            return name;
+        }
 
         /* //! \copydoc BlackMisc::TSettingTrait::isValid
         static bool isValid(const CRawFsdMessageSettings &setting, QString &)

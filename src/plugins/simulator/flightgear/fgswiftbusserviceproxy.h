@@ -73,8 +73,7 @@ namespace BlackSimPlugin::Flightgear
         template <typename T>
         std::function<void(QDBusPendingCallWatcher *)> setterCallback(T *obj)
         {
-            return [this, obj](QDBusPendingCallWatcher * watcher)
-            {
+            return [this, obj](QDBusPendingCallWatcher *watcher) {
                 QDBusPendingReply<T> reply = *watcher;
                 if (reply.isError()) { emit this->asyncMethodError(reply.error()); }
                 else { *obj = reply; }
@@ -85,21 +84,19 @@ namespace BlackSimPlugin::Flightgear
         template <typename T>
         std::function<void(QDBusPendingCallWatcher *)> setterCallbackWithDefault(T *obj, T defaultValue)
         {
-            return [this, obj, defaultValue](QDBusPendingCallWatcher * watcher)
-            {
+            return [this, obj, defaultValue](QDBusPendingCallWatcher *watcher) {
                 QDBusPendingReply<T> reply = *watcher;
-                if (reply.isError()) 
+                if (reply.isError())
                 {
-                    if (reply.error().type() == QDBusError::UnknownMethod) 
+                    if (reply.error().type() == QDBusError::UnknownMethod)
                         *obj = defaultValue;
                     else
-                        emit this->asyncMethodError(reply.error()); 
+                        emit this->asyncMethodError(reply.error());
                 }
                 else { *obj = reply; }
                 watcher->deleteLater();
             };
         }
-
 
     signals:
         //! Emitted if an asynchronous method call caused a DBus error

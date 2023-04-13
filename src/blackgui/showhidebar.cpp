@@ -14,16 +14,15 @@
 namespace BlackGui
 {
 
-    CShowHideBar::CShowHideBar(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CShowHideBar)
+    CShowHideBar::CShowHideBar(QWidget *parent) : QFrame(parent),
+                                                  ui(new Ui::CShowHideBar)
     {
         ui->setupUi(this);
         connect(ui->pb_ShowHidePushButton, &QPushButton::clicked, this, &CShowHideBar::toggleShowHide);
     }
 
     CShowHideBar::~CShowHideBar()
-    { }
+    {}
 
     bool CShowHideBar::isShown() const
     {

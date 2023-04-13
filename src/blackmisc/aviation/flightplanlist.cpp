@@ -12,9 +12,8 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CFlightPlan, CFlightPlanList)
 
 namespace BlackMisc::Aviation
 {
-    CFlightPlanList::CFlightPlanList() { }
+    CFlightPlanList::CFlightPlanList() {}
 
-    CFlightPlanList::CFlightPlanList(const CSequence<CFlightPlan> &other) :
-        CSequence<CFlightPlan>(other)
-    { }
+    CFlightPlanList::CFlightPlanList(const CSequence<CFlightPlan> &other) : CSequence<CFlightPlan>(other)
+    {}
 } // namespace

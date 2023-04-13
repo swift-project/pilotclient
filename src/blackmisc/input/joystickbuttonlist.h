@@ -45,4 +45,4 @@ namespace BlackMisc::Input
 Q_DECLARE_METATYPE(BlackMisc::Input::CJoystickButtonList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Input::CJoystickButton>)
 
-#endif //guard
+#endif // guard

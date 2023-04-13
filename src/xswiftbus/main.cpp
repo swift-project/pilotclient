@@ -7,7 +7,7 @@
  */
 
 #ifndef NOMINMAX
-#define NOMINMAX
+#    define NOMINMAX
 #endif
 #include "plugin.h"
 #include "traffic.h"
@@ -16,8 +16,8 @@
 #include <XPLM/XPLMPlugin.h>
 #include <cstring>
 
-#if ! defined(XPLM210)
-#define XPLM_MSG_LIVERY_LOADED 108
+#if !defined(XPLM210)
+#    define XPLM_MSG_LIVERY_LOADED 108
 #endif
 
 static XSwiftBus::CPlugin *g_plugin = nullptr;
@@ -31,7 +31,7 @@ PLUGIN_API int XPluginStart(char *o_name, char *o_sig, char *o_desc)
 
     INFO_LOG("XSwiftBus plugin starting");
     std::strcpy(o_name, "XSwiftBus");
-    std::strcpy(o_sig,  "org.swift-project.xswiftbus");
+    std::strcpy(o_sig, "org.swift-project.xswiftbus");
     std::strcpy(o_desc, "Allows swift to connect to X-Plane via D-Bus IPC");
     return 1;
 }

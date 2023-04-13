@@ -17,9 +17,8 @@ using namespace BlackMisc;
 
 namespace BlackGui::Filters
 {
-    CStatusMessageFilterDialog::CStatusMessageFilterDialog(QWidget *parent) :
-        CFilterDialog(parent),
-        ui(new Ui::CStatusMessageFilterDialog)
+    CStatusMessageFilterDialog::CStatusMessageFilterDialog(QWidget *parent) : CFilterDialog(parent),
+                                                                              ui(new Ui::CStatusMessageFilterDialog)
     {
         ui->setupUi(this);
         this->setWindowTitle("Filter status messages");
@@ -29,7 +28,7 @@ namespace BlackGui::Filters
     }
 
     CStatusMessageFilterDialog::~CStatusMessageFilterDialog()
-    { }
+    {}
 
     std::unique_ptr<IModelFilter<CStatusMessageList>> CStatusMessageFilterDialog::createModelFilter() const
     {

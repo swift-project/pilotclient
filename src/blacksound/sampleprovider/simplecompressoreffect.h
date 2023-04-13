@@ -42,10 +42,10 @@ namespace BlackSound::SampleProvider
         void setChannels(int channels);
 
     private:
-        QTimer          *m_timer = nullptr;
+        QTimer *m_timer = nullptr;
         ISampleProvider *m_sourceStream = nullptr;
-        bool             m_enabled = true;
-        int              m_channels = 1;
+        bool m_enabled = true;
+        int m_channels = 1;
         chunkware_simple::SimpleComp m_simpleCompressor;
     };
 } // ns

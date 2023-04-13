@@ -22,9 +22,9 @@ namespace BlackCore::Fsd
     public:
         //! Constructor
         FlightPlan(const QString &sender, const QString &receiver, FlightType flightType, const QString &aircraftIcaoType,
-                    int trueCruisingSpeed, const QString &depAirport, int estimatedDepTime, int actualDepTime, const QString &cruiseAlt,
-                    const QString &destAirport, int hoursEnroute, int minutesEnroute, int fuelAvailHours, int fuelAvailMinutes,
-                    const QString &altAirport, const QString &remarks, const QString &route);
+                   int trueCruisingSpeed, const QString &depAirport, int estimatedDepTime, int actualDepTime, const QString &cruiseAlt,
+                   const QString &destAirport, int hoursEnroute, int minutesEnroute, int fuelAvailHours, int fuelAvailMinutes,
+                   const QString &altAirport, const QString &remarks, const QString &route);
 
         //! Message converted to tokens
         QStringList toTokens() const;
@@ -61,23 +61,23 @@ namespace BlackCore::Fsd
     //! Equal to operator
     inline bool operator==(const FlightPlan &lhs, const FlightPlan &rhs)
     {
-        return  lhs.sender() == rhs.sender() &&
-                lhs.receiver() == rhs.receiver() &&
-                lhs.m_flightType == rhs.m_flightType &&
-                lhs.m_aircraftIcaoType == rhs.m_aircraftIcaoType &&
-                lhs.m_trueCruisingSpeed == rhs.m_trueCruisingSpeed &&
-                lhs.m_depAirport == rhs.m_depAirport &&
-                lhs.m_estimatedDepTime == rhs.m_estimatedDepTime &&
-                lhs.m_actualDepTime == rhs.m_actualDepTime &&
-                lhs.m_cruiseAlt == rhs.m_cruiseAlt &&
-                lhs.m_destAirport == rhs.m_destAirport &&
-                lhs.m_hoursEnroute == rhs.m_hoursEnroute &&
-                lhs.m_minutesEnroute == rhs.m_minutesEnroute &&
-                lhs.m_fuelAvailHours == rhs.m_fuelAvailHours &&
-                lhs.m_fuelAvailMinutes == rhs.m_fuelAvailMinutes &&
-                lhs.m_altAirport == rhs.m_altAirport &&
-                lhs.m_remarks == rhs.m_remarks &&
-                lhs.m_route == rhs.m_route;
+        return lhs.sender() == rhs.sender() &&
+               lhs.receiver() == rhs.receiver() &&
+               lhs.m_flightType == rhs.m_flightType &&
+               lhs.m_aircraftIcaoType == rhs.m_aircraftIcaoType &&
+               lhs.m_trueCruisingSpeed == rhs.m_trueCruisingSpeed &&
+               lhs.m_depAirport == rhs.m_depAirport &&
+               lhs.m_estimatedDepTime == rhs.m_estimatedDepTime &&
+               lhs.m_actualDepTime == rhs.m_actualDepTime &&
+               lhs.m_cruiseAlt == rhs.m_cruiseAlt &&
+               lhs.m_destAirport == rhs.m_destAirport &&
+               lhs.m_hoursEnroute == rhs.m_hoursEnroute &&
+               lhs.m_minutesEnroute == rhs.m_minutesEnroute &&
+               lhs.m_fuelAvailHours == rhs.m_fuelAvailHours &&
+               lhs.m_fuelAvailMinutes == rhs.m_fuelAvailMinutes &&
+               lhs.m_altAirport == rhs.m_altAirport &&
+               lhs.m_remarks == rhs.m_remarks &&
+               lhs.m_route == rhs.m_route;
     }
 
     //! Not equal to operator

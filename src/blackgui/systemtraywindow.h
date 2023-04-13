@@ -68,7 +68,6 @@ namespace BlackGui
                             int millisecondsTimeoutHint = 10000);
 
     protected:
-
         //! \copydoc QMainWindow::changeEvent
         virtual void changeEvent(QEvent *event) override;
 
@@ -76,7 +75,6 @@ namespace BlackGui
         virtual void closeEvent(QCloseEvent *event) override;
 
     private:
-
         void createActions();
         void createTrayIcon(const QIcon &icon);
 

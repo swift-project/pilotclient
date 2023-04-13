@@ -16,7 +16,10 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CFlightPlanDialog; }
+namespace Ui
+{
+    class CFlightPlanDialog;
+}
 namespace BlackGui::Views
 {
     //! Flight plan as dialog, also meant for other callsigns

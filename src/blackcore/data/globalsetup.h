@@ -68,9 +68,9 @@ namespace BlackCore::Data
         enum PingTypeFlag
         {
             PingUnspecific = 0,
-            PingLogoff     = 1 << 0,
-            PingStarted    = 1 << 1,
-            PingShutdown   = 1 << 2,
+            PingLogoff = 1 << 0,
+            PingStarted = 1 << 1,
+            PingShutdown = 1 << 2,
             PingCompleteShutdown = PingLogoff | PingShutdown
         };
         Q_DECLARE_FLAGS(PingType, PingTypeFlag)
@@ -205,7 +205,7 @@ namespace BlackCore::Data
         bool isSwiftVersionMinimumMappingVersion() const;
 
         //! Productive settings?
-        void setDevelopment(bool development) { m_development  = development; }
+        void setDevelopment(bool development) { m_development = development; }
 
         //! NCEP GFS Forecasts (0.50 degree grid) data url
         BlackMisc::Network::CUrl getNcepGlobalForecastSystemUrl() const { return m_ncepGlobalForecastSystemUrl; }
@@ -238,25 +238,25 @@ namespace BlackCore::Data
         static CGlobalSetup fromJsonFile(const QString &fileNameAndPath, bool acceptCacheFormat);
 
     private:
-        bool                            m_wasLoadedFromFile = false;   //!< Loaded from local file
-        int                             m_dbHttpPort  = 80;            //!< port
-        int                             m_dbHttpsPort = 443;           //!< SSL port
-        qint64                          m_pingIntervalSecs = 180;      //!< seconds between datastore pings
-        bool                            m_development = false;         //!< dev. version?
-        QString                         m_mappingMinimumVersion;       //!< minimum version
-        BlackMisc::Network::CUrl        m_crashReportServerUrl;        //!< crash report server
-        BlackMisc::Network::CUrl        m_dbRootDirectoryUrl;          //!< Root directory of DB
-        BlackMisc::Network::CUrl        m_vatsimBookingsUrl;           //!< ATC bookings
-        BlackMisc::Network::CUrlList    m_vatsimMetarsUrls;            //!< METAR data
-        BlackMisc::Network::CUrlList    m_vatsimStatusFileUrls;        //!< Status file, where to find the VATSIM files (METAR, data, ATIS, other status files)
-        BlackMisc::Network::CUrlList    m_vatsimDataFileUrls;          //!< Overall VATSIM data file / merely for bootstrapping the first time
-        BlackMisc::Network::CUrl        m_vatsimServerFileUrl;         //!< URL to list of VATSIM servers
-        BlackMisc::Network::CUrl        m_vatsimFsdHttpUrl;            //!< URL to HTTP FSD server (for load-balancing and automatic server selection)
-        BlackMisc::Network::CUrlList    m_sharedUrls;                  //!< where we can obtain shared info files such as bootstrap, ..
-        BlackMisc::Network::CUrlList    m_onlineHelpUrls;              //!< online help URLs
-        BlackMisc::Network::CServerList m_predefinedServers;           //!< Predefined servers loaded from setup file
-        BlackMisc::Network::CUrl        m_ncepGlobalForecastSystemUrl; //!< NCEP GFS url 0.5 degree resolution
-        BlackMisc::Network::CUrl        m_ncepGlobalForecastSystemUrl25; //!< NCEP GFS url 0.25 degree resolution
+        bool m_wasLoadedFromFile = false; //!< Loaded from local file
+        int m_dbHttpPort = 80; //!< port
+        int m_dbHttpsPort = 443; //!< SSL port
+        qint64 m_pingIntervalSecs = 180; //!< seconds between datastore pings
+        bool m_development = false; //!< dev. version?
+        QString m_mappingMinimumVersion; //!< minimum version
+        BlackMisc::Network::CUrl m_crashReportServerUrl; //!< crash report server
+        BlackMisc::Network::CUrl m_dbRootDirectoryUrl; //!< Root directory of DB
+        BlackMisc::Network::CUrl m_vatsimBookingsUrl; //!< ATC bookings
+        BlackMisc::Network::CUrlList m_vatsimMetarsUrls; //!< METAR data
+        BlackMisc::Network::CUrlList m_vatsimStatusFileUrls; //!< Status file, where to find the VATSIM files (METAR, data, ATIS, other status files)
+        BlackMisc::Network::CUrlList m_vatsimDataFileUrls; //!< Overall VATSIM data file / merely for bootstrapping the first time
+        BlackMisc::Network::CUrl m_vatsimServerFileUrl; //!< URL to list of VATSIM servers
+        BlackMisc::Network::CUrl m_vatsimFsdHttpUrl; //!< URL to HTTP FSD server (for load-balancing and automatic server selection)
+        BlackMisc::Network::CUrlList m_sharedUrls; //!< where we can obtain shared info files such as bootstrap, ..
+        BlackMisc::Network::CUrlList m_onlineHelpUrls; //!< online help URLs
+        BlackMisc::Network::CServerList m_predefinedServers; //!< Predefined servers loaded from setup file
+        BlackMisc::Network::CUrl m_ncepGlobalForecastSystemUrl; //!< NCEP GFS url 0.5 degree resolution
+        BlackMisc::Network::CUrl m_ncepGlobalForecastSystemUrl25; //!< NCEP GFS url 0.25 degree resolution
 
         // transient members, to be switched on/off via GUI or set from reader
         bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know what you are doing

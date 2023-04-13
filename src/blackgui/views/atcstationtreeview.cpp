@@ -130,7 +130,7 @@ namespace BlackGui::Views
         if (!this->stationModel()) { return; }
         if (this->stationModel()->container().isEmpty()) { return; }
 
-        QMenu *menu = new QMenu(this);  // menu
+        QMenu *menu = new QMenu(this); // menu
 
         QAction *com1 = new QAction(CIcons::appCockpit16(), "Tune in COM1", this);
         QAction *com2 = new QAction(CIcons::appCockpit16(), "Tune in COM2", this);
@@ -156,8 +156,8 @@ namespace BlackGui::Views
         m_expanded.clear();
         for (int row = 0; row < this->model()->rowCount(); ++row)
         {
-            const QModelIndex i  = this->model()->index(row, 0);
-            const bool expanded  = this->isExpanded(i);
+            const QModelIndex i = this->model()->index(row, 0);
+            const bool expanded = this->isExpanded(i);
             const QString suffix = this->suffixForIndex(i);
             m_expanded.insert(suffix, expanded);
         }
