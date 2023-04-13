@@ -54,10 +54,10 @@ namespace BlackMisc
         //! \remark a timestamp can be passed, or "now" is taken
         int getTokens(qint64 msSinceEpoch);
 
-        int m_capacity = 10;         //!< Maximum capacity of tokens
-        int m_availableTokens = 10;  //!< Currently available tokens. The initial value is 10
+        int m_capacity = 10; //!< Maximum capacity of tokens
+        int m_availableTokens = 10; //!< Currently available tokens. The initial value is 10
         int m_numTokensToRefill = 1; //!< Number of tokens to be refilled each interval
-        qint64 m_intervalMs = 5000;  //!< Refill interval, e.g. every 5 secs
+        qint64 m_intervalMs = 5000; //!< Refill interval, e.g. every 5 secs
         qint64 m_lastReplenishmentTime = QDateTime::currentMSecsSinceEpoch(); //!< Last time
     };
 } // ns

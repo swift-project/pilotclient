@@ -23,24 +23,23 @@ using namespace BlackCore::Data;
 
 namespace BlackGui::Components
 {
-    CNetworkDetailsComponent::CNetworkDetailsComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CNetworkDetailsComponent)
+    CNetworkDetailsComponent::CNetworkDetailsComponent(QWidget *parent) : QFrame(parent),
+                                                                          ui(new Ui::CNetworkDetailsComponent)
     {
         ui->setupUi(this);
         ui->tw_Details->setCurrentIndex(0);
         ui->sw_NetworkServerDetails->setCurrentIndex(PageServer);
 
-        connect(ui->comp_OtherServers,  &CServerListSelector::serverChanged, this, &CNetworkDetailsComponent::onSelectedServerChanged);
+        connect(ui->comp_OtherServers, &CServerListSelector::serverChanged, this, &CNetworkDetailsComponent::onSelectedServerChanged);
         connect(ui->comp_VatsimServers, &CServerListSelector::serverChanged, this, &CNetworkDetailsComponent::onSelectedServerChanged);
         connect(ui->tw_Network, &QTabWidget::currentChanged, this, &CNetworkDetailsComponent::onServerTabWidgetChanged);
         connect(ui->tw_Details, &QTabWidget::currentChanged, this, &CNetworkDetailsComponent::onDetailsTabChanged);
-        connect(ui->pb_OtherServersGotoSettings,  &QPushButton::pressed, this, &CNetworkDetailsComponent::requestNetworkSettings);
+        connect(ui->pb_OtherServersGotoSettings, &QPushButton::pressed, this, &CNetworkDetailsComponent::requestNetworkSettings);
         connect(ui->pb_OverrideCredentialsVatsim, &QPushButton::clicked, this, &CNetworkDetailsComponent::onOverrideCredentialsToPilot);
         connect(ui->pb_OverrideCredentialsOtherServers, &QPushButton::clicked, this, &CNetworkDetailsComponent::onOverrideCredentialsToPilot);
-        connect(ui->pb_DetailsVatsim,       &QPushButton::clicked, this, &CNetworkDetailsComponent::onChangePage);
+        connect(ui->pb_DetailsVatsim, &QPushButton::clicked, this, &CNetworkDetailsComponent::onChangePage);
         connect(ui->pb_DetailsOtherServers, &QPushButton::clicked, this, &CNetworkDetailsComponent::onChangePage);
-        connect(ui->pb_BackToServer,        &QPushButton::clicked, this, &CNetworkDetailsComponent::onChangePage);
+        connect(ui->pb_BackToServer, &QPushButton::clicked, this, &CNetworkDetailsComponent::onChangePage);
         connect(&m_networkSetup, &CNetworkSetup::setupChanged, this, &CNetworkDetailsComponent::reloadOtherServersSetup, Qt::QueuedConnection);
 
         // web service data
@@ -71,7 +70,7 @@ namespace BlackGui::Components
     }
 
     CNetworkDetailsComponent::~CNetworkDetailsComponent()
-    { }
+    {}
 
     CLoginMode CNetworkDetailsComponent::getLoginMode() const
     {
@@ -145,7 +144,7 @@ namespace BlackGui::Components
 
         // only override if not yet enabled
         if (!ui->form_FsdDetails->isFsdSetupEnabled()) { ui->form_FsdDetails->setValue(server.getFsdSetup()); }
-        if (!ui->form_Voice->isVoiceSetupEnabled())    { ui->form_Voice->setValue(server.getVoiceSetup()); }
+        if (!ui->form_Voice->isVoiceSetupEnabled()) { ui->form_Voice->setValue(server.getVoiceSetup()); }
     }
 
     void CNetworkDetailsComponent::onOverrideCredentialsToPilot()

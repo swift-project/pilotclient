@@ -92,7 +92,11 @@ namespace BlackMisc::Simulation::Settings
         static const char *key() { return "settingsswiftplugin"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("swift plugin"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("swift plugin");
+            return name;
+        }
 
         //! \copydoc BlackMisc::TSettingTrait::isValid
         static bool isValid(const CSwiftPluginSettings &value, QString &) { return value.getEmulatedSimulator().isSingleSimulator(); }

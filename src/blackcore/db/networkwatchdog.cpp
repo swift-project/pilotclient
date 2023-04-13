@@ -23,8 +23,7 @@ namespace BlackCore::Db
 {
     const QStringList &CNetworkWatchdog::getLogCategories()
     {
-        static const QStringList cats = CContinuousWorker::getLogCategories() + QStringList
-        {
+        static const QStringList cats = CContinuousWorker::getLogCategories() + QStringList {
             CLogCategories::swiftDbWebservice(), CLogCategories::webservice(), CLogCategories::network()
         };
         return cats;
@@ -49,8 +48,7 @@ namespace BlackCore::Db
 
         // restart timer
         QPointer<CNetworkWatchdog> myself(this);
-        QTimer::singleShot(0, &m_updateTimer, [ = ]
-        {
+        QTimer::singleShot(0, &m_updateTimer, [=] {
             if (!myself) { return; }
             m_updateTimer.start();
         });
@@ -76,8 +74,7 @@ namespace BlackCore::Db
 
         const int n = this->getCheckCount();
         const QPointer<CNetworkWatchdog> myself(this);
-        QTimer::singleShot(0, this, [ = ]
-        {
+        QTimer::singleShot(0, this, [=] {
             if (!myself) { return; }
             this->doWork();
         });
@@ -95,10 +92,7 @@ namespace BlackCore::Db
         static const QString info("Network accessibility check: %1 | Internet accessible: %2 (good: %3 / bad: %4), swift DB accessible: %5 (good: %6 / bad: %7) DB last ping URL: '%8' canConnect: %9ms");
         const QString pUrl(this->getLastPingDbUrl());
         static const QString cct = QString::number(CanConnectTimeMs);
-        return info.
-                arg(boolToEnabledDisabled(!this->isNetworkAccessibilityCheckDisabled()),  boolToYesNo(this->isInternetAccessible())).arg(m_totalGoodCountInternet).arg(m_totalBadCountInternet).
-                arg(boolToYesNo(this->isSwiftDbAccessible())).arg(m_totalGoodCountDb).arg(m_totalBadCountDb).
-                arg(pUrl, cct); // cct has to be string, otherwise the % in the URL will be replaced
+        return info.arg(boolToEnabledDisabled(!this->isNetworkAccessibilityCheckDisabled()), boolToYesNo(this->isInternetAccessible())).arg(m_totalGoodCountInternet).arg(m_totalBadCountInternet).arg(boolToYesNo(this->isSwiftDbAccessible())).arg(m_totalGoodCountDb).arg(m_totalBadCountDb).arg(pUrl, cct); // cct has to be string, otherwise the % in the URL will be replaced
     }
 
     void CNetworkWatchdog::setWorkingSharedUrl(const CUrl &workingUrl)
@@ -230,8 +224,7 @@ namespace BlackCore::Db
         if (!CThreadUtils::isInThisThread(this))
         {
             QPointer<CNetworkWatchdog> myself(this);
-            QTimer::singleShot(0, this, [ = ]
-            {
+            QTimer::singleShot(0, this, [=] {
                 if (!sApp || sApp->isShuttingDown() || !myself) { return; }
                 this->setNetworkAccessibility(accessibility);
             });
@@ -255,8 +248,7 @@ namespace BlackCore::Db
         {
             m_networkAccessible = true;
             const QPointer<CNetworkWatchdog> myself(this);
-            QTimer::singleShot(0, this, [ = ]
-            {
+            QTimer::singleShot(0, this, [=] {
                 if (!myself) { return; }
                 this->doWork();
             });
@@ -320,7 +312,7 @@ namespace BlackCore::Db
             // be a little less verbose
             if ((m_totalGoodCountDb % 5 == 0) || m_consecutivePingBadCount > 0)
             {
-                CLogMessage(this).info(u"Watchdog pinged '%1'")  << url;
+                CLogMessage(this).info(u"Watchdog pinged '%1'") << url;
             }
             m_totalGoodCountDb++;
             m_consecutivePingBadCount = 0;

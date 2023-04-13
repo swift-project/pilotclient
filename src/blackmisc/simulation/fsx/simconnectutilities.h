@@ -27,10 +27,10 @@
 // though it does not make sense to be used on non WIN machines.
 // But it allows such parts to compile on all platforms.
 #ifdef Q_OS_WIN
-#   ifndef NOMINMAX
-#       define NOMINMAX
-#   endif
-#   include <Windows.h>
+#    ifndef NOMINMAX
+#        define NOMINMAX
+#    endif
+#    include <Windows.h>
 #else
 using DWORD = unsigned long; //!< Fake Windows DWORD
 #endif
@@ -181,16 +181,16 @@ namespace BlackMisc::Simulation::Fsx
         //! \sa http://www.prepar3d.com/SDKv2/LearningCenter/utilities/variables/simulation_variables.html
         enum LIGHT_STATES
         {
-            Nav         = 0x0001,
-            Beacon      = 0x0002,
-            Landing     = 0x0004,
-            Taxi        = 0x0008,
-            Strobe      = 0x0010,
-            Panel       = 0x0020,
+            Nav = 0x0001,
+            Beacon = 0x0002,
+            Landing = 0x0004,
+            Taxi = 0x0008,
+            Strobe = 0x0010,
+            Panel = 0x0020,
             Recognition = 0x0040,
-            Wing        = 0x0080,
-            Logo        = 0x0100,
-            Cabin       = 0x0200
+            Wing = 0x0080,
+            Logo = 0x0100,
+            Cabin = 0x0200
         };
 
         //! Receive IDs for SimConnect
@@ -233,7 +233,7 @@ namespace BlackMisc::Simulation::Fsx
         static int lightsToLightStates(const Aviation::CAircraftLights &lights);
 
         //! Converts the weather at gridPoint to a SimConnect METAR string
-        static QString convertToSimConnectMetar(const Weather::CGridPoint &gridPoint, bool isFSX, bool useWindLayers = true, bool useVisibilityLayers = true, bool useCloudLayers = true, bool useTempLayers  = true);
+        static QString convertToSimConnectMetar(const Weather::CGridPoint &gridPoint, bool isFSX, bool useWindLayers = true, bool useVisibilityLayers = true, bool useCloudLayers = true, bool useTempLayers = true);
 
         //! Get info about SimConnect DLL
         static BlackMisc::CWinDllUtils::DLLInfo simConnectDllInfo();

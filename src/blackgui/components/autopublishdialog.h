@@ -16,7 +16,10 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CAutoPublishDialog; }
+namespace Ui
+{
+    class CAutoPublishDialog;
+}
 namespace BlackGui::Components
 {
     //! CAutoPublishComponent as dialog

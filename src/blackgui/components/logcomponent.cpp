@@ -47,22 +47,18 @@ namespace BlackGui::Components
         menu->exec(this->mapToGlobal(pos));
     }
 
-    CLogComponent::CLogComponent(QWidget *parent) :
-        QFrame(parent), ui(new Ui::CLogComponent), m_history(this)
+    CLogComponent::CLogComponent(QWidget *parent) : QFrame(parent), ui(new Ui::CLogComponent), m_history(this)
     {
         ui->setupUi(this);
         connect(ui->comp_StatusMessages, &CStatusMessagesDetail::modelDataChangedDigest, this, &CLogComponent::onStatusMessageDataChanged);
 
-        connect(&m_history, &CLogHistoryReplica::elementAdded, this, [this](const CStatusMessage &message)
-        {
+        connect(&m_history, &CLogHistoryReplica::elementAdded, this, [this](const CStatusMessage &message) {
             ui->comp_StatusMessages->appendStatusMessageToList(message);
         });
-        connect(&m_history, &CLogHistoryReplica::elementsReplaced, this, [this](const CStatusMessageList &messages)
-        {
+        connect(&m_history, &CLogHistoryReplica::elementsReplaced, this, [this](const CStatusMessageList &messages) {
             ui->comp_StatusMessages->appendStatusMessagesToList(messages);
         });
-        connect(ui->comp_StatusMessages, &CStatusMessagesDetail::filterChanged, this, [this](const CVariant &filter)
-        {
+        connect(ui->comp_StatusMessages, &CStatusMessagesDetail::filterChanged, this, [this](const CVariant &filter) {
             clearMessages();
             m_history.setFilter(filter.to<CLogPattern>());
         });
@@ -71,7 +67,7 @@ namespace BlackGui::Components
     }
 
     CLogComponent::~CLogComponent()
-    { }
+    {}
 
     void CLogComponent::displayLog(bool attention)
     {

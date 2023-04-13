@@ -49,7 +49,7 @@ namespace BlackMisc::Simulation::Settings
         void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
     private:
-        bool m_allowExcludeModels = false;  //!< Allow excluded models in sets
+        bool m_allowExcludeModels = false; //!< Allow excluded models in sets
 
         BLACK_METACLASS(
             CModelSettings,
@@ -64,14 +64,22 @@ namespace BlackMisc::Simulation::Settings
         static const char *key() { return "Models"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("Model settings"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("Model settings");
+            return name;
+        }
     };
 
     //! Mapping preferences for model distributor list
     struct TDistributorListPreferences : public TSettingTrait<Simulation::CDistributorListPreferences>
     {
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("Distributor preferences"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("Distributor preferences");
+            return name;
+        }
 
         //! \copydoc BlackMisc::TSettingTrait::key
         static const char *key() { return "mapping/distributorpreferences"; }

@@ -20,9 +20,8 @@ using namespace BlackCore;
 
 namespace BlackGui::Components
 {
-    CCountrySelector::CCountrySelector(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CCountrySelector)
+    CCountrySelector::CCountrySelector(QWidget *parent) : QFrame(parent),
+                                                          ui(new Ui::CCountrySelector)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
         ui->setupUi(this);
@@ -36,7 +35,7 @@ namespace BlackGui::Components
     }
 
     CCountrySelector::~CCountrySelector()
-    { }
+    {}
 
     void CCountrySelector::setCountry(const CCountry &country)
     {

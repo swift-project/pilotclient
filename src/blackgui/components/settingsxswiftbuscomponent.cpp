@@ -26,13 +26,12 @@ namespace BlackGui::Components
         return cats;
     }
 
-    CSettingsXSwiftBusComponent::CSettingsXSwiftBusComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CSettingsXSwiftBusComponent)
+    CSettingsXSwiftBusComponent::CSettingsXSwiftBusComponent(QWidget *parent) : QFrame(parent),
+                                                                                ui(new Ui::CSettingsXSwiftBusComponent)
     {
         ui->setupUi(this);
 
-        connect(ui->pb_Save,  &QPushButton::released, this, &CSettingsXSwiftBusComponent::saveServer);
+        connect(ui->pb_Save, &QPushButton::released, this, &CSettingsXSwiftBusComponent::saveServer);
         connect(ui->pb_Reset, &QPushButton::released, this, &CSettingsXSwiftBusComponent::resetServer);
 
         const QString dBusAddress = m_xSwiftBusSettings.get().getDBusServerAddressQt();
@@ -41,7 +40,7 @@ namespace BlackGui::Components
     }
 
     CSettingsXSwiftBusComponent::~CSettingsXSwiftBusComponent()
-    { }
+    {}
 
     void CSettingsXSwiftBusComponent::resetServer()
     {

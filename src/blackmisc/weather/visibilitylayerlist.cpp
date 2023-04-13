@@ -16,9 +16,8 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Weather, CVisibilityLayer, CVisibilityLa
 
 namespace BlackMisc::Weather
 {
-    CVisibilityLayerList::CVisibilityLayerList(const CSequence<CVisibilityLayer> &other) :
-        CSequence<CVisibilityLayer>(other)
-    { }
+    CVisibilityLayerList::CVisibilityLayerList(const CSequence<CVisibilityLayer> &other) : CSequence<CVisibilityLayer>(other)
+    {}
 
     bool CVisibilityLayerList::containsBase(const CAltitude &base) const
     {

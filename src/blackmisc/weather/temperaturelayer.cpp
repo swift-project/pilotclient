@@ -18,11 +18,10 @@ namespace BlackMisc::Weather
 {
 
     CTemperatureLayer::CTemperatureLayer(const CAltitude &level,
-                                            const CTemperature &value,
-                                            const CTemperature &dewPoint,
-                                            double relativeHumidity) :
-        m_level(level), m_temperature(value), m_dewPoint(dewPoint), m_relativeHumidity(relativeHumidity)
-    { }
+                                         const CTemperature &value,
+                                         const CTemperature &dewPoint,
+                                         double relativeHumidity) : m_level(level), m_temperature(value), m_dewPoint(dewPoint), m_relativeHumidity(relativeHumidity)
+    {}
 
     QVariant CTemperatureLayer::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
     {
@@ -45,7 +44,11 @@ namespace BlackMisc::Weather
 
     void CTemperatureLayer::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CTemperatureLayer>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CTemperatureLayer>();
+            return;
+        }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

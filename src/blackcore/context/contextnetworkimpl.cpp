@@ -55,8 +55,7 @@ using namespace BlackCore::Vatsim;
 
 namespace BlackCore::Context
 {
-    CContextNetwork::CContextNetwork(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
-        IContextNetwork(mode, runtime)
+    CContextNetwork::CContextNetwork(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextNetwork(mode, runtime)
     {
         //! \fixme KB 2019-07 bad style we implicitly depend on 2 other contexts
         Q_ASSERT(this->getRuntime());
@@ -66,26 +65,26 @@ namespace BlackCore::Context
 
         // 1. Init by "network driver"
         m_fsdClient = new CFSDClient(
-            this,  // client provider
+            this, // client provider
             this->getRuntime()->getCContextOwnAircraft(), // own aircraft provider
-            this,  // remote aircraft provider
+            this, // remote aircraft provider
             this); // thread owner
         m_fsdClient->start(); // FSD thread
         connect(m_fsdClient, &CFSDClient::connectionStatusChanged, this, &CContextNetwork::onFsdConnectionStatusChanged, Qt::QueuedConnection);
-        connect(m_fsdClient, &CFSDClient::killRequestReceived,     this, &CContextNetwork::kicked,                 Qt::QueuedConnection);
-        connect(m_fsdClient, &CFSDClient::textMessagesReceived,    this, &CContextNetwork::onTextMessagesReceived, Qt::QueuedConnection);
-        connect(m_fsdClient, &CFSDClient::textMessageSent,         this, &CContextNetwork::onTextMessageSent,      Qt::QueuedConnection);
-        connect(m_fsdClient, &CFSDClient::severeNetworkError,      this, &CContextNetwork::severeNetworkError,     Qt::QueuedConnection);
+        connect(m_fsdClient, &CFSDClient::killRequestReceived, this, &CContextNetwork::kicked, Qt::QueuedConnection);
+        connect(m_fsdClient, &CFSDClient::textMessagesReceived, this, &CContextNetwork::onTextMessagesReceived, Qt::QueuedConnection);
+        connect(m_fsdClient, &CFSDClient::textMessageSent, this, &CContextNetwork::onTextMessageSent, Qt::QueuedConnection);
+        connect(m_fsdClient, &CFSDClient::severeNetworkError, this, &CContextNetwork::severeNetworkError, Qt::QueuedConnection);
 
         // 2. Update timer for data (network data such as frequency)
         // we use 2 timers so we can query at different times (not too many queirs at once)
         m_requestAircraftDataTimer = new QTimer(this);
-        connect(m_requestAircraftDataTimer, &QTimer::timeout, this,  &CContextNetwork::requestAircraftDataUpdates);
+        connect(m_requestAircraftDataTimer, &QTimer::timeout, this, &CContextNetwork::requestAircraftDataUpdates);
         m_requestAircraftDataTimer->start(30 * 1000);
         m_requestAircraftDataTimer->setObjectName("CContextNetwork::m_requestAircraftDataTimer");
 
         m_requestAtisTimer = new QTimer(this);
-        connect(m_requestAtisTimer, &QTimer::timeout, this,  &CContextNetwork::requestAtisUpdates);
+        connect(m_requestAtisTimer, &QTimer::timeout, this, &CContextNetwork::requestAtisUpdates);
         m_requestAtisTimer->start(13 * 1000); // should not be called at the same time as above
         m_requestAtisTimer->setObjectName("CContextNetwork::m_requestAtisTimer");
 
@@ -97,7 +96,7 @@ namespace BlackCore::Context
 
         // 4. Airspace contents
         Q_ASSERT_X(this->getRuntime()->getCContextOwnAircraft(), Q_FUNC_INFO, "this and own aircraft context must be local");
-        Q_ASSERT_X(this->getRuntime()->getCContextSimulator(),   Q_FUNC_INFO, "this and own simulator context must be local");
+        Q_ASSERT_X(this->getRuntime()->getCContextSimulator(), Q_FUNC_INFO, "this and own simulator context must be local");
         m_airspace = new CAirspaceMonitor(
             this->getRuntime()->getCContextOwnAircraft(),
             this->getRuntime()->getCContextSimulator(),
@@ -106,11 +105,11 @@ namespace BlackCore::Context
         connect(m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus, Qt::QueuedConnection);
         connect(m_airspace, &CAirspaceMonitor::changedAtcStationsOnline, this, &CContextNetwork::changedAtcStationsOnline, Qt::QueuedConnection);
         connect(m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked, Qt::QueuedConnection);
-        connect(m_airspace, &CAirspaceMonitor::changedAircraftInRange,   this, &CContextNetwork::changedAircraftInRange,   Qt::QueuedConnection);
-        connect(m_airspace, &CAirspaceMonitor::removedAircraft,          this, &IContextNetwork::removedAircraft,          Qt::QueuedConnection); // DBus
-        connect(m_airspace, &CAirspaceMonitor::readyForModelMatching,    this, &CContextNetwork::onReadyForModelMatching); // intentionally NOT QueuedConnection
-        connect(m_airspace, &CAirspaceMonitor::addedAircraft,            this, &CContextNetwork::addedAircraft,            Qt::QueuedConnection);
-        connect(m_airspace, &CAirspaceMonitor::changedAtisReceived,      this, &CContextNetwork::onChangedAtisReceived,    Qt::QueuedConnection);
+        connect(m_airspace, &CAirspaceMonitor::changedAircraftInRange, this, &CContextNetwork::changedAircraftInRange, Qt::QueuedConnection);
+        connect(m_airspace, &CAirspaceMonitor::removedAircraft, this, &IContextNetwork::removedAircraft, Qt::QueuedConnection); // DBus
+        connect(m_airspace, &CAirspaceMonitor::readyForModelMatching, this, &CContextNetwork::onReadyForModelMatching); // intentionally NOT QueuedConnection
+        connect(m_airspace, &CAirspaceMonitor::addedAircraft, this, &CContextNetwork::addedAircraft, Qt::QueuedConnection);
+        connect(m_airspace, &CAirspaceMonitor::changedAtisReceived, this, &CContextNetwork::onChangedAtisReceived, Qt::QueuedConnection);
     }
 
     CContextNetwork *CContextNetwork::registerWithDBus(BlackMisc::CDBusServer *server)
@@ -122,8 +121,8 @@ namespace BlackCore::Context
 
     void CContextNetwork::setSimulationEnvironmentProvider(ISimulationEnvironmentProvider *provider)
     {
-        if (this->canUseAirspaceMonitor()) { m_airspace->setSimulationEnvironmentProvider(provider);  }
-        if (this->canUseFsd())             { m_fsdClient->setSimulationEnvironmentProvider(provider); }
+        if (this->canUseAirspaceMonitor()) { m_airspace->setSimulationEnvironmentProvider(provider); }
+        if (this->canUseFsd()) { m_fsdClient->setSimulationEnvironmentProvider(provider); }
     }
 
     CContextNetwork::~CContextNetwork()
@@ -205,10 +204,10 @@ namespace BlackCore::Context
 
     QList<QMetaObject::Connection> CContextNetwork::connectRemoteAircraftProviderSignals(
         QObject *receiver,
-        std::function<void (const CAircraftSituation &)> situationSlot,
-        std::function<void (const CCallsign &, const CAircraftParts &)> partsSlot,
-        std::function<void (const CCallsign &)> removedAircraftSlot,
-        std::function<void (const CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot)
+        std::function<void(const CAircraftSituation &)> situationSlot,
+        std::function<void(const CCallsign &, const CAircraftParts &)> partsSlot,
+        std::function<void(const CCallsign &)> removedAircraftSlot,
+        std::function<void(const CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot)
     {
         Q_ASSERT_X(m_airspace, Q_FUNC_INFO, "Missing airspace");
         return m_airspace->connectRemoteAircraftProviderSignals(receiver, situationSlot, partsSlot, removedAircraftSlot, aircraftSnapshotSlot);
@@ -243,7 +242,7 @@ namespace BlackCore::Context
         if (!server.getUser().hasCredentials()) { return CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityError, u"Invalid user credentials"); }
         if (!this->ownAircraft().getAircraftIcaoCode().hasDesignator()) { return CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityError, u"Invalid ICAO data for own aircraft"); }
         if (!CNetworkUtils::canConnect(server, msg, 5000)) { return CStatusMessage(CStatusMessage::SeverityError, msg); }
-        if (m_fsdClient->isConnected())  { return CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityError, u"Already connected"); }
+        if (m_fsdClient->isConnected()) { return CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityError, u"Already connected"); }
         if (this->isPendingConnection()) { return CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityError, u"Pending connection, please wait"); }
 
         this->getIContextOwnAircraft()->updateOwnAircraftPilot(server.getUser());
@@ -258,8 +257,8 @@ namespace BlackCore::Context
         }
 
         const CSimulatorInfo sim = this->getIContextSimulator() ? this->getIContextSimulator()->getSimulatorPluginInfo().getSimulatorInfo() : CSimulatorInfo();
-        const QString l = extraLiveryString.isEmpty() ?  ownAircraft.getModel().getSwiftLiveryString(sim) : extraLiveryString;
-        const QString m = extraModelString.isEmpty()  ?  ownAircraft.getModelString() : extraModelString;
+        const QString l = extraLiveryString.isEmpty() ? ownAircraft.getModel().getSwiftLiveryString(sim) : extraLiveryString;
+        const QString m = extraModelString.isEmpty() ? ownAircraft.getModelString() : extraModelString;
 
         // FG fix, do not send livery and model ids for FlightGear
         // https://discordapp.com/channels/539048679160676382/567091362030419981/698124094482415616
@@ -284,7 +283,7 @@ namespace BlackCore::Context
         QString clientKey;
         if (!getCmdLineClientIdAndKey(clientId, clientKey))
         {
-            clientId  = CBuildConfig::vatsimClientId();
+            clientId = CBuildConfig::vatsimClientId();
             clientKey = CBuildConfig::vatsimPrivateKey();
         }
 
@@ -345,8 +344,8 @@ namespace BlackCore::Context
         Q_UNUSED(originator;)
 
         if (!this->canUseAirspaceMonitor()) { return false; }
-        if (!this->canUseFsd())             { return false; }
-        if (commandLine.isEmpty())          { return false; }
+        if (!this->canUseFsd()) { return false; }
+        if (commandLine.isEmpty()) { return false; }
 
         static const QStringList cmds({ ".msg", ".m", ".chat", ".altos", ".altoffset", ".addtimeos", ".addtimeoffset", ".wallop", ".watchdog", ".reinit", ".reinitialize", ".enable", ".disable", ".ignore", ".unignore", ".fsd" });
         CSimpleCommandParser parser(cmds);
@@ -373,7 +372,7 @@ namespace BlackCore::Context
             // set receiver
             const CSimulatedAircraft ownAircraft(this->getIContextOwnAircraft()->getOwnAircraft());
             const QString receiver = parser.part(1).trimmed().toLower(); // receiver
-            CCallsign ownCallsign  = ownAircraft.getCallsign();
+            CCallsign ownCallsign = ownAircraft.getCallsign();
             if (m_fsdClient)
             {
                 // override with the preset callsign, as the own callsign can be different for partner callsign scenarios
@@ -467,7 +466,7 @@ namespace BlackCore::Context
 
             const bool added = this->testAddAltitudeOffset(cs, os);
             if (added) { CLogMessage(this).info(u"Added altitude offset %1 for %2") << os.valueRoundedWithUnit(2) << cs.asString(); }
-            else       { CLogMessage(this).info(u"Removed altitude offset %1") << cs.asString(); }
+            else { CLogMessage(this).info(u"Removed altitude offset %1") << cs.asString(); }
 
             return true;
         }
@@ -513,7 +512,7 @@ namespace BlackCore::Context
         else if (parser.matchesCommand(".wallop"))
         {
             if (parser.countParts() < 2) { return false; }
-            if (!m_fsdClient)            { return false; }
+            if (!m_fsdClient) { return false; }
             if (!this->isConnected())
             {
                 CLogMessage(this).validationError(u"Network needs to be connected");
@@ -531,16 +530,16 @@ namespace BlackCore::Context
         else if (parser.matchesCommand(".enable", ".unignore"))
         {
             if (parser.countParts() < 2) { return false; }
-            if (!m_fsdClient)            { return false; }
-            if (!this->isConnected())    { return false; }
+            if (!m_fsdClient) { return false; }
+            if (!this->isConnected()) { return false; }
             const CCallsign cs(parser.part(1));
             if (cs.isValid()) { this->updateAircraftEnabled(cs, true); }
         }
         else if (parser.matchesCommand(".disable", ".ignore"))
         {
             if (parser.countParts() < 2) { return false; }
-            if (!m_fsdClient)            { return false; }
-            if (!this->isConnected())    { return false; }
+            if (!m_fsdClient) { return false; }
+            if (!this->isConnected()) { return false; }
             const CCallsign cs(parser.part(1));
             if (cs.isValid()) { this->updateAircraftEnabled(cs, false); }
         }
@@ -699,7 +698,7 @@ namespace BlackCore::Context
     void CContextNetwork::emitReadyForMatching()
     {
         if (m_readyForModelMatching.isEmpty()) { return; }
-        if (!sApp || sApp->isShuttingDown())   { return; }
+        if (!sApp || sApp->isShuttingDown()) { return; }
 
         const CSimulatedAircraft aircraft = m_readyForModelMatching.dequeue();
         if (!this->isAircraftInRange(aircraft.getCallsign())) { return; }
@@ -708,7 +707,7 @@ namespace BlackCore::Context
 
     void CContextNetwork::createRelayMessageToPartnerCallsign(const CTextMessage &textMessage, const CCallsign &partnerCallsign, CTextMessageList &relayedMessages)
     {
-        if (textMessage.isEmpty())     { return; }
+        if (textMessage.isEmpty()) { return; }
         if (partnerCallsign.isEmpty()) { return; }
         if (textMessage.getSenderCallsign() == partnerCallsign) { return; } // no round trips
 
@@ -793,7 +792,7 @@ namespace BlackCore::Context
 
         // 1) relayed messaged "now look like PMs"
         // 2) all messaged of partner are EXCLUDED
-        if (!textMessages.isEmpty())    { emit this->textMessagesReceived(textMessages); }
+        if (!textMessages.isEmpty()) { emit this->textMessagesReceived(textMessages); }
         if (!partnerMessages.isEmpty()) { emit this->textMessagesReceived(partnerMessages); }
 
         if (textMessages.containsPrivateMessages())
@@ -818,8 +817,7 @@ namespace BlackCore::Context
                 if (!relayedMessages.isEmpty())
                 {
                     QPointer<CContextNetwork> myself(this);
-                    QTimer::singleShot(10, this, [ = ]
-                    {
+                    QTimer::singleShot(10, this, [=] {
                         if (myself) { myself->sendTextMessages(relayedMessages); }
                     });
                 }
@@ -843,8 +841,7 @@ namespace BlackCore::Context
                 this->createRelayMessageToPartnerCallsign(message, partnerCallsign, relayedMessages);
                 if (!relayedMessages.isEmpty())
                 {
-                    QTimer::singleShot(10, this, [ = ]
-                    {
+                    QTimer::singleShot(10, this, [=] {
                         if (myself) { myself->sendTextMessages(relayedMessages); }
                     });
                 }
@@ -869,7 +866,7 @@ namespace BlackCore::Context
 
     bool CContextNetwork::isValidPartnerCallsign(const CCallsign &ownCallsign, const CCallsign &partnerCallsign)
     {
-        if (partnerCallsign.isEmpty())      { return false; }
+        if (partnerCallsign.isEmpty()) { return false; }
         if (ownCallsign == partnerCallsign) { return false; } // MUST NOT be the same
         return true;
     }

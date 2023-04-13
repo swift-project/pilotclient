@@ -24,9 +24,8 @@ using namespace BlackMisc::Simulation::Data;
 
 namespace BlackGui::Components
 {
-    CAircraftModelStringCompleter::CAircraftModelStringCompleter(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CAircraftModelStringCompleter)
+    CAircraftModelStringCompleter::CAircraftModelStringCompleter(QWidget *parent) : QFrame(parent),
+                                                                                    ui(new Ui::CAircraftModelStringCompleter)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "missing sGui");
         Q_ASSERT_X(sGui->hasWebDataServices(), Q_FUNC_INFO, "missing web services");
@@ -37,7 +36,7 @@ namespace BlackGui::Components
         connect(ui->le_modelString, &QLineEdit::editingFinished, this, &CAircraftModelStringCompleter::onTextChanged);
         connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbModelsRead, this, &CAircraftModelStringCompleter::onSwiftModelDataRead);
         connect(ui->rb_Db, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::initGui);
-        connect(ui->rb_ModelSet, &QRadioButton::clicked,  this, &CAircraftModelStringCompleter::initGui);
+        connect(ui->rb_ModelSet, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::initGui);
         connect(ui->rb_OwnModels, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::initGui);
         connect(&m_modelCaches, &CModelCaches::cacheChanged, this, &CAircraftModelStringCompleter::setSimulator, Qt::QueuedConnection);
 
@@ -60,7 +59,7 @@ namespace BlackGui::Components
     }
 
     CAircraftModelStringCompleter::~CAircraftModelStringCompleter()
-    { }
+    {}
 
     QString CAircraftModelStringCompleter::getModelString() const
     {
@@ -85,8 +84,8 @@ namespace BlackGui::Components
 
     void CAircraftModelStringCompleter::setSourceVisible(CompleterSource source, bool visible)
     {
-        if (source.testFlag(DB))        { ui->rb_Db->setVisible(visible); }
-        if (source.testFlag(ModelSet))  { ui->rb_ModelSet->setVisible(visible); }
+        if (source.testFlag(DB)) { ui->rb_Db->setVisible(visible); }
+        if (source.testFlag(ModelSet)) { ui->rb_ModelSet->setVisible(visible); }
         if (source.testFlag(OwnModels)) { ui->rb_OwnModels->setVisible(visible); }
     }
 
@@ -94,8 +93,8 @@ namespace BlackGui::Components
     {
         switch (source)
         {
-        case DB:        ui->rb_Db->setChecked(true); break;
-        case ModelSet:  ui->rb_ModelSet->setChecked(true); break;
+        case DB: ui->rb_Db->setChecked(true); break;
+        case ModelSet: ui->rb_ModelSet->setChecked(true); break;
         case OwnModels: ui->rb_OwnModels->setChecked(true); break;
         default: ui->rb_ModelSet->setChecked(true); break;
         }
@@ -103,12 +102,11 @@ namespace BlackGui::Components
 
     bool CAircraftModelStringCompleter::setSimulator(const CSimulatorInfo &simulator)
     {
-        if (simulator.isSingleSimulator())     { return false; }
+        if (simulator.isSingleSimulator()) { return false; }
         if (this->getSimulator() == simulator) { return false; }
         m_currentSimulator = simulator;
         QPointer<CAircraftModelStringCompleter> myself(this);
-        QTimer::singleShot(100, this, [ = ]
-        {
+        QTimer::singleShot(100, this, [=] {
             if (!myself) { return; }
             this->setCompleter(true);
         });

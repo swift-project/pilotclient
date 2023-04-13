@@ -17,7 +17,10 @@
 #include <QTextDocument>
 #include "blackmisc/network/connectionstatus.h"
 
-namespace Ui { class CAircraftPartsHistory; }
+namespace Ui
+{
+    class CAircraftPartsHistory;
+}
 namespace BlackGui::Components
 {
     /*!

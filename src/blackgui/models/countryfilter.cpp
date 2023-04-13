@@ -13,8 +13,7 @@ using namespace BlackMisc;
 
 namespace BlackGui::Models
 {
-    CCountryFilter::CCountryFilter(const QString &isoCode, const QString &name) :
-        m_isoCode(isoCode.trimmed().toUpper()), m_name(name.trimmed())
+    CCountryFilter::CCountryFilter(const QString &isoCode, const QString &name) : m_isoCode(isoCode.trimmed().toUpper()), m_name(name.trimmed())
     {
         this->m_valid = !(this->m_isoCode.isEmpty() && this->m_name.isEmpty());
     }

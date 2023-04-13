@@ -19,8 +19,14 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CDbOwnModelSetFormDialog; }
-namespace BlackMisc { class CLogCategoryList; }
+namespace Ui
+{
+    class CDbOwnModelSetFormDialog;
+}
+namespace BlackMisc
+{
+    class CLogCategoryList;
+}
 namespace BlackGui::Components
 {
     /*!
@@ -64,7 +70,7 @@ namespace BlackGui::Components
     private:
         QScopedPointer<Ui::CDbOwnModelSetFormDialog> ui;
         BlackMisc::Simulation::CAircraftModelList m_modelSet;
-        BlackMisc::Simulation::CSimulatorInfo     m_simulatorInfo;
+        BlackMisc::Simulation::CSimulatorInfo m_simulatorInfo;
 
         //! Button clicked
         void buttonClicked();

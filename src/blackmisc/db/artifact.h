@@ -56,7 +56,7 @@ namespace BlackMisc::Db
 
         //! Constructor
         CArtifact(const QString &name, const QString &version, const QString &md5,
-                    ArtifactType type, int size, bool existing, const CPlatform &platform);
+                  ArtifactType type, int size, bool existing, const CPlatform &platform);
 
         //! Having name?
         bool hasName() const { return !m_name.isEmpty(); }
@@ -147,12 +147,12 @@ namespace BlackMisc::Db
         static CPlatform artifactNameToPlatform(const QString &name);
 
     private:
-        QString m_name;    //!< filename
-        QString m_md5;     //!< MD5 checksum
-        int  m_type = static_cast<int>(UnknownArtifact); //!< artifact type
-        int  m_size = -1;        //!< size in bytes
+        QString m_name; //!< filename
+        QString m_md5; //!< MD5 checksum
+        int m_type = static_cast<int>(UnknownArtifact); //!< artifact type
+        int m_size = -1; //!< size in bytes
         bool m_existing = false; //!< existing artifact for download
-        CPlatform m_platform;    //!< platform (i.e. OS)
+        CPlatform m_platform; //!< platform (i.e. OS)
         CDistributionList m_distributions; //!< related distributions
 
         //! Extract version number from a file name

@@ -18,9 +18,8 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAirport, CAirportList)
 
 namespace BlackMisc::Aviation
 {
-    CAirportList::CAirportList(const CSequence<CAirport> &other) :
-        CSequence<CAirport>(other)
-    { }
+    CAirportList::CAirportList(const CSequence<CAirport> &other) : CSequence<CAirport>(other)
+    {}
 
     CAirportList CAirportList::findByIcao(const CAirportIcaoCode &icao) const
     {
@@ -60,14 +59,12 @@ namespace BlackMisc::Aviation
     CAirport CAirportList::findFirstByNameOrLocation(const QString &nameOrLocation) const
     {
         if (this->isEmpty() || nameOrLocation.isEmpty()) { return CAirport(); }
-        CAirportList airports = this->findBy([&](const CAirport & airport)
-        {
+        CAirportList airports = this->findBy([&](const CAirport &airport) {
             return airport.matchesDescriptiveName(nameOrLocation);
         });
         if (!airports.isEmpty()) { return airports.frontOrDefault(); }
 
-        airports = this->findBy([&](const CAirport & airport)
-        {
+        airports = this->findBy([&](const CAirport &airport) {
             return airport.matchesLocation(nameOrLocation);
         });
         if (!airports.isEmpty()) { return airports.frontOrDefault(); }

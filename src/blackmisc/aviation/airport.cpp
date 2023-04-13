@@ -24,17 +24,14 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAirport)
 
 namespace BlackMisc::Aviation
 {
-    CAirport::CAirport(const QString &icao)  :
-        m_icao(icao)
-    { }
+    CAirport::CAirport(const QString &icao) : m_icao(icao)
+    {}
 
-    CAirport::CAirport(const CAirportIcaoCode &icao, const BlackMisc::Geo::CCoordinateGeodetic &position) :
-        m_icao(icao), m_position(position)
-    { }
+    CAirport::CAirport(const CAirportIcaoCode &icao, const BlackMisc::Geo::CCoordinateGeodetic &position) : m_icao(icao), m_position(position)
+    {}
 
-    CAirport::CAirport(const CAirportIcaoCode &icao, const BlackMisc::Geo::CCoordinateGeodetic &position, const QString &descriptiveName) :
-        m_descriptiveName(descriptiveName), m_icao(icao), m_position(position)
-    { }
+    CAirport::CAirport(const CAirportIcaoCode &icao, const BlackMisc::Geo::CCoordinateGeodetic &position, const QString &descriptiveName) : m_descriptiveName(descriptiveName), m_icao(icao), m_position(position)
+    {}
 
     QString CAirport::getLocationPlusOptionalName() const
     {
@@ -88,8 +85,7 @@ namespace BlackMisc::Aviation
         const CCoordinateGeodetic pos(
             json.value(prefix + "latitude").toDouble(),
             json.value(prefix + "longitude").toDouble(),
-            json.value(prefix + "altitude").toDouble()
-        );
+            json.value(prefix + "altitude").toDouble());
         airport.setPosition(pos);
         airport.setOperating(json.value(prefix + "operating").toString() == QStringLiteral("Y"));
 
@@ -114,14 +110,18 @@ namespace BlackMisc::Aviation
         case IndexOperating: return QVariant::fromValue(this->isOperating());
         default:
             return (ICoordinateWithRelativePosition::canHandleIndex(index)) ?
-                    ICoordinateWithRelativePosition::propertyByIndex(index) :
-                    CValueObject::propertyByIndex(index);
+                       ICoordinateWithRelativePosition::propertyByIndex(index) :
+                       CValueObject::propertyByIndex(index);
         }
     }
 
     void CAirport::setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CAirport>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CAirport>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

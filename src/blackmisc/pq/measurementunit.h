@@ -208,11 +208,11 @@ namespace BlackMisc::PhysicalQuantities
                 : m_name(name), m_symbol(symbol)
             {}
 
-            QLatin1String m_name;     //!< name, e.g. "meter"
-            QLatin1String m_symbol;   //!< unit name, e.g. "m"
-            double m_epsilon = 0.0;   //!< values with differences below epsilon are the equal
-            int m_displayDigits = 0;  //!< standard rounding for string conversions
-            ConverterFunction m_toDefault = nullptr;   //!< convert from this unit to default unit
+            QLatin1String m_name; //!< name, e.g. "meter"
+            QLatin1String m_symbol; //!< unit name, e.g. "m"
+            double m_epsilon = 0.0; //!< values with differences below epsilon are the equal
+            int m_displayDigits = 0; //!< standard rounding for string conversions
+            ConverterFunction m_toDefault = nullptr; //!< convert from this unit to default unit
             ConverterFunction m_fromDefault = nullptr; //!< convert to this unit from default unit
         };
 
@@ -236,7 +236,7 @@ namespace BlackMisc::PhysicalQuantities
         CMeasurementUnit(const CMeasurementUnit &) = default;
 
         //! Copy assignment operator
-        CMeasurementUnit &operator =(const CMeasurementUnit &) = default;
+        CMeasurementUnit &operator=(const CMeasurementUnit &) = default;
 
     private:
         const Data *m_data = (static_cast<void>(throw std::logic_error("Uninitialized pimpl")), nullptr);
@@ -277,14 +277,14 @@ namespace BlackMisc::PhysicalQuantities
         }
 
         //! Equal operator ==
-        friend bool operator == (const CMeasurementUnit &a, const CMeasurementUnit &b)
+        friend bool operator==(const CMeasurementUnit &a, const CMeasurementUnit &b)
         {
             if (&a == &b) return true;
             return a.m_data->m_name == b.m_data->m_name;
         }
 
         //! Unequal operator !=
-        friend bool operator != (const CMeasurementUnit &a, const CMeasurementUnit &b)
+        friend bool operator!=(const CMeasurementUnit &a, const CMeasurementUnit &b)
         {
             return !(a == b);
         }
@@ -312,7 +312,7 @@ namespace BlackMisc::PhysicalQuantities
         {
             const QString c = candidate.trimmed();
             return c.endsWith(this->getName(false), cs) || c.endsWith(this->getName(true)) ||
-                    c.endsWith(this->getSymbol(false), cs) || c.endsWith(this->getSymbol(true));
+                   c.endsWith(this->getSymbol(false), cs) || c.endsWith(this->getSymbol(true));
         }
 
         //! Rounded value
@@ -369,7 +369,8 @@ namespace BlackMisc::PhysicalQuantities
          * \param symbol must be a valid unit symbol (without i18n) or empty string (empty means default unit)
          * \param strict strict check means if unit is not found, program terminates
          */
-        template <class U> static U unitFromSymbol(const QString &symbol, bool strict = true)
+        template <class U>
+        static U unitFromSymbol(const QString &symbol, bool strict = true)
         {
             if (symbol.isEmpty()) { return U::defaultUnit(); }
 
@@ -392,10 +393,10 @@ namespace BlackMisc::PhysicalQuantities
         /*!
          * All symbols
          */
-        template <class U> static const QStringList &allSymbols()
+        template <class U>
+        static const QStringList &allSymbols()
         {
-            static const QStringList symbols = []
-            {
+            static const QStringList symbols = [] {
                 QStringList s;
                 for (const auto &unit : U::allUnits())
                 {
@@ -409,10 +410,10 @@ namespace BlackMisc::PhysicalQuantities
         /*!
          * All symbols case insensitive
          */
-        template <class U> static const QStringList &allSymbolsLowerCase()
+        template <class U>
+        static const QStringList &allSymbolsLowerCase()
         {
-            static const QStringList symbols = []
-            {
+            static const QStringList symbols = [] {
                 QSet<QString> s;
                 for (const QString &symbol : allSymbols<U>())
                 {
@@ -426,10 +427,10 @@ namespace BlackMisc::PhysicalQuantities
         /*!
          * Are symbols case sensitive?
          */
-        template <class U> static bool hasCaseSensitiveSymbols()
+        template <class U>
+        static bool hasCaseSensitiveSymbols()
         {
-            static const bool cs = []
-            {
+            static const bool cs = [] {
                 return (allSymbolsLowerCase<U>().size() != allSymbols<U>().size());
             }();
             return cs;
@@ -439,12 +440,13 @@ namespace BlackMisc::PhysicalQuantities
          * Valid unit symbol?
          * \param symbol to be tested
          */
-        template <class U> static bool isValidUnitSymbol(const QString &symbol)
+        template <class U>
+        static bool isValidUnitSymbol(const QString &symbol)
         {
             static const bool cs = hasCaseSensitiveSymbols<U>();
             return cs ?
-                    isValidUnitSymbol<U>(symbol, Qt::CaseSensitive) :
-                    isValidUnitSymbol<U>(symbol, Qt::CaseInsensitive);
+                       isValidUnitSymbol<U>(symbol, Qt::CaseSensitive) :
+                       isValidUnitSymbol<U>(symbol, Qt::CaseInsensitive);
         }
 
         /*!
@@ -452,7 +454,8 @@ namespace BlackMisc::PhysicalQuantities
          * \param symbol to be tested
          * \param caseSensitivity check case sensitiv?
          */
-        template <class U> static bool isValidUnitSymbol(const QString &symbol, Qt::CaseSensitivity caseSensitivity)
+        template <class U>
+        static bool isValidUnitSymbol(const QString &symbol, Qt::CaseSensitivity caseSensitivity)
         {
             if (symbol.isEmpty()) return false;
             for (const auto &unit : U::allUnits())
@@ -467,7 +470,8 @@ namespace BlackMisc::PhysicalQuantities
          * \param candidate to be tested
          * \param caseSensitivity check case sensitiv?
          */
-        template <class U> static bool containsValidUnitSymbol(const QString &candidate, Qt::CaseSensitivity caseSensitivity = Qt::CaseSensitive)
+        template <class U>
+        static bool containsValidUnitSymbol(const QString &candidate, Qt::CaseSensitivity caseSensitivity = Qt::CaseSensitive)
         {
             if (candidate.isEmpty()) return false;
             for (const auto &unit : U::allUnits())
@@ -482,7 +486,8 @@ namespace BlackMisc::PhysicalQuantities
          * \param candidate to be tested
          * \param caseSensitivity check case sensitiv?
          */
-        template <class U> static bool endWithValidUnitSymbol(const QString &candidate, Qt::CaseSensitivity caseSensitivity = Qt::CaseSensitive)
+        template <class U>
+        static bool endWithValidUnitSymbol(const QString &candidate, Qt::CaseSensitivity caseSensitivity = Qt::CaseSensitive)
         {
             if (candidate.isEmpty()) return false;
             for (const auto &unit : U::allUnits())

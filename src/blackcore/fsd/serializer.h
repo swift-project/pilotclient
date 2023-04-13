@@ -21,61 +21,61 @@
 namespace BlackCore::Fsd
 {
     //! \cond
-    template<typename T>
-    inline QString toQString(const T& value);
+    template <typename T>
+    inline QString toQString(const T &value);
 
-    template<typename T>
+    template <typename T>
     T fromQString(const QString &str);
 
-    template<>
+    template <>
     QString toQString(const AtcRating &value);
 
-    template<>
+    template <>
     AtcRating fromQString(const QString &str);
 
-    template<>
+    template <>
     QString toQString(const PilotRating &value);
 
-    template<>
+    template <>
     PilotRating fromQString(const QString &str);
 
-    template<>
+    template <>
     QString toQString(const SimType &value);
 
-    template<>
+    template <>
     SimType fromQString(const QString &str);
 
-    template<>
+    template <>
     QString toQString(const BlackMisc::Network::CFacilityType &value);
 
-    template<>
+    template <>
     BlackMisc::Network::CFacilityType fromQString(const QString &str);
 
-    template<>
+    template <>
     QString toQString(const ClientQueryType &value);
 
-    template<>
+    template <>
     ClientQueryType fromQString(const QString &str);
 
-    template<>
+    template <>
     QString toQString(const FlightType &value);
 
-    template<>
+    template <>
     FlightType fromQString(const QString &str);
 
-    template<>
+    template <>
     QString toQString(const BlackMisc::Aviation::CTransponder::TransponderMode &value);
 
-    template<>
+    template <>
     BlackMisc::Aviation::CTransponder::TransponderMode fromQString(const QString &str);
 
-    template<>
-    QString toQString(const Capabilities& value);
+    template <>
+    QString toQString(const Capabilities &value);
 
-    template<>
+    template <>
     Capabilities fromQString(const QString &str);
 
-    template<>
+    template <>
     AtisLineType fromQString(const QString &str);
     //! \endcond
 }

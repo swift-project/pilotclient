@@ -13,12 +13,12 @@
 namespace BlackCore::Fsd
 {
     Pong::Pong() : MessageBase()
-    { }
+    {}
 
     Pong::Pong(const QString &sender, const QString &receiver, const QString &timestamp)
         : MessageBase(sender, receiver),
-            m_timestamp(timestamp)
-    { }
+          m_timestamp(timestamp)
+    {}
 
     QStringList Pong::toTokens() const
     {

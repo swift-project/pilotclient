@@ -16,7 +16,10 @@
 #include <QSharedPointer>
 #include <QStringList>
 
-namespace BlackCore { class ISimulator; }
+namespace BlackCore
+{
+    class ISimulator;
+}
 namespace BlackSimPlugin::Flightgear
 {
     //! Class representing a Flightgear multiplayer aircraft
@@ -28,8 +31,8 @@ namespace BlackSimPlugin::Flightgear
 
         //! Constructor providing initial situation/parts
         CFlightgearMPAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft,
-                                BlackCore::ISimulator *simulator,
-                                BlackMisc::Simulation::CInterpolationLogger *logger);
+                              BlackCore::ISimulator *simulator,
+                              BlackMisc::Simulation::CInterpolationLogger *logger);
 
         //! Destructor
         ~CFlightgearMPAircraft() {}

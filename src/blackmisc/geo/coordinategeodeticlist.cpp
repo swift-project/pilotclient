@@ -17,11 +17,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Geo, CCoordinateGeodetic, CCoordinateGeo
 namespace BlackMisc::Geo
 {
     CCoordinateGeodeticList::CCoordinateGeodeticList()
-    { }
+    {}
 
-    CCoordinateGeodeticList::CCoordinateGeodeticList(const CSequence<CCoordinateGeodetic> &other) :
-        CSequence<CCoordinateGeodetic>(other)
-    { }
+    CCoordinateGeodeticList::CCoordinateGeodeticList(const CSequence<CCoordinateGeodetic> &other) : CSequence<CCoordinateGeodetic>(other)
+    {}
 
     CElevationPlane CCoordinateGeodeticList::averageGeodeticHeight(const CCoordinateGeodetic &reference, const CLength &range, const CLength &maxDeviation, int minValues, int sufficentValues) const
     {

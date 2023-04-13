@@ -12,16 +12,15 @@
 
 namespace BlackGui::Components
 {
-    CCopyConfigurationDialog::CCopyConfigurationDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CCopyConfigurationDialog)
+    CCopyConfigurationDialog::CCopyConfigurationDialog(QWidget *parent) : QDialog(parent),
+                                                                          ui(new Ui::CCopyConfigurationDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
     CCopyConfigurationDialog::~CCopyConfigurationDialog()
-    { }
+    {}
 
     void CCopyConfigurationDialog::setCacheMode()
     {

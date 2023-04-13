@@ -18,7 +18,7 @@
  * Operator for marshalling pairs with QDataStream.
  */
 template <typename T, typename U>
-QDataStream &operator <<(QDataStream &stream, const std::pair<T, U> &pair)
+QDataStream &operator<<(QDataStream &stream, const std::pair<T, U> &pair)
 {
     return stream << pair.first << pair.second;
 }
@@ -27,7 +27,7 @@ QDataStream &operator <<(QDataStream &stream, const std::pair<T, U> &pair)
  * Operator for unmarshalling pairs with QDataStream.
  */
 template <typename T, typename U>
-QDataStream &operator >>(QDataStream &stream, std::pair<T, U> &pair)
+QDataStream &operator>>(QDataStream &stream, std::pair<T, U> &pair)
 {
     return stream >> pair.first >> pair.second;
 }

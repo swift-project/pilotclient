@@ -21,11 +21,11 @@ namespace BlackCore::Fsd
     public:
         //! Constructor
         PlaneInformationFsinn(const QString &sender,
-                                const QString &receiver,
-                                const QString &airlineIcao,
-                                const QString &aircraftIcao,
-                                const QString &aircraftIcaoCombinedType,
-                                const QString &sendMModelString);
+                              const QString &receiver,
+                              const QString &airlineIcao,
+                              const QString &aircraftIcao,
+                              const QString &aircraftIcaoCombinedType,
+                              const QString &sendMModelString);
 
         //! Message converted to tokens
         QStringList toTokens() const;
@@ -51,12 +51,12 @@ namespace BlackCore::Fsd
     //! Equal to operator
     inline bool operator==(const PlaneInformationFsinn &lhs, const PlaneInformationFsinn &rhs)
     {
-        return  lhs.sender() == rhs.sender() &&
-                lhs.receiver() == rhs.receiver() &&
-                lhs.m_airlineIcao == rhs.m_airlineIcao &&
-                lhs.m_aircraftIcao == rhs.m_aircraftIcao &&
-                lhs.m_aircraftIcaoCombinedType == rhs.m_aircraftIcaoCombinedType &&
-                lhs.m_sendMModelString == rhs.m_sendMModelString;
+        return lhs.sender() == rhs.sender() &&
+               lhs.receiver() == rhs.receiver() &&
+               lhs.m_airlineIcao == rhs.m_airlineIcao &&
+               lhs.m_aircraftIcao == rhs.m_aircraftIcao &&
+               lhs.m_aircraftIcaoCombinedType == rhs.m_aircraftIcaoCombinedType &&
+               lhs.m_sendMModelString == rhs.m_sendMModelString;
     }
 
     //! Not equal to operator

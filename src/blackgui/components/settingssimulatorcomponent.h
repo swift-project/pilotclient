@@ -22,9 +22,18 @@
 #include <QScopedPointer>
 #include <QString>
 
-namespace Ui { class CSettingsSimulatorComponent; }
-namespace BlackCore { class CPluginManagerSimulator; }
-namespace BlackMisc::Simulation { class CSimulatorPluginInfo; }
+namespace Ui
+{
+    class CSettingsSimulatorComponent;
+}
+namespace BlackCore
+{
+    class CPluginManagerSimulator;
+}
+namespace BlackMisc::Simulation
+{
+    class CSimulatorPluginInfo;
+}
 namespace BlackGui::Components
 {
     //! All simulator settings component (GUI)

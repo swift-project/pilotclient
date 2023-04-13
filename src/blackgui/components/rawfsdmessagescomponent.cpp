@@ -24,8 +24,7 @@ using namespace BlackCore::Vatsim;
 
 namespace BlackGui::Components
 {
-    CRawFsdMessagesComponent::CRawFsdMessagesComponent(QWidget *parent) :
-        QFrame(parent), ui(new Ui::CRawFsdMessagesComponent)
+    CRawFsdMessagesComponent::CRawFsdMessagesComponent(QWidget *parent) : QFrame(parent), ui(new Ui::CRawFsdMessagesComponent)
     {
         ui->setupUi(this);
         ui->cb_FileWritingMode->addItem(QApplication::translate("CRawFsdMessagesComponent", "None", nullptr), QVariant::fromValue(CRawFsdMessageSettings::None));
@@ -44,7 +43,7 @@ namespace BlackGui::Components
     }
 
     CRawFsdMessagesComponent::~CRawFsdMessagesComponent()
-    { }
+    {}
 
     void CRawFsdMessagesComponent::setupConnections()
     {
@@ -169,8 +168,8 @@ namespace BlackGui::Components
     void CRawFsdMessagesComponent::filterDisplayedMessages()
     {
         CRawFsdMessageList filtered = m_buffer;
-        if (! m_filterString.isEmpty()) { filtered = filtered.findByContainsString(m_filterString); }
-        if (! m_filterPacketType.isEmpty()) { filtered = filtered.findByPacketType(m_filterPacketType); }
+        if (!m_filterString.isEmpty()) { filtered = filtered.findByContainsString(m_filterString); }
+        if (!m_filterPacketType.isEmpty()) { filtered = filtered.findByPacketType(m_filterPacketType); }
         ui->pte_RawFsdMessages->clear();
         // Append only the last messages up to maximum display size. Erase everything before.
         filtered.erase(filtered.begin(), filtered.end() - std::min(filtered.size(), m_maxDisplayedMessages));
@@ -200,8 +199,8 @@ namespace BlackGui::Components
         if (m_buffer.size() == m_maxDisplayedMessages) { m_buffer.pop_front(); }
         m_buffer.push_backMaxElements(rawFsdMessage, m_maxDisplayedMessages);
 
-        if (! m_filterPacketType.isEmpty() && !rawFsdMessage.isPacketType(m_filterPacketType)) { return; }
-        if (! m_filterString.isEmpty() && !rawFsdMessage.containsString(m_filterString)) { return; }
+        if (!m_filterPacketType.isEmpty() && !rawFsdMessage.isPacketType(m_filterPacketType)) { return; }
+        if (!m_filterString.isEmpty() && !rawFsdMessage.containsString(m_filterString)) { return; }
         ui->pte_RawFsdMessages->appendPlainText(rawFsdMessageToString(rawFsdMessage));
     }
 

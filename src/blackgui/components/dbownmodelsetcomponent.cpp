@@ -52,10 +52,9 @@ using namespace BlackGui::Views;
 
 namespace BlackGui::Components
 {
-    CDbOwnModelSetComponent::CDbOwnModelSetComponent(QWidget *parent) :
-        QFrame(parent),
-        CDbMappingComponentAware(parent),
-        ui(new Ui::CDbOwnModelSetComponent)
+    CDbOwnModelSetComponent::CDbOwnModelSetComponent(QWidget *parent) : QFrame(parent),
+                                                                        CDbMappingComponentAware(parent),
+                                                                        ui(new Ui::CDbOwnModelSetComponent)
     {
         ui->setupUi(this);
         ui->tvp_OwnModelSet->setAircraftModelMode(CAircraftModelListModel::OwnModelSet);
@@ -80,18 +79,18 @@ namespace BlackGui::Components
         //! \fixme hardcoded style sheet
         ui->pb_SaveAsSetForSimulator->setStyleSheet("padding-left: 3px; padding-right: 3px;");
 
-        connect(ui->pb_CreateNewSet,    &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked, Qt::QueuedConnection);
+        connect(ui->pb_CreateNewSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked, Qt::QueuedConnection);
         connect(ui->pb_LoadExistingSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked, Qt::QueuedConnection);
-        connect(ui->pb_ShowStatistics,  &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked, Qt::QueuedConnection);
-        connect(ui->pb_FirstSet,        &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked, Qt::QueuedConnection);
-        connect(ui->pb_Clear,           &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked, Qt::QueuedConnection);
-        connect(ui->pb_CopyFromAnotherSwift,  &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked, Qt::QueuedConnection);
+        connect(ui->pb_ShowStatistics, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked, Qt::QueuedConnection);
+        connect(ui->pb_FirstSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked, Qt::QueuedConnection);
+        connect(ui->pb_Clear, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked, Qt::QueuedConnection);
+        connect(ui->pb_CopyFromAnotherSwift, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked, Qt::QueuedConnection);
         connect(ui->pb_SaveAsSetForSimulator, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked, Qt::QueuedConnection);
 
-        connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed,   this, &CDbOwnModelSetComponent::setSimulator,      Qt::QueuedConnection);
+        connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelSetComponent::setSimulator, Qt::QueuedConnection);
         connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelDataChanged, this, &CDbOwnModelSetComponent::onRowCountChanged, Qt::QueuedConnection);
-        connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelChanged,     this, &CDbOwnModelSetComponent::viewModelChanged,  Qt::QueuedConnection);
-        connect(ui->tvp_OwnModelSet, &CAircraftModelView::requestUpdate,    this, &CDbOwnModelSetComponent::updateViewToCurrentModels,    Qt::QueuedConnection);
+        connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelChanged, this, &CDbOwnModelSetComponent::viewModelChanged, Qt::QueuedConnection);
+        connect(ui->tvp_OwnModelSet, &CAircraftModelView::requestUpdate, this, &CDbOwnModelSetComponent::updateViewToCurrentModels, Qt::QueuedConnection);
         connect(ui->tvp_OwnModelSet, &CAircraftModelView::jsonModelsForSimulatorLoaded, this, &CDbOwnModelSetComponent::onJsonDataLoaded, Qt::QueuedConnection);
 
         this->triggerSetSimulatorDeferred(simulator);
@@ -159,7 +158,7 @@ namespace BlackGui::Components
 
     CStatusMessage CDbOwnModelSetComponent::addToModelSet(const CAircraftModel &model, const CSimulatorInfo &simulator)
     {
-        return this->addToModelSet(CAircraftModelList({model}), simulator);
+        return this->addToModelSet(CAircraftModelList({ model }), simulator);
     }
 
     CStatusMessage CDbOwnModelSetComponent::addToModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulator)
@@ -175,7 +174,7 @@ namespace BlackGui::Components
         {
             // only currently selected sim allowed
             return CStatusMessage(this, CStatusMessage::SeverityError,
-                                    u"Cannot add data for " % simulator.toQString(true) % u" to " % this->getModelSetSimulator().toQString(true), true);
+                                  u"Cannot add data for " % simulator.toQString(true) % u" to " % this->getModelSetSimulator().toQString(true), true);
         }
 
         const bool allowExcludedModels = m_modelSettings.get().getAllowExcludedModels();
@@ -237,7 +236,7 @@ namespace BlackGui::Components
             if (!ownModelSet.isEmpty())
             {
                 const CSimulatorInfo sim = this->getSelectedSimulator();
-                const CStatusMessage m   = this->setCachedModels(ownModelSet, sim);
+                const CStatusMessage m = this->setCachedModels(ownModelSet, sim);
                 CLogMessage::preformatted(m);
                 if (m.isSuccess())
                 {
@@ -335,7 +334,7 @@ namespace BlackGui::Components
         const QDialog::DialogCode ret = static_cast<QDialog::DialogCode>(m_reduceModelsDialog->exec());
         if (ret != QDialog::Accepted) { return; }
         const CAircraftModelList removeModels = m_reduceModelsDialog->getRemoveCandidates();
-        const CSimulatorInfo removeSimulator  = m_reduceModelsDialog->getSimulator();
+        const CSimulatorInfo removeSimulator = m_reduceModelsDialog->getSimulator();
         if (removeModels.isEmpty()) { return; }
         const QStringList modelStrings = removeModels.getModelStringList(false);
         models.removeModelsWithString(modelStrings, Qt::CaseInsensitive); // by strings also removes if id is missing
@@ -442,7 +441,7 @@ namespace BlackGui::Components
 
     void CDbOwnModelSetComponent::setSimulator(const CSimulatorInfo &simulator)
     {
-        if (m_simulator == simulator)  { return; } // avoid unnecessary signals
+        if (m_simulator == simulator) { return; } // avoid unnecessary signals
         if (simulator.isNoSimulator()) { return; }
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
 
@@ -464,8 +463,7 @@ namespace BlackGui::Components
         this->admitCache(simulator); // trigger loading
 
         QPointer<CDbOwnModelSetComponent> myself(this);
-        QTimer::singleShot(1000, this, [ = ]
-        {
+        QTimer::singleShot(1000, this, [=] {
             if (!sApp || sApp->isShuttingDown()) { return; }
             if (!myself) { return; }
             this->setSimulator(simulator);
@@ -509,7 +507,7 @@ namespace BlackGui::Components
     void CDbOwnModelSetComponent::CLoadModelSetMenu::customMenu(CMenuActions &menuActions)
     {
         // for the moment I use all sims, I could restrict to CSimulatorInfo::getLocallyInstalledSimulators();
-        const CSimulatorInfo sims =  CSimulatorInfo::allSimulators();
+        const CSimulatorInfo sims = CSimulatorInfo::allSimulators();
         const bool noSims = sims.isNoSimulator() || sims.isUnspecified();
         if (!noSims)
         {
@@ -520,16 +518,14 @@ namespace BlackGui::Components
                 if (sims.isFSX())
                 {
                     QAction *a = new QAction(CIcons::appModels16(), "FSX models", this);
-                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
-                    {
+                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
                         Q_UNUSED(checked)
                         ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::FSX));
                     });
                     m_setActions.append(a);
 
                     a = new QAction(CIcons::appModels16(), "New set FSX models", this);
-                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
-                    {
+                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
                         Q_UNUSED(checked)
                         ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::FSX));
                     });
@@ -538,16 +534,14 @@ namespace BlackGui::Components
                 if (sims.isP3D())
                 {
                     QAction *a = new QAction(CIcons::appModels16(), "P3D models", this);
-                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
-                    {
+                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
                         Q_UNUSED(checked)
                         ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::P3D));
                     });
                     m_setActions.append(a);
 
                     a = new QAction(CIcons::appModels16(), "New set P3D models", this);
-                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
-                    {
+                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
                         Q_UNUSED(checked)
                         ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::P3D));
                     });
@@ -556,16 +550,14 @@ namespace BlackGui::Components
                 if (sims.isFS9())
                 {
                     QAction *a = new QAction(CIcons::appModels16(), "FS9 models", this);
-                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
-                    {
+                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
                         Q_UNUSED(checked)
                         ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::FS9));
                     });
                     m_setActions.append(a);
 
                     a = new QAction(CIcons::appModels16(), "New set FS9 models", this);
-                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
-                    {
+                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
                         Q_UNUSED(checked)
                         ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::FS9));
                     });
@@ -574,16 +566,14 @@ namespace BlackGui::Components
                 if (sims.isXPlane())
                 {
                     QAction *a = new QAction(CIcons::appModels16(), "XPlane models", this);
-                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
-                    {
+                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
                         Q_UNUSED(checked)
                         ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::XPLANE));
                     });
                     m_setActions.append(a);
 
                     a = new QAction(CIcons::appModels16(), "New set XPlane models", this);
-                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
-                    {
+                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
                         Q_UNUSED(checked)
                         ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::XPLANE));
                     });
@@ -592,16 +582,14 @@ namespace BlackGui::Components
                 if (sims.isFG())
                 {
                     QAction *a = new QAction(CIcons::appModels16(), "FG models", this);
-                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
-                    {
+                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
                         Q_UNUSED(checked)
                         ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::FG));
                     });
                     m_setActions.append(a);
 
                     a = new QAction(CIcons::appModels16(), "New set FG models", this);
-                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
-                    {
+                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
                         Q_UNUSED(checked)
                         ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::FG));
                     });

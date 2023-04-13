@@ -96,7 +96,7 @@ namespace XSwiftBus
         std::vector<std::unique_ptr<TimeoutHandler>> m_timeouts;
         std::unique_ptr<event_base, EventBaseDeleter> m_eventBase;
 
-        std::vector<IDispatchable*> m_dispatchList;
+        std::vector<IDispatchable *> m_dispatchList;
     };
 }
 

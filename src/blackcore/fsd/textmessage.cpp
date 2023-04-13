@@ -13,17 +13,17 @@
 namespace BlackCore::Fsd
 {
     TextMessage::TextMessage() : MessageBase()
-    { }
+    {}
 
     TextMessage::TextMessage(const QString &sender, const QString &receiver, const QString &message)
         : MessageBase(sender, receiver),
-            m_message(message)
+          m_message(message)
     {
         if (receiver.startsWith('@'))
         {
             m_type = RadioMessage;
             const QStringList frequencyStrings = receiver.split('&');
-            if (! frequencyStrings.isEmpty())
+            if (!frequencyStrings.isEmpty())
             {
                 for (QString frequencyString : frequencyStrings)
                 {
@@ -48,7 +48,7 @@ namespace BlackCore::Fsd
     {
         if (tokens.size() < 3)
         {
-            BlackMisc::CLogMessage(static_cast<TextMessage*>(nullptr)).warning(u"Wrong number of arguments.");
+            BlackMisc::CLogMessage(static_cast<TextMessage *>(nullptr)).warning(u"Wrong number of arguments.");
             return {};
         };
 

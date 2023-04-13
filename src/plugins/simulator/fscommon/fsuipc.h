@@ -69,25 +69,24 @@ namespace BlackSimPlugin::FsCommon
         static const QStringList &errorMessages()
         {
             static const QStringList errors(
-            {
-                "Okay",
-                "Attempt to Open when already Open",
-                "Cannot link to FSUIPC or WideClient",
-                "Failed to Register common message with Windows",
-                "Failed to create Atom for mapping filename",
-                "Failed to create a file mapping object",
-                "Failed to open a view to the file map",
-                "Incorrect version of FSUIPC, or not FSUIPC",
-                "Sim is not version requested",
-                "Call cannot execute, link not Open",
-                "Call cannot execute: no requests accumulated",
-                "IPC timed out all retries",
-                "IPC sendmessage failed all retries",
-                "IPC request contains bad data",
-                "Maybe running on WideClient, but FS not running on Server, or wrong FSUIPC",
-                "Read or Write request cannot be added, memory for Process is full",
-            }
-            );
+                {
+                    "Okay",
+                    "Attempt to Open when already Open",
+                    "Cannot link to FSUIPC or WideClient",
+                    "Failed to Register common message with Windows",
+                    "Failed to create Atom for mapping filename",
+                    "Failed to create a file mapping object",
+                    "Failed to open a view to the file map",
+                    "Incorrect version of FSUIPC, or not FSUIPC",
+                    "Sim is not version requested",
+                    "Call cannot execute, link not Open",
+                    "Call cannot execute: no requests accumulated",
+                    "IPC timed out all retries",
+                    "IPC sendmessage failed all retries",
+                    "IPC request contains bad data",
+                    "Maybe running on WideClient, but FS not running on Server, or wrong FSUIPC",
+                    "Read or Write request cannot be added, memory for Process is full",
+                });
             return errors;
         }
 
@@ -103,10 +102,7 @@ namespace BlackSimPlugin::FsCommon
         static const QStringList &simulators()
         {
             static const QStringList sims(
-            {
-                "any", "FS98", "FS2000", "CFS2", "CFS1", "Fly!", "FS2002", "FS2004", "FSX", "ESP", "P3D"
-            }
-            );
+                { "any", "FS98", "FS2000", "CFS2", "CFS1", "Fly!", "FS2002", "FS2004", "FSX", "ESP", "P3D" });
             return sims;
         }
 
@@ -130,7 +126,7 @@ namespace BlackSimPlugin::FsCommon
         void processWeatherMessages();
 
         bool m_opened = false;
-        int m_openCount  = 0; //!< statistics
+        int m_openCount = 0; //!< statistics
         int m_closeCount = 0; //!< statistics
         int m_lastErrorIndex = 0;
         QString m_lastErrorMessage;

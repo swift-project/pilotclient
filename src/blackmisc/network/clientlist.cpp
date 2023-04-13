@@ -14,10 +14,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Network, CClient, CClientList)
 
 namespace BlackMisc::Network
 {
-    CClientList::CClientList() { }
+    CClientList::CClientList() {}
 
     CClientList::CClientList(const CSequence &other) : CSequence<CClient>(other)
-    { }
+    {}
 
     bool CClientList::hasCapability(const Aviation::CCallsign &callsign, CClient::Capability capability) const
     {

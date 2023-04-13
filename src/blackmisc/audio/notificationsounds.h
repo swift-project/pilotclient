@@ -26,23 +26,23 @@ namespace BlackMisc::Audio
         //! Play notification
         enum NotificationFlag
         {
-            NoNotifications                   = 0,
-            NotificationError                 = 1 << 0,
-            NotificationLogin                 = 1 << 1,
-            NotificationLogoff                = 1 << 2,
-            NotificationTextMessageFrequency  = 1 << 12,
-            NotificationTextMessagePrivate    = 1 << 3,
+            NoNotifications = 0,
+            NotificationError = 1 << 0,
+            NotificationLogin = 1 << 1,
+            NotificationLogoff = 1 << 2,
+            NotificationTextMessageFrequency = 1 << 12,
+            NotificationTextMessagePrivate = 1 << 3,
             NotificationTextMessageSupervisor = 1 << 4,
-            NotificationTextMessageUnicom     = 1 << 13,
+            NotificationTextMessageUnicom = 1 << 13,
             NotificationTextCallsignMentioned = 1 << 5,
-            NotificationNoAudioTransmission   = 1 << 6,
-            NotificationAtcTunedIn            = 1 << 10,
-            NotificationAtcTunedOut           = 1 << 11,
-            PTTClickKeyDown                   = 1 << 7,
-            PTTClickKeyUp                     = 1 << 8,
-            PTTBlocked                        = 1 << 9,
-            AFVClicked                        = 1 << 14,
-            AFVBlocked                        = 1 << 15
+            NotificationNoAudioTransmission = 1 << 6,
+            NotificationAtcTunedIn = 1 << 10,
+            NotificationAtcTunedOut = 1 << 11,
+            PTTClickKeyDown = 1 << 7,
+            PTTClickKeyUp = 1 << 8,
+            PTTBlocked = 1 << 9,
+            AFVClicked = 1 << 14,
+            AFVBlocked = 1 << 15
         };
         Q_DECLARE_FLAGS(Notification, NotificationFlag)
 

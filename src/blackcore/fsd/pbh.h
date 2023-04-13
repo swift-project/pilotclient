@@ -22,24 +22,24 @@ namespace BlackCore::Fsd
         unsigned int pbh = 0; //!< Pitch/Bank/Heading as integer value
         struct
         {
-            unsigned int unused   : 1;  //!< unused bit
-            unsigned int onground : 1;  //!< Onground flag
-            unsigned int hdg      : 10; //!< Heading
-            int bank              : 10; //!< Bank
-            int pitch             : 10; //!< Pitch
+            unsigned int unused : 1; //!< unused bit
+            unsigned int onground : 1; //!< Onground flag
+            unsigned int hdg : 10; //!< Heading
+            int bank : 10; //!< Bank
+            int pitch : 10; //!< Pitch
         };
     };
 
     //! Pitch multiplier
     constexpr double pitchMultiplier()
     {
-        return 256.0  / 90.0;
+        return 256.0 / 90.0;
     }
 
     //! Bank multiplier
     constexpr double bankMultiplier()
     {
-        return 512.0  / 180.0;
+        return 512.0 / 180.0;
     }
 
     //! Heading multiplier
@@ -53,8 +53,8 @@ namespace BlackCore::Fsd
     {
         PBH pbhstrct;
         pbhstrct.pitch = qFloor(pitch * -pitchMultiplier()); // the "-" is the inverted pitch/bank
-        pbhstrct.bank  = qFloor(bank  * -bankMultiplier());
-        pbhstrct.hdg   = static_cast<unsigned int>(heading * headingMultiplier());
+        pbhstrct.bank = qFloor(bank * -bankMultiplier());
+        pbhstrct.hdg = static_cast<unsigned int>(heading * headingMultiplier());
 
         // FSD has inverted pitch and bank angles
         // based on discussion https://discordapp.com/channels/539048679160676382/539925070550794240/687390301530095634
@@ -73,7 +73,7 @@ namespace BlackCore::Fsd
         PBH pbhstrct;
         pbhstrct.pbh = pbh;
         const int iPitch = qFloor(pbhstrct.pitch / -pitchMultiplier()); // the "-" is the inverted pitch/bank
-        const int iBank  = qFloor(pbhstrct.bank  / -bankMultiplier());
+        const int iBank = qFloor(pbhstrct.bank / -bankMultiplier());
 
         // FSD has inverted pitch and bank angles
         // based on discussion https://discordapp.com/channels/539048679160676382/539925070550794240/687390301530095634
@@ -82,8 +82,8 @@ namespace BlackCore::Fsd
         // iPitch = ~iPitch;
         // iBank  = ~iBank;
 
-        pitch   = iPitch;
-        bank    = iBank;
+        pitch = iPitch;
+        bank = iBank;
         heading = pbhstrct.hdg / headingMultiplier();
 
         onGround = pbhstrct.onground == 1;

@@ -37,8 +37,16 @@ namespace BlackCore::Fsd
 
         //! @{
         //! Getter
-        const QString &getCausingParameter() const { static const QString n("no details");     return m_causingParameter.isEmpty() ? n : m_causingParameter; }
-        const QString &getDescription()      const { static const QString n("no description"); return m_description.isEmpty()      ? n : m_description; }
+        const QString &getCausingParameter() const
+        {
+            static const QString n("no details");
+            return m_causingParameter.isEmpty() ? n : m_causingParameter;
+        }
+        const QString &getDescription() const
+        {
+            static const QString n("no description");
+            return m_description.isEmpty() ? n : m_description;
+        }
         //! @}
 
         //! @{
@@ -56,11 +64,11 @@ namespace BlackCore::Fsd
     //! Equal to operator
     inline bool operator==(const ServerError &lhs, const ServerError &rhs)
     {
-        return  lhs.sender() == rhs.sender() &&
-                lhs.receiver() == rhs.receiver() &&
-                lhs.m_errorNumber == rhs.m_errorNumber &&
-                lhs.m_causingParameter == rhs.m_causingParameter &&
-                lhs.m_description == rhs.m_description;
+        return lhs.sender() == rhs.sender() &&
+               lhs.receiver() == rhs.receiver() &&
+               lhs.m_errorNumber == rhs.m_errorNumber &&
+               lhs.m_causingParameter == rhs.m_causingParameter &&
+               lhs.m_description == rhs.m_description;
     }
 
     //! Not equal to operator

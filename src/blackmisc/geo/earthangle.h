@@ -21,26 +21,27 @@ namespace BlackMisc::Geo
     /*!
      * Base class for latitude / longitude
      */
-    template <class LATorLON> class CEarthAngle : public PhysicalQuantities::CAngle
+    template <class LATorLON>
+    class CEarthAngle : public PhysicalQuantities::CAngle
     {
     public:
         //! Plus operator +=
-        CEarthAngle &operator +=(const CEarthAngle &latOrLon);
+        CEarthAngle &operator+=(const CEarthAngle &latOrLon);
 
         //! Minus operator-=
-        CEarthAngle &operator -=(const CEarthAngle &latOrLon);
+        CEarthAngle &operator-=(const CEarthAngle &latOrLon);
 
         //! Multiply operator *=
-        CEarthAngle &operator *=(double multiply);
+        CEarthAngle &operator*=(double multiply);
 
         //! Plus operator +
-        LATorLON operator +(const CEarthAngle &latOrLon) const;
+        LATorLON operator+(const CEarthAngle &latOrLon) const;
 
         //! Minus operator -
-        LATorLON operator -(const CEarthAngle &latOrLon) const;
+        LATorLON operator-(const CEarthAngle &latOrLon) const;
 
         //! Multiply operator *
-        LATorLON operator *(double multiply) const;
+        LATorLON operator*(double multiply) const;
 
         //! \copydoc BlackMisc::Mixin::Icon::toIcon
         CIcons::IconIndex toIcon() const;

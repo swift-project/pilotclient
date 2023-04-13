@@ -14,16 +14,15 @@ using namespace BlackCore::Db;
 
 namespace BlackGui::Components
 {
-    CDataSettingsComponent::CDataSettingsComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        ui(new Ui::CDataSettingsComponent)
+    CDataSettingsComponent::CDataSettingsComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                                      ui(new Ui::CDataSettingsComponent)
     {
         ui->setupUi(this);
         ui->comp_GuiSettings->hideOpacity(true);
     }
 
     CDataSettingsComponent::~CDataSettingsComponent()
-    { }
+    {}
 
     void CDataSettingsComponent::setBackgroundUpdater(const CBackgroundDataUpdater *updater)
     {

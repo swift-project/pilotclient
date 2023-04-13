@@ -23,8 +23,7 @@ namespace BlackGui::Menus
         return cats;
     }
 
-    CFontMenu::CFontMenu(QWidget *widget, Qt::ShortcutContext shortcutContext) :
-        IMenuDelegate(widget), m_widget(widget)
+    CFontMenu::CFontMenu(QWidget *widget, Qt::ShortcutContext shortcutContext) : IMenuDelegate(widget), m_widget(widget)
     {
         m_fontDialogAction.reset(new QAction(CIcons::font16(), "Font", this));
         QObject::connect(m_fontDialogAction.data(), &QAction::triggered, this, &CFontMenu::changeFontDialog);

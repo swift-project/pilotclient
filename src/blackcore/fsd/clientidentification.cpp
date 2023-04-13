@@ -12,16 +12,16 @@
 namespace BlackCore::Fsd
 {
     ClientIdentification::ClientIdentification() : MessageBase()
-    { }
+    {}
 
     ClientIdentification::ClientIdentification(const QString &sender, quint16 clientId, const QString &clientName, int clientVersionMajor,
-            int clientVersionMinor, const QString &userCid, const QString &sysUid, const QString &initialChallenge)
+                                               int clientVersionMinor, const QString &userCid, const QString &sysUid, const QString &initialChallenge)
         : MessageBase(sender, "SERVER"),
-            m_clientId(clientId), m_clientName(clientName),
-            m_clientVersionMajor(clientVersionMajor), m_clientVersionMinor(clientVersionMinor),
-            m_userCid(userCid), m_sysUid(sysUid),
-            m_initialChallenge(initialChallenge)
-    { }
+          m_clientId(clientId), m_clientName(clientName),
+          m_clientVersionMajor(clientVersionMajor), m_clientVersionMinor(clientVersionMinor),
+          m_userCid(userCid), m_sysUid(sysUid),
+          m_initialChallenge(initialChallenge)
+    {}
 
     QStringList ClientIdentification::toTokens() const
     {

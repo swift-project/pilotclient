@@ -23,7 +23,10 @@ BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Weather, CTemperatureLayer, CTemperatur
 
 namespace BlackMisc
 {
-    namespace Aviation { class CAltitude; }
+    namespace Aviation
+    {
+        class CAltitude;
+    }
 
     namespace Weather
     {
@@ -51,9 +54,9 @@ namespace BlackMisc
             CTemperatureLayer findByLevel(const BlackMisc::Aviation::CAltitude &level) const;
         };
 
-    } //namespace
+    } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CTemperatureLayerList)
 
-#endif //guard
+#endif // guard

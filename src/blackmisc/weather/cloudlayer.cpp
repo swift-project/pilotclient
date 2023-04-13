@@ -19,21 +19,19 @@ namespace BlackMisc::Weather
 {
 
     CCloudLayer::CCloudLayer(const BlackMisc::Aviation::CAltitude &base,
-                                const BlackMisc::Aviation::CAltitude &top,
-                                Coverage coverage) :
-        m_base(base), m_top(top)
+                             const BlackMisc::Aviation::CAltitude &top,
+                             Coverage coverage) : m_base(base), m_top(top)
     {
         setCoverage(coverage);
     }
 
     CCloudLayer::CCloudLayer(const BlackMisc::Aviation::CAltitude &base,
-                                const BlackMisc::Aviation::CAltitude &top,
-                                double precipitationRate,
-                                Precipitation precipitation,
-                                Clouds clouds,
-                                Coverage coverage) :
-        m_base(base), m_top(top), m_precipitationRate(precipitationRate),
-        m_precipitation(precipitation), m_clouds(clouds)
+                             const BlackMisc::Aviation::CAltitude &top,
+                             double precipitationRate,
+                             Precipitation precipitation,
+                             Clouds clouds,
+                             Coverage coverage) : m_base(base), m_top(top), m_precipitationRate(precipitationRate),
+                                                  m_precipitation(precipitation), m_clouds(clouds)
     {
         setCoverage(coverage);
     }
@@ -77,7 +75,11 @@ namespace BlackMisc::Weather
 
     void CCloudLayer::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CCloudLayer>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CCloudLayer>();
+            return;
+        }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -107,8 +109,7 @@ namespace BlackMisc::Weather
 
     QString CCloudLayer::convertToQString(bool /** i18n **/) const
     {
-        static const QHash<Coverage, QString> hash =
-        {
+        static const QHash<Coverage, QString> hash = {
             { None, "" },
             { Few, "few" },
             { Scattered, "scattered" },

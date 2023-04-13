@@ -14,20 +14,20 @@
 namespace BlackCore::Fsd
 {
     InterimPilotDataUpdate::InterimPilotDataUpdate() : MessageBase()
-    { }
+    {}
 
     InterimPilotDataUpdate::InterimPilotDataUpdate(const QString &sender, const QString &receiver, double latitude, double longitude, int altitudeTrue,
-                                                    int groundSpeed, double pitch, double bank, double heading, bool onGround)
+                                                   int groundSpeed, double pitch, double bank, double heading, bool onGround)
         : MessageBase(sender, receiver),
-            m_latitude(latitude),
-            m_longitude(longitude),
-            m_altitudeTrue(altitudeTrue),
-            m_groundSpeed(groundSpeed),
-            m_pitch(pitch),
-            m_bank(bank),
-            m_heading(heading),
-            m_onGround(onGround)
-    { }
+          m_latitude(latitude),
+          m_longitude(longitude),
+          m_altitudeTrue(altitudeTrue),
+          m_groundSpeed(groundSpeed),
+          m_pitch(pitch),
+          m_bank(bank),
+          m_heading(heading),
+          m_onGround(onGround)
+    {}
 
     QStringList InterimPilotDataUpdate::toTokens() const
     {
@@ -65,6 +65,6 @@ namespace BlackCore::Fsd
         unpackPBH(tokens[7].toUInt(), pitch, bank, heading, onGround);
 
         return InterimPilotDataUpdate(tokens[0], tokens[1], tokens[3].toDouble(), tokens[4].toDouble(), tokens[5].toInt(), tokens[6].toInt(),
-                pitch, bank, heading, onGround);
+                                      pitch, bank, heading, onGround);
     }
 }

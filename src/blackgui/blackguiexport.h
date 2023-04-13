@@ -18,13 +18,13 @@
  * Export a class or function from the library
  */
 #ifndef WITH_STATIC
-#  if defined(BUILD_BLACKGUI_LIB)
-#    define BLACKGUI_EXPORT Q_DECL_EXPORT
-#  else
-#    define BLACKGUI_EXPORT Q_DECL_IMPORT
-#  endif
+#    if defined(BUILD_BLACKGUI_LIB)
+#        define BLACKGUI_EXPORT Q_DECL_EXPORT
+#    else
+#        define BLACKGUI_EXPORT Q_DECL_IMPORT
+#    endif
 #else
-#  define BLACKGUI_EXPORT
+#    define BLACKGUI_EXPORT
 #endif
 
 /*!
@@ -32,9 +32,9 @@
  * BLACKGUI Export explicit template declaration
  */
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)
-#  define BLACKGUI_EXPORT_DECLARE_TEMPLATE BLACKGUI_EXPORT
+#    define BLACKGUI_EXPORT_DECLARE_TEMPLATE BLACKGUI_EXPORT
 #else
-#  define BLACKGUI_EXPORT_DECLARE_TEMPLATE
+#    define BLACKGUI_EXPORT_DECLARE_TEMPLATE
 #endif
 
 #endif // guard

@@ -20,9 +20,8 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc, CStatusMessage, CStatusMessageList)
 
 namespace BlackMisc
 {
-    CStatusMessageList::CStatusMessageList(const CSequence<CStatusMessage> &other) :
-        CSequence<CStatusMessage>(other)
-    { }
+    CStatusMessageList::CStatusMessageList(const CSequence<CStatusMessage> &other) : CSequence<CStatusMessage>(other)
+    {}
 
     CStatusMessageList::CStatusMessageList(const CStatusMessage &statusMessage)
     {
@@ -31,7 +30,7 @@ namespace BlackMisc
 
     CStatusMessageList CStatusMessageList::findByCategory(const CLogCategory &category) const
     {
-        return this->findBy([ & ](const CStatusMessage & msg) { return msg.getCategories().contains(category); });
+        return this->findBy([&](const CStatusMessage &msg) { return msg.getCategories().contains(category); });
     }
 
     CStatusMessageList CStatusMessageList::findBySeverity(CStatusMessage::StatusSeverity severity) const
@@ -51,8 +50,7 @@ namespace BlackMisc
 
     bool CStatusMessageList::hasWarningOrErrorMessages() const
     {
-        return this->containsBy
-        ([ = ](const CStatusMessage & m) { return m.getSeverity() == CStatusMessage::SeverityWarning || m.getSeverity() == CStatusMessage::SeverityError; });
+        return this->containsBy([=](const CStatusMessage &m) { return m.getSeverity() == CStatusMessage::SeverityWarning || m.getSeverity() == CStatusMessage::SeverityError; });
     }
 
     bool CStatusMessageList::isSuccess() const
@@ -72,8 +70,7 @@ namespace BlackMisc
 
     CStatusMessageList CStatusMessageList::getWarningAndErrorMessages() const
     {
-        return this->findBy([ & ](const CStatusMessage & msg)
-        {
+        return this->findBy([&](const CStatusMessage &msg) {
             return msg.getSeverity() >= CStatusMessage::SeverityWarning;
         });
     }

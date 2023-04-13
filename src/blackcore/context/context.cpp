@@ -20,8 +20,7 @@ namespace BlackCore::Context
         return cats;
     }
 
-    IContext::IContext(CCoreFacadeConfig::ContextMode mode, QObject *parent) :
-        QObject(parent), m_mode(mode), m_contextId(QDateTime::currentMSecsSinceEpoch())
+    IContext::IContext(CCoreFacadeConfig::ContextMode mode, QObject *parent) : QObject(parent), m_mode(mode), m_contextId(QDateTime::currentMSecsSinceEpoch())
     {
         if (sApp && !sApp->isShuttingDown())
         {

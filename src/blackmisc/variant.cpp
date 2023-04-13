@@ -54,8 +54,7 @@ namespace BlackMisc
         }
         if (userType() == qMetaTypeId_CVariantList)
         {
-            return QVariant::fromValue(QVector<CVariant>()).canConvert(typeId)
-                || QVariant(typeId, nullptr).canConvert<QVariantList>();
+            return QVariant::fromValue(QVector<CVariant>()).canConvert(typeId) || QVariant(typeId, nullptr).canConvert<QVariantList>();
         }
         return false;
     }
@@ -112,8 +111,18 @@ namespace BlackMisc
     {
         switch (type())
         {
-        case QMetaType::Bool: case QMetaType::Char: case QMetaType::UChar: case QMetaType::SChar: case QMetaType::Short: case QMetaType::UShort:
-        case QMetaType::Int: case QMetaType::UInt: case QMetaType::Long: case QMetaType::ULong: case QMetaType::LongLong: case QMetaType::ULongLong:
+        case QMetaType::Bool:
+        case QMetaType::Char:
+        case QMetaType::UChar:
+        case QMetaType::SChar:
+        case QMetaType::Short:
+        case QMetaType::UShort:
+        case QMetaType::Int:
+        case QMetaType::UInt:
+        case QMetaType::Long:
+        case QMetaType::ULong:
+        case QMetaType::LongLong:
+        case QMetaType::ULongLong:
             return true;
         default:
             return false;
@@ -153,7 +162,7 @@ namespace BlackMisc
                 else
                 {
                     CLogMessage(&a).warning(u"Comparing two CVariants containing unrelated value objects: %1 (%2) and %3 (%4)")
-                            << a.typeName() << a.userType() << b.typeName() << b.userType();
+                        << a.typeName() << a.userType() << b.typeName() << b.userType();
                     return 0;
                 }
             }
@@ -175,20 +184,20 @@ namespace BlackMisc
 
         switch (m_v.type())
         {
-        case QVariant::Invalid:     json.insert("value", 0); break;
-        case QVariant::Int:         json.insert("value", m_v.toInt()); break;
-        case QVariant::UInt:        json.insert("value", m_v.toInt()); break;
-        case QVariant::Bool:        json.insert("value", m_v.toBool()); break;
-        case QVariant::Double:      json.insert("value", m_v.toDouble()); break;
-        case QVariant::LongLong:    json.insert("value", m_v.toLongLong()); break;
-        case QVariant::ULongLong:   json.insert("value", m_v.toLongLong()); break;
-        case QVariant::String:      json.insert("value", m_v.toString()); break;
-        case QVariant::Char:        json.insert("value", m_v.toString()); break;
-        case QVariant::ByteArray:   json.insert("value", m_v.toString()); break;
-        case QVariant::DateTime:    json.insert("value", m_v.toDateTime().toString(Qt::ISODate)); break;
-        case QVariant::Date:        json.insert("value", m_v.toDate().toString(Qt::ISODate)); break;
-        case QVariant::Time:        json.insert("value", m_v.toTime().toString(Qt::ISODate)); break;
-        case QVariant::StringList:  json.insert("value", QJsonArray::fromStringList(m_v.toStringList())); break;
+        case QVariant::Invalid: json.insert("value", 0); break;
+        case QVariant::Int: json.insert("value", m_v.toInt()); break;
+        case QVariant::UInt: json.insert("value", m_v.toInt()); break;
+        case QVariant::Bool: json.insert("value", m_v.toBool()); break;
+        case QVariant::Double: json.insert("value", m_v.toDouble()); break;
+        case QVariant::LongLong: json.insert("value", m_v.toLongLong()); break;
+        case QVariant::ULongLong: json.insert("value", m_v.toLongLong()); break;
+        case QVariant::String: json.insert("value", m_v.toString()); break;
+        case QVariant::Char: json.insert("value", m_v.toString()); break;
+        case QVariant::ByteArray: json.insert("value", m_v.toString()); break;
+        case QVariant::DateTime: json.insert("value", m_v.toDateTime().toString(Qt::ISODate)); break;
+        case QVariant::Date: json.insert("value", m_v.toDate().toString(Qt::ISODate)); break;
+        case QVariant::Time: json.insert("value", m_v.toTime().toString(Qt::ISODate)); break;
+        case QVariant::StringList: json.insert("value", QJsonArray::fromStringList(m_v.toStringList())); break;
         default:
             try
             {
@@ -227,27 +236,31 @@ namespace BlackMisc
         const QJsonValue typeValue = json.value("type");
         if (typeValue.isUndefined()) { throw CJsonException("Missing 'type'"); }
         const QString typeName = typeValue.toString();
-        if (typeName.isEmpty()) { m_v.clear(); return; }
+        if (typeName.isEmpty())
+        {
+            m_v.clear();
+            return;
+        }
         const int typeId = QMetaType::type(qPrintable(typeName));
 
         const QJsonValue value = json.value("value");
         if (value.isUndefined()) { throw CJsonException("Missing 'value'"); }
         switch (typeId)
         {
-        case QVariant::Invalid:     throw CJsonException("Type not recognized by QMetaType");
-        case QVariant::Int:         m_v.setValue(value.toInt()); break;
-        case QVariant::UInt:        m_v.setValue<uint>(static_cast<uint>(value.toInt())); break;
-        case QVariant::Bool:        m_v.setValue(value.toBool()); break;
-        case QVariant::Double:      m_v.setValue(value.toDouble()); break;
-        case QVariant::LongLong:    m_v.setValue(static_cast<qlonglong>(value.toDouble())); break;
-        case QVariant::ULongLong:   m_v.setValue(static_cast<qulonglong>(value.toDouble())); break;
-        case QVariant::String:      m_v.setValue(value.toString()); break;
-        case QVariant::Char:        m_v.setValue(value.toString().size() > 0 ? value.toString().at(0) : '\0'); break;
-        case QVariant::ByteArray:   m_v.setValue(value.toString().toLatin1()); break;
-        case QVariant::DateTime:    m_v.setValue(fromStringUtc(value.toString(), Qt::ISODate)); break;
-        case QVariant::Date:        m_v.setValue(QDate::fromString(value.toString(), Qt::ISODate)); break;
-        case QVariant::Time:        m_v.setValue(QTime::fromString(value.toString(), Qt::ISODate)); break;
-        case QVariant::StringList:  m_v.setValue(QVariant(value.toArray().toVariantList()).toStringList()); break;
+        case QVariant::Invalid: throw CJsonException("Type not recognized by QMetaType");
+        case QVariant::Int: m_v.setValue(value.toInt()); break;
+        case QVariant::UInt: m_v.setValue<uint>(static_cast<uint>(value.toInt())); break;
+        case QVariant::Bool: m_v.setValue(value.toBool()); break;
+        case QVariant::Double: m_v.setValue(value.toDouble()); break;
+        case QVariant::LongLong: m_v.setValue(static_cast<qlonglong>(value.toDouble())); break;
+        case QVariant::ULongLong: m_v.setValue(static_cast<qulonglong>(value.toDouble())); break;
+        case QVariant::String: m_v.setValue(value.toString()); break;
+        case QVariant::Char: m_v.setValue(value.toString().size() > 0 ? value.toString().at(0) : '\0'); break;
+        case QVariant::ByteArray: m_v.setValue(value.toString().toLatin1()); break;
+        case QVariant::DateTime: m_v.setValue(fromStringUtc(value.toString(), Qt::ISODate)); break;
+        case QVariant::Date: m_v.setValue(QDate::fromString(value.toString(), Qt::ISODate)); break;
+        case QVariant::Time: m_v.setValue(QTime::fromString(value.toString(), Qt::ISODate)); break;
+        case QVariant::StringList: m_v.setValue(QVariant(value.toArray().toVariantList()).toStringList()); break;
         default:
             try
             {
@@ -264,7 +277,7 @@ namespace BlackMisc
                 else if (QMetaType::hasRegisteredConverterFunction(qMetaTypeId<QString>(), typeId))
                 {
                     m_v.setValue(value.toString());
-                    if (! m_v.convert(typeId))
+                    if (!m_v.convert(typeId))
                     {
                         throw CJsonException("Failed to convert from JSON string");
                     }
@@ -323,7 +336,11 @@ namespace BlackMisc
         QJsonValue typeValue = json.value("type");
         if (typeValue.isUndefined()) { throw CJsonException("Missing 'type'"); }
         QString typeName = typeValue.toString();
-        if (typeName.isEmpty()) { m_v.clear(); return; }
+        if (typeName.isEmpty())
+        {
+            m_v.clear();
+            return;
+        }
         int typeId = QMetaType::type(qPrintable(typeName));
 
         auto *meta = Private::getValueObjectMetaInfo(typeId);
@@ -366,16 +383,16 @@ namespace BlackMisc
     {
         switch (m_v.type())
         {
-        case QVariant::Invalid:     return 0;
-        case QVariant::Int:         return qHash(m_v.toInt());
-        case QVariant::UInt:        return qHash(m_v.toUInt());
-        case QVariant::Bool:        return qHash(m_v.toUInt());
-        case QVariant::Double:      return qHash(m_v.toUInt());
-        case QVariant::LongLong:    return qHash(m_v.toLongLong());
-        case QVariant::ULongLong:   return qHash(m_v.toULongLong());
-        case QVariant::String:      return qHash(m_v.toString());
-        case QVariant::Char:        return qHash(m_v.toChar());
-        case QVariant::ByteArray:   return qHash(m_v.toByteArray());
+        case QVariant::Invalid: return 0;
+        case QVariant::Int: return qHash(m_v.toInt());
+        case QVariant::UInt: return qHash(m_v.toUInt());
+        case QVariant::Bool: return qHash(m_v.toUInt());
+        case QVariant::Double: return qHash(m_v.toUInt());
+        case QVariant::LongLong: return qHash(m_v.toLongLong());
+        case QVariant::ULongLong: return qHash(m_v.toULongLong());
+        case QVariant::String: return qHash(m_v.toString());
+        case QVariant::Char: return qHash(m_v.toChar());
+        case QVariant::ByteArray: return qHash(m_v.toByteArray());
         default:
             try
             {
@@ -498,7 +515,7 @@ namespace BlackMisc
     CIcons::IconIndex CVariant::toIcon() const
     {
         auto *meta = getValueObjectMetaInfo();
-        if (! meta) { return {}; }
+        if (!meta) { return {}; }
         try
         {
             return static_cast<CIcons::IconIndex>(meta->toIcon(data()));
@@ -513,8 +530,8 @@ namespace BlackMisc
     QPixmap CVariant::toPixmap() const
     {
         if (m_v.type() == QVariant::Pixmap) { return m_v.value<QPixmap>(); }
-        if (m_v.type() == QVariant::Image)  { return QPixmap::fromImage(m_v.value<QImage>()); }
-        if (m_v.type() == QVariant::Icon)   { return iconToPixmap(m_v.value<QIcon>()); }
+        if (m_v.type() == QVariant::Image) { return QPixmap::fromImage(m_v.value<QImage>()); }
+        if (m_v.type() == QVariant::Icon) { return iconToPixmap(m_v.value<QIcon>()); }
 
         return CIcon(toIcon()).toPixmap();
     }
@@ -543,9 +560,9 @@ namespace BlackMisc
 
     bool CVariant::matches(const CVariant &value) const
     {
-        if (! isValid()) { return false; }
+        if (!isValid()) { return false; }
         auto *meta = getValueObjectMetaInfo();
-        if (! meta)
+        if (!meta)
         {
             CLogMessage(this).warning(u"Invalid type for CVariant::matches: %1") << typeName();
             return false;
@@ -614,28 +631,28 @@ namespace BlackMisc
         switch (type)
         {
         case QMetaType::QDateTime:
-            {
-                QDateTime dt;
-                argument >> dt;
-                return QVariant::fromValue(dt);
-            }
+        {
+            QDateTime dt;
+            argument >> dt;
+            return QVariant::fromValue(dt);
+        }
         case QMetaType::QDate:
-            {
-                QDate date;
-                argument >> date;
-                return QVariant::fromValue(date);
-            }
+        {
+            QDate date;
+            argument >> date;
+            return QVariant::fromValue(date);
+        }
         case QMetaType::QTime:
-            {
-                QTime time;
-                argument >> time;
-                return QVariant::fromValue(time);
-            }
+        {
+            QTime time;
+            argument >> time;
+            return QVariant::fromValue(time);
+        }
         default:
-            {
-                const char *name = QMetaType::typeName(type);
-                qFatal("Type cannot be resolved: %s (%d)", name ? name : "", type);
-            }
+        {
+            const char *name = QMetaType::typeName(type);
+            qFatal("Type cannot be resolved: %s (%d)", name ? name : "", type);
+        }
         }
         return QVariant(); // suppress compiler warning
     }

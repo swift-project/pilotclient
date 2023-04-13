@@ -24,7 +24,7 @@ namespace XSwiftBus
                            const std::function<void(T *)> &remove,
                            const std::function<void(T *)> &toggled)
             : m_addHandler(add), m_removeHandler(remove), m_toggledHandler(toggled)
-        { }
+        {}
 
         static dbus_bool_t add(T *watch, void *refcon)
         {

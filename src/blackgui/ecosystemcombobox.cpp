@@ -18,8 +18,7 @@ namespace BlackGui
         this->initAllItems();
     }
 
-    CEcosystemComboBox::CEcosystemComboBox(const CEcosystemList &systems, QWidget *parent) :
-        QComboBox(parent), m_systems(systems)
+    CEcosystemComboBox::CEcosystemComboBox(const CEcosystemList &systems, QWidget *parent) : QComboBox(parent), m_systems(systems)
     {
         this->initAllItems();
     }

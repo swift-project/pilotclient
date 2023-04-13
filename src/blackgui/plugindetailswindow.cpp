@@ -20,9 +20,8 @@
 
 namespace BlackGui
 {
-    CPluginDetailsWindow::CPluginDetailsWindow(QWidget *parent) :
-        QWidget(parent, Qt::Dialog),
-        ui(new Ui::CPluginDetailsWindow)
+    CPluginDetailsWindow::CPluginDetailsWindow(QWidget *parent) : QWidget(parent, Qt::Dialog),
+                                                                  ui(new Ui::CPluginDetailsWindow)
     {
         ui->setupUi(this);
         this->setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
@@ -36,7 +35,7 @@ namespace BlackGui
     }
 
     CPluginDetailsWindow::~CPluginDetailsWindow()
-    { }
+    {}
 
     void CPluginDetailsWindow::setPluginName(const QString &name)
     {
@@ -66,9 +65,7 @@ namespace BlackGui
                 Qt::LeftToRight,
                 Qt::AlignCenter,
                 this->size(),
-                QDesktopWidget().screenGeometry(qApp->activeWindow())
-            )
-        );
+                QDesktopWidget().screenGeometry(qApp->activeWindow())));
         Q_UNUSED(event);
     }
 }

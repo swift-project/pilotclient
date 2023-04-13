@@ -20,27 +20,26 @@ using namespace BlackMisc;
 
 namespace BlackGui::Components
 {
-    CSettingsFontComponent::CSettingsFontComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CSettingsFontComponent)
+    CSettingsFontComponent::CSettingsFontComponent(QWidget *parent) : QFrame(parent),
+                                                                      ui(new Ui::CSettingsFontComponent)
     {
         ui->setupUi(this);
         this->setMode(CSettingsFontComponent::DirectUpdate);
 
         // due to the problems with overriding a color (e.g T571) we use "no color" as default
         this->initValues();
-        connect(ui->tb_SettingsGuiFontColor,    &QToolButton::clicked, this, &CSettingsFontComponent::fontColorDialog);
-        connect(ui->tb_SettingsGuiNoFontColor,  &QToolButton::clicked, this, &CSettingsFontComponent::noColor);
-        connect(ui->pb_Ok,                      &QPushButton::clicked, this, &CSettingsFontComponent::changeFont, Qt::QueuedConnection);
-        connect(ui->pb_CancelOrReset,           &QToolButton::clicked, this, &CSettingsFontComponent::resetFontAndReject,   Qt::QueuedConnection);
-        connect(ui->pb_Reset,                   &QToolButton::clicked, this, &CSettingsFontComponent::clearQssAndResetFont, Qt::QueuedConnection);
+        connect(ui->tb_SettingsGuiFontColor, &QToolButton::clicked, this, &CSettingsFontComponent::fontColorDialog);
+        connect(ui->tb_SettingsGuiNoFontColor, &QToolButton::clicked, this, &CSettingsFontComponent::noColor);
+        connect(ui->pb_Ok, &QPushButton::clicked, this, &CSettingsFontComponent::changeFont, Qt::QueuedConnection);
+        connect(ui->pb_CancelOrReset, &QToolButton::clicked, this, &CSettingsFontComponent::resetFontAndReject, Qt::QueuedConnection);
+        connect(ui->pb_Reset, &QToolButton::clicked, this, &CSettingsFontComponent::clearQssAndResetFont, Qt::QueuedConnection);
 
         // only after the complete startup style sheet font overrides are available
         connect(sGui, &CGuiApplication::startUpCompleted, this, &CSettingsFontComponent::initValues);
     }
 
     CSettingsFontComponent::~CSettingsFontComponent()
-    { }
+    {}
 
     void CSettingsFontComponent::setMode(CSettingsFontComponent::Mode m)
     {
@@ -128,7 +127,7 @@ namespace BlackGui::Components
 
     void CSettingsFontComponent::noColor()
     {
-        m_selectedColor  = QColor(); // invalid color
+        m_selectedColor = QColor(); // invalid color
         m_noColorDefault = true;
         ui->le_SettingsGuiFontColor->clear();
     }

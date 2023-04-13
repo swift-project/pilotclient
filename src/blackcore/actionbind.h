@@ -34,8 +34,7 @@ namespace BlackCore
         CActionBind(const QString &action, BlackMisc::CIcons::IconIndex icon, Receiver *receiver,
                     MembFunc<Receiver> slot = nullptr,
                     const std::function<void()> &deleteCallback = {},
-                    QObject *parent = nullptr) :
-            QObject(parent), m_deleteCallback(deleteCallback)
+                    QObject *parent = nullptr) : QObject(parent), m_deleteCallback(deleteCallback)
         {
             // workaround if a binding is taking place in an empty context
             if (!sApp || sApp->isShuttingDown()) { return; }
@@ -53,7 +52,7 @@ namespace BlackCore
         //! @{
         //! Not copyable
         CActionBind(const CActionBind &) = delete;
-        CActionBind &operator =(const CActionBind &) = delete;
+        CActionBind &operator=(const CActionBind &) = delete;
         //! @}
 
         //! Destructor
@@ -82,7 +81,7 @@ namespace BlackCore
     };
 
     //! Single binding
-    using CActionBinding  = QSharedPointer<CActionBind>;
+    using CActionBinding = QSharedPointer<CActionBind>;
 
     //! List of bindings
     using CActionBindings = QList<CActionBinding>;

@@ -23,13 +23,12 @@ using namespace BlackMisc::Input;
 
 namespace BlackInput
 {
-    CJoystickDevice::CJoystickDevice(DirectInput8Ptr directInputPtr, const DIDEVICEINSTANCE *pdidInstance, QObject *parent) :
-        QObject(parent),
-        m_guidDevice(pdidInstance->guidInstance),
-        m_guidProduct(pdidInstance->guidProduct),
-        m_deviceName(QString::fromWCharArray(pdidInstance->tszInstanceName).simplified()),
-        m_productName(QString::fromWCharArray(pdidInstance->tszProductName).simplified()),
-        m_directInput(directInputPtr)
+    CJoystickDevice::CJoystickDevice(DirectInput8Ptr directInputPtr, const DIDEVICEINSTANCE *pdidInstance, QObject *parent) : QObject(parent),
+                                                                                                                              m_guidDevice(pdidInstance->guidInstance),
+                                                                                                                              m_guidProduct(pdidInstance->guidProduct),
+                                                                                                                              m_deviceName(QString::fromWCharArray(pdidInstance->tszInstanceName).simplified()),
+                                                                                                                              m_productName(QString::fromWCharArray(pdidInstance->tszProductName).simplified()),
+                                                                                                                              m_directInput(directInputPtr)
     {
         this->setObjectName(classNameShort(this));
     }
@@ -117,7 +116,6 @@ namespace BlackInput
             hr = m_directInputDevice->GetDeviceState(sizeof(DIJOYSTATE2), &state);
         }
 
-
         if (FAILED(hr))
         {
             CLogMessage(this).warning(u"Cannot acquire and poll joystick device %1. Removing it.") << m_deviceName;
@@ -164,13 +162,13 @@ namespace BlackInput
     {
         // Initialize COM.
         // https://docs.microsoft.com/en-us/windows/desktop/api/combaseapi/nf-combaseapi-coinitializeex
-        HRESULT hr = CoInitializeEx(nullptr,  COINIT_MULTITHREADED);
+        HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
         // RPC_E_CHANGED_MODE: CoInitializeEx was already called by someone else in this thread with a different mode.
         if (hr == RPC_E_CHANGED_MODE)
         {
             CLogMessage(this).debug(u"CoInitializeEx was already called with a different mode. Trying again.");
-            hr = CoInitializeEx(nullptr,  COINIT_APARTMENTTHREADED);
+            hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
         }
 
         // Continue here only if CoInitializeEx was successful
@@ -192,7 +190,6 @@ namespace BlackInput
         {
             CLogMessage(this).warning(u"CoInitializeEx returned error code %1");
         }
-
     }
 
     CJoystickWindows::~CJoystickWindows()
@@ -276,7 +273,7 @@ namespace BlackInput
         wce.hInstance = hInstance;
 
         /* Register the class. */
-        if (! RegisterClassEx(&wce))
+        if (!RegisterClassEx(&wce))
         {
             return -1;
         }
@@ -387,17 +384,17 @@ namespace BlackInput
             switch (uMsg)
             {
             case WM_DEVICECHANGE:
+            {
+                if (wParam == DBT_DEVICEARRIVAL)
                 {
-                    if (wParam == DBT_DEVICEARRIVAL)
+                    DEV_BROADCAST_HDR *dbh = reinterpret_cast<DEV_BROADCAST_HDR *>(lParam);
+                    // DEV_BROADCAST_HDR *dbh = (DEV_BROADCAST_HDR *) lParam;
+                    if (dbh && dbh->dbch_devicetype == DBT_DEVTYP_DEVICEINTERFACE)
                     {
-                        DEV_BROADCAST_HDR *dbh = reinterpret_cast<DEV_BROADCAST_HDR *>(lParam);
-                        // DEV_BROADCAST_HDR *dbh = (DEV_BROADCAST_HDR *) lParam;
-                        if (dbh && dbh->dbch_devicetype == DBT_DEVTYP_DEVICEINTERFACE)
-                        {
-                            joystickWindows->enumJoystickDevices();
-                        }
+                        joystickWindows->enumJoystickDevices();
                     }
                 }
+            }
             }
         }
 
@@ -411,7 +408,7 @@ namespace BlackInput
         /* ignore XInput devices here, keep going. */
         // if (isXInputDevice(&pdidInstance->guidProduct)) return DIENUM_CONTINUE;
 
-        if (! obj->isJoystickAlreadyAdded(pdidInstance))
+        if (!obj->isJoystickAlreadyAdded(pdidInstance))
         {
             obj->addJoystickDevice(pdidInstance);
             CLogMessage(static_cast<CJoystickWindows *>(nullptr)).debug() << "Found joystick device" << QString::fromWCharArray(pdidInstance->tszInstanceName);
@@ -419,15 +416,15 @@ namespace BlackInput
         return DIENUM_CONTINUE;
     }
 
-    bool operator == (const CJoystickDevice &lhs, const CJoystickDevice &rhs)
+    bool operator==(const CJoystickDevice &lhs, const CJoystickDevice &rhs)
     {
-        return lhs.m_guidDevice  == rhs.m_guidDevice  &&
+        return lhs.m_guidDevice == rhs.m_guidDevice &&
                lhs.m_guidProduct == rhs.m_guidProduct &&
-               lhs.m_deviceName  == rhs.m_deviceName  &&
+               lhs.m_deviceName == rhs.m_deviceName &&
                lhs.m_productName == rhs.m_productName;
     }
 
-    bool operator == (CJoystickDeviceInput const &lhs, CJoystickDeviceInput const &rhs)
+    bool operator==(CJoystickDeviceInput const &lhs, CJoystickDeviceInput const &rhs)
     {
         return lhs.m_offset == rhs.m_offset &&
                lhs.m_button == rhs.m_button;

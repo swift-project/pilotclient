@@ -18,11 +18,15 @@
 
 namespace BlackGui
 {
-    namespace Menus { class CMenuActions; }
+    namespace Menus
+    {
+        class CMenuActions;
+    }
     namespace Views
     {
         //! Base class for views timestamp offset objects
-        template <class T> class CViewWithTimestampWithOffsetObjects :
+        template <class T>
+        class CViewWithTimestampWithOffsetObjects :
             public CViewBase<T>
         {
         public:

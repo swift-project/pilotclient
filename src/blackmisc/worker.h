@@ -118,7 +118,7 @@ namespace BlackMisc
         void doIfNotFinished(F functor) const
         {
             QMutexLocker lock(&m_finishedMutex);
-            if (! m_finished) { functor(); }
+            if (!m_finished) { functor(); }
         }
 
         //! Executes some code (in the caller's thread) if the task has finished and some different code if it has not finished.
@@ -211,9 +211,12 @@ namespace BlackMisc
         static CWorker *fromTask(QObject *owner, const QString &name, F &&task)
         {
             int typeId = qMetaTypeId<std::decay_t<decltype(std::forward<F>(task)())>>();
-            return fromTaskImpl(owner, name, typeId, [task = std::forward<F>(task)]() mutable
-            {
-                if constexpr (std::is_void_v<decltype(task())>) { std::move(task)(); return QVariant(); }
+            return fromTaskImpl(owner, name, typeId, [task = std::forward<F>(task)]() mutable {
+                if constexpr (std::is_void_v<decltype(task())>)
+                {
+                    std::move(task)();
+                    return QVariant();
+                }
                 else { return QVariant::fromValue(std::move(task)()); }
             });
         }
@@ -249,7 +252,11 @@ namespace BlackMisc
         //! \tparam R The return type of the task.
         //! \threadsafe
         template <typename R>
-        R result() { waitForFinished(); return this->resultNoWait<R>(); }
+        R result()
+        {
+            waitForFinished();
+            return this->resultNoWait<R>();
+        }
 
     private slots:
         //! Called when the worker has been moved into its new thread.
@@ -260,7 +267,11 @@ namespace BlackMisc
         static CWorker *fromTaskImpl(QObject *owner, const QString &name, int typeId, const std::function<QVariant()> &task);
 
         template <typename R>
-        R resultNoWait() { Q_ASSERT(m_result.canConvert<R>()); return m_result.value<R>(); }
+        R resultNoWait()
+        {
+            Q_ASSERT(m_result.canConvert<R>());
+            return m_result.value<R>();
+        }
 
         std::function<QVariant()> m_task;
         QVariant m_result;
@@ -339,7 +350,7 @@ namespace BlackMisc
         using CWorkerBase::setFinished;
 
         QObject *m_owner = nullptr; //!< owner, parent of the QThread
-        QString  m_name; //!< worker's name
+        QString m_name; //!< worker's name
         std::atomic<bool> m_enabled { true }; //!< marker it is enabled
     };
 }

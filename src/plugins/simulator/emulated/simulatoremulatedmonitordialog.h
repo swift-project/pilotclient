@@ -22,7 +22,10 @@
 #include <QScopedPointer>
 #include <QTimer>
 
-namespace Ui { class CSimulatorEmulatedMonitorDialog; }
+namespace Ui
+{
+    class CSimulatorEmulatedMonitorDialog;
+}
 namespace BlackSimPlugin::Emulated
 {
     class CSimulatorEmulated;

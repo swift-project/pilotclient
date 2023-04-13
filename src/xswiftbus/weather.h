@@ -12,7 +12,7 @@
 //! \file
 
 #ifndef NOMINMAX
-#define NOMINMAX
+#    define NOMINMAX
 #endif
 #include "dbusobject.h"
 #include "datarefs.h"
@@ -164,4 +164,3 @@ namespace XSwiftBus
 }
 
 #endif // guard
-

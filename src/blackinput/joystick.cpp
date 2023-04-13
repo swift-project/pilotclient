@@ -9,21 +9,20 @@
 #include "joystick.h"
 
 #if defined(Q_OS_WIN)
-    #include "win/joystickwindows.h"
+#    include "win/joystickwindows.h"
 #elif defined(Q_OS_LINUX)
-    #include "linux/joysticklinux.h"
+#    include "linux/joysticklinux.h"
 #elif defined(Q_OS_MACOS)
-    #include "macos/joystickmacos.h"
+#    include "macos/joystickmacos.h"
 #else
-    #error "Platform is not supported!"
+#    error "Platform is not supported!"
 #endif
 
 namespace BlackInput
 {
 
-    IJoystick::IJoystick(QObject *parent) :
-        QObject(parent)
-    {  }
+    IJoystick::IJoystick(QObject *parent) : QObject(parent)
+    {}
 
     std::unique_ptr<IJoystick> IJoystick::create(QObject *parent)
     {

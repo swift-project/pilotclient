@@ -52,7 +52,7 @@ namespace BlackMisc::PhysicalQuantities
         if (unit.isEmpty() || number.isEmpty()) { return v; }
         bool success;
         const double numberD = parseNumber(number, success, mode);
-        if (!success) {return v; }
+        if (!success) { return v; }
 
         if (CMeasurementUnit::isValidUnitSymbol<CAccelerationUnit>(unit))
         {

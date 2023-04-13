@@ -15,7 +15,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CModelMatcherLogEnable; }
+namespace Ui
+{
+    class CModelMatcherLogEnable;
+}
 namespace BlackGui::Components
 {
     //! Enable/disable matching logs

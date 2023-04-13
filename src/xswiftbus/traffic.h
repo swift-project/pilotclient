@@ -125,7 +125,11 @@ namespace XSwiftBus
         int process();
 
         //! Returns the own aircraft string to be used as callsign for setFollowedAircraft()
-        static const std::string &ownAircraftString() { static const std::string o = "ownAircraft"; return o; }
+        static const std::string &ownAircraftString()
+        {
+            static const std::string o = "ownAircraft";
+            return o;
+        }
 
     protected:
         //! Handler
@@ -138,15 +142,15 @@ namespace XSwiftBus
         //! Camera
         struct DeltaCameraPosition
         {
-            double dxMeters    = 0.0;
-            double dyMeters    = 0.0;
-            double dzMeters    = 0.0;
-            double headingDeg  = 0.0;
-            double pitchDeg    = 0.0;
+            double dxMeters = 0.0;
+            double dyMeters = 0.0;
+            double dzMeters = 0.0;
+            double headingDeg = 0.0;
+            double pitchDeg = 0.0;
             bool isInitialized = false;
         };
 
-        bool m_initialized        = false;
+        bool m_initialized = false;
         bool m_enabledMultiplayer = false;
         CTerrainProbe m_terrainProbe;
 
@@ -176,7 +180,7 @@ namespace XSwiftBus
             std::string modelName;
             std::string nightTextureMode;
             bool hasSurfaces = false;
-            bool isOnGround  = false;
+            bool isOnGround = false;
             char label[32] {};
             CTerrainProbe terrainProbe;
             XPMPPlaneSurfaces_t surfaces;
@@ -194,14 +198,16 @@ namespace XSwiftBus
         {
         public:
             Labels(CTraffic *traffic) : CDrawable(xplm_Phase_Window, false), m_traffic(traffic) {}
-            void setColor(int r, int g, int b) { m_color = {{ static_cast<float>(r) / 255.f, static_cast<float>(g) / 255.f, static_cast<float>(b) / 255.f }}; }
+            void setColor(int r, int g, int b) { m_color = { { static_cast<float>(r) / 255.f, static_cast<float>(g) / 255.f, static_cast<float>(b) / 255.f } }; }
+
         protected:
             virtual void draw() override;
+
         private:
             static void matrixMultVec(double out[4], const float m[16], const double v[4]);
             double distanceSquared(const double pos[3]) const;
             CTraffic *m_traffic = nullptr;
-            std::array<float, 3> m_color{{ 1.0f, 0.75f, 0.0f }};
+            std::array<float, 3> m_color { { 1.0f, 0.75f, 0.0f } };
             ArrayDataRef<xplane::data::sim::graphics::view::world_matrix> m_worldMat;
             ArrayDataRef<xplane::data::sim::graphics::view::projection_matrix_3d> m_projMat;
             DataRef<xplane::data::sim::graphics::view::window_width> m_windowWidth;
@@ -221,9 +227,9 @@ namespace XSwiftBus
 
         //! @{
         //! Normalize to (-180, 180] or [0, 360) degrees
-        static float  normalizeToPlusMinus180Deg(float v);
+        static float normalizeToPlusMinus180Deg(float v);
         static double normalizeToPlusMinus180Deg(double v);
-        static float  normalizeToZero360Deg(float v);
+        static float normalizeToZero360Deg(float v);
         static double normalizeToZero360Deg(double v);
         //! @}
 
@@ -262,7 +268,7 @@ namespace XSwiftBus
         DeltaCameraPosition m_deltaCameraPosition;
 
         bool m_emitSimFrame = true;
-        int m_countFrame    = 0; //!< allows to do something every n-th frame
+        int m_countFrame = 0; //!< allows to do something every n-th frame
 
         std::vector<XPMPUpdate_t> m_updates;
         void doPlaneUpdates();
@@ -272,4 +278,3 @@ namespace XSwiftBus
 } // ns
 
 #endif // guard
-

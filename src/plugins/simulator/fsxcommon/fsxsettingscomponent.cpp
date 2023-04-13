@@ -26,20 +26,19 @@ using namespace BlackConfig;
 
 namespace BlackSimPlugin::FsxCommon
 {
-    CFsxSettingsComponent::CFsxSettingsComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CFsxSettingsComponent)
+    CFsxSettingsComponent::CFsxSettingsComponent(QWidget *parent) : QFrame(parent),
+                                                                    ui(new Ui::CFsxSettingsComponent)
     {
         ui->setupUi(this);
         ui->cb_TraceSimConnectCalls->setChecked(false);
 
         connect(ui->cb_AddingAsSimulatedObject, &QCheckBox::released, this, &CFsxSettingsComponent::onSimulatedObjectChanged);
         connect(ui->cb_TraceSimConnectCalls, &QCheckBox::released, this, &CFsxSettingsComponent::onSimConnectTraceChanged);
-        connect(ui->cb_EnableTerrainProbe,   &QCheckBox::released, this, &CFsxSettingsComponent::onEnableTerrainProbeChanged);
-        connect(ui->cb_UseFsuipc,            &QCheckBox::released, this, &CFsxSettingsComponent::onFsuipcChanged);
-        connect(ui->cb_SBOffsets,            &QCheckBox::released, this, &CFsxSettingsComponent::onSBOffsetsChanged);
-        connect(ui->pb_CopyTerrainProbe,     &QPushButton::released, this, &CFsxSettingsComponent::copyTerrainProbe);
-        connect(ui->pb_Refresh,              &QPushButton::released, this, &CFsxSettingsComponent::refresh);
+        connect(ui->cb_EnableTerrainProbe, &QCheckBox::released, this, &CFsxSettingsComponent::onEnableTerrainProbeChanged);
+        connect(ui->cb_UseFsuipc, &QCheckBox::released, this, &CFsxSettingsComponent::onFsuipcChanged);
+        connect(ui->cb_SBOffsets, &QCheckBox::released, this, &CFsxSettingsComponent::onSBOffsetsChanged);
+        connect(ui->pb_CopyTerrainProbe, &QPushButton::released, this, &CFsxSettingsComponent::copyTerrainProbe);
+        connect(ui->pb_Refresh, &QPushButton::released, this, &CFsxSettingsComponent::refresh);
 
         if (sGui && sGui->getIContextSimulator())
         {
@@ -48,15 +47,14 @@ namespace BlackSimPlugin::FsxCommon
         }
 
         QPointer<CFsxSettingsComponent> myself(this);
-        QTimer::singleShot(2000, this, [ = ]
-        {
+        QTimer::singleShot(2000, this, [=] {
             if (!sGui || !myself || sGui->isShuttingDown()) { return; }
             this->refresh();
         });
     }
 
     CFsxSettingsComponent::~CFsxSettingsComponent()
-    { }
+    {}
 
     CSimulatorInfo CFsxSettingsComponent::getSimulator() const
     {
@@ -130,7 +128,7 @@ namespace BlackSimPlugin::FsxCommon
         const CStatusMessageList msgs = sGui->getIContextSimulator()->copyFsxTerrainProbe(simulator);
         CLogMessage::preformatted(msgs);
         if (!m_mf) { m_mf = CGuiUtility::nextOverlayMessageFrame(this); }
-        if (m_mf)  { m_mf->showOverlayMessages(msgs); }
+        if (m_mf) { m_mf->showOverlayMessages(msgs); }
     }
 
     void CFsxSettingsComponent::onSimulatorStatusChanged(int status)
@@ -155,9 +153,9 @@ namespace BlackSimPlugin::FsxCommon
         if (!sGui->hasSimulator()) { return nullptr; }
 
         ISimulator *simulator = sGui->getISimulator().data();
-        if (!simulator || simulator->isEmulatedDriver())     { return nullptr; }
+        if (!simulator || simulator->isEmulatedDriver()) { return nullptr; }
         if (!simulator->getSimulatorInfo().isFsxP3DFamily()) { return nullptr; }
-        if (simulator->getSimulatorInfo() != m_simulator)    { return nullptr; }
+        if (simulator->getSimulatorInfo() != m_simulator) { return nullptr; }
 
         //! \todo KB 11/18 wonder why qobject_cast does not work here
         CSimulatorFsxCommon *fsx = static_cast<CSimulatorFsxCommon *>(simulator);

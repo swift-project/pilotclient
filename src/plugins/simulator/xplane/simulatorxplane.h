@@ -50,7 +50,10 @@ namespace BlackMisc
         class CAircraftSituation;
         class CCallsign;
     }
-    namespace Network { class CTextMessage; }
+    namespace Network
+    {
+        class CTextMessage;
+    }
     namespace Simulation
     {
         class CSimulatedAircraft;
@@ -58,7 +61,10 @@ namespace BlackMisc
         class IOwnAircraftProvider;
         class IRemoteAircraftProvider;
     }
-    namespace Weather { class IWeatherGridProvider; }
+    namespace Weather
+    {
+        class IWeatherGridProvider;
+    }
 }
 
 namespace BlackSimPlugin::XPlane
@@ -70,48 +76,48 @@ namespace BlackSimPlugin::XPlane
     //! X-Plane data
     struct XPlaneData
     {
-        QString aircraftModelPath;          //!< Aircraft model path
-        QString aircraftIcaoCode;           //!< Aircraft ICAO code
-        double latitudeDeg = 0;             //!< Longitude [deg]
-        double longitudeDeg = 0;            //!< Latitude  [deg]
-        double altitudeM = 0;               //!< Altitude  [m]
-        double pressureAltitudeFt = 0;      //!< Pressure altitude [ft, XP12]
-        double heightAglM = 0;              //!< Height AGL [m]
-        double groundspeedMs = 0;           //!< Ground speed [m/s]
-        double pitchDeg = 0;                //!< Pitch [deg]
-        double rollDeg = 0;                 //!< Roll  [deg]
-        double trueHeadingDeg = 0;          //!< True heading [deg]
-        double localXVelocityMs = 0;        //!< Local x velocity [m/s]
-        double localYVelocityMs = 0;        //!< Local y velocity [m/s]
-        double localZVelocityMs = 0;        //!< Local z velocity [m/s]
-        double pitchRadPerSec = 0;          //!< Pitch angular velocity [rad/s]
-        double rollRadPerSec = 0;           //!< Roll angular velocity [rad/s]
-        double headingRadPerSec = 0;        //!< Heading angular velocity [rad/s]
-        bool onGroundAll = false;           //!< All wheels on ground?
-        double groundElevation = 0;         //!< Elevation of ground [m]
-        int com1ActiveKhz = 122800;         //!< COM1 active  [kHz]
-        int com1StandbyKhz = 122800;        //!< COM1 standby [kHz]
-        bool isCom1Receiving = true;        //!< COM1 receiving
-        bool isCom1Transmitting = true;     //!< COM1 transmittings
-        double com1Volume = 1;              //!< COM1 volume 0..1
-        int com2ActiveKhz = 122800;         //!< COM2 active  [kHz]
-        int com2StandbyKhz = 122800;        //!< COM2 standby [kHz]
-        bool isCom2Receiving = true;        //!< COM2 receiving
-        bool isCom2Transmitting = true;     //!< COM2 transmittings
-        double com2Volume = 1;              //!< COM2 volume 0..1
-        int xpdrCode = 2000;                //!< Transpondder code
-        int xpdrMode = 0;                   //!< Transponder mode (off=0,stdby=1,on=2,test=3)
-        bool xpdrIdent = false;             //!< Is transponder in ident?
-        bool beaconLightsOn = false;        //!< Beacon lights on?
-        bool landingLightsOn = false;       //!< Landing lights on?
-        bool navLightsOn = false;           //!< NAV lights on?
-        bool strobeLightsOn = false;        //!< Strobe lights on?
-        bool taxiLightsOn = false;          //!< Taxi lights on?
-        double flapsDeployRatio = 0;        //!< Flaps deployment ratio [%]
-        double gearDeployRatio = 0;         //!< Gear deployment ratio  [%]
-        QList<double> enginesN1Percentage;  //!< N1 per engine [%]
-        double speedBrakeRatio = 0;         //!< Speed break ratio [%]
-        double seaLevelPressureInHg = 0;    //!< Sea level pressure [inhg]
+        QString aircraftModelPath; //!< Aircraft model path
+        QString aircraftIcaoCode; //!< Aircraft ICAO code
+        double latitudeDeg = 0; //!< Longitude [deg]
+        double longitudeDeg = 0; //!< Latitude  [deg]
+        double altitudeM = 0; //!< Altitude  [m]
+        double pressureAltitudeFt = 0; //!< Pressure altitude [ft, XP12]
+        double heightAglM = 0; //!< Height AGL [m]
+        double groundspeedMs = 0; //!< Ground speed [m/s]
+        double pitchDeg = 0; //!< Pitch [deg]
+        double rollDeg = 0; //!< Roll  [deg]
+        double trueHeadingDeg = 0; //!< True heading [deg]
+        double localXVelocityMs = 0; //!< Local x velocity [m/s]
+        double localYVelocityMs = 0; //!< Local y velocity [m/s]
+        double localZVelocityMs = 0; //!< Local z velocity [m/s]
+        double pitchRadPerSec = 0; //!< Pitch angular velocity [rad/s]
+        double rollRadPerSec = 0; //!< Roll angular velocity [rad/s]
+        double headingRadPerSec = 0; //!< Heading angular velocity [rad/s]
+        bool onGroundAll = false; //!< All wheels on ground?
+        double groundElevation = 0; //!< Elevation of ground [m]
+        int com1ActiveKhz = 122800; //!< COM1 active  [kHz]
+        int com1StandbyKhz = 122800; //!< COM1 standby [kHz]
+        bool isCom1Receiving = true; //!< COM1 receiving
+        bool isCom1Transmitting = true; //!< COM1 transmittings
+        double com1Volume = 1; //!< COM1 volume 0..1
+        int com2ActiveKhz = 122800; //!< COM2 active  [kHz]
+        int com2StandbyKhz = 122800; //!< COM2 standby [kHz]
+        bool isCom2Receiving = true; //!< COM2 receiving
+        bool isCom2Transmitting = true; //!< COM2 transmittings
+        double com2Volume = 1; //!< COM2 volume 0..1
+        int xpdrCode = 2000; //!< Transpondder code
+        int xpdrMode = 0; //!< Transponder mode (off=0,stdby=1,on=2,test=3)
+        bool xpdrIdent = false; //!< Is transponder in ident?
+        bool beaconLightsOn = false; //!< Beacon lights on?
+        bool landingLightsOn = false; //!< Landing lights on?
+        bool navLightsOn = false; //!< NAV lights on?
+        bool strobeLightsOn = false; //!< Strobe lights on?
+        bool taxiLightsOn = false; //!< Taxi lights on?
+        double flapsDeployRatio = 0; //!< Flaps deployment ratio [%]
+        double gearDeployRatio = 0; //!< Gear deployment ratio  [%]
+        QList<double> enginesN1Percentage; //!< N1 per engine [%]
+        double speedBrakeRatio = 0; //!< Speed break ratio [%]
+        double seaLevelPressureInHg = 0; //!< Sea level pressure [inhg]
     };
 
     //! X-Plane ISimulator implementation
@@ -122,11 +128,11 @@ namespace BlackSimPlugin::XPlane
     public:
         //! Constructor
         CSimulatorXPlane(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                            BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
-                            BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                            BlackMisc::Weather::IWeatherGridProvider       *weatherGridProvider,
-                            BlackMisc::Network::IClientProvider            *clientProvider,
-                            QObject *parent = nullptr);
+                         BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                         BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                         BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+                         BlackMisc::Network::IClientProvider *clientProvider,
+                         QObject *parent = nullptr);
 
         //! Dtor
         virtual ~CSimulatorXPlane() override;
@@ -191,7 +197,7 @@ namespace BlackSimPlugin::XPlane
 
         void setAirportsInRange(const QStringList &icaoCodes, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts);
         void emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao,
-                                            const QString &modelString, const QString &name, const QString &description);
+                                         const QString &modelString, const QString &name, const QString &description);
         void fastTimerTimeout();
         void slowTimerTimeout();
 
@@ -235,7 +241,7 @@ namespace BlackSimPlugin::XPlane
         void onRemoteAircraftAdded(const QString &callsign);
         void onRemoteAircraftAddingFailed(const QString &callsign);
         void updateRemoteAircraftFromSimulator(const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
-                                                const QDoubleList &elevationsMeters, const QBoolList &waterFlags, const QDoubleList &verticalOffsetsMeters);
+                                               const QDoubleList &elevationsMeters, const QBoolList &waterFlags, const QDoubleList &verticalOffsetsMeters);
         //! @}
 
         //! Disconnect from DBus
@@ -264,8 +270,8 @@ namespace BlackSimPlugin::XPlane
         DBusMode m_dbusMode;
         BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusSettings> m_xSwiftBusServerSettings { this, &CSimulatorXPlane::onXSwiftBusSettingsChanged };
         static constexpr qint64 TimeoutAdding = 10000;
-        QDBusConnection m_dBusConnection     { "default" };
-        QDBusServiceWatcher    *m_watcher      { nullptr };
+        QDBusConnection m_dBusConnection { "default" };
+        QDBusServiceWatcher *m_watcher { nullptr };
         CXSwiftBusServiceProxy *m_serviceProxy { nullptr };
         CXSwiftBusTrafficProxy *m_trafficProxy { nullptr };
         CXSwiftBusWeatherProxy *m_weatherProxy { nullptr };
@@ -277,17 +283,17 @@ namespace BlackSimPlugin::XPlane
         unsigned int m_slowTimerCalls = 0; //!< how often called
 
         BlackMisc::Aviation::CAirportList m_airportsInRange; //!< aiports in range of own aircraft
-        CXPlaneMPAircraftObjects m_xplaneAircraftObjects;    //!< XPlane multiplayer aircraft
+        CXPlaneMPAircraftObjects m_xplaneAircraftObjects; //!< XPlane multiplayer aircraft
 
-        BlackMisc::Simulation::CSimulatedAircraftList m_pendingToBeAddedAircraft;      //!< aircraft to be added
-        QHash<BlackMisc::Aviation::CCallsign, qint64> m_addingInProgressAircraft;      //!< aircraft just adding
-        BlackMisc::Simulation::CSimulatedAircraftList m_aircraftAddedFailed;           //!< aircraft for which adding failed
+        BlackMisc::Simulation::CSimulatedAircraftList m_pendingToBeAddedAircraft; //!< aircraft to be added
+        QHash<BlackMisc::Aviation::CCallsign, qint64> m_addingInProgressAircraft; //!< aircraft just adding
+        BlackMisc::Simulation::CSimulatedAircraftList m_aircraftAddedFailed; //!< aircraft for which adding failed
         BlackMisc::PhysicalQuantities::CLength m_minSuspicousTerrainProbe { nullptr }; //!< min. distance of "failed" (suspicious) terrain probe requests
         XPlaneData m_xplaneData; //!< XPlane data
-        BlackMisc::PhysicalQuantities::CLength m_altitudeDelta;     //!< XP12 altitude difference cause by temperature effect
+        BlackMisc::PhysicalQuantities::CLength m_altitudeDelta; //!< XP12 altitude difference cause by temperature effect
 
         // statistics
-        qint64 m_statsAddMaxTimeMs     = -1;
+        qint64 m_statsAddMaxTimeMs = -1;
         qint64 m_statsAddCurrentTimeMs = -1;
 
         //! Reset the XPlane data
@@ -341,10 +347,10 @@ namespace BlackSimPlugin::XPlane
     public:
         //! \copydoc BlackCore::ISimulatorFactory::create
         virtual BlackCore::ISimulator *create(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                                                BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
-                                                BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                                                BlackMisc::Weather::IWeatherGridProvider       *weatherGridProvider,
-                                                BlackMisc::Network::IClientProvider            *clientProvider) override;
+                                              BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                                              BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                                              BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+                                              BlackMisc::Network::IClientProvider *clientProvider) override;
 
         //! \copydoc BlackCore::ISimulatorFactory::createListener
         virtual BlackCore::ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) override { return new CSimulatorXPlaneListener(info); }

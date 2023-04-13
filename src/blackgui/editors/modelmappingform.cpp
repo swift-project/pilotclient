@@ -28,9 +28,8 @@ using namespace BlackGui::Components;
 
 namespace BlackGui::Editors
 {
-    CModelMappingForm::CModelMappingForm(QWidget *parent) :
-        CFormDbUser(parent),
-        ui(new Ui::CModelMappingForm)
+    CModelMappingForm::CModelMappingForm(QWidget *parent) : CFormDbUser(parent),
+                                                            ui(new Ui::CModelMappingForm)
     {
         ui->setupUi(this);
         ui->le_LastUpdated->setReadOnly(true);
@@ -49,7 +48,7 @@ namespace BlackGui::Editors
     }
 
     CModelMappingForm::~CModelMappingForm()
-    { }
+    {}
 
     BlackMisc::Simulation::CAircraftModel CModelMappingForm::getValue() const
     {

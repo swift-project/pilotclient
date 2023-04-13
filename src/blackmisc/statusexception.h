@@ -48,9 +48,9 @@ namespace BlackMisc
         static void maybeThrow(const CStatusMessage &);
 
     private:
-        const CStatusMessage   m_payload;
-        mutable QByteArray     m_temp;
-        mutable QReadWriteLock m_lock;  //!< lock (because of mutable members)
+        const CStatusMessage m_payload;
+        mutable QByteArray m_temp;
+        mutable QReadWriteLock m_lock; //!< lock (because of mutable members)
     };
 } // ns
 

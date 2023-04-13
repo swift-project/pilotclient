@@ -15,11 +15,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Db, CArtifact, CArtifactList)
 
 namespace BlackMisc::Db
 {
-    CArtifactList::CArtifactList() { }
+    CArtifactList::CArtifactList() {}
 
-    CArtifactList::CArtifactList(const CSequence<CArtifact> &other) :
-        CSequence<CArtifact>(other)
-    { }
+    CArtifactList::CArtifactList(const CSequence<CArtifact> &other) : CSequence<CArtifact>(other)
+    {}
 
     CPlatformSet CArtifactList::getPlatforms() const
     {
@@ -120,8 +119,7 @@ namespace BlackMisc::Db
 
     void CArtifactList::sortByVersion(Qt::SortOrder order)
     {
-        this->sort([order](const CArtifact & a, const CArtifact & b)
-        {
+        this->sort([order](const CArtifact &a, const CArtifact &b) {
             const QVersionNumber av = a.getQVersion();
             const QVersionNumber bv = b.getQVersion();
             return order == Qt::AscendingOrder ? av < bv : bv < av;

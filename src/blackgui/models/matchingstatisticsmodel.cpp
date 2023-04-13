@@ -14,8 +14,7 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackGui::Models
 {
-    CMatchingStatisticsModel::CMatchingStatisticsModel(MatchingStatisticsMode mode, QObject *parent) :
-        CListModelBase("MatchingStatisticsModel", parent)
+    CMatchingStatisticsModel::CMatchingStatisticsModel(MatchingStatisticsMode mode, QObject *parent) : CListModelBase("MatchingStatisticsModel", parent)
     {
         this->setMode(mode);
 

@@ -13,16 +13,15 @@ using namespace BlackMisc::Simulation::Settings;
 
 namespace BlackGui::Components
 {
-    CCGSourceSelector::CCGSourceSelector(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CCGSourceSelector)
+    CCGSourceSelector::CCGSourceSelector(QWidget *parent) : QFrame(parent),
+                                                            ui(new Ui::CCGSourceSelector)
     {
         ui->setupUi(this);
         this->initComboBox();
     }
 
     CCGSourceSelector::~CCGSourceSelector()
-    { }
+    {}
 
     CSimulatorSettings::CGSource CCGSourceSelector::getValue() const
     {

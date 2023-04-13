@@ -36,11 +36,10 @@ using namespace BlackMisc::Network;
 namespace BlackMisc::Test
 {
     CTestService::CTestService(QObject *parent) : QObject(parent)
-    { }
+    {}
 
-    CTestService::CTestService(bool verbose, QObject *parent) :
-        QObject(parent), m_verbose(verbose)
-    { }
+    CTestService::CTestService(bool verbose, QObject *parent) : QObject(parent), m_verbose(verbose)
+    {}
 
     bool CTestService::canRegisterTestService(QDBusConnection &connection)
     {
@@ -66,7 +65,7 @@ namespace BlackMisc::Test
 
     CTestService *CTestService::registerTestService(QDBusConnection &connection, bool verbose, QObject *parent)
     {
-        CTestService *pTestService = new CTestService(verbose, parent);  // just a QObject with signals / slots and  Q_CLASSINFO("D-Bus Interface", some service name)
+        CTestService *pTestService = new CTestService(verbose, parent); // just a QObject with signals / slots and  Q_CLASSINFO("D-Bus Interface", some service name)
         if (!connection.registerService(CTestService::InterfaceName()))
         {
             QDBusError error = connection.lastError();
@@ -86,7 +85,7 @@ namespace BlackMisc::Test
 
         QString service; // service not needed
         if (connection.connect(service, CTestService::ObjectPath(), CTestService::InterfaceName(),
-                                "sendStringMessage", pTestService, SLOT(receiveStringMessage(const QString &))))
+                               "sendStringMessage", pTestService, SLOT(receiveStringMessage(const QString &))))
         {
             out() << "Connected object with DBus 'sendStringMessage'" << Qt::endl;
         }

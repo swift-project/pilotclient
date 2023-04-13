@@ -20,7 +20,10 @@
 class QPixmap;
 class QWidget;
 
-namespace Ui { class CMainInfoAreaComponent; }
+namespace Ui
+{
+    class CMainInfoAreaComponent;
+}
 namespace BlackGui::Components
 {
     // forward declaration to break compile dependency from all components
@@ -54,20 +57,20 @@ namespace BlackGui::Components
         enum InfoArea
         {
             // index must match tab index!
-            InfoAreaCockpit       = 0,
-            InfoAreaAircraft      = 1,
-            InfoAreaAtc           = 2,
-            InfoAreaUsers         = 3,
-            InfoAreaTextMessages  = 4,
-            InfoAreaSimulator     = 5,
-            InfoAreaFlightPlan    = 6,
-            InfoAreaWeather       = 7,
-            InfoAreaMapping       = 8, //!< aka rendering, models
+            InfoAreaCockpit = 0,
+            InfoAreaAircraft = 1,
+            InfoAreaAtc = 2,
+            InfoAreaUsers = 3,
+            InfoAreaTextMessages = 4,
+            InfoAreaSimulator = 5,
+            InfoAreaFlightPlan = 6,
+            InfoAreaWeather = 7,
+            InfoAreaMapping = 8, //!< aka rendering, models
             InfoAreaInterpolation = 9,
-            InfoAreaSettings      = 10,
-            InfoAreaLog           = 11,
-            InfoAreaRadar         = 12,
-            InfoAreaNone          = -1
+            InfoAreaSettings = 10,
+            InfoAreaLog = 11,
+            InfoAreaRadar = 12,
+            InfoAreaNone = -1
         };
 
         //! Cockpit

@@ -29,7 +29,10 @@ class QDragMoveEvent;
 class QDropEvent;
 class QWidget;
 
-namespace Ui { class CDbLiverySelectorComponent; }
+namespace Ui
+{
+    class CDbLiverySelectorComponent;
+}
 
 namespace BlackGui::Components
 {
@@ -104,7 +107,7 @@ namespace BlackGui::Components
         QString stripExtraInfo(const QString &liveryCode) const;
 
         QScopedPointer<Ui::CDbLiverySelectorComponent> ui;
-        QScopedPointer<QCompleter>   m_completerLiveries;
+        QScopedPointer<QCompleter> m_completerLiveries;
         BlackMisc::Aviation::CLivery m_currentLivery;
     };
 } // ns

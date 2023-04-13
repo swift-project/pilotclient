@@ -50,7 +50,7 @@ namespace BlackCore
         //! Register a new hotkey function
         //! \remark RecvObj has to be a QObject
         template <typename RecvObj>
-        int bind(const QString &action, RecvObj *receiver, void (RecvObj:: *slotPointer)(bool))
+        int bind(const QString &action, RecvObj *receiver, void (RecvObj::*slotPointer)(bool))
         {
             using namespace std::placeholders;
             auto function = std::bind(slotPointer, receiver, _1);
@@ -153,4 +153,4 @@ namespace BlackCore
     };
 } // ns
 
-#endif //guard
+#endif // guard

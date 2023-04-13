@@ -45,18 +45,18 @@ namespace BlackGui
         m_actionWordWrap->setCheckable(true);
 
         connect(m_actionClearTextEdit, &QAction::triggered, this, &CTextMessageTextEdit::clear);
-        connect(m_actionAll,           &QAction::triggered, this, &CTextMessageTextEdit::keepLastNMessages);
-        connect(m_actionLast10,        &QAction::triggered, this, &CTextMessageTextEdit::keepLastNMessages);
-        connect(m_actionLast25,        &QAction::triggered, this, &CTextMessageTextEdit::keepLastNMessages);
-        connect(m_actionWithSender,    &QAction::triggered, this, &CTextMessageTextEdit::setVisibleFields);
+        connect(m_actionAll, &QAction::triggered, this, &CTextMessageTextEdit::keepLastNMessages);
+        connect(m_actionLast10, &QAction::triggered, this, &CTextMessageTextEdit::keepLastNMessages);
+        connect(m_actionLast25, &QAction::triggered, this, &CTextMessageTextEdit::keepLastNMessages);
+        connect(m_actionWithSender, &QAction::triggered, this, &CTextMessageTextEdit::setVisibleFields);
         connect(m_actionWithRecipient, &QAction::triggered, this, &CTextMessageTextEdit::setVisibleFields);
-        connect(m_actionWordWrap,      &QAction::triggered, this, &CTextMessageTextEdit::setWordWrap);
+        connect(m_actionWordWrap, &QAction::triggered, this, &CTextMessageTextEdit::setWordWrap);
 
         connect(this, &QTextEdit::customContextMenuRequested, this, &CTextMessageTextEdit::showContextMenuForTextEdit);
     }
 
     CTextMessageTextEdit::~CTextMessageTextEdit()
-    { }
+    {}
 
     void CTextMessageTextEdit::insertTextMessage(const CTextMessage &textMessage, int maxMessages)
     {
@@ -89,8 +89,7 @@ namespace BlackGui
             this->toHtml(
                 m_latestFirst ? m_messages.reversed() : m_messages,
                 m_withSender,
-                m_withRecipient)
-        );
+                m_withRecipient));
         m_textDocument.setHtml(html);
         this->moveCursor(m_latestFirst ? QTextCursor::Start : QTextCursor::End);
     }

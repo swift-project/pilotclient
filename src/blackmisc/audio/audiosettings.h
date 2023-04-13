@@ -31,10 +31,10 @@ namespace BlackMisc::Audio
     public:
         //! @{
         //! Ranges for audio
-        static constexpr int InMax  =  100;
-        static constexpr int InMin  =  0;
-        static constexpr int OutMax =  100;
-        static constexpr int OutMin =  0;
+        static constexpr int InMax = 100;
+        static constexpr int InMin = 0;
+        static constexpr int OutMax = 100;
+        static constexpr int OutMin = 0;
         //! @}
 
         //! @{
@@ -60,16 +60,16 @@ namespace BlackMisc::Audio
 
         //! @{
         //! Simplified functions
-        bool textMessagePrivate()    const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextMessagePrivate); }
+        bool textMessagePrivate() const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextMessagePrivate); }
         bool textMessageSupervisor() const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextMessageSupervisor); }
         bool textCallsignMentioned() const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextCallsignMentioned); }
-        bool noAudioTransmission()   const { return this->isNotificationFlagSet(CNotificationSounds::NotificationNoAudioTransmission); }
-        bool pttClickDown()          const { return this->isNotificationFlagSet(CNotificationSounds::PTTClickKeyDown); }
-        bool pttClickUp()            const { return this->isNotificationFlagSet(CNotificationSounds::PTTClickKeyUp); }
-        bool pttBlocked()            const { return this->isNotificationFlagSet(CNotificationSounds::PTTBlocked); }
+        bool noAudioTransmission() const { return this->isNotificationFlagSet(CNotificationSounds::NotificationNoAudioTransmission); }
+        bool pttClickDown() const { return this->isNotificationFlagSet(CNotificationSounds::PTTClickKeyDown); }
+        bool pttClickUp() const { return this->isNotificationFlagSet(CNotificationSounds::PTTClickKeyUp); }
+        bool pttBlocked() const { return this->isNotificationFlagSet(CNotificationSounds::PTTBlocked); }
 
-        bool afvClicked()            const { return this->isNotificationFlagSet(CNotificationSounds::AFVClicked); }
-        bool afvBlocked()            const { return this->isNotificationFlagSet(CNotificationSounds::AFVBlocked); }
+        bool afvClicked() const { return this->isNotificationFlagSet(CNotificationSounds::AFVClicked); }
+        bool afvBlocked() const { return this->isNotificationFlagSet(CNotificationSounds::AFVBlocked); }
         //! @}
 
         //! Settings value
@@ -134,13 +134,13 @@ namespace BlackMisc::Audio
     private:
         QString m_notificationSoundDir;
         int m_notification = static_cast<int>(CNotificationSounds::DefaultNotifications); //!< play notification for notification x, a little trick to use a string here (streamable, hashable, ..)
-        int m_notificationVolume = 90;   //!< 0-90
-        int m_outVolume          = 40;   //!< 0-100, AFV
-        int m_outVolumeCom1      = 100;   //!< 0-100, AFV
-        int m_outVolumeCom2      = 100;   //!< 0-100, AFV
-        int m_inVolume           = 50;   //!< AFV range
-        bool m_audioEffects      = true; //!< Audio effects en
-        void initNotificationFlags();    //!< init flags
+        int m_notificationVolume = 90; //!< 0-90
+        int m_outVolume = 40; //!< 0-100, AFV
+        int m_outVolumeCom1 = 100; //!< 0-100, AFV
+        int m_outVolumeCom2 = 100; //!< 0-100, AFV
+        int m_inVolume = 50; //!< AFV range
+        bool m_audioEffects = true; //!< Audio effects en
+        void initNotificationFlags(); //!< init flags
 
         BLACK_METACLASS(
             CSettings,
@@ -162,7 +162,11 @@ namespace BlackMisc::Audio
         static const char *key() { return "audio/%Application%/setup"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("Audio"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("Audio");
+            return name;
+        }
 
         //! \copydoc BlackMisc::TSettingTrait::isValid
         static bool isValid(const BlackMisc::Audio::CSettings &value, QString &)

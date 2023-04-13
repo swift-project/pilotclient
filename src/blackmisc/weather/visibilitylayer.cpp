@@ -18,10 +18,9 @@ namespace BlackMisc::Weather
 {
 
     CVisibilityLayer::CVisibilityLayer(const BlackMisc::Aviation::CAltitude &base,
-                                        const BlackMisc::Aviation::CAltitude &top,
-                                        const PhysicalQuantities::CLength &visibility) :
-        m_base(base), m_top(top), m_visibility(visibility)
-    { }
+                                       const BlackMisc::Aviation::CAltitude &top,
+                                       const PhysicalQuantities::CLength &visibility) : m_base(base), m_top(top), m_visibility(visibility)
+    {}
 
     QVariant CVisibilityLayer::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
     {
@@ -42,7 +41,11 @@ namespace BlackMisc::Weather
 
     void CVisibilityLayer::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CVisibilityLayer>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CVisibilityLayer>();
+            return;
+        }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

@@ -18,13 +18,13 @@
 #include <QStringBuilder>
 
 #ifdef BLACK_USE_CRASHPAD
-#if defined(Q_OS_WIN) && !defined(NOMINMAX)
-#define NOMINMAX
-#endif
-#include "crashpad/client/crashpad_client.h"
-#include "crashpad/client/crash_report_database.h"
-#include "crashpad/client/settings.h"
-#include "crashpad/client/simulate_crash.h"
+#    if defined(Q_OS_WIN) && !defined(NOMINMAX)
+#        define NOMINMAX
+#    endif
+#    include "crashpad/client/crashpad_client.h"
+#    include "crashpad/client/crash_report_database.h"
+#    include "crashpad/client/settings.h"
+#    include "crashpad/client/simulate_crash.h"
 #endif
 
 using namespace BlackConfig;
@@ -40,17 +40,17 @@ namespace BlackMisc
     }
 
     CCrashHandler::~CCrashHandler()
-    { }
+    {}
 
 #ifdef BLACK_USE_CRASHPAD
     //! Convert to file path
     base::FilePath qstringToFilePath(const QString &str)
     {
-#   ifdef Q_OS_WIN
+#    ifdef Q_OS_WIN
         return base::FilePath(str.toStdWString());
-#   else
+#    else
         return base::FilePath(str.toStdString());
-#   endif
+#    endif
     }
 #endif
 
@@ -60,7 +60,7 @@ namespace BlackMisc
         static const QString crashpadHandler(CBuildConfig::isRunningOnWindowsNtPlatform() ? "swift_crashpad_handler.exe" : "swift_crashpad_handler");
         static const QString handler = CFileUtils::appendFilePaths(CSwiftDirectories::binDirectory(), crashpadHandler);
         const QString database = CSwiftDirectories::crashpadDatabaseDirectory();
-        const QString metrics  = CSwiftDirectories::crashpadMetricsDirectory();
+        const QString metrics = CSwiftDirectories::crashpadMetricsDirectory();
 
         if (!QFileInfo::exists(handler)) { return; }
 
@@ -68,13 +68,13 @@ namespace BlackMisc
         std::map<std::string, std::string> annotations;
 
         // Backtrace annotations
-        annotations["token"]         = CBuildConfig::backtraceToken().toStdString();
-        annotations["format"]        = "minidump";
-        annotations["commit"]        = CBuildConfig::gitHeadSha1().toStdString();
-        annotations["version"]       = CBuildConfig::getVersionString().toStdString();
+        annotations["token"] = CBuildConfig::backtraceToken().toStdString();
+        annotations["format"] = "minidump";
+        annotations["commit"] = CBuildConfig::gitHeadSha1().toStdString();
+        annotations["version"] = CBuildConfig::getVersionString().toStdString();
         annotations["short_version"] = CBuildConfig::getShortVersionString().toStdString();
-        annotations["platform"]      = CBuildConfig::getPlatformString().toStdString();
-        annotations["qtversion"]     = QT_VERSION_STR;
+        annotations["platform"] = CBuildConfig::getPlatformString().toStdString();
+        annotations["qtversion"] = QT_VERSION_STR;
 
         // add our logfile
         const QString logAttachment = QStringLiteral("--attachment=attachment_%1=%2").arg(CFileLogger::getLogFileName(), CFileLogger::getLogFilePath());
@@ -114,7 +114,10 @@ namespace BlackMisc
     void CCrashHandler::setUploadsEnabled(bool enable)
     {
 #ifdef BLACK_USE_CRASHPAD
-        if (!m_crashReportDatabase) { return; }
+        if (!m_crashReportDatabase)
+        {
+            return;
+        }
         crashpad::Settings *settings = m_crashReportDatabase->GetSettings();
         settings->SetUploadsEnabled(enable);
 #else
@@ -125,7 +128,10 @@ namespace BlackMisc
     bool CCrashHandler::isCrashDumpUploadEnabled() const
     {
 #ifdef BLACK_USE_CRASHPAD
-        if (!m_crashReportDatabase) { return false; }
+        if (!m_crashReportDatabase)
+        {
+            return false;
+        }
         crashpad::Settings *settings = m_crashReportDatabase->GetSettings();
         bool enabled = false;
         bool ok = settings->GetUploadsEnabled(&enabled);
@@ -172,31 +178,30 @@ namespace BlackMisc
 
     void CCrashHandler::simulateCrash()
     {
-#   ifdef BLACK_USE_CRASHPAD
+#ifdef BLACK_USE_CRASHPAD
         CLogMessage(this).info(u"Simulated crash dump!");
         m_crashAndLogInfo.appendInfo("Simulated crash dump!");
         m_crashAndLogInfo.writeToFile();
         CRASHPAD_SIMULATE_CRASH();
         // real crash
         // raise(SIGSEGV); #include <signal.h>
-#   else
+#else
         CLogMessage(this).warning(u"This compiler or platform does not support crashpad. Cannot simulate crash dump!");
-#   endif
+#endif
     }
 
     void CCrashHandler::simulateAssert()
     {
-#   ifdef BLACK_USE_CRASHPAD
+#ifdef BLACK_USE_CRASHPAD
         CLogMessage(this).info(u"Simulated ASSERT!");
         m_crashAndLogInfo.appendInfo("Simulated ASSERT!");
         m_crashAndLogInfo.writeToFile();
         Q_ASSERT_X(false, Q_FUNC_INFO, "Test server to test Crash handler");
-#   else
+#else
         CLogMessage(this).warning(u"This compiler or platform does not support crashpad. Cannot simulate crash dump!");
-#   endif
+#endif
     }
 
-    CCrashHandler::CCrashHandler(QObject *parent) :
-        QObject(parent)
-    { }
+    CCrashHandler::CCrashHandler(QObject *parent) : QObject(parent)
+    {}
 }

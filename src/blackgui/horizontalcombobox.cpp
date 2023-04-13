@@ -12,14 +12,14 @@ namespace BlackGui
 {
     CHorizontalComboBox::CHorizontalComboBox(QWidget *parent) : QComboBox(parent)
     {
-        m_view  = new QListView(this);
+        m_view = new QListView(this);
         m_view->setFlow(QListView::LeftToRight);
         this->setView(m_view);
         for (QWidget *o : findChildren<QWidget *>())
         {
             if (o->inherits("QComboBoxPrivateContainer"))
             {
-                //popup
+                // popup
                 o->setFixedHeight(view()->height());
                 break;
             }

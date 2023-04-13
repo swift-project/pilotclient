@@ -51,10 +51,10 @@ namespace BlackMisc::Simulation
         IInterpolant(qint64 interpolatedTime, int situationsAvailable) : m_interpolatedTime(interpolatedTime), m_situationsAvailable(situationsAvailable) {}
 
         qint64 m_interpolatedTime = -1; //!< "Real time "of interpolated situation
-        int m_situationsAvailable = 0;  //!< used situations
-        CInterpolatorPbh m_pbh;         //!< the used PBH interpolator
-        bool m_valid = true;            //!< valid?
-        bool m_recalculated = false;    //!< recalculated interpolant
+        int m_situationsAvailable = 0; //!< used situations
+        CInterpolatorPbh m_pbh; //!< the used PBH interpolator
+        bool m_valid = true; //!< valid?
+        bool m_recalculated = false; //!< recalculated interpolant
     };
 } // namespace
 #endif // guard

@@ -15,7 +15,7 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Network, CRole, CRoleList)
 
 namespace BlackMisc::Network
 {
-    CRoleList::CRoleList() { }
+    CRoleList::CRoleList() {}
 
     bool CRoleList::hasRole(const QString &roleName) const
     {
@@ -36,9 +36,8 @@ namespace BlackMisc::Network
         return false;
     }
 
-    CRoleList::CRoleList(const CSequence<CRole> &other) :
-        CSequence<CRole>(other)
-    { }
+    CRoleList::CRoleList(const CSequence<CRole> &other) : CSequence<CRole>(other)
+    {}
 
     QString CRoleList::namesAsString(const QString &separator) const
     {

@@ -23,9 +23,8 @@ using namespace BlackMisc::Network;
 
 namespace BlackGui
 {
-    CLoginModeButtons::CLoginModeButtons(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CLoginModeButtons)
+    CLoginModeButtons::CLoginModeButtons(QWidget *parent) : QFrame(parent),
+                                                            ui(new Ui::CLoginModeButtons)
     {
         ui->setupUi(this);
         ui->lbl_NoSimulator->setVisible(false);
@@ -34,7 +33,7 @@ namespace BlackGui
     }
 
     CLoginModeButtons::~CLoginModeButtons()
-    { }
+    {}
 
     CLoginMode BlackGui::CLoginModeButtons::getLoginMode() const
     {

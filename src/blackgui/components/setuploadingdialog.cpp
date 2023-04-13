@@ -28,9 +28,8 @@ using namespace BlackCore::Data;
 
 namespace BlackGui::Components
 {
-    CSetupLoadingDialog::CSetupLoadingDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CSetupLoadingDialog)
+    CSetupLoadingDialog::CSetupLoadingDialog(QWidget *parent) : QDialog(parent),
+                                                                ui(new Ui::CSetupLoadingDialog)
     {
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need sApp");
         if (this->hasSetupReader())
@@ -64,7 +63,7 @@ namespace BlackGui::Components
     }
 
     CSetupLoadingDialog::~CSetupLoadingDialog()
-    { }
+    {}
 
     bool CSetupLoadingDialog::hasCachedSetup() const
     {
@@ -91,7 +90,7 @@ namespace BlackGui::Components
     {
         const QString gs = sApp->getGlobalSetup().convertToQString("\n", true);
         Q_UNUSED(gs)
-        //ui->comp_Messages->appendPlainTextToConsole(gs);
+        // ui->comp_Messages->appendPlainTextToConsole(gs);
         //! \fixme create plain text console for this (used to be part of the log component, changed by issue T36)
     }
 
@@ -116,8 +115,7 @@ namespace BlackGui::Components
         if (!retry) { return; }
 
         QPointer<CSetupLoadingDialog> myself(this);
-        QTimer::singleShot(2000, this, [ = ]
-        {
+        QTimer::singleShot(2000, this, [=] {
             if (!sApp || !myself) { return; }
             retry->click();
         });
@@ -140,8 +138,8 @@ namespace BlackGui::Components
             const QDateTime setupTs = sr->getSetupCacheTimestamp();
             static const QDateTime zeroTime = QDateTime::fromMSecsSinceEpoch(0);
             ui->le_SetupCache->setText(setupTs.isValid() && setupTs > zeroTime ?
-                                        setupTs.toString(Qt::ISODateWithMs) :
-                                        "No cache timestamp");
+                                           setupTs.toString(Qt::ISODateWithMs) :
+                                           "No cache timestamp");
         }
         else
         {
@@ -156,7 +154,7 @@ namespace BlackGui::Components
 
     void CSetupLoadingDialog::displayOtherVersionsInfo()
     {
-        const int other = CSwiftDirectories::applicationDataDirectoriesCount() - 1 ;
+        const int other = CSwiftDirectories::applicationDataDirectoriesCount() - 1;
         ui->le_OtherSwiftVersions->setText(QStringLiteral("There is/are %1 other swift version(s) installed").arg(other));
         ui->pb_CopyFromSwift->setEnabled(other > 0);
     }

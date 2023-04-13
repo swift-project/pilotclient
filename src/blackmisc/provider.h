@@ -29,7 +29,7 @@ namespace BlackMisc
         IProvider(const IProvider &) = delete;
 
         //! Copy assignment operator
-        IProvider &operator =(const IProvider &) = delete;
+        IProvider &operator=(const IProvider &) = delete;
 
         //! Return as QObject
         virtual QObject *asQObject() { return nullptr; }
@@ -40,7 +40,8 @@ namespace BlackMisc
     };
 
     //! Base class of provider aware classes
-    template <class PROVIDER> class BLACKMISC_EXPORT IProviderAware
+    template <class PROVIDER>
+    class BLACKMISC_EXPORT IProviderAware
     {
     protected:
         //! Ctor
@@ -65,7 +66,7 @@ namespace BlackMisc
             IProvider *iProvider = dynamic_cast<IProvider *>(provider);
             if (iProvider && iProvider->asQObject())
             {
-                QMetaObject::Connection con = QObject::connect(iProvider->asQObject(), &QObject::destroyed, [ = ](QObject * obj) { this->onProviderDestroyed(obj); });
+                QMetaObject::Connection con = QObject::connect(iProvider->asQObject(), &QObject::destroyed, [=](QObject *obj) { this->onProviderDestroyed(obj); });
                 m_lastProviderConnections.append(con);
             }
         }

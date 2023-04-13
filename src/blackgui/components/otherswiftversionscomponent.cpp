@@ -19,9 +19,8 @@ using namespace BlackGui::Views;
 
 namespace BlackGui::Components
 {
-    COtherSwiftVersionsComponent::COtherSwiftVersionsComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::COtherSwiftVersionsComponent)
+    COtherSwiftVersionsComponent::COtherSwiftVersionsComponent(QWidget *parent) : QFrame(parent),
+                                                                                  ui(new Ui::COtherSwiftVersionsComponent)
     {
         ui->setupUi(this);
 
@@ -38,7 +37,7 @@ namespace BlackGui::Components
     }
 
     COtherSwiftVersionsComponent::~COtherSwiftVersionsComponent()
-    { }
+    {}
 
     bool COtherSwiftVersionsComponent::hasSelection() const
     {
@@ -60,8 +59,7 @@ namespace BlackGui::Components
         else
         {
             QPointer<COtherSwiftVersionsComponent> myself(this);
-            QTimer::singleShot(deferMs, this, [ = ]
-            {
+            QTimer::singleShot(deferMs, this, [=] {
                 if (myself) { myself->reloadOtherVersionsDeferred(-1); }
             });
         }

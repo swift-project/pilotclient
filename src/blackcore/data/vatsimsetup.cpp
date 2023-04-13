@@ -16,10 +16,9 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackCore::Data, CVatsimSetup)
 
 namespace BlackCore::Data
 {
-    CVatsimSetup::CVatsimSetup() :
-        ITimestampBased(0),
-        m_dataFileUrls(QStringList( { "http://info.vroute.net/vatsim-data.txt" }))
-    { }
+    CVatsimSetup::CVatsimSetup() : ITimestampBased(0),
+                                   m_dataFileUrls(QStringList({ "http://info.vroute.net/vatsim-data.txt" }))
+    {}
 
     bool CVatsimSetup::setUrls(const CUrlList &dataFileUrls, const CUrlList &serverFileUrls, const CUrlList &metarFileUrls)
     {
@@ -67,14 +66,18 @@ namespace BlackCore::Data
         switch (i)
         {
         case IndexFsdServers: return QVariant::fromValue(this->m_fsdServers);
-        case IndexDataFiles:  return QVariant::fromValue(this->m_dataFileUrls);
+        case IndexDataFiles: return QVariant::fromValue(this->m_dataFileUrls);
         default: return CValueObject::propertyByIndex(index);
         }
     }
 
     void CVatsimSetup::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CVatsimSetup>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CVatsimSetup>();
+            return;
+        }
         if (ITimestampBased::canHandleIndex(index))
         {
             ITimestampBased::setPropertyByIndex(index, variant);
@@ -85,7 +88,7 @@ namespace BlackCore::Data
         switch (i)
         {
         case IndexFsdServers: this->m_fsdServers = variant.value<CServerList>(); break;
-        case IndexDataFiles:  this->m_dataFileUrls = variant.value<CUrlList>();  break;
+        case IndexDataFiles: this->m_dataFileUrls = variant.value<CUrlList>(); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }

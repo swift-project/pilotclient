@@ -25,12 +25,21 @@
 namespace BlackMisc
 {
     class CLogCategoryList;
-    namespace Simulation { class CAircraftModel; }
+    namespace Simulation
+    {
+        class CAircraftModel;
+    }
 }
-namespace Ui { class CDbAutoStashingComponent; }
+namespace Ui
+{
+    class CDbAutoStashingComponent;
+}
 namespace BlackGui
 {
-    namespace Views { class CAircraftModelView; }
+    namespace Views
+    {
+        class CAircraftModelView;
+    }
     namespace Components
     {
         /*!
@@ -116,10 +125,10 @@ namespace BlackGui
             //! Get the temp.livery if available
             static BlackMisc::Aviation::CLivery getTempLivery();
 
-            int m_noStashed = 0;           //!< stashed models
-            int m_noData = 0;              //!< not stashed because no data
-            int m_noValidationFailed = 0;  //!< not stashed because validation failed
-            State m_state = Idle;          //!< modus
+            int m_noStashed = 0; //!< stashed models
+            int m_noData = 0; //!< not stashed because no data
+            int m_noValidationFailed = 0; //!< not stashed because validation failed
+            State m_state = Idle; //!< modus
             BlackMisc::Simulation::CAircraftModelList m_modelsToStash; //!< Models about to be stashed
         };
     } // ns

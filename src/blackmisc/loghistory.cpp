@@ -19,13 +19,12 @@ namespace BlackMisc
 
     CLogHistorySource::CLogHistorySource(QObject *parent) : CListMutator(parent)
     {
-        connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, this, [this](auto&&... args)
-        {
+        connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, this, [this](auto &&...args) {
             this->addElement(args...);
         });
     }
 
-    CLogHistoryReplica::CLogHistoryReplica(QObject* parent) : CListObserver(parent)
+    CLogHistoryReplica::CLogHistoryReplica(QObject *parent) : CListObserver(parent)
     {
     }
 

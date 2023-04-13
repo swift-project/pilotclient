@@ -38,7 +38,10 @@
 #include <QCheckBox>
 #include <QList>
 
-namespace Ui { class CCopySettingsAndCachesComponent; }
+namespace Ui
+{
+    class CCopySettingsAndCachesComponent;
+}
 namespace BlackGui::Components
 {
     /*!
@@ -112,14 +115,14 @@ namespace BlackGui::Components
 
         QScopedPointer<Ui::CCopySettingsAndCachesComponent> ui;
 
-        BlackMisc::CSetting<BlackCore::Audio::TInputDevice>  m_settingsAudioInputDevice  { this };
+        BlackMisc::CSetting<BlackCore::Audio::TInputDevice> m_settingsAudioInputDevice { this };
         BlackMisc::CSetting<BlackCore::Audio::TOutputDevice> m_settingsAudioOutputDevice { this };
         BlackMisc::CSetting<Settings::TGeneralGui> m_settingsGuiGeneral { this };
         BlackMisc::CSetting<Settings::TDockWidget> m_settingsDockWidget { this };
         BlackMisc::CSetting<Settings::TViewUpdateSettings> m_settingsViewUpdate { this };
         BlackMisc::CSetting<Settings::TBackgroundConsolidation> m_settingsConsolidation { this }; //!< consolidation time
         BlackMisc::CSetting<Settings::TAtcStationsSettings> m_settingsAtcStations { this };
-        BlackMisc::CSetting<Settings::TextMessageSettings>  m_settingsTextMessage { this };
+        BlackMisc::CSetting<Settings::TextMessageSettings> m_settingsTextMessage { this };
         BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_settingsEnabledSimulators { this };
         BlackMisc::CSetting<BlackCore::Application::TActionHotkeys> m_settingsActionHotkeys { this };
         BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_settingsAudio { this };
@@ -128,7 +131,7 @@ namespace BlackGui::Components
         BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSimulatorFsx> m_settingsSimulatorFsx { this }; //!< FSX settings
         BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSimulatorFs9> m_settingsSimulatorFs9 { this }; //!< FS9 settings
         BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSimulatorP3D> m_settingsSimulatorP3D { this }; //!< P3D settings
-        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSimulatorXP>  m_settingsSimulatorXPlane { this }; //!< XP settings
+        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSimulatorXP> m_settingsSimulatorXPlane { this }; //!< XP settings
         BlackMisc::CSetting<BlackMisc::Simulation::Settings::TModel> m_settingsModel { this }; //!< model setting
 
         BlackMisc::CData<BlackCore::Data::TVatsimLastServer> m_cacheLastVatsimServer { this }; //!< recently used VATSIM server

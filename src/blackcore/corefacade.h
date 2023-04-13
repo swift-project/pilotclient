@@ -184,15 +184,15 @@ namespace BlackCore
         static void registerMetadata();
 
     private:
-        bool m_initalized   = false;      //!< flag if already initialized
-        bool m_shuttingDown = false;      //!< flag if shutting down
+        bool m_initalized = false; //!< flag if already initialized
+        bool m_shuttingDown = false; //!< flag if shutting down
         const CCoreFacadeConfig m_config; //!< used config
         BlackMisc::CData<Data::TLauncherSetup> m_launcherSetup { this }; //!< updating DBus
 
         // DBus
         BlackMisc::CDBusServer *m_dbusServer = nullptr;
-        bool                    m_initDBusConnection = false;
-        QDBusConnection         m_dbusConnection { "default" };
+        bool m_initDBusConnection = false;
+        QDBusConnection m_dbusConnection { "default" };
 
         // shared state infrastructure
         BlackMisc::SharedState::CDataLinkDBus *m_dataLinkDBus = nullptr;
@@ -203,10 +203,10 @@ namespace BlackCore
         // There is a reason why we do not use smart pointers here. When the context is deleted
         // we need to use deleteLater to gracefully shut the context
         Context::IContextApplication *m_contextApplication = nullptr;
-        Context::CContextAudioBase   *m_contextAudio       = nullptr;
-        Context::IContextNetwork     *m_contextNetwork     = nullptr;
+        Context::CContextAudioBase *m_contextAudio = nullptr;
+        Context::IContextNetwork *m_contextNetwork = nullptr;
         Context::IContextOwnAircraft *m_contextOwnAircraft = nullptr;
-        Context::IContextSimulator   *m_contextSimulator   = nullptr;
+        Context::IContextSimulator *m_contextSimulator = nullptr;
 
         //! Init
         void init();

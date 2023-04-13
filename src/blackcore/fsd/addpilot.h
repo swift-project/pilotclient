@@ -67,14 +67,14 @@ namespace BlackCore::Fsd
     //! AddPilot equal operator
     inline bool operator==(const AddPilot &lhs, const AddPilot &rhs)
     {
-        return  lhs.sender() == rhs.sender() &&
-                lhs.receiver() == rhs.receiver() &&
-                lhs.cid() == rhs.cid() &&
-                lhs.password() == rhs.password() &&
-                lhs.rating() == rhs.rating() &&
-                lhs.protocolVersion() == rhs.protocolVersion() &&
-                lhs.simType() == rhs.simType() &&
-                lhs.realName() == rhs.realName();
+        return lhs.sender() == rhs.sender() &&
+               lhs.receiver() == rhs.receiver() &&
+               lhs.cid() == rhs.cid() &&
+               lhs.password() == rhs.password() &&
+               lhs.rating() == rhs.rating() &&
+               lhs.protocolVersion() == rhs.protocolVersion() &&
+               lhs.simType() == rhs.simType() &&
+               lhs.realName() == rhs.realName();
     }
 
     //! AddPilot not equal operator

@@ -23,8 +23,8 @@ namespace BlackMisc::Simulation
     public:
         //! Constructor
         CInterpolatorMulti(const Aviation::CCallsign &callsign,
-                            ISimulationEnvironmentProvider *p1, IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3,
-                            CInterpolationLogger *logger = nullptr);
+                           ISimulationEnvironmentProvider *p1, IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3,
+                           CInterpolationLogger *logger = nullptr);
 
         //! \copydoc CInterpolator::getInterpolation
         CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber);
@@ -78,13 +78,13 @@ namespace BlackMisc::Simulation
         operator bool() const { return this->hasInterpolator(); }
 
         //! Bool conversion
-        bool operator !() const { return !this->hasInterpolator(); }
+        bool operator!() const { return !this->hasInterpolator(); }
 
         //! * operator
-        CInterpolatorMulti &operator *() const { return *this->interpolator(); }
+        CInterpolatorMulti &operator*() const { return *this->interpolator(); }
 
         //! -> operator
-        CInterpolatorMulti *operator ->() const { return this->interpolator(); }
+        CInterpolatorMulti *operator->() const { return this->interpolator(); }
 
     private:
         QSharedPointer<CInterpolatorMulti> m_interpolator; //!< shared pointer because CInterpolatorMultiWrapper can be copied

@@ -20,8 +20,7 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackGui::Models
 {
-    CAircraftPartsListModel::CAircraftPartsListModel(QObject *parent) :
-        CListModelTimestampWithOffsetObjects<CAircraftPartsList, true>("ViewAircraftPartsList", parent)
+    CAircraftPartsListModel::CAircraftPartsListModel(QObject *parent) : CListModelTimestampWithOffsetObjects<CAircraftPartsList, true>("ViewAircraftPartsList", parent)
     {
         this->addTimestampOffsetColumns();
 

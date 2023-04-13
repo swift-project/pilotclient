@@ -25,7 +25,7 @@ namespace BlackMisc::Simulation::Settings
     class BLACKMISC_EXPORT CFGSwiftBusSettings final :
         public CValueObject<CFGSwiftBusSettings>
     {
-       public:
+    public:
         //! Properties by index
         enum ColumnIndex
         {
@@ -68,7 +68,11 @@ namespace BlackMisc::Simulation::Settings
         static const char *key() { return "fgswiftbus/settings"; }
 
         //! \copydoc BlackCore::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("FGSwiftBus"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("FGSwiftBus");
+            return name;
+        }
 
         //! \copydoc BlackMisc::TSettingTrait::defaultValue
         static CFGSwiftBusSettings defaultValue() { return CFGSwiftBusSettings(); }

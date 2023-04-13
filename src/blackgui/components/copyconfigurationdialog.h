@@ -15,7 +15,10 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CCopyConfigurationDialog; }
+namespace Ui
+{
+    class CCopyConfigurationDialog;
+}
 namespace BlackGui::Components
 {
     //! Dialog to copy cache and settings

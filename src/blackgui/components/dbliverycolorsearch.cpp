@@ -17,16 +17,15 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackGui::Components
 {
-    CDbLiveryColorSearch::CDbLiveryColorSearch(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CDbLiveryColorSearch)
+    CDbLiveryColorSearch::CDbLiveryColorSearch(QWidget *parent) : QFrame(parent),
+                                                                  ui(new Ui::CDbLiveryColorSearch)
     {
         ui->setupUi(this);
         this->setFocusProxy(ui->comp_FuselageSelector);
     }
 
     CDbLiveryColorSearch::~CDbLiveryColorSearch()
-    { }
+    {}
 
     CLivery CDbLiveryColorSearch::getLivery() const
     {

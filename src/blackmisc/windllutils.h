@@ -27,15 +27,15 @@ namespace BlackMisc
         //! Info about an DLL
         struct DLLInfo
         {
-            QString iso;                //!< language iso code
-            QString errorMsg;           //!< error message if any
-            QString fileVersion;        //!< file version, like 3.2.1.3
-            QString fileDescription;    //!< file description
-            QString productVersion;     //!< product version, like 3.2.1.3
+            QString iso; //!< language iso code
+            QString errorMsg; //!< error message if any
+            QString fileVersion; //!< file version, like 3.2.1.3
+            QString fileDescription; //!< file description
+            QString productVersion; //!< product version, like 3.2.1.3
             QString productVersionName; //!< version and name
-            QString productName;        //!< product name
-            QString originalFilename;   //!< original filename
-            QString fullFilename;       //!< full filename and path
+            QString productName; //!< product name
+            QString originalFilename; //!< original filename
+            QString fullFilename; //!< full filename and path
 
             //! Product or file version
             const QString &productOrFileVersion() const
@@ -57,8 +57,8 @@ namespace BlackMisc
         //! Process modules
         struct ProcessModule
         {
-            QString moduleName;    //!< module / dll name
-            QString executable;    //!< full executable path
+            QString moduleName; //!< module / dll name
+            QString executable; //!< full executable path
             qint64 processId = -1; //!< pid
         };
 

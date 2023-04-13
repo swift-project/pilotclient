@@ -16,7 +16,10 @@
 #include <QObject>
 #include <QPointer>
 
-namespace BlackGui::Components { class CInterpolationLogDisplayDialog; }
+namespace BlackGui::Components
+{
+    class CInterpolationLogDisplayDialog;
+}
 namespace BlackSimPlugin::Common
 {
     //! Common base class for simulator plugins
@@ -38,11 +41,11 @@ namespace BlackSimPlugin::Common
     protected:
         //! Constructor
         CSimulatorPluginCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                                BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
-                                BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
-                                BlackMisc::Weather::IWeatherGridProvider       *weatherGridProvider,
-                                BlackMisc::Network::IClientProvider            *clientProvider,
-                                QObject *parent = nullptr);
+                               BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                               BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
+                               BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+                               BlackMisc::Network::IClientProvider *clientProvider,
+                               QObject *parent = nullptr);
 
         //! \ingroup swiftdotcommands
         //! <pre>

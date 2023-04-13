@@ -43,8 +43,8 @@ namespace BlackMisc::Network
         if (this->isPrivateMessage())
         {
             return m_message %
-                    u' ' % m_senderCallsign.toQString(i18n) %
-                    u' ' % m_recipientCallsign.toQString(i18n);
+                   u' ' % m_senderCallsign.toQString(i18n) %
+                   u' ' % m_recipientCallsign.toQString(i18n);
         }
         return m_message % u' ' % m_frequency.toQString(i18n);
     }
@@ -85,13 +85,12 @@ namespace BlackMisc::Network
 
     void CTextMessage::markAsBroadcastMessage()
     {
-
     }
 
     void CTextMessage::makeRelayedMessage(const CCallsign &partnerCallsign)
     {
         if (this->getMessage().startsWith(CTextMessage::swiftRelayMessage())) { return; }
-        const QString sender    = this->getSenderCallsign().asString();
+        const QString sender = this->getSenderCallsign().asString();
         const QString recipient = this->getRecipientCallsign().asString();
         this->markAsRelayedMessage();
         this->setRecipientCallsign(partnerCallsign);
@@ -109,9 +108,9 @@ namespace BlackMisc::Network
         const QString senderRecipient = m_message.left(index).remove(CTextMessage::swiftRelayMessage()).trimmed();
         const QStringList sr = senderRecipient.split(' ');
         if (sr.size() != 2) { return false; }
-        const QString originalSender    = sr.first();
+        const QString originalSender = sr.first();
         const QString originalRecipient = sr.last();
-        this->setSenderCallsign(CCallsign(originalSender));       // sender can be aircraft or ATC
+        this->setSenderCallsign(CCallsign(originalSender)); // sender can be aircraft or ATC
         this->setRecipientCallsign(CCallsign(originalRecipient)); // recipient can be aircraft or ATC
         m_message = m_message.mid(index + 1);
         return true;
@@ -273,7 +272,7 @@ namespace BlackMisc::Network
     bool CTextMessage::isSelcalMessageFor(const QString &selcal) const
     {
         if (!CSelcal::isValidCode(selcal)) return false;
-        return selcal.toUpper() ==  this->getSelcalCode();
+        return selcal.toUpper() == this->getSelcalCode();
     }
 
     QString CTextMessage::getSelcalCode() const
@@ -310,7 +309,7 @@ namespace BlackMisc::Network
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexSenderCallsign:    return m_senderCallsign.propertyByIndex(index.copyFrontRemoved());
+        case IndexSenderCallsign: return m_senderCallsign.propertyByIndex(index.copyFrontRemoved());
         case IndexRecipientCallsign: return m_recipientCallsign.propertyByIndex(index.copyFrontRemoved());
         case IndexRecipientCallsignOrFrequency: return QVariant::fromValue(this->getRecipientCallsignOrFrequency());
         case IndexMessage: return QVariant::fromValue(m_message);
@@ -320,13 +319,21 @@ namespace BlackMisc::Network
 
     void CTextMessage::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CTextMessage>(); return; }
-        if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CTextMessage>();
+            return;
+        }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            ITimestampBased::setPropertyByIndex(index, variant);
+            return;
+        }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexSenderCallsign:    m_senderCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexSenderCallsign: m_senderCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexRecipientCallsign: m_recipientCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexMessage: m_message = variant.value<QString>(); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
@@ -339,7 +346,7 @@ namespace BlackMisc::Network
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexSenderCallsign:    return m_senderCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getSenderCallsign());
+        case IndexSenderCallsign: return m_senderCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getSenderCallsign());
         case IndexRecipientCallsign: return m_recipientCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRecipientCallsign());
         case IndexRecipientCallsignOrFrequency:
             if (this->isRadioMessage()) { return this->getFrequency().compare(compareValue.getFrequency()); }

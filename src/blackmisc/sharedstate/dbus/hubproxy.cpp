@@ -16,7 +16,7 @@
 
 namespace BlackMisc::SharedState::DBus
 {
-    CHubProxy::CHubProxy(const QDBusConnection &connection, const QString &service, QObject* parent) : IHub(parent), m_service(service)
+    CHubProxy::CHubProxy(const QDBusConnection &connection, const QString &service, QObject *parent) : IHub(parent), m_service(service)
     {
         m_interface = new CGenericDBusInterface(service, BLACKMISC_HUB_PATH, BLACKMISC_HUB_INTERFACE, connection, this);
         m_interface->relayParentSignals();
@@ -30,16 +30,16 @@ namespace BlackMisc::SharedState::DBus
     std::pair<QSharedPointer<IDuplex>, QFuture<void>> CHubProxy::getDuplex(const CIdentifier &identifier)
     {
         auto duplex = QSharedPointer<CDuplexProxy>::create(m_interface->connection(), m_service, this);
-        connect(duplex.get(), &QObject::destroyed, this, [ = ] { closeDuplex(identifier); });
+        connect(duplex.get(), &QObject::destroyed, this, [=] { closeDuplex(identifier); });
         return std::make_pair(duplex, openDuplexAsync(identifier));
     }
 
-    bool CHubProxy::openDuplex(const CIdentifier& client)
+    bool CHubProxy::openDuplex(const CIdentifier &client)
     {
         return m_interface->callDBusRet<bool>(QLatin1String("openDuplex"), client);
     }
 
-    void CHubProxy::closeDuplex(const CIdentifier& client)
+    void CHubProxy::closeDuplex(const CIdentifier &client)
     {
         m_interface->callDBus(QLatin1String("closeDuplex"), client);
     }

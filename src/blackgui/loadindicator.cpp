@@ -68,8 +68,7 @@ namespace BlackGui
         const int stopId = m_currentId++; // copy
         if (timeoutMs > 0)
         {
-            QTimer::singleShot(timeoutMs, this, [ = ]
-            {
+            QTimer::singleShot(timeoutMs, this, [=] {
                 if (!myself) { return; }
 
                 // only timeout myself id
@@ -164,7 +163,7 @@ namespace BlackGui
         int innerRadius = qRound((width - 1) * 0.5 * 0.38);
 
         int capsuleHeight = outerRadius - innerRadius;
-        int capsuleWidth  = (width > 32) ? qRound(capsuleHeight * .23) : qRound(capsuleHeight * .35);
+        int capsuleWidth = (width > 32) ? qRound(capsuleHeight * .23) : qRound(capsuleHeight * .35);
         int capsuleRadius = capsuleWidth / 2;
 
         for (int i = 0; i < 12; i++)
@@ -190,8 +189,7 @@ namespace BlackGui
         this->setGeometry(x, y, w, h);
     }
 
-    CLoadIndicatorEnabled::CLoadIndicatorEnabled(QWidget *usingWidget) :
-        m_usingWidget(usingWidget)
+    CLoadIndicatorEnabled::CLoadIndicatorEnabled(QWidget *usingWidget) : m_usingWidget(usingWidget)
     {
         Q_ASSERT_X(usingWidget, Q_FUNC_INFO, "need widget");
     }

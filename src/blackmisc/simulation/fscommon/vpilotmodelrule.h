@@ -46,22 +46,22 @@ namespace BlackMisc::Simulation::FsCommon
         CVPilotModelRule();
 
         //! Default constructor.
-        CVPilotModelRule(const QString &modelName, const QString &folder,  const QString &typeCode, const QString &callsignPrefix, qint64 updated);
+        CVPilotModelRule(const QString &modelName, const QString &folder, const QString &typeCode, const QString &callsignPrefix, qint64 updated);
 
         //! Get model name
-        const QString &getModelName() const { return this->m_modelName;}
+        const QString &getModelName() const { return this->m_modelName; }
 
         //! Get folder
-        const QString &getFolder() const { return this->m_folder;}
+        const QString &getFolder() const { return this->m_folder; }
 
         //! Distributor derived from folder (hardcoded)
         QString getDistributor() const;
 
         //! Get type code
-        const QString &getTypeCode() const { return this->m_typeCode;}
+        const QString &getTypeCode() const { return this->m_typeCode; }
 
         //! Get callsign prefix
-        const QString &getCallsignPrefix() const { return this->m_callsignPrefix;}
+        const QString &getCallsignPrefix() const { return this->m_callsignPrefix; }
 
         //! Model name
         void setModelName(const QString &name) { this->m_modelName = name.trimmed().toUpper(); }
@@ -88,11 +88,11 @@ namespace BlackMisc::Simulation::FsCommon
         CAircraftModel toAircraftModel() const;
 
     private:
-        QString m_modelName;           //!< model name
-        QString m_folder;              //!< folder
-        QString m_typeCode;            //!< type code, aka aircraft ICAO
-        QString m_callsignPrefix;      //!< callsign prefix, aka airline ICAO
-        qint64  m_updatedMsSinceEpoch; //!< updated when
+        QString m_modelName; //!< model name
+        QString m_folder; //!< folder
+        QString m_typeCode; //!< type code, aka aircraft ICAO
+        QString m_callsignPrefix; //!< callsign prefix, aka airline ICAO
+        qint64 m_updatedMsSinceEpoch; //!< updated when
 
         BLACK_METACLASS(
             CVPilotModelRule,

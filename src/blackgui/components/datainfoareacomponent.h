@@ -22,7 +22,10 @@
 class QPixmap;
 class QWidget;
 
-namespace Ui { class CDataInfoAreaComponent; }
+namespace Ui
+{
+    class CDataInfoAreaComponent;
+}
 namespace BlackGui::Components
 {
     class CDbAircraftIcaoComponent;
@@ -46,14 +49,14 @@ namespace BlackGui::Components
         enum InfoArea
         {
             // index must match tab index!
-            InfoAreaModels             = 0,
-            InfoAreaLiveries           = 1,
-            InfoAreaDistributors       = 2,
-            InfoAreaAircraftIcao       = 3,
-            InfoAreaAirlineIcao        = 4,
-            InfoAreaCountries          = 5,
+            InfoAreaModels = 0,
+            InfoAreaLiveries = 1,
+            InfoAreaDistributors = 2,
+            InfoAreaAircraftIcao = 3,
+            InfoAreaAirlineIcao = 4,
+            InfoAreaCountries = 5,
             InfoAreaAircraftCategories = 6,
-            InfoAreaNone               = -1
+            InfoAreaNone = -1
         };
 
         //! Constructor
@@ -104,7 +107,7 @@ namespace BlackGui::Components
         virtual const QPixmap &indexToPixmap(int areaIndex) const override;
 
     private:
-        QScopedPointer <Ui::CDataInfoAreaComponent> ui;
+        QScopedPointer<Ui::CDataInfoAreaComponent> ui;
     };
 } // ns
 

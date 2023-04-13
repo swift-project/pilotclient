@@ -11,12 +11,14 @@
 #ifndef BLACKGUI_COMPONENTS_SETTINGSTEXTMESSAGEINLINECOMPONENT_H
 #define BLACKGUI_COMPONENTS_SETTINGSTEXTMESSAGEINLINECOMPONENT_H
 
-
 #include "blackgui/settings/textmessagesettings.h"
 #include <QScopedPointer>
 #include <QFrame>
 
-namespace Ui { class CSettingsTextMessageInlineComponent; }
+namespace Ui
+{
+    class CSettingsTextMessageInlineComponent;
+}
 namespace BlackGui::Components
 {
     /*!

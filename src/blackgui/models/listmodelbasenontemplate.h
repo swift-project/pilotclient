@@ -31,7 +31,10 @@
 class QMimeData;
 class QModelIndex;
 
-namespace BlackMisc { class CWorker; }
+namespace BlackMisc
+{
+    class CWorker;
+}
 namespace BlackGui::Models
 {
     //! Non templated base class, allows Q_OBJECT and signals to be used
@@ -180,12 +183,12 @@ namespace BlackGui::Models
         //! \param parent
         CListModelBaseNonTemplate(const QString &translationContext, QObject *parent = nullptr);
 
-        CColumns        m_columns;                         //!< columns metadata
-        int             m_sortColumn;                      //!< currently sorted column
-        bool            m_modelDestroyed = false;          //!< \todo rudimentary workaround for T579, can be removed
-        Qt::SortOrder   m_sortOrder;                       //!< sort order (asc/desc)
-        Qt::DropActions m_dropActions = Qt::IgnoreAction;  //!< drop actions
-        BlackMisc::CPropertyIndexList m_sortTieBreakers;   //!< how column values are sorted if equal, if no value is given this is random
+        CColumns m_columns; //!< columns metadata
+        int m_sortColumn; //!< currently sorted column
+        bool m_modelDestroyed = false; //!< \todo rudimentary workaround for T579, can be removed
+        Qt::SortOrder m_sortOrder; //!< sort order (asc/desc)
+        Qt::DropActions m_dropActions = Qt::IgnoreAction; //!< drop actions
+        BlackMisc::CPropertyIndexList m_sortTieBreakers; //!< how column values are sorted if equal, if no value is given this is random
 
     private:
         BlackMisc::CDigestSignal m_dsModelsChanged { this, &CListModelBaseNonTemplate::changed, &CListModelBaseNonTemplate::onChangedDigest, 500, 10 };

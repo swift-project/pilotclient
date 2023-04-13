@@ -38,7 +38,7 @@ namespace BlackMisc::Test
         bool ok = false;
         QTextStream out(stdout);
 
-        const CPropertyIndex pi({ 1000, 2000, 3000, 4000, 5000});  // numbers >= global index
+        const CPropertyIndex pi({ 1000, 2000, 3000, 4000, 5000 }); // numbers >= global index
         const CPropertyIndex piPing = testServiceInterface.pingPropertyIndex(pi);
         ok = pingCompare(pi, piPing, out, verbose, errors);
         if (verbose) { out << "Pinged property index via interface" << errorInfo(ok) << Qt::endl; }
@@ -99,7 +99,7 @@ namespace BlackMisc::Test
         ok = pingCompare(engine, enginePing, out, verbose, errors);
         if (verbose) { out << "Pinged engine via interface" << errorInfo(ok) << Qt::endl; }
 
-        const CAircraftEngineList engines({engine});
+        const CAircraftEngineList engines({ engine });
         const CAircraftParts parts(lights, true, 11, true, engines, true);
         const CAircraftParts partsPing = testServiceInterface.pingAircraftParts(parts);
         ok = pingCompare(parts, partsPing, out, verbose, errors);

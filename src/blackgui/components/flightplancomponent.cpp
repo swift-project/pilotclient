@@ -65,9 +65,8 @@ using namespace BlackConfig;
 
 namespace BlackGui::Components
 {
-    CFlightPlanComponent::CFlightPlanComponent(QWidget *parent) :
-        COverlayMessagesTabWidget(parent),
-        ui(new Ui::CFlightPlanComponent)
+    CFlightPlanComponent::CFlightPlanComponent(QWidget *parent) : COverlayMessagesTabWidget(parent),
+                                                                  ui(new Ui::CFlightPlanComponent)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "missing sGui");
         Q_ASSERT_X(sGui->hasWebDataServices(), Q_FUNC_INFO, "missing web services");
@@ -123,49 +122,49 @@ namespace BlackGui::Components
         // ui->pte_RemarksGenerated->installEventFilter(ef);
 
         // connect
-        connect(ui->pb_Send,     &QPushButton::pressed, this, &CFlightPlanComponent::sendFlightPlan, Qt::QueuedConnection);
+        connect(ui->pb_Send, &QPushButton::pressed, this, &CFlightPlanComponent::sendFlightPlan, Qt::QueuedConnection);
         connect(ui->pb_Download, &QPushButton::pressed, this, &CFlightPlanComponent::loadFlightPlanFromNetwork, Qt::QueuedConnection);
-        connect(ui->pb_Reset,    &QPushButton::pressed, this, &CFlightPlanComponent::resetFlightPlan, Qt::QueuedConnection);
-        connect(ui->pb_ValidateFlightPlan, &QPushButton::pressed,  this, &CFlightPlanComponent::validateFlightPlan, Qt::QueuedConnection);
-        connect(ui->tb_SyncWithSimulator,  &QPushButton::released, this, &CFlightPlanComponent::syncWithSimulator,  Qt::QueuedConnection);
-        connect(ui->pb_Prefill,            &QPushButton::pressed,  this, &CFlightPlanComponent::anticipateValues,   Qt::QueuedConnection);
-        connect(ui->pb_SimBrief,           &QPushButton::pressed,  this, &CFlightPlanComponent::loadFromSimBrief,   Qt::QueuedConnection);
+        connect(ui->pb_Reset, &QPushButton::pressed, this, &CFlightPlanComponent::resetFlightPlan, Qt::QueuedConnection);
+        connect(ui->pb_ValidateFlightPlan, &QPushButton::pressed, this, &CFlightPlanComponent::validateFlightPlan, Qt::QueuedConnection);
+        connect(ui->tb_SyncWithSimulator, &QPushButton::released, this, &CFlightPlanComponent::syncWithSimulator, Qt::QueuedConnection);
+        connect(ui->pb_Prefill, &QPushButton::pressed, this, &CFlightPlanComponent::anticipateValues, Qt::QueuedConnection);
+        connect(ui->pb_SimBrief, &QPushButton::pressed, this, &CFlightPlanComponent::loadFromSimBrief, Qt::QueuedConnection);
 
-        connect(ui->pb_SaveTemplate,  &QPushButton::released, this, &CFlightPlanComponent::saveTemplateToDisk,   Qt::QueuedConnection);
-        connect(ui->pb_LoadTemplate,  &QPushButton::released, this, &CFlightPlanComponent::loadTemplateFromDisk, Qt::QueuedConnection);
-        connect(ui->pb_ClearTemplate, &QPushButton::released, this, &CFlightPlanComponent::clearTemplate,        Qt::QueuedConnection);
+        connect(ui->pb_SaveTemplate, &QPushButton::released, this, &CFlightPlanComponent::saveTemplateToDisk, Qt::QueuedConnection);
+        connect(ui->pb_LoadTemplate, &QPushButton::released, this, &CFlightPlanComponent::loadTemplateFromDisk, Qt::QueuedConnection);
+        connect(ui->pb_ClearTemplate, &QPushButton::released, this, &CFlightPlanComponent::clearTemplate, Qt::QueuedConnection);
 
-        connect(ui->cb_VoiceCapabilities,          &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks, Qt::QueuedConnection);
-        connect(ui->cb_VoiceCapabilities,          &QComboBox::currentTextChanged, this, &CFlightPlanComponent::syncVoiceComboBoxes, Qt::QueuedConnection);
+        connect(ui->cb_VoiceCapabilities, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks, Qt::QueuedConnection);
+        connect(ui->cb_VoiceCapabilities, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::syncVoiceComboBoxes, Qt::QueuedConnection);
         connect(ui->cb_VoiceCapabilitiesFirstPage, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::syncVoiceComboBoxes, Qt::QueuedConnection);
-        connect(ui->cb_NavigationEquipment,        &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks, Qt::QueuedConnection);
-        connect(ui->cb_PerformanceCategory,        &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks, Qt::QueuedConnection);
-        connect(ui->cb_PilotRating,                &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks, Qt::QueuedConnection);
+        connect(ui->cb_NavigationEquipment, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks, Qt::QueuedConnection);
+        connect(ui->cb_PerformanceCategory, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks, Qt::QueuedConnection);
+        connect(ui->cb_PilotRating, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks, Qt::QueuedConnection);
         connect(ui->cb_RequiredNavigationPerformance, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks, Qt::QueuedConnection);
 
         connect(ui->pb_LoadDisk, &QPushButton::clicked, this, &CFlightPlanComponent::loadFromDisk, Qt::QueuedConnection);
-        connect(ui->pb_SaveDisk, &QPushButton::clicked, this, &CFlightPlanComponent::saveToDisk,   Qt::QueuedConnection);
+        connect(ui->pb_SaveDisk, &QPushButton::clicked, this, &CFlightPlanComponent::saveToDisk, Qt::QueuedConnection);
 
         connect(ui->le_AircraftRegistration, &QLineEdit::textChanged, this, &CFlightPlanComponent::buildRemarksString, Qt::QueuedConnection);
-        connect(ui->le_AirlineOperator,      &QLineEdit::textChanged, this, &CFlightPlanComponent::buildRemarksString, Qt::QueuedConnection);
-        connect(ui->cb_NoSidsStarts,         &QCheckBox::released,    this, &CFlightPlanComponent::buildRemarksString, Qt::QueuedConnection);
+        connect(ui->le_AirlineOperator, &QLineEdit::textChanged, this, &CFlightPlanComponent::buildRemarksString, Qt::QueuedConnection);
+        connect(ui->cb_NoSidsStarts, &QCheckBox::released, this, &CFlightPlanComponent::buildRemarksString, Qt::QueuedConnection);
 
         connect(ui->pte_AdditionalRemarks, &QPlainTextEdit::textChanged, this, &CFlightPlanComponent::buildRemarksString, Qt::QueuedConnection);
-        connect(ui->frp_SelcalCode, &CSelcalCodeSelector::valueChanged,  this, &CFlightPlanComponent::buildRemarksString, Qt::QueuedConnection);
-        connect(ui->frp_SelcalCode, &CSelcalCodeSelector::valueChanged,  this, &CFlightPlanComponent::setSelcalInOwnAircraft, Qt::QueuedConnection);
+        connect(ui->frp_SelcalCode, &CSelcalCodeSelector::valueChanged, this, &CFlightPlanComponent::buildRemarksString, Qt::QueuedConnection);
+        connect(ui->frp_SelcalCode, &CSelcalCodeSelector::valueChanged, this, &CFlightPlanComponent::setSelcalInOwnAircraft, Qt::QueuedConnection);
         connect(ui->pb_CopyOver, &QPushButton::pressed, this, &CFlightPlanComponent::copyRemarksConfirmed, Qt::QueuedConnection);
         connect(ui->pb_GetFromGenerator, &QPushButton::pressed, this, &CFlightPlanComponent::copyRemarksConfirmed, Qt::QueuedConnection);
-        connect(ui->pb_RemarksGenerator, &QPushButton::clicked, this, &CFlightPlanComponent::currentTabGenerator,  Qt::QueuedConnection);
+        connect(ui->pb_RemarksGenerator, &QPushButton::clicked, this, &CFlightPlanComponent::currentTabGenerator, Qt::QueuedConnection);
 
-        connect(ui->tb_HelpEquipment,  &QToolButton::clicked, this, &CFlightPlanComponent::showEquipmentCodesTab, Qt::QueuedConnection);
-        connect(ui->tb_AltitudeDialog, &QToolButton::clicked, this, &CFlightPlanComponent::altitudeDialog,        Qt::QueuedConnection);
+        connect(ui->tb_HelpEquipment, &QToolButton::clicked, this, &CFlightPlanComponent::showEquipmentCodesTab, Qt::QueuedConnection);
+        connect(ui->tb_AltitudeDialog, &QToolButton::clicked, this, &CFlightPlanComponent::altitudeDialog, Qt::QueuedConnection);
 
-        connect(ui->le_AircraftType,    &QLineEdit::editingFinished, this, &CFlightPlanComponent::aircraftTypeChanged,   Qt::QueuedConnection);
+        connect(ui->le_AircraftType, &QLineEdit::editingFinished, this, &CFlightPlanComponent::aircraftTypeChanged, Qt::QueuedConnection);
         connect(ui->le_EquipmentSuffix, &QLineEdit::editingFinished, this, &CFlightPlanComponent::buildPrefixIcaoSuffix, Qt::QueuedConnection);
         connect(ui->cb_Heavy, &QCheckBox::released, this, &CFlightPlanComponent::prefixCheckBoxChanged, Qt::QueuedConnection);
-        connect(ui->cb_Tcas,  &QCheckBox::released, this, &CFlightPlanComponent::prefixCheckBoxChanged, Qt::QueuedConnection);
+        connect(ui->cb_Tcas, &QCheckBox::released, this, &CFlightPlanComponent::prefixCheckBoxChanged, Qt::QueuedConnection);
 
-        connect(ui->pb_Remarks,    &QPushButton::pressed, this, &CFlightPlanComponent::remarksHistory, Qt::QueuedConnection);
+        connect(ui->pb_Remarks, &QPushButton::pressed, this, &CFlightPlanComponent::remarksHistory, Qt::QueuedConnection);
         connect(ui->pb_AddRemarks, &QPushButton::pressed, this, &CFlightPlanComponent::remarksHistory, Qt::QueuedConnection);
 
         // web services
@@ -177,8 +176,7 @@ namespace BlackGui::Components
 
         // prefill some data derived from what was used last
         const QPointer<CFlightPlanComponent> myself(this);
-        QTimer::singleShot(2500, this, [ = ]
-        {
+        QTimer::singleShot(2500, this, [=] {
             if (!sGui || sGui->isShuttingDown() || !myself) { return; }
 
             this->loadTemplateFromDisk();
@@ -198,18 +196,18 @@ namespace BlackGui::Components
     }
 
     CFlightPlanComponent::~CFlightPlanComponent()
-    { }
+    {}
 
     void CFlightPlanComponent::loginDataSet()
     {
-        if (m_sentFlightPlan.wasSentOrLoaded())  { return; } // when loaded or sent do not override
+        if (m_sentFlightPlan.wasSentOrLoaded()) { return; } // when loaded or sent do not override
         this->prefillWithOwnAircraftData();
     }
 
     void CFlightPlanComponent::prefillWithOwnAircraftData()
     {
         if (!sGui->getIContextOwnAircraft()) { return; }
-        if (!sGui->getIContextSimulator())   { return; }
+        if (!sGui->getIContextSimulator()) { return; }
         if (!sGui->getIContextSimulator()->isSimulatorAvailable()) { return; }
         const CSimulatedAircraft ownAircraft(sGui->getIContextOwnAircraft()->getOwnAircraft());
         this->prefillWithAircraftData(ownAircraft);
@@ -304,7 +302,7 @@ namespace BlackGui::Components
     {
         CStatusMessageList messages;
         const bool strict = ui->cb_StrictCheck->isChecked();
-        const bool vfr    = this->isVfr();
+        const bool vfr = this->isVfr();
         const CStatusMessage::StatusSeverity severity = strict ? CStatusMessage::SeverityError : CStatusMessage::SeverityWarning;
         messages.push_back(CStatusMessage(this).validationInfo(strict ? QStringLiteral("Strict validation") : QStringLiteral("Lenient validation")));
 
@@ -361,9 +359,11 @@ namespace BlackGui::Components
         if (v.isEmpty())
         {
             messages.push_back(CStatusMessage(this).validation(
-                                    vfr ?
-                                    CStatusMessage::SeverityInfo :
-                                    CStatusMessage::SeverityWarning, u"Missing '%1'") << ui->lbl_Route->text());
+                                   vfr ?
+                                       CStatusMessage::SeverityInfo :
+                                       CStatusMessage::SeverityWarning,
+                                   u"Missing '%1'")
+                               << ui->lbl_Route->text());
         }
         else if (routeLength > CFlightPlan::MaxRouteLength)
         {
@@ -618,10 +618,10 @@ namespace BlackGui::Components
             if (CDirectoryUtils::isInApplicationDirectory(fpDir.absolutePath()))
             {
                 const int ret = QMessageBox::warning(this, "swift flight plan",
-                                                        "You try to save inside the swift directory '" + fpDir.absolutePath() +
-                                                        "'\n\nThis is not recommended!"
-                                                        "\n\nDo you want to really do this?",
-                                                        QMessageBox::Save | QMessageBox::Cancel);
+                                                     "You try to save inside the swift directory '" + fpDir.absolutePath() +
+                                                         "'\n\nThis is not recommended!"
+                                                         "\n\nDo you want to really do this?",
+                                                     QMessageBox::Save | QMessageBox::Cancel);
                 if (ret != QMessageBox::Save) { return; }
             }
 
@@ -682,8 +682,7 @@ namespace BlackGui::Components
         const QString fn =
             CFileUtils::appendFilePathsAndFixUnc(
                 CSwiftDirectories::normalizedApplicationDataDirectory(),
-                QStringLiteral("swiftFlightPlanTemplate.json")
-            );
+                QStringLiteral("swiftFlightPlanTemplate.json"));
         return fn;
     }
 
@@ -731,24 +730,24 @@ namespace BlackGui::Components
         if (!v.isEmpty()) rem.append("REG/").append(v).append(" ");
 
         v = ui->cb_PilotRating->currentText().toUpper();
-        if (v.contains("P1"))      { rem.append("PR/P1 "); }
+        if (v.contains("P1")) { rem.append("PR/P1 "); }
         else if (v.contains("P2")) { rem.append("PR/P2 "); }
         else if (v.contains("P3")) { rem.append("PR/P3 "); }
         else if (v.contains("P4")) { rem.append("PR/P4 "); }
         else if (v.contains("P5")) { rem.append("PR/P5 "); }
 
         v = ui->cb_RequiredNavigationPerformance->currentText().toUpper();
-        if (v.contains("10"))     { rem.append("RNP10 "); }
+        if (v.contains("10")) { rem.append("RNP10 "); }
         else if (v.contains("4")) { rem.append("RNP4 "); }
 
         v = ui->cb_NavigationEquipment->currentText().toUpper();
-        if (v.contains("VORS"))         { rem.append("NAV/VORNDB "); }
-        else if (v.contains("SIDS"))    { rem.append("NAV/GPSRNAV "); }
-        if (v.contains("DEFAULT"))      { rem.append("NAV/GPS "); }
+        if (v.contains("VORS")) { rem.append("NAV/VORNDB "); }
+        else if (v.contains("SIDS")) { rem.append("NAV/GPSRNAV "); }
+        if (v.contains("DEFAULT")) { rem.append("NAV/GPS "); }
         else if (v.contains("OCEANIC")) { rem.append("NAV/GPSOCEANIC "); }
 
         v = ui->cb_PerformanceCategory->currentText().toUpper();
-        if (v.startsWith("A"))      { rem.append("PER/A "); }
+        if (v.startsWith("A")) { rem.append("PER/A "); }
         else if (v.startsWith("B")) { rem.append("PER/B "); }
         else if (v.startsWith("C")) { rem.append("PER/C "); }
         else if (v.startsWith("D")) { rem.append("PER/D "); }
@@ -800,8 +799,7 @@ namespace BlackGui::Components
             if (ui->cb_Heavy->isChecked())
             {
                 const QPointer<CFlightPlanComponent> myself(this);
-                QTimer::singleShot(10, this, [ = ]
-                {
+                QTimer::singleShot(10, this, [=] {
                     if (!myself) { return; }
                     ui->cb_Tcas->setChecked(false);
                     this->buildPrefixIcaoSuffix();
@@ -814,8 +812,7 @@ namespace BlackGui::Components
             if (ui->cb_Tcas->isChecked())
             {
                 const QPointer<CFlightPlanComponent> myself(this);
-                QTimer::singleShot(10, this, [ = ]
-                {
+                QTimer::singleShot(10, this, [=] {
                     if (!myself) { return; }
                     ui->cb_Heavy->setChecked(false);
                     this->buildPrefixIcaoSuffix();
@@ -831,8 +828,7 @@ namespace BlackGui::Components
         const CAircraftIcaoCode icao = this->getAircraftIcaoCode();
         if (!icao.isLoadedFromDb()) { return; }
         QPointer<CFlightPlanComponent> myself(this);
-        QTimer::singleShot(25, this, [ = ]
-        {
+        QTimer::singleShot(25, this, [=] {
             if (!myself || !sGui || sGui->isShuttingDown()) { return; }
             const bool heavy = icao.getWtc().startsWith("H");
             ui->cb_Heavy->setChecked(heavy);

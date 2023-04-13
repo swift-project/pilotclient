@@ -91,9 +91,9 @@ namespace BlackWxPlugin::Gfs
     inline bool operator==(const GfsIsobaricLayer &lhs, const GfsIsobaricLayer &rhs)
     {
         return qFuzzyCompare(lhs.temperature, rhs.temperature) &&
-                qFuzzyCompare(lhs.relativeHumidity, rhs.relativeHumidity) &&
-                qFuzzyCompare(lhs.windU, rhs.windU) &&
-                qFuzzyCompare(lhs.windV, rhs.windV);
+               qFuzzyCompare(lhs.relativeHumidity, rhs.relativeHumidity) &&
+               qFuzzyCompare(lhs.windU, rhs.windU) &&
+               qFuzzyCompare(lhs.windV, rhs.windV);
     }
 
     struct GfsCloudLayer
@@ -118,30 +118,28 @@ namespace BlackWxPlugin::Gfs
     };
     //! \endcond
 
-    const CWeatherDataGfs::Grib2ParameterTable CWeatherDataGfs::m_grib2ParameterTable
-    {
-        { { {0, 0} }, { TMP, "Temperature", "K" } },
-        { { {1, 1} }, { RH, "Relative Humidity", "%" } },
-        { { {1, 7} }, { PRATE, "Precipitation Rate", "kg m-2 s-1" } },
-        { { {1, 192} }, { CRAIN, "Categorical Rain", "-" } },
-        { { {1, 195} }, { CSNOW, "Categorical Snow", "-" } },
-        { { {2, 2} }, { UGRD, "U-Component of Wind", "m s-1" } },
-        { { {2, 3} }, { VGRD, "V-Component of Wind", "m s-1" } },
-        { { {3, 0} }, { PRES, "Pressure", "Pa" } },
-        { { {3, 1} }, { PRMSL, "Pressure Reduced to MSL", "Pa" } },
-        { { {6, 1} }, { TCDC, "Total Cloud Cover", "%" } },
+    const CWeatherDataGfs::Grib2ParameterTable CWeatherDataGfs::m_grib2ParameterTable {
+        { { { 0, 0 } }, { TMP, "Temperature", "K" } },
+        { { { 1, 1 } }, { RH, "Relative Humidity", "%" } },
+        { { { 1, 7 } }, { PRATE, "Precipitation Rate", "kg m-2 s-1" } },
+        { { { 1, 192 } }, { CRAIN, "Categorical Rain", "-" } },
+        { { { 1, 195 } }, { CSNOW, "Categorical Snow", "-" } },
+        { { { 2, 2 } }, { UGRD, "U-Component of Wind", "m s-1" } },
+        { { { 2, 3 } }, { VGRD, "V-Component of Wind", "m s-1" } },
+        { { { 3, 0 } }, { PRES, "Pressure", "Pa" } },
+        { { { 3, 1 } }, { PRMSL, "Pressure Reduced to MSL", "Pa" } },
+        { { { 6, 1 } }, { TCDC, "Total Cloud Cover", "%" } },
     };
 
     // https://physics.stackexchange.com/questions/333475/how-to-calculate-altitude-from-current-temperature-and-pressure
     double calculateAltitudeFt(float seaLevelPressurePa, float atmosphericPressurePa, float temperatureK)
     {
-        double altitude = (std::pow(seaLevelPressurePa / atmosphericPressurePa, 0.19022) - 1) * temperatureK * 3.28084 /  0.0065;
+        double altitude = (std::pow(seaLevelPressurePa / atmosphericPressurePa, 0.19022) - 1) * temperatureK * 3.28084 / 0.0065;
         return altitude;
     }
 
-    CWeatherDataGfs::CWeatherDataGfs(QObject *parent) :
-        IWeatherData(parent)
-    { }
+    CWeatherDataGfs::CWeatherDataGfs(QObject *parent) : IWeatherData(parent)
+    {}
 
     CWeatherDataGfs::~CWeatherDataGfs()
     {
@@ -170,8 +168,7 @@ namespace BlackWxPlugin::Gfs
         {
             CLogMessage(this).debug() << "Using cached data";
             Q_ASSERT_X(!m_parseGribFileWorker, Q_FUNC_INFO, "Worker already running");
-            m_parseGribFileWorker = CWorker::fromTask(this, "parseGribFile", [this]()
-            {
+            m_parseGribFileWorker = CWorker::fromTask(this, "parseGribFile", [this]() {
                 parseGfsFileImpl(m_gribData);
             });
             m_parseGribFileWorker->then(this, &CWeatherDataGfs::fetchingWeatherDataFinished);
@@ -188,8 +185,7 @@ namespace BlackWxPlugin::Gfs
         m_gribData = file.readAll();
 
         Q_ASSERT_X(!m_parseGribFileWorker, Q_FUNC_INFO, "Worker already running");
-        m_parseGribFileWorker = CWorker::fromTask(this, "parseGribFile", [this]()
-        {
+        m_parseGribFileWorker = CWorker::fromTask(this, "parseGribFile", [this]() {
             parseGfsFileImpl(m_gribData);
         });
         m_parseGribFileWorker->then(this, &CWeatherDataGfs::fetchingWeatherDataFinished);
@@ -207,8 +203,7 @@ namespace BlackWxPlugin::Gfs
         if (m_parseGribFileWorker)
         {
             QPointer<CWeatherDataGfs> myself(this);
-            QTimer::singleShot(25, this, [ = ]
-            {
+            QTimer::singleShot(25, this, [=] {
                 // try again until finished
                 if (!myself) { return; }
                 myself->fetchingWeatherDataFinished();
@@ -228,8 +223,7 @@ namespace BlackWxPlugin::Gfs
 
         m_gribData = nwReply->readAll();
         Q_ASSERT_X(!m_parseGribFileWorker, Q_FUNC_INFO, "Worker already running");
-        m_parseGribFileWorker = CWorker::fromTask(this, "parseGribFile", [this]()
-        {
+        m_parseGribFileWorker = CWorker::fromTask(this, "parseGribFile", [this]() {
             parseGfsFileImpl(m_gribData);
         });
         m_parseGribFileWorker->then(this, &CWeatherDataGfs::fetchingWeatherDataFinished);
@@ -239,8 +233,7 @@ namespace BlackWxPlugin::Gfs
     {
         CUrl downloadUrl = sApp->getGlobalSetup().getNcepGlobalForecastSystemUrl25();
 
-        static const QStringList grib2Levels =
-        {
+        static const QStringList grib2Levels = {
             "mean_sea_level",
             "surface",
             "100_mb",
@@ -265,8 +258,7 @@ namespace BlackWxPlugin::Gfs
             "middle_cloud_top_level",
         };
 
-        static const QStringList grib2Variables =
-        {
+        static const QStringList grib2Variables = {
             "PRATE",
             "PRES",
             "PRMSL",
@@ -299,9 +291,7 @@ namespace BlackWxPlugin::Gfs
         // The 0 hour forecast, does not contain all required parameters. Hence use 1 hour forecast instead.
         if (forecast == 0) { forecast = 1; }
 
-        const QString filename = u"gfs." % QStringLiteral("t%1z").arg(hourLastPublishedCycle, 2, 10, QLatin1Char('0'))
-                                    % u".pgrb2.0p25."
-                                    % QStringLiteral("f%2").arg(forecast, 3, 10, QLatin1Char('0'));
+        const QString filename = u"gfs." % QStringLiteral("t%1z").arg(hourLastPublishedCycle, 2, 10, QLatin1Char('0')) % u".pgrb2.0p25." % QStringLiteral("f%2").arg(forecast, 3, 10, QLatin1Char('0'));
         const QString directory = u"/gfs." % cnow.toString("yyyyMMdd") % u"/" % QStringLiteral("%1").arg(hourLastPublishedCycle, 2, 10, QLatin1Char('0')) % u"/atmos";
 
         downloadUrl.appendQuery("file", filename);
@@ -366,7 +356,11 @@ namespace BlackWxPlugin::Gfs
                 g2int expand = 1;
                 gribfield *gfld = nullptr;
                 g2_getfld(readPtr, n + 1, unpack, expand, &gfld);
-                if (gfld->idsectlen < 12) { CLogMessage(this).warning(u"Identification section: wrong length!"); continue; }
+                if (gfld->idsectlen < 12)
+                {
+                    CLogMessage(this).warning(u"Identification section: wrong length!");
+                    continue;
+                }
 
                 if (gfld->igdtnum != 0) { CLogMessage(this).warning(u"Can handle only grid definition template number = 0"); }
 
@@ -374,14 +368,18 @@ namespace BlackWxPlugin::Gfs
                 int npnts = gfld->ngrdpts;
                 int nx = gfld->igdtmpl[7];
                 int ny = gfld->igdtmpl[8];
-                if (nscan != 0) {  CLogMessage(this).error(u"Can only handle scanning mode NS:WE."); }
-                if (npnts != nx * ny) {  CLogMessage(this).error(u"Cannot handle non-regular grid."); }
+                if (nscan != 0) { CLogMessage(this).error(u"Can only handle scanning mode NS:WE."); }
+                if (npnts != nx * ny) { CLogMessage(this).error(u"Cannot handle non-regular grid."); }
 
                 if (m_gfsWeatherGrid.isEmpty()) { createWeatherGrid(gfld); }
 
                 if (gfld->ipdtnum == 0) { handleProductDefinitionTemplate40(gfld); }
                 else if (gfld->ipdtnum == 8) { handleProductDefinitionTemplate48(gfld); }
-                else { CLogMessage(this).warning(u"Cannot handle product definition template %1") << gfld->ipdtnum; continue; }
+                else
+                {
+                    CLogMessage(this).warning(u"Cannot handle product definition template %1") << gfld->ipdtnum;
+                    continue;
+                }
 
                 g2_free(gfld);
             }
@@ -396,7 +394,7 @@ namespace BlackWxPlugin::Gfs
         }
 
         const int weatherGridPointsNo = m_gfsWeatherGrid.size();
-        CLogMessage(this).debug() << "Parsed"   << messageNo << "GRIB messages.";
+        CLogMessage(this).debug() << "Parsed" << messageNo << "GRIB messages.";
         CLogMessage(this).debug() << "Obtained" << weatherGridPointsNo << "grid points.";
 
         constexpr int maxPoints = 200;
@@ -518,12 +516,12 @@ namespace BlackWxPlugin::Gfs
         int nx = gfld->igdtmpl[7];
         int ny = gfld->igdtmpl[8];
         float units = 0.000001f;
-        float latitude1  = gfld->igdtmpl[11] * units;
+        float latitude1 = gfld->igdtmpl[11] * units;
         float longitude1 = gfld->igdtmpl[12] * units;
         int nres = gfld->igdtmpl[13];
-        float latitude2  = gfld->igdtmpl[14] * units;
+        float latitude2 = gfld->igdtmpl[14] * units;
         float longitude2 = gfld->igdtmpl[15] * units;
-        float dlatitude  = gfld->igdtmpl[16] * units;
+        float dlatitude = gfld->igdtmpl[16] * units;
         float dlongitude = gfld->igdtmpl[17] * units;
 
         if (latitude1 < -90.0f || latitude2 < -90.0f || latitude1 > 90.0f || latitude2 > 90.0f)
@@ -612,7 +610,7 @@ namespace BlackWxPlugin::Gfs
                     gridPoint.latitude = latitude1 - iy * dy;
                     gridPoint.longitude = longitude1 + ix * dx;
                     if (gridPoint.longitude >= 360.0f) { gridPoint.longitude -= 360.0f; }
-                    if (gridPoint.longitude  <   0.0f) { gridPoint.longitude += 360.0f; }
+                    if (gridPoint.longitude < 0.0f) { gridPoint.longitude += 360.0f; }
                     gridPoint.fieldPosition = ix + i;
                     const CCoordinateGeodetic gridPointPosition(gridPoint.latitude, gridPoint.longitude, 0);
                     if (m_maxRange == CLength())
@@ -712,8 +710,7 @@ namespace BlackWxPlugin::Gfs
             return;
         }
 
-        static const QHash<int, int> grib2CloudLevelHash =
-        {
+        static const QHash<int, int> grib2CloudLevelHash = {
             { LowCloudBottomLevel, LowCloud },
             { LowCloudTopLevel, LowCloud },
             { LowCloudLayer, LowCloud },
@@ -862,7 +859,7 @@ namespace BlackWxPlugin::Gfs
     CTemperature CWeatherDataGfs::calculateDewPoint(const CTemperature &temperature, double relativeHumidity)
     {
         // https://en.wikipedia.org/wiki/Dew_point#Calculating_the_dew_point
-        const double a =  6.112;
+        const double a = 6.112;
         const double b = 17.67;
         const double c = 243.5;
 

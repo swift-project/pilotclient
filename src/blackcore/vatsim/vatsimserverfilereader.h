@@ -39,10 +39,10 @@ namespace BlackCore::Vatsim
     //! Read VATSIM server file
     //! \sa https://data.vatsim.net/v3/vatsim-servers.json
     class BLACKCORE_EXPORT CVatsimServerFileReader :
-            public CThreadedReader,
-            public BlackMisc::Network::CEcosystemAware
+        public CThreadedReader,
+        public BlackMisc::Network::CEcosystemAware
     {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         //! Constructor
@@ -78,7 +78,6 @@ namespace BlackCore::Vatsim
 
         //! Read / re-read data file
         void read();
-
     };
 } // ns
 

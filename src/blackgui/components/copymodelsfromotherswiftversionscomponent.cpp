@@ -27,9 +27,8 @@ using namespace BlackGui::Models;
 
 namespace BlackGui::Components
 {
-    CCopyModelsFromOtherSwiftVersionsComponent::CCopyModelsFromOtherSwiftVersionsComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        ui(new Ui::CCopyModelsFromOtherSwiftVersionsComponent)
+    CCopyModelsFromOtherSwiftVersionsComponent::CCopyModelsFromOtherSwiftVersionsComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                                                                              ui(new Ui::CCopyModelsFromOtherSwiftVersionsComponent)
     {
         ui->setupUi(this);
         ui->comp_SimulatorSelector->setMode(CSimulatorSelector::CheckBoxes);
@@ -40,7 +39,7 @@ namespace BlackGui::Components
     }
 
     CCopyModelsFromOtherSwiftVersionsComponent::~CCopyModelsFromOtherSwiftVersionsComponent()
-    { }
+    {}
 
     void CCopyModelsFromOtherSwiftVersionsComponent::copy()
     {

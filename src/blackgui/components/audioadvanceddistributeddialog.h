@@ -16,7 +16,10 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CAudioAdvancedDistributedDialog; }
+namespace Ui
+{
+    class CAudioAdvancedDistributedDialog;
+}
 namespace BlackGui::Components
 {
     //! Audio advanced setup as dialog

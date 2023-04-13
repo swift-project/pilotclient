@@ -21,24 +21,23 @@ using namespace BlackMisc;
 
 namespace BlackGui::Components
 {
-    CSettingsTextMessageInlineComponent::CSettingsTextMessageInlineComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CSettingsTextMessageInlineComponent)
+    CSettingsTextMessageInlineComponent::CSettingsTextMessageInlineComponent(QWidget *parent) : QFrame(parent),
+                                                                                                ui(new Ui::CSettingsTextMessageInlineComponent)
     {
         ui->setupUi(this);
-        connect(ui->cb_All,        &QCheckBox::released,   this, &CSettingsTextMessageInlineComponent::changeSettings);
-        connect(ui->cb_Frequency,  &QCheckBox::released,   this, &CSettingsTextMessageInlineComponent::changeSettings);
-        connect(ui->cb_Private,    &QCheckBox::released,   this, &CSettingsTextMessageInlineComponent::changeSettings);
-        connect(ui->cb_Supervisor, &QCheckBox::released,   this, &CSettingsTextMessageInlineComponent::changeSettings);
-        connect(ui->cb_Focus,      &QCheckBox::released,   this, &CSettingsTextMessageInlineComponent::changeSettings);
-        connect(ui->pb_Disable,    &QPushButton::released, this, &CSettingsTextMessageInlineComponent::disableAllOverlayMessages);
-        connect(ui->pb_Reset,      &QPushButton::released, this, &CSettingsTextMessageInlineComponent::resetOverlayMessages);
+        connect(ui->cb_All, &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
+        connect(ui->cb_Frequency, &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
+        connect(ui->cb_Private, &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
+        connect(ui->cb_Supervisor, &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
+        connect(ui->cb_Focus, &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
+        connect(ui->pb_Disable, &QPushButton::released, this, &CSettingsTextMessageInlineComponent::disableAllOverlayMessages);
+        connect(ui->pb_Reset, &QPushButton::released, this, &CSettingsTextMessageInlineComponent::resetOverlayMessages);
 
         this->settingsChanged();
     }
 
     CSettingsTextMessageInlineComponent::~CSettingsTextMessageInlineComponent()
-    { }
+    {}
 
     void CSettingsTextMessageInlineComponent::settingsChanged()
     {
@@ -72,8 +71,7 @@ namespace BlackGui::Components
         CLogMessage::preformatted(m);
 
         QPointer<CSettingsTextMessageInlineComponent> myself(this);
-        QTimer::singleShot(500, this, [ = ]
-        {
+        QTimer::singleShot(500, this, [=] {
             if (myself) { myself->settingsChanged(); }
         });
     }
@@ -85,8 +83,7 @@ namespace BlackGui::Components
         CLogMessage::preformatted(m);
 
         QPointer<CSettingsTextMessageInlineComponent> myself(this);
-        QTimer::singleShot(500, this, [ = ]
-        {
+        QTimer::singleShot(500, this, [=] {
             if (myself) { myself->settingsChanged(); }
         });
     }

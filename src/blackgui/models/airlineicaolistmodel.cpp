@@ -23,8 +23,7 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackGui::Models
 {
-    CAirlineIcaoCodeListModel::CAirlineIcaoCodeListModel(QObject *parent) :
-        CListModelDbObjects("AircraftIcaoListModel", parent)
+    CAirlineIcaoCodeListModel::CAirlineIcaoCodeListModel(QObject *parent) : CListModelDbObjects("AircraftIcaoListModel", parent)
     {
         m_columns.addColumn(CColumn::standardString("id", CAirlineIcaoCode::IndexDbIntegerKey, CDefaultFormatter::alignRightVCenter()));
         m_columns.addColumn(CColumn::standardValueObject("ICAO", CAirlineIcaoCode::IndexAirlineDesignator));
@@ -38,7 +37,7 @@ namespace BlackGui::Models
         m_columns.addColumn(CColumn::standardValueObject("name", CAirlineIcaoCode::IndexAirlineName));
         m_columns.addColumn(CColumn::standardValueObject("gr.des.", "group designator", CAirlineIcaoCode::IndexGroupDesignator));
         m_columns.addColumn(CColumn::standardValueObject("groupname", CAirlineIcaoCode::IndexGroupName));
-        col = CColumn("country", {CAirlineIcaoCode::IndexAirlineCountry, CCountry::IndexIcon});
+        col = CColumn("country", { CAirlineIcaoCode::IndexAirlineCountry, CCountry::IndexIcon });
         col.setSortPropertyIndex(CAirlineIcaoCode::IndexAirlineDesignator);
         m_columns.addColumn(col);
         m_columns.addColumn(CColumn::standardValueObject("country", "country", CAirlineIcaoCode::IndexAirlineCountry));

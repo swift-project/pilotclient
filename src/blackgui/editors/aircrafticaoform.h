@@ -20,7 +20,10 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CAircraftIcaoForm; }
+namespace Ui
+{
+    class CAircraftIcaoForm;
+}
 namespace BlackGui::Editors
 {
     /*!
@@ -68,7 +71,7 @@ namespace BlackGui::Editors
         virtual void jsonPasted(const QString &json) override;
 
     private:
-        QScopedPointer<Ui::CAircraftIcaoForm>  ui;
+        QScopedPointer<Ui::CAircraftIcaoForm> ui;
         BlackMisc::Aviation::CAircraftIcaoCode m_originalCode;
 
         //! Variant has been dropped

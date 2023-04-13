@@ -17,7 +17,10 @@
 
 #include <QString>
 
-namespace BlackMisc::Simulation { class CDistributor; }
+namespace BlackMisc::Simulation
+{
+    class CDistributor;
+}
 namespace BlackGui::Models
 {
     //! Distributor list model

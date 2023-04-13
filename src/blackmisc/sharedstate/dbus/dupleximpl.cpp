@@ -83,8 +83,7 @@ namespace BlackMisc::SharedState::DBus
         {
             if (handler != this && handler->m_handlingChannels.contains(channel))
             {
-                doAfter(handler->receiveRequest(channel, param), this, [this, channel, token](QFuture<CVariant> future)
-                {
+                doAfter(handler->receiveRequest(channel, param), this, [this, channel, token](QFuture<CVariant> future) {
                     emit this->replyReceived(channel, future.result(), token);
                 });
                 return;

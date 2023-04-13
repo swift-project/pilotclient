@@ -30,7 +30,7 @@ namespace XSwiftBus
         //! @{
         //! Not copyable.
         CTerrainProbe(const CTerrainProbe &) = delete;
-        CTerrainProbe &operator =(const CTerrainProbe &) = delete;
+        CTerrainProbe &operator=(const CTerrainProbe &) = delete;
         //! @}
 
         //! @{

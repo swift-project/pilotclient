@@ -15,9 +15,8 @@ using namespace BlackMisc::Settings;
 
 namespace BlackGui::Components
 {
-    CSettingsAdvancedComponent::CSettingsAdvancedComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CSettingsAdvancedComponent)
+    CSettingsAdvancedComponent::CSettingsAdvancedComponent(QWidget *parent) : QFrame(parent),
+                                                                              ui(new Ui::CSettingsAdvancedComponent)
     {
         ui->setupUi(this);
 
@@ -27,7 +26,7 @@ namespace BlackGui::Components
     }
 
     CSettingsAdvancedComponent::~CSettingsAdvancedComponent()
-    { }
+    {}
 
     void CSettingsAdvancedComponent::crashDumpUploadEnabledChanged(int state)
     {

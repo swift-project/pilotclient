@@ -16,16 +16,15 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackGui::Components
 {
-    CAircraftModelSetValidationDialog::CAircraftModelSetValidationDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CAircraftModelSetValidationDialog)
+    CAircraftModelSetValidationDialog::CAircraftModelSetValidationDialog(QWidget *parent) : QDialog(parent),
+                                                                                            ui(new Ui::CAircraftModelSetValidationDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() | Qt::WindowContextHelpButtonHint);
     }
 
     CAircraftModelSetValidationDialog::~CAircraftModelSetValidationDialog()
-    { }
+    {}
 
     void CAircraftModelSetValidationDialog::validatedModelSet(const CSimulatorInfo &simulator, const CAircraftModelList &valid, const CAircraftModelList &invalid, bool stopped, const CStatusMessageList &msgs)
     {

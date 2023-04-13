@@ -14,8 +14,7 @@
 
 namespace BlackGui::Components
 {
-    CAboutDialog::CAboutDialog(QWidget *parent) :
-        QDialog(parent), ui(new Ui::CAboutDialog)
+    CAboutDialog::CAboutDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CAboutDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
@@ -23,7 +22,7 @@ namespace BlackGui::Components
     }
 
     CAboutDialog::~CAboutDialog()
-    { }
+    {}
 
     void CAboutDialog::init()
     {

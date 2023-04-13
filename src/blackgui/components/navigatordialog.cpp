@@ -44,10 +44,9 @@ namespace BlackGui::Components
     // If the dialog is a normal window, it stays open when the parent is minimized
     // (and the parent is null for the dialog). If the dialog is a tool winow it is always
     // minimized, regardless of dialog`s parent
-    CNavigatorDialog::CNavigatorDialog(QWidget *parent) :
-        QDialog(parent, modeToWindowFlags(CEnableForFramelessWindow::WindowTool)),
-        CEnableForFramelessWindow(CEnableForFramelessWindow::WindowTool, false, "navigatorFrameless", this),
-        ui(new Ui::CNavigatorDialog)
+    CNavigatorDialog::CNavigatorDialog(QWidget *parent) : QDialog(parent, modeToWindowFlags(CEnableForFramelessWindow::WindowTool)),
+                                                          CEnableForFramelessWindow(CEnableForFramelessWindow::WindowTool, false, "navigatorFrameless", this),
+                                                          ui(new Ui::CNavigatorDialog)
     {
         ui->setupUi(this);
 
@@ -73,7 +72,7 @@ namespace BlackGui::Components
     }
 
     CNavigatorDialog::~CNavigatorDialog()
-    { }
+    {}
 
     void CNavigatorDialog::buildNavigator(int columns)
     {
@@ -284,10 +283,10 @@ namespace BlackGui::Components
         QAction *a = qobject_cast<QAction *>(QObject::sender());
         if (!a) { return; }
         QString v(a->data().toString());
-        if (v == "1c") { buildNavigator(1);}
-        else if (v == "2c") { buildNavigator(2);}
-        else if (v == "1r") { buildNavigator(columnsForRows(1));}
-        else if (v == "2r") { buildNavigator(columnsForRows(2));}
+        if (v == "1c") { buildNavigator(1); }
+        else if (v == "2c") { buildNavigator(2); }
+        else if (v == "1r") { buildNavigator(columnsForRows(1)); }
+        else if (v == "2r") { buildNavigator(columnsForRows(2)); }
     }
 
     void CNavigatorDialog::menuChangeMargins(const QMargins &margins)

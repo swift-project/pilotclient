@@ -26,9 +26,8 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CCallsignCompleter::CCallsignCompleter(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CCallsignCompleter)
+    CCallsignCompleter::CCallsignCompleter(QWidget *parent) : QFrame(parent),
+                                                              ui(new Ui::CCallsignCompleter)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
         Q_ASSERT_X(sGui->getIContextNetwork(), Q_FUNC_INFO, "Need network context");
@@ -47,7 +46,7 @@ namespace BlackGui::Components
     }
 
     CCallsignCompleter::~CCallsignCompleter()
-    { }
+    {}
 
     CCallsign CCallsignCompleter::getCallsign(bool onlyKnownCallsign) const
     {

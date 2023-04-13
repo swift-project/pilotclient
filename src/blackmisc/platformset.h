@@ -56,9 +56,9 @@ namespace BlackMisc
         //! Register metadata
         static void registerMetadata();
     };
-} //namespace
+} // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::CPlatformSet)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::CPlatform>)
 
-#endif //guard
+#endif // guard

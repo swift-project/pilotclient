@@ -23,7 +23,7 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network, CFsdSetup)
 namespace BlackMisc::Network
 {
     CFsdSetup::CFsdSetup(SendReceiveDetails sendReceive) : m_sendReceive(sendReceive)
-    { }
+    {}
 
     CFsdSetup::CFsdSetup(const QString &codec, SendReceiveDetails sendReceive)
         : m_textCodec(codec), m_sendReceive(sendReceive) {}
@@ -44,26 +44,25 @@ namespace BlackMisc::Network
     {
         static const QString ds("Send parts; %1 gnd: %2 interim: %3 Receive parts: %4 gnd: %5 interim: %6 3letter: %7");
         return ds.arg(boolToYesNo(details.testFlag(SendAircraftParts)),
-                        boolToYesNo(details.testFlag(SendGndFlag)),
-                        boolToYesNo(details.testFlag(SendInterimPositions)),
-                        boolToYesNo(details.testFlag(SendVisualPositions)),
-                        boolToYesNo(details.testFlag(ReceiveAircraftParts)),
-                        boolToYesNo(details.testFlag(ReceiveGndFlag)),
-                        boolToYesNo(details.testFlag(ReceiveInterimPositions)),
-                        boolToYesNo(details.testFlag(Force3LetterAirlineICAO))
-                        );
+                      boolToYesNo(details.testFlag(SendGndFlag)),
+                      boolToYesNo(details.testFlag(SendInterimPositions)),
+                      boolToYesNo(details.testFlag(SendVisualPositions)),
+                      boolToYesNo(details.testFlag(ReceiveAircraftParts)),
+                      boolToYesNo(details.testFlag(ReceiveGndFlag)),
+                      boolToYesNo(details.testFlag(ReceiveInterimPositions)),
+                      boolToYesNo(details.testFlag(Force3LetterAirlineICAO)));
     }
 
     void CFsdSetup::setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive, bool visualSend, bool euroscopeSimDataReceive)
     {
         SendReceiveDetails s = Nothing;
-        if (partsSend)    { s |= SendAircraftParts; }
+        if (partsSend) { s |= SendAircraftParts; }
         if (partsReceive) { s |= ReceiveAircraftParts; }
-        if (gndSend)      { s |= SendGndFlag; }
-        if (gndReceive)   { s |= ReceiveGndFlag; }
-        if (interimSend)  { s |= SendInterimPositions; }
+        if (gndSend) { s |= SendGndFlag; }
+        if (gndReceive) { s |= ReceiveGndFlag; }
+        if (interimSend) { s |= SendInterimPositions; }
         if (interimReceive) { s |= ReceiveInterimPositions; }
-        if (visualSend)   { s |= SendVisualPositions; }
+        if (visualSend) { s |= SendVisualPositions; }
         if (euroscopeSimDataReceive) { s |= ReceiveEuroscopeSimData; }
         this->setSendReceiveDetails(s);
     }
@@ -105,7 +104,11 @@ namespace BlackMisc::Network
 
     void CFsdSetup::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CFsdSetup>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CFsdSetup>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

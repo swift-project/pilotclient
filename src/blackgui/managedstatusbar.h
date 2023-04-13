@@ -62,11 +62,11 @@ namespace BlackGui
         //! Clear status bar
         void clearStatusBar();
 
-        QStatusBar *m_statusBar  = nullptr; //!< the status bar itself
-        QLabel *m_statusBarIcon  = nullptr; //!< status bar icon
+        QStatusBar *m_statusBar = nullptr; //!< the status bar itself
+        QLabel *m_statusBarIcon = nullptr; //!< status bar icon
         QLabel *m_statusBarLabel = nullptr; //!< status bar label
-        QTimer  m_timerStatusBar { this };  //!< cleaning up status bar (own cleaning as I need to clean window / icon)
-        bool m_ownedStatusBar = false;      //!< own status bar or "injected" (e.g.by UI builder)
+        QTimer m_timerStatusBar { this }; //!< cleaning up status bar (own cleaning as I need to clean window / icon)
+        bool m_ownedStatusBar = false; //!< own status bar or "injected" (e.g.by UI builder)
         Qt::TextElideMode m_elideMode = Qt::ElideMiddle; //!< label text elide
         BlackMisc::StatusSeverity m_currentSeverity = BlackMisc::StatusSeverity::SeverityDebug; //!< severity currently displayed
     };

@@ -35,10 +35,9 @@ using namespace BlackCore::Db;
 
 namespace BlackCore::Db
 {
-    CDatabaseWriter::CDatabaseWriter(const Network::CUrl &baseUrl, QObject *parent) :
-        QObject(parent),
-        m_modelPublishUrl(CDatabaseWriter::getModelPublishUrl(baseUrl)),
-        m_autoPublishUrl(CDatabaseWriter::getAutoPublishUrl(baseUrl))
+    CDatabaseWriter::CDatabaseWriter(const Network::CUrl &baseUrl, QObject *parent) : QObject(parent),
+                                                                                      m_modelPublishUrl(CDatabaseWriter::getModelPublishUrl(baseUrl)),
+                                                                                      m_autoPublishUrl(CDatabaseWriter::getAutoPublishUrl(baseUrl))
     {
         // void
     }
@@ -91,8 +90,8 @@ namespace BlackCore::Db
         const QByteArray eInfo = extraInfo.toLatin1();
         request.setRawHeader(QByteArray("swift-extrainfo"), eInfo);
         const int logId = m_writeLog.addPendingUrl(url);
-        m_pendingModelPublishReply = sApp->postToNetwork(request, logId, multiPart, { this, &CDatabaseWriter::postedModelsResponse});
-        m_modelReplyPendingSince   = QDateTime::currentMSecsSinceEpoch();
+        m_pendingModelPublishReply = sApp->postToNetwork(request, logId, multiPart, { this, &CDatabaseWriter::postedModelsResponse });
+        m_modelReplyPendingSince = QDateTime::currentMSecsSinceEpoch();
         return msgs;
     }
 
@@ -130,7 +129,7 @@ namespace BlackCore::Db
         QNetworkRequest request(url);
         CNetworkUtils::ignoreSslVerification(request);
         const int logId = m_writeLog.addPendingUrl(url);
-        m_pendingAutoPublishReply = sApp->postToNetwork(request, logId, multiPart, { this, &CDatabaseWriter::postedAutoPublishResponse});
+        m_pendingAutoPublishReply = sApp->postToNetwork(request, logId, multiPart, { this, &CDatabaseWriter::postedAutoPublishResponse });
         m_autoPublishReplyPendingSince = QDateTime::currentMSecsSinceEpoch();
         return msgs;
     }
@@ -149,8 +148,7 @@ namespace BlackCore::Db
 
     const QStringList &CDatabaseWriter::getLogCategories()
     {
-        static const QStringList cats
-        {
+        static const QStringList cats {
             CLogCategories::swiftDbWebservice(), CLogCategories::webservice()
         };
         return cats;
@@ -174,7 +172,7 @@ namespace BlackCore::Db
             nwReply->close(); // close asap
             if (responseData.isEmpty())
             {
-                const CStatusMessageList msgs({CStatusMessage(this, CStatusMessage::SeverityError, u"No response data from " % urlString)});
+                const CStatusMessageList msgs({ CStatusMessage(this, CStatusMessage::SeverityError, u"No response data from " % urlString) });
                 emit this->publishedModels(CAircraftModelList(), CAircraftModelList(), msgs, false, false);
                 return;
             }
@@ -198,14 +196,14 @@ namespace BlackCore::Db
         {
             const QString error = nwReply->errorString();
             nwReply->close(); // close asap
-            const CStatusMessageList msgs({CStatusMessage(this, CStatusMessage::SeverityError, u"HTTP error: " % error)});
+            const CStatusMessageList msgs({ CStatusMessage(this, CStatusMessage::SeverityError, u"HTTP error: " % error) });
             emit this->publishedModels(CAircraftModelList(), CAircraftModelList(), msgs, false, false);
         }
     }
 
     void CDatabaseWriter::postedAutoPublishResponse(QNetworkReply *nwReplyPtr)
     {
-        static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategories::swiftDbWebservice()}));
+        static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategories::swiftDbWebservice() }));
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
         if (m_shutdown || !sApp)
         {
@@ -263,7 +261,7 @@ namespace BlackCore::Db
 
     QList<QByteArray> CDatabaseWriter::splitData(const QByteArray &data, int size)
     {
-        if (data.size() <= size) { return QList<QByteArray>({data}); }
+        if (data.size() <= size) { return QList<QByteArray>({ data }); }
         int pos = 0, arrsize = data.size();
         QList<QByteArray> arrays;
         while (pos < arrsize)
@@ -275,7 +273,7 @@ namespace BlackCore::Db
         return arrays;
     }
 
-    bool CDatabaseWriter::parseSwiftPublishResponse(const QString &jsonResponse, CAircraftModelList &publishedModels,  CAircraftModelList &skippedModels, CStatusMessageList &messages, bool &directWrite)
+    bool CDatabaseWriter::parseSwiftPublishResponse(const QString &jsonResponse, CAircraftModelList &publishedModels, CAircraftModelList &skippedModels, CStatusMessageList &messages, bool &directWrite)
     {
         directWrite = false;
 

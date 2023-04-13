@@ -15,7 +15,10 @@
 #include <QStringList>
 #include <QScopedPointer>
 
-namespace Ui { class CSettingsTextMessageStyle; }
+namespace Ui
+{
+    class CSettingsTextMessageStyle;
+}
 namespace BlackGui::Components
 {
     class CSettingsFontDialog;
@@ -58,7 +61,7 @@ namespace BlackGui::Components
     private:
         QScopedPointer<Ui::CSettingsTextMessageStyle> ui;
         CSettingsFontDialog *m_fontSettingsDialog = nullptr;
-        CTextEditDialog     *m_textEditDialog     = nullptr;
+        CTextEditDialog *m_textEditDialog = nullptr;
         QString m_style;
 
         //! Change font

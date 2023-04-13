@@ -17,7 +17,10 @@
 #include <QScopedPointer>
 #include <QModelIndex>
 
-namespace Ui { class CInterpolationSetupComponent; }
+namespace Ui
+{
+    class CInterpolationSetupComponent;
+}
 namespace BlackGui::Components
 {
     //! Setup component
@@ -90,6 +93,6 @@ namespace BlackGui::Components
 
         BlackMisc::Simulation::CInterpolationSetupList m_lastSetSetups; //!< last setups set to context
     };
-}// ns
+} // ns
 
 #endif // guard

@@ -39,8 +39,8 @@ namespace BlackCore::Db
 
         //! Constructor for one or multiple entities
         CDatabaseReaderConfig(BlackMisc::Network::CEntityFlags::Entity entities,
-                                BlackMisc::Db::CDbFlags::DataRetrievalMode retrievalFlags,
-                                const BlackMisc::PhysicalQuantities::CTime &cacheLifetime = BlackMisc::PhysicalQuantities::CTime());
+                              BlackMisc::Db::CDbFlags::DataRetrievalMode retrievalFlags,
+                              const BlackMisc::PhysicalQuantities::CTime &cacheLifetime = BlackMisc::PhysicalQuantities::CTime());
 
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
@@ -78,7 +78,7 @@ namespace BlackCore::Db
 
     private:
         int m_entities = BlackMisc::Network::CEntityFlags::NoEntity; //!< BlackMisc::Network::CEntityFlags::Entity
-        int m_retrievalMode = BlackMisc::Db::CDbFlags::DbReading;   //!< BlackMisc::Db::CDbFlags::DataRetrievalMode
+        int m_retrievalMode = BlackMisc::Db::CDbFlags::DbReading; //!< BlackMisc::Db::CDbFlags::DataRetrievalMode
         BlackMisc::PhysicalQuantities::CTime m_cacheLifetime;
 
         BLACK_METACLASS(

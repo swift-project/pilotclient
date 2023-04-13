@@ -15,7 +15,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CDbLiveryColorSearch; }
+namespace Ui
+{
+    class CDbLiveryColorSearch;
+}
 namespace BlackGui::Components
 {
     /*!

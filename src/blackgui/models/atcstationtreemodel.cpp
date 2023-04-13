@@ -38,7 +38,7 @@ using namespace BlackMisc::Network;
 namespace BlackGui::Models
 {
     CAtcStationTreeModel::CAtcStationTreeModel(QObject *parent) : QStandardItemModel(parent)
-    { }
+    {}
 
     void CAtcStationTreeModel::updateContainer(const CAtcStationList &stations)
     {

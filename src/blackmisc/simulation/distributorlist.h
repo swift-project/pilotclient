@@ -85,4 +85,4 @@ namespace BlackMisc::Simulation
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CDistributorList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::CDistributor>)
 
-#endif //guard
+#endif // guard

@@ -38,8 +38,8 @@ namespace BlackMisc::PhysicalQuantities
         enum SeparatorMode
         {
             SeparatorQtDefault, //!< 100000.00 no group separator
-            SeparatorLocale,    //!< depending on QLocale, e.g. 100.000,00 in Germany
-            SeparatorBestGuess  //!< try to figure out
+            SeparatorLocale, //!< depending on QLocale, e.g. 100.000,00 in Germany
+            SeparatorBestGuess //!< try to figure out
         };
 
         //! Group and digit separator
@@ -59,9 +59,10 @@ namespace BlackMisc::PhysicalQuantities
         static CVariant parseToVariant(const QString &value, SeparatorMode mode = SeparatorQtDefault);
 
         //! Parse into concrete type
-        template <class PQ> static PQ parse(const QString &value, SeparatorMode mode = SeparatorQtDefault)
+        template <class PQ>
+        static PQ parse(const QString &value, SeparatorMode mode = SeparatorQtDefault)
         {
-            if (value.isEmpty()) {return PQ::null(); }
+            if (value.isEmpty()) { return PQ::null(); }
             if (value.contains("null", Qt::CaseInsensitive)) { return PQ::null(); }
             const CVariant qv = parseToVariant(value, mode);
             if (!qv.isNull() && qv.canConvert<PQ>())

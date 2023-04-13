@@ -13,8 +13,7 @@
 
 namespace BlackMisc
 {
-    CStatusException::CStatusException(const CStatusMessage &payload) :
-        m_payload(payload)
+    CStatusException::CStatusException(const CStatusMessage &payload) : m_payload(payload)
     {}
 
     CStatusException::CStatusException(const CStatusException &other) : std::exception(other), m_payload(other.m_payload)

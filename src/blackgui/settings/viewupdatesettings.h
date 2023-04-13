@@ -82,10 +82,10 @@ namespace BlackGui::Settings
         void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
 
     private:
-        BlackMisc::PhysicalQuantities::CTime m_updateAtc {10.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()};
-        BlackMisc::PhysicalQuantities::CTime m_updateAircraft {10.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()};
-        BlackMisc::PhysicalQuantities::CTime m_updateRendering {10.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()};
-        BlackMisc::PhysicalQuantities::CTime m_updateUser {10.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()};
+        BlackMisc::PhysicalQuantities::CTime m_updateAtc { 10.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() };
+        BlackMisc::PhysicalQuantities::CTime m_updateAircraft { 10.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() };
+        BlackMisc::PhysicalQuantities::CTime m_updateRendering { 10.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() };
+        BlackMisc::PhysicalQuantities::CTime m_updateUser { 10.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() };
 
         BLACK_METACLASS(
             CViewUpdateSettings,
@@ -103,7 +103,11 @@ namespace BlackGui::Settings
         static const char *key() { return "guiviewupdate"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("View update"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("View update");
+            return name;
+        }
 
         //! \copydoc BlackMisc::TSettingTrait::isValid
         static bool isValid(const CViewUpdateSettings &settings, QString &) { return settings.isValid(); }

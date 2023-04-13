@@ -11,13 +11,12 @@
 
 namespace BlackGui::Components
 {
-    CTransponderCodeSpinBox::CTransponderCodeSpinBox(QWidget *parent) :
-        QSpinBox(parent)
-    { }
+    CTransponderCodeSpinBox::CTransponderCodeSpinBox(QWidget *parent) : QSpinBox(parent)
+    {}
 
     QString CTransponderCodeSpinBox::textFromValue(int value) const
     {
         /* 4 - number of digits, 10 - base of number, '0' - pad character*/
-        return QStringLiteral("%1").arg(value, 4 , 10, QChar('0'));
+        return QStringLiteral("%1").arg(value, 4, 10, QChar('0'));
     }
 } // ns

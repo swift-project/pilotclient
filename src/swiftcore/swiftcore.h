@@ -30,7 +30,10 @@ namespace BlackGui::Components
     class CCockpitComAudioDialog;
     class CAudioAdvancedDistributedDialog;
 }
-namespace Ui { class CSwiftCore; }
+namespace Ui
+{
+    class CSwiftCore;
+}
 
 /*!
  * swift core control GUI
@@ -85,9 +88,9 @@ private:
     //! Restart CMD args
     QStringList getRestartCmdArgs() const;
 
-    QScopedPointer<BlackGui::Components::CCoreSettingsDialog>             m_settingsDialog;
-    QScopedPointer<BlackGui::Components::CRawFsdMessagesDialog>           m_rawFsdMessageDialog;
-    QScopedPointer<BlackGui::Components::CCockpitComAudioDialog>          m_audioDialog;
+    QScopedPointer<BlackGui::Components::CCoreSettingsDialog> m_settingsDialog;
+    QScopedPointer<BlackGui::Components::CRawFsdMessagesDialog> m_rawFsdMessageDialog;
+    QScopedPointer<BlackGui::Components::CCockpitComAudioDialog> m_audioDialog;
     QScopedPointer<BlackGui::Components::CAudioAdvancedDistributedDialog> m_audioAdvDialog;
 
     QScopedPointer<Ui::CSwiftCore> ui;

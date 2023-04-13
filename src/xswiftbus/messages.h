@@ -42,7 +42,7 @@ namespace XSwiftBus
         using string = decltype(Private::empty_u8string());
 
         //! Constructor.
-        CMessage(const string &text, float r = 1, float g = 1, float b = 1) : m_text(text), m_rgb{{ r, g, b }} {}
+        CMessage(const string &text, float r = 1, float g = 1, float b = 1) : m_text(text), m_rgb { { r, g, b } } {}
 
         //! Text.
         string m_text;
@@ -62,7 +62,7 @@ namespace XSwiftBus
         //! \param right Number of "virtual pixels" between screen right edge and box right edge.
         //! \param top   Number of "virtual pixels" between screen top edge and box top edge.
         CMessageBox(int left, int right, int top) : CDrawable(xplm_Phase_Window, true),
-            m_boxLeft(left), m_boxRight(right), m_boxTop(top) {}
+                                                    m_boxLeft(left), m_boxRight(right), m_boxTop(top) {}
 
         //! Set messages to draw in message box, from a pair of iterators.
         template <typename Iterator>
@@ -93,17 +93,17 @@ namespace XSwiftBus
 
     private:
         std::vector<CMessage> m_messages;
-        bool m_upArrow   = false;
+        bool m_upArrow = false;
         bool m_downArrow = false;
-        int m_boxLeft    = 0;
-        int m_boxRight   = 0;
-        int m_boxTop     = 0;
-        int m_boxBottom  = 0;
-        int m_lines      = 10;
+        int m_boxLeft = 0;
+        int m_boxRight = 0;
+        int m_boxTop = 0;
+        int m_boxBottom = 0;
+        int m_lines = 10;
         int m_durationMs = 2500;
 
         // Screen
-        DataRef<xplane::data::sim::graphics::view::window_width>  m_screenWidth;
+        DataRef<xplane::data::sim::graphics::view::window_width> m_screenWidth;
         DataRef<xplane::data::sim::graphics::view::window_height> m_screenHeight;
     };
 
@@ -133,14 +133,26 @@ namespace XSwiftBus
         void setMaxVisibleLines(size_t lines) { m_maxVisibleLines = lines; }
 
         //! Toggles the visibility of the message box
-        void toggle() { if (m_visible) { hide(); } else { show(); } }
+        void toggle()
+        {
+            if (m_visible) { hide(); }
+            else { show(); }
+        }
 
         //! Is message box currently visible?
         bool isVisible() const { return m_visible; }
 
     private:
-        void show() { m_messageBox.show(); m_visible = true; }
-        void hide() { m_messageBox.hide(); m_visible = false; }
+        void show()
+        {
+            m_messageBox.show();
+            m_visible = true;
+        }
+        void hide()
+        {
+            m_messageBox.hide();
+            m_visible = false;
+        }
 
         void scrollUp();
         void scrollDown();
@@ -163,6 +175,6 @@ namespace XSwiftBus
         CCommand m_scrollToTopCommand;
         CCommand m_scrollToBottomCommand;
     };
-} //ns
+} // ns
 
 #endif

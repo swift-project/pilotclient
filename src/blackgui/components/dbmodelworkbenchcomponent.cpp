@@ -37,9 +37,8 @@ using namespace BlackGui::Models;
 
 namespace BlackGui::Components
 {
-    CDbModelWorkbenchComponent::CDbModelWorkbenchComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        ui(new Ui::CDbModelWorkbenchComponent)
+    CDbModelWorkbenchComponent::CDbModelWorkbenchComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                                              ui(new Ui::CDbModelWorkbenchComponent)
     {
         ui->setupUi(this);
 

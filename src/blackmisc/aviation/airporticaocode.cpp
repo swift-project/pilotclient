@@ -62,7 +62,11 @@ namespace BlackMisc::Aviation
 
     void CAirportIcaoCode::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CAirportIcaoCode>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CAirportIcaoCode>();
+            return;
+        }
         CValueObject::setPropertyByIndex(index, variant);
     }
 

@@ -5,8 +5,7 @@
 
 namespace BlackSound::SampleProvider
 {
-    CBufferedWaveProvider::CBufferedWaveProvider(const QAudioFormat &format, QObject *parent) :
-        ISampleProvider(parent)
+    CBufferedWaveProvider::CBufferedWaveProvider(const QAudioFormat &format, QObject *parent) : ISampleProvider(parent)
     {
         const QString on = QStringLiteral("%1 format: '%2'").arg(this->metaObject()->className(), BlackSound::toQString(format));
         this->setObjectName(on);

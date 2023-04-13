@@ -25,7 +25,10 @@ class QAction;
 class QPoint;
 class QWidget;
 
-namespace Ui { class CLogComponent; }
+namespace Ui
+{
+    class CLogComponent;
+}
 namespace BlackGui::Components
 {
     //! Text edit for our log component

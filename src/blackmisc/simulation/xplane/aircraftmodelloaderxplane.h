@@ -71,13 +71,13 @@ namespace BlackMisc
 
                 // Model name parts
                 QStringList dirNames; //!< List dir names starting from xsb_aircrafts.txt parent down to obj folder
-                QString objectName;   //!< Complete basename of the object file
-                QString textureName;  //!< Complete basename of the texture file. Can be empty.
+                QString objectName; //!< Complete basename of the object file
+                QString textureName; //!< Complete basename of the texture file. Can be empty.
 
                 QString filePath; //!< object filePath
-                QString icao;     //!< Icao type of this model
-                QString airline;  //!< Airline identifier. Can be empty.
-                QString livery;   //!< Livery identifier. Can be empty.
+                QString icao; //!< Icao type of this model
+                QString airline; //!< Airline identifier. Can be empty.
+                QString livery; //!< Livery identifier. Can be empty.
 
                 ObjectVersion objectVersion;
 
@@ -121,7 +121,7 @@ namespace BlackMisc
 
             void addUniqueModel(const CAircraftModel &model, CAircraftModelList &models);
 
-            QPointer<CWorker> m_parserWorker;  //!< worker will destroy itself, so weak pointer
+            QPointer<CWorker> m_parserWorker; //!< worker will destroy itself, so weak pointer
             QVector<CSLPackage> m_cslPackages; //!< Parsed Packages. No lock required since accessed only from one thread
 
             static const QString &fileFilterFlyable();

@@ -22,7 +22,10 @@
 #include <QScopedPointer>
 #include <QTimer>
 
-namespace Ui { class CInfoBarWebReadersStatusComponent; }
+namespace Ui
+{
+    class CInfoBarWebReadersStatusComponent;
+}
 namespace BlackGui
 {
     class CLedWidget;
@@ -34,7 +37,7 @@ namespace BlackGui
             Q_OBJECT
 
         public:
-            //!Destructor
+            //! Destructor
             virtual ~CInfoBarWebReadersStatusBase();
 
             //! Consolidation is running
@@ -104,7 +107,7 @@ namespace BlackGui
             //! Constructor
             explicit CInfoBarWebReadersStatusComponent(QWidget *parent = nullptr);
 
-            //!Destructor
+            //! Destructor
             virtual ~CInfoBarWebReadersStatusComponent() override;
 
             //! Show the consolidation status

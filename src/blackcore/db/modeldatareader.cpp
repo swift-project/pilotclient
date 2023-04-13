@@ -42,8 +42,7 @@ using namespace BlackCore::Db;
 
 namespace BlackCore::Db
 {
-    CModelDataReader::CModelDataReader(QObject *owner, const CDatabaseReaderConfigList &config) :
-        CDatabaseReader(owner, config, "CModelDataReader")
+    CModelDataReader::CModelDataReader(QObject *owner, const CDatabaseReaderConfigList &config) : CDatabaseReader(owner, config, "CModelDataReader")
     {
         // init to avoid threading issues
         getBaseUrl(CDbFlags::DbReading);
@@ -178,10 +177,9 @@ namespace BlackCore::Db
 
     bool CModelDataReader::areAllDataRead() const
     {
-        return
-            this->getLiveriesCount() > 0 &&
-            this->getModelsCount() > 0 &&
-            this->getDistributorsCount() > 0;
+        return this->getLiveriesCount() > 0 &&
+               this->getModelsCount() > 0 &&
+               this->getDistributorsCount() > 0;
     }
 
     void CModelDataReader::read(CEntityFlags::Entity entities, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
@@ -204,7 +202,7 @@ namespace BlackCore::Db
             if (!url.isEmpty())
             {
                 url.appendQuery(queryLatestTimestamp(newerThan));
-                this->getFromNetworkAndLog(url, { this, &CModelDataReader::parseLiveryData});
+                this->getFromNetworkAndLog(url, { this, &CModelDataReader::parseLiveryData });
                 triggeredRead |= CEntityFlags::LiveryEntity;
             }
             else
@@ -219,7 +217,7 @@ namespace BlackCore::Db
             if (!url.isEmpty())
             {
                 url.appendQuery(queryLatestTimestamp(newerThan));
-                this->getFromNetworkAndLog(url, { this, &CModelDataReader::parseDistributorData});
+                this->getFromNetworkAndLog(url, { this, &CModelDataReader::parseDistributorData });
                 triggeredRead |= CEntityFlags::DistributorEntity;
             }
             else
@@ -234,7 +232,7 @@ namespace BlackCore::Db
             if (!url.isEmpty())
             {
                 url.appendQuery(queryLatestTimestamp(newerThan));
-                this->getFromNetworkAndLog(url, { this, &CModelDataReader::parseModelData});
+                this->getFromNetworkAndLog(url, { this, &CModelDataReader::parseModelData });
                 triggeredRead |= CEntityFlags::ModelEntity;
             }
             else
@@ -321,7 +319,7 @@ namespace BlackCore::Db
         {
             QElapsedTimer time;
             time.start();
-            liveries  = CLiveryList::fromDatabaseJson(res);
+            liveries = CLiveryList::fromDatabaseJson(res);
             this->logParseMessage("liveries", liveries.size(), static_cast<int>(time.elapsed()), res);
         }
 
@@ -586,8 +584,7 @@ namespace BlackCore::Db
         if (dir.isEmpty() || whatToRead == CEntityFlags::NoEntity) { return false; }
 
         QPointer<CModelDataReader> myself(this);
-        QTimer::singleShot(0, this, [ = ]()
-        {
+        QTimer::singleShot(0, this, [=]() {
             if (!myself) { return; }
             const CStatusMessageList msgs = this->readFromJsonFiles(dir, whatToRead, overrideNewerOnly);
             if (msgs.isFailure())
@@ -623,8 +620,7 @@ namespace BlackCore::Db
 
         for (const auto &pair : fileContents)
         {
-            CWorker::fromTask(this, Q_FUNC_INFO, [pair, directory]
-            {
+            CWorker::fromTask(this, Q_FUNC_INFO, [pair, directory] {
                 CFileUtils::writeStringToFile(CFileUtils::appendFilePaths(directory.absolutePath(), pair.first), pair.second);
             });
         }
@@ -638,22 +634,37 @@ namespace BlackCore::Db
 
     void CModelDataReader::synchronizeCaches(CEntityFlags::Entity entities)
     {
-        if (entities.testFlag(CEntityFlags::LiveryEntity)) { if (m_syncedLiveryCache) { return; } m_syncedLiveryCache = true; m_liveryCache.synchronize(); }
-        if (entities.testFlag(CEntityFlags::ModelEntity))  { if (m_syncedModelCache) { return; } m_syncedModelCache = true;  m_modelCache.synchronize(); }
-        if (entities.testFlag(CEntityFlags::DistributorEntity)) { if (m_syncedDistributorCache) { return; } m_syncedDistributorCache = true; m_distributorCache.synchronize(); }
+        if (entities.testFlag(CEntityFlags::LiveryEntity))
+        {
+            if (m_syncedLiveryCache) { return; }
+            m_syncedLiveryCache = true;
+            m_liveryCache.synchronize();
+        }
+        if (entities.testFlag(CEntityFlags::ModelEntity))
+        {
+            if (m_syncedModelCache) { return; }
+            m_syncedModelCache = true;
+            m_modelCache.synchronize();
+        }
+        if (entities.testFlag(CEntityFlags::DistributorEntity))
+        {
+            if (m_syncedDistributorCache) { return; }
+            m_syncedDistributorCache = true;
+            m_distributorCache.synchronize();
+        }
     }
 
     void CModelDataReader::admitCaches(CEntityFlags::Entity entities)
     {
         if (entities.testFlag(CEntityFlags::LiveryEntity)) { m_liveryCache.admit(); }
-        if (entities.testFlag(CEntityFlags::ModelEntity))  { m_modelCache.admit(); }
+        if (entities.testFlag(CEntityFlags::ModelEntity)) { m_modelCache.admit(); }
         if (entities.testFlag(CEntityFlags::DistributorEntity)) { m_distributorCache.admit(); }
     }
 
     void CModelDataReader::invalidateCaches(CEntityFlags::Entity entities)
     {
         if (entities.testFlag(CEntityFlags::LiveryEntity)) { CDataCache::instance()->clearAllValues(m_liveryCache.getKey()); }
-        if (entities.testFlag(CEntityFlags::ModelEntity))  { CDataCache::instance()->clearAllValues(m_modelCache.getKey()); }
+        if (entities.testFlag(CEntityFlags::ModelEntity)) { CDataCache::instance()->clearAllValues(m_modelCache.getKey()); }
         if (entities.testFlag(CEntityFlags::DistributorEntity)) { CDataCache::instance()->clearAllValues(m_distributorCache.getKey()); }
     }
 
@@ -661,8 +672,8 @@ namespace BlackCore::Db
     {
         switch (entity)
         {
-        case CEntityFlags::LiveryEntity:      return m_liveryCache.getAvailableTimestamp();
-        case CEntityFlags::ModelEntity:       return m_modelCache.getAvailableTimestamp();
+        case CEntityFlags::LiveryEntity: return m_liveryCache.getAvailableTimestamp();
+        case CEntityFlags::ModelEntity: return m_modelCache.getAvailableTimestamp();
         case CEntityFlags::DistributorEntity: return m_distributorCache.getAvailableTimestamp();
         default: return QDateTime();
         }
@@ -672,8 +683,8 @@ namespace BlackCore::Db
     {
         switch (entity)
         {
-        case CEntityFlags::LiveryEntity:      return m_liveryCache.get().size();
-        case CEntityFlags::ModelEntity:       return m_modelCache.get().size();
+        case CEntityFlags::LiveryEntity: return m_liveryCache.get().size();
+        case CEntityFlags::ModelEntity: return m_modelCache.get().size();
         case CEntityFlags::DistributorEntity: return m_distributorCache.get().size();
         default: return 0;
         }

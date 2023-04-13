@@ -38,7 +38,7 @@ namespace BlackCore::Fsd
         //! @{
         //! Properties
         ClientQueryType m_queryType {};
-        QStringList     m_responseData;
+        QStringList m_responseData;
         //! @}
 
     private:
@@ -48,10 +48,10 @@ namespace BlackCore::Fsd
     //! Equal to operator
     inline bool operator==(const ClientResponse &lhs, const ClientResponse &rhs)
     {
-        return  lhs.sender() == rhs.sender() &&
-                lhs.receiver() == rhs.receiver() &&
-                lhs.m_queryType == rhs.m_queryType &&
-                lhs.m_responseData == rhs.m_responseData;
+        return lhs.sender() == rhs.sender() &&
+               lhs.receiver() == rhs.receiver() &&
+               lhs.m_queryType == rhs.m_queryType &&
+               lhs.m_responseData == rhs.m_responseData;
     }
 
     //! Not equal to operator

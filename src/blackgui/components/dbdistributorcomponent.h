@@ -20,11 +20,20 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CDbDistributorComponent; }
-namespace BlackMisc::Simulation { class CSimulatorInfo; }
+namespace Ui
+{
+    class CDbDistributorComponent;
+}
+namespace BlackMisc::Simulation
+{
+    class CSimulatorInfo;
+}
 namespace BlackGui
 {
-    namespace Views { class CDistributorView; }
+    namespace Views
+    {
+        class CDistributorView;
+    }
     namespace Components
     {
         /*!

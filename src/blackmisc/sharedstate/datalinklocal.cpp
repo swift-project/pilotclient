@@ -35,7 +35,7 @@ namespace BlackMisc::SharedState
         publish(static_cast<const CPassiveMutator *>(mutator));
 
         auto &channel = getChannel(mutator);
-        Q_ASSERT_X(! channel.activeMutator, Q_FUNC_INFO, "Tried to publish two active mutators on one channel");
+        Q_ASSERT_X(!channel.activeMutator, Q_FUNC_INFO, "Tried to publish two active mutators on one channel");
         channel.activeMutator = mutator->weakRef();
     }
 
@@ -48,8 +48,7 @@ namespace BlackMisc::SharedState
     {
         subscribe(static_cast<const CPassiveObserver *>(observer));
 
-        connect(observer, &CActiveObserver::requestPosted, this, [this, channel = getChannelName(observer)](const CVariant &param, CPromise<CVariant> reply)
-        {
+        connect(observer, &CActiveObserver::requestPosted, this, [this, channel = getChannelName(observer)](const CVariant &param, CPromise<CVariant> reply) {
             reply.chainResult(handleRequest(param, channel));
         });
     }

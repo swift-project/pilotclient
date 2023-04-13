@@ -45,12 +45,12 @@ namespace BlackSimPlugin::Flightgear
         bool hasSameSizes() const
         {
             const int s = callsigns.size();
-            if (s != latitudesDeg.size())  { return false; }
+            if (s != latitudesDeg.size()) { return false; }
             if (s != longitudesDeg.size()) { return false; }
-            if (s != altitudesFt.size())   { return false; }
-            if (s != pitchesDeg.size())    { return false; }
-            if (s != rollsDeg.size())      { return false; }
-            if (s != headingsDeg.size())   { return false; }
+            if (s != altitudesFt.size()) { return false; }
+            if (s != pitchesDeg.size()) { return false; }
+            if (s != rollsDeg.size()) { return false; }
+            if (s != headingsDeg.size()) { return false; }
             return true;
         }
 
@@ -68,15 +68,15 @@ namespace BlackSimPlugin::Flightgear
             this->groundSpeedKts.push_back(situation.getGroundSpeed().value(BlackMisc::PhysicalQuantities::CSpeedUnit::kts()));
         }
 
-        QStringList   callsigns;       //!< List of callsigns
-        QList<double> latitudesDeg;    //!< List of latitudes
-        QList<double> longitudesDeg;   //!< List of longitudes
-        QList<double> altitudesFt;     //!< List of altitudes
-        QList<double> pitchesDeg;      //!< List of pitches
-        QList<double> rollsDeg;        //!< List of rolls
-        QList<double> headingsDeg;     //!< List of headings
-        QList<double> groundSpeedKts; //!<List of groundspeeds
-        QList<bool> onGrounds;      //!< List of onGrounds
+        QStringList callsigns; //!< List of callsigns
+        QList<double> latitudesDeg; //!< List of latitudes
+        QList<double> longitudesDeg; //!< List of longitudes
+        QList<double> altitudesFt; //!< List of altitudes
+        QList<double> pitchesDeg; //!< List of pitches
+        QList<double> rollsDeg; //!< List of rolls
+        QList<double> headingsDeg; //!< List of headings
+        QList<double> groundSpeedKts; //!< List of groundspeeds
+        QList<bool> onGrounds; //!< List of onGrounds
     };
 
     //! Planes surfaces
@@ -107,23 +107,23 @@ namespace BlackSimPlugin::Flightgear
             this->taxiLights.push_back(parts.getLights().isTaxiOn());
         }
 
-        QStringList callsigns;      //!< List of callsigns
-        QList<double> gears;        //!< List of gears
-        QList<double> flaps;        //!< List of flaps
-        QList<double> spoilers;     //!< List of spoilers
-        QList<double> speedBrakes;  //!< List of speedBrakes
-        QList<double> slats;        //!< List of slats
-        QList<double> wingSweeps;   //!< List of wingSweeps
-        QList<double> thrusts;      //!< List of thrusts
-        QList<double> elevators;    //!< List of elevators
-        QList<double> rudders;      //!< List of rudders
-        QList<double> ailerons;     //!< List of ailerons
-        QList<bool> landLights;     //!< List of landLights
-        QList<bool> beaconLights;   //!< List of beaconLights
-        QList<bool> strobeLights;   //!< List of strobeLights
-        QList<bool> navLights;      //!< List of navLights
-        QList<int> lightPatterns;   //!< List of lightPatterns
-        QList<bool> taxiLights;     //!< List of taxi lights
+        QStringList callsigns; //!< List of callsigns
+        QList<double> gears; //!< List of gears
+        QList<double> flaps; //!< List of flaps
+        QList<double> spoilers; //!< List of spoilers
+        QList<double> speedBrakes; //!< List of speedBrakes
+        QList<double> slats; //!< List of slats
+        QList<double> wingSweeps; //!< List of wingSweeps
+        QList<double> thrusts; //!< List of thrusts
+        QList<double> elevators; //!< List of elevators
+        QList<double> rudders; //!< List of rudders
+        QList<double> ailerons; //!< List of ailerons
+        QList<bool> landLights; //!< List of landLights
+        QList<bool> beaconLights; //!< List of beaconLights
+        QList<bool> strobeLights; //!< List of strobeLights
+        QList<bool> navLights; //!< List of navLights
+        QList<int> lightPatterns; //!< List of lightPatterns
+        QList<bool> taxiLights; //!< List of taxi lights
     };
 
     //! Plane Transponders
@@ -132,17 +132,17 @@ namespace BlackSimPlugin::Flightgear
         //! Is empty?
         bool isEmpty() const { return callsigns.isEmpty(); }
 
-        QStringList callsigns;  //!< List of callsigns
-        QList<int> codes;       //!< List of transponder codes
-        QList<bool> modeCs;     //!< List of active mode C's
-        QList<bool> idents;     //!< List of active idents
+        QStringList callsigns; //!< List of callsigns
+        QList<int> codes; //!< List of transponder codes
+        QList<bool> modeCs; //!< List of active mode C's
+        QList<bool> idents; //!< List of active idents
     };
 
     //! Multiplayer Acquire Info
     struct MultiplayerAcquireInfo
     {
-        bool hasAcquired;       //!< Has FGSwiftBus acquired multiplayer planes?
-        QString owner;          //!< Name of the plugin having multiplayer planes acquired
+        bool hasAcquired; //!< Has FGSwiftBus acquired multiplayer planes?
+        QString owner; //!< Name of the plugin having multiplayer planes acquired
     };
 
     /*!
@@ -154,10 +154,10 @@ namespace BlackSimPlugin::Flightgear
 
     public:
         //! Elevation callback
-        using ElevationCallback = std::function<void (const BlackMisc::Geo::CElevationPlane &, const BlackMisc::Aviation::CCallsign &)>;
+        using ElevationCallback = std::function<void(const BlackMisc::Geo::CElevationPlane &, const BlackMisc::Aviation::CCallsign &)>;
 
         //! Remote aircrafts data callback
-        using RemoteAircraftDataCallback = std::function<void (const QStringList &, const QDoubleList &, const QDoubleList &, const QDoubleList &, const QDoubleList &)>;
+        using RemoteAircraftDataCallback = std::function<void(const QStringList &, const QDoubleList &, const QDoubleList &, const QDoubleList &, const QDoubleList &)>;
 
         //! Service name
         static const QString &InterfaceName()

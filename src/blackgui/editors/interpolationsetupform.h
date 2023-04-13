@@ -19,7 +19,10 @@
 #include <QScopedPointer>
 #include <QCheckBox>
 
-namespace Ui { class CInterpolationSetupForm; }
+namespace Ui
+{
+    class CInterpolationSetupForm;
+}
 namespace BlackGui::Editors
 {
     //! Setup of interpolation and rendering

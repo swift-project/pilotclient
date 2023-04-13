@@ -119,4 +119,4 @@ namespace BlackMisc::Network
 Q_DECLARE_METATYPE(BlackMisc::Network::CTextMessageList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Network::CTextMessage>)
 
-#endif //guard
+#endif // guard

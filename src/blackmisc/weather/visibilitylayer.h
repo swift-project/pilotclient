@@ -45,8 +45,8 @@ namespace BlackMisc::Weather
 
         //! Constructor
         CVisibilityLayer(const BlackMisc::Aviation::CAltitude &base,
-                            const BlackMisc::Aviation::CAltitude &top,
-                            const PhysicalQuantities::CLength &visibility);
+                         const BlackMisc::Aviation::CAltitude &top,
+                         const PhysicalQuantities::CLength &visibility);
 
         //! Set base
         void setBase(const BlackMisc::Aviation::CAltitude &base) { m_base = base; }
@@ -78,7 +78,7 @@ namespace BlackMisc::Weather
     private:
         BlackMisc::Aviation::CAltitude m_base;
         BlackMisc::Aviation::CAltitude m_top;
-        PhysicalQuantities::CLength m_visibility { 100 , PhysicalQuantities::CLengthUnit::km() };
+        PhysicalQuantities::CLength m_visibility { 100, PhysicalQuantities::CLengthUnit::km() };
 
         BLACK_METACLASS(
             CVisibilityLayer,

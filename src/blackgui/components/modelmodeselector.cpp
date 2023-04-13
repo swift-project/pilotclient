@@ -15,9 +15,8 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackGui::Components
 {
-    CModelModeSelector::CModelModeSelector(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CModelModeSelector)
+    CModelModeSelector::CModelModeSelector(QWidget *parent) : QFrame(parent),
+                                                              ui(new Ui::CModelModeSelector)
     {
         ui->setupUi(this);
         connect(ui->rb_Include, &QRadioButton::released, this, &CModelModeSelector::changed);

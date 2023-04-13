@@ -40,9 +40,9 @@ namespace BlackCore::Fsd
     //! Equal to operator
     inline bool operator==(const DeleteAtc &lhs, const DeleteAtc &rhs)
     {
-        return  lhs.sender() == rhs.sender() &&
-                lhs.receiver() == rhs.receiver() &&
-                lhs.m_cid == rhs.m_cid;
+        return lhs.sender() == rhs.sender() &&
+               lhs.receiver() == rhs.receiver() &&
+               lhs.m_cid == rhs.m_cid;
     }
 
     //! Not equal to operator

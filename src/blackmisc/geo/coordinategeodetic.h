@@ -24,7 +24,6 @@
 #include "blackmisc/valueobject.h"
 #include "blackmisc/blackmiscexport.h"
 
-
 #include <QVector3D>
 #include <QString>
 #include <array>
@@ -66,7 +65,7 @@ namespace BlackMisc
             ICoordinateGeodetic(const ICoordinateGeodetic &) = default;
 
             //! Copy assignment operator
-            ICoordinateGeodetic &operator =(const ICoordinateGeodetic &) = default;
+            ICoordinateGeodetic &operator=(const ICoordinateGeodetic &) = default;
 
             //! Latitude
             virtual CLatitude latitude() const = 0;
@@ -188,10 +187,10 @@ namespace BlackMisc
             void setRelativeBearing(const PhysicalQuantities::CAngle &angle) { m_relativeBearing = angle; }
 
             //! Valid distance?
-            bool hasValidRelativeDistance() const { return !m_relativeDistance.isNull();}
+            bool hasValidRelativeDistance() const { return !m_relativeDistance.isNull(); }
 
             //! Valid bearing?
-            bool hasValidRelativeBearing() const { return !m_relativeBearing.isNull();}
+            bool hasValidRelativeBearing() const { return !m_relativeBearing.isNull(); }
 
             //! Calculcate distance, set it, and return distance
             PhysicalQuantities::CLength calculcateAndUpdateRelativeDistance(const Geo::ICoordinateGeodetic &position);
@@ -218,7 +217,7 @@ namespace BlackMisc
             //! Can given index be handled?
             static bool canHandleIndex(CPropertyIndexRef index);
 
-            PhysicalQuantities::CAngle  m_relativeBearing  { 0, nullptr }; //!< temporary stored value
+            PhysicalQuantities::CAngle m_relativeBearing { 0, nullptr }; //!< temporary stored value
             PhysicalQuantities::CLength m_relativeDistance { 0, nullptr }; //!< temporary stored value
         };
 
@@ -305,10 +304,20 @@ namespace BlackMisc
             void setGeodeticHeightToNull();
 
             //! Set normal vector
-            void setNormalVector(const QVector3D &normal) { m_x = static_cast<double>(normal.x()); m_y = static_cast<double>(normal.y()); m_z = static_cast<double>(normal.z()); }
+            void setNormalVector(const QVector3D &normal)
+            {
+                m_x = static_cast<double>(normal.x());
+                m_y = static_cast<double>(normal.y());
+                m_z = static_cast<double>(normal.z());
+            }
 
             //! Set normal vector
-            void setNormalVector(double x, double y, double z) { m_x = x; m_y = y; m_z = z; }
+            void setNormalVector(double x, double y, double z)
+            {
+                m_x = x;
+                m_y = y;
+                m_z = z;
+            }
 
             //! Set normal vector
             void setNormalVector(const std::array<double, 3> &normalVector);

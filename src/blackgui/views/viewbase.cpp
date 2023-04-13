@@ -56,8 +56,8 @@ namespace BlackGui::Views
         this->showLoadIndicator(container.size());
         const bool reallyResize = resize && isResizeConditionMet(container.size()); // do we really perform resizing
         bool presize = (m_resizeMode == PresizeSubset) &&
-                        this->isEmpty() && // only when no data yet
-                        !reallyResize;     // not when we resize later
+                       this->isEmpty() && // only when no data yet
+                       !reallyResize; // not when we resize later
         presize = presize || (this->isEmpty() && resize && !reallyResize); // we presize if we wanted to resize but actually do not because of condition
         const bool presizeThresholdReached = presize && container.size() > ResizeSubsetThreshold; // only when size making sense
 
@@ -106,14 +106,12 @@ namespace BlackGui::Views
         Q_UNUSED(sort)
         ModelClass *model = this->derivedModel();
         const auto sortColumn = model->getSortColumn();
-        const auto sortOrder  = model->getSortOrder();
+        const auto sortOrder = model->getSortOrder();
         this->showLoadIndicator(container.size());
-        CWorker *worker = CWorker::fromTask(this, "ViewSort", [model, container, sortColumn, sortOrder]()
-        {
+        CWorker *worker = CWorker::fromTask(this, "ViewSort", [model, container, sortColumn, sortOrder]() {
             return model->sortContainerByColumn(container, sortColumn, sortOrder);
         });
-        worker->thenWithResult<ContainerType>(this, [this, resize](const ContainerType & sortedContainer)
-        {
+        worker->thenWithResult<ContainerType>(this, [this, resize](const ContainerType &sortedContainer) {
             this->updateContainer(sortedContainer, false, resize);
         });
         worker->then(this, &CViewBase::asyncUpdateFinished);
@@ -145,7 +143,7 @@ namespace BlackGui::Views
         if (this->rowCount() < 1)
         {
             // this allows presizing
-            this->updateContainerMaybeAsync(ContainerType({value}), true, resize);
+            this->updateContainerMaybeAsync(ContainerType({ value }), true, resize);
         }
         else
         {
@@ -177,7 +175,7 @@ namespace BlackGui::Views
         if (this->rowCount() < 1)
         {
             // this allows presizing
-            this->updateContainerMaybeAsync(ContainerType({value}), true, resize);
+            this->updateContainerMaybeAsync(ContainerType({ value }), true, resize);
         }
         else
         {
@@ -216,7 +214,7 @@ namespace BlackGui::Views
         return m_model->container();
     }
 
-    template<class T>
+    template <class T>
     QList<int> CViewBase<T>::rowsOf(const ContainerType &container) const
     {
         QList<int> rows;
@@ -228,7 +226,7 @@ namespace BlackGui::Views
         return rows;
     }
 
-    template<class T>
+    template <class T>
     int CViewBase<T>::rowOf(const ObjectType &obj) const
     {
         //! \fixme KB 4-19 any smarter solution?
@@ -298,7 +296,7 @@ namespace BlackGui::Views
         if (!hasSelection()) { return 0; }
         int c = 0;
 
-        int lastUpdatedRow  = -1;
+        int lastUpdatedRow = -1;
         int firstUpdatedRow = -1;
         const CPropertyIndexList propertyIndexes(vm.indexes());
         const QModelIndexList indexes = this->selectedRows();
@@ -467,7 +465,7 @@ namespace BlackGui::Views
         return m_model->isDropAllowed();
     }
 
-    template<class T>
+    template <class T>
     void CViewBase<T>::dropEvent(QDropEvent *event)
     {
         if (m_model && m_model->isJsonFileDropAllowed() && CGuiUtility::isMimeRepresentingReadableJsonFile(event->mimeData()))
@@ -501,13 +499,13 @@ namespace BlackGui::Views
         m_model->sortByPropertyIndex(propertyIndex, order);
     }
 
-    template<class T>
+    template <class T>
     void CViewBase<T>::sort()
     {
         m_model->sort();
     }
 
-    template<class T>
+    template <class T>
     void CViewBase<T>::resort()
     {
         m_model->resort();
@@ -537,7 +535,7 @@ namespace BlackGui::Views
     }
 
     template <class T>
-    void CViewBase<T>::takeFilterOwnership(std::unique_ptr<BlackGui::Models::IModelFilter<ContainerType> > &filter)
+    void CViewBase<T>::takeFilterOwnership(std::unique_ptr<BlackGui::Models::IModelFilter<ContainerType>> &filter)
     {
         this->derivedModel()->takeFilterOwnership(filter);
     }
@@ -571,7 +569,7 @@ namespace BlackGui::Views
         this->addContainerTypesAsDropTypes(true, true);
     }
 
-    template<class T>
+    template <class T>
     void CViewBase<T>::setTabWidgetViewText(QTabWidget *tw, int index)
     {
         if (!tw) { return; }
@@ -581,7 +579,7 @@ namespace BlackGui::Views
         tw->setTabText(index, o);
     }
 
-    template<class T>
+    template <class T>
     void CViewBase<T>::setPercentageColumnWidths()
     {
         const int width = this->width() - 25; // avoid scrollbars etc, reserve a little space
@@ -720,7 +718,7 @@ namespace BlackGui::Views
         Q_UNUSED(data)
     }
 
-    template<class T>
+    template <class T>
     void CViewBase<T>::customMenu(CMenuActions &menuActions)
     {
         CViewBaseNonTemplate::customMenu(menuActions);
@@ -732,7 +730,7 @@ namespace BlackGui::Views
         }
     }
 
-    template<class T>
+    template <class T>
     CStatusMessage CViewBase<T>::loadJsonFile(const QString &fileName)
     {
         CStatusMessage m;
@@ -809,7 +807,7 @@ namespace BlackGui::Views
         return m;
     }
 
-    template<class T>
+    template <class T>
     void CViewBase<T>::displayContainerAsJsonPopup(bool selectedOnly)
     {
         const ContainerType container = selectedOnly ? this->selectedObjects() : this->container();
@@ -824,9 +822,9 @@ namespace BlackGui::Views
     CStatusMessage CViewBase<T>::loadJson(const QString &directory)
     {
         const QString fileName = QFileDialog::getOpenFileName(nullptr,
-                                    tr("Load data file"),
-                                    directory.isEmpty() ? this->getFileDialogFileName(true) : directory,
-                                    tr("swift (*.json *.txt)"));
+                                                              tr("Load data file"),
+                                                              directory.isEmpty() ? this->getFileDialogFileName(true) : directory,
+                                                              tr("swift (*.json *.txt)"));
         return this->loadJsonFile(fileName);
     }
 
@@ -834,19 +832,19 @@ namespace BlackGui::Views
     CStatusMessage CViewBase<T>::saveJson(bool selectedOnly, const QString &directory)
     {
         const QString fileName = QFileDialog::getSaveFileName(nullptr,
-                                    tr("Save data file"),
-                                    directory.isEmpty() ? this->getFileDialogFileName(false) : directory,
-                                    tr("swift (*.json *.txt)"));
+                                                              tr("Save data file"),
+                                                              directory.isEmpty() ? this->getFileDialogFileName(false) : directory,
+                                                              tr("swift (*.json *.txt)"));
         if (fileName.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityDebug, u"Save canceled", true); }
         const QString json(this->toJsonString(QJsonDocument::Indented, selectedOnly)); // save as CVariant JSON
 
         // save file
-        CWorker::fromTask(qApp, Q_FUNC_INFO, [ = ] { CFileUtils::writeStringToFile(json, fileName); });
+        CWorker::fromTask(qApp, Q_FUNC_INFO, [=] { CFileUtils::writeStringToFile(json, fileName); });
         this->rememberLastJsonDirectory(fileName);
         return CStatusMessage(this, CStatusMessage::SeverityInfo, u"Writing " % fileName % u" in progress", true);
     }
 
-    template<class T>
+    template <class T>
     void CViewBase<T>::copy()
     {
         QClipboard *clipboard = QApplication::clipboard();
@@ -859,7 +857,7 @@ namespace BlackGui::Views
         clipboard->setText(json);
     }
 
-    template<class T>
+    template <class T>
     void CViewBase<T>::cut()
     {
         if (!QApplication::clipboard()) { return; }
@@ -867,7 +865,7 @@ namespace BlackGui::Views
         this->removeSelectedRows();
     }
 
-    template<class T>
+    template <class T>
     void CViewBase<T>::paste()
     {
         const QClipboard *clipboard = QApplication::clipboard();
@@ -909,7 +907,7 @@ namespace BlackGui::Views
             else
             {
                 // takes the filter and triggers the filtering
-                IModelFilterProvider<ContainerType> *provider = dynamic_cast<IModelFilterProvider<ContainerType>*>(m_filterWidget);
+                IModelFilterProvider<ContainerType> *provider = dynamic_cast<IModelFilterProvider<ContainerType> *>(m_filterWidget);
                 Q_ASSERT_X(provider, Q_FUNC_INFO, "Filter widget does not provide interface");
                 if (!provider) { return false; }
                 std::unique_ptr<IModelFilter<ContainerType>> f(provider->createModelFilter());

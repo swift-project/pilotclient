@@ -20,23 +20,23 @@ namespace BlackMisc::Network
     {
         switch (flag)
         {
-        case AircraftIcaoEntity:     return QStringLiteral("Aircraft ICAO");
+        case AircraftIcaoEntity: return QStringLiteral("Aircraft ICAO");
         case AircraftCategoryEntity: return QStringLiteral("Aircraft category");
-        case AirlineIcaoEntity:      return QStringLiteral("Airline ICAO");
-        case AirportEntity:          return QStringLiteral("Airport");
-        case AllEntities:            return QStringLiteral("All");
-        case AllIcaoAndCountries:    return QStringLiteral("All ICAO + country");
-        case AllIcaoEntities:        return QStringLiteral("All ICAO");
-        case BookingEntity:          return QStringLiteral("VATSIM bookings");
-        case CountryEntity:          return QStringLiteral("Country");
-        case DistributorEntity:      return QStringLiteral("Distributor");
-        case DbInfoObjectEntity:     return QStringLiteral("Info objects (DB)");
+        case AirlineIcaoEntity: return QStringLiteral("Airline ICAO");
+        case AirportEntity: return QStringLiteral("Airport");
+        case AllEntities: return QStringLiteral("All");
+        case AllIcaoAndCountries: return QStringLiteral("All ICAO + country");
+        case AllIcaoEntities: return QStringLiteral("All ICAO");
+        case BookingEntity: return QStringLiteral("VATSIM bookings");
+        case CountryEntity: return QStringLiteral("Country");
+        case DistributorEntity: return QStringLiteral("Distributor");
+        case DbInfoObjectEntity: return QStringLiteral("Info objects (DB)");
         case SharedInfoObjectEntity: return QStringLiteral("Info objects (shared)");
-        case LiveryEntity:           return QStringLiteral("Livery");
-        case ModelEntity:            return QStringLiteral("Model");
-        case NoEntity:               return QStringLiteral("no data");
-        case VatsimDataFile:         return QStringLiteral("VATSIM data file");
-        case VatsimStatusFile:       return QStringLiteral("VATSIM status file");
+        case LiveryEntity: return QStringLiteral("Livery");
+        case ModelEntity: return QStringLiteral("Model");
+        case NoEntity: return QStringLiteral("no data");
+        case VatsimDataFile: return QStringLiteral("VATSIM data file");
+        case VatsimStatusFile: return QStringLiteral("VATSIM status file");
         default:
             BLACK_VERIFY_X(false, Q_FUNC_INFO, "wrong flags");
             return "wrong flags";
@@ -51,20 +51,20 @@ namespace BlackMisc::Network
     QStringList CEntityFlags::entitiesToStringList(CEntityFlags::Entity entities)
     {
         QStringList list;
-        if (entities.testFlag(AircraftIcaoEntity))     list << QStringLiteral("Aircraft ICAO");
+        if (entities.testFlag(AircraftIcaoEntity)) list << QStringLiteral("Aircraft ICAO");
         if (entities.testFlag(AircraftCategoryEntity)) list << QStringLiteral("Aircraft category");
-        if (entities.testFlag(AirlineIcaoEntity))      list << QStringLiteral("Airline ICAO");
-        if (entities.testFlag(AirportEntity))          list << QStringLiteral("Airport");
-        if (entities.testFlag(BookingEntity))          list << QStringLiteral("VATSIM bookings");
-        if (entities.testFlag(CountryEntity))          list << QStringLiteral("Country");
-        if (entities.testFlag(DistributorEntity))      list << QStringLiteral("Distributor");
-        if (entities.testFlag(DbInfoObjectEntity))     list << QStringLiteral("Info objects (DB)");
+        if (entities.testFlag(AirlineIcaoEntity)) list << QStringLiteral("Airline ICAO");
+        if (entities.testFlag(AirportEntity)) list << QStringLiteral("Airport");
+        if (entities.testFlag(BookingEntity)) list << QStringLiteral("VATSIM bookings");
+        if (entities.testFlag(CountryEntity)) list << QStringLiteral("Country");
+        if (entities.testFlag(DistributorEntity)) list << QStringLiteral("Distributor");
+        if (entities.testFlag(DbInfoObjectEntity)) list << QStringLiteral("Info objects (DB)");
         if (entities.testFlag(SharedInfoObjectEntity)) list << QStringLiteral("Info objects (shared)");
-        if (entities.testFlag(LiveryEntity))           list << QStringLiteral("Livery");
-        if (entities.testFlag(ModelEntity))            list << QStringLiteral("Model");
-        if (entities.testFlag(NoEntity))               list << QStringLiteral("no data");
-        if (entities.testFlag(VatsimDataFile))         list << QStringLiteral("VATSIM data file");
-        if (entities.testFlag(VatsimStatusFile))       list << QStringLiteral("VATSIM status file");
+        if (entities.testFlag(LiveryEntity)) list << QStringLiteral("Livery");
+        if (entities.testFlag(ModelEntity)) list << QStringLiteral("Model");
+        if (entities.testFlag(NoEntity)) list << QStringLiteral("no data");
+        if (entities.testFlag(VatsimDataFile)) list << QStringLiteral("VATSIM data file");
+        if (entities.testFlag(VatsimStatusFile)) list << QStringLiteral("VATSIM status file");
         return list;
     }
 
@@ -109,10 +109,10 @@ namespace BlackMisc::Network
         {
         case ReadFinishedRestricted: return fr;
         case ReadFinished: return f;
-        case ReadParsing:  return  p;
-        case ReadFailed:   return fa;
-        case ReadSkipped:  return s;
-        case ReadStarted:  return st;
+        case ReadParsing: return p;
+        case ReadFailed: return fa;
+        case ReadSkipped: return s;
+        case ReadStarted: return st;
         default:
             BLACK_VERIFY_X(false, Q_FUNC_INFO, "wrong flags");
             return x;
@@ -128,7 +128,7 @@ namespace BlackMisc::Network
         case ReadParsing:
         case ReadStarted: return CStatusMessage::SeverityInfo;
         case ReadSkipped: return CStatusMessage::SeverityWarning;
-        case ReadFailed:  return CStatusMessage::SeverityError;
+        case ReadFailed: return CStatusMessage::SeverityError;
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Missing state");
             return CStatusMessage::SeverityInfo;
@@ -148,14 +148,46 @@ namespace BlackMisc::Network
     CEntityFlags::Entity CEntityFlags::iterateDbEntities(Entity &entities)
     {
         if (entities == NoEntity || entities == DbInfoObjectEntity) { return NoEntity; }
-        if (entities.testFlag(AircraftIcaoEntity)) { entities &= ~AircraftIcaoEntity; return AircraftIcaoEntity; }
-        if (entities.testFlag(AirlineIcaoEntity))  { entities &= ~AirlineIcaoEntity; return AirlineIcaoEntity; }
-        if (entities.testFlag(AirportEntity))      { entities &= ~AirportEntity; return AirportEntity; }
-        if (entities.testFlag(LiveryEntity))       { entities &= ~LiveryEntity; return LiveryEntity; }
-        if (entities.testFlag(CountryEntity))      { entities &= ~CountryEntity; return CountryEntity; }
-        if (entities.testFlag(ModelEntity))        { entities &= ~ModelEntity; return ModelEntity; }
-        if (entities.testFlag(DistributorEntity))  { entities &= ~DistributorEntity; return DistributorEntity; }
-        if (entities.testFlag(AircraftCategoryEntity)) { entities &= ~AircraftCategoryEntity; return AircraftCategoryEntity; }
+        if (entities.testFlag(AircraftIcaoEntity))
+        {
+            entities &= ~AircraftIcaoEntity;
+            return AircraftIcaoEntity;
+        }
+        if (entities.testFlag(AirlineIcaoEntity))
+        {
+            entities &= ~AirlineIcaoEntity;
+            return AirlineIcaoEntity;
+        }
+        if (entities.testFlag(AirportEntity))
+        {
+            entities &= ~AirportEntity;
+            return AirportEntity;
+        }
+        if (entities.testFlag(LiveryEntity))
+        {
+            entities &= ~LiveryEntity;
+            return LiveryEntity;
+        }
+        if (entities.testFlag(CountryEntity))
+        {
+            entities &= ~CountryEntity;
+            return CountryEntity;
+        }
+        if (entities.testFlag(ModelEntity))
+        {
+            entities &= ~ModelEntity;
+            return ModelEntity;
+        }
+        if (entities.testFlag(DistributorEntity))
+        {
+            entities &= ~DistributorEntity;
+            return DistributorEntity;
+        }
+        if (entities.testFlag(AircraftCategoryEntity))
+        {
+            entities &= ~AircraftCategoryEntity;
+            return AircraftCategoryEntity;
+        }
         return NoEntity;
     }
 
@@ -181,14 +213,14 @@ namespace BlackMisc::Network
     CEntityFlags::Entity CEntityFlags::singleEntityByName(const QString &name)
     {
         // order here is crucial
-        if (name.contains("model", Qt::CaseInsensitive))    { return ModelEntity; }
+        if (name.contains("model", Qt::CaseInsensitive)) { return ModelEntity; }
         if (name.contains("category", Qt::CaseInsensitive)) { return AircraftCategoryEntity; }
         if (name.contains("aircraft", Qt::CaseInsensitive)) { return AircraftIcaoEntity; }
-        if (name.contains("airline", Qt::CaseInsensitive))  { return AirlineIcaoEntity; }
-        if (name.contains("airport", Qt::CaseInsensitive))  { return AirportEntity; }
+        if (name.contains("airline", Qt::CaseInsensitive)) { return AirlineIcaoEntity; }
+        if (name.contains("airport", Qt::CaseInsensitive)) { return AirportEntity; }
         if (name.contains("distributor", Qt::CaseInsensitive)) { return DistributorEntity; }
-        if (name.contains("countr", Qt::CaseInsensitive))   { return CountryEntity; } // singular/plural
-        if (name.contains("liver", Qt::CaseInsensitive))    { return LiveryEntity; } // singular/plural
+        if (name.contains("countr", Qt::CaseInsensitive)) { return CountryEntity; } // singular/plural
+        if (name.contains("liver", Qt::CaseInsensitive)) { return LiveryEntity; } // singular/plural
         return NoEntity;
     }
 

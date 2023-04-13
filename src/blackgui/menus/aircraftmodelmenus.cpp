@@ -32,7 +32,7 @@ using namespace BlackCore::Db;
 namespace BlackGui::Menus
 {
     void IAircraftModelViewMenu::anchor()
-    { }
+    {}
 
     const QStringList &IAircraftModelViewMenu::getLogCategories()
     {
@@ -68,9 +68,8 @@ namespace BlackGui::Menus
         return mv->selectedObjects();
     }
 
-    CShowSimulatorFileMenu::CShowSimulatorFileMenu(CAircraftModelView *modelView, COverlayMessagesFrame *messageFrame) :
-        IAircraftModelViewMenu(modelView), m_messageFrame(messageFrame)
-    { }
+    CShowSimulatorFileMenu::CShowSimulatorFileMenu(CAircraftModelView *modelView, COverlayMessagesFrame *messageFrame) : IAircraftModelViewMenu(modelView), m_messageFrame(messageFrame)
+    {}
 
     const QStringList &CShowSimulatorFileMenu::getLogCategories()
     {
@@ -161,8 +160,7 @@ namespace BlackGui::Menus
 
     // --------------------------------- with DB data ---------------------------------
 
-    CConsolidateWithDbDataMenu::CConsolidateWithDbDataMenu(CAircraftModelView *modelView, QObject *modelsTarget) :
-        IAircraftModelViewMenu(modelView), m_modelsTarget(modelsTarget)
+    CConsolidateWithDbDataMenu::CConsolidateWithDbDataMenu(CAircraftModelView *modelView, QObject *modelsTarget) : IAircraftModelViewMenu(modelView), m_modelsTarget(modelsTarget)
     {
         // it can be the target is not yet known
         if (modelsTarget)
@@ -182,8 +180,16 @@ namespace BlackGui::Menus
     void CConsolidateWithDbDataMenu::customMenu(CMenuActions &menuActions)
     {
         const CAircraftModelView *mv = modelView();
-        if (!mv || mv->isEmpty()) { this->nestedCustomMenu(menuActions); return; }
-        if (!sGui->hasWebDataServices()) { this->nestedCustomMenu(menuActions); return; }
+        if (!mv || mv->isEmpty())
+        {
+            this->nestedCustomMenu(menuActions);
+            return;
+        }
+        if (!sGui->hasWebDataServices())
+        {
+            this->nestedCustomMenu(menuActions);
+            return;
+        }
 
         menuActions.addMenuConsolidateModels();
 
@@ -266,8 +272,7 @@ namespace BlackGui::Menus
 
     // --------------------------------- with simulator models ---------------------------------
 
-    CConsolidateWithSimulatorModels::CConsolidateWithSimulatorModels(CAircraftModelView *modelView, QObject *modelsTarget) :
-        IAircraftModelViewMenu(modelView), m_modelsTarget(modelsTarget)
+    CConsolidateWithSimulatorModels::CConsolidateWithSimulatorModels(CAircraftModelView *modelView, QObject *modelsTarget) : IAircraftModelViewMenu(modelView), m_modelsTarget(modelsTarget)
     {
         // it can be the target is not yet known
         if (modelsTarget)
@@ -287,8 +292,16 @@ namespace BlackGui::Menus
     void CConsolidateWithSimulatorModels::customMenu(CMenuActions &menuActions)
     {
         const CAircraftModelView *mv = modelView();
-        if (mv->isEmpty()) { this->nestedCustomMenu(menuActions); return; }
-        if (!sGui->hasWebDataServices()) { this->nestedCustomMenu(menuActions); return; }
+        if (mv->isEmpty())
+        {
+            this->nestedCustomMenu(menuActions);
+            return;
+        }
+        if (!sGui->hasWebDataServices())
+        {
+            this->nestedCustomMenu(menuActions);
+            return;
+        }
 
         menuActions.addMenuConsolidateModels();
 

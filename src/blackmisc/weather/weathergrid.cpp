@@ -37,9 +37,8 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Weather, CGridPoint, CWeatherGrid)
 
 namespace BlackMisc::Weather
 {
-    CWeatherGrid::CWeatherGrid(const CSequence<CGridPoint> &other) :
-        CSequence<CGridPoint>(other)
-    { }
+    CWeatherGrid::CWeatherGrid(const CSequence<CGridPoint> &other) : CSequence<CGridPoint>(other)
+    {}
 
     CWeatherGrid::CWeatherGrid(const ICoordinateGeodetic &coordinate)
     {
@@ -49,16 +48,14 @@ namespace BlackMisc::Weather
 
     CWeatherGrid CWeatherGrid::findWithinRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const
     {
-        return findBy([&](const CGridPoint & gridPoint)
-        {
+        return findBy([&](const CGridPoint &gridPoint) {
             return calculateGreatCircleDistance(gridPoint.getPosition(), coordinate) <= range;
         });
     }
 
     CWeatherGrid CWeatherGrid::findClosest(int number, const ICoordinateGeodetic &coordinate) const
     {
-        CWeatherGrid closest = partiallySorted(number, [ & ](const CGridPoint & a, const CGridPoint & b)
-        {
+        CWeatherGrid closest = partiallySorted(number, [&](const CGridPoint &a, const CGridPoint &b) {
             return calculateEuclideanDistanceSquared(a.getPosition(), coordinate) < calculateEuclideanDistanceSquared(b.getPosition(), coordinate);
         });
         closest.truncate(number);
@@ -71,12 +68,12 @@ namespace BlackMisc::Weather
         QTextStream qtout(&s);
         for (const CGridPoint &gridPoint : *this)
         {
-            qtout << "Latitude: "  << gridPoint.getPosition().latitude().toQString()    << sep;
-            qtout << "Longitude: " << gridPoint.getPosition().longitude().toQString()  << sep;
+            qtout << "Latitude: " << gridPoint.getPosition().latitude().toQString() << sep;
+            qtout << "Longitude: " << gridPoint.getPosition().longitude().toQString() << sep;
             qtout << "    MSL Pressure: " << gridPoint.getPressureAtMsl().toQString() << sep;
 
             CTemperatureLayerList temperatureLayers = gridPoint.getTemperatureLayers();
-            temperatureLayers.sort([](const CTemperatureLayer & a, const CTemperatureLayer & b) { return a.getLevel() < b.getLevel(); });
+            temperatureLayers.sort([](const CTemperatureLayer &a, const CTemperatureLayer &b) { return a.getLevel() < b.getLevel(); });
             qtout << "    Temperature Layers: " << sep;
             for (const auto &temperatureLayer : std::as_const(temperatureLayers))
             {
@@ -87,7 +84,7 @@ namespace BlackMisc::Weather
             qtout << sep;
 
             CWindLayerList windLayers = gridPoint.getWindLayers();
-            windLayers.sort([](const CWindLayer & a, const CWindLayer & b) { return a.getLevel() < b.getLevel(); });
+            windLayers.sort([](const CWindLayer &a, const CWindLayer &b) { return a.getLevel() < b.getLevel(); });
             qtout << "    Wind Layers: " << sep;
             for (const auto &windLayer : std::as_const(windLayers))
             {
@@ -98,13 +95,13 @@ namespace BlackMisc::Weather
 
             qtout << "    Cloud Layers: " << sep;
             CCloudLayerList cloudLayers = gridPoint.getCloudLayers();
-            cloudLayers.sort([](const CCloudLayer & a, const CCloudLayer & b) { return a.getBase() < b.getBase(); });
+            cloudLayers.sort([](const CCloudLayer &a, const CCloudLayer &b) { return a.getBase() < b.getBase(); });
             for (int i = 0; i < cloudLayers.size(); i++)
             {
                 const CCloudLayer &cloudLayer = cloudLayers[i];
                 qtout << "        Top: " << cloudLayer.getTop().toQString() << sep;
-                qtout << "            Coverage: " << cloudLayer.getCoveragePercent() << " %"     << sep;
-                qtout << "            Precipitation type: " << cloudLayer.getPrecipitation()     << sep;
+                qtout << "            Coverage: " << cloudLayer.getCoveragePercent() << " %" << sep;
+                qtout << "            Precipitation type: " << cloudLayer.getPrecipitation() << sep;
                 qtout << "            Precipitation rate: " << cloudLayer.getPrecipitationRate() << sep;
                 qtout << "        Base: " << cloudLayer.getBase().toQString() << sep;
             }
@@ -117,11 +114,10 @@ namespace BlackMisc::Weather
 
     const QVector<CWeatherScenario> &CWeatherGrid::getAllScenarios()
     {
-        static const QVector<CWeatherScenario> scenarios =
-        {
-            { CWeatherScenario::ClearSky     },
+        static const QVector<CWeatherScenario> scenarios = {
+            { CWeatherScenario::ClearSky },
             { CWeatherScenario::Thunderstorm },
-            { CWeatherScenario::RealWeather  },
+            { CWeatherScenario::RealWeather },
         };
         return scenarios;
     }
@@ -131,7 +127,7 @@ namespace BlackMisc::Weather
         static const CWeatherGrid emptyGrid {};
         switch (scenario.getIndex())
         {
-        case CWeatherScenario::ClearSky:     return getClearWeatherGrid();
+        case CWeatherScenario::ClearSky: return getClearWeatherGrid();
         case CWeatherScenario::Thunderstorm: return getThunderStormGrid();
         default:
             // in release versions just return, no need to ASSERT
@@ -165,14 +161,13 @@ namespace BlackMisc::Weather
             CSpeed(0, CSpeedUnit::kts()),
             CSpeed(0, CSpeedUnit::kts()));
 
-        static const CGridPoint gridPointGLOB =
-        {
+        static const CGridPoint gridPointGLOB = {
             "GLOB",
             CCoordinateGeodetic::null(),
             CCloudLayerList { cloudLayer },
             CTemperatureLayerList { temperatureLayer },
-            CVisibilityLayerList  { visibilityLayer },
-            CWindLayerList        { windLayer },
+            CVisibilityLayerList { visibilityLayer },
+            CWindLayerList { windLayer },
             { CAltitude::standardISASeaLevelPressure() }
         };
 
@@ -194,7 +189,7 @@ namespace BlackMisc::Weather
             83.1); // Dampness: a moist air layer at ground level with a larger extension and relative humidity above 80%;
 
         static const CCloudLayer cloudLayer1(
-            CAltitude(630,  CAltitude::MeanSeaLevel, CLengthUnit::m()),
+            CAltitude(630, CAltitude::MeanSeaLevel, CLengthUnit::m()),
             CAltitude(4630, CAltitude::MeanSeaLevel, CLengthUnit::m()),
             5, CCloudLayer::Rain, CCloudLayer::Thunderstorm,
             CCloudLayer::Overcast);
@@ -217,8 +212,7 @@ namespace BlackMisc::Weather
             CSpeed(21, CSpeedUnit::kts()),
             CSpeed(8, CSpeedUnit::kts()));
 
-        static const CGridPoint gridPointGLOB
-        {
+        static const CGridPoint gridPointGLOB {
             "GLOB",
             CCoordinateGeodetic::null(),
             CCloudLayerList { cloudLayer1, cloudLayer2 },

@@ -55,7 +55,7 @@ namespace BlackGui::Models
         const QMetaType::Type type = static_cast<QMetaType::Type>(dataCVariant.type());
 
         if (type == QMetaType::QPixmap) { return dataCVariant; }
-        if (type == QMetaType::QIcon)   { return dataCVariant; }
+        if (type == QMetaType::QIcon) { return dataCVariant; }
 
         // convert to pixmap
         if (type == QMetaType::QImage)
@@ -130,7 +130,7 @@ namespace BlackGui::Models
     CVariant CDefaultFormatter::keepStandardTypesConvertToStringOtherwise(const CVariant &inputData) const
     {
         if (static_cast<QMetaType::Type>(inputData.type()) == QMetaType::QString) { return inputData; }
-        if (static_cast<QMetaType::Type>(inputData.type()) == QMetaType::Bool)  { return inputData; }
+        if (static_cast<QMetaType::Type>(inputData.type()) == QMetaType::Bool) { return inputData; }
         if (static_cast<QMetaType::Type>(inputData.type()) == QMetaType::Int) { return inputData; }
         return inputData.toQString(m_useI18n);
     }
@@ -204,8 +204,7 @@ namespace BlackGui::Models
         return CVariant(valueObject.toPixmap());
     }
 
-    CDateTimeFormatter::CDateTimeFormatter(const QString &formatString, int alignment, bool i18n) :
-        CDefaultFormatter(alignment, i18n, { Qt::DisplayRole }), m_formatString(formatString)
+    CDateTimeFormatter::CDateTimeFormatter(const QString &formatString, int alignment, bool i18n) : CDefaultFormatter(alignment, i18n, { Qt::DisplayRole }), m_formatString(formatString)
     {
         // void
     }
@@ -289,7 +288,11 @@ namespace BlackGui::Models
     CVariant CStringFormatter::displayRole(const CVariant &dataCVariant) const
     {
         if (dataCVariant.canConvert<QString>()) { return dataCVariant; }
-        if (!dataCVariant.isValid()) { static const CVariant iv("invalid"); return iv; }
+        if (!dataCVariant.isValid())
+        {
+            static const CVariant iv("invalid");
+            return iv;
+        }
         return CVariant::from(QStringLiteral("Invalid type: '%1'").arg(dataCVariant.typeName()));
     }
 
@@ -316,10 +319,9 @@ namespace BlackGui::Models
     }
 
     CBoolLedFormatter::CBoolLedFormatter(int alignment) : CBoolLedFormatter("on", "off", alignment)
-    { }
+    {}
 
-    CBoolLedFormatter::CBoolLedFormatter(const QString &onName, const QString &offName, int alignment) :
-        CBoolTextFormatter(alignment, onName, offName, rolesDecorationAndToolTip())
+    CBoolLedFormatter::CBoolLedFormatter(const QString &onName, const QString &offName, int alignment) : CBoolTextFormatter(alignment, onName, offName, rolesDecorationAndToolTip())
     {
         // one time pixmap creation
         QScopedPointer<CLedWidget> led(createLedDefault());
@@ -347,22 +349,18 @@ namespace BlackGui::Models
         return CVariant();
     }
 
-    CBoolIconFormatter::CBoolIconFormatter(int alignment) :
-        CBoolIconFormatter(CIcons::StandardIconTick16, CIcons::StandardIconCross16, "on", "off", alignment)
-    { }
+    CBoolIconFormatter::CBoolIconFormatter(int alignment) : CBoolIconFormatter(CIcons::StandardIconTick16, CIcons::StandardIconCross16, "on", "off", alignment)
+    {}
 
-    CBoolIconFormatter::CBoolIconFormatter(const QString &onName, const QString &offName, int alignment) :
-        CBoolIconFormatter(CIcons::StandardIconTick16, CIcons::StandardIconCross16, onName, offName, alignment)
-    { }
+    CBoolIconFormatter::CBoolIconFormatter(const QString &onName, const QString &offName, int alignment) : CBoolIconFormatter(CIcons::StandardIconTick16, CIcons::StandardIconCross16, onName, offName, alignment)
+    {}
 
-    CBoolIconFormatter::CBoolIconFormatter(CIcons::IconIndex onIcon, CIcons::IconIndex offIcon, const QString &onName, const QString &offName, int alignment) :
-        CBoolIconFormatter(CIcon::iconByIndex(onIcon), CIcon::iconByIndex(offIcon), onName, offName, alignment)
-    { }
+    CBoolIconFormatter::CBoolIconFormatter(CIcons::IconIndex onIcon, CIcons::IconIndex offIcon, const QString &onName, const QString &offName, int alignment) : CBoolIconFormatter(CIcon::iconByIndex(onIcon), CIcon::iconByIndex(offIcon), onName, offName, alignment)
+    {}
 
-    CBoolIconFormatter::CBoolIconFormatter(const CIcon &onIcon, const CIcon &offIcon, const QString &onName, const QString &offName, int alignment) :
-        CBoolTextFormatter(alignment, onName, offName, rolesDecorationAndToolTip()),
-        m_iconOnVariant(CVariant::fromValue(onIcon.toPixmap())), m_iconOffVariant(CVariant::fromValue(offIcon.toPixmap()))
-    { }
+    CBoolIconFormatter::CBoolIconFormatter(const CIcon &onIcon, const CIcon &offIcon, const QString &onName, const QString &offName, int alignment) : CBoolTextFormatter(alignment, onName, offName, rolesDecorationAndToolTip()),
+                                                                                                                                                      m_iconOnVariant(CVariant::fromValue(onIcon.toPixmap())), m_iconOffVariant(CVariant::fromValue(offIcon.toPixmap()))
+    {}
 
     CVariant CBoolIconFormatter::displayRole(const CVariant &dataCVariant) const
     {
@@ -414,7 +412,7 @@ namespace BlackGui::Models
     CVariant CColorFormatter::decorationRole(const CVariant &dataCVariant) const
     {
         const CRgbColor rgbColor(dataCVariant.to<CRgbColor>());
-        if (!rgbColor.isValid())  { return emptyPixmapVariant(); }
+        if (!rgbColor.isValid()) { return emptyPixmapVariant(); }
         return CVariant::fromValue(rgbColor.toPixmap());
     }
 
@@ -422,7 +420,7 @@ namespace BlackGui::Models
     {
         static const CVariant empty(CVariant::fromValue(QPixmap()));
         const CRgbColor rgbColor(dataCVariant.to<CRgbColor>());
-        if (!rgbColor.isValid())  { return emptyStringVariant(); }
+        if (!rgbColor.isValid()) { return emptyStringVariant(); }
         return rgbColor.hex(true);
     }
 
@@ -432,17 +430,17 @@ namespace BlackGui::Models
         switch (expectedInteger.type())
         {
         case QMetaType::LongLong:
-            {
-                const qlonglong ll = expectedInteger.toLongLong(&ok);
-                if (ok) { return QString::number(ll); }
-                break;
-            }
+        {
+            const qlonglong ll = expectedInteger.toLongLong(&ok);
+            if (ok) { return QString::number(ll); }
+            break;
+        }
         case QMetaType::ULongLong:
-            {
-                const qulonglong ll = expectedInteger.toULongLong(&ok);
-                if (ok) { return QString::number(ll); }
-                break;
-            }
+        {
+            const qulonglong ll = expectedInteger.toULongLong(&ok);
+            if (ok) { return QString::number(ll); }
+            break;
+        }
         default:
             break;
         }

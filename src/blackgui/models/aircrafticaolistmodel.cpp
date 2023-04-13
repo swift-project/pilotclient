@@ -20,8 +20,7 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackGui::Models
 {
-    CAircraftIcaoCodeListModel::CAircraftIcaoCodeListModel(QObject *parent) :
-        CListModelDbObjects("AircraftIcaoListModel", parent)
+    CAircraftIcaoCodeListModel::CAircraftIcaoCodeListModel(QObject *parent) : CListModelDbObjects("AircraftIcaoListModel", parent)
     {
         m_columns.addColumn(CColumn::standardString("id", CAircraftIcaoCode::IndexDbIntegerKey, CDefaultFormatter::alignRightVCenter()));
         m_columns.addColumn(CColumn::standardString("ICAO", CAircraftIcaoCode::IndexAircraftDesignator));
@@ -37,7 +36,8 @@ namespace BlackGui::Models
         m_columns.addColumn(CColumn::standardString("type", "combined type", CAircraftIcaoCode::IndexCombinedAircraftType));
         m_columns.addColumn(CColumn::standardString("WTC", "wake turbulence category", CAircraftIcaoCode::IndexWtc));
         m_columns.addColumn(CColumn("mil.", "military", CAircraftIcaoCode::IndexIsMilitary, new CBoolIconFormatter("military", "civil")));
-        m_columns.addColumn(CColumn("VTOL", "vertical take-off and landing", CAircraftIcaoCode::IndexIsVtol, new CBoolIconFormatter("VTOL", "non VTOL"))); m_columns.addColumn(CColumn("leg.", "legacy", CAircraftIcaoCode::IndexIsLegacy, new CBoolIconFormatter("legacy", "operating")));
+        m_columns.addColumn(CColumn("VTOL", "vertical take-off and landing", CAircraftIcaoCode::IndexIsVtol, new CBoolIconFormatter("VTOL", "non VTOL")));
+        m_columns.addColumn(CColumn("leg.", "legacy", CAircraftIcaoCode::IndexIsLegacy, new CBoolIconFormatter("legacy", "operating")));
         m_columns.addColumn(CColumn("real.", "real world aircraft", CAircraftIcaoCode::IndexIsRealworld, new CBoolIconFormatter("real", "non real")));
         m_columns.addColumn(CColumn::standardString("changed", CAircraftIcaoCode::IndexUtcTimestampFormattedYmdhms));
 

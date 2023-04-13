@@ -61,9 +61,7 @@ namespace BlackCore
     {
         if (!this->isConnected()) { return ISimulator::Disconnected; }
         const SimulatorStatus status =
-            Connected
-            | (this->isSimulating() ? ISimulator::Simulating : static_cast<ISimulator::SimulatorStatusFlag>(0))
-            | (this->isPaused() ? ISimulator::Paused : static_cast<ISimulator::SimulatorStatusFlag>(0));
+            Connected | (this->isSimulating() ? ISimulator::Simulating : static_cast<ISimulator::SimulatorStatusFlag>(0)) | (this->isPaused() ? ISimulator::Paused : static_cast<ISimulator::SimulatorStatusFlag>(0));
         return status;
     }
 
@@ -369,7 +367,7 @@ namespace BlackCore
         for (const CSimulatedAircraft &aircraft : std::as_const(m_highlightedAircraft))
         {
             if (m_blinkCycle) { this->callPhysicallyRemoveRemoteAircraft(aircraft.getCallsign(), true); }
-            else { this->callPhysicallyAddRemoteAircraft(aircraft);  }
+            else { this->callPhysicallyAddRemoteAircraft(aircraft); }
         }
     }
 
@@ -411,15 +409,15 @@ namespace BlackCore
 
     void ISimulator::resetAircraftStatistics()
     {
-        m_statsUpdateAircraftRuns        = 0;
-        m_statsUpdateAircraftTimeAvgMs   = 0;
+        m_statsUpdateAircraftRuns = 0;
+        m_statsUpdateAircraftTimeAvgMs = 0;
         m_statsUpdateAircraftTimeTotalMs = 0;
-        m_statsMaxUpdateTimeMs           = 0;
-        m_statsCurrentUpdateTimeMs       = 0;
-        m_statsPhysicallyAddedAircraft   = 0;
+        m_statsMaxUpdateTimeMs = 0;
+        m_statsCurrentUpdateTimeMs = 0;
+        m_statsPhysicallyAddedAircraft = 0;
         m_statsPhysicallyRemovedAircraft = 0;
-        m_statsUpdateAircraftLimited     = 0;
-        m_statsLastUpdateAircraftRequestedMs  = 0;
+        m_statsUpdateAircraftLimited = 0;
+        m_statsLastUpdateAircraftRequestedMs = 0;
         m_statsUpdateAircraftRequestedDeltaMs = 0;
         ISimulationEnvironmentProvider::resetSimulationEnvironmentStatistics();
     }
@@ -441,7 +439,11 @@ namespace BlackCore
         if (!parser.isKnownCommand()) { return false; }
 
         // .plugin unload
-        if (parser.matchesPart(1, "unload")) { this->unload(); return true; }
+        if (parser.matchesPart(1, "unload"))
+        {
+            this->unload();
+            return true;
+        }
 
         // .plugin log interpolator
         const QString part1(parser.part(1).toLower().trimmed());
@@ -518,9 +520,7 @@ namespace BlackCore
             {
                 const CCallsign cs(parser.part(2));
                 const bool changed = this->setInterpolationMode(part1, cs);
-                CLogMessage(this).info(changed
-                                       ? QStringLiteral("Changed interpolation mode for '%1'")
-                                       : QStringLiteral("Unchanged interpolation mode for '%1'")) << cs.asString();
+                CLogMessage(this).info(changed ? QStringLiteral("Changed interpolation mode for '%1'") : QStringLiteral("Unchanged interpolation mode for '%1'")) << cs.asString();
                 return true;
             }
             else
@@ -528,9 +528,7 @@ namespace BlackCore
                 CInterpolationAndRenderingSetupGlobal setup = this->getInterpolationSetupGlobal();
                 const bool changed = setup.setInterpolatorMode(part1);
                 if (changed) { this->setInterpolationSetupGlobal(setup); }
-                CLogMessage(this).info(changed
-                                       ? QStringLiteral("Changed interpolation mode globally")
-                                       : QStringLiteral("Unchanged interpolation mode"));
+                CLogMessage(this).info(changed ? QStringLiteral("Changed interpolation mode globally") : QStringLiteral("Unchanged interpolation mode"));
                 return true;
             }
         } // spline/linear
@@ -649,35 +647,35 @@ namespace BlackCore
     void ISimulator::registerHelp()
     {
         if (CSimpleCommandParser::registered("BlackCore::ISimulator")) { return; }
-        CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
-        CSimpleCommandParser::registerCommand({".drv unload", "unload driver"});
-        CSimpleCommandParser::registerCommand({".drv cg length clear|modelstr.", "override CG"});
-        CSimpleCommandParser::registerCommand({".drv limit number/secs.", "limit updates to number per second (0..off)"});
-        CSimpleCommandParser::registerCommand({".drv logint callsign", "log interpolator for callsign"});
-        CSimpleCommandParser::registerCommand({".drv logint off", "no log information for interpolator"});
-        CSimpleCommandParser::registerCommand({".drv logint write", "write interpolator log to file"});
-        CSimpleCommandParser::registerCommand({".drv logint clear", "clear current log"});
-        CSimpleCommandParser::registerCommand({".drv logint max number", "max. number of entries logged"});
-        CSimpleCommandParser::registerCommand({".drv pos callsign", "show position for callsign"});
-        CSimpleCommandParser::registerCommand({".drv spline|linear callsign", "set spline/linear interpolator for one/all callsign(s)"});
-        CSimpleCommandParser::registerCommand({".drv aircraft readd callsign", "add again (re-add) a given callsign"});
-        CSimpleCommandParser::registerCommand({".drv aircraft readd all", "add again (re-add) all aircraft"});
-        CSimpleCommandParser::registerCommand({".drv aircraft rm callsign", "remove a given callsign from simulator"});
+        CSimpleCommandParser::registerCommand({ ".drv", "alias: .driver .plugin" });
+        CSimpleCommandParser::registerCommand({ ".drv unload", "unload driver" });
+        CSimpleCommandParser::registerCommand({ ".drv cg length clear|modelstr.", "override CG" });
+        CSimpleCommandParser::registerCommand({ ".drv limit number/secs.", "limit updates to number per second (0..off)" });
+        CSimpleCommandParser::registerCommand({ ".drv logint callsign", "log interpolator for callsign" });
+        CSimpleCommandParser::registerCommand({ ".drv logint off", "no log information for interpolator" });
+        CSimpleCommandParser::registerCommand({ ".drv logint write", "write interpolator log to file" });
+        CSimpleCommandParser::registerCommand({ ".drv logint clear", "clear current log" });
+        CSimpleCommandParser::registerCommand({ ".drv logint max number", "max. number of entries logged" });
+        CSimpleCommandParser::registerCommand({ ".drv pos callsign", "show position for callsign" });
+        CSimpleCommandParser::registerCommand({ ".drv spline|linear callsign", "set spline/linear interpolator for one/all callsign(s)" });
+        CSimpleCommandParser::registerCommand({ ".drv aircraft readd callsign", "add again (re-add) a given callsign" });
+        CSimpleCommandParser::registerCommand({ ".drv aircraft readd all", "add again (re-add) all aircraft" });
+        CSimpleCommandParser::registerCommand({ ".drv aircraft rm callsign", "remove a given callsign from simulator" });
 
         if (CBuildConfig::isCompiledWithFsuipcSupport())
         {
-            CSimpleCommandParser::registerCommand({".drv fsuipc on|off", "enable/disable FSUIPC (if applicable)"});
+            CSimpleCommandParser::registerCommand({ ".drv fsuipc on|off", "enable/disable FSUIPC (if applicable)" });
         }
     }
 
     QString ISimulator::statusToString(SimulatorStatus status)
     {
         QStringList s;
-        if (status.testFlag(Unspecified))  { s << QStringLiteral("Unspecified"); }
+        if (status.testFlag(Unspecified)) { s << QStringLiteral("Unspecified"); }
         if (status.testFlag(Disconnected)) { s << QStringLiteral("Disconnected"); }
-        if (status.testFlag(Connected))    { s << QStringLiteral("Connected"); }
-        if (status.testFlag(Simulating))   { s << QStringLiteral("Simulating"); }
-        if (status.testFlag(Paused))       { s << QStringLiteral("Paused"); }
+        if (status.testFlag(Connected)) { s << QStringLiteral("Connected"); }
+        if (status.testFlag(Simulating)) { s << QStringLiteral("Simulating"); }
+        if (status.testFlag(Paused)) { s << QStringLiteral("Paused"); }
         return s.join(", ");
     }
 
@@ -739,19 +737,18 @@ namespace BlackCore
     }
 
     ISimulator::ISimulator(const CSimulatorPluginInfo &pluginInfo,
-                           IOwnAircraftProvider       *ownAircraftProvider,
-                           IRemoteAircraftProvider    *remoteAircraftProvider,
-                           IWeatherGridProvider       *weatherGridProvider,
-                           IClientProvider            *clientProvider,
-                           QObject                    *parent) :
-        QObject(parent),
-        COwnAircraftAware(ownAircraftProvider),
-        CRemoteAircraftAware(remoteAircraftProvider),
-        CWeatherGridAware(weatherGridProvider),
-        CClientAware(clientProvider),
-        ISimulationEnvironmentProvider(pluginInfo),
-        IInterpolationSetupProvider(),
-        CIdentifiable(this)
+                           IOwnAircraftProvider *ownAircraftProvider,
+                           IRemoteAircraftProvider *remoteAircraftProvider,
+                           IWeatherGridProvider *weatherGridProvider,
+                           IClientProvider *clientProvider,
+                           QObject *parent) : QObject(parent),
+                                              COwnAircraftAware(ownAircraftProvider),
+                                              CRemoteAircraftAware(remoteAircraftProvider),
+                                              CWeatherGridAware(weatherGridProvider),
+                                              CClientAware(clientProvider),
+                                              ISimulationEnvironmentProvider(pluginInfo),
+                                              IInterpolationSetupProvider(),
+                                              CIdentifiable(this)
     {
         this->setObjectName("Simulator: " + pluginInfo.getIdentifier());
         m_interpolationLogger.setObjectName("Logger: " + pluginInfo.getIdentifier());
@@ -765,8 +762,7 @@ namespace BlackCore
                 nullptr,
                 nullptr,
                 std::bind(&ISimulator::rapOnRemoteProviderRemovedAircraft, this, std::placeholders::_1),
-                std::bind(&ISimulator::rapOnRecalculatedRenderedAircraft, this, std::placeholders::_1))
-        );
+                std::bind(&ISimulator::rapOnRecalculatedRenderedAircraft, this, std::placeholders::_1)));
 
         // timer
         connect(&m_oneSecondTimer, &QTimer::timeout, this, &ISimulator::oneSecondTimerTimeout);
@@ -776,7 +772,7 @@ namespace BlackCore
         // swift data
         if (sApp && sApp->hasWebDataServices())
         {
-            connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead,  this, &ISimulator::onSwiftDbAllDataRead, Qt::QueuedConnection);
+            connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this, &ISimulator::onSwiftDbAllDataRead, Qt::QueuedConnection);
             connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbAirportsRead, this, &ISimulator::onSwiftDbAirportsRead, Qt::QueuedConnection);
             connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbModelMatchingEntitiesRead, this, &ISimulator::onSwiftDbModelMatchingEntitiesRead, Qt::QueuedConnection);
         }
@@ -802,10 +798,9 @@ namespace BlackCore
         connect(this, &ISimulator::ownAircraftModelChanged, this, &ISimulator::onOwnModelChanged, Qt::QueuedConnection);
 
         // info
-        CLogMessage(this).info(u"Initialized simulator driver: '%1'") <<
-                (this->getSimulatorInfo().isUnspecified() ?
-                 this->getSimulatorPluginInfo().toQString() :
-                 this->getSimulatorInfo().toQString());
+        CLogMessage(this).info(u"Initialized simulator driver: '%1'") << (this->getSimulatorInfo().isUnspecified() ?
+                                                                              this->getSimulatorPluginInfo().toQString() :
+                                                                              this->getSimulatorInfo().toQString());
     }
 
     void ISimulator::onRecalculatedRenderedAircraft(const CAirspaceAircraftSnapshot &snapshot)
@@ -980,8 +975,7 @@ namespace BlackCore
             // decouple, follow up of signal can include unloading
             // simulator so this should happen strictly asyncronously (which is like forcing Qt::QueuedConnection)
             QPointer<ISimulator> myself(this);
-            QTimer::singleShot(0, this, [ = ]
-            {
+            QTimer::singleShot(0, this, [=] {
                 if (!myself || !sApp || sApp->isShuttingDown()) { return; }
 
                 // now simulating
@@ -998,8 +992,7 @@ namespace BlackCore
     void ISimulator::emitInterpolationSetupChanged()
     {
         QPointer<ISimulator> myself(this);
-        QTimer::singleShot(5, this, [ = ]
-        {
+        QTimer::singleShot(5, this, [=] {
             if (!myself) { return; }
             emit this->interpolationAndRenderingSetupChanged();
         });
@@ -1066,11 +1059,23 @@ namespace BlackCore
         int tokens = qRound(0.1 * numberPerSecond); // 100ms
         do
         {
-            if (tokens >= 3) { m_limitUpdateAircraftBucket.setInterval(100); break; }
+            if (tokens >= 3)
+            {
+                m_limitUpdateAircraftBucket.setInterval(100);
+                break;
+            }
             tokens = qRound(0.25 * numberPerSecond); // 250ms
-            if (tokens >= 3) { m_limitUpdateAircraftBucket.setInterval(250); break; }
+            if (tokens >= 3)
+            {
+                m_limitUpdateAircraftBucket.setInterval(250);
+                break;
+            }
             tokens = qRound(0.5 * numberPerSecond); // 500ms
-            if (tokens >= 3) { m_limitUpdateAircraftBucket.setInterval(500); break; }
+            if (tokens >= 3)
+            {
+                m_limitUpdateAircraftBucket.setInterval(500);
+                break;
+            }
             tokens = numberPerSecond;
             m_limitUpdateAircraftBucket.setInterval(1000);
         }
@@ -1116,24 +1121,23 @@ namespace BlackCore
 
     bool ISimulator::disconnectFrom()
     {
-        m_averageFps      = -1.0;
-        m_simTimeRatio    =  1.0;
-        m_trackMilesShort =  0.0;
-        m_minutesLate     =  0.0;
+        m_averageFps = -1.0;
+        m_simTimeRatio = 1.0;
+        m_trackMilesShort = 0.0;
+        m_minutesLate = 0.0;
         return true;
     }
 
     bool ISimulator::logicallyReAddRemoteAircraft(const CCallsign &callsign)
     {
         if (this->isShuttingDown()) { return false; }
-        if (callsign.isEmpty())     { return false; }
+        if (callsign.isEmpty()) { return false; }
 
         this->stopHighlighting();
         this->logicallyRemoveRemoteAircraft(callsign);
         if (!this->isAircraftInRange(callsign)) { return false; }
         const QPointer<ISimulator> myself(this);
-        QTimer::singleShot(2500, this, [ = ]
-        {
+        QTimer::singleShot(2500, this, [=] {
             if (myself.isNull()) { return; }
             if (this->isShuttingDown()) { return; }
             if (!this->isAircraftInRange(callsign)) { return; }
@@ -1169,8 +1173,8 @@ namespace BlackCore
     {
         if (this->isShuttingDown()) { return false; }
         return aircraft.isEnabled() ?
-               this->physicallyAddRemoteAircraft(aircraft) :
-               this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
+                   this->physicallyAddRemoteAircraft(aircraft) :
+                   this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
     }
 
     bool ISimulator::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft)
@@ -1184,8 +1188,7 @@ namespace BlackCore
         // return this->changeRemoteAircraftEnabled(aircraft);
 
         const QPointer<ISimulator> myself(this);
-        QTimer::singleShot(1000, this, [ = ]
-        {
+        QTimer::singleShot(1000, this, [=] {
             if (!myself) { return; }
             if (this->isAircraftInRange(callsign))
             {
@@ -1216,7 +1219,7 @@ namespace BlackCore
     void ISimulator::finishUpdateRemoteAircraftAndSetStatistics(qint64 startTime, bool limited)
     {
         const qint64 now = QDateTime::currentMSecsSinceEpoch();
-        const qint64 dt  = now - startTime;
+        const qint64 dt = now - startTime;
         m_statsCurrentUpdateTimeMs = dt;
         m_statsUpdateAircraftTimeTotalMs += dt;
         m_statsUpdateAircraftRuns++;
@@ -1261,8 +1264,8 @@ namespace BlackCore
                 // own ground elevations
                 if (elevation.hasMeanSeaLevelValue())
                 {
-                    const CCallsign cs    = situation.hasCallsign() ? situation.getCallsign() : ownAircraft.getCallsign();
-                    const CLength radius  = settings.getRecordedGndRadius().isNull() ? CElevationPlane::singlePointRadius() : settings.getRecordedGndRadius();
+                    const CCallsign cs = situation.hasCallsign() ? situation.getCallsign() : ownAircraft.getCallsign();
+                    const CLength radius = settings.getRecordedGndRadius().isNull() ? CElevationPlane::singlePointRadius() : settings.getRecordedGndRadius();
                     const CElevationPlane ep(situation, radius);
                     const bool remembered = this->rememberGroundElevation(cs, situation.isOnGround(), ep, radius);
 
@@ -1332,7 +1335,7 @@ namespace BlackCore
 
     void ISimulator::rapOnRecalculatedRenderedAircraft(const CAirspaceAircraftSnapshot &snapshot)
     {
-        if (!this->isConnected())   { return; }
+        if (!this->isConnected()) { return; }
         if (this->isShuttingDown()) { return; }
         this->onRecalculatedRenderedAircraft(snapshot);
     }
@@ -1384,8 +1387,7 @@ namespace BlackCore
 
         const int t = CMathUtils::randomInteger(4500, 5500); // makes sure not always using the same time difference
         const QPointer<ISimulator> myself(this);
-        QTimer::singleShot(t, this, [ = ]
-        {
+        QTimer::singleShot(t, this, [=] {
             if (!myself || myself->isShuttingDown()) { return; }
             this->displayLoggedSituationInSimulator(cs, stopLogging, times - 1);
         });
@@ -1401,7 +1403,7 @@ namespace BlackCore
     void ISimulator::reverseLookupAndUpdateOwnAircraftModel(const CAircraftModel &model)
     {
         if (!model.hasModelString()) { return; }
-        if (this->isShuttingDown())  { return; }
+        if (this->isShuttingDown()) { return; }
         Q_ASSERT_X(sApp->hasWebDataServices(), Q_FUNC_INFO, "Missing web services");
 
         if (this->getOwnAircraftModel() != model)
@@ -1418,16 +1420,14 @@ namespace BlackCore
             else
             {
                 // we wait for the data
-                connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbModelMatchingEntitiesRead, this, [ = ]
-                {
+                connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbModelMatchingEntitiesRead, this, [=] {
                     this->reverseLookupAndUpdateOwnAircraftModel(model);
                 });
             }
         }
     }
 
-    ISimulatorListener::ISimulatorListener(const CSimulatorPluginInfo &info) :
-        QObject(), m_info(info)
+    ISimulatorListener::ISimulatorListener(const CSimulatorPluginInfo &info) : QObject(), m_info(info)
     {
         this->setObjectName("ISimulatorListener:" + info.toQString());
 
@@ -1468,7 +1468,7 @@ namespace BlackCore
         {
             // call in correct thread
             QPointer<ISimulatorListener> myself(this);
-            QTimer::singleShot(0, this, [ = ] { if (myself) { this->start(); }});
+            QTimer::singleShot(0, this, [=] { if (myself) { this->start(); } });
             return;
         }
 
@@ -1483,7 +1483,7 @@ namespace BlackCore
         {
             // call in correct thread
             QPointer<ISimulatorListener> myself(this);
-            QTimer::singleShot(0, this, [ = ] { if (myself) { this->stop(); }});
+            QTimer::singleShot(0, this, [=] { if (myself) { this->stop(); } });
             return;
         }
 
@@ -1498,7 +1498,7 @@ namespace BlackCore
         {
             // call in correct thread
             QPointer<ISimulatorListener> myself(this);
-            QTimer::singleShot(0, this, [ = ] { if (myself) { this->check(); }});
+            QTimer::singleShot(0, this, [=] { if (myself) { this->check(); } });
             return;
         }
 

@@ -26,7 +26,8 @@ class QObject;
 namespace BlackGui::Models
 {
     //! List model for callsign based objects (callsign is unique key)
-    template <typename T, bool UseCompare = false> class CListModelCallsignObjects :
+    template <typename T, bool UseCompare = false>
+    class CListModelCallsignObjects :
         public CListModelBase<T, UseCompare>
     {
     public:

@@ -37,25 +37,25 @@ namespace BlackCore::Context
                                     "changedAircraftCockpit", this, SIGNAL(changedAircraftCockpit(BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::CIdentifier)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
-                                "changedSelcal", this, SIGNAL(changedSelcal(BlackMisc::Aviation::CSelcal, BlackMisc::CIdentifier)));
+                               "changedSelcal", this, SIGNAL(changedSelcal(BlackMisc::Aviation::CSelcal, BlackMisc::CIdentifier)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
-                                "changedCallsign", this, SIGNAL(changedCallsign(BlackMisc::Aviation::CCallsign)));
+                               "changedCallsign", this, SIGNAL(changedCallsign(BlackMisc::Aviation::CCallsign)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
-                                "changedAircraftIcaoCodes", this, SIGNAL(changedAircraftIcaoCodes(BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAirlineIcaoCode)));
+                               "changedAircraftIcaoCodes", this, SIGNAL(changedAircraftIcaoCodes(BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAirlineIcaoCode)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
-                                "changedPilot", this, SIGNAL(changedPilot(BlackMisc::Network::CUser)));
+                               "changedPilot", this, SIGNAL(changedPilot(BlackMisc::Network::CUser)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
-                                "movedAircraft", this, SIGNAL(movedAircraft(BlackMisc::PhysicalQuantities::CLength)));
+                               "movedAircraft", this, SIGNAL(movedAircraft(BlackMisc::PhysicalQuantities::CLength)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
-                                "isTakingOff", this, SIGNAL(isTakingOff()));
+                               "isTakingOff", this, SIGNAL(isTakingOff()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
-                                "isTouchingDown", this, SIGNAL(isTouchingDown()));
+                               "isTouchingDown", this, SIGNAL(isTouchingDown()));
         Q_ASSERT(s);
 
         this->relayBaseClassSignals(serviceName, connection, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName());

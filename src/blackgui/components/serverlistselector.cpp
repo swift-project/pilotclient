@@ -22,8 +22,7 @@ using namespace BlackCore::Db;
 
 namespace BlackGui::Components
 {
-    CServerListSelector::CServerListSelector(QWidget *parent) :
-        QComboBox(parent)
+    CServerListSelector::CServerListSelector(QWidget *parent) : QComboBox(parent)
     {
         const CServer server = m_lastServer.get();
         if (server.hasName())

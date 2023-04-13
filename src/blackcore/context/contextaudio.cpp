@@ -7,9 +7,9 @@
  */
 
 #include "blackcore/context/contextaudio.h"
-#include "blackcore/context/contextnetwork.h"      // for user login
-#include "blackcore/context/contextownaircraft.h"  // for COM integration
-#include "blackcore/context/contextsimulator.h"    // for COM intergration
+#include "blackcore/context/contextnetwork.h" // for user login
+#include "blackcore/context/contextownaircraft.h" // for COM integration
+#include "blackcore/context/contextsimulator.h" // for COM intergration
 #include "blackcore/context/contextaudioimpl.h"
 #include "blackcore/context/contextaudioproxy.h"
 #include "blackcore/afv/clients/afvclient.h"
@@ -21,7 +21,7 @@
 #include "blackconfig/buildconfig.h"
 
 #ifdef Q_OS_WIN
-#include "comdef.h"
+#    include "comdef.h"
 #endif
 
 using namespace BlackMisc;
@@ -37,8 +37,7 @@ using namespace BlackCore::Afv::Clients;
 
 namespace BlackCore::Context
 {
-    IContextAudio::IContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
-        IContext(mode, runtime)
+    IContextAudio::IContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContext(mode, runtime)
     {
         // void
     }
@@ -84,12 +83,10 @@ namespace BlackCore::Context
         Q_UNUSED(originator)
         if (commandLine.isEmpty()) { return false; }
         CSimpleCommandParser parser(
-        {
-            ".vol", ".volume",    // output volume
-            ".mute",              // mute
-            ".unmute",            // unmute
-            ".aliased"
-        });
+            { ".vol", ".volume", // output volume
+              ".mute", // mute
+              ".unmute", // unmute
+              ".aliased" });
         parser.parse(commandLine);
         if (!parser.isKnownCommand()) { return false; }
 
@@ -120,9 +117,8 @@ namespace BlackCore::Context
         return false;
     }
 
-    CContextAudioBase::CContextAudioBase(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
-        IContextAudio(mode, runtime),
-        CIdentifiable(this)
+    CContextAudioBase::CContextAudioBase(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextAudio(mode, runtime),
+                                                                                                      CIdentifiable(this)
     {
         CContextAudioBase::registerHelp();
 
@@ -139,8 +135,7 @@ namespace BlackCore::Context
         // the whole context/facade system is not initialized when this code here is executed
 
         QPointer<CContextAudioBase> myself(this);
-        QTimer::singleShot(5000, this, [ = ]
-        {
+        QTimer::singleShot(5000, this, [=] {
             if (!myself || !sApp || sApp->isShuttingDown()) { return; }
 
             const CSettings as = m_audioSettings.getThreadLocal();
@@ -174,13 +169,13 @@ namespace BlackCore::Context
 #ifdef Q_OS_WIN
         if (!m_winCoInitialized)
         {
-            HRESULT hr = CoInitializeEx(nullptr,  COINIT_MULTITHREADED);
+            HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
             // RPC_E_CHANGED_MODE: CoInitializeEx was already called by someone else in this thread with a different mode.
             if (hr == RPC_E_CHANGED_MODE)
             {
                 CLogMessage(this).debug(u"CoInitializeEx was already called with a different mode. Trying again.");
-                hr = CoInitializeEx(nullptr,  COINIT_APARTMENTTHREADED);
+                hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
             }
 
             // S_OK: The COM library was initialized successfully on this thread.
@@ -204,10 +199,10 @@ namespace BlackCore::Context
         // connect(m_voiceClient, &CAfvClient::updatedFromOwnAircraftCockpit, this, &CContextAudioBase::updatedFromOwnAircraftCockpit, Qt::QueuedConnection);
         connect(m_voiceClient, &CAfvClient::startedAudio, this, &CContextAudioBase::startedAudio, Qt::QueuedConnection);
         connect(m_voiceClient, &CAfvClient::stoppedAudio, this, &CContextAudioBase::stoppedAudio, Qt::QueuedConnection);
-        connect(m_voiceClient, &CAfvClient::ptt,          this, &CContextAudioBase::ptt,          Qt::QueuedConnection);
-        connect(m_voiceClient, &CAfvClient::changedMute,  this, &CContextAudioBase::changedMute,  Qt::QueuedConnection);
+        connect(m_voiceClient, &CAfvClient::ptt, this, &CContextAudioBase::ptt, Qt::QueuedConnection);
+        connect(m_voiceClient, &CAfvClient::changedMute, this, &CContextAudioBase::changedMute, Qt::QueuedConnection);
         connect(m_voiceClient, &CAfvClient::connectionStatusChanged, this, &CContextAudioBase::onAfvConnectionStatusChanged, Qt::QueuedConnection);
-        connect(m_voiceClient, &CAfvClient::afvConnectionFailure,    this, &CContextAudioBase::onAfvConnectionFailure,       Qt::QueuedConnection);
+        connect(m_voiceClient, &CAfvClient::afvConnectionFailure, this, &CContextAudioBase::onAfvConnectionFailure, Qt::QueuedConnection);
     }
 
     void CContextAudioBase::terminateVoiceClient()
@@ -308,7 +303,7 @@ namespace BlackCore::Context
         if (this->hasRegisteredAudioCallsign(cs)) // anybody else using that callsign
         {
             //! \todo KB 2019-11 would need a better algorithm to really find a cs
-            cs = CCallsign(cs.asString() +  "2");
+            cs = CCallsign(cs.asString() + "2");
         }
         CLogMessage(this).info(u"About to connect to voice as '%1' '%2'") << connectedUser.getId() << cs;
         m_voiceClient->connectTo(connectedUser.getId(), connectedUser.getPassword(), cs.asString(), client);
@@ -333,9 +328,8 @@ namespace BlackCore::Context
 
     const QList<QCommandLineOption> &CContextAudioBase::getCmdLineOptions()
     {
-        static const QList<QCommandLineOption> opts
-        {
-            QCommandLineOption({{"n", "noaudio"}, QCoreApplication::translate("CContextAudioBase", "No audio for GUI or core.", "noaudio")})
+        static const QList<QCommandLineOption> opts {
+            QCommandLineOption({ { "n", "noaudio" }, QCoreApplication::translate("CContextAudioBase", "No audio for GUI or core.", "noaudio") })
         };
         return opts;
     }
@@ -399,7 +393,7 @@ namespace BlackCore::Context
     void CContextAudioBase::setCurrentAudioDevices(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice)
     {
         if (!m_voiceClient) { return; }
-        if (!sApp)          { return; }
+        if (!sApp) { return; }
 
         if (!inputDevice.getName().isEmpty() && inputDevice.getName() != m_inputDeviceSetting.get())
         {
@@ -424,7 +418,7 @@ namespace BlackCore::Context
         const bool wasMuted = this->isMuted();
         volume = CSettings::fixOutVolume(volume);
 
-        const int  currentVolume = m_voiceClient->getNormalizedMasterOutputVolume();
+        const int currentVolume = m_voiceClient->getNormalizedMasterOutputVolume();
         const bool changedVoiceOutput = (currentVolume != volume);
         if (changedVoiceOutput)
         {
@@ -455,7 +449,7 @@ namespace BlackCore::Context
 
         volume = CSettings::fixOutVolume(volume);
 
-        const int  currentVolume = m_voiceClient->getNormalizedComOutputVolume(comUnit);
+        const int currentVolume = m_voiceClient->getNormalizedComOutputVolume(comUnit);
         const bool changedVoiceOutput = (currentVolume != volume);
         if (changedVoiceOutput)
         {
@@ -495,7 +489,6 @@ namespace BlackCore::Context
 
         if (muted) { m_outMasterVolumeBeforeMute = m_voiceClient->getNormalizedMasterOutputVolume(); }
 
-
         m_voiceClient->setMuted(muted);
         if (!muted) { m_voiceClient->setNormalizedMasterOutputVolume(m_outMasterVolumeBeforeMute); }
 
@@ -517,8 +510,7 @@ namespace BlackCore::Context
         {
             // As of https://dev.swift-project.org/T558 play additional notification
             const QPointer<const CContextAudioBase> myself(this);
-            QTimer::singleShot(ms, this, [ = ]
-            {
+            QTimer::singleShot(ms, this, [=] {
                 if (!sApp || sApp->isShuttingDown() || !myself) { return; }
                 this->playNotification(CNotificationSounds::NotificationTextMessageSupervisor, true);
             });
@@ -590,7 +582,7 @@ namespace BlackCore::Context
         const CAudioDeviceInfoList devices = this->getCurrentAudioDevices();
         Q_ASSERT_X(devices.size() == 2, Q_FUNC_INFO, "Expect INPUT and OUTPUT device");
 
-        const CAudioDeviceInfo input  = devices.front();
+        const CAudioDeviceInfo input = devices.front();
         const CAudioDeviceInfo output = devices.back();
         this->setCurrentAudioDevices(input, output);
     }

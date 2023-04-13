@@ -20,7 +20,7 @@ namespace BlackSimPlugin::XPlane
 
     BlackGui::CPluginConfigWindow *CSimulatorXPlaneConfig::createConfigWindow(QWidget *parent)
     {
-        CSimulatorXPlaneConfigWindow* w = new CSimulatorXPlaneConfigWindow(parent);
+        CSimulatorXPlaneConfigWindow *w = new CSimulatorXPlaneConfigWindow(parent);
         return w;
     }
 } // ns

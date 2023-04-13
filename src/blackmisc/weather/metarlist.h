@@ -49,4 +49,4 @@ namespace BlackMisc::Weather
 Q_DECLARE_METATYPE(BlackMisc::Weather::CMetarList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Weather::CMetar>)
 
-#endif //guard
+#endif // guard

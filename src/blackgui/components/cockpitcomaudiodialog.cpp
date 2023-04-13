@@ -11,15 +11,14 @@
 
 namespace BlackGui::Components
 {
-    CCockpitComAudioDialog::CCockpitComAudioDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CCockpitComAudioDialog)
+    CCockpitComAudioDialog::CCockpitComAudioDialog(QWidget *parent) : QDialog(parent),
+                                                                      ui(new Ui::CCockpitComAudioDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
     CCockpitComAudioDialog::~CCockpitComAudioDialog()
-    { }
+    {}
 
 } // ns

@@ -18,8 +18,8 @@ namespace BlackSimPlugin::FsCommon
 {
     //! @{
     //! Correctly casted values/checks
-    HRESULT inline  s_ok() { return S_OK; }
-    HRESULT inline  s_false() { return S_FALSE; }
+    HRESULT inline s_ok() { return S_OK; }
+    HRESULT inline s_false() { return S_FALSE; }
     static bool inline isOk(HRESULT result) { return result == s_ok(); }
     static bool inline isOk(HRESULT hr1, HRESULT hr2, HRESULT hr3 = s_ok(), HRESULT hr4 = s_ok()) { return isOk(hr1) && isOk(hr2) && isOk(hr3) && isOk(hr4); }
     bool inline isFailure(HRESULT result) { return !isOk(result); }

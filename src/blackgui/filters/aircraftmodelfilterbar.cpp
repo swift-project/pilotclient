@@ -31,9 +31,8 @@ using namespace BlackGui::Components;
 
 namespace BlackGui::Filters
 {
-    CAircraftModelFilterBar::CAircraftModelFilterBar(QWidget *parent) :
-        CFilterWidget(parent),
-        ui(new Ui::CAircraftModelFilterBar)
+    CAircraftModelFilterBar::CAircraftModelFilterBar(QWidget *parent) : CFilterWidget(parent),
+                                                                        ui(new Ui::CAircraftModelFilterBar)
     {
         ui->setupUi(this);
 
@@ -58,22 +57,21 @@ namespace BlackGui::Filters
 
         // connect deferred, avoid to filter during the UI "swing in period"
         QPointer<CAircraftModelFilterBar> myself(this);
-        QTimer::singleShot(2500, this, [ = ]
-        {
+        QTimer::singleShot(2500, this, [=] {
             if (!myself) { return; }
             this->connectTriggerFilterSignals();
         });
     }
 
     CAircraftModelFilterBar::~CAircraftModelFilterBar()
-    { }
+    {}
 
     void CAircraftModelFilterBar::displayCount(bool show)
     {
         ui->filter_Buttons->displayCount(show);
     }
 
-    std::unique_ptr<IModelFilter<CAircraftModelList> > CAircraftModelFilterBar::createModelFilter() const
+    std::unique_ptr<IModelFilter<CAircraftModelList>> CAircraftModelFilterBar::createModelFilter() const
     {
         CAircraftModel::ModelModeFilter mf = CAircraftModel::All;
         if (ui->cbt_IncludeExclude->checkState() == Qt::Checked)
@@ -96,23 +94,22 @@ namespace BlackGui::Filters
         }
 
         return std::make_unique<CAircraftModelFilter>(
-                    convertDbId(ui->le_Id->text()),
-                    ui->le_ModelString->text(),
-                    ui->le_ModelDescription->text(),
-                    mf,
-                    dbf,
-                    ui->cbt_Military->checkState(),
-                    ui->cbt_ColorLiveries->checkState(),
-                    ui->le_AircraftIcao->text(),
-                    ui->le_AircraftManufacturer->text(),
-                    ui->le_AirlineIcao->text(),
-                    ui->le_AirlineName->text(),
-                    ui->le_LiveryCode->text(),
-                    ui->le_FileName->text(),
-                    ui->comp_CombinedType->getCombinedType(),
-                    ui->comp_SimulatorSelector->getValue(),
-                    ui->comp_DistributorSelector->getDistributor()
-                );
+            convertDbId(ui->le_Id->text()),
+            ui->le_ModelString->text(),
+            ui->le_ModelDescription->text(),
+            mf,
+            dbf,
+            ui->cbt_Military->checkState(),
+            ui->cbt_ColorLiveries->checkState(),
+            ui->le_AircraftIcao->text(),
+            ui->le_AircraftManufacturer->text(),
+            ui->le_AirlineIcao->text(),
+            ui->le_AirlineName->text(),
+            ui->le_LiveryCode->text(),
+            ui->le_FileName->text(),
+            ui->comp_CombinedType->getCombinedType(),
+            ui->comp_SimulatorSelector->getValue(),
+            ui->comp_DistributorSelector->getDistributor());
     }
 
     void CAircraftModelFilterBar::onRowCountChanged(int count, bool withFilter)
@@ -169,7 +166,7 @@ namespace BlackGui::Filters
         connect(ui->le_AircraftManufacturer, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
         connect(ui->le_AirlineIcao, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
         connect(ui->le_AirlineName, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
-        connect(ui->le_LiveryCode,  &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+        connect(ui->le_LiveryCode, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
         connect(ui->le_Id, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
         connect(ui->le_ModelDescription, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
         connect(ui->le_ModelString, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
@@ -180,8 +177,8 @@ namespace BlackGui::Filters
         connect(ui->cbt_Military, &QCheckBox::clicked, this, &CAircraftModelFilterBar::onCheckBoxChanged);
         connect(ui->cbt_ColorLiveries, &QCheckBox::clicked, this, &CAircraftModelFilterBar::onCheckBoxChanged);
 
-        connect(ui->comp_SimulatorSelector,   &CSimulatorSelector::changed, this, &CAircraftModelFilterBar::onSimulatorSelectionChanged);
+        connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CAircraftModelFilterBar::onSimulatorSelectionChanged);
         connect(ui->comp_DistributorSelector, &CDbDistributorSelectorComponent::changedDistributor, this, &CAircraftModelFilterBar::onDistributorChanged);
-        connect(ui->comp_CombinedType,        &CAircraftCombinedTypeSelector::changedCombinedType,  this, &CAircraftModelFilterBar::onCombinedTypeChanged);
+        connect(ui->comp_CombinedType, &CAircraftCombinedTypeSelector::changedCombinedType, this, &CAircraftModelFilterBar::onCombinedTypeChanged);
     }
 } // ns

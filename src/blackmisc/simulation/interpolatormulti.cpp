@@ -14,9 +14,8 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackMisc::Simulation
 {
-    CInterpolatorMulti::CInterpolatorMulti(const CCallsign &callsign, ISimulationEnvironmentProvider *p1, IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3, CInterpolationLogger *logger) :
-        m_spline(callsign, p1, p2, p3, logger),
-        m_linear(callsign, p1, p2, p3, logger)
+    CInterpolatorMulti::CInterpolatorMulti(const CCallsign &callsign, ISimulationEnvironmentProvider *p1, IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3, CInterpolationLogger *logger) : m_spline(callsign, p1, p2, p3, logger),
+                                                                                                                                                                                                        m_linear(callsign, p1, p2, p3, logger)
     {}
 
     CInterpolationResult CInterpolatorMulti::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber)
@@ -78,7 +77,7 @@ namespace BlackMisc::Simulation
     }
 
     CInterpolatorMultiWrapper::CInterpolatorMultiWrapper()
-    { }
+    {}
 
     CInterpolatorMultiWrapper::CInterpolatorMultiWrapper(const Aviation::CCallsign &callsign, ISimulationEnvironmentProvider *p1, IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3, CInterpolationLogger *logger)
     {

@@ -19,8 +19,14 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace BlackMisc::Simulation { class CAircraftModel; }
-namespace Ui { class CDbModelMappingModifyDialog; }
+namespace BlackMisc::Simulation
+{
+    class CAircraftModel;
+}
+namespace Ui
+{
+    class CDbModelMappingModifyDialog;
+}
 namespace BlackGui::Components
 {
     /*!

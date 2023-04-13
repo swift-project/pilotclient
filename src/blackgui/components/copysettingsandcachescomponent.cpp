@@ -34,9 +34,8 @@ using namespace BlackGui::Settings;
 
 namespace BlackGui::Components
 {
-    CCopySettingsAndCachesComponent::CCopySettingsAndCachesComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        ui(new Ui::CCopySettingsAndCachesComponent)
+    CCopySettingsAndCachesComponent::CCopySettingsAndCachesComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                                                        ui(new Ui::CCopySettingsAndCachesComponent)
     {
         ui->setupUi(this);
         this->initAll();
@@ -48,7 +47,7 @@ namespace BlackGui::Components
     }
 
     CCopySettingsAndCachesComponent::~CCopySettingsAndCachesComponent()
-    { }
+    {}
 
     void CCopySettingsAndCachesComponent::reloadOtherVersions(int deferMs)
     {

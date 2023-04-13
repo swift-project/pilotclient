@@ -16,7 +16,10 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CAircraftModelSetValidationDialog; }
+namespace Ui
+{
+    class CAircraftModelSetValidationDialog;
+}
 namespace BlackMisc
 {
     class CStatusMessageList;

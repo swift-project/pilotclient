@@ -78,7 +78,7 @@ namespace BlackMisc
         // crash info
         void triggerCrashInfoWrite();
 
-        BlackMisc::CCrashInfo    m_crashAndLogInfo; //!< info representing details
+        BlackMisc::CCrashInfo m_crashAndLogInfo; //!< info representing details
         BlackMisc::CDigestSignal m_dsCrashAndLogInfo { this, &CCrashHandler::triggerCrashInfoWrite, 10000, 5 };
 
 #ifdef BLACK_USE_CRASHPAD

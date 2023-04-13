@@ -42,9 +42,9 @@ namespace BlackCore::Fsd
         //! PDU identifier
         static QString pdu() { return "#TM"; }
 
-        QString m_message;              //!< message text
-        Type m_type = PrivateMessage;   //!< message type
-        QVector<int> m_frequencies;     //!< frequencies in case of radio message.
+        QString m_message; //!< message text
+        Type m_type = PrivateMessage; //!< message type
+        QVector<int> m_frequencies; //!< frequencies in case of radio message.
 
     private:
         TextMessage();

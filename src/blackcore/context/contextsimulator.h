@@ -53,7 +53,10 @@ class QDBusConnection;
 namespace BlackMisc
 {
     class CDBusServer;
-    namespace Simulation { class CSimulatedAircraft; }
+    namespace Simulation
+    {
+        class CSimulatedAircraft;
+    }
 }
 namespace BlackCore::Context
 {
@@ -156,8 +159,8 @@ namespace BlackCore::Context
 
         //! Validated model set
         void validatedModelSet(const BlackMisc::Simulation::CSimulatorInfo &simulator,
-                                const BlackMisc::Simulation::CAircraftModelList &valid, const BlackMisc::Simulation::CAircraftModelList &invalid,
-                                bool stopped, const BlackMisc::CStatusMessageList &msgs);
+                               const BlackMisc::Simulation::CAircraftModelList &valid, const BlackMisc::Simulation::CAircraftModelList &invalid,
+                               bool stopped, const BlackMisc::CStatusMessageList &msgs);
 
         //! Auto publish data written for simulator
         void autoPublishDataWritten(const BlackMisc::Simulation::CSimulatorInfo &simulator);

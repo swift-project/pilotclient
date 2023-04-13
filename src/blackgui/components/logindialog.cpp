@@ -18,18 +18,17 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CLoginDialog::CLoginDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CLoginDialog)
+    CLoginDialog::CLoginDialog(QWidget *parent) : QDialog(parent),
+                                                  ui(new Ui::CLoginDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
         connect(ui->comp_LoginComponent, &CLoginAdvComponent::loginOrLogoffSuccessful, this, &CLoginDialog::onLoginOrLogoffSuccessful);
-        connect(ui->comp_LoginComponent, &CLoginAdvComponent::loginOrLogoffCancelled,  this, &CLoginDialog::onLoginOrLogoffCancelled);
-        connect(ui->comp_LoginComponent, &CLoginAdvComponent::requestNetworkSettings,  this, &CLoginDialog::onRequestNetworkSettings);
+        connect(ui->comp_LoginComponent, &CLoginAdvComponent::loginOrLogoffCancelled, this, &CLoginDialog::onLoginOrLogoffCancelled);
+        connect(ui->comp_LoginComponent, &CLoginAdvComponent::requestNetworkSettings, this, &CLoginDialog::onRequestNetworkSettings);
 
-        connect(ui->comp_LoginOverviewComponent, &CLoginOverviewComponent::closeOverview,           this, &CLoginDialog::close);
+        connect(ui->comp_LoginOverviewComponent, &CLoginOverviewComponent::closeOverview, this, &CLoginDialog::close);
         connect(ui->comp_LoginOverviewComponent, &CLoginOverviewComponent::loginOrLogoffSuccessful, this, &CLoginDialog::onLoginOrLogoffCancelled);
 
         if (sGui && sGui->getIContextNetwork())
@@ -39,7 +38,7 @@ namespace BlackGui::Components
     }
 
     CLoginDialog::~CLoginDialog()
-    { }
+    {}
 
     void CLoginDialog::setAutoLogoff(bool logoff)
     {
@@ -97,4 +96,4 @@ namespace BlackGui::Components
             this->init();
         }
     }
-}// ns
+} // ns

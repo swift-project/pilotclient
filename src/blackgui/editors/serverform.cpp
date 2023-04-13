@@ -21,9 +21,8 @@ using namespace BlackMisc::Network;
 
 namespace BlackGui::Editors
 {
-    CServerForm::CServerForm(QWidget *parent) :
-        CForm(parent),
-        ui(new Ui::CNetworkServerForm)
+    CServerForm::CServerForm(QWidget *parent) : CForm(parent),
+                                                ui(new Ui::CNetworkServerForm)
     {
         ui->setupUi(this);
         ui->le_Port->setValidator(new QIntValidator(1, 65535, this));
@@ -35,7 +34,7 @@ namespace BlackGui::Editors
     }
 
     CServerForm::~CServerForm()
-    { }
+    {}
 
     void CServerForm::setServer(const CServer &server)
     {
@@ -59,8 +58,7 @@ namespace BlackGui::Editors
             ui->le_NetworkId->text().trimmed(),
             ui->le_RealName->text().trimmed().simplified(),
             QString(),
-            ui->le_Password->text().trimmed()
-        );
+            ui->le_Password->text().trimmed());
         const CFsdSetup fsdSetup(ui->form_ServerFsd->getValue());
         const CVoiceSetup voiceSetup(ui->form_Voice->getValue());
         const CServer server(
@@ -72,8 +70,7 @@ namespace BlackGui::Editors
             fsdSetup, voiceSetup,
             ui->cbp_Ecosystem->getSelectedEcosystem(),
             this->getServerType(),
-            true
-        );
+            true);
         return server;
     }
 

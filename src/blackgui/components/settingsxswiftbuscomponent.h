@@ -18,7 +18,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CSettingsXSwiftBusComponent; }
+namespace Ui
+{
+    class CSettingsXSwiftBusComponent;
+}
 namespace BlackGui::Components
 {
     /*!

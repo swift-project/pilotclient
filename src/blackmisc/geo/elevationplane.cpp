@@ -22,36 +22,30 @@ namespace BlackMisc::Geo
         return QStringLiteral("%1 radius: %2").arg(coordinate, m_radius.valueRoundedWithUnit(2, i18n));
     }
 
-    CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, const ICoordinateGeodetic &rangeCoordinate) :
-        CCoordinateGeodetic(coordinate)
+    CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, const ICoordinateGeodetic &rangeCoordinate) : CCoordinateGeodetic(coordinate)
     {
         this->setRadiusOrMinimumRadius(this->calculateGreatCircleDistance(rangeCoordinate));
     }
 
-    CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, const CLength &radius) :
-        CCoordinateGeodetic(coordinate), m_radius(radius)
-    { }
+    CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, const CLength &radius) : CCoordinateGeodetic(coordinate), m_radius(radius)
+    {}
 
-    CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, const CAltitude &altitude, const CLength &radius) :
-        CCoordinateGeodetic(coordinate), m_radius(radius)
+    CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, const CAltitude &altitude, const CLength &radius) : CCoordinateGeodetic(coordinate), m_radius(radius)
     {
         this->setGeodeticHeight(altitude);
     }
 
-    CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, double altitudeMSLft, const CLength &radius) :
-        CCoordinateGeodetic(coordinate), m_radius(radius)
+    CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, double altitudeMSLft, const CLength &radius) : CCoordinateGeodetic(coordinate), m_radius(radius)
     {
         this->setGeodeticHeight(CAltitude(altitudeMSLft, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
     }
 
-    CElevationPlane::CElevationPlane(double latDeg, double lngDeg, double altitudeMSLft, const CLength &radius) :
-        CCoordinateGeodetic(latDeg, lngDeg, altitudeMSLft), m_radius(radius)
+    CElevationPlane::CElevationPlane(double latDeg, double lngDeg, double altitudeMSLft, const CLength &radius) : CCoordinateGeodetic(latDeg, lngDeg, altitudeMSLft), m_radius(radius)
     {
         Q_ASSERT_X(!std::isnan(altitudeMSLft), Q_FUNC_INFO, "elv.nan");
     }
 
-    CElevationPlane::CElevationPlane(const CLatitude &lat, const CLongitude &lng, const CAltitude &altitude, const CLength &radius) :
-        CCoordinateGeodetic(lat, lng, altitude), m_radius(radius)
+    CElevationPlane::CElevationPlane(const CLatitude &lat, const CLongitude &lng, const CAltitude &altitude, const CLength &radius) : CCoordinateGeodetic(lat, lng, altitude), m_radius(radius)
     {
         Q_ASSERT_X(altitude.isMeanSeaLevel(), Q_FUNC_INFO, "Need MSL");
     }
@@ -159,7 +153,11 @@ namespace BlackMisc::Geo
 
     void CElevationPlane::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CElevationPlane>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CElevationPlane>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

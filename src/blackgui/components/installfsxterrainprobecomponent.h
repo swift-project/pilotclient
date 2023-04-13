@@ -15,7 +15,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CInstallFsxTerrainProbeComponent; }
+namespace Ui
+{
+    class CInstallFsxTerrainProbeComponent;
+}
 namespace BlackGui::Components
 {
     //! Install the FSX/P3D terrain probe

@@ -30,8 +30,8 @@ namespace BlackSimPlugin::Fs9
 {
     CLobbyClient::CLobbyClient(QObject *parent)
         : QObject(parent),
-            m_callbackWrapper(this, &CLobbyClient::directPlayMessageHandler),
-            m_lobbyCallbackWrapper(this, &CLobbyClient::directPlayLobbyMessageHandler)
+          m_callbackWrapper(this, &CLobbyClient::directPlayMessageHandler),
+          m_lobbyCallbackWrapper(this, &CLobbyClient::directPlayLobbyMessageHandler)
     {
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing global object");
         initDirectPlay();
@@ -63,9 +63,9 @@ namespace BlackSimPlugin::Fs9
 
         // Create and init IDirectPlay8Peer
         if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Peer, nullptr,
-                                            CLSCTX_INPROC_SERVER,
-                                            IID_IDirectPlay8Peer,
-                                            (LPVOID *) &m_directPlayPeer)))
+                                         CLSCTX_INPROC_SERVER,
+                                         IID_IDirectPlay8Peer,
+                                         (LPVOID *)&m_directPlayPeer)))
             return logDirectPlayError(hr);
 
         // Turn off parameter validation in release builds
@@ -75,12 +75,11 @@ namespace BlackSimPlugin::Fs9
         if (FAILED(hr = m_directPlayPeer->Initialize(&m_callbackWrapper, m_callbackWrapper.messageHandler, dwInitFlags)))
             return logDirectPlayError(hr);
 
-
         // Create and init IDirectPlay8LobbyClient
         if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8LobbyClient, nullptr,
-                                            CLSCTX_INPROC_SERVER,
-                                            IID_IDirectPlay8LobbyClient,
-                                            (LPVOID *) &m_dpLobbyClient)))
+                                         CLSCTX_INPROC_SERVER,
+                                         IID_IDirectPlay8LobbyClient,
+                                         (LPVOID *)&m_dpLobbyClient)))
             return logDirectPlayError(hr);
 
         if (FAILED(hr = m_dpLobbyClient->Initialize(&m_lobbyCallbackWrapper, m_lobbyCallbackWrapper.messageHandler, dwInitFlags)))
@@ -92,8 +91,8 @@ namespace BlackSimPlugin::Fs9
     bool CLobbyClient::canLobbyConnect()
     {
         if (!m_dpLobbyClient) { return false; }
-        GUID appGuid  = CFs9Sdk::guid();
-        DWORD dwSize  = 0;
+        GUID appGuid = CFs9Sdk::guid();
+        DWORD dwSize = 0;
         DWORD dwItems = 0;
         const HRESULT hr = m_dpLobbyClient->EnumLocalPrograms(&appGuid, nullptr, &dwSize, &dwItems, 0);
         if (hr == DPNERR_BUFFERTOOSMALL)
@@ -140,10 +139,10 @@ namespace BlackSimPlugin::Fs9
         }
 
         hr = m_dpLobbyClient->ConnectApplication(&dnConnectInfo,
-                nullptr,
-                &m_applicationHandle,
-                INFINITE,
-                0);
+                                                 nullptr,
+                                                 &m_applicationHandle,
+                                                 INFINITE,
+                                                 0);
         if (FAILED(hr)) { return hr; }
 
         CLogMessage(this).info(u"Lobby client '%1' connected!") << address;
@@ -155,16 +154,15 @@ namespace BlackSimPlugin::Fs9
     {
         HRESULT hr;
 
-        IDirectPlay8Address *pHostAddress   = nullptr;
+        IDirectPlay8Address *pHostAddress = nullptr;
         IDirectPlay8Address *pDeviceAddress = nullptr;
 
         QScopedPointer<GUID> pSPGuid(new GUID);
         memcpy(pSPGuid.data(), &CLSID_DP8SP_TCPIP, sizeof(GUID));
 
-
         // Create a host address
         if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Address, nullptr, CLSCTX_INPROC_SERVER,
-                                            IID_IDirectPlay8Address, reinterpret_cast<void **>(&pHostAddress))))
+                                         IID_IDirectPlay8Address, reinterpret_cast<void **>(&pHostAddress))))
         {
             return logDirectPlayError(hr);
         }
@@ -177,7 +175,7 @@ namespace BlackSimPlugin::Fs9
 
         // Create a device address to specify which device we are using
         if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Address, NULL, CLSCTX_INPROC_SERVER,
-                                            IID_IDirectPlay8Address, reinterpret_cast<void **>(&pDeviceAddress))))
+                                         IID_IDirectPlay8Address, reinterpret_cast<void **>(&pDeviceAddress))))
         {
             return logDirectPlayError(hr);
         }
@@ -199,7 +197,7 @@ namespace BlackSimPlugin::Fs9
         // Allocate space for device address pointers
         // We cannot use QScopedArrayPointer, because memory needs to be valid
         // for the lifetime of DPL_CONNECTION_SETTINGS.
-        IDirectPlay8Address **apDevAddress = new IDirectPlay8Address*[1];
+        IDirectPlay8Address **apDevAddress = new IDirectPlay8Address *[1];
 
         // Set the device addresses
         apDevAddress[0] = pDeviceAddress;
@@ -211,15 +209,15 @@ namespace BlackSimPlugin::Fs9
 
         // Fill in the connection settings
         ZeroMemory(pSettings, sizeof(DPL_CONNECTION_SETTINGS));
-        pSettings->dwSize                       = sizeof(DPL_CONNECTION_SETTINGS);
-        pSettings->dpnAppDesc.dwSize            = sizeof(DPN_APPLICATION_DESC);
-        pSettings->dwFlags                      = 0;
-        pSettings->dpnAppDesc.guidApplication   = *pAppGuid;
-        pSettings->dpnAppDesc.guidInstance      = GUID_NULL;
-        pSettings->dpnAppDesc.dwFlags           = DPNSESSION_NODPNSVR;
-        pSettings->pdp8HostAddress              = pHostAddress;
-        pSettings->ppdp8DeviceAddresses         = apDevAddress;
-        pSettings->cNumDeviceAddresses          = 1;
+        pSettings->dwSize = sizeof(DPL_CONNECTION_SETTINGS);
+        pSettings->dpnAppDesc.dwSize = sizeof(DPN_APPLICATION_DESC);
+        pSettings->dwFlags = 0;
+        pSettings->dpnAppDesc.guidApplication = *pAppGuid;
+        pSettings->dpnAppDesc.guidInstance = GUID_NULL;
+        pSettings->dpnAppDesc.dwFlags = DPNSESSION_NODPNSVR;
+        pSettings->pdp8HostAddress = pHostAddress;
+        pSettings->ppdp8DeviceAddresses = apDevAddress;
+        pSettings->cNumDeviceAddresses = 1;
         pSettings->dpnAppDesc.pwszSessionName = new WCHAR[wcslen(wstrSessionName.data()) + 1];
         wcscpy(pSettings->dpnAppDesc.pwszSessionName, wstrSessionName.data());
 
@@ -265,71 +263,77 @@ namespace BlackSimPlugin::Fs9
         switch (messageId)
         {
         case DPL_MSGID_DISCONNECT:
-            {
-                PDPL_MESSAGE_DISCONNECT pDisconnectMsg;
-                pDisconnectMsg = (PDPL_MESSAGE_DISCONNECT)msgBuffer;
-                Q_UNUSED(pDisconnectMsg)
+        {
+            PDPL_MESSAGE_DISCONNECT pDisconnectMsg;
+            pDisconnectMsg = (PDPL_MESSAGE_DISCONNECT)msgBuffer;
+            Q_UNUSED(pDisconnectMsg)
 
-                emit disconnected();
+            emit disconnected();
 
-                // We should free any data associated with the
-                // app here, but there is none.
-                break;
-            }
+            // We should free any data associated with the
+            // app here, but there is none.
+            break;
+        }
 
         case DPL_MSGID_RECEIVE:
-            {
-                PDPL_MESSAGE_RECEIVE pReceiveMsg;
-                pReceiveMsg = (PDPL_MESSAGE_RECEIVE)msgBuffer;
-                Q_UNUSED(pReceiveMsg)
+        {
+            PDPL_MESSAGE_RECEIVE pReceiveMsg;
+            pReceiveMsg = (PDPL_MESSAGE_RECEIVE)msgBuffer;
+            Q_UNUSED(pReceiveMsg)
 
-                // The lobby app sent us data.  This sample doesn't
-                // expected data from the app, but it is useful
-                // for more complex clients.
-                break;
-            }
+            // The lobby app sent us data.  This sample doesn't
+            // expected data from the app, but it is useful
+            // for more complex clients.
+            break;
+        }
 
         case DPL_MSGID_SESSION_STATUS:
+        {
+            PDPL_MESSAGE_SESSION_STATUS pStatusMsg;
+            pStatusMsg = (PDPL_MESSAGE_SESSION_STATUS)msgBuffer;
+
+            QString message;
+            message.append(QString("%1: ").arg(pStatusMsg->hSender, 0, 16));
+            switch (pStatusMsg->dwStatus)
             {
-                PDPL_MESSAGE_SESSION_STATUS pStatusMsg;
-                pStatusMsg = (PDPL_MESSAGE_SESSION_STATUS)msgBuffer;
-
-                QString message;
-                message.append(QString("%1: ").arg(pStatusMsg->hSender, 0, 16));
-                switch (pStatusMsg->dwStatus)
-                {
-                case DPLSESSION_CONNECTED:
-                    message.append("Session connected"); break;
-                case DPLSESSION_COULDNOTCONNECT:
-                    message.append("Session could not connect"); break;
-                case DPLSESSION_DISCONNECTED:
-                    message.append("Session disconnected"); break;
-                case DPLSESSION_TERMINATED:
-                    message.append("Session terminated"); break;
-                case DPLSESSION_HOSTMIGRATED:
-                    message.append("Host migrated"); break;
-                case DPLSESSION_HOSTMIGRATEDHERE:
-                    message.append("Host migrated to this client"); break;
-                default:
-                    message.append(QStringLiteral("Unknown PDPL_MESSAGE_SESSION_STATUS: %1").arg(pStatusMsg->dwStatus));
-                    break;
-                }
-
-                CLogMessage(this).info(message);
+            case DPLSESSION_CONNECTED:
+                message.append("Session connected");
+                break;
+            case DPLSESSION_COULDNOTCONNECT:
+                message.append("Session could not connect");
+                break;
+            case DPLSESSION_DISCONNECTED:
+                message.append("Session disconnected");
+                break;
+            case DPLSESSION_TERMINATED:
+                message.append("Session terminated");
+                break;
+            case DPLSESSION_HOSTMIGRATED:
+                message.append("Host migrated");
+                break;
+            case DPLSESSION_HOSTMIGRATEDHERE:
+                message.append("Host migrated to this client");
+                break;
+            default:
+                message.append(QStringLiteral("Unknown PDPL_MESSAGE_SESSION_STATUS: %1").arg(pStatusMsg->dwStatus));
                 break;
             }
+
+            CLogMessage(this).info(message);
+            break;
+        }
 
         case DPL_MSGID_CONNECTION_SETTINGS:
-            {
-                PDPL_MESSAGE_CONNECTION_SETTINGS pConnectionStatusMsg;
-                pConnectionStatusMsg = (PDPL_MESSAGE_CONNECTION_SETTINGS)msgBuffer;
-                Q_UNUSED(pConnectionStatusMsg)
+        {
+            PDPL_MESSAGE_CONNECTION_SETTINGS pConnectionStatusMsg;
+            pConnectionStatusMsg = (PDPL_MESSAGE_CONNECTION_SETTINGS)msgBuffer;
+            Q_UNUSED(pConnectionStatusMsg)
 
-                // The app has changed the connection settings.
-                // This simple client doesn't handle this, but more complex clients may
-                // want to.
-                break;
-            }
+            // The app has changed the connection settings.
+            // This simple client doesn't handle this, but more complex clients may
+            // want to.
+            break;
+        }
         }
         return S_OK;
     }

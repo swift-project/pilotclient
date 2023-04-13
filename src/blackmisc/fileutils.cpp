@@ -116,7 +116,7 @@ namespace BlackMisc
 
     QString CFileUtils::stripFileFromPath(const QString &path)
     {
-        if (path.endsWith('/'))  { return path; }
+        if (path.endsWith('/')) { return path; }
         if (!path.contains('/')) { return path; }
         return path.left(path.lastIndexOf('/'));
     }
@@ -160,7 +160,7 @@ namespace BlackMisc
     QString CFileUtils::lastPathSegment(const QString &path)
     {
         if (path.isEmpty()) { return {}; }
-        if (path.endsWith('/'))  { return CFileUtils::lastPathSegment(path.left(path.length() - 1)); }
+        if (path.endsWith('/')) { return CFileUtils::lastPathSegment(path.left(path.length() - 1)); }
         if (!path.contains('/')) { return path; }
         return path.mid(path.lastIndexOf('/') + 1);
     }
@@ -174,8 +174,8 @@ namespace BlackMisc
     {
         static const bool win = CBuildConfig::isRunningOnWindowsNtPlatform();
         return win ?
-               CFileUtils::fixWindowsUncPath(CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path1, path2), path3)) :
-               CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path1, path2), path3);
+                   CFileUtils::fixWindowsUncPath(CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path1, path2), path3)) :
+                   CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path1, path2), path3);
     }
 
     QString CFileUtils::pathUp(const QString &path)
@@ -321,7 +321,7 @@ namespace BlackMisc
         }
         else
         {
-            if (! result.isEmpty()) { return result.first().filePath(); }
+            if (!result.isEmpty()) { return result.first().filePath(); }
         }
         if (recursive)
         {
@@ -329,7 +329,7 @@ namespace BlackMisc
             {
                 if (isExcludedDirectory(subdir, excludeDirectories)) { continue; }
                 const QString first = findFirstFile(subdir.filePath(), true, nameFilters, excludeDirectories, predicate);
-                if (! first.isEmpty()) { return first; }
+                if (!first.isEmpty()) { return first; }
             }
         }
         return {};
@@ -337,17 +337,17 @@ namespace BlackMisc
 
     bool CFileUtils::containsFile(const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories, std::function<bool(const QFileInfo &)> predicate)
     {
-        return ! findFirstFile(dir, recursive, nameFilters, excludeDirectories, predicate).isEmpty();
+        return !findFirstFile(dir, recursive, nameFilters, excludeDirectories, predicate).isEmpty();
     }
 
     QString CFileUtils::findFirstNewerThan(const QDateTime &time, const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories)
     {
-        return findFirstFile(dir, recursive, nameFilters, excludeDirectories, [time](const QFileInfo & fi) { return fi.lastModified() > time; });
+        return findFirstFile(dir, recursive, nameFilters, excludeDirectories, [time](const QFileInfo &fi) { return fi.lastModified() > time; });
     }
 
     bool CFileUtils::containsFileNewerThan(const QDateTime &time, const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories)
     {
-        return ! findFirstNewerThan(time, dir, recursive, nameFilters, excludeDirectories).isEmpty();
+        return !findFirstNewerThan(time, dir, recursive, nameFilters, excludeDirectories).isEmpty();
     }
 
     QFileInfoList CFileUtils::enumerateFiles(const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories, std::function<bool(const QFileInfo &)> predicate)
@@ -356,7 +356,7 @@ namespace BlackMisc
         QFileInfoList result = dir.entryInfoList(nameFilters, QDir::Files);
         if (predicate)
         {
-            result.erase(std::remove_if(result.begin(), result.end(), [ = ](const auto &f) { return !predicate(f); }), result.end());
+            result.erase(std::remove_if(result.begin(), result.end(), [=](const auto &f) { return !predicate(f); }), result.end());
         }
         if (recursive)
         {
@@ -375,8 +375,7 @@ namespace BlackMisc
         const QFileInfoList files = enumerateFiles(dir, recursive, nameFilters, excludeDirectories);
         if (files.isEmpty()) { return {}; }
 
-        auto it = std::max_element(files.cbegin(), files.cend(), [](const QFileInfo & a, const QFileInfo & b)
-        {
+        auto it = std::max_element(files.cbegin(), files.cend(), [](const QFileInfo &a, const QFileInfo &b) {
             return a.lastModified() < b.lastModified();
         });
         return *it;
@@ -388,8 +387,7 @@ namespace BlackMisc
         const QFileInfoList files = enumerateFiles(dir, recursive, nameFilters, excludeDirectories);
         if (files.isEmpty()) { return {}; }
 
-        auto it = std::max_element(files.cbegin(), files.cend(), [](const QFileInfo & a, const QFileInfo & b)
-        {
+        auto it = std::max_element(files.cbegin(), files.cend(), [](const QFileInfo &a, const QFileInfo &b) {
             return a.birthTime() < b.birthTime();
         });
         return *it;
@@ -399,9 +397,8 @@ namespace BlackMisc
     {
         static const QStringList executables(
             QFileInfo(QCoreApplication::applicationFilePath())
-            .dir()
-            .entryList(QDir::Executable | QDir::Files)
-        );
+                .dir()
+                .entryList(QDir::Executable | QDir::Files));
         return executables;
     }
 
@@ -431,16 +428,16 @@ namespace BlackMisc
     {
         switch (lockFile.error())
         {
-        case QLockFile::NoError:         return QStringLiteral("No error");
+        case QLockFile::NoError: return QStringLiteral("No error");
         case QLockFile::PermissionError: return QStringLiteral("Insufficient permission");
-        case QLockFile::UnknownError:    return QStringLiteral("Unknown error");
+        case QLockFile::UnknownError: return QStringLiteral("Unknown error");
         case QLockFile::LockFailedError:
-            {
-                QString hostname, appname;
-                qint64 pid = 0;
-                lockFile.getLockInfo(&pid, &hostname, &appname);
-                return QStringLiteral("Lock open in another process (%1 %2 on %3)").arg(hostname, QString::number(pid), appname);
-            }
+        {
+            QString hostname, appname;
+            qint64 pid = 0;
+            lockFile.getLockInfo(&pid, &hostname, &appname);
+            return QStringLiteral("Lock open in another process (%1 %2 on %3)").arg(hostname, QString::number(pid), appname);
+        }
         default: return QStringLiteral("Bad error number");
         }
     }
@@ -542,7 +539,7 @@ namespace BlackMisc
     {
         // incomplete list of file name appendixes
         // dmg is not a executable. It is a MacOS container. If you open it, a new virtual drive will be mapped which includes a executable.
-        static const QStringList appendixes({".exe", ".dmg", ".run"});
+        static const QStringList appendixes({ ".exe", ".dmg", ".run" });
         return appendixes;
     }
 

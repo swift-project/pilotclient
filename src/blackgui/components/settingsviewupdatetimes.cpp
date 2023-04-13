@@ -14,9 +14,8 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackGui::Components
 {
-    CSettingsViewUpdateTimes::CSettingsViewUpdateTimes(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CSettingsViewUpdateTimes)
+    CSettingsViewUpdateTimes::CSettingsViewUpdateTimes(QWidget *parent) : QFrame(parent),
+                                                                          ui(new Ui::CSettingsViewUpdateTimes)
     {
         ui->setupUi(this);
         connect(ui->hs_RenderingUpdateTime, &QSlider::sliderReleased, this, &CSettingsViewUpdateTimes::ps_sliderChanged);
@@ -29,7 +28,7 @@ namespace BlackGui::Components
     }
 
     CSettingsViewUpdateTimes::~CSettingsViewUpdateTimes()
-    { }
+    {}
 
     void CSettingsViewUpdateTimes::ps_sliderChanged()
     {

@@ -18,13 +18,13 @@ using namespace BlackMisc::Aviation;
 namespace BlackCore::Fsd
 {
     VisualPilotDataToggle::VisualPilotDataToggle() : MessageBase()
-    { }
+    {}
 
     VisualPilotDataToggle::VisualPilotDataToggle(const QString &sender, const QString &client, bool active)
         : MessageBase(sender, {}),
-            m_client(client),
-            m_active(active)
-    { }
+          m_client(client),
+          m_active(active)
+    {}
 
     QStringList VisualPilotDataToggle::toTokens() const
     {

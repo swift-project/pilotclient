@@ -58,8 +58,8 @@ namespace BlackMisc::Aviation
         //! Enum type to distinguish between true north and magnetic north
         enum ReferenceNorth
         {
-            Magnetic = 0,   //!< magnetic north
-            True = 1        //!< true north
+            Magnetic = 0, //!< magnetic north
+            True = 1 //!< true north
         };
 
         //! \copydoc BlackMisc::Mixin::String::toQString

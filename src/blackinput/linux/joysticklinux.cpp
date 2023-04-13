@@ -76,9 +76,8 @@ namespace BlackInput
         }
     }
 
-    CJoystickLinux::CJoystickLinux(QObject *parent) :
-        IJoystick(parent),
-        m_inputWatcher(new QFileSystemWatcher(this))
+    CJoystickLinux::CJoystickLinux(QObject *parent) : IJoystick(parent),
+                                                      m_inputWatcher(new QFileSystemWatcher(this))
     {
         m_inputWatcher->addPath(inputDevicesDir());
         connect(m_inputWatcher, &QFileSystemWatcher::directoryChanged, this, &CJoystickLinux::reloadDevices);
@@ -131,11 +130,11 @@ namespace BlackInput
         BlackMisc::Input::CHotkeyCombination oldCombination(m_buttonCombination);
         if (isPressed)
         {
-            m_buttonCombination.addJoystickButton({name, index});
+            m_buttonCombination.addJoystickButton({ name, index });
         }
         else
         {
-            m_buttonCombination.removeJoystickButton({name, index});
+            m_buttonCombination.removeJoystickButton({ name, index });
         }
 
         if (oldCombination != m_buttonCombination)
@@ -152,8 +151,7 @@ namespace BlackInput
         for (const auto &entry : dir.entryInfoList())
         {
             QString f = entry.absoluteFilePath();
-            auto it = std::find_if(m_joystickDevices.begin(), m_joystickDevices.end(), [path] (const CJoystickDevice *device)
-            {
+            auto it = std::find_if(m_joystickDevices.begin(), m_joystickDevices.end(), [path](const CJoystickDevice *device) {
                 return device->getPath() == path;
             });
             if (it == m_joystickDevices.end())

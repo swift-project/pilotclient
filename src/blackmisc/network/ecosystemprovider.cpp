@@ -56,7 +56,7 @@ namespace BlackMisc::Network
 
     // pin vtable to this file
     void CEcosystemAware::anchor()
-    { }
+    {}
 
     CEcosystem CEcosystemAware::getCurrentEcosystem() const
     {

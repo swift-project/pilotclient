@@ -27,9 +27,8 @@ using namespace BlackMisc::Simulation::FsCommon;
 
 namespace BlackGui::Components
 {
-    CInstallFsxTerrainProbeComponent::CInstallFsxTerrainProbeComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CInstallFsxTerrainProbeComponent)
+    CInstallFsxTerrainProbeComponent::CInstallFsxTerrainProbeComponent(QWidget *parent) : QFrame(parent),
+                                                                                          ui(new Ui::CInstallFsxTerrainProbeComponent)
     {
         ui->setupUi(this);
         ui->le_Source->setText(CSwiftDirectories::shareTerrainProbeDirectory());
@@ -43,15 +42,14 @@ namespace BlackGui::Components
         connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CInstallFsxTerrainProbeComponent::onSimulatorChanged);
 
         QPointer<CInstallFsxTerrainProbeComponent> myself(this);
-        QTimer::singleShot(500, this, [ = ]
-        {
+        QTimer::singleShot(500, this, [=] {
             if (!myself) { return; }
             this->onSimulatorChanged(ui->comp_SimulatorSelector->getValue());
         });
     }
 
     CInstallFsxTerrainProbeComponent::~CInstallFsxTerrainProbeComponent()
-    { }
+    {}
 
     void CInstallFsxTerrainProbeComponent::copyProbe()
     {

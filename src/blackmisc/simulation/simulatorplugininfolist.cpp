@@ -16,19 +16,18 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Simulation, CSimulatorPluginInfo, CSimul
 
 namespace BlackMisc::Simulation
 {
-    CSimulatorPluginInfoList::CSimulatorPluginInfoList() { }
+    CSimulatorPluginInfoList::CSimulatorPluginInfoList() {}
 
     bool CSimulatorPluginInfoList::supportsSimulator(const QString &simulator) const
     {
-        return std::find_if(begin(), end(), [&simulator](const CSimulatorPluginInfo & info)
-        {
-            return info.getSimulator() == simulator;
-        }) != end();
+        return std::find_if(begin(), end(), [&simulator](const CSimulatorPluginInfo &info) {
+                   return info.getSimulator() == simulator;
+               }) != end();
     }
 
     QStringList CSimulatorPluginInfoList::toStringList(bool i18n) const
     {
-        return this->transform([i18n](const CSimulatorPluginInfo & info) { return info.toQString(i18n); });
+        return this->transform([i18n](const CSimulatorPluginInfo &info) { return info.toQString(i18n); });
     }
 
     CSimulatorPluginInfo CSimulatorPluginInfoList::findByIdentifier(const QString &identifier) const

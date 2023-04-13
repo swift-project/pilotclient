@@ -19,9 +19,8 @@ using namespace BlackGui::Views;
 
 namespace BlackGui::Components
 {
-    CInterpolationComponent::CInterpolationComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CInterpolationComponent)
+    CInterpolationComponent::CInterpolationComponent(QWidget *parent) : QFrame(parent),
+                                                                        ui(new Ui::CInterpolationComponent)
     {
         ui->setupUi(this);
         ui->tw_InterpolationSetup->setCurrentIndex(0);
@@ -32,7 +31,7 @@ namespace BlackGui::Components
     }
 
     CInterpolationComponent::~CInterpolationComponent()
-    { }
+    {}
 
     void CInterpolationComponent::displayInterpolationMessages()
     {

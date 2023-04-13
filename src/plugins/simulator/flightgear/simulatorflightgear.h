@@ -50,7 +50,10 @@ namespace BlackMisc
         class CAircraftSituation;
         class CCallsign;
     }
-    namespace Network { class CTextMessage; }
+    namespace Network
+    {
+        class CTextMessage;
+    }
     namespace Simulation
     {
         class CSimulatedAircraft;
@@ -58,7 +61,10 @@ namespace BlackMisc
         class IOwnAircraftProvider;
         class IRemoteAircraftProvider;
     }
-    namespace Weather { class IWeatherGridProvider; }
+    namespace Weather
+    {
+        class IWeatherGridProvider;
+    }
 }
 
 namespace BlackSimPlugin::Flightgear
@@ -71,42 +77,42 @@ namespace BlackSimPlugin::Flightgear
     //! Flightgear data
     struct FlightgearData
     {
-        QString aircraftModelPath;          //!< Aircraft model path
-        QString aircraftIcaoCode;           //!< Aircraft ICAO code
-        double latitudeDeg = 0;             //!< Longitude [deg]
-        double longitudeDeg = 0;            //!< Latitude [deg]
-        double altitudeFt = 0;              //!< Altitude [ft]
-        double groundspeedKts = 0;          //!< Ground speed [kts]
-        double pitchDeg = 0;                //!< Pitch [deg]
-        double rollDeg = 0;                 //!< Roll [deg]
-        double trueHeadingDeg = 0;          //!< True heading [deg]
-        double velocityXMs = 0;             //!< x velocity [m/s]
-        double velocityYMs = 0;             //!< y velocity [m/s]
-        double velocityZMs = 0;             //!< z velocity [m/s]
-        double pitchRateRadPerSec = 0;      //!< Pitch angular velocity [rad/s]
-        double rollRateRadPerSec = 0;       //!< Roll angular velocity [rad/s]
-        double yawRateRadPerSec = 0;        //!< Yaw angular velocity [rad/s]
-        bool onGroundAll = false;           //!< All wheels on ground?
-        int com1ActiveKhz = 122800;         //!< COM1 active [kHz]
-        int com1StandbyKhz = 122800;        //!< COM1 standby [kHz]
-        int com2ActiveKhz = 122800;         //!< COM2 active [kHz]
-        int com2StandbyKhz = 122800;        //!< COM2 standby [kHz]
-        int xpdrCode = 2000;                //!< Transpondder code
-        int xpdrMode = 0;                   //!< Transponder mode (off=0,stdby=1-2, >2 on)
-        bool xpdrIdent = false;             //!< Is transponder in ident?
-        bool beaconLightsOn = false;        //!< Beacon lights on?
-        bool landingLightsOn = false;       //!< Landing lights on?
-        bool navLightsOn = false;           //!< NAV lights on?
-        bool strobeLightsOn = false;        //!< Strobe lights on?
-        bool taxiLightsOn = false;          //!< Taxi lights on?
-        double flapsReployRatio = false;    //!< Flaps deployment ratio [%]
-        double gearReployRatio = false;     //!< Gear deployment ratio [%]
-        QList<double> enginesN1Percentage;  //!< N1 per engine [%]
-        double speedBrakeRatio = 0;         //!< Speed break ratio [%]
-        double pressureAltitudeFt = 0;      //!< Pressure altitude [inhg]
-        double groundElevation = 0;         //!< Ground Elevation [m]
-        double volumeCom1 = 1;              //!< Volume com1 [0..1]
-        double volumeCom2 = 1;              //!< Volume com2 [0..1]
+        QString aircraftModelPath; //!< Aircraft model path
+        QString aircraftIcaoCode; //!< Aircraft ICAO code
+        double latitudeDeg = 0; //!< Longitude [deg]
+        double longitudeDeg = 0; //!< Latitude [deg]
+        double altitudeFt = 0; //!< Altitude [ft]
+        double groundspeedKts = 0; //!< Ground speed [kts]
+        double pitchDeg = 0; //!< Pitch [deg]
+        double rollDeg = 0; //!< Roll [deg]
+        double trueHeadingDeg = 0; //!< True heading [deg]
+        double velocityXMs = 0; //!< x velocity [m/s]
+        double velocityYMs = 0; //!< y velocity [m/s]
+        double velocityZMs = 0; //!< z velocity [m/s]
+        double pitchRateRadPerSec = 0; //!< Pitch angular velocity [rad/s]
+        double rollRateRadPerSec = 0; //!< Roll angular velocity [rad/s]
+        double yawRateRadPerSec = 0; //!< Yaw angular velocity [rad/s]
+        bool onGroundAll = false; //!< All wheels on ground?
+        int com1ActiveKhz = 122800; //!< COM1 active [kHz]
+        int com1StandbyKhz = 122800; //!< COM1 standby [kHz]
+        int com2ActiveKhz = 122800; //!< COM2 active [kHz]
+        int com2StandbyKhz = 122800; //!< COM2 standby [kHz]
+        int xpdrCode = 2000; //!< Transpondder code
+        int xpdrMode = 0; //!< Transponder mode (off=0,stdby=1-2, >2 on)
+        bool xpdrIdent = false; //!< Is transponder in ident?
+        bool beaconLightsOn = false; //!< Beacon lights on?
+        bool landingLightsOn = false; //!< Landing lights on?
+        bool navLightsOn = false; //!< NAV lights on?
+        bool strobeLightsOn = false; //!< Strobe lights on?
+        bool taxiLightsOn = false; //!< Taxi lights on?
+        double flapsReployRatio = false; //!< Flaps deployment ratio [%]
+        double gearReployRatio = false; //!< Gear deployment ratio [%]
+        QList<double> enginesN1Percentage; //!< N1 per engine [%]
+        double speedBrakeRatio = 0; //!< Speed break ratio [%]
+        double pressureAltitudeFt = 0; //!< Pressure altitude [inhg]
+        double groundElevation = 0; //!< Ground Elevation [m]
+        double volumeCom1 = 1; //!< Volume com1 [0..1]
+        double volumeCom2 = 1; //!< Volume com2 [0..1]
     };
 
     //! Flightgear ISimulator implementation
@@ -117,11 +123,11 @@ namespace BlackSimPlugin::Flightgear
     public:
         //! Constructor
         CSimulatorFlightgear(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                                BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                                BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
-                                BlackMisc::Network::IClientProvider *clientProvider,
-                                QObject *parent = nullptr);
+                             BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                             BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                             BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+                             BlackMisc::Network::IClientProvider *clientProvider,
+                             QObject *parent = nullptr);
 
         //! Dtor
         virtual ~CSimulatorFlightgear() override;
@@ -177,7 +183,7 @@ namespace BlackSimPlugin::Flightgear
 
         void setAirportsInRange(const QStringList &icaoCodes, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts);
         void emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao,
-                                            const QString &modelString, const QString &name, const QString &description);
+                                         const QString &modelString, const QString &name, const QString &description);
         void fastTimerTimeout();
         void slowTimerTimeout();
 
@@ -215,7 +221,7 @@ namespace BlackSimPlugin::Flightgear
         void onRemoteAircraftAdded(const QString &callsign);
         void onRemoteAircraftAddingFailed(const QString &callsign);
         void updateRemoteAircraftFromSimulator(const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
-                                                const QDoubleList &elevationsMeters, const QDoubleList &verticalOffsetsMeters);
+                                               const QDoubleList &elevationsMeters, const QDoubleList &verticalOffsetsMeters);
         //! @}
 
         //! Dsiconnect from DBus
@@ -296,10 +302,10 @@ namespace BlackSimPlugin::Flightgear
     public:
         //! \copydoc BlackCore::ISimulatorFactory::create
         virtual BlackCore::ISimulator *create(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                                                BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
-                                                BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                                                BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
-                                                BlackMisc::Network::IClientProvider *clientProvider) override;
+                                              BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                                              BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                                              BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+                                              BlackMisc::Network::IClientProvider *clientProvider) override;
 
         //! \copydoc BlackCore::ISimulatorFactory::createListener
         virtual BlackCore::ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) override { return new CSimulatorFlightgearListener(info); }

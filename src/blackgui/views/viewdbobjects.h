@@ -25,11 +25,15 @@ class QWidget;
 
 namespace BlackGui
 {
-    namespace Menus { class CMenuActions; }
+    namespace Menus
+    {
+        class CMenuActions;
+    }
     namespace Views
     {
         //! Base class for views with DB objects
-        template <class T> class CViewWithDbObjects :
+        template <class T>
+        class CViewWithDbObjects :
             public CViewBase<T>
         {
         public:
@@ -78,7 +82,8 @@ namespace BlackGui
         };
 
         //! Base class for views with DB objects also orderable (based on BlackMisc::IOrderableList )
-        template <class T> class COrderableViewWithDbObjects :
+        template <class T>
+        class COrderableViewWithDbObjects :
             public CViewWithDbObjects<T>
         {
         public:
@@ -121,9 +126,9 @@ namespace BlackGui
 
         private:
             QList<QAction *> m_menuActions;
-            QLineEdit       *m_leOrder   = nullptr;
-            QFrame          *m_frame     = nullptr;
-            QIntValidator   *m_validator = nullptr;
+            QLineEdit *m_leOrder = nullptr;
+            QFrame *m_frame = nullptr;
+            QIntValidator *m_validator = nullptr;
         };
     } // namespace
 } // namespace

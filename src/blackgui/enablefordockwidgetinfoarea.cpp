@@ -43,8 +43,7 @@ namespace BlackGui
         }
 
         m_parentDockableInfoArea = parentDockableWidget;
-        QMetaObject::Connection con = QDockWidget::connect(parentDockableWidget, &QDockWidget::destroyed, [this]
-        {
+        QMetaObject::Connection con = QDockWidget::connect(parentDockableWidget, &QDockWidget::destroyed, [this] {
             // break dependency to dockable widget
             m_parentDockableInfoArea = nullptr;
         });

@@ -29,18 +29,17 @@ namespace BlackGui::Components
 {
     const QStringList &CDbOwnModelSetFormDialog::getLogCategories()
     {
-        static const QStringList cats({ "swift.ownmodelset", CLogCategories::guiComponent()});
+        static const QStringList cats({ "swift.ownmodelset", CLogCategories::guiComponent() });
         return cats;
     }
 
-    CDbOwnModelSetFormDialog::CDbOwnModelSetFormDialog(QWidget *parent) :
-        QDialog(parent),
-        CDbMappingComponentAware(parent),
-        ui(new Ui::CDbOwnModelSetFormDialog)
+    CDbOwnModelSetFormDialog::CDbOwnModelSetFormDialog(QWidget *parent) : QDialog(parent),
+                                                                          CDbMappingComponentAware(parent),
+                                                                          ui(new Ui::CDbOwnModelSetFormDialog)
     {
         ui->setupUi(this);
         connect(ui->pb_Cancel, &QPushButton::clicked, this, &CDbOwnModelSetFormDialog::buttonClicked);
-        connect(ui->pb_Ok,     &QPushButton::clicked, this, &CDbOwnModelSetFormDialog::buttonClicked);
+        connect(ui->pb_Ok, &QPushButton::clicked, this, &CDbOwnModelSetFormDialog::buttonClicked);
         connect(ui->form_OwnModelSet, &COwnModelSetForm::simulatorChanged, this, &CDbOwnModelSetFormDialog::simulatorChanged);
     }
 
@@ -137,7 +136,7 @@ namespace BlackGui::Components
     CAircraftModelList CDbOwnModelSetFormDialog::buildSet(const CSimulatorInfo &simulator, const CAircraftModelList &currentSet)
     {
         Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
-        const bool givenDistributorsOnly  = !ui->form_OwnModelSet->optionUseAllDistributors();
+        const bool givenDistributorsOnly = !ui->form_OwnModelSet->optionUseAllDistributors();
         const bool dbDataOnly = ui->form_OwnModelSet->optionDbDataOnly();
         const bool dbIcaoOnly = ui->form_OwnModelSet->optionDbIcaoCodesOnly();
         const bool incremnental = ui->form_OwnModelSet->optionIncrementalBuild();
@@ -156,8 +155,8 @@ namespace BlackGui::Components
 
         const CModelSetBuilder builder(this);
         CModelSetBuilder::Builder options = givenDistributorsOnly ? CModelSetBuilder::GivenDistributorsOnly : CModelSetBuilder::NoOptions;
-        if (dbDataOnly)   { options |= CModelSetBuilder::OnlyDbData; }
-        if (dbIcaoOnly)   { options |= CModelSetBuilder::OnlyDbIcaoCodes; }
+        if (dbDataOnly) { options |= CModelSetBuilder::OnlyDbData; }
+        if (dbIcaoOnly) { options |= CModelSetBuilder::OnlyDbIcaoCodes; }
         if (incremnental) { options |= CModelSetBuilder::Incremental; }
         if (sortByDistributor) { options |= CModelSetBuilder::SortByDistributors; }
         if (consolidateWithDb) { options |= CModelSetBuilder::ConsolidateWithDb; }

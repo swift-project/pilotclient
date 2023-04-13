@@ -39,10 +39,9 @@ using namespace BlackMisc::Network;
 
 namespace BlackGui::Components
 {
-    CDbLoginComponent::CDbLoginComponent(QWidget *parent) :
-        QFrame(parent),
-        CLoadIndicatorEnabled(this),
-        ui(new Ui::CDbLoginComponent)
+    CDbLoginComponent::CDbLoginComponent(QWidget *parent) : QFrame(parent),
+                                                            CLoadIndicatorEnabled(this),
+                                                            ui(new Ui::CDbLoginComponent)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
         ui->setupUi(this);
@@ -64,7 +63,7 @@ namespace BlackGui::Components
         ui->lbl_DatabaseName->setTextInteractionFlags(Qt::TextBrowserInteraction);
         ui->lbl_DatabaseName->setOpenExternalLinks(true);
 
-        connect(ui->pb_Login,  &QPushButton::clicked, this, &CDbLoginComponent::onLoginClicked);
+        connect(ui->pb_Login, &QPushButton::clicked, this, &CDbLoginComponent::onLoginClicked);
         connect(ui->pb_Logoff, &QPushButton::clicked, this, &CDbLoginComponent::onLogoffClicked);
         connect(ui->le_Password, &QLineEdit::returnPressed, this, &CDbLoginComponent::onLoginClicked);
         connect(&m_loginService, &CDatabaseAuthenticationService::userAuthenticationFinished, this, &CDbLoginComponent::onAuthenticationFinished, Qt::QueuedConnection);
@@ -80,7 +79,7 @@ namespace BlackGui::Components
     }
 
     CDbLoginComponent::~CDbLoginComponent()
-    { }
+    {}
 
     CAuthenticatedUser CDbLoginComponent::getDbUser() const
     {

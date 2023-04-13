@@ -15,7 +15,10 @@
 #include "blackgui/blackguiexport.h"
 #include <QDialog>
 
-namespace Ui { class CUpdateInfoDialog; }
+namespace Ui
+{
+    class CUpdateInfoDialog;
+}
 namespace BlackGui::Components
 {
     /*!

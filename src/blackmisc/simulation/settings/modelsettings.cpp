@@ -14,7 +14,7 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::Settings, CModelSettings)
 namespace BlackMisc::Simulation::Settings
 {
     CModelSettings::CModelSettings()
-    { }
+    {}
 
     QString CModelSettings::convertToQString(bool i18n) const
     {
@@ -35,7 +35,11 @@ namespace BlackMisc::Simulation::Settings
 
     void CModelSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CModelSettings>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CModelSettings>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

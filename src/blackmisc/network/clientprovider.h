@@ -19,7 +19,10 @@
 
 namespace BlackMisc
 {
-    namespace Aviation { class CAircraftSituation; }
+    namespace Aviation
+    {
+        class CAircraftSituation;
+    }
     namespace Network
     {
         //! Direct in memory access to client (network client) data
@@ -158,11 +161,11 @@ namespace BlackMisc
             CClientAware() {}
 
             //! Constructor
-            CClientAware(IClientProvider *clientProvider) : IProviderAware(clientProvider) { }
+            CClientAware(IClientProvider *clientProvider) : IProviderAware(clientProvider) {}
         };
 
         //! Client provider dummy for testing
-        class BLACKMISC_EXPORT CClientProviderDummy: public CClientProvider
+        class BLACKMISC_EXPORT CClientProviderDummy : public CClientProvider
         {
         public:
             //! Dummy instance

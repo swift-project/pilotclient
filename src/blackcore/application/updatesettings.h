@@ -30,8 +30,8 @@ namespace BlackCore::Application
         {
             // guessing / preset-ing some default values
             static const QStringList d = (sApp && !sApp->getUpdateInfo().isEmpty()) ?
-                                            sApp->getUpdateInfo().anticipateMyDefaultChannelAndPlatform() : // from cached or loaded update info
-                                            QStringList({ "STABLE", BlackMisc::CPlatform::currentPlatform().getPlatformName()});
+                                             sApp->getUpdateInfo().anticipateMyDefaultChannelAndPlatform() : // from cached or loaded update info
+                                             QStringList({ "STABLE", BlackMisc::CPlatform::currentPlatform().getPlatformName() });
             return d;
         }
 

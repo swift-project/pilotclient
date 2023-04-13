@@ -17,9 +17,8 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CNetworkAircraftValuesComponent::CNetworkAircraftValuesComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CNetworkAircraftValuesComponent)
+    CNetworkAircraftValuesComponent::CNetworkAircraftValuesComponent(QWidget *parent) : QFrame(parent),
+                                                                                        ui(new Ui::CNetworkAircraftValuesComponent)
     {
         ui->setupUi(this);
     }

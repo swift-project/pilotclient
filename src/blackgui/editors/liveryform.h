@@ -24,7 +24,10 @@
 
 class QWidget;
 
-namespace Ui { class CLiveryForm; }
+namespace Ui
+{
+    class CLiveryForm;
+}
 namespace BlackGui::Editors
 {
     /*!

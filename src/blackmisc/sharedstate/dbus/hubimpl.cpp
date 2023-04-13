@@ -15,7 +15,7 @@
 
 namespace BlackMisc::SharedState::DBus
 {
-    CHub::CHub(CDBusServer *server, QObject* parent) : IHub(parent), m_server(server)
+    CHub::CHub(CDBusServer *server, QObject *parent) : IHub(parent), m_server(server)
     {
         if (server) { server->addObject(BLACKMISC_HUB_PATH, this); }
     }

@@ -11,13 +11,12 @@
 
 namespace BlackGui::Components
 {
-    COtherSwiftVersionsDialog::COtherSwiftVersionsDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::COtherSwiftVersionsDialog)
+    COtherSwiftVersionsDialog::COtherSwiftVersionsDialog(QWidget *parent) : QDialog(parent),
+                                                                            ui(new Ui::COtherSwiftVersionsDialog)
     {
         ui->setupUi(this);
     }
 
     COtherSwiftVersionsDialog::~COtherSwiftVersionsDialog()
-    { }
+    {}
 } // ns

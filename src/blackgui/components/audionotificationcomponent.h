@@ -21,7 +21,10 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CAudioNotificationComponent; }
+namespace Ui
+{
+    class CAudioNotificationComponent;
+}
 namespace BlackGui::Components
 {
     //! Audio component, volume, ...

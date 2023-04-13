@@ -21,7 +21,10 @@
 class QPixmap;
 class QWidget;
 
-namespace Ui { class CCockpitInfoAreaComponent; }
+namespace Ui
+{
+    class CCockpitInfoAreaComponent;
+}
 namespace BlackGui::Components
 {
     //! The cockpit itself is part of the main info area, but itself also an info area.
@@ -41,10 +44,10 @@ namespace BlackGui::Components
         enum InfoArea
         {
             // index must match tab index!
-            InfoAreaNotifications =  0,
-            InfoAreaAudio         =  1,
-            InfoAreaAdvanced      =  2,
-            InfoAreaNone          = -1
+            InfoAreaNotifications = 0,
+            InfoAreaAudio = 1,
+            InfoAreaAdvanced = 2,
+            InfoAreaNone = -1
         };
 
     public slots:

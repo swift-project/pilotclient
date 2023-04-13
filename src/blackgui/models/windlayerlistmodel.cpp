@@ -18,8 +18,7 @@ using namespace BlackMisc::Weather;
 
 namespace BlackGui::Models
 {
-    CWindLayerListModel::CWindLayerListModel(QObject *parent) :
-        CListModelBase("WindLayerListModel", parent)
+    CWindLayerListModel::CWindLayerListModel(QObject *parent) : CListModelBase("WindLayerListModel", parent)
     {
         m_columns.addColumn(CColumn("level", CWindLayer::IndexLevel, new CAltitudeFormatter()));
         m_columns.addColumn(CColumn("direction", CWindLayer::IndexDirection, new CAngleDegreeFormatter()));

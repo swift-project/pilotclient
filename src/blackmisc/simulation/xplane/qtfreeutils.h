@@ -92,32 +92,32 @@ namespace BlackMisc::Simulation::XPlane::QtFreeUtils
     {
         // https://stackoverflow.com/questions/1628386/normalise-orientation-between-0-and-360
         if (value >= start && value <= end) { return value; }
-        const double width       = end - start  ;
+        const double width = end - start;
         const double offsetValue = value - start; // value relative to 0
-        return (offsetValue - (floor(offsetValue / width) * width)) + start ;
+        return (offsetValue - (floor(offsetValue / width) * width)) + start;
     }
 
     //! ACF properties
     struct AcfProperties
     {
-        std::string aircraftIcaoCode;   //!< Aircraft ICAO code
-        std::string modelDescription;   //!< Model description
-        std::string modelName;          //!< Model name
-        std::string author;             //!< Model author
-        std::string modelString;        //!< Generated model string
+        std::string aircraftIcaoCode; //!< Aircraft ICAO code
+        std::string modelDescription; //!< Model description
+        std::string modelName; //!< Model name
+        std::string author; //!< Model author
+        std::string modelString; //!< Generated model string
     };
 
     //! Get the model string for a flyable aircraft
     inline std::string stringForFlyableModel(const AcfProperties &acfProperties, const std::string &acfFile)
     {
-        if (! acfProperties.author.empty())
+        if (!acfProperties.author.empty())
         {
-            if (! acfProperties.modelName.empty())
+            if (!acfProperties.modelName.empty())
             {
                 if (acfProperties.modelName.find(acfProperties.author) != std::string::npos) { return acfProperties.modelName; }
                 else { return acfProperties.author + ' ' + acfProperties.modelName; }
             }
-            else if (! acfProperties.aircraftIcaoCode.empty())
+            else if (!acfProperties.aircraftIcaoCode.empty())
             {
                 return acfProperties.author + ' ' + acfProperties.aircraftIcaoCode;
             }
@@ -128,8 +128,7 @@ namespace BlackMisc::Simulation::XPlane::QtFreeUtils
     //! String to lower case
     inline std::string toLower(std::string s)
     {
-        std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c)
-        {
+        std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) {
             return std::tolower(c);
         });
         return s;
@@ -139,8 +138,7 @@ namespace BlackMisc::Simulation::XPlane::QtFreeUtils
     inline bool stringCompareCaseInsensitive(const std::string &str1, const std::string &str2)
     {
         if (str1.size() != str2.size()) { return false; }
-        return std::equal(str1.begin(), str1.end(), str2.begin(), [](const char &c1, const char &c2)
-        {
+        return std::equal(str1.begin(), str1.end(), str2.begin(), [](const char &c1, const char &c2) {
             return (c1 == c2 || std::toupper(c1) == std::toupper(c2));
         });
     }
@@ -266,33 +264,40 @@ namespace BlackMisc::Simulation::XPlane::QtFreeUtils
 
         //! @{
         //! Equality
-        friend bool operator ==(Utf8Iterator a, Utf8Iterator b) { return a.base == b.base; }
-        friend bool operator !=(Utf8Iterator a, Utf8Iterator b) { return a.base != b.base; }
-        friend bool operator ==(Utf8Iterator a, I b) { return a.base == b; }
-        friend bool operator !=(Utf8Iterator a, I b) { return a.base != b; }
-        friend bool operator ==(I a, Utf8Iterator b) { return a == b.base; }
-        friend bool operator !=(I a, Utf8Iterator b) { return a != b.base; }
+        friend bool operator==(Utf8Iterator a, Utf8Iterator b) { return a.base == b.base; }
+        friend bool operator!=(Utf8Iterator a, Utf8Iterator b) { return a.base != b.base; }
+        friend bool operator==(Utf8Iterator a, I b) { return a.base == b; }
+        friend bool operator!=(Utf8Iterator a, I b) { return a.base != b; }
+        friend bool operator==(I a, Utf8Iterator b) { return a == b.base; }
+        friend bool operator!=(I a, Utf8Iterator b) { return a != b.base; }
         //! @}
 
         //! Dereference (not encoding-aware)
-        reference operator *() const { return *base; }
+        reference operator*() const { return *base; }
 
         //! Pointer indirection (not encoding-aware)
-        pointer operator ->() const { return base.operator ->(); }
+        pointer operator->() const { return base.operator->(); }
 
         //! Pre-increment
-        Utf8Iterator &operator ++()
+        Utf8Iterator &operator++()
         {
-            constexpr auto isContinuation = [](auto c)
-            {
+            constexpr auto isContinuation = [](auto c) {
                 return (c & static_cast<value_type>(0b11000000)) == static_cast<value_type>(0b10000000);
             };
-            do { ++base; } while (base != end && isContinuation(*base));
+            do {
+                ++base;
+            }
+            while (base != end && isContinuation(*base));
             return *this;
         }
 
         //! Post-increment
-        Utf8Iterator operator ++(int) { auto copy = *this; ++*this; return copy; }
+        Utf8Iterator operator++(int)
+        {
+            auto copy = *this;
+            ++*this;
+            return copy;
+        }
 
         I base; //!< Underlying iterator
         I end; //!< Underlying end iterator
@@ -300,4 +305,3 @@ namespace BlackMisc::Simulation::XPlane::QtFreeUtils
 } // namespace
 
 #endif // guard
-

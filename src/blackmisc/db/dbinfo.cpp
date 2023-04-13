@@ -16,9 +16,8 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Db, CDbInfo)
 
 namespace BlackMisc::Db
 {
-    CDbInfo::CDbInfo(int key, const QString &tableName, int entries) :
-        IDatastoreObjectWithIntegerKey(key),
-        m_tableName(tableName.trimmed().toLower()), m_entries(entries)
+    CDbInfo::CDbInfo(int key, const QString &tableName, int entries) : IDatastoreObjectWithIntegerKey(key),
+                                                                       m_tableName(tableName.trimmed().toLower()), m_entries(entries)
     {
         this->setEntity(this->getEntity());
         Q_ASSERT_X(tableName.isEmpty() || m_entity != CEntityFlags::NoEntity, Q_FUNC_INFO, "Wrong entity");
@@ -77,24 +76,28 @@ namespace BlackMisc::Db
         switch (i)
         {
         case IndexTableName: return QVariant::fromValue(m_tableName);
-        case IndexEntries:   return QVariant::fromValue(m_entries);
-        case IndexEntity:    return QVariant::fromValue(m_entity);
+        case IndexEntries: return QVariant::fromValue(m_entries);
+        case IndexEntity: return QVariant::fromValue(m_entity);
         default:
             return (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) ?
-                    IDatastoreObjectWithIntegerKey::propertyByIndex(index) :
-                    CValueObject::propertyByIndex(index);
+                       IDatastoreObjectWithIntegerKey::propertyByIndex(index) :
+                       CValueObject::propertyByIndex(index);
         }
     }
 
     void CDbInfo::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CDbInfo>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CDbInfo>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexTableName: this->setTableName(variant.toString()); break;
-        case IndexEntries:   this->setTableName(variant.toString()); break;
-        case IndexEntity:    this->setEntity(static_cast<CEntityFlags::Entity>(variant.toInt())); break;
+        case IndexEntries: this->setTableName(variant.toString()); break;
+        case IndexEntity: this->setEntity(static_cast<CEntityFlags::Entity>(variant.toInt())); break;
         default:
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
             {
@@ -111,13 +114,13 @@ namespace BlackMisc::Db
     int CDbInfo::comparePropertyByIndex(CPropertyIndexRef index, const CDbInfo &compareValue) const
     {
         if (index.isMyself()) { return getTableName().compare(compareValue.getTableName(), Qt::CaseInsensitive); }
-        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);}
+        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue); }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexTableName: return this->getTableName().compare(compareValue.getTableName(), Qt::CaseInsensitive);
-        case IndexEntries:   return Compare::compare(this->getEntries(), compareValue.getEntries());
-        case IndexEntity:    return Compare::compare(this->getEntity(), compareValue.getEntity());
+        case IndexEntries: return Compare::compare(this->getEntries(), compareValue.getEntries());
+        case IndexEntity: return Compare::compare(this->getEntity(), compareValue.getEntity());
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison possible");
         }
@@ -141,7 +144,7 @@ namespace BlackMisc::Db
 
     const QStringList &CDbInfo::sharedFileNames()
     {
-        static const QStringList names({"aircrafticao.json", "airlineicao.json", "airports.json", "countries.json", "distributors.json", "liveries.json", "models.json", "aircraftcategories.json" });
+        static const QStringList names({ "aircrafticao.json", "airlineicao.json", "airports.json", "countries.json", "distributors.json", "liveries.json", "models.json", "aircraftcategories.json" });
         return names;
     }
 
@@ -153,7 +156,7 @@ namespace BlackMisc::Db
 
     const QStringList &CDbInfo::serviceNames()
     {
-        static const QStringList names({"jsonaircrafticao.php", "jsonairlineicao.php", "jsonairport.php", "jsoncountry.php", "jsondistributor.php", "jsonlivery.php", "jsonaircraftmodel.php", "jsonaircraftcategory.php" });
+        static const QStringList names({ "jsonaircrafticao.php", "jsonairlineicao.php", "jsonairport.php", "jsoncountry.php", "jsondistributor.php", "jsonlivery.php", "jsonaircraftmodel.php", "jsonaircraftcategory.php" });
         return names;
     }
 
@@ -162,13 +165,13 @@ namespace BlackMisc::Db
         static const QString empty;
         switch (entity)
         {
-        case CEntityFlags::AircraftIcaoEntity:  return sharedFileNames().at(0);
-        case CEntityFlags::AirlineIcaoEntity:   return sharedFileNames().at(1);
-        case CEntityFlags::AirportEntity:       return sharedFileNames().at(2);
-        case CEntityFlags::CountryEntity:       return sharedFileNames().at(3);
-        case CEntityFlags::DistributorEntity:   return sharedFileNames().at(4);
-        case CEntityFlags::LiveryEntity:        return sharedFileNames().at(5);
-        case CEntityFlags::ModelEntity:         return sharedFileNames().at(6);
+        case CEntityFlags::AircraftIcaoEntity: return sharedFileNames().at(0);
+        case CEntityFlags::AirlineIcaoEntity: return sharedFileNames().at(1);
+        case CEntityFlags::AirportEntity: return sharedFileNames().at(2);
+        case CEntityFlags::CountryEntity: return sharedFileNames().at(3);
+        case CEntityFlags::DistributorEntity: return sharedFileNames().at(4);
+        case CEntityFlags::LiveryEntity: return sharedFileNames().at(5);
+        case CEntityFlags::ModelEntity: return sharedFileNames().at(6);
         case CEntityFlags::AircraftCategoryEntity: return sharedFileNames().at(7);
         default: break;
         }
@@ -181,12 +184,12 @@ namespace BlackMisc::Db
         switch (entity)
         {
         case CEntityFlags::AircraftIcaoEntity: return serviceNames().at(0);
-        case CEntityFlags::AirlineIcaoEntity:  return serviceNames().at(1);
-        case CEntityFlags::AirportEntity:      return serviceNames().at(2);
-        case CEntityFlags::CountryEntity:      return serviceNames().at(3);
-        case CEntityFlags::DistributorEntity:  return serviceNames().at(4);
-        case CEntityFlags::LiveryEntity:       return serviceNames().at(5);
-        case CEntityFlags::ModelEntity:        return serviceNames().at(6);
+        case CEntityFlags::AirlineIcaoEntity: return serviceNames().at(1);
+        case CEntityFlags::AirportEntity: return serviceNames().at(2);
+        case CEntityFlags::CountryEntity: return serviceNames().at(3);
+        case CEntityFlags::DistributorEntity: return serviceNames().at(4);
+        case CEntityFlags::LiveryEntity: return serviceNames().at(5);
+        case CEntityFlags::ModelEntity: return serviceNames().at(6);
         case CEntityFlags::AircraftCategoryEntity: return serviceNames().at(7);
         default: break;
         }

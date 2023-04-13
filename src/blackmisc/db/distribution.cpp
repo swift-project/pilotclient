@@ -19,11 +19,10 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Db, CDistribution)
 namespace BlackMisc::Db
 {
     CDistribution::CDistribution()
-    { }
+    {}
 
-    CDistribution::CDistribution(const QString &channel, int stability, bool restricted) :
-        m_channel(channel.trimmed().toUpper()), m_stability(stability), m_restricted(restricted)
-    { }
+    CDistribution::CDistribution(const QString &channel, int stability, bool restricted) : m_channel(channel.trimmed().toUpper()), m_stability(stability), m_restricted(restricted)
+    {}
 
     void CDistribution::setChannel(const QString &channel)
     {
@@ -65,13 +64,13 @@ namespace BlackMisc::Db
     QString CDistribution::convertToQString(const QString &separator, bool i18n) const
     {
         return u"channel: " %
-                this->getChannel() %
-                separator %
-                u"download URLs: " %
-                getDownloadUrls().toQString(i18n) %
-                separator %
-                u"timestamp: " %
-                this->getFormattedUtcTimestampYmdhms();
+               this->getChannel() %
+               separator %
+               u"download URLs: " %
+               getDownloadUrls().toQString(i18n) %
+               separator %
+               u"timestamp: " %
+               this->getFormattedUtcTimestampYmdhms();
     }
 
     CIcons::IconIndex CDistribution::toIcon() const
@@ -87,17 +86,21 @@ namespace BlackMisc::Db
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexChannel:      return QVariant::fromValue(m_channel);
-        case IndexStability :   return QVariant::fromValue(m_stability);
+        case IndexChannel: return QVariant::fromValue(m_channel);
+        case IndexStability: return QVariant::fromValue(m_stability);
         case IndexDownloadUrls: return QVariant::fromValue(m_downloadUrls);
-        case IndexRestricted:   return QVariant::fromValue(m_restricted);
-        default:                return CValueObject::propertyByIndex(index);
+        case IndexRestricted: return QVariant::fromValue(m_restricted);
+        default: return CValueObject::propertyByIndex(index);
         }
     }
 
     void CDistribution::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CDistribution>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CDistribution>();
+            return;
+        }
         if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
         {
             IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant);
@@ -107,18 +110,17 @@ namespace BlackMisc::Db
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexChannel:      this->setChannel(variant.value<QString>()); break;
-        case IndexStability:    m_stability = variant.toInt(); break;
+        case IndexChannel: this->setChannel(variant.value<QString>()); break;
+        case IndexStability: m_stability = variant.toInt(); break;
         case IndexDownloadUrls: m_downloadUrls = variant.value<CUrlList>(); break;
-        case IndexRestricted:   m_restricted = variant.toBool(); break;
+        case IndexRestricted: m_restricted = variant.toBool(); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 
     const CDistribution &CDistribution::localDeveloperBuild()
     {
-        static const CDistribution d = []
-        {
+        static const CDistribution d = [] {
             CDistribution ld("local developer", 0, true);
             ld.setCurrentUtcTime();
             return ld;
@@ -132,7 +134,7 @@ namespace BlackMisc::Db
 
         const QString channel(json.value("channel").toString());
         const bool restricted = json.value("restricted").toBool();
-        const int  stability  = json.value("stability").toInt();
+        const int stability = json.value("stability").toInt();
         CDistribution distribution(channel, stability, restricted);
         distribution.setKeyVersionTimestampFromDatabaseJson(json);
 

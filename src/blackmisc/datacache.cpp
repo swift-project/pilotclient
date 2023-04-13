@@ -40,9 +40,9 @@ namespace BlackMisc
     {
     public:
         LockGuard(const LockGuard &) = delete;
-        LockGuard &operator =(const LockGuard &) = delete;
+        LockGuard &operator=(const LockGuard &) = delete;
         LockGuard(LockGuard &&other) noexcept : m_movedFrom(true) { *this = std::move(other); }
-        LockGuard &operator =(LockGuard &&other) noexcept
+        LockGuard &operator=(LockGuard &&other) noexcept
         {
             auto tuple = std::tie(other.m_movedFrom, other.m_keepPromises, other.m_rev);
             std::tie(m_movedFrom, m_keepPromises, m_rev).swap(tuple);
@@ -51,15 +51,19 @@ namespace BlackMisc
 
         ~LockGuard()
         {
-            if (! m_movedFrom) { m_rev->finishUpdate(m_keepPromises); }
+            if (!m_movedFrom) { m_rev->finishUpdate(m_keepPromises); }
         }
 
-        operator bool() const { return ! m_movedFrom; }
+        operator bool() const { return !m_movedFrom; }
 
     private:
         LockGuard() : m_movedFrom(true) {}
-        LockGuard(CDataCacheRevision *rev) : m_movedFrom(! rev), m_rev(rev) {}
-        LockGuard &keepPromises() { m_keepPromises = true; return *this; }
+        LockGuard(CDataCacheRevision *rev) : m_movedFrom(!rev), m_rev(rev) {}
+        LockGuard &keepPromises()
+        {
+            m_keepPromises = true;
+            return *this;
+        }
         friend class CDataCacheRevision;
 
         bool m_movedFrom = false;
@@ -69,28 +73,27 @@ namespace BlackMisc
 
     CDataCache::CDataCache() : CValueCache(1), m_serializer(new CDataCacheSerializer { this, revisionFileName() })
     {
-        if (! QDir::root().mkpath(persistentStore()))
+        if (!QDir::root().mkpath(persistentStore()))
         {
             CLogMessage(this).error(u"Failed to create directory '%1'") << persistentStore();
         }
 
         connect(this, &CValueCache::valuesChangedByLocal, this, &CDataCache::saveToStoreAsync);
-        connect(this, &CValueCache::valuesChangedByLocal, this, [ = ](CValueCachePacket values)
-        {
+        connect(this, &CValueCache::valuesChangedByLocal, this, [=](CValueCachePacket values) {
             values.setSaved();
             changeValuesFromRemote(values, CIdentifier());
         });
         connect(&m_watcher, &QFileSystemWatcher::fileChanged, this, &CDataCache::loadFromStoreAsync);
         connect(m_serializer, &CDataCacheSerializer::valuesLoadedFromStore, this, &CDataCache::changeValuesFromRemote, Qt::DirectConnection);
 
-        if (! QFile::exists(revisionFileName())) { QFile(revisionFileName()).open(QFile::WriteOnly); }
+        if (!QFile::exists(revisionFileName())) { QFile(revisionFileName()).open(QFile::WriteOnly); }
         m_serializer->loadFromStore({}, false, true); // load pinned values
         singleShot(0, this, [this] // only start the serializer if the main thread event loop runs
-        {
-            m_serializer->start();
-            m_watcher.addPath(revisionFileName());
-            loadFromStoreAsync();
-        });
+                   {
+                       m_serializer->start();
+                       m_watcher.addPath(revisionFileName());
+                       loadFromStoreAsync();
+                   });
     }
 
     CDataCache::~CDataCache()
@@ -138,7 +141,9 @@ namespace BlackMisc
         if (future.valid())
         {
             std::future_status s {};
-            do { s = future.wait_for(timeout); }
+            do {
+                s = future.wait_for(timeout);
+            }
             while (s != ready && m_revision.isNewerValueAvailable(key, getTimestampSync(key)));
             if (s != ready) { s = future.wait_for(zero); }
             if (s != ready) { return false; }
@@ -146,8 +151,14 @@ namespace BlackMisc
             //! \todo KB 2018-07 In datastore with consolidation "on" I see many of these exceptions. Is that a normal state?
             //  maybe this happens if a cache is written and this takes a while, maybe we can
             //  use a write in prgress flag or such?
-            try { future.get(); }
-            catch (const std::future_error &) { return false; }   // broken promise
+            try
+            {
+                future.get();
+            }
+            catch (const std::future_error &)
+            {
+                return false;
+            } // broken promise
             return true;
         }
         return false;
@@ -197,16 +208,14 @@ namespace BlackMisc
 
     void CDataCache::saveToStoreAsync(const BlackMisc::CValueCachePacket &values)
     {
-        singleShot(0, m_serializer, [this, values]
-        {
+        singleShot(0, m_serializer, [this, values] {
             m_serializer->saveToStore(values.toVariantMap(), getAllValuesWithTimestamps());
         });
     }
 
     void CDataCache::loadFromStoreAsync()
     {
-        singleShot(0, m_serializer, [this]
-        {
+        singleShot(0, m_serializer, [this] {
             m_serializer->loadFromStore(getAllValuesWithTimestamps());
         });
     }
@@ -266,10 +275,9 @@ namespace BlackMisc
         return cats;
     }
 
-    CDataCacheSerializer::CDataCacheSerializer(CDataCache *owner, const QString &revisionFileName) :
-        CContinuousWorker(owner, QStringLiteral("CDataCacheSerializer '%1'").arg(revisionFileName)),
-        m_cache(owner),
-        m_revisionFileName(revisionFileName)
+    CDataCacheSerializer::CDataCacheSerializer(CDataCache *owner, const QString &revisionFileName) : CContinuousWorker(owner, QStringLiteral("CDataCacheSerializer '%1'").arg(revisionFileName)),
+                                                                                                     m_cache(owner),
+                                                                                                     m_revisionFileName(revisionFileName)
     {}
 
     const QString &CDataCacheSerializer::persistentStore() const
@@ -283,7 +291,7 @@ namespace BlackMisc
         auto lock = loadFromStore(baseline, true); // last-minute check for remote changes before clobbering the revision file
         for (const auto &key : values.keys()) { m_deferredChanges.remove(key); } // ignore changes that we are about to overwrite
 
-        if (! lock) { return; }
+        if (!lock) { return; }
         m_cache->m_revision.writeNewRevision(baseline.toTimestampMap());
 
         auto msg = m_cache->saveToFiles(persistentStore(), values, baseline.toTimestampMapString(values.keys()));
@@ -295,11 +303,11 @@ namespace BlackMisc
 
     CDataCacheRevision::LockGuard CDataCacheSerializer::loadFromStore(const CValueCachePacket &baseline, bool defer, bool pinsOnly)
     {
-        auto lock = m_cache->m_revision.beginUpdate(baseline.toTimestampMap(), ! pinsOnly, pinsOnly);
+        auto lock = m_cache->m_revision.beginUpdate(baseline.toTimestampMap(), !pinsOnly, pinsOnly);
         if (lock && m_cache->m_revision.isPendingRead())
         {
             CValueCachePacket newValues;
-            if (! m_cache->m_revision.isFound())
+            if (!m_cache->m_revision.isFound())
             {
                 m_cache->loadFromFiles(persistentStore(), {}, {}, newValues, {}, true);
                 m_cache->m_revision.regenerate(newValues);
@@ -309,20 +317,20 @@ namespace BlackMisc
             newValues.setTimestamps(m_cache->m_revision.newerTimestamps());
 
             auto missingKeys = m_cache->m_revision.keysWithNewerTimestamps() - newValues.keys();
-            if (! missingKeys.isEmpty()) { m_cache->m_revision.writeNewRevision({}, missingKeys); }
+            if (!missingKeys.isEmpty()) { m_cache->m_revision.writeNewRevision({}, missingKeys); }
 
             msg.setCategories(this);
             CLogMessage::preformatted(msg);
             m_deferredChanges.insert(newValues);
         }
 
-        if (! defer) { applyDeferredChanges(); }
+        if (!defer) { applyDeferredChanges(); }
         return lock;
     }
 
     void CDataCacheSerializer::applyDeferredChanges()
     {
-        if (! m_deferredChanges.isEmpty())
+        if (!m_deferredChanges.isEmpty())
         {
             m_deferredChanges.setSaved();
             emit valuesLoadedFromStore(m_deferredChanges, CIdentifier::null());
@@ -333,8 +341,7 @@ namespace BlackMisc
 
     void CDataCacheSerializer::deliverPromises(std::vector<std::promise<void>> i_promises)
     {
-        QTimer::singleShot(0, Qt::PreciseTimer, this, [promises = std::make_shared<decltype(i_promises)>(std::move(i_promises))]()
-        {
+        QTimer::singleShot(0, Qt::PreciseTimer, this, [promises = std::make_shared<decltype(i_promises)>(std::move(i_promises))]() {
             for (auto &promise : *promises)
             {
                 promise.set_value();
@@ -349,6 +356,7 @@ namespace BlackMisc
         Session(const QString &filename) : m_filename(filename) {}
         void updateSession();
         const QUuid &uuid() const { return m_uuid; }
+
     private:
         const QString m_filename;
         QUuid m_uuid;
@@ -362,10 +370,10 @@ namespace BlackMisc
     {
         QMutexLocker lock(&m_mutex);
 
-        Q_ASSERT(! m_updateInProgress);
-        Q_ASSERT(! m_lockFile.isLocked());
+        Q_ASSERT(!m_updateInProgress);
+        Q_ASSERT(!m_lockFile.isLocked());
 
-        if (! m_lockFile.lock())
+        if (!m_lockFile.lock())
         {
             CLogMessage(this).error(u"Failed to lock %1: %2") << m_basename << CFileUtils::lockFileError(m_lockFile);
             return {};
@@ -379,7 +387,7 @@ namespace BlackMisc
         QFile revisionFile(CFileUtils::appendFilePaths(m_basename, ".rev"));
         if ((m_found = revisionFile.exists()))
         {
-            if (! revisionFile.open(QFile::ReadOnly | QFile::Text))
+            if (!revisionFile.open(QFile::ReadOnly | QFile::Text))
             {
                 CLogMessage(this).error(u"Failed to open %1: %2") << revisionFile.fileName() << revisionFile.errorString();
                 return {};
@@ -419,18 +427,18 @@ namespace BlackMisc
                     auto pins = fromJson(json.value("pins").toArray());
                     for (const auto &key : m_timestamps.keys()) // clazy:exclude=container-anti-pattern,range-loop
                     {
-                        if (! pins.contains(key)) { m_timestamps.remove(key); }
+                        if (!pins.contains(key)) { m_timestamps.remove(key); }
                     }
                 }
 
                 auto deferrals = fromJson(json.value("deferrals").toArray());
                 m_admittedValues.unite(m_admittedQueue);
                 if (updateUuid) { m_admittedQueue.clear(); }
-                else if (! m_admittedQueue.isEmpty()) { m_admittedQueue.intersect(QSet<QString>(m_timestamps.keyBegin(), m_timestamps.keyEnd())); }
+                else if (!m_admittedQueue.isEmpty()) { m_admittedQueue.intersect(QSet<QString>(m_timestamps.keyBegin(), m_timestamps.keyEnd())); }
 
                 for (const auto &key : m_timestamps.keys()) // clazy:exclude=container-anti-pattern,range-loop
                 {
-                    if (deferrals.contains(key) && ! m_admittedValues.contains(key)) { m_timestamps.remove(key); }
+                    if (deferrals.contains(key) && !m_admittedValues.contains(key)) { m_timestamps.remove(key); }
                 }
 
                 m_session->updateSession();
@@ -467,7 +475,7 @@ namespace BlackMisc
         Q_ASSERT(m_lockFile.isLocked());
 
         CAtomicFile revisionFile(CFileUtils::appendFilePaths(m_basename, ".rev"));
-        if (! revisionFile.open(QFile::WriteOnly | QFile::Text))
+        if (!revisionFile.open(QFile::WriteOnly | QFile::Text))
         {
             CLogMessage(this).error(u"Failed to open %1: %2") << revisionFile.fileName() << revisionFile.errorString();
             return;
@@ -495,7 +503,7 @@ namespace BlackMisc
         json.insert("session", toJson(m_sessionValues));
         revisionFile.write(QJsonDocument(json).toJson());
 
-        if (! revisionFile.checkedClose())
+        if (!revisionFile.checkedClose())
         {
             static const QString advice = QStringLiteral("If this error persists, try restarting your computer or delete the file manually.");
             CLogMessage(this).error(u"Failed to replace %1: %2 (%3)") << revisionFile.fileName() << revisionFile.errorString() << advice;
@@ -522,7 +530,7 @@ namespace BlackMisc
         m_updateInProgress = false;
         m_pendingRead = false;
         m_pendingWrite = false;
-        if (! keepPromises) { breakPromises(); }
+        if (!keepPromises) { breakPromises(); }
         m_lockFile.unlock();
     }
 
@@ -539,7 +547,7 @@ namespace BlackMisc
         QMutexLocker lock(&m_mutex);
 
         Q_ASSERT(m_updateInProgress);
-        return ! m_timestamps.isEmpty() || ! m_found;
+        return !m_timestamps.isEmpty() || !m_found;
     }
 
     void CDataCacheRevision::notifyPendingWrite()
@@ -572,8 +580,7 @@ namespace BlackMisc
         // Temporary guard object returned by beginUpdate is deleted at the end of the full expression,
         // don't try to split the conditional into multiple statements.
         // If a future is still waiting for the next update to begin, we don't want to break its associated promise.
-        return (m_updateInProgress || m_pendingWrite || beginUpdate({{ key, timestamp }}, false).keepPromises())
-        &&(m_timestamps.contains(key) || m_admittedQueue.contains(key));
+        return (m_updateInProgress || m_pendingWrite || beginUpdate({ { key, timestamp } }, false).keepPromises()) && (m_timestamps.contains(key) || m_admittedQueue.contains(key));
     }
 
     std::future<void> CDataCacheRevision::promiseLoadedValue(const QString &key, qint64 currentTimestamp)
@@ -602,7 +609,7 @@ namespace BlackMisc
     {
         QMutexLocker lock(&m_mutex);
 
-        if (! m_promises.empty())
+        if (!m_promises.empty())
         {
             CLogMessage(this).debug() << "Breaking" << m_promises.size() << "promises";
             m_promises.clear();
@@ -625,7 +632,7 @@ namespace BlackMisc
     {
         QMutexLocker lock(&m_mutex);
 
-        Q_ASSERT(! m_updateInProgress);
+        Q_ASSERT(!m_updateInProgress);
         m_timesToLive.insert(key, ttl);
     }
 
@@ -633,10 +640,10 @@ namespace BlackMisc
     {
         QMutexLocker lock(&m_mutex);
 
-        Q_ASSERT(! m_updateInProgress);
-        Q_ASSERT(! m_lockFile.isLocked());
+        Q_ASSERT(!m_updateInProgress);
+        Q_ASSERT(!m_lockFile.isLocked());
 
-        if (! m_lockFile.lock())
+        if (!m_lockFile.lock())
         {
             CLogMessage(this).error(u"Failed to lock %1: %2") << m_basename << CFileUtils::lockFileError(m_lockFile);
             m_lockFile.unlock();
@@ -646,7 +653,7 @@ namespace BlackMisc
         CAtomicFile revisionFile(CFileUtils::appendFilePaths(m_basename, ".rev"));
         if (revisionFile.exists())
         {
-            if (! revisionFile.open(QFile::ReadWrite | QFile::Text))
+            if (!revisionFile.open(QFile::ReadWrite | QFile::Text))
             {
                 CLogMessage(this).error(u"Failed to open %1: %2") << revisionFile.fileName() << revisionFile.errorString();
                 m_lockFile.unlock();
@@ -680,7 +687,7 @@ namespace BlackMisc
 
         if (m_lockFile.isLocked()) { return m_originalTimestamps.value(key); }
 
-        if (! m_lockFile.lock())
+        if (!m_lockFile.lock())
         {
             CLogMessage(this).error(u"Failed to lock %1: %2") << m_basename << CFileUtils::lockFileError(m_lockFile);
             m_lockFile.unlock();
@@ -709,7 +716,7 @@ namespace BlackMisc
     {
         QMutexLocker lock(&m_mutex);
 
-        Q_ASSERT(! m_updateInProgress);
+        Q_ASSERT(!m_updateInProgress);
         m_pinnedValues.insert(key);
     }
 
@@ -717,7 +724,7 @@ namespace BlackMisc
     {
         QMutexLocker lock(&m_mutex);
 
-        Q_ASSERT(! m_updateInProgress);
+        Q_ASSERT(!m_updateInProgress);
         m_deferredValues.insert(key);
     }
 
@@ -732,7 +739,7 @@ namespace BlackMisc
     {
         QMutexLocker lock(&m_mutex);
 
-        Q_ASSERT(! m_updateInProgress);
+        Q_ASSERT(!m_updateInProgress);
         m_sessionValues[key]; // clazy:exclude=detaching-member
     }
 
@@ -800,7 +807,7 @@ namespace BlackMisc
     {
         CAtomicFile file(m_filename);
         bool ok = file.open(QIODevice::ReadWrite | QFile::Text);
-        if (! ok)
+        if (!ok)
         {
             CLogMessage(this).error(u"Failed to open session file %1: %2") << m_filename << file.errorString();
             return;
@@ -809,7 +816,7 @@ namespace BlackMisc
         QUuid id(json.value("uuid").toString());
         CSequence<CProcessInfo> apps;
         auto status = apps.convertFromJsonNoThrow(json.value("apps").toObject(), this, QStringLiteral("Error in %1 apps object").arg(m_filename));
-        apps.removeIf([](const CProcessInfo & pi) { return ! pi.exists(); });
+        apps.removeIf([](const CProcessInfo &pi) { return !pi.exists(); });
 
         if (apps.isEmpty()) { id = CIdentifier().toUuid(); }
         m_uuid = id;

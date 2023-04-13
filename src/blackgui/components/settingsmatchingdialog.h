@@ -15,7 +15,10 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CSettingsMatchingDialog; }
+namespace Ui
+{
+    class CSettingsMatchingDialog;
+}
 namespace BlackGui::Components
 {
     //! Matching settings as dialog

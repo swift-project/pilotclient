@@ -17,7 +17,10 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CSimulatorXPlaneConfigWindow; }
+namespace Ui
+{
+    class CSimulatorXPlaneConfigWindow;
+}
 namespace BlackSimPlugin::XPlane
 {
     /*!

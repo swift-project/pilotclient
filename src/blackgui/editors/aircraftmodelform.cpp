@@ -13,16 +13,15 @@ using namespace BlackMisc;
 
 namespace BlackGui::Editors
 {
-    CAircraftModelForm::CAircraftModelForm(QWidget *parent) :
-        CForm(parent),
-        ui(new Ui::CAircraftModelForm)
+    CAircraftModelForm::CAircraftModelForm(QWidget *parent) : CForm(parent),
+                                                              ui(new Ui::CAircraftModelForm)
     {
         ui->setupUi(this);
         this->setFocusProxy(ui->editor_AircraftIcao);
     }
 
     CAircraftModelForm::~CAircraftModelForm()
-    { }
+    {}
 
     void CAircraftModelForm::setReadOnly(bool readOnly)
     {

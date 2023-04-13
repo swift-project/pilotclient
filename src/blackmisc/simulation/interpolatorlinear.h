@@ -23,7 +23,10 @@ class QObject;
 
 namespace BlackMisc
 {
-    namespace Aviation { class CCallsign; }
+    namespace Aviation
+    {
+        class CCallsign;
+    }
     namespace Simulation
     {
         //! Linear interpolator, calculation inbetween positions
@@ -35,8 +38,7 @@ namespace BlackMisc
             //! Constructor
             CInterpolatorLinear(const Aviation::CCallsign &callsign,
                                 ISimulationEnvironmentProvider *simEnvProvider, IInterpolationSetupProvider *setupProvider, IRemoteAircraftProvider *remoteAircraftProvider,
-                                CInterpolationLogger *logger = nullptr) :
-                CInterpolator(callsign, simEnvProvider, setupProvider, remoteAircraftProvider, logger) {}
+                                CInterpolationLogger *logger = nullptr) : CInterpolator(callsign, simEnvProvider, setupProvider, remoteAircraftProvider, logger) {}
 
             //! Linear function that performs the actual interpolation
             class BLACKMISC_EXPORT CInterpolant : public IInterpolant

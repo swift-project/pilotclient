@@ -31,7 +31,13 @@ namespace XSwiftBus
     {
     public:
         //! Message type
-        enum MsgType { DebugMsg, WarningMsg, ErrorMsg, InfoMsg };
+        enum MsgType
+        {
+            DebugMsg,
+            WarningMsg,
+            ErrorMsg,
+            InfoMsg
+        };
 
         Logger() = delete;
 

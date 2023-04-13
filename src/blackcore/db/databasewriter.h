@@ -23,7 +23,10 @@
 
 class QNetworkReply;
 
-namespace BlackMisc::Simulation { class CAutoPublishData; }
+namespace BlackMisc::Simulation
+{
+    class CAutoPublishData;
+}
 namespace BlackCore::Db
 {
     //! Write to the swift DB
@@ -62,9 +65,9 @@ namespace BlackCore::Db
     signals:
         //! Published models, the response to \sa asyncPublishModels
         void publishedModels(const BlackMisc::Simulation::CAircraftModelList &modelsPublished,
-                                const BlackMisc::Simulation::CAircraftModelList &modelsSkipped,
-                                const BlackMisc::CStatusMessageList &messages,
-                                bool sendingSuccessful, bool directWrite);
+                             const BlackMisc::Simulation::CAircraftModelList &modelsSkipped,
+                             const BlackMisc::CStatusMessageList &messages,
+                             bool sendingSuccessful, bool directWrite);
 
         //! Published models, simplified version of publishedModels
         void publishedModelsSimplified(const BlackMisc::Simulation::CAircraftModelList &modelsPublished, bool directWrite);
@@ -75,12 +78,12 @@ namespace BlackCore::Db
     private:
         BlackMisc::Network::CUrlLogList m_writeLog;
         BlackMisc::Network::CUrl m_modelPublishUrl; //!< model publishing
-        BlackMisc::Network::CUrl m_autoPublishUrl;  //!< auto publish data
+        BlackMisc::Network::CUrl m_autoPublishUrl; //!< auto publish data
         QNetworkReply *m_pendingModelPublishReply = nullptr;
-        QNetworkReply *m_pendingAutoPublishReply  = nullptr;
-        qint64         m_modelReplyPendingSince   = -1;
-        qint64         m_autoPublishReplyPendingSince = -1;
-        bool           m_shutdown = false;
+        QNetworkReply *m_pendingAutoPublishReply = nullptr;
+        qint64 m_modelReplyPendingSince = -1;
+        qint64 m_autoPublishReplyPendingSince = -1;
+        bool m_shutdown = false;
 
         //! Post response for models
         void postedModelsResponse(QNetworkReply *nwReplyPtr);
@@ -105,9 +108,9 @@ namespace BlackCore::Db
 
         //! Get data from a DB response
         static bool parseSwiftPublishResponse(const QString &jsonResponse,
-                                                BlackMisc::Simulation::CAircraftModelList &publishedModels,
-                                                BlackMisc::Simulation::CAircraftModelList &skippedModels,
-                                                BlackMisc::CStatusMessageList &messages, bool &directWrite);
+                                              BlackMisc::Simulation::CAircraftModelList &publishedModels,
+                                              BlackMisc::Simulation::CAircraftModelList &skippedModels,
+                                              BlackMisc::CStatusMessageList &messages, bool &directWrite);
     };
 } // ns
 

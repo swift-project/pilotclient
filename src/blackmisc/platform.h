@@ -38,16 +38,16 @@ namespace BlackMisc
         //! OS
         enum PlatformFlag
         {
-            UnknownOs   = 0,
-            Win32       = 1 << 0,
-            Win64       = 1 << 1,
-            Linux       = 1 << 2,
-            MacOS       = 1 << 3,
+            UnknownOs = 0,
+            Win32 = 1 << 0,
+            Win64 = 1 << 1,
+            Linux = 1 << 2,
+            MacOS = 1 << 3,
             Independent = 1 << 4,
-            AllWindows  = Win32 | Win64,
-            All         = AllWindows | Linux | MacOS,
-            All32       = Win32,
-            All64       = Win64 | Linux | MacOS
+            AllWindows = Win32 | Win64,
+            All = AllWindows | Linux | MacOS,
+            All32 = Win32,
+            All64 = Win64 | Linux | MacOS
         };
         Q_DECLARE_FLAGS(Platform, PlatformFlag)
 

@@ -26,9 +26,8 @@ using namespace BlackGui::Views;
 
 namespace BlackGui::Components
 {
-    CDbAircraftIcaoComponent::CDbAircraftIcaoComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        ui(new Ui::CDbAircraftIcaoComponent)
+    CDbAircraftIcaoComponent::CDbAircraftIcaoComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                                          ui(new Ui::CDbAircraftIcaoComponent)
     {
         ui->setupUi(this);
         this->setViewWithIndicator(ui->tvp_AircraftIcao);
@@ -45,7 +44,7 @@ namespace BlackGui::Components
     }
 
     CDbAircraftIcaoComponent::~CDbAircraftIcaoComponent()
-    { }
+    {}
 
     BlackGui::Views::CAircraftIcaoCodeView *CDbAircraftIcaoComponent::view() const
     {

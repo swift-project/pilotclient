@@ -14,15 +14,14 @@ using namespace BlackMisc;
 
 namespace BlackGui::Editors
 {
-    CNetworkSetupForm::CNetworkSetupForm(QWidget *parent) :
-        CForm(parent),
-        ui(new Ui::CNetworkSetupForm)
+    CNetworkSetupForm::CNetworkSetupForm(QWidget *parent) : CForm(parent),
+                                                            ui(new Ui::CNetworkSetupForm)
     {
         ui->setupUi(this);
     }
 
     CNetworkSetupForm::~CNetworkSetupForm()
-    { }
+    {}
 
     void CNetworkSetupForm::setReadOnly(bool readonly)
     {

@@ -18,9 +18,8 @@ using namespace BlackMisc;
 
 namespace BlackGui::Components
 {
-    CCockpitInfoAreaComponent::CCockpitInfoAreaComponent(QWidget *parent) :
-        CInfoArea(parent),
-        ui(new Ui::CCockpitInfoAreaComponent)
+    CCockpitInfoAreaComponent::CCockpitInfoAreaComponent(QWidget *parent) : CInfoArea(parent),
+                                                                            ui(new Ui::CCockpitInfoAreaComponent)
     {
         ui->setupUi(this);
         this->initInfoArea();
@@ -29,7 +28,7 @@ namespace BlackGui::Components
     }
 
     CCockpitInfoAreaComponent::~CCockpitInfoAreaComponent()
-    { }
+    {}
 
     QSize CCockpitInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
     {
@@ -43,10 +42,10 @@ namespace BlackGui::Components
         const InfoArea area = static_cast<InfoArea>(areaIndex);
         switch (area)
         {
-        case InfoAreaAudio:         return CIcons::appAudio16();
+        case InfoAreaAudio: return CIcons::appAudio16();
         case InfoAreaNotifications: return CIcons::appVoiceRooms16();
-        case InfoAreaAdvanced:      return CIcons::appSettings16();
-        default:                    return CIcons::empty();
+        case InfoAreaAdvanced: return CIcons::appSettings16();
+        default: return CIcons::empty();
         }
     }
 

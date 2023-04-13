@@ -19,7 +19,10 @@
 class QPixmap;
 class QWidget;
 
-namespace Ui { class CLabelAndIcon; }
+namespace Ui
+{
+    class CLabelAndIcon;
+}
 
 namespace BlackGui
 {

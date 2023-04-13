@@ -8,7 +8,6 @@
 
 #include "listmodelbase.cpp"
 
-
 namespace BlackGui::Models
 {
     // see here for the reason of thess forward instantiations

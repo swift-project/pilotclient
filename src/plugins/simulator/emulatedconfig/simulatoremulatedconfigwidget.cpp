@@ -13,9 +13,8 @@ using namespace BlackGui;
 
 namespace BlackSimPlugin::Emulated
 {
-    CSimulatorEmulatedConfigWidget::CSimulatorEmulatedConfigWidget(QWidget *parent) :
-        BlackGui::CPluginConfigWindow(parent),
-        ui(new Ui::CSimulatorEmulatedConfigWidget)
+    CSimulatorEmulatedConfigWidget::CSimulatorEmulatedConfigWidget(QWidget *parent) : BlackGui::CPluginConfigWindow(parent),
+                                                                                      ui(new Ui::CSimulatorEmulatedConfigWidget)
     {
         ui->setupUi(this);
         CGuiUtility::disableMinMaxCloseButtons(this);
@@ -23,5 +22,5 @@ namespace BlackSimPlugin::Emulated
     }
 
     CSimulatorEmulatedConfigWidget::~CSimulatorEmulatedConfigWidget()
-    { }
+    {}
 } // ns

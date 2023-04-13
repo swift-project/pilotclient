@@ -196,7 +196,7 @@ namespace BlackMisc::Network
     private:
         QString m_scheme;
         QString m_host;
-        int     m_port = -1;
+        int m_port = -1;
         QString m_path;
         QString m_query;
 

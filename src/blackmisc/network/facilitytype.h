@@ -25,14 +25,14 @@ namespace BlackMisc::Network
         //! Login modes
         enum FacilityType
         {
-            OBS,     /*!< OBS */
-            FSS,     /*!< FSS */
-            DEL,     /*!< Delivery */
-            GND,     /*!< Ground */
-            TWR,     /*!< Tower */
-            APP,     /*!< Approach */
-            CTR,     /*!< Center */
-            Unknown  /*!< Unknown */
+            OBS, /*!< OBS */
+            FSS, /*!< FSS */
+            DEL, /*!< Delivery */
+            GND, /*!< Ground */
+            TWR, /*!< Tower */
+            APP, /*!< Approach */
+            CTR, /*!< Center */
+            Unknown /*!< Unknown */
         };
 
         //! Default constructor.

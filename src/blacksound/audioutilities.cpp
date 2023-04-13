@@ -99,7 +99,8 @@ namespace BlackSound
 
         const QList<QAudioDeviceInfo> allQtDevices =
             device.isInputDevice() ?
-            CAudioDeviceInfoList::allQtInputDevices() : CAudioDeviceInfoList::allQtOutputDevices();
+                CAudioDeviceInfoList::allQtInputDevices() :
+                CAudioDeviceInfoList::allQtOutputDevices();
 
         // Find the one with lowest latency.
         QList<QAudioDeviceInfo> supportedDevices;
@@ -111,11 +112,11 @@ namespace BlackSound
                 {
                     // Check whether the nearest format is acceptable for our needs
                     const QAudioFormat nearestFormat = d.nearestFormat(format);
-                    if (nearestFormat.sampleRate()     != format.sampleRate() ||
-                            nearestFormat.sampleSize() != format.sampleSize() ||
-                            nearestFormat.sampleType() != format.sampleType() ||
-                            nearestFormat.byteOrder()  != format.byteOrder()  ||
-                            nearestFormat.codec()      != format.codec())
+                    if (nearestFormat.sampleRate() != format.sampleRate() ||
+                        nearestFormat.sampleSize() != format.sampleSize() ||
+                        nearestFormat.sampleType() != format.sampleType() ||
+                        nearestFormat.byteOrder() != format.byteOrder() ||
+                        nearestFormat.codec() != format.codec())
                     {
                         continue;
                     }
@@ -197,13 +198,13 @@ namespace BlackSound
     QString toQString(const QAudioFormat &format)
     {
         return QStringLiteral("Sample rate: %1 channels: %2 sample size: %3 codec: %4 order: %5 type: %6 bytes/frame: %7")
-               .arg(format.sampleRate())
-               .arg(format.channelCount())
-               .arg(format.sampleSize())
-               .arg(format.codec())
-               .arg(toQString(format.byteOrder()))
-               .arg(toQString(format.sampleType()))
-               .arg(format.bytesPerFrame());
+            .arg(format.sampleRate())
+            .arg(format.channelCount())
+            .arg(format.sampleSize())
+            .arg(format.codec())
+            .arg(toQString(format.byteOrder()))
+            .arg(toQString(format.sampleType()))
+            .arg(format.bytesPerFrame());
     }
 
     const QString &toQString(QAudioFormat::Endian s)
@@ -227,9 +228,9 @@ namespace BlackSound
         static const QString f("float");
         switch (e)
         {
-        case QAudioFormat::SignedInt:   return s;
+        case QAudioFormat::SignedInt: return s;
         case QAudioFormat::UnSignedInt: return u;
-        case QAudioFormat::Float:       return f;
+        case QAudioFormat::Float: return f;
         case QAudioFormat::Unknown:
         default: break;
         }

@@ -36,10 +36,9 @@ using namespace BlackMisc::Simulation::XPlane;
 
 namespace BlackGui::Components
 {
-    CInstallXSwiftBusComponent::CInstallXSwiftBusComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        CLoadIndicatorEnabled(this),
-        ui(new Ui::CInstallXSwiftBusComponent)
+    CInstallXSwiftBusComponent::CInstallXSwiftBusComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                                              CLoadIndicatorEnabled(this),
+                                                                              ui(new Ui::CInstallXSwiftBusComponent)
     {
         ui->setupUi(this);
 
@@ -58,7 +57,7 @@ namespace BlackGui::Components
     }
 
     CInstallXSwiftBusComponent::~CInstallXSwiftBusComponent()
-    { }
+    {}
 
     void CInstallXSwiftBusComponent::setDefaultDownloadName(const QString &defaultDownload)
     {
@@ -70,7 +69,7 @@ namespace BlackGui::Components
     {
         QString xPlanePluginDir = CFileUtils::fixWindowsUncPath(ui->le_XSwiftBusPluginDir->text().trimmed());
         xPlanePluginDir = QFileDialog::getExistingDirectory(parentWidget(),
-                            tr("Choose your X-Plane plugin directory"), xPlanePluginDir, m_fileDialogOptions);
+                                                            tr("Choose your X-Plane plugin directory"), xPlanePluginDir, m_fileDialogOptions);
 
         if (xPlanePluginDir.isEmpty()) { return; } // canceled
         if (!QDir(xPlanePluginDir).exists())
@@ -86,7 +85,7 @@ namespace BlackGui::Components
     {
         QString downloadDir = CFileUtils::fixWindowsUncPath(ui->le_DownloadDir->text().trimmed());
         downloadDir = QFileDialog::getExistingDirectory(parentWidget(),
-                        tr("Choose your X-Plane plugin directory"), downloadDir, m_fileDialogOptions);
+                                                        tr("Choose your X-Plane plugin directory"), downloadDir, m_fileDialogOptions);
 
         if (downloadDir.isEmpty()) { return; } // canceled
         if (!QDir(downloadDir).exists())
@@ -166,8 +165,7 @@ namespace BlackGui::Components
         {
             // capture values by copy!
             const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).info(u"Uncompressed XSwiftBus in '%1'") << xSwiftBusDirectory;
-            this->showOverlayMessagesWithConfirmation(msg, false, "Delete downloaded file?", [ = ]
-            {
+            this->showOverlayMessagesWithConfirmation(msg, false, "Delete downloaded file?", [=] {
                 if (!myself) { return; }
                 QFile downloadFile(downloadFileName);
                 if (!downloadFile.exists()) { return; } // removed in meantime
@@ -184,9 +182,9 @@ namespace BlackGui::Components
 
         //! fixme Ref T253, once we have a zip library we will directly unzip
         const QMessageBox::StandardButton reply = QMessageBox::question(this,
-                "Install XSwiftXBus",
-                "You need to manually unzip XSwiftBus into the plugins directory.\nIt needs to look like 'plugin/xswiftbus'.\n\nOpen the archive?",
-                QMessageBox::Yes | QMessageBox::No);
+                                                                        "Install XSwiftXBus",
+                                                                        "You need to manually unzip XSwiftBus into the plugins directory.\nIt needs to look like 'plugin/xswiftbus'.\n\nOpen the archive?",
+                                                                        QMessageBox::Yes | QMessageBox::No);
 
         if (reply == QMessageBox::Yes)
         {
@@ -201,13 +199,14 @@ namespace BlackGui::Components
         if (!rf.getBaseName().contains(CBuildConfig::getVersionString()))
         {
             const QMessageBox::StandardButton reply = QMessageBox::question(this,
-                    "Download XSwiftBus",
-                    QStringLiteral(
-                        u"The XSwiftBus versions seems to be for a different version\n"
-                        u"Your version is '%1'. Use this version.\n\n"
-                        u"If not available, you can try the version next to your version number.\n\n"
-                        u"Continue with this version?").arg(CBuildConfig::getVersionString()),
-                    QMessageBox::Yes | QMessageBox::No);
+                                                                            "Download XSwiftBus",
+                                                                            QStringLiteral(
+                                                                                u"The XSwiftBus versions seems to be for a different version\n"
+                                                                                u"Your version is '%1'. Use this version.\n\n"
+                                                                                u"If not available, you can try the version next to your version number.\n\n"
+                                                                                u"Continue with this version?")
+                                                                                .arg(CBuildConfig::getVersionString()),
+                                                                            QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) { return; }
         }
 
@@ -231,16 +230,15 @@ namespace BlackGui::Components
         if (saveFile.exists())
         {
             const QMessageBox::StandardButton reply = QMessageBox::question(this,
-                    "The file already exists",
-                    "Do you want to use the existing '" + saveAsFile + "'?",
-                    QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+                                                                            "The file already exists",
+                                                                            "Do you want to use the existing '" + saveAsFile + "'?",
+                                                                            QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
             if (reply == QMessageBox::Cancel) { return; }
             if (reply == QMessageBox::Yes)
             {
                 const CStatusMessage msg = CStatusMessage(this).info(u"Using existing file '%1'") << saveAsFile;
                 const QPointer<CInstallXSwiftBusComponent> guard(this);
-                QTimer::singleShot(100, this, [ = ]
-                {
+                QTimer::singleShot(100, this, [=] {
                     if (guard.isNull()) { return; }
                     this->downloadedXSwiftBusFile(msg);
                 });
@@ -248,7 +246,7 @@ namespace BlackGui::Components
             }
         }
 
-        const QNetworkReply *r = sGui->downloadFromNetwork(download, saveAsFile, { this, &CInstallXSwiftBusComponent::downloadedXSwiftBusFile});
+        const QNetworkReply *r = sGui->downloadFromNetwork(download, saveAsFile, { this, &CInstallXSwiftBusComponent::downloadedXSwiftBusFile });
         if (r)
         {
             CLogMessage(this).info(u"Triggered downloading of XSwiftBus file from '%1'") << download.getHost();
@@ -278,8 +276,7 @@ namespace BlackGui::Components
         }
 
         static const QString confirm("Install in '%1'?");
-        this->showOverlayMessagesWithConfirmation(status, false, confirm.arg(ui->le_XSwiftBusPluginDir->text()), [ = ]
-        {
+        this->showOverlayMessagesWithConfirmation(status, false, confirm.arg(ui->le_XSwiftBusPluginDir->text()), [=] {
             QTimer::singleShot(0, this, &CInstallXSwiftBusComponent::installXSwiftBus);
         });
     }
@@ -349,9 +346,8 @@ namespace BlackGui::Components
 
             ui->cb_DownloadFile->setCurrentText(
                 current.isEmpty() ?
-                remoteFiles.frontOrDefault().getBaseNameAndSize() :
-                current
-            ); // latest version
+                    remoteFiles.frontOrDefault().getBaseNameAndSize() :
+                    current); // latest version
         }
         ui->cb_DownloadFile->setEnabled(!remoteFiles.isEmpty());
     }

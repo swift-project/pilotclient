@@ -10,9 +10,9 @@
 #include <QtGlobal>
 
 #if defined(Q_OS_WIN32)
-#include <windows.h>
+#    include <windows.h>
 #elif defined(Q_OS_UNIX)
-#include <time.h>
+#    include <time.h>
 #endif
 
 namespace BlackMisc

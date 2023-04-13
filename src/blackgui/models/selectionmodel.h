@@ -14,7 +14,8 @@
 namespace BlackGui::Models
 {
     //! Allow to get and select objects
-    template <typename ContainerType> class ISelectionModel
+    template <typename ContainerType>
+    class ISelectionModel
     {
     public:
         //! Destructor

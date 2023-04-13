@@ -114,10 +114,10 @@ namespace BlackMisc
         bool hasSameMachineNameOrId(const CIdentifier &other) const;
 
         //! Get process id
-        qint64 getProcessId() const {return m_processId;}
+        qint64 getProcessId() const { return m_processId; }
 
         //! Get process name
-        const QString &getProcessName() const {return m_processName;}
+        const QString &getProcessName() const { return m_processName; }
 
         //! Check if originating from the same local machine
         bool isFromLocalMachine() const;
@@ -157,11 +157,11 @@ namespace BlackMisc
         CIdentifier(const QString &name, const QString &machineId, const QString &machineName,
                     const QString &processName, qint64 processId = 0);
 
-        QString m_name;            //!< object name
+        QString m_name; //!< object name
         QString m_machineIdBase64; //!< base 64 encoded machine id
-        QString m_machineName;     //!< human readable machine name
-        QString m_processName;     //!< process name
-        qint64 m_processId;        //!< PID
+        QString m_machineName; //!< human readable machine name
+        QString m_processName; //!< process name
+        qint64 m_processId; //!< PID
 
         BLACK_METACLASS(
             CIdentifier,

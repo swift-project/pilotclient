@@ -13,15 +13,14 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackGui::Components
 {
-    CSettingsMatchingDialog::CSettingsMatchingDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CSettingsMatchingDialog)
+    CSettingsMatchingDialog::CSettingsMatchingDialog(QWidget *parent) : QDialog(parent),
+                                                                        ui(new Ui::CSettingsMatchingDialog)
     {
         ui->setupUi(this);
     }
 
     CSettingsMatchingDialog::~CSettingsMatchingDialog()
-    { }
+    {}
 
     CAircraftMatcherSetup CSettingsMatchingDialog::getMatchingSetup() const
     {

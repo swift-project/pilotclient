@@ -12,8 +12,7 @@ using namespace BlackGui::Models;
 
 namespace BlackGui::Views
 {
-    CAircraftPartsView::CAircraftPartsView(QWidget *parent) :
-        CViewWithTimestampWithOffsetObjects(parent)
+    CAircraftPartsView::CAircraftPartsView(QWidget *parent) : CViewWithTimestampWithOffsetObjects(parent)
     {
         this->standardInit(new CAircraftPartsListModel(this));
         this->setMenu(MenuDefault);

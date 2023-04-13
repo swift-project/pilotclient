@@ -13,17 +13,14 @@ using namespace BlackMisc;
 
 namespace BlackGui::Models
 {
-    CActionItem::CActionItem(const QString &action, const QString &name, CActionItem *parentItem) :
-        m_action(action), m_actionName(name), m_parentItem(parentItem)
-    { }
+    CActionItem::CActionItem(const QString &action, const QString &name, CActionItem *parentItem) : m_action(action), m_actionName(name), m_parentItem(parentItem)
+    {}
 
-    CActionItem::CActionItem(const QString &action, const QString &name, const QPixmap &icon, CActionItem *parentItem) :
-        m_action(action), m_actionName(name), m_icon(icon), m_parentItem(parentItem)
-    { }
+    CActionItem::CActionItem(const QString &action, const QString &name, const QPixmap &icon, CActionItem *parentItem) : m_action(action), m_actionName(name), m_icon(icon), m_parentItem(parentItem)
+    {}
 
-    CActionItem::CActionItem(const QString &action, const QString &name, CIcons::IconIndex icon, CActionItem *parentItem) :
-        m_action(action), m_actionName(name), m_icon(CIcons::pixmapByIndex(icon)), m_parentItem(parentItem)
-    { }
+    CActionItem::CActionItem(const QString &action, const QString &name, CIcons::IconIndex icon, CActionItem *parentItem) : m_action(action), m_actionName(name), m_icon(CIcons::pixmapByIndex(icon)), m_parentItem(parentItem)
+    {}
 
     CActionItem::~CActionItem()
     {

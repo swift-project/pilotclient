@@ -68,8 +68,7 @@ namespace BlackMisc::Simulation::Settings
         {
             if (topPx >= 0) { bottomPx = -1; }
             if (lines < 3) { lines = 3; }
-            this->setMessageBoxValues(std::to_string(leftPx) + ";" + std::to_string(topPx) + ";" + std::to_string(rightPx) + ";" + std::to_string(bottomPx) + ";" + std::to_string(lines) + ";" + std::to_string(durationMs) + ";"
-                + std::to_string(freqRgb) + ";" + std::to_string(privRgb) + ";" + std::to_string(servRgb) + ";" + std::to_string(statRgb) + ";" + std::to_string(supRgb));
+            this->setMessageBoxValues(std::to_string(leftPx) + ";" + std::to_string(topPx) + ";" + std::to_string(rightPx) + ";" + std::to_string(bottomPx) + ";" + std::to_string(lines) + ";" + std::to_string(durationMs) + ";" + std::to_string(freqRgb) + ";" + std::to_string(privRgb) + ";" + std::to_string(servRgb) + ";" + std::to_string(statRgb) + ";" + std::to_string(supRgb));
         }
 
         //! Left, top, right, bottom, lines, duration, color(freq, priv, serv, stat, sup)
@@ -79,7 +78,7 @@ namespace BlackMisc::Simulation::Settings
         std::vector<int> getMessageBoxValuesVector() const
         {
             constexpr int partCount = 11;
-            std::vector<int> partsInt = {20, 20, 20, -1, 5, 5000, 0x00ff00, 0xff00ff, 0xda70d6, 0x00ffff, 0xffff00};
+            std::vector<int> partsInt = { 20, 20, 20, -1, 5, 5000, 0x00ff00, 0xff00ff, 0xda70d6, 0x00ffff, 0xffff00 };
             const std::vector<std::string> parts = XPlane::QtFreeUtils::split(m_msgBox, partCount, ";");
 
             size_t c = 0;
@@ -166,16 +165,16 @@ namespace BlackMisc::Simulation::Settings
         //! @{
         //! The JSON members
         static constexpr char JsonDBusServerAddress[] = "dbusserveradress";
-        static constexpr char JsonDrawingLabels[]     = "drawinglabels";
-        static constexpr char JsonLabelColor[]        = "labelcolor";
-        static constexpr char JsonLogRenderPhases[]   = "renderPhases";
-        static constexpr char JsonTcas[]              = "tcas";
-        static constexpr char JsonTerrainProbe[]      = "terrainProbe";
-        static constexpr char JsonMaxPlanes[]         = "maxplanes";
-        static constexpr char JsonMaxDrawDistance[]   = "maxDrawDistance";
-        static constexpr char JsonNightTextureMode[]  = "nighttexture";
-        static constexpr char JsonTimestamp[]         = "timestamp";
-        static constexpr char JsonMessageBox[]        = "msgbox";
+        static constexpr char JsonDrawingLabels[] = "drawinglabels";
+        static constexpr char JsonLabelColor[] = "labelcolor";
+        static constexpr char JsonLogRenderPhases[] = "renderPhases";
+        static constexpr char JsonTcas[] = "tcas";
+        static constexpr char JsonTerrainProbe[] = "terrainProbe";
+        static constexpr char JsonMaxPlanes[] = "maxplanes";
+        static constexpr char JsonMaxDrawDistance[] = "maxDrawDistance";
+        static constexpr char JsonNightTextureMode[] = "nighttexture";
+        static constexpr char JsonTimestamp[] = "timestamp";
+        static constexpr char JsonMessageBox[] = "msgbox";
         static constexpr char JsonBundleTaxiLandingLights[] = "bundleLights";
         static constexpr char JsonFollowAircraftDistanceM[] = "followAircraftDistance";
         //! @}
@@ -184,18 +183,18 @@ namespace BlackMisc::Simulation::Settings
         virtual void objectUpdated() = 0;
 
         std::string m_dBusServerAddress { "tcp:host=127.0.0.1,port=45001" }; //!< DBus server (also in class CXSwiftBusConfigWriter)
-        std::string m_nightTextureMode  { "auto" }; //!< night texture mode
-        std::string m_msgBox            { "20;20;20;-1;5;5000;65280;16711935;14315734;65535;16776960" }; //!< left, top, right, bottom, lines, duration, colors
-        int    m_maxPlanes               = 100;     //!< max. planes in XPlane
-        int    m_followAircraftDistanceM = 200;     //!< follow aircraft in distance
-        bool   m_drawingLabels           = true;    //!< labels in XPlane
-        int    m_labelColor              = 0xffc000;//!< labels in XPlane
-        bool   m_bundleTaxiLandingLights = true;    //!< bundle taxi and landing lights
-        bool   m_logRenderPhases         = false;   //!< render phases debug messages
-        bool   m_tcasEnabled             = true;    //!< TCAS functionality
-        bool   m_terrainProbeEnabled     = true;    //!< terrain probe to establish ground elevation
-        double m_maxDrawDistanceNM       = 50.0;    //!< distance in XPlane
-        int64_t m_msSinceEpochQtFree     = 0;       //!< timestamp
+        std::string m_nightTextureMode { "auto" }; //!< night texture mode
+        std::string m_msgBox { "20;20;20;-1;5;5000;65280;16711935;14315734;65535;16776960" }; //!< left, top, right, bottom, lines, duration, colors
+        int m_maxPlanes = 100; //!< max. planes in XPlane
+        int m_followAircraftDistanceM = 200; //!< follow aircraft in distance
+        bool m_drawingLabels = true; //!< labels in XPlane
+        int m_labelColor = 0xffc000; //!< labels in XPlane
+        bool m_bundleTaxiLandingLights = true; //!< bundle taxi and landing lights
+        bool m_logRenderPhases = false; //!< render phases debug messages
+        bool m_tcasEnabled = true; //!< TCAS functionality
+        bool m_terrainProbeEnabled = true; //!< terrain probe to establish ground elevation
+        double m_maxDrawDistanceNM = 50.0; //!< distance in XPlane
+        int64_t m_msSinceEpochQtFree = 0; //!< timestamp
     };
 } // ns
 

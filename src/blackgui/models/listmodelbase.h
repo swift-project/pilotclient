@@ -27,7 +27,10 @@
 class QMimeData;
 class QModelIndex;
 
-namespace BlackMisc { class CWorker; }
+namespace BlackMisc
+{
+    class CWorker;
+}
 namespace BlackGui::Models
 {
     //! List model
@@ -161,7 +164,7 @@ namespace BlackGui::Models
         {
             int c = m_container.removeIf(BlackMisc::Predicates::MemberEqual(k0, v0, keysValues...));
             this->updateFilteredContainer();
-            if (c > 0) { this->emitModelDataChanged();}
+            if (c > 0) { this->emitModelDataChanged(); }
             return c;
         }
 
@@ -178,7 +181,7 @@ namespace BlackGui::Models
         void removeFilter();
 
         //! Set the filter
-        void takeFilterOwnership(std::unique_ptr<IModelFilter<ContainerType> > &filter);
+        void takeFilterOwnership(std::unique_ptr<IModelFilter<ContainerType>> &filter);
 
         //! Set the selection model
         void setSelectionModel(BlackGui::Models::ISelectionModel<ContainerType> *selectionModel) { m_selectionModel = selectionModel; }
@@ -203,16 +206,16 @@ namespace BlackGui::Models
         //! Model changed
         void emitModelDataChanged();
 
-        ContainerType m_container;         //!< used container
+        ContainerType m_container; //!< used container
         ContainerType m_containerFiltered; //!< cache for filtered container data
-        std::unique_ptr<IModelFilter<ContainerType> > m_filter;     //!< used filter
+        std::unique_ptr<IModelFilter<ContainerType>> m_filter; //!< used filter
         ISelectionModel<ContainerType> *m_selectionModel = nullptr; //!< selection model
     };
 
     namespace Private
     {
         //! Sort with compare function
-        template<class ObjectType>
+        template <class ObjectType>
         bool compareForModelSort(const ObjectType &a, const ObjectType &b, Qt::SortOrder order, const BlackMisc::CPropertyIndex &index, const BlackMisc::CPropertyIndexList &tieBreakers, std::true_type)
         {
             const int c = a.comparePropertyByIndex(index, b);

@@ -55,10 +55,9 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CAtcStationComponent::CAtcStationComponent(QWidget *parent) :
-        COverlayMessagesFrameEnableForDockWidgetInfoArea(parent),
-        CIdentifiable(this),
-        ui(new Ui::CAtcStationComponent)
+    CAtcStationComponent::CAtcStationComponent(QWidget *parent) : COverlayMessagesFrameEnableForDockWidgetInfoArea(parent),
+                                                                  CIdentifiable(this),
+                                                                  ui(new Ui::CAtcStationComponent)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
         ui->setupUi(this);
@@ -93,16 +92,16 @@ namespace BlackGui::Components
 
         // Signal / Slots
         connect(ui->le_AtcStationsOnlineMetar, &QLineEdit::returnPressed, this, &CAtcStationComponent::getMetarAsEntered);
-        connect(ui->tb_AtcStationsLoadMetar,   &QPushButton::clicked,     this, &CAtcStationComponent::getMetarAsEntered);
-        connect(ui->tb_Audio,                  &QPushButton::clicked,     this, &CAtcStationComponent::requestAudioWidget);
-        connect(ui->tb_TextMessageOverlay,     &QPushButton::clicked,     this, &CAtcStationComponent::showOverlayInlineTextMessage);
+        connect(ui->tb_AtcStationsLoadMetar, &QPushButton::clicked, this, &CAtcStationComponent::getMetarAsEntered);
+        connect(ui->tb_Audio, &QPushButton::clicked, this, &CAtcStationComponent::requestAudioWidget);
+        connect(ui->tb_TextMessageOverlay, &QPushButton::clicked, this, &CAtcStationComponent::showOverlayInlineTextMessage);
         connect(ui->tw_Atc, &QTabWidget::currentChanged, this, &CAtcStationComponent::atcStationsTabChanged); // "local" tab changed (booked, online)
 
-        connect(ui->tvp_AtcStationsOnline, &CAtcStationView::objectClicked,  this, &CAtcStationComponent::onOnlineAtcStationVariantSelected, Qt::QueuedConnection);
+        connect(ui->tvp_AtcStationsOnline, &CAtcStationView::objectClicked, this, &CAtcStationComponent::onOnlineAtcStationVariantSelected, Qt::QueuedConnection);
         connect(ui->tvp_AtcStationsOnline, &CAtcStationView::objectSelected, this, &CAtcStationComponent::onOnlineAtcStationVariantSelected, Qt::QueuedConnection);
         connect(ui->tvp_AtcStationsOnline, &CAtcStationView::testRequestDummyAtcOnlineStations, this, &CAtcStationComponent::testCreateDummyOnlineAtcStations);
         connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::requestOnlineStationsUpdate);
-        connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestNewBackendData,  this, &CAtcStationComponent::requestOnlineStationsUpdate);
+        connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestNewBackendData, this, &CAtcStationComponent::requestOnlineStationsUpdate);
         connect(ui->tvp_AtcStationsOnline, &CAtcStationView::modelDataChangedDigest, this, &CAtcStationComponent::onCountChanged);
         connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestComFrequency, this, &CAtcStationComponent::setComFrequency);
         connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestTextMessageWidget, this, &CAtcStationComponent::requestTextMessageWidget);
@@ -114,7 +113,7 @@ namespace BlackGui::Components
         connect(ui->comp_AtcStationsSettings, &CSettingsAtcStationsInlineComponent::changed, this, &CAtcStationComponent::forceUpdate, Qt::QueuedConnection);
 
         connect(ui->tvp_AtcStationsBooked, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::reloadAtcStationsBooked);
-        connect(ui->tvp_AtcStationsBooked, &CAtcStationView::requestNewBackendData,  this, &CAtcStationComponent::reloadAtcStationsBooked);
+        connect(ui->tvp_AtcStationsBooked, &CAtcStationView::requestNewBackendData, this, &CAtcStationComponent::reloadAtcStationsBooked);
         connect(ui->tvp_AtcStationsBooked, &CAtcStationView::modelDataChangedDigest, this, &CAtcStationComponent::onCountChanged);
 
         connect(ui->tb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::requestAtisUpdates);
@@ -157,7 +156,7 @@ namespace BlackGui::Components
     }
 
     CAtcStationComponent::~CAtcStationComponent()
-    { }
+    {}
 
     void CAtcStationComponent::setTab(AtcTab tab)
     {
@@ -233,7 +232,7 @@ namespace BlackGui::Components
                 const int stationsCount = onlineStations.sizeInt();
                 ui->tvp_AtcStationsOnline->updateContainerMaybeAsync(onlineStations);
                 m_timestampLastReadOnlineStations = QDateTime::currentDateTimeUtc();
-                m_timestampOnlineStationsChanged  = m_timestampLastReadOnlineStations;
+                m_timestampOnlineStationsChanged = m_timestampLastReadOnlineStations;
                 this->updateTreeView();
                 this->setOnlineTabs(allStationsCount, stationsCount);
                 ui->comp_AtcStationsSettings->setCounts(allStationsCount, inRangeCount);
@@ -381,8 +380,7 @@ namespace BlackGui::Components
 
         // here I know I am the selected widget, update, but keep GUI responsive (-> timer)
         const QPointer<CAtcStationComponent> myself(this);
-        QTimer::singleShot(1000, this, [ = ]
-        {
+        QTimer::singleShot(1000, this, [=] {
             if (!sApp || sApp->isShuttingDown() || !myself) { return; }
             this->update();
         });
@@ -473,8 +471,7 @@ namespace BlackGui::Components
     {
         // pass copy, not reference -> can crash
         QPointer<CAtcStationComponent> myself(this);
-        QTimer::singleShot(500, this, [ = ]
-        {
+        QTimer::singleShot(500, this, [=] {
             if (myself) { myself->onOnlineAtcStationSelected(station); }
         });
     }
@@ -484,7 +481,7 @@ namespace BlackGui::Components
         if (!station.hasCallsign()) { return; }
         const QString infoMessage =
             station.getCallsignAsString() % u": " % station.getFrequency().valueRoundedWithUnit(CFrequencyUnit::MHz(), 3) %
-            (station.hasAtis()  ? u"\n\n" % station.getAtis().getMessage()  : QStringLiteral("")) %
+            (station.hasAtis() ? u"\n\n" % station.getAtis().getMessage() : QStringLiteral("")) %
             (station.hasMetar() ? u"\n\n" % station.getMetar().getMessage() : QStringLiteral(""));
         ui->te_AtcStationsOnlineInfo->setText(infoMessage);
         ui->le_AtcStationsOnlineMetar->setText(station.getCallsign().asString());

@@ -21,16 +21,15 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CAirspaceAircraftSnapshot
 namespace BlackMisc::Simulation
 {
     CAirspaceAircraftSnapshot::CAirspaceAircraftSnapshot()
-    { }
+    {}
 
     CAirspaceAircraftSnapshot::CAirspaceAircraftSnapshot(
         const CSimulatedAircraftList &allAircraft,
         bool restricted, bool renderingEnabled, int maxAircraft,
-        const CLength &maxRenderedDistance) :
-        m_timestampMsSinceEpoch(QDateTime::currentMSecsSinceEpoch()),
-        m_restricted(restricted),
-        m_renderingEnabled(renderingEnabled),
-        m_threadName(QThread::currentThread()->objectName())
+        const CLength &maxRenderedDistance) : m_timestampMsSinceEpoch(QDateTime::currentMSecsSinceEpoch()),
+                                              m_restricted(restricted),
+                                              m_renderingEnabled(renderingEnabled),
+                                              m_threadName(QThread::currentThread()->objectName())
     {
         if (allAircraft.isEmpty()) { return; }
 
@@ -117,7 +116,11 @@ namespace BlackMisc::Simulation
 
     void CAirspaceAircraftSnapshot::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CAirspaceAircraftSnapshot>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CAirspaceAircraftSnapshot>();
+            return;
+        }
         CValueObject::setPropertyByIndex(index, variant);
     }
 

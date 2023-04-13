@@ -39,7 +39,10 @@ class QWizard;
 class QGraphicsOpacityEffect;
 class QAbstractItemModel;
 
-namespace BlackMisc { class CIcon; }
+namespace BlackMisc
+{
+    class CIcon;
+}
 namespace BlackGui
 {
     class CEnableForFramelessWindow;
@@ -136,16 +139,17 @@ namespace BlackGui
         static bool isMimeRepresentingReadableJsonFile(const QMimeData *mime);
 
         //! Find next BlackGui::COverlayMessages QFrame or other implementing widget
-        template <class OverlayWidget> static OverlayWidget *nextOverlayMessageWidget(QWidget *widget, int maxLevels = 10)
+        template <class OverlayWidget>
+        static OverlayWidget *nextOverlayMessageWidget(QWidget *widget, int maxLevels = 10)
         {
             if (!widget || maxLevels < 1) { return nullptr; }
-            OverlayWidget *o = qobject_cast<OverlayWidget *> (widget);
+            OverlayWidget *o = qobject_cast<OverlayWidget *>(widget);
             if (o) { return o; }
             int cl = 0;
             QWidget *cw = widget->parentWidget();
             while (cl < maxLevels && cw)
             {
-                o = qobject_cast<OverlayWidget *> (cw);
+                o = qobject_cast<OverlayWidget *>(cw);
                 if (o) { return o; }
                 cl++;
                 cw = cw->parentWidget();

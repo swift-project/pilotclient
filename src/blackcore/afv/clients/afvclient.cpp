@@ -19,7 +19,7 @@
 #include "blackmisc/verify.h"
 
 #ifdef Q_OS_WIN
-#include "comdef.h"
+#    include "comdef.h"
 #endif
 
 #include <QDebug>
@@ -52,13 +52,12 @@ namespace BlackCore::Afv::Clients
         return cats;
     }
 
-    CAfvClient::CAfvClient(const QString &apiServer, QObject *owner) :
-        CContinuousWorker(owner, "CAfvClient"),
-        CIdentifiable("CAfvClient"),
-        m_connection(new CClientConnection(apiServer, this)),
-        m_input(new CInput(SampleRate, this)),
-        m_output(new COutput(this)),
-        m_voiceServerTimer(new QTimer(this))
+    CAfvClient::CAfvClient(const QString &apiServer, QObject *owner) : CContinuousWorker(owner, "CAfvClient"),
+                                                                       CIdentifiable("CAfvClient"),
+                                                                       m_connection(new CClientConnection(apiServer, this)),
+                                                                       m_input(new CInput(SampleRate, this)),
+                                                                       m_output(new COutput(this)),
+                                                                       m_voiceServerTimer(new QTimer(this))
     {
         this->setObjectName("AFV client: " + apiServer);
         m_connection->setReceiveAudio(false);
@@ -66,15 +65,14 @@ namespace BlackCore::Afv::Clients
         connect(m_input, &CInput::opusDataAvailable, this, &CAfvClient::opusDataAvailable);
         connect(m_input, &CInput::inputVolumeStream, this, &CAfvClient::inputVolumeStream);
 
-        connect(m_output,     &COutput::outputVolumeStream,      this, &CAfvClient::outputVolumeStream);
+        connect(m_output, &COutput::outputVolumeStream, this, &CAfvClient::outputVolumeStream);
         connect(m_connection, &CClientConnection::audioReceived, this, &CAfvClient::audioOutDataAvailable);
-        connect(m_voiceServerTimer, &QTimer::timeout,            this, &CAfvClient::onTimerUpdate);
+        connect(m_voiceServerTimer, &QTimer::timeout, this, &CAfvClient::onTimerUpdate);
 
         m_updateTimer.stop(); // not used
 
         // deferred init - use BlackMisc:: singleShot to call in correct thread, "myself" NOT needed
-        BlackMisc::singleShot(1000, this, [ = ]
-        {
+        BlackMisc::singleShot(1000, this, [=] {
             this->deferredInit();
         });
     }
@@ -101,8 +99,7 @@ namespace BlackCore::Afv::Clients
     {
         {
             QMutexLocker lock(&m_mutexTransceivers);
-            m_transceivers =
-            {
+            m_transceivers = {
                 { 0, UniCom, 48.5, 11.5, 1000.0, 1000.0 },
                 { 1, UniCom, 48.5, 11.5, 1000.0, 1000.0 }
             };
@@ -121,7 +118,7 @@ namespace BlackCore::Afv::Clients
     void CAfvClient::connectWithContexts()
     {
         if (m_connectedWithContext) { return; }
-        if (!hasContexts())         { return; }
+        if (!hasContexts()) { return; }
         this->disconnect(sApp->getIContextOwnAircraft());
         sApp->getIContextOwnAircraft()->disconnect(this);
         connect(sApp->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CAfvClient::onUpdateTransceiversFromContext, Qt::QueuedConnection);
@@ -137,12 +134,12 @@ namespace BlackCore::Afv::Clients
         {
             // Method needs to be executed in the context thread
             QPointer<CAfvClient> myself(this);
-            QMetaObject::invokeMethod(sApp->getIContextSimulator(), [ = ]() { if (myself) { this->fetchSimulatorSettings(); }});
+            QMetaObject::invokeMethod(sApp->getIContextSimulator(), [=]() { if (myself) { this->fetchSimulatorSettings(); } });
             return;
         }
 
         const bool integrated = sApp->getIContextSimulator()->getSimulatorSettings().isComIntegrated();
-        const bool changed    = integrated != m_integratedComUnit;
+        const bool changed = integrated != m_integratedComUnit;
 
         m_integratedComUnit = integrated;
         if (changed)
@@ -157,7 +154,7 @@ namespace BlackCore::Afv::Clients
         {
             // Method needs to be executed in the object thread since it will create new QObject children
             QPointer<CAfvClient> myself(this);
-            QMetaObject::invokeMethod(this, [ = ]() { if (myself) { connectTo(cid, password, callsign, client); }});
+            QMetaObject::invokeMethod(this, [=]() { if (myself) { connectTo(cid, password, callsign, client); } });
             return;
         }
 
@@ -169,8 +166,7 @@ namespace BlackCore::Afv::Clients
         if (!this->isConnected() && m_retryConnectAttempt == 0)
         {
             // check if connect simply did NOT receive an answer
-            QTimer::singleShot(20 * 1000, this, [ = ]
-            {
+            QTimer::singleShot(20 * 1000, this, [=] {
                 if (!myself) { return; }
                 if (m_retryConnectAttempt > 0) { return; } // already handled
 
@@ -185,36 +181,33 @@ namespace BlackCore::Afv::Clients
 
             // async connection
             m_connection->connectTo(cid, password, callsign, client,
-            {
-                // this is the callback when the connection has been established
-                this, [ = ](bool authenticated)
-                {
-                    if (!myself) { return; }
+                                    { // this is the callback when the connection has been established
+                                      this, [=](bool authenticated) {
+                                          if (!myself) { return; }
 
-                    // HF stations aliased
-                    const QVector<StationDto> aliasedStations = m_connection->getAllAliasedStations();
-                    this->setAliasedStations(aliasedStations); // threadsafe
-                    this->onTimerUpdate();
+                                          // HF stations aliased
+                                          const QVector<StationDto> aliasedStations = m_connection->getAllAliasedStations();
+                                          this->setAliasedStations(aliasedStations); // threadsafe
+                                          this->onTimerUpdate();
 
-                    // const bool isConnected = this->isConnected(); // threadsafe
-                    if (authenticated)
-                    {
-                        // restart timer, normally it should be started already, paranoia
-                        // as I run in "my thread" starting timer should be OK
-                        {
-                            QMutexLocker lock2(&m_mutex);
-                            if (m_voiceServerTimer) { m_voiceServerTimer->start(PositionUpdatesMs); }
-                        }
-                        m_retryConnectAttempt = 0;
-                        emit this->connectionStatusChanged(Connected);
-                    }
-                    else
-                    {
-                        myself->retryConnectTo(cid, password, callsign, client, QStringLiteral("AFV authentication failed for '%1' callsign '%2'").arg(cid, callsign));
-                        emit this->connectionStatusChanged(Disconnected);
-                    }
-                }
-            });
+                                          // const bool isConnected = this->isConnected(); // threadsafe
+                                          if (authenticated)
+                                          {
+                                              // restart timer, normally it should be started already, paranoia
+                                              // as I run in "my thread" starting timer should be OK
+                                              {
+                                                  QMutexLocker lock2(&m_mutex);
+                                                  if (m_voiceServerTimer) { m_voiceServerTimer->start(PositionUpdatesMs); }
+                                              }
+                                              m_retryConnectAttempt = 0;
+                                              emit this->connectionStatusChanged(Connected);
+                                          }
+                                          else
+                                          {
+                                              myself->retryConnectTo(cid, password, callsign, client, QStringLiteral("AFV authentication failed for '%1' callsign '%2'").arg(cid, callsign));
+                                              emit this->connectionStatusChanged(Disconnected);
+                                          }
+                                      } });
         }
     }
 
@@ -224,7 +217,7 @@ namespace BlackCore::Afv::Clients
         {
             // Method needs to be executed in the object thread since it will create new QObject children
             QPointer<CAfvClient> myself(this);
-            QMetaObject::invokeMethod(this, [ = ]() { if (myself) { disconnectFrom(stop); }});
+            QMetaObject::invokeMethod(this, [=]() { if (myself) { disconnectFrom(stop); } });
             return;
         }
 
@@ -235,8 +228,8 @@ namespace BlackCore::Afv::Clients
             m_connection->disconnectFrom();
         }
 
-        m_heartBeatFailures    = 0;
-        m_retryConnectAttempt  = 0;
+        m_heartBeatFailures = 0;
+        m_retryConnectAttempt = 0;
         m_fsdConnectMismatches = 0;
 
         emit connectionStatusChanged(Disconnected);
@@ -278,7 +271,7 @@ namespace BlackCore::Afv::Clients
 
     void CAfvClient::startAudio()
     {
-        const CAudioDeviceInfo inputDevice  = this->getInputDevice();
+        const CAudioDeviceInfo inputDevice = this->getInputDevice();
         const CAudioDeviceInfo outputDevice = this->getOutputDevice();
         this->startAudio(inputDevice, outputDevice);
     }
@@ -289,14 +282,14 @@ namespace BlackCore::Afv::Clients
         {
             // Method needs to be executed in the object thread since it will create new QObject children
             QPointer<CAfvClient> myself(this);
-            QMetaObject::invokeMethod(this, [ = ]() { if (myself) { startAudio(inputDevice, outputDevice); }});
+            QMetaObject::invokeMethod(this, [=]() { if (myself) { startAudio(inputDevice, outputDevice); } });
             return;
         }
 
-        const CAudioDeviceInfo useInputDevice  = inputDevice.isValid()  ? inputDevice  : CAudioDeviceInfo::getDefaultInputDevice();
+        const CAudioDeviceInfo useInputDevice = inputDevice.isValid() ? inputDevice : CAudioDeviceInfo::getDefaultInputDevice();
         const CAudioDeviceInfo useOutputDevice = outputDevice.isValid() ? outputDevice : CAudioDeviceInfo::getDefaultOutputDevice();
 
-        BLACK_VERIFY_X(useInputDevice.isValid()  && useInputDevice.isInputDevice(),   Q_FUNC_INFO, "Wrong input device");
+        BLACK_VERIFY_X(useInputDevice.isValid() && useInputDevice.isInputDevice(), Q_FUNC_INFO, "Wrong input device");
         BLACK_VERIFY_X(useOutputDevice.isValid() && useOutputDevice.isOutputDevice(), Q_FUNC_INFO, "Wrong output device");
 
         if (m_isStarted)
@@ -315,7 +308,7 @@ namespace BlackCore::Afv::Clients
         {
             // lock block 1
             {
-                QMutexLocker lock{&m_mutexSampleProviders};
+                QMutexLocker lock { &m_mutexSampleProviders };
                 if (m_soundcardSampleProvider)
                 {
                     m_soundcardSampleProvider->disconnect();
@@ -326,7 +319,7 @@ namespace BlackCore::Afv::Clients
 
                 if (m_outputSampleProvider) { m_outputSampleProvider->deleteLater(); }
                 m_outputSampleProvider = new CVolumeSampleProvider(m_soundcardSampleProvider, this);
-                //m_outputSampleProvider->setGainRatio(outputVolume); // 2021-09 LT Disabled. Output volume is controlled independently for COM1/2
+                // m_outputSampleProvider->setGainRatio(outputVolume); // 2021-09 LT Disabled. Output volume is controlled independently for COM1/2
             }
 
             // lock block 2
@@ -356,7 +349,6 @@ namespace BlackCore::Afv::Clients
             // un-mute after startup
             this->setMuted(false);
         }
-
     }
 
     void CAfvClient::startAudio(const QString &inputDeviceName, const QString &outputDeviceName)
@@ -372,7 +364,7 @@ namespace BlackCore::Afv::Clients
         {
             // Method needs to be executed in the object thread since it will create new QObject children
             QPointer<CAfvClient> myself(this);
-            QMetaObject::invokeMethod(this, [ = ]() { if (myself) stopAudio(); });
+            QMetaObject::invokeMethod(this, [=]() { if (myself) stopAudio(); });
             return;
         }
 
@@ -387,7 +379,7 @@ namespace BlackCore::Afv::Clients
 
         // stop input/output
         {
-            QMutexLocker lock{&m_mutex};
+            QMutexLocker lock { &m_mutex };
             m_input->stop();
             m_output->stop();
         }
@@ -411,8 +403,7 @@ namespace BlackCore::Afv::Clients
 
         this->stopAudio();
         QPointer<CAfvClient> myself(this);
-        QTimer::singleShot(1000, this, [ = ]
-        {
+        QTimer::singleShot(1000, this, [=] {
             if (myself) { myself->startAudio(); }
         });
     }
@@ -455,7 +446,7 @@ namespace BlackCore::Afv::Clients
         {
             QMutexLocker lock(&m_mutexTransceivers);
             if (enable) { m_enabledTransceivers.insert(id); }
-            else        { m_enabledTransceivers.remove(id); }
+            else { m_enabledTransceivers.remove(id); }
         }
 
         this->updateTransceivers();
@@ -544,8 +535,8 @@ namespace BlackCore::Afv::Clients
         {
             const CSimulatedAircraft ownAircraft = sApp->getIContextOwnAircraft()->getOwnAircraft();
             this->updatePosition(ownAircraft.latitude().value(CAngleUnit::deg()),
-                                    ownAircraft.longitude().value(CAngleUnit::deg()),
-                                    ownAircraft.getAltitude().value(CLengthUnit::ft()));
+                                 ownAircraft.longitude().value(CAngleUnit::deg()),
+                                 ownAircraft.getAltitude().value(CLengthUnit::ft()));
 
             if (updateFrequencies)
             {
@@ -737,15 +728,14 @@ namespace BlackCore::Afv::Clients
         {
             // call in background thread of AFVClient to avoid lock issues
             QPointer<CAfvClient> myself(this);
-            QTimer::singleShot(0, this, [ = ]
-            {
+            QTimer::singleShot(0, this, [=] {
                 if (!myself || !CAfvClient::hasContexts()) { return; }
                 myself->setInputVolumeDb(valueDb);
             });
             return true; // not exactly "true" as we do it async
         }
 
-        if (valueDb > MaxDbIn)      { valueDb = MaxDbIn; }
+        if (valueDb > MaxDbIn) { valueDb = MaxDbIn; }
         else if (valueDb < MinDbIn) { valueDb = MinDbIn; }
 
         QMutexLocker lock(&m_mutex);
@@ -824,8 +814,7 @@ namespace BlackCore::Afv::Clients
         {
             // call in background thread of AFVClient to avoid lock issues
             QPointer<CAfvClient> myself(this);
-            QTimer::singleShot(0, this, [ = ]
-            {
+            QTimer::singleShot(0, this, [=] {
                 if (!myself || !CAfvClient::hasContexts()) { return; }
                 myself->setNormalizedMasterOutputVolume(volume);
             });
@@ -859,7 +848,7 @@ namespace BlackCore::Afv::Clients
         else { qFatal("Invalid ComUnit"); }
 
         // Calculate volume relative to master-output volume
-        volume = qRound((double)volume*getNormalizedMasterOutputVolume()/100);
+        volume = qRound((double)volume * getNormalizedMasterOutputVolume() / 100);
 
         // Asymetric
         double range = MaxDbOut;
@@ -901,13 +890,13 @@ namespace BlackCore::Afv::Clients
         if (loopback && transmit)
         {
             IAudioDto audioData;
-            audioData.audio      = QByteArray(args.audio.data(), args.audio.size());
-            audioData.callsign   = QStringLiteral("loopback");
+            audioData.audio = QByteArray(args.audio.data(), args.audio.size());
+            audioData.callsign = QStringLiteral("loopback");
             audioData.lastPacket = false;
             audioData.sequenceCounter = 0;
 
-            const RxTransceiverDto com1 = { 0, transceivers.size() > 0 ?  transceivers[0].frequencyHz : UniCom, 1.0 };
-            const RxTransceiverDto com2 = { 1, transceivers.size() > 1 ?  transceivers[1].frequencyHz : UniCom, 1.0 };
+            const RxTransceiverDto com1 = { 0, transceivers.size() > 0 ? transceivers[0].frequencyHz : UniCom, 1.0 };
+            const RxTransceiverDto com2 = { 1, transceivers.size() > 1 ? transceivers[1].frequencyHz : UniCom, 1.0 };
 
             QMutexLocker lock(&m_mutexSampleProviders);
             m_soundcardSampleProvider->addOpusSamples(audioData, { com1, com2 });
@@ -950,9 +939,9 @@ namespace BlackCore::Afv::Clients
     void CAfvClient::audioOutDataAvailable(const AudioRxOnTransceiversDto &dto)
     {
         IAudioDto audioData;
-        audioData.audio           = QByteArray(dto.audio.data(), static_cast<int>(dto.audio.size()));
-        audioData.callsign        = QString::fromStdString(dto.callsign);
-        audioData.lastPacket      = dto.lastPacket;
+        audioData.audio = QByteArray(dto.audio.data(), static_cast<int>(dto.audio.size()));
+        audioData.callsign = QString::fromStdString(dto.callsign);
+        audioData.lastPacket = dto.lastPacket;
         audioData.sequenceCounter = dto.sequenceCounter;
 
         QMutexLocker lock(&m_mutexSampleProviders);
@@ -1011,7 +1000,7 @@ namespace BlackCore::Afv::Clients
     {
         QStringList coms;
         QMutexLocker lock(&m_mutexSampleProviders);
-        if (!m_soundcardSampleProvider) { return {{ QString(), QString() }}; }
+        if (!m_soundcardSampleProvider) { return { { QString(), QString() } }; }
         coms << m_soundcardSampleProvider->getReceivingCallsignsString(comUnitToTransceiverId(CComSystem::Com1));
         coms << m_soundcardSampleProvider->getReceivingCallsignsString(comUnitToTransceiverId(CComSystem::Com2));
         return coms;
@@ -1037,13 +1026,13 @@ namespace BlackCore::Afv::Clients
 #ifdef Q_OS_WIN
         if (!m_winCoInitialized)
         {
-            HRESULT hr = CoInitializeEx(nullptr,  COINIT_MULTITHREADED);
+            HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
             // RPC_E_CHANGED_MODE: CoInitializeEx was already called by someone else in this thread with a different mode.
             if (hr == RPC_E_CHANGED_MODE)
             {
                 CLogMessage(this).debug(u"CoInitializeEx was already called with a different mode. Trying again.");
-                hr = CoInitializeEx(nullptr,  COINIT_APARTMENTTHREADED);
+                hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
             }
 
             // S_OK: The COM library was initialized successfully on this thread.
@@ -1091,7 +1080,7 @@ namespace BlackCore::Afv::Clients
 
     void CAfvClient::checkServerHeartbeat()
     {
-        if (!this->isStarted())   { return; }
+        if (!this->isStarted()) { return; }
         if (!this->isConnected()) { return; }
 
         if (this->isVoiceServerAlive())
@@ -1108,9 +1097,9 @@ namespace BlackCore::Afv::Clients
         QString un, pw, cs, client;
         {
             QMutexLocker lock(&m_mutexConnection);
-            un     = m_connection->getUserName();
-            pw     = m_connection->getPassword();
-            cs     = m_connection->getCallsign();
+            un = m_connection->getUserName();
+            pw = m_connection->getPassword();
+            cs = m_connection->getCallsign();
             client = m_connection->getClient();
         }
         if (un.isEmpty() || pw.isEmpty()) { return; }
@@ -1119,8 +1108,7 @@ namespace BlackCore::Afv::Clients
         if (this->isConnected()) { this->disconnectFrom(false); }
 
         QPointer<CAfvClient> myself(this);
-        QTimer::singleShot(5 * 1000, this, [ = ]
-        {
+        QTimer::singleShot(5 * 1000, this, [=] {
             if (!myself) { return; }
             const QString reason = QStringLiteral("Heartbeat failed %1 times").arg(failures);
             this->retryConnectTo(un, pw, cs, client, reason);
@@ -1144,11 +1132,19 @@ namespace BlackCore::Afv::Clients
 
     void CAfvClient::autoLogoffWithoutFsdNetwork()
     {
-        if (!hasContexts())       { return; }
-        if (!this->isConnected()) { m_fsdConnectMismatches = 0; return; }
+        if (!hasContexts()) { return; }
+        if (!this->isConnected())
+        {
+            m_fsdConnectMismatches = 0;
+            return;
+        }
 
         // AFV is connected
-        if (sApp->getIContextNetwork()->isConnected()) { m_fsdConnectMismatches = 0; return; }
+        if (sApp->getIContextNetwork()->isConnected())
+        {
+            m_fsdConnectMismatches = 0;
+            return;
+        }
         if (++m_fsdConnectMismatches < 2) { return; } // avoid a single issue causing logoff
 
         CLogMessage(this).warning(u"Auto logoff AFV client because FSD no longer connected");
@@ -1167,10 +1163,10 @@ namespace BlackCore::Afv::Clients
         // position
         const double latDeg = aircraft.latitude().value(CAngleUnit::deg());
         const double lngDeg = aircraft.longitude().value(CAngleUnit::deg());
-        const double altM   = aircraft.getAltitude().value(CLengthUnit::m());
+        const double altM = aircraft.getAltitude().value(CLengthUnit::m());
 
-        transceiverCom1.LatDeg     = transceiverCom2.LatDeg     = latDeg;
-        transceiverCom1.LonDeg     = transceiverCom2.LonDeg     = lngDeg;
+        transceiverCom1.LatDeg = transceiverCom2.LatDeg = latDeg;
+        transceiverCom1.LonDeg = transceiverCom2.LonDeg = lngDeg;
         transceiverCom1.HeightAglM = transceiverCom2.HeightAglM = altM;
         transceiverCom1.HeightMslM = transceiverCom2.HeightMslM = altM;
 
@@ -1207,8 +1203,16 @@ namespace BlackCore::Afv::Clients
             const QVector<TransceiverDto> newTransceivers { transceiverCom1, transceiverCom2 };
             QSet<quint16> newEnabledTransceiverIds;
             QVector<TxTransceiverDto> newTransmittingTransceivers;
-            if (e1) { newEnabledTransceivers.push_back(transceiverCom1); newEnabledTransceiverIds.insert(transceiverCom1.id); }
-            if (e2) { newEnabledTransceivers.push_back(transceiverCom2); newEnabledTransceiverIds.insert(transceiverCom2.id); }
+            if (e1)
+            {
+                newEnabledTransceivers.push_back(transceiverCom1);
+                newEnabledTransceiverIds.insert(transceiverCom1.id);
+            }
+            if (e2)
+            {
+                newEnabledTransceivers.push_back(transceiverCom2);
+                newEnabledTransceiverIds.insert(transceiverCom2.id);
+            }
 
             // Transmitting transceivers, currently ALLOW ONLY ONE
             if (tx1 && e1) { newTransmittingTransceivers.push_back(transceiverCom1); }
@@ -1306,8 +1310,7 @@ namespace BlackCore::Afv::Clients
         }
 
         QPointer<CAfvClient> myself(this);
-        QTimer::singleShot(delayMs, this, [ = ]
-        {
+        QTimer::singleShot(delayMs, this, [=] {
             if (!myself) { return; }
             if (myself->isConnected()) { return; }
             this->connectTo(cid, password, callsign, client);
@@ -1338,8 +1341,7 @@ namespace BlackCore::Afv::Clients
         {
             QMutexLocker lock(&m_mutex);
             CFrequency roundedFrequency(static_cast<int>(roundedFrequencyHz), CFrequencyUnit::Hz());
-            const auto it = std::find_if(m_aliasedStations.constBegin(), m_aliasedStations.constEnd(), [roundedFrequency](const StationDto & d)
-            {
+            const auto it = std::find_if(m_aliasedStations.constBegin(), m_aliasedStations.constEnd(), [roundedFrequency](const StationDto &d) {
                 if (d.frequencyAliasHz > 100000000 && roundedFrequency.value(CFrequencyUnit::Hz()) > 100000000) // both VHF
                 {
                     const int aliasedFreqHz = static_cast<int>(qRound(d.frequencyAliasHz / 1000.0)) * 1000;
@@ -1361,19 +1363,19 @@ namespace BlackCore::Afv::Clients
                     {
                         // this is how it should be
                         roundedFrequencyHz = it->frequencyHz;
-                        CLogMessage(this).debug(u"Aliasing '%1' %2Hz [VHF] to %3Hz [HF]")  << closest.getCallsign() << frequencyHz << it->frequencyHz;
+                        CLogMessage(this).debug(u"Aliasing '%1' %2Hz [VHF] to %3Hz [HF]") << closest.getCallsign() << frequencyHz << it->frequencyHz;
                     }
                     else
                     {
                         // Ups!
-                        CLogMessage(this).debug(u"Station '%1' NOT found! Using original frequency %2Hz")  << it->name << roundedFrequencyHz;
+                        CLogMessage(this).debug(u"Station '%1' NOT found! Using original frequency %2Hz") << it->name << roundedFrequencyHz;
                     }
                 }
                 else
                 {
                     // without contexts always use HF frequency if found
                     roundedFrequencyHz = it->frequencyHz; // we use this frequency
-                    CLogMessage(this).debug(u"Aliasing %1Hz [VHF] to %2Hz [HF] (no context)")  << frequencyHz << it->frequencyHz;
+                    CLogMessage(this).debug(u"Aliasing %1Hz [VHF] to %2Hz [HF] (no context)") << frequencyHz << it->frequencyHz;
                 }
             }
         }
@@ -1415,7 +1417,7 @@ namespace BlackCore::Afv::Clients
 
         // avoid issues if there are no parts, or only one
         prefix = parts.size() > 0 ? parts.first() : QString();
-        suffix = parts.size() > 1 ? parts.last() :  QString();
+        suffix = parts.size() > 1 ? parts.last() : QString();
     }
 
     quint16 CAfvClient::comUnitToTransceiverId(CComSystem::ComUnit comUnit)
@@ -1424,7 +1426,7 @@ namespace BlackCore::Afv::Clients
         {
         case CComSystem::Com1: return 0;
         case CComSystem::Com2: return 1;
-        default:               break;
+        default: break;
         }
         return 0;
     }
@@ -1459,15 +1461,14 @@ namespace BlackCore::Afv::Clients
         {
             // call in background thread of AFVClient to avoid lock issues
             QPointer<CAfvClient> myself(this);
-            QTimer::singleShot(0, this, [ = ]
-            {
+            QTimer::singleShot(0, this, [=] {
                 if (!myself || !CAfvClient::hasContexts()) { return; }
                 myself->setComOutputVolumeDb(comUnit, valueDb);
             });
             return true; // not exactly "true" as we do it async
         }
         if (comUnit != CComSystem::Com1 && comUnit != CComSystem::Com2) { return false; }
-        if (valueDb > MaxDbOut)      { valueDb = MaxDbOut; }
+        if (valueDb > MaxDbOut) { valueDb = MaxDbOut; }
         else if (valueDb < MinDbOut) { valueDb = MinDbOut; }
 
         const double gainRatio = qPow(10, valueDb / 20.0);
@@ -1479,7 +1480,7 @@ namespace BlackCore::Afv::Clients
                 changed = !qFuzzyCompare(m_outputVolumeDbCom1, valueDb);
                 if (changed)
                 {
-                    m_outputVolumeDbCom1  = valueDb;
+                    m_outputVolumeDbCom1 = valueDb;
                     m_outputGainRatioCom1 = gainRatio;
                 }
             }
@@ -1488,7 +1489,7 @@ namespace BlackCore::Afv::Clients
                 changed = !qFuzzyCompare(m_outputVolumeDbCom2, valueDb);
                 if (changed)
                 {
-                    m_outputVolumeDbCom2  = valueDb;
+                    m_outputVolumeDbCom2 = valueDb;
                     m_outputGainRatioCom2 = gainRatio;
                 }
             }
@@ -1535,7 +1536,7 @@ namespace BlackCore::Afv::Clients
         lock.unlock();
 
         return i.matchesNameTypeMachineName(inputDevice) &&
-                o.matchesNameTypeMachineName(outputDevice);
+               o.matchesNameTypeMachineName(outputDevice);
     }
 
     CAfvClient::ConnectionStatus CAfvClient::getConnectionStatus() const

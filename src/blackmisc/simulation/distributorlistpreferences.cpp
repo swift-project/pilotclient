@@ -14,7 +14,7 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CDistributorListPreferenc
 
 namespace BlackMisc::Simulation
 {
-    CDistributorListPreferences::CDistributorListPreferences() { }
+    CDistributorListPreferences::CDistributorListPreferences() {}
 
     const CDistributorList &CDistributorListPreferences::getDistributors(const CSimulatorInfo &simulator) const
     {
@@ -24,7 +24,7 @@ namespace BlackMisc::Simulation
         case CSimulatorInfo::FSX: return m_distributorsFsx;
         case CSimulatorInfo::P3D: return m_distributorsP3d;
         case CSimulatorInfo::FS9: return m_distributorsFs9;
-        case CSimulatorInfo::FG:  return m_distributorsFG;
+        case CSimulatorInfo::FG: return m_distributorsFG;
         case CSimulatorInfo::XPLANE: return m_distributorsXPlane;
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
@@ -52,7 +52,7 @@ namespace BlackMisc::Simulation
         case CSimulatorInfo::FSX: m_distributorsFsx = d; break;
         case CSimulatorInfo::P3D: m_distributorsP3d = d; break;
         case CSimulatorInfo::FS9: m_distributorsFs9 = d; break;
-        case CSimulatorInfo::FG:  m_distributorsFG  = d; break;
+        case CSimulatorInfo::FG: m_distributorsFG = d; break;
         case CSimulatorInfo::XPLANE: m_distributorsXPlane = d; break;
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");

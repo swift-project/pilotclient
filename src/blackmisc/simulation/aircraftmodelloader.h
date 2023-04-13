@@ -54,24 +54,24 @@ namespace BlackMisc::Simulation
         //! Parser mode
         enum LoadModeFlag
         {
-            NotSet                = 0,
-            LoadDirectly          = 1 << 0,   //!< load synchronously (blocking), normally for testing
-            LoadInBackground      = 1 << 1,   //!< load in background, asyncronously
-            CacheFirst            = 1 << 2,   //!< always use cache (if it has data)
-            CacheSkipped          = 1 << 3,   //!< ignore cache
-            CacheOnly             = 1 << 4,   //!< only read cache, never load from disk
-            InBackgroundWithCache = LoadInBackground | CacheFirst,   //!< Background, cached
-            InBackgroundNoCache   = LoadInBackground | CacheSkipped  //!< Background, not checking cache
+            NotSet = 0,
+            LoadDirectly = 1 << 0, //!< load synchronously (blocking), normally for testing
+            LoadInBackground = 1 << 1, //!< load in background, asyncronously
+            CacheFirst = 1 << 2, //!< always use cache (if it has data)
+            CacheSkipped = 1 << 3, //!< ignore cache
+            CacheOnly = 1 << 4, //!< only read cache, never load from disk
+            InBackgroundWithCache = LoadInBackground | CacheFirst, //!< Background, cached
+            InBackgroundNoCache = LoadInBackground | CacheSkipped //!< Background, not checking cache
         };
         Q_DECLARE_FLAGS(LoadMode, LoadModeFlag)
 
         //! Load mode
         enum LoadFinishedInfo
         {
-            CacheLoaded,    //!< cache was loaded
-            ParsedData,     //!< parsed data
+            CacheLoaded, //!< cache was loaded
+            ParsedData, //!< parsed data
             LoadingSkipped, //!< loading skipped (empty directory)
-            LoadingFailed   //!< loading failed
+            LoadingFailed //!< loading failed
         };
 
         //! Loaded info
@@ -94,7 +94,7 @@ namespace BlackMisc::Simulation
 
         //! Callback to consolidate data, normally with DB data
         //! \remark this has to be a abstarct, as DB handling is subject of BlackCore
-        using ModelConsolidationCallback = std::function<int (BlackMisc::Simulation::CAircraftModelList &, bool)>;
+        using ModelConsolidationCallback = std::function<int(BlackMisc::Simulation::CAircraftModelList &, bool)>;
 
         //! Destructor
         virtual ~IAircraftModelLoader() override;
@@ -161,12 +161,12 @@ namespace BlackMisc::Simulation
         //! Any cached data?
         bool hasCachedData() const;
 
-        const CSimulatorInfo m_simulator;                         //!< related simulator
-        std::atomic<bool>    m_loadingInProgress { false };       //!< loading in progress
-        std::atomic<bool>    m_cancelLoading { false };           //!< flag, requesting to cancel loading
-        std::atomic<bool>    m_skipLoadingEmptyModelDir { true }; //!< loading empty model dirs might erase the cache, so normally we skip it
-        CStatusMessageList   m_loadingMessages;                   //!< loading messages
-        Settings::CMultiSimulatorSettings m_settings { this };    //!< settings
+        const CSimulatorInfo m_simulator; //!< related simulator
+        std::atomic<bool> m_loadingInProgress { false }; //!< loading in progress
+        std::atomic<bool> m_cancelLoading { false }; //!< flag, requesting to cancel loading
+        std::atomic<bool> m_skipLoadingEmptyModelDir { true }; //!< loading empty model dirs might erase the cache, so normally we skip it
+        CStatusMessageList m_loadingMessages; //!< loading messages
+        Settings::CMultiSimulatorSettings m_settings { this }; //!< settings
 
     private:
         //! Descriptive name for loader

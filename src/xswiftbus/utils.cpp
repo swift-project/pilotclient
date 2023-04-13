@@ -9,7 +9,7 @@
 //! \cond PRIVATE
 
 #ifndef NOMINMAX
-#define NOMINMAX
+#    define NOMINMAX
 #endif
 
 #include "utils.h"
@@ -21,7 +21,7 @@
 #include <cassert>
 
 #ifdef APL
-#include <Carbon/Carbon.h>
+#    include <Carbon/Carbon.h>
 #endif
 
 namespace XSwiftBus
@@ -54,9 +54,9 @@ namespace XSwiftBus
 
     void Logger::print(const std::string &filePath, int line, MsgType type, const std::string &message)
     {
-        (void) line;
-        (void) type;
-        (void) filePath;
+        (void)line;
+        (void)type;
+        (void)filePath;
 
         assert(!filePath.empty());
         std::ostringstream ss;
@@ -94,7 +94,7 @@ namespace XSwiftBus
 
         ss << line;
         ss << " : ";
-#endif //XSWIFTBUS_ENABLE_TRACE_LOG
+#endif // XSWIFTBUS_ENABLE_TRACE_LOG
 
         ss << message;
         ss << "\n";
@@ -107,42 +107,45 @@ namespace XSwiftBus
     template <typename T>
     struct CFSmartPtr
     {
-	    CFSmartPtr(T p) : p_(p) {}
-	    ~CFSmartPtr() { if (p_) CFRelease(p_); }
-	    operator T () { return p_; }
-	    T p_;
+        CFSmartPtr(T p) : p_(p) {}
+        ~CFSmartPtr()
+        {
+            if (p_) CFRelease(p_);
+        }
+        operator T() { return p_; }
+        T p_;
     };
 
-    #ifdef __clang__
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    #endif
+#    ifdef __clang__
+#        pragma clang diagnostic push
+#        pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#    endif
 
     int HFS2PosixPath(const char *path, char *result, int resultLen)
     {
-        bool is_dir = (path[strlen(path)-1] == ':');
+        bool is_dir = (path[strlen(path) - 1] == ':');
 
-        CFSmartPtr<CFStringRef>		inStr(CFStringCreateWithCString(kCFAllocatorDefault, path ,kCFStringEncodingMacRoman));
+        CFSmartPtr<CFStringRef> inStr(CFStringCreateWithCString(kCFAllocatorDefault, path, kCFStringEncodingMacRoman));
         if (inStr == nullptr) return -1;
 
-        CFSmartPtr<CFURLRef>		url(CFURLCreateWithFileSystemPath(kCFAllocatorDefault, inStr, kCFURLHFSPathStyle,0));
+        CFSmartPtr<CFURLRef> url(CFURLCreateWithFileSystemPath(kCFAllocatorDefault, inStr, kCFURLHFSPathStyle, 0));
         if (url == nullptr) return -1;
 
-        CFSmartPtr<CFStringRef>		outStr(CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle));
+        CFSmartPtr<CFStringRef> outStr(CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle));
         if (outStr == nullptr) return -1;
 
         if (!CFStringGetCString(outStr, result, resultLen, kCFStringEncodingMacRoman))
             return -1;
 
-        if(is_dir) strcat(result, "/");
+        if (is_dir) strcat(result, "/");
 
         return 0;
     }
 
-    #ifdef __clang__
-    #pragma clang diagnostic pop
-    #endif
-#endif //APL
+#    ifdef __clang__
+#        pragma clang diagnostic pop
+#    endif
+#endif // APL
 }
 
 //! \endcond

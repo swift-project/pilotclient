@@ -55,10 +55,10 @@ namespace BlackGui
         virtual ~CEnableForFramelessWindow() {}
 
         //! Copy constructor
-        CEnableForFramelessWindow(const CEnableForFramelessWindow &) = delete ;
+        CEnableForFramelessWindow(const CEnableForFramelessWindow &) = delete;
 
         //! Copy assignment operator
-        CEnableForFramelessWindow &operator =(const CEnableForFramelessWindow &) = delete;
+        CEnableForFramelessWindow &operator=(const CEnableForFramelessWindow &) = delete;
 
         //! Window mode
         void setMode(WindowMode mode);
@@ -88,17 +88,17 @@ namespace BlackGui
         static const QString &windowModeToString(WindowMode m);
 
     protected:
-        QPoint       m_framelessDragPosition;             //!< position, if moving is handled with frameless window
-        QSize        m_moveSize;                          //!< size when moved (in frameless window)
-        QPushButton *m_framelessCloseButton = nullptr;    //!< close button
-        WindowMode   m_windowMode = WindowNormal;         //!< Window mode, \sa WindowMode
-        WindowMode   m_originalWindowMode = WindowNormal; //!< mode when initialized
-        bool         m_isMainApplicationWindow = false;   //!< is this the main application window (only 1)?
-        QWidget     *m_widget = nullptr;                  //!< corresponding window or dock widget
-        QSizeGrip   *m_framelessSizeGrip = nullptr;       //!< size grip object
-        QByteArray   m_framelessPropertyName;             //!< property name for frameless widgets
-        int          m_windowFrameSizeW = -1;             //!< window frame width
-        int          m_windowFrameSizeH = -1;             //!< window frame height
+        QPoint m_framelessDragPosition; //!< position, if moving is handled with frameless window
+        QSize m_moveSize; //!< size when moved (in frameless window)
+        QPushButton *m_framelessCloseButton = nullptr; //!< close button
+        WindowMode m_windowMode = WindowNormal; //!< Window mode, \sa WindowMode
+        WindowMode m_originalWindowMode = WindowNormal; //!< mode when initialized
+        bool m_isMainApplicationWindow = false; //!< is this the main application window (only 1)?
+        QWidget *m_widget = nullptr; //!< corresponding window or dock widget
+        QSizeGrip *m_framelessSizeGrip = nullptr; //!< size grip object
+        QByteArray m_framelessPropertyName; //!< property name for frameless widgets
+        int m_windowFrameSizeW = -1; //!< window frame width
+        int m_windowFrameSizeH = -1; //!< window frame height
 
         //! Can be used as notification if window mode changes
         virtual void windowFlagsChanged();

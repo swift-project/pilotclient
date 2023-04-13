@@ -16,7 +16,10 @@
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/statusmessagelist.h"
 
-namespace Ui { class CCoordinateForm; }
+namespace Ui
+{
+    class CCoordinateForm;
+}
 namespace BlackGui::Editors
 {
     /*!

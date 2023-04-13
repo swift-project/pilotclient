@@ -22,7 +22,7 @@ namespace BlackMisc::Simulation
         if (vPilotModels.isEmpty() || modelToBeModified.isEmpty()) { return false; }
         for (CAircraftModel &simModel : modelToBeModified)
         {
-            if (!force && simModel.hasValidAircraftAndAirlineDesignator()) { continue; }  // already done
+            if (!force && simModel.hasValidAircraftAndAirlineDesignator()) { continue; } // already done
             const CAircraftModel vPilotModel(vPilotModels.findFirstByModelStringOrDefault(simModel.getModelString()));
             if (!vPilotModel.hasValidDbKey())
             {
@@ -56,14 +56,15 @@ namespace BlackMisc::Simulation
             QMap<QString, CAircraftModelList> &airlineModels = modelsByDesignator[aircraftIcao];
             const QString airlineIcao(
                 model.getLivery().isColorLivery() ? colorLiveryDesignator :
-                model.hasAirlineDesignator() ? model.getAirlineIcaoCodeDesignator() : emptyDesignator);
+                model.hasAirlineDesignator()      ? model.getAirlineIcaoCodeDesignator() :
+                                                    emptyDesignator);
             if (airlineModels.contains(airlineIcao))
             {
                 airlineModels[airlineIcao].push_back(model);
             }
             else
             {
-                airlineModels.insert(airlineIcao, CAircraftModelList({model}));
+                airlineModels.insert(airlineIcao, CAircraftModelList({ model }));
             }
         }
 

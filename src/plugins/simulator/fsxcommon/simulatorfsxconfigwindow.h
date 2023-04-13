@@ -16,7 +16,10 @@
 #include "blackmisc/simulation/simulatorinfo.h"
 #include <QScopedPointer>
 
-namespace Ui { class CSimulatorFsxConfigWindow; }
+namespace Ui
+{
+    class CSimulatorFsxConfigWindow;
+}
 namespace BlackSimPlugin::FsxCommon
 {
     /*!

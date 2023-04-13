@@ -11,5 +11,5 @@
 namespace BlackMisc
 {
     IProvider::~IProvider()
-    { }
+    {}
 }

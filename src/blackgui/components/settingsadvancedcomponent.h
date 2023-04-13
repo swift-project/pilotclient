@@ -19,7 +19,10 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CSettingsAdvancedComponent; }
+namespace Ui
+{
+    class CSettingsAdvancedComponent;
+}
 namespace BlackGui::Components
 {
     //! Configure general settings

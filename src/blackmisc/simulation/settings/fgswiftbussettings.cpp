@@ -27,13 +27,18 @@ namespace BlackMisc::Simulation::Settings
 
     void CFGSwiftBusSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CFGSwiftBusSettings>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CFGSwiftBusSettings>();
+            return;
+        }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDBusServerAddress:
-            m_dBusServerAddress = variant.toString(); break;
+            m_dBusServerAddress = variant.toString();
+            break;
         default:
             CValueObject::setPropertyByIndex(index, variant);
             break;

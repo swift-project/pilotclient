@@ -16,9 +16,8 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackGui::Editors
 {
-    CInterpolationSetupForm::CInterpolationSetupForm(QWidget *parent) :
-        CForm(parent),
-        ui(new Ui::CInterpolationSetupForm)
+    CInterpolationSetupForm::CInterpolationSetupForm(QWidget *parent) : CForm(parent),
+                                                                        ui(new Ui::CInterpolationSetupForm)
     {
         ui->setupUi(this);
         m_allCheckBoxes = this->findChildren<QCheckBox *>(QString(), Qt::FindDirectChildrenOnly);
@@ -35,7 +34,7 @@ namespace BlackGui::Editors
     }
 
     CInterpolationSetupForm::~CInterpolationSetupForm()
-    { }
+    {}
 
     void CInterpolationSetupForm::setValue(const CInterpolationAndRenderingSetupBase &setup)
     {
@@ -100,7 +99,7 @@ namespace BlackGui::Editors
     {
         switch (mode)
         {
-        case CInterpolationAndRenderingSetupBase::Linear : ui->rb_Linear->setChecked(true); break;
+        case CInterpolationAndRenderingSetupBase::Linear: ui->rb_Linear->setChecked(true); break;
         case CInterpolationAndRenderingSetupBase::Spline:
         default:
             ui->rb_Spline->setChecked(true);

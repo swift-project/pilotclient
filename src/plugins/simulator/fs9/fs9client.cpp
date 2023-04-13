@@ -31,13 +31,12 @@ using namespace BlackSimPlugin::FsCommon;
 namespace BlackSimPlugin::Fs9
 {
     CFs9Client::CFs9Client(const CSimulatedAircraft &remoteAircraft,
-                            const CTime &updateInterval,
-                            CInterpolationLogger *logger, ISimulator *simulator) :
-        CDirectPlayPeer(remoteAircraft.getCallsign(), simulator),
-        m_remoteAircraft(remoteAircraft),
-        m_updateInterval(updateInterval),
-        m_interpolator(remoteAircraft.getCallsign(), simulator, simulator, simulator->getRemoteAircraftProvider(), logger),
-        m_modelName(remoteAircraft.getModelString())
+                           const CTime &updateInterval,
+                           CInterpolationLogger *logger, ISimulator *simulator) : CDirectPlayPeer(remoteAircraft.getCallsign(), simulator),
+                                                                                  m_remoteAircraft(remoteAircraft),
+                                                                                  m_updateInterval(updateInterval),
+                                                                                  m_interpolator(remoteAircraft.getCallsign(), simulator, simulator, simulator->getRemoteAircraftProvider(), logger),
+                                                                                  m_modelName(remoteAircraft.getModelString())
     {
         m_interpolator.attachLogger(logger);
         Q_ASSERT_X(this->simulator(), Q_FUNC_INFO, "Wrong owner, expect simulator object");
@@ -68,12 +67,12 @@ namespace BlackSimPlugin::Fs9
 
         // Pitch, Bank and Heading
         FS_PBH pbhstrct;
-        pbhstrct.hdg   = static_cast<unsigned int>(qRound(newSituation.getHeading().value(CAngleUnit::deg()) * CFs9Sdk::headingMultiplier()));
+        pbhstrct.hdg = static_cast<unsigned int>(qRound(newSituation.getHeading().value(CAngleUnit::deg()) * CFs9Sdk::headingMultiplier()));
         pbhstrct.pitch = qRound(std::floor(newSituation.getPitch().value(CAngleUnit::deg()) * CFs9Sdk::pitchMultiplier()));
-        pbhstrct.bank  = qRound(std::floor(newSituation.getBank().value(CAngleUnit::deg()) * CFs9Sdk::bankMultiplier()));
+        pbhstrct.bank = qRound(std::floor(newSituation.getBank().value(CAngleUnit::deg()) * CFs9Sdk::bankMultiplier()));
         // MSFS has inverted pitch and bank angles
         pbhstrct.pitch = ~pbhstrct.pitch;
-        pbhstrct.bank  = ~pbhstrct.bank;
+        pbhstrct.bank = ~pbhstrct.bank;
         pbhstrct.onground = newSituation.isOnGround() ? 1 : 0;
         positionVelocity.pbh = pbhstrct.pbh;
 
@@ -114,7 +113,7 @@ namespace BlackSimPlugin::Fs9
         positionSlewMode.lat_f = static_cast<quint16>(qAbs((latitude - positionSlewMode.lat_i) * 65536));
 
         // Longitude - integer and decimal places
-        const double longitude  = situation.getPosition().longitude().value(CAngleUnit::deg()) * (65536.0 * 65536.0) / 360.0;
+        const double longitude = situation.getPosition().longitude().value(CAngleUnit::deg()) * (65536.0 * 65536.0) / 360.0;
         positionSlewMode.lon_hi = static_cast<qint32>(longitude);
         positionSlewMode.lon_lo = static_cast<quint16>(qAbs((longitude - positionSlewMode.lon_hi) * 65536));
 
@@ -125,12 +124,12 @@ namespace BlackSimPlugin::Fs9
 
         // Pitch, Bank and Heading
         FS_PBH pbhstrct;
-        pbhstrct.hdg   = static_cast<unsigned int>(qRound(situation.getHeading().value(CAngleUnit::deg()) * CFs9Sdk::headingMultiplier()));
+        pbhstrct.hdg = static_cast<unsigned int>(qRound(situation.getHeading().value(CAngleUnit::deg()) * CFs9Sdk::headingMultiplier()));
         pbhstrct.pitch = qRound(std::floor(situation.getPitch().value(CAngleUnit::deg()) * CFs9Sdk::pitchMultiplier()));
-        pbhstrct.bank  = qRound(std::floor(situation.getBank().value(CAngleUnit::deg()) * CFs9Sdk::bankMultiplier()));
+        pbhstrct.bank = qRound(std::floor(situation.getBank().value(CAngleUnit::deg()) * CFs9Sdk::bankMultiplier()));
         // MSFS has inverted pitch and bank angles
         pbhstrct.pitch = ~pbhstrct.pitch;
-        pbhstrct.bank  = ~pbhstrct.bank;
+        pbhstrct.bank = ~pbhstrct.bank;
 
         pbhstrct.onground = situation.isOnGround() ? 1 : 0;
         positionSlewMode.pbh = pbhstrct.pbh;
@@ -241,15 +240,15 @@ namespace BlackSimPlugin::Fs9
 
         // We now have the host address so lets enum
         if (isFailure(hr = m_directPlayPeer->EnumHosts(&dpAppDesc, // pApplicationDesc
-                            m_hostAddress,                  // pdpaddrHost
-                            m_deviceAddress,                // pdpaddrDeviceInfo
-                            nullptr, 0,                     // pvUserEnumData, size
-                            0,                              // dwEnumCount
-                            0,                              // dwRetryInterval
-                            0,                              // dwTimeOut
-                            nullptr,                        // pvUserContext
-                            nullptr,                        // pAsyncHandle
-                            DPNENUMHOSTS_SYNC)))            // dwFlags
+                                                       m_hostAddress, // pdpaddrHost
+                                                       m_deviceAddress, // pdpaddrDeviceInfo
+                                                       nullptr, 0, // pvUserEnumData, size
+                                                       0, // dwEnumCount
+                                                       0, // dwRetryInterval
+                                                       0, // dwTimeOut
+                                                       nullptr, // pvUserContext
+                                                       nullptr, // pAsyncHandle
+                                                       DPNENUMHOSTS_SYNC))) // dwFlags
         {
             return logDirectPlayError(hr);
         }
@@ -280,8 +279,8 @@ namespace BlackSimPlugin::Fs9
 
         // Set the hostname into the address
         if (isFailure(hr = m_hostAddress->AddComponent(DPNA_KEY_HOSTNAME, hostname,
-                            2 * (wcslen(hostname) + 1), /*bytes*/
-                            DPNA_DATATYPE_STRING)))
+                                                       2 * (wcslen(hostname) + 1), /*bytes*/
+                                                       DPNA_DATATYPE_STRING)))
         {
             return logDirectPlayError(hr);
         }
@@ -321,15 +320,15 @@ namespace BlackSimPlugin::Fs9
 
         DPNHANDLE asyncOpHandle;
         hr = m_directPlayPeer->Connect(&dpAppDesc,
-                                        m_hostAddress,
-                                        m_deviceAddress,
-                                        nullptr,
-                                        nullptr,
-                                        nullptr, 0,
-                                        nullptr,
-                                        nullptr,
-                                        &asyncOpHandle,
-                                        0);
+                                       m_hostAddress,
+                                       m_deviceAddress,
+                                       nullptr,
+                                       nullptr,
+                                       nullptr, 0,
+                                       nullptr,
+                                       nullptr,
+                                       &asyncOpHandle,
+                                       0);
         if (!isPending(hr) && isFailure(hr)) { return logDirectPlayError(hr); }
         return hr;
     }
@@ -395,9 +394,9 @@ namespace BlackSimPlugin::Fs9
     CFs9Sdk::EngineType aircraftToFS9EngineType(const CSimulatedAircraft &aircraft)
     {
         const QChar engine = aircraft.getAircraftIcaoCode().getEngineTypeChar();
-        const QChar type   = aircraft.getAircraftIcaoCode().getAircraftTypeChar();
+        const QChar type = aircraft.getAircraftIcaoCode().getAircraftTypeChar();
 
-        if (type   == 'H') return CFs9Sdk::ENGINE_TYPE_HELO_TURBINE;
+        if (type == 'H') return CFs9Sdk::ENGINE_TYPE_HELO_TURBINE;
         if (engine == 'J') return CFs9Sdk::ENGINE_TYPE_JET;
         if (engine == 'P') return CFs9Sdk::ENGINE_TYPE_PISTON;
         if (engine == 'T') return CFs9Sdk::ENGINE_TYPE_TURBOPROP;

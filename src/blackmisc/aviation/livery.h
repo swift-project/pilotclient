@@ -233,11 +233,11 @@ namespace BlackMisc::Aviation
 
     private:
         CAirlineIcaoCode m_airline; //!< corresponding airline, if any
-        QString   m_combinedCode;   //!< livery code and pseudo airline ICAO code
-        QString   m_description;    //!< describes the livery
-        CRgbColor m_colorFuselage;  //!< color of fuselage
-        CRgbColor m_colorTail;      //!< color of tail
-        bool m_military = false;    //!< military livery?
+        QString m_combinedCode; //!< livery code and pseudo airline ICAO code
+        QString m_description; //!< describes the livery
+        CRgbColor m_colorFuselage; //!< color of fuselage
+        CRgbColor m_colorTail; //!< color of tail
+        bool m_military = false; //!< military livery?
 
         BLACK_METACLASS(
             CLivery,

@@ -22,7 +22,10 @@
 #include <QScopedPointer>
 #include <QFlags>
 
-namespace Ui { class CDownloadComponent; }
+namespace Ui
+{
+    class CDownloadComponent;
+}
 namespace BlackGui::Components
 {
     /*!
@@ -38,9 +41,9 @@ namespace BlackGui::Components
         //! How to run
         enum ModeFlag
         {
-            JustDownload,       //!< download, that's it
+            JustDownload, //!< download, that's it
             StartAfterDownload, //!< download, then install
-            ShutdownSwift,      //!< for installers, stop swift before running
+            ShutdownSwift, //!< for installers, stop swift before running
             SwiftInstaller = StartAfterDownload | ShutdownSwift
         };
         Q_DECLARE_FLAGS(Mode, ModeFlag)
@@ -89,7 +92,7 @@ namespace BlackGui::Components
         static constexpr int OverlayMsgTimeoutMs = 5000; //!< how long overlay is displayed
         QScopedPointer<Ui::CDownloadComponent> ui;
         const QFileDialog::Options m_fileDialogOptions { QFileDialog::ShowDirsOnly | QFileDialog::ReadOnly | QFileDialog::DontResolveSymlinks };
-        BlackMisc::Network::CRemoteFile m_fileInProgress;  //!< file currently downloading
+        BlackMisc::Network::CRemoteFile m_fileInProgress; //!< file currently downloading
         BlackMisc::Network::CRemoteFileList m_remoteFiles; //!< files for download
         BlackMisc::Network::CRemoteFileList m_waitingForDownload; //!< files currently waiting for download
         QNetworkReply *m_reply = nullptr;

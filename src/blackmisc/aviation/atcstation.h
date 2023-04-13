@@ -72,7 +72,7 @@ namespace BlackMisc::Aviation
         CAtcStation(const CCallsign &callsign, const Network::CUser &controller,
                     const PhysicalQuantities::CFrequency &frequency,
                     const Geo::CCoordinateGeodetic &pos, const PhysicalQuantities::CLength &range,
-                    bool isOnline = false, const QDateTime &bookedFromUtc = QDateTime(),  const QDateTime &bookedUntilUtc = QDateTime(),
+                    bool isOnline = false, const QDateTime &bookedFromUtc = QDateTime(), const QDateTime &bookedUntilUtc = QDateTime(),
                     const CInformationMessage &atis = CInformationMessage(CInformationMessage::ATIS), const CInformationMessage &metar = CInformationMessage(CInformationMessage::METAR));
 
         //! Has booking times?
@@ -213,7 +213,7 @@ namespace BlackMisc::Aviation
         const CInformationMessage &getAtis() const { return m_atis; }
 
         //! Set ATIS
-        void setAtis(const CInformationMessage &atis) { m_atis = atis;}
+        void setAtis(const CInformationMessage &atis) { m_atis = atis; }
 
         //! Set ATIS Message
         void setAtisMessage(const QString &atis) { m_atis.setMessage(atis); }
@@ -225,7 +225,7 @@ namespace BlackMisc::Aviation
         const CInformationMessage &getInformationMessage(CInformationMessage::InformationType type) const;
 
         //! Set METAR
-        void setMetar(const CInformationMessage &metar) { m_metar = metar;}
+        void setMetar(const CInformationMessage &metar) { m_metar = metar; }
 
         //! Set METAR Message
         void setMetarMessage(const QString &metar) { m_metar.setMessage(metar); }
@@ -267,16 +267,16 @@ namespace BlackMisc::Aviation
         BlackMisc::CIcons::IconIndex toIcon() const { return m_callsign.toIcon(); }
 
     private:
-        CCallsign                      m_callsign;
-        Network::CUser                 m_controller;
+        CCallsign m_callsign;
+        Network::CUser m_controller;
         PhysicalQuantities::CFrequency m_frequency;
-        Geo::CCoordinateGeodetic       m_position;
-        PhysicalQuantities::CLength    m_range;
-        bool                           m_isOnline = false;
-        bool                           m_isAfvCrossCoupled = false;
-        QDateTime                      m_bookedFromUtc;
-        QDateTime                      m_bookedUntilUtc;
-        CInformationMessage m_atis  { CInformationMessage::ATIS };
+        Geo::CCoordinateGeodetic m_position;
+        PhysicalQuantities::CLength m_range;
+        bool m_isOnline = false;
+        bool m_isAfvCrossCoupled = false;
+        QDateTime m_bookedFromUtc;
+        QDateTime m_bookedUntilUtc;
+        CInformationMessage m_atis { CInformationMessage::ATIS };
         CInformationMessage m_metar { CInformationMessage::METAR };
 
         BLACK_METACLASS(

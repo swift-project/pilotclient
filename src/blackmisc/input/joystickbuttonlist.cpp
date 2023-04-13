@@ -12,8 +12,7 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Input, CJoystickButton, CJoystickButtonL
 
 namespace BlackMisc::Input
 {
-    CJoystickButtonList::CJoystickButtonList(const CSequence<CJoystickButton> &baseClass) :
-        CSequence<CJoystickButton>(baseClass)
-    { }
+    CJoystickButtonList::CJoystickButtonList(const CSequence<CJoystickButton> &baseClass) : CSequence<CJoystickButton>(baseClass)
+    {}
 
 } // namespace

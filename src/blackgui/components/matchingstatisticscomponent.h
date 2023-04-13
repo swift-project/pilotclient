@@ -14,7 +14,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CMatchingStatisticsComponent; }
+namespace Ui
+{
+    class CMatchingStatisticsComponent;
+}
 namespace BlackGui::Components
 {
     /*!

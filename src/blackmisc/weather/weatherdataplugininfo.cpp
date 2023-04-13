@@ -17,15 +17,14 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Weather, CWeatherDataPluginInfo)
 
 namespace BlackMisc::Weather
 {
-    CWeatherDataPluginInfo::CWeatherDataPluginInfo(const QString &identifier, const QString &name, const QString &description, bool valid) :
-        m_identifier(identifier), m_name(name), m_description(description), m_valid(valid)
-    { }
+    CWeatherDataPluginInfo::CWeatherDataPluginInfo(const QString &identifier, const QString &name, const QString &description, bool valid) : m_identifier(identifier), m_name(name), m_description(description), m_valid(valid)
+    {}
 
     void CWeatherDataPluginInfo::convertFromJson(const QJsonObject &json)
     {
-        if (json.contains("IID"))   // comes from the plugin
+        if (json.contains("IID")) // comes from the plugin
         {
-            if (! json.contains("MetaData")) { throw CJsonException("Missing 'MetaData'"); }
+            if (!json.contains("MetaData")) { throw CJsonException("Missing 'MetaData'"); }
 
             // json data is already validated by CPluginManagerWeatherData
             CJsonScope scope("MetaData"); // for stack trace

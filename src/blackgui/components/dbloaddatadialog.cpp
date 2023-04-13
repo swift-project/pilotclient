@@ -28,9 +28,8 @@ using namespace BlackCore::Db;
 
 namespace BlackGui::Components
 {
-    CDbLoadDataDialog::CDbLoadDataDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CDbLoadDataDialog)
+    CDbLoadDataDialog::CDbLoadDataDialog(QWidget *parent) : QDialog(parent),
+                                                            ui(new Ui::CDbLoadDataDialog)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
         ui->setupUi(this);
@@ -50,7 +49,7 @@ namespace BlackGui::Components
     }
 
     CDbLoadDataDialog::~CDbLoadDataDialog()
-    { }
+    {}
 
     bool CDbLoadDataDialog::newerOrEmptyEntitiesDetected(CEntityFlags::Entity loadEntities)
     {
@@ -134,8 +133,7 @@ namespace BlackGui::Components
             const bool defaultConsolidate = !ui->cb_AllModels->isChecked() && ui->cb_ModelSet->isChecked();
 
             QPointer<CDbLoadDataDialog> myself(this);
-            QTimer::singleShot(2000, this, [ = ]
-            {
+            QTimer::singleShot(2000, this, [=] {
                 if (!myself) { return; }
                 ui->wi_Consolidate->setVisible(true);
                 ui->wi_WorkStatus->setVisible(false);
@@ -143,8 +141,7 @@ namespace BlackGui::Components
                 {
                     m_autoConsolidate = true;
                     QPointer<CDbLoadDataDialog> self(this); // 2nd "self"/"myself" for cppcheck identicalConditionAfterEarlyExit
-                    QTimer::singleShot(1000, this, [ = ]
-                    {
+                    QTimer::singleShot(1000, this, [=] {
                         if (!self) { return; }
                         self->consolidate();
                     });
@@ -206,8 +203,7 @@ namespace BlackGui::Components
         m_consolidating = false;
 
         QPointer<CDbLoadDataDialog> myself(this);
-        QTimer::singleShot(2000, this, [ = ]
-        {
+        QTimer::singleShot(2000, this, [=] {
             if (!myself) { return; }
             ui->pb_Loading->setMaximum(100);
             ui->wi_WorkStatus->setVisible(false);

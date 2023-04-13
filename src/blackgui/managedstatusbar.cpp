@@ -55,7 +55,7 @@ namespace BlackGui
 
         // use insert to insert from left to right
         // this keeps any grip on the right size
-        m_statusBar->insertPermanentWidget(0, m_statusBarIcon,  0); // status icon
+        m_statusBar->insertPermanentWidget(0, m_statusBarIcon, 0); // status icon
         m_statusBar->insertPermanentWidget(1, m_statusBarLabel, 1); // status text
 
         // timer

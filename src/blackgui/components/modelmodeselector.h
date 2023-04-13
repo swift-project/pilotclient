@@ -20,7 +20,10 @@
 
 class QWidget;
 
-namespace Ui { class CModelModeSelector; }
+namespace Ui
+{
+    class CModelModeSelector;
+}
 
 namespace BlackGui::Components
 {

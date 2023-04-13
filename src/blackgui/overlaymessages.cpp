@@ -49,9 +49,8 @@ using namespace BlackGui::Components;
 
 namespace BlackGui
 {
-    COverlayMessages::COverlayMessages(int w, int h, QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::COverlayMessages)
+    COverlayMessages::COverlayMessages(int w, int h, QWidget *parent) : QFrame(parent),
+                                                                        ui(new Ui::COverlayMessages)
     {
         this->init(w, h);
         this->showKillButton(false);
@@ -162,8 +161,7 @@ namespace BlackGui
         {
             // defer message
             QPointer<COverlayMessages> myself(this);
-            m_pendingMessageCalls.push_back([ = ]()
-            {
+            m_pendingMessageCalls.push_back([=]() {
                 if (!myself) { return; }
                 myself->showOverlayMessages(messages, timeOutMs);
             });
@@ -231,8 +229,7 @@ namespace BlackGui
         {
             // defer message
             QPointer<COverlayMessages> myself(this);
-            m_pendingMessageCalls.push_back([ = ]()
-            {
+            m_pendingMessageCalls.push_back([=]() {
                 if (!myself) { return; }
                 myself->showOverlayMessage(message, timeOutMs);
             });
@@ -262,8 +259,7 @@ namespace BlackGui
         {
             // defer message
             QPointer<COverlayMessages> myself(this);
-            m_pendingMessageCalls.push_back([ = ]()
-            {
+            m_pendingMessageCalls.push_back([=]() {
                 if (!myself) { return; }
                 myself->showOverlayTextMessage(textMessage, timeOutMs);
             });
@@ -327,8 +323,7 @@ namespace BlackGui
         {
             // defer message
             QPointer<COverlayMessages> myself(this);
-            m_pendingMessageCalls.push_back([ = ]()
-            {
+            m_pendingMessageCalls.push_back([=]() {
                 if (!myself) { return; }
                 myself->showOverlayImage(image, timeOutMs);
             });
@@ -352,8 +347,7 @@ namespace BlackGui
         else
         {
             ui->lbl_Image->setPixmap(
-                image.scaled(sizeAvailable, Qt::KeepAspectRatio, Qt::FastTransformation)
-            );
+                image.scaled(sizeAvailable, Qt::KeepAspectRatio, Qt::FastTransformation));
         }
         this->display(timeOutMs);
     }
@@ -402,8 +396,7 @@ namespace BlackGui
         {
             // defer message
             QPointer<COverlayMessages> myself(this);
-            m_pendingMessageCalls.push_back([ = ]()
-            {
+            m_pendingMessageCalls.push_back([=]() {
                 if (!myself) { return; }
                 myself->showHTMLMessage(htmlMessage, timeOutMs);
             });
@@ -435,7 +428,7 @@ namespace BlackGui
     {
         if (message.isEmpty()) { return; }
         if (!sGui || sGui->isShuttingDown()) { return; }
-        if (this->hasPendingConfirmation())  { return; } // ignore if something else is pending
+        if (this->hasPendingConfirmation()) { return; } // ignore if something else is pending
 
         const int p = qMax(qMin(percentage, 100), 0);
 
@@ -538,14 +531,13 @@ namespace BlackGui
         }
     }
 
-    void COverlayMessages::showOverlayMessagesWithConfirmation(const CStatusMessageList &messages, bool appendOldMessages, const QString &confirmationMessage, std::function<void ()> okLambda, QMessageBox::StandardButton defaultButton, int timeOutMs)
+    void COverlayMessages::showOverlayMessagesWithConfirmation(const CStatusMessageList &messages, bool appendOldMessages, const QString &confirmationMessage, std::function<void()> okLambda, QMessageBox::StandardButton defaultButton, int timeOutMs)
     {
         if (this->hasPendingConfirmation())
         {
             // defer message
             QPointer<COverlayMessages> myself(this);
-            m_pendingMessageCalls.push_back([ = ]()
-            {
+            m_pendingMessageCalls.push_back([=]() {
                 if (!myself) { return; }
                 this->showOverlayMessagesWithConfirmation(messages, appendOldMessages, confirmationMessage, okLambda, defaultButton, timeOutMs);
             });
@@ -610,7 +602,7 @@ namespace BlackGui
     void COverlayMessages::keyPressEvent(QKeyEvent *event)
     {
         if (!this->isVisible()) { QFrame::keyPressEvent(event); }
-        if (event->key() ==  Qt::Key_Escape)
+        if (event->key() == Qt::Key_Escape)
         {
             this->close();
             event->accept();
@@ -642,8 +634,7 @@ namespace BlackGui
             std::function<void()> f = m_pendingMessageCalls.constFirst();
             m_pendingMessageCalls.removeFirst();
             const QPointer<COverlayMessages> myself(this);
-            QTimer::singleShot(500, this, [ = ]
-            {
+            QTimer::singleShot(500, this, [=] {
                 if (!myself) { return; }
                 if (!sGui || sGui->isShuttingDown()) { return; }
                 f();

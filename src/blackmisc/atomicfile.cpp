@@ -16,11 +16,11 @@
 #include <type_traits>
 
 #if defined(Q_OS_POSIX)
-#include <stdio.h>
-#include <errno.h>
+#    include <stdio.h>
+#    include <errno.h>
 #elif defined(Q_OS_WIN32)
-#include <Windows.h>
-#include <io.h>
+#    include <Windows.h>
+#    include <io.h>
 #endif
 
 //! \var qt_ntfs_permission_lookup
@@ -38,8 +38,8 @@ namespace BlackMisc
     {
         bool ok = true;
         qt_ntfs_permission_lookup++;
-        if ((mode & CAtomicFile::ReadOnly) && ! fileInfo.isReadable()) { ok = false; }
-        if ((mode & CAtomicFile::WriteOnly) && ! fileInfo.isWritable()) { ok = false; }
+        if ((mode & CAtomicFile::ReadOnly) && !fileInfo.isReadable()) { ok = false; }
+        if ((mode & CAtomicFile::WriteOnly) && !fileInfo.isWritable()) { ok = false; }
         qt_ntfs_permission_lookup--;
         return ok;
     }
@@ -48,7 +48,7 @@ namespace BlackMisc
     {
         m_originalFilename = fileName();
         QFileInfo fileInfo(fileName());
-        if (exists() && ! checkPermissions(mode, fileInfo))
+        if (exists() && !checkPermissions(mode, fileInfo))
         {
             m_permissionError = true;
             setErrorString("Wrong permissions");
@@ -60,11 +60,11 @@ namespace BlackMisc
         bool ok = true;
         if (mode & ReadOnly)
         {
-            if (exists(m_originalFilename) && ! copy(m_originalFilename, fileName())) { ok = false; }
+            if (exists(m_originalFilename) && !copy(m_originalFilename, fileName())) { ok = false; }
         }
 
-        if (ok && ! QFile::open(mode)) { ok = false; }
-        if (! ok) { setFileName(m_originalFilename); }
+        if (ok && !QFile::open(mode)) { ok = false; }
+        if (!ok) { setFileName(m_originalFilename); }
         return ok;
     }
 
@@ -75,7 +75,7 @@ namespace BlackMisc
 
     void CAtomicFile::close()
     {
-        if (! isOpen()) { return; }
+        if (!isOpen()) { return; }
 
 #if defined(Q_OS_WIN32)
         FlushFileBuffers(reinterpret_cast<HANDLE>(_get_osfhandle(handle())));
@@ -95,7 +95,7 @@ namespace BlackMisc
 
     void CAtomicFile::abandon()
     {
-        if (! isOpen()) { return; }
+        if (!isOpen()) { return; }
 
         QFile::close();
         remove();
@@ -138,16 +138,13 @@ namespace BlackMisc
 #elif defined(Q_OS_WIN32)
     void CAtomicFile::replaceOriginal()
     {
-        auto encode = [](const QString &s)
-        {
+        auto encode = [](const QString &s) {
             const auto prefix = "\\\\?\\"; // support long paths: https://msdn.microsoft.com/en-us/library/windows/desktop/aa365247.aspx#maxpath
             return (prefix + QDir::toNativeSeparators(QDir::cleanPath(QFileInfo(s).absoluteFilePath()))).toStdWString();
         };
         auto replace = exists(m_originalFilename);
-        auto result = replace
-            ? ReplaceFile(encode(m_originalFilename).c_str(), encode(fileName()).c_str(), nullptr, REPLACEFILE_IGNORE_MERGE_ERRORS, nullptr, nullptr)
-            : MoveFileEx(encode(fileName()).c_str(), encode(m_originalFilename).c_str(), MOVEFILE_WRITE_THROUGH);
-        if (! result)
+        auto result = replace ? ReplaceFile(encode(m_originalFilename).c_str(), encode(fileName()).c_str(), nullptr, REPLACEFILE_IGNORE_MERGE_ERRORS, nullptr, nullptr) : MoveFileEx(encode(fileName()).c_str(), encode(m_originalFilename).c_str(), MOVEFILE_WRITE_THROUGH);
+        if (!result)
         {
             wchar_t *s = nullptr;
             FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, nullptr, GetLastError(), 0, reinterpret_cast<LPWSTR>(&s), 0, nullptr);

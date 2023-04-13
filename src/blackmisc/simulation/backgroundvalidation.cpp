@@ -26,8 +26,7 @@ namespace BlackMisc::Simulation
         return cats;
     }
 
-    CBackgroundValidation::CBackgroundValidation(QObject *owner) :
-        CContinuousWorker(owner, "Background validation")
+    CBackgroundValidation::CBackgroundValidation(QObject *owner) : CContinuousWorker(owner, "Background validation")
     {
         connect(&m_updateTimer, &QTimer::timeout, this, &CBackgroundValidation::doWork);
         m_updateTimer.setInterval(60 * 1000);
@@ -36,7 +35,7 @@ namespace BlackMisc::Simulation
     void CBackgroundValidation::setCurrentSimulator(const CSimulatorInfo &simulator, const QString &simDirectory)
     {
         QWriteLocker l(&m_lock);
-        m_simulator    = simulator;
+        m_simulator = simulator;
         m_simDirectory = simDirectory;
     }
 
@@ -69,12 +68,11 @@ namespace BlackMisc::Simulation
         {
             QWriteLocker l(&m_lock);
             if (m_inWork) { return false; }
-            m_simulator    = simulator;
+            m_simulator = simulator;
             m_simDirectory = simDirectory;
             m_checkedSimulatorMsgs.remove(simulator);
         }
-        QTimer::singleShot(5, this, [ = ]
-        {
+        QTimer::singleShot(5, this, [=] {
             if (!myself) { return; }
             myself->doWork();
         });
@@ -91,10 +89,10 @@ namespace BlackMisc::Simulation
         bool wasStopped = false;
         {
             QReadLocker l(&m_lock);
-            simulator  = m_lastResultSimulator;
-            valid      = m_lastResultValid;
-            invalid    = m_lastResultInvalid;
-            msgs       = m_lastResultMsgs;
+            simulator = m_lastResultSimulator;
+            valid = m_lastResultValid;
+            invalid = m_lastResultInvalid;
+            msgs = m_lastResultMsgs;
             wasStopped = m_lastResultWasStopped;
         }
         if (m_lastResultSimulator.isUnspecified()) { return false; }
@@ -118,7 +116,7 @@ namespace BlackMisc::Simulation
         CAircraftModelList valid;
         CAircraftModelList invalid;
         CStatusMessageList msgs;
-        bool validated  = false;
+        bool validated = false;
         bool onlyErrorsAndWarnings = false;
         const CSimulatorInfo simulator = this->getCurrentSimulator();
         const qint64 started = QDateTime::currentMSecsSinceEpoch();
@@ -126,7 +124,7 @@ namespace BlackMisc::Simulation
 
         do
         {
-            if (!simulator.isSingleSimulator())     { break; }
+            if (!simulator.isSingleSimulator()) { break; }
             if (this->wasAlreadyChecked(simulator)) { break; }
 
             const CAircraftMatcherSetup setup = m_matchingSettings.get();
@@ -152,11 +150,11 @@ namespace BlackMisc::Simulation
             msgs.freezeOrder();
 
             QWriteLocker l(&m_lock);
-            m_lastResultValid      = valid;
-            m_lastResultInvalid    = invalid;
+            m_lastResultValid = valid;
+            m_lastResultInvalid = invalid;
             m_lastResultWasStopped = m_wasStopped;
-            m_lastResultSimulator  = simulator;
-            m_lastResultMsgs       = msgs;
+            m_lastResultSimulator = simulator;
+            m_lastResultMsgs = msgs;
             m_checkedSimulatorMsgs.insert(simulator, msgs);
         }
         while (false);

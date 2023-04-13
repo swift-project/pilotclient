@@ -59,10 +59,9 @@ using namespace BlackMisc::Simulation::Data;
 
 namespace BlackCore::Context
 {
-    CContextSimulator::CContextSimulator(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
-        IContextSimulator(mode, runtime),
-        CIdentifiable(this),
-        m_plugins(new CPluginManagerSimulator(this))
+    CContextSimulator::CContextSimulator(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextSimulator(mode, runtime),
+                                                                                                      CIdentifiable(this),
+                                                                                                      m_plugins(new CPluginManagerSimulator(this))
     {
         this->setObjectName("CContextSimulator");
         CContextSimulator::registerHelp();
@@ -73,14 +72,13 @@ namespace BlackCore::Context
         m_plugins->collectPlugins();
         this->restoreSimulatorPlugins();
 
-        connect(&m_weatherManager,  &CWeatherManager::weatherGridReceived, this, &CContextSimulator::onWeatherGridReceived, Qt::QueuedConnection);
-        connect(&m_aircraftMatcher, &CAircraftMatcher::setupChanged,       this, &CContextSimulator::matchingSetupChanged);
+        connect(&m_weatherManager, &CWeatherManager::weatherGridReceived, this, &CContextSimulator::onWeatherGridReceived, Qt::QueuedConnection);
+        connect(&m_aircraftMatcher, &CAircraftMatcher::setupChanged, this, &CContextSimulator::matchingSetupChanged);
         connect(&CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance(), &CCentralMultiSimulatorModelSetCachesProvider::cacheChanged, this, &CContextSimulator::modelSetChanged);
 
         // deferred init of last model set, if no other data are set in meantime
         const QPointer<CContextSimulator> myself(this);
-        QTimer::singleShot(2500, this, [ = ]
-        {
+        QTimer::singleShot(2500, this, [=] {
             if (!myself) { return; }
             this->initByLastUsedModelSet();
             m_aircraftMatcher.setSetup(m_matchingSettings.get());
@@ -567,14 +565,13 @@ namespace BlackCore::Context
 
         // Emit signal after this function completes completely decoupled
         QPointer<CContextSimulator> myself(this);
-        QTimer::singleShot(25, this, [ = ]
-        {
+        QTimer::singleShot(25, this, [=] {
             if (!myself || !sApp || sApp->isShuttingDown()) { return; }
             if (m_simulatorPlugin.second)
             {
                 CLogMessage(this).info(u"Simulator plugin loaded: '%1' connected: %2")
-                        << simulatorPluginInfo.toQString(true)
-                        << boolToYesNo(connected);
+                    << simulatorPluginInfo.toQString(true)
+                    << boolToYesNo(connected);
 
                 // weather in sim.
                 this->setWeatherActivated(m_isWeatherActivated);
@@ -695,7 +692,7 @@ namespace BlackCore::Context
 
         // decide CG
         const CLength cgModel = aircraftModel.getCG();
-        const CLength cgSim   = m_simulatorPlugin.second->getSimulatorCGPerModelString(aircraftModel.getModelString());
+        const CLength cgSim = m_simulatorPlugin.second->getSimulatorCGPerModelString(aircraftModel.getModelString());
         const CSimulatorSettings simSettings = this->getSimulatorSettings();
         switch (simSettings.getCGSource())
         {
@@ -886,7 +883,7 @@ namespace BlackCore::Context
         emit this->weatherGridReceived(weatherGrid, identifier);
 
         if (!this->isSimulatorPluginAvailable()) { return; }
-        if (!m_simulatorPlugin.second)           { return; }
+        if (!m_simulatorPlugin.second) { return; }
 
         if (m_simulatorPlugin.second && m_simulatorPlugin.second->identifier() == identifier)
         {
@@ -924,7 +921,7 @@ namespace BlackCore::Context
 
     void CContextSimulator::relayStatusMessageToSimulator(const BlackMisc::CStatusMessage &message)
     {
-        if (!this->isSimulatorAvailable())   { return; }
+        if (!this->isSimulatorAvailable()) { return; }
         if (!sApp || sApp->isShuttingDown()) { return; }
         const CSimulatorMessagesSettings simMsg = m_messageSettings.getThreadLocal();
         if (simMsg.relayThisStatusMessage(message) && m_simulatorPlugin.second)
@@ -971,7 +968,7 @@ namespace BlackCore::Context
         CStatusMessage msg;
         const CAircraftModel model(this->getModelSet().findFirstByModelStringAliasOrDefault(modelString));
         const CPixmap pm(model.loadIcon(msg));
-        if (!msg.isEmpty()) { CLogMessage::preformatted(msg);}
+        if (!msg.isEmpty()) { CLogMessage::preformatted(msg); }
         return pm;
     }
 
@@ -1000,8 +997,8 @@ namespace BlackCore::Context
         if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << missingOnly; }
         const CMatchingStatistics statistics = m_aircraftMatcher.getCurrentStatistics();
         return missingOnly ?
-                statistics.findMissingOnly() :
-                statistics;
+                   statistics.findMissingOnly() :
+                   statistics;
     }
 
     void CContextSimulator::setMatchingSetup(const CAircraftMatcherSetup &setup)
@@ -1076,10 +1073,10 @@ namespace BlackCore::Context
         Q_UNUSED(originator)
         if (commandLine.isEmpty()) { return false; }
         CSimpleCommandParser parser(
-        {
-            ".plugin", ".drv", ".driver", // forwarded to driver
-            ".ris" // rendering interpolator setup
-        });
+            {
+                ".plugin", ".drv", ".driver", // forwarded to driver
+                ".ris" // rendering interpolator setup
+            });
         parser.parse(commandLine);
         if (!parser.isKnownCommand()) { return false; }
         if (parser.matchesCommand("ris"))
@@ -1147,8 +1144,7 @@ namespace BlackCore::Context
         m_simulatorPlugin.second->logicallyRemoveRemoteAircraft(callsign);
         aircraft.setModel(aircraft.getNetworkModel()); // like originally from network
         QPointer<CContextSimulator> myself(this);
-        QTimer::singleShot(1000, this, [ = ]
-        {
+        QTimer::singleShot(1000, this, [=] {
             if (!sApp || sApp->isShuttingDown() || !myself) { return; }
             this->xCtxAddedRemoteAircraftReadyForModelMatching(aircraft);
         });
@@ -1198,8 +1194,7 @@ namespace BlackCore::Context
         QPointer<CContextSimulator> myself(this);
         for (const CCallsign &cs : callsigns)
         {
-            QTimer::singleShot(delayMs, this, [ = ]
-            {
+            QTimer::singleShot(delayMs, this, [=] {
                 if (!sApp || sApp->isShuttingDown() || !myself) { return; }
                 this->doMatchingAgain(cs);
             });
@@ -1215,8 +1210,7 @@ namespace BlackCore::Context
         if (!this->isSimulatorAvailable()) { return false; }
 
         QPointer<CContextSimulator> myself(this);
-        QTimer::singleShot(2500, this, [ = ]
-        {
+        QTimer::singleShot(2500, this, [=] {
             if (!sApp || sApp->isShuttingDown() || !myself) { return; }
             const CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(callsign);
             if (!aircraft.hasCallsign()) { return; } // no longer valid
@@ -1237,8 +1231,7 @@ namespace BlackCore::Context
         if (m_logMatchingMessages)
         {
             const QPointer<CContextSimulator> myself(this);
-            QTimer::singleShot(5000, this, [ = ]
-            {
+            QTimer::singleShot(5000, this, [=] {
                 if (!myself) { return; }
                 if (m_aircraftMatcher.getModelSetCount() > MatchingLogMaxModelSetSize)
                 {
@@ -1307,7 +1300,7 @@ namespace BlackCore::Context
         // no models in matcher, but in cache, we can set them as default
         const CSimulatorInfo simulator(m_modelSetSimulator.get());
         CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().synchronizeCache(simulator);
-        const CAircraftModelList models(this->getModelSet()); //synced
+        const CAircraftModelList models(this->getModelSet()); // synced
         CLogMessage(this).info(u"Init aircraft matcher with %1 models from set for '%2'") << models.size() << simulator.toQString();
         m_aircraftMatcher.setModelSet(models, simulator, false);
     }

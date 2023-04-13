@@ -78,8 +78,7 @@ namespace BlackMisc
         using base_type = CDictionary;
 
         //! Constructor.
-        CValueCachePacket(bool saved = false, bool valuesChanged = true) :
-            m_saved(saved), m_valuesChanged(valuesChanged)
+        CValueCachePacket(bool saved = false, bool valuesChanged = true) : m_saved(saved), m_valuesChanged(valuesChanged)
         {}
 
         //! Construct from CVariantMap and a timestamp.
@@ -129,8 +128,8 @@ namespace BlackMisc
             using reference = const value_type &;
             const_iterator(CDictionary::const_iterator base) : CDictionary::const_iterator(base) {}
             reference value() const { return CDictionary::const_iterator::value().first; }
-            reference operator *() const { return value(); }
-            pointer operator ->() const { return &value(); }
+            reference operator*() const { return value(); }
+            pointer operator->() const { return &value(); }
             qint64 timestamp() const { return CDictionary::const_iterator::value().second; }
         };
 
@@ -357,8 +356,7 @@ namespace BlackMisc
         //! \param name Human readable name corresponding to the key.
         //! \param owner Will be the parent of the internal QObject used for signal/slot connections.
         template <typename U>
-        CCached(CValueCache *cache, const QString &key, const QString &name, U *owner) :
-            CCached(cache, key, name, nullptr, T{}, owner)
+        CCached(CValueCache *cache, const QString &key, const QString &name, U *owner) : CCached(cache, key, name, nullptr, T {}, owner)
         {}
 
         //! Constructor.
@@ -369,9 +367,8 @@ namespace BlackMisc
         //! \param defaultValue A value which will be used as default if the value is invalid.
         //! \param owner Will be the parent of the internal QObject used for signal/slot connections.
         template <typename U, typename F>
-        CCached(CValueCache *cache, const QString &key, const QString &name, F validator, const T &defaultValue, U *owner) :
-            m_page(&Private::CValuePage::getPageFor(owner, cache)),
-            m_element(&m_page->createElement(key, name, qMetaTypeId<T>(), wrap(validator), CVariant::from(defaultValue)))
+        CCached(CValueCache *cache, const QString &key, const QString &name, F validator, const T &defaultValue, U *owner) : m_page(&Private::CValuePage::getPageFor(owner, cache)),
+                                                                                                                             m_element(&m_page->createElement(key, name, qMetaTypeId<T>(), wrap(validator), CVariant::from(defaultValue)))
         {
             if (isInitialized()) { cache->setHumanReadableName(getKey(), name); }
         }
@@ -380,7 +377,7 @@ namespace BlackMisc
         template <typename F>
         void setNotifySlot(F slot)
         {
-            if (! isInitialized())
+            if (!isInitialized())
             {
                 onOwnerNameChanged([this, slot] { setNotifySlot(slot); });
                 return;
@@ -391,11 +388,15 @@ namespace BlackMisc
         }
 
         //! Read the current value.
-        const T &getThreadLocal() const { static const T empty {}; return *(isValid() ? static_cast<const T *>(getVariant().data()) : &empty); }
+        const T &getThreadLocal() const
+        {
+            static const T empty {};
+            return *(isValid() ? static_cast<const T *>(getVariant().data()) : &empty);
+        }
 
         //! Get a copy of the current value.
         //! \threadsafe
-        T get() const { return isValid() ? getVariantCopy().template value<T>() : T{}; }
+        T get() const { return isValid() ? getVariantCopy().template value<T>() : T {}; }
 
         //! Write a new value. Must be called from the thread in which the owner lives.
         CStatusMessage set(const T &value, qint64 timestamp = 0) { return m_page->setValue(*m_element, CVariant::from(value), timestamp); }
@@ -407,10 +408,20 @@ namespace BlackMisc
         CStatusMessage save() { return m_page->setValue(*m_element, {}, 0, true); }
 
         //! Write a property of the value. Must be called from the thread in which the owner lives.
-        CStatusMessage setProperty(CPropertyIndexRef index, const CVariant &value, qint64 timestamp = 0) { auto v = get(); v.setPropertyByIndex(index, value); return set(v, timestamp); }
+        CStatusMessage setProperty(CPropertyIndexRef index, const CVariant &value, qint64 timestamp = 0)
+        {
+            auto v = get();
+            v.setPropertyByIndex(index, value);
+            return set(v, timestamp);
+        }
 
         //! Write a property and save in the same step. Must be called from the thread in which the owner lives.
-        CStatusMessage setAndSaveProperty(CPropertyIndexRef index, const CVariant &value, qint64 timestamp = 0) { auto v = get(); v.setPropertyByIndex(index, value); return setAndSave(v, timestamp); }
+        CStatusMessage setAndSaveProperty(CPropertyIndexRef index, const CVariant &value, qint64 timestamp = 0)
+        {
+            auto v = get();
+            v.setPropertyByIndex(index, value);
+            return setAndSave(v, timestamp);
+        }
 
         //! Is current thread the owner thread, so CCached::set is safe
         bool isOwnerThread() const { return QThread::currentThread() == m_page->thread(); }
@@ -442,7 +453,7 @@ namespace BlackMisc
         CCached(const CCached &) = delete;
 
         //! Deleted copy assignment operator.
-        CCached &operator =(const CCached &) = delete;
+        CCached &operator=(const CCached &) = delete;
 
     private:
         template <typename F>
@@ -453,9 +464,15 @@ namespace BlackMisc
         static Private::CValuePage::Validator wrap(std::nullptr_t) { return {}; }
 
         template <typename F>
-        static auto makeId(F &&) { return nullptr; }
+        static auto makeId(F &&)
+        {
+            return nullptr;
+        }
         template <typename U, typename M>
-        static auto makeId(M U::* slot) { return static_cast<std::tuple_element_t<1, Private::CValuePage::NotifySlot>>(slot); }
+        static auto makeId(M U::*slot)
+        {
+            return static_cast<std::tuple_element_t<1, Private::CValuePage::NotifySlot>>(slot);
+        }
 
         const QVariant &getVariant() const { return m_page->getValue(*m_element).getQVariant(); }
         QVariant getVariantCopy() const { return m_page->getValueCopy(*m_element).getQVariant(); }
@@ -485,13 +502,17 @@ namespace BlackMisc
         BatchGuard(const BatchGuard &) = delete;
 
         //! Deleted copy assignment operator. Class is move-only.
-        BatchGuard &operator =(const BatchGuard &) = delete;
+        BatchGuard &operator=(const BatchGuard &) = delete;
 
         //! Move constructor.
         BatchGuard(BatchGuard &&other) noexcept : m_page(other.m_page) { other.m_page = nullptr; }
 
         //! Move assignment operator.
-        BatchGuard &operator =(BatchGuard &&other) noexcept { std::swap(m_page, other.m_page); return *this; }
+        BatchGuard &operator=(BatchGuard &&other) noexcept
+        {
+            std::swap(m_page, other.m_page);
+            return *this;
+        }
 
     private:
         friend class CValueCache;

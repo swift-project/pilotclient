@@ -17,9 +17,8 @@ using namespace BlackGui::Models;
 
 namespace BlackGui::Filters
 {
-    CStatusMessageFilterBar::CStatusMessageFilterBar(QWidget *parent) :
-        CFilterWidget(parent),
-        ui(new Ui::CStatusMessageFilterBar)
+    CStatusMessageFilterBar::CStatusMessageFilterBar(QWidget *parent) : CFilterWidget(parent),
+                                                                        ui(new Ui::CStatusMessageFilterBar)
     {
         ui->setupUi(this);
         this->setButtonsAndCount(ui->filter_Buttons);
@@ -42,7 +41,7 @@ namespace BlackGui::Filters
     }
 
     CStatusMessageFilterBar::~CStatusMessageFilterBar()
-    { }
+    {}
 
     void CStatusMessageFilterBar::useRadioButtonDescriptiveIcons(bool oneCharacterText)
     {
@@ -63,13 +62,12 @@ namespace BlackGui::Filters
         ui->rb_Info->setText(oneCharacterText ? msg.getSeverityAsString().left(1) : "");
     }
 
-    std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::CStatusMessageList> > CStatusMessageFilterBar::createModelFilter() const
+    std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::CStatusMessageList>> CStatusMessageFilterBar::createModelFilter() const
     {
         return std::make_unique<CStatusMessageFilter>(
-                    this->getSelectedSeverity(),
-                    ui->le_MessageText->text(),
-                    ui->le_Category->text()
-                );
+            this->getSelectedSeverity(),
+            ui->le_MessageText->text(),
+            ui->le_Category->text());
     }
 
     void CStatusMessageFilterBar::onRowCountChanged(int count, bool withFilter)

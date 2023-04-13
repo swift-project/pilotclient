@@ -43,11 +43,20 @@ namespace BlackMisc::Aviation
     class CAircraftIcaoCode;
     class CLivery;
 }
-namespace Ui { class CDbMappingComponent; }
+namespace Ui
+{
+    class CDbMappingComponent;
+}
 namespace BlackGui
 {
-    namespace Menus { class CMenuActions; }
-    namespace Views { class CAircraftModelView; }
+    namespace Menus
+    {
+        class CMenuActions;
+    }
+    namespace Views
+    {
+        class CAircraftModelView;
+    }
 
     namespace Components
     {
@@ -70,13 +79,13 @@ namespace BlackGui
             //! \remark Must match real tab index
             enum TabIndex
             {
-                NoValidTab      =  -1,
-                TabOwnModelSet  =   0,
-                TabOwnModels    =   1,
-                TabWorkbench    =   2,
-                TabStash        =   3,
-                TabModelMatcher =   4,
-                TabVPilot      =    5
+                NoValidTab = -1,
+                TabOwnModelSet = 0,
+                TabOwnModels = 1,
+                TabWorkbench = 2,
+                TabStash = 3,
+                TabModelMatcher = 4,
+                TabVPilot = 5
             };
 
             //! Constructor
@@ -319,18 +328,18 @@ namespace BlackGui
             void onCustomContextMenu(const QPoint &point);
 
         private:
-            QScopedPointer<Ui::CDbMappingComponent>             ui;
-            QScopedPointer<CDbAutoStashingComponent>            m_autoStashDialog;     //!< dialog auto stashing
-            QScopedPointer<CDbAutoSimulatorStashingComponent>   m_autoSimulatorDialog; //!< dialog auto simulator update
-            QScopedPointer<CDbModelMappingModifyDialog>         m_modelModifyDialog;   //!< dialog when modifying models
-            BlackMisc::Simulation::FsCommon::CVPilotRulesReader m_vPilotReader;        //!< read vPilot rules
-            BlackMisc::CDigestSignal                            m_dsStashedModelsChanged { this, &CDbMappingComponent::onStashedModelsChangedDigest, 750, 25 };
+            QScopedPointer<Ui::CDbMappingComponent> ui;
+            QScopedPointer<CDbAutoStashingComponent> m_autoStashDialog; //!< dialog auto stashing
+            QScopedPointer<CDbAutoSimulatorStashingComponent> m_autoSimulatorDialog; //!< dialog auto simulator update
+            QScopedPointer<CDbModelMappingModifyDialog> m_modelModifyDialog; //!< dialog when modifying models
+            BlackMisc::Simulation::FsCommon::CVPilotRulesReader m_vPilotReader; //!< read vPilot rules
+            BlackMisc::CDigestSignal m_dsStashedModelsChanged { this, &CDbMappingComponent::onStashedModelsChangedDigest, 750, 25 };
             BlackMisc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this, &CDbMappingComponent::onUserChanged };
-            const bool vPilotSupport   = true;   //!< vPilot support (will be removed in future)
-            bool m_vPilot1stInit       = true;   //!< vPilot extensions initalized?
-            bool m_vPilotEnabled       = false;  //!< use vPilot extensions
-            bool m_vPilotFormatted     = false;  //!< vPilot formatted (workaround)
-            bool m_autoFilterInDbViews = false;  //!< automatically filter the DB view by the current model
+            const bool vPilotSupport = true; //!< vPilot support (will be removed in future)
+            bool m_vPilot1stInit = true; //!< vPilot extensions initalized?
+            bool m_vPilotEnabled = false; //!< use vPilot extensions
+            bool m_vPilotFormatted = false; //!< vPilot formatted (workaround)
+            bool m_autoFilterInDbViews = false; //!< automatically filter the DB view by the current model
 
             //! Init vPilot if rights and suitable
             void initVPilotLoading();
@@ -405,8 +414,7 @@ namespace BlackGui
             {
             public:
                 //! Constructor
-                COwnModelSetMenu(CDbMappingComponent *mappingComponent) :
-                    Menus::IMenuDelegate(mappingComponent)
+                COwnModelSetMenu(CDbMappingComponent *mappingComponent) : Menus::IMenuDelegate(mappingComponent)
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu
@@ -425,8 +433,7 @@ namespace BlackGui
             {
             public:
                 //! Constructor
-                CRemovedModelsMenu(CDbMappingComponent *mappingComponent) :
-                    Menus::IMenuDelegate(mappingComponent)
+                CRemovedModelsMenu(CDbMappingComponent *mappingComponent) : Menus::IMenuDelegate(mappingComponent)
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu
@@ -445,8 +452,7 @@ namespace BlackGui
             {
             public:
                 //! Constructor
-                CApplyDbDataMenu(CDbMappingComponent *mappingComponent) :
-                    Menus::IMenuDelegate(mappingComponent)
+                CApplyDbDataMenu(CDbMappingComponent *mappingComponent) : Menus::IMenuDelegate(mappingComponent)
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu
@@ -456,7 +462,7 @@ namespace BlackGui
                 //! Mapping component
                 CDbMappingComponent *mappingComponent() const;
 
-                QList<QAction *> m_menuActions;  //!< actions, kept when once initialized
+                QList<QAction *> m_menuActions; //!< actions, kept when once initialized
             };
 
             //! Merge with vPilot data

@@ -14,7 +14,10 @@
 #include "blackgui/blackguiexport.h"
 #include <QDialog>
 
-namespace Ui { class CCockpitComAudioDialog; }
+namespace Ui
+{
+    class CCockpitComAudioDialog;
+}
 namespace BlackGui::Components
 {
     //! Cockpit COM component as dialog

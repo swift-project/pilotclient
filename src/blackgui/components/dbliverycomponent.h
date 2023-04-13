@@ -22,11 +22,20 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CDbLiveryComponent; }
-namespace BlackMisc::Aviation { class CLivery; }
+namespace Ui
+{
+    class CDbLiveryComponent;
+}
+namespace BlackMisc::Aviation
+{
+    class CLivery;
+}
 namespace BlackGui
 {
-    namespace Views { class CLiveryView; }
+    namespace Views
+    {
+        class CLiveryView;
+    }
     namespace Components
     {
         /*!

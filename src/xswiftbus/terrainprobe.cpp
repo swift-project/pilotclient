@@ -46,7 +46,7 @@ namespace XSwiftBus
             }
 
             o_isWater = false;
-            return {{ std::numeric_limits<double>::quiet_NaN(), degreesLatitude, degreesLongitude }};
+            return { { std::numeric_limits<double>::quiet_NaN(), degreesLatitude, degreesLongitude } };
         }
         XPLMLocalToWorld(probe.locationX, probe.locationY, probe.locationZ, &degreesLatitude, &degreesLongitude, &metersAltitude);
 
@@ -61,6 +61,6 @@ namespace XSwiftBus
             DEBUG_LOG(callsign + " probe returned NaN at " + std::to_string(degreesLatitude) + ", " + std::to_string(degreesLongitude) + ", " + std::to_string(metersAltitude));
         }
         o_isWater = probe.is_wet;
-        return {{ metersAltitude, degreesLatitude, degreesLongitude }};
+        return { { metersAltitude, degreesLatitude, degreesLongitude } };
     }
 } // ns

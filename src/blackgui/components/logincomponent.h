@@ -35,7 +35,10 @@
 #include <QScopedPointer>
 #include <QString>
 
-namespace Ui { class CLoginComponent; }
+namespace Ui
+{
+    class CLoginComponent;
+}
 namespace BlackMisc::Simulation
 {
     class CAircraftModel;
@@ -101,9 +104,9 @@ namespace BlackGui::Components
         //! GUI aircraft values, formatted
         struct CGuiAircraftValues
         {
-            BlackMisc::Aviation::CCallsign         ownCallsign;
+            BlackMisc::Aviation::CCallsign ownCallsign;
             BlackMisc::Aviation::CAircraftIcaoCode ownAircraftIcao;
-            BlackMisc::Aviation::CAirlineIcaoCode  ownAirlineIcao;
+            BlackMisc::Aviation::CAirlineIcaoCode ownAirlineIcao;
             QString ownAircraftCombinedType;
             QString ownAircraftSimulatorModel;
         };
@@ -240,7 +243,7 @@ namespace BlackGui::Components
         //! Tab index changed
         void onDetailsTabChanged(int index);
 
-        static constexpr int OverlayMessageMs      = 5000;
+        static constexpr int OverlayMessageMs = 5000;
         static constexpr int LogoffIntervalSeconds = 20; //!< time before logoff
 
         QScopedPointer<Ui::CLoginComponent> ui;
@@ -250,8 +253,8 @@ namespace BlackGui::Components
         bool m_updatePilotOnServerChanges = true;
         bool m_networkConnected = false;
         bool m_simulatorConnected = false;
-        const QIcon m_iconPlay  {":/famfamfam/icons/famfamfam/icons/silk/control_play_blue.png"};
-        const QIcon m_iconPause {":/famfamfam/icons/famfamfam/icons/silk/control_pause_blue.png"};
+        const QIcon m_iconPlay { ":/famfamfam/icons/famfamfam/icons/silk/control_play_blue.png" };
+        const QIcon m_iconPause { ":/famfamfam/icons/famfamfam/icons/silk/control_pause_blue.png" };
         int m_logoffIntervalSeconds = LogoffIntervalSeconds;
         QTimer m_logoffCountdownTimer; //!< timer for logoff countdown
 

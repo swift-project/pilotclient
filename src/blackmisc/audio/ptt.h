@@ -28,5 +28,3 @@ namespace BlackMisc::Audio
 Q_DECLARE_METATYPE(BlackMisc::Audio::PTTCOM)
 
 #endif // guard
-
-

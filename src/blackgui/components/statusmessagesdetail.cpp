@@ -18,9 +18,8 @@ using namespace BlackGui::Filters;
 
 namespace BlackGui::Components
 {
-    CStatusMessagesDetail::CStatusMessagesDetail(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CStatusMessagesDetail)
+    CStatusMessagesDetail::CStatusMessagesDetail(QWidget *parent) : QFrame(parent),
+                                                                    ui(new Ui::CStatusMessagesDetail)
     {
         ui->setupUi(this);
         connect(ui->tvp_StatusMessages, &CStatusMessageView::objectSelected, ui->form_StatusMessage, &CStatusMessageForm::setVariant);
@@ -31,14 +30,13 @@ namespace BlackGui::Components
         ui->tvp_StatusMessages->menuAddItems(CStatusMessageView::MenuSave);
         this->showFilterBar(); // default
 
-        connect(ui->filter_LogMessages, &CStatusMessageFilterBar::changeFilter, this, [this](bool enable)
-        {
-            emit filterChanged(enable ? ui->filter_LogMessages->createModelFilter()->getAsValueObject() : CVariant{});
+        connect(ui->filter_LogMessages, &CStatusMessageFilterBar::changeFilter, this, [this](bool enable) {
+            emit filterChanged(enable ? ui->filter_LogMessages->createModelFilter()->getAsValueObject() : CVariant {});
         });
     }
 
     CStatusMessagesDetail::~CStatusMessagesDetail()
-    { }
+    {}
 
     void CStatusMessagesDetail::appendStatusMessageToList(const CStatusMessage &message)
     {
@@ -64,8 +62,7 @@ namespace BlackGui::Components
         ui->tvp_StatusMessages->addFilterDialog();
         ui->filter_LogMessages->hide();
 
-        connect(ui->tvp_StatusMessages->getFilterDialog(), &QDialog::accepted, [this]
-        {
+        connect(ui->tvp_StatusMessages->getFilterDialog(), &QDialog::accepted, [this] {
             emit filterChanged(ui->tvp_StatusMessages->getFilterDialog()->createModelFilter()->getAsValueObject());
         });
     }
@@ -119,7 +116,7 @@ namespace BlackGui::Components
         {
             // do not restrict
         }
-        else  if (m_maxLogMessages < 100 && ui->tvp_StatusMessages->rowCount() > (m_maxLogMessages + 10))
+        else if (m_maxLogMessages < 100 && ui->tvp_StatusMessages->rowCount() > (m_maxLogMessages + 10))
         {
             newMsgs.keepLatest(m_maxLogMessages);
         }
@@ -140,8 +137,8 @@ namespace BlackGui::Components
         const bool v = messagesDetail->ui->form_StatusMessage->isVisible();
         const QString formString(v ? "Hide log details" : "Show log details");
         m_action = menuActions.addAction(m_action,
-                                            CIcons::databaseTable16(), formString,
-                                            CMenuAction::pathLog(), { messagesDetail->ui->form_StatusMessage, &CStatusMessageForm::toggleVisibility});
+                                         CIcons::databaseTable16(), formString,
+                                         CMenuAction::pathLog(), { messagesDetail->ui->form_StatusMessage, &CStatusMessageForm::toggleVisibility });
         m_action->setCheckable(true);
         m_action->setChecked(v);
     }

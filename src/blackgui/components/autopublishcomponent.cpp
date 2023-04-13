@@ -27,13 +27,12 @@ using namespace BlackCore::Db;
 
 namespace BlackGui::Components
 {
-    CAutoPublishComponent::CAutoPublishComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        ui(new Ui::CAutoPublishComponent)
+    CAutoPublishComponent::CAutoPublishComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                                    ui(new Ui::CAutoPublishComponent)
     {
         ui->setupUi(this);
-        connect(ui->pb_Analyze,     &QPushButton::released, this, &CAutoPublishComponent::analyzeAgainstDBData, Qt::QueuedConnection);
-        connect(ui->pb_SendToDB,    &QPushButton::released, this, &CAutoPublishComponent::sendToDb, Qt::QueuedConnection);
+        connect(ui->pb_Analyze, &QPushButton::released, this, &CAutoPublishComponent::analyzeAgainstDBData, Qt::QueuedConnection);
+        connect(ui->pb_SendToDB, &QPushButton::released, this, &CAutoPublishComponent::sendToDb, Qt::QueuedConnection);
         connect(ui->pb_DeleteFiles, &QPushButton::released, this, &CAutoPublishComponent::deleteAllFiles, Qt::QueuedConnection);
 
         if (sGui && sGui->hasWebDataServices() && sGui->getWebDataServices()->getDatabaseWriter())
@@ -44,7 +43,7 @@ namespace BlackGui::Components
     }
 
     CAutoPublishComponent::~CAutoPublishComponent()
-    { }
+    {}
 
     int CAutoPublishComponent::readFiles()
     {
@@ -115,14 +114,13 @@ namespace BlackGui::Components
         if (success)
         {
             QPointer<CAutoPublishComponent> myself(this);
-            this->showOverlayMessagesWithConfirmation(msgs, true, "Clean up auto publish files?", [ = ]
-            {
+            this->showOverlayMessagesWithConfirmation(msgs, true, "Clean up auto publish files?", [=] {
                 if (!myself) { return; }
                 const int timeoutMs = 5000;
                 myself->deleteAllFiles();
                 myself->showOverlayHTMLMessage("Cleaned auto publish files after uploading them to DB", timeoutMs);
 
-                QTimer::singleShot(timeoutMs * 1.2, this, [ = ] {
+                QTimer::singleShot(timeoutMs * 1.2, this, [=] {
                     if (!myself) { return; }
                     myself->closeParentDialog();
                 });

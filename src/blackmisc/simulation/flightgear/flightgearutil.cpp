@@ -27,13 +27,13 @@ namespace BlackMisc::Simulation::Flightgear
     const QString &CFlightgearUtil::flightgearRootDir()
     {
         static QString flightgearRootDir;
-        if (CBuildConfig::isRunningOnWindowsNtPlatform()){
+        if (CBuildConfig::isRunningOnWindowsNtPlatform())
+        {
             QSettings flightgearRegistry("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\FlightGear_is1", QSettings::NativeFormat);
             flightgearRootDir = flightgearRegistry.value("InstallLocation").toString().trimmed();
         }
         return flightgearRootDir;
     }
-
 
     bool CFlightgearUtil::isFlightgearRootDirExisting()
     {
@@ -44,9 +44,10 @@ namespace BlackMisc::Simulation::Flightgear
     QStringList CFlightgearUtil::modelDirectoriesFromSimDir(const QString &simulatorDir)
     {
         QStringList dirs;
-        if (CBuildConfig::isRunningOnWindowsNtPlatform() && !simulatorDir.isEmpty()){
+        if (CBuildConfig::isRunningOnWindowsNtPlatform() && !simulatorDir.isEmpty())
+        {
             QString terraSyncFolder = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/Flightgear/Aircraft";
-            if(QDir(terraSyncFolder).exists()){ dirs.append(terraSyncFolder); }
+            if (QDir(terraSyncFolder).exists()) { dirs.append(terraSyncFolder); }
             QString fgdataAIFolder = simulatorDir + "data/AI/Aircraft";
             if (QDir(fgdataAIFolder).exists()) { dirs.append(fgdataAIFolder); }
         }

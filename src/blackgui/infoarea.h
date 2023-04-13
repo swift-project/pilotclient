@@ -199,10 +199,10 @@ namespace BlackGui
         QList<CDockWidgetInfoArea *> m_dockWidgetInfoAreas;
         QList<CInfoArea *> m_childInfoAreas;
         QTabBar *m_tabBar = nullptr;
-        bool m_showTabTexts     = true;   //!< texts for tabs
-        bool m_infoAreaFloating = false;  //!< whole info area floating?
-        bool m_showTabBar       = true;   //!< show the tab bar?
-        bool m_lockTabBar       = false;  //!< locked: means double clicks ignored
+        bool m_showTabTexts = true; //!< texts for tabs
+        bool m_infoAreaFloating = false; //!< whole info area floating?
+        bool m_showTabBar = true; //!< show the tab bar?
+        bool m_lockTabBar = false; //!< locked: means double clicks ignored
 
         //! Toggle tab position North - South
         void toggleTabBarPosition();

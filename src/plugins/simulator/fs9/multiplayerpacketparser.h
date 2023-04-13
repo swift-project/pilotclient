@@ -26,23 +26,23 @@ namespace BlackSimPlugin::Fs9
         //! \cond PRIVATE
 
         // overload the following two for types that need special treatment
-        template<typename Value>
+        template <typename Value>
         QByteArray readValue(const QByteArray &data, Value &val)
         {
             static_assert(std::is_arithmetic<Value>::value ||
-                            std::is_same<CFs9Sdk::EngineType, Value>::value,
-                            "Unsupported type");
+                              std::is_same<CFs9Sdk::EngineType, Value>::value,
+                          "Unsupported type");
 
             val = *reinterpret_cast<const Value *>(data.constData());
             return data.mid(sizeof(Value));
         }
 
-        template<typename Value>
+        template <typename Value>
         QByteArray writeValue(QByteArray data, const Value &value)
         {
             static_assert(std::is_arithmetic<Value>::value ||
-                            std::is_same<CFs9Sdk::EngineType, Value>::value,
-                            "Unsupported type");
+                              std::is_same<CFs9Sdk::EngineType, Value>::value,
+                          "Unsupported type");
 
             data.append(reinterpret_cast<const char *>(&value), sizeof(Value));
             return data;
@@ -52,40 +52,39 @@ namespace BlackSimPlugin::Fs9
 
         QByteArray writeValue(QByteArray data, const QString &value);
 
-        template< typename MessageTuple, quint32 Size = std::tuple_size<MessageTuple>::value >
+        template <typename MessageTuple, quint32 Size = std::tuple_size<MessageTuple>::value>
         struct Serializer;
 
-        template< typename MsgTuple >
+        template <typename MsgTuple>
         struct Serializer<MsgTuple, 0>
         {
             static const QByteArray &read(const QByteArray &data, MsgTuple &) { return data; }
             static QByteArray write(const QByteArray &data, const MsgTuple &) { return data; }
         };
 
-        template< typename MessageTuple, quint32 Size >
+        template <typename MessageTuple, quint32 Size>
         struct Serializer
         {
             static QByteArray read(const QByteArray &data, MessageTuple &messageTuple)
             {
-                return readValue(Serializer < MessageTuple, Size - 1 >::read(data, messageTuple), std::get < Size - 1 > (messageTuple));
+                return readValue(Serializer<MessageTuple, Size - 1>::read(data, messageTuple), std::get<Size - 1>(messageTuple));
             }
             static QByteArray write(QByteArray &data, const MessageTuple &messageTuple)
             {
-                return writeValue(Serializer < MessageTuple, Size - 1 >::write(data, messageTuple), std::get < Size - 1 > (messageTuple));
+                return writeValue(Serializer<MessageTuple, Size - 1>::write(data, messageTuple), std::get<Size - 1>(messageTuple));
             }
         };
 
-        template< class MessageTuple >
+        template <class MessageTuple>
         inline QByteArray doReadMessage(const QByteArray &data, MessageTuple messageTuple)
         {
             return Serializer<MessageTuple>::read(data, messageTuple);
         }
 
-        template< class MessageTuple >
+        template <class MessageTuple>
         inline QByteArray doWriteMessage(QByteArray &data, const MessageTuple &messageTuple)
         {
             return Serializer<MessageTuple>::write(data, messageTuple);
-
         }
 
         //! \endcond
@@ -95,16 +94,15 @@ namespace BlackSimPlugin::Fs9
     class MultiPlayerPacketParser
     {
     public:
-
         //! Read message from byte stream
-        template< class Message >
+        template <class Message>
         static QByteArray readMessage(const QByteArray &data, Message &message)
         {
             return Private::doReadMessage(data.mid(2 * sizeof(qint32)), message.getTuple());
         }
 
         //! Write message to byte stream
-        template< class Message >
+        template <class Message>
         static QByteArray writeMessage(QByteArray &data, const Message &message)
         {
             return Private::doWriteMessage(data, message.getTuple());
@@ -138,4 +136,4 @@ namespace BlackSimPlugin::Fs9
     };
 }
 
-#endif //BLACKSIMPLUGIN_FS9_MP_PACKET_PARSER_H
+#endif // BLACKSIMPLUGIN_FS9_MP_PACKET_PARSER_H

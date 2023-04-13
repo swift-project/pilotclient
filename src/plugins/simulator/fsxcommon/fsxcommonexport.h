@@ -19,13 +19,13 @@
  */
 
 #ifndef WITH_STATIC
-#  if defined(BUILD_FSXCOMMON_LIB)
-#    define FSXCOMMON_EXPORT Q_DECL_EXPORT
-#  else
-#    define FSXCOMMON_EXPORT Q_DECL_IMPORT
-#  endif
+#    if defined(BUILD_FSXCOMMON_LIB)
+#        define FSXCOMMON_EXPORT Q_DECL_EXPORT
+#    else
+#        define FSXCOMMON_EXPORT Q_DECL_IMPORT
+#    endif
 #else
-#  define FSXCOMMON_EXPORT
+#    define FSXCOMMON_EXPORT
 #endif
 
 #endif // guard

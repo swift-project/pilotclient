@@ -19,7 +19,10 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CModelMappingForm; }
+namespace Ui
+{
+    class CModelMappingForm;
+}
 namespace BlackGui::Editors
 {
     /*!

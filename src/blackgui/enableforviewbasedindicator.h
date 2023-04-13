@@ -13,7 +13,10 @@
 
 #include "blackgui/blackguiexport.h"
 
-namespace BlackGui::Views { class CViewBaseNonTemplate; }
+namespace BlackGui::Views
+{
+    class CViewBaseNonTemplate;
+}
 namespace BlackGui
 {
     //! Hand over indication task to an embedded view

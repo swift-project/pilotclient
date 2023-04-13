@@ -389,8 +389,8 @@ namespace BlackCore::Db
             if (updateInfo)
             {
                 const CStatusMessage m = CStatusMessage(static_cast<CDatabaseUtils *>(nullptr)).info(u"%1 -> %2 (%3) for '%4'")
-                                            << dbModelSimulator.toQString(true) << simulator.toQString(true)
-                                            << delta.toQString(true) << dbModel.getModelStringAndDbKey();
+                                         << dbModelSimulator.toQString(true) << simulator.toQString(true)
+                                         << delta.toQString(true) << dbModel.getModelStringAndDbKey();
                 updateInfo->push_back(m);
             }
         }
@@ -526,7 +526,7 @@ namespace BlackCore::Db
         ChangedAutoPublishData changed;
         changed.modelKnown = model.hasValidDbKey();
         if (!changed.modelKnown) { return changed; }
-        changed.changedCG  = !(cg == model.getCG());
+        changed.changedCG = !(cg == model.getCG());
         changed.changedSim = !(model.getSimulator().matchesAll(simulator));
         return changed;
     }

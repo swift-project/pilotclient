@@ -114,12 +114,12 @@ namespace BlackMisc
             void ps_setCache(const BlackMisc::Simulation::CAircraftModelList &models);
 
         private:
-            QStringList m_fileList;              //!< list of file names
-            QStringList m_fileListWithProblems;  //!< problems during parsing
-            int m_loadedFiles = 0;               //!< loaded files
-            CVPilotModelRuleSet m_rules;         //!< rules list
-            bool m_asyncLoadInProgress = false;  //!< Asynchronous load in progress
-            bool m_shutdown            = false;  //!< Shutdown
+            QStringList m_fileList; //!< list of file names
+            QStringList m_fileListWithProblems; //!< problems during parsing
+            int m_loadedFiles = 0; //!< loaded files
+            CVPilotModelRuleSet m_rules; //!< rules list
+            bool m_asyncLoadInProgress = false; //!< Asynchronous load in progress
+            bool m_shutdown = false; //!< Shutdown
             BlackMisc::CData<BlackMisc::Simulation::Data::TVPilotAircraftModels> m_cachedVPilotModels { this, &CVPilotRulesReader::ps_onVPilotCacheChanged }; //!< cache for latest vPilot rules
             mutable QReadWriteLock m_lockData;
 

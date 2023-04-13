@@ -20,7 +20,10 @@ namespace BlackCore
     class ISimulator;
     class CAirspaceMonitor;
 }
-namespace Ui { class CInterpolationLogDisplayDialog; }
+namespace Ui
+{
+    class CInterpolationLogDisplayDialog;
+}
 namespace BlackGui::Components
 {
     /*!

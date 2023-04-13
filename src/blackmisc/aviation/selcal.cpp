@@ -30,7 +30,7 @@ namespace BlackMisc::Aviation
         QString s;
         for (QChar c : selcalCandidate)
         {
-            if (CSelcal::isValidCharacter(c)) { s += c;}
+            if (CSelcal::isValidCharacter(c)) { s += c; }
         }
         return CSelcal::isValidCode(s) ? s : QString();
     }
@@ -89,24 +89,22 @@ namespace BlackMisc::Aviation
     const QList<CFrequency> &CSelcal::audioFrequencyEquivalents()
     {
         static const QList<CFrequency> frequencies(
-        {
-            CFrequency(312.7, CFrequencyUnit::Hz()),
-            CFrequency(346.7, CFrequencyUnit::Hz()),
-            CFrequency(384.6, CFrequencyUnit::Hz()),
-            CFrequency(426.6, CFrequencyUnit::Hz()),
-            CFrequency(473.2, CFrequencyUnit::Hz()),
-            CFrequency(524.8, CFrequencyUnit::Hz()),
-            CFrequency(582.1, CFrequencyUnit::Hz()),
-            CFrequency(645.7, CFrequencyUnit::Hz()),
-            CFrequency(716.1, CFrequencyUnit::Hz()),
-            CFrequency(794.3, CFrequencyUnit::Hz()),
-            CFrequency(881.0, CFrequencyUnit::Hz()),
-            CFrequency(977.2, CFrequencyUnit::Hz()),
-            CFrequency(1083.9, CFrequencyUnit::Hz()),
-            CFrequency(1202.3, CFrequencyUnit::Hz()),
-            CFrequency(1333.5, CFrequencyUnit::Hz()),
-            CFrequency(1479.1, CFrequencyUnit::Hz())
-        });
+            { CFrequency(312.7, CFrequencyUnit::Hz()),
+              CFrequency(346.7, CFrequencyUnit::Hz()),
+              CFrequency(384.6, CFrequencyUnit::Hz()),
+              CFrequency(426.6, CFrequencyUnit::Hz()),
+              CFrequency(473.2, CFrequencyUnit::Hz()),
+              CFrequency(524.8, CFrequencyUnit::Hz()),
+              CFrequency(582.1, CFrequencyUnit::Hz()),
+              CFrequency(645.7, CFrequencyUnit::Hz()),
+              CFrequency(716.1, CFrequencyUnit::Hz()),
+              CFrequency(794.3, CFrequencyUnit::Hz()),
+              CFrequency(881.0, CFrequencyUnit::Hz()),
+              CFrequency(977.2, CFrequencyUnit::Hz()),
+              CFrequency(1083.9, CFrequencyUnit::Hz()),
+              CFrequency(1202.3, CFrequencyUnit::Hz()),
+              CFrequency(1333.5, CFrequencyUnit::Hz()),
+              CFrequency(1479.1, CFrequencyUnit::Hz()) });
         return frequencies;
     }
 

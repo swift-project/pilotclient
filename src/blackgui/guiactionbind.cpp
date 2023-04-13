@@ -50,7 +50,7 @@ namespace BlackGui
             const bool hasIcon = !action->icon().isNull();
             CGuiActionBindHandler *bindHandler = new CGuiActionBindHandler(action);
             // MS 2019-10-08 [AFV integration] CActionBind constructor needs an icon index, not a QPixmap
-            //CActionBinding actionBinding(CActionBinding::create(pathNew, hasIcon ? action->icon().pixmap(CIcons::empty16().size()) : CIcons::empty16(), bindHandler, &CGuiActionBindHandler::boundFunction, [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
+            // CActionBinding actionBinding(CActionBinding::create(pathNew, hasIcon ? action->icon().pixmap(CIcons::empty16().size()) : CIcons::empty16(), bindHandler, &CGuiActionBindHandler::boundFunction, [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
             CActionBinding actionBinding(CActionBinding::create(pathNew, CIcons::StandardIconEmpty16, bindHandler, &CGuiActionBindHandler::boundFunction, [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
             Q_UNUSED(hasIcon)
             bindHandler->m_index = actionBinding->getIndex();
@@ -63,12 +63,12 @@ namespace BlackGui
     {
         Q_ASSERT(button);
         const QString pathNew = absoluteName ?
-                                path :
-                                CGuiActionBindHandler::appendPath(path, button->text()).remove('&'); // remove E&xit key codes
+                                    path :
+                                    CGuiActionBindHandler::appendPath(path, button->text()).remove('&'); // remove E&xit key codes
         CGuiActionBindHandler *bindHandler = new CGuiActionBindHandler(button);
         const bool hasIcon = !button->icon().isNull();
         // MS 2019-10-08 [AFV integration] CActionBind constructor needs an icon index, not a QPixmap
-        //CActionBinding actionBinding(CActionBinding::create(pathNew, hasIcon ? button->icon().pixmap(CIcons::empty16().size()) : CIcons::empty16(), bindHandler, &CGuiActionBindHandler::boundFunction, [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
+        // CActionBinding actionBinding(CActionBinding::create(pathNew, hasIcon ? button->icon().pixmap(CIcons::empty16().size()) : CIcons::empty16(), bindHandler, &CGuiActionBindHandler::boundFunction, [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
         CActionBinding actionBinding(CActionBinding::create(pathNew, CIcons::StandardIconEmpty16, bindHandler, &CGuiActionBindHandler::boundFunction, [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
         Q_UNUSED(hasIcon)
         bindHandler->m_index = actionBinding->getIndex();
@@ -85,8 +85,7 @@ namespace BlackGui
     void CGuiActionBindHandler::connectDestroy(QObject *object)
     {
         // if the action is destroyed from somewhere else I unbind myself
-        QObject::connect(object, &QObject::destroyed, [ = ]
-        {
+        QObject::connect(object, &QObject::destroyed, [=] {
             this->unbind();
         });
     }

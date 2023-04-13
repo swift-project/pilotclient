@@ -36,7 +36,7 @@ namespace BlackMisc
             IWeatherGridProvider(const IWeatherGridProvider &) = delete;
 
             //! Copy assignment operator
-            IWeatherGridProvider &operator =(const IWeatherGridProvider &) = delete;
+            IWeatherGridProvider &operator=(const IWeatherGridProvider &) = delete;
 
             //! Destructor
             virtual ~IWeatherGridProvider() {}

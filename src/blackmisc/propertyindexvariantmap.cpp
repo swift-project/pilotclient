@@ -23,12 +23,12 @@ namespace BlackMisc
         this->addValue(index, value);
     }
 
-    bool operator ==(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b)
+    bool operator==(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b)
     {
         return a.m_wildcard == b.m_wildcard && a.m_values == b.m_values;
     }
 
-    bool operator !=(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b)
+    bool operator!=(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b)
     {
         return !(b == a);
     }
@@ -56,8 +56,8 @@ namespace BlackMisc
             CVariant v = m_values.value(index);
 
             s.isEmpty() ?
-            s.append("{wildcard: ").append(m_wildcard ? "true" : "false").append(" ") :
-            s.append(", ");
+                s.append("{wildcard: ").append(m_wildcard ? "true" : "false").append(" ") :
+                s.append(", ");
 
             s.append('{').append(index.toQString(i18n)).append(": ");
             s.append("(").append(QString::number(v.userType())).append(") ");

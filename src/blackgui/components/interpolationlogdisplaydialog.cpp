@@ -15,9 +15,8 @@ using namespace BlackCore;
 
 namespace BlackGui::Components
 {
-    CInterpolationLogDisplayDialog::CInterpolationLogDisplayDialog(ISimulator *simulator, CAirspaceMonitor *airspaceMonitor, QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CInterpolationLogDisplayDialog)
+    CInterpolationLogDisplayDialog::CInterpolationLogDisplayDialog(ISimulator *simulator, CAirspaceMonitor *airspaceMonitor, QWidget *parent) : QDialog(parent),
+                                                                                                                                                ui(new Ui::CInterpolationLogDisplayDialog)
     {
         ui->setupUi(this);
         this->setSimulator(simulator);

@@ -24,9 +24,8 @@ using namespace BlackGui::Views;
 
 namespace BlackGui::Components
 {
-    CDbReduceModelDuplicates::CDbReduceModelDuplicates(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CDbReduceModelDuplicates)
+    CDbReduceModelDuplicates::CDbReduceModelDuplicates(QWidget *parent) : QDialog(parent),
+                                                                          ui(new Ui::CDbReduceModelDuplicates)
     {
         ui->setupUi(this);
         this->clearProgressBar();
@@ -43,7 +42,7 @@ namespace BlackGui::Components
     }
 
     CDbReduceModelDuplicates::~CDbReduceModelDuplicates()
-    { }
+    {}
 
     void CDbReduceModelDuplicates::setModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
     {
@@ -146,8 +145,8 @@ namespace BlackGui::Components
 
         const QString distKeys = removeModels.getDistributors().dbKeysAsString(", ");
         const CStatusMessage msg = removeModels.isEmpty() ?
-                                    CStatusMessage(this).info(u"No duplicates to be removed!")  :
-                                    CStatusMessage(this).info(u"You can remove %1 models of the following distributors: '%2'.") << removeModels.size() << distKeys;
+                                       CStatusMessage(this).info(u"No duplicates to be removed!") :
+                                       CStatusMessage(this).info(u"You can remove %1 models of the following distributors: '%2'.") << removeModels.size() << distKeys;
         ui->fr_Overlay->showOverlayHTMLMessage(msg, 5000);
         ui->bb_ReduceModelDuplicates->button(QDialogButtonBox::Ok)->setEnabled(true);
     }

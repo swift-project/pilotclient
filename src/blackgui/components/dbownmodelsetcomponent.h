@@ -29,11 +29,20 @@
 
 class QAction;
 
-namespace Ui { class CDbOwnModelSetComponent; }
-namespace BlackMisc::Simulation { class CAircraftModel; }
+namespace Ui
+{
+    class CDbOwnModelSetComponent;
+}
+namespace BlackMisc::Simulation
+{
+    class CAircraftModel;
+}
 namespace BlackGui
 {
-    namespace Menus { class CMenuActions; }
+    namespace Menus
+    {
+        class CMenuActions;
+    }
     namespace Views
     {
         class CAircraftModelView;
@@ -116,8 +125,8 @@ namespace BlackGui
 
             //! \name Implementations of the models interfaces
             //! @{
-            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->setModelSet(models, this->getModelSetSimulator()); }
-            virtual int updateModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { return this->replaceOrAddModelSet(models, this->getModelSetSimulator()); }
+            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models) override { this->setModelSet(models, this->getModelSetSimulator()); }
+            virtual int updateModels(const BlackMisc::Simulation::CAircraftModelList &models) override { return this->replaceOrAddModelSet(models, this->getModelSetSimulator()); }
             virtual BlackMisc::Simulation::CSimulatorInfo getSelectedSimulator() const override { return this->getModelSetSimulator(); }
             //! @}
 
@@ -184,15 +193,15 @@ namespace BlackGui
 
             QScopedPointer<Ui::CDbOwnModelSetComponent> ui;
             QScopedPointer<CDbOwnModelSetFormDialog> m_modelSetFormDialog;
-            QScopedPointer<CFirstModelSetDialog>     m_firstModelSetDialog;
+            QScopedPointer<CFirstModelSetDialog> m_firstModelSetDialog;
             QScopedPointer<CDbReduceModelDuplicates> m_reduceModelsDialog;
             QScopedPointer<CCopyModelsFromOtherSwiftVersionsDialog> m_copyFromAnotherSwiftDialog;
-            QScopedPointer<Views::CAircraftModelStatisticsDialog>   m_modelStatisticsDialog;
+            QScopedPointer<Views::CAircraftModelStatisticsDialog> m_modelStatisticsDialog;
 
             BlackMisc::Simulation::CSimulatorInfo m_simulator; //!< currently set simulator
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TDistributorListPreferences> m_distributorPreferences { this, &CDbOwnModelSetComponent::distributorPreferencesChanged }; //!< distributor preferences
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModel> m_modelSettings { this }; //!< settings for models
-            BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings         { this }; //!< for directories
+            BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for directories
 
             // -------------------------- custom menus -----------------------------------
 
@@ -203,8 +212,7 @@ namespace BlackGui
             {
             public:
                 //! Constructor
-                CLoadModelSetMenu(CDbOwnModelSetComponent *ownModelSetComponent) :
-                    Menus::IMenuDelegate(ownModelSetComponent)
+                CLoadModelSetMenu(CDbOwnModelSetComponent *ownModelSetComponent) : Menus::IMenuDelegate(ownModelSetComponent)
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu

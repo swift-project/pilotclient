@@ -21,7 +21,10 @@
 
 class QWidget;
 
-namespace Ui { class CSelcalCodeSelector; }
+namespace Ui
+{
+    class CSelcalCodeSelector;
+}
 namespace BlackGui::Components
 {
     //! SELCAL mode selector

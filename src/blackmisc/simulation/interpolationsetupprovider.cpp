@@ -195,7 +195,7 @@ namespace BlackMisc::Simulation
 
     // pin vtables to this file
     void CInterpolationSetupAware::anchor()
-    { }
+    {}
 
     CInterpolationAndRenderingSetupPerCallsign CInterpolationSetupAware::getInterpolationSetupPerCallsignOrDefault(const CCallsign &callsign) const
     {

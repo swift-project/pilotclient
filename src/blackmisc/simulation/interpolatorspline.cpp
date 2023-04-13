@@ -30,9 +30,9 @@ namespace BlackMisc::Simulation
         std::array<double, N> solveTridiagonal(std::array<std::array<double, N>, N> &matrix, std::array<double, N> &d)
         {
             // *INDENT-OFF*
-            const auto a = [&matrix](size_t i) -> double& { return matrix[i][i-1]; }; // subdiagonal
-            const auto b = [&matrix](size_t i) -> double& { return matrix[i][i  ]; }; // main diagonal
-            const auto c = [&matrix](size_t i) -> double& { return matrix[i][i+1]; }; // superdiagonal
+            const auto a = [&matrix](size_t i) -> double & { return matrix[i][i - 1]; }; // subdiagonal
+            const auto b = [&matrix](size_t i) -> double & { return matrix[i][i]; }; // main diagonal
+            const auto c = [&matrix](size_t i) -> double & { return matrix[i][i + 1]; }; // superdiagonal
 
             // forward sweep
             c(0) /= b(0);
@@ -40,7 +40,7 @@ namespace BlackMisc::Simulation
             for (size_t i = 1; i < N; ++i)
             {
                 const double denom = b(i) - a(i) * c(i - 1);
-                if (i < N-1) { c(i) /= denom; }
+                if (i < N - 1) { c(i) /= denom; }
                 d[i] = (d[i] - a(i) * d[i - 1]) / denom;
             }
 
@@ -48,7 +48,7 @@ namespace BlackMisc::Simulation
             for (int i = N - 2; i >= 0; --i)
             {
                 const size_t it = static_cast<size_t>(i);
-                d[it] -= c(it) * d[it+1];
+                d[it] -= c(it) * d[it + 1];
             }
             return d;
             // *INDENT-ON*
@@ -60,25 +60,24 @@ namespace BlackMisc::Simulation
         template <size_t N>
         std::array<double, N> getDerivatives(const std::array<double, N> &x, const std::array<double, N> &y)
         {
-            std::array<std::array<double, N>, N> a {{}};
-            std::array<double, N> b {{}};
+            std::array<std::array<double, N>, N> a { {} };
+            std::array<double, N> b { {} };
 
             // *INDENT-OFF*
             a[0][0] = 2.0 / (x[1] - x[0]);
             a[0][1] = 1.0 / (x[1] - x[0]);
-            b[0]    = 3.0 * (y[1] - y[0]) / ((x[1] - x[0]) * (x[1] - x[0]));
+            b[0] = 3.0 * (y[1] - y[0]) / ((x[1] - x[0]) * (x[1] - x[0]));
 
-            a[N-1][N-2] = 1.0 / (x[N-1] - x[N-2]);
-            a[N-1][N-1] = 2.0 / (x[N-1] - x[N-2]);
-            b[N-1]      = 3.0 * (y[N-1] - y[N-2]) / ((x[N-1] - x[N-2]) * (x[N-1] - x[N-2]));
+            a[N - 1][N - 2] = 1.0 / (x[N - 1] - x[N - 2]);
+            a[N - 1][N - 1] = 2.0 / (x[N - 1] - x[N - 2]);
+            b[N - 1] = 3.0 * (y[N - 1] - y[N - 2]) / ((x[N - 1] - x[N - 2]) * (x[N - 1] - x[N - 2]));
 
             for (size_t i = 1; i < N - 1; ++i)
             {
-                a[i][i-1] = 1.0 / (x[i] - x[i-1]);
-                a[i][i  ] = 2.0 / (x[i] - x[i-1]) + 2.0 / (x[i+1] - x[i]);
-                a[i][i+1] = 1.0 / (x[i+1] - x[i]);
-                b[i]      = 3.0 * (y[i] - y[i-1]) / ((x[i] - x[i-1]) * (x[i] - x[i-1]))
-                            + 3.0 * (y[i+1] - y[i]) / ((x[i+1] - x[i]) * (x[i+1] - x[i]));
+                a[i][i - 1] = 1.0 / (x[i] - x[i - 1]);
+                a[i][i] = 2.0 / (x[i] - x[i - 1]) + 2.0 / (x[i + 1] - x[i]);
+                a[i][i + 1] = 1.0 / (x[i + 1] - x[i]);
+                b[i] = 3.0 * (y[i] - y[i - 1]) / ((x[i] - x[i - 1]) * (x[i] - x[i - 1])) + 3.0 * (y[i + 1] - y[i]) / ((x[i + 1] - x[i]) * (x[i + 1] - x[i]));
             }
             // *INDENT-ON*
 
@@ -90,13 +89,13 @@ namespace BlackMisc::Simulation
         double evalSplineInterval(double x, double x0, double x1, double y0, double y1, double k0, double k1)
         {
             const double t = (x - x0) / (x1 - x0);
-            const double a =  k0 * (x1 - x0) - (y1 - y0);
+            const double a = k0 * (x1 - x0) - (y1 - y0);
             const double b = -k1 * (x1 - x0) + (y1 - y0);
             const double y = (1 - t) * y0 + t * y1 + t * (1 - t) * (a * (1 - t) + b * t);
 
             if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
-                BLACK_VERIFY_X(t >= 0,   Q_FUNC_INFO, "Expect t >= 0");
+                BLACK_VERIFY_X(t >= 0, Q_FUNC_INFO, "Expect t >= 0");
                 BLACK_VERIFY_X(t <= 1.0, Q_FUNC_INFO, "Expect t <= 1");
             }
             return y;
@@ -134,7 +133,7 @@ namespace BlackMisc::Simulation
         // set some default values
         const qint64 os = qMax(CFsdSetup::c_minimumPositionTimeOffsetMsec, m_s[2].getTimeOffsetMs());
         m_s[0].addMsecs(-os); // oldest, Ref T297 default offset time to fill data
-        m_s[2].addMsecs(os);  // latest, Ref T297 default offset time to fill data
+        m_s[2].addMsecs(os); // latest, Ref T297 default offset time to fill data
         if (m_currentSituations.isEmpty()) { return false; }
 
         // and use the real values if available
@@ -157,7 +156,7 @@ namespace BlackMisc::Simulation
             if (!closeOlder.isNull()) { m_s[0] = closeOlder; }
         }
         const qint64 latestAdjusted = m_s[2].getAdjustedMSecsSinceEpoch();
-        const qint64 olderAdjusted  = m_s[0].getAdjustedMSecsSinceEpoch();
+        const qint64 olderAdjusted = m_s[0].getAdjustedMSecsSinceEpoch();
 
         // not having a new situation itself is quite normal,
         // only if it persits it is critical.
@@ -179,14 +178,14 @@ namespace BlackMisc::Simulation
 
     // pin vtables to this file
     void CInterpolatorSpline::anchor()
-    { }
+    {}
 
     CInterpolatorSpline::CInterpolant CInterpolatorSpline::getInterpolant(SituationLog &log)
     {
         // recalculate derivatives only if they changed
         // m_situationsLastModified updated in initIniterpolationStepData
         const bool recalculate = (m_currentTimeMsSinceEpoch >= m_nextSampleAdjustedTime) || // new step
-                                    (m_situationsLastModified  >  m_situationsLastModifiedUsed); // modified
+                                 (m_situationsLastModified > m_situationsLastModifiedUsed); // modified
 
         if (recalculate)
         {
@@ -197,15 +196,15 @@ namespace BlackMisc::Simulation
             if (!fillStatus)
             {
                 m_interpolant.setValid(false);
-                return  m_interpolant;
+                return m_interpolant;
             }
 
-            const std::array<std::array<double, 3>, 3> normals {{ m_s[0].getPosition().normalVectorDouble(), m_s[1].getPosition().normalVectorDouble(), m_s[2].getPosition().normalVectorDouble() }};
+            const std::array<std::array<double, 3>, 3> normals { { m_s[0].getPosition().normalVectorDouble(), m_s[1].getPosition().normalVectorDouble(), m_s[2].getPosition().normalVectorDouble() } };
             PosArray pa;
-            pa.x = {{ normals[0][0], normals[1][0], normals[2][0] }}; // oldest -> latest
-            pa.y = {{ normals[0][1], normals[1][1], normals[2][1] }};
-            pa.z = {{ normals[0][2], normals[1][2], normals[2][2] }}; // latest
-            pa.t = {{ static_cast<double>(m_s[0].getAdjustedMSecsSinceEpoch()), static_cast<double>(m_s[1].getAdjustedMSecsSinceEpoch()), static_cast<double>(m_s[2].getAdjustedMSecsSinceEpoch()) }};
+            pa.x = { { normals[0][0], normals[1][0], normals[2][0] } }; // oldest -> latest
+            pa.y = { { normals[0][1], normals[1][1], normals[2][1] } };
+            pa.z = { { normals[0][2], normals[1][2], normals[2][2] } }; // latest
+            pa.t = { { static_cast<double>(m_s[0].getAdjustedMSecsSinceEpoch()), static_cast<double>(m_s[1].getAdjustedMSecsSinceEpoch()), static_cast<double>(m_s[2].getAdjustedMSecsSinceEpoch()) } };
 
             pa.dx = getDerivatives(pa.t, pa.x);
             pa.dy = getDerivatives(pa.t, pa.y);
@@ -223,9 +222,9 @@ namespace BlackMisc::Simulation
             const double a0 = m_s[0].getCorrectedAltitude(cg).value(altUnit); // oldest
             const double a1 = m_s[1].getCorrectedAltitude(cg).value(altUnit);
             const double a2 = m_s[2].getCorrectedAltitude(cg).value(altUnit); // latest
-            pa.a    = {{ a0, a1, a2 }};
-            pa.gnd  = {{ m_s[0].getOnGroundFactor(), m_s[1].getOnGroundFactor(), m_s[2].getOnGroundFactor() }};
-            pa.da   = getDerivatives(pa.t, pa.a);
+            pa.a = { { a0, a1, a2 } };
+            pa.gnd = { { m_s[0].getOnGroundFactor(), m_s[1].getOnGroundFactor(), m_s[2].getOnGroundFactor() } };
+            pa.da = getDerivatives(pa.t, pa.a);
             pa.dgnd = getDerivatives(pa.t, pa.gnd);
 
             m_prevSampleAdjustedTime = m_s[1].getAdjustedMSecsSinceEpoch();
@@ -249,13 +248,13 @@ namespace BlackMisc::Simulation
         // KB: is that correct with dt2, or would it be m_nextSampleTime - m_prevSampleTime
         //     as long as the offset time is constant, it does not matter
         const double dt1 = static_cast<double>(m_currentTimeMsSinceEpoch - m_prevSampleAdjustedTime);
-        const double dt2 = static_cast<double>(m_nextSampleAdjustedTime  - m_prevSampleAdjustedTime);
+        const double dt2 = static_cast<double>(m_nextSampleAdjustedTime - m_prevSampleAdjustedTime);
         double timeFraction = dt1 / dt2;
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
             BLACK_VERIFY_X(dt1 >= 0, Q_FUNC_INFO, "Expect postive dt1");
-            BLACK_VERIFY_X(dt2 >  0, Q_FUNC_INFO, "Expect postive dt2");
+            BLACK_VERIFY_X(dt2 > 0, Q_FUNC_INFO, "Expect postive dt2");
             BLACK_VERIFY_X(isAcceptableTimeFraction(timeFraction), Q_FUNC_INFO, "Expect fraction 0-1");
         }
         timeFraction = clampValidTimeFraction(timeFraction);
@@ -315,8 +314,7 @@ namespace BlackMisc::Simulation
         return false;
     }
 
-    CInterpolatorSpline::CInterpolant::CInterpolant(const CInterpolatorSpline::PosArray &pa, const CLengthUnit &altitudeUnit, const CInterpolatorPbh &pbh) :
-        m_pa(pa), m_altitudeUnit(altitudeUnit)
+    CInterpolatorSpline::CInterpolant::CInterpolant(const CInterpolatorSpline::PosArray &pa, const CLengthUnit &altitudeUnit, const CInterpolatorPbh &pbh) : m_pa(pa), m_altitudeUnit(altitudeUnit)
     {
         m_pbh = pbh;
         m_situationsAvailable = pa.size();
@@ -332,7 +330,7 @@ namespace BlackMisc::Simulation
         {
             Q_ASSERT_X(t1 < t2, Q_FUNC_INFO, "Expect sorted times, latest first"); // that means a bug in our code init the values
             BLACK_VERIFY_X(m_currentTimeMsSinceEpoc >= t1, Q_FUNC_INFO, "invalid timestamp t1");
-            BLACK_VERIFY_X(m_currentTimeMsSinceEpoc <  t2, Q_FUNC_INFO, "invalid timestamp t2"); // t1==t2 results in div/0
+            BLACK_VERIFY_X(m_currentTimeMsSinceEpoc < t2, Q_FUNC_INFO, "invalid timestamp t2"); // t1==t2 results in div/0
         }
         if (!valid) { return CAircraftSituation::null(); }
 
@@ -350,15 +348,14 @@ namespace BlackMisc::Simulation
         if (!valid) { return CAircraftSituation::null(); }
 
         CAircraftSituation newSituation(currentSituation);
-        const std::array<double, 3> normalVector = {{ newX, newY, newZ }};
+        const std::array<double, 3> normalVector = { { newX, newY, newZ } };
         const CCoordinateGeodetic currentPosition(normalVector);
 
         valid = CAircraftSituation::isValidVector(normalVector);
         if (!valid && CBuildConfig::isLocalDeveloperDebugBuild())
         {
             BLACK_VERIFY_X(valid, Q_FUNC_INFO, "invalid vector");
-            CLogMessage(this).warning(u"Invalid vector for '%1' v: %2 %3 %4") <<
-                    currentSituation.getCallsign().asString() << normalVector[0] << normalVector[1] << normalVector[2];
+            CLogMessage(this).warning(u"Invalid vector for '%1' v: %2 %3 %4") << currentSituation.getCallsign().asString() << normalVector[0] << normalVector[1] << normalVector[2];
         }
         if (!valid) { return CAircraftSituation::null(); }
 
@@ -376,8 +373,16 @@ namespace BlackMisc::Simulation
             do
             {
                 newSituation.setOnGroundDetails(CAircraftSituation::OnGroundByInterpolation);
-                if (CAircraftSituation::isGfEqualAirborne(gnd1, gnd2)) { newSituation.setOnGround(false); break; }
-                if (CAircraftSituation::isGfEqualOnGround(gnd1, gnd2)) { newSituation.setOnGround(true); break; }
+                if (CAircraftSituation::isGfEqualAirborne(gnd1, gnd2))
+                {
+                    newSituation.setOnGround(false);
+                    break;
+                }
+                if (CAircraftSituation::isGfEqualOnGround(gnd1, gnd2))
+                {
+                    newSituation.setOnGround(true);
+                    break;
+                }
                 const double newGnd = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, gnd1, gnd2, m_pa.dgnd[1], m_pa.dgnd[2]);
                 newSituation.setOnGroundFactor(newGnd);
                 newSituation.setOnGroundFromGroundFactorFromInterpolation(groundInterpolationFactor());
@@ -398,18 +403,23 @@ namespace BlackMisc::Simulation
     {
         for (uint i = 0; i < 3; i++)
         {
-            x[i]  = 0; y[i] = 0; z[i] = 0;
-            a[i]  = 0; t[i] = 0;
-            dx[i] = 0; dy[i] = 0; dz[i] = 0;
+            x[i] = 0;
+            y[i] = 0;
+            z[i] = 0;
+            a[i] = 0;
+            t[i] = 0;
+            dx[i] = 0;
+            dy[i] = 0;
+            dz[i] = 0;
             da[i] = 0;
-            gnd[i] = 0; dgnd[i] = 0;
+            gnd[i] = 0;
+            dgnd[i] = 0;
         }
     }
 
     const CInterpolatorSpline::PosArray &CInterpolatorSpline::PosArray::zeroPosArray()
     {
-        static const PosArray pa = []
-        {
+        static const PosArray pa = [] {
             PosArray p;
             p.initToZero();
             return p;

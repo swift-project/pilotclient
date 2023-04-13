@@ -30,15 +30,14 @@ namespace BlackMisc::Geo
         struct KMLSettings
         {
             //! Ctor
-            KMLSettings(bool withAltitude, bool extrude) :
-                withAltitude(withAltitude), extrude(extrude)
-            { }
+            KMLSettings(bool withAltitude, bool extrude) : withAltitude(withAltitude), extrude(extrude)
+            {}
 
             //! @{
             //! Setting members
             bool withAltitude = true;
-            bool extrude      = false;
-            bool tessellate   = true;
+            bool extrude = false;
+            bool tessellate = true;
             QString altitudeMode = "absolute";
             //! @}
         };

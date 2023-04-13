@@ -30,7 +30,7 @@ namespace BlackMisc
     class CDBusServer;
     class CIdentifier;
 
-namespace SharedState::DBus
+    namespace SharedState::DBus
     {
         class IDuplex;
 

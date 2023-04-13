@@ -28,9 +28,7 @@ namespace BlackGui
                 Qt::LeftToRight,
                 Qt::AlignCenter,
                 this->size(),
-                QDesktopWidget().screenGeometry(qApp->activeWindow())
-            )
-        );
+                QDesktopWidget().screenGeometry(qApp->activeWindow())));
 
         Q_UNUSED(event);
     }

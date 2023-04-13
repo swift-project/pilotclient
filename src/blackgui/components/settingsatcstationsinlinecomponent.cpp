@@ -17,26 +17,24 @@ using namespace BlackGui::Settings;
 
 namespace BlackGui::Components
 {
-    CSettingsAtcStationsInlineComponent::CSettingsAtcStationsInlineComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CSettingsAtcStationsInlineComponent)
+    CSettingsAtcStationsInlineComponent::CSettingsAtcStationsInlineComponent(QWidget *parent) : QFrame(parent),
+                                                                                                ui(new Ui::CSettingsAtcStationsInlineComponent)
     {
         ui->setupUi(this);
         ui->rb_All->setChecked(true); // default for AFV
 
-        connect(ui->rb_InRange,   &QRadioButton::toggled,  this, &CSettingsAtcStationsInlineComponent::changeSettings, Qt::QueuedConnection);
+        connect(ui->rb_InRange, &QRadioButton::toggled, this, &CSettingsAtcStationsInlineComponent::changeSettings, Qt::QueuedConnection);
         connect(ui->cb_Frequency, &QRadioButton::released, this, &CSettingsAtcStationsInlineComponent::changeSettings, Qt::QueuedConnection);
 
         QPointer<CSettingsAtcStationsInlineComponent> myself(this);
-        QTimer::singleShot(2000, this, [ = ]
-        {
+        QTimer::singleShot(2000, this, [=] {
             if (!myself) { return; }
             this->onSettingsChanged();
         });
     }
 
     CSettingsAtcStationsInlineComponent::~CSettingsAtcStationsInlineComponent()
-    { }
+    {}
 
     void CSettingsAtcStationsInlineComponent::setCounts(int all, int inRange)
     {

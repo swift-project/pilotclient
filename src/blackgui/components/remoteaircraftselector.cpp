@@ -29,9 +29,8 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CRemoteAircraftSelector::CRemoteAircraftSelector(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CRemoteAircraftSelector)
+    CRemoteAircraftSelector::CRemoteAircraftSelector(QWidget *parent) : QFrame(parent),
+                                                                        ui(new Ui::CRemoteAircraftSelector)
     {
         ui->setupUi(this);
         bool s = connect(sGui->getIContextNetwork(), &IContextNetwork::removedAircraft, this, &CRemoteAircraftSelector::onRemovedAircraft, Qt::QueuedConnection);
@@ -42,7 +41,7 @@ namespace BlackGui::Components
         Q_UNUSED(s);
     }
 
-    CRemoteAircraftSelector::~CRemoteAircraftSelector() { }
+    CRemoteAircraftSelector::~CRemoteAircraftSelector() {}
 
     BlackMisc::Aviation::CCallsign CRemoteAircraftSelector::getSelectedCallsign() const
     {
@@ -106,8 +105,8 @@ namespace BlackGui::Components
             if (aircraft.hasAircraftDesignator())
             {
                 i += u" (" %
-                        aircraft.getAircraftIcaoCode().toQString(false) %
-                        u')';
+                     aircraft.getAircraftIcaoCode().toQString(false) %
+                     u')';
             }
             if (aircraft.hasRealName())
             {

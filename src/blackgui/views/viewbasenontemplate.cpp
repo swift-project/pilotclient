@@ -20,7 +20,6 @@
 #include "blackgui/shortcut.h"
 #include "blackmisc/logmessage.h"
 
-
 #include <QApplication>
 #include <QAction>
 #include <QDesktopWidget>
@@ -227,65 +226,84 @@ namespace BlackGui::Views
         switch (menu)
         {
         case MenuRefresh:
-            {
-                static const QMetaMethod requestSignal = QMetaMethod::fromSignal(&CViewBaseNonTemplate::requestUpdate);
-                if (!this->isSignalConnected(requestSignal)) break;
-                ma.addAction(CIcons::refresh16(), "Update", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::triggerReload }); break;
-            }
+        {
+            static const QMetaMethod requestSignal = QMetaMethod::fromSignal(&CViewBaseNonTemplate::requestUpdate);
+            if (!this->isSignalConnected(requestSignal)) break;
+            ma.addAction(CIcons::refresh16(), "Update", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::triggerReload });
+            break;
+        }
         case MenuBackend:
-            {
-                static const QMetaMethod requestSignal = QMetaMethod::fromSignal(&CViewBaseNonTemplate::requestNewBackendData);
-                if (!this->isSignalConnected(requestSignal)) break;
-                ma.addAction(CIcons::refresh16(), "Reload from backend", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::triggerReloadFromBackend }); break;
-            }
+        {
+            static const QMetaMethod requestSignal = QMetaMethod::fromSignal(&CViewBaseNonTemplate::requestNewBackendData);
+            if (!this->isSignalConnected(requestSignal)) break;
+            ma.addAction(CIcons::refresh16(), "Reload from backend", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::triggerReloadFromBackend });
+            break;
+        }
         case MenuDisplayAutomatically:
-            {
-                QAction *a = ma.addAction(CIcons::appMappings16(), "Automatically display (when loaded)", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::toggleAutoDisplay });
-                a->setCheckable(true);
-                a->setChecked(this->displayAutomatically());
-                break;
-            }
-        case MenuRemoveSelectedRows: { ma.addAction(CIcons::delete16(), "Remove selected rows", CMenuAction::pathViewAddRemove(), { this, &CViewBaseNonTemplate::removeSelectedRowsChecked }, CShortcut::keyDelete()); break; }
-        case MenuClear: { ma.addAction(CIcons::delete16(), "Clear", CMenuAction::pathViewAddRemove(), { this, &CViewBaseNonTemplate::clear }); break; }
+        {
+            QAction *a = ma.addAction(CIcons::appMappings16(), "Automatically display (when loaded)", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::toggleAutoDisplay });
+            a->setCheckable(true);
+            a->setChecked(this->displayAutomatically());
+            break;
+        }
+        case MenuRemoveSelectedRows:
+        {
+            ma.addAction(CIcons::delete16(), "Remove selected rows", CMenuAction::pathViewAddRemove(), { this, &CViewBaseNonTemplate::removeSelectedRowsChecked }, CShortcut::keyDelete());
+            break;
+        }
+        case MenuClear:
+        {
+            ma.addAction(CIcons::delete16(), "Clear", CMenuAction::pathViewAddRemove(), { this, &CViewBaseNonTemplate::clear });
+            break;
+        }
         case MenuFilter:
+        {
+            if (m_filterWidget)
             {
-                if (m_filterWidget)
-                {
-                    const bool dialog = qobject_cast<QDialog *>(m_filterWidget);
-                    if (dialog) ma.addAction(CIcons::filter16(), "Show filter " + CShortcut::toParenthesisString(CShortcut::keyDisplayFilter()), CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::displayFilterDialog }, CShortcut::keyDisplayFilter());
-                    ma.addAction(CIcons::filter16(), "Remove Filter", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::removeFilter });
-                }
-                break;
+                const bool dialog = qobject_cast<QDialog *>(m_filterWidget);
+                if (dialog) ma.addAction(CIcons::filter16(), "Show filter " + CShortcut::toParenthesisString(CShortcut::keyDisplayFilter()), CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::displayFilterDialog }, CShortcut::keyDisplayFilter());
+                ma.addAction(CIcons::filter16(), "Remove Filter", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::removeFilter });
             }
-        case MenuMaterializeFilter: { ma.addAction(CIcons::tableRelationship16(), "Materialize filtered data", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::materializeFilter }); break; }
-        case MenuLoad: { ma.addAction(CIcons::disk16(), "Load from file ", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::loadJsonAction }); break; }
+            break;
+        }
+        case MenuMaterializeFilter:
+        {
+            ma.addAction(CIcons::tableRelationship16(), "Materialize filtered data", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::materializeFilter });
+            break;
+        }
+        case MenuLoad:
+        {
+            ma.addAction(CIcons::disk16(), "Load from file ", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::loadJsonAction });
+            break;
+        }
         case MenuSave:
+        {
+            ma.addAction(CIcons::disk16(), "Save data in file " + CShortcut::toParenthesisString(CShortcut::keySaveViews()), CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::saveJsonAction }, CShortcut::keySaveViews());
+            if (this->hasSelection())
             {
-                ma.addAction(CIcons::disk16(), "Save data in file " + CShortcut::toParenthesisString(CShortcut::keySaveViews()), CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::saveJsonAction }, CShortcut::keySaveViews());
-                if (this->hasSelection())
-                {
-                    ma.addAction(CIcons::disk16(), "Save selected data in file", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::saveSelectedJsonAction }); break;
-                }
+                ma.addAction(CIcons::disk16(), "Save selected data in file", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::saveSelectedJsonAction });
                 break;
             }
+            break;
+        }
         case MenuCut:
-            {
-                if (!QApplication::clipboard()) break;
-                ma.addAction(CIcons::cut16(), "Cut", CMenuAction::pathViewCutPaste(), { this, &CViewBaseNonTemplate::cut }, QKeySequence(QKeySequence::Paste));
-                break;
-            }
+        {
+            if (!QApplication::clipboard()) break;
+            ma.addAction(CIcons::cut16(), "Cut", CMenuAction::pathViewCutPaste(), { this, &CViewBaseNonTemplate::cut }, QKeySequence(QKeySequence::Paste));
+            break;
+        }
         case MenuPaste:
-            {
-                if (!QApplication::clipboard()) break;
-                ma.addAction(CIcons::paste16(), "Paste", CMenuAction::pathViewCutPaste(), { this, &CViewBaseNonTemplate::paste }, QKeySequence(QKeySequence::Paste));
-                break;
-            }
+        {
+            if (!QApplication::clipboard()) break;
+            ma.addAction(CIcons::paste16(), "Paste", CMenuAction::pathViewCutPaste(), { this, &CViewBaseNonTemplate::paste }, QKeySequence(QKeySequence::Paste));
+            break;
+        }
         case MenuCopy:
-            {
-                if (!QApplication::clipboard()) break;
-                ma.addAction(CIcons::copy16(), "Copy", CMenuAction::pathViewCutPaste(), { this, &CViewBaseNonTemplate::copy }, QKeySequence(QKeySequence::Copy));
-                break;
-            }
+        {
+            if (!QApplication::clipboard()) break;
+            ma.addAction(CIcons::copy16(), "Copy", CMenuAction::pathViewCutPaste(), { this, &CViewBaseNonTemplate::copy }, QKeySequence(QKeySequence::Copy));
+            break;
+        }
         default:
             break;
         }
@@ -362,8 +380,8 @@ namespace BlackGui::Views
             }
         }
 
-        if (m_menus.testFlag(MenuCopy))  { menuActions.addActions(this->initMenuActions(MenuCopy)); }
-        if (m_menus.testFlag(MenuCut))   { menuActions.addActions(this->initMenuActions(MenuCut)); }
+        if (m_menus.testFlag(MenuCopy)) { menuActions.addActions(this->initMenuActions(MenuCopy)); }
+        if (m_menus.testFlag(MenuCut)) { menuActions.addActions(this->initMenuActions(MenuCut)); }
         if (m_menus.testFlag(MenuPaste)) { menuActions.addActions(this->initMenuActions(MenuPaste)); }
         if (m_menus.testFlag(MenuFont) && m_fontMenu)
         {
@@ -439,7 +457,8 @@ namespace BlackGui::Views
             menuActions.addAction(CIcons::tableSheet16(), "Display as JSON", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::displayJsonPopup });
             if (this->hasSelection())
             {
-                menuActions.addAction(CIcons::tableSheet16(), "Display selected as JSON", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::displaySelectedJsonPopup });;
+                menuActions.addAction(CIcons::tableSheet16(), "Display selected as JSON", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::displaySelectedJsonPopup });
+                ;
             }
         }
 
@@ -522,7 +541,7 @@ namespace BlackGui::Views
 
     int CViewBaseNonTemplate::selectedRowCount() const
     {
-        if (!this->hasSelection()) { return 0;}
+        if (!this->hasSelection()) { return 0; }
         return this->selectedRows().count();
     }
 
@@ -572,8 +591,7 @@ namespace BlackGui::Views
         // call this deferred, otherwise the values are overridden with any values
         // from the UI builder
         const QPointer<CViewBaseNonTemplate> guard(this);
-        QTimer::singleShot(500, this, [ = ]()
-        {
+        QTimer::singleShot(500, this, [=]() {
             if (!guard) { return; }
             CViewBaseNonTemplate::settingsChanged();
         });
@@ -724,7 +742,7 @@ namespace BlackGui::Views
     int CViewBaseNonTemplate::showLoadIndicator(int containerSizeDependent, int timeoutMs, bool processEvents)
     {
         if (!m_enabledLoadIndicator) { return -1; }
-        if (m_showingLoadIndicator)  { return -1; }
+        if (m_showingLoadIndicator) { return -1; }
 
         if (this->hasDockWidgetArea())
         {
@@ -772,13 +790,13 @@ namespace BlackGui::Views
     bool CViewBaseNonTemplate::isResizeConditionMet(int containerSize) const
     {
         if (m_resizeMode == ResizingAlways) { return true; }
-        if (m_resizeMode == PresizeSubset)  { return false; }
-        if (m_resizeMode == ResizingOff)    { return false; }
-        if (m_resizeMode == ResizingOnce)   { return m_resizeCount < 1; }
+        if (m_resizeMode == PresizeSubset) { return false; }
+        if (m_resizeMode == ResizingOff) { return false; }
+        if (m_resizeMode == ResizingOnce) { return m_resizeCount < 1; }
         if (m_resizeMode == ResizingAuto)
         {
             if (reachedResizeThreshold(containerSize)) { return false; }
-            if (m_resizeAutoNthTime < 2)  { return true; }
+            if (m_resizeAutoNthTime < 2) { return true; }
             return (m_resizeCount % m_resizeAutoNthTime) == 0;
         }
         return false;

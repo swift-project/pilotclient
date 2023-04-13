@@ -16,7 +16,10 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class COwnModelSetForm; }
+namespace Ui
+{
+    class COwnModelSetForm;
+}
 namespace BlackGui::Editors
 {
     /*!
@@ -103,7 +106,7 @@ namespace BlackGui::Editors
         //! Set mode for view
         void setDistributorView(bool hasPreferences);
 
-        QScopedPointer<Ui::COwnModelSetForm>  ui;
+        QScopedPointer<Ui::COwnModelSetForm> ui;
         BlackMisc::Simulation::CSimulatorInfo m_simulator;
         BlackMisc::CSetting<BlackMisc::Simulation::Settings::TDistributorListPreferences> m_distributorPreferences { this, &COwnModelSetForm::onPreferencesChanged };
     };

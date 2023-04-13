@@ -16,11 +16,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Simulation, CDistributor, CDistributorLi
 
 namespace BlackMisc::Simulation
 {
-    CDistributorList::CDistributorList() { }
+    CDistributorList::CDistributorList() {}
 
-    CDistributorList::CDistributorList(const CSequence<CDistributor> &other) :
-        CSequence<CDistributor>(other)
-    { }
+    CDistributorList::CDistributorList(const CSequence<CDistributor> &other) : CSequence<CDistributor>(other)
+    {}
 
     CDistributor CDistributorList::findByKeyOrAlias(const QString &keyOrAlias) const
     {

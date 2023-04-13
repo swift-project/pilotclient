@@ -34,9 +34,8 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    COwnAircraftComponent::COwnAircraftComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::COwnAircraftComponent)
+    COwnAircraftComponent::COwnAircraftComponent(QWidget *parent) : QFrame(parent),
+                                                                    ui(new Ui::COwnAircraftComponent)
     {
         ui->setupUi(this);
         ui->selector_AircraftIcao->displayWithIcaoDescription(false);
@@ -67,17 +66,17 @@ namespace BlackGui::Components
 
         connect(ui->le_Callsign, &QLineEdit::editingFinished, this, &COwnAircraftComponent::validate);
         connect(ui->comp_ModelStringCompleter, &CAircraftModelStringCompleter::modelStringChanged, this, &COwnAircraftComponent::onModelStringSendChanged);
-        connect(ui->le_AircraftCombinedType,   &QLineEdit::editingFinished, this, &COwnAircraftComponent::validate);
-        connect(ui->selector_AircraftIcao,     &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &COwnAircraftComponent::changedAircraftIcao, Qt::QueuedConnection);
-        connect(ui->selector_AirlineIcao,      &CDbAirlineIcaoSelectorComponent::changedAirlineIcao,   this, &COwnAircraftComponent::changedAirlineIcao,  Qt::QueuedConnection);
-        connect(ui->pb_SimulatorLookup,        &QPushButton::clicked, this, &COwnAircraftComponent::lookupOwnAircraftModel);
-        connect(ui->pb_MappingWizard,          &QPushButton::clicked, this, &COwnAircraftComponent::mappingWizard, Qt::QueuedConnection);
-        connect(ui->pb_Clear,                  &QPushButton::clicked, this, &COwnAircraftComponent::clearLivery,   Qt::QueuedConnection);
+        connect(ui->le_AircraftCombinedType, &QLineEdit::editingFinished, this, &COwnAircraftComponent::validate);
+        connect(ui->selector_AircraftIcao, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &COwnAircraftComponent::changedAircraftIcao, Qt::QueuedConnection);
+        connect(ui->selector_AirlineIcao, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &COwnAircraftComponent::changedAirlineIcao, Qt::QueuedConnection);
+        connect(ui->pb_SimulatorLookup, &QPushButton::clicked, this, &COwnAircraftComponent::lookupOwnAircraftModel);
+        connect(ui->pb_MappingWizard, &QPushButton::clicked, this, &COwnAircraftComponent::mappingWizard, Qt::QueuedConnection);
+        connect(ui->pb_Clear, &QPushButton::clicked, this, &COwnAircraftComponent::clearLivery, Qt::QueuedConnection);
 
         if (sGui && sGui->getIContextSimulator())
         {
-            connect(sGui->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this, &COwnAircraftComponent::onSimulatorModelChanged,  Qt::QueuedConnection);
-            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged,  this, &COwnAircraftComponent::onSimulatorStatusChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this, &COwnAircraftComponent::onSimulatorModelChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &COwnAircraftComponent::onSimulatorStatusChanged, Qt::QueuedConnection);
         }
 
         if (sGui && sGui->getIContextOwnAircraft())
@@ -87,7 +86,7 @@ namespace BlackGui::Components
     }
 
     COwnAircraftComponent::~COwnAircraftComponent()
-    { }
+    {}
 
     void COwnAircraftComponent::setUser(const CUser &user)
     {
@@ -211,12 +210,12 @@ namespace BlackGui::Components
         CGuiAircraftValues values;
         values.ownCallsign = CCallsign(ui->le_Callsign->text().trimmed().toUpper());
         values.ownAircraftIcao = ui->selector_AircraftIcao->getAircraftIcao();
-        values.ownAirlineIcao  = ui->selector_AirlineIcao->getAirlineIcao();
-        values.ownAircraftCombinedType         = ui->le_AircraftCombinedType->text().trimmed().toUpper();
+        values.ownAirlineIcao = ui->selector_AirlineIcao->getAirlineIcao();
+        values.ownAircraftCombinedType = ui->le_AircraftCombinedType->text().trimmed().toUpper();
         values.ownAircraftSimulatorModelString = ui->le_SimulatorModel->text().trimmed().toUpper();
-        values.ownAircraftModelStringSend      = ui->comp_ModelStringCompleter->getModelString().toUpper();
-        values.ownLiverySend  = ui->le_SendLivery->text().trimmed().toUpper();
-        values.useLivery      = ui->cb_Livery->isChecked();
+        values.ownAircraftModelStringSend = ui->comp_ModelStringCompleter->getModelString().toUpper();
+        values.ownLiverySend = ui->le_SendLivery->text().trimmed().toUpper();
+        values.useLivery = ui->cb_Livery->isChecked();
         values.useModelString = ui->cb_Model->isChecked();
         return values;
     }
@@ -270,18 +269,18 @@ namespace BlackGui::Components
 
     void COwnAircraftComponent::highlightModelField(const CAircraftModel &model)
     {
-        if (!model.hasModelString())      { ui->le_SimulatorModel->setProperty("validation", "error"); }
+        if (!model.hasModelString()) { ui->le_SimulatorModel->setProperty("validation", "error"); }
         else if (!model.isLoadedFromDb()) { ui->le_SimulatorModel->setProperty("validation", "warning"); }
-        else                              { ui->le_SimulatorModel->setProperty("validation", "ok"); }
+        else { ui->le_SimulatorModel->setProperty("validation", "ok"); }
         ui->le_SimulatorModel->setStyleSheet(""); // force update
     }
 
     bool COwnAircraftComponent::hasValidContexts() const
     {
         if (!sGui || !sGui->supportsContexts()) { return false; }
-        if (sGui->isShuttingDown())          { return false; }
-        if (!sGui->getIContextSimulator())   { return false; }
-        if (!sGui->getIContextNetwork())     { return false; }
+        if (sGui->isShuttingDown()) { return false; }
+        if (!sGui->getIContextSimulator()) { return false; }
+        if (!sGui->getIContextNetwork()) { return false; }
         if (!sGui->getIContextOwnAircraft()) { return false; }
         return true;
     }

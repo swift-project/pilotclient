@@ -22,9 +22,8 @@ using namespace BlackMisc::Network;
 
 namespace BlackGui::Filters
 {
-    CCountryFilterBar::CCountryFilterBar(QWidget *parent) :
-        CFilterWidget(parent),
-        ui(new Ui::CCountryFilterBar)
+    CCountryFilterBar::CCountryFilterBar(QWidget *parent) : CFilterWidget(parent),
+                                                            ui(new Ui::CCountryFilterBar)
     {
         ui->setupUi(this);
         this->setButtonsAndCount(ui->filter_Buttons);
@@ -39,14 +38,13 @@ namespace BlackGui::Filters
     }
 
     CCountryFilterBar::~CCountryFilterBar()
-    { }
+    {}
 
-    std::unique_ptr<BlackGui::Models::IModelFilter<CCountryList> > CCountryFilterBar::createModelFilter() const
+    std::unique_ptr<BlackGui::Models::IModelFilter<CCountryList>> CCountryFilterBar::createModelFilter() const
     {
         return std::make_unique<CCountryFilter>(
-                    ui->le_IsoCode->text(),
-                    ui->le_Name->text()
-                );
+            ui->le_IsoCode->text(),
+            ui->le_Name->text());
     }
 
     void CCountryFilterBar::onRowCountChanged(int count, bool withFilter)

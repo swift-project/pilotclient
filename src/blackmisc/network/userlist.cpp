@@ -12,8 +12,8 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Network, CUser, CUserList)
 
 namespace BlackMisc::Network
 {
-    CUserList::CUserList() { }
+    CUserList::CUserList() {}
 
     CUserList::CUserList(const CSequence &other) : CSequence<CUser>(other)
-    { }
+    {}
 } // namespace

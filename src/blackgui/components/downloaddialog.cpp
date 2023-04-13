@@ -14,16 +14,15 @@ using namespace BlackMisc::Network;
 
 namespace BlackGui::Components
 {
-    CDownloadDialog::CDownloadDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CDownloadDialog)
+    CDownloadDialog::CDownloadDialog(QWidget *parent) : QDialog(parent),
+                                                        ui(new Ui::CDownloadDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
     CDownloadDialog::~CDownloadDialog()
-    { }
+    {}
 
     void CDownloadDialog::setDownloadFile(const CRemoteFile &remoteFile)
     {
@@ -49,8 +48,7 @@ namespace BlackGui::Components
     void CDownloadDialog::showAndStartDownloading()
     {
         const QPointer<CDownloadDialog> guard(this);
-        QTimer::singleShot(0, this, [ = ]
-        {
+        QTimer::singleShot(0, this, [=] {
             if (guard.isNull()) { return; }
             ui->comp_Download->triggerDownloadingOfFiles(2500);
         });
@@ -59,7 +57,7 @@ namespace BlackGui::Components
 
     void CDownloadDialog::accept()
     {
-        if (! ui->comp_Download->haveAllDownloadsCompleted())
+        if (!ui->comp_Download->haveAllDownloadsCompleted())
         {
             const QString msg = QStringLiteral("Download ongoing. Do you want to abort it?");
             QMessageBox::StandardButton reply = QMessageBox::question(this, "Abort?", msg, QMessageBox::Yes | QMessageBox::No);

@@ -20,7 +20,10 @@
 #include <QScopedPointer>
 #include <memory>
 
-namespace Ui { class CLiveryFilterBar; }
+namespace Ui
+{
+    class CLiveryFilterBar;
+}
 namespace BlackMisc::Aviation
 {
     class CLivery;

@@ -20,8 +20,7 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackGui::Components
 {
-    CSelcalCodeSelector::CSelcalCodeSelector(QWidget *parent) :
-        QFrame(parent), ui(new Ui::CSelcalCodeSelector)
+    CSelcalCodeSelector::CSelcalCodeSelector(QWidget *parent) : QFrame(parent), ui(new Ui::CSelcalCodeSelector)
     {
         ui->setupUi(this);
         this->resetSelcalCodes(true);
@@ -37,7 +36,7 @@ namespace BlackGui::Components
     }
 
     CSelcalCodeSelector::~CSelcalCodeSelector()
-    { }
+    {}
 
     QString CSelcalCodeSelector::getSelcalCode() const
     {

@@ -38,10 +38,10 @@ namespace BlackMisc::Simulation
 
         //! Constructor
         CAirspaceAircraftSnapshot(const CSimulatedAircraftList &allAircraft,
-                                    bool restricted       = false,
-                                    bool renderingEnabled = true,
-                                    int maxAircraft       = 100,
-                                    const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance = { 0, nullptr });
+                                  bool restricted = false,
+                                  bool renderingEnabled = true,
+                                  int maxAircraft = 100,
+                                  const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance = { 0, nullptr });
 
         //! Time when snapshot was taken
         const QDateTime getTimestamp() const { return QDateTime::fromMSecsSinceEpoch(m_timestampMsSinceEpoch); }

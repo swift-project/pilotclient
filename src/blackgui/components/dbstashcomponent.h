@@ -43,10 +43,16 @@ namespace BlackMisc
         class CLivery;
     }
 }
-namespace Ui { class CDbStashComponent; }
+namespace Ui
+{
+    class CDbStashComponent;
+}
 namespace BlackGui
 {
-    namespace Views { class CAircraftModelView; }
+    namespace Views
+    {
+        class CAircraftModelView;
+    }
     namespace Components
     {
         /*!
@@ -142,7 +148,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CDbStashComponent> ui;
-            BlackMisc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser {this, &CDbStashComponent::onUserChanged}; //!< authenticated user
+            BlackMisc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this, &CDbStashComponent::onUserChanged }; //!< authenticated user
 
             //! Unstash pressed
             void onUnstashPressed();
@@ -158,8 +164,8 @@ namespace BlackGui
 
             //! Publish response received
             void onPublishedModelsResponse(const BlackMisc::Simulation::CAircraftModelList &publishedModels,
-                                            const BlackMisc::Simulation::CAircraftModelList &skippedModels,
-                                            const BlackMisc::CStatusMessageList &msgs, bool sendingSuccesful, bool directWrite);
+                                           const BlackMisc::Simulation::CAircraftModelList &skippedModels,
+                                           const BlackMisc::CStatusMessageList &msgs, bool sendingSuccesful, bool directWrite);
 
             //! Copy over values
             void copyOverValuesToSelectedModels();

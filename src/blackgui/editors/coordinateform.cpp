@@ -24,9 +24,8 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackGui::Editors
 {
-    CCoordinateForm::CCoordinateForm(QWidget *parent) :
-        CForm(parent),
-        ui(new Ui::CCoordinateForm)
+    CCoordinateForm::CCoordinateForm(QWidget *parent) : CForm(parent),
+                                                        ui(new Ui::CCoordinateForm)
     {
         ui->setupUi(this);
 
@@ -68,7 +67,7 @@ namespace BlackGui::Editors
     }
 
     CCoordinateForm::~CCoordinateForm()
-    { }
+    {}
 
     bool CCoordinateForm::setCoordinate(const ICoordinateGeodetic &coordinate)
     {

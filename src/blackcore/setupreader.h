@@ -27,8 +27,14 @@
 #include <QString>
 #include <atomic>
 
-namespace BlackMisc { class CLogCategoryList; }
-namespace BlackCoreTest { class CTestConnectivity; }
+namespace BlackMisc
+{
+    class CLogCategoryList;
+}
+namespace BlackCoreTest
+{
+    class CTestConnectivity;
+}
 namespace BlackCore
 {
     //! Read the central URLs / locations of our data, setup and versions.
@@ -143,23 +149,23 @@ namespace BlackCore
             CacheOnly
         };
 
-        std::atomic<bool> m_shutdown { false };                  //!< shutdown in progress
-        std::atomic<bool> m_setupAvailable { false };            //!< setup available?
-        std::atomic<bool> m_ignoreCmdBootstrapUrl { false };     //!< ignore the explicitly set bootstrap URL
-        std::atomic<bool> m_checkCmdBootstrapUrl { true };       //!< check connection on CMD bootstrap URL
-        std::atomic_int   m_bootstrapReadErrors  { 0 };          //!< failed bootstrap reads
-        std::atomic_int   m_updateInfoReadErrors { 0 };          //!< failed version info reads
-        QString m_localSetupFileValue;                           //!< Local file for setup, passed by cmd line arguments
-        QString m_bootstrapUrlFileValue;                         //!< Bootstrap URL if not local
-        BootstrapMode m_bootstrapMode = Explicit;                //!< How to bootstrap
-        BlackMisc::Network::CUrlList m_bootstrapUrls;            //!< location of setup files
-        QCommandLineOption m_cmdBootstrapUrl;                    //!< bootstrap URL
-        QCommandLineOption m_cmdBootstrapMode;                   //!< bootstrap mode
-        mutable QReadWriteLock m_lockSetup;                      //!< lock for setup
-        mutable QReadWriteLock m_lockUpdateInfo;                 //!< lock for update info
-        QString m_lastSuccessfulSetupUrl;                        //!< last successful read setup URL
-        BlackMisc::CStatusMessageList m_setupReadErrorMsgs;      //!< last parsing error messages
-        BlackMisc::CData<Data::TGlobalSetup> m_setup { this };   //!< data cache setup
+        std::atomic<bool> m_shutdown { false }; //!< shutdown in progress
+        std::atomic<bool> m_setupAvailable { false }; //!< setup available?
+        std::atomic<bool> m_ignoreCmdBootstrapUrl { false }; //!< ignore the explicitly set bootstrap URL
+        std::atomic<bool> m_checkCmdBootstrapUrl { true }; //!< check connection on CMD bootstrap URL
+        std::atomic_int m_bootstrapReadErrors { 0 }; //!< failed bootstrap reads
+        std::atomic_int m_updateInfoReadErrors { 0 }; //!< failed version info reads
+        QString m_localSetupFileValue; //!< Local file for setup, passed by cmd line arguments
+        QString m_bootstrapUrlFileValue; //!< Bootstrap URL if not local
+        BootstrapMode m_bootstrapMode = Explicit; //!< How to bootstrap
+        BlackMisc::Network::CUrlList m_bootstrapUrls; //!< location of setup files
+        QCommandLineOption m_cmdBootstrapUrl; //!< bootstrap URL
+        QCommandLineOption m_cmdBootstrapMode; //!< bootstrap mode
+        mutable QReadWriteLock m_lockSetup; //!< lock for setup
+        mutable QReadWriteLock m_lockUpdateInfo; //!< lock for update info
+        QString m_lastSuccessfulSetupUrl; //!< last successful read setup URL
+        BlackMisc::CStatusMessageList m_setupReadErrorMsgs; //!< last parsing error messages
+        BlackMisc::CData<Data::TGlobalSetup> m_setup { this }; //!< data cache setup
 
         //! Read by local individual file and update cache from that
         BlackMisc::CStatusMessageList readLocalBootstrapFile(const QString &fileName);

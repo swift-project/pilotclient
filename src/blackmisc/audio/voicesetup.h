@@ -44,13 +44,13 @@ namespace BlackMisc::Audio
         CVoiceSetup(const QString &afvVoiceServerUrl, const QString &afvMapUrl);
 
         //! AFV voice server URL
-        void setAfvVoiceServerUrl(const QString &serverUrl) { m_afvVoiceServerUrl = serverUrl;}
+        void setAfvVoiceServerUrl(const QString &serverUrl) { m_afvVoiceServerUrl = serverUrl; }
 
         //! AFV voice server URL
         const QString &getAfvVoiceServerUrl() const { return m_afvVoiceServerUrl; }
 
         //! AFV map URL
-        void setAfvMapUrl(const QString &mapUrl) { m_afvMapUrl = mapUrl;}
+        void setAfvMapUrl(const QString &mapUrl) { m_afvMapUrl = mapUrl; }
 
         //! AFV map URL
         const QString &getAfvMapUrl() const { return m_afvMapUrl; }
@@ -75,7 +75,7 @@ namespace BlackMisc::Audio
 
     private:
         QString m_afvVoiceServerUrl = "https://voice1.vatsim.uk";
-        QString m_afvMapUrl         = "https://afv-map.vatsim.net/";
+        QString m_afvMapUrl = "https://afv-map.vatsim.net/";
 
         BLACK_METACLASS(
             CVoiceSetup,
@@ -92,7 +92,11 @@ namespace BlackMisc::Audio
         static const char *key() { return "audio/%Application%/currentvoicesetup"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("Voice setup"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("Voice setup");
+            return name;
+        }
 
         //! \copydoc BlackMisc::TSettingTrait::isValid
         static bool isValid(const CVoiceSetup &setup, QString &) { return setup.validate().isSuccess(); }

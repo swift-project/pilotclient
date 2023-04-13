@@ -41,9 +41,9 @@ namespace BlackMisc::Network
     const QStringList &CRawFsdMessage::getAllPacketTypes()
     {
         static const QStringList allPacketTypes = { "@", "%", "#AA", "#DA", "#AP", "#DP", "#TM", "#WX", "#DL", "#TD", "#WD"
-                                                    "#CD", "#PC", "#SB", "$FP", "$AM", "$PI", "$PO", "$HO", "$HA", "$AX", "$AR",
-                                                    "$CQ", "$CR", "$ER", "$!!"
-                                                    };
+                                                                                                                      "#CD",
+                                                    "#PC", "#SB", "$FP", "$AM", "$PI", "$PO", "$HO", "$HA", "$AX", "$AR",
+                                                    "$CQ", "$CR", "$ER", "$!!" };
         return allPacketTypes;
     }
 
@@ -62,8 +62,16 @@ namespace BlackMisc::Network
 
     void CRawFsdMessage::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CRawFsdMessage>(); return; }
-        if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CRawFsdMessage>();
+            return;
+        }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            ITimestampBased::setPropertyByIndex(index, variant);
+            return;
+        }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)

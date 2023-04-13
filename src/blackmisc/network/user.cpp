@@ -59,7 +59,7 @@ namespace BlackMisc::Network
     {
         if (this->hasRealName())
         {
-            if (this->hasId()) { return this->getRealName() % u" (" % this->getId()  % QStringLiteral(")"); }
+            if (this->hasId()) { return this->getRealName() % u" (" % this->getId() % QStringLiteral(")"); }
             return this->getRealName();
         }
         return this->getId();
@@ -152,9 +152,9 @@ namespace BlackMisc::Network
     {
         CStatusMessageList msgs;
         // callsign optional
-        if (!this->hasId()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Invalid id"));}
-        if (!this->hasRealName()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Invalid real name"));}
-        if (!this->hasCredentials()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Invalid credentials"));}
+        if (!this->hasId()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Invalid id")); }
+        if (!this->hasRealName()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Invalid real name")); }
+        if (!this->hasCredentials()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Invalid credentials")); }
         return msgs;
     }
 
@@ -207,7 +207,7 @@ namespace BlackMisc::Network
     QString CUser::beautifyRealName(const QString &realName)
     {
         QString newRealName(realName.simplified().trimmed());
-        if (newRealName.isEmpty())       { return newRealName; }
+        if (newRealName.isEmpty()) { return newRealName; }
         if (is09OnlyString(newRealName)) { return newRealName; } // new VATSIM COD, allowing id as name, see https://discordapp.com/channels/539048679160676382/539846348275449887/599969308247851018
 
         int uc = 0;
@@ -218,8 +218,16 @@ namespace BlackMisc::Network
             // jOE dOE -> invalid
             // Joe McArthur -> valid
             if (uc > 1 && lc > 2 && lc > uc) { return newRealName; } // mixed case name, no need to beautify
-            if (ch.isLower()) { lc++; continue; }
-            if (ch.isUpper()) { uc++; continue; }
+            if (ch.isLower())
+            {
+                lc++;
+                continue;
+            }
+            if (ch.isUpper())
+            {
+                uc++;
+                continue;
+            }
         }
 
         // simple title case beautifying
@@ -251,19 +259,23 @@ namespace BlackMisc::Network
         {
         case IndexEmail: return QVariant(m_email);
         case IndexId: return QVariant(m_id);
-        case IndexId7Digit:  return QVariant(this->get7DigitId());
+        case IndexId7Digit: return QVariant(this->get7DigitId());
         case IndexIdInteger: return QVariant::fromValue(this->getIntegerId());
-        case IndexPassword:  return QVariant(m_password);
-        case IndexRealName:  return QVariant(m_realname);
-        case IndexHomebase:  return m_homebase.propertyByIndex(index.copyFrontRemoved());
-        case IndexCallsign:  return m_callsign.propertyByIndex(index.copyFrontRemoved());
+        case IndexPassword: return QVariant(m_password);
+        case IndexRealName: return QVariant(m_realname);
+        case IndexHomebase: return m_homebase.propertyByIndex(index.copyFrontRemoved());
+        case IndexCallsign: return m_callsign.propertyByIndex(index.copyFrontRemoved());
         default: return CValueObject::propertyByIndex(index);
         }
     }
 
     void CUser::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CUser>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CUser>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -299,15 +311,18 @@ namespace BlackMisc::Network
         return 0;
     }
 
-    void CUser::setPassword(const QString &pw) {
+    void CUser::setPassword(const QString &pw)
+    {
         m_password = CObfuscation::decode(pw);
     }
 
-    void CUser::setEmail(const QString &email) {
+    void CUser::setEmail(const QString &email)
+    {
         m_email = CObfuscation::decode(email);
     }
 
-    void CUser::setId(const QString &id) {
+    void CUser::setId(const QString &id)
+    {
         m_id = CObfuscation::decode(id);
     }
 } // namespace

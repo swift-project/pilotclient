@@ -18,7 +18,7 @@ namespace BlackMisc::Network
 
         switch (m_loginMode)
         {
-        case Pilot:    return QStringLiteral("Pilot");
+        case Pilot: return QStringLiteral("Pilot");
         case Observer: return QStringLiteral("Observer");
         }
 

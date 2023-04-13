@@ -25,9 +25,8 @@ namespace BlackMisc::Aviation
         }
     }
 
-    CAircraftEngineList::CAircraftEngineList(const CSequence<CAircraftEngine> &other) :
-        CSequence<CAircraftEngine>(other)
-    { }
+    CAircraftEngineList::CAircraftEngineList(const CSequence<CAircraftEngine> &other) : CSequence<CAircraftEngine>(other)
+    {}
 
     CAircraftEngine CAircraftEngineList::getEngine(int engineNumber) const
     {

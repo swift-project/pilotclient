@@ -60,9 +60,9 @@ namespace BlackCore::Afv::Crypto
         int m_receiveSequenceSizeMaxSize;
 
         QByteArray m_hmacKey;
-        QString    m_channelTag;
-        QDateTime  m_LastTransmitUtc;
-        QDateTime  m_lastReceiveUtc;
+        QString m_channelTag;
+        QDateTime m_LastTransmitUtc;
+        QDateTime m_lastReceiveUtc;
     };
 } // ns
 

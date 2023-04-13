@@ -37,9 +37,8 @@ using namespace BlackMisc;
 
 namespace BlackGui::Components
 {
-    CColorSelector::CColorSelector(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CColorSelector)
+    CColorSelector::CColorSelector(QWidget *parent) : QFrame(parent),
+                                                      ui(new Ui::CColorSelector)
     {
         ui->setupUi(this);
         ui->tb_ColorDialog->setIcon(CIcons::color16());
@@ -56,7 +55,7 @@ namespace BlackGui::Components
         connect(completer, qOverload<const QString &>(&QCompleter::activated), this, &CColorSelector::setColorByName);
     }
 
-    CColorSelector::~CColorSelector() { }
+    CColorSelector::~CColorSelector() {}
 
     void CColorSelector::setColor(const BlackMisc::CRgbColor &color)
     {
@@ -183,7 +182,7 @@ namespace BlackGui::Components
     {
         QColor q = this->getColor().toQColor();
         if (!q.isValid()) { q = m_lastColor.toQColor(); }
-        QColor newColor  = QColorDialog::getColor(q, this, "Color picker");
+        QColor newColor = QColorDialog::getColor(q, this, "Color picker");
         if (!newColor.isValid()) { return; }
         this->setColor(newColor);
     }

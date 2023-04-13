@@ -19,12 +19,10 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Input, CKeyboardKey)
 
 namespace BlackMisc::Input
 {
-    CKeyboardKey::CKeyboardKey() :
-        m_keyCode(Key_Unknown)
+    CKeyboardKey::CKeyboardKey() : m_keyCode(Key_Unknown)
     {}
 
-    CKeyboardKey::CKeyboardKey(KeyCode keyCode) :
-        m_keyCode(keyCode)
+    CKeyboardKey::CKeyboardKey(KeyCode keyCode) : m_keyCode(keyCode)
     {}
 
     QString CKeyboardKey::convertToQString(bool /* i18n */) const
@@ -41,8 +39,7 @@ namespace BlackMisc::Input
     {
         if (m_keyCode == Key_Unknown) return QString();
 
-        static const QHash<KeyCode, QString> keyStrings =
-        {
+        static const QHash<KeyCode, QString> keyStrings = {
             { Key_ShiftLeft, QStringLiteral("ShiftLeft") },
             { Key_ShiftRight, QStringLiteral("ShiftRight") },
             { Key_ControlLeft, QStringLiteral("CtrlLeft") },
@@ -56,42 +53,42 @@ namespace BlackMisc::Input
         switch (m_keyCode)
         {
         case Key_Multiply: return QStringLiteral("NumMultiply"); // return QStringLiteral(u"×");
-        case Key_Divide:   return QStringLiteral("NumDivide");   // return QStringLiteral(u"÷");
-        case Key_Numpad0:  return QStringLiteral("Num0");
-        case Key_Numpad1:  return QStringLiteral("Num1");
-        case Key_Numpad2:  return QStringLiteral("Num2");
-        case Key_Numpad3:  return QStringLiteral("Num3");
-        case Key_Numpad4:  return QStringLiteral("Num4");
-        case Key_Numpad5:  return QStringLiteral("Num5");
-        case Key_Numpad6:  return QStringLiteral("Num6");
-        case Key_Numpad7:  return QStringLiteral("Num7");
-        case Key_Numpad8:  return QStringLiteral("Num8");
-        case Key_Numpad9:  return QStringLiteral("Num9");
+        case Key_Divide: return QStringLiteral("NumDivide"); // return QStringLiteral(u"÷");
+        case Key_Numpad0: return QStringLiteral("Num0");
+        case Key_Numpad1: return QStringLiteral("Num1");
+        case Key_Numpad2: return QStringLiteral("Num2");
+        case Key_Numpad3: return QStringLiteral("Num3");
+        case Key_Numpad4: return QStringLiteral("Num4");
+        case Key_Numpad5: return QStringLiteral("Num5");
+        case Key_Numpad6: return QStringLiteral("Num6");
+        case Key_Numpad7: return QStringLiteral("Num7");
+        case Key_Numpad8: return QStringLiteral("Num8");
+        case Key_Numpad9: return QStringLiteral("Num9");
         case Key_NumpadEqual: return QStringLiteral("Num=");
         case Key_NumpadMinus: return QStringLiteral("Num-");
         case Key_NumpadPlus: return QStringLiteral("Num+");
         case Key_NumpadDelete: return QStringLiteral("Num.");
-        case Key_Esc:      return QStringLiteral("Esc");
-        case Key_Space:    return QStringLiteral("Space");
-        case Key_Tab:      return QStringLiteral("Tab");
-        case Key_Back:     return QStringLiteral("Bksp");
-        case Key_Insert:   return QStringLiteral("Ins");
-        case Key_Delete:   return QStringLiteral("Del");
-        case Key_Home:     return QStringLiteral("Home");
-        case Key_End:      return QStringLiteral("End");
-        case Key_PageUp:   return QStringLiteral("PgUp");
+        case Key_Esc: return QStringLiteral("Esc");
+        case Key_Space: return QStringLiteral("Space");
+        case Key_Tab: return QStringLiteral("Tab");
+        case Key_Back: return QStringLiteral("Bksp");
+        case Key_Insert: return QStringLiteral("Ins");
+        case Key_Delete: return QStringLiteral("Del");
+        case Key_Home: return QStringLiteral("Home");
+        case Key_End: return QStringLiteral("End");
+        case Key_PageUp: return QStringLiteral("PgUp");
         case Key_PageDown: return QStringLiteral("PgDn");
         case Key_CapsLock: return QStringLiteral("CapsLock");
-        case Key_Enter:    return QStringLiteral("Enter");
-        case Key_OEM1:     return QStringLiteral("OEM1");
-        case Key_OEM2:     return QStringLiteral("OEM2");
-        case Key_OEM3:     return QStringLiteral("OEM3");
-        case Key_OEM4:     return QStringLiteral("OEM4");
-        case Key_OEM5:     return QStringLiteral("OEM5");
-        case Key_OEM6:     return QStringLiteral("OEM6");
-        case Key_OEM7:     return QStringLiteral("OEM7");
-        case Key_OEM8:     return QStringLiteral("OEM8");
-        case Key_OEM102:   return QStringLiteral("OEM102");
+        case Key_Enter: return QStringLiteral("Enter");
+        case Key_OEM1: return QStringLiteral("OEM1");
+        case Key_OEM2: return QStringLiteral("OEM2");
+        case Key_OEM3: return QStringLiteral("OEM3");
+        case Key_OEM4: return QStringLiteral("OEM4");
+        case Key_OEM5: return QStringLiteral("OEM5");
+        case Key_OEM6: return QStringLiteral("OEM6");
+        case Key_OEM7: return QStringLiteral("OEM7");
+        case Key_OEM8: return QStringLiteral("OEM8");
+        case Key_OEM102: return QStringLiteral("OEM102");
         case Key_DeadGrave: return QStringLiteral("DeadGrave");
         case Key_Function1: return QStringLiteral("F1");
         case Key_Function2: return QStringLiteral("F2");
@@ -123,8 +120,7 @@ namespace BlackMisc::Input
 
     const QList<KeyCode> &CKeyboardKey::allModifiers()
     {
-        static const QList<KeyCode> allModifiers =
-        {
+        static const QList<KeyCode> allModifiers = {
             Key_ShiftLeft,
             Key_ShiftRight,
             Key_ControlLeft,
@@ -153,7 +149,11 @@ namespace BlackMisc::Input
 
     void CKeyboardKey::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CKeyboardKey>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CKeyboardKey>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

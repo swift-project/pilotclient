@@ -14,13 +14,13 @@
 namespace BlackCore::Fsd
 {
     ClientQuery::ClientQuery() : MessageBase()
-    { }
+    {}
 
     ClientQuery::ClientQuery(const QString &sender, const QString &clientToBeQueried, ClientQueryType queryType, const QStringList &queryData)
         : MessageBase(sender, clientToBeQueried),
-            m_queryType(queryType),
-            m_queryData(queryData)
-    { }
+          m_queryType(queryType),
+          m_queryData(queryData)
+    {}
 
     QStringList ClientQuery::toTokens() const
     {
@@ -45,4 +45,3 @@ namespace BlackCore::Fsd
         return ClientQuery(tokens[0], tokens[1], fromQString<ClientQueryType>(tokens[2]), payload);
     }
 }
-

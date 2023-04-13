@@ -18,9 +18,8 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Weather, CWindLayer)
 namespace BlackMisc::Weather
 {
 
-    CWindLayer::CWindLayer(const CAltitude &level, const CAngle &direction, const CSpeed &speed, const CSpeed &gustSpeed) :
-        m_level(level), m_directionMain(direction), m_speed(speed), m_gustSpeed(gustSpeed)
-    { }
+    CWindLayer::CWindLayer(const CAltitude &level, const CAngle &direction, const CSpeed &speed, const CSpeed &gustSpeed) : m_level(level), m_directionMain(direction), m_speed(speed), m_gustSpeed(gustSpeed)
+    {}
 
     QVariant CWindLayer::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
     {
@@ -45,7 +44,11 @@ namespace BlackMisc::Weather
 
     void CWindLayer::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CWindLayer>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CWindLayer>();
+            return;
+        }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -73,8 +76,10 @@ namespace BlackMisc::Weather
     QString CWindLayer::convertToQString(bool /** i18n **/) const
     {
         QString windAsString = QString("Wind: ");
-        if (m_directionVariable) windAsString += "variable ";
-        else windAsString += QStringLiteral("%1 ").arg(m_directionMain.toQString());
+        if (m_directionVariable)
+            windAsString += "variable ";
+        else
+            windAsString += QStringLiteral("%1 ").arg(m_directionMain.toQString());
 
         if (m_directionFrom != CAngle() && m_directionTo != CAngle())
         {

@@ -20,11 +20,20 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CDbAircraftIcaoComponent; }
-namespace BlackMisc::Aviation { class CAircraftIcaoCode; }
+namespace Ui
+{
+    class CDbAircraftIcaoComponent;
+}
+namespace BlackMisc::Aviation
+{
+    class CAircraftIcaoCode;
+}
 namespace BlackGui
 {
-    namespace Views { class CAircraftIcaoCodeView; }
+    namespace Views
+    {
+        class CAircraftIcaoCodeView;
+    }
     namespace Components
     {
         /*!

@@ -66,7 +66,10 @@ namespace BlackMisc
         class CRawFsdMessage;
         class CTextMessage;
     }
-    namespace Simulation { class CAircraftModel; }
+    namespace Simulation
+    {
+        class CAircraftModel;
+    }
 }
 namespace BlackCore::Context
 {
@@ -248,7 +251,7 @@ namespace BlackCore::Context
         virtual BlackMisc::CStatusMessage connectToNetwork(
             const BlackMisc::Network::CServer &server,
             const QString &extraLiveryString, bool sendLivery,
-            const QString &extraModelString,  bool sendModelString,
+            const QString &extraModelString, bool sendModelString,
             const BlackMisc::Aviation::CCallsign &partnerCallsign,
             BlackMisc::Network::CLoginMode loginMode) = 0;
 

@@ -34,7 +34,10 @@
 
 class QNetworkReply;
 
-namespace BlackMisc::Simulation { class CSimulatedAircraft; }
+namespace BlackMisc::Simulation
+{
+    class CSimulatedAircraft;
+}
 namespace BlackCore::Vatsim
 {
     //! Read vatsim data file

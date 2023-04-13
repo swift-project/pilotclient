@@ -23,8 +23,8 @@ namespace BlackCore::Afv::Audio
     struct OutputVolumeStreamArgs
     {
         double PeakRaw = 0.0; //!< raw peak
-        double PeakDb  = -1 * std::numeric_limits<double>::infinity(); //!< dB peak
-        double PeakVU  = 0.0; //!< VU peak
+        double PeakDb = -1 * std::numeric_limits<double>::infinity(); //!< dB peak
+        double PeakVU = 0.0; //!< VU peak
     };
 
     //! Output buffer
@@ -56,9 +56,9 @@ namespace BlackCore::Afv::Audio
         static constexpr int SampleCountPerEvent = 4800;
         QAudioFormat m_outputFormat;
         float m_maxSampleOutput = 0.0;
-        int m_sampleCount       =   0;
-        const double m_maxDb    =   0;
-        const double m_minDb    = -40;
+        int m_sampleCount = 0;
+        const double m_maxDb = 0;
+        const double m_minDb = -40;
     };
 
     //! Output
@@ -100,8 +100,8 @@ namespace BlackCore::Afv::Audio
     private:
         bool m_started = false;
         BlackMisc::Audio::CAudioDeviceInfo m_device;
-        QScopedPointer<QAudioOutput>       m_audioOutput;
-        CAudioOutputBuffer                *m_audioOutputBuffer = nullptr;
+        QScopedPointer<QAudioOutput> m_audioOutput;
+        CAudioOutputBuffer *m_audioOutputBuffer = nullptr;
     };
 } // ns
 

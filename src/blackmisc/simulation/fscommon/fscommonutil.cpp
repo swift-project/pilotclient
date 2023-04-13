@@ -43,8 +43,8 @@ namespace BlackMisc::Simulation::FsCommon
     bool CFsCommonUtil::adjustFileDirectory(CAircraftModel &model, const QString &simObjectsDirectory)
     {
         if (model.hasExistingCorrespondingFile()) { return true; }
-        if (simObjectsDirectory.isEmpty())        { return false; }
-        if (!model.hasFileName())                 { return false; } // we can do nothing here
+        if (simObjectsDirectory.isEmpty()) { return false; }
+        if (!model.hasFileName()) { return false; } // we can do nothing here
 
         const QString simObjectsDirectoryFix = CFileUtils::fixWindowsUncPath(simObjectsDirectory);
         const QDir dir(simObjectsDirectoryFix);
@@ -140,7 +140,7 @@ namespace BlackMisc::Simulation::FsCommon
         {
             bool ok = false;
             if (wasStopped) { break; } // allow to break from "outside"
-            const CAircraftCfgEntriesList entries  = CAircraftCfgParser::performParsingOfSingleFile(fileName, ok, msgs);
+            const CAircraftCfgEntriesList entries = CAircraftCfgParser::performParsingOfSingleFile(fileName, ok, msgs);
             const QSet<QString> removeModelStrings = entries.getTitleSetUpperCase();
             const CAircraftModelList removedModels = validModels.removeIfFileButNotInSet(fileName, removeModelStrings);
             for (const CAircraftModel &removedModel : removedModels)
@@ -189,7 +189,7 @@ namespace BlackMisc::Simulation::FsCommon
 
     CStatusMessageList CFsCommonUtil::validateSimObjectsPath(
         const QSet<QString> &simObjectDirs, const CAircraftModelList &models,
-        CAircraftModelList  &validModels,         CAircraftModelList &invalidModels,
+        CAircraftModelList &validModels, CAircraftModelList &invalidModels,
         bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &stopped)
     {
         CStatusMessageList msgs;

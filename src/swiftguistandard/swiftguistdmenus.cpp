@@ -151,10 +151,11 @@ void SwiftGuiStd::initMenus()
     {
         QAction *act = new QAction(CIcons::swift16(), "Copy XSwiftBus dialog");
         ui->menu_File->insertAction(ui->menu_File->actions().at(5), act);
-        c = connect(act, &QAction::triggered, this, [ = ]
-        {
-            this->copyXSwiftBusDialog(false);
-        }, Qt::QueuedConnection);
+        c = connect(
+            act, &QAction::triggered, this, [=] {
+                this->copyXSwiftBusDialog(false);
+            },
+            Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed");
     }
 

@@ -83,10 +83,10 @@ namespace BlackGui::Settings
         void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
 
     private:
-        QString m_margins {"0:0:0:0"}; //!< margins
-        QString m_geometry;            //!< geometry as HEX values
-        bool    m_frameless = false;   //!< frameless
-        int     m_columns = 1;         //!< number of columns
+        QString m_margins { "0:0:0:0" }; //!< margins
+        QString m_geometry; //!< geometry as HEX values
+        bool m_frameless = false; //!< frameless
+        int m_columns = 1; //!< number of columns
 
         BLACK_METACLASS(
             CNavigatorSettings,
@@ -104,7 +104,11 @@ namespace BlackGui::Settings
         static const char *key() { return "guinavigator"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("Navigator"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("Navigator");
+            return name;
+        }
     };
 } // ns
 

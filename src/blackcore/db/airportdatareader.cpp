@@ -25,8 +25,7 @@ using namespace BlackMisc::Db;
 
 namespace BlackCore::Db
 {
-    CAirportDataReader::CAirportDataReader(QObject *parent, const CDatabaseReaderConfigList &config) :
-        CDatabaseReader(parent, config, QStringLiteral("CAirportDataReader"))
+    CAirportDataReader::CAirportDataReader(QObject *parent, const CDatabaseReaderConfigList &config) : CDatabaseReader(parent, config, QStringLiteral("CAirportDataReader"))
     {
         // void
     }
@@ -56,8 +55,7 @@ namespace BlackCore::Db
         if (dir.isEmpty() || whatToRead == CEntityFlags::NoEntity) { return false; }
 
         QPointer<CAirportDataReader> myself(this);
-        QTimer::singleShot(0, this, [ = ]()
-        {
+        QTimer::singleShot(0, this, [=]() {
             if (!myself) { return; }
             const CStatusMessageList msgs = this->readFromJsonFiles(dir, whatToRead, overrideNewerOnly);
             if (msgs.isFailure())
@@ -152,7 +150,12 @@ namespace BlackCore::Db
 
     void CAirportDataReader::synchronizeCaches(CEntityFlags::Entity entities)
     {
-        if (entities.testFlag(CEntityFlags::AirportEntity)) { if (m_syncedAirportCache) { return; } m_syncedAirportCache = true; m_airportCache.synchronize(); }
+        if (entities.testFlag(CEntityFlags::AirportEntity))
+        {
+            if (m_syncedAirportCache) { return; }
+            m_syncedAirportCache = true;
+            m_airportCache.synchronize();
+        }
     }
 
     void CAirportDataReader::admitCaches(CEntityFlags::Entity entities)

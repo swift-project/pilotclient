@@ -23,7 +23,11 @@ namespace BlackMisc::Simulation::Settings
         static const char *key() { return "settingsglobalinterpolationsetup"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("Interpolation setup"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("Interpolation setup");
+            return name;
+        }
     };
 } // ns
 

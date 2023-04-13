@@ -14,8 +14,7 @@ namespace BlackInput
 {
     static const auto &keyMapping()
     {
-        static const QHash<int, KeyCode> hash
-        {
+        static const QHash<int, KeyCode> hash {
             { '0', Key_0 },
             { '1', Key_1 },
             { '2', Key_2 },
@@ -92,14 +91,14 @@ namespace BlackInput
             { VK_NUMPAD9, Key_Numpad9 },
             { VK_OEM_NEC_EQUAL, Key_NumpadEqual },
             { VK_OEM_COMMA, Key_Comma },
-            { VK_OEM_1,   Key_OEM1 },
-            { VK_OEM_2,   Key_OEM2 },
-            { VK_OEM_3,   Key_OEM3 },
-            { VK_OEM_4,   Key_OEM4 },
-            { VK_OEM_5,   Key_OEM5 },
-            { VK_OEM_6,   Key_OEM6 },
-            { VK_OEM_7,   Key_OEM7 },
-            { VK_OEM_8,   Key_OEM8 },
+            { VK_OEM_1, Key_OEM1 },
+            { VK_OEM_2, Key_OEM2 },
+            { VK_OEM_3, Key_OEM3 },
+            { VK_OEM_4, Key_OEM4 },
+            { VK_OEM_5, Key_OEM5 },
+            { VK_OEM_6, Key_OEM6 },
+            { VK_OEM_7, Key_OEM7 },
+            { VK_OEM_8, Key_OEM8 },
             { VK_OEM_102, Key_OEM102 },
             { VK_F1, Key_Function1 },
             { VK_F2, Key_Function2 },
@@ -131,9 +130,8 @@ namespace BlackInput
 
     static CKeyboardWindows *g_keyboardWindows = nullptr;
 
-    CKeyboardWindows::CKeyboardWindows(QObject *parent) :
-        IKeyboard(parent),
-        m_keyboardHook(nullptr)
+    CKeyboardWindows::CKeyboardWindows(QObject *parent) : IKeyboard(parent),
+                                                          m_keyboardHook(nullptr)
     {
         connect(&m_pollTimer, &QTimer::timeout, this, &CKeyboardWindows::pollKeyboardState);
     }

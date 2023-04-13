@@ -15,7 +15,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CScaleScreenFactor; }
+namespace Ui
+{
+    class CScaleScreenFactor;
+}
 namespace BlackGui::Components
 {
     /*!
@@ -50,6 +53,6 @@ namespace BlackGui::Components
 
         QScopedPointer<Ui::CScaleScreenFactor> ui;
     };
-}// ns
+} // ns
 
 #endif // guard

@@ -28,7 +28,7 @@ namespace BlackMisc::SharedState
         return m_eventSubscription;
     }
 
-    void CPassiveObserver::handleEvent(const CVariant& param) const
+    void CPassiveObserver::handleEvent(const CVariant &param) const
     {
         m_eventHandler(param);
     }

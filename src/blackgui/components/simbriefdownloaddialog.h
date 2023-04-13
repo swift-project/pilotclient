@@ -15,7 +15,10 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CSimBriefDownloadDialog; }
+namespace Ui
+{
+    class CSimBriefDownloadDialog;
+}
 namespace BlackGui::Components
 {
     //! Download from SimBrief

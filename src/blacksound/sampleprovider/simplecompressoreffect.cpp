@@ -11,9 +11,8 @@
 
 namespace BlackSound::SampleProvider
 {
-    CSimpleCompressorEffect::CSimpleCompressorEffect(ISampleProvider *source, QObject *parent) :
-        ISampleProvider(parent),
-        m_sourceStream(source)
+    CSimpleCompressorEffect::CSimpleCompressorEffect(ISampleProvider *source, QObject *parent) : ISampleProvider(parent),
+                                                                                                 m_sourceStream(source)
     {
 
         this->setObjectName("CSimpleCompressorEffect");

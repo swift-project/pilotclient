@@ -25,9 +25,8 @@ using namespace BlackGui::Views;
 
 namespace BlackGui::Components
 {
-    CDbAirlineIcaoComponent::CDbAirlineIcaoComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        ui(new Ui::CDbAirlineIcaoComponent)
+    CDbAirlineIcaoComponent::CDbAirlineIcaoComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                                        ui(new Ui::CDbAirlineIcaoComponent)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
 
@@ -46,7 +45,7 @@ namespace BlackGui::Components
     }
 
     CDbAirlineIcaoComponent::~CDbAirlineIcaoComponent()
-    { }
+    {}
 
     BlackGui::Views::CAirlineIcaoCodeView *CDbAirlineIcaoComponent::view() const
     {

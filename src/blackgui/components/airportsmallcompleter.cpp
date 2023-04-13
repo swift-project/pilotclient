@@ -21,14 +21,12 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackGui::Components
 {
-    CAirportSmallCompleter::CAirportSmallCompleter(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CAirportSmallCompleter)
+    CAirportSmallCompleter::CAirportSmallCompleter(QWidget *parent) : QFrame(parent),
+                                                                      ui(new Ui::CAirportSmallCompleter)
     {
         ui->setupUi(this);
         ui->le_Icao->setValidator(new CUpperCaseValidator(ui->le_Icao));
         this->setFocusProxy(ui->le_Icao);
-
 
         connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this, &CAirportSmallCompleter::onAirportsChanged);
         connect(ui->le_Icao, &QLineEdit::editingFinished, this, &CAirportSmallCompleter::onIcaoChanged);
@@ -38,7 +36,7 @@ namespace BlackGui::Components
     }
 
     CAirportSmallCompleter::~CAirportSmallCompleter()
-    { }
+    {}
 
     void CAirportSmallCompleter::setAirport(const CAirport &airport)
     {

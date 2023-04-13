@@ -116,11 +116,11 @@ struct SimConnectSymbols
 
 static SimConnectSymbols gSymbols;
 
-template<typename FuncPtr>
+template <typename FuncPtr>
 bool resolveSimConnectSymbol(QLibrary &library, FuncPtr &funcPtr, const char *funcName)
 {
     funcPtr = reinterpret_cast<FuncPtr>(library.resolve(funcName));
-    if (! funcPtr)
+    if (!funcPtr)
     {
         CLogMessage(CLogCategories::driver()).error(u"Failed to resolve %1: %2") << funcName << library.errorString();
         return false;
@@ -178,7 +178,6 @@ bool resolveP3DSimConnectSymbols(QLibrary &simConnectDll)
     return resolveSuccess;
 }
 
-
 P3DSimConnectVersion stringToP3DVersion(const QString &p3d)
 {
     if (p3d.length() >= 2)
@@ -194,7 +193,6 @@ P3DSimConnectVersion stringToP3DVersion(const QString &p3d)
         if (p.contains("50")) { return P3DSimConnectv45; }
         if (p.contains("51")) { return P3DSimConnectv45; }
         if (p.contains("52")) { return P3DSimConnectv45; }
-
     }
     return P3DSimConnectv44; // default
 }
@@ -234,7 +232,7 @@ bool loadAndResolveP3DSimConnect(P3DSimConnectVersion version)
         }
 
         CLogMessage(CLogCategories::driver()).info(u"Loaded and resolved P3D symbols from SimConnect.dll: '%1'") << simConnectFileName;
-        return  resolvedCommon && resolvedP3DSimConnectSymbols;
+        return resolvedCommon && resolvedP3DSimConnectSymbols;
     }
     else
     {
@@ -262,7 +260,7 @@ bool loadAndResolveMSFSimConnect()
         }
 
         CLogMessage(CLogCategories::driver()).info(u"Loaded and resolved MSFS symbols from SimConnect.dll: '%1'") << simConnectFileName;
-        return  resolvedCommon;
+        return resolvedCommon;
     }
     else
     {
@@ -291,9 +289,9 @@ bool loadAndResolveFsxSimConnect(bool manifestProbing)
         // 103 => "SimConnect_XPack.manifest"
         // Use only SP1 and XPack, since RTM is missing two important symbols.
         // Try the latest one first.
-        std::array<WORD, 2> resourceNumbers = {{ 103U, 102U }};
+        std::array<WORD, 2> resourceNumbers = { { 103U, 102U } };
 
-        for (const auto resourceNumber :  resourceNumbers)
+        for (const auto resourceNumber : resourceNumbers)
         {
             ACTCTX actCtx;
             memset(&actCtx, 0, sizeof(ACTCTX));

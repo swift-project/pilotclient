@@ -44,7 +44,11 @@ namespace BlackGui
         else if (key == Qt::Key_Down)
         {
             // move forward in history
-            if (m_position <= 0) { this->clear(); return; }
+            if (m_position <= 0)
+            {
+                this->clear();
+                return;
+            }
             if (m_position == m_history.size()) { --m_position; } // avoid need of 2xKeyDown at end
             if (m_position > 0 && m_history.size() > --m_position)
             {

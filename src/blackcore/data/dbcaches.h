@@ -67,7 +67,6 @@ namespace BlackCore::Data
         static const char *key() { return "dbairlineicaocache"; }
     };
 
-
     //! Trait for DB aircraft ICAO codes
     struct TDbAircraftIcaoCache : public BlackMisc::TDataTrait<BlackMisc::Aviation::CAircraftIcaoCodeList>
     {

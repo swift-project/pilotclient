@@ -21,9 +21,8 @@ using namespace BlackCore::Db;
 
 namespace BlackGui::Components
 {
-    CSettingsModelComponent::CSettingsModelComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CSettingsModelComponent)
+    CSettingsModelComponent::CSettingsModelComponent(QWidget *parent) : QFrame(parent),
+                                                                        ui(new Ui::CSettingsModelComponent)
     {
         ui->setupUi(this);
         ui->le_ConsolidateSecs->setValidator(new QIntValidator(0, TBackgroundConsolidation::maxSecs(), ui->le_ConsolidateSecs));
@@ -37,15 +36,14 @@ namespace BlackGui::Components
 
         // start updater if not yet done
         QPointer<CSettingsModelComponent> myself(this);
-        QTimer::singleShot(2500, this, [ = ]
-        {
+        QTimer::singleShot(2500, this, [=] {
             if (!myself) { return; }
             this->consolidationEntered();
         });
     }
 
     CSettingsModelComponent::~CSettingsModelComponent()
-    { }
+    {}
 
     int CSettingsModelComponent::getBackgroundUpdaterIntervallSecs() const
     {

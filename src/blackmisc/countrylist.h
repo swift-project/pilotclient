@@ -71,9 +71,9 @@ namespace BlackMisc
         //! From our database JSON format
         static CCountryList fromDatabaseJson(const QJsonArray &array);
     };
-} //namespace
+} // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::CCountryList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::CCountry>)
 
-#endif //guard
+#endif // guard

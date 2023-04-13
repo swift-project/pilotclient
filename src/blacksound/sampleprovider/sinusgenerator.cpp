@@ -14,9 +14,8 @@ using namespace BlackMisc;
 
 namespace BlackSound::SampleProvider
 {
-    CSinusGenerator::CSinusGenerator(double frequencyHz, QObject *parent) :
-        ISampleProvider(parent),
-        m_frequencyHz(frequencyHz)
+    CSinusGenerator::CSinusGenerator(double frequencyHz, QObject *parent) : ISampleProvider(parent),
+                                                                            m_frequencyHz(frequencyHz)
     {
         const QString on = QStringLiteral("%1 frequency: %2Hz").arg(classNameShort(this)).arg(frequencyHz);
         this->setObjectName(on);
@@ -29,9 +28,9 @@ namespace BlackSound::SampleProvider
 
         for (int sampleCount = 0; sampleCount < count; sampleCount++)
         {
-            const double multiple    = s_twoPi * m_frequencyHz / m_sampleRate;
+            const double multiple = s_twoPi * m_frequencyHz / m_sampleRate;
             const double sampleValue = m_gain * qSin(m_nSample * multiple);
-            samples[sampleCount]     = static_cast<float>(sampleValue);
+            samples[sampleCount] = static_cast<float>(sampleValue);
             m_nSample++;
         }
         return static_cast<int>(count);

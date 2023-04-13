@@ -18,9 +18,8 @@ using namespace BlackMisc::Network;
 
 namespace BlackGui::Filters
 {
-    CAircraftModelFilterDialog::CAircraftModelFilterDialog(QWidget *parent) :
-        CFilterDialog(parent),
-        ui(new Ui::CAircraftModelFilterDialog)
+    CAircraftModelFilterDialog::CAircraftModelFilterDialog(QWidget *parent) : CFilterDialog(parent),
+                                                                              ui(new Ui::CAircraftModelFilterDialog)
     {
         ui->setupUi(this);
         this->setWindowTitle("Filter models");
@@ -30,7 +29,7 @@ namespace BlackGui::Filters
     }
 
     CAircraftModelFilterDialog::~CAircraftModelFilterDialog()
-    { }
+    {}
 
     std::unique_ptr<IModelFilter<CAircraftModelList>> CAircraftModelFilterDialog::createModelFilter() const
     {

@@ -12,7 +12,7 @@ namespace BlackMisc::Simulation
 {
     // pin vtables to this file
     void CAircraftModelSetAware::anchor()
-    { }
+    {}
 
     CAircraftModelList CAircraftModelSetAware::getModelSet() const
     {

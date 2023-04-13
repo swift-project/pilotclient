@@ -39,7 +39,7 @@ namespace BlackMisc
             executable += CSwiftDirectories::binDirectory();
             executable += '/';
         }
-        executable +=  QStringLiteral("7za");
+        executable += QStringLiteral("7za");
         return executable;
     }
 
@@ -52,7 +52,8 @@ namespace BlackMisc
         const bool win = CBuildConfig::isRunningOnWindowsNtPlatform();
         const QString d =
             directory.isEmpty() ? directory :
-            win ? CFileUtils::toWindowsLocalPath(directory) : directory;
+            win                 ? CFileUtils::toWindowsLocalPath(directory) :
+                                  directory;
         const QString f = win ? CFileUtils::toWindowsLocalPath(file) : file;
 
         // 7za.exe x -o"P:\Temp\XPlane" c:\Users\Foo\Downloads\xswiftbus-allos-0.8.4.802111947.7z
@@ -143,4 +144,3 @@ namespace BlackMisc
         return zipProcess->exitStatus() == QProcess::NormalExit;
     }
 } // ns
-

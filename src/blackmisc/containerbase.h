@@ -29,7 +29,11 @@ namespace BlackMisc
     {
     public:
         //! Stringify value object
-        template <class U> static QString stringify(const U &obj, bool i18n) { return obj.toQString(i18n); }
+        template <class U>
+        static QString stringify(const U &obj, bool i18n)
+        {
+            return obj.toQString(i18n);
+        }
         //! Stringify int
         static QString stringify(int n, bool i18n) { return i18n ? QLocale().toString(n) : QString::number(n); }
         //! Stringify uint
@@ -43,7 +47,11 @@ namespace BlackMisc
         //! Stringify QString
         static QString stringify(QString str, bool /*i18n*/) { return str; }
         //! Stringify pair
-        template <class A, class B> static QString stringify(const std::pair<A, B> &pair, bool i18n) { return stringify(pair.first, i18n) + ":" + stringify(pair.second, i18n); }
+        template <class A, class B>
+        static QString stringify(const std::pair<A, B> &pair, bool i18n)
+        {
+            return stringify(pair.first, i18n) + ":" + stringify(pair.second, i18n);
+        }
     };
 
     /*!
@@ -221,7 +229,7 @@ namespace BlackMisc
         void marshallToDbus(QDBusArgument &argument) const
         {
             argument.beginArray(qMetaTypeId<typename Derived::value_type>());
-            std::for_each(derived().cbegin(), derived().cend(), [ & ](const auto & value) { argument << value; });
+            std::for_each(derived().cbegin(), derived().cend(), [&](const auto &value) { argument << value; });
             argument.endArray();
         }
 
@@ -230,7 +238,12 @@ namespace BlackMisc
         {
             derived().clear();
             argument.beginArray();
-            while (!argument.atEnd()) { typename Derived::value_type value; argument >> value; derived().push_back(value); }
+            while (!argument.atEnd())
+            {
+                typename Derived::value_type value;
+                argument >> value;
+                derived().push_back(value);
+            }
             argument.endArray();
         }
 

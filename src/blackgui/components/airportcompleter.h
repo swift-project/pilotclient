@@ -15,7 +15,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CAirportCompleter; }
+namespace Ui
+{
+    class CAirportCompleter;
+}
 namespace BlackGui::Components
 {
     //! Airport completer, UI element so select by ICAO, name or location
@@ -62,7 +65,7 @@ namespace BlackGui::Components
         //! Airports backend data changed
         void onAirportsChanged();
 
-        QScopedPointer <Ui::CAirportCompleter> ui;
+        QScopedPointer<Ui::CAirportCompleter> ui;
         BlackMisc::Aviation::CAirport m_current; //!< current airport
     };
 } // ns

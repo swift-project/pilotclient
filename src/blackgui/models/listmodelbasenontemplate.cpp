@@ -91,7 +91,7 @@ namespace BlackGui::Models
         }
 
         const bool changedColumn = this->setSortColumnByPropertyIndex(propertyIndex);
-        const bool changedOrder  = (m_sortOrder == order);
+        const bool changedOrder = (m_sortOrder == order);
         m_sortOrder = order;
         return changedColumn || changedOrder;
     }
@@ -164,7 +164,7 @@ namespace BlackGui::Models
     void CListModelBaseNonTemplate::emitDataChanged(int startRowIndex, int endRowIndex)
     {
         BLACK_VERIFY_X(startRowIndex <= endRowIndex, Q_FUNC_INFO, "check rows");
-        BLACK_VERIFY_X(startRowIndex >= 0 &&  endRowIndex >= 0, Q_FUNC_INFO, "check rows");
+        BLACK_VERIFY_X(startRowIndex >= 0 && endRowIndex >= 0, Q_FUNC_INFO, "check rows");
 
         const int columns = columnCount();
         const int rows = rowCount();

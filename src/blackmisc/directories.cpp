@@ -70,14 +70,14 @@ namespace BlackMisc
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexDirFlightPlan:             return QVariant::fromValue(m_dirFlightPlan);
-        case IndexDirFlightPlanOrDefault:    return QVariant::fromValue(this->getFlightPlanDirectoryOrDefault());
-        case IndexDirLastViewJson:           return QVariant::fromValue(m_dirLastViewJson);
-        case IndexDirLastViewJsonOrDefault:  return QVariant::fromValue(this->getLastViewJsonDirectoryOrDefault());
-        case IndexDirLastModelJson:          return QVariant::fromValue(m_dirLastModelStashJson);
+        case IndexDirFlightPlan: return QVariant::fromValue(m_dirFlightPlan);
+        case IndexDirFlightPlanOrDefault: return QVariant::fromValue(this->getFlightPlanDirectoryOrDefault());
+        case IndexDirLastViewJson: return QVariant::fromValue(m_dirLastViewJson);
+        case IndexDirLastViewJsonOrDefault: return QVariant::fromValue(this->getLastViewJsonDirectoryOrDefault());
+        case IndexDirLastModelJson: return QVariant::fromValue(m_dirLastModelStashJson);
         case IndexDirLastModelJsonOrDefault: return QVariant::fromValue(this->getLastModelDirectoryOrDefault());
-        case IndexDirLastModelStashJson:     return QVariant::fromValue(m_dirLastModelStashJson);
-        case IndexDirMatchingScript:         return QVariant::fromValue(this->getMatchingScriptDirectoryOrDefault());
+        case IndexDirLastModelStashJson: return QVariant::fromValue(m_dirLastModelStashJson);
+        case IndexDirMatchingScript: return QVariant::fromValue(this->getMatchingScriptDirectoryOrDefault());
         case IndexDirLastModelStashJsonOrDefault: return QVariant::fromValue(this->getLastModelStashDirectoryOrDefault());
         default: return CValueObject::propertyByIndex(index);
         }
@@ -85,7 +85,11 @@ namespace BlackMisc
 
     void CDirectories::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CDirectories>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CDirectories>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

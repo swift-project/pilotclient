@@ -14,7 +14,10 @@
 #include "blackgui/components/infobarwebreadersstatuscomponent.h"
 #include <QScopedPointer>
 
-namespace Ui { class CInfoBarWebReadersStatusSmallComponent; }
+namespace Ui
+{
+    class CInfoBarWebReadersStatusSmallComponent;
+}
 namespace BlackGui::Components
 {
     /*!

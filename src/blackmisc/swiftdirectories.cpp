@@ -60,8 +60,7 @@ namespace BlackMisc
         }
 
         // the xswiftbus directory in out, not in dist
-        static const QString bd = []
-        {
+        static const QString bd = [] {
             QDir dir(binDirectory());
             if (!dir.cdUp()) { return QString(); }
             if (!dir.cd("xswiftbus")) { return QString(); }
@@ -138,8 +137,8 @@ namespace BlackMisc
         {
             if (withoutCurrent && info.filePath().contains(normalizedApplicationDirectory(), Qt::CaseInsensitive)) continue;
             dirs.append(decodedDirName ?
-                        CDirectoryUtils::decodeNormalizedDirectory(info.filePath()) :
-                        info.filePath());
+                            CDirectoryUtils::decodeNormalizedDirectory(info.filePath()) :
+                            info.filePath());
         }
         return dirs;
     }

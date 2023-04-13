@@ -27,9 +27,8 @@ using namespace BlackGui::Components;
 
 namespace BlackGui::Filters
 {
-    CAirlineIcaoFilterBar::CAirlineIcaoFilterBar(QWidget *parent) :
-        CFilterWidget(parent),
-        ui(new Ui::CAirlineIcaoFilterBar)
+    CAirlineIcaoFilterBar::CAirlineIcaoFilterBar(QWidget *parent) : CFilterWidget(parent),
+                                                                    ui(new Ui::CAirlineIcaoFilterBar)
     {
         ui->setupUi(this);
         this->setButtonsAndCount(ui->filter_Buttons);
@@ -46,18 +45,17 @@ namespace BlackGui::Filters
         this->clearForm();
     }
 
-    CAirlineIcaoFilterBar::~CAirlineIcaoFilterBar() { }
+    CAirlineIcaoFilterBar::~CAirlineIcaoFilterBar() {}
 
-    std::unique_ptr<IModelFilter<CAirlineIcaoCodeList> > CAirlineIcaoFilterBar::createModelFilter() const
+    std::unique_ptr<IModelFilter<CAirlineIcaoCodeList>> CAirlineIcaoFilterBar::createModelFilter() const
     {
         return std::make_unique<CAirlineIcaoFilter>(
-                    convertDbId(ui->le_AirlineId->text()),
-                    ui->le_Designator->text().trimmed(),
-                    ui->le_Name->text().trimmed(),
-                    ui->country_Selector->isSet() ? ui->country_Selector->getCountry().getIsoCode() : "",
-                    ui->cb_RealAirline->isChecked(),
-                    ui->cb_VirtualAirline->isChecked()
-                );
+            convertDbId(ui->le_AirlineId->text()),
+            ui->le_Designator->text().trimmed(),
+            ui->le_Name->text().trimmed(),
+            ui->country_Selector->isSet() ? ui->country_Selector->getCountry().getIsoCode() : "",
+            ui->cb_RealAirline->isChecked(),
+            ui->cb_VirtualAirline->isChecked());
     }
 
     void CAirlineIcaoFilterBar::filter(const CAirlineIcaoCode &icao)

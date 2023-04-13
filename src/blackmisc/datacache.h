@@ -94,7 +94,7 @@ namespace BlackMisc
         //! @{
         //! Non-copyable.
         CDataCacheRevision(const CDataCacheRevision &) = delete;
-        CDataCacheRevision &operator =(const CDataCacheRevision &) = delete;
+        CDataCacheRevision &operator=(const CDataCacheRevision &) = delete;
         //! @}
 
         //! RAII class to keep the revision file locked during update.
@@ -320,18 +320,17 @@ namespace BlackMisc
         //! Constructor.
         //! \param owner Will be the parent of the internal QObject used to access the value.
         template <typename T>
-        CData(T *owner) :
-            CData::CCached(CDataCache::instance(), Trait::key(), Trait::humanReadable(), Trait::isValid, Trait::defaultValue(), owner)
+        CData(T *owner) : CData::CCached(CDataCache::instance(), Trait::key(), Trait::humanReadable(), Trait::isValid, Trait::defaultValue(), owner)
         {
-            if (! this->isInitialized())
+            if (!this->isInitialized())
             {
                 this->onOwnerNameChanged([this, owner] { Private::reconstruct(this, owner); });
                 return;
             }
             if (Trait::timeToLive() >= 0) { CDataCache::instance()->setTimeToLive(this->getKey(), Trait::timeToLive()); }
-            if (Trait::isPinned())   { CDataCache::instance()->pinValue(this->getKey()); }
+            if (Trait::isPinned()) { CDataCache::instance()->pinValue(this->getKey()); }
             if (Trait::isDeferred()) { CDataCache::instance()->deferValue(this->getKey()); }
-            if (Trait::isSession())  { CDataCache::instance()->sessionValue(this->getKey()); }
+            if (Trait::isSession()) { CDataCache::instance()->sessionValue(this->getKey()); }
             static_assert(!(Trait::isPinned() && Trait::isDeferred()), "trait can not be both pinned and deferred");
         }
 
@@ -379,7 +378,10 @@ namespace BlackMisc
         }
 
         //! If the value is load-deferred, trigger the deferred load (async).
-        void admit() { if (Trait::isDeferred()) { CDataCache::instance()->admitValue(this->getKey(), true); } }
+        void admit()
+        {
+            if (Trait::isDeferred()) { CDataCache::instance()->admitValue(this->getKey(), true); }
+        }
 
         //! If the value is currently being loaded, wait for it to finish loading, and call the notification slot, if any.
         void synchronize()
@@ -397,8 +399,7 @@ namespace BlackMisc
             else
             {
                 QPointer<QObject> myself(queue);
-                QTimer::singleShot(0, queue, [ = ]
-                {
+                QTimer::singleShot(0, queue, [=] {
                     if (!myself) { return; }
                     queue->setQueuedValueFromCache(key);
                 });
@@ -445,18 +446,35 @@ namespace BlackMisc
         using type = T;
 
         //! Key string of the value. Reimplemented in derived class.
-        static const char *key() { qFatal("Not implemented"); return ""; }
+        static const char *key()
+        {
+            qFatal("Not implemented");
+            return "";
+        }
 
         //! Optional human readable name.
-        static const QString &humanReadable() { static const QString name; return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name;
+            return name;
+        }
 
         //! Validator function. Return true if the argument is valid, false otherwise. Default
         //! implementation just returns true. Reimplemented in derived class to support validation of the value.
-        static bool isValid(const T &value, QString &reason) { Q_UNUSED(value); Q_UNUSED(reason); return true; }
+        static bool isValid(const T &value, QString &reason)
+        {
+            Q_UNUSED(value);
+            Q_UNUSED(reason);
+            return true;
+        }
 
         //! Return the value to use in case the supplied value does not satisfy the validator.
         //! Default implementation returns a default-constructed value.
-        static const T &defaultValue() { static const T def {}; return def; }
+        static const T &defaultValue()
+        {
+            static const T def {};
+            return def;
+        }
 
         //! Number of milliseconds after which cached value becomes stale.
         //! Default is -1 which means value never becomes stale.
@@ -482,7 +500,7 @@ namespace BlackMisc
         TDataTrait(const TDataTrait &) = delete;
 
         //! Deleted copy assignment operator.
-        TDataTrait &operator =(const TDataTrait &) = delete;
+        TDataTrait &operator=(const TDataTrait &) = delete;
     };
 }
 

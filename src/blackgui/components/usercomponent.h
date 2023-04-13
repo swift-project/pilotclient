@@ -23,7 +23,10 @@
 #include <QtGlobal>
 #include <QTimer>
 
-namespace Ui { class CUserComponent; }
+namespace Ui
+{
+    class CUserComponent;
+}
 namespace BlackGui::Components
 {
     //! User componenet (users, clients)

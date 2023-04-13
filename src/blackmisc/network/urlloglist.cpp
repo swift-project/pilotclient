@@ -12,10 +12,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Network, CUrlLog, CUrlLogList)
 
 namespace BlackMisc::Network
 {
-    CUrlLogList::CUrlLogList() { }
+    CUrlLogList::CUrlLogList() {}
 
     CUrlLogList::CUrlLogList(const CSequence &other) : CSequence<CUrlLog>(other)
-    { }
+    {}
 
     int CUrlLogList::addPendingUrl(const CUrl &url, int maxNumber)
     {
@@ -121,7 +121,7 @@ namespace BlackMisc::Network
     qint64 CUrlLogList::getMinResponseTime() const
     {
         if (!this->hasCompleted()) { return 0; }
-        qint64 min = std::numeric_limits < qint64 >::max();
+        qint64 min = std::numeric_limits<qint64>::max();
         for (const CUrlLog &rl : *this)
         {
             if (rl.isPending()) { continue; }

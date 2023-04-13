@@ -23,12 +23,12 @@ namespace BlackMisc::Simulation::FsCommon
 {
     CAircraftCfgEntriesList::CAircraftCfgEntriesList() = default;
 
-    CAircraftCfgEntriesList::CAircraftCfgEntriesList(const CSequence<CAircraftCfgEntries>& other) : CSequence(other) {}
+    CAircraftCfgEntriesList::CAircraftCfgEntriesList(const CSequence<CAircraftCfgEntries> &other) : CSequence(other) {}
 
     bool CAircraftCfgEntriesList::containsModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity)
     {
         if (title.isEmpty()) { return false; }
-        return this->containsBy([ = ](const CAircraftCfgEntries & entries) { return title.compare(entries.getTitle(), caseSensitivity) == 0; });
+        return this->containsBy([=](const CAircraftCfgEntries &entries) { return title.compare(entries.getTitle(), caseSensitivity) == 0; });
     }
 
     QStringList CAircraftCfgEntriesList::detectAmbiguousTitles() const
@@ -97,7 +97,7 @@ namespace BlackMisc::Simulation::FsCommon
                 {
                     CStatusMessage msg(this);
                     msg.warning(u"Duplicate model string %1 in %2 %3")
-                            << entries.getTitle() << entries.getFileDirectory() << entries.getFileName();
+                        << entries.getTitle() << entries.getFileDirectory() << entries.getFileName();
                     msgs.push_back(msg);
                     continue;
                 }
@@ -117,8 +117,7 @@ namespace BlackMisc::Simulation::FsCommon
 
     CAircraftCfgEntriesList CAircraftCfgEntriesList::findByTitle(const QString &title, Qt::CaseSensitivity caseSensitivity) const
     {
-        return this->findBy([ = ](const CAircraftCfgEntries & entries)
-        { return title.compare(entries.getTitle(), caseSensitivity) == 0; });
+        return this->findBy([=](const CAircraftCfgEntries &entries) { return title.compare(entries.getTitle(), caseSensitivity) == 0; });
     }
 
 } // namespace

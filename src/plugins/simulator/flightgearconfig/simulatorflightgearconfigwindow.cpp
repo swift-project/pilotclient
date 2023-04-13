@@ -17,13 +17,12 @@
 using namespace BlackGui;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation::Settings;
-//using namespace BlackMisc::Simulation::Flightgear;
+// using namespace BlackMisc::Simulation::Flightgear;
 
 namespace BlackSimPlugin::Flightgear
 {
-    CSimulatorFlightgearConfigWindow::CSimulatorFlightgearConfigWindow(QWidget *parent) :
-        CPluginConfigWindow(parent),
-        ui(new Ui::CSimulatorFlightgearConfigWindow)
+    CSimulatorFlightgearConfigWindow::CSimulatorFlightgearConfigWindow(QWidget *parent) : CPluginConfigWindow(parent),
+                                                                                          ui(new Ui::CSimulatorFlightgearConfigWindow)
     {
         ui->setupUi(this);
         CGuiUtility::disableMinMaxCloseButtons(this);
@@ -35,7 +34,7 @@ namespace BlackSimPlugin::Flightgear
     }
 
     CSimulatorFlightgearConfigWindow::~CSimulatorFlightgearConfigWindow()
-    { }
+    {}
 
     CFGSwiftBusSettings CSimulatorFlightgearConfigWindow::getSettingsFromUI() const
     {

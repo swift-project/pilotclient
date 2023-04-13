@@ -16,11 +16,11 @@ using namespace BlackMisc;
 namespace BlackCore::Fsd
 {
     AddPilot::AddPilot(const QString &callsign, const QString &cid, const QString &password, PilotRating rating,
-                                int protocolRevision, SimType simType, const QString &realName)
+                       int protocolRevision, SimType simType, const QString &realName)
         : MessageBase(callsign, "SERVER"),
-            m_cid(cid), m_password(password), m_rating(rating), m_protocolRevision(protocolRevision),
-            m_simType(simType), m_realName(realName)
-    { }
+          m_cid(cid), m_password(password), m_rating(rating), m_protocolRevision(protocolRevision),
+          m_simType(simType), m_realName(realName)
+    {}
 
     QStringList AddPilot::toTokens() const
     {
@@ -40,7 +40,7 @@ namespace BlackCore::Fsd
     {
         if (tokens.size() < 6)
         {
-            CLogMessage(static_cast<AddPilot*>(nullptr)).warning(u"Wrong number of arguments.");
+            CLogMessage(static_cast<AddPilot *>(nullptr)).warning(u"Wrong number of arguments.");
             return {};
         }
 

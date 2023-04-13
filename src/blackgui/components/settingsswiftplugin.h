@@ -15,7 +15,10 @@
 #include "blackmisc/simulation/settings/swiftpluginsettings.h"
 #include "blackgui/blackguiexport.h"
 
-namespace Ui { class CSettingsSwiftPlugin; }
+namespace Ui
+{
+    class CSettingsSwiftPlugin;
+}
 namespace BlackGui::Components
 {
     /*!

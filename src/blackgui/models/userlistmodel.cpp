@@ -21,8 +21,7 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackGui::Models
 {
-    CUserListModel::CUserListModel(UserMode userMode, QObject *parent) :
-        CListModelBase("ModelUserList", parent), m_userMode(NotSet)
+    CUserListModel::CUserListModel(UserMode userMode, QObject *parent) : CListModelBase("ModelUserList", parent), m_userMode(NotSet)
     {
         this->setUserMode(userMode);
 

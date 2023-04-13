@@ -16,20 +16,19 @@ using namespace BlackMisc::Db;
 
 namespace BlackGui::Components
 {
-    CUpdateInfoDialog::CUpdateInfoDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CUpdateInfoDialog)
+    CUpdateInfoDialog::CUpdateInfoDialog(QWidget *parent) : QDialog(parent),
+                                                            ui(new Ui::CUpdateInfoDialog)
     {
         ui->setupUi(this);
         ui->bb_UpdateInfolDialog->button(QDialogButtonBox::Ok)->setText(" Download and install ");
         ui->cb_DontShowAgain->setChecked(!m_setting.get());
         this->selectionChanged();
-        connect(ui->comp_UpdateInfo,  &CUpdateInfoComponent::selectionChanged, this, &CUpdateInfoDialog::selectionChanged);
+        connect(ui->comp_UpdateInfo, &CUpdateInfoComponent::selectionChanged, this, &CUpdateInfoDialog::selectionChanged);
         connect(ui->cb_DontShowAgain, &QCheckBox::toggled, this, &CUpdateInfoDialog::onDontShowAgain);
     }
 
     CUpdateInfoDialog::~CUpdateInfoDialog()
-    { }
+    {}
 
     bool CUpdateInfoDialog::isNewVersionAvailable() const
     {

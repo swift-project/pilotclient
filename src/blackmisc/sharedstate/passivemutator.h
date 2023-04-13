@@ -30,7 +30,7 @@ namespace BlackMisc::SharedState
         friend CActiveMutator;
         friend QSharedPointer<CPassiveMutator>;
 
-        CPassiveMutator(QObject* parent) : QObject(parent) {}
+        CPassiveMutator(QObject *parent) : QObject(parent) {}
 
     public:
         //! Factory method.

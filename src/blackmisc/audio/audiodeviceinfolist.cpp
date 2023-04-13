@@ -17,11 +17,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Audio, CAudioDeviceInfo, CAudioDeviceInf
 
 namespace BlackMisc::Audio
 {
-    CAudioDeviceInfoList::CAudioDeviceInfoList() { }
+    CAudioDeviceInfoList::CAudioDeviceInfoList() {}
 
-    CAudioDeviceInfoList::CAudioDeviceInfoList(const CSequence &other) :
-        CSequence(other)
-    { }
+    CAudioDeviceInfoList::CAudioDeviceInfoList(const CSequence &other) : CSequence(other)
+    {}
 
     CAudioDeviceInfoList CAudioDeviceInfoList::getOutputDevices() const
     {
@@ -125,8 +124,7 @@ namespace BlackMisc::Audio
 
     int CAudioDeviceInfoList::count(CAudioDeviceInfo::DeviceType type) const
     {
-        return static_cast<int>(std::count_if(this->begin(), this->end(), [type](const CAudioDeviceInfo & device)
-        {
+        return static_cast<int>(std::count_if(this->begin(), this->end(), [type](const CAudioDeviceInfo &device) {
             return device.getType() == type;
         }));
     }
@@ -157,7 +155,7 @@ namespace BlackMisc::Audio
         for (const QAudioDeviceInfo &inputDevice : allQtInputDevices())
         {
             const CAudioDeviceInfo d(CAudioDeviceInfo::InputDevice, inputDevice.deviceName());
-            if (! devices.contains(d)) { devices.push_back(d); }
+            if (!devices.contains(d)) { devices.push_back(d); }
         }
         return devices;
     }
@@ -168,7 +166,7 @@ namespace BlackMisc::Audio
         for (const QAudioDeviceInfo &outputDevice : allQtOutputDevices())
         {
             const CAudioDeviceInfo d(CAudioDeviceInfo::OutputDevice, outputDevice.deviceName());
-            if (! devices.contains(d)) { devices.push_back(d); }
+            if (!devices.contains(d)) { devices.push_back(d); }
         }
         return devices;
     }

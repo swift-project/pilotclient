@@ -14,15 +14,15 @@
 namespace BlackCore::Fsd
 {
     RevBClientParts::RevBClientParts()
-    { }
+    {}
 
     RevBClientParts::RevBClientParts(const QString &sender, const QString &partsval1, const QString &partsval2, const QString &partsval3)
         : MessageBase(sender),
-            m_partsval1(partsval1),
-            m_partsval2(partsval2),
-            m_partsval3(partsval3)
+          m_partsval1(partsval1),
+          m_partsval2(partsval2),
+          m_partsval3(partsval3)
 
-    { }
+    {}
 
     QStringList RevBClientParts::toTokens() const
     {
@@ -33,7 +33,6 @@ namespace BlackCore::Fsd
         tokens.push_back(m_partsval3);
         return tokens;
     }
-
 
     RevBClientParts RevBClientParts::fromTokens(const QStringList &tokens)
     {
@@ -46,4 +45,3 @@ namespace BlackCore::Fsd
     }
 
 }
-

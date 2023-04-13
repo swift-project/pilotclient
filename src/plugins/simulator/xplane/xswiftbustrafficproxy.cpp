@@ -35,22 +35,22 @@ namespace BlackSimPlugin::XPlane
         {
             bool s;
             s = connection.connect(QString(), "/xswiftbus/traffic", "org.swift_project.xswiftbus.traffic",
-                                    "simFrame", this, SIGNAL(simFrame()));
+                                   "simFrame", this, SIGNAL(simFrame()));
             Q_ASSERT(s);
 
             s = connection.connect(QString(), "/xswiftbus/traffic", "org.swift_project.xswiftbus.traffic",
-                                    "remoteAircraftAdded", this, SIGNAL(remoteAircraftAdded(QString)));
+                                   "remoteAircraftAdded", this, SIGNAL(remoteAircraftAdded(QString)));
             Q_ASSERT(s);
 
             s = connection.connect(QString(), "/xswiftbus/traffic", "org.swift_project.xswiftbus.traffic",
-                                    "remoteAircraftAddingFailed", this, SIGNAL(remoteAircraftAddingFailed(QString)));
+                                   "remoteAircraftAddingFailed", this, SIGNAL(remoteAircraftAddingFailed(QString)));
             Q_ASSERT(s);
         }
     }
 
     MultiplayerAcquireInfo CXSwiftBusTrafficProxy::acquireMultiplayerPlanes()
     {
-        QDBusPendingReply<bool, QString> reply =  m_dbusInterface->asyncCall(QLatin1String("acquireMultiplayerPlanes"));
+        QDBusPendingReply<bool, QString> reply = m_dbusInterface->asyncCall(QLatin1String("acquireMultiplayerPlanes"));
         reply.waitForFinished();
         if (reply.isError())
         {
@@ -110,28 +110,28 @@ namespace BlackSimPlugin::XPlane
     void CXSwiftBusTrafficProxy::setPlanesPositions(const PlanesPositions &planesPositions)
     {
         m_dbusInterface->callDBus(QLatin1String("setPlanesPositions"),
-                                    planesPositions.callsigns, planesPositions.latitudesDeg, planesPositions.longitudesDeg,
-                                    planesPositions.altitudesFt, planesPositions.pitchesDeg, planesPositions.rollsDeg,
-                                    planesPositions.headingsDeg, planesPositions.onGrounds);
+                                  planesPositions.callsigns, planesPositions.latitudesDeg, planesPositions.longitudesDeg,
+                                  planesPositions.altitudesFt, planesPositions.pitchesDeg, planesPositions.rollsDeg,
+                                  planesPositions.headingsDeg, planesPositions.onGrounds);
     }
 
     void CXSwiftBusTrafficProxy::setPlanesSurfaces(const PlanesSurfaces &planesSurfaces)
     {
         m_dbusInterface->callDBus(QLatin1String("setPlanesSurfaces"),
-                                    planesSurfaces.callsigns, planesSurfaces.gears, planesSurfaces.flaps,
-                                    planesSurfaces.spoilers, planesSurfaces.speedBrakes, planesSurfaces.slats,
-                                    planesSurfaces.wingSweeps, planesSurfaces.thrusts, planesSurfaces.elevators,
-                                    planesSurfaces.rudders, planesSurfaces.ailerons,
-                                    planesSurfaces.landLights, planesSurfaces.taxiLights,
-                                    planesSurfaces.beaconLights, planesSurfaces.strobeLights,
-                                    planesSurfaces.navLights, planesSurfaces.lightPatterns);
+                                  planesSurfaces.callsigns, planesSurfaces.gears, planesSurfaces.flaps,
+                                  planesSurfaces.spoilers, planesSurfaces.speedBrakes, planesSurfaces.slats,
+                                  planesSurfaces.wingSweeps, planesSurfaces.thrusts, planesSurfaces.elevators,
+                                  planesSurfaces.rudders, planesSurfaces.ailerons,
+                                  planesSurfaces.landLights, planesSurfaces.taxiLights,
+                                  planesSurfaces.beaconLights, planesSurfaces.strobeLights,
+                                  planesSurfaces.navLights, planesSurfaces.lightPatterns);
     }
 
     void CXSwiftBusTrafficProxy::setPlanesTransponders(const PlanesTransponders &planesTransponders)
     {
         m_dbusInterface->callDBus(QLatin1String("setPlanesTransponders"),
-                                    planesTransponders.callsigns, planesTransponders.codes,
-                                    planesTransponders.modeCs, planesTransponders.idents);
+                                  planesTransponders.callsigns, planesTransponders.codes,
+                                  planesTransponders.modeCs, planesTransponders.idents);
     }
 
     void CXSwiftBusTrafficProxy::setInterpolatorMode(const QString &callsign, bool spline)
@@ -141,16 +141,15 @@ namespace BlackSimPlugin::XPlane
 
     void CXSwiftBusTrafficProxy::getRemoteAircraftData(const QStringList &callsigns, const RemoteAircraftDataCallback &setter) const
     {
-        std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
-        {
+        std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
             QDBusPendingReply<QStringList, QList<double>, QList<double>, QList<double>, QList<bool>, QList<double>> reply = *watcher;
             if (!reply.isError())
             {
                 const QStringList callsigns = reply.argumentAt<0>();
-                const QList<double> latitudesDeg  = reply.argumentAt<1>();
+                const QList<double> latitudesDeg = reply.argumentAt<1>();
                 const QList<double> longitudesDeg = reply.argumentAt<2>();
-                const QList<double> elevationsM   = reply.argumentAt<3>();
-                const QList<bool>   waterFlags    = reply.argumentAt<4>();
+                const QList<double> elevationsM = reply.argumentAt<3>();
+                const QList<bool> waterFlags = reply.argumentAt<4>();
                 const QList<double> verticalOffsets = reply.argumentAt<5>();
 
                 setter(callsigns, latitudesDeg, longitudesDeg, elevationsM, waterFlags, verticalOffsets);
@@ -166,18 +165,17 @@ namespace BlackSimPlugin::XPlane
     }
 
     void CXSwiftBusTrafficProxy::getElevationAtPosition(const CCallsign &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters,
-            const ElevationCallback &setter) const
+                                                        const ElevationCallback &setter) const
     {
-        std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
-        {
+        std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
             QDBusPendingReply<QString, double, double, double, bool> reply = *watcher;
             if (!reply.isError())
             {
                 const CCallsign cs(reply.argumentAt<0>());
-                const double elevationMeters  = reply.argumentAt<1>();
-                const double latitudeDegrees  = reply.argumentAt<2>();
+                const double elevationMeters = reply.argumentAt<1>();
+                const double latitudeDegrees = reply.argumentAt<2>();
                 const double longitudeDegrees = reply.argumentAt<3>();
-                const CAltitude elevationAlt  = std::isnan(elevationMeters) ? CAltitude::null() : CAltitude(elevationMeters, CLengthUnit::m(), CLengthUnit::ft());
+                const CAltitude elevationAlt = std::isnan(elevationMeters) ? CAltitude::null() : CAltitude(elevationMeters, CLengthUnit::m(), CLengthUnit::ft());
                 const CElevationPlane elevation(CLatitude(latitudeDegrees, CAngleUnit::deg()),
                                                 CLongitude(longitudeDegrees, CAngleUnit::deg()),
                                                 elevationAlt, CElevationPlane::singlePointRadius());

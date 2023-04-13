@@ -24,7 +24,7 @@ namespace BlackMisc
 
     // pin vtables to this file
     void CJsonException::anchor()
-    { }
+    {}
 
     QString CJsonException::toString(const QString &prefix) const
     {

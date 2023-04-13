@@ -109,9 +109,9 @@ namespace BlackMisc::Db
         static CDistribution fromDatabaseJson(const QJsonObject &json, const QString &prefix = {});
 
     private:
-        QString m_channel;                //!< channel the files belong to
-        int     m_stability;              //!< stability
-        bool    m_restricted = false;     //!< restricted access (i.e. password for download needed)
+        QString m_channel; //!< channel the files belong to
+        int m_stability; //!< stability
+        bool m_restricted = false; //!< restricted access (i.e. password for download needed)
         Network::CUrlList m_downloadUrls; //!< download URLs, here I get the installer
 
         BLACK_METACLASS(

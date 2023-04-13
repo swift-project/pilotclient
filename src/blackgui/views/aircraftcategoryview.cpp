@@ -14,8 +14,7 @@ using namespace BlackGui::Models;
 
 namespace BlackGui::Views
 {
-    CAircraftCategoryView::CAircraftCategoryView(QWidget *parent) :
-        CViewWithDbObjects(parent)
+    CAircraftCategoryView::CAircraftCategoryView(QWidget *parent) : CViewWithDbObjects(parent)
     {
         this->standardInit(new CAircraftCategoryListModel(this));
         this->setMenu(MenuDefaultDbViews);

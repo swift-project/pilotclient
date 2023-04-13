@@ -21,8 +21,7 @@ using namespace BlackCore::Afv::Clients;
 
 namespace BlackCore::Context
 {
-    CContextAudio::CContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
-        CContextAudioBase(mode, runtime)
+    CContextAudio::CContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : CContextAudioBase(mode, runtime)
     {
         connect(this, &CContextAudio::changedLocalAudioDevices, this, &CContextAudio::onChangedLocalDevices, Qt::QueuedConnection);
     }

@@ -19,13 +19,13 @@
  */
 
 #ifndef WITH_STATIC
-#  if defined(BUILD_FSCOMMON_LIB)
-#    define FSCOMMON_EXPORT Q_DECL_EXPORT
-#  else
-#    define FSCOMMON_EXPORT Q_DECL_IMPORT
-#  endif
+#    if defined(BUILD_FSCOMMON_LIB)
+#        define FSCOMMON_EXPORT Q_DECL_EXPORT
+#    else
+#        define FSCOMMON_EXPORT Q_DECL_IMPORT
+#    endif
 #else
-#  define FSCOMMON_EXPORT
+#    define FSCOMMON_EXPORT
 #endif
 
 #endif // guard

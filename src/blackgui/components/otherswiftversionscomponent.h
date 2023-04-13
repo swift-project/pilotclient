@@ -15,7 +15,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class COtherSwiftVersionsComponent; }
+namespace Ui
+{
+    class COtherSwiftVersionsComponent;
+}
 namespace BlackGui::Components
 {
     /*!

@@ -63,7 +63,11 @@ namespace BlackMisc
         void addValue(const CPropertyIndex &index, const char *str);
 
         //! Add a value as non CVariant
-        template<class T> void addValue(const CPropertyIndex &index, const T &value) { m_values.insert(index, CVariant::fromValue(value)); }
+        template <class T>
+        void addValue(const CPropertyIndex &index, const T &value)
+        {
+            m_values.insert(index, CVariant::fromValue(value));
+        }
 
         //! Prepend index to all property indexes
         void prependIndex(int index);
@@ -99,17 +103,20 @@ namespace BlackMisc
         int size() const;
 
         //! Equal operator, required if maps are directly compared, not with CValueObject
-        BLACKMISC_EXPORT friend bool operator ==(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b);
+        BLACKMISC_EXPORT friend bool operator==(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b);
 
         //! Equal operator, required if maps are directly compared, not with CValueObject
-        BLACKMISC_EXPORT friend bool operator !=(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b);
+        BLACKMISC_EXPORT friend bool operator!=(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b);
 
         //! True if this map matches the value contained in the variant
         bool matchesVariant(const CVariant &value) const;
 
         //! True if this map matches the value
         template <typename T, typename = std::enable_if_t<!std::is_same_v<T, CVariant>>>
-        bool matches(const T &value) const { return matchesVariant(CVariant::from(value)); }
+        bool matches(const T &value) const
+        {
+            return matchesVariant(CVariant::from(value));
+        }
 
         //! Map
         const QMap<CPropertyIndex, CVariant> &map() const { return m_values; }

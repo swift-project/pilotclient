@@ -17,46 +17,45 @@ namespace BlackSound::Wav
     //! WAV chunk
     struct chunk
     {
-        char        id[4];  //!< chunk id
-        quint32     size;   //!< chunk size
+        char id[4]; //!< chunk id
+        quint32 size; //!< chunk size
     };
 
     //! RIFF header
     struct RIFFHeader
     {
-        chunk       descriptor;     //!< "RIFF"
-        char        type[4];        //!< "WAVE"
+        chunk descriptor; //!< "RIFF"
+        char type[4]; //!< "WAVE"
     };
 
     //! WAVE header
     struct WAVEHeader
     {
-        chunk       descriptor;     //!< chunk descriptor
-        quint16     audioFormat;    //!< audio format, e.g. 0x0001 => PCM
-        quint16     numChannels;    //!< number of channels
-        quint32     sampleRate;     //!< sample rate
-        quint32     byteRate;       //!< byte rate
-        quint16     blockAlign;     //!< block align
-        quint16     bitsPerSample;  //!< bits per sample
+        chunk descriptor; //!< chunk descriptor
+        quint16 audioFormat; //!< audio format, e.g. 0x0001 => PCM
+        quint16 numChannels; //!< number of channels
+        quint32 sampleRate; //!< sample rate
+        quint32 byteRate; //!< byte rate
+        quint16 blockAlign; //!< block align
+        quint16 bitsPerSample; //!< bits per sample
     };
 
     //! Data header
     struct DATAHeader
     {
-        chunk       descriptor;     //!< chunk descriptor
+        chunk descriptor; //!< chunk descriptor
     };
 
     //! Combined header
     struct CombinedHeader
     {
-        RIFFHeader  riff;           //!< RIFF header
-        WAVEHeader  wave;           //!< WAVE header
+        RIFFHeader riff; //!< RIFF header
+        WAVEHeader wave; //!< WAVE header
     };
 
-    CWavFile::CWavFile(QObject *parent) :
-        QFile(parent),
-        m_headerLength(0)
-    { }
+    CWavFile::CWavFile(QObject *parent) : QFile(parent),
+                                          m_headerLength(0)
+    {}
 
     bool CWavFile::open(const QString &fileName)
     {
@@ -83,11 +82,7 @@ namespace BlackSound::Wav
         bool result = read(reinterpret_cast<char *>(&header), sizeof(CombinedHeader)) == sizeof(CombinedHeader);
         if (result)
         {
-            if ((memcmp(&header.riff.descriptor.id, "RIFF", 4) == 0
-                    || memcmp(&header.riff.descriptor.id, "RIFX", 4) == 0)
-                    && memcmp(&header.riff.type, "WAVE", 4) == 0
-                    && memcmp(&header.wave.descriptor.id, "fmt ", 4) == 0
-                    && (header.wave.audioFormat == 1 || header.wave.audioFormat == 0 || header.wave.audioFormat == 3))
+            if ((memcmp(&header.riff.descriptor.id, "RIFF", 4) == 0 || memcmp(&header.riff.descriptor.id, "RIFX", 4) == 0) && memcmp(&header.riff.type, "WAVE", 4) == 0 && memcmp(&header.wave.descriptor.id, "fmt ", 4) == 0 && (header.wave.audioFormat == 1 || header.wave.audioFormat == 0 || header.wave.audioFormat == 3))
             {
                 // Read off remaining header information
                 if (qFromLittleEndian<quint32>(header.wave.descriptor.size) > sizeof(WAVEHeader))
@@ -124,7 +119,6 @@ namespace BlackSound::Wav
                 {
                     m_fileFormat.setSampleType(QAudioFormat::Float);
                 }
-
             }
             else
             {

@@ -34,7 +34,7 @@ namespace XSwiftBus
         dbus_error_init(&error);
         m_server.reset(dbus_server_listen(address.c_str(), &error));
 
-        if (! m_server)
+        if (!m_server)
         {
             ERROR_LOG("DBus failed to listen for new connections on given address: " + std::string(error.message));
             return false;

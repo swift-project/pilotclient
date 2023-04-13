@@ -29,7 +29,10 @@ class QDragMoveEvent;
 class QDropEvent;
 class QWidget;
 
-namespace Ui { class CDbDistributorSelectorComponent; }
+namespace Ui
+{
+    class CDbDistributorSelectorComponent;
+}
 namespace BlackGui::Components
 {
     /*!
@@ -97,8 +100,8 @@ namespace BlackGui::Components
         void onCompleterActivated(const QString &distributorKeyOrAlias);
 
         QScopedPointer<Ui::CDbDistributorSelectorComponent> ui;
-        QScopedPointer<QCompleter>          m_completerDistributors;
-        QMetaObject::Connection             m_signalConnection;
+        QScopedPointer<QCompleter> m_completerDistributors;
+        QMetaObject::Connection m_signalConnection;
         BlackMisc::Simulation::CDistributor m_currentDistributor;
     };
 } // ns

@@ -13,9 +13,8 @@
 
 namespace BlackGui::Components
 {
-    CCoreSettingsDialog::CCoreSettingsDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CCoreSettingsDialog)
+    CCoreSettingsDialog::CCoreSettingsDialog(QWidget *parent) : QDialog(parent),
+                                                                ui(new Ui::CCoreSettingsDialog)
     {
         Q_ASSERT(sGui);
         ui->setupUi(this);
@@ -26,7 +25,7 @@ namespace BlackGui::Components
     }
 
     CCoreSettingsDialog::~CCoreSettingsDialog()
-    { }
+    {}
 
     void CCoreSettingsDialog::showOverview()
     {

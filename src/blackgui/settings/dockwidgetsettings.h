@@ -98,12 +98,12 @@ namespace BlackGui::Settings
         void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
 
     private:
-        QString m_floatingMargins {"0:0:0:0"};          //!< margins: when floating
-        QString m_floatingFramelessMargins {"0:0:0:0"}; //!< margins, when floating and frameless
-        QString m_dockedMargins {"0:0:0:0"};            //!< margins, when docked
-        QString m_geometry;                             //!< geometry as HEX values
-        bool m_floating  = false;                       //!< floating
-        bool m_frameless = false;                       //!< frameless
+        QString m_floatingMargins { "0:0:0:0" }; //!< margins: when floating
+        QString m_floatingFramelessMargins { "0:0:0:0" }; //!< margins, when floating and frameless
+        QString m_dockedMargins { "0:0:0:0" }; //!< margins, when docked
+        QString m_geometry; //!< geometry as HEX values
+        bool m_floating = false; //!< floating
+        bool m_frameless = false; //!< frameless
 
         BLACK_METACLASS(
             CDockWidgetSettings,
@@ -125,7 +125,11 @@ namespace BlackGui::Settings
         static const char *key() { return "guidockwidget/%Application%/%OwnerName%"; } // Key in data cache https://dev.vatsim-germany.org/issues/776
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("Dockable widgets"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("Dockable widgets");
+            return name;
+        }
     };
 } // ns
 

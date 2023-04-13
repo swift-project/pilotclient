@@ -53,16 +53,16 @@ namespace BlackMisc::Weather
 
         //! Constructor
         CGridPoint(const QString &identifier,
-                    const Geo::ICoordinateGeodetic &position);
+                   const Geo::ICoordinateGeodetic &position);
 
         //! Constructor
         CGridPoint(const QString &identifier,
-                    const Geo::ICoordinateGeodetic &position,
-                    const CCloudLayerList &cloudLayers,
-                    const CTemperatureLayerList &temperatureLayers,
-                    const CVisibilityLayerList &visibilityLayers,
-                    const CWindLayerList &windLayers,
-                    const PhysicalQuantities::CPressure &pressureAtMsl);
+                   const Geo::ICoordinateGeodetic &position,
+                   const CCloudLayerList &cloudLayers,
+                   const CTemperatureLayerList &temperatureLayers,
+                   const CVisibilityLayerList &visibilityLayers,
+                   const CWindLayerList &windLayers,
+                   const PhysicalQuantities::CPressure &pressureAtMsl);
 
         //! Set identifier
         void setIdentifier(const QString &identifier) { m_identifier = identifier; }

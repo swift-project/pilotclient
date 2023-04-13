@@ -17,7 +17,8 @@
 namespace BlackMisc::Aviation
 {
     //! Base class for COM, NAV, Squawk units.
-    template <class AVIO> class CModulator : public CValueObject<CModulator<AVIO>>
+    template <class AVIO>
+    class CModulator : public CValueObject<CModulator<AVIO>>
     {
     public:
         //! Column indexes
@@ -118,12 +119,12 @@ namespace BlackMisc::Aviation
 
     private:
         QString m_name; //!< name of the unit
-        PhysicalQuantities::CFrequency m_frequencyActive;  //!< active frequency
+        PhysicalQuantities::CFrequency m_frequencyActive; //!< active frequency
         PhysicalQuantities::CFrequency m_frequencyStandby; //!< standby frequency
-        int m_volumeTransmit   = 100;   //!< volume transmit/input 0..100
-        int m_volumeReceive    = 100;   //!< volume receive/output 0..100
-        bool m_transmitEnabled = true;  //!< is enabled, used e.g. for mute etc.
-        bool m_receiveEnabled  = true;  //!< is enabled, used e.g. for mute etc.
+        int m_volumeTransmit = 100; //!< volume transmit/input 0..100
+        int m_volumeReceive = 100; //!< volume receive/output 0..100
+        bool m_transmitEnabled = true; //!< is enabled, used e.g. for mute etc.
+        bool m_receiveEnabled = true; //!< is enabled, used e.g. for mute etc.
 
         //! Easy access to derived class (CRTP template parameter)
         AVIO const *derived() const

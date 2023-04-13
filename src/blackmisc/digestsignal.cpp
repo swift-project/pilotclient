@@ -18,8 +18,7 @@ namespace BlackMisc
         {
             // call in correct thread
             const QPointer<CDigestSignal> myself(this);
-            QTimer::singleShot(0, this, [ = ]
-            {
+            QTimer::singleShot(0, this, [=] {
                 if (!myself) { return; }
                 this->inputSignal();
             });

@@ -19,7 +19,10 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CLoginModeButtons; }
+namespace Ui
+{
+    class CLoginModeButtons;
+}
 namespace BlackGui
 {
     //! Display login modes (normal, stealth, ...)

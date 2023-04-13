@@ -18,7 +18,7 @@
 #include <QHash>
 #include <QTimer>
 #ifndef NOMINMAX
-#define NOMINMAX
+#    define NOMINMAX
 #endif
 #include <Windows.h>
 

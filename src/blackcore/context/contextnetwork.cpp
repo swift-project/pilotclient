@@ -36,10 +36,9 @@ namespace BlackCore::Context
     const QList<QCommandLineOption> &IContextNetwork::getCmdLineOptions()
     {
         static const QList<QCommandLineOption> e;
-        static const QList<QCommandLineOption> opts
-        {
+        static const QList<QCommandLineOption> opts {
             QCommandLineOption({ "idAndKey", "clientIdAndKey" },
-            QCoreApplication::translate("CContextNetwork", "Client id and key pair separated by ':', e.g. <id>:<key>."), "clientIdAndKey")
+                               QCoreApplication::translate("CContextNetwork", "Client id and key pair separated by ':', e.g. <id>:<key>."), "clientIdAndKey")
         };
 
         // only in not officially shipped versions

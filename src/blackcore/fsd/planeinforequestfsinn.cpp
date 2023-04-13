@@ -13,20 +13,20 @@
 namespace BlackCore::Fsd
 {
     PlaneInfoRequestFsinn::PlaneInfoRequestFsinn() : MessageBase()
-    { }
+    {}
 
     PlaneInfoRequestFsinn::PlaneInfoRequestFsinn(const QString &sender,
-                                                    const QString &receiver,
-                                                    const QString &airlineIcao,
-                                                    const QString &aircraftIcao,
-                                                    const QString &aircraftIcaoCombinedType,
-                                                    const QString &sendMModelString)
+                                                 const QString &receiver,
+                                                 const QString &airlineIcao,
+                                                 const QString &aircraftIcao,
+                                                 const QString &aircraftIcaoCombinedType,
+                                                 const QString &sendMModelString)
         : MessageBase(sender, receiver),
-            m_airlineIcao(airlineIcao),
-            m_aircraftIcao(aircraftIcao),
-            m_aircraftIcaoCombinedType(aircraftIcaoCombinedType),
-            m_sendMModelString(sendMModelString)
-    { }
+          m_airlineIcao(airlineIcao),
+          m_aircraftIcao(aircraftIcao),
+          m_aircraftIcaoCombinedType(aircraftIcaoCombinedType),
+          m_sendMModelString(sendMModelString)
+    {}
 
     QStringList PlaneInfoRequestFsinn::toTokens() const
     {

@@ -18,10 +18,10 @@ using namespace BlackCore;
 namespace BlackSimPlugin::Fsx
 {
     ISimulator *CSimulatorFsxFactory::create(const CSimulatorPluginInfo &info,
-            IOwnAircraftProvider *ownAircraftProvider,
-            IRemoteAircraftProvider *remoteAircraftProvider,
-            IWeatherGridProvider *weatherGridProvider,
-            IClientProvider *clientProvider)
+                                             IOwnAircraftProvider *ownAircraftProvider,
+                                             IRemoteAircraftProvider *remoteAircraftProvider,
+                                             IWeatherGridProvider *weatherGridProvider,
+                                             IClientProvider *clientProvider)
     {
         Q_ASSERT(ownAircraftProvider);
         return new CSimulatorFsx(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, this);

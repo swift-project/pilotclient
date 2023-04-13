@@ -50,7 +50,7 @@ namespace BlackCore::Afv
             CryptoDtoChannelConfigDto dto;
 
             dto.channelTag = json.value("channelTag").toString();
-            dto.aeadReceiveKey  = QByteArray::fromBase64(json.value("aeadReceiveKey").toString().toLocal8Bit());
+            dto.aeadReceiveKey = QByteArray::fromBase64(json.value("aeadReceiveKey").toString().toLocal8Bit());
             dto.aeadTransmitKey = QByteArray::fromBase64(json.value("aeadTransmitKey").toString().toLocal8Bit());
             dto.hmacKey = QByteArray::fromBase64(json.value("hmacKey").toString().toLocal8Bit());
             return dto;
@@ -62,8 +62,8 @@ namespace BlackCore::Afv
     {
         //! @{
         //! Properties
-        QString addressIpV4;    // Example: 123.123.123.123:50000
-        QString addressIpV6;    // Example: 123.123.123.123:50000
+        QString addressIpV4; // Example: 123.123.123.123:50000
+        QString addressIpV6; // Example: 123.123.123.123:50000
         CryptoDtoChannelConfigDto channelConfig;
         //! @}
 
@@ -176,7 +176,7 @@ namespace BlackCore::Afv
             StationDto dto;
             dto.id = json.value("id").toString();
             dto.name = json.value("name").toString();
-            dto.frequencyHz      = static_cast<quint32>(json.value("frequency").toInt());
+            dto.frequencyHz = static_cast<quint32>(json.value("frequency").toInt());
             dto.frequencyAliasHz = static_cast<quint32>(json.value("frequencyAlias").toInt());
             return dto;
         }
@@ -218,7 +218,7 @@ namespace BlackCore::Afv
         // std::string RelayCallsign;
         //! @}
 
-        MSGPACK_DEFINE(id, frequency, distanceRatio/*, RelayCallsign*/)
+        MSGPACK_DEFINE(id, frequency, distanceRatio /*, RelayCallsign*/)
     };
 
     //! Transmit transceiver DTO
@@ -286,10 +286,10 @@ namespace BlackCore::Afv
     //! Audio DTO
     struct IAudioDto
     {
-        QString callsign;      //!< Callsign that audio originates from
-        uint sequenceCounter;  //!< Receiver optionally uses this in reordering algorithm/gap detection
-        QByteArray audio;      //!< Opus compressed audio
-        bool lastPacket;       //!< Used to indicate to receiver that the sender has stopped sending
+        QString callsign; //!< Callsign that audio originates from
+        uint sequenceCounter; //!< Receiver optionally uses this in reordering algorithm/gap detection
+        QByteArray audio; //!< Opus compressed audio
+        bool lastPacket; //!< Used to indicate to receiver that the sender has stopped sending
     };
 } // ns
 

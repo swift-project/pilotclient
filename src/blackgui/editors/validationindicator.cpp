@@ -20,9 +20,8 @@ using namespace BlackMisc;
 
 namespace BlackGui::Editors
 {
-    CValidationIndicator::CValidationIndicator(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CValidationIndicator)
+    CValidationIndicator::CValidationIndicator(QWidget *parent) : QFrame(parent),
+                                                                  ui(new Ui::CValidationIndicator)
     {
         ui->setupUi(this);
         this->clear();
@@ -36,7 +35,7 @@ namespace BlackGui::Editors
     }
 
     CValidationIndicator::~CValidationIndicator()
-    { }
+    {}
 
     void CValidationIndicator::passed()
     {

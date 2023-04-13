@@ -20,7 +20,10 @@
 
 #include <QString>
 
-namespace BlackMisc { class CNameVariantPair; }
+namespace BlackMisc
+{
+    class CNameVariantPair;
+}
 namespace BlackGui::Views
 {
     //! User view

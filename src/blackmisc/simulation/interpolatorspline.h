@@ -30,8 +30,7 @@ namespace BlackMisc::Simulation
         //! Constructor
         CInterpolatorSpline(const Aviation::CCallsign &callsign,
                             ISimulationEnvironmentProvider *envProvider, IInterpolationSetupProvider *setupProvider, IRemoteAircraftProvider *aircraftProvider,
-                            CInterpolationLogger *logger = nullptr) :
-            CInterpolator(callsign, envProvider, setupProvider, aircraftProvider, logger) {}
+                            CInterpolationLogger *logger = nullptr) : CInterpolator(callsign, envProvider, setupProvider, aircraftProvider, logger) {}
 
         //! Position arrays for interpolation
         struct BLACKMISC_EXPORT PosArray

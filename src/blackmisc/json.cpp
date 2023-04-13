@@ -18,160 +18,160 @@ using namespace BlackMisc;
 
 class QPixmap;
 
-const QJsonValue &operator >>(const QJsonValue &json, int &value)
+const QJsonValue &operator>>(const QJsonValue &json, int &value)
 {
     value = json.toInt();
     return json;
 }
 
-const QJsonValue &operator >>(const QJsonValue &json, qlonglong &value)
+const QJsonValue &operator>>(const QJsonValue &json, qlonglong &value)
 {
     value = static_cast<qlonglong>(json.toDouble());
     return json;
 }
 
-const QJsonValue &operator >>(const QJsonValue &json, qulonglong &value)
+const QJsonValue &operator>>(const QJsonValue &json, qulonglong &value)
 {
     value = static_cast<qulonglong>(json.toDouble());
     return json;
 }
 
-const QJsonValue &operator >>(const QJsonValue &json, uint &value)
+const QJsonValue &operator>>(const QJsonValue &json, uint &value)
 {
     value = static_cast<uint>(json.toInt());
     return json;
 }
 
-const QJsonValue &operator >>(const QJsonValue &json, qint16 &value)
+const QJsonValue &operator>>(const QJsonValue &json, qint16 &value)
 {
     value = static_cast<qint16>(json.toInt());
     return json;
 }
 
-const QJsonValue &operator >>(const QJsonValue &json, QString &value)
+const QJsonValue &operator>>(const QJsonValue &json, QString &value)
 {
     value = json.toString();
     return json;
 }
 
-const QJsonValue &operator >>(const QJsonValue &json, std::string &value)
+const QJsonValue &operator>>(const QJsonValue &json, std::string &value)
 {
     value = json.toString().toStdString();
     return json;
 }
 
-const QJsonValue &operator >>(const QJsonValue &json, QStringList &value)
+const QJsonValue &operator>>(const QJsonValue &json, QStringList &value)
 {
     for (auto &&element : json.toArray()) { value << element.toString(); }
     return json;
 }
 
-const QJsonValue &operator >>(const QJsonValue &json, double &value)
+const QJsonValue &operator>>(const QJsonValue &json, double &value)
 {
     value = json.toDouble();
     return json;
 }
 
-const QJsonValue &operator >>(const QJsonValue &json, bool &value)
+const QJsonValue &operator>>(const QJsonValue &json, bool &value)
 {
     value = json.toBool();
     return json;
 }
 
-const QJsonValue &operator >>(const QJsonValue &json, QDateTime &value)
+const QJsonValue &operator>>(const QJsonValue &json, QDateTime &value)
 {
     value = fromStringUtc(json.toString());
     return json;
 }
 
-const QJsonValue &operator >>(const QJsonValue &json, QPixmap &value)
+const QJsonValue &operator>>(const QJsonValue &json, QPixmap &value)
 {
     const QString hex(json.toString());
     BlackMisc::pngHexStringToPixmapRef(hex, value);
     return json;
 }
 
-const QJsonValue &operator >>(const QJsonValue &json, QByteArray &value)
+const QJsonValue &operator>>(const QJsonValue &json, QByteArray &value)
 {
     const QString hex(json.toString());
     value = QByteArray::fromHex(hex.toLatin1());
     return json;
 }
 
-QJsonValueRef operator >>(QJsonValueRef json, int &value)
+QJsonValueRef operator>>(QJsonValueRef json, int &value)
 {
     value = json.toInt();
     return json;
 }
 
-QJsonValueRef operator >>(QJsonValueRef json, qlonglong &value)
+QJsonValueRef operator>>(QJsonValueRef json, qlonglong &value)
 {
     value = static_cast<qlonglong>(json.toDouble());
     return json;
 }
 
-QJsonValueRef operator >>(QJsonValueRef json, qulonglong &value)
+QJsonValueRef operator>>(QJsonValueRef json, qulonglong &value)
 {
     value = static_cast<qulonglong>(json.toDouble());
     return json;
 }
 
-QJsonValueRef operator >>(QJsonValueRef json, uint &value)
+QJsonValueRef operator>>(QJsonValueRef json, uint &value)
 {
     value = static_cast<uint>(json.toInt());
     return json;
 }
 
-QJsonValueRef operator >>(QJsonValueRef json, qint16 &value)
+QJsonValueRef operator>>(QJsonValueRef json, qint16 &value)
 {
     value = static_cast<qint16>(json.toInt());
     return json;
 }
 
-QJsonValueRef operator >>(QJsonValueRef json, QString &value)
+QJsonValueRef operator>>(QJsonValueRef json, QString &value)
 {
     value = json.toString();
     return json;
 }
 
-QJsonValueRef operator >>(QJsonValueRef json, std::string &value)
+QJsonValueRef operator>>(QJsonValueRef json, std::string &value)
 {
     value = json.toString().toStdString();
     return json;
 }
 
-QJsonValueRef operator >>(QJsonValueRef json, QStringList &value)
+QJsonValueRef operator>>(QJsonValueRef json, QStringList &value)
 {
     for (auto &&element : json.toArray()) { value << element.toString(); }
     return json;
 }
 
-QJsonValueRef operator >>(QJsonValueRef json, double &value)
+QJsonValueRef operator>>(QJsonValueRef json, double &value)
 {
     value = json.toDouble();
     return json;
 }
 
-QJsonValueRef operator >>(QJsonValueRef json, bool &value)
+QJsonValueRef operator>>(QJsonValueRef json, bool &value)
 {
     value = json.toBool();
     return json;
 }
 
-QJsonValueRef operator >>(QJsonValueRef json, QDateTime &value)
+QJsonValueRef operator>>(QJsonValueRef json, QDateTime &value)
 {
     value = fromStringUtc(json.toString());
     return json;
 }
 
-QJsonValueRef operator >>(QJsonValueRef json, QPixmap &value)
+QJsonValueRef operator>>(QJsonValueRef json, QPixmap &value)
 {
     const QString hex(json.toString());
     BlackMisc::pngHexStringToPixmapRef(hex, value);
     return json;
 }
 
-QJsonValueRef operator >>(QJsonValueRef json, QByteArray &value)
+QJsonValueRef operator>>(QJsonValueRef json, QByteArray &value)
 {
     const QString hex(json.toString());
     value = QByteArray::fromHex(hex.toLatin1());
@@ -415,7 +415,7 @@ namespace BlackMisc::Json
 {
     QJsonObject jsonObjectFromString(const QString &json, bool acceptCacheFormat)
     {
-        if (json.isEmpty()) { return QJsonObject();}
+        if (json.isEmpty()) { return QJsonObject(); }
         const QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
         return acceptCacheFormat ? Json::unwrapCache(jsonDoc.object()) : jsonDoc.object();
     }
@@ -429,7 +429,7 @@ namespace BlackMisc::Json
 
     QJsonArray jsonArrayFromString(const QString &json)
     {
-        if (json.isEmpty()) { return QJsonArray();}
+        if (json.isEmpty()) { return QJsonArray(); }
         const QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
         return jsonDoc.array();
     }
@@ -453,8 +453,10 @@ namespace BlackMisc::Json
             if (previousObject.value(key).isObject())
             {
                 auto child = getIncrementalObject(previousObject.value(key).toObject(), currentObject.value(key).toObject());
-                if (child.isEmpty()) incrementalObject.remove(key);
-                else incrementalObject.insert(key, child);
+                if (child.isEmpty())
+                    incrementalObject.remove(key);
+                else
+                    incrementalObject.insert(key, child);
             }
             else
             {
@@ -550,7 +552,6 @@ namespace BlackMisc::Json
         }
         return object;
     }
-
 
     QJsonObject unwrapCache(const QString &jsonString)
     {
@@ -660,5 +661,15 @@ namespace BlackMisc::Json
     }
 } // ns
 
-QDataStream &operator<<(QDataStream &s, const std::string &v) { s << QString::fromStdString(v); return s; }
-QDataStream &operator>>(QDataStream &s, std::string &v) {  QString vs; s >> vs; v = vs.toStdString(); return s;  }
+QDataStream &operator<<(QDataStream &s, const std::string &v)
+{
+    s << QString::fromStdString(v);
+    return s;
+}
+QDataStream &operator>>(QDataStream &s, std::string &v)
+{
+    QString vs;
+    s >> vs;
+    v = vs.toStdString();
+    return s;
+}

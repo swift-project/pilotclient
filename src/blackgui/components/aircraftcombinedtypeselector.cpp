@@ -21,23 +21,22 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackGui::Components
 {
-    CAircraftCombinedTypeSelector::CAircraftCombinedTypeSelector(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CAircraftCombinedTypeSelector)
+    CAircraftCombinedTypeSelector::CAircraftCombinedTypeSelector(QWidget *parent) : QFrame(parent),
+                                                                                    ui(new Ui::CAircraftCombinedTypeSelector)
     {
         ui->setupUi(this);
         connect(ui->le_CombinedType, &QLineEdit::editingFinished, this, &CAircraftCombinedTypeSelector::combinedTypeEntered);
-        connect(ui->le_CombinedType, &QLineEdit::returnPressed,   this, &CAircraftCombinedTypeSelector::combinedTypeEntered);
+        connect(ui->le_CombinedType, &QLineEdit::returnPressed, this, &CAircraftCombinedTypeSelector::combinedTypeEntered);
 
         connect(ui->cb_EngineCount, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::changedComboBox);
-        connect(ui->cb_EngineType,  &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::changedComboBox);
-        connect(ui->cb_Type,        &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::changedComboBox);
+        connect(ui->cb_EngineType, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::changedComboBox);
+        connect(ui->cb_Type, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::changedComboBox);
 
         ui->le_CombinedType->setValidator(new CUpperCaseValidator(this));
     }
 
     CAircraftCombinedTypeSelector::~CAircraftCombinedTypeSelector()
-    { }
+    {}
 
     void CAircraftCombinedTypeSelector::setCombinedType(const QString &combinedCode)
     {
@@ -47,14 +46,14 @@ namespace BlackGui::Components
         m_cc = cc;
 
         if (cc.length() > 0) { aircraftType = cc.at(0); }
-        if (cc.length() > 1) { engineCount  = cc.mid(1, 1); }
-        if (cc.length() > 2) { engineType   = cc.mid(2, 1); }
+        if (cc.length() > 1) { engineCount = cc.mid(1, 1); }
+        if (cc.length() > 2) { engineType = cc.mid(2, 1); }
 
         if (this->getCombinedTypeFromComboBoxes() != cc)
         {
-            CGuiUtility::setComboBoxValueByStartingString(ui->cb_EngineCount, engineCount,  "unspecified");
-            CGuiUtility::setComboBoxValueByStartingString(ui->cb_EngineType,  engineType,   "unspecified");
-            CGuiUtility::setComboBoxValueByStartingString(ui->cb_Type,        aircraftType, "unspecified");
+            CGuiUtility::setComboBoxValueByStartingString(ui->cb_EngineCount, engineCount, "unspecified");
+            CGuiUtility::setComboBoxValueByStartingString(ui->cb_EngineType, engineType, "unspecified");
+            CGuiUtility::setComboBoxValueByStartingString(ui->cb_Type, aircraftType, "unspecified");
         }
 
         if (ui->le_CombinedType->text() != cc) { ui->le_CombinedType->setText(cc); }

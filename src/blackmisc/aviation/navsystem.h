@@ -34,9 +34,8 @@ namespace BlackMisc::Aviation
         CNavSystem() = default;
 
         //! Constructor
-        CNavSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency):
-            CModulator(name, activeFrequency, standbyFrequency)
-        { }
+        CNavSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency) : CModulator(name, activeFrequency, standbyFrequency)
+        {}
 
         //! Set active frequency
         void setFrequencyActiveMHz(double frequencyMHz)

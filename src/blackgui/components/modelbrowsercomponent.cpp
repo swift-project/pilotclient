@@ -27,9 +27,8 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CModelBrowserComponent::CModelBrowserComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CModelBrowserComponent)
+    CModelBrowserComponent::CModelBrowserComponent(QWidget *parent) : QFrame(parent),
+                                                                      ui(new Ui::CModelBrowserComponent)
     {
         ui->setupUi(this);
         ui->tw_Tab->setCurrentIndex(0);
@@ -40,17 +39,17 @@ namespace BlackGui::Components
         ui->editor_RelativePosition->setDistance(relDistance);
 
         connect(ui->pb_SetRelativePosition, &QPushButton::released, this, &CModelBrowserComponent::onSetRelativePosition, Qt::QueuedConnection);
-        connect(ui->pb_LoadModelSet,        &QPushButton::released, this, &CModelBrowserComponent::loadModelSet,          Qt::QueuedConnection);
-        connect(ui->pb_Display,             &QPushButton::released, this, &CModelBrowserComponent::display,               Qt::QueuedConnection);
-        connect(ui->pb_Parts,               &QPushButton::released, this, &CModelBrowserComponent::selectTabParts);
-        connect(ui->pb_Remove,              &QPushButton::released, this, &CModelBrowserComponent::remove,                Qt::QueuedConnection);
-        connect(ui->editor_Coordinate,      &CCoordinateForm::changedCoordinate,      this, &CModelBrowserComponent::onSetAbsolutePosition, Qt::QueuedConnection);
-        connect(ui->editor_Pbh,             &CPbhsForm::changeValues,                 this, &CModelBrowserComponent::onSetPBH,              Qt::QueuedConnection);
-        connect(ui->editor_AircraftParts,   &CAircraftPartsForm::changeAircraftParts, this, &CModelBrowserComponent::onSetParts,            Qt::QueuedConnection);
-        connect(ui->tvp_AircraftModels,     &CAircraftModelView::objectDoubleClicked, this, &CModelBrowserComponent::onModelDblClicked,     Qt::QueuedConnection);
+        connect(ui->pb_LoadModelSet, &QPushButton::released, this, &CModelBrowserComponent::loadModelSet, Qt::QueuedConnection);
+        connect(ui->pb_Display, &QPushButton::released, this, &CModelBrowserComponent::display, Qt::QueuedConnection);
+        connect(ui->pb_Parts, &QPushButton::released, this, &CModelBrowserComponent::selectTabParts);
+        connect(ui->pb_Remove, &QPushButton::released, this, &CModelBrowserComponent::remove, Qt::QueuedConnection);
+        connect(ui->editor_Coordinate, &CCoordinateForm::changedCoordinate, this, &CModelBrowserComponent::onSetAbsolutePosition, Qt::QueuedConnection);
+        connect(ui->editor_Pbh, &CPbhsForm::changeValues, this, &CModelBrowserComponent::onSetPBH, Qt::QueuedConnection);
+        connect(ui->editor_AircraftParts, &CAircraftPartsForm::changeAircraftParts, this, &CModelBrowserComponent::onSetParts, Qt::QueuedConnection);
+        connect(ui->tvp_AircraftModels, &CAircraftModelView::objectDoubleClicked, this, &CModelBrowserComponent::onModelDblClicked, Qt::QueuedConnection);
 
         connect(ui->cb_OverrideCG, &QCheckBox::clicked, this, &CModelBrowserComponent::onCGChecked);
-        connect(ui->cb_UseCG,      &QCheckBox::clicked, this, &CModelBrowserComponent::onCGChecked);
+        connect(ui->cb_UseCG, &QCheckBox::clicked, this, &CModelBrowserComponent::onCGChecked);
 
         this->loadModelSet();
         this->onSetRelativePosition();
@@ -176,7 +175,7 @@ namespace BlackGui::Components
         ui->le_ModelInfo->clear();
         ui->le_Info->clear();
 
-        if (!this->hasContexts())      { return; }
+        if (!this->hasContexts()) { return; }
         if (!m_aircraft.hasCallsign()) { return; }
         sGui->getIContextSimulator()->testRemoteAircraft(m_aircraft, false);
         m_aircraft = CSimulatedAircraft(); // reset
@@ -196,7 +195,7 @@ namespace BlackGui::Components
     {
         if (!sGui || sGui->isShuttingDown()) { return false; }
         if (!sGui->getIContextOwnAircraft()) { return false; }
-        if (!sGui->getIContextSimulator())   { return false; }
+        if (!sGui->getIContextSimulator()) { return false; }
         return true;
     }
 
@@ -208,6 +207,6 @@ namespace BlackGui::Components
     void CModelBrowserComponent::onCGChecked(bool checked)
     {
         if (ui->cb_OverrideCG->isChecked() != checked) { ui->cb_OverrideCG->setChecked(true); }
-        if (ui->cb_UseCG->isChecked() != checked)      { ui->cb_UseCG->setChecked(true); }
+        if (ui->cb_UseCG->isChecked() != checked) { ui->cb_UseCG->setChecked(true); }
     }
 } // ns

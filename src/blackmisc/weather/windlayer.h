@@ -47,7 +47,7 @@ namespace BlackMisc::Weather
 
         //! Constructor
         CWindLayer(const BlackMisc::Aviation::CAltitude &level, const PhysicalQuantities::CAngle &direction,
-                    const PhysicalQuantities::CSpeed &speed, const PhysicalQuantities::CSpeed &gustSpeed);
+                   const PhysicalQuantities::CSpeed &speed, const PhysicalQuantities::CSpeed &gustSpeed);
 
         //! Set level
         void setLevel(const BlackMisc::Aviation::CAltitude &level) { m_level = level; }

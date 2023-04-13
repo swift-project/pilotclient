@@ -48,7 +48,10 @@ class QEvent;
 class QMouseEvent;
 class QTimer;
 
-namespace BlackMisc::Aviation   { class CAltitude; }
+namespace BlackMisc::Aviation
+{
+    class CAltitude;
+}
 namespace BlackGui::Components
 {
     class CDbLoadDataDialog;
@@ -57,7 +60,10 @@ namespace BlackGui::Components
     class CModelBrowserDialog;
     class CAfvMapDialog;
 }
-namespace Ui { class SwiftGuiStd; }
+namespace Ui
+{
+    class SwiftGuiStd;
+}
 
 //! swift GUI
 class SwiftGuiStd :
@@ -74,8 +80,8 @@ public:
     //! \remarks keep the values in sync with the real tab indexes
     enum MainPageIndex
     {
-        MainPageInfoArea  = 0,
-        MainPageLogin     = 1,
+        MainPageInfoArea = 0,
+        MainPageLogin = 1,
         MainPageInternals = 2,
         MainPageInvisible = 3
     };
@@ -123,30 +129,30 @@ protected:
 
 private:
     QScopedPointer<Ui::SwiftGuiStd> ui;
-    QScopedPointer<BlackGui::Components::CNavigatorDialog>    m_navigator{ new BlackGui::Components::CNavigatorDialog() }; //!< navigator dialog bar, if I pass the parent, the dialog is always centered over the parent
-    QScopedPointer<BlackGui::Components::CDbLoadDataDialog>   m_dbLoadDialog;      //!< load DB data, lazy init UI component
-    QScopedPointer<BlackGui::Components::CAutoPublishDialog>  m_autoPublishDialog; //!< auto publish dialog
-    QScopedPointer<BlackGui::Components::CLoginDialog>        m_loginDialog;       //!< login dialog
-    QScopedPointer<BlackGui::Components::CModelBrowserDialog> m_modelBrower;       //!< model browser
-    QScopedPointer<BlackGui::Components::CAfvMapDialog>       m_mapDialog;         //!< map dialog
+    QScopedPointer<BlackGui::Components::CNavigatorDialog> m_navigator { new BlackGui::Components::CNavigatorDialog() }; //!< navigator dialog bar, if I pass the parent, the dialog is always centered over the parent
+    QScopedPointer<BlackGui::Components::CDbLoadDataDialog> m_dbLoadDialog; //!< load DB data, lazy init UI component
+    QScopedPointer<BlackGui::Components::CAutoPublishDialog> m_autoPublishDialog; //!< auto publish dialog
+    QScopedPointer<BlackGui::Components::CLoginDialog> m_loginDialog; //!< login dialog
+    QScopedPointer<BlackGui::Components::CModelBrowserDialog> m_modelBrower; //!< model browser
+    QScopedPointer<BlackGui::Components::CAfvMapDialog> m_mapDialog; //!< map dialog
     QScopedPointer<BlackGui::Components::CAircraftModelSetValidationDialog> m_validationDialog; //!< aircraft model validation dialog
     BlackMisc::CData<BlackMisc::Simulation::Data::TLastAutoPublish> m_lastAutoPublish { this };
-    BlackCore::CActionBind m_actionPtt  { BlackMisc::Input::pttHotkeyAction(),     BlackMisc::CIcons::StandardIconRadio16, this, &SwiftGuiStd::onPttChanged };
-    BlackCore::CActionBindings  m_menuHotkeyHandlers;
+    BlackCore::CActionBind m_actionPtt { BlackMisc::Input::pttHotkeyAction(), BlackMisc::CIcons::StandardIconRadio16, this, &SwiftGuiStd::onPttChanged };
+    BlackCore::CActionBindings m_menuHotkeyHandlers;
     BlackGui::CManagedStatusBar m_statusBar;
     BlackMisc::CLogHistoryReplica m_logHistoryForStatus { this };
     BlackMisc::CLogHistoryReplica m_logHistoryForOverlay { this };
 
     // contexts
-    static constexpr int MaxCoreFailures = 5;  //!< Failures counted before reconnecting
-    int  m_coreFailures            = 0;        //!< failed access to core
-    bool m_init                    = false;
-    bool m_coreAvailable           = false;    //!< core already available?
-    bool m_contextNetworkAvailable = false;    //!< network context available?
-    bool m_contextAudioAvailable   = false;    //!< audio context available?
-    bool m_displayingDBusReconnect = false;    //!< currently displaying reconnect dialog
-    bool m_dbDataLoading           = false;    //!< DB or shared data loading in progress
-    QTimer m_timerContextWatchdog;             //!< core available?
+    static constexpr int MaxCoreFailures = 5; //!< Failures counted before reconnecting
+    int m_coreFailures = 0; //!< failed access to core
+    bool m_init = false;
+    bool m_coreAvailable = false; //!< core already available?
+    bool m_contextNetworkAvailable = false; //!< network context available?
+    bool m_contextAudioAvailable = false; //!< audio context available?
+    bool m_displayingDBusReconnect = false; //!< currently displaying reconnect dialog
+    bool m_dbDataLoading = false; //!< DB or shared data loading in progress
+    QTimer m_timerContextWatchdog; //!< core available?
     BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< own aircraft's state
 
     //! GUI status update

@@ -69,8 +69,7 @@ namespace BlackMisc::SharedState
         connect(m_duplex.get(), &IDuplex::eventPosted, this, &CDataLinkDBus::handlePeerEvent);
         connect(m_duplex.get(), &IDuplex::peerSubscriptionsReceived, this, &CDataLinkDBus::setPeerSubscriptions);
         connect(m_duplex.get(), &IDuplex::requestReceived, this, &CDataLinkDBus::handlePeerRequest);
-        doAfter(ready, m_duplex.get(), [this]
-        {
+        doAfter(ready, m_duplex.get(), [this] {
             m_duplex->requestPeerSubscriptions();
             announceLocalSubscriptions();
             setConnectionStatus(true);
@@ -150,8 +149,7 @@ namespace BlackMisc::SharedState
         auto mutator = getChannel(channel).activeMutator.lock();
         if (mutator)
         {
-            doAfter(mutator->handleRequest(param), this, [this, token](auto future)
-            {
+            doAfter(mutator->handleRequest(param), this, [this, token](auto future) {
                 if (m_duplex) { m_duplex->reply(future.result(), token); }
             });
         }
@@ -159,8 +157,7 @@ namespace BlackMisc::SharedState
 
     void CDataLinkDBus::publish(const CPassiveMutator *mutator)
     {
-        connect(mutator, &CPassiveMutator::eventPosted, this, [this, channel = getChannelName(mutator)](const CVariant &param)
-        {
+        connect(mutator, &CPassiveMutator::eventPosted, this, [this, channel = getChannelName(mutator)](const CVariant &param) {
             handleLocalEvent(channel, param);
         });
     }
@@ -170,15 +167,14 @@ namespace BlackMisc::SharedState
         publish(static_cast<const CPassiveMutator *>(mutator));
 
         auto &channel = getChannel(mutator);
-        Q_ASSERT_X(! channel.activeMutator, Q_FUNC_INFO, "Tried to publish two active mutators on one channel");
+        Q_ASSERT_X(!channel.activeMutator, Q_FUNC_INFO, "Tried to publish two active mutators on one channel");
         channel.activeMutator = mutator->weakRef();
 
         if (m_duplex)
         {
             m_duplex->advertise(getChannelName(mutator));
         }
-        connect(mutator, &QObject::destroyed, this, [this, channel = getChannelName(mutator)]
-        {
+        connect(mutator, &QObject::destroyed, this, [this, channel = getChannelName(mutator)] {
             if (m_duplex) { m_duplex->withdraw(channel); }
         });
     }
@@ -187,8 +183,7 @@ namespace BlackMisc::SharedState
     {
         getChannel(observer).passiveObservers.push_back(observer->weakRef());
 
-        auto announce = [this, channel = getChannelName(observer)]
-        {
+        auto announce = [this, channel = getChannelName(observer)] {
             if (m_duplex) { announceLocalSubscriptions(channel); }
         };
         connect(observer, &CPassiveObserver::eventSubscriptionChanged, this, announce);
@@ -200,8 +195,7 @@ namespace BlackMisc::SharedState
     {
         subscribe(static_cast<const CPassiveObserver *>(observer));
 
-        connect(observer, &CActiveObserver::requestPosted, this, [this, channel = getChannelName(observer)](const CVariant &param, CPromise<CVariant> reply)
-        {
+        connect(observer, &CActiveObserver::requestPosted, this, [this, channel = getChannelName(observer)](const CVariant &param, CPromise<CVariant> reply) {
             reply.chainResult(handleLocalRequest(channel, param));
         });
     }

@@ -18,10 +18,10 @@ using namespace BlackMisc;
 namespace BlackGui
 {
     CDropBase::CDropBase()
-    { }
+    {}
 
     CDropBase::~CDropBase()
-    { }
+    {}
 
     void CDropBase::setAcceptedMetaTypeIds(const QList<int> &ids)
     {

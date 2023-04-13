@@ -31,7 +31,8 @@
 #include <QStringList>
 #include <QtGlobal>
 
-template <class Key, class T> class QHash;
+template <class Key, class T>
+class QHash;
 
 namespace BlackMisc
 {
@@ -149,10 +150,26 @@ namespace BlackMisc
         Strategy m_strategy;
         QSet<QString> m_strings;
 
-        const QString &getString() const { Q_ASSERT(m_strategy == ExactMatch && m_strings.size() == 1); return *m_strings.begin(); }
-        const QString &getPrefix() const { Q_ASSERT(m_strategy == StartsWith && m_strings.size() == 1); return *m_strings.begin(); }
-        const QString &getSuffix() const { Q_ASSERT(m_strategy == EndsWith && m_strings.size() == 1); return *m_strings.begin(); }
-        const QString &getSubstring() const { Q_ASSERT(m_strategy == Contains && m_strings.size() == 1); return *m_strings.begin(); }
+        const QString &getString() const
+        {
+            Q_ASSERT(m_strategy == ExactMatch && m_strings.size() == 1);
+            return *m_strings.begin();
+        }
+        const QString &getPrefix() const
+        {
+            Q_ASSERT(m_strategy == StartsWith && m_strings.size() == 1);
+            return *m_strings.begin();
+        }
+        const QString &getSuffix() const
+        {
+            Q_ASSERT(m_strategy == EndsWith && m_strings.size() == 1);
+            return *m_strings.begin();
+        }
+        const QString &getSubstring() const
+        {
+            Q_ASSERT(m_strategy == Contains && m_strings.size() == 1);
+            return *m_strings.begin();
+        }
 
         static const QHash<QString, CLogPattern> &allHumanReadablePatterns();
 

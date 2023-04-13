@@ -28,7 +28,7 @@ namespace BlackGui::Models
     template <typename T, bool UseCompare>
     CListModelBase<T, UseCompare>::CListModelBase(const QString &translationContext, QObject *parent)
         : CListModelBaseNonTemplate(translationContext, parent)
-    { }
+    {}
 
     template <typename T, bool UseCompare>
     int CListModelBase<T, UseCompare>::rowCount(const QModelIndex &parentIndex) const
@@ -220,14 +220,12 @@ namespace BlackGui::Models
         Q_UNUSED(sort)
         if (m_modelDestroyed) { return nullptr; }
         const auto sortColumn = this->getSortColumn();
-        const auto sortOrder  = this->getSortOrder();
-        CWorker *worker = CWorker::fromTask(this, "ModelSort", [this, container, sortColumn, sortOrder]()
-        {
+        const auto sortOrder = this->getSortOrder();
+        CWorker *worker = CWorker::fromTask(this, "ModelSort", [this, container, sortColumn, sortOrder]() {
             return this->sortContainerByColumn(container, sortColumn, sortOrder);
         });
-        worker->thenWithResult<ContainerType>(this, [this](const ContainerType & sortedContainer)
-        {
-            if (m_modelDestroyed) { return;  }
+        worker->thenWithResult<ContainerType>(this, [this](const ContainerType &sortedContainer) {
+            if (m_modelDestroyed) { return; }
             this->update(sortedContainer, false);
         });
         worker->then(this, &CListModelBase::asyncUpdateFinished);
@@ -252,7 +250,7 @@ namespace BlackGui::Models
     template <typename T, bool UseCompare>
     bool CListModelBase<T, UseCompare>::hasFilter() const
     {
-        const bool f =  m_filter && m_filter->isValid();
+        const bool f = m_filter && m_filter->isValid();
         return f;
     }
 
@@ -268,7 +266,7 @@ namespace BlackGui::Models
     }
 
     template <typename T, bool UseCompare>
-    void CListModelBase<T, UseCompare>::takeFilterOwnership(std::unique_ptr<IModelFilter<ContainerType> > &filter)
+    void CListModelBase<T, UseCompare>::takeFilterOwnership(std::unique_ptr<IModelFilter<ContainerType>> &filter)
     {
         ContainerType selection;
         if (m_selectionModel)
@@ -360,7 +358,7 @@ namespace BlackGui::Models
         this->emitModelDataChanged();
     }
 
-    template<typename T, bool UseCompare>
+    template <typename T, bool UseCompare>
     void CListModelBase<T, UseCompare>::push_back(const ContainerType &container)
     {
         beginInsertRows(QModelIndex(), m_container.size(), m_container.size());
@@ -501,7 +499,7 @@ namespace BlackGui::Models
         this->sort(this->getSortColumn(), this->getSortOrder());
     }
 
-    template<typename T, bool UseCompare>
+    template <typename T, bool UseCompare>
     void CListModelBase<T, UseCompare>::resort()
     {
         // sort the values
@@ -515,7 +513,7 @@ namespace BlackGui::Models
 
         // new order
         m_sortColumn = column;
-        m_sortOrder  = order;
+        m_sortOrder = order;
         if (m_container.size() < 2)
         {
             return; // nothing to do
@@ -531,7 +529,7 @@ namespace BlackGui::Models
         if (this->rowCount() <= maxNumber) { return; }
         if (forceSort)
         {
-            this->sort();    // make sure container is sorted
+            this->sort(); // make sure container is sorted
         }
         ContainerType container(this->container());
         container.truncate(maxNumber);
@@ -544,7 +542,7 @@ namespace BlackGui::Models
         if (m_modelDestroyed) { return container; }
         if (container.size() < 2 || !m_columns.isSortable(column))
         {
-            return container;    // nothing to do
+            return container; // nothing to do
         }
 
         // this is the only part not really thread safe, but columns do not change so far
@@ -552,14 +550,13 @@ namespace BlackGui::Models
         Q_ASSERT(!propertyIndex.isEmpty());
         if (propertyIndex.isEmpty())
         {
-            return container;    // at release build do nothing
+            return container; // at release build do nothing
         }
 
         // sort the values
         const auto tieBreakersCopy = m_sortTieBreakers; //! \todo workaround T579 still not thread-safe, but less likely to crash
         const std::integral_constant<bool, UseCompare> marker {};
-        const auto p = [ = ](const ObjectType & a, const ObjectType & b) -> bool
-        {
+        const auto p = [=](const ObjectType &a, const ObjectType &b) -> bool {
             return Private::compareForModelSort<ObjectType>(a, b, order, propertyIndex, tieBreakersCopy, marker);
         };
 
@@ -597,9 +594,9 @@ namespace BlackGui::Models
     QJsonObject CListModelBase<T, UseCompare>::toJson(bool selectedOnly) const
     {
         const CVariant variant = CVariant::fromValue(
-                                        selectedOnly && m_selectionModel ?
-                                        m_selectionModel->selectedObjects() :
-                                        container());
+            selectedOnly && m_selectionModel ?
+                m_selectionModel->selectedObjects() :
+                container());
         return variant.toJson();
     }
 
@@ -607,9 +604,9 @@ namespace BlackGui::Models
     QString CListModelBase<T, UseCompare>::toJsonString(QJsonDocument::JsonFormat format, bool selectedOnly) const
     {
         const CVariant variant = CVariant::fromValue(
-                                        selectedOnly && m_selectionModel ?
-                                        m_selectionModel->selectedObjects() :
-                                        container());
+            selectedOnly && m_selectionModel ?
+                m_selectionModel->selectedObjects() :
+                container());
         return variant.toJsonString(format);
     }
 

@@ -22,8 +22,7 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackGui::Models
 {
-    CAircraftSituationListModel::CAircraftSituationListModel(QObject *parent) :
-        CListModelTimestampWithOffsetObjects<CAircraftSituationList, true>("ViewAircraftPartsList", parent)
+    CAircraftSituationListModel::CAircraftSituationListModel(QObject *parent) : CListModelTimestampWithOffsetObjects<CAircraftSituationList, true>("ViewAircraftPartsList", parent)
     {
         this->addTimestampOffsetColumns();
 

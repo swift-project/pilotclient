@@ -23,8 +23,14 @@
 
 namespace BlackMisc
 {
-    namespace Network { class CServer; }
-    namespace Simulation { class CSimulatorPluginInfo; }
+    namespace Network
+    {
+        class CServer;
+    }
+    namespace Simulation
+    {
+        class CSimulatorPluginInfo;
+    }
 }
 namespace BlackGui::Components
 {

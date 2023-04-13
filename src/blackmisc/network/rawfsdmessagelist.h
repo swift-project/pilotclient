@@ -51,4 +51,4 @@ namespace BlackMisc::Network
 Q_DECLARE_METATYPE(BlackMisc::Network::CRawFsdMessageList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Network::CRawFsdMessage>)
 
-#endif //guard
+#endif // guard

@@ -28,9 +28,8 @@ using namespace BlackGui::Components;
 
 namespace BlackGui::Editors
 {
-    CModelMappingModifyForm::CModelMappingModifyForm(QWidget *parent) :
-        CFormDbUser(parent),
-        ui(new Ui::CModelMappingModifyForm)
+    CModelMappingModifyForm::CModelMappingModifyForm(QWidget *parent) : CFormDbUser(parent),
+                                                                        ui(new Ui::CModelMappingModifyForm)
     {
         ui->setupUi(this);
         ui->le_Parts->setPlaceholderText("Parts " + CAircraftModel::supportedParts());

@@ -190,12 +190,12 @@ namespace BlackCore
             static void registerHelp()
             {
                 if (BlackMisc::CSimpleCommandParser::registered("BlackCore::Context::CContextOwnAircraft")) { return; }
-                BlackMisc::CSimpleCommandParser::registerCommand({".x", "alias: .xpdr"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".x code|mode", "set XPDR code or mode"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".selcal code", "set SELCAL code"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".com1", "alias .c1"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".com1 frequency", "set COM1 frequency"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".com2 frequency", "set COM2 frequency"});
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".x", "alias: .xpdr" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".x code|mode", "set XPDR code or mode" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".selcal code", "set SELCAL code" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".com1", "alias .c1" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".com1 frequency", "set COM1 frequency" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".com2 frequency", "set COM2 frequency" });
             }
 
         protected:
@@ -206,15 +206,15 @@ namespace BlackCore
             CContextOwnAircraft *registerWithDBus(BlackMisc::CDBusServer *server);
 
         private:
-            BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft;  //!< my aircraft
-            mutable QReadWriteLock                    m_lockAircraft; //!< lock aircraft
+            BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< my aircraft
+            mutable QReadWriteLock m_lockAircraft; //!< lock aircraft
 
             CActionBind m_actionToggleXpdr { BlackMisc::Input::toggleXPDRStateHotkeyAction(), BlackMisc::Input::toggleXPDRStateHotkeyIcon(), this, &CContextOwnAircraft::actionToggleTransponder };
-            CActionBind m_actionIdent      { BlackMisc::Input::toggleXPDRIdentHotkeyAction(), BlackMisc::Input::toggleXPDRIdentHotkeyIcon(), this, &CContextOwnAircraft::actionIdent };
+            CActionBind m_actionIdent { BlackMisc::Input::toggleXPDRIdentHotkeyAction(), BlackMisc::Input::toggleXPDRIdentHotkeyIcon(), this, &CContextOwnAircraft::actionIdent };
 
             static constexpr qint64 MinHistoryDeltaMs = 1000;
-            static constexpr int MaxHistoryElements   = 20;
-            QTimer  m_historyTimer;              //!< history timer
+            static constexpr int MaxHistoryElements = 20;
+            QTimer m_historyTimer; //!< history timer
             std::atomic_bool m_history { true }; //!< enable history
             BlackMisc::Aviation::CAircraftSituationList m_situationHistory; //!< history, latest situation first
 

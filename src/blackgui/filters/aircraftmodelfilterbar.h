@@ -21,8 +21,14 @@
 #include <QScopedPointer>
 #include <memory>
 
-namespace Ui { class CAircraftModelFilterBar; }
-namespace BlackMisc::Simulation { class CAircraftModelList; }
+namespace Ui
+{
+    class CAircraftModelFilterBar;
+}
+namespace BlackMisc::Simulation
+{
+    class CAircraftModelList;
+}
 namespace BlackGui::Filters
 {
     /*!

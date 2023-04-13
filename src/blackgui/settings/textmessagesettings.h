@@ -19,8 +19,14 @@ BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackGui::Settings, CTextMessageSettings)
 
 namespace BlackMisc
 {
-    namespace Simulation { class CSimulatedAircraft; }
-    namespace Network { class CTextMessage; }
+    namespace Simulation
+    {
+        class CSimulatedAircraft;
+    }
+    namespace Network
+    {
+        class CTextMessage;
+    }
 }
 namespace BlackGui::Settings
 {
@@ -127,13 +133,13 @@ namespace BlackGui::Settings
         void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
 
     private:
-        bool m_popupPrivateMessages    = true;
+        bool m_popupPrivateMessages = true;
         bool m_popupSupervisorMessages = true;
-        bool m_popupFrequencyMessages  = false; //!< show if tuned in
-        bool m_popupAllMessages        = false;
-        bool m_popupSelcalMessages     = true;
-        bool m_focus                   = true;
-        bool m_latestFirst             = false; //!< latest messages first
+        bool m_popupFrequencyMessages = false; //!< show if tuned in
+        bool m_popupAllMessages = false;
+        bool m_popupSelcalMessages = true;
+        bool m_focus = true;
+        bool m_latestFirst = false; //!< latest messages first
         QString m_styleSheet;
 
         BLACK_METACLASS(
@@ -156,7 +162,11 @@ namespace BlackGui::Settings
         static const char *key() { return "textmessages"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("Text message"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("Text message");
+            return name;
+        }
     };
 } // ns
 

@@ -71,13 +71,24 @@ namespace BlackMisc
          *                It is legal to pass static_cast<T>(nullptr), but in member functions passing the <tt>this</tt> pointer is easier.
          */
         template <typename T, typename = std::enable_if_t<std::is_class_v<T>>>
-        CLogCategoryList(const T *pointer) : CLogCategoryList(fromClass(pointer)) {}
+        CLogCategoryList(const T *pointer) : CLogCategoryList(fromClass(pointer))
+        {}
 
         //! Return a copy with another category appended.
-        CLogCategoryList with(const CLogCategory &other) const { auto copy = *this; copy.push_back(other); return copy; }
+        CLogCategoryList with(const CLogCategory &other) const
+        {
+            auto copy = *this;
+            copy.push_back(other);
+            return copy;
+        }
 
         //! Return a copy with some other categories appended.
-        CLogCategoryList with(const CLogCategoryList &other) const { auto copy = *this; copy.push_back(other); return copy; }
+        CLogCategoryList with(const CLogCategoryList &other) const
+        {
+            auto copy = *this;
+            copy.push_back(other);
+            return copy;
+        }
 
         //! Return a copy with validation category appended.
         CLogCategoryList withValidation() const { return with(CLogCategories::validation()); }
@@ -111,8 +122,7 @@ namespace BlackMisc
         static CLogCategoryList fromClass(const T *ptr)
         {
             static_assert(sizeof(T) > 0, "T must be a complete type, not forward declared");
-            static const auto staticList = []
-            {
+            static const auto staticList = [] {
                 CLogCategoryList list;
                 if constexpr (THasGetLogCategories<T>::value) { list.push_back(fromQStringList(T::getLogCategories())); }
                 if constexpr (QMetaTypeId<T>::Defined) { list.push_back(QMetaType::typeName(qMetaTypeId<T>())); }

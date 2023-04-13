@@ -32,7 +32,10 @@
 #include <QScopedPointer>
 #include <QString>
 
-namespace Ui { class CLoginOverviewComponent; }
+namespace Ui
+{
+    class CLoginOverviewComponent;
+}
 namespace BlackMisc::Simulation
 {
     class CAircraftModel;

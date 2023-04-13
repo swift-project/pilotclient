@@ -20,9 +20,8 @@ BLACK_DEFINE_COLLECTION_MIXINS(BlackMisc::Simulation::FsCommon, CVPilotModelRule
 
 namespace BlackMisc::Simulation::FsCommon
 {
-    CVPilotModelRuleSet::CVPilotModelRuleSet(const CCollection<CVPilotModelRule> &other) :
-        CCollection<CVPilotModelRule>(other)
-    { }
+    CVPilotModelRuleSet::CVPilotModelRuleSet(const CCollection<CVPilotModelRule> &other) : CCollection<CVPilotModelRule>(other)
+    {}
 
     CVPilotModelRuleSet CVPilotModelRuleSet::findByModelName(const QString &modelName) const
     {
@@ -37,8 +36,7 @@ namespace BlackMisc::Simulation::FsCommon
     CVPilotModelRuleSet CVPilotModelRuleSet::findModelsStartingWith(const QString &modelName) const
     {
         QString mn(modelName.trimmed().toUpper());
-        return this->findBy([ = ](const CVPilotModelRule & rule)
-        {
+        return this->findBy([=](const CVPilotModelRule &rule) {
             return rule.getModelName().startsWith(mn, Qt::CaseInsensitive);
         });
     }

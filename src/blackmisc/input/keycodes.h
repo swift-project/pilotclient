@@ -139,4 +139,4 @@ namespace BlackMisc::Input
 
 Q_DECLARE_METATYPE(BlackMisc::Input::KeyCode)
 
-#endif //guard
+#endif // guard

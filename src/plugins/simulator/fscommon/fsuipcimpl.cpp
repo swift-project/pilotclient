@@ -8,35 +8,37 @@
 
 #if defined(SWIFT_USING_FSUIPC32) || defined(SWIFT_USING_FSUIPC64)
 
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
+#    ifndef NOMINMAX
+#        define NOMINMAX
+#    endif
 
-#include "fsuipc.h"
-#include <Windows.h>
+#    include "fsuipc.h"
+#    include <Windows.h>
 // bug in FSUIPC_User.h, windows.h not included, so we have to import it first
 
-#ifdef SWIFT_USING_FSUIPC32
-extern "C" {
-#include "../fsuipc32/IPCuser.h"
-#include "../fsuipc32/FSUIPC_User.h"
-#include "../fsuipc32/NewWeather.h"
+#    ifdef SWIFT_USING_FSUIPC32
+extern "C"
+{
+#        include "../fsuipc32/IPCuser.h"
+#        include "../fsuipc32/FSUIPC_User.h"
+#        include "../fsuipc32/NewWeather.h"
 }
-#elif SWIFT_USING_FSUIPC64
-extern "C" {
-#include "../fsuipc64/IPCuser64.h"
-#include "../fsuipc64/FSUIPC_User64.h"
-#include "../fsuipc64/NewWeather.h"
+#    elif SWIFT_USING_FSUIPC64
+extern "C"
+{
+#        include "../fsuipc64/IPCuser64.h"
+#        include "../fsuipc64/FSUIPC_User64.h"
+#        include "../fsuipc64/NewWeather.h"
 }
-#endif
+#    endif
 
-#include "blackmisc/simulation/fscommon/bcdconversions.h"
-#include "blackmisc/threadutils.h"
-#include "blackmisc/logmessage.h"
+#    include "blackmisc/simulation/fscommon/bcdconversions.h"
+#    include "blackmisc/threadutils.h"
+#    include "blackmisc/logmessage.h"
 
-#include <QDebug>
-#include <QLatin1Char>
-#include <QDateTime>
+#    include <QDebug>
+#    include <QLatin1Char>
+#    include <QDateTime>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation::FsCommon;
@@ -87,11 +89,11 @@ namespace BlackSimPlugin::FsCommon
                 const int simIndex = static_cast<int>(FSUIPC_FS_Version);
                 const QString sim = CFsuipc::simulator(simIndex);
                 const QString ver = QStringLiteral("%1.%2.%3.%4%5")
-                                    .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 28))))
-                                    .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 24))))
-                                    .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 20))))
-                                    .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 16))))
-                                    .arg((FSUIPC_Version & 0xffff) ? QString(QLatin1Char('a' + static_cast<char>(FSUIPC_Version & 0xff) - 1)) : "");
+                                        .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 28))))
+                                        .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 24))))
+                                        .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 20))))
+                                        .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 16))))
+                                        .arg((FSUIPC_Version & 0xffff) ? QString(QLatin1Char('a' + static_cast<char>(FSUIPC_Version & 0xff) - 1)) : "");
                 m_fsuipcVersion = QStringLiteral("FSUIPC %1 (%2)").arg(ver, sim);
                 CLogMessage(this).info(u"FSUIPC connected: %1") << m_fsuipcVersion;
             }
@@ -151,12 +153,12 @@ namespace BlackSimPlugin::FsCommon
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Open not threadsafe");
         if (!this->isOpened()) { return false; }
 
-        quint16 com1ActiveRaw  = static_cast<quint16>(aircraft.getCom1System().getFrequencyActive().value(CFrequencyUnit::MHz())  * 100);
-        quint16 com2ActiveRaw  = static_cast<quint16>(aircraft.getCom2System().getFrequencyActive().value(CFrequencyUnit::MHz())  * 100);
+        quint16 com1ActiveRaw = static_cast<quint16>(aircraft.getCom1System().getFrequencyActive().value(CFrequencyUnit::MHz()) * 100);
+        quint16 com2ActiveRaw = static_cast<quint16>(aircraft.getCom2System().getFrequencyActive().value(CFrequencyUnit::MHz()) * 100);
         quint16 com1StandbyRaw = static_cast<quint16>(aircraft.getCom1System().getFrequencyStandby().value(CFrequencyUnit::MHz()) * 100);
         quint16 com2StandbyRaw = static_cast<quint16>(aircraft.getCom2System().getFrequencyStandby().value(CFrequencyUnit::MHz()) * 100);
-        com1ActiveRaw  = static_cast<quint16>(CBcdConversions::dec2Bcd(com1ActiveRaw - 10000));
-        com2ActiveRaw  = static_cast<quint16>(CBcdConversions::dec2Bcd(com2ActiveRaw - 10000));
+        com1ActiveRaw = static_cast<quint16>(CBcdConversions::dec2Bcd(com1ActiveRaw - 10000));
+        com2ActiveRaw = static_cast<quint16>(CBcdConversions::dec2Bcd(com2ActiveRaw - 10000));
         com1StandbyRaw = static_cast<quint16>(CBcdConversions::dec2Bcd(com1StandbyRaw - 10000));
         com2StandbyRaw = static_cast<quint16>(CBcdConversions::dec2Bcd(com2StandbyRaw - 10000));
         quint16 transponderCodeRaw = static_cast<quint16>(aircraft.getTransponderCode());
@@ -164,8 +166,8 @@ namespace BlackSimPlugin::FsCommon
 
         DWORD dwResult = 0;
         bool ok =
-            FSUIPC_Write(0x034e, 2, &com1ActiveRaw,  &dwResult) &&
-            FSUIPC_Write(0x3118, 2, &com2ActiveRaw,  &dwResult) &&
+            FSUIPC_Write(0x034e, 2, &com1ActiveRaw, &dwResult) &&
+            FSUIPC_Write(0x3118, 2, &com2ActiveRaw, &dwResult) &&
             FSUIPC_Write(0x311a, 2, &com1StandbyRaw, &dwResult) &&
             FSUIPC_Write(0x311c, 2, &com2StandbyRaw, &dwResult) &&
             FSUIPC_Write(0x0354, 2, &transponderCodeRaw, &dwResult);
@@ -183,10 +185,10 @@ namespace BlackSimPlugin::FsCommon
 
         // should be the same as writing via SimConnect data area
         DWORD dwResult;
-        byte xpdrModeSb3Raw  = xpdr.isInStandby()   ? 1U : 0U;
+        byte xpdrModeSb3Raw = xpdr.isInStandby() ? 1U : 0U;
         byte xpdrIdentSb3Raw = xpdr.isIdentifying() ? 1U : 0U;
         const bool ok =
-            FSUIPC_Write(0x7b91, 1, &xpdrModeSb3Raw,  &dwResult) &&
+            FSUIPC_Write(0x7b91, 1, &xpdrModeSb3Raw, &dwResult) &&
             FSUIPC_Write(0x7b93, 1, &xpdrIdentSb3Raw, &dwResult);
         if (ok) { FSUIPC_Process(&dwResult); }
         return ok && dwResult == 0;
@@ -205,20 +207,20 @@ namespace BlackSimPlugin::FsCommon
         NewWeather nw;
 
         // Clear new weather
-        nw.uCommand    = NW_SET;
-        nw.uFlags      = 0;
+        nw.uCommand = NW_SET;
+        nw.uFlags = 0;
         nw.ulSignature = 0;
-        nw.uDynamics   = 0;
+        nw.uDynamics = 0;
         for (std::size_t i = 0; i < sizeof(nw.uSpare) / sizeof(nw.uSpare[0]); i++) { nw.uSpare[i] = 0; }
 
-        nw.dLatitude    = 0.0;
-        nw.dLongitude   = 0.0;
-        nw.nElevation   = 0;
-        nw.ulTimeStamp  = 0;
-        nw.nTempCtr     = 0;
-        nw.nWindsCtr    = 0;
-        nw.nCloudsCtr   = 0;
-        nw.nElevation   = 0; // meters * 65536;
+        nw.dLatitude = 0.0;
+        nw.dLongitude = 0.0;
+        nw.nElevation = 0;
+        nw.ulTimeStamp = 0;
+        nw.nTempCtr = 0;
+        nw.nWindsCtr = 0;
+        nw.nCloudsCtr = 0;
+        nw.nElevation = 0; // meters * 65536;
         nw.nUpperVisCtr = 0;
 
         // todo: Take station from weather grid
@@ -238,7 +240,7 @@ namespace BlackSimPlugin::FsCommon
         {
             vis.LowerAlt = static_cast<short>(visibilityLayer.getBase().valueInteger(CLengthUnit::m()));
             vis.UpperAlt = static_cast<ushort>(visibilityLayer.getTop().valueInteger(CLengthUnit::m()));
-            vis.Range    = static_cast<ushort>(visibilityLayer.getVisibility().value(CLengthUnit::SM()) * 100);
+            vis.Range = static_cast<ushort>(visibilityLayer.getVisibility().value(CLengthUnit::SM()) * 100);
             vis.Spare = 0;
             nw.UpperVis[nw.nUpperVisCtr++] = vis;
         }
@@ -262,12 +264,12 @@ namespace BlackSimPlugin::FsCommon
             NewCloud cloud;
             switch (cloudLayer.getCoverage())
             {
-            case CCloudLayer::None:      cloud.Coverage = 0; break;
-            case CCloudLayer::Few:       cloud.Coverage = 2; break;
+            case CCloudLayer::None: cloud.Coverage = 0; break;
+            case CCloudLayer::Few: cloud.Coverage = 2; break;
             case CCloudLayer::Scattered: cloud.Coverage = 4; break;
-            case CCloudLayer::Broken:    cloud.Coverage = 6; break;
-            case CCloudLayer::Overcast:  cloud.Coverage = 8; break;
-            default:                     cloud.Coverage = 0; break;
+            case CCloudLayer::Broken: cloud.Coverage = 6; break;
+            case CCloudLayer::Overcast: cloud.Coverage = 8; break;
+            default: cloud.Coverage = 0; break;
             }
 
             cloud.Deviation = 0;
@@ -282,15 +284,15 @@ namespace BlackSimPlugin::FsCommon
 
             cloud.PrecipRate = 2 * static_cast<unsigned char>(cloudLayer.getPrecipitationRate());
             cloud.PrecipType = static_cast<unsigned char>(cloudLayer.getPrecipitation());
-            cloud.TopShape   = 0;
+            cloud.TopShape = 0;
             cloud.Turbulence = 0;
 
             switch (cloudLayer.getClouds())
             {
             case CCloudLayer::NoClouds: cloud.Type = 0; break;
-            case CCloudLayer::Cirrus:   cloud.Type = 1; break;
-            case CCloudLayer::Stratus:  cloud.Type = 8; break;
-            case CCloudLayer::Cumulus:  cloud.Type = 9; break;
+            case CCloudLayer::Cirrus: cloud.Type = 1; break;
+            case CCloudLayer::Stratus: cloud.Type = 8; break;
+            case CCloudLayer::Cumulus: cloud.Type = 9; break;
             case CCloudLayer::Thunderstorm: cloud.Type = 10; break;
             default: cloud.Type = 0;
             }
@@ -336,11 +338,11 @@ namespace BlackSimPlugin::FsCommon
 
         // should be the same as writing via SimConnect data area
         DWORD dwResult;
-        quint8 hourRaw   = static_cast<quint8>(hour);
+        quint8 hourRaw = static_cast<quint8>(hour);
         quint8 minuteRaw = static_cast<quint8>(minute);
 
         const bool ok =
-            FSUIPC_Write(0x023b, 1, &hourRaw,  &dwResult) &&
+            FSUIPC_Write(0x023b, 1, &hourRaw, &dwResult) &&
             FSUIPC_Write(0x023c, 1, &minuteRaw, &dwResult);
         if (ok) { FSUIPC_Process(&dwResult); }
         return ok && dwResult == 0;
@@ -408,21 +410,21 @@ namespace BlackSimPlugin::FsCommon
             FSUIPC_Read(0x0238, 3, localFsTimeRaw, &dwResult) &&
 
             // COM settings
-            (cockpitN || FSUIPC_Read(0x034e, 2, &com1ActiveRaw,  &dwResult)) &&
-            (cockpitN || FSUIPC_Read(0x3118, 2, &com2ActiveRaw,  &dwResult)) &&
+            (cockpitN || FSUIPC_Read(0x034e, 2, &com1ActiveRaw, &dwResult)) &&
+            (cockpitN || FSUIPC_Read(0x3118, 2, &com2ActiveRaw, &dwResult)) &&
             (cockpitN || FSUIPC_Read(0x311a, 2, &com1StandbyRaw, &dwResult)) &&
             (cockpitN || FSUIPC_Read(0x311c, 2, &com2StandbyRaw, &dwResult)) &&
             (cockpitN || FSUIPC_Read(0x0354, 2, &transponderCodeRaw, &dwResult)) &&
 
             // COM Settings, transponder, SB3
-            (cockpitN || FSUIPC_Read(0x7b91, 1, &xpdrModeSb3Raw,  &dwResult)) &&
+            (cockpitN || FSUIPC_Read(0x7b91, 1, &xpdrModeSb3Raw, &dwResult)) &&
             (cockpitN || FSUIPC_Read(0x7b93, 1, &xpdrIdentSb3Raw, &dwResult)) &&
 
             // Speeds, situation
             (situationN || FSUIPC_Read(0x02b4, 4, &groundspeedRaw, &dwResult)) &&
             (situationN || FSUIPC_Read(0x0578, 4, &pitchRaw, &dwResult)) &&
-            (situationN || FSUIPC_Read(0x057c, 4, &bankRaw,  &dwResult)) &&
-            (situationN || FSUIPC_Read(0x0580, 4, &headingRaw,  &dwResult)) &&
+            (situationN || FSUIPC_Read(0x057c, 4, &bankRaw, &dwResult)) &&
+            (situationN || FSUIPC_Read(0x0580, 4, &headingRaw, &dwResult)) &&
             (situationN || FSUIPC_Read(0x0570, 8, &altitudeRaw, &dwResult)) &&
 
             (situationN || FSUIPC_Read(0x3198, 8, &velocityWorld[0], &dwResult)) &&
@@ -434,19 +436,19 @@ namespace BlackSimPlugin::FsCommon
             (situationN || FSUIPC_Read(0x30B8, 8, &rotationVelocityBody[2], &dwResult)) &&
 
             // Position
-            (situationN || FSUIPC_Read(0x0560, 8, &latitudeRaw,  &dwResult)) &&
+            (situationN || FSUIPC_Read(0x0560, 8, &latitudeRaw, &dwResult)) &&
             (situationN || FSUIPC_Read(0x0568, 8, &longitudeRaw, &dwResult)) &&
-            (situationN || FSUIPC_Read(0x0020, 4, &groundAltitudeRaw,   &dwResult)) &&
+            (situationN || FSUIPC_Read(0x0020, 4, &groundAltitudeRaw, &dwResult)) &&
             (situationN || FSUIPC_Read(0x34B0, 8, &pressureAltitudeRaw, &dwResult)) &&
 
             // model name
             FSUIPC_Read(0x3d00, 256, &modelNameRaw, &dwResult) &&
 
             // aircraft parts
-            (aircraftPartsN || FSUIPC_Read(0x0D0C, 2, &lightsRaw,   &dwResult)) &&
+            (aircraftPartsN || FSUIPC_Read(0x0D0C, 2, &lightsRaw, &dwResult)) &&
             (aircraftPartsN || FSUIPC_Read(0x0366, 2, &onGroundRaw, &dwResult)) &&
             (aircraftPartsN || FSUIPC_Read(0x0BDC, 4, &flapsControlRaw, &dwResult)) &&
-            (aircraftPartsN || FSUIPC_Read(0x0BE8, 4, &gearControlRaw,  &dwResult)) &&
+            (aircraftPartsN || FSUIPC_Read(0x0BE8, 4, &gearControlRaw, &dwResult)) &&
             (aircraftPartsN || FSUIPC_Read(0x0BD0, 4, &spoilersControlRaw, &dwResult)) &&
 
             // engines
@@ -469,8 +471,8 @@ namespace BlackSimPlugin::FsCommon
                 CTransponder xpdr = aircraft.getTransponder();
 
                 // 2710 => 12710 => / 100.0 => 127.1
-                com1ActiveRaw  = static_cast<short>(10000 + CBcdConversions::bcd2Dec(com1ActiveRaw));
-                com2ActiveRaw  = static_cast<short>(10000 + CBcdConversions::bcd2Dec(com2ActiveRaw));
+                com1ActiveRaw = static_cast<short>(10000 + CBcdConversions::bcd2Dec(com1ActiveRaw));
+                com2ActiveRaw = static_cast<short>(10000 + CBcdConversions::bcd2Dec(com2ActiveRaw));
                 com1StandbyRaw = static_cast<short>(10000 + CBcdConversions::bcd2Dec(com1StandbyRaw));
                 com2StandbyRaw = static_cast<short>(10000 + CBcdConversions::bcd2Dec(com2StandbyRaw));
                 com1.setFrequencyActiveMHz(com1ActiveRaw / 100.0);
@@ -499,9 +501,9 @@ namespace BlackSimPlugin::FsCommon
                 // cppcheck-suppress shadowArgument
                 CAircraftSituation situation = aircraft.getSituation();
                 CCoordinateGeodetic position = situation.getPosition();
-                CLatitude  lat(latitudeRaw  * latCorrectionFactor, CAngleUnit::deg());
+                CLatitude lat(latitudeRaw * latCorrectionFactor, CAngleUnit::deg());
                 CLongitude lon(longitudeRaw * lonCorrectionFactor, CAngleUnit::deg());
-                CAltitude  groundAltitude(groundAltitudeRaw / 256.0, CAltitude::MeanSeaLevel, CLengthUnit::m());
+                CAltitude groundAltitude(groundAltitudeRaw / 256.0, CAltitude::MeanSeaLevel, CLengthUnit::m());
                 position.setLatitude(lat);
                 position.setLongitude(lon);
                 position.setGeodeticHeight(groundAltitude);
@@ -509,16 +511,16 @@ namespace BlackSimPlugin::FsCommon
 
                 const double angleCorrectionFactor = 360.0 / 65536.0 / 65536.0; // see FSUIPC docu
                 pitchRaw = qRound(std::floor(pitchRaw * angleCorrectionFactor));
-                bankRaw  = qRound(std::floor(bankRaw * angleCorrectionFactor));
+                bankRaw = qRound(std::floor(bankRaw * angleCorrectionFactor));
 
                 // MSFS has inverted pitch and bank angles
                 pitchRaw = ~pitchRaw;
-                bankRaw  = ~bankRaw;
+                bankRaw = ~bankRaw;
                 if (pitchRaw < -90 || pitchRaw > 89) { CLogMessage(this).warning(u"FSUIPC: Pitch value out of limits: %1") << pitchRaw; }
 
                 // speeds, situation
                 CAngle pitch = CAngle(pitchRaw, CAngleUnit::deg());
-                CAngle bank  = CAngle(bankRaw, CAngleUnit::deg());
+                CAngle bank = CAngle(bankRaw, CAngleUnit::deg());
                 CHeading heading = CHeading(headingRaw * angleCorrectionFactor, CHeading::True, CAngleUnit::deg());
                 CSpeed groundspeed(groundspeedRaw / 65536.0, CSpeedUnit::m_s());
                 CAltitude altitude(altitudeRaw / (65536.0 * 65536.0), CAltitude::MeanSeaLevel, CLengthUnit::m());
@@ -529,11 +531,11 @@ namespace BlackSimPlugin::FsCommon
                 situation.setGroundSpeed(groundspeed);
                 situation.setAltitude(altitude);
                 situation.setPressureAltitude(pressureAltitude);
-                situation.setVelocity({velocityWorld[0], velocityWorld[1], velocityWorld[2], CSpeedUnit::ft_s(), rotationVelocityBody[0],
-                                        rotationVelocityBody[1], rotationVelocityBody[2], CAngleUnit::rad(), CTimeUnit::s()});
+                situation.setVelocity({ velocityWorld[0], velocityWorld[1], velocityWorld[2], CSpeedUnit::ft_s(), rotationVelocityBody[0],
+                                        rotationVelocityBody[1], rotationVelocityBody[2], CAngleUnit::rad(), CTimeUnit::s() });
                 situation.setGroundElevation(groundAltitude, CAircraftSituation::FromProvider);
                 aircraft.setSituation(situation);
-                //aircraft.setCG(altitude - groundAltitude); // calculate the CG
+                // aircraft.setCG(altitude - groundAltitude); // calculate the CG
             } // situation
 
             // model
@@ -543,11 +545,10 @@ namespace BlackSimPlugin::FsCommon
             if (aircraftParts)
             {
                 const CAircraftLights lights(lightsRaw & (1 << 4), lightsRaw & (1 << 2), lightsRaw & (1 << 3), lightsRaw & (1 << 1),
-                                                lightsRaw & (1 << 0), lightsRaw & (1 << 8));
+                                             lightsRaw & (1 << 0), lightsRaw & (1 << 8));
 
                 const QList<bool> helperList { engine1CombustionFlag != 0, engine2CombustionFlag != 0,
-                                                engine3CombustionFlag != 0, engine4CombustionFlag != 0
-                                                };
+                                               engine3CombustionFlag != 0, engine4CombustionFlag != 0 };
 
                 CAircraftEngineList engines;
                 for (int index = 0; index < numberOfEngines; ++index)
@@ -556,7 +557,7 @@ namespace BlackSimPlugin::FsCommon
                 }
 
                 CAircraftParts parts(lights, gearControlRaw == 16383, flapsControlRaw * 100 / 16383,
-                                        spoilersControlRaw == 16383, engines, onGroundRaw == 1);
+                                     spoilersControlRaw == 16383, engines, onGroundRaw == 1);
 
                 aircraft.setParts(parts);
             } // parts
@@ -578,10 +579,8 @@ namespace BlackSimPlugin::FsCommon
         processWeatherMessages();
     }
 
-    CFsuipc::FsuipcWeatherMessage::FsuipcWeatherMessage(unsigned int offset, const QByteArray &data, int leftTrials) :
-        m_offset(static_cast<int>(offset)), m_messageData(data), m_leftTrials(leftTrials)
-    { }
-
+    CFsuipc::FsuipcWeatherMessage::FsuipcWeatherMessage(unsigned int offset, const QByteArray &data, int leftTrials) : m_offset(static_cast<int>(offset)), m_messageData(data), m_leftTrials(leftTrials)
+    {}
 
     void CFsuipc::clearAllWeather()
     {
@@ -591,19 +590,19 @@ namespace BlackSimPlugin::FsCommon
         NewWeather nw;
 
         // Clear new weather
-        nw.uCommand    = NW_CLEAR;
-        nw.uFlags      = 0;
+        nw.uCommand = NW_CLEAR;
+        nw.uFlags = 0;
         nw.ulSignature = 0;
-        nw.uDynamics   = 0;
+        nw.uDynamics = 0;
         for (std::size_t i = 0; i < sizeof(nw.uSpare) / sizeof(nw.uSpare[0]); i++) { nw.uSpare[i] = 0; }
 
-        nw.dLatitude   = 0.0;
-        nw.dLongitude  = 0.0;
-        nw.nElevation  = 0;
+        nw.dLatitude = 0.0;
+        nw.dLongitude = 0.0;
+        nw.nElevation = 0;
         nw.ulTimeStamp = 0;
-        nw.nTempCtr    = 0;
-        nw.nWindsCtr   = 0;
-        nw.nCloudsCtr  = 0;
+        nw.nTempCtr = 0;
+        nw.nWindsCtr = 0;
+        nw.nCloudsCtr = 0;
         const QByteArray clearWeather(reinterpret_cast<const char *>(&nw), sizeof(NewWeather));
         m_weatherMessageQueue.append(FsuipcWeatherMessage(0xC800, clearWeather, 1));
     }

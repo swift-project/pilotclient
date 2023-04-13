@@ -54,7 +54,7 @@ namespace BlackCore
     }
 
     CAircraftMatcher::CAircraftMatcher(QObject *parent) : CAircraftMatcher(CAircraftMatcherSetup(), parent)
-    { }
+    {}
 
     CAircraftMatcher::~CAircraftMatcher()
     {
@@ -76,8 +76,7 @@ namespace BlackCore
         bool useWebServices, CStatusMessageList *log)
     {
         CCallsign::addLogDetailsToList(log, callsign,
-                                           QStringLiteral("Find airline designator from 1st: '%1' 2nd: '%2' callsign: '%3', use airline callsign: %4, name: '%5' telephony: '%6' use web service: %7").
-                                           arg(primaryIcao, secondaryIcao, callsign.toQString(), boolToYesNo(airlineFromCallsign), airlineName, airlineTelephony, boolToYesNo(useWebServices)), getLogCategories());
+                                       QStringLiteral("Find airline designator from 1st: '%1' 2nd: '%2' callsign: '%3', use airline callsign: %4, name: '%5' telephony: '%6' use web service: %7").arg(primaryIcao, secondaryIcao, callsign.toQString(), boolToYesNo(airlineFromCallsign), airlineName, airlineTelephony, boolToYesNo(useWebServices)), getLogCategories());
         CAirlineIcaoCode code;
         do
         {
@@ -122,8 +121,7 @@ namespace BlackCore
         {
 
             CCallsign::addLogDetailsToList(log, callsign,
-                                               QStringLiteral("Cannot find airline designator from 1st: '%1' 2nd: '%2' callsign: '%3', use airline callsign: %4, name: '%5' telephony: '%6' use web service: %7").
-                                               arg(primaryIcao, secondaryIcao, callsign.toQString(), boolToYesNo(airlineFromCallsign), airlineName, airlineTelephony, boolToYesNo(useWebServices)), getLogCategories());
+                                           QStringLiteral("Cannot find airline designator from 1st: '%1' 2nd: '%2' callsign: '%3', use airline callsign: %4, name: '%5' telephony: '%6' use web service: %7").arg(primaryIcao, secondaryIcao, callsign.toQString(), boolToYesNo(airlineFromCallsign), airlineName, airlineTelephony, boolToYesNo(useWebServices)), getLogCategories());
         }
         return code;
     }
@@ -131,8 +129,7 @@ namespace BlackCore
     CAirlineIcaoCode CAircraftMatcher::failoverValidAirlineIcaoDesignator(const CCallsign &callsign, const QString &primaryIcao, const QString &secondaryIcao, bool airlineFromCallsign, const QString &airlineName, const QString &airlineTelephony, const CAircraftModelList &models, CStatusMessageList *log)
     {
         CCallsign::addLogDetailsToList(log, callsign,
-                                           QStringLiteral("Find airline designator from 1st: '%1' 2nd: '%2' callsign: '%3', use airline callsign: %4, airline name: '%5' telephony: '%6', models: %7").
-                                           arg(primaryIcao, secondaryIcao, callsign.toQString(), boolToYesNo(airlineFromCallsign), airlineName, airlineTelephony, models.sizeString()), getLogCategories());
+                                       QStringLiteral("Find airline designator from 1st: '%1' 2nd: '%2' callsign: '%3', use airline callsign: %4, airline name: '%5' telephony: '%6', models: %7").arg(primaryIcao, secondaryIcao, callsign.toQString(), boolToYesNo(airlineFromCallsign), airlineName, airlineTelephony, models.sizeString()), getLogCategories());
 
         if (models.isEmpty())
         {
@@ -232,8 +229,7 @@ namespace BlackCore
         else
         {
             CCallsign::addLogDetailsToList(log, callsign,
-                                               QStringLiteral("Cannot find airline designator from 1st: '%1' 2nd: '%2' callsign: '%3', use airline callsign: %4, airline name: '%5' telephony: '%6', models: %7").
-                                               arg(primaryIcao, secondaryIcao, callsign.toQString(), boolToYesNo(airlineFromCallsign), airlineName, airlineTelephony, models.sizeString()), getLogCategories());
+                                           QStringLiteral("Cannot find airline designator from 1st: '%1' 2nd: '%2' callsign: '%3', use airline callsign: %4, airline name: '%5' telephony: '%6', models: %7").arg(primaryIcao, secondaryIcao, callsign.toQString(), boolToYesNo(airlineFromCallsign), airlineName, airlineTelephony, models.sizeString()), getLogCategories());
         }
         return code;
     }
@@ -468,14 +464,13 @@ namespace BlackCore
             static const QString nms = "no model string";
             CMatchingUtils::addLogDetailsToList(log, remoteAircraft,
                                                 summary.arg(
-                                                    remoteAircraft.getAircraftIcaoCode().getCombinedType(),    matchedModel.getAircraftIcaoCode().getCombinedType(),
-                                                    remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey(), matchedModel.getAircraftIcaoCode().getDesignatorDbKey(),
-                                                    remoteAircraft.getAirlineIcaoCode().getVDesignatorDbKey(), matchedModel.getAirlineIcaoCode().getVDesignatorDbKey()
-                                                ).arg(
-                                                    remoteAircraft.getLivery().getCombinedCodePlusInfoAndId(), matchedModel.getLivery().getCombinedCodePlusInfoAndId(),
-                                                    defaultIfEmpty(remoteAircraft.getModel().getModelStringAndDbKey(), nms), matchedModel.getModelStringAndDbKey(),
-                                                    boolToYesNo(didRunAndModifyMatchingScript)
-                                                ));
+                                                           remoteAircraft.getAircraftIcaoCode().getCombinedType(), matchedModel.getAircraftIcaoCode().getCombinedType(),
+                                                           remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey(), matchedModel.getAircraftIcaoCode().getDesignatorDbKey(),
+                                                           remoteAircraft.getAirlineIcaoCode().getVDesignatorDbKey(), matchedModel.getAirlineIcaoCode().getVDesignatorDbKey())
+                                                    .arg(
+                                                        remoteAircraft.getLivery().getCombinedCodePlusInfoAndId(), matchedModel.getLivery().getCombinedCodePlusInfoAndId(),
+                                                        defaultIfEmpty(remoteAircraft.getModel().getModelStringAndDbKey(), nms), matchedModel.getModelStringAndDbKey(),
+                                                        boolToYesNo(didRunAndModifyMatchingScript)));
         } // log
 
         const QDateTime endTime = QDateTime::currentDateTimeUtc();
@@ -561,8 +556,8 @@ namespace BlackCore
             MSInOutValues inObject(inModel);
             MSInOutValues matchedObject(matchedModel); // same as inModel for reverse lookup
             matchedObject.evaluateChanges(inModel.getAircraftIcaoCode(), inModel.getAirlineIcaoCode());
-            MSInOutValues outObject(matchedModel);     // set default values for out object
-            MSModelSet modelSetObject(modelSet);       // as passed
+            MSInOutValues outObject(matchedModel); // set default values for out object
+            MSModelSet modelSetObject(modelSet); // as passed
             modelSetObject.initByAircraftAndAirline(inModel.getAircraftIcaoCode(), inModel.getAirlineIcaoCode());
             MSWebServices webServices; // web services encapsulated
 
@@ -626,7 +621,7 @@ namespace BlackCore
                         if (model.hasValidDbKey())
                         {
                             // found full model from DB
-                            rv.model    = model;
+                            rv.model = model;
                             rv.modified = true;
                             break;
                         }
@@ -638,7 +633,7 @@ namespace BlackCore
                             CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Matching script using model from set: '%1'").arg(modelString));
 
                             // NON DB model from model set
-                            rv.model    = modeSetModel;
+                            rv.model = modeSetModel;
                             rv.modified = true;
                             break;
                         }
@@ -873,10 +868,7 @@ namespace BlackCore
 
         if (log)
         {
-            CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Using model: ICAO '%1', livery '%2', model '%3', type '%4'").arg(
-                                                   model.getAircraftIcaoCode().getCombinedIcaoStringWithKey(),
-                                                   model.getLivery().getCombinedCodePlusInfo(),
-                                                   model.getModelString(), model.getModelTypeAsString()));
+            CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Using model: ICAO '%1', livery '%2', model '%3', type '%4'").arg(model.getAircraftIcaoCode().getCombinedIcaoStringWithKey(), model.getLivery().getCombinedCodePlusInfo(), model.getModelString(), model.getModelTypeAsString()));
         }
         return model;
     }
@@ -1023,7 +1015,7 @@ namespace BlackCore
             if (icao.isLoadedFromDb())
             {
                 // smart search found DB data
-                foundIcaos = CAircraftIcaoCodeList({icao});
+                foundIcaos = CAircraftIcaoCodeList({ icao });
             }
             else
             {
@@ -1291,7 +1283,7 @@ namespace BlackCore
         }
 
         // set values
-        m_modelSet  = modelsCleaned;
+        m_modelSet = modelsCleaned;
         m_simulator = simulator;
         m_modelSetInfo = QStringLiteral("Set: '%1' entries: %2").arg(simulator.toQString()).arg(modelsCleaned.size());
         return models.size();
@@ -1327,8 +1319,8 @@ namespace BlackCore
     {
         Q_UNUSED(livery)
         Q_ASSERT_X(sApp && sApp->hasWebDataServices(), Q_FUNC_INFO, "Missing web data services");
-        if (m_modelSet.isEmpty())   { return; } // ignore empty sets to not create silly stats
-        if (sessionId.isEmpty())    { return; }
+        if (m_modelSet.isEmpty()) { return; } // ignore empty sets to not create silly stats
+        if (sessionId.isEmpty()) { return; }
         if (aircraftIcao.isEmpty()) { return; }
 
         QString description;
@@ -1352,15 +1344,14 @@ namespace BlackCore
         if (airlineIcaoChecked.hasValidDesignator())
         {
             type = m_modelSet.containsModelsWithAircraftAndAirlineIcaoDesignator(aircraftIcao, airlineIcao) ?
-                   CMatchingStatisticsEntry::Found :
-                   CMatchingStatisticsEntry::Missing;
+                       CMatchingStatisticsEntry::Found :
+                       CMatchingStatisticsEntry::Missing;
         }
         else
         {
             type = m_modelSet.containsModelsWithAircraftAndAirlineIcaoDesignator(aircraftIcao, airlineIcao) ?
-                   CMatchingStatisticsEntry::Found :
-                   CMatchingStatisticsEntry::Missing;
-
+                       CMatchingStatisticsEntry::Found :
+                       CMatchingStatisticsEntry::Missing;
         }
         m_statistics.addAircraftAirlineCombination(type, sessionId, m_modelSetInfo, description, aircraftIcao, airlineIcao);
     }
@@ -1585,8 +1576,7 @@ namespace BlackCore
         const CAircraftModelList byLivery(
             inList.findByAircraftDesignatorAndLiveryCombinedCode(
                 remoteAircraft.getLivery().getCombinedCode(),
-                remoteAircraft.getAircraftIcaoCodeDesignator()
-            ));
+                remoteAircraft.getAircraftIcaoCodeDesignator()));
 
         if (byLivery.isEmpty())
         {
@@ -1738,7 +1728,7 @@ namespace BlackCore
         const QString m = remoteAircraft.getAircraftIcaoCode().getManufacturer();
         if (m.isEmpty())
         {
-            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, info % u" No manufacturer, cannot reduce " % QString::number(inList.size()) %  u" entries", getLogCategories()); }
+            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, info % u" No manufacturer, cannot reduce " % QString::number(inList.size()) % u" entries", getLogCategories()); }
             return inList;
         }
 
@@ -1766,7 +1756,7 @@ namespace BlackCore
         const QString m = icaoCode.getManufacturer();
         if (m.isEmpty())
         {
-            if (log) { CCallsign::addLogDetailsToList(log, logCallsign, info % u" No manufacturer, cannot reduce " % QString::number(inList.size()) %  u" entries", getLogCategories()); }
+            if (log) { CCallsign::addLogDetailsToList(log, logCallsign, info % u" No manufacturer, cannot reduce " % QString::number(inList.size()) % u" entries", getLogCategories()); }
             return inList;
         }
 
@@ -1793,7 +1783,7 @@ namespace BlackCore
 
         if (!remoteAircraft.hasAircraftDesignator())
         {
-            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, info % " No aircraft designator, cannot reduce " % QString::number(inList.size()) %  " entries", getLogCategories()); }
+            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, info % " No aircraft designator, cannot reduce " % QString::number(inList.size()) % " entries", getLogCategories()); }
             return inList;
         }
 
@@ -1809,7 +1799,7 @@ namespace BlackCore
         return outList;
     }
 
-    CAircraftModelList CAircraftMatcher::ifPossibleReduceByAircraftOrFamily(const CSimulatedAircraft &remoteAircraft, bool allowPseudoFamily, const CAircraftModelList &inList,  const CAircraftMatcherSetup &setup, const QString &info, bool &reduced, CStatusMessageList *log)
+    CAircraftModelList CAircraftMatcher::ifPossibleReduceByAircraftOrFamily(const CSimulatedAircraft &remoteAircraft, bool allowPseudoFamily, const CAircraftModelList &inList, const CAircraftMatcherSetup &setup, const QString &info, bool &reduced, CStatusMessageList *log)
     {
         reduced = false;
         const CAircraftModelList outList = ifPossibleReduceByAircraft(remoteAircraft, inList, info, reduced, log);
@@ -1829,7 +1819,7 @@ namespace BlackCore
 
         if (!remoteAircraft.hasAirlineDesignator())
         {
-            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, info % u" No airline designator, cannot reduce " % QString::number(inList.size()) %  u" entries", getLogCategories()); }
+            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, info % u" No airline designator, cannot reduce " % QString::number(inList.size()) % u" entries", getLogCategories()); }
             return inList;
         }
 
@@ -1847,8 +1837,8 @@ namespace BlackCore
                 {
                     CMatchingUtils::addLogDetailsToList(log, remoteAircraft,
                                                         groupModels.isEmpty() ?
-                                                        QStringLiteral("No group models found by using airline group '%1'").arg(remoteAircraft.getAirlineIcaoCode().getGroupDesignator()) :
-                                                        QStringLiteral("Added %1 model(s) by using airline group '%2', all members: '%3'").arg(groupModels.sizeInt()).arg(remoteAircraft.getAirlineIcaoCode().getGroupDesignator(), joinStringSet(groupModels.getAirlineVDesignators(), ", ")),
+                                                            QStringLiteral("No group models found by using airline group '%1'").arg(remoteAircraft.getAirlineIcaoCode().getGroupDesignator()) :
+                                                            QStringLiteral("Added %1 model(s) by using airline group '%2', all members: '%3'").arg(groupModels.sizeInt()).arg(remoteAircraft.getAirlineIcaoCode().getGroupDesignator(), joinStringSet(groupModels.getAirlineVDesignators(), ", ")),
                                                         getLogCategories());
                 }
             } // group membership
@@ -1876,7 +1866,7 @@ namespace BlackCore
 
         if (telephony.isEmpty() && airlineName.isEmpty())
         {
-            if (log) { CCallsign::addLogDetailsToList(log, cs, info % u" No name/telephony, cannot reduce " % QString::number(inList.size()) %  u" entries", getLogCategories()); }
+            if (log) { CCallsign::addLogDetailsToList(log, cs, info % u" No name/telephony, cannot reduce " % QString::number(inList.size()) % u" entries", getLogCategories()); }
             return inList;
         }
 
@@ -2006,7 +1996,7 @@ namespace BlackCore
         if (!useSwiftDbData) { return CAirlineIcaoCode(designator); }
         if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return CAirlineIcaoCode(designator); }
         const CAirlineIcaoCodeList codes = sApp->getWebDataServices()->getAirlineIcaoCodesForDesignator(designator);
-        if (codes.isEmpty())   { return CAirlineIcaoCode(designator); }
+        if (codes.isEmpty()) { return CAirlineIcaoCode(designator); }
         if (codes.size() == 1) { return codes.front(); }
 
         // more than 1

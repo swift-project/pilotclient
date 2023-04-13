@@ -19,7 +19,10 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CDistributorPreferencesComponent; }
+namespace Ui
+{
+    class CDistributorPreferencesComponent;
+}
 namespace BlackGui
 {
     class COverlayMessagesFrame;

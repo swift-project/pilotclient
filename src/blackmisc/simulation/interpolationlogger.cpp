@@ -33,8 +33,7 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackMisc::Simulation
 {
-    CInterpolationLogger::CInterpolationLogger(QObject *parent) :
-        QObject(parent)
+    CInterpolationLogger::CInterpolationLogger(QObject *parent) : QObject(parent)
     {
         this->setObjectName("CInterpolationLogger");
     }
@@ -59,8 +58,7 @@ namespace BlackMisc::Simulation
         }
 
         QPointer<CInterpolationLogger> myself(this);
-        CWorker *worker = CWorker::fromTask(this, "WriteInterpolationLog", [situations, parts, myself, clearLog]()
-        {
+        CWorker *worker = CWorker::fromTask(this, "WriteInterpolationLog", [situations, parts, myself, clearLog]() {
             const CStatusMessageList msg = CInterpolationLogger::writeLogFiles(situations, parts);
             CLogMessage::preformatted(msg);
 
@@ -76,12 +74,12 @@ namespace BlackMisc::Simulation
         QDir logs(logDir);
         if (!logs.exists()) { return files; }
         logs.setNameFilters(filePatterns());
-        const QStringList interpolations = logs.entryList(QStringList({filePatternInterpolationLog()}), QDir::NoFilter, QDir::Time);
+        const QStringList interpolations = logs.entryList(QStringList({ filePatternInterpolationLog() }), QDir::NoFilter, QDir::Time);
         if (!interpolations.isEmpty())
         {
             files[0] = CFileUtils::appendFilePaths(logDir, interpolations.first());
         }
-        const QStringList parts = logs.entryList(QStringList({filePatternPartsLog()}), QDir::NoFilter, QDir::Time);
+        const QStringList parts = logs.entryList(QStringList({ filePatternPartsLog() }), QDir::NoFilter, QDir::Time);
         if (!parts.isEmpty())
         {
             files[1] = CFileUtils::appendFilePaths(logDir, parts.first());
@@ -153,8 +151,8 @@ namespace BlackMisc::Simulation
     CStatusMessage CInterpolationLogger::logStatusFileWriting(bool success, const QString &fileName)
     {
         return success ?
-                CStatusMessage(static_cast<CInterpolationLogger *>(nullptr)).info(u"Written log file '%1'") << fileName :
-                CStatusMessage(static_cast<CInterpolationLogger *>(nullptr)).error(u"Failed to write log file '%1'") << fileName;
+                   CStatusMessage(static_cast<CInterpolationLogger *>(nullptr)).info(u"Written log file '%1'") << fileName :
+                   CStatusMessage(static_cast<CInterpolationLogger *>(nullptr)).error(u"Failed to write log file '%1'") << fileName;
     }
 
     void CInterpolationLogger::logInterpolation(const SituationLog &log)
@@ -333,7 +331,8 @@ namespace BlackMisc::Simulation
                 (changedNewPosition ? QStringLiteral("<td class=\"changed\">*</td>") : QStringLiteral("<td></td>")) %
                 u"<td>" % log.interpolator % u"</td>" %
                 u"<td>" % boolToYesNo(log.interpolantRecalc) % u"</td>"
-                u"<td>" % log.callsign.asString() % u"</td>" %
+                                                               u"<td>" %
+                log.callsign.asString() % u"</td>" %
                 u"<td>" % boolToYesNo(log.vtolAircraft) % u"</td>" %
                 u"<td>" % msSinceEpochToTime(log.tsCurrent) % u"</td>" %
                 u"<td>" % QString::number(log.tsCurrent - firstLog.tsCurrent) % u"</td>" %
@@ -342,7 +341,7 @@ namespace BlackMisc::Simulation
                 u"<td class=\"new\">" % situationNew.getTimestampAndOffset(true) % u"</td>" %
                 u"<td class=\"cur\">" % log.situationCurrent.getTimestampAndOffset(true) % u"</td>" %
 
-                u"<td>" % msSinceEpochToTime(log.tsInterpolated)  % u"</td>" %
+                u"<td>" % msSinceEpochToTime(log.tsInterpolated) % u"</td>" %
                 u"<td>" % QString::number(log.deltaSampleTimesMs) % u"ms</td>" %
                 u"<td>" % QString::number(log.simTimeFraction) % u"</td>" %
 
@@ -400,9 +399,10 @@ namespace BlackMisc::Simulation
             if (!changedNewPosition && !recalc) { continue; }
             newPosTs = situationNew.getMSecsSinceEpoch();
             kml += CKmlUtils::asPlacemark(
-                        QStringLiteral("%1: %2 new pos: %3 recalc: %4").arg(n++).arg(situationNew.getFormattedUtcTimestampHmsz(), boolToYesNo(changedNewPosition), boolToYesNo(recalc)),
-                        situationNew.toQString(true),
-                        situationNew, s) % u"\n";
+                       QStringLiteral("%1: %2 new pos: %3 recalc: %4").arg(n++).arg(situationNew.getFormattedUtcTimestampHmsz(), boolToYesNo(changedNewPosition), boolToYesNo(recalc)),
+                       situationNew.toQString(true),
+                       situationNew, s) %
+                   u"\n";
         }
 
         return kml;
@@ -426,12 +426,10 @@ namespace BlackMisc::Simulation
             if (!situationNew.hasGroundElevation()) { continue; }
             newPosTs = situationNew.getMSecsSinceEpoch();
             kml += CKmlUtils::asPlacemark(
-                        QStringLiteral("%1: %2 %3 info: %4 alt.cor: %5").arg(n++).arg(
-                            situationNew.getFormattedUtcTimestampHmsz(),
-                            situationNew.getGroundElevationAndInfo(),
-                            log.elevationInfo, log.altCorrection),
-                        situationNew.getGroundElevationPlane().toQString(true),
-                        situationNew.getGroundElevationPlane(), s) % u"\n";
+                       QStringLiteral("%1: %2 %3 info: %4 alt.cor: %5").arg(n++).arg(situationNew.getFormattedUtcTimestampHmsz(), situationNew.getGroundElevationAndInfo(), log.elevationInfo, log.altCorrection),
+                       situationNew.getGroundElevationPlane().toQString(true),
+                       situationNew.getGroundElevationPlane(), s) %
+                   u"\n";
         }
 
         return kml;
@@ -449,22 +447,22 @@ namespace BlackMisc::Simulation
             coordinates += CKmlUtils::asRawCoordinates(situation, s.withAltitude) % u"\n";
         }
 
-        return
-            u"<Placemark>\n"
-            u"<name>Interpolation " % QString::number(logs.size()) % u"entries</name>\n" %
-            CKmlUtils::asLineString(coordinates, s) %
-            u"</Placemark>\n";
+        return u"<Placemark>\n"
+               u"<name>Interpolation " %
+               QString::number(logs.size()) % u"entries</name>\n" %
+               CKmlUtils::asLineString(coordinates, s) %
+               u"</Placemark>\n";
     }
 
     QString CInterpolationLogger::getHtmlPartsLog(const QList<PartsLog> &logs)
     {
         if (logs.isEmpty()) { return {}; }
         static const QString tableHeader = QStringLiteral(
-                                                u"<thead><tr>"
-                                                u"<th>CS</th><th>timestamp</th>"
-                                                u"<th>c.</th>"
-                                                u"<th>parts</th>"
-                                                u"</tr></thead>\n");
+            u"<thead><tr>"
+            u"<th>CS</th><th>timestamp</th>"
+            u"<th>c.</th>"
+            u"<th>parts</th>"
+            u"</tr></thead>\n");
 
         CAircraftParts lastParts; // default, so shown if parts are different from default
         QString tableRows("<tbody>\n");
@@ -484,8 +482,14 @@ namespace BlackMisc::Simulation
 
     void CInterpolationLogger::clearLog()
     {
-        { QWriteLocker l(&m_lockSituations); m_situationLogs.clear(); }
-        { QWriteLocker l(&m_lockParts); m_partsLogs.clear(); }
+        {
+            QWriteLocker l(&m_lockSituations);
+            m_situationLogs.clear();
+        }
+        {
+            QWriteLocker l(&m_lockParts);
+            m_partsLogs.clear();
+        }
     }
 
     QString CInterpolationLogger::msSinceEpochToTime(qint64 ms)
@@ -515,63 +519,54 @@ namespace BlackMisc::Simulation
         const CAircraftSituation situationNewInterpolation = this->newestInterpolationSituation();
 
         return (
-                    withSetup ?
-                    u"setup: " % usedSetup.toQString(true) % separator :
-                    QString()
-                ) %
-                (
-                    withElevation ?
+                   withSetup ?
+                       u"setup: " % usedSetup.toQString(true) % separator :
+                       QString()) %
+               (withElevation ?
                     u"Elev.info: " % elevationInfo %
-                    u" scenery os: " % sceneryOffset.valueRoundedWithUnit(1) % separator :
-                    QString()
-                ) %
-                u"change: " % change.toQString(true) %
-                separator %
-                u"Interpolation CS: " % callsign.asString() % separator %
-                u"ts: " % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsCurrent) %
-                u" | type: " % this->interpolationType() %
-                u" | gnd.fa.: " % QString::number(groundFactor) %
-                u" | CG: " % cgAboveGround.valueRoundedWithUnit(CLengthUnit::m(), 1) %
-                u" " % cgAboveGround.valueRoundedWithUnit(CLengthUnit::ft(), 1) %
-                u" | alt.cor.: " % altCorrection %
-                u" | #nw.sit.: " % QString::number(noNetworkSituations) %
-                u" | #invalid: " % QString::number(noInvalidSituations) %
-                (
-                    withDeltaTimes ?
+                        u" scenery os: " % sceneryOffset.valueRoundedWithUnit(1) % separator :
+                    QString()) %
+               u"change: " % change.toQString(true) %
+               separator %
+               u"Interpolation CS: " % callsign.asString() % separator %
+               u"ts: " % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsCurrent) %
+               u" | type: " % this->interpolationType() %
+               u" | gnd.fa.: " % QString::number(groundFactor) %
+               u" | CG: " % cgAboveGround.valueRoundedWithUnit(CLengthUnit::m(), 1) %
+               u" " % cgAboveGround.valueRoundedWithUnit(CLengthUnit::ft(), 1) %
+               u" | alt.cor.: " % altCorrection %
+               u" | #nw.sit.: " % QString::number(noNetworkSituations) %
+               u" | #invalid: " % QString::number(noInvalidSituations) %
+               (withDeltaTimes ?
                     separator %
-                    u"cur.time: " % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsCurrent) %
-                    u" | int.time: " % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsInterpolated) %
-                    u" | dt.cur.int.: " %  QString::number(deltaCurrentToInterpolatedTime()) % u"ms" %
-                    u" | sample dt: " % QString::number(deltaSampleTimesMs) % u"ms" %
-                    u" | fr.[0-1]: " % QString::number(simTimeFraction) %
-                    u" | old int.pos.: " % situationOldInterpolation.getTimestampAndOffset(true) %
-                    u" | new int.pos.: " % situationNewInterpolation.getTimestampAndOffset(true) %
-                    u" | #int.pos.: " % QString::number(interpolationSituations.size()) :
-                    QString()
-                ) %
-                (
-                    withCurrentSituation ?
+                        u"cur.time: " % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsCurrent) %
+                        u" | int.time: " % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsInterpolated) %
+                        u" | dt.cur.int.: " % QString::number(deltaCurrentToInterpolatedTime()) % u"ms" %
+                        u" | sample dt: " % QString::number(deltaSampleTimesMs) % u"ms" %
+                        u" | fr.[0-1]: " % QString::number(simTimeFraction) %
+                        u" | old int.pos.: " % situationOldInterpolation.getTimestampAndOffset(true) %
+                        u" | new int.pos.: " % situationNewInterpolation.getTimestampAndOffset(true) %
+                        u" | #int.pos.: " % QString::number(interpolationSituations.size()) :
+                    QString()) %
+               (withCurrentSituation ?
                     separator %
-                    u"cur.sit.(interpolated): " % situationCurrent.toQString(true) :
-                    QString()
-                ) %
-                (
-                    withOtherPositions ?
+                        u"cur.sit.(interpolated): " % situationCurrent.toQString(true) :
+                    QString()) %
+               (withOtherPositions ?
                     separator %
-                    u"old: " % situationOldInterpolation.toQString(true) %
-                    separator %
-                    u"new: " % situationNewInterpolation.toQString(true) :
-                    QString()
-                );
+                        u"old: " % situationOldInterpolation.toQString(true) %
+                        separator %
+                        u"new: " % situationNewInterpolation.toQString(true) :
+                    QString());
     }
 
     QString PartsLog::toQString(const QString &separator) const
     {
         return u"CS: " % callsign.asString() % separator %
-                u"ts: " % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsCurrent) %
-                u" | #nw.parts: " % QString::number(noNetworkParts) %
-                separator %
-                u"parts: " % parts.toQString(true);
+               u"ts: " % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsCurrent) %
+               u" | #nw.parts: " % QString::number(noNetworkParts) %
+               separator %
+               u"parts: " % parts.toQString(true);
     }
 
     const QString &SituationLog::interpolationType() const
@@ -585,8 +580,8 @@ namespace BlackMisc::Simulation
     }
 
 #ifdef __GNUC__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstrict-overflow"
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wstrict-overflow"
 #endif
     const CAircraftSituation &SituationLog::secondInterpolationSituation() const
     {
@@ -595,7 +590,7 @@ namespace BlackMisc::Simulation
         return interpolationSituations[i];
     }
 #ifdef __GNUC__
-#pragma GCC diagnostic pop
+#    pragma GCC diagnostic pop
 #endif
 
 } // namespace

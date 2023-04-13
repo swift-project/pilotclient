@@ -12,8 +12,7 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Weather, CPresentWeather, CPresentWeathe
 
 namespace BlackMisc::Weather
 {
-    CPresentWeatherList::CPresentWeatherList(const CSequence<CPresentWeather> &other) :
-        CSequence<CPresentWeather>(other)
-    { }
+    CPresentWeatherList::CPresentWeatherList(const CSequence<CPresentWeather> &other) : CSequence<CPresentWeather>(other)
+    {}
 
 } // namespace

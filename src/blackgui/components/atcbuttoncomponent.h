@@ -16,7 +16,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CAtcButtonComponent; }
+namespace Ui
+{
+    class CAtcButtonComponent;
+}
 namespace BlackGui::Components
 {
     //! ATC stations as button bar

@@ -127,8 +127,8 @@ namespace BlackMisc::Network
 
     private:
         int m_currentIndexDistributedLoad = -1; //!< index for random access
-        int m_maxTrials = 2;     //!< number of max trials
-        CUrlList m_failedUrls;   //!< failed tested URLs
+        int m_maxTrials = 2; //!< number of max trials
+        CUrlList m_failedUrls; //!< failed tested URLs
         QStringList m_errorMsgs; //!< error messages while testing;
     };
 
@@ -138,4 +138,4 @@ Q_DECLARE_METATYPE(BlackMisc::Network::CUrlList)
 Q_DECLARE_METATYPE(BlackMisc::Network::CFailoverUrlList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Network::CUrl>)
 
-#endif //guard
+#endif // guard

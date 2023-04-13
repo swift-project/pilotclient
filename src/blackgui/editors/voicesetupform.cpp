@@ -16,9 +16,8 @@ using namespace BlackMisc::Network;
 
 namespace BlackGui::Editors
 {
-    CVoiceSetupForm::CVoiceSetupForm(QWidget *parent) :
-        CForm(parent),
-        ui(new Ui::CVoiceSetupForm)
+    CVoiceSetupForm::CVoiceSetupForm(QWidget *parent) : CForm(parent),
+                                                        ui(new Ui::CVoiceSetupForm)
     {
         ui->setupUi(this);
         ui->cb_Override->setChecked(true);
@@ -28,7 +27,7 @@ namespace BlackGui::Editors
     }
 
     CVoiceSetupForm::~CVoiceSetupForm()
-    { }
+    {}
 
     CVoiceSetup CVoiceSetupForm::getValue() const
     {

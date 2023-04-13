@@ -25,7 +25,7 @@ namespace BlackMisc
         static QString getQDBusArgumentSignature(const QDBusArgument &arg, int level = 0);
 
         //! Signature for BlackMisc::CValueObject
-        template<typename ValueObj>
+        template <typename ValueObj>
         static QString dBusSignature(const ValueObj &obj)
         {
             QDBusArgument arg;
@@ -34,7 +34,7 @@ namespace BlackMisc
         }
 
         //! Signature size for BlackMisc::CValueObject
-        template<typename ValueObj>
+        template <typename ValueObj>
         static int dBusSignatureSize(const ValueObj &obj)
         {
             return dBusSignature<ValueObj>(obj).size();

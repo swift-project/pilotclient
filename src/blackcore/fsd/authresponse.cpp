@@ -14,10 +14,9 @@ namespace BlackCore::Fsd
     AuthResponse::AuthResponse() : MessageBase()
     {}
 
-    AuthResponse::AuthResponse(const QString &sender, const QString &receiver, const QString &response) :
-        MessageBase(sender, receiver),
-        m_response(response)
-    { }
+    AuthResponse::AuthResponse(const QString &sender, const QString &receiver, const QString &response) : MessageBase(sender, receiver),
+                                                                                                          m_response(response)
+    {}
 
     QStringList AuthResponse::toTokens() const
     {

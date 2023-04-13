@@ -18,7 +18,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CCockpitComForm; }
+namespace Ui
+{
+    class CCockpitComForm;
+}
 namespace BlackGui::Editors
 {
     /*!

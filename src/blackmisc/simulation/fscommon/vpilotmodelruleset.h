@@ -76,4 +76,4 @@ namespace BlackMisc::Simulation::FsCommon
 Q_DECLARE_METATYPE(BlackMisc::Simulation::FsCommon::CVPilotModelRuleSet)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::FsCommon::CVPilotModelRule>)
 
-#endif //guard
+#endif // guard

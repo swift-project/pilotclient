@@ -18,7 +18,10 @@
 
 class QTextEdit;
 
-namespace Ui { class CTextEditDialog; }
+namespace Ui
+{
+    class CTextEditDialog;
+}
 namespace BlackGui::Components
 {
     //! Text edit as dialog

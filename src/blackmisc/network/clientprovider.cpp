@@ -154,7 +154,7 @@ namespace BlackMisc::Network
 
     // Pin the vtable to this file
     void CClientAware::anchor()
-    { }
+    {}
 
     CClientList CClientAware::getClients() const
     {

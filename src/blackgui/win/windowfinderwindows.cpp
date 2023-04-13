@@ -21,13 +21,13 @@ namespace BlackGui
 
         if (!windowName.isEmpty())
         {
-            lpWindowName.reset(new TCHAR[windowName.size()+1]);
+            lpWindowName.reset(new TCHAR[windowName.size() + 1]);
             windowName.toWCharArray(lpWindowName.data());
             lpWindowName[windowName.size()] = 0;
         }
         if (!className.isEmpty())
         {
-            lpClassName.reset(new TCHAR[className.size()+1]);
+            lpClassName.reset(new TCHAR[className.size() + 1]);
             className.toWCharArray(lpClassName.data());
             lpClassName[className.size()] = 0;
         }

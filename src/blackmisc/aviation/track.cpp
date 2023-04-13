@@ -21,8 +21,8 @@ namespace BlackMisc::Aviation
         if (i18n)
         {
             return s.append(this->isMagneticTrack() ?
-                            QCoreApplication::translate("Aviation", "magnetic") :
-                            QCoreApplication::translate("Aviation", "true"));
+                                QCoreApplication::translate("Aviation", "magnetic") :
+                                QCoreApplication::translate("Aviation", "true"));
         }
         else
         {

@@ -76,15 +76,15 @@ namespace BlackMisc::Aviation
         enum ReferenceDatum
         {
             MeanSeaLevel = 0, //!< MSL
-            AboveGround,      //!< AGL
-            FlightLevel       //!< Flight level
+            AboveGround, //!< AGL
+            FlightLevel //!< Flight level
         };
 
         //! Altitude type
         enum AltitudeType
         {
-            PressureAltitude,   //!< Altitude above the standard datum plane
-            TrueAltitude        //!< Height of the airplane above Mean Sea Level (MSL)
+            PressureAltitude, //!< Altitude above the standard datum plane
+            TrueAltitude //!< Height of the airplane above Mean Sea Level (MSL)
         };
 
         //! Default constructor: 0m Altitude MSL

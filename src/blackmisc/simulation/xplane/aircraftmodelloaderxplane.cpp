@@ -90,7 +90,7 @@ namespace BlackMisc::Simulation::XPlane
     }
 
     CAircraftModelLoaderXPlane::CAircraftModelLoaderXPlane(QObject *parent) : IAircraftModelLoader(CSimulatorInfo::xplane(), parent)
-    { }
+    {}
 
     CAircraftModelLoaderXPlane::~CAircraftModelLoaderXPlane()
     {
@@ -117,14 +117,12 @@ namespace BlackMisc::Simulation::XPlane
             emit this->diskLoadingStarted(simulator, mode);
 
             m_parserWorker = CWorker::fromTask(this, "CAircraftModelLoaderXPlane::performParsing",
-                                                [this, modelDirs, excludedDirectoryPatterns, modelConsolidation]()
-            {
-                auto models = this->performParsing(modelDirs, excludedDirectoryPatterns);
-                if (modelConsolidation) { modelConsolidation(models, true); }
-                return models;
-            });
-            m_parserWorker->thenWithResult<CAircraftModelList>(this, [ = ](const auto & models)
-            {
+                                               [this, modelDirs, excludedDirectoryPatterns, modelConsolidation]() {
+                                                   auto models = this->performParsing(modelDirs, excludedDirectoryPatterns);
+                                                   if (modelConsolidation) { modelConsolidation(models, true); }
+                                                   return models;
+                                               });
+            m_parserWorker->thenWithResult<CAircraftModelList>(this, [=](const auto &models) {
                 this->updateInstalledModels(models);
                 m_loadingMessages.freezeOrder();
                 emit this->loadingFinished(m_loadingMessages, simulator, ParsedData);
@@ -331,7 +329,7 @@ namespace BlackMisc::Simulation::XPlane
             return false;
         }
 
-        auto p = std::find_if(m_cslPackages.cbegin(), m_cslPackages.cend(), [&tokens](const CSLPackage & p) { return p.name == tokens[1]; });
+        auto p = std::find_if(m_cslPackages.cbegin(), m_cslPackages.cend(), [&tokens](const CSLPackage &p) { return p.name == tokens[1]; });
         if (p == m_cslPackages.cend())
         {
             package.path = path;
@@ -356,7 +354,7 @@ namespace BlackMisc::Simulation::XPlane
             return false;
         }
 
-        if (std::count_if(m_cslPackages.cbegin(), m_cslPackages.cend(), [&tokens](const CSLPackage & p) { return p.name == tokens[1]; }) == 0)
+        if (std::count_if(m_cslPackages.cbegin(), m_cslPackages.cend(), [&tokens](const CSLPackage &p) { return p.name == tokens[1]; }) == 0)
         {
             const CStatusMessage m = CStatusMessage(this).error(u"XPlane required package %1 not found. Aborting processing of this package.") << tokens[1];
             m_loadingMessages.push_back(m);
@@ -555,8 +553,7 @@ namespace BlackMisc::Simulation::XPlane
         using command = std::function<bool(const QStringList &, CSLPackage &, const QString &, int)>;
         using namespace std::placeholders;
 
-        const QMap<QString, command> commands
-        {
+        const QMap<QString, command> commands {
             { "EXPORT_NAME", std::bind(&CAircraftModelLoaderXPlane::parseExportCommand, this, _1, _2, _3, _4) }
         };
 
@@ -589,8 +586,7 @@ namespace BlackMisc::Simulation::XPlane
         using command = std::function<bool(const QStringList &, CSLPackage &, const QString &, int)>;
         using namespace std::placeholders;
 
-        const QMap<QString, command> commands
-        {
+        const QMap<QString, command> commands {
             { "EXPORT_NAME", std::bind(&CAircraftModelLoaderXPlane::parseDummyCommand, this, _1, _2, _3, _4) },
             { "DEPENDENCY", std::bind(&CAircraftModelLoaderXPlane::parseDependencyCommand, this, _1, _2, _3, _4) },
             { "OBJECT", std::bind(&CAircraftModelLoaderXPlane::parseObjectCommand, this, _1, _2, _3, _4) },
@@ -624,7 +620,7 @@ namespace BlackMisc::Simulation::XPlane
                     bool result = it.value()(tokens, package, package.path, lineNum);
                     if (!result)
                     {
-                        if (! package.planes.empty()) { package.planes.back().hasErrors = true; }
+                        if (!package.planes.empty()) { package.planes.back().hasErrors = true; }
                     }
                 }
                 else
@@ -636,8 +632,7 @@ namespace BlackMisc::Simulation::XPlane
         }
 
         // Remove all planes with errors
-        auto it = std::remove_if(package.planes.begin(), package.planes.end(), [](const CSLPlane &plane)
-        {
+        auto it = std::remove_if(package.planes.begin(), package.planes.end(), [](const CSLPlane &plane) {
             return plane.hasErrors;
         });
         package.planes.erase(it, package.planes.end());

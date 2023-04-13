@@ -33,12 +33,11 @@ using namespace BlackCore::Context;
 namespace BlackSimPlugin::Emulated
 {
     CSimulatorEmulated::CSimulatorEmulated(const CSimulatorPluginInfo &info,
-                                            IOwnAircraftProvider    *ownAircraftProvider,
-                                            IRemoteAircraftProvider *remoteAircraftProvider,
-                                            IWeatherGridProvider    *weatherGridProvider,
-                                            IClientProvider         *clientProvider,
-                                            QObject                 *parent) :
-        CSimulatorPluginCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
+                                           IOwnAircraftProvider *ownAircraftProvider,
+                                           IRemoteAircraftProvider *remoteAircraftProvider,
+                                           IWeatherGridProvider *weatherGridProvider,
+                                           IClientProvider *clientProvider,
+                                           QObject *parent) : CSimulatorPluginCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
     {
         Q_ASSERT_X(sApp && sApp->getIContextSimulator(), Q_FUNC_INFO, "Need context");
 
@@ -48,8 +47,8 @@ namespace BlackSimPlugin::Emulated
         m_myAircraft = this->getOwnAircraft(); // sync with provider
         m_monitorWidget = new CSimulatorEmulatedMonitorDialog(this, sGui->mainApplicationWidget());
 
-        connect(qApp, &QApplication::aboutToQuit,            this, &CSimulatorEmulated::closeMonitor);
-        connect(sGui, &CGuiApplication::aboutToShutdown,     this, &CSimulatorEmulated::closeMonitor, Qt::QueuedConnection);
+        connect(qApp, &QApplication::aboutToQuit, this, &CSimulatorEmulated::closeMonitor);
+        connect(sGui, &CGuiApplication::aboutToShutdown, this, &CSimulatorEmulated::closeMonitor, Qt::QueuedConnection);
         connect(&m_interpolatorFetchTimer, &QTimer::timeout, this, &CSimulatorEmulated::updateRemoteAircraft);
 
         // connect own signals for monitoring
@@ -75,8 +74,7 @@ namespace BlackSimPlugin::Emulated
     bool CSimulatorEmulated::connectTo()
     {
         const QPointer<CSimulatorEmulated> myself(this);
-        QTimer::singleShot(1000, this, [ = ]
-        {
+        QTimer::singleShot(1000, this, [=] {
             if (myself.isNull() || !sGui || sGui->isShuttingDown()) { return; }
             this->emitSimulatorCombinedStatus();
             m_monitorWidget->show();
@@ -245,8 +243,7 @@ namespace BlackSimPlugin::Emulated
         }
 
         QPointer<CSimulatorEmulated> myself(this);
-        QTimer::singleShot(444, this, [ = ]
-        {
+        QTimer::singleShot(444, this, [=] {
             if (!myself) { return; }
 
             // updates in providers and emits signal
@@ -272,16 +269,16 @@ namespace BlackSimPlugin::Emulated
     void CSimulatorEmulated::registerHelp()
     {
         if (CSimpleCommandParser::registered("BlackSimPlugin::Swift::CSimulatorEmulated")) { return; }
-        CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
-        CSimpleCommandParser::registerCommand({".drv show", "show emulated driver window"});
-        CSimpleCommandParser::registerCommand({".drv hide", "hide emulated driver window"});
+        CSimpleCommandParser::registerCommand({ ".drv", "alias: .driver .plugin" });
+        CSimpleCommandParser::registerCommand({ ".drv show", "show emulated driver window" });
+        CSimpleCommandParser::registerCommand({ ".drv hide", "hide emulated driver window" });
     }
 
     void CSimulatorEmulated::setCombinedStatus(bool connected, bool simulating, bool paused)
     {
-        m_connected  = connected;
+        m_connected = connected;
         m_simulating = simulating;
-        m_paused     = paused;
+        m_paused = paused;
         this->emitSimulatorCombinedStatus();
     }
 
@@ -293,10 +290,10 @@ namespace BlackSimPlugin::Emulated
     bool CSimulatorEmulated::changeInternalCom(const CSimulatedAircraft &aircraft)
     {
         bool changed = false;
-        if (aircraft.getCom1System()  != m_myAircraft.getCom1System())  { changed = true; }
-        if (aircraft.getCom2System()  != m_myAircraft.getCom2System())  { changed = true; }
+        if (aircraft.getCom1System() != m_myAircraft.getCom1System()) { changed = true; }
+        if (aircraft.getCom2System() != m_myAircraft.getCom2System()) { changed = true; }
         if (aircraft.getTransponder() != m_myAircraft.getTransponder()) { changed = true; }
-        if (aircraft.getSelcal()      != m_myAircraft.getSelcal())      { changed = true; }
+        if (aircraft.getSelcal() != m_myAircraft.getSelcal()) { changed = true; }
 
         if (!changed) { return false; }
         m_myAircraft.setCockpit(aircraft);
@@ -330,11 +327,10 @@ namespace BlackSimPlugin::Emulated
             if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()))
             {
                 if (m_lastWeatherPosition.isNull() ||
-                        calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
+                    calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
                 {
                     m_lastWeatherPosition = currentPosition;
                     requestWeatherGrid(currentPosition, this->identifier());
-
                 }
             }
         }
@@ -427,8 +423,16 @@ namespace BlackSimPlugin::Emulated
     {
         if (m_monitorWidget && parser.isKnownCommand())
         {
-            if (parser.matchesPart(1, "show")) { m_monitorWidget->show(); return true; }
-            if (parser.matchesPart(1, "hide")) { m_monitorWidget->hide(); return true; }
+            if (parser.matchesPart(1, "show"))
+            {
+                m_monitorWidget->show();
+                return true;
+            }
+            if (parser.matchesPart(1, "hide"))
+            {
+                m_monitorWidget->hide();
+                return true;
+            }
         }
         return CSimulatorPluginCommon::parseDetails(parser);
     }
@@ -499,55 +503,55 @@ namespace BlackSimPlugin::Emulated
     void CSimulatorEmulated::connectOwnSignals()
     {
         //! \fixme signal name not hardcoded would be nice
-        m_connectionGuard.append(connect(this, &ISimulator::simulatorStatusChanged, this, [ = ](SimulatorStatus status)
-        {
-            if (!m_monitorWidget) return;
-            m_monitorWidget->appendSendingCall("simulatorStatusChanged", CSimulatorEmulated::statusToString(status));
-        },
-        Qt::QueuedConnection));
+        m_connectionGuard.append(connect(
+            this, &ISimulator::simulatorStatusChanged, this, [=](SimulatorStatus status) {
+                if (!m_monitorWidget) return;
+                m_monitorWidget->appendSendingCall("simulatorStatusChanged", CSimulatorEmulated::statusToString(status));
+            },
+            Qt::QueuedConnection));
 
-        m_connectionGuard.append(connect(this, &ISimulator::ownAircraftModelChanged, this, [ = ](const CAircraftModel & model)
-        {
-            if (!m_monitorWidget) return;
-            m_monitorWidget->appendSendingCall("ownAircraftModelChanged", model.toQString());
-        },
-        Qt::QueuedConnection));
+        m_connectionGuard.append(connect(
+            this, &ISimulator::ownAircraftModelChanged, this, [=](const CAircraftModel &model) {
+                if (!m_monitorWidget) return;
+                m_monitorWidget->appendSendingCall("ownAircraftModelChanged", model.toQString());
+            },
+            Qt::QueuedConnection));
 
-        m_connectionGuard.append(connect(this, &ISimulator::renderRestrictionsChanged, this, [ = ](bool restricted, bool enabled, int maxAircraft, const CLength & maxRenderedDistance)
-        {
-            if (!m_monitorWidget) return;
-            static const QString params("restricted: %1 enabled: %2 max aircraft: %3");
-            m_monitorWidget->appendSendingCall("renderRestrictionsChanged", params.arg(boolToYesNo(restricted), boolToYesNo(enabled)).arg(maxAircraft), maxRenderedDistance.valueRoundedWithUnit(CLengthUnit::m(), 1));
-        },
-        Qt::QueuedConnection));
+        m_connectionGuard.append(connect(
+            this, &ISimulator::renderRestrictionsChanged, this, [=](bool restricted, bool enabled, int maxAircraft, const CLength &maxRenderedDistance) {
+                if (!m_monitorWidget) return;
+                static const QString params("restricted: %1 enabled: %2 max aircraft: %3");
+                m_monitorWidget->appendSendingCall("renderRestrictionsChanged", params.arg(boolToYesNo(restricted), boolToYesNo(enabled)).arg(maxAircraft), maxRenderedDistance.valueRoundedWithUnit(CLengthUnit::m(), 1));
+            },
+            Qt::QueuedConnection));
 
-        m_connectionGuard.append(connect(this, &ISimulator::interpolationAndRenderingSetupChanged, this, [ = ]()
-        {
-            if (!m_monitorWidget) return;
-            m_monitorWidget->appendSendingCall("interpolationAndRenderingSetupChanged");
-        },
-        Qt::QueuedConnection));
+        m_connectionGuard.append(connect(
+            this, &ISimulator::interpolationAndRenderingSetupChanged, this, [=]() {
+                if (!m_monitorWidget) return;
+                m_monitorWidget->appendSendingCall("interpolationAndRenderingSetupChanged");
+            },
+            Qt::QueuedConnection));
 
-        m_connectionGuard.append(connect(this, &ISimulator::aircraftRenderingChanged, this, [ = ](const CSimulatedAircraft & aircraft)
-        {
-            if (!m_monitorWidget) return;
-            m_monitorWidget->appendSendingCall("aircraftRenderingChanged", aircraft.toQString());
-        },
-        Qt::QueuedConnection));
+        m_connectionGuard.append(connect(
+            this, &ISimulator::aircraftRenderingChanged, this, [=](const CSimulatedAircraft &aircraft) {
+                if (!m_monitorWidget) return;
+                m_monitorWidget->appendSendingCall("aircraftRenderingChanged", aircraft.toQString());
+            },
+            Qt::QueuedConnection));
 
-        m_connectionGuard.append(connect(this, &ISimulator::physicallyAddingRemoteModelFailed, this, [ = ](const CSimulatedAircraft & aircraft)
-        {
-            if (!m_monitorWidget) return;
-            m_monitorWidget->appendSendingCall("physicallyAddingRemoteModelFailed", aircraft.toQString());
-        },
-        Qt::QueuedConnection));
+        m_connectionGuard.append(connect(
+            this, &ISimulator::physicallyAddingRemoteModelFailed, this, [=](const CSimulatedAircraft &aircraft) {
+                if (!m_monitorWidget) return;
+                m_monitorWidget->appendSendingCall("physicallyAddingRemoteModelFailed", aircraft.toQString());
+            },
+            Qt::QueuedConnection));
 
-        m_connectionGuard.append(connect(this, &ISimulator::airspaceSnapshotHandled, this, [ = ]
-        {
-            if (!m_monitorWidget) return;
-            m_monitorWidget->appendSendingCall("airspaceSnapshotHandled");
-        },
-        Qt::QueuedConnection));
+        m_connectionGuard.append(connect(
+            this, &ISimulator::airspaceSnapshotHandled, this, [=] {
+                if (!m_monitorWidget) return;
+                m_monitorWidget->appendSendingCall("airspaceSnapshotHandled");
+            },
+            Qt::QueuedConnection));
     }
 
     void CSimulatorEmulated::updateRemoteAircraft()
@@ -593,14 +597,13 @@ namespace BlackSimPlugin::Emulated
 
     CSimulatorEmulatedListener::CSimulatorEmulatedListener(const CSimulatorPluginInfo &info)
         : ISimulatorListener(info)
-    { }
+    {}
 
     void CSimulatorEmulatedListener::startImpl()
     {
         if (this->isShuttingDown()) { return; }
         const QPointer<CSimulatorEmulatedListener> myself(this);
-        QTimer::singleShot(2000, this, [ = ]
-        {
+        QTimer::singleShot(2000, this, [=] {
             if (!myself) { return; }
             Q_ASSERT_X(this->getPluginInfo().isValid(), Q_FUNC_INFO, "Invalid plugin");
             emit this->simulatorStarted(this->getPluginInfo());
@@ -608,7 +611,7 @@ namespace BlackSimPlugin::Emulated
     }
 
     void CSimulatorEmulatedListener::stopImpl()
-    { }
+    {}
 
     void CSimulatorEmulatedListener::checkImpl()
     {

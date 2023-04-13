@@ -102,9 +102,9 @@ namespace BlackCore
 
     protected:
         mutable QReadWriteLock m_lock { QReadWriteLock::Recursive }; //!< lock which can be used from the derived classes
-        std::atomic_int             m_networkReplyProgress;     //!< Progress percentage 0...100
-        std::atomic_llong           m_networkReplyCurrent;      //!< current bytes
-        std::atomic_llong           m_networkReplyNax;          //!< max bytes
+        std::atomic_int m_networkReplyProgress; //!< Progress percentage 0...100
+        std::atomic_llong m_networkReplyCurrent; //!< current bytes
+        std::atomic_llong m_networkReplyNax; //!< max bytes
 
         //! Constructor
         CThreadedReader(QObject *owner, const QString &name);
@@ -150,12 +150,12 @@ namespace BlackCore
 
         static constexpr int OutdatedPendingCallMs = 30 * 1000; //!< when is a call considered "outdated"
 
-        int               m_initialTime = -1;         //!< Initial start delay
-        int               m_periodicTime = -1;        //!< Periodic time after which the task is repeated
-        QDateTime         m_updateTimestamp;          //!< when file/resource was read
-        uint              m_contentHash = 0;          //!< has of the content given
-        std::atomic_bool  m_markedAsFailed { false }; //!< marker if reading failed
-        bool              m_unitTest { false };       //!< mark as unit test
+        int m_initialTime = -1; //!< Initial start delay
+        int m_periodicTime = -1; //!< Periodic time after which the task is repeated
+        QDateTime m_updateTimestamp; //!< when file/resource was read
+        uint m_contentHash = 0; //!< has of the content given
+        std::atomic_bool m_markedAsFailed { false }; //!< marker if reading failed
+        bool m_unitTest { false }; //!< mark as unit test
         BlackMisc::Network::CUrlLogList m_urlReadLog; //!< URL based reading can be logged
     };
 } // namespace

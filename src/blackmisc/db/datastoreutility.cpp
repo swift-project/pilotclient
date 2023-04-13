@@ -26,7 +26,7 @@ namespace BlackMisc::Db
 {
     const QStringList &CDatastoreUtility::getLogCategories()
     {
-        static const QStringList cats({CLogCategories::swiftDbWebservice()});
+        static const QStringList cats({ CLogCategories::swiftDbWebservice() });
         return cats;
     }
 
@@ -54,7 +54,7 @@ namespace BlackMisc::Db
         int i1 = ks.lastIndexOf('(');
         if (i1 < 0) { return -1; }
         int i2 = ks.lastIndexOf(')');
-        if (i2 <= i1 + 1) { return -1;}
+        if (i2 <= i1 + 1) { return -1; }
         const QString n(ks.mid(i1 + 1, i2 - i1 - 1));
         ok = false;
         key = n.toInt(&ok);

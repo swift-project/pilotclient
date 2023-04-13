@@ -55,4 +55,4 @@ namespace BlackMisc::Geo
 Q_DECLARE_METATYPE(BlackMisc::Geo::CCoordinateGeodeticList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Geo::CCoordinateGeodetic>)
 
-#endif //guard
+#endif // guard

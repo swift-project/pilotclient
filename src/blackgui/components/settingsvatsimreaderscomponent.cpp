@@ -16,9 +16,8 @@ using namespace BlackCore::Vatsim;
 
 namespace BlackGui::Components
 {
-    CSettingsVatsimReadersComponent::CSettingsVatsimReadersComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CSettingsVatsimReadersComponent)
+    CSettingsVatsimReadersComponent::CSettingsVatsimReadersComponent(QWidget *parent) : QFrame(parent),
+                                                                                        ui(new Ui::CSettingsVatsimReadersComponent)
     {
         ui->setupUi(this);
         connect(ui->pb_Save, &QPushButton::clicked, this, &CSettingsVatsimReadersComponent::save);
@@ -27,7 +26,7 @@ namespace BlackGui::Components
     }
 
     CSettingsVatsimReadersComponent::~CSettingsVatsimReadersComponent()
-    { }
+    {}
 
     void CSettingsVatsimReadersComponent::onSettingsChanged()
     {
@@ -43,17 +42,17 @@ namespace BlackGui::Components
         const int newMetarSec = ui->sb_Metar->value();
         if (newMetarSec != metarSec)
         {
-            m_settingsMetars.setAndSaveProperty(CReaderSettings::IndexPeriodicTime, CVariant::fromValue(CTime{static_cast<double>(newMetarSec), CTimeUnit::s()}));
+            m_settingsMetars.setAndSaveProperty(CReaderSettings::IndexPeriodicTime, CVariant::fromValue(CTime { static_cast<double>(newMetarSec), CTimeUnit::s() }));
         }
         const int newBookingsSec = ui->sb_Bookings->value();
         if (newBookingsSec != bookingsSec)
         {
-            m_settingsBookings.setAndSaveProperty(CReaderSettings::IndexPeriodicTime, CVariant::fromValue(CTime{static_cast<double>(newBookingsSec), CTimeUnit::s()}));
+            m_settingsBookings.setAndSaveProperty(CReaderSettings::IndexPeriodicTime, CVariant::fromValue(CTime { static_cast<double>(newBookingsSec), CTimeUnit::s() }));
         }
         const int newDataFileSec = ui->sb_DataFile->value();
         if (newDataFileSec != dataFileSec)
         {
-            m_settingsBookings.setAndSaveProperty(CReaderSettings::IndexPeriodicTime, CVariant::fromValue(CTime{static_cast<double>(newDataFileSec), CTimeUnit::s()}));
+            m_settingsBookings.setAndSaveProperty(CReaderSettings::IndexPeriodicTime, CVariant::fromValue(CTime { static_cast<double>(newDataFileSec), CTimeUnit::s() }));
         }
     }
 

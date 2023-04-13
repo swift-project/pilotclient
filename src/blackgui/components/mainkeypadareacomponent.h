@@ -24,8 +24,14 @@
 
 class QPushButton;
 
-namespace BlackMisc::Simulation { class CSimulatedAircraft; }
-namespace Ui { class CMainKeypadAreaComponent; }
+namespace BlackMisc::Simulation
+{
+    class CSimulatedAircraft;
+}
+namespace Ui
+{
+    class CMainKeypadAreaComponent;
+}
 namespace BlackGui::Components
 {
     //! Main keypad area as used with main info area

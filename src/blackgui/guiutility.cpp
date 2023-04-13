@@ -46,8 +46,8 @@
 // for the screen size
 
 #ifdef Q_OS_WINDOWS
-#include "wtypes.h"
-#include <iostream>
+#    include "wtypes.h"
+#    include <iostream>
 #endif
 
 using namespace BlackMisc;
@@ -167,7 +167,7 @@ namespace BlackGui
             GetScaleFactorForMonitor(monitor, &pScale);
             **/
 
-            const int monitor_width  = info.rcMonitor.right  - info.rcMonitor.left;
+            const int monitor_width = info.rcMonitor.right - info.rcMonitor.left;
             const int monitor_height = info.rcMonitor.bottom - info.rcMonitor.top;
             return QSize(monitor_height, monitor_width);
 
@@ -218,7 +218,7 @@ namespace BlackGui
                  u"Information for screen: " % screen->name() % separator %
                  u"Available geometry: " % rectAsString(screen->availableGeometry()) % separator %
                  u"Available size: " % sizeAsString(screen->availableSize()) % separator %
-                 u"Available virtual geometry: " %  rectAsString(screen->availableVirtualGeometry()) % separator %
+                 u"Available virtual geometry: " % rectAsString(screen->availableVirtualGeometry()) % separator %
                  u"Available virtual size: " % sizeAsString(screen->availableVirtualSize()) % separator %
                  u"Device ratio: " % QString::number(screen->devicePixelRatio()) % separator %
                  u"Depth: " % QString::number(screen->depth()) % u"bits" % separator %
@@ -250,12 +250,12 @@ namespace BlackGui
 
         switch (orientation)
         {
-        case Qt::PrimaryOrientation           : return pr;
-        case Qt::LandscapeOrientation         : return la;
-        case Qt::PortraitOrientation          : return po;
-        case Qt::InvertedLandscapeOrientation : return il;
-        case Qt::InvertedPortraitOrientation  : return ip;
-        default                               : break;
+        case Qt::PrimaryOrientation: return pr;
+        case Qt::LandscapeOrientation: return la;
+        case Qt::PortraitOrientation: return po;
+        case Qt::InvertedLandscapeOrientation: return il;
+        case Qt::InvertedPortraitOrientation: return ip;
+        default: break;
         }
 
         static const QString unknown("Unknown");
@@ -300,7 +300,7 @@ namespace BlackGui
         if (t == c) { return true; }
 
         // further unify
-        if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("[^a-z0-9\\s]")); }
+        if (!tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("[^a-z0-9\\s]")); }
         const QRegularExpression &regexp = tsRegex.localData();
         t = t.remove(regexp);
         c = c.remove(regexp);
@@ -500,8 +500,7 @@ namespace BlackGui
         const QLineEdit::EchoMode mode = lineEdit->echoMode();
         lineEdit->setEchoMode(QLineEdit::Normal);
         QPointer<QLineEdit> qpLineEdit(lineEdit);
-        QTimer::singleShot(unhideMs, lineEdit, [ = ]
-        {
+        QTimer::singleShot(unhideMs, lineEdit, [=] {
             if (qpLineEdit) { qpLineEdit->setEchoMode(mode); }
         });
     }
@@ -543,11 +542,11 @@ namespace BlackGui
     {
         // http://stackoverflow.com/a/7569928/356726
         if (!layout) { return; }
-        QLayoutItem *item {nullptr};
+        QLayoutItem *item { nullptr };
         while ((item = layout->takeAt(0)))
         {
-            QLayout *sublayout {nullptr};
-            QWidget *widget {nullptr};
+            QLayout *sublayout { nullptr };
+            QWidget *widget { nullptr };
             if ((sublayout = item->layout()))
             {
                 deleteLayout(sublayout, deleteWidgets);
@@ -601,7 +600,7 @@ namespace BlackGui
         else
         {
             flags &= ~Qt::WindowStaysOnBottomHint;
-            flags |=  Qt::WindowStaysOnTopHint;
+            flags |= Qt::WindowStaysOnTopHint;
         }
         widget->setWindowFlags(flags);
         widget->show(); // without that the window sometimes just disappears
@@ -615,7 +614,7 @@ namespace BlackGui
         if (onTop)
         {
             flags &= ~Qt::WindowStaysOnBottomHint;
-            flags |=  Qt::WindowStaysOnTopHint;
+            flags |= Qt::WindowStaysOnTopHint;
         }
         else
         {
@@ -786,17 +785,17 @@ namespace BlackGui
         const QSizeF s1 = CGuiUtility::fontMetrics80Chars(withRatio);
         const QSizeF s2 = CGuiUtility::fontMetricsLazyDog43Chars(withRatio);
         const QSizeF s = s1 + s2;
-        const qreal w = s.width()  * xCharacters / 123; // 123 chars
-        const qreal h = s.height() * yCharacters / 2;   // 2 lines
+        const qreal w = s.width() * xCharacters / 123; // 123 chars
+        const qreal h = s.height() * yCharacters / 2; // 2 lines
         return QSizeF(w, h);
     }
 
     void CGuiUtility::centerWidget(QWidget *widget)
     {
         // const QRect screenGeometry = QApplication::desktop()->screenGeometry();
-        const QScreen *pScreen = QGuiApplication::screenAt(widget->mapToGlobal({widget->width() / 2, 0}));
+        const QScreen *pScreen = QGuiApplication::screenAt(widget->mapToGlobal({ widget->width() / 2, 0 }));
         const QRect screenGeometry = pScreen->availableGeometry();
-        const int x = (screenGeometry.width()  - widget->width())  / 2;
+        const int x = (screenGeometry.width() - widget->width()) / 2;
         const int y = (screenGeometry.height() - widget->height()) / 2;
         widget->move(x, y);
     }
@@ -833,11 +832,7 @@ namespace BlackGui
             desktop = QStringLiteral("Desktop w%1 w%2").arg(sd.width()).arg(sd.height());
             ratio = QStringLiteral("ratio: %1").arg(mainWidget->devicePixelRatioF());
         }
-        return s.
-               arg(desktop).
-               arg(CGuiUtility::isUsingHighDpiScreenSupport() ? "hi DPI" : "-").
-               arg(ratio).
-               arg(s80.width()).arg(s80.height()).arg(s43.width()).arg(s43.height());
+        return s.arg(desktop).arg(CGuiUtility::isUsingHighDpiScreenSupport() ? "hi DPI" : "-").arg(ratio).arg(s80.width()).arg(s80.height()).arg(s43.width()).arg(s43.height());
     }
 
     bool CGuiUtility::isUsingHighDpiScreenSupport()
@@ -928,14 +923,26 @@ namespace BlackGui
     void CGuiUtility::setElidedText(QLabel *label, const QString &shortText, const QString &longText, Qt::TextElideMode mode)
     {
         if (!label) { return; }
-        if (shortText.isEmpty()) { CGuiUtility::setElidedText(label, longText, mode); return; }
-        if (longText.isEmpty()) { CGuiUtility::setElidedText(label, shortText, mode); return; }
+        if (shortText.isEmpty())
+        {
+            CGuiUtility::setElidedText(label, longText, mode);
+            return;
+        }
+        if (longText.isEmpty())
+        {
+            CGuiUtility::setElidedText(label, shortText, mode);
+            return;
+        }
 
         label->setToolTip(longText);
         const QFontMetrics metrics(label->font());
         const int width = qMax(label->width() - 2, 0);
         const int wl = metrics.horizontalAdvance(longText);
-        if (wl >= width) { label->setText(longText); return; }
+        if (wl >= width)
+        {
+            label->setText(longText);
+            return;
+        }
         if (qRound(wl * 0.85) > wl)
         {
             const QString clippedText = metrics.elidedText(longText, mode, width);
@@ -951,10 +958,10 @@ namespace BlackGui
         if (!wizard) { return; }
 
         const int minW = qMax(qRound(CGuiUtility::fontMetricsLazyDog43Chars(true).width() * 6.0 / 43.0), 80);
-        if (wizard->button(QWizard::BackButton))    { wizard->button(QWizard::BackButton)->setMinimumWidth(minW);    }
-        if (wizard->button(QWizard::NextButton))    { wizard->button(QWizard::NextButton)->setMinimumWidth(minW);    }
-        if (wizard->button(QWizard::CancelButton))  { wizard->button(QWizard::CancelButton)->setMinimumWidth(minW);  }
-        if (wizard->button(QWizard::FinishButton))  { wizard->button(QWizard::FinishButton)->setMinimumWidth(minW);  }
+        if (wizard->button(QWizard::BackButton)) { wizard->button(QWizard::BackButton)->setMinimumWidth(minW); }
+        if (wizard->button(QWizard::NextButton)) { wizard->button(QWizard::NextButton)->setMinimumWidth(minW); }
+        if (wizard->button(QWizard::CancelButton)) { wizard->button(QWizard::CancelButton)->setMinimumWidth(minW); }
+        if (wizard->button(QWizard::FinishButton)) { wizard->button(QWizard::FinishButton)->setMinimumWidth(minW); }
         if (wizard->button(QWizard::CustomButton1)) { wizard->button(QWizard::CustomButton1)->setMinimumWidth(minW); }
         if (wizard->button(QWizard::CustomButton2)) { wizard->button(QWizard::CustomButton2)->setMinimumWidth(minW); }
         if (wizard->button(QWizard::CustomButton3)) { wizard->button(QWizard::CustomButton3)->setMinimumWidth(minW); }

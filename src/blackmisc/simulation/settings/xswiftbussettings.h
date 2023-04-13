@@ -118,7 +118,11 @@ namespace BlackMisc::Simulation::Settings
         static const char *key() { return "xswiftbus/settings"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("XSwiftBus"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("XSwiftBus");
+            return name;
+        }
 
         //! \copydoc BlackMisc::TSettingTrait::defaultValue
         static CXSwiftBusSettings defaultValue() { return CXSwiftBusSettings::defaultValue(); }

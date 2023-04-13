@@ -12,11 +12,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Network, CServer, CServerList)
 
 namespace BlackMisc::Network
 {
-    CServerList::CServerList() { }
+    CServerList::CServerList() {}
 
-    CServerList::CServerList(const CSequence<CServer> &other) :
-        CSequence<CServer>(other)
-    { }
+    CServerList::CServerList(const CSequence<CServer> &other) : CSequence<CServer>(other)
+    {}
 
     bool CServerList::containsName(const QString &name) const
     {

@@ -26,7 +26,7 @@
  * Any signals tagged with this macro will be ignored by BlackMisc::CGenericDBusInterface::relayParentSignals().
  * \see QMetaMethod::tag
  */
-#define BLACK_NO_RELAY
+#    define BLACK_NO_RELAY
 #endif
 
 namespace BlackMisc
@@ -41,9 +41,8 @@ namespace BlackMisc
 
     public:
         //! Constructor
-        CGenericDBusInterface(const QString &serviceName, const QString &path, const QString &interfaceName, const QDBusConnection &connection, QObject *parent = nullptr) :
-            QDBusAbstractInterface(serviceName, path, interfaceName.toUtf8().constData(), connection, parent)
-        {  }
+        CGenericDBusInterface(const QString &serviceName, const QString &path, const QString &interfaceName, const QDBusConnection &connection, QObject *parent = nullptr) : QDBusAbstractInterface(serviceName, path, interfaceName.toUtf8().constData(), connection, parent)
+        {}
 
         //! For each signal in parent, attempt to connect to it an interface signal of the same name.
         //! \see BLACK_NO_RELAY
@@ -70,7 +69,7 @@ namespace BlackMisc
 
         //! Call DBus, no return value
         template <typename... Args>
-        void callDBus(QLatin1String method, Args &&... args)
+        void callDBus(QLatin1String method, Args &&...args)
         {
             const QList<QVariant> argumentList { QVariant::fromValue(std::forward<Args>(args))... };
             this->callWithArgumentList(QDBus::NoBlock, method, argumentList);
@@ -78,12 +77,12 @@ namespace BlackMisc
 
         //! Call DBus with synchronous return value
         template <typename Ret, typename... Args>
-        Ret callDBusRet(QLatin1String method, Args &&... args)
+        Ret callDBusRet(QLatin1String method, Args &&...args)
         {
             QList<QVariant> argumentList { QVariant::fromValue(std::forward<Args>(args))... };
             QDBusPendingReply<Ret> pr = this->asyncCallWithArgumentList(method, argumentList);
             pr.waitForFinished();
-            if(pr.isError())
+            if (pr.isError())
             {
                 CLogMessage(this).debug(u"CGenericDBusInterface::callDBusRet(%1) returned: %2") << method << pr.error().message();
             }
@@ -93,7 +92,7 @@ namespace BlackMisc
         //! Call DBus with asynchronous return value
         //! Callback can be any callable object taking a single argument of type QDBusPendingCallWatcher*.
         template <typename Func, typename... Args>
-        QDBusPendingCallWatcher *callDBusAsync(QLatin1String method, Func callback, Args &&... args)
+        QDBusPendingCallWatcher *callDBusAsync(QLatin1String method, Func callback, Args &&...args)
         {
             QList<QVariant> argumentList { QVariant::fromValue(std::forward<Args>(args))... };
             QDBusPendingCall pc = this->asyncCallWithArgumentList(method, argumentList);
@@ -104,10 +103,11 @@ namespace BlackMisc
 
         //! Call DBus with asynchronous return as a future
         template <typename Ret, typename... Args>
-        QFuture<Ret> callDBusFuture(QLatin1String method, Args&&... args)
+        QFuture<Ret> callDBusFuture(QLatin1String method, Args &&...args)
         {
             auto sharedPromise = QSharedPointer<CPromise<Ret>>::create();
-            this->callDBusAsync(method, [ = ](auto pcw) { sharedPromise->setResult(QDBusPendingReply<Ret>(*pcw)); }, std::forward<Args>(args)...);
+            this->callDBusAsync(
+                method, [=](auto pcw) { sharedPromise->setResult(QDBusPendingReply<Ret>(*pcw)); }, std::forward<Args>(args)...);
             return sharedPromise->future();
         }
 

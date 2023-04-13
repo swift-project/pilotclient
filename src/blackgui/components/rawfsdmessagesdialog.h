@@ -17,7 +17,10 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CRawFsdMessagesDialog; }
+namespace Ui
+{
+    class CRawFsdMessagesDialog;
+}
 namespace BlackGui::Components
 {
     //! CRawFsdMessageComponent as dialog

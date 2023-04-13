@@ -12,13 +12,13 @@
 #include <type_traits>
 
 #if defined(Q_OS_MACOS)
-#include <libproc.h>
+#    include <libproc.h>
 #elif defined(Q_OS_WIN)
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-#include <windows.h>
-#include <psapi.h>
+#    ifndef NOMINMAX
+#        define NOMINMAX
+#    endif
+#    include <windows.h>
+#    include <psapi.h>
 #endif
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc, CProcessInfo)
@@ -48,7 +48,7 @@ namespace BlackMisc
     QString CProcessInfo::processNameFromId(qint64 pid)
     {
         HANDLE proc = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, static_cast<DWORD>(pid));
-        if (! proc) { return {}; }
+        if (!proc) { return {}; }
         wchar_t path[1024];
         auto len = GetModuleFileNameEx(proc, nullptr, path, std::extent_v<decltype(path)>);
         CloseHandle(proc);

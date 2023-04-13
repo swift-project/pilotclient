@@ -14,7 +14,7 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::Settings, CSwiftPluginSet
 namespace BlackMisc::Simulation::Settings
 {
     CSwiftPluginSettings::CSwiftPluginSettings()
-    { }
+    {}
 
     void CSwiftPluginSettings::setEmulatedSimulator(const CSimulatorInfo &simulator)
     {
@@ -50,7 +50,11 @@ namespace BlackMisc::Simulation::Settings
 
     void CSwiftPluginSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CSwiftPluginSettings>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CSwiftPluginSettings>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

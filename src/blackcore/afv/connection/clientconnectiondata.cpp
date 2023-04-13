@@ -59,7 +59,7 @@ namespace BlackCore::Afv::Connection
     {
         const QDateTime now = QDateTime::currentDateTimeUtc();
         m_lastVoiceServerHeartbeatAckUtc = now;
-        m_lastDataServerHeartbeatAckUtc  = now;
+        m_lastDataServerHeartbeatAckUtc = now;
     }
 
     void CClientConnectionData::reset()
@@ -74,6 +74,6 @@ namespace BlackCore::Afv::Connection
     bool CClientConnectionData::voiceServerAlive() const
     {
         return (m_authenticatedDateTimeUtc.isValid() && timeSinceAuthenticationSecs() < ServerTimeoutSecs) ||
-                (m_lastVoiceServerHeartbeatAckUtc.isValid() && m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) < ServerTimeoutSecs);
+               (m_lastVoiceServerHeartbeatAckUtc.isValid() && m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) < ServerTimeoutSecs);
     }
 } // ns

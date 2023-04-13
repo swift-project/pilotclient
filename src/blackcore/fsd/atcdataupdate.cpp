@@ -17,19 +17,18 @@ using namespace BlackMisc::Network;
 namespace BlackCore::Fsd
 {
     AtcDataUpdate::AtcDataUpdate() : MessageBase()
-    { }
+    {}
 
     AtcDataUpdate::AtcDataUpdate(const QString &sender, int frequencykHz, CFacilityType facility, int visibleRange, AtcRating rating,
-                                    double latitude, double longitude, int elevation) :
-        MessageBase(sender, {}),
-                m_frequencykHz(frequencykHz),
-                m_facility(facility),
-                m_visibleRange(visibleRange),
-                m_rating(rating),
-                m_latitude(latitude),
-                m_longitude(longitude),
-                m_elevation(elevation)
-    { }
+                                 double latitude, double longitude, int elevation) : MessageBase(sender, {}),
+                                                                                     m_frequencykHz(frequencykHz),
+                                                                                     m_facility(facility),
+                                                                                     m_visibleRange(visibleRange),
+                                                                                     m_rating(rating),
+                                                                                     m_latitude(latitude),
+                                                                                     m_longitude(longitude),
+                                                                                     m_elevation(elevation)
+    {}
 
     QStringList AtcDataUpdate::toTokens() const
     {
@@ -39,7 +38,7 @@ namespace BlackCore::Fsd
         tokens.push_back(toQString(m_facility));
         tokens.push_back(QString::number(m_visibleRange));
         tokens.push_back(toQString(m_rating));
-        tokens.push_back(QString::number(m_latitude,  'f', 5));
+        tokens.push_back(QString::number(m_latitude, 'f', 5));
         tokens.push_back(QString::number(m_longitude, 'f', 5));
         tokens.push_back(QString::number(m_elevation));
         return tokens;
@@ -54,7 +53,7 @@ namespace BlackCore::Fsd
         }
 
         AtcDataUpdate packet(tokens[0], tokens[1].toInt() + 100000, fromQString<CFacilityType>(tokens[2]), tokens[3].toInt(), fromQString<AtcRating>(tokens[4]),
-                                tokens[5].toDouble(), tokens[6].toDouble(), tokens[7].toInt());
+                             tokens[5].toDouble(), tokens[6].toDouble(), tokens[7].toInt());
         return packet;
     }
 }

@@ -19,7 +19,7 @@ namespace BlackCore::Afv::Crypto
     enum class CryptoDtoMode
     {
         Undefined = 0, //!< undefined
-        None      = 1, //!< none
+        None = 1, //!< none
         AEAD_ChaCha20Poly1305 = 2 //!< AEAD
     };
 

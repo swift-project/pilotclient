@@ -57,8 +57,7 @@ namespace BlackConfig
 
     const QString &CBuildConfig::getPlatformString()
     {
-        static const QString p([]
-        {
+        static const QString p([] {
             if (CBuildConfig::isRunningOnLinuxPlatform()) return QString("Linux");
             if (CBuildConfig::isRunningOnMacOSPlatform()) return QString("MacOS");
             if (CBuildConfig::isRunningOnWindowsNtPlatform())
@@ -104,15 +103,15 @@ namespace BlackConfig
             if (infoShort.isEmpty())
             {
                 QStringList sl;
-                if (CBuildConfig::isCompiledWithBlackCore())     { sl << "BlackCore"; }
-                if (CBuildConfig::isCompiledWithBlackSound())    { sl << "BlackSound"; }
-                if (CBuildConfig::isCompiledWithBlackInput())    { sl << "BlackInput"; }
-                if (CBuildConfig::isCompiledWithGui())           { sl << "BlackGui"; }
-                if (CBuildConfig::isCompiledWithFs9Support())    { sl << "FS9"; }
-                if (CBuildConfig::isCompiledWithFsxSupport())    { sl << "FSX"; }
+                if (CBuildConfig::isCompiledWithBlackCore()) { sl << "BlackCore"; }
+                if (CBuildConfig::isCompiledWithBlackSound()) { sl << "BlackSound"; }
+                if (CBuildConfig::isCompiledWithBlackInput()) { sl << "BlackInput"; }
+                if (CBuildConfig::isCompiledWithGui()) { sl << "BlackGui"; }
+                if (CBuildConfig::isCompiledWithFs9Support()) { sl << "FS9"; }
+                if (CBuildConfig::isCompiledWithFsxSupport()) { sl << "FSX"; }
                 if (CBuildConfig::isCompiledWithXPlaneSupport()) { sl << "XPlane"; }
-                if (CBuildConfig::isCompiledWithP3DSupport())    { sl << "P3D"; }
-                if (CBuildConfig::isCompiledWithFGSupport())     { sl << "FG"; }
+                if (CBuildConfig::isCompiledWithP3DSupport()) { sl << "P3D"; }
+                if (CBuildConfig::isCompiledWithFGSupport()) { sl << "FG"; }
                 infoShort = sl.join(", ");
                 if (infoShort.isEmpty()) { infoShort = "<none>"; }
             }
@@ -138,13 +137,13 @@ namespace BlackConfig
         }
     }
 
-    const QString& CBuildConfig::gitHubRepoUrl()
+    const QString &CBuildConfig::gitHubRepoUrl()
     {
         static const QString url = "https://github.com/swift-project/pilotclient/";
         return url;
     }
 
-    const QString& CBuildConfig::gitHubRepoApiUrl()
+    const QString &CBuildConfig::gitHubRepoApiUrl()
     {
         static const QString url = "https://api.github.com/repos/swift-project/pilotclient/";
         return url;
@@ -153,7 +152,7 @@ namespace BlackConfig
     const QString &CBuildConfig::buildDateAndTime()
     {
         // http://en.cppreference.com/w/cpp/preprocessor/replace#Predefined_macros
-        static const QString buildDateAndTime = QString(__DATE__ " "  __TIME__).simplified();
+        static const QString buildDateAndTime = QString(__DATE__ " " __TIME__).simplified();
         return buildDateAndTime;
     }
 

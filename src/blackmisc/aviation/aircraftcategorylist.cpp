@@ -18,16 +18,14 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAircraftCategory, CAircraftCa
 namespace BlackMisc::Aviation
 {
     CAircraftCategoryList::CAircraftCategoryList()
-    { }
+    {}
 
-    CAircraftCategoryList::CAircraftCategoryList(const CSequence<CAircraftCategory> &other) :
-        CSequence<CAircraftCategory>(other)
-    { }
+    CAircraftCategoryList::CAircraftCategoryList(const CSequence<CAircraftCategory> &other) : CSequence<CAircraftCategory>(other)
+    {}
 
     CAircraftCategoryList CAircraftCategoryList::findByName(const QString &name, Qt::CaseSensitivity cs) const
     {
-        return this->findBy([&](const CAircraftCategory & category)
-        {
+        return this->findBy([&](const CAircraftCategory &category) {
             return category.matchesName(name, cs);
         });
     }
@@ -39,8 +37,7 @@ namespace BlackMisc::Aviation
 
     void CAircraftCategoryList::sortByLevel()
     {
-        this->sort([](const CAircraftCategory & a, const CAircraftCategory & b)
-        {
+        this->sort([](const CAircraftCategory &a, const CAircraftCategory &b) {
             const int c = a.compareByLevel(b);
             return c < 0;
         });
@@ -59,7 +56,7 @@ namespace BlackMisc::Aviation
     QString CAircraftCategoryList::getLevelsString(const QString &separator) const
     {
         const QSet<QString> levels = this->getLevelStrings();
-        if (levels.isEmpty()) {return {}; }
+        if (levels.isEmpty()) { return {}; }
         return levels.values().join(separator);
     }
 
@@ -210,7 +207,7 @@ namespace BlackMisc::Aviation
     {
         if (level.isEmpty()) { return *this; } // nothing removed
         CAircraftCategoryList removed;
-        for (const CAircraftCategory &category : * this)
+        for (const CAircraftCategory &category : *this)
         {
             if (category.matchesLevel(level)) { continue; }
             removed.push_back(category);

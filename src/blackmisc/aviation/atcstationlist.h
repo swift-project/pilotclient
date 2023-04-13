@@ -93,4 +93,4 @@ namespace BlackMisc::Aviation
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAtcStationList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Aviation::CAtcStation>)
 
-#endif //guard
+#endif // guard

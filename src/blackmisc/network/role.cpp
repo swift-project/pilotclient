@@ -17,14 +17,14 @@ namespace BlackMisc::Network
 {
     CRole::CRole(const QString &name, const QString &description)
         : m_name(name), m_description(description)
-    {  }
+    {}
 
     QString CRole::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
         return u"Role: " % m_name %
-                u" description: " % m_description %
-                this->getDbKeyAsStringInParentheses(" ");
+               u" description: " % m_description %
+               this->getDbKeyAsStringInParentheses(" ");
     }
 
     QVariant CRole::propertyByIndex(CPropertyIndexRef index) const
@@ -43,8 +43,16 @@ namespace BlackMisc::Network
 
     void CRole::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CRole>(); return; }
-        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CRole>();
+            return;
+        }
+        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
+        {
+            IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant);
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

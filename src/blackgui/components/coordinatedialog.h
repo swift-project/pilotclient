@@ -17,7 +17,10 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CCoordinateDialog; }
+namespace Ui
+{
+    class CCoordinateDialog;
+}
 namespace BlackGui::Components
 {
     //! Coordinate form as dialog

@@ -12,7 +12,7 @@
 #include <vector>
 
 #ifdef Q_OS_WIN
-#include <windows.h>
+#    include <windows.h>
 #endif
 
 namespace BlackMisc
@@ -20,26 +20,26 @@ namespace BlackMisc
 
     void setCustomLibraryPath(const QString &path)
     {
-    #ifdef Q_OS_WIN
+#ifdef Q_OS_WIN
         std::wstring customLibraryPath = path.toStdWString();
         SetDllDirectory(customLibraryPath.data());
-    #else
+#else
         Q_UNUSED(path);
         // do nothing.
-    #endif
+#endif
     }
 
     QString getCustomLibraryPath()
     {
-    #ifdef Q_OS_WIN
+#ifdef Q_OS_WIN
         const DWORD nBufferLength = GetDllDirectory(0, nullptr);
         std::vector<wchar_t> customLibraryPath(nBufferLength);
         GetDllDirectory(nBufferLength, customLibraryPath.data());
         return QString::fromWCharArray(customLibraryPath.data());
-    #else
+#else
         // do nothing.
         return {};
-    #endif
+#endif
     }
 
 } // ns

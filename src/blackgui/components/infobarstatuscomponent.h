@@ -26,7 +26,10 @@
 
 class QPoint;
 
-namespace Ui { class CInfoBarStatusComponent; }
+namespace Ui
+{
+    class CInfoBarStatusComponent;
+}
 namespace BlackGui::Components
 {
     //! Info bar displaying status (Network, Simulator, DBus)
@@ -38,7 +41,7 @@ namespace BlackGui::Components
         //! Constructor
         explicit CInfoBarStatusComponent(QWidget *parent = nullptr);
 
-        //!Destructor
+        //! Destructor
         virtual ~CInfoBarStatusComponent() override;
 
         //! DBus used?
@@ -60,7 +63,7 @@ namespace BlackGui::Components
 
     private:
         QScopedPointer<Ui::CInfoBarStatusComponent> ui;
-        BlackCore::CActionBind m_actionPtt  { BlackMisc::Input::pttHotkeyAction(),     BlackMisc::Input::pttHotkeyIcon(), this, &CInfoBarStatusComponent::onPttChanged };
+        BlackCore::CActionBind m_actionPtt { BlackMisc::Input::pttHotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CInfoBarStatusComponent::onPttChanged };
 
         BlackMisc::CDigestSignal m_dsResize { this, &CInfoBarStatusComponent::adjustTextSize, 1000, 50 };
 

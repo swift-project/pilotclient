@@ -23,10 +23,9 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CSettingsGuiComponent::CSettingsGuiComponent(QWidget *parent) :
-        QFrame(parent),
-        BlackGui::CSingleApplicationUi(this),
-        ui(new Ui::CSettingsGuiComponent)
+    CSettingsGuiComponent::CSettingsGuiComponent(QWidget *parent) : QFrame(parent),
+                                                                    BlackGui::CSingleApplicationUi(this),
+                                                                    ui(new Ui::CSettingsGuiComponent)
     {
         ui->setupUi(this);
 
@@ -41,13 +40,13 @@ namespace BlackGui::Components
 
         // selection
         connect(ui->rb_PreferExtendedSelection, &QRadioButton::released, this, &CSettingsGuiComponent::selectionChanged);
-        connect(ui->rb_PreferMultiSelection, &QRadioButton::released,    this, &CSettingsGuiComponent::selectionChanged);
+        connect(ui->rb_PreferMultiSelection, &QRadioButton::released, this, &CSettingsGuiComponent::selectionChanged);
 
         this->guiSettingsChanged();
     }
 
     CSettingsGuiComponent::~CSettingsGuiComponent()
-    { }
+    {}
 
     void CSettingsGuiComponent::hideOpacity(bool hide)
     {
@@ -106,9 +105,9 @@ namespace BlackGui::Components
 
         **/
         const int ret = QMessageBox::information(this,
-                        tr("Change style?"),
-                        tr("Changing style requires a restart.\nChanges will be visible a the next start.\nDo you want to save your changes?"),
-                        QMessageBox::Ok | QMessageBox::Cancel);
+                                                 tr("Change style?"),
+                                                 tr("Changing style requires a restart.\nChanges will be visible a the next start.\nDo you want to save your changes?"),
+                                                 QMessageBox::Ok | QMessageBox::Cancel);
 
         if (ret != QMessageBox::Ok)
         {

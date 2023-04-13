@@ -16,11 +16,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Network, CRemoteFile, CRemoteFileList)
 
 namespace BlackMisc::Network
 {
-    CRemoteFileList::CRemoteFileList() { }
+    CRemoteFileList::CRemoteFileList() {}
 
-    CRemoteFileList::CRemoteFileList(const CSequence<CRemoteFile> &other) :
-        CSequence<CRemoteFile>(other)
-    { }
+    CRemoteFileList::CRemoteFileList(const CSequence<CRemoteFile> &other) : CSequence<CRemoteFile>(other)
+    {}
 
     QStringList CRemoteFileList::getNames(bool sorted) const
     {

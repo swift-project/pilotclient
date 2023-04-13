@@ -33,7 +33,7 @@ namespace XSwiftBus
         dbus_message_unref(m_message);
     }
 
-    CDBusMessage &CDBusMessage::operator =(CDBusMessage other)
+    CDBusMessage &CDBusMessage::operator=(CDBusMessage other)
     {
         std::swap(m_serial, other.m_serial);
         m_message = dbus_message_ref(other.m_message);
@@ -260,7 +260,7 @@ namespace XSwiftBus
     {
         DBusMessage *reply = dbus_message_new(DBUS_MESSAGE_TYPE_METHOD_RETURN);
         dbus_message_set_no_reply(reply, TRUE);
-        if (! destination.empty()) { dbus_message_set_destination(reply, destination.c_str()); }
+        if (!destination.empty()) { dbus_message_set_destination(reply, destination.c_str()); }
         dbus_message_set_reply_serial(reply, serial);
         CDBusMessage msg(reply);
         dbus_message_unref(reply);

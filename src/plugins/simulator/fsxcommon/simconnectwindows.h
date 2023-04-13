@@ -5,7 +5,7 @@
 #define BLACKSIMPLUGIN_FSX_SIMCONNECTWINDOWS_H
 
 #ifndef NOMINMAX
-#define NOMINMAX
+#    define NOMINMAX
 #endif
 
 // clash with struct interface in objbase.h used to happen
@@ -21,9 +21,9 @@
 //! adding struct SIMCONNECT_DATA_PBH not existing in SimConnect FSX
 struct SIMCONNECT_DATA_PBH
 {
-    double  Pitch;    //!< pitch
-    double  Bank;     //!< bank
-    double  Heading;  //!< heading
+    double Pitch; //!< pitch
+    double Bank; //!< bank
+    double Heading; //!< heading
 };
 #endif
 

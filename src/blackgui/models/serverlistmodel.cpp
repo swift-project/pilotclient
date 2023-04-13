@@ -17,8 +17,7 @@ using namespace BlackMisc::Network;
 
 namespace BlackGui::Models
 {
-    CServerListModel::CServerListModel(QObject *parent) :
-        CListModelBase("ServerListModel", parent)
+    CServerListModel::CServerListModel(QObject *parent) : CListModelBase("ServerListModel", parent)
     {
         m_columns.addColumn(CColumn::standardString("name", CServer::IndexName));
         m_columns.addColumn(CColumn::standardString("description", CServer::IndexDescription));

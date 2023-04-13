@@ -37,15 +37,14 @@ using namespace BlackMisc::Network;
 
 namespace BlackGui::Components
 {
-    CDbDistributorSelectorComponent::CDbDistributorSelectorComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CDbDistributorSelectorComponent)
+    CDbDistributorSelectorComponent::CDbDistributorSelectorComponent(QWidget *parent) : QFrame(parent),
+                                                                                        ui(new Ui::CDbDistributorSelectorComponent)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
         ui->setupUi(this);
         this->setFocusProxy(ui->le_Distributor);
         this->setAcceptDrops(true);
-        this->setAcceptedMetaTypeIds({qMetaTypeId<CDistributor>(), qMetaTypeId<CDistributorList>()});
+        this->setAcceptedMetaTypeIds({ qMetaTypeId<CDistributor>(), qMetaTypeId<CDistributorList>() });
         ui->le_Distributor->setValidator(new CUpperCaseValidator(this));
 
         bool c = connect(ui->le_Distributor, &QLineEdit::editingFinished, this, &CDbDistributorSelectorComponent::onDataChanged, Qt::QueuedConnection);

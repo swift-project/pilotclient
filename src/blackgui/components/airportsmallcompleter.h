@@ -15,7 +15,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CAirportSmallCompleter; }
+namespace Ui
+{
+    class CAirportSmallCompleter;
+}
 namespace BlackGui::Components
 {
     class CAirportDialog;
@@ -77,7 +80,7 @@ namespace BlackGui::Components
         void showAirportsDialog();
 
         QScopedPointer<Ui::CAirportSmallCompleter> ui;
-        QScopedPointer <CAirportDialog> m_airportsDialog; //!< UI completer
+        QScopedPointer<CAirportDialog> m_airportsDialog; //!< UI completer
         BlackMisc::Aviation::CAirport m_current; //!< this airport
     };
 } // ns

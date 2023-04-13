@@ -16,7 +16,10 @@
 #include <QScopedPointer>
 #include "blackmisc/network/fsdsetup.h"
 
-namespace Ui { class CFsdSetupForm; }
+namespace Ui
+{
+    class CFsdSetupForm;
+}
 namespace BlackGui::Editors
 {
     /*!
@@ -71,7 +74,7 @@ namespace BlackGui::Editors
         void visibleEnableInfo(bool visible);
 
         QScopedPointer<Ui::CFsdSetupForm> ui;
-        bool m_visibleEnableInfo   = true;
+        bool m_visibleEnableInfo = true;
         bool m_alwaysAllowOverride = false;
     };
 } // ns

@@ -33,9 +33,9 @@ namespace BlackMisc::Network
 
         switch (m_voiceCapabilities)
         {
-        case Voice:    return v;
+        case Voice: return v;
         case TextOnly: return t;
-        case Unknown:  return u;
+        case Unknown: return u;
         case VoiceReceivingOnly: return r;
         default: break;
         }
@@ -69,12 +69,36 @@ namespace BlackMisc::Network
 
         // this function is very frequently called, so I put the most likely scenarios on top
         const QString r = flightPlanRemarks.toUpper().trimmed();
-        if (flightPlanRemarks.isEmpty()) { this->setCapabilities(Unknown); return; }
-        if (r.contains("/V/")) { this->setCapabilities(Voice); return; }
-        if (r.contains("/T/")) { this->setCapabilities(TextOnly); return; }
-        if (r.contains("/R/")) { this->setCapabilities(VoiceReceivingOnly); return; }
-        if (r.contains("/VOICE/")) { this->setCapabilities(Voice); return; }
-        if (r.contains("/TEXT/"))  { this->setCapabilities(TextOnly); return; }
+        if (flightPlanRemarks.isEmpty())
+        {
+            this->setCapabilities(Unknown);
+            return;
+        }
+        if (r.contains("/V/"))
+        {
+            this->setCapabilities(Voice);
+            return;
+        }
+        if (r.contains("/T/"))
+        {
+            this->setCapabilities(TextOnly);
+            return;
+        }
+        if (r.contains("/R/"))
+        {
+            this->setCapabilities(VoiceReceivingOnly);
+            return;
+        }
+        if (r.contains("/VOICE/"))
+        {
+            this->setCapabilities(Voice);
+            return;
+        }
+        if (r.contains("/TEXT/"))
+        {
+            this->setCapabilities(TextOnly);
+            return;
+        }
         this->setCapabilities(Unknown);
     }
 
@@ -123,16 +147,16 @@ namespace BlackMisc::Network
             const CVoiceCapabilities vc(text);
             return vc;
         }
-        if (text.contains("TEXT", Qt::CaseInsensitive))    { return CVoiceCapabilities(TextOnly); }
-        if (text.contains("ONLY", Qt::CaseInsensitive))    { return CVoiceCapabilities(TextOnly); }
+        if (text.contains("TEXT", Qt::CaseInsensitive)) { return CVoiceCapabilities(TextOnly); }
+        if (text.contains("ONLY", Qt::CaseInsensitive)) { return CVoiceCapabilities(TextOnly); }
         if (text.contains("RECEIVE", Qt::CaseInsensitive)) { return CVoiceCapabilities(VoiceReceivingOnly); }
-        if (text.contains("VOICE", Qt::CaseInsensitive))   { return CVoiceCapabilities(Voice); }
+        if (text.contains("VOICE", Qt::CaseInsensitive)) { return CVoiceCapabilities(Voice); }
         return CVoiceCapabilities(Unknown);
     }
 
     const QList<CVoiceCapabilities> &CVoiceCapabilities::allCapabilities()
     {
-        static const QList<CVoiceCapabilities> all({fromVoiceCapabilities(Unknown), fromVoiceCapabilities(Voice), fromVoiceCapabilities(VoiceReceivingOnly), fromVoiceCapabilities(TextOnly)});
+        static const QList<CVoiceCapabilities> all({ fromVoiceCapabilities(Unknown), fromVoiceCapabilities(Voice), fromVoiceCapabilities(VoiceReceivingOnly), fromVoiceCapabilities(TextOnly) });
         return all;
     }
 } // namespace

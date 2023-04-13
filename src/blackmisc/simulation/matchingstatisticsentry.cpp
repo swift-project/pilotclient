@@ -13,14 +13,13 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CMatchingStatisticsEntry)
 
 namespace BlackMisc::Simulation
 {
-    CMatchingStatisticsEntry::CMatchingStatisticsEntry() { }
+    CMatchingStatisticsEntry::CMatchingStatisticsEntry() {}
 
-    CMatchingStatisticsEntry::CMatchingStatisticsEntry(EntryType type, const QString &sessionId, const QString &modelSetId, const QString &description, const QString &aircraftDesignator, const QString &airlineDesignator) :
-        m_sessionId(sessionId.trimmed()), m_modelSetId(modelSetId.trimmed()),
-        m_description(description),
-        m_aircraftDesignator(aircraftDesignator.trimmed().toUpper()),
-        m_airlineDesignator(airlineDesignator.trimmed().toUpper()),
-        m_entryType(type)
+    CMatchingStatisticsEntry::CMatchingStatisticsEntry(EntryType type, const QString &sessionId, const QString &modelSetId, const QString &description, const QString &aircraftDesignator, const QString &airlineDesignator) : m_sessionId(sessionId.trimmed()), m_modelSetId(modelSetId.trimmed()),
+                                                                                                                                                                                                                               m_description(description),
+                                                                                                                                                                                                                               m_aircraftDesignator(aircraftDesignator.trimmed().toUpper()),
+                                                                                                                                                                                                                               m_airlineDesignator(airlineDesignator.trimmed().toUpper()),
+                                                                                                                                                                                                                               m_entryType(type)
     {
         this->setCurrentUtcTime();
     }
@@ -112,8 +111,16 @@ namespace BlackMisc::Simulation
 
     void CMatchingStatisticsEntry::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CMatchingStatisticsEntry>(); return; }
-        if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CMatchingStatisticsEntry>();
+            return;
+        }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            ITimestampBased::setPropertyByIndex(index, variant);
+            return;
+        }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)

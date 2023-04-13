@@ -42,10 +42,9 @@ namespace BlackGui::Components
         return cats;
     }
 
-    CSimulatorComponent::CSimulatorComponent(QWidget *parent) :
-        QTabWidget(parent),
-        CEnableForDockWidgetInfoArea(),
-        ui(new Ui::CSimulatorComponent)
+    CSimulatorComponent::CSimulatorComponent(QWidget *parent) : QTabWidget(parent),
+                                                                CEnableForDockWidgetInfoArea(),
+                                                                ui(new Ui::CSimulatorComponent)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
 
@@ -74,7 +73,7 @@ namespace BlackGui::Components
     }
 
     CSimulatorComponent::~CSimulatorComponent()
-    { }
+    {}
 
     void CSimulatorComponent::addOrUpdateLiveDataByName(const QString &name, const QString &value, const CIcon &icon)
     {
@@ -162,17 +161,17 @@ namespace BlackGui::Components
             }
         }
 
-        this->addOrUpdateLiveDataByName(QStringLiteral("latitude"),  s.latitude().toQString(),  iconLatLng);
+        this->addOrUpdateLiveDataByName(QStringLiteral("latitude"), s.latitude().toQString(), iconLatLng);
         this->addOrUpdateLiveDataByName(QStringLiteral("longitude"), s.longitude().toQString(), iconLatLng);
         this->addOrUpdateLiveDataByName(QStringLiteral("altitude, true (ft)"), s.getAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1), iconAlt);
-        this->addOrUpdateLiveDataByName(QStringLiteral("altitude, true (m)"),  s.getAltitude().valueRoundedWithUnit(CLengthUnit::m(),  2), iconAlt);
+        this->addOrUpdateLiveDataByName(QStringLiteral("altitude, true (m)"), s.getAltitude().valueRoundedWithUnit(CLengthUnit::m(), 2), iconAlt);
         this->addOrUpdateLiveDataByName(QStringLiteral("altitude, pressure (ft)"), s.getPressureAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1), iconAlt);
-        this->addOrUpdateLiveDataByName(QStringLiteral("altitude, pressure (m)"),  s.getPressureAltitude().valueRoundedWithUnit(CLengthUnit::m(),  2), iconAlt);
+        this->addOrUpdateLiveDataByName(QStringLiteral("altitude, pressure (m)"), s.getPressureAltitude().valueRoundedWithUnit(CLengthUnit::m(), 2), iconAlt);
 
         if (s.hasGroundElevation())
         {
             this->addOrUpdateLiveDataByName(QStringLiteral("elevation (ft)"), s.getGroundElevation().valueRoundedWithUnit(CLengthUnit::ft(), 1), iconAlt);
-            this->addOrUpdateLiveDataByName(QStringLiteral("elevation (m)"),  s.getGroundElevation().valueRoundedWithUnit(CLengthUnit::m(),  2), iconAlt);
+            this->addOrUpdateLiveDataByName(QStringLiteral("elevation (m)"), s.getGroundElevation().valueRoundedWithUnit(CLengthUnit::m(), 2), iconAlt);
         }
         else
         {
@@ -182,7 +181,7 @@ namespace BlackGui::Components
         if (ownAircraft.hasCG())
         {
             this->addOrUpdateLiveDataByName(QStringLiteral("CG (ft)"), ownAircraft.getCG().valueRoundedWithUnit(CLengthUnit::ft(), 1), iconPlane);
-            this->addOrUpdateLiveDataByName(QStringLiteral("CG (m)"),  ownAircraft.getCG().valueRoundedWithUnit(CLengthUnit::m(),  2), iconPlane);
+            this->addOrUpdateLiveDataByName(QStringLiteral("CG (m)"), ownAircraft.getCG().valueRoundedWithUnit(CLengthUnit::m(), 2), iconPlane);
         }
         else
         {
@@ -203,7 +202,7 @@ namespace BlackGui::Components
         this->addOrUpdateLiveDataByName(QStringLiteral("COM2 active"), c2.getFrequencyActive().toQString(), iconRadio);
         this->addOrUpdateLiveDataByName(QStringLiteral("COM1 standby"), c1.getFrequencyStandby().toQString(), iconRadio);
         this->addOrUpdateLiveDataByName(QStringLiteral("COM2 standby"), c2.getFrequencyStandby().toQString(), iconRadio);
-        this->addOrUpdateLiveDataByName(QStringLiteral("COM1 volume"), QString::number(c1.getVolumeReceive()) , iconRadio);
+        this->addOrUpdateLiveDataByName(QStringLiteral("COM1 volume"), QString::number(c1.getVolumeReceive()), iconRadio);
         this->addOrUpdateLiveDataByName(QStringLiteral("COM2 volume"), QString::number(c2.getVolumeReceive()), iconRadio);
         this->addOrUpdateLiveDataByName(QStringLiteral("Transponder"), ownAircraft.getTransponderCodeFormatted(), iconRadio);
     }
@@ -227,9 +226,8 @@ namespace BlackGui::Components
 
     void CSimulatorComponent::onAddingRemoteModelFailed(const CSimulatedAircraft &aircraft, bool disabled, bool failover, const CStatusMessage &message)
     {
-        const CStatusMessage msg = CStatusMessage(this).
-                                    warning(u"Adding model '%1' failed, disabled: %2: failover: %3 details: %4")
-                                    << aircraft.getModelString() << boolToYesNo(disabled) << boolToYesNo(failover) << aircraft.toQString(true);
+        const CStatusMessage msg = CStatusMessage(this).warning(u"Adding model '%1' failed, disabled: %2: failover: %3 details: %4")
+                                   << aircraft.getModelString() << boolToYesNo(disabled) << boolToYesNo(failover) << aircraft.toQString(true);
         ui->comp_StatusMessages->appendStatusMessageToList(msg);
         ui->comp_StatusMessages->appendStatusMessageToList(message);
     }
@@ -244,7 +242,7 @@ namespace BlackGui::Components
     {
         if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
         const CSimulatorInternals internals = sGui->getIContextSimulator()->getSimulatorInternals();
-        const CSimulatorInfo simulatorInfo  = sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulatorInfo();
+        const CSimulatorInfo simulatorInfo = sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulatorInfo();
         m_simulator = simulatorInfo;
 
         const QStringList names(internals.getSortedNames());

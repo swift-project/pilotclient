@@ -22,7 +22,7 @@ namespace BlackMisc::Simulation
     }
 
     CRemoteAircraftProviderDummy::CRemoteAircraftProviderDummy(QObject *parent) : CRemoteAircraftProvider(parent)
-    { }
+    {}
 
     void CRemoteAircraftProviderDummy::insertNewSituation(const CAircraftSituation &situation)
     {

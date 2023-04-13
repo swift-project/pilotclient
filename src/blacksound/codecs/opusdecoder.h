@@ -31,7 +31,7 @@ namespace BlackSound::Codecs
         //! @{
         //! Not copyable and assignable
         COpusDecoder(const COpusDecoder &decoder) = delete;
-        COpusDecoder& operator=(COpusDecoder const&) = delete;
+        COpusDecoder &operator=(COpusDecoder const &) = delete;
         //! @}
 
         //! Frame count

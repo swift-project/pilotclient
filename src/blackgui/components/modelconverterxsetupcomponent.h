@@ -14,12 +14,15 @@
 #include "blackmisc/simulation/modelconverterx.h"
 #include <QFrame>
 
-namespace Ui { class CModelConverterXSetupComponent; }
+namespace Ui
+{
+    class CModelConverterXSetupComponent;
+}
 namespace BlackGui::Components
 {
     /*!
-    * Setup to start ModelConverterX
-    */
+     * Setup to start ModelConverterX
+     */
     class CModelConverterXSetupComponent : public QFrame
     {
         Q_OBJECT

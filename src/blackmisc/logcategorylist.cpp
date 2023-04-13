@@ -47,7 +47,7 @@ namespace BlackMisc
 
     CLogCategoryList CLogCategoryList::fromQStringList(const QStringList &stringList)
     {
-        return makeRange(Iterators::makeTransformIterator(stringList.begin(), [](const QString &str) { return CLogCategory{str}; }), stringList.end());
+        return makeRange(Iterators::makeTransformIterator(stringList.begin(), [](const QString &str) { return CLogCategory { str }; }), stringList.end());
     }
 
     CLogCategoryList CLogCategoryList::fromQString(const QString &string)
@@ -57,12 +57,12 @@ namespace BlackMisc
 
     bool CLogCategoryList::anyStartWith(const QString &prefix) const
     {
-        return containsBy([ = ](const CLogCategory &cat) { return cat.startsWith(prefix); });
+        return containsBy([=](const CLogCategory &cat) { return cat.startsWith(prefix); });
     }
 
     bool CLogCategoryList::anyEndWith(const QString &suffix) const
     {
-        return containsBy([ = ](const CLogCategory &cat) { return cat.endsWith(suffix); });
+        return containsBy([=](const CLogCategory &cat) { return cat.endsWith(suffix); });
     }
 
     void CLogCategoryList::registerMetadata()

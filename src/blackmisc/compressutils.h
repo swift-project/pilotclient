@@ -43,9 +43,7 @@ namespace BlackMisc
 
     private:
         static bool runZip7Process(QProcess *zipProcess, QStringList *stdOutAndError);
-
     };
 } // ns
 
 #endif // guard
-

@@ -26,9 +26,8 @@ using namespace BlackGui::Components;
 
 namespace BlackGui::Editors
 {
-    CDistributorForm::CDistributorForm(QWidget *parent) :
-        CForm(parent),
-        ui(new Ui::CDistributorForm)
+    CDistributorForm::CDistributorForm(QWidget *parent) : CForm(parent),
+                                                          ui(new Ui::CDistributorForm)
     {
         ui->setupUi(this);
         this->setFocusProxy(ui->comp_DistributorSelector);
@@ -41,11 +40,11 @@ namespace BlackGui::Editors
         connect(ui->comp_DistributorSelector, &CDbDistributorSelectorComponent::changedDistributor, this, &CDistributorForm::setValue);
         // connect(ui->comp_DistributorSelector, &CDbDistributorSelectorComponent::returnPressed, this, &CDistributorForm::onReturnPressed);
         ui->drop_DropData->setInfoText("<drop distributor>");
-        ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CDistributor>(), qMetaTypeId<CDistributorList>()});
+        ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CDistributor>(), qMetaTypeId<CDistributorList>() });
     }
 
     CDistributorForm::~CDistributorForm()
-    { }
+    {}
 
     bool CDistributorForm::setValue(const BlackMisc::Simulation::CDistributor &distributor)
     {

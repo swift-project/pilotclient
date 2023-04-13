@@ -11,11 +11,11 @@
 #include <QtGlobal>
 
 #if defined(Q_OS_WIN)
-    #include "win/windowfinderwindows.h"
+#    include "win/windowfinderwindows.h"
 #elif defined(Q_OS_LINUX)
 #elif defined(Q_OS_MACOS)
 #else
-    #error "Platform is not supported!"
+#    error "Platform is not supported!"
 #endif
 
 namespace BlackGui

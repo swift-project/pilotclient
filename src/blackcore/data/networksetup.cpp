@@ -17,7 +17,7 @@ using namespace BlackMisc::Network;
 namespace BlackCore::Data
 {
     CNetworkSetup::CNetworkSetup()
-    { }
+    {}
 
     CServer CNetworkSetup::getLastVatsimServer() const
     {
@@ -82,8 +82,8 @@ namespace BlackCore::Data
         const CServer server(this->getLastServer());
         if (server.isNull()) { return false; }
         return server.getEcosystem() == CEcosystem::privateFsd() ||
-                server.getEcosystem() == CEcosystem::swiftTest() ||
-                server.getEcosystem() == CEcosystem::swift();
+               server.getEcosystem() == CEcosystem::swiftTest() ||
+               server.getEcosystem() == CEcosystem::swift();
     }
 
     void CNetworkSetup::onSettingsChanged()

@@ -39,7 +39,7 @@ namespace BlackCore::Afv::Connection
         //! @{
         //!  Servers alive
         bool isVoiceServerAlive() const;
-        bool isDataServerAlive()  const;
+        bool isDataServerAlive() const;
         //! @}
 
         //! @{
@@ -109,8 +109,8 @@ namespace BlackCore::Afv::Connection
         QDateTime m_lastVoiceServerHeartbeatAckUtc;
         QDateTime m_lastDataServerHeartbeatAckUtc;
 
-        bool m_receiveAudio = true;  //!< audio?
-        bool m_connected    = false; //!< connected?
+        bool m_receiveAudio = true; //!< audio?
+        bool m_connected = false; //!< connected?
 
         static constexpr qint64 ServerTimeoutSecs = 10; //!< timeout
     };

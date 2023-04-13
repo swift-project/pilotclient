@@ -24,7 +24,7 @@ namespace BlackCore::Fsd
     public:
         //! Constructor
         ClientIdentification(const QString &sender, quint16 clientId, const QString &clientName, int clientVersionMajor, int clientVersionMinor,
-                                const QString &userCid, const QString &sysUid, const QString &initialChallenge);
+                             const QString &userCid, const QString &sysUid, const QString &initialChallenge);
 
         //! Message converted to tokens
         QStringList toTokens() const;
@@ -53,15 +53,15 @@ namespace BlackCore::Fsd
     //! Equal to operator
     inline bool operator==(const ClientIdentification &lhs, const ClientIdentification &rhs)
     {
-        return  lhs.sender() == rhs.sender() &&
-                lhs.receiver() == rhs.receiver() &&
-                lhs.m_clientId == rhs.m_clientId &&
-                lhs.m_clientName == rhs.m_clientName &&
-                lhs.m_clientVersionMajor == rhs.m_clientVersionMajor &&
-                lhs.m_clientVersionMinor == rhs.m_clientVersionMinor &&
-                lhs.m_userCid == rhs.m_userCid &&
-                lhs.m_sysUid == rhs.m_sysUid &&
-                lhs.m_initialChallenge == rhs.m_initialChallenge;
+        return lhs.sender() == rhs.sender() &&
+               lhs.receiver() == rhs.receiver() &&
+               lhs.m_clientId == rhs.m_clientId &&
+               lhs.m_clientName == rhs.m_clientName &&
+               lhs.m_clientVersionMajor == rhs.m_clientVersionMajor &&
+               lhs.m_clientVersionMinor == rhs.m_clientVersionMinor &&
+               lhs.m_userCid == rhs.m_userCid &&
+               lhs.m_sysUid == rhs.m_sysUid &&
+               lhs.m_initialChallenge == rhs.m_initialChallenge;
     }
 
     //! Not equal to operator

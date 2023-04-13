@@ -23,10 +23,18 @@ namespace BlackGui::Settings
         static const char *key() { return "guiupdatenotification/%Application%"; }
 
         //! \copydoc BlackMisc::TSettingTrait::defaultValue
-        static const bool &defaultValue() { static const bool d = true; return d; }
+        static const bool &defaultValue()
+        {
+            static const bool d = true;
+            return d;
+        }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("Update notification"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("Update notification");
+            return name;
+        }
     };
 } // ns
 

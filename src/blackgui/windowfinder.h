@@ -22,7 +22,6 @@ namespace BlackGui
     class BLACKGUI_EXPORT IWindowFinder
     {
     public:
-
         //! Constructor
         IWindowFinder() {}
 

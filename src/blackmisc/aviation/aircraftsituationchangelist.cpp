@@ -12,11 +12,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAircraftSituationChange, CAir
 
 namespace BlackMisc::Aviation
 {
-    CAircraftSituationChangeList::CAircraftSituationChangeList() { }
+    CAircraftSituationChangeList::CAircraftSituationChangeList() {}
 
-    CAircraftSituationChangeList::CAircraftSituationChangeList(const CSequence<CAircraftSituationChange> &other) :
-        CSequence<CAircraftSituationChange>(other)
-    { }
+    CAircraftSituationChangeList::CAircraftSituationChangeList(const CSequence<CAircraftSituationChange> &other) : CSequence<CAircraftSituationChange>(other)
+    {}
 
     CAircraftSituationChange CAircraftSituationChangeList::frontOrNull() const
     {

@@ -104,8 +104,7 @@ namespace BlackCore
 
     CSequence<QString> CPluginManagerSimulator::acceptedIids() const
     {
-        return
-        {
+        return {
             QStringLiteral("org.swift-project.blackcore.simulatorinterface"),
             QStringLiteral("org.swift-project.blackgui.pluginconfiginterface")
         };

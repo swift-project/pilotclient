@@ -27,7 +27,7 @@ namespace BlackMisc
         int getIndex(const T &value)
         {
             int &index = m_dict[value];
-            if (! index)
+            if (!index)
             {
                 m_list.push_back(value);
                 index = m_list.size();
@@ -66,7 +66,10 @@ namespace BlackMisc
 
             //! Return the values in the T table as a flat list.
             template <typename T>
-            const CSequence<T> &getTable() const { return this->CMemoTable<T>::getTable(); }
+            const CSequence<T> &getTable() const
+            {
+                return this->CMemoTable<T>::getTable();
+            }
         };
 
         //! Unmemoizer for Ts. Other types are passed through.
@@ -75,7 +78,10 @@ namespace BlackMisc
         public:
             //! Return reference to the flat list T table.
             template <typename T>
-            CSequence<T> &getTable() { return *this; }
+            CSequence<T> &getTable()
+            {
+                return *this;
+            }
 
             //! If T is in Ts, return proxy that will assign to member through the value at the given index in the flat list.
             //! Otherwise, return member as std::reference_wrapper.
@@ -90,7 +96,10 @@ namespace BlackMisc
                         T &member;
                         const CSequence<T> &list;
                         int &get() { return index; }
-                        ~Memo() { if (index >= 0) { member = list[index]; } }
+                        ~Memo()
+                        {
+                            if (index >= 0) { member = list[index]; }
+                        }
                     };
                     return Memo { -1, member, static_cast<const CSequence<T> &>(*this) };
                 }

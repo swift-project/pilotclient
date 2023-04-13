@@ -19,10 +19,9 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackGui::Components
 {
-    CDbAutoSimulatorStashingComponent::CDbAutoSimulatorStashingComponent(QWidget *parent) :
-        QDialog(parent, Qt::WindowSystemMenuHint | Qt::WindowTitleHint),
-        CDbMappingComponentAware(qobject_cast<CDbMappingComponent * >(parent)),
-        ui(new Ui::CDbAutoSimulatorStashingComponent)
+    CDbAutoSimulatorStashingComponent::CDbAutoSimulatorStashingComponent(QWidget *parent) : QDialog(parent, Qt::WindowSystemMenuHint | Qt::WindowTitleHint),
+                                                                                            CDbMappingComponentAware(qobject_cast<CDbMappingComponent *>(parent)),
+                                                                                            ui(new Ui::CDbAutoSimulatorStashingComponent)
     {
         ui->setupUi(this);
         ui->le_MaxModelsStashed->setValidator(new QIntValidator(this));
@@ -42,28 +41,28 @@ namespace BlackGui::Components
         {
         case Running: return;
         case Completed:
+        {
+            if (!m_modelsToStash.isEmpty())
             {
-                if (!m_modelsToStash.isEmpty())
-                {
-                    // this removes previously stashed models
-                    this->getMappingComponent()->replaceStashedModelsUnvalidated(m_modelsToStash);
-                    const CStatusMessage stashedMsg(this, CStatusMessage::SeverityInfo, QStringLiteral("Stashed %1 models").arg(m_modelsToStash.size()));
-                    this->addStatusMessage(stashedMsg);
-                    m_modelsToStash.clear();
-                }
-                QDialog::accept();
-                break;
+                // this removes previously stashed models
+                this->getMappingComponent()->replaceStashedModelsUnvalidated(m_modelsToStash);
+                const CStatusMessage stashedMsg(this, CStatusMessage::SeverityInfo, QStringLiteral("Stashed %1 models").arg(m_modelsToStash.size()));
+                this->addStatusMessage(stashedMsg);
+                m_modelsToStash.clear();
             }
+            QDialog::accept();
+            break;
+        }
         default:
-            {
-                this->tryToStash();
-                break;
-            }
+        {
+            this->tryToStash();
+            break;
+        }
         }
     }
 
     CDbAutoSimulatorStashingComponent::~CDbAutoSimulatorStashingComponent()
-    { }
+    {}
 
     void CDbAutoSimulatorStashingComponent::updateProgressIndicator(int percent)
     {

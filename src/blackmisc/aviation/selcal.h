@@ -23,7 +23,10 @@
 class QStringList;
 
 BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CSelcal)
-namespace BlackMisc::PhysicalQuantities { class CFrequency; }
+namespace BlackMisc::PhysicalQuantities
+{
+    class CFrequency;
+}
 namespace BlackMisc::Aviation
 {
     /*!

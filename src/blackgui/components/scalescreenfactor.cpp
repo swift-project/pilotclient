@@ -16,34 +16,37 @@
 
 namespace BlackGui::Components
 {
-    CScaleScreenFactor::CScaleScreenFactor(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CScaleScreenFactor)
+    CScaleScreenFactor::CScaleScreenFactor(QWidget *parent) : QFrame(parent),
+                                                              ui(new Ui::CScaleScreenFactor)
     {
         ui->setupUi(this);
         this->setMinMax(50, 150);
 
-        connect(ui->hs_Factor, &QSlider::valueChanged,      this, &CScaleScreenFactor::onSliderChanged);
+        connect(ui->hs_Factor, &QSlider::valueChanged, this, &CScaleScreenFactor::onSliderChanged);
         connect(ui->le_Factor, &QLineEdit::editingFinished, this, &CScaleScreenFactor::onEditFinished);
 
         const QDesktopWidget *w = qApp->desktop();
         const QString tt = QStringLiteral(
-                                "Scaling only works on High DPI screens\n"
-                                "Width/height: %1/%2 Ratio: %3\n"
-                                "Logical DPI x/y: %4/%5\n"
-                                "Physical DPI x/y: %6/%7\n"
-                                "width/height MM: %8/%9"
-                            ).
-                            arg(w->width()).arg(w->height()).arg(QString::number(CGuiUtility::mainApplicationWidgetPixelRatio(), 'f', 2)).
-                            arg(w->logicalDpiX()).arg(w->logicalDpiY()).
-                            arg(w->physicalDpiX()).arg(w->physicalDpiY()).
-                            arg(w->widthMM()).arg(w->heightMM());
+                               "Scaling only works on High DPI screens\n"
+                               "Width/height: %1/%2 Ratio: %3\n"
+                               "Logical DPI x/y: %4/%5\n"
+                               "Physical DPI x/y: %6/%7\n"
+                               "width/height MM: %8/%9")
+                               .arg(w->width())
+                               .arg(w->height())
+                               .arg(QString::number(CGuiUtility::mainApplicationWidgetPixelRatio(), 'f', 2))
+                               .arg(w->logicalDpiX())
+                               .arg(w->logicalDpiY())
+                               .arg(w->physicalDpiX())
+                               .arg(w->physicalDpiY())
+                               .arg(w->widthMM())
+                               .arg(w->heightMM());
 
         this->setToolTip(tt);
     }
 
     CScaleScreenFactor::~CScaleScreenFactor()
-    { }
+    {}
 
     void CScaleScreenFactor::setMinMax(int min, int max)
     {
@@ -81,7 +84,7 @@ namespace BlackGui::Components
 
     void CScaleScreenFactor::onEditFinished()
     {
-        const QString v =  ui->le_Factor->text();
+        const QString v = ui->le_Factor->text();
         if (v.isEmpty()) { return; }
         bool ok;
         const int value = v.toInt(&ok);

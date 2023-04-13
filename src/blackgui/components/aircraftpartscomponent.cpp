@@ -27,19 +27,18 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CAircraftPartsComponent::CAircraftPartsComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CAircraftPartsComponent)
+    CAircraftPartsComponent::CAircraftPartsComponent(QWidget *parent) : QFrame(parent),
+                                                                        ui(new Ui::CAircraftPartsComponent)
     {
         ui->setupUi(this);
 
         ui->editor_AircraftParts->showSetButton(false);
-        connect(ui->pb_SendAircraftPartsGui,      &QPushButton::released, this, &CAircraftPartsComponent::sendAircraftParts);
-        connect(ui->pb_SendAircraftPartsJson,     &QPushButton::released, this, &CAircraftPartsComponent::sendAircraftParts);
-        connect(ui->pb_CurrentParts,              &QPushButton::released, this, &CAircraftPartsComponent::setCurrentParts);
-        connect(ui->pb_OwnParts,                  &QPushButton::released, this, &CAircraftPartsComponent::displayOwnParts);
-        connect(ui->pb_RequestFromNetwork,        &QPushButton::released, this, &CAircraftPartsComponent::requestPartsFromNetwork);
-        connect(ui->pb_DisplayLog,                &QPushButton::released, this, &CAircraftPartsComponent::displayLogInSimulator);
+        connect(ui->pb_SendAircraftPartsGui, &QPushButton::released, this, &CAircraftPartsComponent::sendAircraftParts);
+        connect(ui->pb_SendAircraftPartsJson, &QPushButton::released, this, &CAircraftPartsComponent::sendAircraftParts);
+        connect(ui->pb_CurrentParts, &QPushButton::released, this, &CAircraftPartsComponent::setCurrentParts);
+        connect(ui->pb_OwnParts, &QPushButton::released, this, &CAircraftPartsComponent::displayOwnParts);
+        connect(ui->pb_RequestFromNetwork, &QPushButton::released, this, &CAircraftPartsComponent::requestPartsFromNetwork);
+        connect(ui->pb_DisplayLog, &QPushButton::released, this, &CAircraftPartsComponent::displayLogInSimulator);
         connect(ui->comp_RemoteAircraftCompleter, &CCallsignCompleter::validCallsignEnteredDigest, this, &CAircraftPartsComponent::onCallsignChanged);
 
         ui->comp_RemoteAircraftCompleter->addOwnCallsign(true);
@@ -120,8 +119,8 @@ namespace BlackGui::Components
 
     void CAircraftPartsComponent::requestPartsFromNetwork()
     {
-        if (!sGui || sGui->isShuttingDown())  { return; }
-        if (!sGui->getIContextNetwork())      { return; }
+        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui->getIContextNetwork()) { return; }
 
         const CCallsign callsign(ui->comp_RemoteAircraftCompleter->getCallsign(true));
         if (callsign.isEmpty())
@@ -135,8 +134,7 @@ namespace BlackGui::Components
 
         // simple approach to update UI when parts are received
         const QPointer<CAircraftPartsComponent> myself(this);
-        QTimer::singleShot(3000, this, [ = ]
-        {
+        QTimer::singleShot(3000, this, [=] {
             if (!myself) { return; }
             ui->pb_CurrentParts->click();
             ui->pb_RequestFromNetwork->setEnabled(true);
@@ -151,8 +149,8 @@ namespace BlackGui::Components
 
     void CAircraftPartsComponent::displayOwnParts()
     {
-        if (!sGui || sGui->isShuttingDown())  { return; }
-        if (!sGui->getIContextOwnAircraft())  { return; }
+        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui->getIContextOwnAircraft()) { return; }
 
         const CSimulatedAircraft myAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
         const CCallsign cs = myAircraft.getCallsign();
@@ -163,8 +161,8 @@ namespace BlackGui::Components
 
     void CAircraftPartsComponent::displayLogInSimulator()
     {
-        if (!sGui || sGui->isShuttingDown())  { return; }
-        if (!sGui->getIContextSimulator())    { return; }
+        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui->getIContextSimulator()) { return; }
         const CCallsign callsign(ui->comp_RemoteAircraftCompleter->getCallsign(true));
         if (callsign.isEmpty())
         {

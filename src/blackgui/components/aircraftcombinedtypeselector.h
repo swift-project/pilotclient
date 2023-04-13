@@ -19,8 +19,14 @@
 #include <QScopedPointer>
 #include <QString>
 
-namespace Ui { class CAircraftCombinedTypeSelector; }
-namespace BlackMisc::Aviation { class CAircraftIcaoCode; }
+namespace Ui
+{
+    class CAircraftCombinedTypeSelector;
+}
+namespace BlackMisc::Aviation
+{
+    class CAircraftIcaoCode;
+}
 namespace BlackGui::Components
 {
     /*!

@@ -44,7 +44,7 @@ namespace BlackMisc::Simulation
         // HINT: VTOL aircraft can change pitch/bank without changing position, planes cannot
         // Interpolate heading: HDG = (HdgB - HdgA) * t + HdgA
         const CHeading headingBegin = m_oldSituation.getHeading();
-        const CHeading headingEnd   = m_newSituation.getHeading();
+        const CHeading headingEnd = m_newSituation.getHeading();
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
@@ -67,9 +67,7 @@ namespace BlackMisc::Simulation
 
     CSpeed CInterpolatorPbh::getGroundSpeed() const
     {
-        return (m_newSituation.getGroundSpeed() - m_oldSituation.getGroundSpeed())
-                * m_simulationTimeFraction
-                + m_oldSituation.getGroundSpeed();
+        return (m_newSituation.getGroundSpeed() - m_oldSituation.getGroundSpeed()) * m_simulationTimeFraction + m_oldSituation.getGroundSpeed();
     }
 
     void CInterpolatorPbh::setSituations(const CAircraftSituation &older, const CAircraftSituation &newer)

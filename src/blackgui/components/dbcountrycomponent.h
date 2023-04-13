@@ -22,7 +22,10 @@
 
 class QWidget;
 
-namespace Ui { class CDbCountryComponent; }
+namespace Ui
+{
+    class CDbCountryComponent;
+}
 namespace BlackGui::Components
 {
     /*!

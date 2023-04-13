@@ -39,15 +39,37 @@ namespace BlackGui
     public:
         //! Colors
         //! \remarks NoColor has to be last entry
-        enum LedColor { Red = 0, Green, Yellow, Grey, Orange, Purple, Blue, Black, NoColor};
+        enum LedColor
+        {
+            Red = 0,
+            Green,
+            Yellow,
+            Grey,
+            Orange,
+            Purple,
+            Blue,
+            Black,
+            NoColor
+        };
         Q_ENUM(LedColor)
 
         //! Shapes
-        enum LedShape { Circle = 0, Square, Triangle, Rounded};
+        enum LedShape
+        {
+            Circle = 0,
+            Square,
+            Triangle,
+            Rounded
+        };
         Q_ENUM(LedShape)
 
         //! States
-        enum State { On, Off, TriState };
+        enum State
+        {
+            On,
+            Off,
+            TriState
+        };
 
         //! Default constructor
         CLedWidget(QWidget *parent = nullptr);
@@ -98,7 +120,11 @@ namespace BlackGui
         void setShape(LedShape);
 
         //! Target width
-        void setTargetWidth(int width) { this->m_widthTarget = width; this->setLed(); }
+        void setTargetWidth(int width)
+        {
+            this->m_widthTarget = width;
+            this->setLed();
+        }
 
         //! Tool tip
         QString getOnToolTip() const { return m_tooltipOn; }
@@ -138,22 +164,22 @@ namespace BlackGui
         void clicked();
 
     private:
-        State m_blinkState = Off;        //!< current state, can be different from value when blinking
-        State m_value = Off;             //!< explicit value
-        LedColor m_colorOn = Yellow;     //!< On color
-        LedColor m_colorOff = Black;     //!< Off color
+        State m_blinkState = Off; //!< current state, can be different from value when blinking
+        State m_value = Off; //!< explicit value
+        LedColor m_colorOn = Yellow; //!< On color
+        LedColor m_colorOff = Black; //!< Off color
         LedColor m_colorTriState = Blue; //!< tri-state color
-        LedShape m_shape = Circle;       //!< shape
-        double m_whRatio = 1.0;          //!< width/height ratio
-        int m_widthTarget = -1;          //!< desired width
-        int m_heightCalculated = 1;      //!< calculated height
+        LedShape m_shape = Circle; //!< shape
+        double m_whRatio = 1.0; //!< width/height ratio
+        int m_widthTarget = -1; //!< desired width
+        int m_heightCalculated = 1; //!< calculated height
 
-        QString m_tooltipOn = "on";              //!< tooltip when on
-        QString m_tooltipOff = "off";            //!< tooltip when off
+        QString m_tooltipOn = "on"; //!< tooltip when on
+        QString m_tooltipOff = "off"; //!< tooltip when off
         QString m_tooltipTriState = "tri-state"; //!< tooltip tri-state
-        QString m_currentToolTip = "off";        //!< currently used tooltip
+        QString m_currentToolTip = "off"; //!< currently used tooltip
         QScopedPointer<QSvgRenderer> m_renderer; //!< Renderer
-        QTimer m_resetTimer;                     //!< reset state
+        QTimer m_resetTimer; //!< reset state
 
         //! Init
         void init();

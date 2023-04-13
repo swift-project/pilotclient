@@ -30,26 +30,30 @@
 
 namespace BlackMisc::PhysicalQuantities
 {
-    template <class MU, class PQ> class CPhysicalQuantity;
+    template <class MU, class PQ>
+    class CPhysicalQuantity;
 }
 
 //! \cond
-#define BLACK_TEMPLATE_PQ_MIXINS(MU, PQ, Extern, Export)                                                                                        \
-    namespace BlackMisc::PhysicalQuantities { class PQ; }                                                                                       \
-    namespace BlackMisc::Private                                                                                                                \
-    {                                                                                                                                           \
-        Extern template struct Export CValueObjectMetaInfo<PhysicalQuantities::PQ>;                                                             \
-        Extern template struct Export MetaTypeHelper<PhysicalQuantities::PQ>;                                                                   \
-    }                                                                                                                                           \
-    namespace BlackMisc::Mixin                                                                                                                  \
-    {                                                                                                                                           \
-        Extern template class Export DBusOperators<PhysicalQuantities::CPhysicalQuantity<PhysicalQuantities::MU, PhysicalQuantities::PQ>>;      \
-        Extern template class Export DataStreamOperators<PhysicalQuantities::CPhysicalQuantity<PhysicalQuantities::MU, PhysicalQuantities::PQ>>;\
-        Extern template class Export JsonOperators<PhysicalQuantities::CPhysicalQuantity<PhysicalQuantities::MU, PhysicalQuantities::PQ>>;      \
-        Extern template class Export Index<PhysicalQuantities::PQ>;                                                                             \
-        Extern template class Export MetaType<PhysicalQuantities::PQ>;                                                                          \
-        Extern template class Export String<PhysicalQuantities::PQ>;                                                                            \
-        Extern template class Export Icon<PhysicalQuantities::CPhysicalQuantity<PhysicalQuantities::MU, PhysicalQuantities::PQ>>;               \
+#define BLACK_TEMPLATE_PQ_MIXINS(MU, PQ, Extern, Export)                                                                                         \
+    namespace BlackMisc::PhysicalQuantities                                                                                                      \
+    {                                                                                                                                            \
+        class PQ;                                                                                                                                \
+    }                                                                                                                                            \
+    namespace BlackMisc::Private                                                                                                                 \
+    {                                                                                                                                            \
+        Extern template struct Export CValueObjectMetaInfo<PhysicalQuantities::PQ>;                                                              \
+        Extern template struct Export MetaTypeHelper<PhysicalQuantities::PQ>;                                                                    \
+    }                                                                                                                                            \
+    namespace BlackMisc::Mixin                                                                                                                   \
+    {                                                                                                                                            \
+        Extern template class Export DBusOperators<PhysicalQuantities::CPhysicalQuantity<PhysicalQuantities::MU, PhysicalQuantities::PQ>>;       \
+        Extern template class Export DataStreamOperators<PhysicalQuantities::CPhysicalQuantity<PhysicalQuantities::MU, PhysicalQuantities::PQ>>; \
+        Extern template class Export JsonOperators<PhysicalQuantities::CPhysicalQuantity<PhysicalQuantities::MU, PhysicalQuantities::PQ>>;       \
+        Extern template class Export Index<PhysicalQuantities::PQ>;                                                                              \
+        Extern template class Export MetaType<PhysicalQuantities::PQ>;                                                                           \
+        Extern template class Export String<PhysicalQuantities::PQ>;                                                                             \
+        Extern template class Export Icon<PhysicalQuantities::CPhysicalQuantity<PhysicalQuantities::MU, PhysicalQuantities::PQ>>;                \
     }
 //! \endcond
 
@@ -64,14 +68,14 @@ namespace BlackMisc::PhysicalQuantities
  * Explicit template definition of mixins for a CPhysicalQuantity subclass
  */
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)
-#  define BLACK_DECLARE_PQ_MIXINS(MU, PQ)
-#  define BLACK_DEFINE_PQ_MIXINS(MU, PQ)
+#    define BLACK_DECLARE_PQ_MIXINS(MU, PQ)
+#    define BLACK_DEFINE_PQ_MIXINS(MU, PQ)
 #elif defined(Q_OS_WIN) && defined(Q_CC_CLANG)
-#  define BLACK_DECLARE_PQ_MIXINS(MU, PQ) BLACK_TEMPLATE_PQ_MIXINS(MU, PQ, extern, )
-#  define BLACK_DEFINE_PQ_MIXINS(MU, PQ)  BLACK_TEMPLATE_PQ_MIXINS(MU, PQ,       , BLACKMISC_EXPORT)
+#    define BLACK_DECLARE_PQ_MIXINS(MU, PQ) BLACK_TEMPLATE_PQ_MIXINS(MU, PQ, extern, )
+#    define BLACK_DEFINE_PQ_MIXINS(MU, PQ) BLACK_TEMPLATE_PQ_MIXINS(MU, PQ, , BLACKMISC_EXPORT)
 #else
-#  define BLACK_DECLARE_PQ_MIXINS(MU, PQ) BLACK_TEMPLATE_PQ_MIXINS(MU, PQ, extern, )
-#  define BLACK_DEFINE_PQ_MIXINS(MU, PQ)  BLACK_TEMPLATE_PQ_MIXINS(MU, PQ,       , )
+#    define BLACK_DECLARE_PQ_MIXINS(MU, PQ) BLACK_TEMPLATE_PQ_MIXINS(MU, PQ, extern, )
+#    define BLACK_DEFINE_PQ_MIXINS(MU, PQ) BLACK_TEMPLATE_PQ_MIXINS(MU, PQ, , )
 #endif
 
 BLACK_DECLARE_PQ_MIXINS(CAngleUnit, CAngle)
@@ -99,14 +103,15 @@ namespace BlackMisc::PhysicalQuantities
     /*!
      * A physical quantity such as "5m", "20s", "1500ft/s"
      */
-    template <class MU, class PQ> class CPhysicalQuantity :
+    template <class MU, class PQ>
+    class CPhysicalQuantity :
         public Mixin::DBusOperators<CPhysicalQuantity<MU, PQ>>,
-                public Mixin::DataStreamOperators<CPhysicalQuantity<MU, PQ>>,
-                public Mixin::JsonOperators<CPhysicalQuantity<MU, PQ>>,
-                public Mixin::Index<PQ>,
-                public Mixin::MetaType<PQ>,
-                public Mixin::String<PQ>,
-                public Mixin::Icon<CPhysicalQuantity<MU, PQ>>
+        public Mixin::DataStreamOperators<CPhysicalQuantity<MU, PQ>>,
+        public Mixin::JsonOperators<CPhysicalQuantity<MU, PQ>>,
+        public Mixin::Index<PQ>,
+        public Mixin::MetaType<PQ>,
+        public Mixin::String<PQ>,
+        public Mixin::Icon<CPhysicalQuantity<MU, PQ>>
     {
         //! \copydoc CValueObject::compare
         friend int compare(const PQ &a, const PQ &b) { return compareImpl(a, b); }
@@ -207,22 +212,22 @@ namespace BlackMisc::PhysicalQuantities
         void substractValueSameUnit(double value);
 
         //! Multiply operator *=
-        CPhysicalQuantity &operator *=(double multiply);
+        CPhysicalQuantity &operator*=(double multiply);
 
         //! Divide operator /=
-        CPhysicalQuantity &operator /=(double divide);
+        CPhysicalQuantity &operator/=(double divide);
 
         //! Operator *
-        PQ operator *(double multiply) const;
+        PQ operator*(double multiply) const;
 
         //! Operator to support commutative multiplication
-        friend PQ operator *(double factor, const PQ &other) { return other * factor; }
+        friend PQ operator*(double factor, const PQ &other) { return other * factor; }
 
         //! Operator /
-        PQ operator /(double divide) const;
+        PQ operator/(double divide) const;
 
         //! Unary operator -
-        PQ operator -() const;
+        PQ operator-() const;
 
         //! Equal operator ==
         friend bool operator==(const CPhysicalQuantity &a, const CPhysicalQuantity &b) { return a.equals(b); }
@@ -231,10 +236,10 @@ namespace BlackMisc::PhysicalQuantities
         friend bool operator!=(const CPhysicalQuantity &a, const CPhysicalQuantity &b) { return !a.equals(b); }
 
         //! Plus operator +=
-        CPhysicalQuantity &operator +=(const CPhysicalQuantity &other);
+        CPhysicalQuantity &operator+=(const CPhysicalQuantity &other);
 
         //! Minus operator-=
-        CPhysicalQuantity &operator -=(const CPhysicalQuantity &other);
+        CPhysicalQuantity &operator-=(const CPhysicalQuantity &other);
 
         //! Greater operator >
         friend bool operator>(const CPhysicalQuantity &a, const CPhysicalQuantity &b) { return b.lessThan(a); }
@@ -249,10 +254,20 @@ namespace BlackMisc::PhysicalQuantities
         friend bool operator>=(const CPhysicalQuantity &a, const CPhysicalQuantity &b) { return !a.lessThan(b); }
 
         //! Plus operator +
-        friend PQ operator +(const PQ &a, const PQ &b) { PQ copy(a); copy += b; return copy; }
+        friend PQ operator+(const PQ &a, const PQ &b)
+        {
+            PQ copy(a);
+            copy += b;
+            return copy;
+        }
 
         //! Minus operator -
-        friend PQ operator -(const PQ &a, const PQ &b) { PQ copy(a); copy -= b; return copy; }
+        friend PQ operator-(const PQ &a, const PQ &b)
+        {
+            PQ copy(a);
+            copy -= b;
+            return copy;
+        }
 
         //! Quantity value <= epsilon
         bool isZeroEpsilonConsidered() const;
@@ -353,7 +368,7 @@ namespace BlackMisc::PhysicalQuantities
 
     private:
         double m_value; //!< numeric part
-        MU m_unit;      //!< unit part
+        MU m_unit; //!< unit part
 
         //! Which subclass of CMeasurementUnit is used?
         using UnitClass = MU;

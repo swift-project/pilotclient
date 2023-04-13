@@ -38,9 +38,8 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackGui::Components
 {
-    CAircraftComponent::CAircraftComponent(QWidget *parent) :
-        QTabWidget(parent),
-        ui(new Ui::CAircraftComponent)
+    CAircraftComponent::CAircraftComponent(QWidget *parent) : QTabWidget(parent),
+                                                              ui(new Ui::CAircraftComponent)
     {
         ui->setupUi(this);
 
@@ -55,11 +54,11 @@ namespace BlackGui::Components
         ui->tvp_AircraftInRange->setAircraftMode(CSimulatedAircraftListModel::NetworkMode);
         ui->tvp_AircraftInRange->configureMenu(true, true, false, true, true, true);
 
-        connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::modelDataChangedDigest,   this, &CAircraftComponent::onRowCountChanged);
+        connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::modelDataChangedDigest, this, &CAircraftComponent::onRowCountChanged);
         connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestTextMessageWidget, this, &CAircraftComponent::requestTextMessageWidget);
-        connect(ui->tvp_AirportsInRange, &CSimulatedAircraftView::modelDataChangedDigest,   this, &CAircraftComponent::onRowCountChanged);
-        connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged,      this, &CAircraftComponent::onConnectionStatusChanged, Qt::QueuedConnection);
-        connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::movedAircraft,        this, &CAircraftComponent::onOwnAircraftMoved,        Qt::QueuedConnection);
+        connect(ui->tvp_AirportsInRange, &CSimulatedAircraftView::modelDataChangedDigest, this, &CAircraftComponent::onRowCountChanged);
+        connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAircraftComponent::onConnectionStatusChanged, Qt::QueuedConnection);
+        connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::movedAircraft, this, &CAircraftComponent::onOwnAircraftMoved, Qt::QueuedConnection);
         connect(&m_updateTimer, &QTimer::timeout, this, &CAircraftComponent::update);
 
         this->onSettingsChanged();
@@ -67,7 +66,7 @@ namespace BlackGui::Components
     }
 
     CAircraftComponent::~CAircraftComponent()
-    { }
+    {}
 
     int CAircraftComponent::countAircraftInView() const
     {
@@ -138,8 +137,7 @@ namespace BlackGui::Components
 
         // here I know I am the selected widget, update, but keep GUI responsive (hence I use a timer)
         QPointer<CAircraftComponent> myself(this);
-        QTimer::singleShot(1000, this, [ = ]
-        {
+        QTimer::singleShot(1000, this, [=] {
             if (!myself) { return; }
             myself->update();
         });

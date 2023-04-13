@@ -25,7 +25,8 @@
 
 namespace BlackMisc
 {
-    template <class> class CRange;
+    template <class>
+    class CRange;
 
     /*!
      * Any container class with begin and end iterators can inherit from this CRTP class
@@ -53,27 +54,45 @@ namespace BlackMisc
 
         //! Return a reference to the first element for which a given predicate returns true. Undefined if there is none.
         template <class Predicate>
-        const auto &findFirstBy(Predicate p) const { return findBy(p).front(); }
+        const auto &findFirstBy(Predicate p) const
+        {
+            return findBy(p).front();
+        }
 
         //! Return a reference to the first element matching some particular key/value pair(s). Undefined if there is none.
         template <class K, class V>
-        const auto &findFirstBy(K key, V value) const { return findBy(key, value).front(); }
+        const auto &findFirstBy(K key, V value) const
+        {
+            return findBy(key, value).front();
+        }
 
         //! Return a copy of the first element for which a given predicate returns true, or a default value if there is none.
         template <class Predicate, class Value>
-        auto findFirstByOrDefault(Predicate p, const Value &def) const { return findBy(p).frontOrDefault(def); }
+        auto findFirstByOrDefault(Predicate p, const Value &def) const
+        {
+            return findBy(p).frontOrDefault(def);
+        }
 
         //! Return a copy of the first element for which a given predicate returns true, or a default value if there is none.
         template <class Predicate>
-        auto findFirstByOrDefault(Predicate p) const { return findBy(p).frontOrDefault(); }
+        auto findFirstByOrDefault(Predicate p) const
+        {
+            return findBy(p).frontOrDefault();
+        }
 
         //! Return a copy of the first element matching some particular key/value pair(s), or a default value if there is none.
         template <class K, class V, class Value>
-        auto findFirstByOrDefault(K key, V value, const Value &def) const { return findBy(key, value).frontOrDefault(def); }
+        auto findFirstByOrDefault(K key, V value, const Value &def) const
+        {
+            return findBy(key, value).frontOrDefault(def);
+        }
 
         //! Return a copy of the first element matching some particular key/value pair(s), or a default value if there is none.
         template <class T, class K, class V>
-        auto findFirstByOrDefault(K T::* key, V value) const { return findBy(key, value).frontOrDefault(); }
+        auto findFirstByOrDefault(K T::*key, V value) const
+        {
+            return findBy(key, value).frontOrDefault();
+        }
 
         //! Return true if there is an element for which a given predicate returns true.
         template <class Predicate>
@@ -238,12 +257,16 @@ namespace BlackMisc
         size_type size() const { return std::distance(begin(), end()); }
 
         //! Returns the element at the beginning of the range. Undefined if the range is empty.
-        const_reference front() const { Q_ASSERT(!empty()); return *begin(); }
+        const_reference front() const
+        {
+            Q_ASSERT(!empty());
+            return *begin();
+        }
 
         //! Returns the element at the beginning of the range, or a default value if the range is empty.
         const_reference frontOrDefault() const
         {
-            static const value_type def{};
+            static const value_type def {};
             return empty() ? def : *begin();
         }
 
@@ -258,7 +281,8 @@ namespace BlackMisc
         I m_end;
 
         void check(...) {}
-        template <class I2, class F> void check(Iterators::ConditionalIterator<I2, F> *begin, Iterators::ConditionalIterator<I2, F> *end)
+        template <class I2, class F>
+        void check(Iterators::ConditionalIterator<I2, F> *begin, Iterators::ConditionalIterator<I2, F> *end)
         {
             begin->checkEnd(*end);
         }
@@ -269,13 +293,13 @@ namespace BlackMisc
      * Streaming operators for CRange to qDebug.
      */
     template <class I>
-    QDebug operator <<(QDebug d, const CRange<I> &range)
+    QDebug operator<<(QDebug d, const CRange<I> &range)
     {
         for (const auto &v : range) { d << v; }
         return d;
     }
     template <class I>
-    QNoDebug operator <<(QNoDebug d, const CRange<I> &)
+    QNoDebug operator<<(QNoDebug d, const CRange<I> &)
     {
         return d;
     }

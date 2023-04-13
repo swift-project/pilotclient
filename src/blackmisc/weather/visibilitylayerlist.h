@@ -23,7 +23,10 @@ BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Weather, CVisibilityLayer, CVisibilityL
 
 namespace BlackMisc
 {
-    namespace Aviation { class CAltitude; }
+    namespace Aviation
+    {
+        class CAltitude;
+    }
 
     namespace Weather
     {
@@ -51,9 +54,9 @@ namespace BlackMisc
             CVisibilityLayer findByBase(const BlackMisc::Aviation::CAltitude &base) const;
         };
 
-    } //namespace
+    } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CVisibilityLayerList)
 
-#endif //guard
+#endif // guard

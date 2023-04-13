@@ -38,14 +38,13 @@ using namespace BlackMisc::Network;
 
 namespace BlackGui::Components
 {
-    CDbAircraftIcaoSelectorComponent::CDbAircraftIcaoSelectorComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CDbAircraftIcaoSelectorComponent)
+    CDbAircraftIcaoSelectorComponent::CDbAircraftIcaoSelectorComponent(QWidget *parent) : QFrame(parent),
+                                                                                          ui(new Ui::CDbAircraftIcaoSelectorComponent)
     {
         ui->setupUi(this);
         this->setFocusProxy(ui->le_Aircraft);
         this->setAcceptDrops(true);
-        this->setAcceptedMetaTypeIds({qMetaTypeId<CAircraftIcaoCode>(), qMetaTypeId<CAircraftIcaoCodeList>()});
+        this->setAcceptedMetaTypeIds({ qMetaTypeId<CAircraftIcaoCode>(), qMetaTypeId<CAircraftIcaoCodeList>() });
         ui->le_Aircraft->setValidator(new CUpperCaseValidator(this));
 
         connect(ui->le_Aircraft, &QLineEdit::editingFinished, this, &CDbAircraftIcaoSelectorComponent::onDataChanged);
@@ -57,7 +56,7 @@ namespace BlackGui::Components
     }
 
     CDbAircraftIcaoSelectorComponent::~CDbAircraftIcaoSelectorComponent()
-    { }
+    {}
 
     bool CDbAircraftIcaoSelectorComponent::setAircraftIcao(const CAircraftIcaoCode &icao)
     {

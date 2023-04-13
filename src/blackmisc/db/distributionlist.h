@@ -81,4 +81,4 @@ namespace BlackMisc::Db
 Q_DECLARE_METATYPE(BlackMisc::Db::CDistributionList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Db::CDistribution>)
 
-#endif //guard
+#endif // guard

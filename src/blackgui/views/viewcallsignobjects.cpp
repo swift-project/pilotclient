@@ -27,8 +27,7 @@ using namespace BlackGui::Models;
 namespace BlackGui::Views
 {
     template <class T>
-    CViewWithCallsignObjects<T>::CViewWithCallsignObjects(QWidget *parent) :
-        CViewBase<T>(parent)
+    CViewWithCallsignObjects<T>::CViewWithCallsignObjects(QWidget *parent) : CViewBase<T>(parent)
     {
         // void
     }
@@ -36,7 +35,7 @@ namespace BlackGui::Views
     template <class T>
     void CViewWithCallsignObjects<T>::selectCallsign(const CCallsign &callsign)
     {
-        const CCallsignSet cs({callsign});
+        const CCallsignSet cs({ callsign });
         this->selectCallsigns(cs);
     }
 
@@ -66,7 +65,7 @@ namespace BlackGui::Views
         return selected.getCallsigns();
     }
 
-    template<class T>
+    template <class T>
     int CViewWithCallsignObjects<T>::removeCallsign(const CCallsign &callsign)
     {
         if (callsign.isEmpty()) { return 0; }
@@ -100,7 +99,7 @@ namespace BlackGui::Views
         return c;
     }
 
-    template<class T>
+    template <class T>
     int CViewWithCallsignObjects<T>::replaceOrAddObjectByCallsign(const ObjectType &object)
     {
         ContainerType copy(this->container());
@@ -110,7 +109,7 @@ namespace BlackGui::Views
         return c;
     }
 
-    template<class T>
+    template <class T>
     void CViewWithCallsignObjects<T>::selectObjects(const ContainerType &selectedObjects)
     {
         if (!selectedObjects.isEmpty())

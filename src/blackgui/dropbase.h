@@ -55,8 +55,8 @@ namespace BlackGui
         CDropBase();
 
     private:
-        bool m_allowDrop = true;        //!< dropping allowed?
-        bool m_acceptJsonFile = false;  //!< accept JSON files
+        bool m_allowDrop = true; //!< dropping allowed?
+        bool m_acceptJsonFile = false; //!< accept JSON files
         QList<int> m_acceptedMetaTypes; //!< accepted meta types
     };
 } // ns

@@ -60,4 +60,4 @@ Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituationChangePerCallsign)
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituationChangeListPerCallsign)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Aviation::CAircraftSituationChange>)
 
-#endif //guard
+#endif // guard

@@ -47,10 +47,10 @@ namespace BlackGui
         void tickChanged(bool ticked);
 
     private:
-        bool m_isPixmapTicked     = false; //!< ticked state
-        QString m_toolTipTicked   = "on";
+        bool m_isPixmapTicked = false; //!< ticked state
+        QString m_toolTipTicked = "on";
         QString m_toolTipUnticked = "off";
-        QPixmap m_pixmapTicked   = BlackMisc::CIcons::tick16();
+        QPixmap m_pixmapTicked = BlackMisc::CIcons::tick16();
         QPixmap m_pixmapUnticked = BlackMisc::CIcons::cross16();
 
         //! Set the label

@@ -289,8 +289,7 @@ namespace BlackMisc
         //! \note Human readable patterns are defined in CLogPattern::allHumanReadablePatterns
         static const QStringList &allSpecialCategories()
         {
-            static const QStringList cats
-            {
+            static const QStringList cats {
                 uncategorized(),
                 aviation(),
                 audio(),

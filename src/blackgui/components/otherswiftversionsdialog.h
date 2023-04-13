@@ -14,7 +14,10 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class COtherSwiftVersionsDialog; }
+namespace Ui
+{
+    class COtherSwiftVersionsDialog;
+}
 namespace BlackGui::Components
 {
     /*!

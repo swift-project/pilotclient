@@ -70,7 +70,7 @@ namespace BlackMisc::Aviation
         const QString &getIcaoAsString() const { return m_icao.asString(); }
 
         //! Set ICAO code.
-        void setIcao(const CAirportIcaoCode &icao) {  m_icao = icao; }
+        void setIcao(const CAirportIcaoCode &icao) { m_icao = icao; }
 
         //! Get location (e.g. "London")
         const QString &getLocation() const { return m_location; }
@@ -165,11 +165,11 @@ namespace BlackMisc::Aviation
         static CAirport fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
 
     private:
-        QString                             m_location;
-        QString                             m_descriptiveName;
-        bool                                m_operating = true;
-        CAirportIcaoCode                    m_icao;
-        BlackMisc::CCountry                 m_country;
+        QString m_location;
+        QString m_descriptiveName;
+        bool m_operating = true;
+        CAirportIcaoCode m_icao;
+        BlackMisc::CCountry m_country;
         BlackMisc::Geo::CCoordinateGeodetic m_position;
 
         BLACK_METACLASS(

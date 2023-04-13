@@ -20,7 +20,7 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Network, CTextMessage, CTextMessageList)
 namespace BlackMisc::Network
 {
 
-    CTextMessageList::CTextMessageList() { }
+    CTextMessageList::CTextMessageList() {}
 
     CTextMessageList::CTextMessageList(const QString &message, const CCallsign &recipientCallsign)
     {
@@ -55,9 +55,8 @@ namespace BlackMisc::Network
         }
     }
 
-    CTextMessageList::CTextMessageList(const CSequence<CTextMessage> &other) :
-        CSequence<CTextMessage>(other)
-    { }
+    CTextMessageList::CTextMessageList(const CSequence<CTextMessage> &other) : CSequence<CTextMessage>(other)
+    {}
 
     CTextMessageList CTextMessageList::getPrivateMessages() const
     {
@@ -122,7 +121,7 @@ namespace BlackMisc::Network
     void CTextMessageList::toggleSenderRecipients()
     {
         if (this->isEmpty()) { return; }
-        std::for_each(this->begin(), this->end(), [](CTextMessage & tm) { tm.toggleSenderRecipient(); });
+        std::for_each(this->begin(), this->end(), [](CTextMessage &tm) { tm.toggleSenderRecipient(); });
     }
 
     int CTextMessageList::relayedToPrivateMessages()
@@ -157,7 +156,7 @@ namespace BlackMisc::Network
 
     CTextMessageList CTextMessageList::withRemovedPrivateMessagesFromCallsign(const CCallsign &callsign) const
     {
-        if (this->isEmpty())    { return {}; }
+        if (this->isEmpty()) { return {}; }
         if (callsign.isEmpty()) { return *this; }
         CTextMessageList r;
         for (const CTextMessage &m : *this)
@@ -170,7 +169,7 @@ namespace BlackMisc::Network
 
     void CTextMessageList::markAsSent()
     {
-        std::for_each(this->begin(), this->end(), [](CTextMessage & tm) { tm.markAsSent(); });
+        std::for_each(this->begin(), this->end(), [](CTextMessage &tm) { tm.markAsSent(); });
     }
 
     CTextMessageList CTextMessageList::markedAsSent()

@@ -56,7 +56,7 @@ namespace BlackMisc::Simulation
         CDistributor(const QString &id, const QString &description, const QString &alias1, const QString &alias2, const BlackMisc::Simulation::CSimulatorInfo &simulator = BlackMisc::Simulation::CSimulatorInfo());
 
         //! Get description
-        const QString &getDescription() const { return m_description;}
+        const QString &getDescription() const { return m_description; }
 
         //! Get id and description
         QString getIdAndDescription() const;
@@ -68,10 +68,10 @@ namespace BlackMisc::Simulation
         bool hasDescription() const { return !m_description.isEmpty(); }
 
         //! Get alias1
-        const QString &getAlias1() const { return m_alias1;}
+        const QString &getAlias1() const { return m_alias1; }
 
         //! Get alias2
-        const QString &getAlias2() const { return m_alias2;}
+        const QString &getAlias2() const { return m_alias2; }
 
         //! Set alias1
         void setAlias1(const QString &alias) { m_alias1 = alias; }
@@ -138,9 +138,9 @@ namespace BlackMisc::Simulation
         //! @}
 
     private:
-        QString m_description;                             //!< description
-        QString m_alias1;                                  //!< alias name
-        QString m_alias2;                                  //!< alias name
+        QString m_description; //!< description
+        QString m_alias1; //!< alias name
+        QString m_alias2; //!< alias name
         BlackMisc::Simulation::CSimulatorInfo m_simulator; //!< simulator
 
         //! "Clean up" the keys, like X-CSL => XCSL

@@ -24,22 +24,19 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::FsCommon, CAircraftCfgEnt
 
 namespace BlackMisc::Simulation::FsCommon
 {
-    CAircraftCfgEntries::CAircraftCfgEntries(const QString &fileName, int index, const QString &title, const QString &atcType, const QString &atcModel, const QString &atcParkingCode, const QString &description) :
-        m_index(index), m_fileName(fileName), m_title(title.trimmed()), m_atcType(atcType.trimmed()),
-        m_atcModel(atcModel.trimmed()), m_atcParkingCode(atcParkingCode.trimmed()), m_description(description.trimmed())
+    CAircraftCfgEntries::CAircraftCfgEntries(const QString &fileName, int index, const QString &title, const QString &atcType, const QString &atcModel, const QString &atcParkingCode, const QString &description) : m_index(index), m_fileName(fileName), m_title(title.trimmed()), m_atcType(atcType.trimmed()),
+                                                                                                                                                                                                                     m_atcModel(atcModel.trimmed()), m_atcParkingCode(atcParkingCode.trimmed()), m_description(description.trimmed())
     {
         // void
     }
 
     QString CAircraftCfgEntries::convertToQString(bool) const
     {
-        return QStringLiteral("{%1, %2, %3, %4, %5, %6}").arg(m_fileName).arg(m_index).
-                arg(m_title, m_atcModel, m_atcType, m_atcParkingCode);
+        return QStringLiteral("{%1, %2, %3, %4, %5, %6}").arg(m_fileName).arg(m_index).arg(m_title, m_atcModel, m_atcType, m_atcParkingCode);
     }
 
-    CAircraftCfgEntries::CAircraftCfgEntries(const QString &fileName, int index) :
-        m_index(index), m_fileName(fileName)
-    { }
+    CAircraftCfgEntries::CAircraftCfgEntries(const QString &fileName, int index) : m_index(index), m_fileName(fileName)
+    {}
 
     QString CAircraftCfgEntries::getFileDirectory() const
     {
@@ -134,8 +131,8 @@ namespace BlackMisc::Simulation::FsCommon
         const QString designator(CAircraftIcaoCode::normalizeDesignator(this->getAtcModel()));
         CAircraftIcaoCode aircraft(
             CAircraftIcaoCode::isValidDesignator(designator) ?
-            designator :
-            CAircraftIcaoCode::getUnassignedDesignator());
+                designator :
+                CAircraftIcaoCode::getUnassignedDesignator());
         aircraft.setManufacturer(this->getUiManufacturer());
         model.setAircraftIcaoCode(aircraft);
 
@@ -204,8 +201,16 @@ namespace BlackMisc::Simulation::FsCommon
 
     void CAircraftCfgEntries::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CAircraftCfgEntries>(); return; }
-        if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CAircraftCfgEntries>();
+            return;
+        }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            ITimestampBased::setPropertyByIndex(index, variant);
+            return;
+        }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

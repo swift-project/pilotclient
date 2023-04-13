@@ -19,7 +19,7 @@
 namespace BlackMisc::Simulation::XPlane
 {
     CXSwiftBusConfigWriter::CXSwiftBusConfigWriter(QObject *parent) : QObject(parent)
-    { }
+    {}
 
     void CXSwiftBusConfigWriter::setDBusAddress(const QString &dBusAddress)
     {
@@ -30,7 +30,6 @@ namespace BlackMisc::Simulation::XPlane
         {
             CDBusServer::dBusAddressToHostAndPort(dBusAddress, m_dbusAddress, m_dbusPort);
         }
-
     }
 
     void CXSwiftBusConfigWriter::setDebugMode(bool on)

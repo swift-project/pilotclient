@@ -35,11 +35,11 @@ namespace BlackSimPlugin::P3D
     public:
         //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
         CSimulatorP3D(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                        BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
-                        BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                        BlackMisc::Weather::IWeatherGridProvider       *weatherGridProvider,
-                        BlackMisc::Network::IClientProvider            *clientProvider,
-                        QObject *parent = nullptr);
+                      BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                      BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                      BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+                      BlackMisc::Network::IClientProvider *clientProvider,
+                      QObject *parent = nullptr);
 
         //! \name ISimulator implementations
         //! @{

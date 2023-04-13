@@ -15,11 +15,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Simulation, CSimulatorInfo, CSimulatorIn
 
 namespace BlackMisc::Simulation
 {
-    CSimulatorInfoList::CSimulatorInfoList() { }
+    CSimulatorInfoList::CSimulatorInfoList() {}
 
-    CSimulatorInfoList::CSimulatorInfoList(const CSequence<CSimulatorInfo> &other) :
-        CSequence<CSimulatorInfo>(other)
-    { }
+    CSimulatorInfoList::CSimulatorInfoList(const CSequence<CSimulatorInfo> &other) : CSequence<CSimulatorInfo>(other)
+    {}
 
     CSimulatorInfoList CSimulatorInfoList::withNoDuplicates() const
     {

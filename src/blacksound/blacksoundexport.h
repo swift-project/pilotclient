@@ -19,13 +19,13 @@
  */
 
 #ifndef WITH_STATIC
-#  if defined(BUILD_BLACKSOUND_LIB)
-#    define BLACKSOUND_EXPORT Q_DECL_EXPORT
-#  else
-#    define BLACKSOUND_EXPORT Q_DECL_IMPORT
-#  endif
+#    if defined(BUILD_BLACKSOUND_LIB)
+#        define BLACKSOUND_EXPORT Q_DECL_EXPORT
+#    else
+#        define BLACKSOUND_EXPORT Q_DECL_IMPORT
+#    endif
 #else
-#  define BLACKSOUND_EXPORT
+#    define BLACKSOUND_EXPORT
 #endif
 
 #endif // guard

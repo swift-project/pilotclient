@@ -24,11 +24,15 @@ class QWidget;
 
 namespace BlackGui
 {
-    namespace Menus { class CMenuActions; }
+    namespace Menus
+    {
+        class CMenuActions;
+    }
     namespace Views
     {
         //! Base class for views with DB objects
-        template <class T> class CViewWithCallsignObjects :
+        template <class T>
+        class CViewWithCallsignObjects :
             public CViewBase<T>
         {
         public:

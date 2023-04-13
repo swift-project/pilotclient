@@ -19,13 +19,13 @@
  */
 
 #ifndef WITH_STATIC
-#  if defined(BUILD_BLACKINPUT_LIB)
-#    define BLACKINPUT_EXPORT Q_DECL_EXPORT
-#  else
-#    define BLACKINPUT_EXPORT Q_DECL_IMPORT
-#  endif
+#    if defined(BUILD_BLACKINPUT_LIB)
+#        define BLACKINPUT_EXPORT Q_DECL_EXPORT
+#    else
+#        define BLACKINPUT_EXPORT Q_DECL_IMPORT
+#    endif
 #else
-#  define BLACKINPUT_EXPORT
+#    define BLACKINPUT_EXPORT
 #endif
 
 #endif // guard

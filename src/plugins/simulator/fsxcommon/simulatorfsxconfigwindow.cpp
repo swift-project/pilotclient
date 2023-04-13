@@ -13,10 +13,9 @@ using namespace BlackGui;
 
 namespace BlackSimPlugin::FsxCommon
 {
-    CSimulatorFsxConfigWindow::CSimulatorFsxConfigWindow(const QString &simulator, QWidget *parent) :
-        CPluginConfigWindow(parent),
-        m_simulator(simulator),
-        ui(new Ui::CSimulatorFsxConfigWindow)
+    CSimulatorFsxConfigWindow::CSimulatorFsxConfigWindow(const QString &simulator, QWidget *parent) : CPluginConfigWindow(parent),
+                                                                                                      m_simulator(simulator),
+                                                                                                      ui(new Ui::CSimulatorFsxConfigWindow)
     {
         ui->setupUi(this);
         ui->tw_Settings->setCurrentIndex(0);

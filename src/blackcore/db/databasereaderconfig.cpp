@@ -22,20 +22,18 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackCore::Db, CDatabaseReaderConfig, CDatabaseRead
 
 namespace BlackCore::Db
 {
-    CDatabaseReaderConfig::CDatabaseReaderConfig(CEntityFlags::Entity entities, CDbFlags::DataRetrievalMode retrievalFlags, const CTime &cacheLifetime) :
-        m_entities(entities), m_retrievalMode(retrievalFlags), m_cacheLifetime(cacheLifetime)
+    CDatabaseReaderConfig::CDatabaseReaderConfig(CEntityFlags::Entity entities, CDbFlags::DataRetrievalMode retrievalFlags, const CTime &cacheLifetime) : m_entities(entities), m_retrievalMode(retrievalFlags), m_cacheLifetime(cacheLifetime)
     {
         // void
     }
 
     QString CDatabaseReaderConfig::convertToQString(bool i18n) const
     {
-        return
-            CDbFlags::flagToString(this->getRetrievalMode()) %
-            u' ' %
-            CEntityFlags::flagToString(this->getEntities()) %
-            u' ' %
-            m_cacheLifetime.toQString(i18n);
+        return CDbFlags::flagToString(this->getRetrievalMode()) %
+               u' ' %
+               CEntityFlags::flagToString(this->getEntities()) %
+               u' ' %
+               m_cacheLifetime.toQString(i18n);
     }
 
     CEntityFlags::Entity CDatabaseReaderConfig::getEntities() const
@@ -100,9 +98,8 @@ namespace BlackCore::Db
         return m_entities != CEntityFlags::NoEntity;
     }
 
-    CDatabaseReaderConfigList::CDatabaseReaderConfigList(const CSequence<CDatabaseReaderConfig> &other) :
-        CSequence<CDatabaseReaderConfig>(other)
-    { }
+    CDatabaseReaderConfigList::CDatabaseReaderConfigList(const CSequence<CDatabaseReaderConfig> &other) : CSequence<CDatabaseReaderConfig>(other)
+    {}
 
     CDatabaseReaderConfig CDatabaseReaderConfigList::findFirstOrDefaultForEntity(const CEntityFlags::Entity entities) const
     {
@@ -211,11 +208,11 @@ namespace BlackCore::Db
         retrievalFlags |= CDbFlags::DbWriting;
         CDatabaseReaderConfigList l;
         l.push_back(CDatabaseReaderConfig(CEntityFlags::AircraftIcaoEntity, retrievalFlags, cacheLifetime));
-        l.push_back(CDatabaseReaderConfig(CEntityFlags::AirlineIcaoEntity,  retrievalFlags, cacheLifetime));
+        l.push_back(CDatabaseReaderConfig(CEntityFlags::AirlineIcaoEntity, retrievalFlags, cacheLifetime));
         l.push_back(CDatabaseReaderConfig(CEntityFlags::AirportEntity, CDbFlags::Ignore, cacheLifetime)); // not needed in mapping tool
         l.push_back(CDatabaseReaderConfig(CEntityFlags::DistributorEntity, retrievalFlags, cacheLifetime));
-        l.push_back(CDatabaseReaderConfig(CEntityFlags::ModelEntity,   retrievalFlags, cacheLifetime));
-        l.push_back(CDatabaseReaderConfig(CEntityFlags::LiveryEntity,  retrievalFlags, cacheLifetime));
+        l.push_back(CDatabaseReaderConfig(CEntityFlags::ModelEntity, retrievalFlags, cacheLifetime));
+        l.push_back(CDatabaseReaderConfig(CEntityFlags::LiveryEntity, retrievalFlags, cacheLifetime));
         l.push_back(CDatabaseReaderConfig(CEntityFlags::CountryEntity, retrievalFlags, cacheLifetime));
         l.push_back(CDatabaseReaderConfig(CEntityFlags::AircraftCategoryEntity, retrievalFlags, cacheLifetime));
         return l;
@@ -230,11 +227,11 @@ namespace BlackCore::Db
 
         CDatabaseReaderConfigList l;
         l.push_back(CDatabaseReaderConfig(CEntityFlags::AircraftIcaoEntity, retrievalFlags, cacheLifetime));
-        l.push_back(CDatabaseReaderConfig(CEntityFlags::AirlineIcaoEntity,  retrievalFlags, cacheLifetime));
-        l.push_back(CDatabaseReaderConfig(CEntityFlags::AirportEntity,      retrievalFlags, cacheLifetime));
-        l.push_back(CDatabaseReaderConfig(CEntityFlags::DistributorEntity,  retrievalFlags, cacheLifetime));
-        l.push_back(CDatabaseReaderConfig(CEntityFlags::ModelEntity,   retrievalFlagsWriting, cacheLifetime)); // for wizard
-        l.push_back(CDatabaseReaderConfig(CEntityFlags::LiveryEntity,  retrievalFlags, cacheLifetime));
+        l.push_back(CDatabaseReaderConfig(CEntityFlags::AirlineIcaoEntity, retrievalFlags, cacheLifetime));
+        l.push_back(CDatabaseReaderConfig(CEntityFlags::AirportEntity, retrievalFlags, cacheLifetime));
+        l.push_back(CDatabaseReaderConfig(CEntityFlags::DistributorEntity, retrievalFlags, cacheLifetime));
+        l.push_back(CDatabaseReaderConfig(CEntityFlags::ModelEntity, retrievalFlagsWriting, cacheLifetime)); // for wizard
+        l.push_back(CDatabaseReaderConfig(CEntityFlags::LiveryEntity, retrievalFlags, cacheLifetime));
         l.push_back(CDatabaseReaderConfig(CEntityFlags::CountryEntity, retrievalFlags, cacheLifetime));
         l.push_back(CDatabaseReaderConfig(CEntityFlags::AircraftCategoryEntity, retrievalFlags, cacheLifetime));
         return l;
@@ -246,11 +243,11 @@ namespace BlackCore::Db
         const CDbFlags::DataRetrievalMode retrievalFlags = CDbFlags::CacheThenShared;
         CDatabaseReaderConfigList l;
         l.push_back(CDatabaseReaderConfig(CEntityFlags::AircraftIcaoEntity, retrievalFlags, cacheLifetime));
-        l.push_back(CDatabaseReaderConfig(CEntityFlags::AirlineIcaoEntity, retrievalFlags,  cacheLifetime));
-        l.push_back(CDatabaseReaderConfig(CEntityFlags::AirportEntity, CDbFlags::Ignore,    cacheLifetime)); // not needed in mapping tool
+        l.push_back(CDatabaseReaderConfig(CEntityFlags::AirlineIcaoEntity, retrievalFlags, cacheLifetime));
+        l.push_back(CDatabaseReaderConfig(CEntityFlags::AirportEntity, CDbFlags::Ignore, cacheLifetime)); // not needed in mapping tool
         l.push_back(CDatabaseReaderConfig(CEntityFlags::DistributorEntity, retrievalFlags, cacheLifetime));
-        l.push_back(CDatabaseReaderConfig(CEntityFlags::ModelEntity, retrievalFlags,   cacheLifetime));
-        l.push_back(CDatabaseReaderConfig(CEntityFlags::LiveryEntity, retrievalFlags,  cacheLifetime));
+        l.push_back(CDatabaseReaderConfig(CEntityFlags::ModelEntity, retrievalFlags, cacheLifetime));
+        l.push_back(CDatabaseReaderConfig(CEntityFlags::LiveryEntity, retrievalFlags, cacheLifetime));
         l.push_back(CDatabaseReaderConfig(CEntityFlags::CountryEntity, retrievalFlags, cacheLifetime));
         l.push_back(CDatabaseReaderConfig(CEntityFlags::AircraftCategoryEntity, retrievalFlags, cacheLifetime));
         return l;
@@ -265,8 +262,8 @@ namespace BlackCore::Db
         l.push_back(CDatabaseReaderConfig(CEntityFlags::AirlineIcaoEntity, retrievalFlags, cacheLifetime));
         l.push_back(CDatabaseReaderConfig(CEntityFlags::AirportEntity, retrievalFlags, cacheLifetime));
         l.push_back(CDatabaseReaderConfig(CEntityFlags::DistributorEntity, retrievalFlags, cacheLifetime));
-        l.push_back(CDatabaseReaderConfig(CEntityFlags::ModelEntity,   retrievalFlags, cacheLifetime));
-        l.push_back(CDatabaseReaderConfig(CEntityFlags::LiveryEntity,  retrievalFlags, cacheLifetime));
+        l.push_back(CDatabaseReaderConfig(CEntityFlags::ModelEntity, retrievalFlags, cacheLifetime));
+        l.push_back(CDatabaseReaderConfig(CEntityFlags::LiveryEntity, retrievalFlags, cacheLifetime));
         l.push_back(CDatabaseReaderConfig(CEntityFlags::CountryEntity, retrievalFlags, cacheLifetime));
         l.push_back(CDatabaseReaderConfig(CEntityFlags::AircraftCategoryEntity, retrievalFlags, cacheLifetime));
         return l;

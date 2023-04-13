@@ -11,7 +11,6 @@
 #ifndef BLACKMISC_VARIANT_H
 #define BLACKMISC_VARIANT_H
 
-
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/mixin/mixindbus.h"
@@ -67,7 +66,9 @@ namespace BlackMisc
         public Mixin::JsonOperators<CVariant>,
         public Mixin::String<CVariant>
     {
-        template <typename> struct tag {};
+        template <typename>
+        struct tag
+        {};
 
     public:
         //! Default constructor.
@@ -110,16 +111,24 @@ namespace BlackMisc
         void reset(QVariant &&var) { m_v = std::move(var); }
 
         //! Copy assignment operator.
-        CVariant &operator =(const CVariant &other) = default;
+        CVariant &operator=(const CVariant &other) = default;
 
         //! Move assignment operatior.
-        CVariant &operator =(CVariant &&other) noexcept = default;
+        CVariant &operator=(CVariant &&other) noexcept = default;
 
         //! Change the internal QVariant
-        CVariant &operator =(const QVariant &var) { m_v = var; return *this; }
+        CVariant &operator=(const QVariant &var)
+        {
+            m_v = var;
+            return *this;
+        }
 
         //! Change the internal QVariant
-        CVariant &operator =(QVariant &&var) noexcept { m_v = std::move(var); return *this; }
+        CVariant &operator=(QVariant &&var) noexcept
+        {
+            m_v = std::move(var);
+            return *this;
+        }
 
         //! Swap this variant with another.
         void swap(CVariant &other) noexcept { m_v.swap(other.m_v); }
@@ -128,35 +137,57 @@ namespace BlackMisc
         void swap(QVariant &other) noexcept { m_v.swap(other); }
 
         //! Construct a variant from a value.
-        template <typename T> static CVariant fromValue(T &&value)
+        template <typename T>
+        static CVariant fromValue(T &&value)
         {
             static_assert(!std::is_same_v<CVariant, std::decay_t<T>>, "CVariant is an illegal type!");
             return CVariant(QVariant::fromValue(std::forward<T>(value)));
         }
 
         //! Synonym for fromValue().
-        template <typename T> static CVariant from(T &&value)
+        template <typename T>
+        static CVariant from(T &&value)
         {
             static_assert(!std::is_same_v<CVariant, std::decay_t<T>>, "CVariant is an illegal type!");
             return CVariant(QVariant::fromValue(std::forward<T>(value)));
         }
 
         //! Change the value.
-        template <typename T> void setValue(T &&value) { m_v.setValue(std::forward<T>(value)); }
+        template <typename T>
+        void setValue(T &&value)
+        {
+            m_v.setValue(std::forward<T>(value));
+        }
 
         //! Synonym for setValue().
-        template <typename T> void set(T &&value) { m_v.setValue(std::forward<T>(value)); }
+        template <typename T>
+        void set(T &&value)
+        {
+            m_v.setValue(std::forward<T>(value));
+        }
 
         //! Return the value converted to the type T.
-        template <typename T> T value() const { return to(tag<T>()); }
+        template <typename T>
+        T value() const
+        {
+            return to(tag<T>());
+        }
 
         //! Synonym for value().
-        template <typename T> T to() const { return to(tag<T>()); }
+        template <typename T>
+        T to() const
+        {
+            return to(tag<T>());
+        }
 
         //! Returns the value converted to the type T, or a default if it can not be converted.
         //! \details Parameter is passed by value to avoid odr-using the argument in case it is
         //!          an inline-initialized static const integral data member without a definition (§9.4.2/3).
-        template <typename T> T valueOrDefault(T def) const { return canConvert<T>() ? value<T>() : def; }
+        template <typename T>
+        T valueOrDefault(T def) const
+        {
+            return canConvert<T>() ? value<T>() : def;
+        }
 
         //! Return the internal QVariant.
         const QVariant &getQVariant() const { return m_v; }
@@ -171,7 +202,11 @@ namespace BlackMisc
         bool canConvert(int typeId) const;
 
         //! True if this variant can be converted to the type T.
-        template <typename T> bool canConvert() const { return canConvert(qMetaTypeId<T>()); }
+        template <typename T>
+        bool canConvert() const
+        {
+            return canConvert(qMetaTypeId<T>());
+        }
 
         //! Convert this variant to the type with the given metatype ID and return true if successful.
         bool convert(int typeId);
@@ -306,19 +341,41 @@ namespace BlackMisc
         static int compareImpl(const CVariant &, const CVariant &);
         uint getValueHash() const;
 
-        template <typename T> T to(tag<T>) const
+        template <typename T>
+        T to(tag<T>) const
         {
-            auto copy = *this; copy.convert(qMetaTypeId<T>()); return *static_cast<const T*>(copy.data());
+            auto copy = *this;
+            copy.convert(qMetaTypeId<T>());
+            return *static_cast<const T *>(copy.data());
         }
-        template <typename T> QList<T> to(tag<QList<T>>) const { return toImpl<QList<T>>(); }
-        template <typename T> QVector<T> to(tag<QVector<T>>) const { return toImpl<QVector<T>>(); }
-        template <typename T> CSequence<T> to(tag<CSequence<T>>) const { return toImpl<CSequence<T>>(); }
-        template <typename T> T toImpl() const
+        template <typename T>
+        QList<T> to(tag<QList<T>>) const
+        {
+            return toImpl<QList<T>>();
+        }
+        template <typename T>
+        QVector<T> to(tag<QVector<T>>) const
+        {
+            return toImpl<QVector<T>>();
+        }
+        template <typename T>
+        CSequence<T> to(tag<CSequence<T>>) const
+        {
+            return toImpl<CSequence<T>>();
+        }
+        template <typename T>
+        T toImpl() const
         {
             using VT = typename T::value_type;
             T result;
-            if (isVariantList()) { for (const auto &v : m_v.value<QVector<CVariant>>())   { result.push_back(v.value<VT>()); } }
-            else                 { for (const auto &v : m_v.value<QSequentialIterable>()) { result.push_back(v.value<VT>()); } }
+            if (isVariantList())
+            {
+                for (const auto &v : m_v.value<QVector<CVariant>>()) { result.push_back(v.value<VT>()); }
+            }
+            else
+            {
+                for (const auto &v : m_v.value<QSequentialIterable>()) { result.push_back(v.value<VT>()); }
+            }
             return result;
         }
         bool isVariantList() const;
@@ -337,12 +394,10 @@ namespace BlackMisc::Private
         {
             if (QMetaType::hasRegisteredConverterFunction(qMetaTypeId<T>(), qMetaTypeId<QVector<CVariant>>())) { return; }
 
-            QMetaType::registerConverter<T, QVector<CVariant>>([](const T &list) -> QVector<CVariant>
-            {
+            QMetaType::registerConverter<T, QVector<CVariant>>([](const T &list) -> QVector<CVariant> {
                 return list.transform([](const typename T::value_type &v) { return CVariant::from(v); });
             });
-            QMetaType::registerConverter<QVector<CVariant>, T>([](const QVector<CVariant> &list) -> T
-            {
+            QMetaType::registerConverter<QVector<CVariant>, T>([](const QVector<CVariant> &list) -> T {
                 return makeRange(list).transform([](const CVariant &v) { return v.to<typename T::value_type>(); });
             });
         }

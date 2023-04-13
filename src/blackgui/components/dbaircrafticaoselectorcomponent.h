@@ -27,7 +27,10 @@ class QDragLeaveEvent;
 class QDragMoveEvent;
 class QDropEvent;
 
-namespace Ui { class CDbAircraftIcaoSelectorComponent; }
+namespace Ui
+{
+    class CDbAircraftIcaoSelectorComponent;
+}
 namespace BlackGui::Components
 {
     /*!

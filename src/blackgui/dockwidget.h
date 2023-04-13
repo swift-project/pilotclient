@@ -35,8 +35,14 @@ class QWidgetAction;
 
 namespace BlackGui
 {
-    namespace Components { class CMarginsInput; }
-    namespace Menus { class CFontMenu; }
+    namespace Components
+    {
+        class CMarginsInput;
+    }
+    namespace Menus
+    {
+        class CFontMenu;
+    }
 
     //! \brief Our base class for dockable widgets containing some specialized functionality on top of QDockWidget.
     //! \details We currently use dockable widgets either as "info area" or "info bar" dockable widget.
@@ -224,26 +230,26 @@ namespace BlackGui
         virtual void onStyleSheetsChanged();
 
     private:
-        QWidget *m_titleBarWidgetEmpty     = nullptr; //!< replacing default title bar
-        QWidget *m_titleBarWidgetOriginal  = nullptr; //!< the original title bar
-        QWidgetAction *m_marginMenuAction  = nullptr; //!< menu widget(!) action for margin widget
+        QWidget *m_titleBarWidgetEmpty = nullptr; //!< replacing default title bar
+        QWidget *m_titleBarWidgetOriginal = nullptr; //!< the original title bar
+        QWidgetAction *m_marginMenuAction = nullptr; //!< menu widget(!) action for margin widget
         Components::CMarginsInput *m_input = nullptr; //!< margins widget
-        Menus::CFontMenu *m_fontMenu       = nullptr; //!< Font menu
-        bool m_allowStatusBar              = true;
-        bool m_windowTitleWhenDocked       = true;
-        bool m_wasAlreadyFloating          = false;   //!< flag if widget was at least once in floating state
-        bool m_selected                    = false;   //!< selected when tabbed
-        bool m_dockWidgetVisible           = false;   //!< logical visible, not to be confused with QDockWidget::isVisible()
-        bool m_wasFrameless                = false;   //!< frameless when last floating
-        bool m_alwaysOnTop                 = false;   //!< only effective if floating
-        CManagedStatusBar m_statusBar;                //!< status bar when floating
-        QString m_windowTitleBackup;                  //!< original title, even if the widget title is deleted for layout purposes
-        QSize m_preferredSizeWhenFloating;            //!< preferred size when floating 1st time
-        QSize m_initialDockedMinimumSize;             //!< minimum size before first floating
-        QSize m_lastFloatingSize;                     //!< last floating position
-        QPoint m_offsetWhenFloating;                  //!< initial offset to main window when floating first time
-        QPoint m_lastFloatingPosition;                //!< last floating position
-        Qt::DockWidgetAreas m_originalAreas;          //!< areas before floating
+        Menus::CFontMenu *m_fontMenu = nullptr; //!< Font menu
+        bool m_allowStatusBar = true;
+        bool m_windowTitleWhenDocked = true;
+        bool m_wasAlreadyFloating = false; //!< flag if widget was at least once in floating state
+        bool m_selected = false; //!< selected when tabbed
+        bool m_dockWidgetVisible = false; //!< logical visible, not to be confused with QDockWidget::isVisible()
+        bool m_wasFrameless = false; //!< frameless when last floating
+        bool m_alwaysOnTop = false; //!< only effective if floating
+        CManagedStatusBar m_statusBar; //!< status bar when floating
+        QString m_windowTitleBackup; //!< original title, even if the widget title is deleted for layout purposes
+        QSize m_preferredSizeWhenFloating; //!< preferred size when floating 1st time
+        QSize m_initialDockedMinimumSize; //!< minimum size before first floating
+        QSize m_lastFloatingSize; //!< last floating position
+        QPoint m_offsetWhenFloating; //!< initial offset to main window when floating first time
+        QPoint m_lastFloatingPosition; //!< last floating position
+        Qt::DockWidgetAreas m_originalAreas; //!< areas before floating
 
         BlackMisc::CSetting<BlackGui::Settings::TDockWidget> m_settings { this, &CDockWidget::settingsChanged };
 

@@ -20,14 +20,13 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Db, CArtifact)
 namespace BlackMisc::Db
 {
     CArtifact::CArtifact()
-    { }
+    {}
 
     CArtifact::CArtifact(
         const QString &name, const QString &version, const QString &md5,
-        CArtifact::ArtifactType type, int size, bool existing, const CPlatform &platform):
-        m_name(name.trimmed()),
-        m_md5(md5), m_type(static_cast<int>(type)), m_size(size), m_existing(existing),
-        m_platform(platform)
+        CArtifact::ArtifactType type, int size, bool existing, const CPlatform &platform) : m_name(name.trimmed()),
+                                                                                            m_md5(md5), m_type(static_cast<int>(type)), m_size(size), m_existing(existing),
+                                                                                            m_platform(platform)
     {
         this->setVersion(trimVersionString(version));
         if (!name.isEmpty() && version.isEmpty())
@@ -39,8 +38,8 @@ namespace BlackMisc::Db
     bool CArtifact::matchesName(const QString &name, Qt::CaseSensitivity cs) const
     {
         const bool m = (cs == Qt::CaseInsensitive) ?
-                        caseInsensitiveStringCompare(this->getName(), name) :
-                        name == this->getName();
+                           caseInsensitiveStringCompare(this->getName(), name) :
+                           name == this->getName();
         if (m) { return true; }
         return name.startsWith(this->getName(), cs);
     }
@@ -101,16 +100,16 @@ namespace BlackMisc::Db
     {
         Q_UNUSED(i18n);
         return u"name: " %
-                this->getName() %
-                separator %
-                u"size: " %
-                this->getFileSizeHumanReadable() %
-                separator %
-                u"OS: " %
-                this->getPlatform().toQString(i18n) %
-                separator %
-                u"timestamp: " %
-                this->getFormattedUtcTimestampYmdhms();
+               this->getName() %
+               separator %
+               u"size: " %
+               this->getFileSizeHumanReadable() %
+               separator %
+               u"OS: " %
+               this->getPlatform().toQString(i18n) %
+               separator %
+               u"timestamp: " %
+               this->getFormattedUtcTimestampYmdhms();
     }
 
     QVariant CArtifact::propertyByIndex(CPropertyIndexRef index) const
@@ -136,7 +135,11 @@ namespace BlackMisc::Db
 
     void CArtifact::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CArtifact>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CArtifact>();
+            return;
+        }
         if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
         {
             IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant);
@@ -233,9 +236,9 @@ namespace BlackMisc::Db
     {
         const QString s(str.trimmed().toLower());
         if (s.contains("installer")) return CArtifact::PilotClientInstaller;
-        if (s.contains("client"))    return CArtifact::PilotClientInstaller;
-        if (s.contains("symb"))      return CArtifact::Symbols;
-        if (s.contains("bus"))       return CArtifact::XSwiftBus;
+        if (s.contains("client")) return CArtifact::PilotClientInstaller;
+        if (s.contains("symb")) return CArtifact::Symbols;
+        if (s.contains("bus")) return CArtifact::XSwiftBus;
         return CArtifact::UnknownArtifact;
     }
 

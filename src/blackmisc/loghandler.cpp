@@ -15,7 +15,7 @@
 #include "blackconfig/buildconfig.h"
 
 #ifdef BLACK_USE_CRASHPAD
-#include "crashpad/client/simulate_crash.h"
+#    include "crashpad/client/simulate_crash.h"
 #endif
 
 #include <QAbstractNativeEventFilter>
@@ -29,7 +29,7 @@
 #include <algorithm>
 
 #ifdef Q_OS_WIN
-#include <windows.h>
+#    include <windows.h>
 #endif
 
 namespace BlackMisc
@@ -38,7 +38,7 @@ namespace BlackMisc
 
     CLogHandler *CLogHandler::instance()
     {
-        Q_ASSERT(! g_handler.isDestroyed());
+        Q_ASSERT(!g_handler.isDestroyed());
         return g_handler;
     }
 
@@ -49,7 +49,8 @@ namespace BlackMisc
         {
             // Fatal message means this thread is about to crash the application. A queued connection would be useless.
             // Blocking queued connection means we pause this thread just long enough to let the main thread handle the message.
-            QMetaObject::invokeMethod(CLogHandler::instance(), [ & ] { messageHandler(type, context, message); }, Qt::BlockingQueuedConnection);
+            QMetaObject::invokeMethod(
+                CLogHandler::instance(), [&] { messageHandler(type, context, message); }, Qt::BlockingQueuedConnection);
             return;
         }
 #if defined(Q_CC_MSVC) && defined(QT_NO_DEBUG)
@@ -69,13 +70,12 @@ namespace BlackMisc
             qApp->installNativeEventFilter(&ef);
             MessageBoxW(nullptr, message.toStdWString().c_str(), nullptr, MB_OK); // display assert dialog in release build
             qApp->removeNativeEventFilter(&ef);
-#   if defined(BLACK_USE_CRASHPAD)
+#    if defined(BLACK_USE_CRASHPAD)
             CRASHPAD_SIMULATE_CRASH(); // workaround inability to catch __fastfail
-#   endif
+#    endif
         }
 #endif
-        QMetaObject::invokeMethod(CLogHandler::instance(), [statusMessage = CStatusMessage(type, context, message)]
-        {
+        QMetaObject::invokeMethod(CLogHandler::instance(), [statusMessage = CStatusMessage(type, context, message)] {
             CLogHandler::instance()->logLocalMessage(statusMessage);
         });
     }
@@ -102,8 +102,8 @@ namespace BlackMisc
     {
         Q_ASSERT(thread() == QThread::currentThread());
 
-        auto finder = [ & ](const PatternPair & pair) { return pair.first == pattern; };
-        auto comparator = [](const PatternPair & a, const PatternPair & b) { return a.first.isProperSubsetOf(b.first); };
+        auto finder = [&](const PatternPair &pair) { return pair.first == pattern; };
+        auto comparator = [](const PatternPair &a, const PatternPair &b) { return a.first.isProperSubsetOf(b.first); };
 
         auto it = std::find_if(m_patternHandlers.cbegin(), m_patternHandlers.cend(), finder);
         if (it == m_patternHandlers.cend())
@@ -140,7 +140,7 @@ namespace BlackMisc
     {
         for (const auto *handler : handlers)
         {
-            if (! handler->m_inheritFallThrough)
+            if (!handler->m_inheritFallThrough)
             {
                 return handler->m_enableFallThrough;
             }
@@ -171,7 +171,7 @@ namespace BlackMisc
 
         auto bucket = m_tokenBuckets.find(statusMessage);
         if (bucket == m_tokenBuckets.end()) { bucket = m_tokenBuckets.insert(statusMessage, { { 5, 1000, 1 }, 0 }); }
-        if (! bucket->first.tryConsume())
+        if (!bucket->first.tryConsume())
         {
             bucket->second++;
             return;
@@ -226,8 +226,7 @@ namespace BlackMisc
 
     void CLogHandler::removePatternHandler(CLogPatternHandler *handler)
     {
-        auto it = std::find_if(m_patternHandlers.begin(), m_patternHandlers.end(), [handler](const PatternPair & pair)
-        {
+        auto it = std::find_if(m_patternHandlers.begin(), m_patternHandlers.end(), [handler](const PatternPair &pair) {
             return pair.second == handler;
         });
         if (it != m_patternHandlers.end())
@@ -250,8 +249,7 @@ namespace BlackMisc
         return result;
     }
 
-    CLogPatternHandler::CLogPatternHandler(CLogHandler *parent, const CLogPattern &pattern) :
-        QObject(parent), m_parent(parent), m_pattern(pattern)
+    CLogPatternHandler::CLogPatternHandler(CLogHandler *parent, const CLogPattern &pattern) : QObject(parent), m_parent(parent), m_pattern(pattern)
     {
         connect(&m_subscriptionUpdateTimer, &QTimer::timeout, this, &CLogPatternHandler::updateSubscription);
         m_subscriptionUpdateTimer.start(1);
@@ -277,7 +275,7 @@ namespace BlackMisc
                 }
             }
 
-            if (m_inheritFallThrough && ! m_isSubscribed)
+            if (m_inheritFallThrough && !m_isSubscribed)
             {
                 m_parent->removePatternHandler(this);
             }
@@ -296,7 +294,7 @@ namespace BlackMisc
         unsubscribe();
         m_handler = CLogHandler::instance()->handlerForPattern(pattern);
 
-        if (! m_inheritFallThrough)
+        if (!m_inheritFallThrough)
         {
             m_handler->enableConsoleOutput(m_enableFallThrough);
         }
@@ -314,7 +312,7 @@ namespace BlackMisc
 
         if (m_handler)
         {
-            if (! m_inheritFallThrough) { m_handler->inheritConsoleOutput(); }
+            if (!m_inheritFallThrough) { m_handler->inheritConsoleOutput(); }
             m_handler->disconnect(this);
         }
     }

@@ -38,7 +38,7 @@ namespace BlackSound::SampleProvider
 
     private:
         QRandomGenerator m_random;
-        std::array<double, 7> m_pinkNoiseBuffer = {{0}};
+        std::array<double, 7> m_pinkNoiseBuffer = { { 0 } };
         double m_gain = 0.0;
     };
 }

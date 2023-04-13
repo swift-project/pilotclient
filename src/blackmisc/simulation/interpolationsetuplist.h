@@ -45,4 +45,4 @@ namespace BlackMisc::Simulation
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CInterpolationSetupList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign>)
 
-#endif //guard
+#endif // guard

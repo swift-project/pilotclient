@@ -160,21 +160,21 @@ namespace BlackCore::Db
         virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const override;
 
     private:
-        BlackMisc::CData<BlackCore::Data::TDbAircraftIcaoCache>     m_aircraftIcaoCache {this, &CIcaoDataReader::aircraftIcaoCacheChanged };
-        BlackMisc::CData<BlackCore::Data::TDbAirlineIcaoCache>      m_airlineIcaoCache  {this, &CIcaoDataReader::airlineIcaoCacheChanged };
-        BlackMisc::CData<BlackCore::Data::TDbCountryCache>          m_countryCache      {this, &CIcaoDataReader::countryCacheChanged };
-        BlackMisc::CData<BlackCore::Data::TDbAircraftCategoryCache> m_categoryCache     {this, &CIcaoDataReader::aircraftCategoryCacheChanged };
+        BlackMisc::CData<BlackCore::Data::TDbAircraftIcaoCache> m_aircraftIcaoCache { this, &CIcaoDataReader::aircraftIcaoCacheChanged };
+        BlackMisc::CData<BlackCore::Data::TDbAirlineIcaoCache> m_airlineIcaoCache { this, &CIcaoDataReader::airlineIcaoCacheChanged };
+        BlackMisc::CData<BlackCore::Data::TDbCountryCache> m_countryCache { this, &CIcaoDataReader::countryCacheChanged };
+        BlackMisc::CData<BlackCore::Data::TDbAircraftCategoryCache> m_categoryCache { this, &CIcaoDataReader::aircraftCategoryCacheChanged };
         std::atomic_bool m_syncedAircraftIcaoCache { false }; //!< already synchronized?
-        std::atomic_bool m_syncedAirlineIcaoCache  { false }; //!< already synchronized?
-        std::atomic_bool m_syncedCountryCache      { false }; //!< already synchronized?
-        std::atomic_bool m_syncedCategories        { false }; //!< already synchronized?
+        std::atomic_bool m_syncedAirlineIcaoCache { false }; //!< already synchronized?
+        std::atomic_bool m_syncedCountryCache { false }; //!< already synchronized?
+        std::atomic_bool m_syncedCategories { false }; //!< already synchronized?
 
         //! \copydoc CDatabaseReader::read
         virtual void read(BlackMisc::Network::CEntityFlags::Entity entities,
-                            BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan) override;
+                          BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan) override;
 
         //! Reader URL (we read from where?) used to detect changes of location
-        BlackMisc::CData<BlackCore::Data::TDbIcaoReaderBaseUrl> m_readerUrlCache {this, &CIcaoDataReader::baseUrlCacheChanged };
+        BlackMisc::CData<BlackCore::Data::TDbIcaoReaderBaseUrl> m_readerUrlCache { this, &CIcaoDataReader::baseUrlCacheChanged };
 
         //! Aircraft have been read
         void parseAircraftIcaoData(QNetworkReply *nwReply);

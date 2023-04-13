@@ -28,7 +28,11 @@ namespace BlackCore::Application
         static const char *key() { return "application/actionhotkeys"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("Hotkeys"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("Hotkeys");
+            return name;
+        }
 
         //! \copydoc BlackMisc::TSettingTrait::isValid
         static bool isValid(const BlackMisc::Input::CActionHotkeyList &value, QString &)
@@ -36,8 +40,8 @@ namespace BlackCore::Application
             for (const auto &actionHotkey : value)
             {
                 if (actionHotkey.getApplicableMachine().getMachineName().isEmpty() ||
-                        actionHotkey.getAction().isEmpty() ||
-                        actionHotkey.getCombination().isEmpty()) { return false; }
+                    actionHotkey.getAction().isEmpty() ||
+                    actionHotkey.getCombination().isEmpty()) { return false; }
             }
             return true;
         }
@@ -50,7 +54,11 @@ namespace BlackCore::Application
         static const char *key() { return "application/enabledsimulators"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("Enabled simulators"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("Enabled simulators");
+            return name;
+        }
 
         //! \copydoc BlackMisc::TSettingTrait::defaultValue
         static const QStringList &defaultValue()
@@ -82,7 +90,11 @@ namespace BlackCore::Application
         static const char *key() { return "application/crashdump"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable() { static const QString name("Crash dumps"); return name; }
+        static const QString &humanReadable()
+        {
+            static const QString name("Crash dumps");
+            return name;
+        }
 
         //! \copydoc BlackMisc::TSettingTrait::defaultValue
         // static bool defaultValue() { return BlackMisc::Settings::CCrashSettings(); }

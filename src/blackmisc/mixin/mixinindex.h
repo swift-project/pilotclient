@@ -85,17 +85,27 @@ namespace BlackMisc
         };
 
         template <class Derived>
-        const Derived *Index<Derived>::derived() const { return static_cast<const Derived *>(this); }
+        const Derived *Index<Derived>::derived() const
+        {
+            return static_cast<const Derived *>(this);
+        }
 
         template <class Derived>
-        Derived *Index<Derived>::derived() { return static_cast<Derived *>(this); }
+        Derived *Index<Derived>::derived()
+        {
+            return static_cast<Derived *>(this);
+        }
 
         template <class Derived>
         template <typename T>
         QVariant Index<Derived>::myself() const
         {
             if constexpr (std::is_default_constructible_v<T>) { return QVariant::fromValue(*derived()); }
-            else { qFatal("isMyself should have been handled before reaching here"); return {}; }
+            else
+            {
+                qFatal("isMyself should have been handled before reaching here");
+                return {};
+            }
         }
 
         template <class Derived>
@@ -108,23 +118,30 @@ namespace BlackMisc
 
         template <class Derived>
         template <typename T>
-        QVariant Index<Derived>::basePropertyByIndex(const T *base, CPropertyIndexRef index) const { return base->propertyByIndex(index); }
+        QVariant Index<Derived>::basePropertyByIndex(const T *base, CPropertyIndexRef index) const
+        {
+            return base->propertyByIndex(index);
+        }
 
         template <class Derived>
         template <typename T>
-        void Index<Derived>::baseSetPropertyByIndex(T *base, const QVariant &var, CPropertyIndexRef index) { base->setPropertyByIndex(index, var); }
+        void Index<Derived>::baseSetPropertyByIndex(T *base, const QVariant &var, CPropertyIndexRef index)
+        {
+            base->setPropertyByIndex(index, var);
+        }
 
         template <class Derived>
         QVariant Index<Derived>::basePropertyByIndex(const void *, CPropertyIndexRef) const
         {
-            //qFatal("%s", qPrintable("Property by index not found, index: " + index.toQString())); return {};
-            qFatal("Property by index not found"); return {};
+            // qFatal("%s", qPrintable("Property by index not found, index: " + index.toQString())); return {};
+            qFatal("Property by index not found");
+            return {};
         }
 
         template <class Derived>
         void Index<Derived>::baseSetPropertyByIndex(void *, const QVariant &, CPropertyIndexRef)
         {
-            //qFatal("%s", qPrintable("Property by index not found (setter), index: " + index.toQString()));
+            // qFatal("%s", qPrintable("Property by index not found (setter), index: " + index.toQString()));
             qFatal("Property by index not found");
         }
 
@@ -133,12 +150,12 @@ namespace BlackMisc
          * the derived class uses this macro to disambiguate the inherited members.
          */
         // *INDENT-OFF*
-#       define BLACKMISC_DECLARE_USING_MIXIN_INDEX(DERIVED)                     \
-            using ::BlackMisc::Mixin::Index<DERIVED>::apply;                    \
-            using ::BlackMisc::Mixin::Index<DERIVED>::setPropertyByIndex;       \
-            using ::BlackMisc::Mixin::Index<DERIVED>::propertyByIndex;          \
-            using ::BlackMisc::Mixin::Index<DERIVED>::comparePropertyByIndex;   \
-            using ::BlackMisc::Mixin::Index<DERIVED>::equalsPropertyByIndex;
+#define BLACKMISC_DECLARE_USING_MIXIN_INDEX(DERIVED)                  \
+    using ::BlackMisc::Mixin::Index<DERIVED>::apply;                  \
+    using ::BlackMisc::Mixin::Index<DERIVED>::setPropertyByIndex;     \
+    using ::BlackMisc::Mixin::Index<DERIVED>::propertyByIndex;        \
+    using ::BlackMisc::Mixin::Index<DERIVED>::comparePropertyByIndex; \
+    using ::BlackMisc::Mixin::Index<DERIVED>::equalsPropertyByIndex;
         // *INDENT-ON*
 
         template <class Derived>
@@ -174,11 +191,12 @@ namespace BlackMisc
             return derived()->propertyByIndex(index) == compareValue;
         }
 
-        template<class Derived>
+        template <class Derived>
         int Index<Derived>::comparePropertyByIndex(CPropertyIndexRef index, const Derived &compareValue) const
         {
             if (this == &compareValue) { return 0; }
-            if (index.isMyself()) {
+            if (index.isMyself())
+            {
                 // slow, only last resort
                 return derived()->toQString().compare(compareValue.toQString());
             }

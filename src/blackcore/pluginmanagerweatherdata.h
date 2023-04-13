@@ -22,7 +22,10 @@
 #include <QObject>
 #include <QString>
 
-namespace BlackMisc { class CVariant; }
+namespace BlackMisc
+{
+    class CVariant;
+}
 namespace BlackCore
 {
     class IWeatherDataFactory;

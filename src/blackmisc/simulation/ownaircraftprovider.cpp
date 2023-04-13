@@ -23,7 +23,7 @@ namespace BlackMisc::Simulation
 
     // pin vtables to this file
     void COwnAircraftAware::anchor()
-    { }
+    {}
 
     CSimulatedAircraft COwnAircraftAware::getOwnAircraft() const
     {

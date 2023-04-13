@@ -50,12 +50,12 @@ namespace BlackMisc::Network
         {
             None = 0,
             FsdWithInterimPositions = 1 << 0, //!< fast position updates
-            FsdWithIcaoCodes        = 1 << 1, //!< basically means it is a pilot client handling ICAO code packages
-            FsdAtisCanBeReceived    = 1 << 2, //!< ATIS
-            FsdWithAircraftConfig   = 1 << 3, //!< Aircraft parts
-            FsdWithGroundFlag       = 1 << 4, //!< supports gnd. flag (in position)
-            FsdModelString          = 1 << 5, //!< model string can be queried
-            FsdWithVisualPositions  = 1 << 6  //!< visual position updates
+            FsdWithIcaoCodes = 1 << 1, //!< basically means it is a pilot client handling ICAO code packages
+            FsdAtisCanBeReceived = 1 << 2, //!< ATIS
+            FsdWithAircraftConfig = 1 << 3, //!< Aircraft parts
+            FsdWithGroundFlag = 1 << 4, //!< supports gnd. flag (in position)
+            FsdModelString = 1 << 5, //!< model string can be queried
+            FsdWithVisualPositions = 1 << 6 //!< visual position updates
         };
         Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -102,22 +102,22 @@ namespace BlackMisc::Network
         void removeCapability(Capability capability);
 
         //! Get voice capabilities
-        const CVoiceCapabilities &getVoiceCapabilities() const { return m_voiceCapabilities;}
+        const CVoiceCapabilities &getVoiceCapabilities() const { return m_voiceCapabilities; }
 
         //! Has known voice capabilities?
-        bool hasSpecifiedVoiceCapabilities() const { return !m_voiceCapabilities.isUnknown();}
+        bool hasSpecifiedVoiceCapabilities() const { return !m_voiceCapabilities.isUnknown(); }
 
         //! Set voice capabilities
-        void setVoiceCapabilities(const CVoiceCapabilities &voiceCapabilities) { m_voiceCapabilities = voiceCapabilities;}
+        void setVoiceCapabilities(const CVoiceCapabilities &voiceCapabilities) { m_voiceCapabilities = voiceCapabilities; }
 
         //! Set voice capabilities
-        void setVoiceCapabilities(const QString &flightPlanRemarks) { m_voiceCapabilities = CVoiceCapabilities(flightPlanRemarks);}
+        void setVoiceCapabilities(const QString &flightPlanRemarks) { m_voiceCapabilities = CVoiceCapabilities(flightPlanRemarks); }
 
         //! User
         const CUser &getUser() const { return m_user; }
 
         //! User
-        void setUser(const CUser &user) { m_user = user;}
+        void setUser(const CUser &user) { m_user = user; }
 
         //! User's callsign
         bool setUserCallsign(const BlackMisc::Aviation::CCallsign &callsign);

@@ -93,7 +93,7 @@ namespace BlackMisc::Weather
 
     private:
         ScenarioIndex m_scenarioIndex = ClearSky;
-        QString m_scenarioName        = enumToString(ClearSky);
+        QString m_scenarioName = enumToString(ClearSky);
         QString m_scenarioDescription = enumToDescription(ClearSky);
 
         BLACK_METACLASS(
@@ -108,4 +108,4 @@ namespace BlackMisc::Weather
 Q_DECLARE_METATYPE(BlackMisc::Weather::CWeatherScenario)
 Q_DECLARE_METATYPE(BlackMisc::Weather::CWeatherScenario::ScenarioIndex)
 
-#endif //guard
+#endif // guard

@@ -49,8 +49,8 @@ namespace BlackCore::Afv::Model
     inline bool operator==(const CSampleAtcStation &lhs, const CSampleAtcStation &rhs)
     {
         return lhs.callsign() == rhs.callsign() &&
-                qFuzzyCompare(lhs.latitude(), rhs.latitude()) &&
-                qFuzzyCompare(lhs.longitude(), rhs.longitude());
+               qFuzzyCompare(lhs.latitude(), rhs.latitude()) &&
+               qFuzzyCompare(lhs.longitude(), rhs.longitude());
     }
 
     //! Sample list model

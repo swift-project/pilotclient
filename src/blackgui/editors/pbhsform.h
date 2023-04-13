@@ -19,7 +19,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CPbhsForm; }
+namespace Ui
+{
+    class CPbhsForm;
+}
 namespace BlackGui::Editors
 {
     //! Pitch, bank, heading and speed form

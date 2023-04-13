@@ -11,9 +11,8 @@
 
 namespace BlackGui::Components
 {
-    CAudioAdvancedDistributedDialog::CAudioAdvancedDistributedDialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CAudioAdvancedDistributedDialog)
+    CAudioAdvancedDistributedDialog::CAudioAdvancedDistributedDialog(QWidget *parent) : QDialog(parent),
+                                                                                        ui(new Ui::CAudioAdvancedDistributedDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
@@ -21,7 +20,7 @@ namespace BlackGui::Components
     }
 
     CAudioAdvancedDistributedDialog::~CAudioAdvancedDistributedDialog()
-    { }
+    {}
 
     void CAudioAdvancedDistributedDialog::reloadRegisteredDevices()
     {

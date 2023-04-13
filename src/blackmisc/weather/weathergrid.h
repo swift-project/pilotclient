@@ -24,7 +24,10 @@ BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Weather, CGridPoint, CWeatherGrid)
 
 namespace BlackMisc
 {
-    namespace Geo { class ICoordinateGeodetic; }
+    namespace Geo
+    {
+        class ICoordinateGeodetic;
+    }
     namespace Weather
     {
         /*!
@@ -69,9 +72,9 @@ namespace BlackMisc
             static const BlackMisc::Weather::CWeatherGrid &getThunderStormGrid();
         };
 
-    } //namespace
+    } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CWeatherGrid)
 
-#endif //guard
+#endif // guard

@@ -29,9 +29,8 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackGui::Components
 {
-    CDbAirlineIcaoSelectorComponent::CDbAirlineIcaoSelectorComponent(QWidget *parent) :
-        CDbAirlineIcaoSelectorBase(parent),
-        ui(new Ui::CDbAirlineIcaoSelectorComponent)
+    CDbAirlineIcaoSelectorComponent::CDbAirlineIcaoSelectorComponent(QWidget *parent) : CDbAirlineIcaoSelectorBase(parent),
+                                                                                        ui(new Ui::CDbAirlineIcaoSelectorComponent)
     {
         ui->setupUi(this);
         this->setFocusProxy(ui->le_Airline);
@@ -40,7 +39,7 @@ namespace BlackGui::Components
     }
 
     CDbAirlineIcaoSelectorComponent::~CDbAirlineIcaoSelectorComponent()
-    { }
+    {}
 
     void CDbAirlineIcaoSelectorComponent::setReadOnly(bool readOnly)
     {

@@ -19,7 +19,10 @@
 
 #include <QScopedPointer>
 
-namespace Ui { class CDbAircraftCategoryComponent; }
+namespace Ui
+{
+    class CDbAircraftCategoryComponent;
+}
 namespace BlackGui::Components
 {
     /*!

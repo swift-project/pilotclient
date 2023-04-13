@@ -14,11 +14,10 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Db, CDbInfo, CDbInfoList)
 
 namespace BlackMisc::Db
 {
-    CDbInfoList::CDbInfoList() { }
+    CDbInfoList::CDbInfoList() {}
 
-    CDbInfoList::CDbInfoList(const CSequence<CDbInfo> &other) :
-        CSequence<CDbInfo>(other)
-    { }
+    CDbInfoList::CDbInfoList(const CSequence<CDbInfo> &other) : CSequence<CDbInfo>(other)
+    {}
 
     CDbInfo CDbInfoList::findFirstByEntityOrDefault(CEntityFlags::Entity entity) const
     {

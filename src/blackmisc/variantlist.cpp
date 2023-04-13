@@ -39,6 +39,6 @@ namespace BlackMisc
 
     bool CVariantList::matches(const CVariant &event) const
     {
-        return containsBy([ & ](const CVariant &pattern) { return pattern.matches(event); });
+        return containsBy([&](const CVariant &pattern) { return pattern.matches(event); });
     }
 } // ns

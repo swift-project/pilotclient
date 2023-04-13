@@ -14,11 +14,12 @@ namespace BlackMisc::Simulation::Flightgear
 
     bool CAircraftModelLoaderFlightgear::isLoadingFinished() const
     {
-        return !m_parserWorker || m_parserWorker->isFinished();;
+        return !m_parserWorker || m_parserWorker->isFinished();
+        ;
     }
 
     CAircraftModelLoaderFlightgear::CAircraftModelLoaderFlightgear(QObject *parent) : Simulation::IAircraftModelLoader(Simulation::CSimulatorInfo::fg(), parent)
-    { }
+    {}
 
     CAircraftModelLoaderFlightgear::~CAircraftModelLoaderFlightgear()
     {
@@ -95,7 +96,7 @@ namespace BlackMisc::Simulation::Flightgear
 
     void CAircraftModelLoaderFlightgear::addUniqueModel(const CAircraftModel &model, CAircraftModelList &models)
     {
-        //TODO Add check
+        // TODO Add check
         models.push_back(model);
     }
 
@@ -105,11 +106,13 @@ namespace BlackMisc::Simulation::Flightgear
         for (const QString &rootDirectory : rootDirectories)
         {
             QString dir = rootDirectory;
-            dir.replace('\\','/');
+            dir.replace('\\', '/');
             if (dir.contains("/AI/Aircraft"))
             {
                 allModels.push_back(parseAIAirplanes(dir, excludeDirectories));
-            } else {
+            }
+            else
+            {
                 allModels.push_back(parseFlyableAirplanes(dir, excludeDirectories));
             }
         }
@@ -123,21 +126,18 @@ namespace BlackMisc::Simulation::Flightgear
         const QStringList modelDirs = this->getInitializedModelDirectories(modelDirectories, simulator);
         const QStringList excludedDirectoryPatterns(m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator)); // copy
 
-
         if (mode.testFlag(LoadInBackground))
         {
             if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
             emit this->diskLoadingStarted(simulator, mode);
 
             m_parserWorker = CWorker::fromTask(this, "CAircraftModelLoaderFlightgear::performParsing",
-                                                [this, modelDirs, excludedDirectoryPatterns, modelConsolidation]()
-            {
-                auto models = this->performParsing(modelDirs, excludedDirectoryPatterns);
-                if (modelConsolidation) { modelConsolidation(models, true); }
-                return models;
-            });
-            m_parserWorker->thenWithResult<CAircraftModelList>(this, [ = ](const auto & models)
-            {
+                                               [this, modelDirs, excludedDirectoryPatterns, modelConsolidation]() {
+                                                   auto models = this->performParsing(modelDirs, excludedDirectoryPatterns);
+                                                   if (modelConsolidation) { modelConsolidation(models, true); }
+                                                   return models;
+                                               });
+            m_parserWorker->thenWithResult<CAircraftModelList>(this, [=](const auto &models) {
                 this->updateInstalledModels(models);
                 m_loadingMessages.freezeOrder();
                 emit this->loadingFinished(m_loadingMessages, simulator, ParsedData);
@@ -149,7 +149,6 @@ namespace BlackMisc::Simulation::Flightgear
             CAircraftModelList models(this->performParsing(modelDirs, excludedDirectoryPatterns));
             this->updateInstalledModels(models);
         }
-
     }
 
     QString CAircraftModelLoaderFlightgear::getModelString(const QString &fileName, bool ai)
@@ -172,4 +171,3 @@ namespace BlackMisc::Simulation::Flightgear
         return modelString;
     }
 }
-

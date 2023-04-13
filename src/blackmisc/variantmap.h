@@ -51,10 +51,18 @@ namespace BlackMisc
         CVariantMap(CVariantMap &&other) noexcept : CDictionary(std::move(other)) {}
 
         //! Copy assignment operator.
-        CVariantMap &operator =(const CVariantMap &other) { CDictionary::operator =(other); return *this; }
+        CVariantMap &operator=(const CVariantMap &other)
+        {
+            CDictionary::operator=(other);
+            return *this;
+        }
 
         //! Move assignment operator.
-        CVariantMap &operator =(CVariantMap &&other) noexcept { CDictionary::operator =(std::move(other)); return *this; }
+        CVariantMap &operator=(CVariantMap &&other) noexcept
+        {
+            CDictionary::operator=(std::move(other));
+            return *this;
+        }
 
         //! Destructor.
         ~CVariantMap() = default;

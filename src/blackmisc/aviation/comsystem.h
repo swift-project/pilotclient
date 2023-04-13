@@ -49,8 +49,8 @@ namespace BlackMisc::Aviation
         //! Channel spacing frequency
         enum ChannelSpacing
         {
-            ChannelSpacing50KHz,  //!< 50kHz
-            ChannelSpacing25KHz,  //!< 25kHz
+            ChannelSpacing50KHz, //!< 50kHz
+            ChannelSpacing25KHz, //!< 25kHz
             ChannelSpacing8_33KHz //!< 8.33kHz
         };
 
@@ -65,9 +65,8 @@ namespace BlackMisc::Aviation
         CComSystem() {}
 
         //! Constructor
-        CComSystem(const QString &name, const PhysicalQuantities::CFrequency &activeFrequency, const PhysicalQuantities::CFrequency &standbyFrequency = { 0, PhysicalQuantities::CFrequencyUnit::nullUnit() }):
-            CModulator(name, activeFrequency, standbyFrequency.isNull() ? activeFrequency : standbyFrequency)
-        { }
+        CComSystem(const QString &name, const PhysicalQuantities::CFrequency &activeFrequency, const PhysicalQuantities::CFrequency &standbyFrequency = { 0, PhysicalQuantities::CFrequencyUnit::nullUnit() }) : CModulator(name, activeFrequency, standbyFrequency.isNull() ? activeFrequency : standbyFrequency)
+        {}
 
         //! Set active frequency
         //! \remarks will be rounded to channel spacing
@@ -125,12 +124,12 @@ namespace BlackMisc::Aviation
         //! Round to channel spacing, set MHz as unit
         //! \see ChannelSpacing
         static void roundToChannelSpacing(PhysicalQuantities::CFrequency &frequency,
-                                            ChannelSpacing channelSpacing);
+                                          ChannelSpacing channelSpacing);
 
         //! Compare frequencies under consideration that on VATSIM
         //! frequencies .x20/.x25 and .x70/.x75 are the same
         static bool isSameFrequency(const PhysicalQuantities::CFrequency &freq1,
-                                            const PhysicalQuantities::CFrequency &freq2);
+                                    const PhysicalQuantities::CFrequency &freq2);
 
         //! Is passed frequency in kHz a valid 8.33 channel. This does not check if
         //! the frequency is within the correct bounds.

@@ -38,9 +38,8 @@ namespace BlackGui::Components
         return cats;
     }
 
-    CFirstModelSetComponent::CFirstModelSetComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        ui(new Ui::CFirstModelSetComponent)
+    CFirstModelSetComponent::CFirstModelSetComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                                        ui(new Ui::CFirstModelSetComponent)
     {
         ui->setupUi(this);
         ui->comp_Distributors->view()->setSelectionMode(QAbstractItemView::MultiSelection);
@@ -61,15 +60,15 @@ namespace BlackGui::Components
         Q_ASSERT_X(s, Q_FUNC_INFO, "Cannot connect models signal");
 
         connect(ui->pb_ModelSet, &QPushButton::clicked, this, &CFirstModelSetComponent::openOwnModelSetDialog);
-        connect(ui->pb_Models,   &QPushButton::clicked, this, &CFirstModelSetComponent::openOwnModelsDialog);
+        connect(ui->pb_Models, &QPushButton::clicked, this, &CFirstModelSetComponent::openOwnModelsDialog);
         connect(ui->pb_ModelsTriggerReload, &QPushButton::clicked, this, &CFirstModelSetComponent::openOwnModelsDialog);
         connect(ui->pb_ChangeModelDir, &QPushButton::clicked, this, &CFirstModelSetComponent::changeModelDirectory);
-        connect(ui->pb_ClearModelDir,  &QPushButton::clicked, this, &CFirstModelSetComponent::changeModelDirectory);
+        connect(ui->pb_ClearModelDir, &QPushButton::clicked, this, &CFirstModelSetComponent::changeModelDirectory);
         connect(ui->pb_CreateModelSet, &QPushButton::clicked, this, &CFirstModelSetComponent::createModelSet);
     }
 
     CFirstModelSetComponent::~CFirstModelSetComponent()
-    { }
+    {}
 
     void CFirstModelSetComponent::onSimulatorChanged(const CSimulatorInfo &simulator)
     {
@@ -137,8 +136,7 @@ namespace BlackGui::Components
     {
         if (!sGui || sGui->isShuttingDown()) { return; }
         QPointer<CFirstModelSetComponent> myself(this);
-        QTimer::singleShot(0, this, [ = ]
-        {
+        QTimer::singleShot(0, this, [=] {
             if (!myself || !sGui || sGui->isShuttingDown()) { return; }
             myself->onSettingsChanged(simulator);
         });

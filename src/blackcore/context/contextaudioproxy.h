@@ -32,8 +32,14 @@ class QDBusConnection;
 namespace BlackMisc
 {
     class CGenericDBusInterface;
-    namespace Audio    { class CAudioDeviceInfo; }
-    namespace Aviation { class CCallsign; }
+    namespace Audio
+    {
+        class CAudioDeviceInfo;
+    }
+    namespace Aviation
+    {
+        class CCallsign;
+    }
 }
 
 namespace BlackCore
@@ -71,10 +77,10 @@ namespace BlackCore
             virtual void unRegisterDevicesFor(const BlackMisc::CIdentifier &identifier) override;
 
             //! \copydoc BlackCore::Context::CContextAudioBase::registerAudioCallsign
-            virtual void registerAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign,  const BlackMisc::CIdentifier &identifier)   override;
+            virtual void registerAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CIdentifier &identifier) override;
 
             //! \copydoc BlackCore::Context::CContextAudioBase::unRegisterAudioCallsign
-            virtual void unRegisterAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign,  const BlackMisc::CIdentifier &identifier) override;
+            virtual void unRegisterAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CIdentifier &identifier) override;
 
             //! \copydoc BlackCore::Context::CContextAudioBase::hasRegisteredAudioCallsign
             virtual bool hasRegisteredAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;

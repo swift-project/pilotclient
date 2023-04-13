@@ -62,4 +62,4 @@ namespace BlackMisc::Network
 Q_DECLARE_METATYPE(BlackMisc::Network::CRoleList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Network::CRole>)
 
-#endif //guard
+#endif // guard

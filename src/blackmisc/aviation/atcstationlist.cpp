@@ -23,24 +23,21 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Aviation, CAtcStation, CAtcStationList)
 
 namespace BlackMisc::Aviation
 {
-    CAtcStationList::CAtcStationList() { }
+    CAtcStationList::CAtcStationList() {}
 
-    CAtcStationList::CAtcStationList(const CSequence<CAtcStation> &other) :
-        CSequence<CAtcStation>(other)
-    { }
+    CAtcStationList::CAtcStationList(const CSequence<CAtcStation> &other) : CSequence<CAtcStation>(other)
+    {}
 
     CAtcStationList CAtcStationList::findIfComUnitTunedInChannelSpacing(const CComSystem &comUnit) const
     {
-        return this->findBy([&](const CAtcStation & atcStation)
-        {
+        return this->findBy([&](const CAtcStation &atcStation) {
             return atcStation.isComUnitTunedToFrequency(comUnit);
         });
     }
 
     bool CAtcStationList::hasComUnitTunedInChannelSpacing(const CComSystem &comUnit) const
     {
-        return this->containsBy([&](const CAtcStation & atcStation)
-        {
+        return this->containsBy([&](const CAtcStation &atcStation) {
             return atcStation.isComUnitTunedToFrequency(comUnit);
         });
     }
@@ -48,8 +45,7 @@ namespace BlackMisc::Aviation
     CAtcStationList CAtcStationList::findIfFrequencyIsWithinSpacing(const CFrequency &frequency)
     {
         if (frequency.isNull()) { return CAtcStationList(); }
-        return this->findBy([&](const CAtcStation & atcStation)
-        {
+        return this->findBy([&](const CAtcStation &atcStation) {
             return atcStation.isAtcStationFrequency(frequency);
         });
     }
@@ -150,7 +146,7 @@ namespace BlackMisc::Aviation
     QHash<QString, CAtcStationList> CAtcStationList::splitPerSuffix(bool sort) const
     {
         if (this->isEmpty()) { return QHash<QString, CAtcStationList>(); }
-        const CAtcStationList stations = sort ? this->sortedByAtcSuffixSortOrderAndDistance() : * this;
+        const CAtcStationList stations = sort ? this->sortedByAtcSuffixSortOrderAndDistance() : *this;
 
         QString suffix;
         QHash<QString, CAtcStationList> split;

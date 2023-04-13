@@ -18,7 +18,10 @@
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/variant.h"
 
-namespace Ui { class CModelBrowserComponent; }
+namespace Ui
+{
+    class CModelBrowserComponent;
+}
 namespace BlackGui::Components
 {
     //! Allow to browse thru the model set
@@ -54,8 +57,8 @@ namespace BlackGui::Components
         void updatePartsAndPBH(bool setPbh, bool setParts);
         void fetchSimulatorValues();
 
-        QScopedPointer <Ui::CModelBrowserComponent> ui;
-        BlackMisc::Aviation::CAircraftSituation   m_situation;
+        QScopedPointer<Ui::CModelBrowserComponent> ui;
+        BlackMisc::Aviation::CAircraftSituation m_situation;
         BlackMisc::Simulation::CSimulatedAircraft m_aircraft;
     };
 } // ns

@@ -17,7 +17,10 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CLoginDialog; }
+namespace Ui
+{
+    class CLoginDialog;
+}
 namespace BlackGui::Components
 {
     //! Login dialog
@@ -51,6 +54,6 @@ namespace BlackGui::Components
 
         QScopedPointer<Ui::CLoginDialog> ui;
     };
-}// ns
+} // ns
 
 #endif // guard

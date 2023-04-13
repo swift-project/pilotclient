@@ -37,7 +37,7 @@ namespace BlackMisc::Private
         template <typename F>
         void for_each(F &&visitor) const
         {
-            (static_cast<void>(visitor(static_cast<const tuple_part<Is, Ts>&>(*this).value)), ...);
+            (static_cast<void>(visitor(static_cast<const tuple_part<Is, Ts> &>(*this).value)), ...);
         }
     };
 

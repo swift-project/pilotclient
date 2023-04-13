@@ -24,8 +24,14 @@
 #include <QObject>
 #include <QScopedPointer>
 
-namespace Ui { class CAudioDeviceVolumeSetupComponent; }
-namespace BlackCore::Afv::Clients { class CAfvClient; }
+namespace Ui
+{
+    class CAudioDeviceVolumeSetupComponent;
+}
+namespace BlackCore::Afv::Clients
+{
+    class CAfvClient;
+}
 namespace BlackGui::Components
 {
     //! Audio setup such as input / output devices
@@ -42,7 +48,7 @@ namespace BlackGui::Components
 
         //! @{
         //! Get input and output volume values
-        int getInValue(int from  = BlackMisc::Audio::CSettings::InMin,  int to = BlackMisc::Audio::CSettings::InMax) const;
+        int getInValue(int from = BlackMisc::Audio::CSettings::InMin, int to = BlackMisc::Audio::CSettings::InMax) const;
         int getOutValue(int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax) const;
         int getOutValueCom1(int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax) const;
         int getOutValueCom2(int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax) const;
@@ -50,8 +56,8 @@ namespace BlackGui::Components
 
         //! @{
         //! Set input and output volume values
-        void setInValue(int value,  int from = BlackMisc::Audio::CSettings::InMin,  int to = BlackMisc::Audio::CSettings::InMax);
-        void setOutValue(int value,  int from = BlackMisc::Audio::CSettings::InMin,  int to = BlackMisc::Audio::CSettings::InMax);
+        void setInValue(int value, int from = BlackMisc::Audio::CSettings::InMin, int to = BlackMisc::Audio::CSettings::InMax);
+        void setOutValue(int value, int from = BlackMisc::Audio::CSettings::InMin, int to = BlackMisc::Audio::CSettings::InMax);
         void setOutValueCom1(int value, int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax);
         void setOutValueCom2(int value, int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax);
         //! @}

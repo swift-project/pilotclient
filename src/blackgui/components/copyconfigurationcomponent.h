@@ -21,7 +21,10 @@
 #include <QWizardPage>
 #include <QDir>
 
-namespace Ui { class CCopyConfigurationComponent; }
+namespace Ui
+{
+    class CCopyConfigurationComponent;
+}
 namespace BlackGui::Components
 {
     //! Copy configuration (i.e. settings and cache files)
@@ -119,9 +122,9 @@ namespace BlackGui::Components
         QStringList m_otherVersionDirs;
         QString m_initializedSourceDir;
         QString m_initializedDestinationDir;
-        bool m_logCopiedFiles        = true;
-        bool m_nameFilterDisables    = false; //!< name filter disables or hides
-        bool m_withBootstrapFile     = false;
+        bool m_logCopiedFiles = true;
+        bool m_nameFilterDisables = false; //!< name filter disables or hides
+        bool m_withBootstrapFile = false;
         bool m_hasOtherSwiftVersions = false;
 
         // caches will be explicitly initialized in initCaches
@@ -132,11 +135,11 @@ namespace BlackGui::Components
         // those caches do not harm if they exists default initialized
         //! \fixme this is a workaround, as it creates files on disk even if those are not copied. It was much nicer if the cache would init themself if the file appears
         BlackMisc::CData<BlackMisc::Network::Data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
-        BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelection>  m_modelSetCurrentSimulator { this };
-        BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_modelsCurrentSimulator   { this };
+        BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelection> m_modelSetCurrentSimulator { this };
+        BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_modelsCurrentSimulator { this };
         BlackMisc::CData<BlackMisc::Simulation::Data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
-        BlackMisc::CData<BlackCore::Data::TLauncherSetup>    m_launcherSetup    { this };
-        BlackMisc::CData<BlackCore::Data::TVatsimSetup>      m_vatsimSetup      { this };
+        BlackMisc::CData<BlackCore::Data::TLauncherSetup> m_launcherSetup { this };
+        BlackMisc::CData<BlackCore::Data::TVatsimSetup> m_vatsimSetup { this };
         BlackMisc::CData<BlackCore::Data::TVatsimLastServer> m_lastVatsimServer { this }; //!< recently used VATSIM server
     };
 

@@ -16,7 +16,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CAboutHtmlComponent; }
+namespace Ui
+{
+    class CAboutHtmlComponent;
+}
 namespace BlackGui::Components
 {
     /*!

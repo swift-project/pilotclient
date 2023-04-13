@@ -20,8 +20,7 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network, CUrlLog)
 
 namespace BlackMisc::Network
 {
-    CUrlLog::CUrlLog(const CUrl &url) :
-        ITimestampBased(), m_id(uniqueId()), m_url(url)
+    CUrlLog::CUrlLog(const CUrl &url) : ITimestampBased(), m_id(uniqueId()), m_url(url)
     {
         ITimestampBased::setCurrentUtcTime();
     }
@@ -56,8 +55,16 @@ namespace BlackMisc::Network
 
     void CUrlLog::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CUrlLog>(); return; }
-        if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CUrlLog>();
+            return;
+        }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            ITimestampBased::setPropertyByIndex(index, variant);
+            return;
+        }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
@@ -85,7 +92,7 @@ namespace BlackMisc::Network
 
     int CUrlLog::uniqueId()
     {
-        static std::atomic_int s_id {1}; // 0 means default in property system, so I start with 1
+        static std::atomic_int s_id { 1 }; // 0 means default in property system, so I start with 1
         const int id = s_id++;
         return id;
     }

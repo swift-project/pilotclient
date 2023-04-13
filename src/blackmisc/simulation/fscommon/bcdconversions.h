@@ -17,7 +17,10 @@
 
 namespace BlackMisc
 {
-    namespace Aviation { class CTransponder; }
+    namespace Aviation
+    {
+        class CTransponder;
+    }
     namespace Simulation::FsCommon
     {
         //! BCD conversions for FS

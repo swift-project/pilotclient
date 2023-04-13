@@ -26,8 +26,14 @@
 #include <QScopedPointer>
 #include <QPointer>
 
-namespace Ui { class CInterpolationLogDisplay; }
-namespace BlackCore  { class CAirspaceMonitor; }
+namespace Ui
+{
+    class CInterpolationLogDisplay;
+}
+namespace BlackCore
+{
+    class CAirspaceMonitor;
+}
 namespace BlackGui::Components
 {
     /*!
@@ -186,17 +192,17 @@ namespace BlackGui::Components
 
         QScopedPointer<Ui::CInterpolationLogDisplay> ui;
         QTimer m_updateTimer;
-        QPointer<BlackCore::ISimulator> m_simulator;                      //!< related simulator
-        QPointer<BlackCore::CAirspaceMonitor> m_airspaceMonitor;          //!< related airspace monitor
+        QPointer<BlackCore::ISimulator> m_simulator; //!< related simulator
+        QPointer<BlackCore::CAirspaceMonitor> m_airspaceMonitor; //!< related airspace monitor
         BlackMisc::Aviation::CAircraftSituationList m_lastInterpolations; //!< list of last interpolations
         BlackMisc::Aviation::CCallsign m_callsign; //!< current callsign
 
-        int m_elvRequested = 0;         //!< counted via signal
-        int m_elvReceived  = 0;         //!< counted via signal
+        int m_elvRequested = 0; //!< counted via signal
+        int m_elvReceived = 0; //!< counted via signal
         int m_elvRequestedLoggedCs = 0; //!< counted via signal
-        int m_elvReceivedLoggedCs  = 0; //!< counted via signal
+        int m_elvReceivedLoggedCs = 0; //!< counted via signal
 
-        int m_elvHistoryCount = -1;                //!< how many in history
+        int m_elvHistoryCount = -1; //!< how many in history
         QStringListModel *m_elvHistoryModel = nullptr;
 
         static const QString &startText();

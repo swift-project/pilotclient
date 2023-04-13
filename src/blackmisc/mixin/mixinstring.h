@@ -80,33 +80,51 @@ namespace BlackMisc::Mixin
     };
 
     template <class Derived>
-    QString String<Derived>::toQString(bool i18n) const { return derived()->convertToQString(i18n); }
+    QString String<Derived>::toQString(bool i18n) const
+    {
+        return derived()->convertToQString(i18n);
+    }
 
     template <class Derived>
-    QString String<Derived>::toFormattedQString(bool i18n) const { return derived()->toQString(i18n); }
+    QString String<Derived>::toFormattedQString(bool i18n) const
+    {
+        return derived()->toQString(i18n);
+    }
 
     template <class Derived>
-    std::string String<Derived>::toStdString(bool i18n) const { return derived()->convertToQString(i18n).toStdString(); }
+    std::string String<Derived>::toStdString(bool i18n) const
+    {
+        return derived()->convertToQString(i18n).toStdString();
+    }
 
     template <class Derived>
-    QString String<Derived>::stringForStreaming() const { return derived()->convertToQString(); }
+    QString String<Derived>::stringForStreaming() const
+    {
+        return derived()->convertToQString();
+    }
 
     template <class Derived>
-    const Derived *String<Derived>::derived() const { return static_cast<const Derived *>(this); }
+    const Derived *String<Derived>::derived() const
+    {
+        return static_cast<const Derived *>(this);
+    }
 
     template <class Derived>
-    Derived *String<Derived>::derived() { return static_cast<Derived *>(this); }
+    Derived *String<Derived>::derived()
+    {
+        return static_cast<Derived *>(this);
+    }
 
     // *INDENT-OFF*
     /*!
      * When a derived class and a base class both inherit from Mixin::String,
      * the derived class uses this macro to disambiguate the inherited members.
      */
-#       define BLACKMISC_DECLARE_USING_MIXIN_STRING(DERIVED)                \
-        using ::BlackMisc::Mixin::String<DERIVED>::toQString;           \
-        using ::BlackMisc::Mixin::String<DERIVED>::toFormattedQString;  \
-        using ::BlackMisc::Mixin::String<DERIVED>::toStdString;         \
-        using ::BlackMisc::Mixin::String<DERIVED>::stringForStreaming;
+#define BLACKMISC_DECLARE_USING_MIXIN_STRING(DERIVED)              \
+    using ::BlackMisc::Mixin::String<DERIVED>::toQString;          \
+    using ::BlackMisc::Mixin::String<DERIVED>::toFormattedQString; \
+    using ::BlackMisc::Mixin::String<DERIVED>::toStdString;        \
+    using ::BlackMisc::Mixin::String<DERIVED>::stringForStreaming;
     // *INDENT-ON*
 } // ns
 

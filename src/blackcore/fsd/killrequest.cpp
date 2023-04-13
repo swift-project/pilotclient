@@ -13,12 +13,12 @@
 namespace BlackCore::Fsd
 {
     KillRequest::KillRequest() : MessageBase()
-    { }
+    {}
 
     KillRequest::KillRequest(const QString &callsign, const QString &receiver, const QString &reason)
         : MessageBase(callsign, receiver),
-            m_reason(reason)
-    { }
+          m_reason(reason)
+    {}
 
     QStringList KillRequest::toTokens() const
     {

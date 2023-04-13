@@ -24,7 +24,10 @@ BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CInterpolationAndRenderi
 
 namespace BlackMisc
 {
-    namespace Network { class CClient; }
+    namespace Network
+    {
+        class CClient;
+    }
     namespace Simulation
     {
         //! Value object for interpolator and rendering base class
@@ -101,7 +104,7 @@ namespace BlackMisc
             void consolidateWithClient(const Network::CClient &client);
 
             //! Interpolator mode
-            InterpolatorMode getInterpolatorMode() const { return static_cast<InterpolatorMode>(m_interpolatorMode);  }
+            InterpolatorMode getInterpolatorMode() const { return static_cast<InterpolatorMode>(m_interpolatorMode); }
 
             //! Interpolator mode
             const QString &getInterpolatorModeAsString() const { return modeToString(this->getInterpolatorMode()); }
@@ -131,13 +134,13 @@ namespace BlackMisc
             //! Can handle index?
             static bool canHandleIndex(int index);
 
-            bool m_logInterpolation       = false; //!< Debug messages in interpolator
+            bool m_logInterpolation = false; //!< Debug messages in interpolator
             bool m_simulatorDebugMessages = false; //!< Debug messages of simulator (aka plugin)
             bool m_forceFullInterpolation = false; //!< always do a full interpolation, even if aircraft is not moving
-            bool m_enabledAircraftParts   = true;  //!< Enable aircraft parts
-            bool m_sendGndToSim           = true;  //!< Send the gnd.flag to simulator
-            bool m_fixSceneryOffset       = false; //!< Fix. scenery offset
-            int  m_interpolatorMode       = static_cast<int>(Spline); //!< interpolator mode (spline, ...)
+            bool m_enabledAircraftParts = true; //!< Enable aircraft parts
+            bool m_sendGndToSim = true; //!< Send the gnd.flag to simulator
+            bool m_fixSceneryOffset = false; //!< Fix. scenery offset
+            int m_interpolatorMode = static_cast<int>(Spline); //!< interpolator mode (spline, ...)
             PhysicalQuantities::CAngle m_pitchOnGround = PhysicalQuantities::CAngle::null(); //!< pitch angle on ground
         };
 

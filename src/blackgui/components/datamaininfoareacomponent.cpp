@@ -24,9 +24,8 @@ using namespace BlackGui::Components;
 
 namespace BlackGui::Components
 {
-    CDataMainInfoAreaComponent::CDataMainInfoAreaComponent(QWidget *parent) :
-        CInfoArea(parent),
-        ui(new Ui::CDataMainInfoAreaComponent)
+    CDataMainInfoAreaComponent::CDataMainInfoAreaComponent(QWidget *parent) : CInfoArea(parent),
+                                                                              ui(new Ui::CDataMainInfoAreaComponent)
     {
         ui->setupUi(this);
         this->initInfoArea(); // init base class
@@ -43,7 +42,7 @@ namespace BlackGui::Components
     }
 
     CDataMainInfoAreaComponent::~CDataMainInfoAreaComponent()
-    { }
+    {}
 
     CLogComponent *CDataMainInfoAreaComponent::getLogComponent() const
     {

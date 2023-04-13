@@ -32,15 +32,14 @@ namespace BlackCore
         return cats;
     }
 
-    CThreadedReader::CThreadedReader(QObject *owner, const QString &name) :
-        CContinuousWorker(owner, name)
+    CThreadedReader::CThreadedReader(QObject *owner, const QString &name) : CContinuousWorker(owner, name)
     {
         connect(&m_updateTimer, &QTimer::timeout, this, &CThreadedReader::doWork);
         m_updateTimer.setSingleShot(true);
     }
 
     CThreadedReader::~CThreadedReader()
-    { }
+    {}
 
     qint64 CThreadedReader::lastModifiedMsSinceEpoch(QNetworkReply *nwReply) const
     {
@@ -80,7 +79,7 @@ namespace BlackCore
     void CThreadedReader::startReader()
     {
         Q_ASSERT(m_initialTime > 0);
-        QTimer::singleShot(m_initialTime, this, [ = ] { this->doWork(); });
+        QTimer::singleShot(m_initialTime, this, [=] { this->doWork(); });
     }
 
     void CThreadedReader::pauseReader()
@@ -164,7 +163,7 @@ namespace BlackCore
     bool CThreadedReader::doWorkCheck() const
     {
         // sApp->hasWebDataServices() cannot be used, as some readers are already used during init phase
-        if (!this->isEnabled())  { return false; }
+        if (!this->isEnabled()) { return false; }
 
         // MS 2019-02-23 isAbandoned() check only makes sense when called by worker thread (T541)
         if (CThreadUtils::isInThisThread(this) && this->isAbandoned()) { return false; }
@@ -173,7 +172,7 @@ namespace BlackCore
         return true;
     }
 
-    QNetworkReply *CThreadedReader::getFromNetworkAndLog(const CUrl &url, const CSlot<void (QNetworkReply *)> &callback)
+    QNetworkReply *CThreadedReader::getFromNetworkAndLog(const CUrl &url, const CSlot<void(QNetworkReply *)> &callback)
     {
         QWriteLocker wl(&m_lock);
         const CUrlLogList outdatedPendingUrls = m_urlReadLog.findOutdatedPending(OutdatedPendingCallMs);

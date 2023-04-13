@@ -67,7 +67,6 @@ namespace BlackMisc::Input
         return s;
     }
 
-
     CIcons::IconIndex toggleXPDRStateHotkeyIcon()
     {
         return CIcons::StandardIconRadio16;

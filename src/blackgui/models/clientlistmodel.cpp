@@ -24,8 +24,7 @@ using namespace BlackMisc::Network;
 
 namespace BlackGui::Models
 {
-    CClientListModel::CClientListModel(QObject *parent) :
-        CListModelBase<CClientList>("ViewClientList", parent)
+    CClientListModel::CClientListModel(QObject *parent) : CListModelBase<CClientList>("ViewClientList", parent)
     {
         m_columns.addColumn(CColumn("client", CClient::IndexIcon));
         m_columns.addColumn(CColumn::standardValueObject("callsign", CClient::IndexCallsign));
@@ -33,7 +32,7 @@ namespace BlackGui::Models
         m_columns.addColumn(CColumn("vo.", "voice capabilities", CClient::IndexVoiceCapabilitiesIcon, new CPixmapFormatter()));
         m_columns.addColumn(CColumn::standardString("capabilities", CClient::IndexCapabilitiesString));
         m_columns.addColumn(CColumn::standardString("model", CClient::IndexModelString));
-        m_columns.addColumn(CColumn("q.?", "queried", {CClient::IndexModelString, CAircraftModel::IndexHasQueriedModelString},
+        m_columns.addColumn(CColumn("q.?", "queried", { CClient::IndexModelString, CAircraftModel::IndexHasQueriedModelString },
                                     new CBoolIconFormatter("queried", "not queried")));
         m_columns.addColumn(CColumn::standardString("server", CClient::IndexServer));
 
@@ -47,8 +46,8 @@ namespace BlackGui::Models
 
     QVariant CClientListModel::data(const QModelIndex &index, int role) const
     {
-        static const CPropertyIndex ms({CClient::IndexModelString, CAircraftModel::IndexModelString});
-        static const CPropertyIndex qf({CClient::IndexModelString, CAircraftModel::IndexHasQueriedModelString});
+        static const CPropertyIndex ms({ CClient::IndexModelString, CAircraftModel::IndexModelString });
+        static const CPropertyIndex qf({ CClient::IndexModelString, CAircraftModel::IndexHasQueriedModelString });
         if (role != Qt::DisplayRole && role != Qt::DecorationRole) { return CListModelBase::data(index, role); }
         const CPropertyIndex pi = modelIndexToPropertyIndex(index);
         if (pi == ms && role == Qt::DisplayRole)

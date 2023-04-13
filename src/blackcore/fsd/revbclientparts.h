@@ -25,10 +25,8 @@ namespace BlackCore::Fsd
         //! Constructor
         RevBClientParts(const QString &sender, const QString &partsval1, const QString &partsval2, const QString &partsval3);
 
-
         //! Message converted to tokens
         QStringList toTokens() const;
-
 
         //! Construct from tokens
         static RevBClientParts fromTokens(const QStringList &tokens);
@@ -40,9 +38,9 @@ namespace BlackCore::Fsd
         //! Properties
         ClientQueryType m_queryType = ClientQueryType::Unknown;
         QStringList m_queryData;
-        QString  m_partsval1;
-        QString  m_partsval2;
-        QString  m_partsval3;
+        QString m_partsval1;
+        QString m_partsval2;
+        QString m_partsval3;
         //! @}
 
     private:
@@ -52,10 +50,10 @@ namespace BlackCore::Fsd
     //! Equal to operator
     inline bool operator==(const RevBClientParts &lhs, const RevBClientParts &rhs)
     {
-        return  lhs.sender() == rhs.sender() &&
-                lhs.m_partsval1 == rhs.m_partsval1 &&
-                lhs.m_partsval2 == rhs.m_partsval2 &&
-                lhs.m_partsval3 == rhs.m_partsval3;
+        return lhs.sender() == rhs.sender() &&
+               lhs.m_partsval1 == rhs.m_partsval1 &&
+               lhs.m_partsval2 == rhs.m_partsval2 &&
+               lhs.m_partsval3 == rhs.m_partsval3;
     }
 
     //! Not equal to operator

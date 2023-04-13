@@ -44,47 +44,42 @@ namespace BlackCore::Context
         }
     }
 
-    IContextApplication::IContextApplication(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
-        IContext(mode, runtime)
+    IContextApplication::IContextApplication(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContext(mode, runtime)
     {
         if (mode == CCoreFacadeConfig::NotUsed) { return; }
         QPointer<IContextApplication> myself(this);
 
-        connect(CSettingsCache::instance(), &CSettingsCache::valuesChangedByLocal, this, [ = ](const CValueCachePacket & settings)
-        {
+        connect(CSettingsCache::instance(), &CSettingsCache::valuesChangedByLocal, this, [=](const CValueCachePacket &settings) {
             if (!myself) { return; }
             this->changeSettings(settings, {});
         });
 
-        connect(this, &IContextApplication::settingsChanged, CSettingsCache::instance(), [](const CValueCachePacket & settings, const CIdentifier & origin)
-        {
+        connect(this, &IContextApplication::settingsChanged, CSettingsCache::instance(), [](const CValueCachePacket &settings, const CIdentifier &origin) {
             // Intentionally don't check for round trip here
             CSettingsCache::instance()->changeValuesFromRemote(settings, origin);
         });
 
         Q_ASSERT_X(sApp && sApp->getInputManager(), Q_FUNC_INFO, "Missing input manager");
-        bool s = connect(sApp->getInputManager(), &CInputManager::hotkeyActionRegistered, this, [ = ](const QStringList & actions)
-        {
+        bool s = connect(sApp->getInputManager(), &CInputManager::hotkeyActionRegistered, this, [=](const QStringList &actions) {
             if (!myself) { return; }
             this->registerHotkeyActions(actions, {});
         });
         Q_ASSERT_X(s, Q_FUNC_INFO, "Connect hotkey action failed");
         Q_UNUSED(s);
 
-        s = connect(this, &IContextApplication::hotkeyActionsRegistered, sApp->getInputManager(), [ = ](const QStringList & actions, const CIdentifier & origin)
-        {
+        s = connect(this, &IContextApplication::hotkeyActionsRegistered, sApp->getInputManager(), [=](const QStringList &actions, const CIdentifier &origin) {
             if (origin.hasApplicationProcessId()) { return; }
             sApp->getInputManager()->registerRemoteActions(actions);
         });
         Q_ASSERT_X(s, Q_FUNC_INFO, "Connect hotkey actions failed");
         Q_UNUSED(s);
 
-        s = connect(sApp->getInputManager(), &CInputManager::remoteActionFromLocal, this, [ = ](const QString & action, bool argument)
-        {
-            if (!myself) { return; }
-            this->callHotkeyActionRemotely(action, argument, {});
-        },
-        Qt::QueuedConnection);
+        s = connect(
+            sApp->getInputManager(), &CInputManager::remoteActionFromLocal, this, [=](const QString &action, bool argument) {
+                if (!myself) { return; }
+                this->callHotkeyActionRemotely(action, argument, {});
+            },
+            Qt::QueuedConnection);
 
         Q_ASSERT_X(s, Q_FUNC_INFO, "Connect remote action failed");
         Q_UNUSED(s);

@@ -16,7 +16,10 @@
 #include <QWizard>
 #include <QScopedPointer>
 
-namespace Ui { class CDbQuickMappingWizard; }
+namespace Ui
+{
+    class CDbQuickMappingWizard;
+}
 namespace BlackGui::Components
 {
     /*!
@@ -35,7 +38,7 @@ namespace BlackGui::Components
             PageColor,
             PageLiverySelect,
             PageDistributorSelect,
-            PageConfirmation,     //!< model from and validation
+            PageConfirmation, //!< model from and validation
             PageCredentials,
             PageLastConfirmation, //!< just info to say data will be send
             PageSendStatus
@@ -106,9 +109,9 @@ namespace BlackGui::Components
 
         //! Models published
         void onPublishedModels(const BlackMisc::Simulation::CAircraftModelList &modelsPublished,
-                                const BlackMisc::Simulation::CAircraftModelList &modelsSkipped,
-                                const BlackMisc::CStatusMessageList &messages,
-                                bool requestSuccessful, bool directWrite);
+                               const BlackMisc::Simulation::CAircraftModelList &modelsSkipped,
+                               const BlackMisc::CStatusMessageList &messages,
+                               bool requestSuccessful, bool directWrite);
 
         //! Web data have been read
         void onWebDataRead();

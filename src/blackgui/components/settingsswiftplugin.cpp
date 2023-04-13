@@ -16,9 +16,8 @@ using namespace BlackMisc::Simulation::Settings;
 
 namespace BlackGui::Components
 {
-    CSettingsSwiftPlugin::CSettingsSwiftPlugin(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CSettingsSwiftPlugin)
+    CSettingsSwiftPlugin::CSettingsSwiftPlugin(QWidget *parent) : QFrame(parent),
+                                                                  ui(new Ui::CSettingsSwiftPlugin)
     {
         ui->setupUi(this);
         ui->comp_EmulatedSimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
@@ -28,7 +27,7 @@ namespace BlackGui::Components
     }
 
     CSettingsSwiftPlugin::~CSettingsSwiftPlugin()
-    { }
+    {}
 
     BlackMisc::Simulation::Settings::CSwiftPluginSettings CSettingsSwiftPlugin::getPluginSettings() const
     {

@@ -19,9 +19,8 @@ using namespace BlackMisc::Math;
 
 namespace BlackGui::Components
 {
-    CConfigurationWizard::CConfigurationWizard(QWidget *parent) :
-        QWizard(parent),
-        ui(new Ui::CConfigurationWizard)
+    CConfigurationWizard::CConfigurationWizard(QWidget *parent) : QWizard(parent),
+                                                                  ui(new Ui::CConfigurationWizard)
     {
         ui->setupUi(this);
         this->setWindowFlags(windowFlags() | Qt::CustomizeWindowHint | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
@@ -54,8 +53,7 @@ namespace BlackGui::Components
 
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "missing sGui");
         const QPointer<CConfigurationWizard> myself(this);
-        connect(this, &QWizard::helpRequested, sGui, [ = ]
-        {
+        connect(this, &QWizard::helpRequested, sGui, [=] {
             if (!myself) { return; }
             if (!sGui || sGui->isShuttingDown()) { return; }
             sGui->showHelp(this);
@@ -66,7 +64,7 @@ namespace BlackGui::Components
     }
 
     CConfigurationWizard::~CConfigurationWizard()
-    { }
+    {}
 
     bool CConfigurationWizard::lastStepSkipped() const
     {

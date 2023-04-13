@@ -21,7 +21,10 @@
 class QPixmap;
 class QWidget;
 
-namespace Ui { class CCoreInfoAreaComponent; }
+namespace Ui
+{
+    class CCoreInfoAreaComponent;
+}
 
 namespace BlackGui::Components
 {
@@ -44,9 +47,9 @@ namespace BlackGui::Components
         enum InfoArea
         {
             // index must match tab index!
-            InfoAreaLog          = 0,
-            InfoAreaStatus       = 1,
-            InfoAreaNone         = -1
+            InfoAreaLog = 0,
+            InfoAreaStatus = 1,
+            InfoAreaNone = -1
         };
 
         //! Log messages

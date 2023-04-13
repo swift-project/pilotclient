@@ -14,9 +14,8 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackGui::Components
 {
-    CCockpitComTransmissionComponent::CCockpitComTransmissionComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CCockpitComTransmissionComponent)
+    CCockpitComTransmissionComponent::CCockpitComTransmissionComponent(QWidget *parent) : QFrame(parent),
+                                                                                          ui(new Ui::CCockpitComTransmissionComponent)
     {
         ui->setupUi(this);
         connect(ui->pb_Com1Save, &QPushButton::released, this, &CCockpitComTransmissionComponent::onSave);

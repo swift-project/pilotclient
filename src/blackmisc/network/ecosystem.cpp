@@ -100,7 +100,11 @@ namespace BlackMisc::Network
 
     void CEcosystem::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CEcosystem>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CEcosystem>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

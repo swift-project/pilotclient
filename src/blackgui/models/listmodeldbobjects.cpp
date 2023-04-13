@@ -36,13 +36,12 @@ using namespace BlackMisc::Db;
 namespace BlackGui::Models
 {
     template <typename T, typename K, bool UseCompare>
-    CListModelDbObjects<T, K, UseCompare>::CListModelDbObjects(const QString &translationContext, QObject *parent) :
-        CListModelBase<ContainerType, UseCompare>(translationContext, parent)
+    CListModelDbObjects<T, K, UseCompare>::CListModelDbObjects(const QString &translationContext, QObject *parent) : CListModelBase<ContainerType, UseCompare>(translationContext, parent)
     {
         CListModelBaseNonTemplate::m_sortTieBreakers.push_front(ObjectType::keyIndex());
 
         constexpr bool hasIntegerKey = std::is_base_of_v<IDatastoreObjectWithIntegerKey, ObjectType> && std::is_same_v<int, KeyType>;
-        constexpr bool hasStringKey  = std::is_base_of_v<IDatastoreObjectWithStringKey, ObjectType> && std::is_base_of_v<QString, KeyType>;
+        constexpr bool hasStringKey = std::is_base_of_v<IDatastoreObjectWithStringKey, ObjectType> && std::is_base_of_v<QString, KeyType>;
         static_assert(hasIntegerKey || hasStringKey, "ObjectType needs to implement IDatastoreObjectWithXXXXKey and have appropriate KeyType");
     }
 
@@ -72,7 +71,7 @@ namespace BlackGui::Models
     template <typename T, typename K, bool UseCompare>
     COrderableListModelDbObjects<T, K, UseCompare>::COrderableListModelDbObjects(const QString &translationContext, QObject *parent)
         : CListModelDbObjects<ContainerType, KeyType, UseCompare>(translationContext, parent)
-    { }
+    {}
 
     template <typename T, typename K, bool UseCompare>
     void COrderableListModelDbObjects<T, K, UseCompare>::moveItems(const ContainerType &items, int position)

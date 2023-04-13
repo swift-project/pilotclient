@@ -33,8 +33,7 @@ namespace BlackMisc
         std::promise<QMetaObject::Connection> promise;
         auto called = std::make_shared<std::atomic_flag>();
         called->clear();
-        auto wrapper = [receiver, called, connection = promise.get_future().share(), slot = std::forward<G>(slot)](auto &&... args)
-        {
+        auto wrapper = [receiver, called, connection = promise.get_future().share(), slot = std::forward<G>(slot)](auto &&...args) {
             if (called->test_and_set()) { return; }
             QObject::disconnect(connection.get());
             Private::invokeSlot(slot, receiver, std::forward<decltype(args)>(args)...);
@@ -51,7 +50,7 @@ namespace BlackMisc
     template <typename T, typename F, typename G>
     QMetaObject::Connection connectOnce(T *sender, F signal, G &&slot)
     {
-        static_assert(! std::is_member_pointer_v<std::decay_t<G>>, "If slot is a pointer to member, a receiver must be supplied");
+        static_assert(!std::is_member_pointer_v<std::decay_t<G>>, "If slot is a pointer to member, a receiver must be supplied");
         return connectOnce(sender, signal, sender, std::forward<G>(slot));
     }
 
@@ -76,18 +75,16 @@ namespace BlackMisc
 
         //! Construct a slot from the given member function of the given object.
         template <typename T, typename U>
-        CSlot(T *object, R(U::* function)(Args...)) :
-            m_object(object),
-            m_function([ = ](Args... args) { return (object->*function)(args...); })
+        CSlot(T *object, R (U::*function)(Args...)) : m_object(object),
+                                                      m_function([=](Args... args) { return (object->*function)(args...); })
         {
             Q_ASSERT_X(object, Q_FUNC_INFO, "Need object");
         }
 
         //! Construct a slot from the given object passing a function and a object
         template <typename T>
-        CSlot(T *object, std::function<R(Args...)> function) :
-            m_object(object),
-            m_function(function)
+        CSlot(T *object, std::function<R(Args...)> function) : m_object(object),
+                                                               m_function(function)
         {}
 
         //! Call the slot. The behaviour is undefined if the slot is empty.
@@ -128,7 +125,7 @@ namespace BlackMisc
         }
 
         //! True if the slot is empty or object is null, false if it can be called.
-        bool operator !() const
+        bool operator!() const
         {
             return this->isEmpty() || this->hasNullObject();
         }
@@ -136,7 +133,7 @@ namespace BlackMisc
         //! True if the slot is empty, false if it can be called.
         bool isEmpty() const
         {
-            return ! m_function;
+            return !m_function;
         }
 
         //! True if the object is null

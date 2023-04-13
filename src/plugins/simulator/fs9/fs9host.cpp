@@ -22,8 +22,7 @@ using namespace BlackMisc;
 
 namespace BlackSimPlugin::Fs9
 {
-    CFs9Host::CFs9Host(QObject *parent) :
-        CDirectPlayPeer(sApp->swiftVersionString(), parent)
+    CFs9Host::CFs9Host(QObject *parent) : CDirectPlayPeer(sApp->swiftVersionString(), parent)
     {
         initDirectPlay();
         createHostAddress();
@@ -136,12 +135,12 @@ namespace BlackSimPlugin::Fs9
         dpAppDesc.pwszSessionName = wszSession.data();
 
         // We are now ready to host the app
-        if (FAILED(hr = m_directPlayPeer->Host(&dpAppDesc,          // AppDesc
-                                                &m_deviceAddress, 1, // Device Address
-                                                nullptr,
-                                                nullptr,             // Reserved
-                                                nullptr,             // Player Context
-                                                0)))                 // dwFlags
+        if (FAILED(hr = m_directPlayPeer->Host(&dpAppDesc, // AppDesc
+                                               &m_deviceAddress, 1, // Device Address
+                                               nullptr,
+                                               nullptr, // Reserved
+                                               nullptr, // Player Context
+                                               0))) // dwFlags
         {
             logDirectPlayError(hr);
             return hr;

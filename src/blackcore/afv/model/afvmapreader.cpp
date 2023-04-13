@@ -63,18 +63,17 @@ namespace BlackCore::Afv::Model
                         for (auto jt = txArray.begin(); jt != txArray.end(); ++jt)
                         {
                             const TransceiverDto transceiver = TransceiverDto::fromJson(jt->toObject());
-                            transceivers.push_back({ callsign, transceiver});
+                            transceivers.push_back({ callsign, transceiver });
                         }
                     }
                 }
             }
 
             if (transceivers.isEmpty()) { return; }
-            transceivers.erase(std::remove_if(transceivers.begin(), transceivers.end(), [this](const CSampleAtcStation & s)
-            {
-                return s.callsign() == m_callsign;
-            }),
-            transceivers.end());
+            transceivers.erase(std::remove_if(transceivers.begin(), transceivers.end(), [this](const CSampleAtcStation &s) {
+                                   return s.callsign() == m_callsign;
+                               }),
+                               transceivers.end());
             m_model->updateAtcStations(transceivers);
         }
     }

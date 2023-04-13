@@ -88,8 +88,8 @@ namespace BlackCore::Db
 
         BlackMisc::Db::CDbFlags::DataRetrievalModeFlag m_mode; //!< shared or DB web service?
         BlackMisc::Db::CDbInfoList m_infoObjects;
-        BlackMisc::Network::CUrl   m_urlInfoObjects;
-        mutable QReadWriteLock     m_lockInfoObjects;
+        BlackMisc::Network::CUrl m_urlInfoObjects;
+        mutable QReadWriteLock m_lockInfoObjects;
     };
 } // ns
 #endif // guard

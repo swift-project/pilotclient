@@ -50,9 +50,9 @@ namespace BlackGui
     private:
         bool m_optionalValue = false; //!< allow empty
         int m_minLength = 0;
-        int m_maxLength = 32678;      //!< standard length
-        QString m_allowedCharacters;  //!< allowedCharacters
-        QStringList m_restrictions;   //!< list of allowed strings
+        int m_maxLength = 32678; //!< standard length
+        QString m_allowedCharacters; //!< allowedCharacters
+        QStringList m_restrictions; //!< list of allowed strings
     };
 }
 #endif // guard

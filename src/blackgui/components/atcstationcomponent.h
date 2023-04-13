@@ -33,8 +33,14 @@
 #include <QTimer>
 #include <QList>
 
-namespace Ui { class CAtcStationComponent; }
-namespace BlackMisc::Aviation { class CCallsign; }
+namespace Ui
+{
+    class CAtcStationComponent;
+}
+namespace BlackMisc::Aviation
+{
+    class CCallsign;
+}
 namespace BlackGui
 {
     class CDockWidgetInfoArea;
@@ -169,13 +175,13 @@ namespace BlackGui
             QVBoxLayout *vLayout() const;
 
             QScopedPointer<Ui::CAtcStationComponent> ui;
-            QTimer     m_updateTimer;
+            QTimer m_updateTimer;
             QList<int> m_splitterSizes;
             BlackMisc::Aviation::CCallsign m_selectedCallsign;
             QDateTime m_timestampLastReadOnlineStations; //!< stations read
-            QDateTime m_timestampOnlineStationsChanged;  //!< stations marked as changed
+            QDateTime m_timestampOnlineStationsChanged; //!< stations marked as changed
             QDateTime m_timestampLastReadBookedStations; //!< stations read
-            QDateTime m_timestampBookedStationsChanged;  //!< stations marked as changed
+            QDateTime m_timestampBookedStationsChanged; //!< stations marked as changed
             BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settingsView { this, &CAtcStationComponent::settingsChanged };
         };
     } // namespace

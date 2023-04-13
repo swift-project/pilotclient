@@ -27,18 +27,17 @@ namespace BlackSimPlugin::FsCommon
 {
     CSimulatorFsCommon::CSimulatorFsCommon(
         const CSimulatorPluginInfo &info,
-        IOwnAircraftProvider    *ownAircraftProvider,
+        IOwnAircraftProvider *ownAircraftProvider,
         IRemoteAircraftProvider *renderedAircraftProvider,
-        IWeatherGridProvider    *weatherGridProvider,
-        IClientProvider         *clientProvider,
-        QObject                 *parent) :
-        CSimulatorPluginCommon(info, ownAircraftProvider, renderedAircraftProvider, weatherGridProvider, clientProvider, parent),
-        m_fsuipc(new CFsuipc(this))
+        IWeatherGridProvider *weatherGridProvider,
+        IClientProvider *clientProvider,
+        QObject *parent) : CSimulatorPluginCommon(info, ownAircraftProvider, renderedAircraftProvider, weatherGridProvider, clientProvider, parent),
+                           m_fsuipc(new CFsuipc(this))
     {
         CSimulatorFsCommon::registerHelp();
     }
 
-    CSimulatorFsCommon::~CSimulatorFsCommon() { }
+    CSimulatorFsCommon::~CSimulatorFsCommon() {}
 
     void CSimulatorFsCommon::initSimulatorInternals()
     {
@@ -77,8 +76,8 @@ namespace BlackSimPlugin::FsCommon
     void CSimulatorFsCommon::registerHelp()
     {
         if (CSimpleCommandParser::registered("BlackSimPlugin::FsCommon::CSimulatorFsCommon")) { return; }
-        CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
-        CSimpleCommandParser::registerCommand({".drv fsuipc on|off", "FSUIPC on|off if applicable"});
+        CSimpleCommandParser::registerCommand({ ".drv", "alias: .driver .plugin" });
+        CSimpleCommandParser::registerCommand({ ".drv fsuipc on|off", "FSUIPC on|off if applicable" });
     }
 
     bool CSimulatorFsCommon::disconnectFrom()

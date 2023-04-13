@@ -22,8 +22,7 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackGui::Models
 {
-    CAirportListModel::CAirportListModel(QObject *parent) :
-        CListModelBase("AirportListModel", parent)
+    CAirportListModel::CAirportListModel(QObject *parent) : CListModelBase("AirportListModel", parent)
     {
         m_columns.addColumn(CColumn::standardValueObject("ICAO", CAirport::IndexIcao));
         m_columns.addColumn(CColumn("distance", CAirport::IndexRelativeDistance, new CAirspaceDistanceFormatter()));

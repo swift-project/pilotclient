@@ -20,9 +20,8 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CSettingsMatchingComponent::CSettingsMatchingComponent(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CSettingsMatchingComponent)
+    CSettingsMatchingComponent::CSettingsMatchingComponent(QWidget *parent) : QFrame(parent),
+                                                                              ui(new Ui::CSettingsMatchingComponent)
     {
         ui->setupUi(this);
         connect(ui->pb_Save, &QPushButton::released, this, &CSettingsMatchingComponent::onSavePressed);
@@ -43,7 +42,7 @@ namespace BlackGui::Components
     }
 
     CSettingsMatchingComponent::~CSettingsMatchingComponent()
-    { }
+    {}
 
     CAircraftMatcherSetup CSettingsMatchingComponent::getMatchingSetup() const
     {
@@ -99,8 +98,7 @@ namespace BlackGui::Components
         else
         {
             QPointer<CSettingsMatchingComponent> myself(this);
-            QTimer::singleShot(deferMs, this, [ = ]
-            {
+            QTimer::singleShot(deferMs, this, [=] {
                 if (!myself) { return; }
                 this->deferredReload(0);
             });

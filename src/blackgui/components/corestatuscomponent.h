@@ -19,7 +19,10 @@
 
 class QWidget;
 
-namespace Ui { class CCoreStatusComponent; }
+namespace Ui
+{
+    class CCoreStatusComponent;
+}
 
 namespace BlackGui::Components
 {

@@ -53,10 +53,16 @@
 
 class QDBusConnection;
 
-namespace BlackMisc { class CDBusServer; }
+namespace BlackMisc
+{
+    class CDBusServer;
+}
 namespace BlackCore
 {
-    namespace Afv::Clients { class CAfvClient; }
+    namespace Afv::Clients
+    {
+        class CAfvClient;
+    }
     namespace Context
     {
         //! Audio context interface
@@ -102,11 +108,11 @@ namespace BlackCore
 
             //! Register an audio callsign (used with AFV)
             //! \remarks normally called with login
-            virtual void registerAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign,  const BlackMisc::CIdentifier &identifier) = 0;
+            virtual void registerAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CIdentifier &identifier) = 0;
 
             //! Un-register an audio callsign (used with AFV)
             //! \remarks normally called with logoff
-            virtual void unRegisterAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign,  const BlackMisc::CIdentifier &identifier) = 0;
+            virtual void unRegisterAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CIdentifier &identifier) = 0;
 
             //! Un-register an audio callsign (used with AFV)
             //! \remarks normally called with logoff
@@ -143,14 +149,14 @@ namespace BlackCore
 
             //! @{
             //! Enable/disable
-            void enableVoiceClient()  { this->initVoiceClient(); }
+            void enableVoiceClient() { this->initVoiceClient(); }
             void enableVoiceClientAndStart();
             void disableVoiceClient() { this->terminateVoiceClient(); }
             //! @}
 
             //! @{
             //! Receive/transmit
-            void setRxTx(bool  rx1, bool  tx1, bool  rx2, bool  tx2);
+            void setRxTx(bool rx1, bool tx1, bool rx2, bool tx2);
             void getRxTx(bool &rx1, bool &tx1, bool &rx2, bool &tx2) const;
             //! @}
 
@@ -159,10 +165,10 @@ namespace BlackCore
             //! @{
             //! Audio devices
             BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const;
-            BlackMisc::Audio::CAudioDeviceInfoList getAudioInputDevices()  const;
+            BlackMisc::Audio::CAudioDeviceInfoList getAudioInputDevices() const;
             BlackMisc::Audio::CAudioDeviceInfoList getAudioOutputDevices() const;
             BlackMisc::Audio::CAudioDeviceInfoList getAudioDevicesPlusDefault() const;
-            BlackMisc::Audio::CAudioDeviceInfoList getAudioInputDevicesPlusDefault()  const;
+            BlackMisc::Audio::CAudioDeviceInfoList getAudioInputDevicesPlusDefault() const;
             BlackMisc::Audio::CAudioDeviceInfoList getAudioOutputDevicesPlusDefault() const;
             //! @}
 
@@ -242,10 +248,10 @@ namespace BlackCore
             static void registerHelp()
             {
                 if (BlackMisc::CSimpleCommandParser::registered("BlackCore::Context::CContextAudioBase")) { return; }
-                BlackMisc::CSimpleCommandParser::registerCommand({".mute", "mute audio"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".unmute", "unmute audio"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".vol volume", "volume 0..100"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".aliased on|off", "aliased HF frequencies"});
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".mute", "mute audio" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".unmute", "unmute audio" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".vol volume", "volume 0..100" });
+                BlackMisc::CSimpleCommandParser::registerCommand({ ".aliased on|off", "aliased HF frequencies" });
             }
 
             // -------- parts which can run in core and GUI, referring to local voice client ------------
@@ -349,7 +355,7 @@ namespace BlackCore
             //! AFV client authentication failed
             void onAfvConnectionFailure(const BlackMisc::CStatusMessage &msg);
 
-            CActionBind m_actionPtt     { BlackMisc::Input::pttHotkeyAction(),     BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudioBase::setVoiceTransmissionComActive };
+            CActionBind m_actionPtt { BlackMisc::Input::pttHotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudioBase::setVoiceTransmissionComActive };
             CActionBind m_actionAudioVolumeIncrease { BlackMisc::Input::audioVolumeIncreaseHotkeyAction(), BlackMisc::Input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudioBase::audioIncreaseVolume };
             CActionBind m_actionAudioVolumeDecrease { BlackMisc::Input::audioVolumeDecreaseHotkeyAction(), BlackMisc::Input::audioVolumeDecreaseHotkeyIcon(), this, &CContextAudioBase::audioDecreaseVolume };
             CActionBind m_actionAudioVolumeIncreaseCom1 { BlackMisc::Input::audioVolumeIncreaseCom1HotkeyAction(), BlackMisc::Input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudioBase::audioIncreaseVolumeCom1 };
@@ -364,10 +370,10 @@ namespace BlackCore
             static bool isRunningWithLocalCore();
 
             // settings
-            BlackMisc::CSetting<BlackMisc::Audio::TSettings>   m_audioSettings { this, &CContextAudioBase::onChangedAudioSettings };
+            BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &CContextAudioBase::onChangedAudioSettings };
             BlackMisc::CSetting<BlackMisc::Audio::TVoiceSetup> m_voiceSettings { this, &CContextAudioBase::onChangedVoiceSettings };
 
-            BlackMisc::CSetting<Audio::TInputDevice>  m_inputDeviceSetting  { this, &CContextAudioBase::changeDeviceSettings };
+            BlackMisc::CSetting<Audio::TInputDevice> m_inputDeviceSetting { this, &CContextAudioBase::changeDeviceSettings };
             BlackMisc::CSetting<Audio::TOutputDevice> m_outputDeviceSetting { this, &CContextAudioBase::changeDeviceSettings };
 
             // AFV
@@ -376,7 +382,7 @@ namespace BlackCore
             BlackMisc::Audio::CAudioDeviceInfoList m_activeLocalDevices;
 
             // Players
-            BlackSound::CSelcalPlayer      *m_selcalPlayer = nullptr;
+            BlackSound::CSelcalPlayer *m_selcalPlayer = nullptr;
             BlackSound::CNotificationPlayer m_notificationPlayer;
         };
     } // ns

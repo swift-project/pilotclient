@@ -35,15 +35,17 @@ namespace BlackMisc::SharedState
         friend QSharedPointer<CPassiveObserver>;
 
         template <typename T, typename F>
-        CPassiveObserver(T *parent, F eventHandler) :
-            QObject(parent),
-            m_eventHandler([ = ](const CVariant &param) { Private::invokeMethod(parent, eventHandler, param); })
+        CPassiveObserver(T *parent, F eventHandler) : QObject(parent),
+                                                      m_eventHandler([=](const CVariant &param) { Private::invokeMethod(parent, eventHandler, param); })
         {}
 
     public:
         //! Factory method.
         template <typename T, typename F>
-        static auto create(T *parent, F eventHandler) { return QSharedPointer<CPassiveObserver>::create(parent, eventHandler); }
+        static auto create(T *parent, F eventHandler)
+        {
+            return QSharedPointer<CPassiveObserver>::create(parent, eventHandler);
+        }
 
         //! Set the object that determines which events are subscribed to.
         void setEventSubscription(const CVariant &param);
@@ -52,7 +54,7 @@ namespace BlackMisc::SharedState
         CVariant eventSubscription() const;
 
         //! Called when a subscribed event is emitted.
-        void handleEvent(const CVariant& param) const;
+        void handleEvent(const CVariant &param) const;
 
         //! Get a QWeakPointer pointing to this object.
         QWeakPointer<const CPassiveObserver> weakRef() const { return sharedFromThis(); }

@@ -15,9 +15,8 @@ using namespace BlackMisc;
 
 namespace BlackSound::SampleProvider
 {
-    CResourceSoundSampleProvider::CResourceSoundSampleProvider(const CResourceSound &resourceSound, QObject *parent) :
-        ISampleProvider(parent),
-        m_resourceSound(resourceSound)
+    CResourceSoundSampleProvider::CResourceSoundSampleProvider(const CResourceSound &resourceSound, QObject *parent) : ISampleProvider(parent),
+                                                                                                                       m_resourceSound(resourceSound)
     {
         const QString on = QStringLiteral("%1 %2").arg(classNameShort(this), resourceSound.getFileName());
         this->setObjectName(on);
@@ -33,7 +32,7 @@ namespace BlackSound::SampleProvider
             return 0;
         }
         const qint64 availableSamples = m_resourceSound.audioData().size() - m_position;
-        const qint64 samplesToCopy    = qMin(availableSamples, count);
+        const qint64 samplesToCopy = qMin(availableSamples, count);
         samples.clear();
         samples.fill(0, static_cast<int>(samplesToCopy));
 

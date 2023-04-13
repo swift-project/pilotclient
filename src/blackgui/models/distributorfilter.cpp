@@ -14,15 +14,14 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackGui::Models
 {
-    CDistributorFilter::CDistributorFilter(const CSimulatorInfo &simulator) :
-        m_simulator(simulator)
+    CDistributorFilter::CDistributorFilter(const CSimulatorInfo &simulator) : m_simulator(simulator)
     {
         m_valid = true;
     }
 
     CDistributorList CDistributorFilter::filter(const CDistributorList &inDistributors) const
     {
-        if (!this->isValid())        { return inDistributors; }
+        if (!this->isValid()) { return inDistributors; }
         if (this->ignoreSimulator()) { return inDistributors; }
 
         CDistributorList outContainer;

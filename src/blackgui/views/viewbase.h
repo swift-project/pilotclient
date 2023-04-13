@@ -51,7 +51,10 @@ class QPoint;
 class QShowEvent;
 class QTabWidget;
 
-namespace BlackMisc { class CWorker; }
+namespace BlackMisc
+{
+    class CWorker;
+}
 namespace BlackGui
 {
     class CDockWidgetInfoArea;
@@ -99,11 +102,11 @@ namespace BlackGui
             //! \remarks Using own resizing (other than QHeaderView::ResizeMode)
             enum ResizeMode
             {
-                ResizingAuto,    //!< resizing when below threshold, \sa m_resizeAutoNthTime forcing only every n-th update to be resized
-                ResizingOnce,    //!< only one time
-                PresizeSubset,   //!< use a subset of the data to resize
-                ResizingAlways,  //!< always resize
-                ResizingOff      //!< never
+                ResizingAuto, //!< resizing when below threshold, \sa m_resizeAutoNthTime forcing only every n-th update to be resized
+                ResizingOnce, //!< only one time
+                PresizeSubset, //!< use a subset of the data to resize
+                ResizingAlways, //!< always resize
+                ResizingOff //!< never
             };
 
             //! How rows are resized, makes sense when \sa ResizeMode is \sa ResizingOff
@@ -116,33 +119,33 @@ namespace BlackGui
             //! Menu flags
             enum MenuFlag
             {
-                MenuNone                 = 0,        //!< no menu
-                MenuClear                = 1 << 0,   //!< allow clearing the view via menu
-                MenuRemoveSelectedRows   = 1 << 1,   //!< allow to remove selected rows
-                MenuRefresh              = 1 << 2,   //!< allow refreshing the view via menu
-                MenuBackend              = 1 << 3,   //!< allow to request data from backend
-                MenuDisplayAutomatically = 1 << 4,   //!< allow to switch display automatically
-                MenuDisplayAutomaticallyAndRefresh = MenuDisplayAutomatically | MenuRefresh,  //!< should come together
-                MenuFilter               = 1 << 5,   //!< filter can be opened
-                MenuMaterializeFilter    = 1 << 6,   //!< materialize filter (filtered data become model data)
-                MenuSave                 = 1 << 7,   //!< save as JSON
-                MenuLoad                 = 1 << 8,   //!< load from JSON
-                MenuToggleSelectionMode  = 1 << 9,   //!< allow to toggle selection mode
-                MenuOrderable            = 1 << 10,  //!< items can be ordered (if container is BlackMisc::IOrderableList
-                MenuCopy                 = 1 << 11,  //!< copy (for copy/paste)
-                MenuPaste                = 1 << 12,  //!< paste (for copy/paste)
-                MenuCut                  = 1 << 13,  //!< cut (for copy/paste)
-                MenuFont                 = 1 << 14,  //!< font related menu (size)
-                MenuLoadAndSave          = MenuLoad  | MenuSave,
-                MenuDefault              = MenuToggleSelectionMode | MenuDisplayAutomaticallyAndRefresh | MenuFont | MenuClear,
-                MenuDefaultNoClear       = MenuToggleSelectionMode | MenuDisplayAutomaticallyAndRefresh | MenuFont,
-                MenuDefaultDbViews       = MenuToggleSelectionMode | MenuBackend | MenuFont,
+                MenuNone = 0, //!< no menu
+                MenuClear = 1 << 0, //!< allow clearing the view via menu
+                MenuRemoveSelectedRows = 1 << 1, //!< allow to remove selected rows
+                MenuRefresh = 1 << 2, //!< allow refreshing the view via menu
+                MenuBackend = 1 << 3, //!< allow to request data from backend
+                MenuDisplayAutomatically = 1 << 4, //!< allow to switch display automatically
+                MenuDisplayAutomaticallyAndRefresh = MenuDisplayAutomatically | MenuRefresh, //!< should come together
+                MenuFilter = 1 << 5, //!< filter can be opened
+                MenuMaterializeFilter = 1 << 6, //!< materialize filter (filtered data become model data)
+                MenuSave = 1 << 7, //!< save as JSON
+                MenuLoad = 1 << 8, //!< load from JSON
+                MenuToggleSelectionMode = 1 << 9, //!< allow to toggle selection mode
+                MenuOrderable = 1 << 10, //!< items can be ordered (if container is BlackMisc::IOrderableList
+                MenuCopy = 1 << 11, //!< copy (for copy/paste)
+                MenuPaste = 1 << 12, //!< paste (for copy/paste)
+                MenuCut = 1 << 13, //!< cut (for copy/paste)
+                MenuFont = 1 << 14, //!< font related menu (size)
+                MenuLoadAndSave = MenuLoad | MenuSave,
+                MenuDefault = MenuToggleSelectionMode | MenuDisplayAutomaticallyAndRefresh | MenuFont | MenuClear,
+                MenuDefaultNoClear = MenuToggleSelectionMode | MenuDisplayAutomaticallyAndRefresh | MenuFont,
+                MenuDefaultDbViews = MenuToggleSelectionMode | MenuBackend | MenuFont,
                 // special menus, should be in derived classes, but enums cannot be inherited
                 // maybe shifted in the future to elsewhere
-                MenuHighlightStashed     = 1 << 15,  //!< highlight stashed models
-                MenuCanStashModels       = 1 << 16,  //!< stash models
-                MenuDisableModelsTemp    = 1 << 17,  //!< temp. disable model
-                MenuStashing             = MenuHighlightStashed | MenuCanStashModels,
+                MenuHighlightStashed = 1 << 15, //!< highlight stashed models
+                MenuCanStashModels = 1 << 16, //!< stash models
+                MenuDisableModelsTemp = 1 << 17, //!< temp. disable model
+                MenuStashing = MenuHighlightStashed | MenuCanStashModels,
             };
             Q_DECLARE_FLAGS(Menu, MenuFlag)
 
@@ -160,7 +163,7 @@ namespace BlackGui
             virtual void clear() = 0;
 
             //! Empty?
-            virtual bool isEmpty() const = 0 ;
+            virtual bool isEmpty() const = 0;
 
             //! Elements in container
             virtual int rowCount() const = 0;
@@ -220,7 +223,11 @@ namespace BlackGui
             void setDisplayAutomatically(bool automatically) { m_displayAutomatically = automatically; }
 
             //! Header (horizontal) font
-            const QFont &getHorizontalHeaderFont() const { Q_ASSERT(this->horizontalHeader()); return this->horizontalHeader()->font(); }
+            const QFont &getHorizontalHeaderFont() const
+            {
+                Q_ASSERT(this->horizontalHeader());
+                return this->horizontalHeader()->font();
+            }
 
             //! Horizontal font height
             int getHorizontalHeaderFontHeight() const;
@@ -571,32 +578,32 @@ namespace BlackGui
             //! Init text edit dialog if required and return pointer to it
             Components::CTextEditDialog *textEditDialog();
 
-            ResizeMode     m_resizeMode               = PresizeSubset;         //!< mode
-            RowsResizeMode m_rowResizeMode            = Interactive;           //!< row resize mode for row height
-            SelectionMode  m_originalSelectionMode    = this->selectionMode(); //!< Selection mode set
-            int m_resizeCount                         = 0;                     //!< flag / counter, how many resize activities
-            int m_skipResizeThreshold                 = 40;                    //!< when to skip resize (rows count)
-            int m_resizeAutoNthTime                   = 1;                     //!< with ResizeAuto, resize every n-th time
-            int m_loadIndicatorTimeoutMsDefault       = 30 * 1000;             //!< default time for timeout
-            bool m_forceStretchLastColumnWhenResized  = true;                  //!< a small table might (few columns) fail stretching, force again
-            bool m_showingLoadIndicator               = false;                 //!< showing loading indicator
-            bool m_enabledLoadIndicator               = false;                 //!< loading indicator enabled/disabled
-            bool m_acceptClickSelection               = false;                 //!< clicked
-            bool m_acceptRowSelection                 = false;                 //!< selection changed
-            bool m_acceptDoubleClickSelection         = false;                 //!< double clicked
-            bool m_displayAutomatically               = true;                  //!< display directly when loaded
-            bool m_enableDeleteSelectedRows           = false;                 //!< selected rows can be deleted
-            bool m_dropIndicator                      = false;                 //!< drop indicator
-            bool m_forceColumnsToMaxSize              = true;                  //!< force that columns are extended to full viewport width
-            bool m_allowCacheFileJson                 = true;                  //!< allow Cache format JSON to be loaded
-            QWidget *m_filterWidget                   = nullptr;               //!< filter widget or dialog
-            Menu m_menus                              = MenuDefault;           //!< Default menu settings
-            Menus::IMenuDelegate *m_menu              = nullptr;               //!< custom menu if any
-            Menus::CFontMenu *m_fontMenu              = nullptr;               //!< font menu if applicable
-            CLoadIndicator   *m_loadIndicator         = nullptr;               //!< load indicator if needed
-            Components::CTextEditDialog *m_textEditDialog = nullptr;           //!< text edit dialog
-            QMap<MenuFlag, Menus::CMenuActions> m_menuFlagActions;             //!< initialized actions for menu flag (enum)
-            QString m_saveFileName;                                            //!< save file name (JSON)
+            ResizeMode m_resizeMode = PresizeSubset; //!< mode
+            RowsResizeMode m_rowResizeMode = Interactive; //!< row resize mode for row height
+            SelectionMode m_originalSelectionMode = this->selectionMode(); //!< Selection mode set
+            int m_resizeCount = 0; //!< flag / counter, how many resize activities
+            int m_skipResizeThreshold = 40; //!< when to skip resize (rows count)
+            int m_resizeAutoNthTime = 1; //!< with ResizeAuto, resize every n-th time
+            int m_loadIndicatorTimeoutMsDefault = 30 * 1000; //!< default time for timeout
+            bool m_forceStretchLastColumnWhenResized = true; //!< a small table might (few columns) fail stretching, force again
+            bool m_showingLoadIndicator = false; //!< showing loading indicator
+            bool m_enabledLoadIndicator = false; //!< loading indicator enabled/disabled
+            bool m_acceptClickSelection = false; //!< clicked
+            bool m_acceptRowSelection = false; //!< selection changed
+            bool m_acceptDoubleClickSelection = false; //!< double clicked
+            bool m_displayAutomatically = true; //!< display directly when loaded
+            bool m_enableDeleteSelectedRows = false; //!< selected rows can be deleted
+            bool m_dropIndicator = false; //!< drop indicator
+            bool m_forceColumnsToMaxSize = true; //!< force that columns are extended to full viewport width
+            bool m_allowCacheFileJson = true; //!< allow Cache format JSON to be loaded
+            QWidget *m_filterWidget = nullptr; //!< filter widget or dialog
+            Menu m_menus = MenuDefault; //!< Default menu settings
+            Menus::IMenuDelegate *m_menu = nullptr; //!< custom menu if any
+            Menus::CFontMenu *m_fontMenu = nullptr; //!< font menu if applicable
+            CLoadIndicator *m_loadIndicator = nullptr; //!< load indicator if needed
+            Components::CTextEditDialog *m_textEditDialog = nullptr; //!< text edit dialog
+            QMap<MenuFlag, Menus::CMenuActions> m_menuFlagActions; //!< initialized actions for menu flag (enum)
+            QString m_saveFileName; //!< save file name (JSON)
             BlackMisc::CDirectories::ColumnIndex m_dirSettingsIndex = BlackMisc::CDirectories::IndexDirLastViewJsonOrDefault; //!< allows to set more specialized directories                             //!< remember last JSON directory, having this member allows to have specific dir
             BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_dirSettings { this }; //!< directory for load/save
             BlackMisc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings { this, &CViewBaseNonTemplate::settingsChanged }; //!< general GUI settings
@@ -627,7 +634,8 @@ namespace BlackGui
         Q_DECLARE_OPERATORS_FOR_FLAGS(BlackGui::Views::CViewBaseNonTemplate::Menu)
 
         //! Base class for views
-        template <class T> class CViewBase :
+        template <class T>
+        class CViewBase :
             public CViewBaseNonTemplate,
             public Models::ISelectionModel<typename T::ContainerType>
         {
@@ -645,7 +653,10 @@ namespace BlackGui
             using ObjectType = typename T::ObjectType;
 
             //! Destructor
-            virtual ~CViewBase() { if (m_model) { m_model->markDestroyed(); }}
+            virtual ~CViewBase()
+            {
+                if (m_model) { m_model->markDestroyed(); }
+            }
 
             //! Model
             ModelClass *derivedModel() { return m_model; }
@@ -795,7 +806,7 @@ namespace BlackGui
             virtual BlackMisc::CPropertyIndex getSortProperty() const override { return m_model->getSortProperty(); }
 
             //!\copydoc BlackGui::Views::CViewBaseNonTemplate::getSortColumn
-            virtual int  getSortColumn() const override { return m_model->getSortColumn(); }
+            virtual int getSortColumn() const override { return m_model->getSortColumn(); }
 
             //!\copydoc BlackGui::Views::CViewBaseNonTemplate::hasValidSortColumn
             virtual bool hasValidSortColumn() const override { return m_model->hasValidSortColumn(); }
@@ -838,7 +849,11 @@ namespace BlackGui
             void initAsOrderable();
 
             //! Drop actions
-            void setDropActions(Qt::DropActions dropActions) { Q_ASSERT(m_model); m_model->setDropActions(dropActions); }
+            void setDropActions(Qt::DropActions dropActions)
+            {
+                Q_ASSERT(m_model);
+                m_model->setDropActions(dropActions);
+            }
 
             //! Set a tab widget text based on row count, filter etc.
             void setTabWidgetViewText(QTabWidget *tw, int index);
@@ -869,7 +884,7 @@ namespace BlackGui
             virtual void performModeBasedResizeToContent() override;
 
             //!\copydoc BlackGui::Views::CViewBaseNonTemplate::performUpdateContainer
-            virtual int  performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize) override;
+            virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize) override;
 
             //!\copydoc BlackGui::Views::CViewBaseNonTemplate::updateSortIndicator
             virtual void updateSortIndicator() override;

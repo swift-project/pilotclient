@@ -21,7 +21,10 @@
 class QCompleter;
 class QWidget;
 
-namespace Ui { class CDbAirlineNameSelectorComponent; }
+namespace Ui
+{
+    class CDbAirlineNameSelectorComponent;
+}
 namespace BlackGui::Components
 {
     /*!

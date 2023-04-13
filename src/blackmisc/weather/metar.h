@@ -146,19 +146,19 @@ namespace BlackMisc::Weather
         static CMetar CAVOK();
 
     private:
-        QString                          m_metarMessage;
-        ReportType                       m_reportType = METAR;
-        Aviation::CAirportIcaoCode       m_airport;
-        int                              m_reportDay = 0;
-        PhysicalQuantities::CTime        m_reportTime;
-        bool                             m_isAutomated = false;
-        CWindLayer                       m_windLayer;
-        PhysicalQuantities::CLength      m_visibility;
-        CPresentWeatherList              m_presentWeathers;
-        CCloudLayerList                  m_cloudLayers;
+        QString m_metarMessage;
+        ReportType m_reportType = METAR;
+        Aviation::CAirportIcaoCode m_airport;
+        int m_reportDay = 0;
+        PhysicalQuantities::CTime m_reportTime;
+        bool m_isAutomated = false;
+        CWindLayer m_windLayer;
+        PhysicalQuantities::CLength m_visibility;
+        CPresentWeatherList m_presentWeathers;
+        CCloudLayerList m_cloudLayers;
         PhysicalQuantities::CTemperature m_temperature;
         PhysicalQuantities::CTemperature m_dewPoint;
-        PhysicalQuantities::CPressure    m_altimeter;
+        PhysicalQuantities::CPressure m_altimeter;
 
         BLACK_METACLASS(
             CMetar,

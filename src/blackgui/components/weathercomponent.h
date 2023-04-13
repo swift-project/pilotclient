@@ -29,8 +29,14 @@
 #include <QWidget>
 #include <QtGlobal>
 
-namespace BlackMisc::Weather { class CWeatherGrid; }
-namespace Ui { class CWeatherComponent; }
+namespace BlackMisc::Weather
+{
+    class CWeatherGrid;
+}
+namespace Ui
+{
+    class CWeatherComponent;
+}
 
 namespace BlackGui
 {
@@ -65,7 +71,7 @@ namespace BlackGui
             void setCavok();
 
             void updateWeatherInfoLine();
-            void updateWeatherInformationForced()  { this->updateWeatherInformation(true);  }
+            void updateWeatherInformationForced() { this->updateWeatherInformation(true); }
             void updateWeatherInformationChecked() { this->updateWeatherInformation(false); }
             void updateWeatherInformation(bool forceRealWeatherReload);
             void onWeatherGridReceived(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier);

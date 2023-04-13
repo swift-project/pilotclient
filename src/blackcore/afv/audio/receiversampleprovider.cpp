@@ -30,9 +30,8 @@ namespace BlackCore::Afv::Audio
         return cats;
     }
 
-    CReceiverSampleProvider::CReceiverSampleProvider(const QAudioFormat &audioFormat, quint16 id, int voiceInputNumber, QObject *parent) :
-        ISampleProvider(parent),
-        m_id(id)
+    CReceiverSampleProvider::CReceiverSampleProvider(const QAudioFormat &audioFormat, quint16 id, int voiceInputNumber, QObject *parent) : ISampleProvider(parent),
+                                                                                                                                           m_id(id)
     {
         const QString on = QStringLiteral("%1 id: %2").arg(classNameShort(this)).arg(id);
         this->setObjectName(on);
@@ -72,8 +71,7 @@ namespace BlackCore::Afv::Audio
 
     int CReceiverSampleProvider::activeCallsigns() const
     {
-        const int numberOfCallsigns = static_cast<int>(std::count_if(m_voiceInputs.begin(), m_voiceInputs.end(), [](const CCallsignSampleProvider * p)
-        {
+        const int numberOfCallsigns = static_cast<int>(std::count_if(m_voiceInputs.begin(), m_voiceInputs.end(), [](const CCallsignSampleProvider *p) {
             return p->inUse() == true;
         }));
         return numberOfCallsigns;
@@ -139,8 +137,7 @@ namespace BlackCore::Afv::Audio
         if (m_frequencyHz != frequency) { return; } // Lag in the backend means we get the tail end of a transmission
         CCallsignSampleProvider *voiceInput = nullptr;
 
-        auto it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [audioDto](const CCallsignSampleProvider * p)
-        {
+        auto it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [audioDto](const CCallsignSampleProvider *p) {
             return p->callsign() == audioDto.callsign;
         });
 
@@ -151,7 +148,7 @@ namespace BlackCore::Afv::Audio
 
         if (!voiceInput)
         {
-            it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [](const CCallsignSampleProvider * p) { return p->inUse() == false; });
+            it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [](const CCallsignSampleProvider *p) { return p->inUse() == false; });
             if (it != m_voiceInputs.end())
             {
                 voiceInput = *it;
@@ -175,8 +172,7 @@ namespace BlackCore::Afv::Audio
         if (m_frequencyHz != frequency) { return; } // Lag in the backend means we get the tail end of a transmission
 
         CCallsignSampleProvider *voiceInput = nullptr;
-        auto it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [audioDto](const CCallsignSampleProvider * p)
-        {
+        auto it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [audioDto](const CCallsignSampleProvider *p) {
             return p->callsign() == audioDto.callsign;
         });
 
@@ -187,7 +183,7 @@ namespace BlackCore::Afv::Audio
 
         if (!voiceInput)
         {
-            it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [](const CCallsignSampleProvider * p) { return p->inUse() == false; });
+            it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [](const CCallsignSampleProvider *p) { return p->inUse() == false; });
             if (it != m_voiceInputs.end())
             {
                 voiceInput = *it;
@@ -221,8 +217,8 @@ namespace BlackCore::Afv::Audio
         {
             if (!sp || !sp->inUse()) { continue; } // only log the ones in use
             l += (l.isEmpty() ? QStringLiteral("") : QStringLiteral("\n")) %
-                    prefix %
-                    QString::number(no++) % QStringLiteral(": ") % sp->toQString();
+                 prefix %
+                 QString::number(no++) % QStringLiteral(": ") % sp->toQString();
         }
 
         if (l.isEmpty()) { return; }

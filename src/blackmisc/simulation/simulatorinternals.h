@@ -43,7 +43,7 @@ namespace BlackMisc::Simulation
         CSimulatorInternals() {}
 
         //! All values
-        BlackMisc::CNameVariantPairList getData() const { return this->m_data;}
+        BlackMisc::CNameVariantPairList getData() const { return this->m_data; }
 
         //! Settings
         void setData(const BlackMisc::CNameVariantPairList &data) { this->m_data = data; }

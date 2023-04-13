@@ -15,7 +15,7 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackGui::Settings, CAtcStationsSettings)
 namespace BlackGui::Settings
 {
     CAtcStationsSettings::CAtcStationsSettings()
-    { }
+    {}
 
     QString CAtcStationsSettings::convertToQString(bool i18n) const
     {
@@ -38,7 +38,11 @@ namespace BlackGui::Settings
 
     void CAtcStationsSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CAtcStationsSettings>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CAtcStationsSettings>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

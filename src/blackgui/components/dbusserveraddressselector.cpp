@@ -21,9 +21,8 @@ using namespace BlackMisc::Network;
 
 namespace BlackGui::Components
 {
-    CDBusServerAddressSelector::CDBusServerAddressSelector(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CDBusServerAddressSelector)
+    CDBusServerAddressSelector::CDBusServerAddressSelector(QWidget *parent) : QFrame(parent),
+                                                                              ui(new Ui::CDBusServerAddressSelector)
     {
         Q_ASSERT(sGui);
         ui->setupUi(this);
@@ -35,29 +34,28 @@ namespace BlackGui::Components
         this->set(sGui->getCmdDBusAddressValue());
 
         ui->le_DBusServerPort->setValidator(new QIntValidator(0, 65535, this));
-        connect(ui->rb_DBusP2P,           &QRadioButton::released,        this, &CDBusServerAddressSelector::onRadioButtonReleased);
-        connect(ui->rb_DBusSession,       &QRadioButton::released,        this, &CDBusServerAddressSelector::onRadioButtonReleased);
-        connect(ui->rb_DBusSystem,        &QRadioButton::released,        this, &CDBusServerAddressSelector::onRadioButtonReleased);
-        connect(ui->le_DBusServerPort,    &QLineEdit::editingFinished,    this, &CDBusServerAddressSelector::editingFinished);
+        connect(ui->rb_DBusP2P, &QRadioButton::released, this, &CDBusServerAddressSelector::onRadioButtonReleased);
+        connect(ui->rb_DBusSession, &QRadioButton::released, this, &CDBusServerAddressSelector::onRadioButtonReleased);
+        connect(ui->rb_DBusSystem, &QRadioButton::released, this, &CDBusServerAddressSelector::onRadioButtonReleased);
+        connect(ui->le_DBusServerPort, &QLineEdit::editingFinished, this, &CDBusServerAddressSelector::editingFinished);
         connect(ui->cb_DBusServerAddress, &QComboBox::currentTextChanged, this, &CDBusServerAddressSelector::editingFinished);
     }
 
     CDBusServerAddressSelector::~CDBusServerAddressSelector()
-    { }
+    {}
 
     QString CDBusServerAddressSelector::getP2PAddress() const
     {
         if (!this->isP2P()) { return {}; }
         return CDBusServer::p2pAddress(
-                    ui->cb_DBusServerAddress->currentText() + ":" +
-                    ui->le_DBusServerPort->text()
-                );
+            ui->cb_DBusServerAddress->currentText() + ":" +
+            ui->le_DBusServerPort->text());
     }
 
     QString CDBusServerAddressSelector::getDBusAddress() const
     {
         if (ui->rb_DBusSession->isChecked()) { return CDBusServer::sessionBusAddress(); }
-        if (ui->rb_DBusSystem->isChecked())  { return CDBusServer::systemBusAddress(); }
+        if (ui->rb_DBusSystem->isChecked()) { return CDBusServer::systemBusAddress(); }
         return this->getP2PAddress();
     }
 

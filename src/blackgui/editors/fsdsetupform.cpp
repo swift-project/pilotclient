@@ -17,9 +17,8 @@ using namespace BlackMisc::Network;
 
 namespace BlackGui::Editors
 {
-    CFsdSetupForm::CFsdSetupForm(QWidget *parent) :
-        CForm(parent),
-        ui(new Ui::CFsdSetupForm)
+    CFsdSetupForm::CFsdSetupForm(QWidget *parent) : CForm(parent),
+                                                    ui(new Ui::CFsdSetupForm)
     {
         ui->setupUi(this);
         this->resetToDefaultValues();
@@ -30,7 +29,7 @@ namespace BlackGui::Editors
     }
 
     CFsdSetupForm::~CFsdSetupForm()
-    { }
+    {}
 
     CFsdSetup CFsdSetupForm::getValue() const
     {
@@ -40,8 +39,7 @@ namespace BlackGui::Editors
             ui->cb_AircraftPartsSend->isChecked(), ui->cb_AircraftPartsReceive->isChecked(),
             ui->cb_GndFlagSend->isChecked(), ui->cb_GndFlagReceive->isChecked(),
             ui->cb_FastPositionSend->isChecked(), ui->cb_FastPositionReceive->isChecked(),
-            ui->cb_VisualPositionSend->isChecked(), ui->cb_EuroscopeSimData->isChecked()
-        );
+            ui->cb_VisualPositionSend->isChecked(), ui->cb_EuroscopeSimData->isChecked());
         s.setForce3LetterAirlineCodes(ui->cb_3LetterAirlineICAO->isChecked());
         return s;
     }

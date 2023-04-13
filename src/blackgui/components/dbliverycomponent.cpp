@@ -23,9 +23,8 @@ using namespace BlackMisc::Network;
 
 namespace BlackGui::Components
 {
-    CDbLiveryComponent::CDbLiveryComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        ui(new Ui::CDbLiveryComponent)
+    CDbLiveryComponent::CDbLiveryComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                              ui(new Ui::CDbLiveryComponent)
     {
         ui->setupUi(this);
         this->setViewWithIndicator(ui->tvp_Liveries);
@@ -42,7 +41,7 @@ namespace BlackGui::Components
     }
 
     CDbLiveryComponent::~CDbLiveryComponent()
-    { }
+    {}
 
     CLiveryView *CDbLiveryComponent::view()
     {

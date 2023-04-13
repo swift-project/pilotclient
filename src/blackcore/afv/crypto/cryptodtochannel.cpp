@@ -13,8 +13,7 @@ using namespace BlackMisc;
 
 namespace BlackCore::Afv::Crypto
 {
-    CCryptoDtoChannel::CCryptoDtoChannel(const QString &channelTag, const QByteArray &aeadReceiveKey, const QByteArray &aeadTransmitKey, int receiveSequenceHistorySize):
-        m_aeadTransmitKey(aeadTransmitKey), m_aeadReceiveKey(aeadReceiveKey), m_receiveSequenceSizeMaxSize(receiveSequenceHistorySize), m_channelTag(channelTag)
+    CCryptoDtoChannel::CCryptoDtoChannel(const QString &channelTag, const QByteArray &aeadReceiveKey, const QByteArray &aeadTransmitKey, int receiveSequenceHistorySize) : m_aeadTransmitKey(aeadTransmitKey), m_aeadReceiveKey(aeadReceiveKey), m_receiveSequenceSizeMaxSize(receiveSequenceHistorySize), m_channelTag(channelTag)
 
     {
         if (m_receiveSequenceSizeMaxSize < 1) { m_receiveSequenceSizeMaxSize = 1; }
@@ -22,8 +21,7 @@ namespace BlackCore::Afv::Crypto
         m_receiveSequenceHistoryDepth = 0;
     }
 
-    CCryptoDtoChannel::CCryptoDtoChannel(const CryptoDtoChannelConfigDto &channelConfig, int receiveSequenceHistorySize) :
-        m_aeadTransmitKey(channelConfig.aeadTransmitKey), m_aeadReceiveKey(channelConfig.aeadReceiveKey), m_receiveSequenceSizeMaxSize(receiveSequenceHistorySize), m_hmacKey(channelConfig.hmacKey), m_channelTag(channelConfig.channelTag)
+    CCryptoDtoChannel::CCryptoDtoChannel(const CryptoDtoChannelConfigDto &channelConfig, int receiveSequenceHistorySize) : m_aeadTransmitKey(channelConfig.aeadTransmitKey), m_aeadReceiveKey(channelConfig.aeadReceiveKey), m_receiveSequenceSizeMaxSize(receiveSequenceHistorySize), m_hmacKey(channelConfig.hmacKey), m_channelTag(channelConfig.channelTag)
     {
         if (m_receiveSequenceSizeMaxSize < 1) { m_receiveSequenceSizeMaxSize = 1; }
         m_receiveSequenceHistory.fill(0, m_receiveSequenceSizeMaxSize);
@@ -89,7 +87,7 @@ namespace BlackCore::Afv::Crypto
             return false;
         }
 
-        if (m_receiveSequenceHistoryDepth < m_receiveSequenceSizeMaxSize)                       //If the buffer has been filled...
+        if (m_receiveSequenceHistoryDepth < m_receiveSequenceSizeMaxSize) // If the buffer has been filled...
         {
             m_receiveSequenceHistory[m_receiveSequenceHistoryDepth++] = sequenceReceived;
         }
@@ -97,7 +95,7 @@ namespace BlackCore::Afv::Crypto
         {
             int minIndex;
             uint minValue = getMin(minIndex);
-            if (sequenceReceived < minValue) { return false; }          // Possible replay attack
+            if (sequenceReceived < minValue) { return false; } // Possible replay attack
             m_receiveSequenceHistory[minIndex] = sequenceReceived;
         }
 
@@ -117,7 +115,7 @@ namespace BlackCore::Afv::Crypto
     uint CCryptoDtoChannel::getMin(int &minIndex) const
     {
         uint minValue = std::numeric_limits<uint>::max();
-        minIndex  = -1;
+        minIndex = -1;
         int index = -1;
 
         for (int i = 0; i < m_receiveSequenceHistoryDepth; i++)

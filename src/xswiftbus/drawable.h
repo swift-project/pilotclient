@@ -36,7 +36,7 @@ namespace XSwiftBus
         {
             if (m_visible) { return; }
             m_visible = true;
-            XPLMRegisterDrawCallback(callback, m_phase, m_before, static_cast<void*>(this));
+            XPLMRegisterDrawCallback(callback, m_phase, m_before, static_cast<void *>(this));
         }
 
         //! Unregister the draw callback.
@@ -44,7 +44,7 @@ namespace XSwiftBus
         {
             if (!m_visible) { return; }
             m_visible = false;
-            XPLMUnregisterDrawCallback(callback, m_phase, m_before, static_cast<void*>(this));
+            XPLMUnregisterDrawCallback(callback, m_phase, m_before, static_cast<void *>(this));
         }
 
     protected:
@@ -54,7 +54,7 @@ namespace XSwiftBus
     private:
         static int callback(XPLMDrawingPhase, int, void *refcon)
         {
-            static_cast<CDrawable*>(refcon)->draw();
+            static_cast<CDrawable *>(refcon)->draw();
             return 1;
         }
 

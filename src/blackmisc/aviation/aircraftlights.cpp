@@ -17,33 +17,33 @@ namespace BlackMisc::Aviation
 {
     CAircraftLights::CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn)
         : m_strobeOn(strobeOn), m_landingOn(landingOn), m_taxiOn(taxiOn), m_beaconOn(beaconOn), m_navOn(navOn), m_logoOn(logoOn)
-    { }
+    {}
 
     CAircraftLights::CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn, bool recognition, bool cabin)
         : m_strobeOn(strobeOn), m_landingOn(landingOn), m_taxiOn(taxiOn), m_beaconOn(beaconOn), m_navOn(navOn), m_logoOn(logoOn), m_recognition(recognition), m_cabin(cabin)
-    { }
+    {}
 
     CAircraftLights CAircraftLights::allLightsOn()
     {
-        return CAircraftLights {true, true, true, true, true, true, true, true};
+        return CAircraftLights { true, true, true, true, true, true, true, true };
     }
 
     CAircraftLights CAircraftLights::allLightsOff()
     {
-        return CAircraftLights {false, false, false, false, false, false, false, false};
+        return CAircraftLights { false, false, false, false, false, false, false, false };
     }
 
     QString CAircraftLights::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
         const QString s = u"strobe: " % boolToYesNo(m_strobeOn) %
-                            u" landing: " % boolToYesNo(m_landingOn) %
-                            u" taxi: " % boolToYesNo(m_taxiOn) %
-                            u" beacon: " % boolToYesNo(m_beaconOn) %
-                            u" nav: " % boolToYesNo(m_navOn) %
-                            u" logo: " % boolToYesNo(m_logoOn) %
-                            u" recognition: " % boolToYesNo(m_recognition) %
-                            u" cabin: " % boolToYesNo(m_cabin);
+                          u" landing: " % boolToYesNo(m_landingOn) %
+                          u" taxi: " % boolToYesNo(m_taxiOn) %
+                          u" beacon: " % boolToYesNo(m_beaconOn) %
+                          u" nav: " % boolToYesNo(m_navOn) %
+                          u" logo: " % boolToYesNo(m_logoOn) %
+                          u" recognition: " % boolToYesNo(m_recognition) %
+                          u" cabin: " % boolToYesNo(m_cabin);
         return s;
     }
 
@@ -69,7 +69,11 @@ namespace BlackMisc::Aviation
 
     void CAircraftLights::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CAircraftLights>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CAircraftLights>();
+            return;
+        }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)

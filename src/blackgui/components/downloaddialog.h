@@ -17,8 +17,15 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CDownloadDialog; }
-namespace BlackMisc::Network { class CRemoteFile; class CRemoteFileList; }
+namespace Ui
+{
+    class CDownloadDialog;
+}
+namespace BlackMisc::Network
+{
+    class CRemoteFile;
+    class CRemoteFileList;
+}
 namespace BlackGui::Components
 {
     /*!

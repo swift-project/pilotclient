@@ -16,7 +16,10 @@
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/simulation/distributor.h"
 
-namespace Ui { class CAircraftModelForm; }
+namespace Ui
+{
+    class CAircraftModelForm;
+}
 namespace BlackGui::Editors
 {
     /*!

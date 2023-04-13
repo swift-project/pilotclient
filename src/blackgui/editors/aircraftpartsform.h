@@ -18,7 +18,10 @@
 
 class QWidget;
 
-namespace Ui { class CAircraftPartsForm; }
+namespace Ui
+{
+    class CAircraftPartsForm;
+}
 namespace BlackGui::Editors
 {
     /*!

@@ -33,56 +33,56 @@ namespace BlackMisc::Simulation
         //! Enabled matching mode flags
         enum MatchingModeFlag
         {
-            ByModelString    = 1 << 0, //!< allow exact model string match
-            ByIcaoData       = 1 << 1, //!< ICAO airline and aircraft codes
-            ByFamily         = 1 << 2,
-            ByLivery         = 1 << 3,
-            ByCombinedType   = 1 << 4,
-            ByManufacturer   = 1 << 5,
-            ByMilitary       = 1 << 6, //!< military (in) will only search in military
-            ByCivilian       = 1 << 7, //!< civilian (in) will only search in civilian
-            ByMilOrCivilian  = ByCivilian | ByMilitary,
-            ByVtol           = 1 << 8,
-            ByIcaoOrderAircraftFirst    = (1 <<  9) | ByIcaoData,
-            ByIcaoOrderAirlineFirst     = (1 << 10) | ByIcaoData,
+            ByModelString = 1 << 0, //!< allow exact model string match
+            ByIcaoData = 1 << 1, //!< ICAO airline and aircraft codes
+            ByFamily = 1 << 2,
+            ByLivery = 1 << 3,
+            ByCombinedType = 1 << 4,
+            ByManufacturer = 1 << 5,
+            ByMilitary = 1 << 6, //!< military (in) will only search in military
+            ByCivilian = 1 << 7, //!< civilian (in) will only search in civilian
+            ByMilOrCivilian = ByCivilian | ByMilitary,
+            ByVtol = 1 << 8,
+            ByIcaoOrderAircraftFirst = (1 << 9) | ByIcaoData,
+            ByIcaoOrderAirlineFirst = (1 << 10) | ByIcaoData,
             ByAirlineGroupSameAsAirline = (1 << 11) | ByIcaoData,
-            ByAirlineGroupIfNoAirline   = (1 << 12) | ByIcaoData,
+            ByAirlineGroupIfNoAirline = (1 << 12) | ByIcaoData,
 
             // --- exclusion ---
-            ExcludeNoDbData   = 1 << 13,
+            ExcludeNoDbData = 1 << 13,
             ExcludeNoExcluded = 1 << 14,
             ExcludeDefault = ExcludeNoExcluded | ExcludeNoDbData,
 
             // --- model set ---
-            ModelSetRemoveFailedModel        = 1 << 15,
-            ModelVerificationAtStartup       = 1 << 16,
+            ModelSetRemoveFailedModel = 1 << 15,
+            ModelVerificationAtStartup = 1 << 16,
             ModelFailoverIfNoModelCanBeAdded = 1 << 17,
-            ModelVerificationOnlyWarnError   = 1 << 18, // later added, hence 18
+            ModelVerificationOnlyWarnError = 1 << 18, // later added, hence 18
 
             // --- categories ---
-            ByCategoryGlider            =  1 << 20,
-            ByCategoryMilitary          =  1 << 21,
-            ByCategorySmallAircraft     =  1 << 22,
+            ByCategoryGlider = 1 << 20,
+            ByCategoryMilitary = 1 << 21,
+            ByCategorySmallAircraft = 1 << 22,
 
             // --- reverse lookup ---
-            ReverseLookupModelString    = 1 << 25,
+            ReverseLookupModelString = 1 << 25,
             ReverseLookupSwiftLiveryIds = 1 << 26,
             ReverseLookupDefault = ReverseLookupModelString | ReverseLookupSwiftLiveryIds,
 
             // --- score based matching ---
-            ScoreIgnoreZeros         = 1 << 28, //!< zero scores are ignored
+            ScoreIgnoreZeros = 1 << 28, //!< zero scores are ignored
             ScorePreferColorLiveries = 1 << 29, //!< prefer color liveries
 
             // --- others ---
-            ModeNone          = 0,
-            ModeByFLags       = ByMilOrCivilian  | ByVtol,
+            ModeNone = 0,
+            ModeByFLags = ByMilOrCivilian | ByVtol,
 
             // default mode for set handling
-            ModeDefaultSet    = ModelSetRemoveFailedModel | ModelVerificationAtStartup | ModelFailoverIfNoModelCanBeAdded,
+            ModeDefaultSet = ModelSetRemoveFailedModel | ModelVerificationAtStartup | ModelFailoverIfNoModelCanBeAdded,
 
             // default depending on algorithm
-            ModeDefaultScore  =     ScoreIgnoreZeros | ScorePreferColorLiveries | ExcludeDefault | ReverseLookupDefault,
-            ModeDefaultReduce =          ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ByAirlineGroupIfNoAirline | ReverseLookupDefault | ExcludeDefault | ByLivery,
+            ModeDefaultScore = ScoreIgnoreZeros | ScorePreferColorLiveries | ExcludeDefault | ReverseLookupDefault,
+            ModeDefaultReduce = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ByAirlineGroupIfNoAirline | ReverseLookupDefault | ExcludeDefault | ByLivery,
             ModeDefaultReducePlusScore = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ByAirlineGroupIfNoAirline | ReverseLookupDefault | ExcludeDefault | ModeDefaultScore,
         };
         Q_DECLARE_FLAGS(MatchingMode, MatchingModeFlag)
@@ -90,10 +90,10 @@ namespace BlackMisc::Simulation
         //! Force values
         enum ForceModeFlag
         {
-            ForceNothing     = 0,
-            ForceType        = 1 << 0,
+            ForceNothing = 0,
+            ForceType = 1 << 0,
             ForceEnginecount = 1 << 1,
-            ForceEngine      = 1 << 2
+            ForceEngine = 1 << 2
         };
         Q_DECLARE_FLAGS(ForceMode, ForceModeFlag)
 
@@ -184,7 +184,7 @@ namespace BlackMisc::Simulation
 
         //! @{
         //! Is matching script enabled
-        void setMsReverseLookupEnabled(bool enabled) { m_msReverseEnabled  = enabled; }
+        void setMsReverseLookupEnabled(bool enabled) { m_msReverseEnabled = enabled; }
         void setMsMatchingStageEnabled(bool enabled) { m_msMatchingEnabled = enabled; }
         //! @}
 
@@ -264,22 +264,22 @@ namespace BlackMisc::Simulation
         static const QString &strategyToString(PickSimilarStrategy strategy);
 
         //! Mode by flags
-        static MatchingMode matchingMode(bool revModelString,  bool revLiveryIds,
-                                            bool byModelString,   bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st,
-                                            bool byFamily,        bool byLivery,              bool byCombinedType,
-                                            bool byForceMilitary, bool byForceCivilian,
-                                            bool byVtol,            bool byGliderCategory,           bool byMilitaryCategory,        bool bySmallAircraftCategory,
-                                            bool scoreIgnoreZeros,  bool scorePreferColorLiveries,   bool excludeNoDbData,           bool excludeNoExcluded,
-                                            bool modelVerification, bool modelVerificationWarnError, bool modelSetRemoveFailedModel, bool modelFailover);
+        static MatchingMode matchingMode(bool revModelString, bool revLiveryIds,
+                                         bool byModelString, bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st,
+                                         bool byFamily, bool byLivery, bool byCombinedType,
+                                         bool byForceMilitary, bool byForceCivilian,
+                                         bool byVtol, bool byGliderCategory, bool byMilitaryCategory, bool bySmallAircraftCategory,
+                                         bool scoreIgnoreZeros, bool scorePreferColorLiveries, bool excludeNoDbData, bool excludeNoExcluded,
+                                         bool modelVerification, bool modelVerificationWarnError, bool modelSetRemoveFailedModel, bool modelFailover);
 
     private:
         int m_algorithm = static_cast<int>(MatchingStepwiseReducePlusScoreBased);
-        int m_mode      = static_cast<int>(ModeDefaultReducePlusScore);
-        int m_strategy  = static_cast<int>(PickByOrder);
-        int m_force     = static_cast<int>(ForceNothing);
-        QString m_msReverseLookupFile;    //!< network entry matching script file
-        QString m_msMatchingStageFile;    //!< matching stage matching script file
-        bool m_msReverseEnabled  = false; //!< enable network matching script
+        int m_mode = static_cast<int>(ModeDefaultReducePlusScore);
+        int m_strategy = static_cast<int>(PickByOrder);
+        int m_force = static_cast<int>(ForceNothing);
+        QString m_msReverseLookupFile; //!< network entry matching script file
+        QString m_msMatchingStageFile; //!< matching stage matching script file
+        bool m_msReverseEnabled = false; //!< enable network matching script
         bool m_msMatchingEnabled = false; //!< enable matching stage matching script
 
         BLACK_METACLASS(

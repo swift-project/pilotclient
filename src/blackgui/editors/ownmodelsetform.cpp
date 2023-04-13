@@ -26,9 +26,8 @@ using namespace BlackGui::Components;
 
 namespace BlackGui::Editors
 {
-    COwnModelSetForm::COwnModelSetForm(QWidget *parent) :
-        CForm(parent),
-        ui(new Ui::COwnModelSetForm)
+    COwnModelSetForm::COwnModelSetForm(QWidget *parent) : CForm(parent),
+                                                          ui(new Ui::COwnModelSetForm)
     {
         ui->setupUi(this);
         ui->tvp_Distributors->setDistributorMode(CDistributorListModel::Minimal);
@@ -40,8 +39,7 @@ namespace BlackGui::Editors
         connect(ui->rb_DisplayPreferencesDistributors, &QRadioButton::clicked, this, &COwnModelSetForm::changeDistributorDisplay);
 
         QPointer<COwnModelSetForm> myself(this);
-        QTimer::singleShot(1250, [ = ]
-        {
+        QTimer::singleShot(1250, [=] {
             if (!myself) { return; }
             this->onSimulatorChanged(ui->comp_SimulatorSelector->getValue());
         });
@@ -161,8 +159,8 @@ namespace BlackGui::Editors
 
     CDistributorList COwnModelSetForm::getDistributorsBasedOnOptions() const
     {
-        if (ui->rb_DistributorsAll->isChecked())       { return this->getAllDistributors(); }
-        if (ui->rb_DistributorsSelected->isChecked())  { return this->getSelectedDistributors(); }
+        if (ui->rb_DistributorsAll->isChecked()) { return this->getAllDistributors(); }
+        if (ui->rb_DistributorsSelected->isChecked()) { return this->getSelectedDistributors(); }
         if (ui->rb_DistributorsFromBelow->isChecked()) { return this->getShownDistributors(); }
         Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong option");
         return CDistributorList();

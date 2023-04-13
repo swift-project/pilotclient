@@ -15,7 +15,10 @@
 #include <QScopedPointer>
 #include <QWizardPage>
 
-namespace Ui { class CInitialDataLoadComponent; }
+namespace Ui
+{
+    class CInitialDataLoadComponent;
+}
 namespace BlackGui::Components
 {
     /*!
@@ -47,8 +50,8 @@ namespace BlackGui::Components
     };
 
     /*!
-    * Wizard page for CInitialDataLoadComponent
-    */
+     * Wizard page for CInitialDataLoadComponent
+     */
     class CInitialDataLoadWizardPage : public QWizardPage
     {
         Q_OBJECT

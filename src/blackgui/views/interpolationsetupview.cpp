@@ -12,8 +12,7 @@ using namespace BlackGui::Models;
 
 namespace BlackGui::Views
 {
-    CInterpolationSetupView::CInterpolationSetupView(QWidget *parent) :
-        CViewWithCallsignObjects(parent)
+    CInterpolationSetupView::CInterpolationSetupView(QWidget *parent) : CViewWithCallsignObjects(parent)
     {
         this->standardInit(new CInterpolationSetupListModel(this));
         // this->setMenu(MenuDefaultDbViews);

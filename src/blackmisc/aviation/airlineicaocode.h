@@ -277,17 +277,17 @@ namespace BlackMisc::Aviation
         static const QSet<int> &iconIds();
 
     private:
-        QString m_designator;           //!< "DLH"
-        QString m_iataCode;             //!< "LH"
-        QString m_name;                 //!< "Lufthansa"
-        QString m_telephonyDesignator;  //!< "Speedbird"
-        QString m_groupDesignator;      //!< Group designator
-        QString m_groupName;            //!< Group name
-        CCountry m_country;             //!< Country
-        int m_groupId = -1;             //!< Group id
-        bool m_isVa = false;            //!< virtual airline
-        bool m_isOperating = true;      //!< still operating?
-        bool m_isMilitary = false;      //!< Air Force or such
+        QString m_designator; //!< "DLH"
+        QString m_iataCode; //!< "LH"
+        QString m_name; //!< "Lufthansa"
+        QString m_telephonyDesignator; //!< "Speedbird"
+        QString m_groupDesignator; //!< Group designator
+        QString m_groupName; //!< Group name
+        CCountry m_country; //!< Country
+        int m_groupId = -1; //!< Group id
+        bool m_isVa = false; //!< virtual airline
+        bool m_isOperating = true; //!< still operating?
+        bool m_isMilitary = false; //!< Air Force or such
 
         BLACK_METACLASS(
             CAirlineIcaoCode,

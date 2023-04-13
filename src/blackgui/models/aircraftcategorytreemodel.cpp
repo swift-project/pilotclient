@@ -42,7 +42,7 @@ namespace BlackGui::Models
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Wrong thread");
 
         this->clear();
-        if (categories.isEmpty())  { return; }
+        if (categories.isEmpty()) { return; }
 
         m_categories = categories;
         m_categories.sortByLevel();
@@ -56,8 +56,7 @@ namespace BlackGui::Models
             // ownership of QStandardItem is taken by model
             QStandardItem *si = new QStandardItem(
                 category.isAssignable() ? CIcons::paperPlane16() : CIcons::folder16(),
-                category.getLevelAndName()
-            );
+                category.getLevelAndName());
             si->setEditable(false);
             categoryRow.push_back(si);
 

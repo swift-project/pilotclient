@@ -33,9 +33,8 @@ using namespace BlackGui::Components;
 
 namespace BlackGui::Editors
 {
-    CLiveryForm::CLiveryForm(QWidget *parent) :
-        CForm(parent),
-        ui(new Ui::CLiveryForm)
+    CLiveryForm::CLiveryForm(QWidget *parent) : CForm(parent),
+                                                ui(new Ui::CLiveryForm)
     {
         ui->setupUi(this);
         ui->le_Updated->setReadOnly(true);
@@ -53,7 +52,7 @@ namespace BlackGui::Editors
         connect(ui->tb_Paste, &QToolButton::clicked, this, &CLiveryForm::pasted);
         connect(ui->drop_DropData, &CDropSite::droppedValueObject, this, &CLiveryForm::onDroppedLivery);
         ui->drop_DropData->setInfoText("<drop livery>");
-        ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CLivery>(), qMetaTypeId<CLiveryList>()});
+        ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CLivery>(), qMetaTypeId<CLiveryList>() });
 
         // embedded form
         connect(ui->editor_AirlineIcao, &CAirlineIcaoForm::airlineChangedDigest, this, &CLiveryForm::onAirlineChanged, Qt::QueuedConnection);
@@ -63,7 +62,7 @@ namespace BlackGui::Editors
         connect(ui->pb_SearchColor, &QPushButton::pressed, this, &CLiveryForm::searchForColor);
     }
 
-    CLiveryForm::~CLiveryForm() { }
+    CLiveryForm::~CLiveryForm() {}
 
     CLivery CLiveryForm::getValue() const
     {
@@ -233,8 +232,8 @@ namespace BlackGui::Editors
         else if (variantDropped.canConvert<CLiveryList>())
         {
             CLiveryList liveryList(variantDropped.value<CLiveryList>());
-            if (liveryList.isEmpty()) { return;  }
-            livery =  liveryList.front();
+            if (liveryList.isEmpty()) { return; }
+            livery = liveryList.front();
         }
         else { return; }
         this->setValue(livery);
@@ -244,7 +243,7 @@ namespace BlackGui::Editors
     {
         if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
         if (!code.hasCompleteData()) { return; }
-        if (!code.hasValidDbKey())   { return; }
+        if (!code.hasValidDbKey()) { return; }
 
         // only replace with STD livery if airline does not match
         const CLivery currentLivery = this->getValue();

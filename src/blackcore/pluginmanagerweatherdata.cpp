@@ -22,7 +22,7 @@ namespace BlackCore
     using namespace BlackMisc::Weather;
 
     CPluginManagerWeatherData::CPluginManagerWeatherData(QObject *parent) : IPluginManager(parent)
-    { }
+    {}
 
     IWeatherDataFactory *CPluginManagerWeatherData::getFactory(const QString &pluginId)
     {
@@ -57,8 +57,7 @@ namespace BlackCore
 
     BlackMisc::CSequence<QString> CPluginManagerWeatherData::acceptedIids() const
     {
-        return
-        {
+        return {
             QStringLiteral("org.swift-project.blackcore.weatherdata")
         };
     }

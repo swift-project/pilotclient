@@ -33,15 +33,14 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CFlightPlan)
 namespace BlackMisc::Aviation
 {
     CFlightPlanRemarks::CFlightPlanRemarks()
-    { }
+    {}
 
     CFlightPlanRemarks::CFlightPlanRemarks(const QString &remarks, bool parse) : m_remarks(cleanRemarks(remarks))
     {
         if (parse) { this->parseFlightPlanRemarks(); }
     }
 
-    CFlightPlanRemarks::CFlightPlanRemarks(const QString &remarks, CVoiceCapabilities voiceCapabilities, bool parse) :
-        m_remarks(cleanRemarks(remarks)), m_voiceCapabilities(voiceCapabilities)
+    CFlightPlanRemarks::CFlightPlanRemarks(const QString &remarks, CVoiceCapabilities voiceCapabilities, bool parse) : m_remarks(cleanRemarks(remarks)), m_voiceCapabilities(voiceCapabilities)
     {
         if (parse) { this->parseFlightPlanRemarks(); }
     }
@@ -74,12 +73,7 @@ namespace BlackMisc::Aviation
     QString CFlightPlanRemarks::convertToQString(bool i18n) const
     {
         const QString s =
-            (m_registration.isEmpty() ? QString() : u"reg.: " % m_registration.toQString(i18n))
-            % (!this->hasValidAirlineIcao() ? QString() : u" airline: " % m_airlineIcao.getDesignator())
-            % (m_radioTelephony.isEmpty()   ? QString() : u" radio tel.:" % m_radioTelephony)
-            % (m_flightOperator.isEmpty()   ? QString() : u" operator: "  % m_flightOperator)
-            % (!m_selcalCode.isValid()      ? QString() : u" SELCAL: " % m_selcalCode.getCode())
-            % u" voice: " % m_voiceCapabilities.toQString(i18n);
+            (m_registration.isEmpty() ? QString() : u"reg.: " % m_registration.toQString(i18n)) % (!this->hasValidAirlineIcao() ? QString() : u" airline: " % m_airlineIcao.getDesignator()) % (m_radioTelephony.isEmpty() ? QString() : u" radio tel.:" % m_radioTelephony) % (m_flightOperator.isEmpty() ? QString() : u" operator: " % m_flightOperator) % (!m_selcalCode.isValid() ? QString() : u" SELCAL: " % m_selcalCode.getCode()) % u" voice: " % m_voiceCapabilities.toQString(i18n);
         return s.simplified().trimmed();
     }
 
@@ -95,9 +89,21 @@ namespace BlackMisc::Aviation
         if (oldRemarks.isEmpty()) { return newCapRemarks; }
 
         QString r(oldRemarks);
-        if (r.contains("/V/", Qt::CaseInsensitive)) { r.replace("/V/", newCapRemarks, Qt::CaseInsensitive); return r; }
-        if (r.contains("/R/", Qt::CaseInsensitive)) { r.replace("/R/", newCapRemarks, Qt::CaseInsensitive); return r; }
-        if (r.contains("/T/", Qt::CaseInsensitive)) { r.replace("/T/", newCapRemarks, Qt::CaseInsensitive); return r; }
+        if (r.contains("/V/", Qt::CaseInsensitive))
+        {
+            r.replace("/V/", newCapRemarks, Qt::CaseInsensitive);
+            return r;
+        }
+        if (r.contains("/R/", Qt::CaseInsensitive))
+        {
+            r.replace("/R/", newCapRemarks, Qt::CaseInsensitive);
+            return r;
+        }
+        if (r.contains("/T/", Qt::CaseInsensitive))
+        {
+            r.replace("/T/", newCapRemarks, Qt::CaseInsensitive);
+            return r;
+        }
         return newCapRemarks % u' ' % r;
     }
 
@@ -177,7 +183,7 @@ namespace BlackMisc::Aviation
         int to1 = remarks.indexOf(nextMarker, f + 1); // for case 2,3
         if (to1 < 0) { to1 = maxIndex + 1; }
         int to2 = remarks.indexOf('/', f + 1); // for case 1
-        if (to2 < 0) { to2 = maxIndex + 1; }   // no more end markers, ends after last character
+        if (to2 < 0) { to2 = maxIndex + 1; } // no more end markers, ends after last character
         const int to = qMin(to1, to2);
         const QString cut = remarks.mid(f, to - f).simplified();
         return cut;
@@ -196,7 +202,7 @@ namespace BlackMisc::Aviation
             int to1 = remarks.indexOf(nextMarker, f + 1); // for case 2,3
             if (to1 < 0) { to1 = maxIndex + 1; }
             int to2 = remarks.indexOf('/', f + 1); // for case 1
-            if (to2 < 0) { to2 = maxIndex + 1; }   // no more end markers, ends after last character
+            if (to2 < 0) { to2 = maxIndex + 1; } // no more end markers, ends after last character
             const int to = qMin(to1, to2);
             r.remove(f, to - f);
         }
@@ -210,15 +216,15 @@ namespace BlackMisc::Aviation
     }
 
     CFlightPlan::CFlightPlan(const CCallsign &callsign, const QString &equipmentIcao, const CAirportIcaoCode &originAirportIcao, const CAirportIcaoCode &destinationAirportIcao,
-                                const CAirportIcaoCode &alternateAirportIcao, const QDateTime &takeoffTimePlanned, const QDateTime &takeoffTimeActual, const PhysicalQuantities::CTime &enrouteTime,
-                                const PhysicalQuantities::CTime &fuelTime, const CAltitude &cruiseAltitude, const PhysicalQuantities::CSpeed &cruiseTrueAirspeed, CFlightPlan::FlightRules flightRules,
-                                const QString &route, const QString &remarks)
+                             const CAirportIcaoCode &alternateAirportIcao, const QDateTime &takeoffTimePlanned, const QDateTime &takeoffTimeActual, const PhysicalQuantities::CTime &enrouteTime,
+                             const PhysicalQuantities::CTime &fuelTime, const CAltitude &cruiseAltitude, const PhysicalQuantities::CSpeed &cruiseTrueAirspeed, CFlightPlan::FlightRules flightRules,
+                             const QString &route, const QString &remarks)
         : m_callsign(callsign),
-            m_equipmentSuffix(equipmentIcao), m_originAirportIcao(originAirportIcao), m_destinationAirportIcao(destinationAirportIcao), m_alternateAirportIcao(alternateAirportIcao),
-            m_takeoffTimePlanned(takeoffTimePlanned), m_takeoffTimeActual(takeoffTimeActual), m_enrouteTime(enrouteTime), m_fuelTime(fuelTime),
-            m_cruiseAltitude(cruiseAltitude), m_cruiseTrueAirspeed(cruiseTrueAirspeed), m_flightRules(flightRules),
-            m_route(route.trimmed().left(MaxRouteLength).toUpper()),
-            m_remarks(remarks.trimmed().left(MaxRemarksLength).toUpper())
+          m_equipmentSuffix(equipmentIcao), m_originAirportIcao(originAirportIcao), m_destinationAirportIcao(destinationAirportIcao), m_alternateAirportIcao(alternateAirportIcao),
+          m_takeoffTimePlanned(takeoffTimePlanned), m_takeoffTimeActual(takeoffTimeActual), m_enrouteTime(enrouteTime), m_fuelTime(fuelTime),
+          m_cruiseAltitude(cruiseAltitude), m_cruiseTrueAirspeed(cruiseTrueAirspeed), m_flightRules(flightRules),
+          m_route(route.trimmed().left(MaxRouteLength).toUpper()),
+          m_remarks(remarks.trimmed().left(MaxRemarksLength).toUpper())
     {
         m_callsign.setTypeHint(CCallsign::Aircraft);
         m_enrouteTime.switchUnit(BlackMisc::PhysicalQuantities::CTimeUnit::hrmin());
@@ -338,7 +344,11 @@ namespace BlackMisc::Aviation
 
     void CFlightPlan::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CFlightPlan>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CFlightPlan>();
+            return;
+        }
         if (ITimestampBased::canHandleIndex(index))
         {
             ITimestampBased::setPropertyByIndex(index, variant);
@@ -369,25 +379,7 @@ namespace BlackMisc::Aviation
 
     QString CFlightPlan::buildString(bool i18n, const QString &separator) const
     {
-        const QString s = m_callsign.toQString(i18n)
-                            % u" aircraft: " % m_equipmentSuffix
-                            % separator
-                            % u"origin: "       % m_originAirportIcao.toQString(i18n)
-                            % u" destination: " % m_destinationAirportIcao.toQString(i18n)
-                            % u" alternate: "   % m_alternateAirportIcao.toQString(i18n)
-                            % separator
-                            % u"takeoff planed: " % m_takeoffTimePlanned.toString("ddhhmm")
-                            % u" actual: " % m_takeoffTimeActual.toString("ddhhmm")
-                            % separator
-                            % u"enroute time: " % m_enrouteTime.toQString(i18n)
-                            % u" fuel time:" % m_fuelTime.toQString(i18n)
-                            % separator
-                            % u"altitude: " % m_cruiseAltitude.toQString(i18n)
-                            % u" speed: "   % m_cruiseTrueAirspeed.toQString(i18n)
-                            % separator
-                            % u"route: " % m_route
-                            % separator
-                            % u"remarks: " % this->getRemarks();
+        const QString s = m_callsign.toQString(i18n) % u" aircraft: " % m_equipmentSuffix % separator % u"origin: " % m_originAirportIcao.toQString(i18n) % u" destination: " % m_destinationAirportIcao.toQString(i18n) % u" alternate: " % m_alternateAirportIcao.toQString(i18n) % separator % u"takeoff planed: " % m_takeoffTimePlanned.toString("ddhhmm") % u" actual: " % m_takeoffTimeActual.toString("ddhhmm") % separator % u"enroute time: " % m_enrouteTime.toQString(i18n) % u" fuel time:" % m_fuelTime.toQString(i18n) % separator % u"altitude: " % m_cruiseAltitude.toQString(i18n) % u" speed: " % m_cruiseTrueAirspeed.toQString(i18n) % separator % u"route: " % m_route % separator % u"remarks: " % this->getRemarks();
         return s;
     }
 
@@ -662,8 +654,8 @@ namespace BlackMisc::Aviation
                 return CFlightPlan();
             }
 
-            if (fileName.endsWith(".sfp", Qt::CaseInsensitive))  { return CFlightPlan::fromSB4Format(data); }
-            if (fileName.endsWith(".vfp", Qt::CaseInsensitive))  { return CFlightPlan::fromVPilotFormat(data); }
+            if (fileName.endsWith(".sfp", Qt::CaseInsensitive)) { return CFlightPlan::fromSB4Format(data); }
+            if (fileName.endsWith(".vfp", Qt::CaseInsensitive)) { return CFlightPlan::fromVPilotFormat(data); }
             if (fileName.endsWith(".json", Qt::CaseInsensitive))
             {
                 do
@@ -733,8 +725,8 @@ namespace BlackMisc::Aviation
 
         switch (rules)
         {
-        case VFR:  return v;
-        case IFR:  return i;
+        case VFR: return v;
+        case IFR: return i;
         case SVFR: return s;
         case DVFR: return d;
         case UNKNOWN:
@@ -750,7 +742,7 @@ namespace BlackMisc::Aviation
 
     QStringList CFlightPlan::splitEquipmentCode(const QString &equipmentCodeAndAircraft)
     {
-        static const QStringList empty({"", "", ""});
+        static const QStringList empty({ "", "", "" });
         if (empty.isEmpty()) { return empty; }
         QStringList firstSplit = equipmentCodeAndAircraft.split('-');
         if (firstSplit.size() >= 2)
@@ -844,14 +836,14 @@ namespace BlackMisc::Aviation
         const QString fr(flightRules.toUpper().trimmed());
         if (fr.startsWith("DVFR")) { return DVFR; }
         if (fr.startsWith("SVFR")) { return SVFR; }
-        if (fr.startsWith("VFR"))  { return VFR; }
-        if (fr.startsWith("IFR"))  { return IFR; }
+        if (fr.startsWith("VFR")) { return VFR; }
+        if (fr.startsWith("IFR")) { return IFR; }
         return UNKNOWN;
     }
 
     const QStringList &CFlightPlan::flightRules()
     {
-        static const QStringList r({"IFR", "VFR", "SVFR", "DVFR" });
+        static const QStringList r({ "IFR", "VFR", "SVFR", "DVFR" });
         return r;
     }
 
@@ -880,62 +872,57 @@ namespace BlackMisc::Aviation
     const QStringList &CFlightPlan::faaEquipmentCodes()
     {
         // List of FAA Aircraft Equipment Codes For US Domestic Flights
-        static const QStringList e({"X", "T", "U", "D", "B", "A", "M", "N", "P", "Y", "C", "I", "L", "G", "Z", "I", "W", "L"});
+        static const QStringList e({ "X", "T", "U", "D", "B", "A", "M", "N", "P", "Y", "C", "I", "L", "G", "Z", "I", "W", "L" });
         return e;
     }
 
     const QStringList &CFlightPlan::faaEquipmentCodesInfo()
     {
         static const QStringList e(
-        {
-            "X No transponder",
-            "T Transponder with no Mode C",
-            "U Transponder with Mode C",
-            "D DME: No transponder",
-            "B DME: Transponder with no Mode C",
-            "A DME: Transponder with Mode C",
-            "M TACAN only: No transponder",
-            "N TACAN only: Transponder with no Mode C",
-            "P TACAN only: Transponder with Mode C",
-            "Y Basic RNAV: LORAN, VOR/DME, or INS with no transponder",
-            "C Basic RNAV: LORAN, VOR/DME, or INS, transponder with no Mode C",
-            "I Basic RNAV: LORAN, VOR/DME, or INS, transponder with Mode C",
-            "L Advanced RNAV: RNAV capability with Global Navigation Satellite System (GNSS)",
-            "G Advanced RNAV: RNAV capability with GNSS and without RVSM",
-            "Z Advanced RNAV: RNAV capability without GNSS and with RVSM",
-            "I Advanced RNAV: RNAV capability without GNSS and without RVSM",
-            "W RVSM",
-            "L RVSM and /G"
-        });
+            { "X No transponder",
+              "T Transponder with no Mode C",
+              "U Transponder with Mode C",
+              "D DME: No transponder",
+              "B DME: Transponder with no Mode C",
+              "A DME: Transponder with Mode C",
+              "M TACAN only: No transponder",
+              "N TACAN only: Transponder with no Mode C",
+              "P TACAN only: Transponder with Mode C",
+              "Y Basic RNAV: LORAN, VOR/DME, or INS with no transponder",
+              "C Basic RNAV: LORAN, VOR/DME, or INS, transponder with no Mode C",
+              "I Basic RNAV: LORAN, VOR/DME, or INS, transponder with Mode C",
+              "L Advanced RNAV: RNAV capability with Global Navigation Satellite System (GNSS)",
+              "G Advanced RNAV: RNAV capability with GNSS and without RVSM",
+              "Z Advanced RNAV: RNAV capability without GNSS and with RVSM",
+              "I Advanced RNAV: RNAV capability without GNSS and without RVSM",
+              "W RVSM",
+              "L RVSM and /G" });
         return e;
     }
 
     const QStringList &CFlightPlan::squawkBoxEquipmentCodes()
     {
-        static const QStringList e({"E", "F", "G", "R", "J", "K", "L", "Q"});
+        static const QStringList e({ "E", "F", "G", "R", "J", "K", "L", "Q" });
         return e;
     }
 
     const QStringList &CFlightPlan::squawkBoxEquipmentCodesInfo()
     {
         static const QStringList e(
-        {
-            "E Flight Management System (FMS) with DME/DME and IRU positioning updating",
-            "F Flight Management System (FMS) with DME/DME positioning updating",
-            "G Global Navigation Satellite System (GNSS), including GPS or Wide Area Augmentation System",
-            "R Required navigation performance, the aircraft meets the RNP type prescribed for the route segment(s), route(s) and or area concerned",
-            "J RVSM + E",
-            "L RVSM + F",
-            "L RVSM + G",
-            "Q RVSM + E"
-        });
+            { "E Flight Management System (FMS) with DME/DME and IRU positioning updating",
+              "F Flight Management System (FMS) with DME/DME positioning updating",
+              "G Global Navigation Satellite System (GNSS), including GPS or Wide Area Augmentation System",
+              "R Required navigation performance, the aircraft meets the RNP type prescribed for the route segment(s), route(s) and or area concerned",
+              "J RVSM + E",
+              "L RVSM + F",
+              "L RVSM + G",
+              "Q RVSM + E" });
         return e;
     }
 
     const QStringList &CFlightPlan::equipmentCodes()
     {
-        static const QStringList e = []
-        {
+        static const QStringList e = [] {
             QSet<QString> el(CFlightPlan::faaEquipmentCodes().begin(), CFlightPlan::faaEquipmentCodes().end());
             el.unite(QSet<QString>(CFlightPlan::squawkBoxEquipmentCodes().begin(), CFlightPlan::squawkBoxEquipmentCodes().end()));
             return el.values();
@@ -945,8 +932,7 @@ namespace BlackMisc::Aviation
 
     const QStringList &CFlightPlan::equipmentCodesInfo()
     {
-        static const QStringList e = []
-        {
+        static const QStringList e = [] {
             QStringList info(CFlightPlan::faaEquipmentCodesInfo());
             info.append(CFlightPlan::squawkBoxEquipmentCodesInfo());
             return info;
@@ -956,7 +942,7 @@ namespace BlackMisc::Aviation
 
     const QStringList &CFlightPlan::prefixCodes()
     {
-        static const QStringList p({"T", "H"});
+        static const QStringList p({ "T", "H" });
         return p;
     }
 

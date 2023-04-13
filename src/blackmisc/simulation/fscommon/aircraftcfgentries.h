@@ -28,7 +28,7 @@ namespace BlackMisc::Simulation::FsCommon
     //! Set of aircraft.cfg entries representing an aircraft (FSX)
     //! \remarks an entry in the aircraft.cfg is title, atc type, ...
     //!          This class already bundles relevant entries, hence the class is named Entries (plural)
-    class BLACKMISC_EXPORT CAircraftCfgEntries:
+    class BLACKMISC_EXPORT CAircraftCfgEntries :
         public CValueObject<CAircraftCfgEntries>,
         public ITimestampBased
     {
@@ -185,21 +185,21 @@ namespace BlackMisc::Simulation::FsCommon
         QString convertToQString(bool i18n = false) const;
 
     private:
-        int m_index;               //!< current index in given config
-        QString m_fileName;        //!< file name of .cfg
-        QString m_title;           //!< Title in .cfg
-        QString m_atcType;         //!< ATC type
-        QString m_atcModel;        //!< ATC model
-        QString m_atcAirline;      //!< ATC airline
-        QString m_atcParkingCode;  //!< ATC parking code
-        QString m_atcIdColor;      //!< e.g. 0xffffffff (not for all aircrafts)
-        QString m_description;     //!< descriptive text
-        QString m_uiType;          //!< e.g. A321-231 IAE
-        QString m_uiManufacturer;  //!< e.g. Airbus
-        QString m_uiVariation;     //!< e.g. White,Green
-        QString m_texture;         //!< texture, needed to identify thumbnail.jpg
-        QString m_simName;         //!< name in simulator
-        QString m_createdBy;       //!< created by, "distributor"
+        int m_index; //!< current index in given config
+        QString m_fileName; //!< file name of .cfg
+        QString m_title; //!< Title in .cfg
+        QString m_atcType; //!< ATC type
+        QString m_atcModel; //!< ATC model
+        QString m_atcAirline; //!< ATC airline
+        QString m_atcParkingCode; //!< ATC parking code
+        QString m_atcIdColor; //!< e.g. 0xffffffff (not for all aircrafts)
+        QString m_description; //!< descriptive text
+        QString m_uiType; //!< e.g. A321-231 IAE
+        QString m_uiManufacturer; //!< e.g. Airbus
+        QString m_uiVariation; //!< e.g. White,Green
+        QString m_texture; //!< texture, needed to identify thumbnail.jpg
+        QString m_simName; //!< name in simulator
+        QString m_createdBy; //!< created by, "distributor"
         bool m_rotorcraft = false; //!< hint if rotorcraft
 
         BLACK_METACLASS(

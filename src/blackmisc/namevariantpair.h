@@ -72,9 +72,9 @@ namespace BlackMisc
         QString convertToQString(bool i18n = false) const;
 
     private:
-        QString  m_name;
+        QString m_name;
         CVariant m_variant;
-        CIcon    m_icon; //!< optional icon
+        CIcon m_icon; //!< optional icon
 
         BLACK_METACLASS(
             CNameVariantPair,

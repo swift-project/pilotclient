@@ -15,9 +15,8 @@
 
 namespace BlackGui::Filters
 {
-    CFilterBarButtons::CFilterBarButtons(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CFilterBarButtons)
+    CFilterBarButtons::CFilterBarButtons(QWidget *parent) : QFrame(parent),
+                                                            ui(new Ui::CFilterBarButtons)
     {
         ui->setupUi(this);
         connect(ui->tb_ClearForm, &QToolButton::clicked, this, &CFilterBarButtons::ps_buttonClicked);
@@ -27,7 +26,7 @@ namespace BlackGui::Filters
     }
 
     CFilterBarButtons::~CFilterBarButtons()
-    { }
+    {}
 
     void CFilterBarButtons::displayCount(bool show)
     {
@@ -50,7 +49,7 @@ namespace BlackGui::Filters
     void CFilterBarButtons::onRowCountChanged(int count, bool withFilter)
     {
         QString v = QString::number(count);
-        if (withFilter) { v += "F";}
+        if (withFilter) { v += "F"; }
         ui->le_Count->setText(v);
     }
 

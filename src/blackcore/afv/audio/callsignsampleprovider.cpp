@@ -27,11 +27,10 @@ using namespace BlackConfig;
 
 namespace BlackCore::Afv::Audio
 {
-    CCallsignSampleProvider::CCallsignSampleProvider(const QAudioFormat &audioFormat, const CReceiverSampleProvider *receiver, QObject *parent) :
-        ISampleProvider(parent),
-        m_audioFormat(audioFormat),
-        m_receiver(receiver),
-        m_decoder(audioFormat.sampleRate(), 1)
+    CCallsignSampleProvider::CCallsignSampleProvider(const QAudioFormat &audioFormat, const CReceiverSampleProvider *receiver, QObject *parent) : ISampleProvider(parent),
+                                                                                                                                                  m_audioFormat(audioFormat),
+                                                                                                                                                  m_receiver(receiver),
+                                                                                                                                                  m_decoder(audioFormat.sampleRate(), 1)
     {
         Q_ASSERT(audioFormat.channelCount() == 1);
         Q_ASSERT(receiver);
@@ -65,7 +64,7 @@ namespace BlackCore::Afv::Audio
         m_mixer->addMixerInput(m_voiceEqualizer);
 
         m_timer = new QTimer(this);
-        m_timer->setObjectName(this->objectName() +  ":m_timer");
+        m_timer->setObjectName(this->objectName() + ":m_timer");
 
         m_timer->setInterval(100);
         connect(m_timer, &QTimer::timeout, this, &CCallsignSampleProvider::timerElapsed);
@@ -209,7 +208,7 @@ namespace BlackCore::Afv::Audio
             {
                 double crackleFactor = (((qExp(m_distanceRatio) * qPow(m_distanceRatio, -4.0)) / 350.0) - 0.00776652);
 
-                if (crackleFactor < 0.0)  { crackleFactor = 0.0;  }
+                if (crackleFactor < 0.0) { crackleFactor = 0.0; }
                 if (crackleFactor > 0.20) { crackleFactor = 0.20; }
 
                 m_crackleSoundProvider->setGain(crackleFactor * 2);
@@ -231,8 +230,8 @@ namespace BlackCore::Afv::Audio
     QString CCallsignSampleProvider::toQString() const
     {
         return QStringLiteral("In use: ") % boolToYesNo(m_inUse) %
-                QStringLiteral(" cs: ")    % m_callsign %
-                QStringLiteral(" type: ")  % m_aircraftType;
+               QStringLiteral(" cs: ") % m_callsign %
+               QStringLiteral(" type: ") % m_aircraftType;
     }
 
 } // ns

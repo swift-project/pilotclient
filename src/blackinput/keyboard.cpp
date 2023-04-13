@@ -9,13 +9,13 @@
 #include "keyboard.h"
 
 #if defined(Q_OS_WIN)
-    #include "win/keyboardwindows.h"
+#    include "win/keyboardwindows.h"
 #elif defined(Q_OS_LINUX)
-    #include "linux/keyboardlinux.h"
+#    include "linux/keyboardlinux.h"
 #elif defined(Q_OS_MACOS)
-    #include "macos/keyboardmacos.h"
+#    include "macos/keyboardmacos.h"
 #else
-    #error "Platform is not supported!"
+#    error "Platform is not supported!"
 #endif
 
 namespace BlackInput

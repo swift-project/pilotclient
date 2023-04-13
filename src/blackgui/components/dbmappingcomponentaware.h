@@ -40,7 +40,7 @@ namespace BlackGui::Components
         CDbMappingComponentAware(const CDbMappingComponentAware &) = default;
 
         //! Copy assignment operator
-        CDbMappingComponentAware &operator =(const CDbMappingComponentAware &) = default;
+        CDbMappingComponentAware &operator=(const CDbMappingComponentAware &) = default;
 
         //! @{
         //! Overlay messages
@@ -48,7 +48,7 @@ namespace BlackGui::Components
         bool showMappingComponentOverlayHtmlMessage(const BlackMisc::CStatusMessage &message, int timeoutMs = -1);
         //! @}
 
-    private :
+    private:
         CDbMappingComponent *m_mappingComponent = nullptr; //!< reference to component
     };
 } // ns

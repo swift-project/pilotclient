@@ -64,19 +64,20 @@ namespace BlackMisc::PhysicalQuantities
     }
 
     template <class MU, class PQ>
-    QString CPhysicalQuantity<MU, PQ>::getUnitSymbol() const { return m_unit.getSymbol(true); }
+    QString CPhysicalQuantity<MU, PQ>::getUnitSymbol() const
+    {
+        return m_unit.getSymbol(true);
+    }
 
     template <class MU, class PQ>
-    CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(double value, MU unit) :
-        m_value(unit.isNull() ? 0.0 : value), m_unit(unit)
+    CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(double value, MU unit) : m_value(unit.isNull() ? 0.0 : value), m_unit(unit)
     {
         Q_ASSERT_X(!std::isnan(value), Q_FUNC_INFO, "nan value");
         Q_ASSERT_X(!std::isinf(value), Q_FUNC_INFO, "infinity");
     }
 
     template <class MU, class PQ>
-    CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(const QString &unitString) :
-        m_value(0.0), m_unit(MU::nullUnit())
+    CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(const QString &unitString) : m_value(0.0), m_unit(MU::nullUnit())
     {
         this->parseFromString(unitString);
     }
@@ -94,7 +95,7 @@ namespace BlackMisc::PhysicalQuantities
     }
 
     template <class MU, class PQ>
-    CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator +=(const CPhysicalQuantity<MU, PQ> &other)
+    CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator+=(const CPhysicalQuantity<MU, PQ> &other)
     {
         m_value += other.value(m_unit);
         return *this;
@@ -113,7 +114,7 @@ namespace BlackMisc::PhysicalQuantities
     }
 
     template <class MU, class PQ>
-    CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator -=(const CPhysicalQuantity<MU, PQ> &other)
+    CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator-=(const CPhysicalQuantity<MU, PQ> &other)
     {
         m_value -= other.value(m_unit);
         return *this;
@@ -153,7 +154,7 @@ namespace BlackMisc::PhysicalQuantities
         return *this->derived();
     }
 
-    template<class MU, class PQ>
+    template <class MU, class PQ>
     PQ CPhysicalQuantity<MU, PQ>::abs() const
     {
         if (this->isNull() || qFuzzyIsNull(m_value)) { return *this->derived(); }
@@ -213,14 +214,14 @@ namespace BlackMisc::PhysicalQuantities
     }
 
     template <class MU, class PQ>
-    CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator *=(double factor)
+    CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator*=(double factor)
     {
         m_value *= factor;
         return *this;
     }
 
     template <class MU, class PQ>
-    PQ CPhysicalQuantity<MU, PQ>::operator *(double factor) const
+    PQ CPhysicalQuantity<MU, PQ>::operator*(double factor) const
     {
         PQ copy = *derived();
         copy *= factor;
@@ -228,14 +229,14 @@ namespace BlackMisc::PhysicalQuantities
     }
 
     template <class MU, class PQ>
-    CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator /=(double divisor)
+    CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator/=(double divisor)
     {
         m_value /= divisor;
         return *this;
     }
 
     template <class MU, class PQ>
-    PQ CPhysicalQuantity<MU, PQ>::operator /(double divisor) const
+    PQ CPhysicalQuantity<MU, PQ>::operator/(double divisor) const
     {
         PQ copy = *derived();
         copy /= divisor;
@@ -243,7 +244,7 @@ namespace BlackMisc::PhysicalQuantities
     }
 
     template <class MU, class PQ>
-    PQ CPhysicalQuantity<MU, PQ>::operator -() const
+    PQ CPhysicalQuantity<MU, PQ>::operator-() const
     {
         PQ copy = *derived();
         copy *= -1;
@@ -338,7 +339,7 @@ namespace BlackMisc::PhysicalQuantities
         return this->valueRoundedWithUnit(m_unit, digits, withGroupSeparator, i18n);
     }
 
-    template<class MU, class PQ>
+    template <class MU, class PQ>
     void CPhysicalQuantity<MU, PQ>::roundToEpsilon()
     {
         if (this->isNull()) { return; }
@@ -360,13 +361,13 @@ namespace BlackMisc::PhysicalQuantities
         return qRound(v);
     }
 
-    template<class MU, class PQ>
+    template <class MU, class PQ>
     int CPhysicalQuantity<MU, PQ>::valueInteger() const
     {
         return this->valueInteger(m_unit);
     }
 
-    template<class MU, class PQ>
+    template <class MU, class PQ>
     bool CPhysicalQuantity<MU, PQ>::isInteger() const
     {
         if (this->isNull()) { return false; }
@@ -381,7 +382,7 @@ namespace BlackMisc::PhysicalQuantities
         return this->valueRounded(m_unit, digits);
     }
 
-    template<class MU, class PQ>
+    template <class MU, class PQ>
     QString CPhysicalQuantity<MU, PQ>::valueRoundedAsString(MU unit, int digits) const
     {
         if (this->isNull()) { return QStringLiteral("null"); }
@@ -403,7 +404,7 @@ namespace BlackMisc::PhysicalQuantities
         return this->valueRoundedWithUnit(this->getUnit(), -1, i18n);
     }
 
-    template<class MU, class PQ>
+    template <class MU, class PQ>
     const PQ &CPhysicalQuantity<MU, PQ>::maxValue(const PQ &pq1, const PQ &pq2)
     {
         if (pq1.isNull()) { return pq2; }
@@ -411,7 +412,7 @@ namespace BlackMisc::PhysicalQuantities
         return pq1 > pq2 ? pq1 : pq2;
     }
 
-    template<class MU, class PQ>
+    template <class MU, class PQ>
     const PQ &CPhysicalQuantity<MU, PQ>::minValue(const PQ &pq1, const PQ &pq2)
     {
         if (pq1.isNull()) { return pq2; }
@@ -419,7 +420,7 @@ namespace BlackMisc::PhysicalQuantities
         return pq1 < pq2 ? pq1 : pq2;
     }
 
-    template<class MU, class PQ>
+    template <class MU, class PQ>
     const PQ &CPhysicalQuantity<MU, PQ>::null()
     {
         static const PQ n(0, MU::nullUnit());
@@ -448,7 +449,7 @@ namespace BlackMisc::PhysicalQuantities
     {
         const QJsonValue unit = json.value("unit");
         const QJsonValue value = json.value("value");
-        if (unit.isUndefined())  { throw CJsonException("Missing 'unit'"); }
+        if (unit.isUndefined()) { throw CJsonException("Missing 'unit'"); }
         if (value.isUndefined()) { throw CJsonException("Missing 'value'"); }
 
         this->setUnitBySymbol(unit.toString());
@@ -461,7 +462,7 @@ namespace BlackMisc::PhysicalQuantities
         *this = CPqString::parse<PQ>(value, mode);
     }
 
-    template<class MU, class PQ>
+    template <class MU, class PQ>
     void CPhysicalQuantity<MU, PQ>::parseFromString(const QString &value, CPqString::SeparatorMode mode, const MU &defaultUnitIfMissing)
     {
         if (is09OrSeparatorOnlyString(value))
@@ -481,7 +482,7 @@ namespace BlackMisc::PhysicalQuantities
         *this = CPqString::parse<PQ>(value, CPqString::SeparatorQtDefault);
     }
 
-    template<class MU, class PQ>
+    template <class MU, class PQ>
     PQ CPhysicalQuantity<MU, PQ>::parsedFromString(const QString &value, CPqString::SeparatorMode mode, const MU &defaultUnitIfMissing)
     {
         QString v = value;
@@ -496,7 +497,7 @@ namespace BlackMisc::PhysicalQuantities
         return pq;
     }
 
-    template<class MU, class PQ>
+    template <class MU, class PQ>
     PQ CPhysicalQuantity<MU, PQ>::parsedFromString(const QString &value, CPqString::SeparatorMode mode)
     {
         PQ pq;
@@ -512,7 +513,7 @@ namespace BlackMisc::PhysicalQuantities
         switch (i)
         {
         case IndexValue: return QVariant::fromValue(m_value);
-        case IndexUnit:  return QVariant::fromValue(m_unit);
+        case IndexUnit: return QVariant::fromValue(m_unit);
         case IndexValueRounded0DigitsWithUnit: return QVariant::fromValue(this->valueRoundedWithUnit(0));
         case IndexValueRounded1DigitsWithUnit: return QVariant::fromValue(this->valueRoundedWithUnit(1));
         case IndexValueRounded2DigitsWithUnit: return QVariant::fromValue(this->valueRoundedWithUnit(2));
@@ -525,7 +526,11 @@ namespace BlackMisc::PhysicalQuantities
     template <class MU, class PQ>
     void CPhysicalQuantity<MU, PQ>::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<PQ>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<PQ>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

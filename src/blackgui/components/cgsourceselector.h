@@ -15,7 +15,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CCGSourceSelector; }
+namespace Ui
+{
+    class CCGSourceSelector;
+}
 namespace BlackGui::Components
 {
     //! CG (aka vertical offset) selector

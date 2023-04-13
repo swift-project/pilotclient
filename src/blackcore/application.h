@@ -74,7 +74,10 @@ namespace BlackCore
         class IContextOwnAircraft;
         class IContextSimulator;
     }
-    namespace Db { class CNetworkWatchdog; }
+    namespace Db
+    {
+        class CNetworkWatchdog;
+    }
 
     /*!
      * Our runtime. Normally one instance is to be initialized at the beginning of main, and thereafter
@@ -337,7 +340,6 @@ namespace BlackCore
         //! The input manager, if available
         CInputManager *getInputManager() const { return m_inputManager; }
 
-
         // ----------------------- simulator ----------------------------------------
 
         //! The simulator plugin, if available
@@ -384,7 +386,7 @@ namespace BlackCore
         bool isLocalContext() const;
 
         //! DBus application? (not Local)
-        bool isDBusContext()  const;
+        bool isDBusContext() const;
 
         //! Get the facade
         const CCoreFacade *getCoreFacade() const { return m_coreFacade.data(); }
@@ -393,18 +395,18 @@ namespace BlackCore
 
         //! Direct access to contexts if a CCoreFacade has been initialized
         //! @{
-        const Context::IContextNetwork     *getIContextNetwork() const;
-        const Context::IContextAudio       *getIContextAudio() const;
-        const Context::CContextAudioBase   *getCContextAudioBase() const;
+        const Context::IContextNetwork *getIContextNetwork() const;
+        const Context::IContextAudio *getIContextAudio() const;
+        const Context::CContextAudioBase *getCContextAudioBase() const;
         const Context::IContextApplication *getIContextApplication() const;
         const Context::IContextOwnAircraft *getIContextOwnAircraft() const;
-        const Context::IContextSimulator   *getIContextSimulator() const;
-        Context::IContextNetwork           *getIContextNetwork();
-        Context::IContextAudio             *getIContextAudio();
-        Context::CContextAudioBase         *getCContextAudioBase();
-        Context::IContextApplication       *getIContextApplication();
-        Context::IContextOwnAircraft       *getIContextOwnAircraft();
-        Context::IContextSimulator         *getIContextSimulator();
+        const Context::IContextSimulator *getIContextSimulator() const;
+        Context::IContextNetwork *getIContextNetwork();
+        Context::IContextAudio *getIContextAudio();
+        Context::CContextAudioBase *getCContextAudioBase();
+        Context::IContextApplication *getIContextApplication();
+        Context::IContextOwnAircraft *getIContextOwnAircraft();
+        Context::IContextSimulator *getIContextSimulator();
         //! @}
 
         // ----------------------- setup data ---------------------------------
@@ -455,9 +457,9 @@ namespace BlackCore
         //! \name network
         //! @{
 
-        static constexpr int NoRedirects         = -1; //!< network request not allowing redirects
-        static constexpr int NoLogRequestId      = -1; //!< network request without logging
-        static constexpr int DefaultMaxRedirects =  2; //!< network request, default for max.redirects
+        static constexpr int NoRedirects = -1; //!< network request not allowing redirects
+        static constexpr int NoLogRequestId = -1; //!< network request without logging
+        static constexpr int DefaultMaxRedirects = 2; //!< network request, default for max.redirects
 
         //! The network reply callback when request is completed
         using CallbackSlot = BlackMisc::CSlot<void(QNetworkReply *)>;
@@ -546,8 +548,8 @@ namespace BlackCore
         //! Request to delete a network ressource from network, supporting BlackMisc::Network::CUrlLog
         //! \threadsafe
         QNetworkReply *deleteResourceFromNetwork(const QNetworkRequest &request, int logId,
-                const CallbackSlot &callback,
-                int maxRedirects = DefaultMaxRedirects);
+                                                 const CallbackSlot &callback,
+                                                 int maxRedirects = DefaultMaxRedirects);
 
         //! Post to network
         //! \threadsafe
@@ -639,7 +641,7 @@ namespace BlackCore
 
         //! Severe issue during startup, most likely it does not make sense to continue
         //! \note call this here if the parsing stage is over and reaction to a runtime issue is needed
-        [[ noreturn ]] void severeStartupProblem(const BlackMisc::CStatusMessage &message);
+        [[noreturn]] void severeStartupProblem(const BlackMisc::CStatusMessage &message);
 
         //! Start the core facade
         //! \note does nothing when setup is not yet loaded
@@ -656,23 +658,23 @@ namespace BlackCore
         static void registerMetadata();
 
         // cmd parsing
-        QList<QCommandLineOption> m_allOptions;                 //!< All registered options
-        QCommandLineParser m_parser;                            //!< cmd parser
-        QCommandLineOption m_cmdHelp          {"help"};         //!< help option
-        QCommandLineOption m_cmdVersion       {"version"};      //!< version option
-        QCommandLineOption m_cmdDBusAddress   {"emptyDBus"};    //!< DBus address
-        QCommandLineOption m_cmdDevelopment   {"dev"};          //!< Development flag
-        QCommandLineOption m_cmdSharedDir     {"shared"};       //!< Shared directory
-        QCommandLineOption m_cmdClearCache    {"clearcache"};   //!< Clear cache
-        QCommandLineOption m_cmdTestCrashpad  {"testcrashpad"}; //!< Test a crasphpad upload
-        QCommandLineOption m_cmdSkipSingleApp {"skipsa"};       //!< Skip test for single application
-        bool               m_parsed    = false;                 //!< Parsing accomplished?
-        bool               m_started   = false;                 //!< Started with success?
-        bool               m_singleApplication = true;          //!< Only one instance of that application
-        bool               m_alreadyRunning    = false;         //!< Application already running
-        std::atomic_bool   m_shutdown  { false };               //!< Is being shutdown?
-        std::atomic_bool   m_incognito { false };               //!< Incognito mode?
-        std::atomic_bool   m_shutdownInProgress { false };      //!< shutdown in progress?
+        QList<QCommandLineOption> m_allOptions; //!< All registered options
+        QCommandLineParser m_parser; //!< cmd parser
+        QCommandLineOption m_cmdHelp { "help" }; //!< help option
+        QCommandLineOption m_cmdVersion { "version" }; //!< version option
+        QCommandLineOption m_cmdDBusAddress { "emptyDBus" }; //!< DBus address
+        QCommandLineOption m_cmdDevelopment { "dev" }; //!< Development flag
+        QCommandLineOption m_cmdSharedDir { "shared" }; //!< Shared directory
+        QCommandLineOption m_cmdClearCache { "clearcache" }; //!< Clear cache
+        QCommandLineOption m_cmdTestCrashpad { "testcrashpad" }; //!< Test a crasphpad upload
+        QCommandLineOption m_cmdSkipSingleApp { "skipsa" }; //!< Skip test for single application
+        bool m_parsed = false; //!< Parsing accomplished?
+        bool m_started = false; //!< Started with success?
+        bool m_singleApplication = true; //!< Only one instance of that application
+        bool m_alreadyRunning = false; //!< Application already running
+        std::atomic_bool m_shutdown { false }; //!< Is being shutdown?
+        std::atomic_bool m_incognito { false }; //!< Incognito mode?
+        std::atomic_bool m_shutdownInProgress { false }; //!< shutdown in progress?
 
     private:
         //! Problem with network access manager
@@ -707,7 +709,6 @@ namespace BlackCore
 
         using NetworkRequestOrPostFunction = std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)>;
 
-
         //! Implementation for getFromNetwork(), postToNetwork() and headerFromNetwork()
         //! \return QNetworkReply reply will only be returned, if the QNetworkAccessManager is in the same thread
         QNetworkReply *httpRequestImpl(const QNetworkRequest &request,
@@ -732,29 +733,29 @@ namespace BlackCore
         //! Write meta information into the application directory so other swift versions can display them
         void tagApplicationDataDirectory();
 
-        CInputManager                 *m_inputManager          = nullptr; //!< Input devices and hotkeys
-        QNetworkConfigurationManager  *m_networkConfigManager  = nullptr; //!< configuration
-        QNetworkAccessManager         *m_accessManager         = nullptr; //!< single network access manager
-        Db::CNetworkWatchdog          *m_networkWatchDog       = nullptr; //!< checking DB/internet access
-        BlackMisc::CApplicationInfo            m_applicationInfo;         //!< Application if specified
-        QScopedPointer<CCoreFacade>            m_coreFacade;              //!< core facade if any
-        QScopedPointer<CSetupReader>           m_setupReader;             //!< setup reader
-        QScopedPointer<CGitHubPackagesReader>  m_gitHubPackagesReader;    //!< github packages reader
-        QScopedPointer<CWebDataServices>       m_webDataServices;         //!< web data services
-        QScopedPointer<BlackMisc::CFileLogger> m_fileLogger;              //!< file logger
-        QPointer<CCookieManager>               m_cookieManager;           //!< single cookie manager for our access manager
-        const QString                          m_applicationName;         //!< application name
-        QReadWriteLock                         m_accessManagerLock;       //!< lock to make access manager access threadsafe
-        CCoreFacadeConfig                      m_coreFacadeConfig;        //!< Core facade config if any
-        CWebReaderFlags::WebReader             m_webReadersUsed;          //!< Readers to be used
-        Db::CDatabaseReaderConfigList          m_dbReaderConfig;          //!< Load or used caching?
-        bool m_noNwAccessPoint = false;        //!< no network access point?
-        bool m_useContexts     = false;        //!< use contexts
-        bool m_useWebData      = false;        //!< use web data
-        bool m_signalStartup   = true;         //!< signal startup automatically
-        bool m_devFlag         = false;        //!< dev. environment
-        bool m_saveSettingsOnShutdown = true;  //!< saving all settings on shutdown
-        bool m_localSettingsLoaded    = false; //!< local settings loaded?
+        CInputManager *m_inputManager = nullptr; //!< Input devices and hotkeys
+        QNetworkConfigurationManager *m_networkConfigManager = nullptr; //!< configuration
+        QNetworkAccessManager *m_accessManager = nullptr; //!< single network access manager
+        Db::CNetworkWatchdog *m_networkWatchDog = nullptr; //!< checking DB/internet access
+        BlackMisc::CApplicationInfo m_applicationInfo; //!< Application if specified
+        QScopedPointer<CCoreFacade> m_coreFacade; //!< core facade if any
+        QScopedPointer<CSetupReader> m_setupReader; //!< setup reader
+        QScopedPointer<CGitHubPackagesReader> m_gitHubPackagesReader; //!< github packages reader
+        QScopedPointer<CWebDataServices> m_webDataServices; //!< web data services
+        QScopedPointer<BlackMisc::CFileLogger> m_fileLogger; //!< file logger
+        QPointer<CCookieManager> m_cookieManager; //!< single cookie manager for our access manager
+        const QString m_applicationName; //!< application name
+        QReadWriteLock m_accessManagerLock; //!< lock to make access manager access threadsafe
+        CCoreFacadeConfig m_coreFacadeConfig; //!< Core facade config if any
+        CWebReaderFlags::WebReader m_webReadersUsed; //!< Readers to be used
+        Db::CDatabaseReaderConfigList m_dbReaderConfig; //!< Load or used caching?
+        bool m_noNwAccessPoint = false; //!< no network access point?
+        bool m_useContexts = false; //!< use contexts
+        bool m_useWebData = false; //!< use web data
+        bool m_signalStartup = true; //!< signal startup automatically
+        bool m_devFlag = false; //!< dev. environment
+        bool m_saveSettingsOnShutdown = true; //!< saving all settings on shutdown
+        bool m_localSettingsLoaded = false; //!< local settings loaded?
 
         // -------------- crashpad -----------------
         BlackMisc::CSettingReadOnly<Application::TCrashDumpSettings> m_crashDumpSettings { this, &CApplication::onCrashDumpUploadEnabledChanged };

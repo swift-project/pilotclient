@@ -43,8 +43,7 @@ namespace BlackMisc::Simulation::FsCommon
     QString fsxDirFromRegistryImpl()
     {
         QString fsxPath;
-        const FsRegistryPathPair fsxRegistryPathPairs =
-        {
+        const FsRegistryPathPair fsxRegistryPathPairs = {
             { QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0"), QStringLiteral("AppPath") },
             { QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Microsoft Games\\Flight Simulator - Steam Edition\\10.0"), QStringLiteral("AppPath") },
             { QStringLiteral("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0"), QStringLiteral("SetupPath") },
@@ -78,10 +77,8 @@ namespace BlackMisc::Simulation::FsCommon
         const QString dir(CFsDirectories::fsxDirFromRegistry());
         if (!dir.isEmpty()) { return dir; }
         QStringList someDefaultDirs(
-        {
-            "C:/Program Files (x86)/Microsoft Games/Microsoft Flight Simulator X",
-            "C:/FSX"
-        });
+            { "C:/Program Files (x86)/Microsoft Games/Microsoft Flight Simulator X",
+              "C:/FSX" });
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
             // developer directories
@@ -130,8 +127,7 @@ namespace BlackMisc::Simulation::FsCommon
 
     const QStringList &CFsDirectories::fsxSimObjectsExcludeDirectoryPatterns()
     {
-        static const QStringList exclude
-        {
+        static const QStringList exclude {
             "SimObjects/Animals",
             "SimObjects/Misc",
             "SimObjects/GroundVehicles",
@@ -143,8 +139,7 @@ namespace BlackMisc::Simulation::FsCommon
     QString p3dDirFromRegistryImpl()
     {
         QString p3dPath;
-        FsRegistryPathPair p3dRegistryPathPairs =
-        {
+        FsRegistryPathPair p3dRegistryPathPairs = {
             // latest versions first
             { QStringLiteral("HKEY_CURRENT_USER\\Software\\Lockheed Martin\\Prepar3d v6"), QStringLiteral("AppPath") },
             { QStringLiteral("HKEY_CURRENT_USER\\Software\\Lockheed Martin\\Prepar3d v5"), QStringLiteral("AppPath") },
@@ -180,12 +175,10 @@ namespace BlackMisc::Simulation::FsCommon
         QString dir(CFsDirectories::p3dDirFromRegistry());
         if (!dir.isEmpty()) { return dir; }
         const QStringList someDefaultDirs(
-        {
-            "C:/Program Files (x86)/Lockheed Martin/Prepar3D v4",
-            "C:/Program Files (x86)/Lockheed Martin/Prepar3D v3",
-            "C:/Program Files (x86)/Lockheed Martin/Prepar3D v2",
-            "C:/Program Files (x86)/Lockheed Martin/Prepar3D"
-        });
+            { "C:/Program Files (x86)/Lockheed Martin/Prepar3D v4",
+              "C:/Program Files (x86)/Lockheed Martin/Prepar3D v3",
+              "C:/Program Files (x86)/Lockheed Martin/Prepar3D v2",
+              "C:/Program Files (x86)/Lockheed Martin/Prepar3D" });
         return CFileUtils::findFirstExisting(someDefaultDirs);
     }
 
@@ -242,7 +235,7 @@ namespace BlackMisc::Simulation::FsCommon
     {
         // finding the user settings only works on P3D machine
         QStringList allPaths = CFsDirectories::allP3dAddOnXmlSimObjectPaths(versionHint).values();
-        const QString sod    = CFileUtils::normalizeFilePathToQtStandard(simObjectsDir.isEmpty() ? CFsDirectories::p3dSimObjectsDir() : simObjectsDir);
+        const QString sod = CFileUtils::normalizeFilePathToQtStandard(simObjectsDir.isEmpty() ? CFsDirectories::p3dSimObjectsDir() : simObjectsDir);
         if (!sod.isEmpty() && !allPaths.contains(sod, Qt::CaseInsensitive))
         {
             // case insensitive is important here
@@ -261,8 +254,8 @@ namespace BlackMisc::Simulation::FsCommon
         if (candidate.contains("v5", Qt::CaseInsensitive)) { return QStringLiteral("v5"); }
         if (candidate.contains("v4", Qt::CaseInsensitive)) { return QStringLiteral("v4"); }
 
-        if (candidate.contains("5", Qt::CaseInsensitive))  { return QStringLiteral("v5"); }
-        if (candidate.contains("4", Qt::CaseInsensitive))  { return QStringLiteral("v4"); }
+        if (candidate.contains("5", Qt::CaseInsensitive)) { return QStringLiteral("v5"); }
+        if (candidate.contains("4", Qt::CaseInsensitive)) { return QStringLiteral("v4"); }
 
         return "v5"; // that is the future (in 2020)
     }
@@ -275,8 +268,7 @@ namespace BlackMisc::Simulation::FsCommon
 
     const QStringList &CFsDirectories::p3dSimObjectsExcludeDirectoryPatterns()
     {
-        static const QStringList exclude
-        {
+        static const QStringList exclude {
             // FSX
             "SimObjects/Animals",
             "SimObjects/Misc",
@@ -295,8 +287,7 @@ namespace BlackMisc::Simulation::FsCommon
     QString fs9DirFromRegistryImpl()
     {
         QString fs9Path;
-        FsRegistryPathPair fs9RegistryPathPairs =
-        {
+        FsRegistryPathPair fs9RegistryPathPairs = {
             { QStringLiteral("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\DirectPlay\\Applications\\Microsoft Flight Simulator 2004"), QStringLiteral("AppPath") },
             { QStringLiteral("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\DirectPlay\\Applications\\Microsoft Flight Simulator 2004"), QStringLiteral("AppPath") }
         };
@@ -328,10 +319,8 @@ namespace BlackMisc::Simulation::FsCommon
         QString dir(CFsDirectories::fs9DirFromRegistry());
         if (!dir.isEmpty()) { return dir; }
         const QStringList someDefaultDirs(
-        {
-            "C:/Flight Simulator 9",
-            "C:/FS9"
-        });
+            { "C:/Flight Simulator 9",
+              "C:/FS9" });
         return CFileUtils::findFirstExisting(someDefaultDirs);
     }
 
@@ -462,20 +451,20 @@ namespace BlackMisc::Simulation::FsCommon
             const QDomNodeList components = doc.elementsByTagName("AddOn.Component");
             for (int i = 0; i < components.size(); i++)
             {
-                const QDomNode component    = components.item(i);
-                const QDomElement category  = component.firstChildElement("Category");
+                const QDomNode component = components.item(i);
+                const QDomElement category = component.firstChildElement("Category");
                 const QString categoryValue = category.text();
                 if (!caseInsensitiveStringCompare(categoryValue, QStringLiteral("SimObjects"))) { continue; }
-                const QDomElement path  = component.firstChildElement("Path");
+                const QDomElement path = component.firstChildElement("Path");
                 const QString pathValue = CFileUtils::normalizeFilePathToQtStandard(path.text());
-                const bool correctPath  = pathValue.contains("Airplanes", Qt::CaseInsensitive) ||
-                                            pathValue.contains("Rotorcraft", Qt::CaseInsensitive);
+                const bool correctPath = pathValue.contains("Airplanes", Qt::CaseInsensitive) ||
+                                         pathValue.contains("Rotorcraft", Qt::CaseInsensitive);
                 if (!correctPath) { continue; }
 
                 // absolute or relative path
                 const QString fp = pathValue.leftRef(3).contains(':') ?
-                                    pathValue :
-                                    CFileUtils::appendFilePaths(addOnPath, pathValue);
+                                       pathValue :
+                                       CFileUtils::appendFilePaths(addOnPath, pathValue);
                 if (CFsDirectories::logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"Testing '%1' as addon path: '%2'") << fp << addOnPath; }
                 if (!checked || QDir(fp).exists())
                 {

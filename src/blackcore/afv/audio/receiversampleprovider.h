@@ -28,7 +28,7 @@ namespace BlackCore::Afv::Audio
     //! Arguments
     struct TransceiverReceivingCallsignsChangedArgs
     {
-        quint16 transceiverID;          //!< transceiver id
+        quint16 transceiverID; //!< transceiver id
         QStringList receivingCallsigns; //!< callsigns
     };
 
@@ -98,25 +98,25 @@ namespace BlackCore::Afv::Audio
 
     private:
         uint m_frequencyHz = 122800000;
-        bool m_mute        = false;
-        const double m_clickGain     = 1.0;
+        bool m_mute = false;
+        const double m_clickGain = 1.0;
         const double m_blockToneGain = 0.10;
 
         quint16 m_id;
         BlackMisc::CSettingReadOnly<BlackMisc::Audio::TSettings> m_audioSettings { this };
 
-        BlackSound::SampleProvider::CVolumeSampleProvider *m_volume    = nullptr;
-        BlackSound::SampleProvider::CMixingSampleProvider *m_mixer     = nullptr;
-        BlackSound::SampleProvider::CSinusGenerator       *m_blockTone = nullptr;
+        BlackSound::SampleProvider::CVolumeSampleProvider *m_volume = nullptr;
+        BlackSound::SampleProvider::CMixingSampleProvider *m_mixer = nullptr;
+        BlackSound::SampleProvider::CSinusGenerator *m_blockTone = nullptr;
         QVector<CCallsignSampleProvider *> m_voiceInputs;
         qint64 m_lastLogMessage = -1;
 
         QString m_receivingCallsignsString;
         BlackMisc::Aviation::CCallsignSet m_receivingCallsigns;
 
-        bool m_doClickWhenAppropriate  = false;
-        bool m_doBlockWhenAppropriate  = false;
-        int  m_lastNumberOfInUseInputs = 0;
+        bool m_doClickWhenAppropriate = false;
+        bool m_doBlockWhenAppropriate = false;
+        int m_lastNumberOfInUseInputs = 0;
     };
 } // ns
 

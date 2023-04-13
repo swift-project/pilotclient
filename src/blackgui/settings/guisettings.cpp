@@ -16,7 +16,7 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackGui::Settings, CGeneralGuiSettings)
 namespace BlackGui::Settings
 {
     CGeneralGuiSettings::CGeneralGuiSettings()
-    { }
+    {}
 
     void CGeneralGuiSettings::setWidgetStyle(const QString &widgetStyle)
     {
@@ -67,7 +67,11 @@ namespace BlackGui::Settings
 
     void CGeneralGuiSettings::setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CGeneralGuiSettings>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CGeneralGuiSettings>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

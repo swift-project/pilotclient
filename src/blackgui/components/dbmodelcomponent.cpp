@@ -31,10 +31,9 @@ using namespace BlackGui::Models;
 
 namespace BlackGui::Components
 {
-    CDbModelComponent::CDbModelComponent(QWidget *parent) :
-        COverlayMessagesFrame(parent),
-        CDbMappingComponentAware(parent),
-        ui(new Ui::CDbModelComponent)
+    CDbModelComponent::CDbModelComponent(QWidget *parent) : COverlayMessagesFrame(parent),
+                                                            CDbMappingComponentAware(parent),
+                                                            ui(new Ui::CDbModelComponent)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
         Q_ASSERT_X(sGui->hasWebDataServices(), Q_FUNC_INFO, "Missing web services");
@@ -45,7 +44,6 @@ namespace BlackGui::Components
         ui->tvp_AircraftModel->menuAddItems(CAircraftModelView::MenuStashing);
         ui->tvp_AircraftModel->menuAddItems(CViewBaseNonTemplate::MenuCopy);
         ui->tvp_AircraftModel->menuRemoveItems(CAircraftModelView::MenuHighlightStashed); // not supported here
-
 
         // configure view
         ui->tvp_AircraftModel->setFilterWidget(ui->filter_AircraftModelFilter);

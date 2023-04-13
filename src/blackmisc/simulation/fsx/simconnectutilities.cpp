@@ -27,7 +27,7 @@ using namespace BlackMisc::Weather;
 
 namespace BlackMisc::Simulation::Fsx
 {
-    CSimConnectUtilities::CSimConnectUtilities() { }
+    CSimConnectUtilities::CSimConnectUtilities() {}
 
     const QString &CSimConnectUtilities::simConnectFilename()
     {
@@ -97,7 +97,9 @@ namespace BlackMisc::Simulation::Fsx
     QString CSimConnectUtilities::simConnectCfg(const QString &ip, int port)
     {
         const QString sc = QStringLiteral("[SimConnect]\nProtocol=Ipv4\nAddress=%1\nPort=%2\n"
-                                            "MaxReceiveSize=4096\nDisableNagle=0").arg(ip).arg(port);
+                                          "MaxReceiveSize=4096\nDisableNagle=0")
+                               .arg(ip)
+                               .arg(port);
         return sc;
     }
 
@@ -194,12 +196,12 @@ namespace BlackMisc::Simulation::Fsx
     int CSimConnectUtilities::lightsToLightStates(const CAircraftLights &lights)
     {
         int lightMask = 0;
-        if (lights.isBeaconOn())  { lightMask |= Beacon; }
+        if (lights.isBeaconOn()) { lightMask |= Beacon; }
         if (lights.isLandingOn()) { lightMask |= Landing; }
-        if (lights.isLogoOn())    { lightMask |= Logo; }
-        if (lights.isNavOn())     { lightMask |= Nav; }
-        if (lights.isStrobeOn())  { lightMask |= Strobe; }
-        if (lights.isTaxiOn())    { lightMask |= Taxi; }
+        if (lights.isLogoOn()) { lightMask |= Logo; }
+        if (lights.isNavOn()) { lightMask |= Nav; }
+        if (lights.isStrobeOn()) { lightMask |= Strobe; }
+        if (lights.isTaxiOn()) { lightMask |= Taxi; }
         return lightMask;
     }
 
@@ -273,11 +275,11 @@ namespace BlackMisc::Simulation::Fsx
             {
                 if (!windLayer.getSpeed().isNull() && !windLayer.getDirection().isNull())
                 {
-                    const int speedKts     = windLayer.getSpeed().valueInteger(CSpeedUnit::kts());
+                    const int speedKts = windLayer.getSpeed().valueInteger(CSpeedUnit::kts());
                     const int directionDeg = windLayer.getDirection().valueInteger(CAngleUnit::deg());
 
                     simConnectWinds += arg1s.arg(directionDeg, 3, 10, QLatin1Char('0')) % // DDD = Direction (0-360 degrees)
-                                        arg1s.arg(speedKts, 3, 10, QLatin1Char('0')); // SSS = Speed
+                                       arg1s.arg(speedKts, 3, 10, QLatin1Char('0')); // SSS = Speed
                 }
             }
             // XX = Gust speed
@@ -406,7 +408,7 @@ namespace BlackMisc::Simulation::Fsx
             // http://wiki.sandaysoft.com/a/Rain_measurement#Rain_Rate
             auto precipitationRate = cloudLayer.getPrecipitationRate();
             // Very light rain: precipitation rate is < 0.25 mm/hour
-            if (precipitationRate < 0.25) {  simconnectClouds += QLatin1Char('V'); }
+            if (precipitationRate < 0.25) { simconnectClouds += QLatin1Char('V'); }
             // Light rain: precipitation rate is between 0.25mm/hour and 1.0mm/hour
             else if (precipitationRate >= 0.25 && precipitationRate < 1.0) { simconnectClouds += QLatin1Char('L'); }
             // Moderate rain: precipitation rate is between 1.0 mm/hour and 4.0 mm/hour
@@ -451,10 +453,10 @@ namespace BlackMisc::Simulation::Fsx
             const int altitude = temperatureLayer.getLevel().valueInteger(CLengthUnit::m());
 
             simconnectTemperatures += arg1s.arg(temperature, 2, 10, QLatin1Char('0')) % // TT = temperature in Celsius
-                                        u'/' %
-                                        arg1s.arg(dewPoint, 2, 10, QLatin1Char('0')) % // DD = dewpoint in Celsius
-                                        u"&A" %
-                                        arg1s.arg(altitude, 5, 10, QLatin1Char('0')); // NNNNN = altitude of the temperatures in meters.
+                                      u'/' %
+                                      arg1s.arg(dewPoint, 2, 10, QLatin1Char('0')) % // DD = dewpoint in Celsius
+                                      u"&A" %
+                                      arg1s.arg(altitude, 5, 10, QLatin1Char('0')); // NNNNN = altitude of the temperatures in meters.
         }
         return simconnectTemperatures;
     }

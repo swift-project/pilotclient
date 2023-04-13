@@ -23,12 +23,11 @@ namespace BlackSimPlugin::Common
 {
     CSimulatorPluginCommon::CSimulatorPluginCommon(
         const CSimulatorPluginInfo &info,
-        IOwnAircraftProvider    *ownAircraftProvider,
+        IOwnAircraftProvider *ownAircraftProvider,
         IRemoteAircraftProvider *renderedAircraftProvider,
-        IWeatherGridProvider    *weatherGridProvider,
-        IClientProvider         *clientProvider,
-        QObject *parent) :
-        ISimulator(info, ownAircraftProvider, renderedAircraftProvider, weatherGridProvider, clientProvider, parent)
+        IWeatherGridProvider *weatherGridProvider,
+        IClientProvider *clientProvider,
+        QObject *parent) : ISimulator(info, ownAircraftProvider, renderedAircraftProvider, weatherGridProvider, clientProvider, parent)
     {
         CSimulatorPluginCommon::registerHelp();
     }
@@ -90,6 +89,6 @@ namespace BlackSimPlugin::Common
     void CSimulatorPluginCommon::registerHelp()
     {
         if (CSimpleCommandParser::registered("BlackSimPlugin::Common::CSimulatorPluginCommon")) { return; }
-        CSimpleCommandParser::registerCommand({".drv intdisplay", "interpolation display"});
+        CSimpleCommandParser::registerCommand({ ".drv intdisplay", "interpolation display" });
     }
 } // namespace

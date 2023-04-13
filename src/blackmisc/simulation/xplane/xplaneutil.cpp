@@ -18,7 +18,7 @@
 #include <QTextStream>
 
 #if defined(Q_OS_WIN)
-#include <ShlObj.h>
+#    include <ShlObj.h>
 #endif
 
 using namespace BlackMisc;
@@ -58,10 +58,10 @@ namespace BlackMisc::Simulation::XPlane
         QString result;
         TCHAR szLocalAppDataPath[MAX_PATH];
         if (SUCCEEDED(SHGetFolderPath(NULL,
-                                        CSIDL_LOCAL_APPDATA,
-                                        NULL,
-                                        0,
-                                        szLocalAppDataPath)))
+                                      CSIDL_LOCAL_APPDATA,
+                                      NULL,
+                                      0,
+                                      szLocalAppDataPath)))
         {
             result = QString::fromWCharArray(szLocalAppDataPath);
         }
@@ -95,10 +95,10 @@ namespace BlackMisc::Simulation::XPlane
         //! \fixme KB 8/17 we could also use the runtime CBuildConfig decision here, which looks nicer (I personally always try to avoid ifdef)
 #if defined(Q_OS_WIN)
         return CFileUtils::appendFilePathsAndFixUnc(getWindowsLocalAppDataPath(), xplaneInstallFile);
-#elif defined (Q_OS_LINUX)
+#elif defined(Q_OS_LINUX)
         static const QString xp(".x-plane");
         return CFileUtils::appendFilePaths(QDir::homePath(), xp, xplaneInstallFile);
-#elif defined (Q_OS_OSX)
+#elif defined(Q_OS_OSX)
         static const QString lib("Library/Preferences");
         return CFileUtils::appendFilePaths(QDir::homePath(), lib, xplaneInstallFile);
 #endif
@@ -106,11 +106,10 @@ namespace BlackMisc::Simulation::XPlane
 
     const QString &CXPlaneUtil::xplaneRootDir()
     {
-        static const QString dir = []
-        {
-            if (!xplane11Dir().isEmpty())      { return xplane11Dir(); }
+        static const QString dir = [] {
+            if (!xplane11Dir().isEmpty()) { return xplane11Dir(); }
             else if (!xplane10Dir().isEmpty()) { return xplane10Dir(); }
-            else if (!xplane9Dir().isEmpty())  { return xplane9Dir(); }
+            else if (!xplane9Dir().isEmpty()) { return xplane9Dir(); }
             else { return QString(); }
         }();
         return dir;
@@ -222,8 +221,16 @@ namespace BlackMisc::Simulation::XPlane
         for (const QString &file : files)
         {
             if (file.contains("swift", Qt::CaseInsensitive)) { continue; }
-            if (file.contains("ivap", Qt::CaseInsensitive)) { conflicts.push_back(file); continue; }
-            if (file.contains("XSquawkBox", Qt::CaseInsensitive)) { conflicts.push_back(file); continue; }
+            if (file.contains("ivap", Qt::CaseInsensitive))
+            {
+                conflicts.push_back(file);
+                continue;
+            }
+            if (file.contains("XSquawkBox", Qt::CaseInsensitive))
+            {
+                conflicts.push_back(file);
+                continue;
+            }
         }
         return conflicts;
     }
@@ -277,7 +284,7 @@ namespace BlackMisc::Simulation::XPlane
 
     const QStringList &CXPlaneUtil::xplFileFilter()
     {
-        static const QStringList filter({"*.xpl"});
+        static const QStringList filter({ "*.xpl" });
         return filter;
     }
 
@@ -295,11 +302,11 @@ namespace BlackMisc::Simulation::XPlane
         for (const QString &modelDir : modelDirectories)
         {
             const bool exists = simDirExists ?
-                                CDirectoryUtils::isSameOrSubDirectoryOf(modelDir, sd) :
-                                CDirectoryUtils::isSameOrSubDirectoryOfStringBased(modelDir, sd.absolutePath());
+                                    CDirectoryUtils::isSameOrSubDirectoryOf(modelDir, sd) :
+                                    CDirectoryUtils::isSameOrSubDirectoryOfStringBased(modelDir, sd.absolutePath());
             const CStatusMessage m = exists ?
-                                        CStatusMessage(static_cast<CXPlaneUtil *>(nullptr)).info(u"Model directory '%1' inside '%2'") << modelDir << sd.absolutePath() :
-                                        CStatusMessage(static_cast<CXPlaneUtil *>(nullptr)).error(u"Model directory '%1' NOT inside '%2'") << modelDir << sd.absolutePath();
+                                         CStatusMessage(static_cast<CXPlaneUtil *>(nullptr)).info(u"Model directory '%1' inside '%2'") << modelDir << sd.absolutePath() :
+                                         CStatusMessage(static_cast<CXPlaneUtil *>(nullptr)).error(u"Model directory '%1' NOT inside '%2'") << modelDir << sd.absolutePath();
             msgs.push_back(m);
         }
         msgs.addValidationCategory();

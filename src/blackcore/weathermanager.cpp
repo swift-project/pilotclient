@@ -68,7 +68,6 @@ namespace BlackCore
         m_lastPendingRequestTs = now;
     }
 
-
     void CWeatherManager::requestWeatherGrid(const CWeatherGrid &initialWeatherGrid, const CIdentifier &identifier)
     {
         if (identifier.isNull() || initialWeatherGrid.isEmpty() || initialWeatherGrid.frontOrDefault().getPosition().isNull())
@@ -90,7 +89,7 @@ namespace BlackCore
     }
 
     void CWeatherManager::requestWeatherGrid(const CWeatherGrid &initialWeatherGrid,
-            const CSlot<void(const CWeatherGrid &)> &callback)
+                                             const CSlot<void(const CWeatherGrid &)> &callback)
     {
         if (!callback || initialWeatherGrid.isEmpty() || initialWeatherGrid.frontOrDefault().getPosition().isNull())
         {
@@ -117,7 +116,7 @@ namespace BlackCore
     }
 
     void CWeatherManager::requestWeatherGridFromFile(const QString &filePath, const CWeatherGrid &initialWeatherGrid,
-            const CSlot<void(const CWeatherGrid &)> &callback)
+                                                     const CSlot<void(const CWeatherGrid &)> &callback)
     {
         if (m_isWeatherClear && callback)
         {
@@ -186,8 +185,7 @@ namespace BlackCore
     void CWeatherManager::fetchNextWeatherDataDeferred()
     {
         QPointer<CWeatherManager> myself(this);
-        QTimer::singleShot(0, this, [ = ]
-        {
+        QTimer::singleShot(0, this, [=] {
             if (!myself || !sApp || sApp->isShuttingDown()) { return; }
             myself->fetchNextWeatherData();
         });
@@ -208,7 +206,7 @@ namespace BlackCore
         const auto fetchedWeatherGrid = weatherDataPlugin->getWeatherData();
 
         const WeatherRequest weatherRequest = m_pendingRequests.front();
-        CWeatherGrid requestedWeatherGrid   = weatherRequest.weatherGrid;
+        CWeatherGrid requestedWeatherGrid = weatherRequest.weatherGrid;
 
         // Interpolation. So far it just picks the closest point without interpolation.
         for (CGridPoint &gridPoint : requestedWeatherGrid)

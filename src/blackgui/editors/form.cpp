@@ -18,9 +18,9 @@ using namespace BlackMisc::Network;
 namespace BlackGui::Editors
 {
     CForm::CForm(QWidget *parent) : COverlayMessagesFrame(parent)
-    { }
+    {}
 
-    CForm::~CForm() { }
+    CForm::~CForm() {}
 
     void CForm::setSelectOnly()
     {
@@ -59,10 +59,10 @@ namespace BlackGui::Editors
     }
 
     CFormDbUser::CFormDbUser(QWidget *parent) : CForm(parent)
-    { }
+    {}
 
     CFormDbUser::~CFormDbUser()
-    { }
+    {}
 
     CAuthenticatedUser CFormDbUser::getSwiftDbUser() const
     {

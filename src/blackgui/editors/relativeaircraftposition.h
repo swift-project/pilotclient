@@ -17,7 +17,10 @@
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackgui/editors/form.h"
 
-namespace Ui { class CRelativeAircraftPosition; }
+namespace Ui
+{
+    class CRelativeAircraftPosition;
+}
 namespace BlackGui::Editors
 {
     //! Position relative to other aircraft

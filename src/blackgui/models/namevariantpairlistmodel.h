@@ -58,7 +58,6 @@ namespace BlackGui::Models
 
         //! Current row index of given name
         int getRowIndexForName(const QString &name) const;
-
     };
 }
 #endif // guard

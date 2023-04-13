@@ -48,7 +48,8 @@ namespace BlackMisc
             const Derived *derived() const;
             Derived *derived();
 
-            template <typename Base2> static bool baseIsA(const Base2 *base, int metaTypeId);
+            template <typename Base2>
+            static bool baseIsA(const Base2 *base, int metaTypeId);
             static bool baseIsA(const void *, int);
         };
 
@@ -79,28 +80,40 @@ namespace BlackMisc
         }
 
         template <class Derived>
-        const Derived *MetaType<Derived>::derived() const { return static_cast<const Derived *>(this); }
+        const Derived *MetaType<Derived>::derived() const
+        {
+            return static_cast<const Derived *>(this);
+        }
 
         template <class Derived>
-        Derived *MetaType<Derived>::derived() { return static_cast<Derived *>(this); }
+        Derived *MetaType<Derived>::derived()
+        {
+            return static_cast<Derived *>(this);
+        }
 
         template <class Derived>
         template <typename Base2>
-        bool MetaType<Derived>::baseIsA(const Base2 *base, int metaTypeId) { return base->isA(metaTypeId); }
+        bool MetaType<Derived>::baseIsA(const Base2 *base, int metaTypeId)
+        {
+            return base->isA(metaTypeId);
+        }
 
         template <class Derived>
-        bool MetaType<Derived>::baseIsA(const void *, int) { return false; }
+        bool MetaType<Derived>::baseIsA(const void *, int)
+        {
+            return false;
+        }
 
         // *INDENT-OFF*
         /*!
          * When a derived class and a base class both inherit from Mixin::MetaType,
          * the derived class uses this macro to disambiguate the inherited members.
          */
-#       define BLACKMISC_DECLARE_USING_MIXIN_METATYPE(DERIVED)                  \
-            using ::BlackMisc::Mixin::MetaType<DERIVED>::registerMetadata;      \
-            using ::BlackMisc::Mixin::MetaType<DERIVED>::getMetaTypeId;         \
-            using ::BlackMisc::Mixin::MetaType<DERIVED>::getClassName;          \
-            using ::BlackMisc::Mixin::MetaType<DERIVED>::isA;
+#define BLACKMISC_DECLARE_USING_MIXIN_METATYPE(DERIVED)            \
+    using ::BlackMisc::Mixin::MetaType<DERIVED>::registerMetadata; \
+    using ::BlackMisc::Mixin::MetaType<DERIVED>::getMetaTypeId;    \
+    using ::BlackMisc::Mixin::MetaType<DERIVED>::getClassName;     \
+    using ::BlackMisc::Mixin::MetaType<DERIVED>::isA;
         // *INDENT-ON*
 
     } // Mixin

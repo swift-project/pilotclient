@@ -17,11 +17,11 @@ BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Weather, CWeatherDataPluginInfo, CWeathe
 namespace BlackMisc::Weather
 {
 
-    CWeatherDataPluginInfoList::CWeatherDataPluginInfoList() { }
+    CWeatherDataPluginInfoList::CWeatherDataPluginInfoList() {}
 
     QStringList CWeatherDataPluginInfoList::toStringList(bool i18n) const
     {
-        return this->transform([i18n](const CWeatherDataPluginInfo & info) { return info.toQString(i18n); });
+        return this->transform([i18n](const CWeatherDataPluginInfo &info) { return info.toQString(i18n); });
     }
 
 } // namespace

@@ -15,7 +15,10 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CDBusServerAddressSelector; }
+namespace Ui
+{
+    class CDBusServerAddressSelector;
+}
 namespace BlackGui::Components
 {
     //! Select DBus address such as session P2P, ...

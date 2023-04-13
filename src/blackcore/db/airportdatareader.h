@@ -67,11 +67,11 @@ namespace BlackCore::Db
         virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const override;
 
     private:
-        BlackMisc::CData<BlackCore::Data::TDbAirportCache> m_airportCache {this, &CAirportDataReader::airportCacheChanged}; //!< cache file
+        BlackMisc::CData<BlackCore::Data::TDbAirportCache> m_airportCache { this, &CAirportDataReader::airportCacheChanged }; //!< cache file
         std::atomic_bool m_syncedAirportCache { false }; //!< already synchronized?
 
         //! Reader URL (we read from where?) used to detect changes of location
-        BlackMisc::CData<BlackCore::Data::TDbModelReaderBaseUrl> m_readerUrlCache {this, &CAirportDataReader::baseUrlCacheChanged };
+        BlackMisc::CData<BlackCore::Data::TDbModelReaderBaseUrl> m_readerUrlCache { this, &CAirportDataReader::baseUrlCacheChanged };
 
         //! \copydoc CDatabaseReader::read
         void read(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan) override;

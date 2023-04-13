@@ -15,7 +15,10 @@
 #include "blackgui/models/listmodelcallsignobjects.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 
-namespace BlackMisc::Simulation { class CSimulatedAircraft; }
+namespace BlackMisc::Simulation
+{
+    class CSimulatedAircraft;
+}
 namespace BlackGui::Models
 {
     //! Aircraft list model
@@ -28,7 +31,7 @@ namespace BlackGui::Models
         //! Model modes
         enum AircraftMode
         {
-            NetworkMode,  //!< like aircraft in range
+            NetworkMode, //!< like aircraft in range
             RenderedMode, //!< focusing on used model
             NotSet
         };

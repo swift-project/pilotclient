@@ -29,8 +29,7 @@ namespace BlackMisc
     auto removeIfIn(I begin1, I end1, J begin2, J end2)
     {
         auto newEnd = end1;
-        std::for_each(begin2, end2, [&](const auto &rm)
-        {
+        std::for_each(begin2, end2, [&](const auto &rm) {
             const auto found = std::find(begin1, end1, rm);
             Q_ASSERT(found != end1);
             if (newEnd == end1) { newEnd = found; }
@@ -47,7 +46,7 @@ namespace BlackMisc
         //! \threadsafe
         inline std::mt19937 &defaultRandomGenerator()
         {
-            thread_local std::mt19937 rng(std::random_device{}());
+            thread_local std::mt19937 rng(std::random_device {}());
             return rng;
         }
     }
@@ -121,10 +120,8 @@ namespace BlackMisc
         auto part = begin;
         while (part != end)
         {
-            auto newPart = std::partition(part, end, [ = ](const value_type &a)
-            {
-                return std::none_of(part, end, [ =, &a ](const value_type &b)
-                {
+            auto newPart = std::partition(part, end, [=](const value_type &a) {
+                return std::none_of(part, end, [=, &a](const value_type &b) {
                     return comparator(b, a);
                 });
             });
@@ -150,12 +147,11 @@ namespace BlackMisc
     {
         using value_type = typename C::value_type;
         using reverse = std::reverse_iterator<typename C::iterator>;
-        auto rit = std::find_if(reverse(container.end()), reverse(container.begin()), [ =, &value ](const value_type &lhs)
-        {
+        auto rit = std::find_if(reverse(container.end()), reverse(container.begin()), [=, &value](const value_type &lhs) {
             return comparator(lhs, value);
         });
-        Q_ASSERT_X(std::none_of(rit, reverse(container.begin()), [ =, &value ](const value_type &rhs) { return comparator(value, rhs); }),
-            "BlackMisc::topologicallySortedInsert", "Cyclic less-than relation detected (not a partial ordering)");
+        Q_ASSERT_X(std::none_of(rit, reverse(container.begin()), [=, &value](const value_type &rhs) { return comparator(value, rhs); }),
+                   "BlackMisc::topologicallySortedInsert", "Cyclic less-than relation detected (not a partial ordering)");
         container.insert(rit.base(), std::forward<T>(value));
     }
 
