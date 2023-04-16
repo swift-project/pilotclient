@@ -17,7 +17,10 @@
 #include <string>
 #include <cassert>
 
-#include "datarefs.inc"
+// Avoid checking large auto-generated header with cppcheck
+#ifndef CPPCHECK
+#    include "datarefs.inc"
+#endif
 
 namespace XSwiftBus
 {
