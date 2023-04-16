@@ -50,7 +50,7 @@ jobs:
           warnIfNotFound: false
 
   checks:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: preBuild
     outputs:
       warnings: ${{ steps.cppcheck.outputs.warnings }}
@@ -68,7 +68,7 @@ jobs:
         run: |
           sudo apt-get -y install cppcheck
           sudo cpan Path::Class
-          cppcheck --template=gcc --inline-suppr --std=c++14 --enable=style,unusedFunction -i externals \
+          cppcheck --template=gcc --inline-suppr --std=c++17 --enable=style,unusedFunction -i externals \
                    --suppressions-list=cppcheck.supp --library=qt.cfg --library=posix.cfg . 2> >(tee error.log >&2)
           perl scripts/warnings.pl error.log
 
