@@ -74,7 +74,7 @@ namespace BlackMisc::Aviation
         if ((p3 = CSelcal::validCharacters().indexOf(codeUpper.at(2))) < 0) return false;
         if ((p4 = CSelcal::validCharacters().indexOf(codeUpper.at(3))) < 0) return false;
         if (p1 >= p2 || p3 >= p4) return false; // pair in alphabetical order
-        if (p1 == p3 || p2 == p3 || p2 == p4 || p3 == p4) return false; // given letter can be used only once in a SELCAL code
+        if (p1 == p3 || p2 == p3 || p2 == p4 || p3 == p4) return false; // cppcheck-suppress knownConditionTrueFalse // given letter can be used only once in a SELCAL code
         return true;
     }
 

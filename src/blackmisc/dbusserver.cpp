@@ -380,8 +380,7 @@ namespace BlackMisc
         QString p = port.toLower().trimmed();
         if (!p.isEmpty())
         {
-            // cppcheck-suppress ignoredReturnValue
-            p.toShort(&ok);
+            p.toShort(&ok); // cppcheck-suppress ignoredReturnValue
             if (!ok)
             {
                 p = ""; // was not a number

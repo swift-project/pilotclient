@@ -32,7 +32,7 @@ namespace BlackCore::Afv::Model
         {
             loop.exec();
         }
-        const QByteArray jsonData = reply->readAll();
+        const QByteArray jsonData = reply ? reply->readAll() : QByteArray {};
         if (reply) { reply->deleteLater(); }
 
         if (jsonData.isEmpty()) { return; }

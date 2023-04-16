@@ -534,7 +534,11 @@ namespace BlackGui::Menus
         }
         Q_ASSERT_X(subMenu, Q_FUNC_INFO, "Could not create sub menu");
 
-        subMenu->setParent(parentMenu);
+        if (subMenu)
+        {
+            subMenu->setParent(parentMenu);
+        }
+
         if (pathDepth > 0 && subMenu)
         {
             subMenus.insert(key, subMenu);

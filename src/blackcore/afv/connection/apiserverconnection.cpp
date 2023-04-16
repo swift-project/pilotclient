@@ -69,7 +69,7 @@ namespace BlackCore::Afv::Connection
                             { this, [=](QNetworkReply *nwReply) {
                                  // called in "this" thread
                                  const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
-                                 if (!myself || isShuttingDown()) { return; }
+                                 if (!myself || isShuttingDown()) { return; } // cppcheck-suppress knownConditionTrueFalse
 
                                  this->logRequestDuration(reply.data(), "authentication");
                                  if (reply->error() != QNetworkReply::NoError)
@@ -278,7 +278,7 @@ namespace BlackCore::Afv::Connection
             QPointer<CApiServerConnection> myself(this);
             this->connectTo(m_username, m_password, m_client, m_networkVersion,
                             { this, [=](bool authenticated) {
-                                 if (!myself) { return; }
+                                 if (!myself) { return; } // cppcheck-suppress knownConditionTrueFalse
                                  CLogMessage(this).info(u"API server authenticated '%1': %2") << m_username << boolToYesNo(authenticated);
                              } });
         }

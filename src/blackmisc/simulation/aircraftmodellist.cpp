@@ -1030,14 +1030,11 @@ namespace BlackMisc::Simulation
         }
         const QMultiMap<int, CSimulatorInfo> cps(counts.countPerSimulator());
         CSimulatorInfo maxSim = cps.last();
-        if (simulatorsRepresented > 0)
+        const int count = cps.lastKey(); // how many elements
+        const QList<CSimulatorInfo> infoWithMaxValues = cps.values(count); // all with the same counts
+        for (const CSimulatorInfo &info : infoWithMaxValues)
         {
-            const int count = cps.lastKey(); // how many elements
-            const QList<CSimulatorInfo> infoWithMaxValues = cps.values(count); // all with the same counts
-            for (const CSimulatorInfo &info : infoWithMaxValues)
-            {
-                maxSim.addSimulator(info);
-            }
+            maxSim.addSimulator(info);
         }
         return maxSim;
     }

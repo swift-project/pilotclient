@@ -62,7 +62,7 @@ namespace BlackGui
         if (processEvents && sGui)
         {
             sGui->processEventsToRefreshGui();
-            if (!myself) { return -1; } // deleted in meantime (process events)
+            if (!myself) { return -1; } // cppcheck-suppress knownConditionTrueFalse // deleted in meantime (process events)
         }
 
         const int stopId = m_currentId++; // copy

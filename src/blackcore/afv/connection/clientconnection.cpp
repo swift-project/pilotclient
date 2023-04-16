@@ -50,7 +50,7 @@ namespace BlackCore::Afv::Connection
                                          { // callback called when connected
                                            this, [=](bool authenticated) {
                                                // callback when connection has been established
-                                               if (!myself) { return; }
+                                               if (!myself) { return; } // cppcheck-suppress knownConditionTrueFalse
 
                                                if (authenticated)
                                                {

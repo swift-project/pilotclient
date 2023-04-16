@@ -64,7 +64,7 @@ namespace BlackMisc
     bool CFileUtils::writeStringToLockedFile(const QString &content, const QString &fileNameAndPath)
     {
         QLockFile lock(fileNameAndPath + ".lock");
-        lock.lock();
+        if (!lock.lock()) { return false; }
         return writeStringToFile(content, fileNameAndPath);
     }
 
@@ -81,7 +81,7 @@ namespace BlackMisc
     QString CFileUtils::readLockedFileToString(const QString &fileNameAndPath)
     {
         QLockFile lock(fileNameAndPath + ".lock");
-        lock.lock();
+        if (!lock.lock()) { return {}; }
         return readFileToString(fileNameAndPath);
     }
 
