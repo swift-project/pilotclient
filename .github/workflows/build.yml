@@ -69,7 +69,7 @@ jobs:
           sudo apt-get -y install cppcheck
           sudo cpan Path::Class
           cppcheck --template=gcc --inline-suppr --std=c++17 --enable=style,unusedFunction -i externals \
-                   -DCPPCHECK --force --suppressions-list=cppcheck.supp \
+                   -i src/plugins/weatherdata/gfs/g2clib -DCPPCHECK --force --suppressions-list=cppcheck.supp \
                    --library=qt.cfg --library=posix.cfg . 2> >(tee error.log >&2)
           perl scripts/warnings.pl error.log
 
