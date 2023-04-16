@@ -75,7 +75,7 @@ jobs:
 
   buildLinux:
     runs-on: ubuntu-20.04
-    needs: preBuild
+    needs: [preBuild, checks]
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
       BACKTRACE_MINIDUMP_TOKEN: ${{ secrets.BACKTRACE_MINIDUMP_TOKEN }}
@@ -157,7 +157,7 @@ jobs:
 
   buildWin64:
     runs-on: windows-2019
-    needs: preBuild
+    needs: [preBuild, checks]
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
       BACKTRACE_MINIDUMP_TOKEN: ${{ secrets.BACKTRACE_MINIDUMP_TOKEN }}
@@ -244,7 +244,7 @@ jobs:
 
   buildWin32:
     runs-on: windows-2019
-    needs: preBuild
+    needs: [preBuild, checks]
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
       BACKTRACE_MINIDUMP_TOKEN: ${{ secrets.BACKTRACE_MINIDUMP_TOKEN }}
@@ -325,7 +325,7 @@ jobs:
 
   buildMacOS:
     runs-on: macos-11
-    needs: preBuild
+    needs: [preBuild, checks]
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
       BACKTRACE_MINIDUMP_TOKEN: ${{ secrets.BACKTRACE_MINIDUMP_TOKEN }}
