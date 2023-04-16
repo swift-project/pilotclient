@@ -18,13 +18,6 @@ useStlAlgorithm
 // Internal errors
 cppcheckError
 
-// g2clib
-variableScope:src/plugins/weatherdata/gfs/g2clib/*.c
-knownConditionTrueFalse:src/plugins/weatherdata/gfs/g2clib/*.c
-redundantAssignment:src/plugins/weatherdata/gfs/g2clib/*.c
-unreadVariable:src/plugins/weatherdata/gfs/g2clib/*.c
-invalidFunctionArg:src/plugins/weatherdata/gfs/g2clib/*.c
-
 // Ignore unusedFunction as it has too many false positives (especially in tests)
 unusedFunction
 
