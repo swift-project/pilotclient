@@ -83,7 +83,7 @@ namespace XSwiftBus
         void dispatch();
 
         dbus_bool_t dbusAddWatch(DBusWatch *watch);
-        void dbusRemoveWatch(DBusWatch *watch);
+        void dbusRemoveWatch(const DBusWatch *watch);
         void dbusWatchToggled(DBusWatch *watch);
 
         dbus_bool_t dbusAddTimeout(DBusTimeout *timeout);

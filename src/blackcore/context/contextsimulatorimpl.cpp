@@ -644,7 +644,7 @@ namespace BlackCore::Context
         if (!m_simulatorPlugin.first.isUnspecified())
         {
             ISimulator *simulator = m_simulatorPlugin.second;
-            if (simulator->isConnected())
+            if (simulator && simulator->isConnected())
             {
                 // we are about to unload an connected simulator
                 this->updateMarkAllAsNotRendered(); // without plugin nothing can be rendered

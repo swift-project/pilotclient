@@ -183,7 +183,7 @@ namespace BlackCore::Afv::Clients
             m_connection->connectTo(cid, password, callsign, client,
                                     { // this is the callback when the connection has been established
                                       this, [=](bool authenticated) {
-                                          if (!myself) { return; }
+                                          if (!myself) { return; } // cppcheck-suppress knownConditionTrueFalse
 
                                           // HF stations aliased
                                           const QVector<StationDto> aliasedStations = m_connection->getAllAliasedStations();

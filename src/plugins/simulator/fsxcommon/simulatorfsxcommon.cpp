@@ -1214,7 +1214,7 @@ namespace BlackSimPlugin::FsxCommon
             verified = true;
         }
 
-        if (!verified)
+        if (!verified) // cppcheck-suppress knownConditionTrueFalse
         {
             CLogMessage(this).info(u"Disable probes: '%1' failed to relase control") << cs.asString();
             m_useFsxTerrainProbe = false;
@@ -2641,8 +2641,7 @@ namespace BlackSimPlugin::FsxCommon
     void CSimulatorFsxCommon::traceSendId(const CSimConnectObject &simObject, const QString &functionName, const QString &details, bool forceTrace)
     {
         if (!forceTrace && !this->isTracingSendId()) { return; }
-        // cppcheck-suppress knownConditionTrueFalse
-        if (MaxSendIdTraces < 1) { return; }
+        if (MaxSendIdTraces < 1) { return; } // cppcheck-suppress knownConditionTrueFalse
         DWORD dwLastId = 0;
         const HRESULT hr = SimConnect_GetLastSentPacketID(m_hSimConnect, &dwLastId);
         if (isFailure(hr)) { return; }

@@ -748,7 +748,7 @@ namespace BlackMisc::Aviation
         if (firstSplit.size() >= 2)
         {
             // format like B789/H-SDE1E2E3FGHIJ2J3J4J5M1RWXY/LB1D1
-            QString equipment = firstSplit.size() >= 2 ? firstSplit[1] : "";
+            QString equipment = firstSplit[1];
             QStringList split = firstSplit[0].split('/');
             if (split.size() >= 3)
             {

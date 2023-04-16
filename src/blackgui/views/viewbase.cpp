@@ -75,7 +75,7 @@ namespace BlackGui::Views
         const int c = m_model->update(container, sort);
 
         // resize after real update according to mode
-        if (presizeThresholdReached)
+        if (presizeThresholdReached) // cppcheck-suppress knownConditionTrueFalse
         {
             // currently no furhter actions
         }
@@ -83,7 +83,7 @@ namespace BlackGui::Views
         {
             this->resizeToContents(); // mode based resize
         }
-        else if (presize && !presizeThresholdReached)
+        else if (presize && !presizeThresholdReached) // cppcheck-suppress knownConditionTrueFalse
         {
             // small amount of data not covered before
             this->fullResizeToContents();

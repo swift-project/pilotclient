@@ -103,6 +103,7 @@ namespace XSwiftBus
         return { XPLMCreateMenu(name.c_str(), m_data->id, XPLMAppendMenuItem(m_data->id, name.c_str(), nullptr, false), handler, itemsVoidPtr), false, std::move(items) };
     }
 
+    // cppcheck-suppress constParameter
     void CMenu::handler(void *menuRef, void *itemRef)
     {
         if (menuRef && itemRef)

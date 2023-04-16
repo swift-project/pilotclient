@@ -52,17 +52,17 @@ namespace BlackMisc::Aviation
             lights.setBeaconOn(true);
             lights.setNavOn(true);
 
-            if (gsKts > 5)
-            {
-                // mode taxi
-                lights.setTaxiOn(true);
-                lights.setLandingOn(false);
-            }
-            else if (gsKts > 30)
+            if (gsKts > 30)
             {
                 // mode accelaration for takeoff
                 lights.setTaxiOn(false);
                 lights.setLandingOn(true);
+            }
+            else if (gsKts > 5)
+            {
+                // mode taxi
+                lights.setTaxiOn(true);
+                lights.setLandingOn(false);
             }
             else
             {

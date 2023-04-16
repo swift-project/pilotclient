@@ -117,7 +117,7 @@ namespace BlackCore
                     // "retry" possible in some cases
                     do
                     {
-                        if (ignoreCmdBootstrapUrl || !checkCmdBootstrapUrl || CNetworkUtils::canConnect(url, CNetworkUtils::getLongTimeoutMs()))
+                        if (ignoreCmdBootstrapUrl || !checkCmdBootstrapUrl || CNetworkUtils::canConnect(url, CNetworkUtils::getLongTimeoutMs())) // cppcheck-suppress knownConditionTrueFalse
                         {
                             ok = true;
                             break;
@@ -308,7 +308,6 @@ namespace BlackCore
     {
         Q_ASSERT_X(!(webRead && localRead), Q_FUNC_INFO, "Local and web read together seems to be wrong");
         CStatusMessageList msgs;
-        QPointer<CSetupReader> myself(this);
 
         bool available = false;
         if (webRead || localRead)

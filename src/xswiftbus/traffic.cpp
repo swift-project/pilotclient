@@ -980,8 +980,7 @@ namespace XSwiftBus
             int h = top - bottom;
             x -= left;
             y -= bottom;
-            // cppcheck-suppress knownConditionTrueFalse
-            if (DEBUG) { DEBUG_LOG("Follow aircraft coordinates w,h,x,y: " + std::to_string(w) + " " + std::to_string(h) + " " + std::to_string(x) + " " + std::to_string(y)); }
+            if (DEBUG) { DEBUG_LOG("Follow aircraft coordinates w,h,x,y: " + std::to_string(w) + " " + std::to_string(h) + " " + std::to_string(x) + " " + std::to_string(y)); } // cppcheck-suppress knownConditionTrueFalse
             if (traffic->m_lastMouseX == x && traffic->m_lastMouseY == y && traffic->m_lastMouseX >= 0 && traffic->m_lastMouseY >= 0)
             {
                 // mouse NOT moving, we lost focus or we do NOT move anymore
@@ -1099,8 +1098,7 @@ namespace XSwiftBus
             return 0;
         }
 
-        // cppcheck-suppress knownConditionTrueFalse
-        if (DEBUG)
+        if (DEBUG) // cppcheck-suppress knownConditionTrueFalse
         {
             DEBUG_LOG("Camera: " + pos2String(cameraPosition));
             DEBUG_LOG("Follow aircraft " + traffic->m_followPlaneViewCallsign + " " + modelName);

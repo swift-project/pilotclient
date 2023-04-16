@@ -352,7 +352,7 @@ namespace BlackMisc
     class BLACKMISC_EXPORT CDataCacheRevision::Session
     {
     public:
-        // cppcheck-suppress unusedFunction
+        // cppcheck-suppress missingReturn
         Session(const QString &filename) : m_filename(filename) {}
         void updateSession();
         const QUuid &uuid() const { return m_uuid; }

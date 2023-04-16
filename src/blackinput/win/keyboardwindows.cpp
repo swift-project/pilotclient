@@ -143,8 +143,7 @@ namespace BlackInput
 
     bool CKeyboardWindows::init()
     {
-        // cppcheck-suppress knownConditionTrueFalse
-        if (useWindowsHook)
+        if (useWindowsHook) // cppcheck-suppress knownConditionTrueFalse
         {
             Q_ASSERT_X(g_keyboardWindows == nullptr, "CKeyboardWindows::init", "Windows supports only one keyboard instance. Cannot initialize a second one!");
             g_keyboardWindows = this;

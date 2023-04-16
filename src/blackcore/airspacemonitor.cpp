@@ -186,7 +186,7 @@ namespace BlackCore
             eventLoop.stopWhen(m_fsdClient, &CFSDClient::flightPlanReceived, [=](const auto &cs, const auto &) { return cs == callsign; });
             if (eventLoop.exec(1500))
             {
-                if (!myself || !sApp || sApp->isShuttingDown()) { return CFlightPlan(); }
+                if (!myself || !sApp || sApp->isShuttingDown()) { return CFlightPlan(); } // cppcheck-suppress knownConditionTrueFalse
                 if (m_flightPlanCache.contains(callsign))
                 {
                     plan = m_flightPlanCache[callsign];

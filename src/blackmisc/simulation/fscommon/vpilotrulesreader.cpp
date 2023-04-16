@@ -148,7 +148,7 @@ namespace BlackMisc::Simulation::FsCommon
             if (m_shutdown) { return false; }
             loadedFiles++;
             bool s = this->loadFile(fn, rules);
-            if (!s) { this->m_fileListWithProblems.append(fn); }
+            if (!s) { filesWithProblems.append(fn); }
         }
 
         {

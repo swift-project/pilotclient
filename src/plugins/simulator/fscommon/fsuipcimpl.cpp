@@ -498,8 +498,7 @@ namespace BlackSimPlugin::FsCommon
                 // position
                 const double latCorrectionFactor = 90.0 / (10001750.0 * 65536.0 * 65536.0);
                 const double lonCorrectionFactor = 360.0 / (65536.0 * 65536.0 * 65536.0 * 65536.0);
-                // cppcheck-suppress shadowArgument
-                CAircraftSituation situation = aircraft.getSituation();
+                CAircraftSituation situation = aircraft.getSituation(); // cppcheck-suppress shadowArgument
                 CCoordinateGeodetic position = situation.getPosition();
                 CLatitude lat(latitudeRaw * latCorrectionFactor, CAngleUnit::deg());
                 CLongitude lon(longitudeRaw * lonCorrectionFactor, CAngleUnit::deg());

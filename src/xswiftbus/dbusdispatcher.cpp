@@ -190,7 +190,7 @@ namespace XSwiftBus
         return true;
     }
 
-    void CDBusDispatcher::dbusRemoveWatch(DBusWatch *watch)
+    void CDBusDispatcher::dbusRemoveWatch(const DBusWatch *watch)
     {
         for (auto it = m_watchers.begin(); it != m_watchers.end();)
         {
