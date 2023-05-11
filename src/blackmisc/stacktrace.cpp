@@ -9,6 +9,7 @@
 #include <QMutexLocker>
 #include <array>
 #include <cstdlib>
+#include <mutex>
 
 #if defined(Q_CC_MSVC)
 #    include <Windows.h>

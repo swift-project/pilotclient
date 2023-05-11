@@ -18,6 +18,8 @@
 #include <Windows.h>
 #include <SimConnect.h>
 
+#include <QtGlobal>
+
 #pragma pop_macro("interface")
 
 #ifndef Q_OS_WIN64
