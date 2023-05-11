@@ -19,6 +19,7 @@
 #include <QTextStream>
 #include <QtGlobal>
 #include <string>
+#include <ostream>
 
 namespace BlackMisc::Mixin
 {
