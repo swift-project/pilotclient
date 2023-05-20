@@ -52,3 +52,7 @@ desktop.ini
 # Jetbrains stuff
 .idea/**
 cmake-build-*/
+
+# Install folders
+out/
+dist/
