@@ -5,7 +5,7 @@
     <selected>1</selected>
     <show>1</show>
     <componentList>
-        <component>
+        <!-- <component>
             <name>fs2004</name>
             <description>FS9: Flight Sim 2004</description>
             <canBeEdited>1</canBeEdited>
@@ -35,8 +35,8 @@
                     <value>32</value>
                 </compareText>
             </shouldPackRuleList>
-        </component>
-        <component>
+        </component> -->
+        <!-- <component>
             <name>fsx</name>
             <description>FSX: Flight Sim X</description>
             <canBeEdited>1</canBeEdited>
@@ -70,8 +70,8 @@ This plugin acts as the interface between swift and FSX.</detailedDescription>
                     <value>32</value>
                 </compareText>
             </shouldPackRuleList>
-        </component>
-        <component>
+        </component> -->
+        <!-- <component>
             <name>msfs</name>
             <description>MSFS: Flight Sim 2020</description>
             <canBeEdited>1</canBeEdited>
@@ -97,8 +97,8 @@ This plugin acts as the interface between swift and MSFS.</detailedDescription>
                     <type>windows</type>
                 </platformTest>
             </shouldPackRuleList>
-        </component>
-        <component>
+        </component> -->
+        <!-- <component>
             <name>p3d</name>
             <description>PREPAR3D</description>
             <canBeEdited>1</canBeEdited>
@@ -127,7 +127,7 @@ This plugin acts as the interface between swift and P3D.</detailedDescription>
                     <type>windows</type>
                 </platformTest>
             </shouldPackRuleList>
-        </component>
+        </component> -->
         <component>
             <name>xplane</name>
             <description>X-Plane</description>
