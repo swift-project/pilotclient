@@ -90,7 +90,7 @@ class Builder:
         windows64 = 1 if os_name == 'windows' and int(self.word_size) == 64 else 0
         installer_platform = installer_platform_map[platform.system()]
 
-        subprocess.check_call([bitrock_builder_bin,
+        subprocess.check_call([os.path.expanduser(bitrock_builder_bin),
                                 "quickbuild",
                                 "installer/installbuilder/project.xml",
                                 "{}".format(installer_platform),
