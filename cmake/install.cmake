@@ -26,6 +26,11 @@ elseif(APPLE)
 endif()
 install(FILES ${crashpad_handler_path} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
+# create_dbus_machineid
+if(APPLE)
+    install(FILES ${swift_SOURCE_DIR}/externals/macx-clang/64/bin/create_dbus_machineid.scpt DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+endif()
+
 # Deploy qt libs
 
 # Workaround to get Qt paths for deployment (until switching to Qt6 deployment tool)
