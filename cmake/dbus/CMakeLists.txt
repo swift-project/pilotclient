@@ -26,7 +26,7 @@ elseif(APPLE)
     target_include_directories(externals_dbus INTERFACE ${PROJECT_SOURCE_DIR}/externals/common/include)
     target_include_directories(externals_dbus INTERFACE ${PROJECT_SOURCE_DIR}/externals/macx-clang/64/include/)
 
-    set_target_properties(externals_dbus PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/externals/macx-clang/64/lib/libdbus-1.dylib)
+    set_target_properties(externals_dbus PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/externals/macx-clang/64/lib/libdbus-1.3.dylib)
     install(IMPORTED_RUNTIME_ARTIFACTS externals_dbus DESTINATION xswiftbus/64)
     install(IMPORTED_RUNTIME_ARTIFACTS externals_dbus DESTINATION lib)
 endif()
