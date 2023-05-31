@@ -28,5 +28,5 @@ elseif(APPLE)
 
     set_target_properties(externals_dbus PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/externals/macx-clang/64/lib/libdbus-1.dylib)
     install(IMPORTED_RUNTIME_ARTIFACTS externals_dbus DESTINATION xswiftbus/64)
-    install(IMPORTED_RUNTIME_ARTIFACTS externals_dbus DESTINATION bin)
+    install(IMPORTED_RUNTIME_ARTIFACTS externals_dbus DESTINATION lib)
 endif()
