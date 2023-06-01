@@ -157,7 +157,7 @@ jobs:
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
       BACKTRACE_MINIDUMP_TOKEN: ${{ secrets.BACKTRACE_MINIDUMP_TOKEN }}
-      BITROCK_BUILDER: "$(USERPROFILE)/installbuilder/bin/builder-cli.exe"
+      BITROCK_BUILDER: "~/installbuilder/bin/builder-cli.exe"
     outputs:
       warnings: ${{ steps.warnings.outputs.warnings }}
 
@@ -243,7 +243,7 @@ jobs:
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
       BACKTRACE_MINIDUMP_TOKEN: ${{ secrets.BACKTRACE_MINIDUMP_TOKEN }}
-      BITROCK_BUILDER: "$(USERPROFILE)/installbuilder/bin/builder-cli.exe"
+      BITROCK_BUILDER: "~/installbuilder/bin/builder-cli.exe"
     outputs:
       warnings: ${{ steps.warnings.outputs.warnings }}
 
