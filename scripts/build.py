@@ -82,7 +82,7 @@ class Builder:
         os.chdir(self._get_swift_source_path())
         os_map = {'Linux': 'linux', 'Darwin': 'macos', 'Windows': 'windows'}
         installer_platform_map = {'Linux': 'linux-x{}'.format(self.word_size), 'Darwin': 'osx', 'Windows': 'windows'}
-        extension_map = {'Linux': 'run', 'Darwin': 'dmg', 'Windows': 'exe'}
+        extension_map = {'Linux': 'run', 'Darwin': 'app', 'Windows': 'exe'}
         extension = extension_map[platform.system()]
         os_name = os_map[platform.system()]
         version_full = self.__get_swift_version_base()
