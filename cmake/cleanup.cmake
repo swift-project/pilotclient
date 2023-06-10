@@ -1,0 +1,2 @@
+file(GLOB UNUSED_DLLS ${CMAKE_INSTALL_PREFIX}/vcredist/*.dll)
+file(REMOVE ${UNUSED_DLLS})

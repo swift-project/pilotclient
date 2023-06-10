@@ -13,7 +13,7 @@
             <actionList>
                 <runProgram>
                     <abortOnError>0</abortOnError>
-                    <program>${installdir}/vcredist/vcredist_x86.exe</program>
+                    <program>${installdir}/vcredist/vc_redist.x86.exe</program>
                     <programArguments>/install /quiet /norestart</programArguments>
                     <progressText>Installing Visual Studio 2019 x86 Redistributables</progressText>
                     <showMessageOnError>0</showMessageOnError>
@@ -61,7 +61,7 @@ The installation will now continue, but swift might not work properly. If this i
             </actionList>
             <distributionFileList>
                 <distributionFile>
-                    <origin>../../dist/vcredist/vcredist_x86.exe</origin>
+                    <origin>../../dist/vcredist/vc_redist.x86.exe</origin>
                 </distributionFile>
             </distributionFileList>
         </folder>

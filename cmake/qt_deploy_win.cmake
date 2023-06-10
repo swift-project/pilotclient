@@ -19,6 +19,7 @@ execute_process(COMMAND ${QT_INSTALL_BINS}/windeployqt.exe
                         --no-opengl-sw
                         --no-webkit2
                         --no-virtualkeyboard
+                        -opengl # not detected automatically
                         WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin)
 
 # Remove unused files

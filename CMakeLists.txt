@@ -51,6 +51,20 @@ if(SWIFT_WIN32)
     set(SWIFT_BUILD_XSWIFTBUS OFF)
 endif()
 
+if(MSVC)
+    # This also installs some dlls which we do not need
+    # but our script to create the installer does not pack them.
+    # Further they are removed with cleanup.cmake
+    # see https://gitlab.kitware.com/cmake/cmake/-/issues/17725
+    set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION vcredist)
+    include(InstallRequiredSystemLibraries)
+    if (SWIFT_WIN32)
+        install(FILES ${MSVC_REDIST_DIR}/vc_redist.x86.exe DESTINATION vcredist)
+    else()
+        install(FILES ${MSVC_REDIST_DIR}/vc_redist.x64.exe DESTINATION vcredist)
+    endif()
+endif()
+
 # Find dependencies
 find_package(Qt5 REQUIRED COMPONENTS Core DBus Gui Multimedia Xml Qml Widgets Svg Test)
 
@@ -116,3 +130,7 @@ if(SWIFT_BUILD_DOCUMENTATION)
 endif()
 
 include(cmake/install.cmake)
+
+if(MSVC)
+    install(SCRIPT ${PROJECT_SOURCE_DIR}/cmake/cleanup.cmake)
+endif()
