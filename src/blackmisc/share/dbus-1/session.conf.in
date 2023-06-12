@@ -12,7 +12,7 @@
        the behavior of child processes. -->
   <keep_umask/>
 
-  <listen>$$DBUS_SESSION_BUS_LISTEN_ADDRESS</listen>
+  <listen>${DBUS_SESSION_BUS_LISTEN_ADDRESS}</listen>
 
   <!-- On Unix systems, the most secure authentication mechanism is
   EXTERNAL, which uses credential-passing over Unix sockets.
@@ -22,7 +22,7 @@
   and will not work on obscure flavours of Unix that do not have
   a supported credentials-passing mechanism. On those platforms/transports,
   comment out the <auth> element to allow fallback to DBUS_COOKIE_SHA1. -->
-  $$DBUS_SESSION_CONF_MAYBE_AUTH_EXTERNAL
+  ${DBUS_SESSION_CONF_MAYBE_AUTH_EXTERNAL}
 
   <standard_session_servicedirs />
 
