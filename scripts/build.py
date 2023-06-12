@@ -380,7 +380,29 @@ class MacOSBuilder(Builder):
         return True
 
     def _strip_debug(self):
-        pass # TOOD
+        files = [
+            "bin/swiftcore",
+            "bin/swiftdata",
+            "bin/swiftguistd",
+            "bin/swiftlauncher",
+            "lib/libcore.dylib",
+            "lib/libgui.dylib",
+            "lib/libinput.dylib",
+            "lib/libmisc.dylib",
+            "lib/libplugincommon.dylib",
+            "lib/libsound.dylib",
+            "bin/plugins/simulator/libsimulatoremulated.dylib",
+            "bin/plugins/simulator/libsimulatoremulatedconfig.dylib",
+            "bin/plugins/simulator/libsimulatorflightgear.dylib",
+            "bin/plugins/simulator/libsimulatorflightgearconfig.dylib",
+            "bin/plugins/simulator/libsimulatorxplane.dylib",
+            "bin/plugins/simulator/libsimulatorxplaneconfig.dylib",
+            "bin/plugins/weatherdata/libweatherdatagfs.dylib",
+            "xswiftbus/64/mac.xpl",
+        ]
+        dist_path = path.join(self._get_swift_source_path(), "dist")
+        for file in files:
+            subprocess.check_call(["dsymutil", path.join(dist_path, file)], env=dict(os.environ))
 
     def __init__(self, word_size):
         Builder.__init__(self, word_size)
