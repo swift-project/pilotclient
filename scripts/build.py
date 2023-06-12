@@ -146,7 +146,7 @@ class Builder:
         archive_name = '-'.join(['xswiftbus', os_map[platform.system()], self.word_size, self.version]) + '.7z'
         archive_path = path.abspath(path.join(os.pardir, archive_name))
         content_path = path.abspath(path.join(self._get_swift_source_path(), 'dist', 'xswiftbus'))
-        subprocess.check_call(['7z', 'a', '-mx=9', archive_path, content_path], env=dict(os.environ))
+        subprocess.check_call(['7z', 'a', '-mx=9', archive_path, content_path, "-xr\!\*.debug", "-xr\!\*.dSYM"], env=dict(os.environ))
 
     def symbols(self, upload_symbols):
         """
