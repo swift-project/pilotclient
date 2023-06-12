@@ -50,11 +50,14 @@ class Builder:
             os.makedirs(build_path)
         os.chdir(build_path)
 
+        use_crashpad = "ON" if platform.system() == 'Darwin' or platform.system() == 'Windows' else "OFF"
+
         cmake_call = ['cmake',
                       '..',
                       '-G {}'.format(self._get_generator()),
                       '-DCMAKE_BUILD_TYPE=RelWithDebInfo',
-                      '-DCMAKE_INSTALL_PREFIX=../dist'] + cmake_args
+                      '-DCMAKE_INSTALL_PREFIX=../dist',
+                      '-DSWIFT_USE_CRASHPAD={}'.format(use_crashpad)] + cmake_args
         subprocess.check_call(cmake_call, env=dict(os.environ))
 
         # Workaround while using Make for MacOS to pass number of jobs
