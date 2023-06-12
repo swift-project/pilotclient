@@ -84,6 +84,9 @@ endif()
 
 if(UNIX AND NOT APPLE)
     add_compile_options("-Wno-deprecated")
+endif()
+
+if(UNIX)
     add_compile_options("-Wno-deprecated-declarations")
 endif()
 
