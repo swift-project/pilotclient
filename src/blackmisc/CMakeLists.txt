@@ -732,14 +732,8 @@ if(WIN32)
 endif()
 
 if(APPLE)
-    target_link_libraries(misc PRIVATE "-lbsm -framework AVFoundation -framework Security -framework CoreFoundation -framework ApplicationServices -framework Foundation")
+    target_link_libraries(misc PRIVATE "-lbsm -framework AVFoundation -framework Security -framework CoreFoundation -framework ApplicationServices -framework Foundation -framework IOKit")
 endif()
-
-# TODO OTHER_FILES += $$TRANSLATIONS readme.txt share/dbus-1/session.conf.in
-
-# TODO DBus config
-
-# TODO Copy externals to build/install directory
 
 install(TARGETS misc
     LIBRARY DESTINATION lib
