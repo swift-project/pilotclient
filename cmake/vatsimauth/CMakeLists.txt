@@ -14,6 +14,11 @@ elseif(SWIFT_WIN64)
     set_target_properties(externals_vatsim_auth PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/externals/win32-msvc/64/lib/vatsimauth.dll)
 endif()
 
+if(UNIX AND NOT APPLE)
+    # https://gitlab.kitware.com/cmake/cmake/-/issues/19860#note_642079
+    set_target_properties(externals_vatsim_auth PROPERTIES IMPORTED_NO_SONAME TRUE)
+endif()
+
 install(IMPORTED_RUNTIME_ARTIFACTS externals_vatsim_auth
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
