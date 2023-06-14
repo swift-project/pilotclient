@@ -134,6 +134,3 @@ elseif(APPLE)
     install(DIRECTORY ${QT_INSTALL_PLUGINS}/platforminputcontexts DESTINATION bin FILES_MATCHING PATTERN "*.dylib")
     install(DIRECTORY ${QT_INSTALL_PLUGINS}/platformthemes DESTINATION bin FILES_MATCHING PATTERN "*.dylib")
 endif()
-
-# TODO VC runtime
-# TODO csl2xsb

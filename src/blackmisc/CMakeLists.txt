@@ -365,7 +365,7 @@ add_library(misc SHARED
         network/settings/serversettings.h
         network/authenticateduser.cpp
         network/authenticateduser.h
-        network/external/qjsonwebtoken.cpp # TODO To separate target
+        network/external/qjsonwebtoken.cpp
         network/external/qjsonwebtoken.h
         network/client.cpp
         network/client.h
@@ -652,7 +652,6 @@ add_library(misc SHARED
         test/testserviceinterface.h
 
         # Third party
-        # TODO Move to separate target
         thirdparty/simplecrypt.cpp
         thirdparty/simplecrypt.h
 

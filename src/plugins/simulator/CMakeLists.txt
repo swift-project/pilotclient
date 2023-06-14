@@ -6,4 +6,3 @@ add_subdirectory(plugincommon)
 
 add_subdirectory(xplane)
 add_subdirectory(xplaneconfig)
-# TODO

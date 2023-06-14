@@ -107,7 +107,6 @@ endif()
 target_link_libraries(xswiftbus PUBLIC externals_event externals_dbus externals_xplm)
 
 
-# TODO Use debug versions in debug mode
 if(SWIFT_WIN32)
     set(PNG_LIBRARIES ${swift_SOURCE_DIR}/externals/win32-msvc/32/lib/png.lib)
     set(ZLIB_LIBRARIES ${swift_SOURCE_DIR}/externals/win32-msvc/32/lib/z.lib)
