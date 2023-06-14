@@ -6,8 +6,8 @@ add_library(plugincommon SHARED
 
 target_include_directories(plugincommon PUBLIC ${PROJECT_SOURCE_DIR}/src)
 
-set_target_properties(simulatoremulated PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin)
-set_target_properties(simulatoremulated PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin)
+set_target_properties(plugincommon PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin)
+set_target_properties(plugincommon PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin)
 
 target_link_libraries(plugincommon
         PUBLIC
