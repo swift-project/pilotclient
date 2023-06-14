@@ -167,6 +167,7 @@ endif()
 install(TARGETS xswiftbus
     LIBRARY DESTINATION xswiftbus/64
     RUNTIME DESTINATION xswiftbus/64
+    PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
 )
 configure_file(readme.txt.in readme.txt)
 
