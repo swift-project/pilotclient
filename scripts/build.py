@@ -210,6 +210,9 @@ class Builder:
             tar.close()
             self.__upload_symbol_files(tar_path)
 
+    def bundle_csl2xsb(self):
+        pass
+
     def _get_swift_source_path(self):
         return self.__source_path
 
@@ -317,6 +320,13 @@ class MSVCBuilder(Builder):
 
     def _strip_debug(self):
         pass
+
+    def bundle_csl2xsb(self):
+        if self.word_size != '64':
+            return
+
+        subprocess.check_call(["pyinstaller", "-y", "--distpath", "dist/share",
+                                "--workpath", os.environ["TEMP"], "scripts/csl2xsb/CSL2XSB.py"])
 
     def __init__(self, word_size):
         Builder.__init__(self, word_size)
@@ -480,6 +490,7 @@ def main(argv):
 
     builder.prepare()
     builder.build(jobs, cmake_args, dev_build)
+    builder.bundle_csl2xsb()
     #builder.checks()
     builder.install()
     builder.publish()

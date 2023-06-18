@@ -23,9 +23,9 @@
         <include>
             <file>vcredist-x64.xml</file>
         </include>
-        <!-- <include>
+        <include>
             <file>csl2xsb.xml</file>
-        </include> -->
+        </include>
     </componentList>
     <functionDefinitionList>
         <actionDefinition>
