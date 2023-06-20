@@ -1,9 +1,0 @@
-# SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
-# SPDX-License-Identifier: CC0-1.0
-
-win32:isEmpty(MINGW_IN_SHELL) {
-    TOUCH = copy /y nul >nul
-}
-else {
-    TOUCH = touch
-}

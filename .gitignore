@@ -1,9 +1,6 @@
 # SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
 # SPDX-License-Identifier: CC0-1.0
 
-# MSVC generated precompiled sources
-pch.h.cpp
-
 # QtCreator project files
 /swift.pro.user
 /swift.pro.user.*
@@ -31,10 +28,6 @@ desktop.ini
 # Editors temporary files 
 *~
 
-# qmake
-/.qmake.stash
-/.qmake.cache
-
 # Generated installers
 /swiftinstaller-*.run
 /swiftinstaller-*.exe
@@ -48,9 +41,6 @@ desktop.ini
 
 # VATSIM key
 /vatsim.json
-
-# other
-/swift_config.cookie
 
 # Jetbrains stuff
 .idea/**
