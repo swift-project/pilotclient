@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
+# SPDX-License-Identifier: CC0-1.0
+
 # this file is included by swift.pro in the project root
 
 XSWIFTBUS_DEPENDENTS = $$SourceRoot/src/xswiftbus \

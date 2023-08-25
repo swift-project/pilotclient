@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright (C) 2019 swift Project Community / Contributors
+// SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
+
 #include "blackcore/afv/model/afvmapreader.h"
 #include "blackcore/application.h"
 #include "blackcore/afv/dto.h"

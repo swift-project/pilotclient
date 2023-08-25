@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
+# SPDX-License-Identifier: CC0-1.0
+
 msvc {
     contains(QMAKE_TARGET.arch, x86_64) {
         WORD_SIZE = 64

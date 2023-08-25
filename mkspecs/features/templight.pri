@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
+# SPDX-License-Identifier: CC0-1.0
+
 swiftConfig(templight) {
     CXXFLAGS_NO_TEMPLIGHT = $$QMAKE_CXXFLAGS
     QMAKE_CXXFLAGS += -Xtemplight -profiler -Xtemplight -ignore-system

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
+# SPDX-License-Identifier: CC0-1.0
+
 msvc:DEFINES *= _SCL_SECURE_NO_WARNINGS
 
 # swift standard warnings

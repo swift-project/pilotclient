@@ -1,3 +1,8 @@
+<!--
+ SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
+ SPDX-License-Identifier: CC0-1.0
+-->
+
 <!-- This configuration file controls the per-user-login-session message bus.
      Add a session-local.conf and edit that rather than changing this 
      file directly. -->

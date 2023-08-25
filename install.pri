@@ -1,9 +1,12 @@
+# SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
+# SPDX-License-Identifier: CC0-1.0
+
 ############### Readme, License etc. #####
 
 text_files_target.path = $${PREFIX}/bin
 text_files_target.files *= README.md
-text_files_target.files *= LICENSE
-text_files_target.files *= LICENSE.html
+text_files_target.files *= LICENSES/LicenseRef-swift-pilot-client-1.txt
+text_files_target.files *= LICENSES/LicenseRef-swift-pilot-client-1.html
 
 INSTALLS += text_files_target
 

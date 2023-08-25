@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Copyright (C) 2014 swift Project Community / Contributors
+// SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "callbackwrapper.h"
 #include <QDebug>

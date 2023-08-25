@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
+# SPDX-License-Identifier: CC0-1.0
+
 win32: GIT_BIN = $$system($$(SYSTEMROOT)\system32\where git 2> nul)
 else: GIT_BIN = $$system(which git 2> /dev/null)
 

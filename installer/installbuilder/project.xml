@@ -1,11 +1,15 @@
+<!--
+	SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
+	SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
+-->
 <project>
     <shortName>swift</shortName>
     <fullName>swift</fullName>
     <version></version>
 
     <!-- <version>0.7.0</version> -->
-    <licenseFile>../../dist/bin/LICENSE</licenseFile>
-    <htmlLicenseFile>../../dist/bin/LICENSE.html</htmlLicenseFile>
+    <licenseFile>../../dist/bin/LicenseRef-swift-pilot-client-1.txt</licenseFile>
+    <htmlLicenseFile>../../dist/bin/LicenseRef-swift-pilot-client-1.html</htmlLicenseFile>
     <leftImage>../images/leftimage.png</leftImage>
     <logoImage>../images/logo.png</logoImage>
     <splashImage>../images/splashscreen.png</splashImage>
@@ -318,8 +322,8 @@ https://swift-project.org/</text>
         <licenseFile>
             <code>en</code>
             <encoding>utf-8</encoding>
-            <file>../../dist/bin/LICENSE</file>
-            <htmlFile>../../dist/bin/LICENSE.html</htmlFile>
+            <file>../../dist/bin/LicenseRef-swift-pilot-client-1.txt</file>
+            <htmlFile>../../dist/bin/LicenseRef-swift-pilot-client-1.html</htmlFile>
         </licenseFile>
     </licenseFileList>
     <parameterList>

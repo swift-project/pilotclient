@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
+# SPDX-License-Identifier: CC0-1.0
+
 # Make sure _QMAKE_CACHE_ is initialized (otherwise config.log goes to the root directory)
 cache()
 
