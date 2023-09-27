@@ -16,7 +16,7 @@ env:
   do_symbols:    ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
   qt_version:    5.15.2
   bitrock_version: qt-professional-23.1.0
-  bitrock_url:     https://releases.bitrock.com/installbuilder
+  bitrock_url:     https://releases.installbuilder.com/installbuilder
 
 jobs:
 
