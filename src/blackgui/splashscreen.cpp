@@ -3,35 +3,38 @@
 
 #include "splashscreen.h"
 
+#include <QtMath>
+
 using namespace BlackMisc;
 
 namespace BlackGui
 {
-    CSplashScreen::CSplashScreen(const QPixmap &pixmap) : QSplashScreen(pixmap)
+    CSplashScreen::CSplashScreen(const QPixmap &pixmap)
     {
-        const int heightTe = 60;
-        const int height = pixmap.height();
-        const int width = qRound(0.9 * pixmap.width());
-        const int yPos = (height - heightTe) / 2;
-        const int xPos = (pixmap.width() - width) / 2;
+        const int height = qFloor(pixmap.height() * 1.2);
+        const int width = pixmap.width();
+        QPixmap splash(pixmap.width(), height);
+        splash.fill(Qt::transparent);
 
-        m_label = new QLabel(this);
-        m_label->setGeometry(xPos, yPos, width, 80);
-        m_label->setAlignment(Qt::AlignCenter);
-        m_label->setStyleSheet("background: rgba(0,0,0,0); color: white;");
-        m_label->setWordWrap(true);
-        m_label->setVisible(false);
+        QPainter painter(&splash);
+        painter.drawPixmap(0, 0, pixmap);
 
-        m_hideTextTimer.setSingleShot(true);
-        connect(&m_hideTextTimer, &QTimer::timeout, this, &CSplashScreen::hideText);
+        const int statusbar_height = qFloor((height - pixmap.height()) / 2.0);
+        QPixmap statusbar(width, statusbar_height);
+        statusbar.fill(QColor(200, 200, 200));
+        painter.drawPixmap(0, height - statusbar_height, statusbar);
+
+        this->setPixmap(splash);
+
+        m_clearTextTimer.setSingleShot(true);
+        connect(&m_clearTextTimer, &QTimer::timeout, this, &CSplashScreen::clearMessage);
     }
 
     void CSplashScreen::showStatusMessage(const QString &html)
     {
         if (html.isEmpty()) { return; }
-        m_label->setVisible(true);
-        m_label->setText(html);
-        m_hideTextTimer.start(2000);
+        this->showMessage(html, Qt::AlignHCenter | Qt::AlignBottom);
+        m_clearTextTimer.start(2000);
     }
 
     void CSplashScreen::showStatusMessage(const BlackMisc::CStatusMessage &message)
@@ -42,11 +45,5 @@ namespace BlackGui
     void CSplashScreen::setSplashFont(const QFont &font)
     {
         this->setFont(font);
-        m_label->setFont(font);
     }
-
-    void CSplashScreen::hideText()
-    {
-        m_label->setVisible(false);
-    };
 }
