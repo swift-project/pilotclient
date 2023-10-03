@@ -35,12 +35,8 @@ namespace BlackGui
         void setSplashFont(const QFont &font);
 
     private:
-        //! Hide text
-        void hideText();
-
         QString m_message;
-        QTimer m_hideTextTimer;
-        QLabel *m_label = nullptr;
+        QTimer m_clearTextTimer;
     };
 } // ns
 

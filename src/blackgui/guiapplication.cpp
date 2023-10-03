@@ -225,11 +225,11 @@ namespace BlackGui
         splashFont.setFamily("Arial");
         // splashFont.setBold(true);
         splashFont.setPointSize(10);
-        splashFont.setStretch(125);
+        splashFont.setStretch(100);
 
         m_splashScreen.reset(new CSplashScreen(pixmap.scaled(256, 256)));
         m_splashScreen->show();
-        m_splashScreen->showStatusMessage(CBuildConfig::getVersionString());
+        m_splashScreen->showStatusMessage("Version " + CBuildConfig::getVersionString());
         m_splashScreen->setSplashFont(splashFont);
 
         this->processEventsToRefreshGui();
