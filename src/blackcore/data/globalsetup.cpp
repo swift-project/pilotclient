@@ -47,7 +47,7 @@ namespace BlackCore::Data
         m_vatsimStatusFileUrls = CUrlList { "https://status.vatsim.net" };
         m_vatsimDataFileUrls = CUrlList { "https://data.vatsim.net/v3/vatsim-data.json" };
         m_vatsimServerFileUrl = CUrl("https://data.vatsim.net/v3/vatsim-servers.json");
-        m_vatsimFsdHttpUrl = CUrl("http://fsd-http.connect.vatsim.net");
+        m_vatsimFsdHttpUrl = CUrl("http://fsd.vatsim.net");
         m_sharedUrls = CUrlList {
             "http://download.swift-project.org/shared/",
         };
