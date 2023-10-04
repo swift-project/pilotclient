@@ -411,7 +411,14 @@ namespace BlackMisc::Json
     QJsonObject jsonObjectFromString(const QString &json, bool acceptCacheFormat)
     {
         if (json.isEmpty()) { return QJsonObject(); }
-        const QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
+
+        QJsonParseError error {};
+        const QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8(), &error));
+        if (error.error != QJsonParseError::NoError)
+        {
+            throw CJsonException(error.errorString());
+        }
+
         return acceptCacheFormat ? Json::unwrapCache(jsonDoc.object()) : jsonDoc.object();
     }
 
