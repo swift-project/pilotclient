@@ -417,11 +417,25 @@ namespace BlackSimPlugin::Fs9
         // To avoid jitters, I wait some update cylces to stabilize the values
         if (m_skipCockpitUpdateCycles < 1)
         {
-            this->updateCockpit(
-                simDataOwnAircraft.getCom1System(),
-                simDataOwnAircraft.getCom2System(),
-                simDataOwnAircraft.getTransponder(),
-                this->identifier());
+            const auto dontOverwrite = [](const CFrequency &from, const CFrequency &to) {
+                // don't overwrite 8.33 kHz frequencies
+                return CComSystem::isExclusiveWithin8_33kHzChannel(from) &&
+                       from.valueInteger(CFrequencyUnit::kHz()) / 10 == to.valueInteger(CFrequencyUnit::kHz()) / 10;
+            };
+            CComSystem com1 = simDataOwnAircraft.getCom1System();
+            CComSystem com2 = simDataOwnAircraft.getCom2System();
+            const CComSystem oldCom1 = getOwnComSystem(CComSystem::Com1);
+            const CComSystem oldCom2 = getOwnComSystem(CComSystem::Com2);
+            if (dontOverwrite(oldCom1.getFrequencyActive(), com1.getFrequencyActive()))
+                com1.setFrequencyActive(oldCom1.getFrequencyActive());
+            if (dontOverwrite(oldCom1.getFrequencyStandby(), com1.getFrequencyStandby()))
+                com1.setFrequencyStandby(oldCom1.getFrequencyStandby());
+            if (dontOverwrite(oldCom2.getFrequencyActive(), com2.getFrequencyActive()))
+                com2.setFrequencyActive(oldCom2.getFrequencyActive());
+            if (dontOverwrite(oldCom2.getFrequencyStandby(), com2.getFrequencyStandby()))
+                com2.setFrequencyStandby(oldCom2.getFrequencyStandby());
+
+            this->updateCockpit(com1, com2, simDataOwnAircraft.getTransponder(), this->identifier());
         }
         else
         {

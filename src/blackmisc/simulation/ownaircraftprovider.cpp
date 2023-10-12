@@ -32,6 +32,18 @@ namespace BlackMisc::Simulation
         return this->provider()->getOwnCallsign();
     }
 
+    CComSystem COwnAircraftAware::getOwnComSystem(CComSystem::ComUnit unit) const
+    {
+        Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
+        return this->provider()->getOwnComSystem(unit);
+    }
+
+    CTransponder COwnAircraftAware::getOwnTransponder() const
+    {
+        Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
+        return this->provider()->getOwnTransponder();
+    }
+
     CCoordinateGeodetic COwnAircraftAware::getOwnAircraftPosition() const
     {
         Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
