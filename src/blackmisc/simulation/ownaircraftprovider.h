@@ -131,6 +131,12 @@ namespace BlackMisc
             //! \copydoc IOwnAircraftProvider::getOwnCallsign
             Aviation::CCallsign getOwnCallsign() const;
 
+            //! \copydoc IOwnAircraftProvider::getOwnComSystem
+            Aviation::CComSystem getOwnComSystem(Aviation::CComSystem::ComUnit unit) const;
+
+            //! \copydoc IOwnAircraftProvider::getOwnTransponder
+            Aviation::CTransponder getOwnTransponder() const;
+
             //! \copydoc IOwnAircraftProvider::getOwnAircraftPosition
             BlackMisc::Geo::CCoordinateGeodetic getOwnAircraftPosition() const;
 
