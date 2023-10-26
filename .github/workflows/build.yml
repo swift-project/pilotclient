@@ -156,7 +156,7 @@ jobs:
           path: ${{ github.workspace }}/xswiftbus-*
 
   buildWin64:
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs: [preBuild, checks]
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
@@ -242,7 +242,7 @@ jobs:
           path: ${{ github.workspace }}/xswiftbus-*
 
   buildWin32:
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs: [preBuild, checks]
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
