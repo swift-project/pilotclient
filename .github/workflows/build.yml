@@ -91,6 +91,7 @@ jobs:
         uses: jurplel/install-qt-action@v3
         with:
           version: ${{ env.qt_version }}
+          cache: true
       - name: Download InstallBuilder
         run: |
           wget --retry-connrefused -t 10 -w 10 -T 60 -O ~/installbuilder.run ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-linux-x64-installer.run
@@ -171,11 +172,13 @@ jobs:
         with:
           version: ${{ env.qt_version }}
           arch: win64_msvc2019_64
+          cache: true
       - name: Install Qt debug info
         uses: jurplel/install-qt-action@v3
         with:
           version: ${{ env.qt_version }}
           arch: win64_msvc2019_64
+          cache: true
           modules: debug_info
           extra: --archives qtbase
       - name: Download InstallBuilder
@@ -257,11 +260,13 @@ jobs:
         with:
           version: ${{ env.qt_version }}
           arch: win32_msvc2019
+          cache: true
       - name: Install Qt debug info
         uses: jurplel/install-qt-action@v3
         with:
           version: ${{ env.qt_version }}
           arch: win32_msvc2019
+          cache: true
           modules: debug_info
           extra: --archives qtbase
       - name: Download InstallBuilder
@@ -337,6 +342,7 @@ jobs:
         uses: jurplel/install-qt-action@v3
         with:
           version: ${{ env.qt_version }}
+          cache: true
       - name: Download InstallBuilder
         run: |
           wget --retry-connrefused -t 10 -w 10 -T 60 -O $HOME/installbuilder.dmg ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-osx-installer.dmg
