@@ -92,9 +92,18 @@ jobs:
         with:
           version: ${{ env.qt_version }}
           cache: true
+      - name: Cache InstallBuilder
+        id: cache-bitrock
+        uses: actions/cache@v3
+        with:
+          path: ~/installbuilder.run
+          key: installbuilder-${{ env.bitrock_version }}-linux-x64
       - name: Download InstallBuilder
+        if: steps.cache-bitrock.outputs.cache-hit != 'true'
         run: |
           wget --retry-connrefused -t 10 -w 10 -T 60 -O ~/installbuilder.run ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-linux-x64-installer.run
+      - name: Install InstallBuilder
+        run: |
           chmod 700 ~/installbuilder.run
           ~/installbuilder.run --mode unattended --prefix ~/installbuilder
           cat >~/license.xml <<EOF
@@ -181,7 +190,14 @@ jobs:
           cache: true
           modules: debug_info
           extra: --archives qtbase
+      - name: Cache InstallBuilder
+        id: cache-bitrock
+        uses: actions/cache@v3
+        with:
+          path: C:\installbuilder.exe
+          key: installbuilder-${{ env.bitrock_version }}-windows-x64
       - name: Download InstallBuilder
+        if: steps.cache-bitrock.outputs.cache-hit != 'true'
         shell: C:\msys64\usr\bin\bash.exe -le {0}
         run: |
           wget --retry-connrefused -t 10 -w 10 -T 60 -O /c/installbuilder.exe ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-windows-x64-installer.exe
@@ -269,7 +285,14 @@ jobs:
           cache: true
           modules: debug_info
           extra: --archives qtbase
+      - name: Cache InstallBuilder
+        id: cache-bitrock
+        uses: actions/cache@v3
+        with:
+          path: C:\installbuilder.exe
+          key: installbuilder-${{ env.bitrock_version }}-windows
       - name: Download InstallBuilder
+        if: steps.cache-bitrock.outputs.cache-hit != 'true'
         shell: C:\msys64\usr\bin\bash.exe -le {0}
         run: |
           wget --retry-connrefused -t 10 -w 10 -T 60 -O /c/installbuilder.exe ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-windows-installer.exe
@@ -343,9 +366,18 @@ jobs:
         with:
           version: ${{ env.qt_version }}
           cache: true
+      - name: Cache InstallBuilder
+        id: cache-bitrock
+        uses: actions/cache@v3
+        with:
+          path: ~/installbuilder.dmg
+          key: installbuilder-${{ env.bitrock_version }}-osx
       - name: Download InstallBuilder
+        if: steps.cache-bitrock.outputs.cache-hit != 'true'
         run: |
           wget --retry-connrefused -t 10 -w 10 -T 60 -O $HOME/installbuilder.dmg ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-osx-installer.dmg
+      - name: Install InstallBuilder
+        run: |
           chmod 700 $HOME/installbuilder.dmg
           sudo hdiutil attach $HOME/installbuilder.dmg
           sudo cp -rf "/Volumes/InstallBuilder Qt/installbuilder-${{ env.bitrock_version }}-osx-installer.app" /Applications
