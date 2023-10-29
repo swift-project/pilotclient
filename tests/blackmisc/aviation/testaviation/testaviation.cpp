@@ -53,6 +53,9 @@ namespace BlackMiscTest
         //! COM and NAV units
         void comAndNav();
 
+        //! Same frequency in aviation context
+        void sameAviationFrequency();
+
         //! COM frequency rounding
         void comFrequencyRounding();
 
@@ -107,15 +110,86 @@ namespace BlackMiscTest
         QVERIFY2(!CNavSystem::isValidCivilNavigationFrequency(CFrequency(200.0, CFrequencyUnit::MHz())), "Expect invalid nav frequency");
     }
 
+    void CTestAviation::sameAviationFrequency()
+    {
+        {
+            CFrequency freq1(129620000, CFrequencyUnit::Hz());
+            CFrequency freq2(129620000, CFrequencyUnit::Hz());
+            QVERIFY2(CComSystem::isSameFrequency(freq1, freq2), "Frequencies should be the same");
+        }
+
+        {
+            CFrequency freq1(122.8, CFrequencyUnit::MHz());
+            CFrequency freq2(122.8, CFrequencyUnit::MHz());
+            QVERIFY2(CComSystem::isSameFrequency(freq1, freq2), "Frequencies should be the same");
+        }
+
+        {
+            // Should be the same despite small rounding error in Hz range
+            CFrequency freq1(123450001, CFrequencyUnit::Hz());
+            CFrequency freq2(123450, CFrequencyUnit::kHz());
+            QVERIFY2(CComSystem::isSameFrequency(freq1, freq2), "Frequencies should be the same");
+        }
+
+        {
+            // Ending with 20/70 is treated the same as 25/75 (correct value) as old radios only had 2 digits available after the decimal point
+            CFrequency freq1(118.325, CFrequencyUnit::MHz());
+            CFrequency freq2(118.320, CFrequencyUnit::MHz());
+            CFrequency freq3(132.770, CFrequencyUnit::MHz());
+            CFrequency freq4(132.775, CFrequencyUnit::MHz());
+            CFrequency freq5(132.765, CFrequencyUnit::MHz());
+            CFrequency freq6(132.780, CFrequencyUnit::MHz());
+
+            QVERIFY2(CComSystem::isSameFrequency(freq1, freq2), "Frequencies should be the same");
+            QVERIFY2(CComSystem::isSameFrequency(freq3, freq4), "Frequencies should be the same");
+            QVERIFY2(!CComSystem::isSameFrequency(freq1, freq3), "Frequencies should not be the same");
+            QVERIFY2(!CComSystem::isSameFrequency(freq1, freq4), "Frequencies should not be the same");
+            QVERIFY2(!CComSystem::isSameFrequency(freq2, freq3), "Frequencies should not be the same");
+            QVERIFY2(!CComSystem::isSameFrequency(freq2, freq4), "Frequencies should not be the same");
+            QVERIFY2(!CComSystem::isSameFrequency(freq3, freq5), "Frequencies should not be the same");
+            QVERIFY2(!CComSystem::isSameFrequency(freq3, freq6), "Frequencies should not be the same");
+            QVERIFY2(!CComSystem::isSameFrequency(freq4, freq5), "Frequencies should not be the same");
+            QVERIFY2(!CComSystem::isSameFrequency(freq4, freq6), "Frequencies should not be the same");
+        }
+
+        {
+            CFrequency freq1(129620000, CFrequencyUnit::Hz());
+            CFrequency freq2(132025000, CFrequencyUnit::Hz());
+            QVERIFY2(!CComSystem::isSameFrequency(freq1, freq2), "Frequencies should not be the same");
+        }
+
+        // 8.33 kHz frequencies
+        {
+            CFrequency freq1(118.305, CFrequencyUnit::MHz());
+            CFrequency freq2(118305, CFrequencyUnit::kHz());
+            QVERIFY2(CComSystem::isSameFrequency(freq1, freq2), "Frequencies should be the same");
+        }
+
+        {
+            CFrequency freq1(118.310, CFrequencyUnit::MHz());
+            CFrequency freq2(118305, CFrequencyUnit::kHz());
+            QVERIFY2(!CComSystem::isSameFrequency(freq1, freq2), "Frequencies should not be the same");
+        }
+
+        {
+            CFrequency freq1(135.660, CFrequencyUnit::MHz());
+            CFrequency freq2(135665, CFrequencyUnit::kHz());
+            QVERIFY2(!CComSystem::isSameFrequency(freq1, freq2), "Frequencies should not be the same");
+        }
+    }
+
     void CTestAviation::comFrequencyRounding()
     {
         const CFrequency f1 = CFrequency(122.8, CFrequencyUnit::MHz());
         const CFrequency f2 = CFrequency(122.795, CFrequencyUnit::MHz());
         const CFrequency f3 = CFrequency(122.805, CFrequencyUnit::MHz());
+        const CFrequency f4 = CFrequency(122.225, CFrequencyUnit::MHz());
+        const CFrequency f5 = CFrequency(122.220, CFrequencyUnit::MHz());
 
         QVERIFY2(f1 == f1, "Ups, how can this fail");
         QVERIFY2(f1 != f2, "Ups, how can this fail");
         QVERIFY2(f1 != f3, "Ups, how can this fail");
+        QVERIFY2(f4 != f5, "Ups, how can this fail");
 
         CFrequency up(f2);
         CComSystem::roundToChannelSpacing(up, CComSystem::ChannelSpacing25KHz);
@@ -124,6 +198,15 @@ namespace BlackMiscTest
         CFrequency down(f3);
         CComSystem::roundToChannelSpacing(down, CComSystem::ChannelSpacing25KHz);
         QVERIFY2(down == f1, "Expect rounding up");
+
+        CFrequency same(f3);
+        CComSystem::roundToChannelSpacing(same, CComSystem::ChannelSpacing8_33KHz);
+        QVERIFY2(same != f1, "Expect no rounding");
+        QVERIFY2(same == f3, "Expect no rounding");
+
+        CFrequency up2(f5);
+        CComSystem::roundToChannelSpacing(up2, CComSystem::ChannelSpacing8_33KHz);
+        QVERIFY2(up2 == f4, "Expect rounding up");
     }
 
     void CTestAviation::transponder()
