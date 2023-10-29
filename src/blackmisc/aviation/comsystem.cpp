@@ -3,6 +3,7 @@
 
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/math/mathutils.h"
+#include "blackmisc/pq/literals.h"
 #include "blackmisc/stringutils.h"
 
 #include <QDBusMetaType>
@@ -176,15 +177,26 @@ namespace BlackMisc::Aviation
 
     bool CComSystem::isSameFrequency(const CFrequency &freq1, const CFrequency &freq2)
     {
+        using namespace BlackMisc::PhysicalQuantities::Literals;
         if (freq1.isNull() || freq2.isNull()) { return false; }
-        if (freq1 == freq2) { return true; } // shortcut for many of such comparisons
-        if (freq1.valueInteger(CFrequencyUnit::kHz()) == freq2.valueInteger(CFrequencyUnit::kHz())) { return true; }
-        // .x20 == .x25 and .x70 == .x75
-        const int freq1End = static_cast<int>(freq1.value(CFrequencyUnit::kHz())) % 100;
-        const int freq2End = static_cast<int>(freq2.value(CFrequencyUnit::kHz())) % 100;
-        if (freq1End != 20 && freq1End != 25 && freq1End != 70 && freq1End != 75) { return false; }
-        if (freq2End != 20 && freq2End != 25 && freq2End != 70 && freq2End != 75) { return false; }
-        return std::abs(freq1End - freq2End) == 5;
+
+        // Normalize .x20 => .x25 and .70 => .x75
+        auto normalize = [](CFrequency freq) {
+            const int freq_end = static_cast<int>(freq.value(CFrequencyUnit::kHz())) % 100;
+            if (freq_end == 20 || freq_end == 70)
+            {
+                freq += 5_kHz;
+            }
+            return freq;
+        };
+
+        CFrequency normalized_freq1 = normalize(freq1);
+        CFrequency normalized_freq2 = normalize(freq2);
+
+        if (normalized_freq1 == normalized_freq2) { return true; } // shortcut for many of such comparisons
+
+        // Avoid precision errors in Hz range
+        return normalized_freq1.valueInteger(CFrequencyUnit::kHz()) == normalized_freq2.valueInteger(CFrequencyUnit::kHz());
     }
 
     CFrequency CComSystem::parseComFrequency(const QString &input, CPqString::SeparatorMode sep)
