@@ -5,104 +5,66 @@
 #error This file is only to be included by buildconfig.inc
 #endif
 
+#define SWIFTCONFIG_ON true
+#define SWIFTCONFIG_OFF false
+
 constexpr bool BlackConfig::CBuildConfig::isCompiledWithBlackCore()
 {
-!!IF swiftConfig(libs.blackcore)
-    return true;
-!!ELSE
-    return false;
-!!ENDIF
+    return SWIFTCONFIG_${SWIFT_BUILD_BLACKCORE};
 }
 
 constexpr bool BlackConfig::CBuildConfig::isCompiledWithBlackSound()
 {
-!!IF swiftConfig(libs.blacksound)
-    return true;
-!!ELSE
-    return false;
-!!ENDIF
+    return SWIFTCONFIG_${SWIFT_BUILD_BLACKSOUND};
 }
 
 constexpr bool BlackConfig::CBuildConfig::isCompiledWithBlackInput()
 {
-!!IF swiftConfig(libs.blackinput)
-    return true;
-!!ELSE
-    return false;
-!!ENDIF
+    return SWIFTCONFIG_${SWIFT_BUILD_BLACKINPUT};
 }
 
 constexpr bool BlackConfig::CBuildConfig::isCompiledWithFs9Support()
 {
-!!IF swiftConfig(sims.fs9)
-    return true;
-!!ELSE
-    return false;
-!!ENDIF
+    return SWIFTCONFIG_${SWIFT_BUILD_FS9_PLUGIN};
 }
 
 constexpr bool BlackConfig::CBuildConfig::isCompiledWithP3DSupport()
 {
-!!IF swiftConfig(sims.p3d)
-    return true;
-!!ELSE
-    return false;
-!!ENDIF
+    return SWIFTCONFIG_${SWIFT_BUILD_P3D_PLUGIN};
 }
 
 constexpr bool BlackConfig::CBuildConfig::isCompiledWithFsxSupport()
 {
-!!IF swiftConfig(sims.fsx)
-    return true;
-!!ELSE
-    return false;
-!!ENDIF
+    return SWIFTCONFIG_${SWIFT_BUILD_FSX_PLUGIN};
 }
 
 constexpr bool BlackConfig::CBuildConfig::isCompiledWithFsuipcSupport()
 {
-!!IF swiftConfig(sims.fsuipc)
-    return true;
-!!ELSE
-    return false;
-!!ENDIF
+    return isCompiledWithFsxSupport() || isCompiledWithP3DSupport() || isCompiledWithFs9Support() || SWIFTCONFIG_${SWIFT_BUILD_MSFS_PLUGIN};
 }
 
 constexpr bool BlackConfig::CBuildConfig::isCompiledWithXPlaneSupport()
 {
-!!IF swiftConfig(sims.xplane)
-    return true;
-!!ELSE
-    return false;
-!!ENDIF
+    return SWIFTCONFIG_${SWIFT_BUILD_XPLANE_PLUGIN};
 }
 
 constexpr bool BlackConfig::CBuildConfig::isCompiledWithFGSupport()
 {
-!!IF swiftConfig(sims.fg)
-    return true;
-!!ELSE
-    return false;
-!!ENDIF
+    return SWIFTCONFIG_${SWIFT_BUILD_FLIGHTGEAR_PLUGIN};
 }
 
 constexpr bool BlackConfig::CBuildConfig::isCompiledWithGui()
 {
-!!IF swiftConfig(libs.blackgui)
-    return true;
-!!ELSE
-    return false;
-!!ENDIF
+    return SWIFTCONFIG_${SWIFT_BUILD_BLACKGUI};
 }
 
 constexpr bool BlackConfig::CBuildConfig::isVatsimVersion()
 {
-!!IF swiftConfig(vatsimSupport)
-    return true;
-!!ELSE
-    return false;
-!!ENDIF
+    return SWIFTCONFIG_${SWIFT_VATSIM_SUPPORT};
 }
 
-constexpr int BlackConfig::CBuildConfig::versionMajor() { return $$swiftConfig(version.major); }
-constexpr int BlackConfig::CBuildConfig::versionMinor() { return $$swiftConfig(version.minor); }
+constexpr int BlackConfig::CBuildConfig::versionMajor() { return ${SWIFT_VERSION_MAJOR}; }
+constexpr int BlackConfig::CBuildConfig::versionMinor() { return ${SWIFT_VERSION_MINOR}; }
+
+#undef SWIFTCONFIG_ON
+#undef SWIFTCONFIG_OFF

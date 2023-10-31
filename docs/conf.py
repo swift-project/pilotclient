@@ -11,7 +11,7 @@ import os
 import json
 import subprocess
 
-swift_config_file = open('../default.json')
+swift_config_file = open('../version.json')
 swift_config = json.load(swift_config_file)
 swift_config_file.close()
 

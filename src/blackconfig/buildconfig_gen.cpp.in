@@ -1,33 +1,33 @@
 // SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include \"blackconfig/buildconfig.h\"
+#include "blackconfig/buildconfig.h"
 #include <QString>
 #include <QDateTime>
 
 int BlackConfig::CBuildConfig::vatsimClientId()
 {
-    static const int id { $$swiftConfig(vatsim.id) };
+    static const int id { ${SWIFT_VATSIM_ID} };
     return id;
 }
 
 const QString &BlackConfig::CBuildConfig::vatsimPrivateKey()
 {
-    static const auto pk = QString { \"$$swiftConfig(vatsim.key)\" };
+    static const auto pk = QString { "${SWIFT_VATSIM_KEY}" };
     return pk;
 }
 
 const QString &BlackConfig::CBuildConfig::backtraceToken()
 {
-    static const auto bt = QString { \"$$(BACKTRACE_MINIDUMP_TOKEN)\" };
+    static const auto bt = QString { "$ENV{BACKTRACE_MINIDUMP_TOKEN}" };
     return bt;
 }
 
 const QString &BlackConfig::CBuildConfig::gitHeadSha1()
 {
-    static const QString gitHeadSha1(\"$$GIT_HEAD_SHA1\");
+    static const QString gitHeadSha1("${swift_git_head}");
     Q_ASSERT(!gitHeadSha1.isEmpty());
     return gitHeadSha1;
 }
 
-int BlackConfig::CBuildConfig::versionRevision() { return $$GIT_REV_COUNT; }
+int BlackConfig::CBuildConfig::versionRevision() { return ${SWIFT_VERSION_REVISION}; }
