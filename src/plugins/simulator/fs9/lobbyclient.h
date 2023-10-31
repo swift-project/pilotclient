@@ -1,6 +1,9 @@
 // SPDX-FileCopyrightText: Copyright (C) 2014 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
+#ifndef BLACKSIMPLUGIN_FS9_LOBBYCLIENT_H
+#define BLACKSIMPLUGIN_FS9_LOBBYCLIENT_H
+
 #include "callbackwrapper.h"
 #include <QDebug>
 #include <dplay8.h>
@@ -63,3 +66,5 @@ namespace BlackSimPlugin::Fs9
         static const size_t m_maxSizePlayerName = 14;
     };
 } // ns
+
+#endif
