@@ -86,28 +86,28 @@ This installs the binaries to run all swift applications.</detailedDescription>
                     <origin>../../dist/bin/swiftlauncher.exe</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/bin/blacksound.dll</origin>
+                    <origin>../../dist/bin/sound.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/bin/blackcore.dll</origin>
+                    <origin>../../dist/bin/core.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/bin/blackgui.dll</origin>
+                    <origin>../../dist/bin/gui.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/bin/blackinput.dll</origin>
+                    <origin>../../dist/bin/input.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/bin/blackmisc.dll</origin>
+                    <origin>../../dist/bin/misc.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/bin/simulatorplugincommon.dll</origin>
+                    <origin>../../dist/bin/plugincommon.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/bin/simulatorfscommon.dll</origin>
+                    <origin>../../dist/bin/fscommon.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/bin/simulatorfsxcommon.dll</origin>
+                    <origin>../../dist/bin/fsxcommon.dll</origin>
                 </distributionFile>
             </distributionFileList>
         </folder>
@@ -130,32 +130,32 @@ This installs the binaries to run all swift applications.</detailedDescription>
             <distributionFileList>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/lib/libblackcore*</origin>
+                    <origin>../../dist/lib/libcore*</origin>
                     <excludeFiles>*/*.debug</excludeFiles>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/lib/libblackgui*</origin>
+                    <origin>../../dist/lib/libgui*</origin>
                     <excludeFiles>*/*.debug</excludeFiles>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/lib/libblackinput*</origin>
+                    <origin>../../dist/lib/libinput*</origin>
                     <excludeFiles>*/*.debug</excludeFiles>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/lib/libblackmisc*</origin>
+                    <origin>../../dist/lib/libmisc*</origin>
                     <excludeFiles>*/*.debug</excludeFiles>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/lib/libblacksound*</origin>
+                    <origin>../../dist/lib/libsound*</origin>
                     <excludeFiles>*/*.debug</excludeFiles>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/lib/libsimulatorplugincommon*</origin>
+                    <origin>../../dist/lib/libplugincommon*</origin>
                     <excludeFiles>*/*.debug</excludeFiles>
                 </distributionFile>
             </distributionFileList>
@@ -168,32 +168,32 @@ This installs the binaries to run all swift applications.</detailedDescription>
             <distributionFileList>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/lib/libblackcore*.dylib</origin>
+                    <origin>../../dist/lib/libcore*.dylib</origin>
                     <excludeFiles>*/*.dSYM</excludeFiles>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/lib/libblackgui*.dylib</origin>
+                    <origin>../../dist/lib/libgui*.dylib</origin>
                     <excludeFiles>*/*.dSYM</excludeFiles>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/lib/libblackinput*.dylib</origin>
+                    <origin>../../dist/lib/libinput*.dylib</origin>
                     <excludeFiles>*/*.dSYM</excludeFiles>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/lib/libblackmisc*.dylib</origin>
+                    <origin>../../dist/lib/libmisc*.dylib</origin>
                     <excludeFiles>*/*.dSYM</excludeFiles>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/lib/libblacksound*.dylib</origin>
+                    <origin>../../dist/lib/libsound*.dylib</origin>
                     <excludeFiles>*/*.dSYM</excludeFiles>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/lib/libsimulatorplugincommon*.dylib</origin>
+                    <origin>../../dist/lib/libplugincommon*.dylib</origin>
                     <excludeFiles>*/*.dSYM</excludeFiles>
                 </distributionFile>
             </distributionFileList>
