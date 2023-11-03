@@ -36,8 +36,8 @@ namespace BlackGui::Models
 
         // force strings for translation in resource files
         (void)QT_TRANSLATE_NOOP("ModelAtcList", "callsign");
-        (void)QT_TRANSLATE_NOOP("ModelAtcList", "distance");
         (void)QT_TRANSLATE_NOOP("ModelAtcList", "frequency");
+        (void)QT_TRANSLATE_NOOP("ModelAtcList", "distance");
         (void)QT_TRANSLATE_NOOP("ModelAtcList", "controllername");
         (void)QT_TRANSLATE_NOOP("ModelAtcList", "online");
         (void)QT_TRANSLATE_NOOP("ModelAtcList", "bookedfrom");
@@ -58,8 +58,8 @@ namespace BlackGui::Models
             CColumn col("type", CAtcStation::IndexIcon);
             col.setSortPropertyIndex({ CAtcStation::IndexCallsign, CCallsign::IndexSuffix });
             m_columns.addColumn(col);
-            m_columns.addColumn(CColumn("distance", CAtcStation::IndexRelativeDistance, new CAirspaceDistanceFormatter()));
             m_columns.addColumn(CColumn("frequency", CAtcStation::IndexFrequency, new CComFrequencyFormatter()));
+            m_columns.addColumn(CColumn("distance", CAtcStation::IndexRelativeDistance, new CAirspaceDistanceFormatter()));
             m_columns.addColumn(CColumn("r.", "in range", CAtcStation::IndexIsInRange, new CBoolIconFormatter("in range", "outside range")));
             m_columns.addColumn(CColumn("xc.", "AFV cross coupled", CAtcStation::IndexIsAfvCrossCoupled, new CBoolIconFormatter("AFV cross coupled", "not coupled")));
             m_columns.addColumn(CColumn("range", CAtcStation::IndexRange, new CAirspaceDistanceFormatter()));
