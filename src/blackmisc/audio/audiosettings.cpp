@@ -28,11 +28,6 @@ namespace BlackMisc::Audio
         return v;
     }
 
-    CSettings::CSettings()
-    {
-        this->initDefaultValues();
-    }
-
     bool CSettings::isNotificationFlagSet(CNotificationSounds::NotificationFlag notification) const
     {
         return this->getNotification().testFlag(notification);
@@ -111,11 +106,5 @@ namespace BlackMisc::Audio
         Q_UNUSED(i18n)
         return u"Notification flags: " % CNotificationSounds::toString(this->getNotification()) %
                u" volume: " % QString::number(m_notificationVolume);
-    }
-
-    void CSettings::initDefaultValues()
-    {
-        this->setNotification(CNotificationSounds::AllNotifications);
-        m_notificationVolume = 90;
     }
 } // namespace
