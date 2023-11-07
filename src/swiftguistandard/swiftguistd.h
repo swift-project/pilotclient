@@ -24,6 +24,7 @@
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/autopublishdata.h"
 #include "blackmisc/audio/notificationsounds.h"
+#include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/input/actionhotkeydefs.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/variant.h"
@@ -137,6 +138,7 @@ private:
     BlackGui::CManagedStatusBar m_statusBar;
     BlackMisc::CLogHistoryReplica m_logHistoryForStatus { this };
     BlackMisc::CLogHistoryReplica m_logHistoryForOverlay { this };
+    BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this };
 
     // contexts
     static constexpr int MaxCoreFailures = 5; //!< Failures counted before reconnecting

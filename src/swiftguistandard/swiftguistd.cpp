@@ -530,7 +530,7 @@ void SwiftGuiStd::checkDbDataLoaded()
 void SwiftGuiStd::playNotifcationSound(CNotificationSounds::NotificationFlag notification) const
 {
     if (!m_contextAudioAvailable) { return; }
-    if (!ui->comp_MainInfoArea->getSettingsComponent()->playNotificationSounds()) { return; }
+    if (!m_audioSettings.get().isNotificationFlagSet(notification)) { return; }
     if (!sGui || sGui->isShuttingDown()) { return; }
     sGui->getCContextAudioBase()->playNotification(notification, true);
 }
