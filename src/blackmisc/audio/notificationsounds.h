@@ -30,7 +30,7 @@ namespace BlackMisc::Audio
             NotificationTextMessageSupervisor = 1 << 4,
             NotificationTextMessageUnicom = 1 << 13,
             NotificationTextCallsignMentioned = 1 << 5,
-            NotificationNoAudioTransmission = 1 << 6,
+            // 1 << 6 previously used for NoAudioTransmission
             NotificationAtcTunedIn = 1 << 10,
             NotificationAtcTunedOut = 1 << 11,
             PTTClickKeyDown = 1 << 7,

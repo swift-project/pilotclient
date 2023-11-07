@@ -50,14 +50,14 @@
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="13" column="1">
+       <item row="12" column="1">
         <widget class="QCheckBox" name="cb_SetupAudioPTTBlocked">
          <property name="text">
           <string>PTT blocking</string>
          </property>
         </widget>
        </item>
-       <item row="14" column="1">
+       <item row="13" column="1">
         <widget class="QCheckBox" name="cb_SetupAfvClicked">
          <property name="text">
           <string>AFV click</string>
@@ -150,7 +150,7 @@
          </property>
         </widget>
        </item>
-       <item row="12" column="1">
+       <item row="11" column="1">
         <widget class="QCheckBox" name="cb_SetupAfvBlocked">
          <property name="text">
           <string>AFV blocking</string>
@@ -171,14 +171,14 @@
          </property>
         </widget>
        </item>
-       <item row="15" column="1">
+       <item row="14" column="1">
         <widget class="QCheckBox" name="cb_SetupAudioNotificationAtcTunedIn">
          <property name="text">
           <string>ATC frequency selected</string>
          </property>
         </widget>
        </item>
-       <item row="10" column="1">
+       <item row="9" column="1">
         <widget class="QCheckBox" name="cb_SetupAudioPTTClickDown">
          <property name="text">
           <string>PTT click (key down)</string>
@@ -192,21 +192,14 @@
          </property>
         </widget>
        </item>
-       <item row="9" column="1">
-        <widget class="QCheckBox" name="cb_SetupAudioNoTransmission">
-         <property name="text">
-          <string>No audio transmission warning</string>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="1">
+       <item row="10" column="1">
         <widget class="QCheckBox" name="cb_SetupAudioPTTClickUp">
          <property name="text">
           <string>PTT click (key up)</string>
          </property>
         </widget>
        </item>
-       <item row="16" column="1">
+       <item row="15" column="1">
         <widget class="QCheckBox" name="cb_SetupAudioNotificationAtcTunedOut">
          <property name="text">
           <string>ATC frequency deselected</string>
@@ -230,7 +223,6 @@
   <tabstop>cb_SetupAudioNotificationTextCallsignMentioned</tabstop>
   <tabstop>cb_SetupAudioNotificationTextMessagePrivate</tabstop>
   <tabstop>cb_SetupAudioNotificationTextMessageSupervisor</tabstop>
-  <tabstop>cb_SetupAudioNoTransmission</tabstop>
   <tabstop>cb_SetupAudioPTTClickDown</tabstop>
   <tabstop>cb_SetupAudioPTTClickUp</tabstop>
   <tabstop>cb_SetupAudioPTTBlocked</tabstop>
