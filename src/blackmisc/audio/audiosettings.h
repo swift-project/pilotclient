@@ -134,7 +134,6 @@ namespace BlackMisc::Audio
         int m_outVolumeCom2 = 100; //!< 0-100, AFV
         int m_inVolume = 50; //!< AFV range
         bool m_audioEffects = true; //!< Audio effects en
-        void initNotificationFlags(); //!< init flags
 
         BLACK_METACLASS(
             CSettings,
