@@ -192,6 +192,20 @@
          </property>
         </widget>
        </item>
+       <item row="14" column="1">
+        <widget class="QCheckBox" name="cb_SetupAudioNotificationLogin">
+         <property name="text">
+          <string>Login</string>
+         </property>
+        </widget>
+       </item>
+       <item row="15" column="1">
+        <widget class="QCheckBox" name="cb_SetupAudioNotificationLogoff">
+         <property name="text">
+          <string>Logoff</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </widget>
@@ -214,6 +228,8 @@
   <tabstop>cb_SetupAudioPTTBlocked</tabstop>
   <tabstop>cb_SetupAfvClicked</tabstop>
   <tabstop>cb_SetupAfvBlocked</tabstop>
+  <tabstop>cb_SetupAudioNotificationLogin</tabstop>
+  <tabstop>cb_SetupAudioNotificationLogoff</tabstop>
  </tabstops>
  <resources/>
  <connections/>

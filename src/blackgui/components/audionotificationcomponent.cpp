@@ -67,6 +67,10 @@ namespace BlackGui::Components
         Q_ASSERT(c);
         c = connect(ui->cb_SetupAfvClicked, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
         Q_ASSERT(c);
+        c = connect(ui->cb_SetupAudioNotificationLogin, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
+        Q_ASSERT(c);
+        c = connect(ui->cb_SetupAudioNotificationLogoff, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
+        Q_ASSERT(c);
         c = connect(ui->pb_SoundReset, &QPushButton::released, this, &CAudioNotificationComponent::resetNotificationSoundsDir, Qt::QueuedConnection);
         Q_ASSERT(c);
         c = connect(ui->pb_SoundDir, &QPushButton::released, this, &CAudioNotificationComponent::selectNotificationSoundsDir, Qt::QueuedConnection);
@@ -87,7 +91,7 @@ namespace BlackGui::Components
                ui->cb_SetupAudioNotificationTextMessageFrequency->isChecked() || ui->cb_SetupAudioNotificationTextMessageUnicom->isChecked() ||
                ui->cb_SetupAudioNotificationTextMessagePrivate->isChecked() || ui->cb_SetupAudioNotificationTextMessageSupervisor->isChecked() ||
                ui->cb_SetupAudioNotificationTextCallsignMentioned->isChecked() ||
-               ui->cb_SetupAfvBlocked->isChecked() || ui->cb_SetupAfvClicked->isChecked();
+               ui->cb_SetupAfvBlocked->isChecked() || ui->cb_SetupAfvClicked->isChecked() || ui->cb_SetupAudioNotificationLogin->isChecked() || ui->cb_SetupAudioNotificationLogoff->isChecked();
     }
 
     void CAudioNotificationComponent::reloadSettings()
@@ -106,6 +110,9 @@ namespace BlackGui::Components
 
         ui->cb_SetupAfvBlocked->setChecked(as.isNotificationFlagSet(CNotificationSounds::AFVBlocked));
         ui->cb_SetupAfvClicked->setChecked(as.isNotificationFlagSet(CNotificationSounds::AFVClicked));
+
+        ui->cb_SetupAudioNotificationLogin->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationLogin));
+        ui->cb_SetupAudioNotificationLogoff->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationLogoff));
 
         ui->le_SoundDir->setText(as.getNotificationSoundDirectory());
         ui->sb_NotificationValueVolume->setValue(as.getNotificationVolume());
@@ -137,6 +144,9 @@ namespace BlackGui::Components
         if (cb == ui->cb_SetupAfvBlocked) { return CNotificationSounds::AFVBlocked; }
         if (cb == ui->cb_SetupAfvClicked) { return CNotificationSounds::AFVClicked; }
 
+        if (cb == ui->cb_SetupAudioNotificationLogin) { return CNotificationSounds::NotificationLogin; }
+        if (cb == ui->cb_SetupAudioNotificationLogoff) { return CNotificationSounds::NotificationLogoff; }
+
         return CNotificationSounds::NoNotifications;
     }
 
@@ -157,6 +167,9 @@ namespace BlackGui::Components
 
         as.setNotificationFlag(CNotificationSounds::AFVBlocked, ui->cb_SetupAfvBlocked->isChecked());
         as.setNotificationFlag(CNotificationSounds::AFVClicked, ui->cb_SetupAfvClicked->isChecked());
+
+        as.setNotificationFlag(CNotificationSounds::NotificationLogin, ui->cb_SetupAudioNotificationLogin->isChecked());
+        as.setNotificationFlag(CNotificationSounds::NotificationLogoff, ui->cb_SetupAudioNotificationLogoff->isChecked());
 
         const CStatusMessage msg = m_audioSettings.set(as);
         CLogMessage(this).preformatted(msg);
