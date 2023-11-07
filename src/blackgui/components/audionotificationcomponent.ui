@@ -171,13 +171,6 @@
          </property>
         </widget>
        </item>
-       <item row="14" column="1">
-        <widget class="QCheckBox" name="cb_SetupAudioNotificationAtcTunedIn">
-         <property name="text">
-          <string>ATC frequency selected</string>
-         </property>
-        </widget>
-       </item>
        <item row="9" column="1">
         <widget class="QCheckBox" name="cb_SetupAudioPTTClickDown">
          <property name="text">
@@ -196,13 +189,6 @@
         <widget class="QCheckBox" name="cb_SetupAudioPTTClickUp">
          <property name="text">
           <string>PTT click (key up)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="15" column="1">
-        <widget class="QCheckBox" name="cb_SetupAudioNotificationAtcTunedOut">
-         <property name="text">
-          <string>ATC frequency deselected</string>
          </property>
         </widget>
        </item>
@@ -228,8 +214,6 @@
   <tabstop>cb_SetupAudioPTTBlocked</tabstop>
   <tabstop>cb_SetupAfvClicked</tabstop>
   <tabstop>cb_SetupAfvBlocked</tabstop>
-  <tabstop>cb_SetupAudioNotificationAtcTunedIn</tabstop>
-  <tabstop>cb_SetupAudioNotificationAtcTunedOut</tabstop>
  </tabstops>
  <resources/>
  <connections/>

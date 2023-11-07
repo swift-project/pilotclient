@@ -24,8 +24,6 @@ namespace BlackMisc::Audio
         static const QString pttBlocked("PTT blocked");
         static const QString afvclick("AFC click");
         static const QString afvblock("AFV blocked");
-        static const QString tunein("ATC tuned in");
-        static const QString tuneout("ATC tuned off");
 
         switch (notification)
         {
@@ -37,8 +35,6 @@ namespace BlackMisc::Audio
         case NotificationTextMessageSupervisor: return supMsg;
         case NotificationTextMessageUnicom: return unicomMsg;
         case NotificationTextCallsignMentioned: return mentioned;
-        case NotificationAtcTunedIn: return tunein;
-        case NotificationAtcTunedOut: return tuneout;
         case PTTClickKeyDown: return pttDown;
         case PTTClickKeyUp: return pttUp;
         case PTTBlocked: return pttBlocked;
@@ -61,9 +57,6 @@ namespace BlackMisc::Audio
         if (notification.testFlag(NotificationTextMessageSupervisor)) n << flagToString(NotificationTextMessageSupervisor);
         if (notification.testFlag(NotificationTextMessageUnicom)) n << flagToString(NotificationTextMessageUnicom);
         if (notification.testFlag(NotificationTextCallsignMentioned)) n << flagToString(NotificationTextCallsignMentioned);
-
-        if (notification.testFlag(NotificationAtcTunedIn)) n << flagToString(NotificationAtcTunedIn);
-        if (notification.testFlag(NotificationAtcTunedOut)) n << flagToString(NotificationAtcTunedOut);
 
         if (notification.testFlag(PTTClickKeyUp)) n << flagToString(PTTClickKeyUp);
         if (notification.testFlag(PTTClickKeyDown)) n << flagToString(PTTClickKeyDown);
