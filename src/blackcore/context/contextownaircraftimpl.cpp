@@ -267,23 +267,6 @@ namespace BlackCore::Context
         const bool atcCom1 = atcs.hasComUnitTunedInChannelSpacing(com1);
         const bool atcCom2 = atcs.hasComUnitTunedInChannelSpacing(com2);
 
-        const bool tunedIn1 = atcCom1 && !lastCom1.isReceiveEnabled();
-        const bool tunedIn2 = atcCom2 && !lastCom2.isReceiveEnabled();
-        const bool tunedOut1 = !atcCom1 && lastCom1.isReceiveEnabled();
-        const bool tunedOut2 = !atcCom2 && lastCom2.isReceiveEnabled();
-
-        if (sApp && sApp->getCContextAudioBase() && sApp->getIContextNetwork()->isConnected())
-        {
-            if (tunedIn1 || tunedIn2)
-            {
-                sApp->getCContextAudioBase()->playNotification(CNotificationSounds::NotificationAtcTunedIn, true);
-            }
-            else if (tunedOut1 || tunedOut2)
-            {
-                sApp->getCContextAudioBase()->playNotification(CNotificationSounds::NotificationAtcTunedOut, true);
-            }
-        }
-
         // remember if I was tuned in, abusing the flag
         com1.setReceiveEnabled(atcCom1);
         com2.setReceiveEnabled(atcCom2);
