@@ -39,7 +39,7 @@ namespace BlackMisc::Audio
         //! @}
 
         //! Default constructor.
-        CSettings();
+        CSettings() = default;
 
         //! Notification flag (play notification?)
         bool isNotificationFlagSet(CNotificationSounds::NotificationFlag notification) const;
@@ -118,9 +118,6 @@ namespace BlackMisc::Audio
 
         //! Audio effects
         void setAudioEffectsEnabled(bool enabled) { m_audioEffects = enabled; }
-
-        //! Init with meaningful default values
-        void initDefaultValues();
 
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
