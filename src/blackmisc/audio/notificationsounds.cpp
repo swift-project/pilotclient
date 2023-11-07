@@ -22,7 +22,6 @@ namespace BlackMisc::Audio
         static const QString pttUp("PTT click up");
         static const QString pttDown("PTT click down");
         static const QString pttBlocked("PTT blocked");
-        static const QString noaudiotx("No audio tx");
         static const QString afvclick("AFC click");
         static const QString afvblock("AFV blocked");
         static const QString tunein("ATC tuned in");
@@ -38,7 +37,6 @@ namespace BlackMisc::Audio
         case NotificationTextMessageSupervisor: return supMsg;
         case NotificationTextMessageUnicom: return unicomMsg;
         case NotificationTextCallsignMentioned: return mentioned;
-        case NotificationNoAudioTransmission: return noaudiotx;
         case NotificationAtcTunedIn: return tunein;
         case NotificationAtcTunedOut: return tuneout;
         case PTTClickKeyDown: return pttDown;
@@ -63,7 +61,6 @@ namespace BlackMisc::Audio
         if (notification.testFlag(NotificationTextMessageSupervisor)) n << flagToString(NotificationTextMessageSupervisor);
         if (notification.testFlag(NotificationTextMessageUnicom)) n << flagToString(NotificationTextMessageUnicom);
         if (notification.testFlag(NotificationTextCallsignMentioned)) n << flagToString(NotificationTextCallsignMentioned);
-        if (notification.testFlag(NotificationNoAudioTransmission)) n << flagToString(NotificationNoAudioTransmission);
 
         if (notification.testFlag(NotificationAtcTunedIn)) n << flagToString(NotificationAtcTunedIn);
         if (notification.testFlag(NotificationAtcTunedOut)) n << flagToString(NotificationAtcTunedOut);

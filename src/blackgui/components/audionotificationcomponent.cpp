@@ -67,8 +67,6 @@ namespace BlackGui::Components
         Q_ASSERT(c);
         c = connect(ui->cb_SetupAudioNotificationAtcTunedIn, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
         Q_ASSERT(c);
-        c = connect(ui->cb_SetupAudioNoTransmission, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
-        Q_ASSERT(c);
         c = connect(ui->cb_SetupAfvBlocked, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
         Q_ASSERT(c);
         c = connect(ui->cb_SetupAfvClicked, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
@@ -92,7 +90,7 @@ namespace BlackGui::Components
                ui->cb_SetupAudioPTTBlocked->isChecked() ||
                ui->cb_SetupAudioNotificationTextMessageFrequency->isChecked() || ui->cb_SetupAudioNotificationTextMessageUnicom->isChecked() ||
                ui->cb_SetupAudioNotificationTextMessagePrivate->isChecked() || ui->cb_SetupAudioNotificationTextMessageSupervisor->isChecked() ||
-               ui->cb_SetupAudioNotificationTextCallsignMentioned->isChecked() || ui->cb_SetupAudioNoTransmission->isChecked() ||
+               ui->cb_SetupAudioNotificationTextCallsignMentioned->isChecked() ||
                ui->cb_SetupAfvBlocked->isChecked() || ui->cb_SetupAfvClicked->isChecked() ||
                ui->cb_SetupAudioNotificationAtcTunedIn->isChecked() || ui->cb_SetupAudioNotificationAtcTunedOut->isChecked();
     }
@@ -112,7 +110,6 @@ namespace BlackGui::Components
         ui->cb_SetupAudioNotificationTextCallsignMentioned->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationTextCallsignMentioned));
         ui->cb_SetupAudioNotificationAtcTunedIn->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationAtcTunedIn));
         ui->cb_SetupAudioNotificationAtcTunedOut->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationAtcTunedOut));
-        ui->cb_SetupAudioNoTransmission->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationNoAudioTransmission));
 
         ui->cb_SetupAfvBlocked->setChecked(as.isNotificationFlagSet(CNotificationSounds::AFVBlocked));
         ui->cb_SetupAfvClicked->setChecked(as.isNotificationFlagSet(CNotificationSounds::AFVClicked));
@@ -146,8 +143,6 @@ namespace BlackGui::Components
         if (cb == ui->cb_SetupAudioNotificationAtcTunedIn) { return CNotificationSounds::NotificationAtcTunedIn; }
         if (cb == ui->cb_SetupAudioNotificationAtcTunedOut) { return CNotificationSounds::NotificationAtcTunedOut; }
 
-        if (cb == ui->cb_SetupAudioNoTransmission) { return CNotificationSounds::NotificationNoAudioTransmission; }
-
         if (cb == ui->cb_SetupAfvBlocked) { return CNotificationSounds::AFVBlocked; }
         if (cb == ui->cb_SetupAfvClicked) { return CNotificationSounds::AFVClicked; }
 
@@ -168,7 +163,6 @@ namespace BlackGui::Components
         as.setNotificationFlag(CNotificationSounds::NotificationTextMessageSupervisor, ui->cb_SetupAudioNotificationTextMessageSupervisor->isChecked());
         as.setNotificationFlag(CNotificationSounds::NotificationTextMessageUnicom, ui->cb_SetupAudioNotificationTextMessageUnicom->isChecked());
         as.setNotificationFlag(CNotificationSounds::NotificationTextCallsignMentioned, ui->cb_SetupAudioNotificationTextCallsignMentioned->isChecked());
-        as.setNotificationFlag(CNotificationSounds::NotificationNoAudioTransmission, ui->cb_SetupAudioNoTransmission->isChecked());
 
         as.setNotificationFlag(CNotificationSounds::AFVBlocked, ui->cb_SetupAfvBlocked->isChecked());
         as.setNotificationFlag(CNotificationSounds::AFVClicked, ui->cb_SetupAfvClicked->isChecked());

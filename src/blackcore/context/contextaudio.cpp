@@ -519,16 +519,6 @@ namespace BlackCore::Context
         const CSettings settings = m_audioSettings.getThreadLocal();
         const bool play = !considerSettings || settings.isNotificationFlagSet(notification);
         if (!play) { return; }
-        if (notification == CNotificationSounds::PTTClickKeyDown && (considerSettings && settings.noAudioTransmission()))
-        {
-            /*
-            if (!this->canTalk())
-            {
-                // warning sound
-                notification = CNotificationSounds::NotificationNoAudioTransmission;
-            }
-            */
-        }
 
         if (volume < 0 || volume > 100)
         {

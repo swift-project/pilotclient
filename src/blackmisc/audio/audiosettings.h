@@ -58,7 +58,6 @@ namespace BlackMisc::Audio
         bool textMessagePrivate() const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextMessagePrivate); }
         bool textMessageSupervisor() const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextMessageSupervisor); }
         bool textCallsignMentioned() const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextCallsignMentioned); }
-        bool noAudioTransmission() const { return this->isNotificationFlagSet(CNotificationSounds::NotificationNoAudioTransmission); }
         bool pttClickDown() const { return this->isNotificationFlagSet(CNotificationSounds::PTTClickKeyDown); }
         bool pttClickUp() const { return this->isNotificationFlagSet(CNotificationSounds::PTTClickKeyUp); }
         bool pttBlocked() const { return this->isNotificationFlagSet(CNotificationSounds::PTTBlocked); }
