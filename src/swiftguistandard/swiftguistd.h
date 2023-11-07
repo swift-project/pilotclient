@@ -6,11 +6,6 @@
 #ifndef STDGUI_SWIFTGUISTD_H
 #define STDGUI_SWIFTGUISTD_H
 
-//! \fixme KB 2019-06 Seems to be no longer needed, can be removed after 2019-10
-// clash with struct interface in objbase.h used to happen
-// #pragma push_macro("interface")
-// #undef interface
-
 #include "blackgui/components/maininfoareacomponent.h"
 #include "blackgui/components/navigatordialog.h"
 #include "blackgui/components/aircraftmodelsetvalidationdialog.h"
