@@ -278,6 +278,7 @@ class Builder:
         return int(count.decode("utf-8"))
 
     def __upload_symbol_files(self, symbols_package):
+        return
         print('Uploading symbols')
         url = 'https://swift-project.sp.backtrace.io:6098/post'
         token = os.environ['BACKTRACE_SYMBOL_TOKEN']
