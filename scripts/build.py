@@ -51,6 +51,7 @@ class Builder:
                       '..',
                       '-G {}'.format(self._get_generator()),
                       '-DCMAKE_BUILD_TYPE=RelWithDebInfo',
+                      '-DSWIFT_MINIFY_DEBUG_SYMBOLS=ON',
                       '-DCMAKE_INSTALL_PREFIX=../dist',
                       '-DSWIFT_USE_CRASHPAD={}'.format(use_crashpad)] + cmake_args
         subprocess.check_call(cmake_call, env=dict(os.environ))

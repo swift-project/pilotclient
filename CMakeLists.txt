@@ -43,6 +43,7 @@ cmake_dependent_option(SWIFT_BUILD_XSWIFTBUS "Build xswiftbus" ON "NOT SWIFT_WIN
 option(SWIFT_BUILD_FLIGHTGEAR_PLUGIN "Build Flightgear plugin" ON)
 option(SWIFT_BUILD_EMULATED_PLUGIN "Build Emulated plugin" ON)
 cmake_dependent_option(SWIFT_BUILD_MSFS_PLUGIN "Build MSFS plugin" ON WIN32 OFF)
+option(SWIFT_MINIFY_DEBUG_SYMBOLS "Minify debug symbols" OFF)
 
 option(SWIFT_BUILD_BLACKCORE "Build Blackcore" ON)
 option(SWIFT_BUILD_BLACKSOUND "Build Blacksound" ON)
@@ -56,6 +57,15 @@ option(SWIFT_VATSIM_SUPPORT "Build with VATSIM support" ON)
 set(VATSIM_KEY_JSON "" CACHE STRING "Path to JSON containing VATSIM key")
 load_vatsim_key()
 
+if(SWIFT_MINIFY_DEBUG_SYMBOLS)
+    if(MSVC)
+        add_link_options(/OPT:REF /OPT:ICF)
+    elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
+        add_compile_options(-g1 -gz)
+    elseif(${CMAKE_CXX_COMPILER_ID} MATCHES ".*Clang")
+        add_compile_options(-gline-tables-only)
+    endif()
+endif()
 
 if(MSVC)
     # This also installs some dlls which we do not need
