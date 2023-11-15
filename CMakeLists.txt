@@ -99,6 +99,9 @@ if(MSVC)
 
     # Workaround C1128 error
     add_compile_options(/bigobj)
+
+    # Debug iterators used by Qt 5
+    add_compile_definitions(_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
 endif()
 
 if(UNIX AND NOT APPLE)
