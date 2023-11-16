@@ -54,6 +54,7 @@ namespace BlackGui::Components
         void fitInView();
         void changeRangeInSteps(bool zoomIn);
         void changeRangeFromUserSelection(int index);
+        void updateFont(int pointSize);
 
         static QPointF polarPoint(double distance, double angleRadians);
 
@@ -73,6 +74,8 @@ namespace BlackGui::Components
         int m_rotatenAngle = 0;
         QTimer m_updateTimer;
         QTimer m_headingTimer;
+
+        QFont m_tagFont;
 
         BlackCore::CActionBind m_actionZoomIn { BlackMisc::Input::radarZoomInHotkeyAction(), BlackMisc::Input::radarZoomInHotkeyIcon(), this, &CRadarComponent::rangeZoomIn };
         BlackCore::CActionBind m_actionZoomOut { BlackMisc::Input::radarZoomOutHotkeyAction(), BlackMisc::Input::radarZoomOutHotkeyIcon(), this, &CRadarComponent::rangeZoomOut };

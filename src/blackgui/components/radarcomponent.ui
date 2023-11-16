@@ -44,10 +44,16 @@
       <property name="bottomMargin">
        <number>2</number>
       </property>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="cb_LockNorth">
+      <item row="0" column="4">
+       <widget class="QSpinBox" name="sb_FontSize"/>
+      </item>
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="cb_Callsign">
         <property name="text">
-         <string>Lock North</string>
+         <string>Callsign</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -61,7 +67,17 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="2" colspan="2">
+      <item row="0" column="3">
+       <widget class="QLabel" name="lbl_FontSize">
+        <property name="text">
+         <string>Font size</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
        <widget class="QCheckBox" name="cb_Altitude">
         <property name="text">
          <string>Altitude (FL)</string>
@@ -71,20 +87,17 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="cb_LockNorth">
+        <property name="text">
+         <string>Lock North</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="1">
        <widget class="QCheckBox" name="cb_GroundSpeed">
         <property name="text">
          <string>GroundSpeed</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="cb_Callsign">
-        <property name="text">
-         <string>Callsign</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -101,10 +114,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="2" colspan="2">
-       <widget class="QComboBox" name="cb_RadarRange"/>
-      </item>
-      <item row="2" column="0" colspan="2">
+      <item row="1" column="3">
        <widget class="QLabel" name="lbl_Range">
         <property name="text">
          <string>Range</string>
@@ -113,6 +123,9 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QComboBox" name="cb_RadarRange"/>
       </item>
      </layout>
     </widget>
@@ -131,6 +144,7 @@
   <tabstop>cb_Callsign</tabstop>
   <tabstop>cb_Heading</tabstop>
   <tabstop>cb_Altitude</tabstop>
+  <tabstop>sb_FontSize</tabstop>
   <tabstop>cb_LockNorth</tabstop>
   <tabstop>cb_GroundSpeed</tabstop>
   <tabstop>cb_Grid</tabstop>
