@@ -22,7 +22,7 @@ using namespace BlackGui::Views;
 namespace BlackGui::Components
 {
     CRadarComponent::CRadarComponent(QWidget *parent) : QFrame(parent),
-                                                        ui(new Ui::CRadarComponent)
+                                                        ui(new Ui::CRadarComponent), m_tagFont(QApplication::font())
     {
         ui->setupUi(this);
 
@@ -39,6 +39,8 @@ namespace BlackGui::Components
         }
 
         ui->cb_RadarRange->setCurrentText(QString::number(m_rangeNM) % u" nm");
+        ui->sb_FontSize->setRange(1, 100);
+        ui->sb_FontSize->setValue(QApplication::font().pointSize());
 
         connect(ui->gv_RadarView, &CRadarView::radarViewResized, this, &CRadarComponent::fitInView);
         connect(ui->gv_RadarView, &CRadarView::zoomEvent, this, &CRadarComponent::changeRangeInSteps);
@@ -46,6 +48,7 @@ namespace BlackGui::Components
         connect(&m_headingTimer, &QTimer::timeout, this, &CRadarComponent::rotateView);
 
         connect(ui->cb_RadarRange, qOverload<int>(&QComboBox::currentIndexChanged), this, &CRadarComponent::changeRangeFromUserSelection);
+        connect(ui->sb_FontSize, qOverload<int>(&QSpinBox::valueChanged), this, &CRadarComponent::updateFont);
         connect(ui->cb_Callsign, &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
         connect(ui->cb_Heading, &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
         connect(ui->cb_Altitude, &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
@@ -175,6 +178,7 @@ namespace BlackGui::Components
                     }
 
                     tag->setPlainText(tagText);
+                    tag->setFont(m_tagFont);
                     tag->setPos(position);
                     tag->setDefaultTextColor(Qt::green);
                     tag->setFlags(QGraphicsItem::ItemIgnoresTransformations);
@@ -257,6 +261,12 @@ namespace BlackGui::Components
             m_rangeNM = range;
             fitInView();
         }
+    }
+
+    void CRadarComponent::updateFont(int pointSize)
+    {
+        m_tagFont.setPointSize(pointSize);
+        this->refreshTargets();
     }
 
     void CRadarComponent::onInfoAreaTabBarChanged(int index)
