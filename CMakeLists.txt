@@ -86,7 +86,7 @@ find_package(Qt5 REQUIRED COMPONENTS Core DBus Gui Multimedia Network OpenGL Con
 
 # Global compiler options
 if(MSVC)
-    add_compile_options(/wd4351 /wd4661)
+    add_compile_options(/W3 /w34100 /w34189 /wd4661)
 
     # https://doc.qt.io/qt-6/qt-disable-unicode-defines.html
     add_compile_definitions(UNICODE)
@@ -102,6 +102,12 @@ if(MSVC)
 
     # Debug iterators used by Qt 5
     add_compile_definitions(_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
+elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
+    add_compile_options(-Wall -Wextra)
+    add_compile_options("$<$<COMPILE_LANGUAGE:CXX,OBJCXX>:-Woverloaded-virtual;-Wzero-as-null-pointer-constant;-Wsuggest-override>")
+elseif(${CMAKE_CXX_COMPILER_ID} MATCHES ".*Clang")
+    add_compile_options(-Wall -Wextra)
+    add_compile_options("$<$<COMPILE_LANGUAGE:CXX,OBJCXX>:-Woverloaded-virtual;-Wzero-as-null-pointer-constant;-Wno-return-std-move>")
 endif()
 
 add_compile_definitions(QT_NO_DEPRECATED_WARNINGS)
