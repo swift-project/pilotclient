@@ -122,6 +122,11 @@ elseif(UNIX)
     set(CMAKE_INSTALL_RPATH \$ORIGIN/../lib)
 endif()
 
+if(UNIX AND NOT APPLE AND ${CMAKE_BUILD_TYPE} STREQUAL Debug)
+    # For BlackMisc::getStackTrace
+    add_link_options(-rdynamic)
+endif()
+
 if(MSVC)
     set(CMAKE_DEBUG_POSTFIX d)
 endif()
