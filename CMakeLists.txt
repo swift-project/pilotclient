@@ -104,13 +104,7 @@ if(MSVC)
     add_compile_definitions(_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
 endif()
 
-if(UNIX AND NOT APPLE)
-    add_compile_options("-Wno-deprecated")
-endif()
-
-if(UNIX)
-    add_compile_options("-Wno-deprecated-declarations")
-endif()
+add_compile_definitions(QT_NO_DEPRECATED_WARNINGS)
 
 if(SWIFT_USE_CRASHPAD)
     add_compile_definitions(BLACK_USE_CRASHPAD)
