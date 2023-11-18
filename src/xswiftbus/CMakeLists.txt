@@ -135,6 +135,12 @@ if(MSVC)
     target_compile_definitions(xswiftbus PRIVATE _CRT_SECURE_NO_WARNINGS)
 endif()
 
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
+    target_compile_options(xswiftbus PRIVATE -Wno-missing-field-initializers -Wno-stringop-truncation)
+elseif(${CMAKE_CXX_COMPILER_ID} MATCHES ".*Clang")
+    target_compile_options(xswiftbus PRIVATE -Wno-missing-field-initializers)
+endif()
+
 if(UNIX AND NOT APPLE)
     target_compile_definitions(xswiftbus PUBLIC LIN=1)
 elseif(WIN32)
