@@ -417,7 +417,7 @@ jobs:
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' }}
         run: |
-          python3 -u scripts/build.py -w 64 -t clang -d -j2 -q "SWIFT_CONFIG_JSON+=$vatsim_key_file" --upload 2> >(tee error.log >&2)
+          python3 -u scripts/build.py -w 64 -t clang -d -j2 -q "-DVATSIM_KEY_JSON=$vatsim_key_file" --upload 2> >(tee error.log >&2)
       - name: Check warnings
         id: warnings
         run: |
