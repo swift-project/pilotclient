@@ -66,15 +66,14 @@ jobs:
       - name: Run clang-format
         run: |
           scripts/run_clang_format.py
+      - uses: Trass3r/setup-cpp@master
       - name: Run cppcheck
         id: cppcheck
         run: |
           sudo apt-get -y install cppcheck
-          sudo cpan Path::Class
           cppcheck --template=gcc --inline-suppr --std=c++17 --enable=style,unusedFunction -i externals \
                    -i src/plugins/weatherdata/gfs/g2clib -DCPPCHECK --force --suppressions-list=cppcheck.supp \
-                   --library=qt.cfg --library=posix.cfg . 2> >(tee error.log >&2)
-          perl scripts/warnings.pl error.log
+                   --library=qt.cfg --library=posix.cfg .
 
   buildLinux:
     runs-on: ubuntu-20.04
@@ -115,7 +114,6 @@ jobs:
         run: |
           sudo apt-get -y install dbus-x11 doxygen graphviz libglu1-mesa-dev libopus-dev libsodium-dev libpulse-dev libdbus-1-dev libevent-dev libpng-dev ninja-build
           pip3 install requests
-          sudo cpan Path::Class
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
@@ -136,18 +134,15 @@ jobs:
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
+      - uses: Trass3r/setup-cpp@master
       - name: Build swift (without symbols)
         if: ${{ env.do_symbols != 'true' }}
         run: |
-          python3 -u scripts/build.py -w 64 -t gcc -d -j2 -q "-DVATSIM_KEY_JSON=$vatsim_key_file" 2> >(tee error.log >&2)
+          python3 -u scripts/build.py -w 64 -t gcc -d -j2 -q "-DVATSIM_KEY_JSON=$vatsim_key_file"
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' }}
         run: |
-          python3 -u scripts/build.py -w 64 -t gcc -d -j2 -q "-DVATSIM_KEY_JSON=$vatsim_key_file" --upload 2> >(tee error.log >&2)
-      - name: Check warnings
-        id: warnings
-        run: |
-          perl scripts/warnings.pl error.log
+          python3 -u scripts/build.py -w 64 -t gcc -d -j2 -q "-DVATSIM_KEY_JSON=$vatsim_key_file" --upload
       - name: Upload installer
         uses: actions/upload-artifact@v3
         with:
@@ -229,20 +224,15 @@ jobs:
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
+      - uses: Trass3r/setup-cpp@master
       - name: Build swift (without symbols)
         if: ${{ env.do_symbols != 'true' }}
-        shell: bash
         run: |
-          python -u scripts/build.py -w 64 -t msvc -d -q "-DVATSIM_KEY_JSON=$vatsim_key_file" 2>&1 | tee error.log
+          python -u scripts/build.py -w 64 -t msvc -d -q "-DVATSIM_KEY_JSON=$env:vatsim_key_file"
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' }}
-        shell: bash
         run: |
-          python -u scripts/build.py -w 64 -t msvc -d -q "-DVATSIM_KEY_JSON=$vatsim_key_file" --upload 2>&1 | tee error.log
-      - name: Check warnings
-        id: warnings
-        run: |
-          perl.exe scripts\warnings.pl error.log
+          python -u scripts/build.py -w 64 -t msvc -d -q "-DVATSIM_KEY_JSON=$env:vatsim_key_file" --upload
       - name: Upload installer
         uses: actions/upload-artifact@v3
         with:
@@ -324,20 +314,15 @@ jobs:
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
+      - uses: Trass3r/setup-cpp@master
       - name: Build swift (without symbols)
         if: ${{ env.do_symbols != 'true' }}
-        shell: bash
         run: |
-          python -u scripts/build.py -w 32 -t msvc -d -q "-DVATSIM_KEY_JSON=$vatsim_key_file" 2>&1 | tee error.log
+          python -u scripts/build.py -w 32 -t msvc -d -q "-DVATSIM_KEY_JSON=$env:vatsim_key_file"
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' }}
-        shell: bash
         run: |
-          python -u scripts/build.py -w 32 -t msvc -d -q "-DVATSIM_KEY_JSON=$vatsim_key_file" --upload 2>&1 | tee error.log
-      - name: Check warnings
-        id: warnings
-        run: |
-          perl.exe scripts\warnings.pl error.log
+          python -u scripts/build.py -w 32 -t msvc -d -q "-DVATSIM_KEY_JSON=$env:vatsim_key_file" --upload
       - name: Upload installer
         uses: actions/upload-artifact@v3
         with:
@@ -394,7 +379,6 @@ jobs:
       - name: Install dependencies
         run: |
           pip3 install requests
-          cpan Path::Class
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
@@ -410,18 +394,15 @@ jobs:
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
+      - uses: Trass3r/setup-cpp@master
       - name: Build swift (without symbols)
         if: ${{ env.do_symbols != 'true' }}
         run: |
-          python3 -u scripts/build.py -w 64 -t clang -d -j2 -q "-DVATSIM_KEY_JSON=$vatsim_key_file" 2> >(tee error.log >&2)
+          python3 -u scripts/build.py -w 64 -t clang -d -j2 -q "-DVATSIM_KEY_JSON=$vatsim_key_file"
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' }}
         run: |
-          python3 -u scripts/build.py -w 64 -t clang -d -j2 -q "-DVATSIM_KEY_JSON=$vatsim_key_file" --upload 2> >(tee error.log >&2)
-      - name: Check warnings
-        id: warnings
-        run: |
-          perl scripts/warnings.pl error.log
+          python3 -u scripts/build.py -w 64 -t clang -d -j2 -q "-DVATSIM_KEY_JSON=$vatsim_key_file" --upload
       - name: Upload installer
         uses: actions/upload-artifact@v3
         with:
