@@ -477,14 +477,25 @@ jobs:
     steps:
       - name: Install dependencies
         run: |
-          sudo apt-get -y install jo
+          sudo apt-get -y install jo jq
+      - name: Query GitHub annotations
+        uses: octokit/request-action@v2.x
+        id: checkruns
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          route: GET /repos/swift-project/pilotclient/commits/${{ github.sha }}/check-runs
       - name: Prepare Discord build message
         run: |
           result=SKIPPED
-          ${{ contains(needs.*.result,           'success')   }} && result=SUCCESS
-          ${{ contains(needs.*.outputs.warnings, 'true')      }} && result=WARNING
-          ${{ contains(needs.*.result,           'cancelled') }} && result=CANCELLED
-          ${{ contains(needs.*.result,           'failure')   }} && result=FAILED
+          ${{ contains(needs.*.result, 'success')   }} && result=SUCCESS
+          for run in $CHECK_RUNS; do
+            curl -L -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $TOKEN" -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/swift-project/pilotclient/check-runs/$run/annotations" \
+            | jq -e 'any(.[].annotation_level; . == "warning" or . == "error")' && result=WARNING
+          done
+          ${{ contains(needs.*.result, 'cancelled') }} && result=CANCELLED
+          ${{ contains(needs.*.result, 'failure')   }} && result=FAILED
           [[ $result = SKIPPED   ]] && emoji=repeat
           [[ $result = SUCCESS   ]] && emoji=white_check_mark
           [[ $result = WARNING   ]] && emoji=warning
@@ -492,6 +503,9 @@ jobs:
           [[ $result = FAILED    ]] && emoji=x
           echo "result=$result"  >>$GITHUB_ENV
           echo "emoji=$emoji"    >>$GITHUB_ENV
+        env:
+          CHECK_RUNS: ${{ join(fromJson(steps.checkruns.outputs.data).check_runs.*.id, ' ') }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Prepare Discord release message
         uses: octokit/request-action@v2.x
         if: ${{ needs.release.result == 'success' }}
