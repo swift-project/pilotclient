@@ -55,8 +55,6 @@ jobs:
   checks:
     runs-on: ubuntu-22.04
     needs: preBuild
-    outputs:
-      warnings: ${{ steps.cppcheck.outputs.warnings }}
 
     steps:
       - name: Checkout repository
@@ -68,7 +66,6 @@ jobs:
           scripts/run_clang_format.py
       - uses: Trass3r/setup-cpp@master
       - name: Run cppcheck
-        id: cppcheck
         run: |
           sudo apt-get -y install cppcheck
           cppcheck --template=gcc --inline-suppr --std=c++17 --enable=style,unusedFunction -i externals \
@@ -82,8 +79,6 @@ jobs:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
       BACKTRACE_MINIDUMP_TOKEN: ${{ secrets.BACKTRACE_MINIDUMP_TOKEN }}
       BITROCK_BUILDER: ~/installbuilder/bin/builder
-    outputs:
-      warnings: ${{ steps.warnings.outputs.warnings }}
 
     steps:
       - name: Install Qt
@@ -167,8 +162,6 @@ jobs:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
       BACKTRACE_MINIDUMP_TOKEN: ${{ secrets.BACKTRACE_MINIDUMP_TOKEN }}
       BITROCK_BUILDER: "~/installbuilder/bin/builder-cli.exe"
-    outputs:
-      warnings: ${{ steps.warnings.outputs.warnings }}
 
     steps:
       - name: Install Qt
@@ -257,8 +250,6 @@ jobs:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
       BACKTRACE_MINIDUMP_TOKEN: ${{ secrets.BACKTRACE_MINIDUMP_TOKEN }}
       BITROCK_BUILDER: "~/installbuilder/bin/builder-cli.exe"
-    outputs:
-      warnings: ${{ steps.warnings.outputs.warnings }}
 
     steps:
       - name: Install Qt
@@ -342,8 +333,6 @@ jobs:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
       BACKTRACE_MINIDUMP_TOKEN: ${{ secrets.BACKTRACE_MINIDUMP_TOKEN }}
       BITROCK_BUILDER: /Applications/installbuilder/bin/Builder.app/Contents/MacOS/installbuilder.sh
-    outputs:
-      warnings: ${{ steps.warnings.outputs.warnings }}
 
     steps:
       - name: Install Qt
