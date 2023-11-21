@@ -27,7 +27,7 @@ elseif(SWIFT_WIN64)
 elseif(APPLE)
     set(crashpad_handler_path ${swift_SOURCE_DIR}/externals/macx-clang/64/bin/swift_crashpad_handler)
 endif()
-install(FILES ${crashpad_handler_path} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+install(PROGRAMS ${crashpad_handler_path} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
 # create_dbus_machineid
 if(APPLE)
