@@ -7,19 +7,19 @@
 	<key>CFBundleDisplayName</key>
 	<string>swift gui</string>
 	<key>CFBundleExecutable</key>
-	<string>${EXECUTABLE_NAME}</string>
+	<string>swiftguistd</string>
 	<key>CFBundleGetInfoString</key>
 	<string>swift project - free and open source pilot client</string>
 	<key>CFBundleIconFile</key>
-	<string>${ASSETCATALOG_COMPILER_APPICON_NAME}</string>
+	<string>swift.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>${PRODUCT_BUNDLE_IDENTIFIER}</string>
+	<string>org.swift-project.swiftguistd</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
-	<string>${QMAKE_PKGINFO_TYPEINFO}</string>
+	<string>????</string>
 	<key>LSMinimumSystemVersion</key>
-	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
+	<string>10.13</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>NSSupportsAutomaticGraphicsSwitching</key>

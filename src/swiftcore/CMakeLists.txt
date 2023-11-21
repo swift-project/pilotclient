@@ -22,10 +22,22 @@ target_link_libraries(swiftcore
         core
         )
 
+if(APPLE)
+    set_target_properties(swiftcore PROPERTIES MACOSX_BUNDLE TRUE)
+    set_target_properties(swiftcore PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
+    set(RESOURCE_FILES swiftcore.icns qt.conf)
+    target_sources(swiftcore PRIVATE ${RESOURCE_FILES})
+    set_target_properties(swiftcore PROPERTIES RESOURCE "${RESOURCE_FILES}")
+endif()
+
 add_dependencies(swiftcore resources)
 
 if(WIN32)
         add_dependencies(swiftcore copy_externals_to_build_dir)
 endif()
 
-install(TARGETS swiftcore)
+if(APPLE)
+    install(TARGETS swiftcore BUNDLE DESTINATION bin)
+else()
+    install(TARGETS swiftcore)
+endif()

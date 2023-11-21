@@ -23,10 +23,22 @@ target_link_libraries(swiftdata
         core
         )
 
+if(APPLE)
+    set_target_properties(swiftdata PROPERTIES MACOSX_BUNDLE TRUE)
+    set_target_properties(swiftdata PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
+    set(RESOURCE_FILES swiftdata.icns qt.conf)
+    target_sources(swiftdata PRIVATE ${RESOURCE_FILES})
+    set_target_properties(swiftdata PROPERTIES RESOURCE "${RESOURCE_FILES}")
+endif()
+
 add_dependencies(swiftdata resources)
 
 if(WIN32)
         add_dependencies(swiftdata copy_externals_to_build_dir)
 endif()
 
-install(TARGETS swiftdata)
+if(APPLE)
+    install(TARGETS swiftdata BUNDLE DESTINATION bin)
+else()
+    install(TARGETS swiftdata)
+endif()

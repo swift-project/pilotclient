@@ -384,11 +384,14 @@ class MacOSBuilder(Builder):
         return True
 
     def _strip_debug(self):
+        bundle_files = [
+            "bin/swiftcore.app/Contents/MacOS/swiftcore",
+            "bin/swiftdata.app/Contents/MacOS/swiftdata",
+            "bin/swiftguistd.app/Contents/MacOS/swiftguistd",
+            "bin/swiftlauncher.app/Contents/MacOS/swiftlauncher",
+        ]
+
         files = [
-            "bin/swiftcore",
-            "bin/swiftdata",
-            "bin/swiftguistd",
-            "bin/swiftlauncher",
             "lib/libcore.dylib",
             "lib/libgui.dylib",
             "lib/libinput.dylib",
@@ -405,6 +408,11 @@ class MacOSBuilder(Builder):
             "xswiftbus/64/mac.xpl",
         ]
         dist_path = path.join(self._get_swift_source_path(), "dist")
+
+        # Put output of bundle files directly in bin folder
+        for file in bundle_files:
+            subprocess.check_call(["dsymutil", path.join(dist_path, file), "-o", path.join(dist_path, "bin", file.split("/")[-1] + ".dSYM")], env=dict(os.environ))
+
         for file in files:
             subprocess.check_call(["dsymutil", path.join(dist_path, file)], env=dict(os.environ))
 
