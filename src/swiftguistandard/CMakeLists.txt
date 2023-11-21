@@ -28,10 +28,22 @@ target_link_libraries(swiftguistd
         sound
         )
 
+if(APPLE)
+    set_target_properties(swiftguistd PROPERTIES MACOSX_BUNDLE TRUE)
+    set_target_properties(swiftguistd PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
+    set(RESOURCE_FILES swift.icns qt.conf)
+    target_sources(swiftguistd PRIVATE ${RESOURCE_FILES})
+    set_target_properties(swiftguistd PROPERTIES RESOURCE "${RESOURCE_FILES}")
+endif()
+
 add_dependencies(swiftguistd resources)
 
 if(WIN32)
         add_dependencies(swiftguistd copy_externals_to_build_dir)
 endif()
 
-install(TARGETS swiftguistd)
+if(APPLE)
+    install(TARGETS swiftguistd BUNDLE DESTINATION bin)
+else()
+    install(TARGETS swiftguistd)
+endif()

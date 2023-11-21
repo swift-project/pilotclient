@@ -117,7 +117,7 @@ if(SWIFT_USE_CRASHPAD)
 endif()
 
 if(APPLE)
-    set(CMAKE_INSTALL_RPATH @loader_path/../lib)
+    set(CMAKE_INSTALL_RPATH @loader_path/../../../../lib)
 elseif(UNIX)
     set(CMAKE_INSTALL_RPATH \$ORIGIN/../lib)
 endif()
