@@ -65,7 +65,6 @@ namespace BlackSound
         this->updateEffect(CNotificationSounds::NotificationTextMessageSupervisor, directory, "supervisormessage.wav");
         this->updateEffect(CNotificationSounds::NotificationTextMessageUnicom, directory, "unicommessage.wav");
         this->updateEffect(CNotificationSounds::NotificationTextCallsignMentioned, directory, "callsignmentioned.wav");
-        this->updateEffect(CNotificationSounds::PTTBlocked, directory, "pttblocked.wav");
         this->updateEffect(CNotificationSounds::PTTClickKeyDown, directory, "pttclick.wav");
         this->updateEffect(CNotificationSounds::PTTClickKeyUp, directory, "pttclick.wav");
 

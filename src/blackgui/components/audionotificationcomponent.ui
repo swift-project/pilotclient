@@ -51,13 +51,6 @@
       </property>
       <layout class="QGridLayout" name="gridLayout">
        <item row="12" column="1">
-        <widget class="QCheckBox" name="cb_SetupAudioPTTBlocked">
-         <property name="text">
-          <string>PTT blocking</string>
-         </property>
-        </widget>
-       </item>
-       <item row="13" column="1">
         <widget class="QCheckBox" name="cb_SetupAfvClicked">
          <property name="text">
           <string>AFV click</string>
@@ -192,14 +185,14 @@
          </property>
         </widget>
        </item>
-       <item row="14" column="1">
+       <item row="13" column="1">
         <widget class="QCheckBox" name="cb_SetupAudioNotificationLogin">
          <property name="text">
           <string>Login</string>
          </property>
         </widget>
        </item>
-       <item row="15" column="1">
+       <item row="14" column="1">
         <widget class="QCheckBox" name="cb_SetupAudioNotificationLogoff">
          <property name="text">
           <string>Logoff</string>
@@ -225,7 +218,6 @@
   <tabstop>cb_SetupAudioNotificationTextMessageSupervisor</tabstop>
   <tabstop>cb_SetupAudioPTTClickDown</tabstop>
   <tabstop>cb_SetupAudioPTTClickUp</tabstop>
-  <tabstop>cb_SetupAudioPTTBlocked</tabstop>
   <tabstop>cb_SetupAfvClicked</tabstop>
   <tabstop>cb_SetupAfvBlocked</tabstop>
   <tabstop>cb_SetupAudioNotificationLogin</tabstop>

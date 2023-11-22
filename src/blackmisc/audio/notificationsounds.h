@@ -35,7 +35,7 @@ namespace BlackMisc::Audio
             // 1 << 11 previously used for NotificationAtcTunedOut
             PTTClickKeyDown = 1 << 7,
             PTTClickKeyUp = 1 << 8,
-            PTTBlocked = 1 << 9,
+            // 1 << 9 previously used for PTTBlocked
             AFVClicked = 1 << 14,
             AFVBlocked = 1 << 15
         };
@@ -49,7 +49,7 @@ namespace BlackMisc::Audio
         constexpr static Notification AllLoginNotifications = Notification(NotificationLogin | NotificationLogoff);
 
         //! All PTT notification flags
-        constexpr static Notification AllPTTNotifications = Notification(PTTBlocked | PTTClickKeyUp | PTTClickKeyDown);
+        constexpr static Notification AllPTTNotifications = Notification(PTTClickKeyUp | PTTClickKeyDown);
 
         //! All AFV flags
         constexpr static Notification AllAfv = Notification(AFVClicked | AFVBlocked);

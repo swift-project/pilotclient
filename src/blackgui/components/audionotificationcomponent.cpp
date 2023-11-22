@@ -51,8 +51,6 @@ namespace BlackGui::Components
         Q_ASSERT(c);
         c = connect(ui->cb_SetupAudioPTTClickUp, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
         Q_ASSERT(c);
-        c = connect(ui->cb_SetupAudioPTTBlocked, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
-        Q_ASSERT(c);
         c = connect(ui->cb_SetupAudioNotificationTextMessageFrequency, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
         Q_ASSERT(c);
         c = connect(ui->cb_SetupAudioNotificationTextMessagePrivate, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
@@ -87,7 +85,6 @@ namespace BlackGui::Components
     bool CAudioNotificationComponent::playNotificationSounds() const
     {
         return ui->cb_SetupAudioPTTClickDown->isChecked() || ui->cb_SetupAudioPTTClickUp->isChecked() ||
-               ui->cb_SetupAudioPTTBlocked->isChecked() ||
                ui->cb_SetupAudioNotificationTextMessageFrequency->isChecked() || ui->cb_SetupAudioNotificationTextMessageUnicom->isChecked() ||
                ui->cb_SetupAudioNotificationTextMessagePrivate->isChecked() || ui->cb_SetupAudioNotificationTextMessageSupervisor->isChecked() ||
                ui->cb_SetupAudioNotificationTextCallsignMentioned->isChecked() ||
@@ -100,7 +97,6 @@ namespace BlackGui::Components
 
         ui->cb_SetupAudioPTTClickDown->setChecked(as.isNotificationFlagSet(CNotificationSounds::PTTClickKeyDown));
         ui->cb_SetupAudioPTTClickUp->setChecked(as.isNotificationFlagSet(CNotificationSounds::PTTClickKeyUp));
-        ui->cb_SetupAudioPTTBlocked->setChecked(as.isNotificationFlagSet(CNotificationSounds::PTTBlocked));
 
         ui->cb_SetupAudioNotificationTextMessageFrequency->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationTextMessageFrequency));
         ui->cb_SetupAudioNotificationTextMessagePrivate->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationTextMessagePrivate));
@@ -133,7 +129,6 @@ namespace BlackGui::Components
 
         if (cb == ui->cb_SetupAudioPTTClickDown) { return CNotificationSounds::PTTClickKeyDown; }
         if (cb == ui->cb_SetupAudioPTTClickUp) { return CNotificationSounds::PTTClickKeyUp; }
-        if (cb == ui->cb_SetupAudioPTTBlocked) { return CNotificationSounds::PTTBlocked; }
 
         if (cb == ui->cb_SetupAudioNotificationTextCallsignMentioned) { return CNotificationSounds::NotificationTextCallsignMentioned; }
         if (cb == ui->cb_SetupAudioNotificationTextMessageFrequency) { return CNotificationSounds::NotificationTextMessageFrequency; }
@@ -157,7 +152,6 @@ namespace BlackGui::Components
 
         as.setNotificationFlag(CNotificationSounds::PTTClickKeyDown, ui->cb_SetupAudioPTTClickDown->isChecked());
         as.setNotificationFlag(CNotificationSounds::PTTClickKeyUp, ui->cb_SetupAudioPTTClickUp->isChecked());
-        as.setNotificationFlag(CNotificationSounds::PTTBlocked, ui->cb_SetupAudioPTTBlocked->isChecked());
 
         as.setNotificationFlag(CNotificationSounds::NotificationTextMessageFrequency, ui->cb_SetupAudioNotificationTextMessageFrequency->isChecked());
         as.setNotificationFlag(CNotificationSounds::NotificationTextMessagePrivate, ui->cb_SetupAudioNotificationTextMessagePrivate->isChecked());
