@@ -21,7 +21,6 @@ namespace BlackMisc::Audio
         static const QString mentioned("cs mentioned");
         static const QString pttUp("PTT click up");
         static const QString pttDown("PTT click down");
-        static const QString pttBlocked("PTT blocked");
         static const QString afvclick("AFC click");
         static const QString afvblock("AFV blocked");
 
@@ -37,7 +36,6 @@ namespace BlackMisc::Audio
         case NotificationTextCallsignMentioned: return mentioned;
         case PTTClickKeyDown: return pttDown;
         case PTTClickKeyUp: return pttUp;
-        case PTTBlocked: return pttBlocked;
         case AFVClicked: return afvclick;
         case AFVBlocked: return afvblock;
 
@@ -60,7 +58,6 @@ namespace BlackMisc::Audio
 
         if (notification.testFlag(PTTClickKeyUp)) n << flagToString(PTTClickKeyUp);
         if (notification.testFlag(PTTClickKeyDown)) n << flagToString(PTTClickKeyDown);
-        if (notification.testFlag(PTTBlocked)) n << flagToString(PTTBlocked);
 
         if (notification.testFlag(AFVClicked)) n << flagToString(AFVClicked);
         if (notification.testFlag(AFVBlocked)) n << flagToString(AFVBlocked);
