@@ -13,9 +13,9 @@ The application allows users of flight simulation software to connect to online 
 
 \section links Links
 
-- <a href="http://www.swift-project.org/">swift website</a>
-- <a href="http://docs.swift-project.org/">user guide</a>
-- <a href="https://docs.swift-project.org/doku.php?id=developer_documentation">developer guide</a>
+- <a href="https://swift-project.org/">swift website</a>
+- <a href="https://swift-project.org/documentation/">user guide</a>
+- <a href="https://github.com/swift-project/pilotclient/wiki">developer guide</a>
 - <a href="https://github.com/swift-project/pilotclient">github repository</a>
 
 */
