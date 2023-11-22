@@ -146,7 +146,7 @@
        <item row="11" column="1">
         <widget class="QCheckBox" name="cb_SetupAfvBlocked">
          <property name="text">
-          <string>AFV blocking</string>
+          <string>AFV blocking sound when more than station transmits</string>
          </property>
         </widget>
        </item>
