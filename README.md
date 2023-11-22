@@ -30,7 +30,7 @@ Resources
 
 [:globe_with_meridians: Website](https://swift-project.org/)
 
-[:green_book: User guide](https://docs.swift-project.org/)
+[:green_book: User guide](https://swift-project.org/documentation/)
 
 [:wave: Discord](https://discord.gg/R7Atd9A)
 
@@ -46,6 +46,6 @@ _swift_ is written in modern C++17 using the Qt framework.
 
 Pull requests should be made against the `main` branch.
 
-[:blue_book: Developer guide](https://docs.swift-project.org/doku.php?id=developer_documentation)
+[:blue_book: Developer guide](https://github.com/swift-project/pilotclient/wiki)
 
 [:orange_book: API documentation](https://apidocs.swift-project.org/)
