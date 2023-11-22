@@ -21,7 +21,7 @@ namespace BlackMisc::Audio
         static const QString mentioned("cs mentioned");
         static const QString pttUp("PTT click up");
         static const QString pttDown("PTT click down");
-        static const QString afvclick("AFC click");
+        static const QString afvclick("AFV click");
         static const QString afvblock("AFV blocked");
 
         switch (notification)
