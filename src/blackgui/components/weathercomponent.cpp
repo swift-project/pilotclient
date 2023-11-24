@@ -252,8 +252,9 @@ namespace BlackGui::Components
         ui->tvp_CloudLayers->updateContainer(gridPoint.getCloudLayers());
         ui->tvp_WindLayers->updateContainer(gridPoint.getWindLayers());
         const CCoordinateGeodetic position = gridPoint.getPosition();
-        const double pressureAtMsl = gridPoint.getPressureAtMsl().value(CPressureUnit::hPa());
-        const QString status = QStringLiteral("Weather Position: %1 %2\nPressure (MSL): %3 hPa").arg(position.latitude().toWgs84(), position.longitude().toWgs84()).arg(pressureAtMsl);
+        const double pressureAtMslHpa = gridPoint.getPressureAtMsl().value(CPressureUnit::hPa());
+        const double pressureAtMslInHg = gridPoint.getPressureAtMsl().value(CPressureUnit::inHg());
+        const QString status = QStringLiteral("Weather Position: %1 %2\nPressure (MSL): %3 hPa / %4 inHg").arg(position.latitude().toWgs84(), position.longitude().toWgs84()).arg(pressureAtMslHpa).arg(pressureAtMslInHg);
         ui->lbl_Status->setText(status);
     }
 
