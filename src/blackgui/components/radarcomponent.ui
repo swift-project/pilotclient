@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>342</width>
-    <height>259</height>
+    <width>247</width>
+    <height>293</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -44,60 +44,13 @@
       <property name="bottomMargin">
        <number>2</number>
       </property>
-      <item row="0" column="4">
-       <widget class="QSpinBox" name="sb_FontSize"/>
-      </item>
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="cb_Callsign">
-        <property name="text">
-         <string>Callsign</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="1">
-       <widget class="QCheckBox" name="cb_Heading">
-        <property name="text">
-         <string>Track line</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QLabel" name="lbl_FontSize">
-        <property name="text">
-         <string>Font size</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QCheckBox" name="cb_Altitude">
-        <property name="text">
-         <string>Altitude (FL)</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="cb_LockNorth">
-        <property name="text">
-         <string>Lock North</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
        <widget class="QCheckBox" name="cb_GroundSpeed">
-        <property name="text">
+        <property name="toolTip">
          <string>Ground speed</string>
+        </property>
+        <property name="text">
+         <string>GS</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -114,17 +67,80 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="3">
+      <item row="1" column="1">
+       <widget class="QCheckBox" name="cb_Heading">
+        <property name="text">
+         <string>Track line</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="cb_LockNorth">
+        <property name="text">
+         <string>Lock North</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_FontSize">
+        <property name="text">
+         <string>Font size</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="cb_Altitude">
+        <property name="toolTip">
+         <string>Altitude</string>
+        </property>
+        <property name="text">
+         <string>ALT</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="cb_Callsign">
+        <property name="text">
+         <string>Callsign</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
        <widget class="QLabel" name="lbl_Range">
         <property name="text">
          <string>Range</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         <set>Qt::AlignBottom|Qt::AlignHCenter</set>
         </property>
        </widget>
       </item>
-      <item row="1" column="4">
+      <item row="3" column="0">
+       <widget class="QSpinBox" name="sb_FontSize">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
        <widget class="QComboBox" name="cb_RadarRange"/>
       </item>
      </layout>
@@ -142,12 +158,12 @@
  <tabstops>
   <tabstop>gv_RadarView</tabstop>
   <tabstop>cb_Callsign</tabstop>
-  <tabstop>cb_Heading</tabstop>
-  <tabstop>cb_Altitude</tabstop>
-  <tabstop>sb_FontSize</tabstop>
-  <tabstop>cb_LockNorth</tabstop>
   <tabstop>cb_GroundSpeed</tabstop>
+  <tabstop>cb_Altitude</tabstop>
+  <tabstop>cb_LockNorth</tabstop>
+  <tabstop>cb_Heading</tabstop>
   <tabstop>cb_Grid</tabstop>
+  <tabstop>sb_FontSize</tabstop>
   <tabstop>cb_RadarRange</tabstop>
  </tabstops>
  <resources/>
