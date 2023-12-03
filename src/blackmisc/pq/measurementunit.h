@@ -139,54 +139,60 @@ namespace BlackMisc::PhysicalQuantities
             }
         };
 
-        //! @{
         //! Metapolicy that can be used to modify template parameters of converters
         struct One
         {
             static double factor() { return 1; } //!< factor
         };
+        //! \copydoc BlackMisc::PhysicalQuantities::CMeasurementUnit::One
         template <class Policy>
         struct Two
         {
             static double factor() { return Policy::factor() * 2.0; } //!< factor
         };
+        //! \copydoc BlackMisc::PhysicalQuantities::CMeasurementUnit::One
         template <class Policy>
         struct Milli
         {
             static double factor() { return Policy::factor() / 1000.0; } //!< factor
         };
+        //! \copydoc BlackMisc::PhysicalQuantities::CMeasurementUnit::One
         template <class Policy>
         struct Centi
         {
             static double factor() { return Policy::factor() / 100.0; } //!< factor
         };
+        //! \copydoc BlackMisc::PhysicalQuantities::CMeasurementUnit::One
         template <class Policy>
         struct Hecto
         {
             static double factor() { return Policy::factor() * 100.0; } //!< factor
         };
+        //! \copydoc BlackMisc::PhysicalQuantities::CMeasurementUnit::One
         template <class Policy>
         struct Kilo
         {
             static double factor() { return Policy::factor() * 1000.0; } //!< factor
         };
+        //! \copydoc BlackMisc::PhysicalQuantities::CMeasurementUnit::One
         template <class Policy>
         struct Mega
         {
             static double factor() { return Policy::factor() * 1e+6; } //!< factor
         };
+        //! \copydoc BlackMisc::PhysicalQuantities::CMeasurementUnit::One
         template <class Policy>
         struct Giga
         {
             static double factor() { return Policy::factor() * 1e+9; } //!< factor
         };
+        //! \copydoc BlackMisc::PhysicalQuantities::CMeasurementUnit::One
         template <int Subfactor>
         struct InEachHundred
         {
             static double fraction() { return 100.0; } //!< fraction
             static double subfactor() { return float(Subfactor); } //!< subfactor
         };
-        //! @}
 
     protected:
         //! Pimpl class

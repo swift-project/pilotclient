@@ -108,7 +108,7 @@ namespace BlackMisc::PhysicalQuantities
         public Mixin::String<PQ>,
         public Mixin::Icon<CPhysicalQuantity<MU, PQ>>
     {
-        //! \copydoc CValueObject::compare
+        //! \copydoc BlackMisc::CValueObject::compare
         friend int compare(const PQ &a, const PQ &b) { return compareImpl(a, b); }
 
     public:

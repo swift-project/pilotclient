@@ -14,17 +14,18 @@ BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CWakeTurbulenceCategory)
 
 namespace BlackMisc::Aviation
 {
+    //! ICAO wake turbulence category
     class BLACKMISC_EXPORT CWakeTurbulenceCategory : public CValueObject<CWakeTurbulenceCategory>
     {
     public:
         //! ICAO wake turbulence categories
         enum WakeTurbulenceCategory
         {
-            UNKNOWN, // required when converting from FAA equipment codes and for some database entries where the correct WTC is not available
-            LIGHT,
-            MEDIUM,
-            HEAVY,
-            SUPER
+            UNKNOWN, //!< required when converting from FAA equipment codes and for some database entries where the correct WTC is not available
+            LIGHT, //!< light
+            MEDIUM, //!< medium
+            HEAVY, //!< heavy
+            SUPER //!< super heavy
         };
 
         //! Create default object with unknown wake turbulence category
