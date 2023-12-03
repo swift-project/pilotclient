@@ -78,6 +78,10 @@ jobs:
           doxygen Doxyfile
         env:
           DOXY_SRC_ROOT: ..
+      - name: Upload doxygen
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: docs/html/
 
   buildLinux:
     runs-on: ubuntu-20.04
@@ -447,6 +451,11 @@ jobs:
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     outputs:
       id: ${{ steps.create.outputs.release_id }}
+    permissions:
+      id-token: write
+      contents: write
+      pages: write
+    environment: github-pages
 
     steps:
       - name: Download artifacts
@@ -475,6 +484,8 @@ jobs:
             swiftinstaller-macos-64-${{ needs.preBuild.outputs.version }}.dmg
             xswiftbus-fat-allos-${{ needs.preBuild.outputs.version }}.7z
             swiftsymbols-allos-${{ needs.preBuild.outputs.version }}:swiftsymbols
+      - name: Publish doxygen
+        uses: actions/deploy-pages@v3
 
   notify:
     runs-on: ubuntu-20.04
