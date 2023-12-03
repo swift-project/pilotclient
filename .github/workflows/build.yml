@@ -421,7 +421,7 @@ jobs:
           path: ${{ github.workspace }}/xswiftbus-*
 
   postBuild:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [preBuild, checks, buildLinux, buildWin64, buildWin32, buildMacOS]
 
     steps:
@@ -446,7 +446,7 @@ jobs:
           name: xswiftbus-thin-allos-${{ needs.preBuild.outputs.version }}
 
   release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [preBuild, postBuild]
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     outputs:
@@ -488,7 +488,7 @@ jobs:
         uses: actions/deploy-pages@v3
 
   notify:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [preBuild, checks, buildLinux, buildWin64, buildWin32, buildMacOS, postBuild, release]
     if: always()
 
