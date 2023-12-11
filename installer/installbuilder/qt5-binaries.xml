@@ -64,10 +64,6 @@
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/expat.dll*</origin>
-                </distributionFile>
-                <distributionFile>
-                    <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/libcrypto-1_1*.dll</origin>
                 </distributionFile>
                 <distributionFile>
