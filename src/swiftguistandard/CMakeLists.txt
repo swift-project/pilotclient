@@ -29,6 +29,8 @@ target_link_libraries(swiftguistd
         )
 
 if(APPLE)
+    target_link_libraries(swiftguistd PUBLIC input)
+
     set_target_properties(swiftguistd PROPERTIES MACOSX_BUNDLE TRUE)
     set_target_properties(swiftguistd PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
     set(RESOURCE_FILES swift.icns qt.conf)

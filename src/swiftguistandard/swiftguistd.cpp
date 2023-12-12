@@ -28,6 +28,10 @@
 #include "blackmisc/threadutils.h"
 #include "blackconfig/buildconfig.h"
 
+#if defined(Q_OS_MACOS)
+#    include "blackinput/macos/macosinpututils.h"
+#endif
+
 #include "swiftguistd.h"
 #include <QAction>
 #include <QDateTime>
@@ -474,6 +478,16 @@ void SwiftGuiStd::verifyPrerequisites()
     {
         msgs.push_back(sGui->getIContextSimulator()->verifyPrerequisites());
     }
+
+#if defined(Q_OS_MACOS)
+    if (!BlackInput::CMacOSInputUtils::hasAccess())
+    {
+        // A log message about missing permissions is already emitted when initializing the keyboard.
+        // But this happens way before initializing the GUI. Hence do the check here again to show an error message
+        // to the user
+        msgs.push_back(CLogMessage(this).error(u"Cannot access the keyboard. Is \"Input Monitoring\" for swift enabled?"));
+    }
+#endif
 
     if (msgs.hasWarningOrErrorMessages())
     {

@@ -16,6 +16,9 @@ namespace BlackInput
     public:
         CMacOSInputUtils() = delete;
 
+        //! Check OS permission for input monitoring access
+        static bool hasAccess();
+
         //! Request OS permission for input monitoring access
         static bool requestAccess();
 
