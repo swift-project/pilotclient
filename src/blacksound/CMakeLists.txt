@@ -14,7 +14,6 @@ add_library(sound SHARED
         sampleprovider/samples.h
         sampleprovider/volumesampleprovider.h
         sampleprovider/pinknoisegenerator.h
-        sampleprovider/sampleprovider.pri
         sampleprovider/mixingsampleprovider.h
         sampleprovider/sampleprovider.h
         sampleprovider/sawtoothgenerator.cpp
