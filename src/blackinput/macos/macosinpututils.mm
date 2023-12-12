@@ -8,6 +8,19 @@
 
 namespace BlackInput
 {
+
+    bool CMacOSInputUtils::hasAccess()
+    {
+        if (@available(macOS 10.15, *))
+        {
+            return IOHIDCheckAccess(kIOHIDRequestTypeListenEvent) == IOHIDAccessType::kIOHIDAccessTypeGranted;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
     bool CMacOSInputUtils::requestAccess()
     {
         if (@available(macOS 10.15, *))
