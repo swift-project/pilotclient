@@ -4,7 +4,7 @@
 #include "blackcore/afv/connection/apiserverconnection.h"
 
 #include "blackmisc/network/networkutils.h"
-#include "blackmisc/network/external/qjsonwebtoken.h"
+#include "qjsonwebtoken/qjsonwebtoken.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/stringutils.h"
 #include "blackconfig/buildconfig.h"
