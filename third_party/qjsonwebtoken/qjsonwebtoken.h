@@ -15,8 +15,6 @@
 #ifndef QJSONWEBTOKEN_H
 #define QJSONWEBTOKEN_H
 
-#include "blackmisc/blackmiscexport.h"
-
 #include <QObject>
 #include <QMessageAuthenticationCode>
 #include <QJsonDocument>
@@ -55,7 +53,7 @@ The repository of this project includes examples that demonstrate the use of thi
 * ./examples/jwtcreator/  : Example that shows how to create a JWT with your custom *payload*.
 * ./examples/jwtverifier/ : Example that shows how to validate a JWT with a given *secret*.
 */
-class BLACKMISC_EXPORT QJsonWebToken
+class QJsonWebToken
 {
 public:
 

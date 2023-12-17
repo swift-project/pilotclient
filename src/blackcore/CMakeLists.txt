@@ -268,6 +268,7 @@ target_link_libraries(core
         PRIVATE
             Qt::Qml
             Qt::Xml
+            QJsonWebToken
 )
 
 target_compile_definitions(core PRIVATE BUILD_BLACKCORE_LIB)

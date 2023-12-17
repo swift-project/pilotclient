@@ -144,6 +144,7 @@ add_subdirectory(cmake/crashpad)
 add_subdirectory(cmake/tls)
 add_subdirectory(cmake/simconnect)
 add_subdirectory(cmake/dplay)
+add_subdirectory(third_party)
 
 
 if(SWIFT_BUILD_XSWIFTBUS)

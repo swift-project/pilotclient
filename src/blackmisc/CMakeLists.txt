@@ -370,8 +370,6 @@ add_library(misc SHARED
         network/settings/serversettings.h
         network/authenticateduser.cpp
         network/authenticateduser.h
-        network/external/qjsonwebtoken.cpp
-        network/external/qjsonwebtoken.h
         network/client.cpp
         network/client.h
         network/clientlist.cpp
