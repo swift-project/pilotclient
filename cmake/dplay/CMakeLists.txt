@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 if(SWIFT_BUILD_FS9_PLUGIN)
-    set(DPLAY_PATH ${PROJECT_SOURCE_DIR}/externals/win32-msvc/32/include)
+    set(DPLAY_PATH ${PROJECT_SOURCE_DIR}/third_party/externals/win32-msvc/32/include)
     if(NOT EXISTS "${DPLAY_PATH}/dplay8.h")
         message(WARNING "DPLAY_PATH does not point to dplay include directory. FS9 support disabled.")
         set(SWIFT_BUILD_FS9_PLUGIN OFF PARENT_SCOPE)
