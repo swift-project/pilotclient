@@ -2,10 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackmisc/obfuscation.h"
-#include "blackmisc/thirdparty/simplecrypt.h"
+#include "simplecrypt/simplecrypt.h"
 #include <QStringBuilder>
-
-using namespace BlackMisc::ThirdParty;
 
 namespace BlackMisc
 {

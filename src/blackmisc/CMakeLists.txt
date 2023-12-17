@@ -654,10 +654,6 @@ add_library(misc SHARED
         test/testserviceinterface.cpp
         test/testserviceinterface.h
 
-        # Third party
-        thirdparty/simplecrypt.cpp
-        thirdparty/simplecrypt.h
-
         # Weather
         weather/cloudlayer.cpp
         weather/cloudlayer.h
@@ -722,6 +718,7 @@ target_link_libraries(misc
             externals_rapidjson # used by xswiftbussettingsqtfree.inc
         PRIVATE
             Qt::Xml
+            SimpleCrypt
 )
 
 if(SWIFT_USE_CRASHPAD)
