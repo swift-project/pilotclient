@@ -185,11 +185,11 @@ if(WIN32)
     endif()
     add_custom_command(TARGET copy_externals_to_build_dir
             POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different externals/win32-msvc/${ARCH_DIR}/bin ${PROJECT_BINARY_DIR}/out/bin
+            COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different third_party/externals/win32-msvc/${ARCH_DIR}/bin ${PROJECT_BINARY_DIR}/out/bin
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
     add_custom_command(TARGET copy_externals_to_build_dir
             POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different externals/win32-msvc/${ARCH_DIR}/lib ${PROJECT_BINARY_DIR}/out/bin
+            COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different third_party/externals/win32-msvc/${ARCH_DIR}/lib ${PROJECT_BINARY_DIR}/out/bin
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
 

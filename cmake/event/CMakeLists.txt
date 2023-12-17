@@ -3,16 +3,16 @@
 
 add_library(externals_event SHARED IMPORTED GLOBAL)
 
-target_include_directories(externals_event INTERFACE ${PROJECT_SOURCE_DIR}/externals/common/include)
+target_include_directories(externals_event INTERFACE ${PROJECT_SOURCE_DIR}/third_party/externals/common/include)
 
 if(SWIFT_WIN64)
-    target_include_directories(externals_event INTERFACE ${PROJECT_SOURCE_DIR}/externals/win32-msvc/64/include)
+    target_include_directories(externals_event INTERFACE ${PROJECT_SOURCE_DIR}/third_party/externals/win32-msvc/64/include)
 
-    set_target_properties(externals_event PROPERTIES IMPORTED_IMPLIB ${PROJECT_SOURCE_DIR}/externals/win32-msvc/64/lib/event_core.lib)
-    set_target_properties(externals_event PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/externals/win32-msvc/64/lib/event_core.dll)
+    set_target_properties(externals_event PROPERTIES IMPORTED_IMPLIB ${PROJECT_SOURCE_DIR}/third_party/externals/win32-msvc/64/lib/event_core.lib)
+    set_target_properties(externals_event PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/third_party/externals/win32-msvc/64/lib/event_core.dll)
 elseif(APPLE)
-    target_include_directories(externals_event INTERFACE ${PROJECT_SOURCE_DIR}/externals/macx-clang/64/include)
-    set_target_properties(externals_event PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/externals/macx-clang/64/lib/libevent_core.2.1.8.dylib)
+    target_include_directories(externals_event INTERFACE ${PROJECT_SOURCE_DIR}/third_party/externals/macx-clang/64/include)
+    set_target_properties(externals_event PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/third_party/externals/macx-clang/64/lib/libevent_core.2.1.8.dylib)
 else()
     find_package(PkgConfig REQUIRED)
     pkg_search_module(libevent_core REQUIRED libevent_core)

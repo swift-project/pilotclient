@@ -241,7 +241,7 @@ class Builder:
         self.__build_path = path.abspath(path.join(self.__source_path, 'build'))
 
         files = os.listdir(self.__source_path)
-        for dir in ['src', 'installer', 'externals']:
+        for dir in ['src', 'installer', 'third_party']:
             if dir not in files:
                 raise RuntimeError('Cannot find {} folder! Are we in the right directory?'.format(dir))
 

@@ -3,18 +3,18 @@
 
 add_library(externals_vatsim_auth SHARED IMPORTED GLOBAL)
 
-target_include_directories(externals_vatsim_auth INTERFACE ${PROJECT_SOURCE_DIR}/externals/common/include/)
+target_include_directories(externals_vatsim_auth INTERFACE ${PROJECT_SOURCE_DIR}/third_party/externals/common/include/)
 
 if(UNIX AND NOT APPLE)
-    set_target_properties(externals_vatsim_auth PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/externals/linux-g++/64/lib/libvatsimauth.so)
+    set_target_properties(externals_vatsim_auth PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/third_party/externals/linux-g++/64/lib/libvatsimauth.so)
 elseif(APPLE)
-    set_target_properties(externals_vatsim_auth PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/externals/macx-clang/64/lib/libvatsimauth.dylib)
+    set_target_properties(externals_vatsim_auth PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/third_party/externals/macx-clang/64/lib/libvatsimauth.dylib)
 elseif(SWIFT_WIN32)
-    set_target_properties(externals_vatsim_auth PROPERTIES IMPORTED_IMPLIB ${PROJECT_SOURCE_DIR}/externals/win32-msvc/32/lib/vatsimauth.lib)
-    set_target_properties(externals_vatsim_auth PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/externals/win32-msvc/32/lib/vatsimauth.dll)
+    set_target_properties(externals_vatsim_auth PROPERTIES IMPORTED_IMPLIB ${PROJECT_SOURCE_DIR}/third_party/externals/win32-msvc/32/lib/vatsimauth.lib)
+    set_target_properties(externals_vatsim_auth PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/third_party/externals/win32-msvc/32/lib/vatsimauth.dll)
 elseif(SWIFT_WIN64)
-    set_target_properties(externals_vatsim_auth PROPERTIES IMPORTED_IMPLIB ${PROJECT_SOURCE_DIR}/externals/win32-msvc/64/lib/vatsimauth.lib)
-    set_target_properties(externals_vatsim_auth PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/externals/win32-msvc/64/lib/vatsimauth.dll)
+    set_target_properties(externals_vatsim_auth PROPERTIES IMPORTED_IMPLIB ${PROJECT_SOURCE_DIR}/third_party/externals/win32-msvc/64/lib/vatsimauth.lib)
+    set_target_properties(externals_vatsim_auth PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/third_party/externals/win32-msvc/64/lib/vatsimauth.dll)
 endif()
 
 if(UNIX AND NOT APPLE)
