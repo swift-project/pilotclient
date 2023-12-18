@@ -777,16 +777,6 @@ namespace BlackMisc::Aviation
         return true;
     }
 
-    bool CAircraftIcaoCode::isValidWtc(const QString &candidate)
-    {
-        if (candidate.isEmpty()) { return true; } // we accept unspecified
-        if (candidate.length() == 1)
-        {
-            return candidate == "L" || candidate == "M" || candidate == "H" || candidate == "J";
-        }
-        return false;
-    }
-
     const QString &CAircraftIcaoCode::getUnassignedDesignator()
     {
         static const QString z("ZZZZ");
