@@ -73,7 +73,7 @@ namespace BlackGui::Editors
         ui->combined_TypeSelector->setCombinedType(icao.getCombinedType());
 
         QString rank(icao.getRankString());
-        QString wtc(icao.getWtc());
+        QString wtc(icao.getWtc().toQString());
         CGuiUtility::setComboBoxValueByStartingString(ui->cb_Rank, rank, "unspecified");
         CGuiUtility::setComboBoxValueByStartingString(ui->cb_Wtc, wtc, "unspecified");
 
@@ -134,7 +134,7 @@ namespace BlackGui::Editors
         bool realWorld = ui->cb_RealWorld->isChecked();
         icao.setManufacturer(manufacturer);
         icao.setModelDescription(modelDescription);
-        icao.setWtc(wtc);
+        icao.setWtc(wtc.isEmpty() ? CWakeTurbulenceCategory() : CWakeTurbulenceCategory(wtc.at(0)));
         icao.setCodeFlags(military, legacy, realWorld);
         icao.setRank(rank);
         icao.setCombinedType(combined);

@@ -17,6 +17,7 @@
 #include "blackmisc/aviation/informationmessage.h"
 #include "blackmisc/aviation/navsystem.h"
 #include "blackmisc/aviation/transponder.h"
+#include "blackmisc/aviation/waketurbulencecategory.h"
 #include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/geo/latitude.h"
@@ -74,6 +75,9 @@ namespace BlackMiscTest
 
         //! Test some of the guessing functions
         void testGuessing();
+
+        //! Test wake turbulence categories
+        void testWakeTurbulenceCategories();
     };
 
     void CTestAviation::headingBasics()
@@ -378,6 +382,60 @@ namespace BlackMiscTest
 
         QVERIFY(s172 < sB747);
         QVERIFY(sB737 < sB747);
+    }
+
+    void CTestAviation::testWakeTurbulenceCategories()
+    {
+        const CWakeTurbulenceCategory catLight1('L');
+        const CWakeTurbulenceCategory catLight2('l');
+        const CWakeTurbulenceCategory catLight3(CWakeTurbulenceCategory::LIGHT);
+
+        const CWakeTurbulenceCategory catMedium1('M');
+        const CWakeTurbulenceCategory catMedium2('m');
+        const CWakeTurbulenceCategory catMedium3(CWakeTurbulenceCategory::MEDIUM);
+
+        const CWakeTurbulenceCategory catHeavy1('H');
+        const CWakeTurbulenceCategory catHeavy2('h');
+        const CWakeTurbulenceCategory catHeavy3(CWakeTurbulenceCategory::HEAVY);
+
+        const CWakeTurbulenceCategory catSuper1('J');
+        const CWakeTurbulenceCategory catSuper2('j');
+        const CWakeTurbulenceCategory catSuper3(CWakeTurbulenceCategory::SUPER);
+
+        const CWakeTurbulenceCategory catUnknown1('-');
+        const CWakeTurbulenceCategory catUnknown2('A');
+        const CWakeTurbulenceCategory catUnknown3('x');
+        const CWakeTurbulenceCategory catUnknown4(CWakeTurbulenceCategory::UNKNOWN);
+
+        QVERIFY(catLight1.isCategory(BlackMisc::Aviation::CWakeTurbulenceCategory::LIGHT));
+        QVERIFY(catLight2.isCategory(BlackMisc::Aviation::CWakeTurbulenceCategory::LIGHT));
+        QVERIFY(catLight3.isCategory(BlackMisc::Aviation::CWakeTurbulenceCategory::LIGHT));
+        QCOMPARE(catLight1.toQString(), "L");
+
+        QVERIFY(catMedium1.isCategory(BlackMisc::Aviation::CWakeTurbulenceCategory::MEDIUM));
+        QVERIFY(catMedium2.isCategory(BlackMisc::Aviation::CWakeTurbulenceCategory::MEDIUM));
+        QVERIFY(catMedium3.isCategory(BlackMisc::Aviation::CWakeTurbulenceCategory::MEDIUM));
+        QCOMPARE(catMedium1.toQString(), "M");
+
+        QVERIFY(catHeavy1.isCategory(BlackMisc::Aviation::CWakeTurbulenceCategory::HEAVY));
+        QVERIFY(catHeavy2.isCategory(BlackMisc::Aviation::CWakeTurbulenceCategory::HEAVY));
+        QVERIFY(catHeavy3.isCategory(BlackMisc::Aviation::CWakeTurbulenceCategory::HEAVY));
+        QCOMPARE(catHeavy1.toQString(), "H");
+
+        QVERIFY(catSuper1.isCategory(BlackMisc::Aviation::CWakeTurbulenceCategory::SUPER));
+        QVERIFY(catSuper2.isCategory(BlackMisc::Aviation::CWakeTurbulenceCategory::SUPER));
+        QVERIFY(catSuper3.isCategory(BlackMisc::Aviation::CWakeTurbulenceCategory::SUPER));
+        QCOMPARE(catSuper1.toQString(), "J");
+
+        QVERIFY(catUnknown1.isCategory(BlackMisc::Aviation::CWakeTurbulenceCategory::UNKNOWN));
+        QVERIFY(catUnknown1.isUnknown());
+        QVERIFY(catUnknown2.isCategory(BlackMisc::Aviation::CWakeTurbulenceCategory::UNKNOWN));
+        QVERIFY(catUnknown2.isUnknown());
+        QVERIFY(catUnknown3.isCategory(BlackMisc::Aviation::CWakeTurbulenceCategory::UNKNOWN));
+        QVERIFY(catUnknown3.isUnknown());
+        QVERIFY(catUnknown4.isCategory(BlackMisc::Aviation::CWakeTurbulenceCategory::UNKNOWN));
+        QVERIFY(catUnknown4.isUnknown());
+        QCOMPARE(catUnknown1.toQString(), "-");
     }
 
 } // namespace

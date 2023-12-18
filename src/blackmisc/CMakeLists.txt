@@ -99,6 +99,8 @@ add_library(misc SHARED
         aviation/track.h
         aviation/transponder.cpp
         aviation/transponder.h
+        aviation/waketurbulencecategory.cpp
+        aviation/waketurbulencecategory.h
 
         # DB
         db/artifact.cpp

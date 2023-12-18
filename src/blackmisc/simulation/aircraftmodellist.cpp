@@ -316,7 +316,7 @@ namespace BlackMisc::Simulation
     {
         const CAircraftModelList ml = this->findByCombinedType(combinedType);
         if (ml.isEmpty()) { return ml; }
-        const QString wtcUc(wtc.toUpper().trimmed());
+        const CWakeTurbulenceCategory wtcUc = wtc.isEmpty() ? CWakeTurbulenceCategory() : CWakeTurbulenceCategory(wtc.toUpper().trimmed().at(0));
         return this->findBy([&](const CAircraftModel &model) {
             const CAircraftIcaoCode icao(model.getAircraftIcaoCode());
             return icao.getWtc() == wtcUc;
