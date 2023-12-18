@@ -266,7 +266,7 @@ namespace BlackGui::Components
     CAircraftModel CModelMatcherComponent::defaultModel() const
     {
         // can somehow dynamilcally determine the models
-        const CAircraftIcaoCode icaoAircraft("B737", "L2J", "FooBar", "Dummy", "M", false, false, false, 1);
+        const CAircraftIcaoCode icaoAircraft("B737", "L2J", "FooBar", "Dummy", CWakeTurbulenceCategory::MEDIUM, false, false, false, 1);
         const CAirlineIcaoCode icaoAirline("Foo", "FooBar airlines", { "DE", "Germany" }, "FOO", true, true);
         const CLivery livery(CLivery::getStandardCode(icaoAirline), icaoAirline, "Standard Foo airlines", "red", "blue", false);
         CAircraftModel model("default model", CAircraftModel::TypeOwnSimulatorModel, "dummy model", icaoAircraft, livery);

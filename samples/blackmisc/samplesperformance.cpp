@@ -704,7 +704,7 @@ namespace BlackSample
         CDistributorList distributors;
         for (int i = 0; i < numberOfMemoParts; ++i)
         {
-            aircraftIcaos.push_back(CAircraftIcaoCode("A" + QString::number(i), "A" + QString::number(i), "L1P", "Lego", "Foo", "M", false, false, false, 0));
+            aircraftIcaos.push_back(CAircraftIcaoCode("A" + QString::number(i), "A" + QString::number(i), "L1P", "Lego", "Foo", CWakeTurbulenceCategory::MEDIUM, false, false, false, 0));
             liveries.push_back(CLivery("A" + QString::number(i), CAirlineIcaoCode("A" + QString::number(i), "Foo", CCountry("DE", "Germany"), "Foo", false, false), "Foo", "red", "blue", false));
             distributors.push_back(CDistributor(QString::number(i), "Foo", {}, {}, CSimulatorInfo::FSX));
         }

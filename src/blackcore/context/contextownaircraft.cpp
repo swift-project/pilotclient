@@ -48,7 +48,7 @@ namespace BlackCore::Context
         // if all fails
         static const CAircraftModel defaultModel(
             "", CAircraftModel::TypeOwnSimulatorModel, "default model",
-            CAircraftIcaoCode("C172", "L1P", "Cessna", "172", "L", true, false, false, 0));
+            CAircraftIcaoCode("C172", "L1P", "Cessna", "172", CWakeTurbulenceCategory::LIGHT, true, false, false, 0));
 
         // create one from DB data
         if (sApp && sApp->hasWebDataServices())

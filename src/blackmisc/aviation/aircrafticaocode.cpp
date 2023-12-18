@@ -28,34 +28,34 @@ namespace BlackMisc::Aviation
     CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &combinedType) : m_designator(icao.trimmed().toUpper()), m_combinedType(combinedType.trimmed().toUpper())
     {}
 
-    CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &combinedType, const QString &manufacturer, const QString &model, const QString &wtc, bool realworld, bool legacy, bool military, int rank)
+    CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &combinedType, const QString &manufacturer, const QString &model, CWakeTurbulenceCategory wtc, bool realworld, bool legacy, bool military, int rank)
         : m_designator(icao.trimmed().toUpper()),
           m_combinedType(combinedType.trimmed().toUpper()),
           m_manufacturer(manufacturer.trimmed()),
-          m_modelDescription(model.trimmed()), m_wtc(wtc.trimmed().toUpper()), m_realWorld(realworld), m_legacy(legacy), m_military(military), m_rank(rank)
+          m_modelDescription(model.trimmed()), m_wtc(wtc), m_realWorld(realworld), m_legacy(legacy), m_military(military), m_rank(rank)
     {
         if (m_rank < 0 || m_rank >= 10) { m_rank = 10; }
     }
 
-    CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &iata, const QString &combinedType, const QString &manufacturer, const QString &model, const QString &wtc, bool realworld, bool legacy, bool military, int rank)
+    CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &iata, const QString &combinedType, const QString &manufacturer, const QString &model, CWakeTurbulenceCategory wtc, bool realworld, bool legacy, bool military, int rank)
         : m_designator(icao.trimmed().toUpper()),
           m_iataCode(iata.trimmed().toUpper()),
           m_combinedType(combinedType.trimmed().toUpper()),
           m_manufacturer(manufacturer.trimmed()),
-          m_modelDescription(model.trimmed()), m_wtc(wtc.trimmed().toUpper()), m_realWorld(realworld), m_legacy(legacy), m_military(military), m_rank(rank)
+          m_modelDescription(model.trimmed()), m_wtc(wtc), m_realWorld(realworld), m_legacy(legacy), m_military(military), m_rank(rank)
     {
         if (m_rank < 0 || m_rank >= 10) { m_rank = 10; }
     }
 
     CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &iata, const QString &family, const QString &combinedType, const QString &manufacturer,
-                                         const QString &model, const QString &modelIata, const QString &modelSwift, const QString &wtc, bool realworld, bool legacy, bool military, int rank)
+                                         const QString &model, const QString &modelIata, const QString &modelSwift, CWakeTurbulenceCategory wtc, bool realworld, bool legacy, bool military, int rank)
         : m_designator(icao.trimmed().toUpper()),
           m_iataCode(iata.trimmed().toUpper()),
           m_family(family.trimmed().toUpper()),
           m_combinedType(combinedType.trimmed().toUpper()),
           m_manufacturer(manufacturer.trimmed()),
           m_modelDescription(model.trimmed()), m_modelIataDescription(modelIata.trimmed()), m_modelSwiftDescription(modelSwift.trimmed()),
-          m_wtc(wtc.trimmed().toUpper()), m_realWorld(realworld), m_legacy(legacy), m_military(military), m_rank(rank)
+          m_wtc(wtc), m_realWorld(realworld), m_legacy(legacy), m_military(military), m_rank(rank)
     {
         if (m_rank < 0 || m_rank >= 10) { m_rank = 10; }
     }
@@ -71,8 +71,8 @@ namespace BlackMisc::Aviation
     {
         Q_UNUSED(i18n);
         return (this->hasCategory()) ?
-                   QStringLiteral("%1 %2 %3 cat: %4").arg(this->getDesignatorDbKey(), this->getCombinedType(), this->getWtc(), this->getCategory().getDbKeyAsString()).trimmed() :
-                   QStringLiteral("%1 %2 %3").arg(this->getDesignatorDbKey(), this->getCombinedType(), this->getWtc()).trimmed();
+                   QStringLiteral("%1 %2 %3 cat: %4").arg(this->getDesignatorDbKey(), this->getCombinedType(), this->getWtc().toQString(), this->getCategory().getDbKeyAsString()).trimmed() :
+                   QStringLiteral("%1 %2 %3").arg(this->getDesignatorDbKey(), this->getCombinedType(), this->getWtc().toQString()).trimmed();
     }
 
     void CAircraftIcaoCode::updateMissingParts(const CAircraftIcaoCode &otherIcaoCode)
@@ -704,7 +704,7 @@ namespace BlackMisc::Aviation
         case IndexModelIataDescription: this->setModelIataDescription(variant.value<QString>()); break;
         case IndexModelSwiftDescription: this->setModelSwiftDescription(variant.value<QString>()); break;
         case IndexManufacturer: this->setManufacturer(variant.value<QString>()); break;
-        case IndexWtc: this->setWtc(variant.value<QString>()); break;
+        case IndexWtc: this->setWtc(variant.value<CWakeTurbulenceCategory>()); break;
         case IndexIsLegacy: m_legacy = variant.toBool(); break;
         case IndexIsMilitary: m_military = variant.toBool(); break;
         case IndexRank: m_rank = variant.toInt(); break;
@@ -742,7 +742,7 @@ namespace BlackMisc::Aviation
             return c;
         }
         case IndexManufacturer: return m_manufacturer.compare(compareValue.getManufacturer(), Qt::CaseInsensitive);
-        case IndexWtc: return m_wtc.compare(compareValue.getWtc(), Qt::CaseInsensitive);
+        case IndexWtc: return m_wtc == compareValue.getWtc();
         case IndexIsLegacy: return Compare::compare(m_legacy, compareValue.isLegacyAircraft());
         case IndexIsMilitary: return Compare::compare(m_military, compareValue.isMilitary());
         case IndexIsVtol: return Compare::compare(isVtol(), compareValue.isVtol());
@@ -883,13 +883,14 @@ namespace BlackMisc::Aviation
         const QString engine(json.value(prefix % u"engine").toString());
         const QString combined(createdCombinedString(type, engineCount, engine));
 
-        QString wtc(json.value(prefix % u"wtc").toString());
-        if (wtc.length() > 1 && wtc.contains("/"))
+        QString wtcString(json.value(prefix % u"wtc").toString());
+        if (wtcString.length() > 1 && wtcString.contains("/"))
         {
             // "L/M" -> "M"
-            wtc = wtc.right(1);
+            wtcString = wtcString.right(1);
         }
-        Q_ASSERT_X(wtc.length() < 2, Q_FUNC_INFO, "WTC too long");
+        Q_ASSERT_X(wtcString.length() < 2, Q_FUNC_INFO, "WTC too long");
+        const CWakeTurbulenceCategory wtc = wtcString.isEmpty() ? CWakeTurbulenceCategory() : CWakeTurbulenceCategory(wtcString.at(0));
 
         const bool real = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % u"realworld").toString());
         const bool legacy = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % u"legacy").toString());

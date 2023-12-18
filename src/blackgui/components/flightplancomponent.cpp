@@ -225,7 +225,7 @@ namespace BlackGui::Components
 
         if (aircraft.getAircraftIcaoCode().isLoadedFromDb() && aircraft.getAircraftIcaoCode().hasValidWtc())
         {
-            const QString wtc = aircraft.getAircraftIcaoCode().getWtc().toUpper();
+            const QString wtc = toSingleLetterCode(aircraft.getAircraftIcaoCode().getWtc());
             const bool heavyFlag = (wtc.startsWith("H", Qt::CaseInsensitive) || wtc.startsWith("S", Qt::CaseInsensitive));
             ui->cb_Heavy->setChecked(heavyFlag);
         }
@@ -825,7 +825,7 @@ namespace BlackGui::Components
         QPointer<CFlightPlanComponent> myself(this);
         QTimer::singleShot(25, this, [=] {
             if (!myself || !sGui || sGui->isShuttingDown()) { return; }
-            const bool heavy = icao.getWtc().startsWith("H");
+            const bool heavy = icao.getWtc() == BlackMisc::Aviation::WakeTurbulenceCategory::HEAVY;
             ui->cb_Heavy->setChecked(heavy);
             if (heavy) { ui->cb_Tcas->setChecked(false); }
             this->buildPrefixIcaoSuffix();

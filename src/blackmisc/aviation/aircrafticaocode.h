@@ -7,6 +7,7 @@
 #define BLACKMISC_AVIATION_AIRCRAFTICAOCODE_H
 
 #include "blackmisc/aviation/aircraftcategory.h"
+#include "blackmisc/aviation/waketurbulencecategory.h"
 #include "blackmisc/db/datastore.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/blackmiscexport.h"
@@ -60,15 +61,15 @@ namespace BlackMisc::Aviation
 
         //! Constructor
         CAircraftIcaoCode(const QString &icao, const QString &combinedType, const QString &manufacturer,
-                          const QString &model, const QString &wtc, bool realworld, bool legacy, bool military, int rank);
+                          const QString &model, CWakeTurbulenceCategory wtc, bool realworld, bool legacy, bool military, int rank);
 
         //! Constructor
         CAircraftIcaoCode(const QString &icao, const QString &iata, const QString &combinedType, const QString &manufacturer,
-                          const QString &model, const QString &wtc, bool realworld, bool legacy, bool military, int rank);
+                          const QString &model, CWakeTurbulenceCategory wtc, bool realworld, bool legacy, bool military, int rank);
 
         //! Constructor
         CAircraftIcaoCode(const QString &icao, const QString &iata, const QString &family, const QString &combinedType, const QString &manufacturer,
-                          const QString &model, const QString &modelIata, const QString &modelSwift, const QString &wtc, bool realworld, bool legacy, bool military, int rank);
+                          const QString &model, const QString &modelIata, const QString &modelSwift, CWakeTurbulenceCategory wtc, bool realworld, bool legacy, bool military, int rank);
 
         //! Get ICAO designator, e.g. "B737"
         const QString &getDesignator() const { return m_designator; }
@@ -198,13 +199,13 @@ namespace BlackMisc::Aviation
         bool matchesManufacturer(const QString &manufacturer) const;
 
         //! Get WTC
-        const QString &getWtc() const { return m_wtc; }
+        CWakeTurbulenceCategory getWtc() const { return m_wtc; }
 
         //! Set WTC
-        void setWtc(const QString &wtc) { m_wtc = wtc.trimmed().toUpper(); }
+        void setWtc(CWakeTurbulenceCategory wtc) { m_wtc = wtc; }
 
         //! Valid WTC code?
-        bool hasValidWtc() const { return !m_wtc.isEmpty(); }
+        bool hasValidWtc() const { return !m_wtc.isUnknown(); }
 
         //! Is VTOL aircraft (helicopter, tilt wing)
         bool isVtol() const;
@@ -376,7 +377,7 @@ namespace BlackMisc::Aviation
         QString m_modelDescription; //!< "A-330-200", the ICAO description
         QString m_modelIataDescription; //!< alternative IATA description
         QString m_modelSwiftDescription; //!< alternative swift description
-        QString m_wtc; //!< wake turbulence like "M","H" "L/M", "L", "J", we only use the one letter versions
+        CWakeTurbulenceCategory m_wtc; //!< ICAO wake turbulence category
         bool m_realWorld = true; //!< real world aircraft
         bool m_legacy = false; //!< legacy code
         bool m_military = false; //!< military aircraft?
