@@ -78,7 +78,7 @@ namespace BlackMisc::Aviation
     void CAircraftIcaoCode::updateMissingParts(const CAircraftIcaoCode &otherIcaoCode)
     {
         if (!this->hasValidDesignator() && otherIcaoCode.hasValidDesignator()) { this->setDesignator(otherIcaoCode.getDesignator()); }
-        if (!this->hasValidWtc() && otherIcaoCode.hasValidWtc()) { this->setWtc(otherIcaoCode.getDesignator()); }
+        if (!this->hasValidWtc() && otherIcaoCode.hasValidWtc()) { this->setWtc(otherIcaoCode.getWtc()); }
         if (!this->hasValidCombinedType() && otherIcaoCode.hasValidCombinedType()) { this->setCombinedType(otherIcaoCode.getCombinedType()); }
         if (m_manufacturer.isEmpty()) { this->setManufacturer(otherIcaoCode.getManufacturer()); }
         if (m_modelDescription.isEmpty()) { this->setModelDescription(otherIcaoCode.getModelDescription()); }
