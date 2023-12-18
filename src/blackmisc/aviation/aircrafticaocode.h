@@ -327,9 +327,6 @@ namespace BlackMisc::Aviation
         //! Valid combined type
         static bool isValidCombinedType(const QString &combinedType);
 
-        //! Valid WTC code?
-        static bool isValidWtc(const QString &candidate);
-
         //! The unassigned designator ("ZZZZ")
         static const QString &getUnassignedDesignator();
 
