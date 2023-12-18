@@ -89,7 +89,6 @@ namespace BlackGui::Views
         QStringList icaosForAxis;
 
         QList<double> series;
-        int unknown = 0;
         CAircraftIcaoCodeList icaoList(icaos.keys());
         icaoList.sortByDesignatorAndRank();
 
@@ -99,7 +98,6 @@ namespace BlackGui::Views
             if (c < 1) { continue; }
             if (!icao.hasKnownDesignator())
             {
-                unknown += c;
                 continue;
             }
             icaosForAxis << (icao.getDesignatorDbKey() % u" (" % QString::number(c) % u")");
