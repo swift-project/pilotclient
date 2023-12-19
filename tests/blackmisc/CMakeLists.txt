@@ -30,6 +30,12 @@ add_swift_test(
         LINK_LIBRARIES misc tests_test Qt::Core
 )
 
+add_swift_test(
+        NAME misc_aviation_flightplanaircraftinfo
+        SOURCES aviation/testflightplan/testflightplanaircraftinfo.cpp
+        LINK_LIBRARIES misc tests_test Qt::Core
+)
+
 ##############
 ##    Geo   ##
 ##############

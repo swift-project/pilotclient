@@ -70,8 +70,11 @@ namespace BlackMisc
             CCallsign::registerMetadata();
             CCallsignSet::registerMetadata();
             CComSystem::registerMetadata();
+            CSsrEquipment::registerMetadata();
+            CComNavEquipment::registerMetadata();
             CWakeTurbulenceCategory::registerMetadata();
             CFlightPlan::registerMetadata();
+            CFlightPlanAircraftInfo::registerMetadata();
             CFlightPlanList::registerMetadata();
             CSimBriefData::registerMetadata();
             CFlightPlanRemarks::registerMetadata();
