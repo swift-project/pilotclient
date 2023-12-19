@@ -71,10 +71,14 @@ add_library(misc SHARED
         aviation/callsignobjectlist.h
         aviation/callsignset.cpp
         aviation/callsignset.h
+        aviation/comnavequipment.cpp
+        aviation/comnavequipment.h
         aviation/comsystem.cpp
         aviation/comsystem.h
         aviation/flightplan.cpp
         aviation/flightplan.h
+        aviation/flightplanaircraftinfo.cpp
+        aviation/flightplanaircraftinfo.h
         aviation/flightplanlist.cpp
         aviation/flightplanlist.h
         aviation/heading.cpp
@@ -95,6 +99,8 @@ add_library(misc SHARED
         aviation/selcal.h
         aviation/simbriefdata.cpp
         aviation/simbriefdata.h
+        aviation/ssrequipment.cpp
+        aviation/ssrequipment.h
         aviation/track.cpp
         aviation/track.h
         aviation/transponder.cpp
