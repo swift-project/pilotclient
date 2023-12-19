@@ -60,10 +60,6 @@ namespace BlackMisc::Mixin
         //! Cast as QString
         QString toQString(bool i18n = false) const;
 
-        //! Cast to pretty-printed QString
-        //! \deprecated not really used and just using toQString
-        QString toFormattedQString(bool i18n = false) const;
-
         //! To std string
         std::string toStdString(bool i18n = false) const;
 
@@ -79,12 +75,6 @@ namespace BlackMisc::Mixin
     QString String<Derived>::toQString(bool i18n) const
     {
         return derived()->convertToQString(i18n);
-    }
-
-    template <class Derived>
-    QString String<Derived>::toFormattedQString(bool i18n) const
-    {
-        return derived()->toQString(i18n);
     }
 
     template <class Derived>
@@ -116,10 +106,9 @@ namespace BlackMisc::Mixin
      * When a derived class and a base class both inherit from Mixin::String,
      * the derived class uses this macro to disambiguate the inherited members.
      */
-#define BLACKMISC_DECLARE_USING_MIXIN_STRING(DERIVED)              \
-    using ::BlackMisc::Mixin::String<DERIVED>::toQString;          \
-    using ::BlackMisc::Mixin::String<DERIVED>::toFormattedQString; \
-    using ::BlackMisc::Mixin::String<DERIVED>::toStdString;        \
+#define BLACKMISC_DECLARE_USING_MIXIN_STRING(DERIVED)       \
+    using ::BlackMisc::Mixin::String<DERIVED>::toQString;   \
+    using ::BlackMisc::Mixin::String<DERIVED>::toStdString; \
     using ::BlackMisc::Mixin::String<DERIVED>::stringForStreaming;
     // *INDENT-ON*
 } // ns
