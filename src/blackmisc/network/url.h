@@ -22,7 +22,7 @@ BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Network, CUrl)
 namespace BlackMisc::Network
 {
     //! Value object encapsulating information of a location,
-    //! kind of simplied CValueObject compliant version of QUrl
+    //! kind of simplified CValueObject compliant version of QUrl
     class BLACKMISC_EXPORT CUrl : public CValueObject<CUrl>
     {
     public:
@@ -104,6 +104,12 @@ namespace BlackMisc::Network
 
         //! Append query
         void appendQuery(const QString &key, const QString &value);
+
+        //! Fragment string?
+        bool hasFragment() const;
+
+        //! Set fragment
+        void setFragment(const QString &fragment);
 
         //! Empty
         bool isEmpty() const;
@@ -194,6 +200,7 @@ namespace BlackMisc::Network
         int m_port = -1;
         QString m_path;
         QString m_query;
+        QString m_fragment;
 
         static QString stripQueryString(const QString &query);
 
@@ -203,7 +210,8 @@ namespace BlackMisc::Network
             BLACK_METAMEMBER(host),
             BLACK_METAMEMBER(port),
             BLACK_METAMEMBER(path),
-            BLACK_METAMEMBER(query)
+            BLACK_METAMEMBER(query),
+            BLACK_METAMEMBER(fragment)
         );
     };
 } // namespace
