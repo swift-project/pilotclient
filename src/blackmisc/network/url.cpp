@@ -102,6 +102,16 @@ namespace BlackMisc::Network
         this->appendQuery(key + "=" + value);
     }
 
+    bool CUrl::hasFragment() const
+    {
+        return !m_fragment.isEmpty();
+    }
+
+    void CUrl::setFragment(const QString &fragment)
+    {
+        m_fragment = fragment;
+    }
+
     QString CUrl::getFullUrl(bool withQuery) const
     {
         if (m_host.isEmpty()) { return {}; }
@@ -109,6 +119,7 @@ namespace BlackMisc::Network
         QString qn(m_host);
         if (!hasDefaultPort() && hasPort()) { qn = qn.append(":").append(QString::number(m_port)); }
         if (hasPath()) { qn = qn.append("/").append(m_path).replace("//", "/"); }
+        if (hasFragment()) { qn = qn.append("#").append(m_fragment).replace("//", "/"); }
         if (hasQuery() && withQuery) { qn = qn.append("?").append(m_query); }
         if (hasScheme()) { qn = QString(this->getScheme()).append("://").append(qn); }
         return qn;
@@ -136,6 +147,7 @@ namespace BlackMisc::Network
         this->setScheme(url.scheme());
         this->setPath(url.path());
         this->setQuery(url.query());
+        this->setFragment(url.fragment());
     }
 
     QNetworkRequest CUrl::toNetworkRequest() const
