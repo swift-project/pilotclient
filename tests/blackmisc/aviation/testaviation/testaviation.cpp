@@ -35,6 +35,7 @@
 #include <QTest>
 
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Audio;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
@@ -308,7 +309,9 @@ namespace BlackMiscTest
         const CUser user2(user1);
         QVERIFY2(user1 == user2, "information shall be equal");
 
-        const CServer server1 = CServer::swiftFsdTestServer();
+        const CServer server1 = CServer("Testserver", "Client project testserver", "localhost", 6809,
+                                        CUser("111111", "My Name", "", "123"),
+                                        CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
         const CServer server2(server1);
         QVERIFY2(server1 == server2, "server shall be equal");
 

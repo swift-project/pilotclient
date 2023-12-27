@@ -54,19 +54,6 @@ namespace BlackMisc::Network
         return QStringLiteral("%1 %2 %3:%4 %5 %6 accepting: %7 FSD: %8 con.since: %9").arg(m_name, m_description, m_address).arg(m_port).arg(m_user.toQString(i18n), m_ecosystem.getSystemString(), boolToYesNo(m_isAcceptingConnections), m_fsdSetup.toQString(i18n), this->isConnected() ? this->getFormattedUtcTimestampHms() : "not con.");
     }
 
-    const CServer &CServer::swiftFsdTestServer(bool withPw)
-    {
-        // CUser("guest", "Guest Client project", "", "guest")
-        // PW!!!!! => use CObfuscation::endocde to get the strings
-        static const CServer dvp("Testserver", "Client project testserver", "fsd.swift-project.org", 6809,
-                                 CUser("OBF:AwJ6BweZqpmtmORL", "OBF:AwI/594lQTJGZnmSwB0=", "", "OBF:AwKi3JkHNAczBno="),
-                                 CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
-        static const CServer dvnWithPw("Testserver", "Client project testserver", "fsd.swift-project.org", 6809,
-                                       CUser("OBF:AwJ6BweZqpmtmORL", "OBF:AwI/594lQTJGZnmSwB0=", "", ""),
-                                       CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
-        return withPw ? dvp : dvnWithPw;
-    }
-
     const CServer &CServer::fscFsdServer()
     {
         static const CServer fsc = [] {

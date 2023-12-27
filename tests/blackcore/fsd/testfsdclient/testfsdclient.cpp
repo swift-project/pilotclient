@@ -26,6 +26,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Audio;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;
@@ -101,6 +102,8 @@ namespace BlackFsdTest
 
     private:
         CFSDClient *m_client = nullptr;
+
+        const CServer &localTestServer();
     };
 
     void CTestFSDClient::initTestCase()
@@ -108,9 +111,17 @@ namespace BlackFsdTest
         BlackMisc::registerMetadata();
     }
 
+    const CServer &CTestFSDClient::localTestServer()
+    {
+        static const CServer dvp("Testserver", "Client project testserver", "localhost", 6809,
+                                 CUser("1234567", "Test User", "", "123456"),
+                                 CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
+        return dvp;
+    }
+
     void CTestFSDClient::init()
     {
-        const CServer server = CServer::swiftFsdTestServer(true);
+        const CServer server = localTestServer();
 
         COwnAircraftProviderDummy::instance()->updateOwnCallsign("ABCD");
         CLivery livery;
@@ -841,7 +852,7 @@ namespace BlackFsdTest
 
     //    void CTestFSDClient::testConnection()
     //    {
-    //        const CServer fsdServer = CServer::swiftFsdTestServer(true);
+    //        const CServer fsdServer = localTestServer();
     //        if (!pingServer(fsdServer)) { QSKIP("Server not reachable."); }
     //
     //        QSignalSpy spy(m_client, &CFSDClient::connectionStatusChanged);

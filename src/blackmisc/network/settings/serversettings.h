@@ -46,7 +46,7 @@ namespace BlackMisc::Network::Settings
         //! \copydoc BlackMisc::TSettingTrait::defaultValue
         static const BlackMisc::Network::CServer &defaultValue()
         {
-            static const CServer dv = CServer::swiftFsdTestServer();
+            static const CServer dv;
             return dv;
         }
     };
