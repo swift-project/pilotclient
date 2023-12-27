@@ -208,9 +208,6 @@ namespace BlackMisc::Network
         //! \copydoc BlackMisc::Mixin::String::toQString()
         QString convertToQString(bool i18n = false) const;
 
-        //! swift FSD test server
-        static const CServer &swiftFsdTestServer(bool withPw = false);
-
         //! FSC server
         static const CServer &fscFsdServer();
 
