@@ -16,11 +16,6 @@
     "ncepGlobalForecastSystemUrl25": {
         "url": "http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl"
     },
-    "newsUrls": {
-        "containerbase": [
-			{ "url": "https://blog.swift-project.net/?__print__=1" },
-			{ "url": "https://dev.swift-project.org/phame/blog/view/1/?__print__=1" }]
-    },
     "onlineHelpUrls": {
         "containerbase": [
             {
