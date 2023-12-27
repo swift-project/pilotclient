@@ -34,7 +34,7 @@ namespace BlackGui::Editors
             ui->cb_AircraftPartsSend->isChecked(), ui->cb_AircraftPartsReceive->isChecked(),
             ui->cb_GndFlagSend->isChecked(), ui->cb_GndFlagReceive->isChecked(),
             ui->cb_FastPositionSend->isChecked(), ui->cb_FastPositionReceive->isChecked(),
-            ui->cb_VisualPositionSend->isChecked(), ui->cb_EuroscopeSimData->isChecked());
+            ui->cb_VisualPositionSend->isChecked(), ui->cb_EuroscopeSimData->isChecked(), ui->cb_IcaoEquipment->isChecked());
         s.setForce3LetterAirlineCodes(ui->cb_3LetterAirlineICAO->isChecked());
         return s;
     }
@@ -56,6 +56,7 @@ namespace BlackGui::Editors
         ui->cb_FastPositionSend->setChecked(d & CFsdSetup::SendInterimPositions);
         ui->cb_3LetterAirlineICAO->setChecked(setup.force3LetterAirlineCodes());
         ui->cb_EuroscopeSimData->setChecked(d & CFsdSetup::ReceiveEuroscopeSimData);
+        ui->cb_IcaoEquipment->setChecked(d & CFsdSetup::SendFplWithIcaoEquipment);
     }
 
     void CFsdSetupForm::setAlwaysAllowOverride(bool allow)

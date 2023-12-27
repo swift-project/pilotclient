@@ -453,6 +453,7 @@ namespace BlackCore::Fsd
         case Capabilities::FastPos: return "FASTPOS";
         case Capabilities::Stealth: return "STEALTH";
         case Capabilities::AircraftConfig: return "ACCONFIG";
+        case Capabilities::IcaoEquipment: return "ICAOEQ";
         }
 
         return {};
@@ -479,6 +480,8 @@ namespace BlackCore::Fsd
             return Capabilities::Stealth;
         else if (str == "ACCONFIG")
             return Capabilities::AircraftConfig;
+        else if (str == "ICAOEQ")
+            return Capabilities::IcaoEquipment;
 
         return Capabilities::None;
     }

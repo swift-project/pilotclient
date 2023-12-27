@@ -35,6 +35,7 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QDateTime>
+#include <QDesktopServices>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPlainTextEdit>
@@ -48,6 +49,7 @@
 #include <QFile>
 #include <QMessageBox>
 #include <Qt>
+#include <QWidgetAction>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -70,6 +72,12 @@ namespace BlackGui::Components
         ui->setupUi(this);
         this->setCurrentIndex(0);
 
+        // Initialize wake turbulence category selection
+        for (const WakeTurbulenceEntry &item : std::as_const(m_wakeTurbulenceCategories))
+        {
+            ui->cb_Wtc->addItem(item.m_name);
+        }
+
         // fix style
         this->tabBar()->setExpanding(false);
         this->tabBar()->setUsesScrollButtons(true);
@@ -79,6 +87,9 @@ namespace BlackGui::Components
         this->setReducedInfo(true);
         this->setForceSmall(true);
         this->showKillButton(false);
+
+        setupNavComContextMenu();
+        setupSsrContextMenu();
 
         // rules
         ui->cb_FlightRule->clear();
@@ -93,15 +104,8 @@ namespace BlackGui::Components
         ui->le_AirlineOperator->setValidator(new CUpperCaseValidator(ui->le_AirlineOperator));
         ui->le_AircraftRegistration->setValidator(new CUpperCaseValidator(ui->le_AircraftRegistration));
 
-        CUpperCaseValidator *ucv = new CUpperCaseValidator(true, 0, 1, ui->le_EquipmentSuffix);
-        ucv->setRestrictions(CFlightPlan::equipmentCodes());
-        ui->le_EquipmentSuffix->setValidator(ucv);
-        ui->le_EquipmentSuffix->setToolTip(ui->tbr_EquipmentCodes->toHtml());
-        QCompleter *completer = new QCompleter(CFlightPlan::equipmentCodesInfo(), ui->le_EquipmentSuffix);
-        completer->setMaxVisibleItems(10);
-        completer->popup()->setMinimumWidth(225);
-        completer->setCompletionMode(QCompleter::PopupCompletion);
-        ui->le_EquipmentSuffix->setCompleter(completer);
+        ui->le_NavComEquipment->setReadOnly(true);
+        ui->le_SsrEquipment->setReadOnly(true);
 
         CUpperCaseEventFilter *ef = new CUpperCaseEventFilter(ui->pte_Route);
         ef->setOnlyAscii();
@@ -151,13 +155,19 @@ namespace BlackGui::Components
         connect(ui->pb_GetFromGenerator, &QPushButton::pressed, this, &CFlightPlanComponent::copyRemarksConfirmed, Qt::QueuedConnection);
         connect(ui->pb_RemarksGenerator, &QPushButton::clicked, this, &CFlightPlanComponent::currentTabGenerator, Qt::QueuedConnection);
 
-        connect(ui->tb_HelpEquipment, &QToolButton::clicked, this, &CFlightPlanComponent::showEquipmentCodesTab, Qt::QueuedConnection);
+        connect(
+            ui->tb_EditNavComEquipment, &QToolButton::clicked, this, [this]() { m_navComEquipmentMenu->popup(QCursor::pos()); }, Qt::QueuedConnection);
+        connect(
+            ui->tb_NavComHelp, &QToolButton::clicked, this, []() { QDesktopServices::openUrl(sGui->getGlobalSetup().getComNavEquipmentHelpUrl()); }, Qt::QueuedConnection);
+
+        connect(
+            ui->tb_EditSsrEquipment, &QToolButton::clicked, this, [this]() { m_ssrEquipmentMenu->popup(QCursor::pos()); }, Qt::QueuedConnection);
+        connect(
+            ui->tb_SsrHelp, &QToolButton::clicked, this, []() { QDesktopServices::openUrl(sGui->getGlobalSetup().getSsrEquipmentHelpUrl()); }, Qt::QueuedConnection);
+
         connect(ui->tb_AltitudeDialog, &QToolButton::clicked, this, &CFlightPlanComponent::altitudeDialog, Qt::QueuedConnection);
 
         connect(ui->le_AircraftType, &QLineEdit::editingFinished, this, &CFlightPlanComponent::aircraftTypeChanged, Qt::QueuedConnection);
-        connect(ui->le_EquipmentSuffix, &QLineEdit::editingFinished, this, &CFlightPlanComponent::buildPrefixIcaoSuffix, Qt::QueuedConnection);
-        connect(ui->cb_Heavy, &QCheckBox::released, this, &CFlightPlanComponent::prefixCheckBoxChanged, Qt::QueuedConnection);
-        connect(ui->cb_Tcas, &QCheckBox::released, this, &CFlightPlanComponent::prefixCheckBoxChanged, Qt::QueuedConnection);
 
         connect(ui->pb_Remarks, &QPushButton::pressed, this, &CFlightPlanComponent::remarksHistory, Qt::QueuedConnection);
         connect(ui->pb_AddRemarks, &QPushButton::pressed, this, &CFlightPlanComponent::remarksHistory, Qt::QueuedConnection);
@@ -225,13 +235,10 @@ namespace BlackGui::Components
 
         if (aircraft.getAircraftIcaoCode().isLoadedFromDb() && aircraft.getAircraftIcaoCode().hasValidWtc())
         {
-            const QString wtc = toSingleLetterCode(aircraft.getAircraftIcaoCode().getWtc());
-            const bool heavyFlag = (wtc.startsWith("H", Qt::CaseInsensitive) || wtc.startsWith("S", Qt::CaseInsensitive));
-            ui->cb_Heavy->setChecked(heavyFlag);
+            updateWakeTurbulenceCategorySelector(aircraft.getAircraftIcaoCode().getWtc());
         }
 
         this->prefillWithUserData(aircraft.getPilot());
-        this->buildPrefixIcaoSuffix();
     }
 
     void CFlightPlanComponent::prefillWithUserData(const CUser &user)
@@ -276,7 +283,7 @@ namespace BlackGui::Components
         else if (flightPlan.getFlightRules() == CFlightPlan::UNKNOWN)
         {
             ui->cb_FlightRule->setCurrentText(CFlightPlan::flightRulesToString(CFlightPlan::IFR));
-            const CStatusMessage m = CStatusMessage(this).validationWarning(u"Unknown fligh rule, setting to default");
+            const CStatusMessage m = CStatusMessage(this).validationWarning(u"Unknown flight rule, setting to default");
             this->showOverlayMessage(m);
         }
 
@@ -285,6 +292,14 @@ namespace BlackGui::Components
             const QString rem = flightPlan.getRemarks();
             this->setRemarksUIValues(rem);
         }
+
+        updateWakeTurbulenceCategorySelector(flightPlan.getAircraftInfo().getWtc());
+
+        m_navComEquipment = flightPlan.getAircraftInfo().getComNavEquipment();
+        updateNavComEquipmentUi();
+
+        m_ssrEquipment = flightPlan.getAircraftInfo().getSsrEquipment();
+        updateSsrEquipmentUi();
     }
 
     const QStringList &CFlightPlanComponent::getLogCategories()
@@ -331,22 +346,9 @@ namespace BlackGui::Components
         {
             messages.push_back(CStatusMessage(this).validationWarning(u"Are you sure '%1' is a valid type?") << v);
         }
-        flightPlan.setAircraftIcao(this->getAircraftIcaoCode());
 
-        // prefix / equipment code
-        v = this->getPrefix();
-        if (!v.isEmpty() && !CFlightPlan::prefixCodes().contains(v))
-        {
-            messages.push_back(CStatusMessage(this).validation(severity, u"Invalid prefix"));
-        }
-        flightPlan.setPrefix(v);
-
-        v = this->getEquipmentSuffix();
-        if (!v.isEmpty() && !CFlightPlan::equipmentCodes().contains(v))
-        {
-            messages.push_back(CStatusMessage(this).validation(severity, u"Invalid equipment code"));
-        }
-        flightPlan.setEquipmentSuffix(v);
+        CFlightPlanAircraftInfo info(this->getAircraftIcaoCode(), m_navComEquipment, m_ssrEquipment, getSelectedWakeTurbulenceCategory());
+        flightPlan.setAircraftInfo(info);
 
         // route
         v = ui->pte_Route->toPlainText().trimmed();
@@ -781,43 +783,6 @@ namespace BlackGui::Components
         this->initCompleters();
     }
 
-    void CFlightPlanComponent::buildPrefixIcaoSuffix()
-    {
-        ui->le_PrefixIcaoSuffix->setText(this->getCombinedPrefixIcaoSuffix());
-    }
-
-    void CFlightPlanComponent::prefixCheckBoxChanged()
-    {
-        QObject *sender = QObject::sender();
-        if (sender == ui->cb_Heavy)
-        {
-            if (ui->cb_Heavy->isChecked())
-            {
-                const QPointer<CFlightPlanComponent> myself(this);
-                QTimer::singleShot(10, this, [=] {
-                    if (!myself) { return; }
-                    ui->cb_Tcas->setChecked(false);
-                    this->buildPrefixIcaoSuffix();
-                });
-                return;
-            }
-        }
-        else if (sender == ui->cb_Tcas)
-        {
-            if (ui->cb_Tcas->isChecked())
-            {
-                const QPointer<CFlightPlanComponent> myself(this);
-                QTimer::singleShot(10, this, [=] {
-                    if (!myself) { return; }
-                    ui->cb_Heavy->setChecked(false);
-                    this->buildPrefixIcaoSuffix();
-                });
-                return;
-            }
-        }
-        this->buildPrefixIcaoSuffix();
-    }
-
     void CFlightPlanComponent::aircraftTypeChanged()
     {
         const CAircraftIcaoCode icao = this->getAircraftIcaoCode();
@@ -825,10 +790,7 @@ namespace BlackGui::Components
         QPointer<CFlightPlanComponent> myself(this);
         QTimer::singleShot(25, this, [=] {
             if (!myself || !sGui || sGui->isShuttingDown()) { return; }
-            const bool heavy = icao.getWtc() == BlackMisc::Aviation::WakeTurbulenceCategory::HEAVY;
-            ui->cb_Heavy->setChecked(heavy);
-            if (heavy) { ui->cb_Tcas->setChecked(false); }
-            this->buildPrefixIcaoSuffix();
+            updateWakeTurbulenceCategorySelector(icao.getWtc());
         });
     }
 
@@ -842,13 +804,6 @@ namespace BlackGui::Components
         this->prefillWithAircraftData(aircraft, true);
     }
 
-    QString CFlightPlanComponent::getPrefix() const
-    {
-        if (ui->cb_Heavy->isChecked()) { return QStringLiteral("H"); }
-        else if (ui->cb_Tcas->isChecked()) { return QStringLiteral("T"); }
-        return {};
-    }
-
     CAircraftIcaoCode CFlightPlanComponent::getAircraftIcaoCode() const
     {
         const QString designator(ui->le_AircraftType->text());
@@ -859,21 +814,6 @@ namespace BlackGui::Components
             if (designatorFromDb.isLoadedFromDb()) { return designatorFromDb; }
         }
         return designator;
-    }
-
-    QString CFlightPlanComponent::getEquipmentSuffix() const
-    {
-        return ui->le_EquipmentSuffix->text().trimmed().toUpper();
-    }
-
-    QString CFlightPlanComponent::getCombinedPrefixIcaoSuffix() const
-    {
-        return CFlightPlan::concatPrefixIcaoSuffix(this->getPrefix(), this->getAircraftIcaoCode().getDesignator(), this->getEquipmentSuffix());
-    }
-
-    void CFlightPlanComponent::showEquipmentCodesTab()
-    {
-        this->setCurrentWidget(ui->tb_EquipmentCodes);
     }
 
     bool CFlightPlanComponent::isVfr() const
@@ -1091,6 +1031,118 @@ namespace BlackGui::Components
             // network error, try next URL
             nwReply->abort();
         }
+    }
+
+    void CFlightPlanComponent::setupNavComContextMenu()
+    {
+        m_navComEquipmentMenu = new QMenu(ui->tb_EditNavComEquipment);
+        auto list = new QListWidget(m_navComEquipmentMenu);
+        list->setSelectionMode(QAbstractItemView::MultiSelection);
+        list->addItems(BlackMisc::Aviation::CComNavEquipment::allEquipmentLetters());
+
+        connect(list, &QListWidget::itemSelectionChanged, this, &CFlightPlanComponent::updateNavComEquipmentFromSelection);
+
+        auto action = new QWidgetAction(ui->tb_EditNavComEquipment);
+        action->setDefaultWidget(list);
+        m_navComEquipmentMenu->addAction(action);
+
+        updateNavComEquipmentUi();
+    }
+
+    void CFlightPlanComponent::setupSsrContextMenu()
+    {
+        m_ssrEquipmentMenu = new QMenu(ui->tb_EditSsrEquipment);
+        auto list = new QListWidget(m_ssrEquipmentMenu);
+        list->setSelectionMode(QAbstractItemView::MultiSelection);
+        list->addItems(BlackMisc::Aviation::CSsrEquipment::allEquipmentLetters());
+
+        connect(list, &QListWidget::itemSelectionChanged, this, &CFlightPlanComponent::updateSsrEquipmentFromSelection);
+
+        auto action = new QWidgetAction(ui->tb_EditSsrEquipment);
+        action->setDefaultWidget(list);
+        m_ssrEquipmentMenu->addAction(action);
+
+        updateSsrEquipmentUi();
+    }
+
+    void CFlightPlanComponent::updateNavComEquipmentFromSelection()
+    {
+        const QListWidget *list = getMenuEquipmentList(m_navComEquipmentMenu);
+
+        QString equipmentString;
+
+        for (auto equipment : list->selectedItems())
+        {
+            equipmentString.append(equipment->text());
+        }
+
+        m_navComEquipment = CComNavEquipment(equipmentString);
+        updateNavComEquipmentUi();
+    }
+
+    void CFlightPlanComponent::updateSsrEquipmentFromSelection()
+    {
+        const QListWidget *list = getMenuEquipmentList(m_ssrEquipmentMenu);
+
+        QString ssrEquipmentString;
+
+        for (auto equipment : list->selectedItems())
+        {
+            ssrEquipmentString.append(equipment->text());
+        }
+
+        m_ssrEquipment = CSsrEquipment(ssrEquipmentString);
+        updateSsrEquipmentUi();
+    }
+
+    QListWidget *CFlightPlanComponent::getMenuEquipmentList(QMenu *menu)
+    {
+        Q_ASSERT_X(menu->actions().size() == 1, Q_FUNC_INFO, "should only contain a single action");
+        const QWidgetAction *action = qobject_cast<QWidgetAction *>(menu->actions().at(0));
+        Q_ASSERT_X(action, Q_FUNC_INFO, "equipment menu contains invalid action item");
+        auto list = qobject_cast<QListWidget *>(action->defaultWidget());
+        Q_ASSERT_X(list, Q_FUNC_INFO, "Action widget contains invalid widget");
+        return list;
+    }
+
+    void CFlightPlanComponent::updateSsrEquipmentUi()
+    {
+        ui->le_SsrEquipment->setText(m_ssrEquipment.toQString());
+        updateListSelection(m_ssrEquipmentMenu, m_ssrEquipment.enabledOptions());
+    }
+
+    void CFlightPlanComponent::updateNavComEquipmentUi()
+    {
+        ui->le_NavComEquipment->setText(m_navComEquipment.toQString());
+        updateListSelection(m_navComEquipmentMenu, m_navComEquipment.enabledOptions());
+    }
+
+    void CFlightPlanComponent::updateListSelection(QMenu *menu, const QStringList &enabledOptions)
+    {
+        QListWidget *list = getMenuEquipmentList(menu);
+        list->blockSignals(true);
+        list->clearSelection();
+        for (const auto &enabledOption : enabledOptions)
+        {
+            auto item = list->findItems(enabledOption, Qt::MatchExactly);
+            Q_ASSERT_X(item.size() == 1, Q_FUNC_INFO, "Expected exactly one item per option");
+            list->setItemSelected(item[0], true);
+        }
+        list->blockSignals(false);
+    }
+
+    void CFlightPlanComponent::updateWakeTurbulenceCategorySelector(const BlackMisc::Aviation::CWakeTurbulenceCategory &wtc)
+    {
+        if (wtc.isUnknown()) return; // Unknown should not be shown to the user
+        const auto it = std::find_if(m_wakeTurbulenceCategories.cbegin(), m_wakeTurbulenceCategories.cend(), [&wtc](const WakeTurbulenceEntry &item) { return item.m_wtc == wtc; });
+        Q_ASSERT_X(it != m_wakeTurbulenceCategories.cend(), Q_FUNC_INFO, "Invalid wake turbulence category selected");
+        const int newIndex = static_cast<int>(std::distance(m_wakeTurbulenceCategories.cbegin(), it));
+        ui->cb_Wtc->setCurrentIndex(newIndex);
+    }
+
+    CWakeTurbulenceCategory CFlightPlanComponent::getSelectedWakeTurbulenceCategory() const
+    {
+        return m_wakeTurbulenceCategories.at(ui->cb_Wtc->currentIndex()).m_wtc;
     }
 
     bool CFlightPlanComponent::consolidateRemarks(QStringList &remarks, const QString &newRemarks)

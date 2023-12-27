@@ -43,6 +43,7 @@ namespace BlackMisc::Network
             Force3LetterAirlineICAO = 1 << 6, //!< force 3 letter airline ICAO code
             SendVisualPositions = 1 << 7, //!< visual positions out
             ReceiveEuroscopeSimData = 1 << 8, //!< euroscope SIMDATA in
+            SendFplWithIcaoEquipment = 1 << 9, //!< send flightplan with ICAO equipment code instead of FAA code
             AllSending = SendAircraftParts | SendInterimPositions | SendVisualPositions | SendGndFlag, //!< all out
             AllReceive = ReceiveAircraftParts | ReceiveInterimPositions | ReceiveGndFlag, //!< all in
             All = AllReceive | AllSending, //!< all
@@ -51,7 +52,7 @@ namespace BlackMisc::Network
             AllReceiveWithoutGnd = AllReceive - ReceiveGndFlag, //!< all in, but no gnd.flag
             AllInterimPositions = SendInterimPositions | ReceiveInterimPositions, //!< all interim positions
             AllWithoutGnd = AllReceiveWithoutGnd | AllSendingWithoutGnd, //!< all, but no gnd.flag
-            VATSIMDefault = AllParts | Force3LetterAirlineICAO | SendVisualPositions
+            VATSIMDefault = AllParts | Force3LetterAirlineICAO | SendVisualPositions | SendFplWithIcaoEquipment
         };
         Q_DECLARE_FLAGS(SendReceiveDetails, SendReceiveDetailsFlag)
 
@@ -90,7 +91,7 @@ namespace BlackMisc::Network
         void removeSendReceiveDetails(SendReceiveDetails sendReceive) { m_sendReceive &= ~sendReceive; }
 
         //! Set send / receive details
-        void setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive, bool visualSend, bool euroscopeSimDataReceive);
+        void setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive, bool visualSend, bool euroscopeSimDataReceive, bool icaoEquipment);
 
         //! @{
         //! FSD setup flags
@@ -103,6 +104,7 @@ namespace BlackMisc::Network
         bool receiveGndFlag() const { return this->getSendReceiveDetails().testFlag(ReceiveGndFlag); }
         bool receiveInterimPositions() const { return this->getSendReceiveDetails().testFlag(ReceiveInterimPositions); }
         bool receiveEuroscopeSimData() const { return this->getSendReceiveDetails().testFlag(ReceiveEuroscopeSimData); }
+        bool shouldSendFlightPlanEquipmentInIcaoFormat() const { return this->getSendReceiveDetails().testFlag(SendFplWithIcaoEquipment); }
         //! @}
 
         //! @{

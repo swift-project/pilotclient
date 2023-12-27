@@ -305,11 +305,11 @@ namespace BlackCore::Vatsim
         const CSpeed groundspeed(pilot["groundspeed"].toInt(), CSpeedUnit::kts());
         const CAircraftSituation situation(callsign, position, heading, {}, {}, groundspeed);
         CSimulatedAircraft aircraft(callsign, user, situation);
-        const QString icaoAndEquipment(pilot["flight_plan"]["aircraft"].toString().trimmed());
-        const QString icao(CFlightPlan::aircraftIcaoCodeFromEquipmentCode(icaoAndEquipment));
-        if (CAircraftIcaoCode::isValidDesignator(icao))
+        const QString icaoAndEquipment(pilot["flight_plan"]["aircraft"].toString().trimmed()); // in ICAO format
+        CFlightPlanAircraftInfo info(icaoAndEquipment);
+        if (info.getAircraftIcao().hasValidDesignator())
         {
-            aircraft.setAircraftIcaoCode(icao);
+            aircraft.setAircraftIcaoCode(info.getAircraftIcao());
         }
         else if (!icaoAndEquipment.isEmpty())
         {

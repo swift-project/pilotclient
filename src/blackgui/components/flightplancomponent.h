@@ -11,6 +11,8 @@
 #include "blackmisc/simulation/data/lastmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/flightplan.h"
+#include "blackmisc/aviation/comnavequipment.h"
+#include "blackmisc/aviation/ssrequipment.h"
 #include "blackmisc/network/data/lastserver.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/directories.h"
@@ -27,6 +29,7 @@
 #include <QtGlobal>
 #include <QFileDialog>
 #include <QNetworkReply>
+#include <QListWidget>
 
 namespace Ui
 {
@@ -99,14 +102,31 @@ namespace BlackGui::Components
         CAltitudeDialog *m_altitudeDialog = nullptr;
         CStringListDialog *m_fpRemarksDialog = nullptr;
         CSimBriefDownloadDialog *m_simBriefDialog = nullptr;
+        QMenu *m_navComEquipmentMenu = nullptr;
+        QMenu *m_ssrEquipmentMenu = nullptr;
         BlackMisc::Aviation::CFlightPlan m_sentFlightPlan; //!< my flight plan
         BlackMisc::Simulation::CAircraftModel m_model; //!< currently used model
+        BlackMisc::Aviation::CComNavEquipment m_navComEquipment; //!< current NAV/COM equipment
+        BlackMisc::Aviation::CSsrEquipment m_ssrEquipment; //!< current SSR equipment
         BlackMisc::CIdentifier m_identifier { "FlightPlanComponent", this }; //!< Flightplan identifier
         BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_directories { this }; //!< the swift directories
         BlackMisc::CSetting<FlightPlanSettings::TRemarksHistory> m_remarksHistory { this }; //!< remarks history
         BlackMisc::CSetting<FlightPlanSettings::TRemarksHistoryAdditional> m_remarksHistoryAdditional { this }; //!< remarks history
         BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
         BlackMisc::CDataReadOnly<BlackMisc::Network::Data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
+
+        struct WakeTurbulenceEntry
+        {
+            QString m_name; //!< Name displayed to the user
+            BlackMisc::Aviation::CWakeTurbulenceCategory m_wtc; //!< Wake turbulence category
+        };
+
+        const QList<WakeTurbulenceEntry> m_wakeTurbulenceCategories = {
+            { "Light", BlackMisc::Aviation::CWakeTurbulenceCategory::LIGHT },
+            { "Medium", BlackMisc::Aviation::CWakeTurbulenceCategory::MEDIUM },
+            { "Heavy", BlackMisc::Aviation::CWakeTurbulenceCategory::HEAVY },
+            { "Super", BlackMisc::Aviation::CWakeTurbulenceCategory::SUPER }
+        }; //!< Mapping CWakeTurbulenceCategory <=> UI name that is shown to the user
 
         //! Validate, generates status messages
         BlackMisc::CStatusMessageList validateAndInitializeFlightPlan(BlackMisc::Aviation::CFlightPlan &fligtPlan);
@@ -204,29 +224,14 @@ namespace BlackGui::Components
         //! GUI init complete
         void swiftWebDataRead();
 
-        //! Build "H/B737/F"
-        void buildPrefixIcaoSuffix();
-
-        //! Prefix check box changed
-        void prefixCheckBoxChanged();
-
         //! Aircraft type changed
         void aircraftTypeChanged();
 
         //! Sync.with simulator
         void syncWithSimulator();
 
-        //! Get prefix
-        QString getPrefix() const;
-
         //! Aircraft type as ICAO code
         BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCode() const;
-
-        //! Get equipment code (1 char)
-        QString getEquipmentSuffix() const;
-
-        //! Something like "H/B737/F"
-        QString getCombinedPrefixIcaoSuffix() const;
 
         //! Show tab of equipment codes
         void showEquipmentCodesTab();
@@ -263,6 +268,36 @@ namespace BlackGui::Components
 
         //! Response from SimBrief
         void handleSimBriefResponse(QNetworkReply *nwReplyPtr);
+
+        //! Setup NAV/COM context menu
+        void setupNavComContextMenu();
+
+        //! Setup SSR context menu
+        void setupSsrContextMenu();
+
+        //! Update the current NAV/COM equipment from the menu selection
+        void updateNavComEquipmentFromSelection();
+
+        //! Update the current SSR equipment from the menu selection
+        void updateSsrEquipmentFromSelection();
+
+        //! Update the selection and label according to current NAV/COM equipment
+        void updateNavComEquipmentUi();
+
+        //! Update the selection and label according to current SSR equipment
+        void updateSsrEquipmentUi();
+
+        //! Update the wake turbulence category selector
+        void updateWakeTurbulenceCategorySelector(const BlackMisc::Aviation::CWakeTurbulenceCategory &wtc);
+
+        //! Get the selected wake turbulence category
+        BlackMisc::Aviation::CWakeTurbulenceCategory getSelectedWakeTurbulenceCategory() const;
+
+        //! Helper to get the QListWidget from a given NAV/COM or SSR menu
+        static QListWidget *getMenuEquipmentList(QMenu *menu);
+
+        //! Helper to mark all options in \p enabledOptions as "selected" in the QListWidget, contained in the NAV/COM or SSR \p menu
+        static void updateListSelection(QMenu *menu, const QStringList &enabledOptions);
 
         //! Consolidate the new remarks list, latest on front
         static bool consolidateRemarks(QStringList &remarks, const QString &newRemarks);

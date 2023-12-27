@@ -125,6 +125,7 @@
         <file>icons/pastel/16/folder-pink.png</file>
         <file>icons/pastel/16/folder-purple.png</file>
         <file>icons/pastel/16/undo.png</file>
+        <file>icons/pastel/16/pencil.png</file>
     </qresource>
     <qresource prefix="/vatsim">
         <file>icons/vatsim/C1.png</file>

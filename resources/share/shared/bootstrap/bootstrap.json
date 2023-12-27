@@ -66,5 +66,11 @@
             }
         ]
     },
+    "comNavEquipmentHelpUrl": {
+        "url": "https://en.wikipedia.org/wiki/Equipment_codes#Radio_communication,_navigation_and_approach_aid_equipment_and_capabilities"
+    },
+    "ssrEquipmentHelpUrl": {
+        "url": "https://en.wikipedia.org/wiki/Equipment_codes#Surveillance_equipment_codes"
+    },
     "wasLoadedFromFile": false
 }
