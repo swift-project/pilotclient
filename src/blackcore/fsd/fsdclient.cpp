@@ -706,10 +706,20 @@ namespace BlackCore::Fsd
         const QString alt = flightPlan.getCruiseAltitude().asFpVatsimAltitudeString();
         // const QString alt = flightPlan.getCruiseAltitude().asFpAltitudeString();
 
-        QString act = flightPlan.getCombinedPrefixIcaoSuffix();
-        if (act.isEmpty()) { act = flightPlan.getAircraftIcao().getDesignator(); } // fallback
-
         FlightType flightType = getFlightType(flightPlan.getFlightRules());
+
+        QString act;
+
+        if (m_server.getFsdSetup().shouldSendFlightPlanEquipmentInIcaoFormat())
+        {
+            act = flightPlan.getAircraftInfo().asIcaoString();
+        }
+        else
+        {
+            act = flightPlan.getAircraftInfo().asFaaString();
+        }
+
+        Q_ASSERT_X(!act.isEmpty(), Q_FUNC_INFO, "Aircraft type must not be empty");
 
         const QList<int> timePartsEnroute = flightPlan.getEnrouteTime().getHrsMinSecParts();
         const QList<int> timePartsFuel = flightPlan.getFuelTime().getHrsMinSecParts();
@@ -909,6 +919,7 @@ namespace BlackCore::Fsd
             if (m_capabilities & Capabilities::VisPos) responseData.push_back(toQString(Capabilities::VisPos) % "=1");
             if (m_capabilities & Capabilities::Stealth) responseData.push_back(toQString(Capabilities::Stealth) % "=1");
             if (m_capabilities & Capabilities::AircraftConfig) responseData.push_back(toQString(Capabilities::AircraftConfig) % "=1");
+            if (m_capabilities & Capabilities::IcaoEquipment) responseData.push_back(toQString(Capabilities::IcaoEquipment) % "=1");
             const ClientResponse clientResponse(ownCallsign, receiver, ClientQueryType::Capabilities, responseData);
             sendQueudedMessage(clientResponse);
         }
@@ -1382,7 +1393,7 @@ namespace BlackCore::Fsd
         const CCallsign callsign(fp.sender(), CCallsign::Aircraft);
         const CFlightPlan flightPlan(
             callsign,
-            fp.m_aircraftIcaoType,
+            CFlightPlanAircraftInfo(fp.m_aircraftIcaoType),
             fp.m_depAirport,
             fp.m_destAirport,
             fp.m_altAirport,

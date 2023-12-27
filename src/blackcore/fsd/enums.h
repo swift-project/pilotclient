@@ -168,7 +168,10 @@ namespace BlackCore::Fsd
         Stealth = (1 << 8),
 
         /*! Aircraft Config */
-        AircraftConfig = (1 << 9)
+        AircraftConfig = (1 << 9),
+
+        /*! Process aircraft ICAO in flightplan as ICAO equipment code (e.g. B737/M-SDE2E3FGHIRWXY/LB1) */
+        IcaoEquipment = (1 << 10)
     };
 
     //! @{

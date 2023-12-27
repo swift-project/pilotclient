@@ -33,7 +33,7 @@ namespace BlackCore::Fsd
         //! @{
         //! Properties
         FlightType m_flightType {};
-        QString m_aircraftIcaoType;
+        QString m_aircraftIcaoType; //!< Contains the full equipment string in FAA or ICAO format, depending on the server
         int m_trueCruisingSpeed = 0;
         QString m_depAirport;
         int m_estimatedDepTime = 0;

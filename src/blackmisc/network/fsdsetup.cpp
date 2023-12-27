@@ -37,7 +37,7 @@ namespace BlackMisc::Network
 
     QString CFsdSetup::sendReceiveDetailsToString(SendReceiveDetails details)
     {
-        static const QString ds("Send parts; %1 gnd: %2 interim: %3 Receive parts: %4 gnd: %5 interim: %6 3letter: %7");
+        static const QString ds("Send parts; %1 gnd: %2 interim: %3 Receive parts: %4 gnd: %5 interim: %6 3letter: %7 ICAO equipment %8");
         return ds.arg(boolToYesNo(details.testFlag(SendAircraftParts)),
                       boolToYesNo(details.testFlag(SendGndFlag)),
                       boolToYesNo(details.testFlag(SendInterimPositions)),
@@ -45,10 +45,11 @@ namespace BlackMisc::Network
                       boolToYesNo(details.testFlag(ReceiveAircraftParts)),
                       boolToYesNo(details.testFlag(ReceiveGndFlag)),
                       boolToYesNo(details.testFlag(ReceiveInterimPositions)),
-                      boolToYesNo(details.testFlag(Force3LetterAirlineICAO)));
+                      boolToYesNo(details.testFlag(Force3LetterAirlineICAO)),
+                      boolToYesNo(details.testFlag(SendFplWithIcaoEquipment)));
     }
 
-    void CFsdSetup::setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive, bool visualSend, bool euroscopeSimDataReceive)
+    void CFsdSetup::setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive, bool visualSend, bool euroscopeSimDataReceive, bool icaoEquipment)
     {
         SendReceiveDetails s = Nothing;
         if (partsSend) { s |= SendAircraftParts; }
@@ -59,6 +60,7 @@ namespace BlackMisc::Network
         if (interimReceive) { s |= ReceiveInterimPositions; }
         if (visualSend) { s |= SendVisualPositions; }
         if (euroscopeSimDataReceive) { s |= ReceiveEuroscopeSimData; }
+        if (icaoEquipment) { s |= SendFplWithIcaoEquipment; }
         this->setSendReceiveDetails(s);
     }
 

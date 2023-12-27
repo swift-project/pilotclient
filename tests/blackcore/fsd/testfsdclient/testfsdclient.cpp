@@ -87,7 +87,8 @@ namespace BlackFsdTest
         void testSendTextMessage2();
         void testSendRadioMessage1();
         void testSendRadioMessage2();
-        void testSendFlightPlan();
+        void testSendFlightPlanFaa();
+        void testSendFlightPlanIcao();
         void testSendPlaneInfoRequest();
         void testSendPlaneInformation1();
         void testSendPlaneInformation2();
@@ -669,15 +670,17 @@ namespace BlackFsdTest
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#TMABCD:@24050&@35725:hey dude!");
     }
 
-    void CTestFSDClient::testSendFlightPlan()
+    void CTestFSDClient::testSendFlightPlanFaa()
     {
+        // Server without ICAOEQ capability is set by default (in init())
         QSignalSpy spy(m_client, &CFSDClient::rawFsdMessage);
         QDateTime takeoffTimePlanned = QDateTime::fromString("1530", "hhmm");
         takeoffTimePlanned.setTimeSpec(Qt::UTC);
         QDateTime takeoffTimeActual = QDateTime::fromString("1535", "hhmm");
         takeoffTimeActual.setTimeSpec(Qt::UTC);
         CAltitude flightLevel(35000, CAltitude::FlightLevel, CLengthUnit::ft());
-        CFlightPlan fp({}, "B744", "EGLL", "KORD", "NONE",
+        CFlightPlanAircraftInfo info("H/B744/L");
+        CFlightPlan fp({}, info, "EGLL", "KORD", "NONE",
                        takeoffTimePlanned, takeoffTimeActual,
                        CTime(8.25, CTimeUnit::h()), CTime(9.5, CTimeUnit::h()),
                        flightLevel, CSpeed(420, CSpeedUnit::kts()), CFlightPlan::VFR,
@@ -688,7 +691,34 @@ namespace BlackFsdTest
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
         CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
-        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>$FPABCD:SERVER:V:B744:420:EGLL:1530:1535:FL350:KORD:8:15:9:30:NONE:UNIT TEST:EGLL.KORD");
+        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>$FPABCD:SERVER:V:H/B744/L:420:EGLL:1530:1535:FL350:KORD:8:15:9:30:NONE:UNIT TEST:EGLL.KORD");
+    }
+
+    void CTestFSDClient::testSendFlightPlanIcao()
+    {
+        CServer server = localTestServer();
+        server.setFsdSetup(CFsdSetup(CFsdSetup::SendFplWithIcaoEquipment));
+        m_client->setServer(server);
+
+        QSignalSpy spy(m_client, &CFSDClient::rawFsdMessage);
+        QDateTime takeoffTimePlanned = QDateTime::fromString("1530", "hhmm");
+        takeoffTimePlanned.setTimeSpec(Qt::UTC);
+        QDateTime takeoffTimeActual = QDateTime::fromString("1535", "hhmm");
+        takeoffTimeActual.setTimeSpec(Qt::UTC);
+        CAltitude flightLevel(35000, CAltitude::FlightLevel, CLengthUnit::ft());
+        CFlightPlanAircraftInfo info("B748/H-SDE3FGHIM1M2RWXY/LB1");
+        CFlightPlan fp({}, info, "EGLL", "KORD", "NONE",
+                       takeoffTimePlanned, takeoffTimeActual,
+                       CTime(8.25, CTimeUnit::h()), CTime(9.5, CTimeUnit::h()),
+                       flightLevel, CSpeed(420, CSpeedUnit::kts()), CFlightPlan::VFR,
+                       "EGLL.KORD", "Unit Test");
+        m_client->sendFlightPlan(fp);
+
+        QCOMPARE(spy.count(), 1);
+        QList<QVariant> arguments = spy.takeFirst();
+        QCOMPARE(arguments.size(), 1);
+        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>$FPABCD:SERVER:V:B748/H-SDE3FGHIM1M2RWXY/LB1:420:EGLL:1530:1535:FL350:KORD:8:15:9:30:NONE:UNIT TEST:EGLL.KORD");
     }
 
     void CTestFSDClient::testSendPlaneInfoRequest()

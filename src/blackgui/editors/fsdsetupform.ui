@@ -29,6 +29,34 @@
    <property name="spacing">
     <number>4</number>
    </property>
+   <item row="0" column="1">
+    <widget class="QLabel" name="lbl_FsdSetup">
+     <property name="text">
+      <string>FSD setup:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QCheckBox" name="cb_AircraftPartsSend">
+     <property name="text">
+      <string>send</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QCheckBox" name="cb_AircraftPartsReceive">
+     <property name="text">
+      <string>receive</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QCheckBox" name="cb_Override">
+     <property name="text">
+      <string>override</string>
+     </property>
+    </widget>
+   </item>
    <item row="4" column="1">
     <widget class="QLabel" name="lbl_AircraftParts">
      <property name="toolTip">
@@ -39,31 +67,10 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="3">
-    <widget class="QCheckBox" name="cb_FastPositionSend">
-     <property name="text">
-      <string>send</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="2">
-    <widget class="QCheckBox" name="cb_GndFlagSend">
-     <property name="text">
-      <string>send</string>
-     </property>
-    </widget>
-   </item>
    <item row="4" column="2">
     <widget class="QLabel" name="lbl_GndFlag">
      <property name="text">
       <string>Gnd.flag</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
-    <widget class="QCheckBox" name="cb_AircraftPartsReceive">
-     <property name="text">
-      <string>receive</string>
      </property>
     </widget>
    </item>
@@ -81,31 +88,10 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="2">
-    <widget class="QCheckBox" name="cb_GndFlagReceive">
-     <property name="text">
-      <string>receive</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="1">
-    <widget class="QCheckBox" name="cb_AircraftPartsSend">
+   <item row="5" column="2">
+    <widget class="QCheckBox" name="cb_GndFlagSend">
      <property name="text">
       <string>send</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="5">
-    <widget class="QLabel" name="lbl_TextCodec">
-     <property name="text">
-      <string>Text codec</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="5">
-    <widget class="QLineEdit" name="le_TextCodec">
-     <property name="placeholderText">
-      <string>e.g. &quot;latin1&quot;</string>
      </property>
     </widget>
    </item>
@@ -113,20 +99,6 @@
     <widget class="QPushButton" name="pb_SetDefaults">
      <property name="text">
       <string>set defaults</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="2">
-    <widget class="QCheckBox" name="cb_Override">
-     <property name="text">
-      <string>override</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QLabel" name="lbl_FsdSetup">
-     <property name="text">
-      <string>FSD setup:</string>
      </property>
     </widget>
    </item>
@@ -140,10 +112,24 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="4">
-    <widget class="QCheckBox" name="cb_VisualPositionSend">
+   <item row="5" column="3">
+    <widget class="QCheckBox" name="cb_FastPositionSend">
      <property name="text">
-      <string>Send visual pos.</string>
+      <string>send</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="5">
+    <widget class="QLabel" name="lbl_TextCodec">
+     <property name="text">
+      <string>Text codec</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="2">
+    <widget class="QCheckBox" name="cb_GndFlagReceive">
+     <property name="text">
+      <string>receive</string>
      </property>
     </widget>
    </item>
@@ -157,21 +143,43 @@
      </property>
     </widget>
    </item>
+   <item row="5" column="5">
+    <widget class="QLineEdit" name="le_TextCodec">
+     <property name="placeholderText">
+      <string>e.g. &quot;latin1&quot;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="4">
+    <widget class="QCheckBox" name="cb_VisualPositionSend">
+     <property name="text">
+      <string>Send visual pos.</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="6">
+    <widget class="QCheckBox" name="cb_IcaoEquipment">
+     <property name="text">
+      <string>ICAO Equipment</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <tabstops>
   <tabstop>cb_Override</tabstop>
-  <tabstop>pb_SetDefaults</tabstop>
   <tabstop>cb_AircraftPartsSend</tabstop>
-  <tabstop>cb_AircraftPartsReceive</tabstop>
   <tabstop>cb_GndFlagSend</tabstop>
-  <tabstop>cb_GndFlagReceive</tabstop>
   <tabstop>cb_FastPositionSend</tabstop>
-  <tabstop>cb_FastPositionReceive</tabstop>
   <tabstop>cb_VisualPositionSend</tabstop>
-  <tabstop>cb_EuroscopeSimData</tabstop>
   <tabstop>le_TextCodec</tabstop>
+  <tabstop>cb_IcaoEquipment</tabstop>
+  <tabstop>cb_AircraftPartsReceive</tabstop>
+  <tabstop>cb_GndFlagReceive</tabstop>
+  <tabstop>cb_FastPositionReceive</tabstop>
+  <tabstop>cb_EuroscopeSimData</tabstop>
   <tabstop>cb_3LetterAirlineICAO</tabstop>
+  <tabstop>pb_SetDefaults</tabstop>
  </tabstops>
  <resources/>
  <connections/>

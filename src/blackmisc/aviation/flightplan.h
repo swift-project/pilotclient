@@ -12,6 +12,7 @@
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/selcal.h"
+#include "blackmisc/aviation/flightplanaircraftinfo.h"
 #include "blackmisc/network/voicecapabilities.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/pq/speed.h"
@@ -185,16 +186,15 @@ namespace BlackMisc::Aviation
 
         //! Constructor
         CFlightPlan(const CCallsign &callsign,
-                    const QString &equipmentIcao, const CAirportIcaoCode &originAirportIcao, const CAirportIcaoCode &destinationAirportIcao, const CAirportIcaoCode &alternateAirportIcao,
+                    const CFlightPlanAircraftInfo &aircraftInfo, const CAirportIcaoCode &originAirportIcao, const CAirportIcaoCode &destinationAirportIcao, const CAirportIcaoCode &alternateAirportIcao,
                     const QDateTime &takeoffTimePlanned, const QDateTime &takeoffTimeActual, const PhysicalQuantities::CTime &enrouteTime, const PhysicalQuantities::CTime &fuelTime,
                     const CAltitude &cruiseAltitude, const PhysicalQuantities::CSpeed &cruiseTrueAirspeed, FlightRules flightRules, const QString &route, const QString &remarks);
 
         //! Callsign (of aircraft)
         void setCallsign(const CCallsign &callsign);
 
-        //! Set single char ICAO aircraft equipment code like used in "T/A320/F" (here "F")
-        //! \remark function can handle full codes like "T/A320/F" of just the "F"
-        void setEquipmentIcao(const QString &equipmentIcao);
+        //! Set information about the aircraft used in this flightplan
+        void setAircraftInfo(const CFlightPlanAircraftInfo &aircraftInfo);
 
         //! Set origin airport ICAO code
         void setOriginAirportIcao(const QString &originAirportIcao) { m_originAirportIcao = originAirportIcao; }
@@ -360,32 +360,8 @@ namespace BlackMisc::Aviation
         //! Set FP remarks
         void setFlightPlanRemarks(const CFlightPlanRemarks &remarks) { m_remarks = remarks; }
 
-        //! Get ICAO aircraft equipment prefix H/B737/F "H"
-        const QString &getPrefix() const { return m_prefix; }
-
-        //! Set ICAO aircraft equipment prefix H/B737/F "H"
-        void setPrefix(const QString &prefix);
-
-        //! Mark as heavy
-        void setHeavy();
-
-        //! Get ICAO aircraft equipment suffix H/B737/F "F"
-        const QString &getEquipmentSuffix() const { return m_equipmentSuffix; }
-
-        //! Set ICAO aircraft equipment suffix H/B737/F "F"
-        void setEquipmentSuffix(const QString &suffix);
-
-        //! Get aircraft ICAO H/B737/F "B737"
-        const CAircraftIcaoCode &getAircraftIcao() const { return m_aircraftIcao; }
-
-        //! Set aircraft ICAO code H/B737/F "B737"
-        void setAircraftIcao(const CAircraftIcaoCode &icao) { m_aircraftIcao = icao; }
-
-        //! Has aircraft ICAO?
-        bool hasAircraftIcao() const { return m_aircraftIcao.hasDesignator(); }
-
-        //! Full string like "H/B737/F"
-        QString getCombinedPrefixIcaoSuffix() const;
+        //! Get ICAO aircraft NAV/COM equipment
+        CFlightPlanAircraftInfo getAircraftInfo() const { return m_aircraftInfo; }
 
         //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
         QVariant propertyByIndex(CPropertyIndexRef index) const;
@@ -441,42 +417,9 @@ namespace BlackMisc::Aviation
         static bool isIFRRules(const QString &rule);
         //! @}
 
-        //! Get aircraft ICAO code from equipment code like
-        //! \remark we expect something like "H/B772/F" "B773" "B773/F"
-        static QString aircraftIcaoCodeFromEquipmentCode(const QString &equipmentCodeAndAircraft);
-
-        //! Get the 3 parts of "H/B772/F", returned as prefix, ICAO, suffix
-        static QStringList splitEquipmentCode(const QString &equipmentCodeAndAircraft);
-
-        //! Concat the 3 parts to "H/B772/F"
-        static QString concatPrefixIcaoSuffix(const QString &prefix, const QString &icao, const QString &suffix);
-
-        //! Equipment codes 1 character
-        static const QStringList &faaEquipmentCodes();
-
-        //! Codes plus info
-        static const QStringList &faaEquipmentCodesInfo();
-
-        //! SquawkBox equipment codes
-        static const QStringList &squawkBoxEquipmentCodes();
-
-        //! Codes plus info
-        static const QStringList &squawkBoxEquipmentCodesInfo();
-
-        //! All equipment codes
-        static const QStringList &equipmentCodes();
-
-        //! Equipment codes info
-        static const QStringList &equipmentCodesInfo();
-
-        //! Prefix codes "H" .. Heavy, "T" .. TCAS
-        static const QStringList &prefixCodes();
-
     private:
         CCallsign m_callsign; //!< aircraft callsign
-        CAircraftIcaoCode m_aircraftIcao; //!< Aircraft ICAO code
-        QString m_prefix; //!< e.g. "T/A320/F" -> the "T"
-        QString m_equipmentSuffix; //!< e.g. "T/A320/F" -> the "F"
+        CFlightPlanAircraftInfo m_aircraftInfo; //!< Aircraft information
         CAirportIcaoCode m_originAirportIcao;
         CAirportIcaoCode m_destinationAirportIcao;
         CAirportIcaoCode m_alternateAirportIcao;
@@ -497,9 +440,7 @@ namespace BlackMisc::Aviation
         BLACK_METACLASS(
             CFlightPlan,
             // callsign will be current flight
-            BLACK_METAMEMBER(aircraftIcao),
-            BLACK_METAMEMBER(prefix),
-            BLACK_METAMEMBER(equipmentSuffix),
+            BLACK_METAMEMBER(aircraftInfo),
             BLACK_METAMEMBER(originAirportIcao),
             BLACK_METAMEMBER(destinationAirportIcao),
             BLACK_METAMEMBER(alternateAirportIcao),

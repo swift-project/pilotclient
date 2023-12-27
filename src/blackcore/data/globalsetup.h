@@ -208,6 +208,12 @@ namespace BlackCore::Data
         //! NCEP GFS Forecasts (0.25 degree grid) data url
         BlackMisc::Network::CUrl getNcepGlobalForecastSystemUrl25() const { return m_ncepGlobalForecastSystemUrl25; }
 
+        //! COM/NAV equipment code help URL
+        BlackMisc::Network::CUrl getComNavEquipmentHelpUrl() const { return m_comNavEquipmentHelpUrl; }
+
+        //! SSR equipment code help URL
+        BlackMisc::Network::CUrl getSsrEquipmentHelpUrl() const { return m_ssrEquipmentHelpUrl; }
+
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
@@ -252,6 +258,8 @@ namespace BlackCore::Data
         BlackMisc::Network::CServerList m_predefinedServers; //!< Predefined servers loaded from setup file
         BlackMisc::Network::CUrl m_ncepGlobalForecastSystemUrl; //!< NCEP GFS url 0.5 degree resolution
         BlackMisc::Network::CUrl m_ncepGlobalForecastSystemUrl25; //!< NCEP GFS url 0.25 degree resolution
+        BlackMisc::Network::CUrl m_comNavEquipmentHelpUrl; //!< Help URL for COM/NAV equipment codes
+        BlackMisc::Network::CUrl m_ssrEquipmentHelpUrl; //!< Help URL for SSR equipment codes
 
         // transient members, to be switched on/off via GUI or set from reader
         bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know what you are doing
@@ -281,6 +289,8 @@ namespace BlackCore::Data
             BLACK_METAMEMBER(mappingMinimumVersion),
             BLACK_METAMEMBER(ncepGlobalForecastSystemUrl),
             BLACK_METAMEMBER(ncepGlobalForecastSystemUrl25),
+            BLACK_METAMEMBER(comNavEquipmentHelpUrl),
+            BLACK_METAMEMBER(ssrEquipmentHelpUrl),
             BLACK_METAMEMBER(dbDebugFlag, BlackMisc::DisabledForJson)
         );
     };
