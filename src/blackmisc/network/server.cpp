@@ -79,14 +79,6 @@ namespace BlackMisc::Network
         return fsc;
     }
 
-    const CServer &CServer::afvFsdTestServer()
-    {
-        static const CServer afv("AFV testserver", "VATSIM AFV testserver", "afv-beta-fsd.vatsim.net", 6809,
-                                 CUser("OBF:AwLZ7f9hUmpSZhm4=", "OBF:AwJGiYV4GHQSMizchFk2=", "", ""),
-                                 CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::vatsim()), CServer::FSDServerVatsim);
-        return afv;
-    }
-
     const CServer &CServer::esTowerView()
     {
         static const CServer s = CServer("ES Tower", "Euroscope Tower view", "localhost", 6809,

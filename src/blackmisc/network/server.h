@@ -214,9 +214,6 @@ namespace BlackMisc::Network
         //! FSC server
         static const CServer &fscFsdServer();
 
-        //! The AFV test server
-        static const CServer &afvFsdTestServer();
-
         //! ES tower server
         static const CServer &esTowerView();
 
