@@ -97,7 +97,7 @@ namespace BlackFsdTest
         void testCom1FreqQueryResponse();
         void testPlaneInfoRequestResponse();
         void testAuth();
-        void testConnection();
+        // void testConnection(); // Connection test disabled as currently no server exist to check the connection
 
     private:
         CFSDClient *m_client = nullptr;
@@ -839,47 +839,47 @@ namespace BlackFsdTest
         return true;
     }
 
-    void CTestFSDClient::testConnection()
-    {
-        const CServer fsdServer = CServer::swiftFsdTestServer(true);
-        if (!pingServer(fsdServer)) { QSKIP("Server not reachable."); }
-
-        QSignalSpy spy(m_client, &CFSDClient::connectionStatusChanged);
-        m_client->setUnitTestMode(false);
-        m_client->connectToServer();
-
-        if (spy.isEmpty()) { QVERIFY(spy.wait()); }
-        QList<QVariant> arguments = spy.takeAt(0);
-        QCOMPARE(arguments.size(), 2);
-        QCOMPARE(CConnectionStatus::Disconnected, arguments.at(0).value<CConnectionStatus>().getConnectionStatus());
-        QCOMPARE(CConnectionStatus::Connecting, arguments.at(1).value<CConnectionStatus>().getConnectionStatus());
-
-        if (spy.isEmpty()) { QVERIFY(spy.wait()); }
-        arguments = arguments = spy.takeAt(0);
-        QCOMPARE(arguments.size(), 2);
-        QCOMPARE(CConnectionStatus::Connecting, arguments.at(0).value<CConnectionStatus>().getConnectionStatus());
-        QCOMPARE(CConnectionStatus::Connected, arguments.at(1).value<CConnectionStatus>().getConnectionStatus());
-
-        QSignalSpy pongSpy(m_client, &CFSDClient::pongReceived);
-        connect(m_client, &CFSDClient::pongReceived, [](const QString &sender, double elapsedTimeM) {
-            qDebug() << "Received pong from" << sender << "in" << elapsedTimeM << "ms";
-        });
-        m_client->sendPing("SERVER");
-        QVERIFY(pongSpy.wait());
-
-        m_client->disconnectFromServer();
-        if (spy.isEmpty()) { QVERIFY(spy.wait()); }
-        arguments = spy.takeAt(0);
-        QCOMPARE(arguments.size(), 2);
-        QCOMPARE(CConnectionStatus::Connected, arguments.at(0).value<CConnectionStatus>().getConnectionStatus());
-        QCOMPARE(CConnectionStatus::Disconnecting, arguments.at(1).value<CConnectionStatus>().getConnectionStatus());
-
-        if (spy.isEmpty()) { QVERIFY(spy.wait()); }
-        arguments = spy.takeAt(0);
-        QCOMPARE(arguments.size(), 2);
-        QCOMPARE(CConnectionStatus::Disconnecting, arguments.at(0).value<CConnectionStatus>().getConnectionStatus());
-        QCOMPARE(CConnectionStatus::Disconnected, arguments.at(1).value<CConnectionStatus>().getConnectionStatus());
-    }
+    //    void CTestFSDClient::testConnection()
+    //    {
+    //        const CServer fsdServer = CServer::swiftFsdTestServer(true);
+    //        if (!pingServer(fsdServer)) { QSKIP("Server not reachable."); }
+    //
+    //        QSignalSpy spy(m_client, &CFSDClient::connectionStatusChanged);
+    //        m_client->setUnitTestMode(false);
+    //        m_client->connectToServer();
+    //
+    //        if (spy.isEmpty()) { QVERIFY(spy.wait()); }
+    //        QList<QVariant> arguments = spy.takeAt(0);
+    //        QCOMPARE(arguments.size(), 2);
+    //        QCOMPARE(CConnectionStatus::Disconnected, arguments.at(0).value<CConnectionStatus>().getConnectionStatus());
+    //        QCOMPARE(CConnectionStatus::Connecting, arguments.at(1).value<CConnectionStatus>().getConnectionStatus());
+    //
+    //        if (spy.isEmpty()) { QVERIFY(spy.wait()); }
+    //        arguments = arguments = spy.takeAt(0);
+    //        QCOMPARE(arguments.size(), 2);
+    //        QCOMPARE(CConnectionStatus::Connecting, arguments.at(0).value<CConnectionStatus>().getConnectionStatus());
+    //        QCOMPARE(CConnectionStatus::Connected, arguments.at(1).value<CConnectionStatus>().getConnectionStatus());
+    //
+    //        QSignalSpy pongSpy(m_client, &CFSDClient::pongReceived);
+    //        connect(m_client, &CFSDClient::pongReceived, [](const QString &sender, double elapsedTimeM) {
+    //            qDebug() << "Received pong from" << sender << "in" << elapsedTimeM << "ms";
+    //        });
+    //        m_client->sendPing("SERVER");
+    //        QVERIFY(pongSpy.wait());
+    //
+    //        m_client->disconnectFromServer();
+    //        if (spy.isEmpty()) { QVERIFY(spy.wait()); }
+    //        arguments = spy.takeAt(0);
+    //        QCOMPARE(arguments.size(), 2);
+    //        QCOMPARE(CConnectionStatus::Connected, arguments.at(0).value<CConnectionStatus>().getConnectionStatus());
+    //        QCOMPARE(CConnectionStatus::Disconnecting, arguments.at(1).value<CConnectionStatus>().getConnectionStatus());
+    //
+    //        if (spy.isEmpty()) { QVERIFY(spy.wait()); }
+    //        arguments = spy.takeAt(0);
+    //        QCOMPARE(arguments.size(), 2);
+    //        QCOMPARE(CConnectionStatus::Disconnecting, arguments.at(0).value<CConnectionStatus>().getConnectionStatus());
+    //        QCOMPARE(CConnectionStatus::Disconnected, arguments.at(1).value<CConnectionStatus>().getConnectionStatus());
+    //    }
 }
 
 //! main
