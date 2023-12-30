@@ -48,6 +48,9 @@ namespace BlackMisc
                 //! @}
 
                 //! Perform the interpolation
+                //! \param situation situation used as a base for interpolation. Contains for example the already interpolated PBH.
+                //! \param interpolateGndFactor whether to interpolate the GND factor.
+                //! \return \p situation with interpolated position and altitude, updated timestamp and possibly interpolated GND factor
                 Aviation::CAircraftSituation interpolatePositionAndAltitude(const Aviation::CAircraftSituation &situation, bool interpolateGndFactor) const;
 
                 //! Old situation
