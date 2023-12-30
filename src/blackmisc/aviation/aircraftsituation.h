@@ -20,6 +20,7 @@
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/time.h"
+#include "blackmisc/math/mathutils.h"
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/valueobject.h"
@@ -529,25 +530,29 @@ namespace BlackMisc
             //! Both on ground
             static bool isGfEqualOnGround(double oldGroundFactor, double newGroundFactor)
             {
-                return isDoubleEpsilonEqual(1.0, oldGroundFactor) && isDoubleEpsilonEqual(1.0, newGroundFactor);
+                using namespace BlackMisc::Math;
+                return CMathUtils::epsilonEqualLimits(1.0, oldGroundFactor) && CMathUtils::epsilonEqualLimits(1.0, newGroundFactor);
             }
 
             //! Both not on ground
             static bool isGfEqualAirborne(double oldGroundFactor, double newGroundFactor)
             {
-                return isDoubleEpsilonEqual(0.0, oldGroundFactor) && isDoubleEpsilonEqual(0.0, newGroundFactor);
+                using namespace BlackMisc::Math;
+                return CMathUtils::epsilonEqualLimits(0.0, oldGroundFactor) && CMathUtils::epsilonEqualLimits(0.0, newGroundFactor);
             }
 
             //! Aircraft is starting
             static bool isGfStarting(double oldGroundFactor, double newGroundFactor)
             {
-                return isDoubleEpsilonEqual(0.0, oldGroundFactor) && isDoubleEpsilonEqual(1.0, newGroundFactor);
+                using namespace BlackMisc::Math;
+                return CMathUtils::epsilonEqualLimits(0.0, oldGroundFactor) && CMathUtils::epsilonEqualLimits(1.0, newGroundFactor);
             }
 
             //! Aircraft is landing
             static bool isGfLanding(double oldGroundFactor, double newGroundFactor)
             {
-                return isDoubleEpsilonEqual(1.0, oldGroundFactor) && isDoubleEpsilonEqual(0.0, newGroundFactor);
+                using namespace BlackMisc::Math;
+                return CMathUtils::epsilonEqualLimits(1.0, oldGroundFactor) && CMathUtils::epsilonEqualLimits(0.0, newGroundFactor);
             }
             //! @}
 
@@ -587,12 +592,6 @@ namespace BlackMisc
             int m_elvInfo = static_cast<int>(CAircraftSituation::NoElevationInfo); //!< where did we gnd.elevation from?
             double m_onGroundFactor = -1; //!< interpolated ground flag, 1..on ground, 0..not on ground, -1 no info
             QString m_onGroundGuessingDetails; //!< only for debugging, not transferred via DBus etc.
-
-            //! Equal double values?
-            static bool isDoubleEpsilonEqual(double d1, double d2)
-            {
-                return qAbs(d1 - d2) <= std::numeric_limits<double>::epsilon();
-            }
 
             BLACK_METACLASS(
                 CAircraftSituation,
