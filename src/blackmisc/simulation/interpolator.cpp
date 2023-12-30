@@ -260,7 +260,7 @@ namespace BlackMisc::Simulation
             const CInterpolatorPbh pbh = interpolant.pbh();
 
             // init interpolated situation
-            currentSituation = this->initInterpolatedSituation(pbh.getOldSituation(), pbh.getNewSituation());
+            currentSituation = this->initInterpolatedSituation(pbh.getStartSituation(), pbh.getEndSituation());
 
             // Pitch bank heading first, so follow up steps could use those values
             currentSituation.setHeading(pbh.getHeading());
@@ -269,7 +269,7 @@ namespace BlackMisc::Simulation
             currentSituation.setGroundSpeed(pbh.getGroundSpeed());
 
             // use derived interpolant function
-            const bool interpolateGndFlag = pbh.getNewSituation().hasGroundDetailsForGndInterpolation() && pbh.getOldSituation().hasGroundDetailsForGndInterpolation();
+            const bool interpolateGndFlag = pbh.getEndSituation().hasGroundDetailsForGndInterpolation() && pbh.getStartSituation().hasGroundDetailsForGndInterpolation();
             currentSituation = interpolant.interpolatePositionAndAltitude(currentSituation, interpolateGndFlag);
             if (currentSituation.isNull()) { break; }
 
@@ -284,7 +284,7 @@ namespace BlackMisc::Simulation
             if (!interpolateGndFlag) { CAircraftSituationChange::null().guessOnGround(currentSituation, m_model); }
 
             // as we now have the position and can interpolate elevation
-            currentSituation.interpolateElevation(pbh.getOldSituation(), pbh.getNewSituation());
+            currentSituation.interpolateElevation(pbh.getStartSituation(), pbh.getEndSituation());
             if (!currentSituation.hasGroundElevation())
             {
                 // we still have no elevation

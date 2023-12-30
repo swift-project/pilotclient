@@ -12,6 +12,16 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc::Simulation
 {
+    CInterpolatorPbh::CInterpolatorPbh(double simulationTimeFraction, const Aviation::CAircraftSituation &start, const Aviation::CAircraftSituation &end) : m_simulationTimeFraction(simulationTimeFraction),
+                                                                                                                                                            m_startSituation(start),
+                                                                                                                                                            m_endSituation(end)
+    {
+        if (CBuildConfig::isLocalDeveloperDebugBuild())
+        {
+            BLACK_VERIFY_X(isValidTimeFraction(m_simulationTimeFraction), Q_FUNC_INFO, "Time fraction needs to be within [0;1]");
+        }
+    }
+
     CAngle CInterpolatorPbh::interpolateAngle(const CAngle &begin, const CAngle &end, double timeFraction0to1)
     {
         // determine the right direction (to left, to right) we interpolate towards to
@@ -38,37 +48,31 @@ namespace BlackMisc::Simulation
     {
         // HINT: VTOL aircraft can change pitch/bank without changing position, planes cannot
         // Interpolate heading: HDG = (HdgB - HdgA) * t + HdgA
-        const CHeading headingBegin = m_oldSituation.getHeading();
-        const CHeading headingEnd = m_newSituation.getHeading();
+        const CHeading headingStart = m_startSituation.getHeading();
+        const CHeading headingEnd = m_endSituation.getHeading();
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            BLACK_VERIFY_X(headingBegin.getReferenceNorth() == headingEnd.getReferenceNorth(), Q_FUNC_INFO, "Need same reference");
+            BLACK_VERIFY_X(headingStart.getReferenceNorth() == headingEnd.getReferenceNorth(), Q_FUNC_INFO, "Need same reference");
         }
-        return CHeading(interpolateAngle(headingBegin, headingEnd, m_simulationTimeFraction), headingEnd.getReferenceNorth());
+        return CHeading(interpolateAngle(headingStart, headingEnd, m_simulationTimeFraction), headingEnd.getReferenceNorth());
     }
 
     CAngle CInterpolatorPbh::getPitch() const
     {
         // Interpolate Pitch: Pitch = (PitchB - PitchA) * t + PitchA
-        return interpolateAngle(m_oldSituation.getPitch(), m_newSituation.getPitch(), m_simulationTimeFraction);
+        return interpolateAngle(m_startSituation.getPitch(), m_endSituation.getPitch(), m_simulationTimeFraction);
     }
 
     CAngle CInterpolatorPbh::getBank() const
     {
         // Interpolate bank: Bank = (BankB - BankA) * t + BankA
-        return interpolateAngle(m_oldSituation.getBank(), m_newSituation.getBank(), m_simulationTimeFraction);
+        return interpolateAngle(m_startSituation.getBank(), m_endSituation.getBank(), m_simulationTimeFraction);
     }
 
     CSpeed CInterpolatorPbh::getGroundSpeed() const
     {
-        return (m_newSituation.getGroundSpeed() - m_oldSituation.getGroundSpeed()) * m_simulationTimeFraction + m_oldSituation.getGroundSpeed();
-    }
-
-    void CInterpolatorPbh::setSituations(const CAircraftSituation &older, const CAircraftSituation &newer)
-    {
-        m_oldSituation = older;
-        m_newSituation = newer;
+        return (m_endSituation.getGroundSpeed() - m_startSituation.getGroundSpeed()) * m_simulationTimeFraction + m_startSituation.getGroundSpeed();
     }
 
     void CInterpolatorPbh::setTimeFraction(double tf)
