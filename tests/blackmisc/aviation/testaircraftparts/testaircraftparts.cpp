@@ -82,7 +82,8 @@ namespace BlackMiscTest
     }
 } // ns
 
-BLACKTEST_APPLESS_MAIN(BlackMiscTest::CTestAircraftParts)
+//! main
+BLACKTEST_APPLESS_MAIN(BlackMiscTest::CTestAircraftParts);
 
 #include "testaircraftparts.moc"
 
