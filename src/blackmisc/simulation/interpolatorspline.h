@@ -68,12 +68,6 @@ namespace BlackMisc::Simulation
             //! Perform the interpolation
             Aviation::CAircraftSituation interpolatePositionAndAltitude(const Aviation::CAircraftSituation &currentSituation, bool interpolateGndFactor) const;
 
-            //! Old situation
-            const Aviation::CAircraftSituation &getOldSituation() const { return pbh().getOldSituation(); }
-
-            //! New situation
-            const Aviation::CAircraftSituation &getNewSituation() const { return pbh().getNewSituation(); }
-
             //! Set the time values
             void setTimes(qint64 currentTimeMs, double timeFraction, qint64 interpolatedTimeMs);
 
