@@ -1023,6 +1023,11 @@ namespace BlackGui::Components
             else
             {
                 CFlightPlan fp = CFlightPlan::fromSimBriefFormat(simBriefFP);
+
+                // Voice capability is not included from SimBrief -> set capability from UI
+                const QString currentVoiceCapability = ui->cb_VoiceCapabilities->currentText();
+                fp.setVoiceCapabilities(CFlightPlanRemarks::textToVoiceCapabilitiesRemarks(currentVoiceCapability));
+
                 this->fillWithFlightPlanData(fp);
             }
         } // no error
