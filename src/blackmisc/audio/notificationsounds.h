@@ -36,6 +36,10 @@ namespace BlackMisc::Audio
             PTTClickKeyDown = 1 << 7,
             PTTClickKeyUp = 1 << 8,
             // 1 << 9 previously used for PTTBlocked
+
+            // AFVClicked and AFVBlocked are not played back from the notification player itself (except for preview playback).
+            // Instead, they are provided from BlackSound::SampleProvider::Samples.
+            // They are included here to allow to disable playing them.
             AFVClicked = 1 << 14,
             AFVBlocked = 1 << 15
         };
