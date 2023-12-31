@@ -51,6 +51,8 @@ namespace BlackMisc::Aviation
     void CFlightPlanRemarks::setVoiceCapabilities(const CVoiceCapabilities &capabilities)
     {
         m_voiceCapabilities = capabilities;
+        const QString r = CFlightPlanRemarks::replaceVoiceCapabilities(m_voiceCapabilities.toFlightPlanRemarks(), m_remarks);
+        m_remarks = r;
     }
 
     bool CFlightPlanRemarks::hasAnyParsedRemarks() const
