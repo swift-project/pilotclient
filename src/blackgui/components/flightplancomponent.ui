@@ -872,7 +872,7 @@
           <property name="spacing">
            <number>6</number>
           </property>
-          <item row="6" column="1">
+          <item row="5" column="1">
            <widget class="QComboBox" name="cb_VoiceCapabilities">
             <item>
              <property name="text">
@@ -901,7 +901,7 @@
             </property>
            </widget>
           </item>
-          <item row="9" column="0">
+          <item row="8" column="0">
            <widget class="QLabel" name="lbl_RemarksGenerated">
             <property name="text">
              <string>Remarks</string>
@@ -911,7 +911,7 @@
             </property>
            </widget>
           </item>
-          <item row="5" column="1">
+          <item row="4" column="1">
            <widget class="QComboBox" name="cb_PerformanceCategory">
             <property name="toolTip">
              <string>Final Approach Speed</string>
@@ -948,16 +948,6 @@
             </item>
            </widget>
           </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="lbl_NavigationEquipment">
-            <property name="text">
-             <string>Navigation equipment</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
           <item row="2" column="0">
            <widget class="QLabel" name="lbl_SidsStars">
             <property name="text">
@@ -965,7 +955,7 @@
             </property>
            </widget>
           </item>
-          <item row="8" column="0">
+          <item row="7" column="0">
            <widget class="QLabel" name="lbl_Selcal">
             <property name="text">
              <string>SELCAL</string>
@@ -982,7 +972,7 @@
             </property>
            </widget>
           </item>
-          <item row="7" column="1">
+          <item row="6" column="1">
            <widget class="QComboBox" name="cb_PilotRating">
             <item>
              <property name="text">
@@ -1016,7 +1006,7 @@
             </item>
            </widget>
           </item>
-          <item row="9" column="1">
+          <item row="8" column="1">
            <widget class="QPlainTextEdit" name="pte_RemarksGenerated">
             <property name="maximumSize">
              <size>
@@ -1032,7 +1022,7 @@
             </property>
            </widget>
           </item>
-          <item row="11" column="1">
+          <item row="10" column="1">
            <widget class="QPlainTextEdit" name="pte_AdditionalRemarks">
             <property name="maximumSize">
              <size>
@@ -1055,7 +1045,7 @@
             </property>
            </widget>
           </item>
-          <item row="5" column="0">
+          <item row="4" column="0">
            <widget class="QLabel" name="lbl_PerformanceCategory">
             <property name="text">
              <string>Performance category</string>
@@ -1065,7 +1055,7 @@
             </property>
            </widget>
           </item>
-          <item row="13" column="1">
+          <item row="12" column="1">
            <widget class="QFrame" name="fr_Buttons">
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
@@ -1084,7 +1074,7 @@
             </layout>
            </widget>
           </item>
-          <item row="4" column="1">
+          <item row="3" column="1">
            <widget class="QComboBox" name="cb_RequiredNavigationPerformance">
             <item>
              <property name="text">
@@ -1106,7 +1096,7 @@
           <item row="1" column="1">
            <widget class="QLineEdit" name="le_AircraftRegistration"/>
           </item>
-          <item row="4" column="0">
+          <item row="3" column="0">
            <widget class="QLabel" name="lbl_RequiredNavigationPerformance">
             <property name="text">
              <string>Required Navigation Performance</string>
@@ -1116,17 +1106,17 @@
             </property>
            </widget>
           </item>
-          <item row="7" column="0">
+          <item row="6" column="0">
            <widget class="QLabel" name="lbl_PilotRating">
             <property name="text">
              <string>Pilot rating</string>
             </property>
            </widget>
           </item>
-          <item row="8" column="1">
+          <item row="7" column="1">
            <widget class="BlackGui::Components::CSelcalCodeSelector" name="frp_SelcalCode"/>
           </item>
-          <item row="6" column="0">
+          <item row="5" column="0">
            <widget class="QLabel" name="lbl_VoiceCapabilities">
             <property name="text">
              <string>Voice capabilities</string>
@@ -1136,39 +1126,7 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="1">
-           <widget class="QComboBox" name="cb_NavigationEquipment">
-            <property name="toolTip">
-             <string>How will you be navigating?</string>
-            </property>
-            <item>
-             <property name="text">
-              <string>VFR flying visually</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Direct VORs and NDBs</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Default GPS</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>GPS or FMC capable of SIDs/STARs</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>GPS oceanic certified</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="11" column="0" alignment="Qt::AlignTop">
+          <item row="10" column="0" alignment="Qt::AlignTop">
            <widget class="QPushButton" name="pb_AddRemarks">
             <property name="text">
              <string>add.remarks</string>
@@ -1234,7 +1192,6 @@
   <tabstop>le_AirlineOperator</tabstop>
   <tabstop>le_AircraftRegistration</tabstop>
   <tabstop>cb_NoSidsStarts</tabstop>
-  <tabstop>cb_NavigationEquipment</tabstop>
   <tabstop>cb_RequiredNavigationPerformance</tabstop>
   <tabstop>cb_PerformanceCategory</tabstop>
   <tabstop>cb_VoiceCapabilities</tabstop>

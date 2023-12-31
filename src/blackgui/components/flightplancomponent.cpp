@@ -136,7 +136,6 @@ namespace BlackGui::Components
         connect(ui->cb_VoiceCapabilities, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks, Qt::QueuedConnection);
         connect(ui->cb_VoiceCapabilities, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::syncVoiceComboBoxes, Qt::QueuedConnection);
         connect(ui->cb_VoiceCapabilitiesFirstPage, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::syncVoiceComboBoxes, Qt::QueuedConnection);
-        connect(ui->cb_NavigationEquipment, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks, Qt::QueuedConnection);
         connect(ui->cb_PerformanceCategory, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks, Qt::QueuedConnection);
         connect(ui->cb_PilotRating, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks, Qt::QueuedConnection);
         connect(ui->cb_RequiredNavigationPerformance, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks, Qt::QueuedConnection);
@@ -737,12 +736,6 @@ namespace BlackGui::Components
         if (v.contains("10")) { rem.append("RNP10 "); }
         else if (v.contains("4")) { rem.append("RNP4 "); }
 
-        v = ui->cb_NavigationEquipment->currentText().toUpper();
-        if (v.contains("VORS")) { rem.append("NAV/VORNDB "); }
-        else if (v.contains("SIDS")) { rem.append("NAV/GPSRNAV "); }
-        if (v.contains("DEFAULT")) { rem.append("NAV/GPS "); }
-        else if (v.contains("OCEANIC")) { rem.append("NAV/GPSOCEANIC "); }
-
         v = ui->cb_PerformanceCategory->currentText().toUpper();
         if (v.startsWith("A")) { rem.append("PER/A "); }
         else if (v.startsWith("B")) { rem.append("PER/B "); }
@@ -851,8 +844,7 @@ namespace BlackGui::Components
             msgs.push_back(CStatusMessage(this).validationInfo(u"No SID/STARs"));
             ui->cb_RequiredNavigationPerformance->setCurrentIndex(0);
             ui->cb_PerformanceCategory->setCurrentIndex(0);
-            ui->cb_NavigationEquipment->setCurrentIndex(0);
-            msgs.push_back(CStatusMessage(this).validationInfo(u"Set navigation and performance to VFR"));
+            msgs.push_back(CStatusMessage(this).validationInfo(u"Set performance to VFR"));
         }
         else
         {
@@ -866,8 +858,7 @@ namespace BlackGui::Components
                     msgs.push_back(CStatusMessage(this).validationInfo(u"Jet >=2 engines"));
                     msgs.push_back(CStatusMessage(this).validationInfo(u"SID/STARs"));
                     ui->cb_NoSidsStarts->setChecked(false);
-                    ui->cb_NavigationEquipment->setCurrentText("GPS or FMC capable of SIDs/STARs");
-                    msgs.push_back(CStatusMessage(this).validationInfo(u"GPS or FMC capable of SIDs/STARs"));
+                    msgs.push_back(CStatusMessage(this).validationInfo(u"Capable of SIDs/STARs"));
 
                     // reset those values
                     ui->cb_RequiredNavigationPerformance->setCurrentIndex(0);
@@ -965,15 +956,6 @@ namespace BlackGui::Components
         {
             CGuiUtility::setComboBoxValueByContainingString(ui->cb_VoiceCapabilitiesFirstPage, "RECEIVE");
             CGuiUtility::setComboBoxValueByContainingString(ui->cb_VoiceCapabilities, "RECEIVE");
-        }
-
-        if (remarks.contains("NAV/GPSRNAV"))
-        {
-            CGuiUtility::setComboBoxValueByContainingString(ui->cb_NavigationEquipment, "GPS OR FMC");
-        }
-        else if (remarks.contains("NAV/VORNDB"))
-        {
-            CGuiUtility::setComboBoxValueByContainingString(ui->cb_NavigationEquipment, "DIRECT VOR");
         }
 
         const int selcal = remarks.indexOf("SEL/");
