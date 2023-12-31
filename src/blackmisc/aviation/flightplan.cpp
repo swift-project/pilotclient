@@ -138,31 +138,6 @@ namespace BlackMisc::Aviation
         }
     }
 
-    void CFlightPlanRemarks::setIcaoEquipmentCodes(const QString &eq)
-    {
-        // https://en.wikipedia.org/wiki/Equipment_codes
-        const QString r = eq.toUpper().trimmed();
-        QStringList remarks;
-        if (r.isEmpty()) { return; }
-        if (r.contains('W'))
-        {
-            if (r.contains('G')) { remarks << "/L"; }
-            else if (r.contains('D') || r.contains('L') || r.contains('O')) { remarks << "/Z"; }
-            else if (r.contains('A')) { remarks << "/W"; }
-        }
-        else
-        {
-            if (r.contains('G')) { remarks << "/G"; }
-            else if (r.contains('D') || r.contains('L') || r.contains('O')) { remarks << "/I"; }
-        }
-
-        if (r.contains('G')) { remarks << "NAV/GPSRNAV"; }
-        else if (r.contains('D') || r.contains('L') || r.contains('O')) { remarks << "NAV/VORNDB"; }
-
-        m_remarks = remarks.join(" ");
-        this->parseFlightPlanRemarks(true);
-    }
-
     QString CFlightPlanRemarks::getRemark(const QString &remarks, const QString &marker)
     {
         const int maxIndex = remarks.size() - 1;
@@ -535,15 +510,25 @@ namespace BlackMisc::Aviation
             const int b = equipment.indexOf('-');
             const int e = equipment.indexOf('/');
 
-            CFlightPlanRemarks r = fp.getFlightPlanRemarks();
-            bool remarksChanged = false;
             if (e > b && e >= 0 && b >= 0 && equipment.size() > e)
             {
-                const QString icao = equipment.mid(b + 1, e - b - 1);
-                r.setIcaoEquipmentCodes(icao);
-                remarksChanged = true;
+                // Do not read aircraft ICAO code as this is read/overwritten from the simulator
+
+                const QChar wtcChar = equipment.mid(0, 1).at(0);
+                const CWakeTurbulenceCategory wtc(wtcChar);
+
+                const QString comNavEquipmentString = equipment.mid(b + 1, e - b - 1);
+                const CComNavEquipment comNavEquipment(comNavEquipmentString);
+
+                const QString ssrEquipmentString = equipment.mid(e + 1);
+                const CSsrEquipment ssrEquipment(ssrEquipmentString);
+
+                const CFlightPlanAircraftInfo info(fp.getAircraftInfo().getAircraftIcao(), comNavEquipment, ssrEquipment, wtc);
+                fp.setAircraftInfo(info);
             }
 
+            CFlightPlanRemarks r = fp.getFlightPlanRemarks();
+            bool remarksChanged = false;
             const QString selcal = aircraft.firstChildElement("selcal").text();
             if (selcal.length() == 4)
             {
@@ -557,7 +542,6 @@ namespace BlackMisc::Aviation
             }
         }
 
-        // read FP
         return fp;
     }
 

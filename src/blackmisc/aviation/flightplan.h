@@ -99,9 +99,6 @@ namespace BlackMisc::Aviation
         //! Empty remarks?
         bool isEmpty() const { return m_remarks.isEmpty(); }
 
-        //! Equipment codes (ICAO)
-        void setIcaoEquipmentCodes(const QString &eq);
-
         //! Already parsed?
         bool isParsed() const { return m_isParsed; }
 
