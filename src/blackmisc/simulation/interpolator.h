@@ -195,16 +195,6 @@ namespace BlackMisc
             //! Parts and situation interpolated
             CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber);
 
-            //! Takes input between 0 and 1 and returns output between 0 and 1 smoothed with an S-shaped curve.
-            //!
-            //! Useful for making interpolation seem smoother, efficiently as it just uses simple arithmetic.
-            //! \see https://en.wikipedia.org/wiki/Smoothstep
-            //! \see http://sol.gfxile.net/interpolation/
-            static double smootherStep(double x)
-            {
-                return x * x * x * (x * (x * 6.0 - 15.0) + 10.0);
-            }
-
             //! Attach an observer to read the interpolator's state for debugging
             //! \remark parts logging has a \c bool \c log flag
             void attachLogger(CInterpolationLogger *logger) { m_logger = logger; }
@@ -218,11 +208,6 @@ namespace BlackMisc
             //! Reset last interpolation to null
             //! \remark mainly needed in UNIT tests
             void resetLastInterpolation();
-
-            //! Clear all data
-            //! \remark mainly needed in UNIT tests
-            //! \private
-            void clear();
 
             //! Init, or re-init the corressponding model
             //! \remark either by passing a model or using the provider

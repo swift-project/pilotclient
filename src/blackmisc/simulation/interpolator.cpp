@@ -674,25 +674,6 @@ namespace BlackMisc::Simulation
     }
 
     template <typename Derived>
-    void CInterpolator<Derived>::clear()
-    {
-        this->resetLastInterpolation();
-        m_model = CAircraftModel();
-        m_currentSceneryOffset = CLength::null();
-        m_pastSituationsChange = CAircraftSituationChange::null();
-        m_currentSituations.clear();
-        m_currentTimeMsSinceEpoch = -1;
-        m_situationsLastModified = -1;
-        m_situationsLastModifiedUsed = -1;
-        m_currentInterpolationStatus.reset();
-        m_currentPartsStatus.reset();
-        m_interpolatedSituationsCounter = 0;
-        m_invalidSituations = 0;
-        m_lastInvalidLogTs = -1;
-        m_interpolationMessages.clear();
-    }
-
-    template <typename Derived>
     bool CInterpolator<Derived>::initIniterpolationStepData(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber)
     {
         Q_ASSERT_X(!m_callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
