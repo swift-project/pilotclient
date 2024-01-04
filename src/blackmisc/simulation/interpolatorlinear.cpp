@@ -35,6 +35,10 @@ namespace BlackMisc::Simulation
                                                                                                                                                                                       m_startSituation(startSituation), m_endSituation(endSituation),
                                                                                                                                                                                       m_simulationTimeFraction(timeFraction)
     {
+        if (CBuildConfig::isLocalDeveloperDebugBuild())
+        {
+            BLACK_VERIFY_X(isValidTimeFraction(m_simulationTimeFraction), Q_FUNC_INFO, "Time fraction needs to be within [0;1]");
+        }
         m_pbh = CInterpolatorPbh(m_simulationTimeFraction, startSituation, endSituation);
     }
 
