@@ -13,7 +13,7 @@ namespace BlackMisc::Simulation
                                                                                                                                                                                                         m_linear(callsign, p1, p2, p3, logger)
     {}
 
-    CInterpolationResult CInterpolatorMulti::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber)
+    CInterpolationResult CInterpolatorMulti::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber)
     {
         switch (setup.getInterpolatorMode())
         {

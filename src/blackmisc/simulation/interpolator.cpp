@@ -212,13 +212,11 @@ namespace BlackMisc::Simulation
     }
 
     template <typename Derived>
-    CInterpolationResult CInterpolator<Derived>::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber)
+    CInterpolationResult CInterpolator<Derived>::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber)
     {
         CInterpolationResult result;
         do
         {
-            // make sure we can also interpolate parts only (needed in unit tests)
-            if (aircraftNumber < 0) { aircraftNumber = 0; }
             const bool init = this->initIniterpolationStepData(currentTimeSinceEpoc, setup, aircraftNumber);
             Q_ASSERT_X(!m_currentInterpolationStatus.isInterpolated(), Q_FUNC_INFO, "Expect reset status");
             if (!m_unitTest && !init) { break; } // failure in real scenarios, unit tests move on

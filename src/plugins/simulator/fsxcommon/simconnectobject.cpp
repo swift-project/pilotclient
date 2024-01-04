@@ -205,7 +205,7 @@ namespace BlackSimPlugin::FsxCommon
         m_interpolator->attachLogger(logger);
     }
 
-    CInterpolationResult CSimConnectObject::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber) const
+    CInterpolationResult CSimConnectObject::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber) const
     {
         if (!m_interpolator)
         {

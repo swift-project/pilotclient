@@ -1996,7 +1996,7 @@ namespace BlackSimPlugin::FsxCommon
         // interpolation for all remote aircraft
         const QList<CSimConnectObject> simObjects(m_simConnectObjects.values());
 
-        int simObjectNumber = 0;
+        uint32_t simObjectNumber = 0;
         const bool traceSendId = this->isTracingSendId();
         const bool updateAllAircraft = this->isUpdateAllRemoteAircraft(currentTimestamp);
         for (const CSimConnectObject &simObject : simObjects)

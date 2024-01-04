@@ -1048,7 +1048,7 @@ namespace BlackSimPlugin::XPlane
         PlanesSurfaces planesSurfaces;
         PlanesTransponders planesTransponders;
 
-        int aircraftNumber = 0;
+        uint32_t aircraftNumber = 0;
         const bool updateAllAircraft = this->isUpdateAllRemoteAircraft(currentTimestamp);
         const CCallsignSet callsignsInRange = this->getAircraftInRangeCallsigns();
         for (const CXPlaneMPAircraft &xplaneAircraft : std::as_const(m_xplaneAircraftObjects))

@@ -105,7 +105,7 @@ namespace BlackMiscTest
             // from:  ts - 2 * deltaT + offset
             // to:    ts              + offset
 
-            const CInterpolationResult result = interpolator.getInterpolation(currentTime, setup);
+            const CInterpolationResult result = interpolator.getInterpolation(currentTime, setup, 0);
             const CAircraftSituation currentSituation(result);
             QVERIFY2(result.getInterpolationStatus().isInterpolated(), "Value was not interpolated");
             const double latDeg = currentSituation.getPosition().latitude().valueRounded(CAngleUnit::deg(), 5);
@@ -139,7 +139,7 @@ namespace BlackMiscTest
                 // This will use range
                 // from:  ts - 2* deltaT + offset
                 // to:    ts             + offset
-                const CInterpolationResult result = interpolator.getInterpolation(currentTime, setup);
+                const CInterpolationResult result = interpolator.getInterpolation(currentTime, setup, 0);
                 const CAircraftSituation currentSituation(result);
                 QVERIFY2(result.getInterpolationStatus().isInterpolated(), "Not interpolated");
                 QVERIFY2(!currentSituation.getCallsign().isEmpty(), "Empty callsign");
@@ -163,7 +163,7 @@ namespace BlackMiscTest
         timer.start();
         for (qint64 currentTime = ts - 2 * deltaT; currentTime < ts; currentTime += 250)
         {
-            const CInterpolationResult result = interpolator.getInterpolation(currentTime, setup);
+            const CInterpolationResult result = interpolator.getInterpolation(currentTime, setup, 0);
             fetchedParts++;
             QVERIFY2(result.getPartsStatus().isSupportingParts(), "Parts not supported");
         }

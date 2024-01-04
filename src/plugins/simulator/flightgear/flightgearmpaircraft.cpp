@@ -40,7 +40,7 @@ namespace BlackSimPlugin::Flightgear
         m_interpolator->attachLogger(logger);
     }
 
-    CInterpolationResult CFlightgearMPAircraft::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber) const
+    CInterpolationResult CFlightgearMPAircraft::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber) const
     {
         Q_ASSERT(m_interpolator);
         return m_interpolator->getInterpolation(currentTimeSinceEpoc, setup, aircraftNumber);

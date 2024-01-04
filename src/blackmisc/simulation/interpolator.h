@@ -193,7 +193,7 @@ namespace BlackMisc
             const Aviation::CAircraftSituation &getLastInterpolatedSituation() const { return m_lastSituation; }
 
             //! Parts and situation interpolated
-            CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber = -1);
+            CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber);
 
             //! Takes input between 0 and 1 and returns output between 0 and 1 smoothed with an S-shaped curve.
             //!
