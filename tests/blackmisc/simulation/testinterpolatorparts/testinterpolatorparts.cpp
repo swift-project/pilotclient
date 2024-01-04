@@ -46,8 +46,6 @@ namespace BlackMiscTest
         const CInterpolationAndRenderingSetupPerCallsign setup(cs, gSetup);
 
         CRemoteAircraftProviderDummy provider;
-        CInterpolatorSpline interpolator(cs, nullptr, nullptr, &provider);
-        interpolator.markAsUnitTest();
 
         // fixed time so everything can be debugged
         const qint64 ts = 1425000000000; // QDateTime::currentMSecsSinceEpoch()
@@ -70,32 +68,41 @@ namespace BlackMiscTest
 
         // Testing for a time >> last time
         // all on ground flags true
-        provider.insertNewAircraftParts(cs, parts, false); // we work with 0 offsets here
-        QVERIFY2(provider.remoteAircraftPartsCount(cs) == parts.size(), "Wrong parts size");
+        {
+            CInterpolatorSpline interpolator(cs, nullptr, nullptr, &provider);
+            interpolator.markAsUnitTest();
 
-        CInterpolationResult result = interpolator.getInterpolation(farFuture, setup);
-        CAircraftParts p = result;
-        qint64 pTs = p.getAdjustedMSecsSinceEpoch();
-        QVERIFY2(result.getPartsStatus().isSupportingParts(), "Should support parts");
-        QVERIFY2(pTs == ts, "Expect latest ts");
-        result = interpolator.getInterpolation(farPast, setup);
-        p = result;
-        pTs = p.getAdjustedMSecsSinceEpoch();
-        QVERIFY2(result.getPartsStatus().isSupportingParts(), "Should support parts");
-        QVERIFY2(pTs == oldestTs, "Expect oldest ts");
+            provider.insertNewAircraftParts(cs, parts, false); // we work with 0 offsets here
+            QVERIFY2(provider.remoteAircraftPartsCount(cs) == parts.size(), "Wrong parts size");
+
+            CInterpolationResult result = interpolator.getInterpolation(farFuture, setup, 0);
+            CAircraftParts p = result;
+            qint64 pTs = p.getAdjustedMSecsSinceEpoch();
+            QVERIFY2(result.getPartsStatus().isSupportingParts(), "Should support parts");
+            QVERIFY2(pTs == ts, "Expect latest ts");
+            result = interpolator.getInterpolation(farPast, setup, 0);
+            p = result;
+            pTs = p.getAdjustedMSecsSinceEpoch();
+            QVERIFY2(result.getPartsStatus().isSupportingParts(), "Should support parts");
+            QVERIFY2(pTs == oldestTs, "Expect oldest ts");
+        }
 
         // Testing for a time >> last time
-        // all on ground flags true
-        interpolator.clear();
-        provider.clear();
+        // all on ground flags false
+        {
+            provider.clear();
 
-        parts.setOnGround(false);
-        provider.insertNewAircraftParts(cs, parts, false); // we work with 0 offsets here
-        result = interpolator.getInterpolation(farFuture, setup);
-        p = result;
-        pTs = p.getAdjustedMSecsSinceEpoch();
-        QVERIFY2(result.getPartsStatus().isSupportingParts(), "Should support parts");
-        QVERIFY2(p.getAdjustedMSecsSinceEpoch() == pTs, "Expect latest ts");
+            CInterpolatorSpline interpolator(cs, nullptr, nullptr, &provider);
+            interpolator.markAsUnitTest();
+
+            parts.setOnGround(false);
+            provider.insertNewAircraftParts(cs, parts, false); // we work with 0 offsets here
+            CInterpolationResult result = interpolator.getInterpolation(farFuture, setup, 0);
+            CAircraftParts p = result;
+            qint64 pTs = p.getAdjustedMSecsSinceEpoch();
+            QVERIFY2(result.getPartsStatus().isSupportingParts(), "Should support parts");
+            QVERIFY2(p.getAdjustedMSecsSinceEpoch() == pTs, "Expect latest ts");
+        }
     }
 
     void CTestInterpolatorParts::partsToSituationGndFlag()
