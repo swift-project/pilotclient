@@ -192,7 +192,11 @@ namespace BlackMisc
             //! Latest interpolation result
             const Aviation::CAircraftSituation &getLastInterpolatedSituation() const { return m_lastSituation; }
 
-            //! Parts and situation interpolated
+            //! Get interpolated situation
+            //! \param currentTimeSinceEpoch milliseconds since epoch for which the situation should be interpolated
+            //! \param setup interpolation setup
+            //! \param aircraftNumber number used to spread the computational load of part interpolation
+            //! \return interpolation result
             CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber);
 
             //! Attach an observer to read the interpolator's state for debugging
@@ -231,9 +235,9 @@ namespace BlackMisc
                           ISimulationEnvironmentProvider *simEnvProvider, IInterpolationSetupProvider *setupProvider, IRemoteAircraftProvider *remoteProvider,
                           CInterpolationLogger *logger);
 
-            //! Inits all data for this current interpolation step
-            //! \param currentTimeSinceEpoch
-            //! \param setup
+            //! Inits all data members for this current interpolation step
+            //! \param currentTimeSinceEpoch milliseconds since epoch for which the situation should be interpolated
+            //! \param setup interpolation setup
             //! \param aircraftNumber passing the aircraft number allows to equally distribute among the steps and not to do it always together for all aircraft
             bool initIniterpolationStepData(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber);
 
@@ -260,7 +264,7 @@ namespace BlackMisc
             static double groundInterpolationFactor();
 
             const Aviation::CCallsign m_callsign; //!< corresponding callsign
-            CAircraftModel m_model; //!< corresponding model
+            CAircraftModel m_model; //!< corresponding model (required for CG)
 
             // values for current interpolation step
             qint64 m_currentTimeMsSinceEpoch = -1; //!< current time
