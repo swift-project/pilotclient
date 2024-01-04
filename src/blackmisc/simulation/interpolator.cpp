@@ -212,11 +212,11 @@ namespace BlackMisc::Simulation
     }
 
     template <typename Derived>
-    CInterpolationResult CInterpolator<Derived>::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber)
+    CInterpolationResult CInterpolator<Derived>::getInterpolation(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber)
     {
         CInterpolationResult result;
 
-        const bool init = this->initIniterpolationStepData(currentTimeSinceEpoc, setup, aircraftNumber);
+        const bool init = this->initIniterpolationStepData(currentTimeSinceEpoch, setup, aircraftNumber);
         Q_ASSERT_X(!m_currentInterpolationStatus.isInterpolated(), Q_FUNC_INFO, "Expect reset status");
         if (init || m_unitTest) // ignore failure in unittest
         {
@@ -673,7 +673,7 @@ namespace BlackMisc::Simulation
     }
 
     template <typename Derived>
-    bool CInterpolator<Derived>::initIniterpolationStepData(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber)
+    bool CInterpolator<Derived>::initIniterpolationStepData(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber)
     {
         Q_ASSERT_X(!m_callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
 
@@ -681,7 +681,7 @@ namespace BlackMisc::Simulation
         const bool slowUpdateStep = (((m_interpolatedSituationsCounter + aircraftNumber) % 25) == 0); // flag when parts are updated, which need not to be updated every time
         const bool changedSituations = lastModifed > m_situationsLastModified;
 
-        m_currentTimeMsSinceEpoch = currentTimeSinceEpoc;
+        m_currentTimeMsSinceEpoch = currentTimeSinceEpoch;
         m_currentInterpolationStatus.reset();
         m_currentPartsStatus.reset();
         m_currentSetup = setup;

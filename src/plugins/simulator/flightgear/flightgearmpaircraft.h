@@ -57,7 +57,7 @@ namespace BlackSimPlugin::Flightgear
         void attachInterpolatorLogger(BlackMisc::Simulation::CInterpolationLogger *logger) const;
 
         //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolation
-        BlackMisc::Simulation::CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoc, const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber) const;
+        BlackMisc::Simulation::CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoch, const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber) const;
 
         //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolationMessages
         BlackMisc::CStatusMessageList getInterpolationMessages(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;

@@ -40,10 +40,10 @@ namespace BlackSimPlugin::XPlane
         m_interpolator->attachLogger(logger);
     }
 
-    CInterpolationResult CXPlaneMPAircraft::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber) const
+    CInterpolationResult CXPlaneMPAircraft::getInterpolation(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber) const
     {
         Q_ASSERT(m_interpolator);
-        return m_interpolator->getInterpolation(currentTimeSinceEpoc, setup, aircraftNumber);
+        return m_interpolator->getInterpolation(currentTimeSinceEpoch, setup, aircraftNumber);
     }
 
     CStatusMessageList CXPlaneMPAircraft::getInterpolationMessages(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
