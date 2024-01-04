@@ -6,18 +6,12 @@
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/pq/length.h"
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/range.h"
-#include "blackmisc/sequence.h"
-#include "blackmisc/statusmessage.h"
 #include "blackconfig/buildconfig.h"
 
-#include <QDateTime>
-#include <QList>
 #include <array>
 
 using namespace BlackConfig;

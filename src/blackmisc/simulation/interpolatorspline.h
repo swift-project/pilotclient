@@ -11,8 +11,6 @@
 #include "blackmisc/simulation/interpolant.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/blackmiscexport.h"
-#include <QString>
-#include <QtGlobal>
 
 namespace BlackMisc::Simulation
 {
