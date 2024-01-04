@@ -193,7 +193,7 @@ namespace BlackMisc
             const Aviation::CAircraftSituation &getLastInterpolatedSituation() const { return m_lastSituation; }
 
             //! Parts and situation interpolated
-            CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber);
+            CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber);
 
             //! Attach an observer to read the interpolator's state for debugging
             //! \remark parts logging has a \c bool \c log flag
@@ -232,10 +232,10 @@ namespace BlackMisc
                           CInterpolationLogger *logger);
 
             //! Inits all data for this current interpolation step
-            //! \param currentTimeSinceEpoc
+            //! \param currentTimeSinceEpoch
             //! \param setup
             //! \param aircraftNumber passing the aircraft number allows to equally distribute among the steps and not to do it always together for all aircraft
-            bool initIniterpolationStepData(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber);
+            bool initIniterpolationStepData(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber);
 
             //! Init the interpolated situation
             Aviation::CAircraftSituation initInterpolatedSituation(const Aviation::CAircraftSituation &oldSituation, const Aviation::CAircraftSituation &newSituation) const;
