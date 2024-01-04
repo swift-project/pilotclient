@@ -18,8 +18,8 @@
 #include "blackmisc/logcategories.h"
 #include "blackmisc/statusmessagelist.h"
 
-#include <QObject>
 #include <QString>
+#include <QStringList>
 #include <QtGlobal>
 #include <QTimer>
 
