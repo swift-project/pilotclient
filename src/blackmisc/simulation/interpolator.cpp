@@ -215,17 +215,16 @@ namespace BlackMisc::Simulation
     CInterpolationResult CInterpolator<Derived>::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber)
     {
         CInterpolationResult result;
-        do
+
+        const bool init = this->initIniterpolationStepData(currentTimeSinceEpoc, setup, aircraftNumber);
+        Q_ASSERT_X(!m_currentInterpolationStatus.isInterpolated(), Q_FUNC_INFO, "Expect reset status");
+        if (init || m_unitTest) // ignore failure in unittest
         {
-            const bool init = this->initIniterpolationStepData(currentTimeSinceEpoc, setup, aircraftNumber);
-            Q_ASSERT_X(!m_currentInterpolationStatus.isInterpolated(), Q_FUNC_INFO, "Expect reset status");
-            if (!m_unitTest && !init) { break; } // failure in real scenarios, unit tests move on
             Q_ASSERT_X(m_currentTimeMsSinceEpoch > 0, Q_FUNC_INFO, "No valid timestamp, interpolator initialized?");
             const CAircraftSituation interpolatedSituation = this->getInterpolatedSituation();
             const CAircraftParts interpolatedParts = this->getInterpolatedOrGuessedParts(aircraftNumber);
             result.setValues(interpolatedSituation, interpolatedParts);
         }
-        while (false);
 
         result.setStatus(m_currentInterpolationStatus, m_currentPartsStatus);
         return result;
