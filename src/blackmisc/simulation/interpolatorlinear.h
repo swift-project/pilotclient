@@ -41,10 +41,10 @@ namespace BlackMisc
             public:
                 //! @{
                 //! Constructor
-                CInterpolant() {}
-                CInterpolant(const Aviation::CAircraftSituation &oldSituation);
-                CInterpolant(const Aviation::CAircraftSituation &oldSituation, const CInterpolatorPbh &pbh);
-                CInterpolant(const Aviation::CAircraftSituation &oldSituation, const Aviation::CAircraftSituation &newSituation, double timeFraction, qint64 interpolatedTime);
+                CInterpolant() = default;
+                CInterpolant(const Aviation::CAircraftSituation &startSituation);
+                CInterpolant(const Aviation::CAircraftSituation &startSituation, const CInterpolatorPbh &pbh);
+                CInterpolant(const Aviation::CAircraftSituation &startSituation, const Aviation::CAircraftSituation &endSituation, double timeFraction, qint64 interpolatedTime);
                 //! @}
 
                 //! Perform the interpolation
@@ -53,15 +53,15 @@ namespace BlackMisc
                 //! \return \p situation with interpolated position and altitude, updated timestamp and possibly interpolated GND factor
                 Aviation::CAircraftSituation interpolatePositionAndAltitude(const Aviation::CAircraftSituation &situation, bool interpolateGndFactor) const;
 
-                //! Old situation
-                const Aviation::CAircraftSituation &getOldSituation() const { return m_oldSituation; }
+                //! Start situation
+                const Aviation::CAircraftSituation &getStartSituation() const { return m_startSituation; }
 
-                //! New situation
-                const Aviation::CAircraftSituation &getNewSituation() const { return m_newSituation; }
+                //! End situation
+                const Aviation::CAircraftSituation &getEndSituation() const { return m_endSituation; }
 
             private:
-                Aviation::CAircraftSituation m_oldSituation;
-                Aviation::CAircraftSituation m_newSituation;
+                Aviation::CAircraftSituation m_startSituation;
+                Aviation::CAircraftSituation m_endSituation;
                 double m_simulationTimeFraction = 0.0; //!< 0..1
             };
 
