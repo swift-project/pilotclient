@@ -85,7 +85,6 @@ namespace BlackMisc::Simulation
     template <typename Derived>
     CAircraftSituationList CInterpolator<Derived>::remoteAircraftSituationsAndChange(const CInterpolationAndRenderingSetupPerCallsign &setup)
     {
-        // const bool vtol = setup.isForcingFullInterpolation() || m_model.isVtol();
         CAircraftSituationList validSituations = this->remoteAircraftSituations(m_callsign);
 
         // get the changes, we need the second value as we want to look in the past
