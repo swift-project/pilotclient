@@ -401,8 +401,6 @@ namespace BlackMisc::Simulation
     template <typename Derived>
     CAircraftParts CInterpolator<Derived>::getInterpolatedParts()
     {
-        // (!) this code is used by linear and spline interpolator
-
         // Parts are supposed to be in correct order, latest first
         const CAircraftPartsList validParts = this->remoteAircraftParts(m_callsign);
 
@@ -416,22 +414,20 @@ namespace BlackMisc::Simulation
 
         m_currentPartsStatus.setSupportsParts(true);
         CAircraftParts currentParts;
-        do
-        {
-            // find the first parts earlier than the current time
-            const auto pivot = std::partition_point(validParts.begin(), validParts.end(), [=](auto &&p) { return p.getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch; });
-            const auto partsNewer = makeRange(validParts.begin(), pivot).reverse();
-            const auto partsOlder = makeRange(pivot, validParts.end());
 
-            // if (partsOlder.isEmpty()) { currentParts = *(partsNewer.end() - 1); break; }
-            if (partsOlder.isEmpty())
-            {
-                currentParts = *(partsNewer.begin());
-                break;
-            }
+        // find the first parts earlier than the current time
+        const auto pivot = std::partition_point(validParts.begin(), validParts.end(), [=](auto &&p) { return p.getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch; });
+        const auto partsNewer = makeRange(validParts.begin(), pivot).reverse();
+        const auto partsOlder = makeRange(pivot, validParts.end());
+
+        if (partsOlder.isEmpty())
+        {
+            currentParts = *(partsNewer.begin());
+        }
+        else
+        {
             currentParts = partsOlder.front(); // latest older parts
         }
-        while (false);
 
         this->logParts(currentParts, validParts.size(), false);
         return currentParts;
