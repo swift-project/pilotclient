@@ -209,9 +209,7 @@ namespace BlackSimPlugin::FsxCommon
     {
         if (!m_interpolator)
         {
-            CInterpolationResult result;
-            result.reset();
-            return result;
+            return {};
         }
         return m_interpolator->getInterpolation(currentTimeSinceEpoch, setup, aircraftNumber);
     }
