@@ -539,11 +539,15 @@ add_library(misc SHARED
         simulation/interpolationsetupprovider.h
         simulation/aircraftmodellist.h
         simulation/interpolationsetupprovider.cpp
+        simulation/interpolationstatus.cpp
+        simulation/interpolationstatus.h
         simulation/interpolatorlinear.h
         simulation/backgroundvalidation.cpp
         simulation/airspaceaircraftsnapshot.cpp
         simulation/autopublishdata.h
         simulation/interpolationrenderingsetup.h
+        simulation/interpolationresult.cpp
+        simulation/interpolationresult.h
         simulation/matchingscriptmisc.h
         simulation/interpolationsetuplist.cpp
         simulation/remoteaircraftprovider.h
@@ -605,6 +609,8 @@ add_library(misc SHARED
         simulation/simulatorinfo.cpp
         simulation/matchingstatistics.cpp
         simulation/ownaircraftproviderdummy.cpp
+        simulation/partsstatus.cpp
+        simulation/partsstatus.h
         simulation/simulatorinfolist.cpp
         simulation/aircraftmodelloader.cpp
         simulation/distributor.h

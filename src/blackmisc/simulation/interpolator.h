@@ -6,6 +6,9 @@
 #ifndef BLACKMISC_SIMULATION_INTERPOLATOR_H
 #define BLACKMISC_SIMULATION_INTERPOLATOR_H
 
+#include "blackmisc/simulation/interpolationresult.h"
+#include "blackmisc/simulation/interpolationstatus.h"
+#include "blackmisc/simulation/partsstatus.h"
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/interpolationsetupprovider.h"
@@ -35,148 +38,6 @@ namespace BlackMisc
         class CInterpolationLogger;
         class CInterpolatorLinear;
         class CInterpolatorSpline;
-
-        //! Status of interpolation
-        struct BLACKMISC_EXPORT CInterpolationStatus
-        {
-        public:
-            //! Did interpolation succeed?
-            bool isInterpolated() const { return m_isInterpolated; }
-
-            //! Set succeeded
-            void setInterpolated(bool interpolated) { m_isInterpolated = interpolated; }
-
-            //! Interpolating between 2 same situations?
-            bool isSameSituation() const { return m_isSameSituation; }
-
-            //! Interpolating between 2 same situations?
-            void setSameSituation(bool same) { m_isSameSituation = same; }
-
-            //! Set situations count
-            void setSituationsCount(int count) { m_situations = count; }
-
-            //! Extra info
-            void setExtraInfo(const QString &info);
-
-            //! Set succeeded
-            void setInterpolatedAndCheckSituation(bool succeeded, const Aviation::CAircraftSituation &situation);
-
-            //! Is the corresponding position valid?
-            bool hasValidSituation() const { return m_isValidSituation; }
-
-            //! Valid interpolated situation
-            bool hasValidInterpolatedSituation() const;
-
-            //! Is that a valid position?
-            void checkIfValidSituation(const Aviation::CAircraftSituation &situation);
-
-            //! Reset to default values
-            void reset();
-
-            //! Info string
-            QString toQString() const;
-
-        private:
-            bool m_isInterpolated = false; //!< position is interpolated (means enough values, etc.)
-            bool m_isValidSituation = false; //!< is valid situation
-            bool m_isSameSituation = false; //!< interpolation between 2 same situations
-            int m_situations = -1; //!< number of situations used for interpolation
-            QString m_extraInfo; //!< optional details
-        };
-
-        //! Status regarding parts
-        struct BLACKMISC_EXPORT CPartsStatus
-        {
-        public:
-            //! Ctor
-            CPartsStatus() {}
-
-            //! Ctor
-            CPartsStatus(bool supportsParts) : m_supportsParts(supportsParts) {}
-
-            //! Supporting parts
-            bool isSupportingParts() const { return m_supportsParts; }
-
-            //! Set support flag
-            void setSupportsParts(bool supports) { m_supportsParts = supports; }
-
-            //! Is a reused parts object?
-            //! \remark means using last value again
-            bool isReusedParts() const { return m_resusedParts; }
-
-            //! Mark as reused
-            void setReusedParts(bool reused) { m_resusedParts = reused; }
-
-            //! Same parts as last parts?
-            bool isSameParts() const { return m_isSameParts; }
-
-            //! Same parts as last parts?
-            void setSameParts(bool same) { m_isSameParts = same; }
-
-            //! Reset to default values
-            void reset();
-
-            //! Info string
-            QString toQString() const;
-
-        private:
-            bool m_supportsParts = false; //!< supports parts for given callsign
-            bool m_resusedParts = false; //!< reusing from last step
-            bool m_isSameParts = false; //!< same as last parts?
-        };
-
-        //! Combined results
-        class BLACKMISC_EXPORT CInterpolationResult
-        {
-        public:
-            //! Ctor
-            CInterpolationResult();
-
-            //! Get situation
-            const Aviation::CAircraftSituation &getInterpolatedSituation() const { return m_interpolatedSituation; }
-
-            //! Get parts (interpolated or guessed)
-            const Aviation::CAircraftParts &getInterpolatedParts() const { return m_interpolatedParts; }
-
-            //! Get status
-            const CInterpolationStatus &getInterpolationStatus() const { return m_interpolationStatus; }
-
-            //! Get status
-            const CPartsStatus &getPartsStatus() const { return m_partsStatus; }
-
-            //! Set situation
-            void setInterpolatedSituation(const Aviation::CAircraftSituation &situation) { m_interpolatedSituation = situation; }
-
-            //! Set parts (interpolated or guessed)
-            void setInterpolatedParts(const Aviation::CAircraftParts &parts) { m_interpolatedParts = parts; }
-
-            //! Set values
-            void setValues(const Aviation::CAircraftSituation &situation, const Aviation::CAircraftParts &parts);
-
-            //! Set status
-            void setInterpolationStatus(const CInterpolationStatus &status) { m_interpolationStatus = status; }
-
-            //! Set status
-            void setPartsStatus(const CPartsStatus &status) { m_partsStatus = status; }
-
-            //! Set status values
-            void setStatus(const CInterpolationStatus &interpolation, const CPartsStatus &parts);
-
-            //! Reset values
-            void reset();
-
-            //! @{
-            //! Implicit conversion
-            operator const Aviation::CAircraftSituation &() const { return m_interpolatedSituation; }
-            operator const Aviation::CAircraftParts &() const { return m_interpolatedParts; }
-            //! @}
-
-        private:
-            Aviation::CAircraftSituation m_interpolatedSituation; //!< interpolated situation
-            Aviation::CAircraftParts m_interpolatedParts; //!< guessed or interpolated parts
-            CInterpolationStatus m_interpolationStatus; //!< interpolation status
-            CPartsStatus m_partsStatus; //!< parts status
-        };
 
         //! Interpolator, calculation inbetween positions
         template <typename Derived>

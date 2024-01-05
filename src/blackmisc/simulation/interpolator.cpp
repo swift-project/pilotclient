@@ -500,7 +500,7 @@ namespace BlackMisc::Simulation
             if (m_interpolationMessages.isEmpty()) { CLogMessage::preformatted(m); }
             m_interpolationMessages.push_back(m);
         }
-        m_currentPartsStatus.reset();
+        m_currentPartsStatus = {};
         return CAircraftParts::null();
     }
 
@@ -682,8 +682,8 @@ namespace BlackMisc::Simulation
         const bool changedSituations = lastModifed > m_situationsLastModified;
 
         m_currentTimeMsSinceEpoch = currentTimeSinceEpoch;
-        m_currentInterpolationStatus.reset();
-        m_currentPartsStatus.reset();
+        m_currentInterpolationStatus = {};
+        m_currentPartsStatus = {};
         m_currentSetup = setup;
 
         if (changedSituations)
@@ -774,85 +774,6 @@ namespace BlackMisc::Simulation
     void CInterpolator<Derived>::markAsUnitTest()
     {
         m_unitTest = true;
-    }
-
-    CInterpolationResult::CInterpolationResult()
-    {
-        this->reset();
-    }
-
-    void CInterpolationResult::setValues(const CAircraftSituation &situation, const CAircraftParts &parts)
-    {
-        m_interpolatedSituation = situation;
-        m_interpolatedParts = parts;
-    }
-
-    void CInterpolationResult::setStatus(const CInterpolationStatus &interpolation, const CPartsStatus &parts)
-    {
-        m_interpolationStatus = interpolation;
-        m_partsStatus = parts;
-    }
-
-    void CInterpolationResult::reset()
-    {
-        m_interpolatedSituation = CAircraftSituation::null();
-        m_interpolatedParts = CAircraftParts::null();
-        m_interpolationStatus.reset();
-        m_partsStatus.reset();
-    }
-
-    void CInterpolationStatus::setExtraInfo(const QString &info)
-    {
-        m_extraInfo = info;
-    }
-
-    void CInterpolationStatus::setInterpolatedAndCheckSituation(bool succeeded, const CAircraftSituation &situation)
-    {
-        m_isInterpolated = succeeded;
-        this->checkIfValidSituation(situation);
-    }
-
-    void CInterpolationStatus::checkIfValidSituation(const CAircraftSituation &situation)
-    {
-        m_isValidSituation = !situation.isPositionOrAltitudeNull();
-        if (!m_isValidSituation) { m_isValidSituation = false; }
-    }
-
-    bool CInterpolationStatus::hasValidInterpolatedSituation() const
-    {
-        return m_isInterpolated && m_isValidSituation;
-    }
-
-    void CInterpolationStatus::reset()
-    {
-        m_extraInfo.clear();
-        m_isValidSituation = false;
-        m_isInterpolated = false;
-        m_isSameSituation = false;
-        m_situations = -1;
-    }
-
-    QString CInterpolationStatus::toQString() const
-    {
-        return QStringLiteral("Interpolated: ") % boolToYesNo(m_isInterpolated) %
-               QStringLiteral(" | situations: ") % QString::number(m_situations) %
-               QStringLiteral(" | situation valid: ") % boolToYesNo(m_isValidSituation) %
-               QStringLiteral(" | same: ") % boolToYesNo(m_isSameSituation) %
-               (m_extraInfo.isEmpty() ? QString() : QStringLiteral(" info: ") % m_extraInfo);
-    }
-
-    void CPartsStatus::reset()
-    {
-        m_supportsParts = false;
-        m_resusedParts = false;
-        m_isSameParts = false;
-    }
-
-    QString CPartsStatus::toQString() const
-    {
-        return QStringLiteral("Supported parts: ") % boolToYesNo(m_supportsParts) %
-               QStringLiteral(" | reused: ") % boolToYesNo(m_resusedParts) %
-               QStringLiteral(" | same: ") % boolToYesNo(m_isSameParts);
     }
 
     // see here for the reason of thess forward instantiations
