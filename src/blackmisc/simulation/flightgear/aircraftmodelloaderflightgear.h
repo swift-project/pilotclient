@@ -1,6 +1,9 @@
 // SPDX-FileCopyrightText: Copyright (C) 2019 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
+#ifndef BLACKMISC_SIMULATION_FLIGHTGEAR_AIRCRAFTMODELLOADERFLIGHTGEAR_H
+#define BLACKMISC_SIMULATION_FLIGHTGEAR_AIRCRAFTMODELLOADERFLIGHTGEAR_H
+
 #include "blackmisc/simulation/aircraftmodelloader.h"
 #include <QPointer>
 
@@ -37,3 +40,5 @@ namespace BlackMisc::Simulation::Flightgear
         CAircraftModelList performParsing(const QStringList &rootDirectories, const QStringList &excludeDirectories);
     };
 }
+
+#endif // BLACKMISC_SIMULATION_FLIGHTGEAR_AIRCRAFTMODELLOADERFLIGHTGEAR_H
