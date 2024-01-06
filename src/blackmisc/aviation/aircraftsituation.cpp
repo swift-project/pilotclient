@@ -148,7 +148,6 @@ namespace BlackMisc::Aviation
 
     const QString &CAircraftSituation::onGroundDetailsToString(CAircraftSituation::OnGroundDetails reliability)
     {
-        static const QString elv("elevation");
         static const QString elvCg("elevation/CG");
         static const QString interpolation("interpolation");
         static const QString guess("guessing");
@@ -156,18 +155,15 @@ namespace BlackMisc::Aviation
         static const QString outOwnAircraft("own aircraft");
         static const QString inNetwork("from network");
         static const QString inFromParts("from parts");
-        static const QString inNoGndInfo("no gnd.info");
 
         switch (reliability)
         {
-        case CAircraftSituation::OnGroundByElevation: return elv;
         case CAircraftSituation::OnGroundByElevationAndCG: return elvCg;
         case CAircraftSituation::OnGroundByGuessing: return guess;
         case CAircraftSituation::OnGroundByInterpolation: return interpolation;
         case CAircraftSituation::OutOnGroundOwnAircraft: return outOwnAircraft;
         case CAircraftSituation::InFromNetwork: return inNetwork;
         case CAircraftSituation::InFromParts: return inFromParts;
-        case CAircraftSituation::InNoGroundInfo: return inNoGndInfo;
         case CAircraftSituation::NotSetGroundDetails:
         default: return unknown;
         }

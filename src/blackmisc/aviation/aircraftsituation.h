@@ -94,12 +94,10 @@ namespace BlackMisc
                 // interpolated situation
                 OnGroundByInterpolation, //!< strongest for remote aircraft
                 OnGroundByElevationAndCG,
-                OnGroundByElevation,
                 OnGroundByGuessing, //!< weakest
                 // received situation
                 InFromNetwork, //!< received from network
                 InFromParts, //!< set from aircraft parts
-                InNoGroundInfo, //!< not known
                 // send information
                 OutOnGroundOwnAircraft //!< sending on ground
             };
