@@ -523,27 +523,19 @@ namespace BlackMisc::Aviation
 
     void CAircraftSituation::setOnGroundFactor(double groundFactor)
     {
-        double gf = groundFactor;
-        do
+        if (groundFactor < 0.0)
         {
-            if (groundFactor < 0.0)
-            {
-                gf = -1.0;
-                break;
-            }
-            if (groundFactor < 0.001)
-            {
-                gf = 0.0;
-                break;
-            }
-            if (groundFactor > 0.999)
-            {
-                gf = 1.0;
-                break;
-            }
+            groundFactor = -1.0;
         }
-        while (false);
-        m_onGroundFactor = gf;
+        else if (groundFactor < 0.001)
+        {
+            groundFactor = 0.0;
+        }
+        else if (groundFactor > 0.999)
+        {
+            groundFactor = 1.0;
+        }
+        m_onGroundFactor = groundFactor;
     }
 
     bool CAircraftSituation::shouldGuessOnGround() const
