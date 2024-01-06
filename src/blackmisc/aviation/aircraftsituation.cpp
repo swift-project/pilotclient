@@ -587,23 +587,9 @@ namespace BlackMisc::Aviation
         return true;
     }
 
-    bool CAircraftSituation::setOnGroundByUnderflowDetection(const CLength &cg)
-    {
-        IsOnGround og = this->isOnGroundByElevation(cg);
-        if (og == OnGroundSituationUnknown) { return false; }
-        this->setOnGround(og, OnGroundByElevationAndCG);
-        return true;
-    }
-
     QString CAircraftSituation::getOnGroundInfo() const
     {
         return this->onGroundAsString() % u' ' % this->getOnGroundDetailsAsString();
-    }
-
-    CLength CAircraftSituation::getGroundElevationDistance() const
-    {
-        // returns NULL if elevation is N/A
-        return this->getGroundElevationPlane().calculateGreatCircleDistance(*this);
     }
 
     CAircraftSituation::GndElevationInfo CAircraftSituation::getGroundElevationInfo() const
@@ -665,11 +651,6 @@ namespace BlackMisc::Aviation
         if (ep.isNull()) { return false; }
         this->setGroundElevation(ep, Interpolated);
         return true;
-    }
-
-    CAircraftSituation::IsOnGround CAircraftSituation::isOnGroundByElevation() const
-    {
-        return this->isOnGroundByElevation(m_cg);
     }
 
     CAircraftSituation::IsOnGround CAircraftSituation::isOnGroundByElevation(const CLength &cg) const
@@ -759,12 +740,6 @@ namespace BlackMisc::Aviation
     {
         m_groundElevationPlane = CElevationPlane::null();
         this->setGroundElevationInfo(NoElevationInfo);
-    }
-
-    const CLength &CAircraftSituation::getGroundElevationRadius() const
-    {
-        if (!this->hasGroundElevation()) { return CLength::null(); }
-        return m_groundElevationPlane.getRadius();
     }
 
     CLength CAircraftSituation::getHeightAboveGround() const
@@ -996,12 +971,6 @@ namespace BlackMisc::Aviation
     void CAircraftSituation::setCG(const CLength &cg)
     {
         m_cg = cg.switchedUnit(this->getAltitudeOrDefaultUnit());
-    }
-
-    const CLength &CAircraftSituation::getSceneryOffsetOrZero() const
-    {
-        static const CLength zero(0, CLengthUnit::ft());
-        return this->hasSceneryOffset() ? m_sceneryOffset : zero;
     }
 
     void CAircraftSituation::setSceneryOffset(const CLength &sceneryOffset)
