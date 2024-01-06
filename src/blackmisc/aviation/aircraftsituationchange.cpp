@@ -32,8 +32,6 @@ namespace BlackMisc::Aviation
         qRegisterMetaType<CAircraftSituationChange::GuessedSceneryDeviation>();
     }
 
-    CAircraftSituationChange::CAircraftSituationChange() {}
-
     CAircraftSituationChange::CAircraftSituationChange(const CAircraftSituationList &situations, const PhysicalQuantities::CLength &cg, bool isVtol, bool alreadySortedLatestFirst, bool calcStdDeviations)
     {
         if (situations.size() < 2) { return; }

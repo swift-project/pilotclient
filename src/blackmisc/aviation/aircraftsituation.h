@@ -261,9 +261,6 @@ namespace BlackMisc
             //! Set on ground as interpolated from ground fatcor
             bool setOnGroundFromGroundFactorFromInterpolation(double threshold = 0.5);
 
-            //! Set on ground by underflow detection, detects below ground scenarios
-            bool setOnGroundByUnderflowDetection(const PhysicalQuantities::CLength &cg);
-
             //! On ground info as string
             QString getOnGroundInfo() const;
 
@@ -281,9 +278,6 @@ namespace BlackMisc
 
             //! Elevation of the ground directly beneath
             const Geo::CElevationPlane &getGroundElevationPlane() const { return m_groundElevationPlane; }
-
-            //! Distance of coordinates of situation to coordinates of elevation plane
-            PhysicalQuantities::CLength getGroundElevationDistance() const;
 
             //! How did we get gnd.elevation?
             GndElevationInfo getGroundElevationInfo() const;
@@ -323,7 +317,6 @@ namespace BlackMisc
 
             //! @{
             //! Is on ground by elevation data, requires elevation and CG
-            IsOnGround isOnGroundByElevation() const;
             IsOnGround isOnGroundByElevation(const PhysicalQuantities::CLength &cg) const;
             //! @}
 
@@ -345,9 +338,6 @@ namespace BlackMisc
 
             //! Reset ground elevation
             void resetGroundElevation();
-
-            //! Distance of ground elevation
-            const PhysicalQuantities::CLength &getGroundElevationRadius() const;
 
             //! Height above ground.
             PhysicalQuantities::CLength getHeightAboveGround() const;
@@ -471,14 +461,8 @@ namespace BlackMisc
             //! Get scenery offset if any
             const PhysicalQuantities::CLength &getSceneryOffset() const { return m_sceneryOffset; }
 
-            //! Get scenery offset if any or zero ("0")
-            const PhysicalQuantities::CLength &getSceneryOffsetOrZero() const;
-
             //! Set scenery offset
             void setSceneryOffset(const PhysicalQuantities::CLength &sceneryOffset);
-
-            //! Has scenery offset?
-            bool hasSceneryOffset() const { return !m_sceneryOffset.isNull(); }
 
             //! Set flag indicating this is an interim position update
             void setInterimFlag(bool flag) { m_isInterim = flag; }

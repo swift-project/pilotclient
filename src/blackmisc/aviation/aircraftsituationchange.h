@@ -65,7 +65,7 @@ namespace BlackMisc
             };
 
             //! Default constructor.
-            CAircraftSituationChange();
+            CAircraftSituationChange() = default;
 
             //! Ctor with n situations
             //! \remark the timestamps of the latest situation will be used
@@ -116,24 +116,8 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Aviation::CAircraftSituationList::containsPushBack
             bool containsPushBack() const { return m_containsPushBack; }
 
-            //! Ground distance (AGL) if it can be calculated, otherwise NULL
-            //! \note distance is without CG, so on ground it can also be used to calculate
-            PhysicalQuantities::CLengthPair getGroundDistanceStdDevAndMean() const { return PhysicalQuantities::CLengthPair(m_gndDistStdDev, m_gndDistMean); }
-
-            //! \copydoc BlackMisc::Aviation::CAircraftSituationList::altitudeStandardDeviationAndMean
-            CAltitudePair getAltitudeStdDevAndMean() const { return CAltitudePair(m_altStdDev, m_altMean); }
-
             //! \copydoc BlackMisc::Aviation::CAircraftSituationList::elevationStandardDeviationAndMean
             CAltitudePair getElevationStdDevAndMean() const { return CAltitudePair(m_elvStdDev, m_elvMean); }
-
-            //! \copydoc BlackMisc::Aviation::CAircraftSituationList::groundSpeedStandardDeviationAndMean
-            PhysicalQuantities::CSpeedPair getGroundSpeedStdDevAndMean() const { return PhysicalQuantities::CSpeedPair(m_gsStdDev, m_gsMean); }
-
-            //! \copydoc BlackMisc::Aviation::CAircraftSituationList::pitchStandardDeviationAndMean
-            PhysicalQuantities::CAnglePair getPitchStdDevAndMean() const { return PhysicalQuantities::CAnglePair(m_pitchStdDev, m_pitchMean); }
-
-            //! \copydoc BlackMisc::Aviation::CAircraftSituationList::minMaxGroundDistance
-            PhysicalQuantities::CLengthPair getMinMaxGroundDistance() const { return PhysicalQuantities::CLengthPair(m_minGroundDistance, m_maxGroundDistance); }
 
             //! Guess on ground flag
             bool guessOnGround(CAircraftSituation &situation, const Simulation::CAircraftModel &model) const;
