@@ -117,7 +117,6 @@ namespace BlackMisc::Aviation
                u" | alt: " % this->getAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1) %
                u' ' % this->getCorrectedAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1) %
                u"[cor] | og: " % this->getOnGroundInfo() %
-               (m_onGroundGuessingDetails.isEmpty() ? QString() : u' ' % m_onGroundGuessingDetails) %
                u" | CG: " %
                (m_cg.isNull() ? QStringLiteral("null") : m_cg.valueRoundedWithUnit(CLengthUnit::m(), 1) % u' ' % m_cg.valueRoundedWithUnit(CLengthUnit::ft(), 1)) %
                u" | offset: " %
@@ -513,10 +512,6 @@ namespace BlackMisc::Aviation
     {
         const bool set = this->setOnGround(onGround);
         this->setOnGroundDetails(details);
-        if (details != OnGroundByGuessing)
-        {
-            m_onGroundGuessingDetails.clear();
-        }
 
         return set;
     }
@@ -563,10 +558,6 @@ namespace BlackMisc::Aviation
 
     bool CAircraftSituation::setOnGroundDetails(CAircraftSituation::OnGroundDetails details)
     {
-        if (details != OnGroundByGuessing)
-        {
-            m_onGroundGuessingDetails.clear();
-        }
         if (this->getOnGroundDetails() == details) { return false; }
         m_onGroundDetails = static_cast<int>(details);
         return true;

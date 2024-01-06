@@ -575,7 +575,6 @@ namespace BlackMisc
             int m_onGroundDetails = static_cast<int>(CAircraftSituation::NotSetGroundDetails);
             int m_elvInfo = static_cast<int>(CAircraftSituation::NoElevationInfo); //!< where did we gnd.elevation from?
             double m_onGroundFactor = -1; //!< interpolated ground flag, 1..on ground, 0..not on ground, -1 no info
-            QString m_onGroundGuessingDetails; //!< only for debugging, not transferred via DBus etc.
 
             BLACK_METACLASS(
                 CAircraftSituation,
