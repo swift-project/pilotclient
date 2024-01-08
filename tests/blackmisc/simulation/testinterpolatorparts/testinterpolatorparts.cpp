@@ -132,27 +132,27 @@ namespace BlackMiscTest
         for (int i = 0; i < number; i++)
         {
             CAircraftSituation s = createTestSituation(cs, i, ts, deltaT, 0);
-            s.setOnGround(CAircraftSituation::OnGroundSituationUnknown, CAircraftSituation::NotSetGroundDetails);
+            s.setOnGroundInfo({ COnGroundInfo::OnGroundSituationUnknown, COnGroundInfo::NotSetGroundDetails });
             situations.push_back(s);
         }
 
         CAircraftSituation s0 = situations[0];
         s0.adjustGroundFlag(partsOnGround, true);
-        QVERIFY2(s0.getOnGround(), "Supposed to be on ground");
+        QVERIFY2(s0.getOnGroundInfo().getOnGround(), "Supposed to be on ground");
 
         s0 = situations[0];
         s0.adjustGroundFlag(partsNotOnGround, true);
-        QVERIFY2(!s0.getOnGround(), "Supposed to be not on ground");
+        QVERIFY2(!s0.getOnGroundInfo().getOnGround(), "Supposed to be not on ground");
 
         qint64 distanceMs = -1;
         const qint64 Offset = 33;
         partsOnGround.addMsecsToOffset(Offset);
         CAircraftSituation s1 = situations[1];
-        s1.setOnGroundDetails(CAircraftSituation::NotSetGroundDetails);
+        s1.setOnGroundInfo({ COnGroundInfo::OnGroundSituationUnknown, COnGroundInfo::NotSetGroundDetails });
         s1.adjustGroundFlag(partsOnGround, true, 0.1, &distanceMs);
-        QVERIFY2(s1.getOnGround(), "Supposed to be on ground");
+        QVERIFY2(s1.getOnGroundInfo().getOnGround(), "Supposed to be on ground");
         QVERIFY2(distanceMs == deltaT - Offset, "Offset time wrong");
-        QVERIFY2(s1.getOnGroundDetails() == CAircraftSituation::InFromParts, "Wrong details");
+        QVERIFY2(s1.getOnGroundInfo().getGroundDetails() == COnGroundInfo::InFromParts, "Wrong details");
     }
 
     CAircraftParts CTestInterpolatorParts::createTestParts(int number, qint64 ts, qint64 deltaT, bool onGround)

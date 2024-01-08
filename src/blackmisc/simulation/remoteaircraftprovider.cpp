@@ -303,7 +303,7 @@ namespace BlackMisc::Simulation
                 // unify all inbound ground information
                 if (situation.hasInboundGroundDetails())
                 {
-                    newSituationsList.setOnGroundDetails(situation.getOnGroundDetails());
+                    newSituationsList.setOnGroundDetails(situation.getOnGroundInfo().getGroundDetails());
                 }
             }
             m_latestSituationByCallsign[cs] = situationCorrected;

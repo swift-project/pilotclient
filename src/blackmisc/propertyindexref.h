@@ -63,6 +63,7 @@ namespace BlackMisc
             GlobalIndexCGridPoint = 4500,
             GlobalIndexCVisibilityLayer = 4600,
             GlobalIndexCWeatherScenario = 4700,
+            GlobalIndexCOnGroundInfo = 4800,
             GlobalIndexICoordinateGeodetic = 5000,
             GlobalIndexICoordinateWithRelativePosition = 5100,
             GlobalIndexCCoordinateGeodetic = 5200,

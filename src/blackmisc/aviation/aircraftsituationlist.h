@@ -66,14 +66,14 @@ namespace BlackMisc
             int adjustGroundFlag(const CAircraftParts &parts, double timeDeviationFactor = 0.1);
 
             //! Contains on ground details?
-            bool containsOnGroundDetails(CAircraftSituation::OnGroundDetails details) const;
+            bool containsOnGroundDetails(COnGroundInfo::OnGroundDetails details) const;
 
             //! Contains any push back?
             //! \remark only valid for non VTOL aircraft
             bool containsPushBack() const;
 
             //! Are all on ground details the same?
-            bool areAllOnGroundDetailsSame(CAircraftSituation::OnGroundDetails details) const;
+            bool areAllOnGroundDetailsSame(COnGroundInfo::OnGroundDetails details) const;
 
             //! Are all situations on ground?
             bool isConstOnGround() const;
@@ -94,7 +94,7 @@ namespace BlackMisc
             bool isConstDecelarating(bool alreadySortedLatestFirst = false) const;
 
             //! Is the ground flag changing for the situations
-            QPair<bool, CAircraftSituation::IsOnGround> isGndFlagStableChanging(bool alreadySortedLatestFirst = false) const;
+            QPair<bool, COnGroundInfo::IsOnGround> isGndFlagStableChanging(bool alreadySortedLatestFirst = false) const;
 
             //! Is just taking off?
             bool isJustTakingOff(bool alreadySortedLatestFirst = false) const;
@@ -111,17 +111,17 @@ namespace BlackMisc
             //! Is rotating up?
             bool isRotatingUp(bool alreadySortedLatestFirst = false) const;
 
-            //! Count the number of situations with CAircraftSituation::IsOnGround
-            int countOnGround(CAircraftSituation::IsOnGround og) const;
+            //! Count the number of situations with COnGroundInfo::IsOnGround
+            int countOnGround(COnGroundInfo::IsOnGround og) const;
 
             //! CLosest elevation within given range
             CAircraftSituation findClosestElevationWithinRange(const Geo::ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range = Geo::CElevationPlane::singlePointRadius()) const;
 
             //! Set on ground
-            int setOnGround(CAircraftSituation::IsOnGround og);
+            void setOnGroundInfo(const COnGroundInfo &info);
 
             //! Set on ground details for all situations
-            int setOnGroundDetails(CAircraftSituation::OnGroundDetails details);
+            void setOnGroundDetails(COnGroundInfo::OnGroundDetails details);
 
             //! Add an offset to each altitude
             int addAltitudeOffset(const PhysicalQuantities::CLength &offset);

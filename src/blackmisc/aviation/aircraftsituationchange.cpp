@@ -94,21 +94,21 @@ namespace BlackMisc::Aviation
         {
             if (situation.getGroundSpeed().isNegativeWithEpsilonConsidered())
             {
-                situation.setOnGround(CAircraftSituation::OnGround, CAircraftSituation::OnGroundByGuessing);
+                situation.setOnGroundInfo({ COnGroundInfo::OnGround, COnGroundInfo::OnGroundByGuessing });
                 if (details) { *details = QStringLiteral("No VTOL, push back"); }
                 return true;
             }
 
             if (!situation.isMoving())
             {
-                situation.setOnGround(CAircraftSituation::OnGround, CAircraftSituation::OnGroundByGuessing);
+                situation.setOnGroundInfo({ COnGroundInfo::OnGround, COnGroundInfo::OnGroundByGuessing });
                 if (details) { *details = QStringLiteral("No VTOL, not moving => on ground"); }
                 return true;
             }
         }
 
         // not on ground is default
-        situation.setOnGround(CAircraftSituation::NotOnGround, CAircraftSituation::OnGroundByGuessing);
+        situation.setOnGroundInfo({ COnGroundInfo::NotOnGround, COnGroundInfo::OnGroundByGuessing });
 
         CLength cg = situation.hasCG() ? situation.getCG() : model.getCG();
         CSpeed guessedRotateSpeed = CSpeed::null();
@@ -146,11 +146,12 @@ namespace BlackMisc::Aviation
         // we can detect "on ground" (underflow, near ground), but not "not on ground" because of overflow
 
         // we can detect on ground for underflow, but not for overflow (so we can not rely on NotOnGround)
-        CAircraftSituation::IsOnGround og = situation.isOnGroundByElevation(cg);
-        if (og == CAircraftSituation::OnGround)
+        COnGroundInfo og(cg, situation.getGroundDistance(cg));
+        if (og.getOnGround() == COnGroundInfo::OnGround)
         {
             if (details) { *details = QStringLiteral("elevation on ground"); }
-            situation.setOnGround(og, CAircraftSituation::OnGroundByGuessing);
+            og.setOnGroundDetails(COnGroundInfo::OnGroundByGuessing);
+            situation.setOnGroundInfo(og);
             return true;
         }
 
@@ -166,7 +167,7 @@ namespace BlackMisc::Aviation
                 }
 
                 // here we stick to ground until we detect rotate up
-                situation.setOnGround(CAircraftSituation::OnGround, CAircraftSituation::OnGroundByGuessing);
+                situation.setOnGroundInfo({ COnGroundInfo::OnGround, COnGroundInfo::OnGroundByGuessing });
                 if (details) { *details = QStringLiteral("waiting for rotating up"); }
                 return true;
             }
@@ -183,7 +184,7 @@ namespace BlackMisc::Aviation
         if (vtol)
         {
             // no idea
-            situation.setOnGround(CAircraftSituation::OnGroundSituationUnknown, CAircraftSituation::NotSetGroundDetails);
+            situation.setOnGroundInfo({ COnGroundInfo::OnGroundSituationUnknown, COnGroundInfo::NotSetGroundDetails });
             return false;
         }
 
@@ -193,7 +194,7 @@ namespace BlackMisc::Aviation
             // does the value make any sense?
             if (situation.getGroundSpeed() < guessedRotateSpeed)
             {
-                situation.setOnGround(CAircraftSituation::OnGround, CAircraftSituation::OnGroundByGuessing);
+                situation.setOnGroundInfo({ COnGroundInfo::OnGround, COnGroundInfo::OnGroundByGuessing });
                 if (details) { *details = QStringLiteral("Guessing, max.guessed gs.") + guessedRotateSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1); }
                 return true;
             }

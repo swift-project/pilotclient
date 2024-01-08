@@ -84,21 +84,20 @@ namespace BlackMisc::Simulation
 
         if (interpolateGndFactor)
         {
-            const double startGroundFactor = m_startSituation.getOnGroundFactor();
-            const double endGroundFactor = m_endSituation.getOnGroundFactor();
+            const double startGroundFactor = m_startSituation.getOnGroundInfo().getGroundFactor();
+            const double endGroundFactor = m_endSituation.getOnGroundInfo().getGroundFactor();
             if (CAircraftSituation::isGfEqualAirborne(startGroundFactor, endGroundFactor))
             {
-                interpolatedSituation.setOnGround(false);
+                interpolatedSituation.setOnGroundInfo({ COnGroundInfo::NotOnGround, COnGroundInfo::OnGroundByInterpolation });
             }
             else if (CAircraftSituation::isGfEqualOnGround(startGroundFactor, endGroundFactor))
             {
-                interpolatedSituation.setOnGround(true);
+                interpolatedSituation.setOnGroundInfo({ COnGroundInfo::OnGround, COnGroundInfo::OnGroundByInterpolation });
             }
             else
             {
                 const double interpolatedGroundFactor = (endGroundFactor - startGroundFactor) * tf + startGroundFactor;
-                interpolatedSituation.setOnGroundFactor(interpolatedGroundFactor);
-                interpolatedSituation.setOnGroundFromGroundFactorFromInterpolation(groundInterpolationFactor());
+                interpolatedSituation.setOnGroundInfo(COnGroundInfo(interpolatedGroundFactor));
             }
         }
         return interpolatedSituation;

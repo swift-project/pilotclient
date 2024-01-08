@@ -113,10 +113,6 @@ namespace BlackMisc::Simulation
         //! Do logging
         bool doLogging() const;
 
-        //! Decides threshold when situation is considered on ground
-        //! \sa BlackMisc::Aviation::CAircraftSituation::setOnGroundFromGroundFactorFromInterpolation
-        static double groundInterpolationFactor();
-
         const Aviation::CCallsign m_callsign; //!< corresponding callsign
         CAircraftModel m_model; //!< corresponding model (required for CG)
 

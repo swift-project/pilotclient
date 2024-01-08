@@ -75,14 +75,6 @@ namespace BlackMisc::Simulation
     }
 
     template <typename Derived>
-    double CInterpolator<Derived>::groundInterpolationFactor()
-    {
-        // done here so we can change value without "larfer" recompilations
-        static constexpr double f = 0.95;
-        return f;
-    }
-
-    template <typename Derived>
     CAircraftSituationList CInterpolator<Derived>::remoteAircraftSituationsAndChange(const CInterpolationAndRenderingSetupPerCallsign &setup)
     {
         CAircraftSituationList validSituations = this->remoteAircraftSituations(m_callsign);
@@ -181,10 +173,10 @@ namespace BlackMisc::Simulation
         if (setup.isNull() || !setup.isAircraftPartsEnabled()) { return sorted; }
 
         bool details = false;
-        if (situations.containsOnGroundDetails(CAircraftSituation::InFromParts))
+        if (situations.containsOnGroundDetails(COnGroundInfo::InFromParts))
         {
             // if a client supports parts, all ground situations are supposed to be parts based
-            details = situations.areAllOnGroundDetailsSame(CAircraftSituation::InFromParts);
+            details = situations.areAllOnGroundDetailsSame(COnGroundInfo::InFromParts);
             BLACK_VERIFY_X(details, Q_FUNC_INFO, "Once gnd.from parts -> always gnd. from parts");
         }
 
@@ -300,7 +292,7 @@ namespace BlackMisc::Simulation
             }
 
             // correct altitude itself
-            if (!interpolateGndFlag && currentSituation.getOnGroundDetails() != CAircraftSituation::OnGroundByGuessing)
+            if (!interpolateGndFlag && currentSituation.getOnGroundInfo().getGroundDetails() != COnGroundInfo::OnGroundByGuessing)
             {
                 // just in case
                 altCorrection = currentSituation.correctAltitude(true); // we have CG set
@@ -377,7 +369,7 @@ namespace BlackMisc::Simulation
         {
             log.tsCurrent = m_currentTimeMsSinceEpoch;
             log.callsign = m_callsign;
-            log.groundFactor = currentSituation.getOnGroundFactor();
+            log.groundFactor = currentSituation.getOnGroundInfo().getGroundFactor();
             log.altCorrection = CAircraftSituation::altitudeCorrectionToString(altCorrection);
             log.situationCurrent = currentSituation;
             log.interpolantRecalc = interpolant.isRecalculated();
@@ -524,7 +516,7 @@ namespace BlackMisc::Simulation
         CLength guessedCG = model.getCG();
         model.getAircraftIcaoCode().guessModelParameters(guessedCG, guessedVRotate);
 
-        if (situation.getOnGroundDetails() != CAircraftSituation::NotSetGroundDetails)
+        if (situation.getOnGroundInfo().getGroundDetails() != COnGroundInfo::NotSetGroundDetails)
         {
             do
             {
@@ -613,10 +605,10 @@ namespace BlackMisc::Simulation
         }
         else
         {
-            if (situation.getOnGroundDetails() != CAircraftSituation::NotSetGroundDetails)
+            if (situation.getOnGroundInfo().getGroundDetails() != COnGroundInfo::NotSetGroundDetails)
             {
                 // we have no ground elevation but a ground info
-                if (situation.getOnGroundDetails() == CAircraftSituation::OnGroundByGuessing)
+                if (situation.getOnGroundInfo().getGroundDetails() == COnGroundInfo::OnGroundByGuessing)
                 {
                     // should be OK
                     if (details) { *details = QStringLiteral("on ground, no elv."); }

@@ -34,7 +34,7 @@ namespace BlackMisc::Aviation
 
     CAircraftLights CAircraftSituation::guessLights() const
     {
-        const bool isOnGround = getOnGround() == CAircraftSituation::OnGround;
+        const bool isOnGround = this->isOnGround();
         const double gsKts = getGroundSpeed().value(CSpeedUnit::kts());
         CAircraftLights lights;
         lights.setCabinOn(true);
@@ -81,8 +81,6 @@ namespace BlackMisc::Aviation
     void CAircraftSituation::registerMetadata()
     {
         CValueObject<CAircraftSituation>::registerMetadata();
-        qRegisterMetaType<CAircraftSituation::IsOnGround>();
-        qRegisterMetaType<CAircraftSituation::OnGroundDetails>();
         qRegisterMetaType<CAircraftSituation::AltitudeCorrection>();
         qRegisterMetaType<CAircraftSituation::GndElevationInfo>();
     }
@@ -116,12 +114,11 @@ namespace BlackMisc::Aviation
                u" | " % m_position.toQString(i18n) %
                u" | alt: " % this->getAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1) %
                u' ' % this->getCorrectedAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1) %
-               u"[cor] | og: " % this->getOnGroundInfo() %
+               u"[cor] | og: " % this->getOnGroundInfo().toQString(i18n) %
                u" | CG: " %
                (m_cg.isNull() ? QStringLiteral("null") : m_cg.valueRoundedWithUnit(CLengthUnit::m(), 1) % u' ' % m_cg.valueRoundedWithUnit(CLengthUnit::ft(), 1)) %
                u" | offset: " %
                (m_sceneryOffset.isNull() ? QStringLiteral("null") : m_sceneryOffset.valueRoundedWithUnit(CLengthUnit::m(), 1) % u' ' % m_sceneryOffset.valueRoundedWithUnit(CLengthUnit::ft(), 1)) %
-               u" | factor [0..1]: " % QString::number(m_onGroundFactor, 'f', 2) %
                u" | skip ng: " % boolToYesNo(this->canLikelySkipNearGroundInterpolation()) %
                u" | bank: " % m_bank.toQString(i18n) %
                u" | pitch: " % m_pitch.toQString(i18n) %
@@ -129,44 +126,6 @@ namespace BlackMisc::Aviation
                u" | GS: " % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1, true) %
                u' ' % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::m_s(), 1, true) %
                u" | elevation [" % this->getGroundElevationInfoAsString() % u"]: " % (m_groundElevationPlane.toQString(i18n));
-    }
-
-    const QString &CAircraftSituation::isOnGroundToString(CAircraftSituation::IsOnGround onGround)
-    {
-        static const QString notog("not on ground");
-        static const QString og("on ground");
-        static const QString unknown("unknown");
-
-        switch (onGround)
-        {
-        case CAircraftSituation::NotOnGround: return notog;
-        case CAircraftSituation::OnGround: return og;
-        case CAircraftSituation::OnGroundSituationUnknown:
-        default: return unknown;
-        }
-    }
-
-    const QString &CAircraftSituation::onGroundDetailsToString(CAircraftSituation::OnGroundDetails reliability)
-    {
-        static const QString elvCg("elevation/CG");
-        static const QString interpolation("interpolation");
-        static const QString guess("guessing");
-        static const QString unknown("unknown");
-        static const QString outOwnAircraft("own aircraft");
-        static const QString inNetwork("from network");
-        static const QString inFromParts("from parts");
-
-        switch (reliability)
-        {
-        case CAircraftSituation::OnGroundByElevationAndCG: return elvCg;
-        case CAircraftSituation::OnGroundByGuessing: return guess;
-        case CAircraftSituation::OnGroundByInterpolation: return interpolation;
-        case CAircraftSituation::OutOnGroundOwnAircraft: return outOwnAircraft;
-        case CAircraftSituation::InFromNetwork: return inNetwork;
-        case CAircraftSituation::InFromParts: return inFromParts;
-        case CAircraftSituation::NotSetGroundDetails:
-        default: return unknown;
-        }
     }
 
     const QString &CAircraftSituation::altitudeCorrectionToString(CAircraftSituation::AltitudeCorrection correction)
@@ -315,10 +274,7 @@ namespace BlackMisc::Aviation
         case IndexGroundSpeed: return m_groundSpeed.propertyByIndex(index.copyFrontRemoved());
         case IndexGroundElevationPlane: return m_groundElevationPlane.propertyByIndex(index.copyFrontRemoved());
         case IndexCallsign: return m_correspondingCallsign.propertyByIndex(index.copyFrontRemoved());
-        case IndexIsOnGround: return QVariant::fromValue(m_onGround);
-        case IndexIsOnGroundString: return QVariant::fromValue(this->onGroundAsString());
-        case IndexOnGroundReliability: return QVariant::fromValue(m_onGroundDetails);
-        case IndexOnGroundReliabilityString: return QVariant::fromValue(this->getOnGroundDetailsAsString());
+        case IndexIsOnGroundInfo: return m_onGroundInfo.propertyByIndex(index.copyFrontRemoved());
         case IndexGroundElevationInfo: return QVariant::fromValue(this->getGroundElevationInfo());
         case IndexGroundElevationInfoTransferred: return QVariant::fromValue(this->isGroundElevationInfoTransferred());
         case IndexGroundElevationInfoString: return QVariant::fromValue(this->getGroundElevationInfoAsString());
@@ -353,8 +309,7 @@ namespace BlackMisc::Aviation
         case IndexGroundSpeed: m_groundSpeed.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexGroundElevationPlane: m_groundElevationPlane.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexCallsign: m_correspondingCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-        case IndexIsOnGround: m_onGround = variant.toInt(); break;
-        case IndexOnGroundReliability: m_onGroundDetails = variant.toInt(); break;
+        case IndexIsOnGroundInfo: m_onGroundInfo.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexGroundElevationInfo: m_elvInfo = variant.toInt(); break;
         case IndexGroundElevationInfoTransferred: m_isElvInfoTransferred = variant.toBool(); break;
         case IndexGroundElevationPlusInfo: break;
@@ -387,12 +342,7 @@ namespace BlackMisc::Aviation
             return Compare::compare(this->getGroundElevationInfo(), compareValue.getGroundElevationInfo());
         }
         case IndexCallsign: return m_correspondingCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
-        case IndexIsOnGround:
-        case IndexIsOnGroundString:
-            return Compare::compare(m_onGround, compareValue.m_onGround);
-        case IndexOnGroundReliability:
-        case IndexOnGroundReliabilityString:
-            return Compare::compare(m_onGroundDetails, compareValue.m_onGroundDetails);
+        case IndexIsOnGroundInfo: return m_onGroundInfo.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getOnGroundInfo());
         case IndexGroundElevationInfo:
         case IndexGroundElevationInfoString:
         {
@@ -461,7 +411,7 @@ namespace BlackMisc::Aviation
         m_velocity = {};
         m_groundElevationPlane.setNull();
         m_groundSpeed.setNull();
-        m_onGroundDetails = CAircraftSituation::NotSetGroundDetails;
+        m_onGroundInfo = {};
         m_elvInfo = NoElevationInfo;
         m_isElvInfoTransferred = false;
         m_cg.setNull();
@@ -470,63 +420,19 @@ namespace BlackMisc::Aviation
 
     bool CAircraftSituation::isOnGroundFromParts() const
     {
-        return this->isOnGround() && this->getOnGroundDetails() == InFromParts;
+        return this->isOnGround() && m_onGroundInfo.getGroundDetails() == COnGroundInfo::InFromParts;
     }
 
     bool CAircraftSituation::isOnGroundFromNetwork() const
     {
-        return this->isOnGround() && this->getOnGroundDetails() == InFromNetwork;
-    }
-
-    const QString &CAircraftSituation::onGroundAsString() const
-    {
-        return CAircraftSituation::isOnGroundToString(this->getOnGround());
+        return this->isOnGround() && m_onGroundInfo.getGroundDetails() == COnGroundInfo::InFromNetwork;
     }
 
     bool CAircraftSituation::isOnGroundInfoAvailable() const
     {
         if (this->hasInboundGroundDetails()) { return true; }
-        return this->getOnGround() != CAircraftSituation::OnGroundSituationUnknown &&
-               this->getOnGroundDetails() != CAircraftSituation::NotSetGroundDetails;
-    }
-
-    bool CAircraftSituation::setOnGround(bool onGround)
-    {
-        return this->setOnGround(onGround ? OnGround : NotOnGround);
-    }
-
-    bool CAircraftSituation::setOnGround(CAircraftSituation::IsOnGround onGround)
-    {
-        if (this->getOnGround() == onGround) { return false; }
-        const int og = static_cast<int>(onGround);
-        m_onGround = og;
-        m_onGroundFactor = (onGround == OnGround) ? 1.0 : 0.0;
-        return true;
-    }
-
-    bool CAircraftSituation::setOnGround(CAircraftSituation::IsOnGround onGround, CAircraftSituation::OnGroundDetails details)
-    {
-        const bool set = this->setOnGround(onGround);
-        this->setOnGroundDetails(details);
-
-        return set;
-    }
-
-    void CAircraftSituation::setOnGroundFactor(double groundFactor)
-    {
-        if (groundFactor < 0.0)
-        {
-            groundFactor = -1.0;
-        }
-        else if (groundFactor < 0.001)
-        {
-            groundFactor = 0.0;
-        }
-        else if (groundFactor > 0.999)
-        {
-            groundFactor = 1.0;
-        }
-        m_onGroundFactor = groundFactor;
+        return m_onGroundInfo.getOnGround() != COnGroundInfo::OnGroundSituationUnknown &&
+               m_onGroundInfo.getGroundDetails() != COnGroundInfo::NotSetGroundDetails;
     }
 
     bool CAircraftSituation::shouldGuessOnGround() const
@@ -544,39 +450,22 @@ namespace BlackMisc::Aviation
 
     bool CAircraftSituation::hasGroundDetailsForGndInterpolation() const
     {
-        return this->getOnGroundDetails() != CAircraftSituation::NotSetGroundDetails;
+        return m_onGroundInfo.getGroundDetails() != COnGroundInfo::NotSetGroundDetails;
     }
 
-    const QString &CAircraftSituation::getOnGroundDetailsAsString() const
+    COnGroundInfo CAircraftSituation::getOnGroundInfo() const
     {
-        return CAircraftSituation::onGroundDetailsToString(this->getOnGroundDetails());
+        return m_onGroundInfo;
     }
 
-    bool CAircraftSituation::setOnGroundDetails(CAircraftSituation::OnGroundDetails details)
+    void CAircraftSituation::setOnGroundDetails(COnGroundInfo::OnGroundDetails details)
     {
-        if (this->getOnGroundDetails() == details) { return false; }
-        m_onGroundDetails = static_cast<int>(details);
-        return true;
+        m_onGroundInfo.setOnGroundDetails(details);
     }
 
-    bool CAircraftSituation::setOnGroundFromGroundFactorFromInterpolation(double threshold)
+    void CAircraftSituation::setOnGroundInfo(const Aviation::COnGroundInfo &info)
     {
-        this->setOnGroundDetails(OnGroundByInterpolation);
-        if (this->getOnGroundFactor() < 0.0)
-        {
-            this->setOnGround(NotSetGroundDetails);
-            return false;
-        }
-
-        // set on ground but leave factor untouched
-        const bool og = this->getOnGroundFactor() > threshold; // 1.0 means on ground
-        m_onGround = og ? OnGround : NotOnGround;
-        return true;
-    }
-
-    QString CAircraftSituation::getOnGroundInfo() const
-    {
-        return this->onGroundAsString() % u' ' % this->getOnGroundDetailsAsString();
+        m_onGroundInfo = info;
     }
 
     CAircraftSituation::GndElevationInfo CAircraftSituation::getGroundElevationInfo() const
@@ -640,21 +529,6 @@ namespace BlackMisc::Aviation
         return true;
     }
 
-    CAircraftSituation::IsOnGround CAircraftSituation::isOnGroundByElevation(const CLength &cg) const
-    {
-        const CLength groundDistance = this->getGroundDistance(cg);
-        if (groundDistance.isNull()) { return OnGroundSituationUnknown; }
-        if (groundDistance.isNegativeWithEpsilonConsidered()) { return OnGround; }
-        if (groundDistance.abs() < deltaNearGround()) { return OnGround; }
-        if (!cg.isNull())
-        {
-            // smaller than percentage from CG
-            const CLength cgFactor(cg * 0.1);
-            if (groundDistance.abs() < cgFactor.abs()) { return OnGround; }
-        }
-        return NotOnGround;
-    }
-
     bool CAircraftSituation::hasGroundElevation() const
     {
         return !this->getGroundElevation().isNull();
@@ -662,7 +536,7 @@ namespace BlackMisc::Aviation
 
     bool CAircraftSituation::hasInboundGroundDetails() const
     {
-        return this->getOnGroundDetails() == CAircraftSituation::InFromParts || this->getOnGroundDetails() == CAircraftSituation::InFromNetwork;
+        return m_onGroundInfo.getGroundDetails() == COnGroundInfo::InFromParts || m_onGroundInfo.getGroundDetails() == COnGroundInfo::InFromNetwork;
     }
 
     bool CAircraftSituation::setGroundElevation(const CAltitude &altitude, GndElevationInfo info, bool transferred)
@@ -810,7 +684,7 @@ namespace BlackMisc::Aviation
                 if (correction) { *correction = NoCorrection; }
                 return groundPlusCG;
             }
-            const bool forceDragToGround = (enableDragToGround && this->getOnGround() == OnGround) && (this->hasInboundGroundDetails() || this->getOnGroundDetails() == OnGroundByGuessing);
+            const bool forceDragToGround = (enableDragToGround && isOnGround()) && (this->hasInboundGroundDetails() || m_onGroundInfo.getGroundDetails() == COnGroundInfo::OnGroundByGuessing);
             if (forceDragToGround)
             {
                 if (correction) { *correction = DraggedToGround; }
@@ -971,14 +845,14 @@ namespace BlackMisc::Aviation
         static const qint64 Max = std::numeric_limits<qint64>::max();
         if (differenceMs) { *differenceMs = Max; }
 
-        if (this->getOnGroundDetails() == CAircraftSituation::InFromNetwork) { return false; }
-        if (alwaysSetDetails) { this->setOnGroundDetails(InFromParts); }
+        if (m_onGroundInfo.getGroundDetails() == COnGroundInfo::InFromNetwork) { return false; }
+        if (alwaysSetDetails) { m_onGroundInfo.setOnGroundDetails(COnGroundInfo::InFromParts); }
         const qint64 d = this->getAdjustedTimeDifferenceMs(parts.getAdjustedMSecsSinceEpoch());
         const bool adjust = (d >= 0) || qAbs(d) < (timeDeviationFactor * parts.getTimeOffsetMs()); // future or past within deviation range
         if (!adjust) { return false; }
 
         if (differenceMs) { *differenceMs = d; }
-        this->setOnGround(parts.isOnGround() ? CAircraftSituation::OnGround : CAircraftSituation::NotOnGround, CAircraftSituation::InFromParts);
+        m_onGroundInfo = COnGroundInfo(parts.isOnGround() ? COnGroundInfo::OnGround : COnGroundInfo::NotOnGround, COnGroundInfo::InFromParts);
         return true;
     }
 
@@ -988,8 +862,8 @@ namespace BlackMisc::Aviation
         static const qint64 Max = std::numeric_limits<qint64>::max();
         if (differenceMs) { *differenceMs = Max; }
 
-        if (this->getOnGroundDetails() == CAircraftSituation::InFromNetwork) { return false; }
-        if (alwaysSetDetails) { this->setOnGroundDetails(InFromParts); }
+        if (m_onGroundInfo.getGroundDetails() == COnGroundInfo::InFromNetwork) { return false; }
+        if (alwaysSetDetails) { m_onGroundInfo.setOnGroundDetails(COnGroundInfo::InFromParts); }
         if (partsList.isEmpty()) { return false; }
 
         CAircraftParts bestParts;
@@ -1009,8 +883,8 @@ namespace BlackMisc::Aviation
         }
         if (!adjust) { return false; }
 
-        const CAircraftSituation::IsOnGround og = bestParts.isOnGround() ? CAircraftSituation::OnGround : CAircraftSituation::NotOnGround;
-        this->setOnGround(og, CAircraftSituation::InFromParts);
+        const COnGroundInfo::IsOnGround og = bestParts.isOnGround() ? COnGroundInfo::OnGround : COnGroundInfo::NotOnGround;
+        m_onGroundInfo = COnGroundInfo(og, COnGroundInfo::InFromParts);
         return true;
     }
 } // namespace
