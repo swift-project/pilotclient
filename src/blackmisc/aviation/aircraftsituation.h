@@ -8,6 +8,7 @@
 
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/ongroundinfo.h"
 #include "blackmisc/aviation/heading.h"
 #include "blackmisc/aviation/aircraftvelocity.h"
 #include "blackmisc/blackmiscexport.h"
@@ -60,10 +61,7 @@ namespace BlackMisc
                 IndexAltitude,
                 IndexHeading,
                 IndexBank,
-                IndexIsOnGround,
-                IndexIsOnGroundString,
-                IndexOnGroundReliability,
-                IndexOnGroundReliabilityString,
+                IndexIsOnGroundInfo,
                 IndexPitch,
                 IndexPBHInfo,
                 IndexVelocity,
@@ -77,29 +75,6 @@ namespace BlackMisc
                 IndexCG,
                 IndexSceneryOffset,
                 IndexCanLikelySkipNearGroundInterpolation
-            };
-
-            //! Is on ground?
-            enum IsOnGround
-            {
-                NotOnGround,
-                OnGround,
-                OnGroundSituationUnknown
-            };
-
-            //! Reliability of on ground information
-            enum OnGroundDetails
-            {
-                NotSetGroundDetails,
-                // interpolated situation
-                OnGroundByInterpolation, //!< strongest for remote aircraft
-                OnGroundByElevationAndCG,
-                OnGroundByGuessing, //!< weakest
-                // received situation
-                InFromNetwork, //!< received from network
-                InFromParts, //!< set from aircraft parts
-                // send information
-                OutOnGroundOwnAircraft //!< sending on ground
             };
 
             //! How was altitude corrected?
@@ -205,11 +180,8 @@ namespace BlackMisc
             //! \copydoc Geo::ICoordinateGeodetic::longitude()
             virtual Geo::CLongitude longitude() const override { return m_position.longitude(); }
 
-            //! On ground?
-            IsOnGround getOnGround() const { return static_cast<CAircraftSituation::IsOnGround>(m_onGround); }
-
             //! Is on ground?
-            bool isOnGround() const { return this->getOnGround() == OnGround; }
+            bool isOnGround() const { return m_onGroundInfo.getOnGround() == COnGroundInfo::OnGround; }
 
             //! On ground by parts?
             bool isOnGroundFromParts() const;
@@ -217,26 +189,8 @@ namespace BlackMisc
             //! On ground by network flag?
             bool isOnGroundFromNetwork() const;
 
-            //! On ground?
-            const QString &onGroundAsString() const;
-
             //! On ground info available?
             bool isOnGroundInfoAvailable() const;
-
-            //! Set on ground
-            bool setOnGround(bool onGround);
-
-            //! Set on ground
-            bool setOnGround(CAircraftSituation::IsOnGround onGround);
-
-            //! Set on ground
-            bool setOnGround(CAircraftSituation::IsOnGround onGround, CAircraftSituation::OnGroundDetails details);
-
-            //! On ground factor 0..1 (on ground), -1 not set
-            double getOnGroundFactor() const { return m_onGroundFactor; }
-
-            //! Set on ground factor 0..1 (on ground), -1 not set
-            void setOnGroundFactor(double groundFactor);
 
             //! Should we guess on ground?
             bool shouldGuessOnGround() const;
@@ -244,23 +198,17 @@ namespace BlackMisc
             //! Distance to ground, null if impossible to calculate
             PhysicalQuantities::CLength getGroundDistance(const PhysicalQuantities::CLength &centerOfGravity) const;
 
-            //! On ground reliability
-            OnGroundDetails getOnGroundDetails() const { return static_cast<CAircraftSituation::OnGroundDetails>(m_onGroundDetails); }
-
             //! Do the ground details permit ground interpolation?
             bool hasGroundDetailsForGndInterpolation() const;
 
-            //! On ground reliability as string
-            const QString &getOnGroundDetailsAsString() const;
-
             //! On ground details
-            bool setOnGroundDetails(CAircraftSituation::OnGroundDetails details);
+            void setOnGroundDetails(COnGroundInfo::OnGroundDetails details);
 
-            //! Set on ground as interpolated from ground fatcor
-            bool setOnGroundFromGroundFactorFromInterpolation(double threshold = 0.5);
+            //! On ground info
+            Aviation::COnGroundInfo getOnGroundInfo() const;
 
-            //! On ground info as string
-            QString getOnGroundInfo() const;
+            //! Set the on ground info
+            void setOnGroundInfo(const Aviation::COnGroundInfo &info);
 
             //! \copydoc Geo::ICoordinateGeodetic::geodeticHeight
             const CAltitude &geodeticHeight() const override { return m_position.geodeticHeight(); }
@@ -312,11 +260,6 @@ namespace BlackMisc
             //! \sa CAircraftSituation::transferGroundElevation
             //! \sa CAircraftSituation::presetGroundElevation
             bool interpolateElevation(const Aviation::CAircraftSituation &oldSituation, const Aviation::CAircraftSituation &newSituation);
-
-            //! @{
-            //! Is on ground by elevation data, requires elevation and CG
-            IsOnGround isOnGroundByElevation(const PhysicalQuantities::CLength &cg) const;
-            //! @}
 
             //! Is ground elevation value available
             bool hasGroundElevation() const;
@@ -483,12 +426,6 @@ namespace BlackMisc
             bool isInterim() const { return m_isInterim; }
 
             //! Enum to string
-            static const QString &isOnGroundToString(IsOnGround onGround);
-
-            //! Enum to string
-            static const QString &onGroundDetailsToString(OnGroundDetails reliability);
-
-            //! Enum to string
             static const QString &altitudeCorrectionToString(AltitudeCorrection correction);
 
             //! Means corrected altitude?
@@ -569,10 +506,8 @@ namespace BlackMisc
             CAircraftVelocity m_velocity;
             bool m_isInterim = false; //!< interim situation?
             bool m_isElvInfoTransferred = false; //!< the gnd.elevation has been transferred
-            int m_onGround = static_cast<int>(CAircraftSituation::OnGroundSituationUnknown);
-            int m_onGroundDetails = static_cast<int>(CAircraftSituation::NotSetGroundDetails);
             int m_elvInfo = static_cast<int>(CAircraftSituation::NoElevationInfo); //!< where did we gnd.elevation from?
-            double m_onGroundFactor = -1; //!< interpolated ground flag, 1..on ground, 0..not on ground, -1 no info
+            Aviation::COnGroundInfo m_onGroundInfo;
 
             BLACK_METACLASS(
                 CAircraftSituation,
@@ -588,11 +523,9 @@ namespace BlackMisc
                 BLACK_METAMEMBER(hasVelocity),
                 BLACK_METAMEMBER(velocity),
                 BLACK_METAMEMBER(groundElevationPlane),
-                BLACK_METAMEMBER(onGround),
-                BLACK_METAMEMBER(onGroundDetails),
+                BLACK_METAMEMBER(onGroundInfo),
                 BLACK_METAMEMBER(elvInfo),
                 BLACK_METAMEMBER(isElvInfoTransferred),
-                BLACK_METAMEMBER(onGroundFactor),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(timeOffsetMs),
                 BLACK_METAMEMBER(isInterim)
@@ -602,8 +535,6 @@ namespace BlackMisc
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation)
-Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation::IsOnGround)
-Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation::OnGroundDetails)
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation::AltitudeCorrection)
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation::GndElevationInfo)
 

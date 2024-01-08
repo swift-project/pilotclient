@@ -55,22 +55,22 @@ namespace BlackMisc::Aviation
         int c = 0;
         for (CAircraftSituation &situation : *this)
         {
-            situation.setOnGroundDetails(CAircraftSituation::InFromParts);
+            situation.setOnGroundDetails(COnGroundInfo::InFromParts);
             if (situation.adjustGroundFlag(parts, true, timeDeviationFactor)) { c++; };
         }
         return c;
     }
 
-    bool CAircraftSituationList::containsOnGroundDetails(CAircraftSituation::OnGroundDetails details) const
+    bool CAircraftSituationList::containsOnGroundDetails(COnGroundInfo::OnGroundDetails details) const
     {
-        return this->contains(&CAircraftSituation::getOnGroundDetails, details);
+        return std::any_of(begin(), end(), [&details](const CAircraftSituation &sit) { return sit.getOnGroundInfo().getGroundDetails() == details; });
     }
 
-    bool CAircraftSituationList::areAllOnGroundDetailsSame(CAircraftSituation::OnGroundDetails details) const
+    bool CAircraftSituationList::areAllOnGroundDetailsSame(COnGroundInfo::OnGroundDetails details) const
     {
         for (const CAircraftSituation &situation : *this)
         {
-            if (situation.getOnGroundDetails() != details) { return false; }
+            if (situation.getOnGroundInfo().getGroundDetails() != details) { return false; }
         }
         return true;
     }
@@ -79,24 +79,14 @@ namespace BlackMisc::Aviation
     {
         if (this->isEmpty()) { return false; }
         if (this->containsNullPositionOrHeight()) { return false; }
-        for (const CAircraftSituation &situation : *this)
-        {
-            const CAircraftSituation::IsOnGround og = situation.getOnGround();
-            if (og != CAircraftSituation::OnGround) { return false; }
-        }
-        return true;
+        return std::all_of(begin(), end(), [](const CAircraftSituation &situation) { return situation.isOnGround(); });
     }
 
     bool CAircraftSituationList::isConstNotOnGround() const
     {
         if (this->isEmpty()) { return false; }
         if (this->containsNullPositionOrHeight()) { return false; }
-        for (const CAircraftSituation &situation : *this)
-        {
-            const CAircraftSituation::IsOnGround og = situation.getOnGround();
-            if (og != CAircraftSituation::NotOnGround) { return false; }
-        }
-        return true;
+        return std::all_of(begin(), end(), [](const CAircraftSituation &situation) { return situation.getOnGroundInfo().getOnGround() == COnGroundInfo::NotOnGround; });
     }
 
     bool CAircraftSituationList::isConstDescending(bool alreadySortedLatestFirst) const
@@ -178,27 +168,27 @@ namespace BlackMisc::Aviation
         return true;
     }
 
-    QPair<bool, CAircraftSituation::IsOnGround> CAircraftSituationList::isGndFlagStableChanging(bool alreadySortedLatestFirst) const
+    QPair<bool, COnGroundInfo::IsOnGround> CAircraftSituationList::isGndFlagStableChanging(bool alreadySortedLatestFirst) const
     {
-        if (this->size() < 2) { return QPair<bool, CAircraftSituation::IsOnGround>(false, CAircraftSituation::OnGroundSituationUnknown); }
+        if (this->size() < 2) { return QPair<bool, COnGroundInfo::IsOnGround>(false, COnGroundInfo::OnGroundSituationUnknown); }
 
         const CAircraftSituationList sorted(alreadySortedLatestFirst ? (*this) : this->getSortedAdjustedLatestFirst());
-        const CAircraftSituation::IsOnGround f = sorted.front().getOnGround();
-        const CAircraftSituation::IsOnGround t = sorted.back().getOnGround();
-        QPair<bool, CAircraftSituation::IsOnGround> ret(false, f); // changing to front (latest)
+        const COnGroundInfo::IsOnGround f = sorted.front().getOnGroundInfo().getOnGround();
+        const COnGroundInfo::IsOnGround t = sorted.back().getOnGroundInfo().getOnGround();
+        QPair<bool, COnGroundInfo::IsOnGround> ret(false, f); // changing to front (latest)
         if (f == t) { return ret; }
 
         bool changed = false;
 
         for (const CAircraftSituation &s : sorted)
         {
-            if (!changed && s.getOnGround() == f) { continue; } // find 1st changing
+            if (!changed && s.getOnGroundInfo().getOnGround() == f) { continue; } // find 1st changing
             if (!changed)
             {
                 changed = true;
                 continue;
             } // just changed
-            if (s.getOnGround() != t) { return ret; } // jitter, something like gnd, no gnd, gnd
+            if (s.getOnGroundInfo().getOnGround() != t) { return ret; } // jitter, something like gnd, no gnd, gnd
         }
         ret.first = changed;
         return ret;
@@ -210,8 +200,8 @@ namespace BlackMisc::Aviation
 
         const CAircraftSituationList sorted(alreadySortedLatestFirst ? (*this) : this->getSortedAdjustedLatestFirst());
         const CAircraftSituation latest = sorted.front();
-        if (latest.getOnGround() != CAircraftSituation::NotOnGround) { return false; }
-        const int c = this->countOnGround(CAircraftSituation::OnGround);
+        if (latest.getOnGroundInfo().getOnGround() != COnGroundInfo::NotOnGround) { return false; }
+        const int c = this->countOnGround(COnGroundInfo::OnGround);
         return this->size() - 1 == c; // all others on ground
     }
 
@@ -221,21 +211,21 @@ namespace BlackMisc::Aviation
 
         const CAircraftSituationList sorted(alreadySortedLatestFirst ? (*this) : this->getSortedAdjustedLatestFirst());
         const CAircraftSituation latest = sorted.front();
-        if (latest.getOnGround() != CAircraftSituation::OnGround) { return false; }
-        const int c = this->countOnGround(CAircraftSituation::NotOnGround);
+        if (latest.getOnGroundInfo().getOnGround() != COnGroundInfo::OnGround) { return false; }
+        const int c = this->countOnGround(COnGroundInfo::NotOnGround);
         return this->size() - 1 == c; // all others not on ground
     }
 
     bool CAircraftSituationList::isTakingOff(bool alreadySortedLatestFirst) const
     {
-        const QPair<bool, CAircraftSituation::IsOnGround> r = this->isGndFlagStableChanging(alreadySortedLatestFirst);
-        return r.first && r.second == CAircraftSituation::NotOnGround;
+        const QPair<bool, COnGroundInfo::IsOnGround> r = this->isGndFlagStableChanging(alreadySortedLatestFirst);
+        return r.first && r.second == COnGroundInfo::NotOnGround;
     }
 
     bool CAircraftSituationList::isTouchingDown(bool alreadySortedLatestFirst) const
     {
-        const QPair<bool, CAircraftSituation::IsOnGround> r = this->isGndFlagStableChanging(alreadySortedLatestFirst);
-        return r.first && r.second == CAircraftSituation::OnGround;
+        const QPair<bool, COnGroundInfo::IsOnGround> r = this->isGndFlagStableChanging(alreadySortedLatestFirst);
+        return r.first && r.second == COnGroundInfo::OnGround;
     }
 
     bool CAircraftSituationList::isRotatingUp(bool alreadySortedLatestFirst) const
@@ -258,14 +248,9 @@ namespace BlackMisc::Aviation
         return false;
     }
 
-    int CAircraftSituationList::countOnGround(CAircraftSituation::IsOnGround og) const
+    int CAircraftSituationList::countOnGround(COnGroundInfo::IsOnGround og) const
     {
-        int c = 0;
-        for (const CAircraftSituation &situation : *this)
-        {
-            if (situation.getOnGround() == og) { c++; }
-        }
-        return c;
+        return std::count_if(begin(), end(), [&og](const CAircraftSituation &situation) { return situation.getOnGroundInfo().getOnGround() == og; });
     }
 
     CAircraftSituation CAircraftSituationList::findClosestElevationWithinRange(const ICoordinateGeodetic &coordinate, const CLength &range) const
@@ -293,24 +278,20 @@ namespace BlackMisc::Aviation
         return situationWithElevation;
     }
 
-    int CAircraftSituationList::setOnGround(CAircraftSituation::IsOnGround og)
+    void CAircraftSituationList::setOnGroundInfo(const COnGroundInfo &info)
     {
-        int c = 0;
         for (CAircraftSituation &situation : *this)
         {
-            if (situation.setOnGround(og)) { c++; }
+            situation.setOnGroundInfo(info);
         }
-        return c;
     }
 
-    int CAircraftSituationList::setOnGroundDetails(CAircraftSituation::OnGroundDetails details)
+    void CAircraftSituationList::setOnGroundDetails(COnGroundInfo::OnGroundDetails details)
     {
-        int c = 0;
         for (CAircraftSituation &situation : *this)
         {
-            if (situation.setOnGroundDetails(details)) { c++; }
+            situation.setOnGroundDetails(details);
         }
-        return c;
     }
 
     int CAircraftSituationList::addAltitudeOffset(const CLength &offset)

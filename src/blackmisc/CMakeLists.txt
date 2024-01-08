@@ -90,6 +90,8 @@ add_library(misc SHARED
         aviation/modulator.h
         aviation/navsystem.h
         aviation/percallsign.h
+        aviation/ongroundinfo.cpp
+        aviation/ongroundinfo.h
         aviation/registermetadataaviation.cpp
         aviation/registermetadataaviation.h
         aviation/selcal.cpp

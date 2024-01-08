@@ -63,7 +63,7 @@ namespace BlackSimPlugin::XPlane
             this->pitchesDeg.push_back(situation.getPitch().value(BlackMisc::PhysicalQuantities::CAngleUnit::deg()));
             this->rollsDeg.push_back(situation.getBank().value(BlackMisc::PhysicalQuantities::CAngleUnit::deg()));
             this->headingsDeg.push_back(situation.getHeading().value(BlackMisc::PhysicalQuantities::CAngleUnit::deg()));
-            this->onGrounds.push_back(situation.getOnGround() == BlackMisc::Aviation::CAircraftSituation::OnGround);
+            this->onGrounds.push_back(situation.isOnGround());
         }
 
         QStringList callsigns; //!< List of callsigns

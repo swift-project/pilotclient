@@ -116,7 +116,7 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Aviation::CAircraftSituationList::containsPushBack
             bool containsPushBack() const { return m_containsPushBack; }
 
-            //! \copydoc BlackMisc::Aviation::CAircraftSituationList::elevationStandardDeviationAndMean
+            //! Elevation standard deviation and mean
             CAltitudePair getElevationStdDevAndMean() const { return CAltitudePair(m_elvStdDev, m_elvMean); }
 
             //! Guess on ground flag

@@ -652,7 +652,7 @@ namespace BlackSimPlugin::FsxCommon
         aircraftSituation.setPressureAltitude(CAltitude(simulatorOwnAircraft.pressureAltitudeM, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::m()));
         // set on ground also in situation for consistency and future usage
         // it is duplicated in parts
-        aircraftSituation.setOnGround(dtb(simulatorOwnAircraft.simOnGround) ? CAircraftSituation::OnGround : CAircraftSituation::NotOnGround, CAircraftSituation::OutOnGroundOwnAircraft);
+        aircraftSituation.setOnGroundInfo({ dtb(simulatorOwnAircraft.simOnGround) ? COnGroundInfo::OnGround : COnGroundInfo::NotOnGround, COnGroundInfo::OutOnGroundOwnAircraft });
 
         CAircraftVelocity aircraftVelocity(simulatorOwnAircraft.velocityWorldX,
                                            simulatorOwnAircraft.velocityWorldY,
@@ -2236,7 +2236,7 @@ namespace BlackSimPlugin::FsxCommon
         // send GND flag also when underflow detection is available
         if ((sendGnd || forceUnderflowDetection) && situation.isOnGroundInfoAvailable())
         {
-            const bool onGround = (situation.getOnGround() == CAircraftSituation::OnGround);
+            const bool onGround = situation.isOnGround();
             position.OnGround = onGround ? 1U : 0U;
         }
 

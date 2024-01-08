@@ -39,6 +39,7 @@
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/aviation/liverylist.h"
+#include "blackmisc/aviation/ongroundinfo.h"
 
 namespace BlackMisc
 {
@@ -86,6 +87,7 @@ namespace BlackMisc
             CSelcal::registerMetadata();
             CTrack::registerMetadata();
             CTransponder::registerMetadata();
+            COnGroundInfo::registerMetadata();
         }
     }
 

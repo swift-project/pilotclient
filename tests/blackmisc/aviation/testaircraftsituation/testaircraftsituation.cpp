@@ -76,7 +76,7 @@ namespace BlackMiscTest
     void CTestAircraftSituation::allGndFlagsAndTakeOff() const
     {
         CAircraftSituationList situations = testSituations();
-        situations.setOnGround(CAircraftSituation::OnGround);
+        situations.setOnGroundInfo({ COnGroundInfo::OnGround, COnGroundInfo::NotSetGroundDetails });
         const CAircraftSituationChange change(situations, cg(), false);
         QVERIFY2(change.isConstOnGround(), "Expect const on ground");
         QVERIFY(!change.isConstNotOnGround());
@@ -87,7 +87,7 @@ namespace BlackMiscTest
         QVERIFY(situations.isSortedAdjustedLatestFirstWithoutNullPositions());
 
         CAircraftSituation f = situations.front();
-        f.setOnGround(false);
+        f.setOnGroundInfo({ COnGroundInfo::NotOnGround, COnGroundInfo::NotSetGroundDetails });
         situations.pop_front();
         situations.push_front(f);
         const CAircraftSituationChange change2(situations, cg(), false);
@@ -100,7 +100,7 @@ namespace BlackMiscTest
     void CTestAircraftSituation::allNotGndFlagsAndTouchdown() const
     {
         CAircraftSituationList situations = testSetDescendingAltitudes(testSituations());
-        situations.setOnGround(CAircraftSituation::NotOnGround);
+        situations.setOnGroundInfo({ COnGroundInfo::NotOnGround, COnGroundInfo::NotSetGroundDetails });
         const CAircraftSituationChange change(situations, cg(), false);
         QVERIFY2(change.isConstNotOnGround(), "Expect const not on ground");
         QVERIFY(!change.isConstOnGround());
@@ -111,7 +111,7 @@ namespace BlackMiscTest
         QVERIFY(situations.isSortedAdjustedLatestFirstWithoutNullPositions());
 
         CAircraftSituation f = situations.front();
-        f.setOnGround(true);
+        f.setOnGroundInfo({ COnGroundInfo::OnGround, COnGroundInfo::NotSetGroundDetails });
         situations.pop_front();
         situations.push_front(f);
         const CAircraftSituationChange change2(situations, cg(), false);
@@ -215,7 +215,8 @@ namespace BlackMiscTest
         corAlt = situation.getCorrectedAltitude(true, &correction);
         QVERIFY2(corAlt == alt, "Expect same altitude, no overflow since not on gnd.");
 
-        situation.setOnGround(CAircraftSituation::OnGround, CAircraftSituation::InFromNetwork);
+        situation.setOnGroundInfo({ COnGroundInfo::OnGround, COnGroundInfo::InFromNetwork });
+
         corAlt = situation.getCorrectedAltitude(true, &correction);
         QVERIFY2(correction == CAircraftSituation::DraggedToGround, "Expect dragged to gnd.");
         QVERIFY2(corAlt < alt, "Expect corrected altitude dragged to gnd.");

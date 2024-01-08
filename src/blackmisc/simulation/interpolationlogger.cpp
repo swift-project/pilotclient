@@ -361,9 +361,9 @@ namespace BlackMisc::Simulation
                 u"<td class=\"cur\">" % log.situationCurrent.getGroundElevation().valueRoundedWithUnit(ft, 1) % u" " % log.situationCurrent.getGroundElevationInfoAsString() % u"</td>" %
 
                 u"<td>" % QString::number(log.groundFactor) % u"</td>" %
-                u"<td class=\"old\">" % situationOld.getOnGroundInfo() % u"</td>" %
-                u"<td class=\"new\">" % situationNew.getOnGroundInfo() % u"</td>" %
-                u"<td class=\"cur\">" % log.situationCurrent.getOnGroundInfo() % u"</td>" %
+                u"<td class=\"old\">" % situationOld.getOnGroundInfo().toQString() % u"</td>" %
+                u"<td class=\"new\">" % situationNew.getOnGroundInfo().toQString() % u"</td>" %
+                u"<td class=\"cur\">" % log.situationCurrent.getOnGroundInfo().toQString() % u"</td>" %
 
                 // tableRows +=
                 u"<td>" % log.cgAboveGround.valueRoundedWithUnit(ft, 0) % u"</td>" %

@@ -107,7 +107,7 @@ namespace BlackMisc::Network
     {
         if (situation.getCallsign().isEmpty()) { return false; } // no callsign
         if (!situation.isOnGround()) { return false; } // nothing to adjust
-        if (situation.getOnGroundDetails() != CAircraftSituation::InFromNetwork) { return false; } // not from network
+        if (situation.getOnGroundInfo().getGroundDetails() != COnGroundInfo::InFromNetwork) { return false; } // not from network
         return this->addClientGndCapability(situation.getCallsign());
     }
 

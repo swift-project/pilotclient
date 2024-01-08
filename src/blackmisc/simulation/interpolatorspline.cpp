@@ -218,7 +218,7 @@ namespace BlackMisc::Simulation
             const double a1 = m_s[1].getCorrectedAltitude(cg).value(altUnit);
             const double a2 = m_s[2].getCorrectedAltitude(cg).value(altUnit); // latest
             pa.a = { { a0, a1, a2 } };
-            pa.gnd = { { m_s[0].getOnGroundFactor(), m_s[1].getOnGroundFactor(), m_s[2].getOnGroundFactor() } };
+            pa.gnd = { { m_s[0].getOnGroundInfo().getGroundFactor(), m_s[1].getOnGroundInfo().getGroundFactor(), m_s[2].getOnGroundInfo().getGroundFactor() } };
             pa.da = getDerivatives(pa.t, pa.a);
             pa.dgnd = getDerivatives(pa.t, pa.gnd);
 
@@ -365,24 +365,20 @@ namespace BlackMisc::Simulation
         {
             const double gnd1 = m_pa.gnd[1];
             const double gnd2 = m_pa.gnd[2]; // latest
-            do
+
+            if (CAircraftSituation::isGfEqualAirborne(gnd1, gnd2))
             {
-                newSituation.setOnGroundDetails(CAircraftSituation::OnGroundByInterpolation);
-                if (CAircraftSituation::isGfEqualAirborne(gnd1, gnd2))
-                {
-                    newSituation.setOnGround(false);
-                    break;
-                }
-                if (CAircraftSituation::isGfEqualOnGround(gnd1, gnd2))
-                {
-                    newSituation.setOnGround(true);
-                    break;
-                }
-                const double newGnd = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, gnd1, gnd2, m_pa.dgnd[1], m_pa.dgnd[2]);
-                newSituation.setOnGroundFactor(newGnd);
-                newSituation.setOnGroundFromGroundFactorFromInterpolation(groundInterpolationFactor());
+                newSituation.setOnGroundInfo({ COnGroundInfo::NotOnGround, COnGroundInfo::OnGroundByInterpolation });
             }
-            while (false);
+            else if (CAircraftSituation::isGfEqualOnGround(gnd1, gnd2))
+            {
+                newSituation.setOnGroundInfo({ COnGroundInfo::OnGround, COnGroundInfo::OnGroundByInterpolation });
+            }
+            else
+            {
+                const double newGnd = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, gnd1, gnd2, m_pa.dgnd[1], m_pa.dgnd[2]);
+                newSituation.setOnGroundInfo(COnGroundInfo(newGnd));
+            }
         }
         return newSituation;
     }

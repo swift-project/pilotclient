@@ -1241,7 +1241,8 @@ namespace BlackCore::Fsd
             CAngle(dataUpdate.m_bank, CAngleUnit::deg()),
             CSpeed(dataUpdate.m_groundSpeed, CSpeedUnit::kts()));
         situation.setPressureAltitude(CAltitude(dataUpdate.m_altitudePressure, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::ft()));
-        situation.setOnGround(dataUpdate.m_onGround);
+        const COnGroundInfo og(dataUpdate.m_onGround ? COnGroundInfo::OnGround : COnGroundInfo::NotOnGround, COnGroundInfo::InFromNetwork);
+        situation.setOnGroundInfo(og);
 
         // Ref T297, default offset time
         situation.setCurrentUtcTime();
@@ -1279,8 +1280,8 @@ namespace BlackCore::Fsd
             CAngle(-data.m_pitch, CAngleUnit::deg()),
             CAngle(-data.m_bank, CAngleUnit::deg()),
             CSpeed(data.m_groundSpeed, CSpeedUnit::kts()));
-        situation.setOnGround(data.m_onGround);
-        situation.setOnGroundDetails(CAircraftSituation::InFromNetwork);
+        const COnGroundInfo og(data.m_onGround ? COnGroundInfo::OnGround : COnGroundInfo::NotOnGround, COnGroundInfo::InFromNetwork);
+        situation.setOnGroundInfo(og);
 
         // Ref T297, default offset time
         situation.setCurrentUtcTime();
@@ -1771,7 +1772,8 @@ namespace BlackCore::Fsd
                 CAngle(interimPilotDataUpdate.m_pitch, CAngleUnit::deg()),
                 CAngle(interimPilotDataUpdate.m_bank, CAngleUnit::deg()),
                 CSpeed(interimPilotDataUpdate.m_groundSpeed, CSpeedUnit::kts()));
-            situation.setOnGround(interimPilotDataUpdate.m_onGround);
+            const COnGroundInfo og(interimPilotDataUpdate.m_onGround ? COnGroundInfo::OnGround : COnGroundInfo::NotOnGround, COnGroundInfo::InFromNetwork);
+            situation.setOnGroundInfo(og);
 
             // Ref T297, default offset time
             situation.setCurrentUtcTime();
