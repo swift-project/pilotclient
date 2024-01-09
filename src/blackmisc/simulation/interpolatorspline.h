@@ -77,10 +77,13 @@ namespace BlackMisc::Simulation
             //! \private UNIT tests/ASSERT only
             const PosArray &getPa() const { return m_pa; }
 
+            CInterpolatorPbh pbh() const { return m_pbh; }
+
         private:
             PosArray m_pa; //!< current positions array, latest values last
             PhysicalQuantities::CLengthUnit m_altitudeUnit;
             qint64 m_currentTimeMsSinceEpoc { -1 };
+            CInterpolatorPbh m_pbh; //!< the used PBH interpolator
         };
 
         //! Strategy used by CInterpolator::getInterpolatedSituation
