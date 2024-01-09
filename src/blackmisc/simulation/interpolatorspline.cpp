@@ -175,7 +175,7 @@ namespace BlackMisc::Simulation
     void CInterpolatorSpline::anchor()
     {}
 
-    CInterpolatorSpline::CInterpolant CInterpolatorSpline::getInterpolant(SituationLog &log)
+    const IInterpolant &CInterpolatorSpline::getInterpolant(SituationLog &log)
     {
         // recalculate derivatives only if they changed
         // m_situationsLastModified updated in initIniterpolationStepData

@@ -31,12 +31,11 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc::Simulation
 {
-    template <typename Derived>
-    CInterpolator<Derived>::CInterpolator(const CCallsign &callsign,
-                                          ISimulationEnvironmentProvider *simEnvProvider,
-                                          IInterpolationSetupProvider *setupProvider,
-                                          IRemoteAircraftProvider *remoteProvider,
-                                          CInterpolationLogger *logger) : m_callsign(callsign)
+    CInterpolator::CInterpolator(const CCallsign &callsign,
+                                 ISimulationEnvironmentProvider *simEnvProvider,
+                                 IInterpolationSetupProvider *setupProvider,
+                                 IRemoteAircraftProvider *remoteProvider,
+                                 CInterpolationLogger *logger) : m_callsign(callsign)
     {
         // normally when created m_cg is still null since there is no CG in the provider yet
 
@@ -52,8 +51,7 @@ namespace BlackMisc::Simulation
         this->attachLogger(logger);
     }
 
-    template <typename Derived>
-    CLength CInterpolator<Derived>::getAndFetchModelCG(const CLength &dbCG)
+    CLength CInterpolator::getAndFetchModelCG(const CLength &dbCG)
     {
         CLength cgDb = dbCG;
         if (cgDb.isNull())
@@ -74,8 +72,7 @@ namespace BlackMisc::Simulation
         return cg;
     }
 
-    template <typename Derived>
-    CAircraftSituationList CInterpolator<Derived>::remoteAircraftSituationsAndChange(const CInterpolationAndRenderingSetupPerCallsign &setup)
+    CAircraftSituationList CInterpolator::remoteAircraftSituationsAndChange(const CInterpolationAndRenderingSetupPerCallsign &setup)
     {
         CAircraftSituationList validSituations = this->remoteAircraftSituations(m_callsign);
 
@@ -103,8 +100,7 @@ namespace BlackMisc::Simulation
         return validSituations;
     }
 
-    template <typename Derived>
-    bool CInterpolator<Derived>::presetGroundElevation(CAircraftSituation &situationToPreset, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const CAircraftSituationChange &change)
+    bool CInterpolator::presetGroundElevation(CAircraftSituation &situationToPreset, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const CAircraftSituationChange &change)
     {
         // IMPORTANT: we do not know what the situation will be (interpolated to), so we cannot transfer
         situationToPreset.resetGroundElevation();
@@ -151,15 +147,13 @@ namespace BlackMisc::Simulation
         return situationToPreset.hasGroundElevation();
     }
 
-    template <typename Derived>
-    void CInterpolator<Derived>::deferredInit()
+    void CInterpolator::deferredInit()
     {
         if (m_model.hasModelString()) { return; } // set in-between
         this->initCorrespondingModel();
     }
 
-    template <typename Derived>
-    bool CInterpolator<Derived>::verifyInterpolationSituations(const CAircraftSituation &oldest, const CAircraftSituation &newer, const CAircraftSituation &latest, const CInterpolationAndRenderingSetupPerCallsign &setup)
+    bool CInterpolator::verifyInterpolationSituations(const CAircraftSituation &oldest, const CAircraftSituation &newer, const CAircraftSituation &latest, const CInterpolationAndRenderingSetupPerCallsign &setup)
     {
         if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return true; }
         CAircraftSituationList situations;
@@ -196,15 +190,13 @@ namespace BlackMisc::Simulation
         return sorted && details;
     }
 
-    template <typename Derived>
-    const QStringList &CInterpolator<Derived>::getLogCategories()
+    const QStringList &CInterpolator::getLogCategories()
     {
         static const QStringList cats { CLogCategories::interpolator() };
         return cats;
     }
 
-    template <typename Derived>
-    CInterpolationResult CInterpolator<Derived>::getInterpolation(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber)
+    CInterpolationResult CInterpolator::getInterpolation(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber)
     {
         CInterpolationResult result;
 
@@ -222,8 +214,7 @@ namespace BlackMisc::Simulation
         return result;
     }
 
-    template <typename Derived>
-    CAircraftSituation CInterpolator<Derived>::getInterpolatedSituation()
+    CAircraftSituation CInterpolator::getInterpolatedSituation()
     {
         Q_ASSERT_X(!m_currentInterpolationStatus.isInterpolated(), Q_FUNC_INFO, "Expect reset status");
         if (m_currentSituations.isEmpty())
@@ -235,7 +226,7 @@ namespace BlackMisc::Simulation
         // interpolant as function of derived class
         // CInterpolatorLinear::Interpolant or CInterpolatorSpline::Interpolant
         SituationLog log;
-        const auto interpolant = derived()->getInterpolant(log);
+        const IInterpolant &interpolant = getInterpolant(log);
         const bool isValidInterpolant = interpolant.isValid();
 
         CAircraftSituation currentSituation = m_lastSituation;
@@ -400,8 +391,7 @@ namespace BlackMisc::Simulation
         return currentSituation;
     }
 
-    template <typename Derived>
-    CAircraftParts CInterpolator<Derived>::getInterpolatedParts()
+    CAircraftParts CInterpolator::getInterpolatedParts()
     {
         // Parts are supposed to be in correct order, latest first
         const CAircraftPartsList validParts = this->remoteAircraftParts(m_callsign);
@@ -435,8 +425,7 @@ namespace BlackMisc::Simulation
         return currentParts;
     }
 
-    template <typename Derived>
-    CAircraftParts CInterpolator<Derived>::getInterpolatedOrGuessedParts(int aircraftNumber)
+    CAircraftParts CInterpolator::getInterpolatedOrGuessedParts(int aircraftNumber)
     {
         Q_ASSERT_X(m_partsToSituationInterpolationRatio >= 1 && m_partsToSituationInterpolationRatio < 11, Q_FUNC_INFO, "Wrong ratio");
         const bool needParts = m_unitTest || m_lastParts.isNull();
@@ -482,8 +471,7 @@ namespace BlackMisc::Simulation
         return parts;
     }
 
-    template <typename Derived>
-    const CAircraftParts &CInterpolator<Derived>::logAndReturnNullParts(const QString &info, bool log)
+    const CAircraftParts &CInterpolator::logAndReturnNullParts(const QString &info, bool log)
     {
         if (!m_lastParts.isNull())
         {
@@ -502,14 +490,12 @@ namespace BlackMisc::Simulation
         return CAircraftParts::null();
     }
 
-    template <typename Derived>
-    bool CInterpolator<Derived>::doLogging() const
+    bool CInterpolator::doLogging() const
     {
         return this->hasAttachedLogger() && m_currentSetup.logInterpolation();
     }
 
-    template <typename Derived>
-    CAircraftParts CInterpolator<Derived>::guessParts(const CAircraftSituation &situation, const CAircraftSituationChange &change, const CAircraftModel &model)
+    CAircraftParts CInterpolator::guessParts(const CAircraftSituation &situation, const CAircraftSituationChange &change, const CAircraftModel &model)
     {
         CAircraftParts parts;
         parts.setMSecsSinceEpoch(situation.getMSecsSinceEpoch());
@@ -638,8 +624,7 @@ namespace BlackMisc::Simulation
         return parts;
     }
 
-    template <typename Derived>
-    void CInterpolator<Derived>::logParts(const CAircraftParts &parts, int partsNo, bool empty) const
+    void CInterpolator::logParts(const CAircraftParts &parts, int partsNo, bool empty) const
     {
         if (!this->doLogging()) { return; }
         PartsLog logInfo;
@@ -651,8 +636,7 @@ namespace BlackMisc::Simulation
         m_logger->logParts(logInfo);
     }
 
-    template <typename Derived>
-    QString CInterpolator<Derived>::getInterpolatorInfo() const
+    QString CInterpolator::getInterpolatorInfo() const
     {
         return QStringLiteral("Callsign: ") %
                m_callsign.asString() %
@@ -664,14 +648,12 @@ namespace BlackMisc::Simulation
                boolToYesNo(m_lastSituation.isNull());
     }
 
-    template <typename Derived>
-    void CInterpolator<Derived>::resetLastInterpolation()
+    void CInterpolator::resetLastInterpolation()
     {
         m_lastSituation.setNull();
     }
 
-    template <typename Derived>
-    bool CInterpolator<Derived>::initIniterpolationStepData(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber)
+    bool CInterpolator::initIniterpolationStepData(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber)
     {
         Q_ASSERT_X(!m_callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
 
@@ -723,8 +705,7 @@ namespace BlackMisc::Simulation
         return success;
     }
 
-    template <typename Derived>
-    CAircraftSituation CInterpolator<Derived>::initInterpolatedSituation(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation) const
+    CAircraftSituation CInterpolator::initInterpolatedSituation(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation) const
     {
         if (m_currentSituations.isEmpty()) { return CAircraftSituation::null(); }
 
@@ -750,8 +731,7 @@ namespace BlackMisc::Simulation
         return currentSituation;
     }
 
-    template <typename Derived>
-    void CInterpolator<Derived>::initCorrespondingModel(const CAircraftModel &model)
+    void CInterpolator::initCorrespondingModel(const CAircraftModel &model)
     {
         if (model.hasModelString())
         {
@@ -768,16 +748,8 @@ namespace BlackMisc::Simulation
         this->getAndFetchModelCG(model.getCG());
     }
 
-    template <typename Derived>
-    void CInterpolator<Derived>::markAsUnitTest()
+    void CInterpolator::markAsUnitTest()
     {
         m_unitTest = true;
     }
-
-    // see here for the reason of thess forward instantiations
-    // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
-    //! \cond PRIVATE
-    template class CInterpolator<CInterpolatorLinear>;
-    template class CInterpolator<CInterpolatorSpline>;
-    //! \endcond
 } // namespace
