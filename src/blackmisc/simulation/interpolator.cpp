@@ -153,43 +153,6 @@ namespace BlackMisc::Simulation
         this->initCorrespondingModel();
     }
 
-    bool CInterpolator::verifyInterpolationSituations(const CAircraftSituation &oldest, const CAircraftSituation &newer, const CAircraftSituation &latest, const CInterpolationAndRenderingSetupPerCallsign &setup)
-    {
-        if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return true; }
-        CAircraftSituationList situations;
-
-        // oldest last, null ignored
-        if (!latest.isNull()) { situations.push_back(latest); }
-        if (!newer.isNull()) { situations.push_back(newer); }
-        if (!oldest.isNull()) { situations.push_back(oldest); }
-
-        const bool sorted = situations.isSortedAdjustedLatestFirstWithoutNullPositions();
-        if (setup.isNull() || !setup.isAircraftPartsEnabled()) { return sorted; }
-
-        bool details = false;
-        if (situations.containsOnGroundDetails(COnGroundInfo::InFromParts))
-        {
-            // if a client supports parts, all ground situations are supposed to be parts based
-            details = situations.areAllOnGroundDetailsSame(COnGroundInfo::InFromParts);
-            BLACK_VERIFY_X(details, Q_FUNC_INFO, "Once gnd.from parts -> always gnd. from parts");
-        }
-
-        for (const CAircraftSituation &s : situations)
-        {
-            if (!s.hasGroundElevation()) { continue; }
-            BLACK_VERIFY_X(!s.getGroundElevation().isZeroEpsilonConsidered(), Q_FUNC_INFO, "Suspicous 0 gnd. value");
-        }
-
-        // check if middle situation is missing
-        if (latest.hasGroundElevation() && oldest.hasGroundElevation())
-        {
-            BLACK_VERIFY_X(newer.hasGroundElevation(), Q_FUNC_INFO, "Middle ground elevation is missing");
-        }
-
-        // result
-        return sorted && details;
-    }
-
     const QStringList &CInterpolator::getLogCategories()
     {
         static const QStringList cats { CLogCategories::interpolator() };

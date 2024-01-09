@@ -101,6 +101,10 @@ namespace BlackMisc::Simulation
         //! Fill the situations array
         bool fillSituationsArray();
 
+        //! Verify gnd flag, times, ... true means "OK"
+        static bool verifyInterpolationSituations(const Aviation::CAircraftSituation &oldest, const Aviation::CAircraftSituation &newer, const Aviation::CAircraftSituation &latest,
+                                                  const CInterpolationAndRenderingSetupPerCallsign &setup = CInterpolationAndRenderingSetupPerCallsign::null());
+
         qint64 m_prevSampleAdjustedTime = 0; //!< previous sample time + offset
         qint64 m_nextSampleAdjustedTime = 0; //!< previous sample time + offset
         qint64 m_prevSampleTime = 0; //!< previous sample "real time"

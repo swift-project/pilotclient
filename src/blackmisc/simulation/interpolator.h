@@ -145,10 +145,6 @@ namespace BlackMisc::Simulation
 
         bool m_unitTest = false; //!< mark as unit test
 
-        //! Verify gnd flag, times, ... true means "OK"
-        bool verifyInterpolationSituations(const Aviation::CAircraftSituation &oldest, const Aviation::CAircraftSituation &newer, const Aviation::CAircraftSituation &latest,
-                                           const CInterpolationAndRenderingSetupPerCallsign &setup = CInterpolationAndRenderingSetupPerCallsign::null());
-
     private:
         CInterpolationLogger *m_logger = nullptr; //!< optional interpolation logger
         QTimer m_initTimer; //!< timer to init model, will be deleted when interpolator is deleted and cancel the call
