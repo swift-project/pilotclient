@@ -9,7 +9,7 @@
 #include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 #include "plugins/simulator/fsxcommon/simconnectdatadefinition.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/interpolatormulti.h"
+#include "blackmisc/simulation/interpolation/interpolatormulti.h"
 #include <QSharedPointer>
 #include <QStringList>
 #include <QByteArray>

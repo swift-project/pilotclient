@@ -3,10 +3,10 @@
 
 //! \file
 
-#ifndef BLACKMISC_SIMULATION_INTERPOLANT_H
-#define BLACKMISC_SIMULATION_INTERPOLANT_H
+#ifndef BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLANT_H
+#define BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLANT_H
 
-#include "blackmisc/simulation/interpolatorlinearpbh.h"
+#include "blackmisc/simulation/interpolation/interpolatorlinearpbh.h"
 
 namespace BlackMisc::Simulation
 {

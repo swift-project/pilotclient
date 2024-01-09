@@ -12,7 +12,7 @@
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/interpolatormulti.h"
+#include "blackmisc/simulation/interpolation/interpolatormulti.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/geo/elevationplane.h"

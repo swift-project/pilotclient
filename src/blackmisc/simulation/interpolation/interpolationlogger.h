@@ -3,10 +3,10 @@
 
 //! \file
 
-#ifndef BLACKMISC_SIMULATION_INTERPOLATIONLOGGER_H
-#define BLACKMISC_SIMULATION_INTERPOLATIONLOGGER_H
+#ifndef BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLATIONLOGGER_H
+#define BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLATIONLOGGER_H
 
-#include "blackmisc/simulation/interpolationrenderingsetup.h"
+#include "blackmisc/simulation/interpolation/interpolationrenderingsetup.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"

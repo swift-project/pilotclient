@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackmisc/simulation/interpolationlogger.h"
+#include "blackmisc/simulation/interpolation/interpolationlogger.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/heading.h"
 #include "blackmisc/geo/kmlutils.h"

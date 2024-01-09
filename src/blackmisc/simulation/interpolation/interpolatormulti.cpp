@@ -3,7 +3,7 @@
 
 //! \file
 
-#include "blackmisc/simulation/interpolatormulti.h"
+#include "blackmisc/simulation/interpolation/interpolatormulti.h"
 
 using namespace BlackMisc::Aviation;
 

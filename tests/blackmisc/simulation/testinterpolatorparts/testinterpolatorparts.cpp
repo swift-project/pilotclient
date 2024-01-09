@@ -5,7 +5,7 @@
 //! \file
 //! \ingroup testblackmisc
 
-#include "blackmisc/simulation/interpolatorspline.h"
+#include "blackmisc/simulation/interpolation/interpolatorspline.h"
 #include "blackmisc/simulation/remoteaircraftproviderdummy.h"
 #include "test.h"
 #include <QTest>

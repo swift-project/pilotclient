@@ -3,12 +3,12 @@
 
 //! \file
 
-#ifndef BLACKMISC_SIMULATION_INTERPOLATIONSETUPPROVIDER_H
-#define BLACKMISC_SIMULATION_INTERPOLATIONSETUPPROVIDER_H
+#ifndef BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLATIONSETUPPROVIDER_H
+#define BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLATIONSETUPPROVIDER_H
 
-#include "blackmisc/simulation/interpolationsetuplist.h"
-#include "blackmisc/simulation/interpolationrenderingsetup.h"
-#include "blackmisc/simulation/interpolationsetuplist.h"
+#include "blackmisc/simulation/interpolation/interpolationsetuplist.h"
+#include "blackmisc/simulation/interpolation/interpolationrenderingsetup.h"
+#include "blackmisc/simulation/interpolation/interpolationsetuplist.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/provider.h"
 #include <QMap>

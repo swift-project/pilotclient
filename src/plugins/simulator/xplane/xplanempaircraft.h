@@ -7,7 +7,7 @@
 #define BLACKSIMPLUGIN_XPLANE_XPLANEMPAIRCRAFT_H
 
 #include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/interpolatormulti.h"
+#include "blackmisc/simulation/interpolation/interpolatormulti.h"
 #include <QSharedPointer>
 #include <QStringList>
 

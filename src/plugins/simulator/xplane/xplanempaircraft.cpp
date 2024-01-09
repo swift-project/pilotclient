@@ -3,7 +3,7 @@
 
 #include "xplanempaircraft.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/simulation/interpolatormulti.h"
+#include "blackmisc/simulation/interpolation/interpolatormulti.h"
 
 using namespace BlackCore;
 using namespace BlackMisc;

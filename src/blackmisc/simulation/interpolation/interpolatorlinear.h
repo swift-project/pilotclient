@@ -3,12 +3,12 @@
 
 //! \file
 
-#ifndef BLACKMISC_SIMULATION_INTERPOLATORLINEAR_H
-#define BLACKMISC_SIMULATION_INTERPOLATORLINEAR_H
+#ifndef BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLATORLINEAR_H
+#define BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLATORLINEAR_H
 
-#include "blackmisc/simulation/interpolator.h"
-#include "blackmisc/simulation/interpolationlogger.h"
-#include "blackmisc/simulation/interpolant.h"
+#include "blackmisc/simulation/interpolation/interpolator.h"
+#include "blackmisc/simulation/interpolation/interpolationlogger.h"
+#include "blackmisc/simulation/interpolation/interpolant.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/blackmiscexport.h"
 

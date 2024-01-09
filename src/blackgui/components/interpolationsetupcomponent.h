@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_INTERPOLATIONSETUPCOMPONENT_H
 #define BLACKGUI_COMPONENTS_INTERPOLATIONSETUPCOMPONENT_H
 
-#include "blackmisc/simulation/interpolationsetuplist.h"
+#include "blackmisc/simulation/interpolation/interpolationsetuplist.h"
 #include "blackgui/overlaymessagesframe.h"
 #include <QFrame>
 #include <QScopedPointer>

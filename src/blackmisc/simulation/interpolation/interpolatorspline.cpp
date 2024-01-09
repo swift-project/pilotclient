@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright (C) 2017 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackmisc/simulation/interpolatorspline.h"
-#include "blackmisc/simulation/interpolatorfunctions.h"
+#include "blackmisc/simulation/interpolation/interpolatorspline.h"
+#include "blackmisc/simulation/interpolation/interpolatorfunctions.h"
 #include "blackmisc/network/fsdsetup.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/verify.h"

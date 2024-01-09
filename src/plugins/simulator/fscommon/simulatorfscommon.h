@@ -8,7 +8,7 @@
 
 #include "plugins/simulator/fscommon/fsuipc.h"
 #include "plugins/simulator/plugincommon/simulatorplugincommon.h"
-#include "blackmisc/simulation/interpolator.h"
+#include "blackmisc/simulation/interpolation/interpolator.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 
 #include <QObject>

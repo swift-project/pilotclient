@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright (C) 2018 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackmisc/simulation/interpolatorlinearpbh.h"
-#include "blackmisc/simulation/interpolatorfunctions.h"
+#include "blackmisc/simulation/interpolation/interpolatorlinearpbh.h"
+#include "blackmisc/simulation/interpolation/interpolatorfunctions.h"
 #include "blackmisc/verify.h"
 #include "blackconfig/buildconfig.h"
 

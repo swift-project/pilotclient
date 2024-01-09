@@ -6,7 +6,7 @@
 #include "simulatorfsxcommon.h"
 #include "blackcore/simulator.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/simulation/interpolatormulti.h"
+#include "blackmisc/simulation/interpolation/interpolatormulti.h"
 #include "blackconfig/buildconfig.h"
 
 using namespace BlackConfig;
