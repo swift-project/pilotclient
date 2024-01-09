@@ -117,8 +117,6 @@ namespace BlackMisc::Aviation
                u"[cor] | og: " % this->getOnGroundInfo().toQString(i18n) %
                u" | CG: " %
                (m_cg.isNull() ? QStringLiteral("null") : m_cg.valueRoundedWithUnit(CLengthUnit::m(), 1) % u' ' % m_cg.valueRoundedWithUnit(CLengthUnit::ft(), 1)) %
-               u" | offset: " %
-               (m_sceneryOffset.isNull() ? QStringLiteral("null") : m_sceneryOffset.valueRoundedWithUnit(CLengthUnit::m(), 1) % u' ' % m_sceneryOffset.valueRoundedWithUnit(CLengthUnit::ft(), 1)) %
                u" | skip ng: " % boolToYesNo(this->canLikelySkipNearGroundInterpolation()) %
                u" | bank: " % m_bank.toQString(i18n) %
                u" | pitch: " % m_pitch.toQString(i18n) %
@@ -270,7 +268,6 @@ namespace BlackMisc::Aviation
         case IndexVelocity: return QVariant::fromValue(this->getVelocity());
         case IndexBank: return m_bank.propertyByIndex(index.copyFrontRemoved());
         case IndexCG: return m_cg.propertyByIndex(index.copyFrontRemoved());
-        case IndexSceneryOffset: return m_sceneryOffset.propertyByIndex(index.copyFrontRemoved());
         case IndexGroundSpeed: return m_groundSpeed.propertyByIndex(index.copyFrontRemoved());
         case IndexGroundElevationPlane: return m_groundElevationPlane.propertyByIndex(index.copyFrontRemoved());
         case IndexCallsign: return m_correspondingCallsign.propertyByIndex(index.copyFrontRemoved());
@@ -305,7 +302,6 @@ namespace BlackMisc::Aviation
         case IndexBank: m_bank.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexVelocity: m_velocity.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexCG: m_cg.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-        case IndexSceneryOffset: m_sceneryOffset.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexGroundSpeed: m_groundSpeed.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexGroundElevationPlane: m_groundElevationPlane.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexCallsign: m_correspondingCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
@@ -332,7 +328,6 @@ namespace BlackMisc::Aviation
         case IndexPitch: return m_pitch.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPitch());
         case IndexBank: return m_bank.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getBank());
         case IndexCG: return m_cg.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCG());
-        case IndexSceneryOffset: return m_sceneryOffset.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getSceneryOffset());
         case IndexGroundSpeed: return m_groundSpeed.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getGroundSpeed());
         case IndexGroundElevationPlane:
         case IndexGroundElevationPlusInfo:
@@ -415,7 +410,6 @@ namespace BlackMisc::Aviation
         m_elvInfo = NoElevationInfo;
         m_isElvInfoTransferred = false;
         m_cg.setNull();
-        m_sceneryOffset.setNull();
     }
 
     bool CAircraftSituation::isOnGroundFromParts() const
@@ -832,11 +826,6 @@ namespace BlackMisc::Aviation
     void CAircraftSituation::setCG(const CLength &cg)
     {
         m_cg = cg.switchedUnit(this->getAltitudeOrDefaultUnit());
-    }
-
-    void CAircraftSituation::setSceneryOffset(const CLength &sceneryOffset)
-    {
-        m_sceneryOffset = sceneryOffset.switchedUnit(this->getAltitudeOrDefaultUnit());
     }
 
     bool CAircraftSituation::adjustGroundFlag(const CAircraftParts &parts, bool alwaysSetDetails, double timeDeviationFactor, qint64 *differenceMs)

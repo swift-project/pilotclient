@@ -333,16 +333,6 @@ namespace BlackMisc::Simulation
         const CAircraftSituationChange change(updatedSituations, situationCorrected.getCG(), aircraftModel.isVtol(), true, true);
         this->storeChange(change);
 
-        if (change.hasSceneryDeviation())
-        {
-            const CLength offset = change.getGuessedSceneryDeviation();
-            situationCorrected.setSceneryOffset(offset);
-
-            QWriteLocker lock(&m_lockSituations);
-            m_latestSituationByCallsign[cs].setSceneryOffset(offset);
-            m_situationsByCallsign[cs].front().setSceneryOffset(offset);
-        }
-
         // situation has been added
         emit this->addedAircraftSituation(situationCorrected);
 

@@ -73,7 +73,6 @@ namespace BlackMisc
                 IndexGroundElevationPlusInfo,
                 IndexCallsign,
                 IndexCG,
-                IndexSceneryOffset,
                 IndexCanLikelySkipNearGroundInterpolation
             };
 
@@ -399,12 +398,6 @@ namespace BlackMisc
             //! Has CG set?
             bool hasCG() const { return !m_cg.isNull(); }
 
-            //! Get scenery offset if any
-            const PhysicalQuantities::CLength &getSceneryOffset() const { return m_sceneryOffset; }
-
-            //! Set scenery offset
-            void setSceneryOffset(const PhysicalQuantities::CLength &sceneryOffset);
-
             //! Set flag indicating this is an interim position update
             void setInterimFlag(bool flag) { m_isInterim = flag; }
 
@@ -501,7 +494,6 @@ namespace BlackMisc
             PhysicalQuantities::CAngle m_bank { 0, nullptr };
             PhysicalQuantities::CSpeed m_groundSpeed { 0, nullptr };
             PhysicalQuantities::CLength m_cg { 0, nullptr };
-            PhysicalQuantities::CLength m_sceneryOffset { 0, nullptr };
             bool m_hasVelocity = false;
             CAircraftVelocity m_velocity;
             bool m_isInterim = false; //!< interim situation?
@@ -519,7 +511,6 @@ namespace BlackMisc
                 BLACK_METAMEMBER(bank),
                 BLACK_METAMEMBER(groundSpeed),
                 BLACK_METAMEMBER(cg),
-                BLACK_METAMEMBER(sceneryOffset),
                 BLACK_METAMEMBER(hasVelocity),
                 BLACK_METAMEMBER(velocity),
                 BLACK_METAMEMBER(groundElevationPlane),
