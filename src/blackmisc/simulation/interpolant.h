@@ -6,7 +6,7 @@
 #ifndef BLACKMISC_SIMULATION_INTERPOLANT_H
 #define BLACKMISC_SIMULATION_INTERPOLANT_H
 
-#include "blackmisc/simulation/interpolatorpbh.h"
+#include "blackmisc/simulation/interpolatorlinearpbh.h"
 
 namespace BlackMisc::Simulation
 {

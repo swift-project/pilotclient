@@ -94,8 +94,8 @@ add_swift_test(
 )
 
 add_swift_test(
-        NAME misc_simulation_interpolatorpbh
-        SOURCES simulation/testinterpolatorpbh/testinterpolatorpbh.cpp
+        NAME misc_simulation_interpolatorlinearpbh
+        SOURCES simulation/testinterpolatorlinearpbh/testinterpolatorlinearpbh.cpp
         LINK_LIBRARIES misc tests_test Qt::Core
 )
 

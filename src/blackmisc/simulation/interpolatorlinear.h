@@ -43,7 +43,7 @@ namespace BlackMisc
                 //! Constructor
                 CInterpolant() = default;
                 CInterpolant(const Aviation::CAircraftSituation &startSituation);
-                CInterpolant(const Aviation::CAircraftSituation &startSituation, const CInterpolatorPbh &pbh);
+                CInterpolant(const Aviation::CAircraftSituation &startSituation, const CInterpolatorLinearPbh &pbh);
                 CInterpolant(const Aviation::CAircraftSituation &startSituation, const Aviation::CAircraftSituation &endSituation, double timeFraction, qint64 interpolatedTime);
                 //! @}
 
@@ -60,13 +60,13 @@ namespace BlackMisc
                 //! End situation
                 const Aviation::CAircraftSituation &getEndSituation() const { return m_endSituation; }
 
-                CInterpolatorPbh pbh() const { return m_pbh; }
+                CInterpolatorLinearPbh pbh() const { return m_pbh; }
 
             private:
                 Aviation::CAircraftSituation m_startSituation;
                 Aviation::CAircraftSituation m_endSituation;
                 double m_simulationTimeFraction = 0.0; //!< 0..1
-                CInterpolatorPbh m_pbh;
+                CInterpolatorLinearPbh m_pbh;
             };
 
             //! Get the interpolant for the given time point

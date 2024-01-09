@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_SIMULATION_INTERPOLATORPBH_H
-#define BLACKMISC_SIMULATION_INTERPOLATORPBH_H
+#ifndef BLACKMISC_SIMULATION_INTERPOLATORLINEARPBH_H
+#define BLACKMISC_SIMULATION_INTERPOLATORLINEARPBH_H
 
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/heading.h"
@@ -15,14 +15,14 @@
 namespace BlackMisc::Simulation
 {
     //! Simple linear interpolator for pitch, bank, heading and groundspeed from start to end situation
-    class BLACKMISC_EXPORT CInterpolatorPbh
+    class BLACKMISC_EXPORT CInterpolatorLinearPbh
     {
     public:
         //! @{
         //! Constructor
-        CInterpolatorPbh() = default;
-        CInterpolatorPbh(const Aviation::CAircraftSituation &start, const Aviation::CAircraftSituation &end) : m_startSituation(start), m_endSituation(end) {}
-        CInterpolatorPbh(double simulationTimeFraction, const Aviation::CAircraftSituation &start, const Aviation::CAircraftSituation &end);
+        CInterpolatorLinearPbh() = default;
+        CInterpolatorLinearPbh(const Aviation::CAircraftSituation &start, const Aviation::CAircraftSituation &end) : m_startSituation(start), m_endSituation(end) {}
+        CInterpolatorLinearPbh(double simulationTimeFraction, const Aviation::CAircraftSituation &start, const Aviation::CAircraftSituation &end);
         //! @}
 
         //! @{

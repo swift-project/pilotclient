@@ -567,7 +567,7 @@ add_library(misc SHARED
         simulation/xplane/xswiftbusconfigwriter.h
         simulation/matchingutils.h
         simulation/registermetadatasimulation.h
-        simulation/interpolatorpbh.h
+        simulation/interpolatorlinearpbh.h
         simulation/fsx/simconnectutilities.h
         simulation/fsx/simconnectutilities.cpp
         simulation/fsx/fsx.h
@@ -602,7 +602,7 @@ add_library(misc SHARED
         simulation/interpolatorfunctions.h
         simulation/ownaircraftprovider.h
         simulation/distributorlistpreferences.cpp
-        simulation/interpolatorpbh.cpp
+        simulation/interpolatorlinearpbh.cpp
         simulation/reverselookup.h
         simulation/autopublishdata.cpp
         simulation/simulationenvironmentprovider.h

@@ -7,7 +7,7 @@
 
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/heading.h"
-#include "blackmisc/simulation/interpolatorpbh.h"
+#include "blackmisc/simulation/interpolatorlinearpbh.h"
 #include "blackmisc/math/mathutils.h"
 #include "test.h"
 
@@ -24,7 +24,7 @@ namespace BlackMiscTest
 {
     //! InterpolatorPBH tests
     //! As the PBH interpolator works with time-fractions, the situations are time-independent
-    class CTestInterpolatorPbh : public QObject
+    class CTestInterpolatorLinearPbh : public QObject
     {
         Q_OBJECT
 
@@ -55,11 +55,11 @@ namespace BlackMiscTest
         static constexpr const double m_tfStep = 1.0 / m_steps; //!< Time fraction between steps
     };
 
-    void CTestInterpolatorPbh::pbhInterpolatorTestHeading0To120()
+    void CTestInterpolatorLinearPbh::pbhInterpolatorTestHeading0To120()
     {
         CAircraftSituation s1({}, CHeading(0, CHeading::True, CAngleUnit::deg()));
         CAircraftSituation s2({}, CHeading(120, CHeading::True, CAngleUnit::deg()));
-        CInterpolatorPbh pbh(s1, s2);
+        CInterpolatorLinearPbh pbh(s1, s2);
 
         double lastDeg = 0;
 
@@ -84,11 +84,11 @@ namespace BlackMiscTest
         }
     }
 
-    void CTestInterpolatorPbh::pbhInterpolatorTestHeadingM90To30()
+    void CTestInterpolatorLinearPbh::pbhInterpolatorTestHeadingM90To30()
     {
         CAircraftSituation s1({}, CHeading(270, CHeading::True, CAngleUnit::deg())); // -90
         CAircraftSituation s2({}, CHeading(30, CHeading::True, CAngleUnit::deg()));
-        CInterpolatorPbh pbh(s1, s2);
+        CInterpolatorLinearPbh pbh(s1, s2);
 
         double lastDeg = 0;
 
@@ -113,11 +113,11 @@ namespace BlackMiscTest
         }
     }
 
-    void CTestInterpolatorPbh::pbhInterpolatorTestHeadingM90To170()
+    void CTestInterpolatorLinearPbh::pbhInterpolatorTestHeadingM90To170()
     {
         CAircraftSituation s1({}, CHeading(270, CHeading::True, CAngleUnit::deg())); // -90
         CAircraftSituation s2({}, CHeading(170, CHeading::True, CAngleUnit::deg()));
-        CInterpolatorPbh pbh(s1, s2);
+        CInterpolatorLinearPbh pbh(s1, s2);
 
         double lastDeg = 0;
 
@@ -142,11 +142,11 @@ namespace BlackMiscTest
         }
     }
 
-    void CTestInterpolatorPbh::pbhInterpolatorTestBank270To30()
+    void CTestInterpolatorLinearPbh::pbhInterpolatorTestBank270To30()
     {
         CAircraftSituation s1({}, CHeading {}, {}, CAngle(270, CAngleUnit::deg()));
         CAircraftSituation s2({}, CHeading {}, {}, CAngle(30, CAngleUnit::deg()));
-        CInterpolatorPbh pbh(s1, s2);
+        CInterpolatorLinearPbh pbh(s1, s2);
 
         double lastDeg = 0;
 
@@ -171,11 +171,11 @@ namespace BlackMiscTest
         }
     }
 
-    void CTestInterpolatorPbh::pbhInterpolatorTestBank170To190()
+    void CTestInterpolatorLinearPbh::pbhInterpolatorTestBank170To190()
     {
         CAircraftSituation s1({}, CHeading {}, {}, CAngle(170, CAngleUnit::deg()));
         CAircraftSituation s2({}, CHeading {}, {}, CAngle(190, CAngleUnit::deg()));
-        CInterpolatorPbh pbh(s1, s2);
+        CInterpolatorLinearPbh pbh(s1, s2);
 
         double lastDeg = 0;
 
@@ -200,11 +200,11 @@ namespace BlackMiscTest
         }
     }
 
-    void CTestInterpolatorPbh::pbhInterpolatorTestPitch30ToM30()
+    void CTestInterpolatorLinearPbh::pbhInterpolatorTestPitch30ToM30()
     {
         CAircraftSituation s1({}, {}, CAngle(30, CAngleUnit::deg()));
         CAircraftSituation s2({}, {}, CAngle(-30, CAngleUnit::deg()));
-        CInterpolatorPbh pbh(s1, s2);
+        CInterpolatorLinearPbh pbh(s1, s2);
 
         double lastDeg = 0;
 
@@ -229,11 +229,11 @@ namespace BlackMiscTest
         }
     }
 
-    void CTestInterpolatorPbh::pbhInterpolatorTestPitchM30To30()
+    void CTestInterpolatorLinearPbh::pbhInterpolatorTestPitchM30To30()
     {
         CAircraftSituation s1({}, {}, CAngle(-30, CAngleUnit::deg()));
         CAircraftSituation s2({}, {}, CAngle(30, CAngleUnit::deg()));
-        CInterpolatorPbh pbh(s1, s2);
+        CInterpolatorLinearPbh pbh(s1, s2);
 
         double lastDeg = 0;
 
@@ -260,8 +260,8 @@ namespace BlackMiscTest
 }
 
 //! main
-BLACKTEST_MAIN(BlackMiscTest::CTestInterpolatorPbh);
+BLACKTEST_MAIN(BlackMiscTest::CTestInterpolatorLinearPbh);
 
-#include "testinterpolatorpbh.moc"
+#include "testinterpolatorlinearpbh.moc"
 
 //! \endcond

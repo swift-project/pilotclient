@@ -226,7 +226,7 @@ namespace BlackMisc::Simulation
             m_nextSampleAdjustedTime = m_s[2].getAdjustedMSecsSinceEpoch(); // latest
             m_prevSampleTime = m_s[1].getMSecsSinceEpoch(); // last interpolated situation normally
             m_nextSampleTime = m_s[2].getMSecsSinceEpoch(); // latest
-            m_interpolant = CInterpolant(pa, altUnit, CInterpolatorPbh(m_s[1], m_s[2])); // older, newer
+            m_interpolant = CInterpolant(pa, altUnit, CInterpolatorLinearPbh(m_s[1], m_s[2])); // older, newer
             Q_ASSERT_X(m_prevSampleAdjustedTime < m_nextSampleAdjustedTime, Q_FUNC_INFO, "Wrong time order");
         }
 
@@ -309,7 +309,7 @@ namespace BlackMisc::Simulation
         return false;
     }
 
-    CInterpolatorSpline::CInterpolant::CInterpolant(const CInterpolatorSpline::PosArray &pa, const CLengthUnit &altitudeUnit, const CInterpolatorPbh &pbh) : m_pa(pa), m_altitudeUnit(altitudeUnit)
+    CInterpolatorSpline::CInterpolant::CInterpolant(const CInterpolatorSpline::PosArray &pa, const CLengthUnit &altitudeUnit, const CInterpolatorLinearPbh &pbh) : m_pa(pa), m_altitudeUnit(altitudeUnit)
     {
         m_pbh = pbh;
         m_situationsAvailable = pa.size();
