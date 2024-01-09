@@ -23,12 +23,12 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackMisc::Simulation
 {
-    CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &startSituation) : IInterpolant(1, CInterpolatorPbh(0, startSituation, startSituation)),
-                                                                                                m_startSituation(startSituation)
+    CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &startSituation) : IInterpolant(1),
+                                                                                                m_startSituation(startSituation), m_pbh(0, startSituation, startSituation)
     {}
 
-    CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &startSituation, const CInterpolatorPbh &pbh) : IInterpolant(1, pbh),
-                                                                                                                             m_startSituation(startSituation)
+    CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &startSituation, const CInterpolatorPbh &pbh) : IInterpolant(1),
+                                                                                                                             m_startSituation(startSituation), m_pbh(pbh)
     {}
 
     CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &startSituation, const CAircraftSituation &endSituation, double timeFraction, qint64 interpolatedTime) : IInterpolant(interpolatedTime, 2),

@@ -245,12 +245,12 @@ namespace BlackMisc::Simulation
         do
         {
             if (!isValidInterpolant) { break; }
-            const CInterpolatorPbh pbh = interpolant.pbh();
 
             // init interpolated situation
             currentSituation = this->initInterpolatedSituation(pbh.getStartSituation(), pbh.getEndSituation());
 
             // Pitch bank heading first, so follow up steps could use those values
+            const auto pbh = interpolant.pbh();
             currentSituation.setHeading(pbh.getHeading());
             currentSituation.setPitch(pbh.getPitch());
             currentSituation.setBank(pbh.getBank());

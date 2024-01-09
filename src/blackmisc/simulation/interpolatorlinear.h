@@ -60,10 +60,13 @@ namespace BlackMisc
                 //! End situation
                 const Aviation::CAircraftSituation &getEndSituation() const { return m_endSituation; }
 
+                CInterpolatorPbh pbh() const { return m_pbh; }
+
             private:
                 Aviation::CAircraftSituation m_startSituation;
                 Aviation::CAircraftSituation m_endSituation;
                 double m_simulationTimeFraction = 0.0; //!< 0..1
+                CInterpolatorPbh m_pbh;
             };
 
             //! Get the interpolant for the given time point

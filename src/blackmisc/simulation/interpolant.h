@@ -17,9 +17,6 @@ namespace BlackMisc::Simulation
         //! "Real time" representing the interpolated situation
         qint64 getInterpolatedTime() const { return m_interpolatedTime; }
 
-        //! Interpolator for pitch, bank, heading, groundspeed
-        const CInterpolatorPbh &pbh() const { return m_pbh; }
-
         //! Situations available
         int getSituationsAvailable() const { return m_situationsAvailable; }
 
@@ -37,17 +34,16 @@ namespace BlackMisc::Simulation
 
     protected:
         //! Default ctor
-        IInterpolant() {}
+        IInterpolant() = default;
 
         //! Constructor
-        IInterpolant(int situationsAvailable, const CInterpolatorPbh &pbh) : m_situationsAvailable(situationsAvailable), m_pbh(pbh) {}
+        explicit IInterpolant(int situationsAvailable) : m_situationsAvailable(situationsAvailable) {}
 
         //! Constructor
         IInterpolant(qint64 interpolatedTime, int situationsAvailable) : m_interpolatedTime(interpolatedTime), m_situationsAvailable(situationsAvailable) {}
 
         qint64 m_interpolatedTime = -1; //!< "Real time "of interpolated situation
         int m_situationsAvailable = 0; //!< used situations
-        CInterpolatorPbh m_pbh; //!< the used PBH interpolator
         bool m_valid = true; //!< valid?
         bool m_recalculated = false; //!< recalculated interpolant
     };
