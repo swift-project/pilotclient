@@ -257,9 +257,12 @@ namespace BlackMisc::Simulation
             currentSituation.setGroundSpeed(pbh.getGroundSpeed());
 
             // use derived interpolant function
-            const bool interpolateGndFlag = pbh.getEndSituation().hasGroundDetailsForGndInterpolation() && pbh.getStartSituation().hasGroundDetailsForGndInterpolation();
-            currentSituation = interpolant.interpolatePositionAndAltitude(currentSituation);
+            const auto [interpolatedPosition, interpolatedAltitude] = interpolant.interpolatePositionAndAltitude();
+            currentSituation.setPosition(interpolatedPosition);
+            currentSituation.setAltitude(interpolatedAltitude);
+            currentSituation.setMSecsSinceEpoch(interpolant.getInterpolatedTime());
 
+            const bool interpolateGndFlag = pbh.getEndSituation().hasGroundDetailsForGndInterpolation() && pbh.getStartSituation().hasGroundDetailsForGndInterpolation();
             if (interpolateGndFlag)
             {
                 currentSituation.setOnGroundInfo(interpolant.interpolateGroundFactor());

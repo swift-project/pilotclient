@@ -48,9 +48,8 @@ namespace BlackMisc
                 //! @}
 
                 //! Perform the interpolation
-                //! \param situation situation used as a base for interpolation. Contains for example the already interpolated PBH.
-                //! \return \p situation with interpolated position and altitude and updated timestamp
-                Aviation::CAircraftSituation interpolatePositionAndAltitude(const Aviation::CAircraftSituation &situation) const;
+                //! \return interpolated position and altitude
+                std::tuple<Geo::CCoordinateGeodetic, Aviation::CAltitude> interpolatePositionAndAltitude() const;
 
                 //! Interpolate the ground information/factor
                 Aviation::COnGroundInfo interpolateGroundFactor() const;
