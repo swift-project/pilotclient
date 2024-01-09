@@ -65,9 +65,11 @@ namespace BlackMisc::Simulation
 
             //! Perform the interpolation
             //! \param situation situation used as a base for interpolation. Contains for example the already interpolated PBH.
-            //! \param interpolateGndFactor whether to interpolate the GND factor.
-            //! \return \p situation with interpolated position and altitude, updated timestamp and possibly interpolated GND factor
-            Aviation::CAircraftSituation interpolatePositionAndAltitude(const Aviation::CAircraftSituation &currentSituation, bool interpolateGndFactor) const;
+            //! \return \p situation with interpolated position and altitude and updated timestamp
+            Aviation::CAircraftSituation interpolatePositionAndAltitude(const Aviation::CAircraftSituation &currentSituation) const;
+
+            //! Interpolate the ground information/factor
+            Aviation::COnGroundInfo interpolateGroundFactor() const;
 
             //! Set the time values
             void setTimes(qint64 currentTimeMs, double timeFraction, qint64 interpolatedTimeMs);

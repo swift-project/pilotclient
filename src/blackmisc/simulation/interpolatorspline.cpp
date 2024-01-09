@@ -315,7 +315,7 @@ namespace BlackMisc::Simulation
         m_situationsAvailable = pa.size();
     }
 
-    CAircraftSituation CInterpolatorSpline::CInterpolant::interpolatePositionAndAltitude(const CAircraftSituation &currentSituation, bool interpolateGndFactor) const
+    CAircraftSituation CInterpolatorSpline::CInterpolant::interpolatePositionAndAltitude(const CAircraftSituation &currentSituation) const
     {
         const double t1 = m_pa.t[1];
         const double t2 = m_pa.t[2]; // latest (adjusted)
@@ -361,26 +361,32 @@ namespace BlackMisc::Simulation
         newSituation.setAltitude(alt);
         newSituation.setMSecsSinceEpoch(this->getInterpolatedTime());
 
-        if (interpolateGndFactor)
-        {
-            const double gnd1 = m_pa.gnd[1];
-            const double gnd2 = m_pa.gnd[2]; // latest
-
-            if (CAircraftSituation::isGfEqualAirborne(gnd1, gnd2))
-            {
-                newSituation.setOnGroundInfo({ COnGroundInfo::NotOnGround, COnGroundInfo::OnGroundByInterpolation });
-            }
-            else if (CAircraftSituation::isGfEqualOnGround(gnd1, gnd2))
-            {
-                newSituation.setOnGroundInfo({ COnGroundInfo::OnGround, COnGroundInfo::OnGroundByInterpolation });
-            }
-            else
-            {
-                const double newGnd = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, gnd1, gnd2, m_pa.dgnd[1], m_pa.dgnd[2]);
-                newSituation.setOnGroundInfo(COnGroundInfo(newGnd));
-            }
-        }
         return newSituation;
+    }
+
+    Aviation::COnGroundInfo CInterpolatorSpline::CInterpolant::interpolateGroundFactor() const
+    {
+        const double t1 = m_pa.t[1];
+        const double t2 = m_pa.t[2]; // latest (adjusted)
+        bool valid = (t1 < t2) && (m_currentTimeMsSinceEpoc >= t1) && (m_currentTimeMsSinceEpoc < t2);
+        if (!valid) { return { COnGroundInfo::OnGroundSituationUnknown, COnGroundInfo::NotSetGroundDetails }; }
+
+        const double gnd1 = m_pa.gnd[1];
+        const double gnd2 = m_pa.gnd[2]; // latest
+
+        if (CAircraftSituation::isGfEqualAirborne(gnd1, gnd2))
+        {
+            return { COnGroundInfo::NotOnGround, COnGroundInfo::OnGroundByInterpolation };
+        }
+        else if (CAircraftSituation::isGfEqualOnGround(gnd1, gnd2))
+        {
+            return { COnGroundInfo::OnGround, COnGroundInfo::OnGroundByInterpolation };
+        }
+        else
+        {
+            const double newGnd = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, gnd1, gnd2, m_pa.dgnd[1], m_pa.dgnd[2]);
+            return COnGroundInfo(newGnd);
+        }
     }
 
     void CInterpolatorSpline::CInterpolant::setTimes(qint64 currentTimeMs, double timeFraction, qint64 interpolatedTimeMs)

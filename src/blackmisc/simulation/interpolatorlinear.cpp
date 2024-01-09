@@ -45,7 +45,7 @@ namespace BlackMisc::Simulation
     void CInterpolatorLinear::anchor()
     {}
 
-    CAircraftSituation CInterpolatorLinear::CInterpolant::interpolatePositionAndAltitude(const CAircraftSituation &situation, bool interpolateGndFactor) const
+    CAircraftSituation CInterpolatorLinear::CInterpolant::interpolatePositionAndAltitude(const CAircraftSituation &situation) const
     {
         const std::array<double, 3> startVec(m_startSituation.getPosition().normalVectorDouble());
         const std::array<double, 3> endVec(m_endSituation.getPosition().normalVectorDouble());
@@ -82,25 +82,27 @@ namespace BlackMisc::Simulation
         interpolatedSituation.setAltitude(altitude);
         interpolatedSituation.setMSecsSinceEpoch(this->getInterpolatedTime());
 
-        if (interpolateGndFactor)
-        {
-            const double startGroundFactor = m_startSituation.getOnGroundInfo().getGroundFactor();
-            const double endGroundFactor = m_endSituation.getOnGroundInfo().getGroundFactor();
-            if (CAircraftSituation::isGfEqualAirborne(startGroundFactor, endGroundFactor))
-            {
-                interpolatedSituation.setOnGroundInfo({ COnGroundInfo::NotOnGround, COnGroundInfo::OnGroundByInterpolation });
-            }
-            else if (CAircraftSituation::isGfEqualOnGround(startGroundFactor, endGroundFactor))
-            {
-                interpolatedSituation.setOnGroundInfo({ COnGroundInfo::OnGround, COnGroundInfo::OnGroundByInterpolation });
-            }
-            else
-            {
-                const double interpolatedGroundFactor = (endGroundFactor - startGroundFactor) * tf + startGroundFactor;
-                interpolatedSituation.setOnGroundInfo(COnGroundInfo(interpolatedGroundFactor));
-            }
-        }
         return interpolatedSituation;
+    }
+
+    Aviation::COnGroundInfo CInterpolatorLinear::CInterpolant::interpolateGroundFactor() const
+    {
+        const double startGroundFactor = m_startSituation.getOnGroundInfo().getGroundFactor();
+        const double endGroundFactor = m_endSituation.getOnGroundInfo().getGroundFactor();
+        if (CAircraftSituation::isGfEqualAirborne(startGroundFactor, endGroundFactor))
+        {
+            return { COnGroundInfo::NotOnGround, COnGroundInfo::OnGroundByInterpolation };
+        }
+        else if (CAircraftSituation::isGfEqualOnGround(startGroundFactor, endGroundFactor))
+        {
+            return { COnGroundInfo::OnGround, COnGroundInfo::OnGroundByInterpolation };
+        }
+        else
+        {
+            const double tf = clampValidTimeFraction(m_simulationTimeFraction);
+            const double interpolatedGroundFactor = (endGroundFactor - startGroundFactor) * tf + startGroundFactor;
+            return COnGroundInfo(interpolatedGroundFactor);
+        }
     }
 
     CInterpolatorLinear::CInterpolant CInterpolatorLinear::getInterpolant(SituationLog &log)
