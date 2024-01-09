@@ -6,7 +6,7 @@
 #include "blackgui/views/interpolationsetupview.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackmisc/simulation/interpolationsetuplist.h"
+#include "blackmisc/simulation/interpolation/interpolationsetuplist.h"
 #include "blackmisc/statusmessage.h"
 #include <QPointer>
 

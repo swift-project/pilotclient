@@ -7,7 +7,7 @@
 
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/heading.h"
-#include "blackmisc/simulation/interpolatorlinearpbh.h"
+#include "blackmisc/simulation/interpolation/interpolatorlinearpbh.h"
 #include "blackmisc/math/mathutils.h"
 #include "test.h"
 

@@ -3,10 +3,10 @@
 
 //! \file
 
-#ifndef BLACKMISC_SIMULATION_INTERPOLATIONSETUPLIST_H
-#define BLACKMISC_SIMULATION_INTERPOLATIONSETUPLIST_H
+#ifndef BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLATIONSETUPLIST_H
+#define BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLATIONSETUPLIST_H
 
-#include "blackmisc/simulation/interpolationrenderingsetup.h"
+#include "blackmisc/simulation/interpolation/interpolationrenderingsetup.h"
 #include "blackmisc/aviation/callsignobjectlist.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"

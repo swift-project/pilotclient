@@ -9,7 +9,7 @@
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/simulation/interpolationlogger.h"
+#include "blackmisc/simulation/interpolation/interpolationlogger.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/logcategories.h"

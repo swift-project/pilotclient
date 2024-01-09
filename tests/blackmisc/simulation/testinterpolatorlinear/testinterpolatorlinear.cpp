@@ -5,8 +5,8 @@
 //! \file
 //! \ingroup testblackmisc
 
-#include "blackmisc/simulation/interpolator.h"
-#include "blackmisc/simulation/interpolatorlinear.h"
+#include "blackmisc/simulation/interpolation/interpolator.h"
+#include "blackmisc/simulation/interpolation/interpolatorlinear.h"
 #include "blackmisc/simulation/remoteaircraftproviderdummy.h"
 #include "blackmisc/aviation/aircraftengine.h"
 #include "blackmisc/aviation/aircraftenginelist.h"

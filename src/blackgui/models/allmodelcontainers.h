@@ -6,7 +6,7 @@
 
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/simulation/interpolationsetuplist.h"
+#include "blackmisc/simulation/interpolation/interpolationsetuplist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/matchingstatistics.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"

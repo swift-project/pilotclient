@@ -3,15 +3,15 @@
 
 //! \file
 
-#ifndef BLACKMISC_SIMULATION_INTERPOLATIONRESULT_H
-#define BLACKMISC_SIMULATION_INTERPOLATIONRESULT_H
+#ifndef BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLATIONRESULT_H
+#define BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLATIONRESULT_H
 
 #include "blackmisc/blackmiscexport.h"
 
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftparts.h"
 
-#include "blackmisc/simulation/interpolationstatus.h"
+#include "blackmisc/simulation/interpolation/interpolationstatus.h"
 #include "blackmisc/simulation/partsstatus.h"
 
 namespace BlackMisc::Simulation
@@ -68,4 +68,4 @@ namespace BlackMisc::Simulation
 
 }
 
-#endif // BLACKMISC_SIMULATION_INTERPOLATIONRESULT_H
+#endif // BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLATIONRESULT_H

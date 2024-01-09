@@ -6,7 +6,7 @@
 //! \ingroup testblackmisc
 
 #include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/simulation/interpolationrenderingsetup.h"
+#include "blackmisc/simulation/interpolation/interpolationrenderingsetup.h"
 #include "test.h"
 
 #include <QDebug>

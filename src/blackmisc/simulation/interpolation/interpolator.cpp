@@ -1,11 +1,11 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackmisc/simulation/interpolator.h"
+#include "blackmisc/simulation/interpolation/interpolator.h"
 #include "blackconfig/buildconfig.h"
-#include "blackmisc/simulation/interpolationlogger.h"
-#include "blackmisc/simulation/interpolatorlinear.h"
-#include "blackmisc/simulation/interpolatorspline.h"
+#include "blackmisc/simulation/interpolation/interpolationlogger.h"
+#include "blackmisc/simulation/interpolation/interpolatorlinear.h"
+#include "blackmisc/simulation/interpolation/interpolatorspline.h"
 #include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/network/fsdsetup.h"

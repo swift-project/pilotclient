@@ -3,15 +3,15 @@
 
 //! \file
 
-#ifndef BLACKMISC_SIMULATION_INTERPOLATORLINEARPBH_H
-#define BLACKMISC_SIMULATION_INTERPOLATORLINEARPBH_H
+#ifndef BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLATORLINEARPBH_H
+#define BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLATORLINEARPBH_H
 
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/heading.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/simulation/interpolatorpbh.h"
+#include "blackmisc/simulation/interpolation/interpolatorpbh.h"
 
 namespace BlackMisc::Simulation
 {

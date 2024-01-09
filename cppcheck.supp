@@ -9,7 +9,7 @@
 // [error id]
 
 // Issues introduced by refactoring - expected to be fixed
-knownConditionTrueFalse:src/blackmisc/simulation/interpolator.cpp
+knownConditionTrueFalse:src/blackmisc/simulation/interpolation/interpolator.cpp
 knownConditionTrueFalse:src/blackmisc/aviation/aircraftsituationchange.cpp
 
 // Ignore noExplicitConstructor for now.

@@ -6,7 +6,7 @@
 #ifndef BLACKMISC_SIMULATION_SETTINGS_INTERPOLATIONRENDERINGSETUP_H
 #define BLACKMISC_SIMULATION_SETTINGS_INTERPOLATIONRENDERINGSETUP_H
 
-#include "blackmisc/simulation/interpolationrenderingsetup.h"
+#include "blackmisc/simulation/interpolation/interpolationrenderingsetup.h"
 #include "blackmisc/settingscache.h"
 
 namespace BlackMisc::Simulation::Settings

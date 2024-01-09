@@ -20,7 +20,7 @@
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/simulatorinternals.h"
 #include "blackmisc/simulation/matchingstatistics.h"
-#include "blackmisc/simulation/interpolationrenderingsetup.h"
+#include "blackmisc/simulation/interpolation/interpolationrenderingsetup.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/pq/length.h"

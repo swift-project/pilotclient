@@ -3,18 +3,18 @@
 
 //! \file
 
-#ifndef BLACKMISC_SIMULATION_INTERPOLATOR_H
-#define BLACKMISC_SIMULATION_INTERPOLATOR_H
+#ifndef BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLATOR_H
+#define BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLATOR_H
 
-#include "blackmisc/simulation/interpolationresult.h"
-#include "blackmisc/simulation/interpolationstatus.h"
+#include "blackmisc/simulation/interpolation/interpolationresult.h"
+#include "blackmisc/simulation/interpolation/interpolationstatus.h"
 #include "blackmisc/simulation/partsstatus.h"
-#include "blackmisc/simulation/interpolationrenderingsetup.h"
+#include "blackmisc/simulation/interpolation/interpolationrenderingsetup.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
-#include "blackmisc/simulation/interpolationsetupprovider.h"
+#include "blackmisc/simulation/interpolation/interpolationsetupprovider.h"
 #include "blackmisc/simulation/simulationenvironmentprovider.h"
-#include "blackmisc/simulation/interpolationlogger.h"
-#include "blackmisc/simulation/interpolant.h"
+#include "blackmisc/simulation/interpolation/interpolationlogger.h"
+#include "blackmisc/simulation/interpolation/interpolant.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/aviation/aircraftsituation.h"

@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_MODELS_INTERPOLATIONSETUPMODEL_H
 #define BLACKGUI_MODELS_INTERPOLATIONSETUPMODEL_H
 
-#include "blackmisc/simulation/interpolationsetuplist.h"
+#include "blackmisc/simulation/interpolation/interpolationsetuplist.h"
 #include "blackgui/models/listmodelcallsignobjects.h"
 #include "blackgui/blackguiexport.h"
 #include <QString>

@@ -12,7 +12,7 @@
 #include "plugins/simulator/fsxcommon/simconnectwindows.h"
 #include "plugins/simulator/fscommon/simulatorfscommon.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/simulation/interpolatorlinear.h"
+#include "blackmisc/simulation/interpolation/interpolatorlinear.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/aircraftmodel.h"

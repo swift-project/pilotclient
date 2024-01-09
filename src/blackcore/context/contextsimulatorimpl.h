@@ -20,7 +20,7 @@
 #include "blackmisc/simulation/aircraftmodelsetprovider.h"
 #include "blackmisc/simulation/backgroundvalidation.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/interpolationsetuplist.h"
+#include "blackmisc/simulation/interpolation/interpolationsetuplist.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/simulatorinternals.h"

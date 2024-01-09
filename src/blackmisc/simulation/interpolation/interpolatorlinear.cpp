@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright (C) 2014 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackmisc/simulation/interpolatorlinear.h"
-#include "blackmisc/simulation/interpolatorfunctions.h"
+#include "blackmisc/simulation/interpolation/interpolatorlinear.h"
+#include "blackmisc/simulation/interpolation/interpolatorfunctions.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/geo/coordinategeodetic.h"

@@ -3,11 +3,11 @@
 
 //! \file
 
-#ifndef BLACKMISC_SIMULATION_INTERPOLATORMULTI_H
-#define BLACKMISC_SIMULATION_INTERPOLATORMULTI_H
+#ifndef BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLATORMULTI_H
+#define BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLATORMULTI_H
 
-#include "blackmisc/simulation/interpolatorlinear.h"
-#include "blackmisc/simulation/interpolatorspline.h"
+#include "blackmisc/simulation/interpolation/interpolatorlinear.h"
+#include "blackmisc/simulation/interpolation/interpolatorspline.h"
 #include "blackmisc/statusmessagelist.h"
 
 namespace BlackMisc::Simulation

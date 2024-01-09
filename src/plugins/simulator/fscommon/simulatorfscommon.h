@@ -7,7 +7,7 @@
 #define BLACKSIMPLUGIN_FSCOMMON_SIMULATORFSCOMMON_H
 
 #include "plugins/simulator/plugincommon/simulatorplugincommon.h"
-#include "blackmisc/simulation/interpolator.h"
+#include "blackmisc/simulation/interpolation/interpolator.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "plugins/simulator/fscommon/fscommonexport.h"
 

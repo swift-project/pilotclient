@@ -8,9 +8,9 @@
 
 #include "../plugincommon/simulatorplugincommon.h"
 #include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/simulation/interpolatormulti.h"
-#include "blackmisc/simulation/interpolationrenderingsetup.h"
-#include "blackmisc/simulation/interpolationlogger.h"
+#include "blackmisc/simulation/interpolation/interpolatormulti.h"
+#include "blackmisc/simulation/interpolation/interpolationrenderingsetup.h"
+#include "blackmisc/simulation/interpolation/interpolationlogger.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/settings/swiftpluginsettings.h"
 #include "blackmisc/pq/time.h"

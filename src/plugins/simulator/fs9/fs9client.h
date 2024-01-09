@@ -5,7 +5,7 @@
 #define DIRECTPLAY_CLIENT_H
 
 #include "directplaypeer.h"
-#include "blackmisc/simulation/interpolatormulti.h"
+#include "blackmisc/simulation/interpolation/interpolatormulti.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/pq/time.h"
