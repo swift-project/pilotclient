@@ -77,7 +77,7 @@ namespace BlackMisc::Simulation
             //! \private UNIT tests/ASSERT only
             const PosArray &getPa() const { return m_pa; }
 
-            CInterpolatorLinearPbh pbh() const { return m_pbh; }
+            const IInterpolatorPbh &pbh() const { return m_pbh; }
 
         private:
             PosArray m_pa; //!< current positions array, latest values last

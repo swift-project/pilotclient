@@ -60,7 +60,7 @@ namespace BlackMisc
                 //! End situation
                 const Aviation::CAircraftSituation &getEndSituation() const { return m_endSituation; }
 
-                CInterpolatorLinearPbh pbh() const { return m_pbh; }
+                const IInterpolatorPbh &pbh() const { return m_pbh; }
 
             private:
                 Aviation::CAircraftSituation m_startSituation;
