@@ -11,11 +11,12 @@
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/simulation/interpolatorpbh.h"
 
 namespace BlackMisc::Simulation
 {
     //! Simple linear interpolator for pitch, bank, heading and groundspeed from start to end situation
-    class BLACKMISC_EXPORT CInterpolatorLinearPbh
+    class BLACKMISC_EXPORT CInterpolatorLinearPbh : public IInterpolatorPbh
     {
     public:
         //! @{
@@ -27,12 +28,12 @@ namespace BlackMisc::Simulation
 
         //! @{
         //! Getter
-        Aviation::CHeading getHeading() const;
-        PhysicalQuantities::CAngle getPitch() const;
-        PhysicalQuantities::CAngle getBank() const;
-        PhysicalQuantities::CSpeed getGroundSpeed() const;
-        const Aviation::CAircraftSituation &getStartSituation() const { return m_startSituation; }
-        const Aviation::CAircraftSituation &getEndSituation() const { return m_endSituation; }
+        Aviation::CHeading getHeading() const override;
+        PhysicalQuantities::CAngle getPitch() const override;
+        PhysicalQuantities::CAngle getBank() const override;
+        PhysicalQuantities::CSpeed getGroundSpeed() const override;
+        const Aviation::CAircraftSituation &getStartSituation() const override { return m_startSituation; }
+        const Aviation::CAircraftSituation &getEndSituation() const override { return m_endSituation; }
         //! @}
 
         //! Change time fraction

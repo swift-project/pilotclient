@@ -651,6 +651,7 @@ add_library(misc SHARED
         simulation/simulatedaircraftlist.cpp
         simulation/matchingstatisticsentry.h
         simulation/interpolationsetuplist.h
+        simulation/interpolatorpbh.h
 
         # Test
         test/testdata.cpp
