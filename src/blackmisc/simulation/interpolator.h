@@ -94,24 +94,6 @@ namespace BlackMisc::Simulation
                       ISimulationEnvironmentProvider *simEnvProvider, IInterpolationSetupProvider *setupProvider, IRemoteAircraftProvider *remoteProvider,
                       CInterpolationLogger *logger);
 
-        //! Inits all data members for this current interpolation step
-        //! \param currentTimeSinceEpoch milliseconds since epoch for which the situation should be interpolated
-        //! \param setup interpolation setup
-        //! \param aircraftNumber passing the aircraft number allows to equally distribute among the steps and not to do it always together for all aircraft
-        bool initIniterpolationStepData(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber);
-
-        //! Init the interpolated situation
-        Aviation::CAircraftSituation initInterpolatedSituation(const Aviation::CAircraftSituation &oldSituation, const Aviation::CAircraftSituation &newSituation) const;
-
-        //! Current interpolated situation
-        Aviation::CAircraftSituation getInterpolatedSituation();
-
-        //! Parts before given offset time
-        Aviation::CAircraftParts getInterpolatedParts();
-
-        //! Interpolated parts, if not available guessed parts
-        Aviation::CAircraftParts getInterpolatedOrGuessedParts(int aircraftNumber);
-
         //! Center of gravity
         const PhysicalQuantities::CLength &getModelCG() const { return m_model.getCG(); }
 
@@ -143,11 +125,28 @@ namespace BlackMisc::Simulation
         qint64 m_situationsLastModifiedUsed { -1 }; //!< interpolant based on situations last updated
         int m_interpolatedSituationsCounter { 0 }; //!< counter for each interpolated situations: used for statistics, every n-th interpolation ....
 
-        bool m_unitTest = false; //!< mark as unit test
-
     private:
         CInterpolationLogger *m_logger = nullptr; //!< optional interpolation logger
         QTimer m_initTimer; //!< timer to init model, will be deleted when interpolator is deleted and cancel the call
+        bool m_unitTest = false; //!< mark as unit test
+
+        //! Inits all data members for this current interpolation step
+        //! \param currentTimeSinceEpoch milliseconds since epoch for which the situation should be interpolated
+        //! \param setup interpolation setup
+        //! \param aircraftNumber passing the aircraft number allows to equally distribute among the steps and not to do it always together for all aircraft
+        bool initIniterpolationStepData(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber);
+
+        //! Init the interpolated situation
+        Aviation::CAircraftSituation initInterpolatedSituation(const Aviation::CAircraftSituation &oldSituation, const Aviation::CAircraftSituation &newSituation) const;
+
+        //! Current interpolated situation
+        Aviation::CAircraftSituation getInterpolatedSituation();
+
+        //! Parts before given offset time
+        Aviation::CAircraftParts getInterpolatedParts();
+
+        //! Interpolated parts, if not available guessed parts
+        Aviation::CAircraftParts getInterpolatedOrGuessedParts(int aircraftNumber);
 
         //! Guessed parts
         static Aviation::CAircraftParts guessParts(const Aviation::CAircraftSituation &situation, const Aviation::CAircraftSituationChange &change, const Simulation::CAircraftModel &model);
