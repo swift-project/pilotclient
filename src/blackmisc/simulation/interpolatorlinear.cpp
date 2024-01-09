@@ -27,7 +27,7 @@ namespace BlackMisc::Simulation
                                                                                                 m_startSituation(startSituation), m_pbh(0, startSituation, startSituation)
     {}
 
-    CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &startSituation, const CInterpolatorPbh &pbh) : IInterpolant(1),
+    CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &startSituation, const CInterpolatorLinearPbh &pbh) : IInterpolant(1),
                                                                                                                              m_startSituation(startSituation), m_pbh(pbh)
     {}
 
@@ -39,7 +39,7 @@ namespace BlackMisc::Simulation
         {
             BLACK_VERIFY_X(isValidTimeFraction(m_simulationTimeFraction), Q_FUNC_INFO, "Time fraction needs to be within [0;1]");
         }
-        m_pbh = CInterpolatorPbh(m_simulationTimeFraction, startSituation, endSituation);
+        m_pbh = CInterpolatorLinearPbh(m_simulationTimeFraction, startSituation, endSituation);
     }
 
     void CInterpolatorLinear::anchor()
