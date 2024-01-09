@@ -258,7 +258,13 @@ namespace BlackMisc::Simulation
 
             // use derived interpolant function
             const bool interpolateGndFlag = pbh.getEndSituation().hasGroundDetailsForGndInterpolation() && pbh.getStartSituation().hasGroundDetailsForGndInterpolation();
-            currentSituation = interpolant.interpolatePositionAndAltitude(currentSituation, interpolateGndFlag);
+            currentSituation = interpolant.interpolatePositionAndAltitude(currentSituation);
+
+            if (interpolateGndFlag)
+            {
+                currentSituation.setOnGroundInfo(interpolant.interpolateGroundFactor());
+            }
+
             if (currentSituation.isNull()) { break; }
 
             // if we get here and the vector is invalid it means we haven't handled it correctly in one of the interpolators
