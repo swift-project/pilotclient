@@ -13,6 +13,8 @@
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/interpolationsetupprovider.h"
 #include "blackmisc/simulation/simulationenvironmentprovider.h"
+#include "blackmisc/simulation/interpolationlogger.h"
+#include "blackmisc/simulation/interpolant.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/aviation/aircraftsituation.h"
@@ -20,6 +22,7 @@
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/logcategories.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QString>
 #include <QStringList>
@@ -32,9 +35,11 @@ namespace BlackMisc::Simulation
     class CInterpolatorLinear;
     class CInterpolatorSpline;
 
-    //! Interpolator, calculation inbetween positions
-    template <typename Derived>
-    class CInterpolator :
+    //! Base class for interpolating (calculate positions inbetween updates).
+    //! One instance is responsible for one aircraft
+    //! This class provides the high level functions for interpolation (called from the simulator plugin), logging functionality, as well as the logic to interpolate aircraft parts.
+    //! Information for the position interpolation (basically aircraft updates from FSD) are provided from this class.
+    class BLACKMISC_EXPORT CInterpolator :
         protected CSimulationEnvironmentAware,
         protected CInterpolationSetupAware,
         protected CRemoteAircraftAware
@@ -174,17 +179,9 @@ namespace BlackMisc::Simulation
         //! Return NULL parts and log
         const BlackMisc::Aviation::CAircraftParts &logAndReturnNullParts(const QString &info, bool log);
 
-        //! @{
-        //! Derived class
-        Derived *derived() { return static_cast<Derived *>(this); }
-        const Derived *derived() const { return static_cast<const Derived *>(this); }
-        //! @}
+        //! Get the interpolant for the given time point
+        virtual const IInterpolant &getInterpolant(SituationLog &log) = 0;
     };
-
-    //! \cond PRIVATE
-    extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CInterpolator<CInterpolatorLinear>;
-    extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CInterpolator<CInterpolatorSpline>;
-    //! \endcond
 } // namespace
 // namespace
 #endif // guard

@@ -25,7 +25,7 @@ namespace BlackMisc
     namespace Simulation
     {
         //! Linear interpolator, calculation inbetween positions
-        class BLACKMISC_EXPORT CInterpolatorLinear : public CInterpolator<CInterpolatorLinear>
+        class BLACKMISC_EXPORT CInterpolatorLinear : public CInterpolator
         {
             virtual void anchor() override;
 
@@ -47,12 +47,11 @@ namespace BlackMisc
                 CInterpolant(const Aviation::CAircraftSituation &startSituation, const Aviation::CAircraftSituation &endSituation, double timeFraction, qint64 interpolatedTime);
                 //! @}
 
-                //! Perform the interpolation
-                //! \return interpolated position and altitude
-                std::tuple<Geo::CCoordinateGeodetic, Aviation::CAltitude> interpolatePositionAndAltitude() const;
+                //! \copydoc BlackMisc::Simulation::IInterpolant::interpolatePositionAndAltitude
+                std::tuple<Geo::CCoordinateGeodetic, Aviation::CAltitude> interpolatePositionAndAltitude() const override;
 
-                //! Interpolate the ground information/factor
-                Aviation::COnGroundInfo interpolateGroundFactor() const;
+                //! \copydoc BlackMisc::Simulation::IInterpolant::interpolateGroundFactor
+                Aviation::COnGroundInfo interpolateGroundFactor() const override;
 
                 //! Start situation
                 const Aviation::CAircraftSituation &getStartSituation() const { return m_startSituation; }
@@ -60,7 +59,8 @@ namespace BlackMisc
                 //! End situation
                 const Aviation::CAircraftSituation &getEndSituation() const { return m_endSituation; }
 
-                const IInterpolatorPbh &pbh() const { return m_pbh; }
+                //! \copydoc BlackMisc::Simulation::IInterpolant::pbh
+                const IInterpolatorPbh &pbh() const override { return m_pbh; }
 
             private:
                 Aviation::CAircraftSituation m_startSituation;
@@ -69,8 +69,8 @@ namespace BlackMisc
                 CInterpolatorLinearPbh m_pbh;
             };
 
-            //! Get the interpolant for the given time point
-            CInterpolant getInterpolant(SituationLog &log);
+            //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolant
+            const IInterpolant &getInterpolant(SituationLog &log) override;
 
         private:
             CInterpolant m_interpolant; //!< current interpolant

@@ -100,7 +100,7 @@ namespace BlackMisc::Simulation
         }
     }
 
-    CInterpolatorLinear::CInterpolant CInterpolatorLinear::getInterpolant(SituationLog &log)
+    const IInterpolant &CInterpolatorLinear::getInterpolant(SituationLog &log)
     {
         // set default situations
         CAircraftSituation startSituation = m_interpolant.getStartSituation();
