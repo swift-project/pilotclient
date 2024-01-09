@@ -315,7 +315,7 @@ namespace BlackMisc::Simulation
         m_situationsAvailable = pa.size();
     }
 
-    CAircraftSituation CInterpolatorSpline::CInterpolant::interpolatePositionAndAltitude(const CAircraftSituation &currentSituation) const
+    std::tuple<Geo::CCoordinateGeodetic, Aviation::CAltitude> CInterpolatorSpline::CInterpolant::interpolatePositionAndAltitude() const
     {
         const double t1 = m_pa.t[1];
         const double t2 = m_pa.t[2]; // latest (adjusted)
@@ -327,7 +327,7 @@ namespace BlackMisc::Simulation
             BLACK_VERIFY_X(m_currentTimeMsSinceEpoc >= t1, Q_FUNC_INFO, "invalid timestamp t1");
             BLACK_VERIFY_X(m_currentTimeMsSinceEpoc < t2, Q_FUNC_INFO, "invalid timestamp t2"); // t1==t2 results in div/0
         }
-        if (!valid) { return CAircraftSituation::null(); }
+        if (!valid) { return { {}, {} }; }
 
         const double newX = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.x[1], m_pa.x[2], m_pa.dx[1], m_pa.dx[2]);
         const double newY = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.y[1], m_pa.y[2], m_pa.dy[1], m_pa.dy[2]);
@@ -340,9 +340,8 @@ namespace BlackMisc::Simulation
             BLACK_VERIFY_X(CAircraftSituation::isValidVector(m_pa.y), Q_FUNC_INFO, "invalid Y"); // all y values
             BLACK_VERIFY_X(CAircraftSituation::isValidVector(m_pa.z), Q_FUNC_INFO, "invalid Z"); // all z values
         }
-        if (!valid) { return CAircraftSituation::null(); }
+        if (!valid) { return { {}, {} }; }
 
-        CAircraftSituation newSituation(currentSituation);
         const std::array<double, 3> normalVector = { { newX, newY, newZ } };
         const CCoordinateGeodetic currentPosition(normalVector);
 
@@ -350,18 +349,14 @@ namespace BlackMisc::Simulation
         if (!valid && CBuildConfig::isLocalDeveloperDebugBuild())
         {
             BLACK_VERIFY_X(valid, Q_FUNC_INFO, "invalid vector");
-            CLogMessage(this).warning(u"Invalid vector for '%1' v: %2 %3 %4") << currentSituation.getCallsign().asString() << normalVector[0] << normalVector[1] << normalVector[2];
+            CLogMessage(this).warning(u"Invalid vector v: %2 %3 %4") << normalVector[0] << normalVector[1] << normalVector[2];
         }
-        if (!valid) { return CAircraftSituation::null(); }
+        if (!valid) { return { {}, {} }; }
 
         const double newA = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.a[1], m_pa.a[2], m_pa.da[1], m_pa.da[2]);
         const CAltitude alt(newA, m_altitudeUnit);
 
-        newSituation.setPosition(currentPosition);
-        newSituation.setAltitude(alt);
-        newSituation.setMSecsSinceEpoch(this->getInterpolatedTime());
-
-        return newSituation;
+        return { currentPosition, alt };
     }
 
     Aviation::COnGroundInfo CInterpolatorSpline::CInterpolant::interpolateGroundFactor() const

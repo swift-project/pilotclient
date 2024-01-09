@@ -45,7 +45,7 @@ namespace BlackMisc::Simulation
     void CInterpolatorLinear::anchor()
     {}
 
-    CAircraftSituation CInterpolatorLinear::CInterpolant::interpolatePositionAndAltitude(const CAircraftSituation &situation) const
+    std::tuple<Geo::CCoordinateGeodetic, Aviation::CAltitude> CInterpolatorLinear::CInterpolant::interpolatePositionAndAltitude() const
     {
         const std::array<double, 3> startVec(m_startSituation.getPosition().normalVectorDouble());
         const std::array<double, 3> endVec(m_endSituation.getPosition().normalVectorDouble());
@@ -77,12 +77,7 @@ namespace BlackMisc::Simulation
         const CAltitude altitude((newAlt - oldAlt) * tf + oldAlt,
                                  oldAlt.getReferenceDatum());
 
-        CAircraftSituation interpolatedSituation(situation);
-        interpolatedSituation.setPosition(interpolatedPosition);
-        interpolatedSituation.setAltitude(altitude);
-        interpolatedSituation.setMSecsSinceEpoch(this->getInterpolatedTime());
-
-        return interpolatedSituation;
+        return { interpolatedPosition, altitude };
     }
 
     Aviation::COnGroundInfo CInterpolatorLinear::CInterpolant::interpolateGroundFactor() const
