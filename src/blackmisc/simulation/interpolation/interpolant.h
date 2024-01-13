@@ -18,10 +18,7 @@ namespace BlackMisc::Simulation
         IInterpolant() = default;
 
         //! Constructor
-        explicit IInterpolant(int situationsAvailable) : m_situationsAvailable(situationsAvailable) {}
-
-        //! Constructor
-        IInterpolant(qint64 interpolatedTime, int situationsAvailable) : m_interpolatedTime(interpolatedTime), m_situationsAvailable(situationsAvailable) {}
+        explicit IInterpolant(qint64 interpolatedTime) : m_interpolatedTime(interpolatedTime) {}
 
         virtual ~IInterpolant() = default;
 
@@ -38,9 +35,6 @@ namespace BlackMisc::Simulation
         //! "Real time" representing the interpolated situation
         qint64 getInterpolatedTime() const { return m_interpolatedTime; }
 
-        //! Situations available
-        int getSituationsAvailable() const { return m_situationsAvailable; }
-
         //! Valid?
         bool isValid() const { return m_valid; }
 
@@ -55,7 +49,6 @@ namespace BlackMisc::Simulation
 
     protected:
         qint64 m_interpolatedTime = -1; //!< "Real time "of interpolated situation
-        int m_situationsAvailable = 0; //!< used situations
         bool m_valid = true; //!< valid?
         bool m_recalculated = false; //!< recalculated interpolant
     };

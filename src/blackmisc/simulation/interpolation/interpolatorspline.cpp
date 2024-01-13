@@ -312,7 +312,6 @@ namespace BlackMisc::Simulation
     CInterpolatorSpline::CInterpolant::CInterpolant(const CInterpolatorSpline::PosArray &pa, const CLengthUnit &altitudeUnit, const CInterpolatorLinearPbh &pbh) : m_pa(pa), m_altitudeUnit(altitudeUnit)
     {
         m_pbh = pbh;
-        m_situationsAvailable = pa.size();
     }
 
     std::tuple<Geo::CCoordinateGeodetic, Aviation::CAltitude> CInterpolatorSpline::CInterpolant::interpolatePositionAndAltitude() const
