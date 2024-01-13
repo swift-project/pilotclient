@@ -346,8 +346,6 @@ namespace BlackMisc::Simulation
             log.noNetworkSituations = m_currentSituations.sizeInt();
             log.useParts = this->isRemoteAircraftSupportingParts(m_callsign);
             m_logger->logInterpolation(log);
-
-            // if (log.interpolantRecalc) { CLogMessage(this).debug(u"Recalc %1") << log.callsign.asString(); }
         }
 
         // bye
