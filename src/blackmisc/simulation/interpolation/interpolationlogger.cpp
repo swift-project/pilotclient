@@ -290,7 +290,7 @@ namespace BlackMisc::Simulation
                 u"<thead><tr>"
                 u"<th title=\"changed situation\">cs.</th><th>Int</th>"
                 u"<th title=\"recalculated interpolant\">recalc</th>"
-                u"<th>CS</th><th>VTOL</th><th>timestamp</th><th>since</th>"
+                u"<th>CS</th><th>timestamp</th><th>since</th>"
                 u"<th>ts old</th><th>ts new</th><th>ts cur</th>"
                 u"<th>Interpolation ts.</th><th>Sample &Delta;t</th><th>fraction</th>"
                 u"<th>lat.old</th><th>lat.new</th><th>lat.cur</th>"
@@ -328,7 +328,6 @@ namespace BlackMisc::Simulation
                 u"<td>" % boolToYesNo(log.interpolantRecalc) % u"</td>"
                                                                u"<td>" %
                 log.callsign.asString() % u"</td>" %
-                u"<td>" % boolToYesNo(log.vtolAircraft) % u"</td>" %
                 u"<td>" % msSinceEpochToTime(log.tsCurrent) % u"</td>" %
                 u"<td>" % QString::number(log.tsCurrent - firstLog.tsCurrent) % u"</td>" %
 

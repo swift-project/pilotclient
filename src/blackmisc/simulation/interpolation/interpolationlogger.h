@@ -32,7 +32,6 @@ namespace BlackMisc
             double simTimeFraction = -1; //!< time fraction, expected 0..1
             double deltaSampleTimesMs = -1; //!< delta time between samples (i.e. 2 situations)
             bool useParts = false; //!< supporting aircraft parts
-            bool vtolAircraft = false; //!< VTOL aircraft
             bool interpolantRecalc = false; //!< interpolant recalculated
             int noNetworkSituations = 0; //!< available network situations
             int noInvalidSituations = 0; //!< invalid situations, missing situations for timestampd
