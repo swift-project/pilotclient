@@ -1282,8 +1282,9 @@ namespace BlackCore::Fsd
         emit euroscopeSimDataUpdatedReceived(situation, parts, currentOffsetTime(data.sender()), data.m_model, data.m_livery);
     }
 
-    void CFSDClient::handleVisualPilotDataUpdate(const QStringList &tokens, MessageType messageType)
+    void CFSDClient::handleVisualPilotDataUpdate(const QStringList & /*tokens*/, MessageType /*messageType*/)
     {
+#if 0
         VisualPilotDataUpdate dataUpdate;
         switch (messageType)
         {
@@ -1312,6 +1313,7 @@ namespace BlackCore::Fsd
         situation.setTimeOffsetMs(offsetTimeMs);
 
         emit visualPilotDataUpdateReceived(situation);
+#endif
     }
 
     void CFSDClient::handleVisualPilotDataToggle(const QStringList &tokens)
