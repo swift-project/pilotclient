@@ -1928,9 +1928,9 @@ namespace BlackCore::Fsd
         const qint64 avgTimeMs = this->averageOffsetTimeMs(callsign, count, 3); // latest average
         qint64 offsetTime = CFsdSetup::c_positionTimeOffsetMsec;
 
-        if (avgTimeMs < CFsdSetup::c_minimumPositionTimeOffsetMsec && count >= 3)
+        if (avgTimeMs < CFsdSetup::c_interimPositionTimeOffsetMsec && count >= 3)
         {
-            offsetTime = CFsdSetup::c_minimumPositionTimeOffsetMsec;
+            offsetTime = CFsdSetup::c_interimPositionTimeOffsetMsec;
         }
 
         return m_additionalOffsetTime + offsetTime;
