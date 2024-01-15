@@ -575,8 +575,6 @@ namespace BlackCore::Fsd
         QHash<BlackMisc::Aviation::CCallsign, PendingAtisQuery> m_pendingAtisQueries;
         QHash<BlackMisc::Aviation::CCallsign, qint64> m_lastPositionUpdate;
         QHash<BlackMisc::Aviation::CCallsign, QList<qint64>> m_lastOffsetTimes; //!< latest offset first
-        QHash<BlackMisc::Aviation::CCallsign, qint64> m_interpolatedOffsetTime;
-        static const int c_offsetTimeInterpolationInverseRate = 4;
 
         BlackMisc::Aviation::CAtcStationList m_atcStations;
 
