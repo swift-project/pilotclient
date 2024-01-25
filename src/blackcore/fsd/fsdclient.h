@@ -195,7 +195,7 @@ namespace BlackCore::Fsd
         }
 
         //! @{
-        //! Connenct/disconnect
+        //! Connect/disconnect
         void connectToServer();
         void disconnectFromServer();
         //! @}
@@ -348,7 +348,7 @@ namespace BlackCore::Fsd
 
         //! Message send to FSD
         template <class T>
-        void sendQueudedMessage(const T &message)
+        void sendQueuedMessage(const T &message)
         {
             if (!message.isValid()) { return; }
             if (m_unitTestMode)
@@ -436,7 +436,7 @@ namespace BlackCore::Fsd
         void handleKillRequest(const QStringList &tokens);
         void handleFlightPlan(const QStringList &tokens);
         void handleClientQuery(const QStringList &tokens);
-        void handleClientReponse(const QStringList &tokens);
+        void handleClientResponse(const QStringList &tokens);
         void handleServerError(const QStringList &tokens);
         void handleCustomPilotPacket(const QStringList &tokens);
         void handleFsdIdentification(const QStringList &tokens);
@@ -477,10 +477,10 @@ namespace BlackCore::Fsd
         void insertLatestOffsetTime(const BlackMisc::Aviation::CCallsign &callsign, qint64 offsetMs);
 
         //! Average offset time in ms
-        qint64 averageOffsetTimeMs(const BlackMisc::Aviation::CCallsign &callsign, int &count, int maxLastValues = MaxOffseTimes) const;
+        qint64 averageOffsetTimeMs(const BlackMisc::Aviation::CCallsign &callsign, int &count, int maxLastValues = c_maxOffsetTimes) const;
 
         //! Average offset time in ms
-        qint64 averageOffsetTimeMs(const BlackMisc::Aviation::CCallsign &callsign, int maxLastValues = MaxOffseTimes) const;
+        qint64 averageOffsetTimeMs(const BlackMisc::Aviation::CCallsign &callsign, int maxLastValues = c_maxOffsetTimes) const;
 
         bool isInterimPositionSendingEnabledForServer() const;
         bool isInterimPositionReceivingEnabledForServer() const;
@@ -518,7 +518,7 @@ namespace BlackCore::Fsd
         //! Max or 1st non-null value
         static const BlackMisc::PhysicalQuantities::CLength &maxOrNotNull(const BlackMisc::PhysicalQuantities::CLength &l1, const BlackMisc::PhysicalQuantities::CLength &l2);
 
-        //! String withou colons
+        //! String without colons
         static QString noColons(const QString &input);
 
         //! Get a short-lived, one-time-use token from Vatsim web service, to avoid sending plaintext password to FSD
@@ -639,10 +639,10 @@ namespace BlackCore::Fsd
         //! An illegal FSD state has been detected
         void handleIllegalFsdState(const QString &message);
 
-        static const int MaxOffseTimes = 6; //!< Max offset times kept
+        static int constexpr c_maxOffsetTimes = 6; //!< Max offset times kept
         static int constexpr c_processingIntervalMsec = 100; //!< interval for the processing timer
-        static int constexpr c_updatePostionIntervalMsec = 5000; //!< interval for the position update timer (send our position to network)
-        static int constexpr c_updateInterimPostionIntervalMsec = 1000; //!< interval for iterim position updates (send our position as interim position)
+        static int constexpr c_updatePositionIntervalMsec = 5000; //!< interval for the position update timer (send our position to network)
+        static int constexpr c_updateInterimPositionIntervalMsec = 1000; //!< interval for interim position updates (send our position as interim position)
         static int constexpr c_updateVisualPositionIntervalMsec = 200; //!< interval for the VATSIM visual position updates (send our position and 6DOF velocity)
         static int constexpr c_sendFsdMsgIntervalMsec = 10; //!< interval for FSD send messages
         bool m_stoppedSendingVisualPositions = false; //!< for when velocity drops to zero
