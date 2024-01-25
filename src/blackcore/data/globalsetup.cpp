@@ -42,7 +42,6 @@ namespace BlackCore::Data
     {
         m_mappingMinimumVersion = CBuildConfig::getVersionString();
         m_dbRootDirectoryUrl = CUrl("https://datastore.swift-project.org/");
-        m_vatsimBookingsUrl = CUrl("http://vatbook.euroutepro.com/xml2.php");
         m_vatsimMetarsUrls = CUrlList { "http://metar.vatsim.net/metar.php" };
         m_vatsimStatusFileUrls = CUrlList { "https://status.vatsim.net" };
         m_vatsimDataFileUrls = CUrlList { "https://data.vatsim.net/v3/vatsim-data.json" };
@@ -277,7 +276,7 @@ namespace BlackCore::Data
         s +=
             u"DB root directory: " % getDbRootDirectoryUrl().toQString(i18n) % separator % u"ICAO DB reader: " % getDbIcaoReaderUrl().toQString(i18n) % separator % u"Model DB reader: " % getDbModelReaderUrl().toQString(i18n) % separator % u"Airport DB reader: " % getDbAirportReaderUrl().toQString(i18n) % separator % u"DB home page: " % getDbHomePageUrl().toQString(i18n) % separator % u"DB login service: " % getDbLoginServiceUrl().toQString(i18n) % separator % u"DB client ping service: " % getDbClientPingServiceUrl().toQString(i18n);
         s +=
-            u"VATSIM bookings: " % getVatsimBookingsUrl().toQString(i18n) % separator % u"VATSIM METARs: " % getVatsimMetarsUrls().toQString(i18n) % separator % u"VATSIM data file: " % getVatsimDataFileUrls().toQString(i18n) % separator % u"VATSIM server file: " % getVatsimServerFileUrl().toQString(i18n) % separator
+            u"VATSIM METARs: " % getVatsimMetarsUrls().toQString(i18n) % separator % u"VATSIM data file: " % getVatsimDataFileUrls().toQString(i18n) % separator % u"VATSIM server file: " % getVatsimServerFileUrl().toQString(i18n) % separator
 
             % u"Predefined servers: " % getPredefinedServers().toQString(i18n) % separator
 
@@ -301,7 +300,6 @@ namespace BlackCore::Data
         case IndexDbClientPingService: return QVariant::fromValue(this->getDbClientPingServiceUrl());
         case IndexVatsimStatus: return QVariant::fromValue(m_vatsimStatusFileUrls);
         case IndexVatsimData: return QVariant::fromValue(m_vatsimDataFileUrls);
-        case IndexVatsimBookings: return QVariant::fromValue(m_vatsimBookingsUrl);
         case IndexVatsimServer: return QVariant::fromValue(m_vatsimServerFileUrl);
         case IndexVatsimHttpFsd: return QVariant::fromValue(m_vatsimFsdHttpUrl);
         case IndexVatsimMetars: return QVariant::fromValue(m_vatsimMetarsUrls);
@@ -339,7 +337,6 @@ namespace BlackCore::Data
         case IndexDbLoginService: break; // cannot be changed
         case IndexDbClientPingService: break; // cannot be changed
         case IndexVatsimData: m_vatsimDataFileUrls = variant.value<CUrlList>(); break;
-        case IndexVatsimBookings: m_vatsimBookingsUrl.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexVatsimServer: m_vatsimServerFileUrl = variant.value<CUrl>(); break;
         case IndexVatsimHttpFsd: m_vatsimFsdHttpUrl = variant.value<CUrl>(); break;
         case IndexVatsimMetars: m_vatsimMetarsUrls = variant.value<CUrlList>(); break;

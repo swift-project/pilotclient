@@ -73,17 +73,11 @@ namespace BlackCore
             //! \name Interface overrides
             //! @{
 
-            //! \copydoc BlackCore::Context::IContextNetwork::requestAtcBookingsUpdate
-            virtual void requestAtcBookingsUpdate() const override;
-
             //! \copydoc BlackCore::Context::IContextNetwork::getAtcStationsOnline
             virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline(bool recalculateDistance) const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getClosestAtcStationsOnline
             virtual BlackMisc::Aviation::CAtcStationList getClosestAtcStationsOnline(int number) const override;
-
-            //! \copydoc BlackCore::Context::IContextNetwork::getAtcStationsBooked
-            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked(bool recalculateDistance) const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getAircraftInRange
             virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;

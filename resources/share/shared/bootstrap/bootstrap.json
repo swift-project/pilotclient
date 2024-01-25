@@ -36,9 +36,6 @@
         ]
     },
     "timestampMSecsSinceEpoch": 1559602257000,
-    "vatsimBookingsUrl": {
-        "url": "http://vatbook.euroutepro.com/xml2.php"
-    },
     "vatsimDataFileUrls": {
         "containerbase": [
             {

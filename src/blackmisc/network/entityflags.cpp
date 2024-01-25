@@ -22,7 +22,6 @@ namespace BlackMisc::Network
         case AllEntities: return QStringLiteral("All");
         case AllIcaoAndCountries: return QStringLiteral("All ICAO + country");
         case AllIcaoEntities: return QStringLiteral("All ICAO");
-        case BookingEntity: return QStringLiteral("VATSIM bookings");
         case CountryEntity: return QStringLiteral("Country");
         case DistributorEntity: return QStringLiteral("Distributor");
         case DbInfoObjectEntity: return QStringLiteral("Info objects (DB)");
@@ -50,7 +49,6 @@ namespace BlackMisc::Network
         if (entities.testFlag(AircraftCategoryEntity)) list << QStringLiteral("Aircraft category");
         if (entities.testFlag(AirlineIcaoEntity)) list << QStringLiteral("Airline ICAO");
         if (entities.testFlag(AirportEntity)) list << QStringLiteral("Airport");
-        if (entities.testFlag(BookingEntity)) list << QStringLiteral("VATSIM bookings");
         if (entities.testFlag(CountryEntity)) list << QStringLiteral("Country");
         if (entities.testFlag(DistributorEntity)) list << QStringLiteral("Distributor");
         if (entities.testFlag(DbInfoObjectEntity)) list << QStringLiteral("Info objects (DB)");

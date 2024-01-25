@@ -27,7 +27,6 @@ namespace BlackGui::Models
         enum AtcStationMode
         {
             NotSet,
-            StationsBooked,
             StationsOnline
         };
 

@@ -80,7 +80,7 @@ namespace BlackSample
         CAtcStationList atcList = CTestData::getAtcStations();
         atcList.push_back(CTestData::getAtcStations());
         atcList = atcList.findBy(&CAtcStation::getCallsign, "eddm_twr", &CAtcStation::getFrequency, CFrequency(118.7, CFrequencyUnit::MHz()));
-        atcList = atcList.sortedBy(&CAtcStation::getBookedFromUtc, &CAtcStation::getCallsign, &CAtcStation::getControllerRealName);
+        atcList = atcList.sortedBy(&CAtcStation::getCallsign, &CAtcStation::getControllerRealName);
         out << atcList << Qt::endl;
         out << "-----------------------------------------------" << Qt::endl;
 

@@ -91,7 +91,7 @@ namespace BlackMisc::Test
     {
         static const CAtcStation t(CCallsign("EDDM_TWR"), CUser("654321", "John Doe"),
                                    CFrequency(119.9, CFrequencyUnit::MHz()), CTestData::getCoordinateFrankfurtTower(), CLength(50, CLengthUnit::km()),
-                                   false, QDateTime::currentDateTimeUtc().addSecs(7200), QDateTime::currentDateTimeUtc().addSecs(9500));
+                                   false);
         return t;
     }
 
@@ -99,7 +99,7 @@ namespace BlackMisc::Test
     {
         static const CAtcStation t(CCallsign("EDDF_TWR"), CUser("654321", "Joe Bar"),
                                    CFrequency(118.7, CFrequencyUnit::MHz()), CTestData::getCoordinateMunichTower(), CLength(50, CLengthUnit::km()),
-                                   true, QDateTime::currentDateTimeUtc().addSecs(-3600), QDateTime::currentDateTimeUtc().addSecs(2400));
+                                   true, QDateTime::currentDateTimeUtc().addSecs(2400));
         return t;
     }
 
@@ -108,7 +108,7 @@ namespace BlackMisc::Test
         static const CAtcStation t(CCallsign("eddm_app"), CUser("654321", "Jen Doe"),
                                    CFrequency(120.7, CFrequencyUnit::MHz()),
                                    CTestData::getCoordinateMunichTower(), CLength(100, CLengthUnit::km()),
-                                   false, QDateTime::currentDateTimeUtc().addSecs(1000), QDateTime::currentDateTimeUtc().addSecs(2000));
+                                   false);
         return t;
     }
 

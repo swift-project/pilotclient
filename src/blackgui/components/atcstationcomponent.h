@@ -56,7 +56,6 @@ namespace BlackGui
             {
                 TabAtcOnline = 0,
                 TabAtcOnlineTree,
-                TabAtcBooked
             };
 
             //! Constructor
@@ -67,9 +66,6 @@ namespace BlackGui
 
             //! Set tab
             void setTab(AtcTab tab);
-
-            //! Number of booked stations
-            int countBookedStations() const;
 
             //! Number of online stations
             int countOnlineStations() const;
@@ -109,15 +105,6 @@ namespace BlackGui
             //! Trigger a selection of an onlie station (async)
             void triggerOnlineAtcStationSelected(const BlackMisc::Aviation::CAtcStation &station);
 
-            //! Tab changed
-            void atcStationsTabChanged();
-
-            //! Booked stations reloading
-            void reloadAtcStationsBooked();
-
-            //! Booked stations changed
-            void changedAtcStationsBooked();
-
             //! Online stations changed
             void changedAtcStationsOnline();
 
@@ -132,9 +119,6 @@ namespace BlackGui
 
             //! Info area tab bar has changed
             void infoAreaTabBarChanged(int index);
-
-            //! Count has been changed
-            void onCountChanged(int count, bool withFilter);
 
             //! Online tab info
             void setOnlineTabs(int count, int filtered);
@@ -175,8 +159,6 @@ namespace BlackGui
             BlackMisc::Aviation::CCallsign m_selectedCallsign;
             QDateTime m_timestampLastReadOnlineStations; //!< stations read
             QDateTime m_timestampOnlineStationsChanged; //!< stations marked as changed
-            QDateTime m_timestampLastReadBookedStations; //!< stations read
-            QDateTime m_timestampBookedStationsChanged; //!< stations marked as changed
             BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settingsView { this, &CAtcStationComponent::settingsChanged };
         };
     } // namespace

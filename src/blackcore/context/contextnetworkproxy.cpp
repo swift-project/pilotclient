@@ -44,13 +44,7 @@ namespace BlackCore::Context
                                     "connectionStatusChanged", this, SIGNAL(connectionStatusChanged(BlackMisc::Network::CConnectionStatus, BlackMisc::Network::CConnectionStatus)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "changedAtcStationsBooked", this, SIGNAL(changedAtcStationsBooked()));
-        Q_ASSERT(s);
-        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "changedAtcStationsOnline", this, SIGNAL(changedAtcStationsOnline()));
-        Q_ASSERT(s);
-        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "changedAtcStationsBookedDigest", this, SIGNAL(changedAtcStationsBookedDigest()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "changedAtcStationsOnlineDigest", this, SIGNAL(changedAtcStationsOnlineDigest()));
@@ -95,11 +89,6 @@ namespace BlackCore::Context
         this->relayBaseClassSignals(serviceName, connection, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName());
     }
 
-    void CContextNetworkProxy::requestAtcBookingsUpdate() const
-    {
-        m_dBusInterface->callDBus(QLatin1String("requestAtcBookingsUpdate"));
-    }
-
     CAtcStationList CContextNetworkProxy::getAtcStationsOnline(bool recalculateDistance) const
     {
         return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1String("getAtcStationsOnline"), recalculateDistance);
@@ -108,11 +97,6 @@ namespace BlackCore::Context
     CAtcStationList CContextNetworkProxy::getClosestAtcStationsOnline(int number) const
     {
         return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1String("getClosestAtcStationsOnline"), number);
-    }
-
-    CAtcStationList CContextNetworkProxy::getAtcStationsBooked(bool recalculateDistance) const
-    {
-        return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1String("getAtcStationsBooked"), recalculateDistance);
     }
 
     CSimulatedAircraftList CContextNetworkProxy::getAircraftInRange() const

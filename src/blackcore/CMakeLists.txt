@@ -188,8 +188,6 @@ add_library(core SHARED
         fsd/visualpilotdataperiodic.h
 
         # VATSIM
-        vatsim/vatsimbookingreader.cpp
-        vatsim/vatsimbookingreader.h
         vatsim/vatsimdatafilereader.cpp
         vatsim/vatsimdatafilereader.h
         vatsim/vatsimmetarreader.cpp

@@ -56,7 +56,7 @@ namespace BlackSample
         qDebug() << "-- find by:";
         qDebug() << atcListFind.toQString();
 
-        CAtcStationList atcListSort = atcList.sortedBy(&CAtcStation::getBookedFromUtc, &CAtcStation::getCallsign, &CAtcStation::getControllerRealName);
+        CAtcStationList atcListSort = atcList.sortedBy(&CAtcStation::getCallsign, &CAtcStation::getControllerRealName);
         qDebug() << "-- sort by:";
         qDebug() << atcListSort.toQString();
 

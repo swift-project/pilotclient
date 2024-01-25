@@ -42,7 +42,6 @@ namespace BlackCore::Data
             IndexDbLoginService,
             IndexDbClientPingService,
             IndexVatsimStatus,
-            IndexVatsimBookings,
             IndexVatsimMetars,
             IndexVatsimData,
             IndexVatsimServer,
@@ -160,9 +159,6 @@ namespace BlackCore::Data
         //! \remark based on getSwiftSharedUrls
         BlackMisc::Network::CUrlList getSwiftUpdateInfoFileUrls() const;
 
-        //! URL to read VATSIM bookings
-        const BlackMisc::Network::CUrl &getVatsimBookingsUrl() const { return m_vatsimBookingsUrl; }
-
         //! VATSIM METAR URL
         const BlackMisc::Network::CUrlList &getVatsimMetarsUrls() const { return m_vatsimMetarsUrls; }
 
@@ -247,7 +243,6 @@ namespace BlackCore::Data
         QString m_mappingMinimumVersion; //!< minimum version
         BlackMisc::Network::CUrl m_crashReportServerUrl; //!< crash report server
         BlackMisc::Network::CUrl m_dbRootDirectoryUrl; //!< Root directory of DB
-        BlackMisc::Network::CUrl m_vatsimBookingsUrl; //!< ATC bookings
         BlackMisc::Network::CUrlList m_vatsimMetarsUrls; //!< METAR data
         BlackMisc::Network::CUrlList m_vatsimStatusFileUrls; //!< Status file, where to find the VATSIM files (METAR, data, ATIS, other status files)
         BlackMisc::Network::CUrlList m_vatsimDataFileUrls; //!< Overall VATSIM data file / merely for bootstrapping the first time
@@ -280,7 +275,6 @@ namespace BlackCore::Data
             BLACK_METAMEMBER(vatsimDataFileUrls),
             BLACK_METAMEMBER(vatsimServerFileUrl),
             BLACK_METAMEMBER(vatsimFsdHttpUrl),
-            BLACK_METAMEMBER(vatsimBookingsUrl),
             BLACK_METAMEMBER(vatsimMetarsUrls),
             BLACK_METAMEMBER(sharedUrls),
             BLACK_METAMEMBER(onlineHelpUrls),

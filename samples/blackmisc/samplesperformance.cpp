@@ -852,8 +852,7 @@ namespace BlackSample
             r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLatitudeAsString }).toString());
             r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLongitudeAsString }).toString());
             r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexRelativeDistance, CLength::IndexValueRounded2DigitsWithUnit }).toString());
-            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexBookedFrom }).toDateTime().toString("yyyy-MM-dd hh:mm"));
-            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexBookedUntil }).toDateTime().toString("yyyy-MM-dd hh:mm"));
+            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexLogoffTime }).toDateTime().toString("yyyy-MM-dd hh:mm"));
         }
         else
         {
@@ -862,8 +861,7 @@ namespace BlackSample
             r.append(station.getPosition().latitudeAsString());
             r.append(station.getPosition().longitudeAsString());
             r.append(station.getRelativeDistance().toQString(true));
-            r.append(station.getBookedFromUtc().toString("yyyy-MM-dd hh:mm"));
-            r.append(station.getBookedUntilUtc().toString("yyyy-MM-dd hh:mm"));
+            r.append(station.getLogoffTimeUtc().toString("yyyy-MM-dd hh:mm"));
         }
         return r;
     }
