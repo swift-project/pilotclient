@@ -737,13 +737,18 @@ namespace BlackCore
         Q_ASSERT(CThreadUtils::isInThisThread(this));
         if (!this->isConnectedAndNotShuttingDown()) { return; }
 
-        if (zuluTime.length() == 4)
+        if (zuluTime.length() == 5) // for example 2000z
         {
             // Logic to set logoff time
+
+            QStringView zuluTimeView(zuluTime);
+            // TODO Replace with Qt 6.0 QStringView::slice()
+            zuluTimeView.chop(1); // Remove z
+
             bool ok;
-            const int h = zuluTime.leftRef(2).toInt(&ok);
+            const int h = zuluTimeView.left(2).toInt(&ok);
             if (!ok) { return; }
-            const int m = zuluTime.rightRef(2).toInt(&ok);
+            const int m = zuluTimeView.right(2).toInt(&ok);
             if (!ok) { return; }
             QDateTime logoffDateTime = QDateTime::currentDateTimeUtc();
             logoffDateTime.setTime(QTime(h, m));
