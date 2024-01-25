@@ -57,6 +57,8 @@ namespace BlackFsdTest
         void testDeletePilot();
         void testTextMessage();
         void testRadioMessage();
+        void testClientQueryAtis();
+        void testClientResponseAtis();
         void testPilotDataUpdate();
         void testAtcDataUpdate();
         void testPong();
@@ -233,6 +235,55 @@ namespace BlackFsdTest
         QCOMPARE(message.getMessage(), text);
         QCOMPARE(message.getFrequency(), frequency);
         QCOMPARE(message.getSenderCallsign(), "EDMM_CTR");
+    }
+
+    void CTestFSDClient::testClientQueryAtis()
+    {
+        CCallsign callsign("EDLW_TWR");
+
+        QSignalSpy spy(m_client, &CFSDClient::rawFsdMessage);
+
+        m_client->sendClientQueryAtis(callsign);
+
+        QCOMPARE(spy.count(), 1);
+        QList<QVariant> arguments = spy.takeFirst();
+        QCOMPARE(arguments.size(), 1);
+        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>$CQABCD:EDLW_TWR:ATIS");
+    }
+
+    void CTestFSDClient::testClientResponseAtis()
+    {
+        const CCallsign callsign("EDLW_TWR");
+        m_client->sendClientQueryAtis(callsign);
+
+        QSignalSpy spyLogoff(m_client, &CFSDClient::atisLogoffTimeReplyReceived);
+        QSignalSpy spyAtis(m_client, &CFSDClient::atisReplyReceived);
+
+        m_client->sendFsdMessage("$CREDLW_TWR:ABCD:ATIS:V:VoiceRoom"); // still send (checked January 2024)
+        m_client->sendFsdMessage("$CREDLW_TWR:ABCD:ATIS:T:Dortmund Tower");
+        m_client->sendFsdMessage("$CREDLW_TWR:ABCD:ATIS:T:Useful information");
+        m_client->sendFsdMessage("$CREDLW_TWR:ABCD:ATIS:T:More useful information");
+        m_client->sendFsdMessage("$CREDLW_TWR:ABCD:ATIS:Z:2000z");
+        m_client->sendFsdMessage("$CREDLW_TWR:ABCD:ATIS:E:6");
+
+        // Check logoff
+        QCOMPARE(spyLogoff.count(), 1);
+        QList<QVariant> arguments = spyLogoff.takeFirst();
+        QCOMPARE(arguments.size(), 2);
+        auto receivedCallsign = arguments.at(0).value<BlackMisc::Aviation::CCallsign>();
+        auto receivedLogoffTime = arguments.at(1).value<QString>();
+        QCOMPARE(callsign, receivedCallsign);
+        QCOMPARE(receivedLogoffTime, "2000z");
+
+        // Check ATIS itself
+        QCOMPARE(spyAtis.count(), 1);
+        arguments = spyAtis.takeFirst();
+        QCOMPARE(arguments.size(), 2);
+        receivedCallsign = arguments.at(0).value<BlackMisc::Aviation::CCallsign>();
+        auto atisMessage = arguments.at(1).value<BlackMisc::Aviation::CInformationMessage>();
+        QCOMPARE(callsign, receivedCallsign);
+        QCOMPARE(atisMessage.toQString(), "Dortmund Tower\nUseful information\nMore useful information");
     }
 
     void CTestFSDClient::testPilotDataUpdate()
