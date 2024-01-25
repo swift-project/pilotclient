@@ -68,11 +68,6 @@ namespace BlackMisc::Aviation
         //! Those in range
         CAtcStationList findInRange() const;
 
-        //! Synchronize with ATC station representing booking information.
-        //! Both sides (booking, online station) will be updated.
-        //! \pre Can be used only if the stored data in this list are online ATC stations
-        int synchronizeWithBookedStation(CAtcStation &bookedAtcStation);
-
         //! Sort by ATC suffix sort order and distance
         void sortByAtcSuffixSortOrderAndDistance();
 

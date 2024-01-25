@@ -120,59 +120,6 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tb_AtcStationsBooked">
-       <attribute name="title">
-        <string>ATC booked</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="vl_AtcBooked">
-        <property name="spacing">
-         <number>3</number>
-        </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="BlackGui::Views::CAtcStationView" name="tvp_AtcStationsBooked">
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Sunken</enum>
-          </property>
-          <property name="lineWidth">
-           <number>1</number>
-          </property>
-          <property name="alternatingRowColors">
-           <bool>true</bool>
-          </property>
-          <property name="selectionMode">
-           <enum>QAbstractItemView::SingleSelection</enum>
-          </property>
-          <property name="selectionBehavior">
-           <enum>QAbstractItemView::SelectRows</enum>
-          </property>
-          <property name="sortingEnabled">
-           <bool>true</bool>
-          </property>
-          <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-           <bool>true</bool>
-          </attribute>
-          <attribute name="verticalHeaderVisible">
-           <bool>false</bool>
-          </attribute>
-         </widget>
-        </item>
-       </layout>
-      </widget>
      </widget>
      <widget class="QGroupBox" name="gb_Details">
       <property name="title">
@@ -341,7 +288,6 @@
   <tabstop>tb_Audio</tabstop>
   <tabstop>te_AtcStationsOnlineInfo</tabstop>
   <tabstop>tvp_AtcStationsOnlineTree</tabstop>
-  <tabstop>tvp_AtcStationsBooked</tabstop>
  </tabstops>
  <resources/>
  <connections/>

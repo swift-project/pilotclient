@@ -9,7 +9,6 @@
 #include "blackcore/db/databasewriter.h"
 #include "blackcore/db/icaodatareader.h"
 #include "blackcore/db/modeldatareader.h"
-#include "blackcore/vatsim/vatsimbookingreader.h"
 #include "blackcore/vatsim/vatsimdatafilereader.h"
 #include "blackcore/vatsim/vatsimmetarreader.h"
 #include "blackcore/vatsim/vatsimstatusfilereader.h"
@@ -256,15 +255,6 @@ namespace BlackCore
             {
                 m_vatsimDataFileReader->readInBackgroundThread();
                 triggeredRead |= CEntityFlags::VatsimDataFile;
-            }
-        }
-
-        if (m_vatsimBookingReader)
-        {
-            if (whatToRead.testFlag(CEntityFlags::BookingEntity))
-            {
-                m_vatsimBookingReader->readInBackgroundThread();
-                triggeredRead |= CEntityFlags::BookingEntity;
             }
         }
 
@@ -544,7 +534,6 @@ namespace BlackCore
     {
         const QString db = this->getDbReadersLog(separator);
         QStringList report;
-        if (m_vatsimBookingReader) { report << m_vatsimBookingReader->getName() + ": " + m_vatsimBookingReader->getReadLog().getSummary(); }
         if (m_vatsimMetarReader) { report << m_vatsimMetarReader->getName() + ": " + m_vatsimMetarReader->getReadLog().getSummary(); }
         if (m_vatsimStatusReader) { report << m_vatsimStatusReader->getName() + ": " + m_vatsimStatusReader->getReadLog().getSummary(); }
         if (report.isEmpty()) { return db; }
@@ -971,11 +960,6 @@ namespace BlackCore
             m_vatsimMetarReader->quitAndWait();
             m_vatsimMetarReader = nullptr;
         }
-        if (m_vatsimBookingReader)
-        {
-            m_vatsimBookingReader->quitAndWait();
-            m_vatsimBookingReader = nullptr;
-        }
         if (m_vatsimDataFileReader)
         {
             m_vatsimDataFileReader->quitAndWait();
@@ -1108,20 +1092,7 @@ namespace BlackCore
 
         // ---- "normal data", triggerRead will start read, not starting directly
 
-        // 3. VATSIM bookings
-        if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::VatsimBookingReader))
-        {
-            m_vatsimBookingReader = new CVatsimBookingReader(this);
-            c = connect(m_vatsimBookingReader, &CVatsimBookingReader::atcBookingsRead, this, &CWebDataServices::receivedBookings, typeReaderReadSignals);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM booking reader signals");
-            c = connect(m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CWebDataServices::dataRead, typeReaderReadSignals);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed bookings");
-            m_entitiesPeriodicallyRead |= CEntityFlags::BookingEntity;
-            m_vatsimBookingReader->start(QThread::LowPriority);
-            m_vatsimBookingReader->startReader();
-        }
-
-        // 4. VATSIM data file
+        // 3. VATSIM data file
         if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::VatsimDataReader))
         {
             m_vatsimDataFileReader = new CVatsimDataFileReader(this);
@@ -1134,7 +1105,7 @@ namespace BlackCore
             m_vatsimDataFileReader->startReader();
         }
 
-        // 5. VATSIM METAR data
+        // 4. VATSIM METAR data
         if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::VatsimMetarReader))
         {
             m_vatsimMetarReader = new CVatsimMetarReader(this);
@@ -1147,7 +1118,7 @@ namespace BlackCore
             m_vatsimMetarReader->startReader();
         }
 
-        // 6. ICAO data reader
+        // 5. ICAO data reader
         if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::IcaoDataReader))
         {
             m_icaoDataReader = new CIcaoDataReader(this, dbReaderConfig);
@@ -1162,7 +1133,7 @@ namespace BlackCore
             m_icaoDataReader->start(QThread::LowPriority);
         }
 
-        // 7. Model reader
+        // 6. Model reader
         if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::ModelReader))
         {
             m_modelDataReader = new CModelDataReader(this, dbReaderConfig);
@@ -1177,7 +1148,7 @@ namespace BlackCore
             m_modelDataReader->start(QThread::LowPriority);
         }
 
-        // 8. Airport reader
+        // 7. Airport reader
         if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::AirportReader))
         {
             m_airportDataReader = new CAirportDataReader(this, dbReaderConfig);
@@ -1359,11 +1330,6 @@ namespace BlackCore
         if (m_icaoDataReader) { entities |= m_icaoDataReader->getEntitiesWithCacheTimestampNewerThan(threshold); }
         if (m_modelDataReader) { entities |= m_modelDataReader->getEntitiesWithCacheTimestampNewerThan(threshold); }
         return entities;
-    }
-
-    void CWebDataServices::receivedBookings(const CAtcStationList &stations)
-    {
-        CLogMessage(this).info(u"Read %1 ATC bookings from network") << stations.size();
     }
 
     void CWebDataServices::receivedMetars(const CMetarList &metars)

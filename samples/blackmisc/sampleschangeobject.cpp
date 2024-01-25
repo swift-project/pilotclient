@@ -31,18 +31,14 @@ namespace BlackSample
     int CSamplesChangeObject::samples()
     {
         // ATC station
-        const QDateTime dtFrom = QDateTime::currentDateTimeUtc();
-        const QDateTime dtUntil = dtFrom.addSecs(60 * 60); // 1 hour
-        const QDateTime dtFrom2 = dtUntil;
-        const QDateTime dtUntil2 = dtUntil.addSecs(60 * 60);
         const CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", { 1487, CLengthUnit::ft() });
         const CAtcStation station1(CCallsign("eddm_twr"), CUser("123456", "Joe Doe"),
                                    CFrequency(118.7, CFrequencyUnit::MHz()),
-                                   geoPos, CLength(50, CLengthUnit::km()), false, dtFrom, dtUntil);
+                                   geoPos, CLength(50, CLengthUnit::km()), false);
         const CAtcStation station2(station1);
         const CAtcStation station3(CCallsign("eddm_app"), CUser("654321", "Jen Doe"),
                                    CFrequency(120.7, CFrequencyUnit::MHz()),
-                                   geoPos, CLength(100, CLengthUnit::km()), false, dtFrom2, dtUntil2);
+                                   geoPos, CLength(100, CLengthUnit::km()), false);
 
         Q_ASSERT_X(station1 == station2, Q_FUNC_INFO, "Unequal stations");
 

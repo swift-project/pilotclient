@@ -99,7 +99,6 @@ namespace BlackCore::Context
         m_fsdClient->setClientProvider(m_airspace);
         connect(m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus, Qt::QueuedConnection);
         connect(m_airspace, &CAirspaceMonitor::changedAtcStationsOnline, this, &CContextNetwork::changedAtcStationsOnline, Qt::QueuedConnection);
-        connect(m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked, Qt::QueuedConnection);
         connect(m_airspace, &CAirspaceMonitor::changedAircraftInRange, this, &CContextNetwork::changedAircraftInRange, Qt::QueuedConnection);
         connect(m_airspace, &CAirspaceMonitor::removedAircraft, this, &IContextNetwork::removedAircraft, Qt::QueuedConnection); // DBus
         connect(m_airspace, &CAirspaceMonitor::readyForModelMatching, this, &CContextNetwork::onReadyForModelMatching); // intentionally NOT QueuedConnection
@@ -883,15 +882,6 @@ namespace BlackCore::Context
         return stations;
     }
 
-    CAtcStationList CContextNetwork::getAtcStationsBooked(bool recalculateDistance) const
-    {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        CAtcStationList stations = m_airspace->getAtcStationsBooked();
-        if (!recalculateDistance || !this->getIContextOwnAircraft()) { return stations; }
-        stations.calculcateAndUpdateRelativeDistanceAndBearing(this->getIContextOwnAircraft()->getOwnAircraftSituation());
-        return stations;
-    }
-
     CSimulatedAircraftList CContextNetwork::getAircraftInRange() const
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
@@ -1171,13 +1161,6 @@ namespace BlackCore::Context
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign << cg.valueRoundedWithUnit(1) << modelString; }
         const bool c = m_airspace->updateCGAndModelString(callsign, cg, modelString);
         return c;
-    }
-
-    void CContextNetwork::requestAtcBookingsUpdate() const
-    {
-        if (!canUseAirspaceMonitor()) { return; }
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        m_airspace->requestAtcBookingsUpdate();
     }
 
     bool CContextNetwork::updateAircraftRendered(const CCallsign &callsign, bool rendered)

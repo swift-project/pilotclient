@@ -102,17 +102,11 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Aviation::CFlightPlanRemarks tryToGetFlightPlanRemarks(const BlackMisc::Aviation::CCallsign &callsign) const;
 
-        //! Returns the current online ATC stations (consolidated with booked stations)
+        //! Returns the current online ATC stations
         BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const { return m_atcStationsOnline; }
 
         //! Recalculate distance to own aircraft
         BlackMisc::Aviation::CAtcStationList getAtcStationsOnlineRecalculated();
-
-        //! Returns the current booked ATC stations (consolidated with online stations)
-        BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const { return m_atcStationsBooked; }
-
-        //! Recalculate distance to own aircraft
-        BlackMisc::Aviation::CAtcStationList getAtcStationsBookedRecalculated();
 
         //! Returns the closest ATC station operating on the given frequency, if any
         BlackMisc::Aviation::CAtcStation getAtcStationForComUnit(const BlackMisc::Aviation::CComSystem &comSystem) const;
@@ -125,9 +119,6 @@ namespace BlackCore
 
         //! Request to update ATC stations' ATIS data from the network
         void requestAtisUpdates();
-
-        //! Request updates of bookings
-        void requestAtcBookingsUpdate();
 
         //! Analyzer
         CAirspaceAnalyzer *analyzer() const { return m_analyzer; }
@@ -188,9 +179,6 @@ namespace BlackCore
     signals:
         //! Online ATC stations were changed
         void changedAtcStationsOnline();
-
-        //! Booked ATC stations were changed
-        void changedAtcStationsBooked();
 
         //! Connection status of an ATC station was changed
         void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool isConnected);
@@ -278,7 +266,6 @@ namespace BlackCore
         };
 
         BlackMisc::Aviation::CAtcStationList m_atcStationsOnline; //!< online ATC stations
-        BlackMisc::Aviation::CAtcStationList m_atcStationsBooked; //!< booked ATC stations
         QHash<BlackMisc::Aviation::CCallsign, FsInnPacket> m_tempFsInnPackets; //!< unhandled FsInn packets
         QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache; //!< flight plan information retrieved from network and cached
         QHash<BlackMisc::Aviation::CCallsign, Readiness> m_readiness; //!< readiness
@@ -287,7 +274,6 @@ namespace BlackCore
         QQueue<BlackMisc::Aviation::CCallsign> m_queryPilot; //!< query the pilot data
         Fsd::CFSDClient *m_fsdClient = nullptr; //!< corresponding network interface
         CAirspaceAnalyzer *m_analyzer = nullptr; //!< owned analyzer
-        bool m_bookingsRequested = false; //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
         int m_maxDistanceNM = 125; //!< position range / FSD range
         int m_maxDistanceNMHysteresis = qRound(1.1 * m_maxDistanceNM);
         int m_foundInNonMovingAircraft = 0;
@@ -383,9 +369,6 @@ namespace BlackCore
         //! Update online stations by callsign
         int updateOnlineStation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true, bool sendSignal = true);
 
-        //! Update booked station by callsign
-        int updateBookedStation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true, bool sendSignal = true);
-
         //! Handle max.range
         bool handleMaxRange(const BlackMisc::Aviation::CAircraftSituation &situation);
 
@@ -445,8 +428,6 @@ namespace BlackCore
         void onIcaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery);
         void onPilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
         void onFrequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
-        void onReceivedAtcBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
-        void onReadUnchangedAtcBookings();
         void onReceivedVatsimDataFile();
         void onAircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, qint64 currentOffsetMs);
         void onAircraftInterimUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation);

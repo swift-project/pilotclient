@@ -107,25 +107,6 @@ namespace BlackMisc::Aviation
         return copy;
     }
 
-    int CAtcStationList::synchronizeWithBookedStation(CAtcStation &bookedAtcStation)
-    {
-        int c = 0;
-        bookedAtcStation.setOnline(false); // reset
-        if (this->isEmpty()) return 0;
-
-        for (auto i = this->begin(); i != this->end(); ++i)
-        {
-            if (i->getCallsign() != bookedAtcStation.getCallsign()) { continue; }
-            i->synchronizeWithBookedStation(bookedAtcStation);
-            c++;
-        }
-
-        // normally 1 expected, as I should find
-        // only one online station for this booking
-        Q_ASSERT_X(c == 0 || c == 1, Q_FUNC_INFO, "Found >1 matching station");
-        return c;
-    }
-
     void CAtcStationList::sortByAtcSuffixSortOrderAndDistance()
     {
         this->sortBy(&CAtcStation::getSuffixSortOrder, &CAtcStation::getRelativeDistance);

@@ -49,8 +49,7 @@ namespace BlackMisc::Aviation
             IndexIsInRange,
             IndexIsOnline,
             IndexIsAfvCrossCoupled,
-            IndexBookedFrom,
-            IndexBookedUntil,
+            IndexLogoffTime,
             IndexLatitude,
             IndexLongitude,
             IndexAtis,
@@ -67,11 +66,11 @@ namespace BlackMisc::Aviation
         CAtcStation(const CCallsign &callsign, const Network::CUser &controller,
                     const PhysicalQuantities::CFrequency &frequency,
                     const Geo::CCoordinateGeodetic &pos, const PhysicalQuantities::CLength &range,
-                    bool isOnline = false, const QDateTime &bookedFromUtc = QDateTime(), const QDateTime &bookedUntilUtc = QDateTime(),
+                    bool isOnline = false, const QDateTime &logoffTimeUtc = QDateTime(),
                     const CInformationMessage &atis = CInformationMessage(CInformationMessage::ATIS), const CInformationMessage &metar = CInformationMessage(CInformationMessage::METAR));
 
-        //! Has booking times?
-        bool hasBookingTimes() const;
+        //! Has expected logoff time?
+        bool hasLogoffTimeUtc() const;
 
         //! Has ATIS?
         bool hasAtis() const { return m_atis.hasMessage(); }
@@ -142,15 +141,6 @@ namespace BlackMisc::Aviation
         //! Set position
         void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { m_position = position; }
 
-        //! Synchronize controller data
-        //! Updates two stations (normally a booked and online ATC station) with complementary data
-        void synchronizeControllerData(CAtcStation &otherStation);
-
-        //! Synchronize station data
-        //! Updates the two stations (a booked and online ATC station) with complementary data
-        //! \pre this object is the online station, the passed station the booked station
-        void synchronizeWithBookedStation(CAtcStation &bookedStation);
-
         //! Get the radius of the controller's area of visibility.
         const PhysicalQuantities::CLength &getRange() const { return m_range; }
 
@@ -160,7 +150,7 @@ namespace BlackMisc::Aviation
         //! In range? If range and distance to own aircraft are not available false
         bool isInRange() const;
 
-        //! Is station online (or just booked)?
+        //! Is station online?
         bool isOnline() const { return m_isOnline; }
 
         //! Set online
@@ -172,37 +162,15 @@ namespace BlackMisc::Aviation
         //! Set AFV cross coupled
         void setAfvCrossCoupled(bool coupled) { m_isAfvCrossCoupled = coupled; }
 
-        //! Booked date/time if any.
-        //! This represents the closest booking within a time frame as there can be multiple bookings.
-        const QDateTime &getBookedFromUtc() const { return m_bookedFromUtc; }
-
-        //! Booked date/time if any.
-        //! This represents the closest booking within a time frame as there can be multiple bookings.
-        const QDateTime &getBookedUntilUtc() const { return m_bookedUntilUtc; }
-
-        //! Has valid booking times?
-        bool hasValidBookingTimes() const;
-
-        //! Set booked from
-        void setBookedFromUtc(const QDateTime &from) { m_bookedFromUtc = from; }
-
-        //! Transfer booking times
-        void setBookedFromUntil(const CAtcStation &otherStation);
-
-        //! Booked now?
-        bool isBookedNow() const;
+        //! Return the expected logoff time (UTC). This data comes
+        //! from the controller through its ATIS line.
+        const QDateTime &getLogoffTimeUtc() const { return m_logoffTimeUtc; }
 
         //! Is Com unit tuned to this stations frequency
         bool isComUnitTunedToFrequency(const Aviation::CComSystem &comUnit) const;
 
         //! Is passed frequency the frequency of this station
         bool isAtcStationFrequency(const PhysicalQuantities::CFrequency &frequency) const;
-
-        //! When booked, 0 means now,
-        //! negative values mean booking in past,
-        //! positive values mean booking in future,
-        //! no booking dates will result in null time
-        PhysicalQuantities::CTime bookedWhen() const;
 
         //! Get ATIS
         const CInformationMessage &getAtis() const { return m_atis; }
@@ -228,8 +196,8 @@ namespace BlackMisc::Aviation
         //! Set given message
         bool setMessage(const CInformationMessage &message);
 
-        //! Set booked until
-        void setBookedUntilUtc(const QDateTime &until) { m_bookedUntilUtc = until; }
+        //! Set expected logoff time (UTC)
+        void setLogoffTimeUtc(const QDateTime &logoffTimeUtc) { m_logoffTimeUtc = logoffTimeUtc; }
 
         //! \copydoc Geo::ICoordinateGeodetic::latitude
         virtual Geo::CLatitude latitude() const override;
@@ -269,8 +237,7 @@ namespace BlackMisc::Aviation
         PhysicalQuantities::CLength m_range;
         bool m_isOnline = false;
         bool m_isAfvCrossCoupled = false;
-        QDateTime m_bookedFromUtc;
-        QDateTime m_bookedUntilUtc;
+        QDateTime m_logoffTimeUtc;
         CInformationMessage m_atis { CInformationMessage::ATIS };
         CInformationMessage m_metar { CInformationMessage::METAR };
 
@@ -283,8 +250,7 @@ namespace BlackMisc::Aviation
             BLACK_METAMEMBER(range),
             BLACK_METAMEMBER(isOnline),
             BLACK_METAMEMBER(isAfvCrossCoupled),
-            BLACK_METAMEMBER(bookedFromUtc),
-            BLACK_METAMEMBER(bookedUntilUtc),
+            BLACK_METAMEMBER(logoffTimeUtc),
             BLACK_METAMEMBER(atis),
             BLACK_METAMEMBER(metar),
             BLACK_METAMEMBER(relativeDistance),

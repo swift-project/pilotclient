@@ -308,12 +308,6 @@ namespace BlackCore
                 BlackMisc::CSimpleCommandParser::registerCommand({ ".disable callsign", "disable/ignore callsign" });
             }
 
-            //! \copydoc BlackCore::Context::IContextNetwork::requestAtcBookingsUpdate
-            virtual void requestAtcBookingsUpdate() const override;
-
-            //! \copydoc BlackCore::Context::IContextNetwork::getAtcStationsBooked
-            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked(bool recalculateDistance) const override;
-
             //! \copydoc BlackCore::Context::IContextNetwork::getAtcStationsOnline
             virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline(bool recalculateDistance) const override;
 
@@ -425,7 +419,6 @@ namespace BlackCore
             BlackMisc::Simulation::CSimulatorInfo m_lastConnectedSim; //!< last connected sim.
 
             // Digest signals, only sending after some time
-            BlackMisc::CDigestSignal m_dsAtcStationsBookedChanged { this, &IContextNetwork::changedAtcStationsBooked, &IContextNetwork::changedAtcStationsBookedDigest, 1000, 2 };
             BlackMisc::CDigestSignal m_dsAtcStationsOnlineChanged { this, &IContextNetwork::changedAtcStationsOnline, &IContextNetwork::changedAtcStationsOnlineDigest, 1000, 4 };
             BlackMisc::CDigestSignal m_dsAircraftsInRangeChanged { this, &IContextNetwork::changedAircraftInRange, &IContextNetwork::changedAircraftInRangeDigest, 1000, 4 };
 

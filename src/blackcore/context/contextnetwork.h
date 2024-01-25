@@ -114,12 +114,6 @@ namespace BlackCore::Context
         //! Digest signal changedAtcStationsOnline()
         void changedAtcStationsOnlineDigest();
 
-        //! ATC station (booked) list has been changed
-        void changedAtcStationsBooked();
-
-        //! Digest signal changedAtcStationsBooked()
-        void changedAtcStationsBookedDigest();
-
         //! Aircraft list has been changed
         void changedAircraftInRange();
 
@@ -170,9 +164,6 @@ namespace BlackCore::Context
         void textMessageSent(const BlackMisc::Network::CTextMessage &sentMessage);
 
     public slots:
-        //! Reload bookings from booking service
-        virtual void requestAtcBookingsUpdate() const = 0;
-
         //! The ATC list with online ATC controllers
         virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline(bool recalculateDistance) const = 0;
 
@@ -180,9 +171,6 @@ namespace BlackCore::Context
         //! \remark recalculates distance and picks closest elements
         //! \remark sorted by distance, nearest first
         virtual BlackMisc::Aviation::CAtcStationList getClosestAtcStationsOnline(int number) const = 0;
-
-        //! ATC list, with booked controllers
-        virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked(bool recalculateDistance) const = 0;
 
         //! Aircraft list
         virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const = 0;

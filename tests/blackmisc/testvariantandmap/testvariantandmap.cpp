@@ -87,19 +87,15 @@ namespace BlackMiscTest
     void CTestVariantAndMap::variant()
     {
         // ATC station
-        QDateTime dtFrom = QDateTime::currentDateTimeUtc();
-        QDateTime dtUntil = dtFrom.addSecs(60 * 60); // 1 hour
-        QDateTime dtFrom2 = dtUntil;
-        QDateTime dtUntil2 = dtUntil.addSecs(60 * 60);
         CCoordinateGeodetic geoPos =
             CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", { 1487, CLengthUnit::ft() });
         CAtcStation station1(CCallsign("eddm_twr"), CUser("123456", "Joe Doe"),
                              CFrequency(118.7, CFrequencyUnit::MHz()),
-                             geoPos, CLength(50, CLengthUnit::km()), false, dtFrom, dtUntil);
+                             geoPos, CLength(50, CLengthUnit::km()), false);
         CAtcStation station2(station1);
         CAtcStation station3(CCallsign("eddm_app"), CUser("654321", "Jen Doe"),
                              CFrequency(120.7, CFrequencyUnit::MHz()),
-                             geoPos, CLength(100, CLengthUnit::km()), false, dtFrom2, dtUntil2);
+                             geoPos, CLength(100, CLengthUnit::km()), false);
 
         // compare
         CLength l1(0, nullptr);
@@ -165,13 +161,11 @@ namespace BlackMiscTest
     void CTestVariantAndMap::valueMap()
     {
         // ATC station
-        QDateTime dtFrom = QDateTime::currentDateTimeUtc();
-        QDateTime dtUntil = dtFrom.addSecs(60 * 60); // 1 hour
         CCoordinateGeodetic geoPos =
             CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", { 1487, CLengthUnit::ft() });
         CAtcStation station1(CCallsign("eddm_twr"), CUser("123456", "Joe Doe"),
                              CFrequency(118.7, CFrequencyUnit::MHz()),
-                             geoPos, CLength(50, CLengthUnit::km()), false, dtFrom, dtUntil);
+                             geoPos, CLength(50, CLengthUnit::km()), false);
 
         // value maps
         CPropertyIndexVariantMap vmWildcard(true);

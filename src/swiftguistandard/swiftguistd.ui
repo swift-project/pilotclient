@@ -578,7 +578,6 @@
   <slot>menuClicked()</slot>
   <slot>networkServerSelected(QModelIndex)</slot>
   <slot>alterTrafficServer()</slot>
-  <slot>reloadAtcStationsBooked()</slot>
   <slot>onlineAtcStationSelected(QModelIndex)</slot>
   <slot>commandEntered()</slot>
   <slot>getMetar()</slot>

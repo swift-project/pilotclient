@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackcore/airspacemonitor.h"
-#include "blackcore/vatsim/vatsimbookingreader.h"
 #include "blackcore/vatsim/vatsimdatafilereader.h"
 #include "blackcore/airspaceanalyzer.h"
 #include "blackcore/aircraftmatcher.h"
@@ -93,13 +92,6 @@ namespace BlackCore
 
         // AutoConnection: this should also avoid race conditions by updating the bookings
         Q_ASSERT_X(sApp && sApp->hasWebDataServices(), Q_FUNC_INFO, "Missing data reader");
-
-        // optional readers
-        if (sApp && sApp->getWebDataServices()->getBookingReader())
-        {
-            connect(sApp->getWebDataServices()->getBookingReader(), &CVatsimBookingReader::atcBookingsRead, this, &CAirspaceMonitor::onReceivedAtcBookings);
-            connect(sApp->getWebDataServices()->getBookingReader(), &CVatsimBookingReader::atcBookingsReadUnchanged, this, &CAirspaceMonitor::onReadUnchangedAtcBookings);
-        }
 
         if (this->supportsVatsimDataFile())
         {
@@ -209,12 +201,6 @@ namespace BlackCore
     {
         m_atcStationsOnline.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftSituation());
         return m_atcStationsOnline;
-    }
-
-    CAtcStationList CAirspaceMonitor::getAtcStationsBookedRecalculated()
-    {
-        m_atcStationsBooked.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftSituation());
-        return m_atcStationsBooked;
     }
 
     CUserList CAirspaceMonitor::getUsers() const
@@ -330,13 +316,6 @@ namespace BlackCore
                 m_queryAtis.enqueue(cs);
             }
         }
-    }
-
-    void CAirspaceMonitor::requestAtcBookingsUpdate()
-    {
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return; }
-        sApp->getWebDataServices()->readInBackground(BlackMisc::Network::CEntityFlags::BookingEntity);
-        m_bookingsRequested = true;
     }
 
     bool CAirspaceMonitor::enableAnalyzer(bool enable)
@@ -484,8 +463,7 @@ namespace BlackCore
             // very likely and ATC callsign
             const CPropertyIndexVariantMap vm = CPropertyIndexVariantMap({ CAtcStation::IndexController, CUser::IndexRealName }, rn);
             const int c1 = this->updateOnlineStation(callsign, vm, false, true);
-            const int c2 = this->updateBookedStation(callsign, vm, false, true);
-            wasAtc = c1 > 0 || c2 > 0;
+            wasAtc = c1 > 0;
         }
 
         if (!wasAtc)
@@ -550,36 +528,6 @@ namespace BlackCore
         m_flightPlanCache.remove(callsign);
         m_readiness.remove(callsign);
         this->removeReverseLookupMessages(callsign);
-    }
-
-    void CAirspaceMonitor::onReceivedAtcBookings(const CAtcStationList &bookedStations)
-    {
-        Q_ASSERT(CThreadUtils::isInThisThread(this));
-        if (bookedStations.isEmpty())
-        {
-            m_atcStationsBooked.clear();
-        }
-        else
-        {
-            CAtcStationList newBookedStations(bookedStations); // modifyable copy
-            for (CAtcStation &bookedStation : newBookedStations)
-            {
-                // exchange booking and online data, both sides are updated
-                m_atcStationsOnline.synchronizeWithBookedStation(bookedStation);
-            }
-            m_atcStationsBooked = newBookedStations;
-        }
-        m_bookingsRequested = false; // we already emit here
-        m_atcStationsBooked.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftSituation());
-
-        emit this->changedAtcStationsBooked(); // all booked stations reloaded
-    }
-
-    void CAirspaceMonitor::onReadUnchangedAtcBookings()
-    {
-        if (!m_bookingsRequested) { return; }
-        m_bookingsRequested = false;
-        emit this->changedAtcStationsBooked(); // treat as stations were changed
     }
 
     void CAirspaceMonitor::onReceivedVatsimDataFile()
@@ -735,14 +683,6 @@ namespace BlackCore
             station.setOnline(true);
             station.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftPosition());
 
-            // sync with bookings
-            if (m_atcStationsBooked.containsCallsign(callsign))
-            {
-                CAtcStation bookedStation(m_atcStationsBooked.findFirstByCallsign(callsign));
-                station.synchronizeWithBookedStation(bookedStation); // both will be aligned
-                m_atcStationsBooked.replaceIf(&CAtcStation::getCallsign, callsign, bookedStation);
-            }
-
             m_atcStationsOnline.push_back(station);
 
             // subsequent queries
@@ -780,9 +720,6 @@ namespace BlackCore
             emit this->changedAtcStationsOnline();
             emit this->changedAtcStationOnlineConnectionStatus(removedStation, false);
         }
-
-        // booked
-        this->updateBookedStation(callsign, CPropertyIndexVariantMap(CAtcStation::IndexIsOnline, CVariant::from(false)), true, false);
     }
 
     void CAirspaceMonitor::onAtisReceived(const CCallsign &callsign, const CInformationMessage &atisMessage)
@@ -790,9 +727,6 @@ namespace BlackCore
         Q_ASSERT(CThreadUtils::isInThisThread(this));
         if (!this->isConnectedAndNotShuttingDown() || callsign.isEmpty()) return;
         const bool changedAtis = m_atcStationsOnline.updateIfMessageChanged(atisMessage, callsign, true);
-
-        // receiving an ATIS means station is online, update in bookings
-        m_atcStationsBooked.setOnline(callsign, true);
 
         // signal
         if (changedAtis) { emit this->changedAtisReceived(callsign); }
@@ -814,9 +748,8 @@ namespace BlackCore
             QDateTime logoffDateTime = QDateTime::currentDateTimeUtc();
             logoffDateTime.setTime(QTime(h, m));
 
-            const CPropertyIndexVariantMap vm(CAtcStation::IndexBookedUntil, CVariant(logoffDateTime));
+            const CPropertyIndexVariantMap vm(CAtcStation::IndexLogoffTime, CVariant(logoffDateTime));
             this->updateOnlineStation(callsign, vm);
-            this->updateBookedStation(callsign, vm);
         }
     }
 
@@ -1134,17 +1067,6 @@ namespace BlackCore
         if (c > 0 && sendSignal)
         {
             emit this->changedAtcStationsOnline();
-        }
-        return c;
-    }
-
-    int CAirspaceMonitor::updateBookedStation(const CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues, bool sendSignal)
-    {
-        // do not used applyFirst here, more stations wit callsign at a time
-        const int c = m_atcStationsBooked.applyIfCallsign(callsign, vm, skipEqualValues);
-        if (c > 0 && sendSignal)
-        {
-            emit this->changedAtcStationsBooked();
         }
         return c;
     }

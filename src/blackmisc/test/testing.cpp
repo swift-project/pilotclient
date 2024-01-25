@@ -48,8 +48,6 @@ namespace BlackMisc::Test
         const QString id = QStringLiteral("00000%1").arg(index).right(6);
         const double f = 118.0 + (index % 30) * 0.25;
 
-        const QDateTime dtFrom = QDateTime::currentDateTimeUtc();
-        const QDateTime dtUntil = dtFrom.addSecs(60 * 60); // 1 hour
         const CUser user(id, usr);
         const CInformationMessage atis(CInformationMessage::ATIS, "ATIS for " + QString::number(index));
         const CInformationMessage metar(CInformationMessage::METAR, "Metar for " + QString::number(index));
@@ -63,8 +61,6 @@ namespace BlackMisc::Test
             station.setPropertyByIndex(CAtcStation::IndexRange, CVariant::from(CLength(50, CLengthUnit::km())));
             station.setPropertyByIndex(CAtcStation::IndexPosition, CVariant::from(geoPos));
             station.setPropertyByIndex(CAtcStation::IndexIsOnline, CVariant::from(false));
-            station.setPropertyByIndex(CAtcStation::IndexBookedFrom, CVariant::from(dtFrom));
-            station.setPropertyByIndex(CAtcStation::IndexBookedUntil, CVariant::from(dtUntil));
             station.setPropertyByIndex(CAtcStation::IndexRelativeDistance, CVariant::from(CLength(index + 1, CLengthUnit::NM())));
             station.setPropertyByIndex(CAtcStation::IndexAtis, CVariant::from(atis));
             station.setPropertyByIndex(CAtcStation::IndexMetar, CVariant::from(metar));
@@ -73,7 +69,7 @@ namespace BlackMisc::Test
         {
             station = CAtcStation(CCallsign(cs, CCallsign::Atc), user,
                                   CFrequency(f, CFrequencyUnit::MHz()),
-                                  geoPos, CLength(50, CLengthUnit::km()), false, dtFrom, dtUntil);
+                                  geoPos, CLength(50, CLengthUnit::km()), false);
             station.setRelativeDistance(CLength(index + 1, CLengthUnit::NM()));
             station.setAtis(atis);
             station.setMetar(metar);

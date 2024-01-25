@@ -339,9 +339,9 @@ namespace BlackMiscTest
         const CCallsign call2("edds_n_app", CCallsign::Atc);
         QVERIFY2(call1 == call2, "Callsigns shall be equal");
 
-        const CAtcStation atc1(c1, user1, f1, situation1.getPosition(), CLength(), false, QDateTime(), QDateTime(), CInformationMessage(CInformationMessage::ATIS, "foo"));
-        const CAtcStation atc2(c1, user1, f1, situation1.getPosition(), CLength(), false, QDateTime(), QDateTime(), CInformationMessage(CInformationMessage::ATIS, "foo"));
-        const CAtcStation atc3(c1, user1, f1, situation1.getPosition(), CLength(), false, QDateTime(), QDateTime(), CInformationMessage(CInformationMessage::ATIS, "bar"));
+        const CAtcStation atc1(c1, user1, f1, situation1.getPosition(), CLength(), false, QDateTime(), CInformationMessage(CInformationMessage::ATIS, "foo"));
+        const CAtcStation atc2(c1, user1, f1, situation1.getPosition(), CLength(), false, QDateTime(), CInformationMessage(CInformationMessage::ATIS, "foo"));
+        const CAtcStation atc3(c1, user1, f1, situation1.getPosition(), CLength(), false, QDateTime(), CInformationMessage(CInformationMessage::ATIS, "bar"));
         QVERIFY2(atc1 == atc2, "ATC stations shall be equal");
         QVERIFY2(atc1 != atc3, "ATC stations shall not be equal");
     }

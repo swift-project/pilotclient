@@ -102,14 +102,8 @@ namespace BlackCore
         //! Shutdown
         void gracefulShutdown();
 
-        //! Read ATC bookings (used to re-read)
-        void readAtcBookingsInBackground() const;
-
         //! Data file reader
         Vatsim::CVatsimDataFileReader *getVatsimDataFileReader() const { return m_vatsimDataFileReader; }
-
-        //! Booking reader
-        Vatsim::CVatsimBookingReader *getBookingReader() const { return m_vatsimBookingReader; }
 
         //! Metar reader
         Vatsim::CVatsimMetarReader *getMetarReader() const { return m_vatsimMetarReader; }
@@ -569,9 +563,6 @@ namespace BlackCore
         void readInBackground(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::AllEntities);
 
     private:
-        //! ATC bookings received
-        void receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
-
         //! Received METAR data
         void receivedMetars(const BlackMisc::Weather::CMetarList &metars);
 
@@ -650,7 +641,6 @@ namespace BlackCore
 
         // for reading XML and VATSIM data files
         Vatsim::CVatsimStatusFileReader *m_vatsimStatusReader = nullptr;
-        Vatsim::CVatsimBookingReader *m_vatsimBookingReader = nullptr;
         Vatsim::CVatsimDataFileReader *m_vatsimDataFileReader = nullptr;
         Vatsim::CVatsimMetarReader *m_vatsimMetarReader = nullptr;
         Vatsim::CVatsimServerFileReader *m_vatsimServerFileReader = nullptr;

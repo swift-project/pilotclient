@@ -34,9 +34,9 @@ namespace BlackMisc::Aviation
 
     CAtcStation::CAtcStation(const CCallsign &callsign, const CUser &controller, const CFrequency &frequency,
                              const CCoordinateGeodetic &pos, const CLength &range, bool isOnline,
-                             const QDateTime &bookedFromUtc, const QDateTime &bookedUntilUtc,
+                             const QDateTime &logoffTimeUtc,
                              const CInformationMessage &atis, const CInformationMessage &metar) : m_callsign(callsign), m_controller(controller), m_frequency(frequency), m_position(pos),
-                                                                                                  m_range(range), m_isOnline(isOnline), m_bookedFromUtc(bookedFromUtc), m_bookedUntilUtc(bookedUntilUtc),
+                                                                                                  m_range(range), m_isOnline(isOnline), m_logoffTimeUtc(logoffTimeUtc),
                                                                                                   m_atis(atis), m_metar(metar)
     {
         // sync callsigns
@@ -47,9 +47,9 @@ namespace BlackMisc::Aviation
         }
     }
 
-    bool CAtcStation::hasBookingTimes() const
+    bool CAtcStation::hasLogoffTimeUtc() const
     {
-        return !(m_bookedFromUtc.isNull() && m_bookedUntilUtc.isNull());
+        return !m_logoffTimeUtc.isNull();
     }
 
     bool CAtcStation::hasMetar() const
@@ -125,18 +125,7 @@ namespace BlackMisc::Aviation
                           u' ' % m_range.toQString(i18n) %
 
                           // distance / bearing
-                          u' ' % ICoordinateWithRelativePosition::convertToQString(i18n) %
-
-                          // booking from/until
-                          u' ' %
-                          (i18n ? fromUtcI18n : QStringLiteral("from(UTC)")) %
-                          u' ' %
-                          (m_bookedFromUtc.isNull() ? QStringLiteral("-") : m_bookedFromUtc.toString("yy-MM-dd HH:mm")) %
-
-                          u' ' %
-                          (i18n ? untilUtcI18n : QStringLiteral("until(UTC)")) %
-                          u' ' %
-                          (m_bookedUntilUtc.isNull() ? QStringLiteral("-") : m_bookedUntilUtc.toString("yy-MM-dd HH:mm"));
+                          u' ' % ICoordinateWithRelativePosition::convertToQString(i18n);
 
         return s;
 
@@ -156,90 +145,6 @@ namespace BlackMisc::Aviation
         m_frequency.setUnit(CFrequencyUnit::MHz());
     }
 
-    void CAtcStation::synchronizeControllerData(CAtcStation &otherStation)
-    {
-        if (m_controller == otherStation.getController()) { return; }
-        CUser otherController = otherStation.getController();
-        m_controller.synchronizeData(otherController);
-        otherStation.setController(otherController);
-    }
-
-    void CAtcStation::synchronizeWithBookedStation(CAtcStation &bookedStation)
-    {
-        if (bookedStation.getCallsign() != this->getCallsign()) { return; }
-
-        // from online to booking
-        bookedStation.setOnline(true);
-        bookedStation.setFrequency(this->getFrequency());
-
-        // Logoff Zulu Time set?
-        // comes directly from the online controller and is most likely more accurate
-        if (!this->getBookedUntilUtc().isNull())
-        {
-            bookedStation.setBookedUntilUtc(this->getBookedUntilUtc());
-        }
-
-        // from booking to online
-        // booked now stations have valid data and need no update
-        if (!this->isBookedNow() && bookedStation.hasValidBookingTimes())
-        {
-            if (this->hasValidBookingTimes())
-            {
-                if (bookedStation.isBookedNow())
-                {
-                    // can't get any better, we just copy from / to over
-                    this->setBookedFromUntil(bookedStation);
-                }
-                else
-                {
-                    // we already have some booking dates, we will verify those now
-                    // and will set the most appropriate booking dates
-                    const CTime timeDiffBooking(bookedStation.bookedWhen());
-                    const CTime timeDiffOnline(this->bookedWhen()); // diff to now
-                    if (timeDiffBooking.isNegativeWithEpsilonConsidered() && timeDiffOnline.isNegativeWithEpsilonConsidered())
-                    {
-                        // both in past
-                        if (timeDiffBooking > timeDiffOnline)
-                        {
-                            this->setBookedFromUntil(bookedStation);
-                        }
-                    }
-                    else if (timeDiffBooking.isPositiveWithEpsilonConsidered() && timeDiffOnline.isPositiveWithEpsilonConsidered())
-                    {
-                        // both in future
-                        if (timeDiffBooking < timeDiffOnline)
-                        {
-                            this->setBookedFromUntil(bookedStation);
-                        }
-                    }
-                    else if (timeDiffBooking.isPositiveWithEpsilonConsidered() && timeDiffOnline.isNegativeWithEpsilonConsidered())
-                    {
-                        // future booking is better than past booking
-                        this->setBookedFromUntil(bookedStation);
-                    }
-                }
-            }
-            else
-            {
-                // no booking info so far, so we just copy over
-                this->setBookedFromUntil(bookedStation);
-            }
-        }
-
-        // both ways
-        this->synchronizeControllerData(bookedStation);
-        if (this->hasValidRelativeDistance())
-        {
-            bookedStation.setRelativeDistance(this->getRelativeDistance());
-            bookedStation.setRelativeBearing(this->getRelativeBearing());
-        }
-        else if (bookedStation.hasValidRelativeDistance())
-        {
-            this->setRelativeDistance(bookedStation.getRelativeDistance());
-            this->setRelativeBearing(bookedStation.getRelativeBearing());
-        }
-    }
-
     bool CAtcStation::isInRange() const
     {
         if (m_range.isNull() || !hasValidRelativeDistance()) { return false; }
@@ -253,27 +158,6 @@ namespace BlackMisc::Aviation
         return true;
     }
 
-    bool CAtcStation::hasValidBookingTimes() const
-    {
-        return !m_bookedFromUtc.isNull() && m_bookedFromUtc.isValid() &&
-               !m_bookedUntilUtc.isNull() && m_bookedUntilUtc.isValid();
-    }
-
-    void CAtcStation::setBookedFromUntil(const CAtcStation &otherStation)
-    {
-        this->setBookedFromUtc(otherStation.getBookedFromUtc());
-        this->setBookedUntilUtc(otherStation.getBookedUntilUtc());
-    }
-
-    bool CAtcStation::isBookedNow() const
-    {
-        if (!this->hasValidBookingTimes()) { return false; }
-        QDateTime now = QDateTime::currentDateTimeUtc();
-        if (m_bookedFromUtc > now) { return false; }
-        if (now > m_bookedUntilUtc) { return false; }
-        return true;
-    }
-
     bool CAtcStation::isComUnitTunedToFrequency(const CComSystem &comUnit) const
     {
         return comUnit.isActiveFrequencySameFrequency(this->getFrequency());
@@ -282,30 +166,6 @@ namespace BlackMisc::Aviation
     bool CAtcStation::isAtcStationFrequency(const CFrequency &frequency) const
     {
         return CComSystem::isSameFrequency(frequency, this->getFrequency());
-    }
-
-    CTime CAtcStation::bookedWhen() const
-    {
-        if (!this->hasValidBookingTimes()) { return CTime(0, nullptr); }
-        QDateTime now = QDateTime::currentDateTimeUtc();
-        qint64 diffMs;
-        if (m_bookedFromUtc > now)
-        {
-            // future
-            diffMs = now.msecsTo(m_bookedFromUtc);
-            return CTime(diffMs / 1000.0, CTimeUnit::s());
-        }
-        else if (m_bookedUntilUtc > now)
-        {
-            // now
-            return CTime(0.0, CTimeUnit::s());
-        }
-        else
-        {
-            // past
-            diffMs = m_bookedUntilUtc.msecsTo(now);
-            return CTime(-diffMs / 1000.0, CTimeUnit::s());
-        }
     }
 
     const CInformationMessage &CAtcStation::getInformationMessage(CInformationMessage::InformationType type) const
@@ -361,8 +221,7 @@ namespace BlackMisc::Aviation
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexBookedFrom: return QVariant::fromValue(m_bookedFromUtc);
-        case IndexBookedUntil: return QVariant::fromValue(m_bookedUntilUtc);
+        case IndexLogoffTime: return QVariant::fromValue(m_logoffTimeUtc);
         case IndexCallsign: return m_callsign.propertyByIndex(index.copyFrontRemoved());
         case IndexCallsignString: return this->getCallsignAsString();
         case IndexCallsignStringCrossCopuled: return this->getCallsignAsStringCrossCoupled();
@@ -394,8 +253,7 @@ namespace BlackMisc::Aviation
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexBookedFrom: this->setBookedFromUtc(variant.value<QDateTime>()); break;
-        case IndexBookedUntil: this->setBookedUntilUtc(variant.value<QDateTime>()); break;
+        case IndexLogoffTime: this->setLogoffTimeUtc(variant.value<QDateTime>()); break;
         case IndexCallsign: m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexController: m_controller.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexFrequency: m_frequency.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
@@ -432,8 +290,7 @@ namespace BlackMisc::Aviation
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexBookedFrom: return Compare::compare(this->getBookedFromUtc(), compareValue.getBookedFromUtc());
-        case IndexBookedUntil: return Compare::compare(this->getBookedUntilUtc(), compareValue.getBookedUntilUtc());
+        case IndexLogoffTime: return Compare::compare(this->getLogoffTimeUtc(), compareValue.getLogoffTimeUtc());
         case IndexCallsignString:
         case IndexCallsignStringCrossCopuled:
             return m_callsign.comparePropertyByIndex(CPropertyIndexRef::empty(), compareValue.getCallsign());
