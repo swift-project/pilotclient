@@ -11,8 +11,7 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackCore::Data, CVatsimSetup)
 
 namespace BlackCore::Data
 {
-    CVatsimSetup::CVatsimSetup() : ITimestampBased(0),
-                                   m_dataFileUrls(QStringList({ "http://info.vroute.net/vatsim-data.txt" }))
+    CVatsimSetup::CVatsimSetup() : ITimestampBased(0)
     {}
 
     bool CVatsimSetup::setUrls(const CUrlList &dataFileUrls, const CUrlList &serverFileUrls, const CUrlList &metarFileUrls)

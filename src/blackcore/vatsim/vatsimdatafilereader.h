@@ -36,7 +36,6 @@ namespace BlackMisc::Simulation
 namespace BlackCore::Vatsim
 {
     //! Read vatsim data file
-    //! \sa http://info.vroute.net/vatsim-data.txt
     class BLACKCORE_EXPORT CVatsimDataFileReader :
         public CThreadedReader,
         public BlackMisc::Network::CEcosystemAware
