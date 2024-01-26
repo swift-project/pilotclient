@@ -189,26 +189,6 @@ namespace BlackMisc::Network
         request.setHeader(QNetworkRequest::UserAgentHeader, agent);
     }
 
-    //! \cond PRIVATE
-    QSslKey loadPrivateSslKey()
-    {
-        QFile privateKeyFile(":/blackmisc/ssl/swiftclient.key");
-        privateKeyFile.open(QIODevice::ReadOnly);
-        QSslKey privateKey(&privateKeyFile, QSsl::Rsa, QSsl::Pem, QSsl::PrivateKey, QByteArrayLiteral("ead811e4474a29539a37ff766ca18330"));
-        Q_ASSERT(!privateKey.isNull());
-        return privateKey;
-    }
-
-    QSslCertificate loadSslCertifcate()
-    {
-        QFile certificateFile(":/blackmisc/ssl/swiftclient.crt");
-        certificateFile.open(QIODevice::ReadOnly);
-        QSslCertificate certificate(&certificateFile);
-        Q_ASSERT(!certificate.isNull());
-        return certificate;
-    }
-    //! \endcond
-
     void CNetworkUtils::addDebugFlag(QUrlQuery &qurl)
     {
         qurl.addQueryItem("XDEBUG_SESSION_START", "ECLIPSE_DBGP");
