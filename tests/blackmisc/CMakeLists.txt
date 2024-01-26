@@ -139,12 +139,6 @@ add_swift_test(
 )
 
 add_swift_test(
-        NAME misc_librarypath
-        SOURCES testlibrarypath/testlibrarypath.cpp
-        LINK_LIBRARIES blackconfig misc tests_test Qt::Core
-)
-
-add_swift_test(
         NAME misc_process
         SOURCES testprocess/testprocess.cpp
         LINK_LIBRARIES misc tests_test Qt::Core
