@@ -5,8 +5,6 @@
 
 <RCC>
     <qresource prefix="/blackmisc">
-        <file>ssl/swiftclient.crt</file>
-        <file>ssl/swiftclient.key</file>
         <file>translations/blackmisc_i18n_de.qm</file>
         <file>translations/blackmisc_i18n_fr.qm</file>
         <file>translations/blackmisc_i18n_en.qm</file>
