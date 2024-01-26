@@ -249,8 +249,6 @@ add_library(misc SHARED
         json.h
         jsonexception.cpp
         jsonexception.h
-        librarypath.cpp
-        librarypath.h
         lockfree.h
         logcategories.h
         logcategory.cpp
