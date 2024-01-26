@@ -151,7 +151,6 @@ namespace BlackCore
             m_setupReader.reset(new CSetupReader(this));
             connect(m_setupReader.data(), &CSetupReader::setupHandlingCompleted, this, &CApplication::onSetupHandlingCompleted, Qt::QueuedConnection);
             connect(m_setupReader.data(), &CSetupReader::setupHandlingCompleted, this, &CApplication::setupHandlingCompleted, Qt::QueuedConnection); // hand thru
-            connect(m_setupReader.data(), &CSetupReader::successfullyReadSharedUrl, m_networkWatchDog, &CNetworkWatchdog::setWorkingSharedUrl, Qt::QueuedConnection);
 
             this->addParserOptions(m_setupReader->getCmdLineOptions()); // add options from reader
 

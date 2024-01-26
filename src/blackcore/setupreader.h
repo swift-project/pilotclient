@@ -105,9 +105,6 @@ namespace BlackCore
         //! Setup fetched or failed (from web, cache, or local file)?
         void setupHandlingCompleted(bool available);
 
-        //! A shared URL was successfully read
-        void successfullyReadSharedUrl(const BlackMisc::Network::CUrl &sharedUrl);
-
         //! Message about the loading status
         void setupLoadingMessages(const BlackMisc::CStatusMessageList &messages);
 
