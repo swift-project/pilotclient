@@ -871,16 +871,6 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="cb_AutoLogoff">
-        <property name="toolTip">
-         <string>automatically logoff when simulator changes or appears crashed</string>
-        </property>
-        <property name="text">
-         <string>auto logoff</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
@@ -965,7 +955,6 @@
   <tabstop>le_LoginAsAircaft</tabstop>
   <tabstop>le_LoginSince</tabstop>
   <tabstop>tb_Timeout</tabstop>
-  <tabstop>cb_AutoLogoff</tabstop>
   <tabstop>pb_Ok</tabstop>
   <tabstop>pb_Cancel</tabstop>
   <tabstop>comp_OtherServers</tabstop>

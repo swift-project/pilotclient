@@ -35,12 +35,6 @@ namespace BlackGui::Components
     CLoginDialog::~CLoginDialog()
     {}
 
-    void CLoginDialog::setAutoLogoff(bool logoff)
-    {
-        ui->comp_LoginComponent->setAutoLogoff(logoff);
-        ui->comp_LoginOverviewComponent->setAutoLogoff(logoff);
-    }
-
     void CLoginDialog::show()
     {
         this->init();

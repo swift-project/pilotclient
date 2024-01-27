@@ -250,10 +250,6 @@ void SwiftGuiStd::loginRequested()
     {
         if (!m_loginDialog) { m_loginDialog.reset(new CLoginDialog(this)); }
         connect(m_loginDialog.data(), &CLoginDialog::requestNetworkSettings, this, &SwiftGuiStd::displayNetworkSettings);
-        if (!CBuildConfig::isLocalDeveloperDebugBuild())
-        {
-            m_loginDialog->setAutoLogoff(true);
-        }
         m_loginDialog->show();
     }
     else

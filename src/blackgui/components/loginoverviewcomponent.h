@@ -55,9 +55,6 @@ namespace BlackGui::Components
         //! Destructor
         virtual ~CLoginOverviewComponent() override;
 
-        //! Set auto logoff
-        void setAutoLogoff(bool autoLogoff);
-
         //! Login requested
         void toggleNetworkConnection();
 

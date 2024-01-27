@@ -60,9 +60,6 @@ namespace BlackGui::Components
         //! Automatically popup
         void setAutoPopupWizad(bool autoPopup);
 
-        //! Set auto logoff
-        void setAutoLogoff(bool autoLogoff);
-
         //! Login requested
         void toggleNetworkConnection();
 
