@@ -69,7 +69,7 @@ namespace BlackMisc::Audio
         static const CVoiceSetup &vatsimStandard();
 
     private:
-        QString m_afvVoiceServerUrl = "https://voice1.vatsim.uk";
+        QString m_afvVoiceServerUrl = "https://voice1.vatsim.net";
         QString m_afvMapUrl = "https://afv-map.vatsim.net/";
 
         BLACK_METACLASS(

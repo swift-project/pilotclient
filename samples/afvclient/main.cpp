@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     CAfvMapReader *afvMapReader = new CAfvMapReader(&a);
     afvMapReader->updateFromMap();
 
-    CAfvClient *voiceClient = new CAfvClient("https://voice1.vatsim.uk", &qa);
+    CAfvClient *voiceClient = new CAfvClient("https://voice1.vatsim.net", &qa);
     voiceClient->start(QThread::TimeCriticalPriority); // background thread
     CAfvClientBridge *voiceClientBridge = new CAfvClientBridge(voiceClient, &qa);
 
