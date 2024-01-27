@@ -85,13 +85,6 @@ namespace BlackGui::Components
         // override details/voice
         ui->comp_NetworkDetails->setAlwaysAllowOverride(true);
 
-        // auto logoff
-        // we decided to make it difficult for users to disable it
-        if (!CBuildConfig::isLocalDeveloperDebugBuild())
-        {
-            ui->cb_AutoLogoff->setChecked(true);
-        }
-
         // Stored data
         this->loadRememberedUserData();
 
@@ -105,16 +98,10 @@ namespace BlackGui::Components
 
         // inital setup, if data already available
         ui->form_Pilot->validate();
-        ui->cb_AutoLogoff->setChecked(m_networkSetup.useAutoLogoff());
     }
 
     CLoginAdvComponent::~CLoginAdvComponent()
     {}
-
-    void CLoginAdvComponent::setAutoLogoff(bool autoLogoff)
-    {
-        ui->cb_AutoLogoff->setChecked(autoLogoff);
-    }
 
     void CLoginAdvComponent::loginCancelled()
     {
@@ -129,7 +116,6 @@ namespace BlackGui::Components
 
         const bool isConnected = sGui && sGui->getIContextNetwork()->isConnected();
         const bool vatsimLogin = ui->comp_NetworkDetails->isVatsimServerSelected();
-        m_networkSetup.setAutoLogoff(ui->cb_AutoLogoff->isChecked());
 
         ui->form_Pilot->setVatsimValidation(vatsimLogin);
 
@@ -323,7 +309,6 @@ namespace BlackGui::Components
 
     void CLoginAdvComponent::autoLogoffDetection()
     {
-        if (!ui->cb_AutoLogoff->isChecked()) { return; }
         if (!this->hasValidContexts()) { return; }
         if (!sGui->getIContextNetwork()->isConnected()) { return; } // nothing to logoff
 
@@ -337,7 +322,6 @@ namespace BlackGui::Components
     void CLoginAdvComponent::autoLogoffFrameRate(bool fatal)
     {
         //! \fixme code duplication with function above
-        if (!ui->cb_AutoLogoff->isChecked()) { return; }
         if (!this->hasValidContexts()) { return; }
         if (!sGui->getIContextNetwork()->isConnected()) { return; }
 

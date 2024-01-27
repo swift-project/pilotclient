@@ -161,7 +161,6 @@ namespace BlackGui::Components
         // inital setup, if data already available
         this->validateAircraftValues();
         ui->form_Pilot->validate();
-        ui->cb_AutoLogoff->setChecked(m_networkSetup.useAutoLogoff());
         this->onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1, {});
         this->reloadOtherServersSetup();
 
@@ -202,12 +201,6 @@ namespace BlackGui::Components
             this->updateUiConnectState();
             this->blinkConnectButton();
         }
-
-        // we decided to make it difficult for users to disable it
-        if (!CBuildConfig::isLocalDeveloperDebugBuild())
-        {
-            ui->cb_AutoLogoff->setChecked(true);
-        }
     }
 
     void CLoginComponent::setLogoffCountdown(int timeoutSeconds)
@@ -235,7 +228,6 @@ namespace BlackGui::Components
 
         m_networkConnected = sGui && sGui->getIContextNetwork()->isConnected();
         const bool vatsimLogin = this->isVatsimNetworkTabSelected();
-        m_networkSetup.setAutoLogoff(ui->cb_AutoLogoff->isChecked());
 
         ui->form_Pilot->setVatsimValidation(vatsimLogin);
         this->updateUiConnectState();
@@ -691,7 +683,6 @@ namespace BlackGui::Components
 
     void CLoginComponent::autoLogoffDetection()
     {
-        if (!ui->cb_AutoLogoff->isChecked()) { return; }
         if (!this->hasValidContexts()) { return; }
         if (!sGui->getIContextNetwork()->isConnected()) { return; } // nothing to logoff
 
@@ -707,7 +698,6 @@ namespace BlackGui::Components
     void CLoginComponent::autoLogoffFrameRate(bool fatal)
     {
         //! \fixme code duplication with function above
-        if (!ui->cb_AutoLogoff->isChecked()) { return; }
         if (!this->hasValidContexts()) { return; }
         if (!sGui->getIContextNetwork()->isConnected()) { return; }
 

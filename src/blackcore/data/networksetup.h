@@ -40,9 +40,6 @@ namespace BlackCore::Data
         //! Set value of last VATSIM server
         BlackMisc::CStatusMessage setLastVatsimServer(const BlackMisc::Network::CServer &server);
 
-        //! Save auto logoff
-        BlackMisc::CStatusMessage setAutoLogoff(bool autoLogoff);
-
         //! Last server (all networks)
         BlackMisc::Network::CServer getLastServer() const;
 
@@ -64,9 +61,6 @@ namespace BlackCore::Data
         //! Used with an other server (i.e. non VATSIM)
         bool wasLastUsedWithOtherServer() const;
 
-        //! Auto logoff?
-        bool useAutoLogoff() const { return m_autoLogoff.get(); }
-
     signals:
         //! Setup changed
         void setupChanged();
@@ -76,7 +70,6 @@ namespace BlackCore::Data
         void onSettingsChanged();
 
         BlackMisc::CSettingReadOnly<BlackMisc::Network::Settings::TTrafficServers> m_otherTrafficNetworkServers { this, &CNetworkSetup::onSettingsChanged };
-        BlackMisc::CSetting<BlackMisc::Network::Settings::TAutoLogoff> m_autoLogoff { this, &CNetworkSetup::onSettingsChanged };
         BlackMisc::CData<BlackMisc::Network::Data::TLastServer> m_lastServer { this, &CNetworkSetup::onSettingsChanged }; //!< recently used server (VATSIM, other)
         BlackMisc::CData<BlackCore::Data::TVatsimLastServer> m_lastVatsimServer { this, &CNetworkSetup::onSettingsChanged }; //!< recently used VATSIM server
     };

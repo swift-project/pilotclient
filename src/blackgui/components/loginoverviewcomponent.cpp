@@ -84,25 +84,12 @@ namespace BlackGui::Components
         ui->form_Pilot->setReadOnly(true);
         ui->form_Server->setReadOnly(true);
 
-        // auto logoff
-        // we decided to make it difficult for users to disable it
-        if (!CBuildConfig::isLocalDeveloperDebugBuild())
-        {
-            ui->cb_AutoLogoff->setChecked(true);
-        }
-
         // inital setup, if data already available
         ui->form_Pilot->validate();
-        ui->cb_AutoLogoff->setChecked(m_networkSetup.useAutoLogoff());
     }
 
     CLoginOverviewComponent::~CLoginOverviewComponent()
     {}
-
-    void CLoginOverviewComponent::setAutoLogoff(bool autoLogoff)
-    {
-        ui->cb_AutoLogoff->setChecked(autoLogoff);
-    }
 
     void CLoginOverviewComponent::cancel()
     {
@@ -116,7 +103,6 @@ namespace BlackGui::Components
         if (!sGui->getIContextNetwork() || !sGui->getIContextAudio()) { return; }
 
         const bool isConnected = sGui && sGui->getIContextNetwork()->isConnected();
-        m_networkSetup.setAutoLogoff(ui->cb_AutoLogoff->isChecked());
 
         CStatusMessage msg;
         if (!isConnected)

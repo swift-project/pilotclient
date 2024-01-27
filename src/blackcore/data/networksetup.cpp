@@ -24,11 +24,6 @@ namespace BlackCore::Data
         return m_lastVatsimServer.set(server);
     }
 
-    CStatusMessage CNetworkSetup::setAutoLogoff(bool autoLogoff)
-    {
-        return m_autoLogoff.setAndSave(autoLogoff);
-    }
-
     CServer CNetworkSetup::getLastServer() const
     {
         return m_lastServer.get();

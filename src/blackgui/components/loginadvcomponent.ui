@@ -223,16 +223,6 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="cb_AutoLogoff">
-        <property name="toolTip">
-         <string>automatically logoff when simulator changes or appears crashed</string>
-        </property>
-        <property name="text">
-         <string>auto logoff</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
@@ -266,7 +256,6 @@
  </customwidgets>
  <tabstops>
   <tabstop>form_Pilot</tabstop>
-  <tabstop>cb_AutoLogoff</tabstop>
   <tabstop>pb_Connect</tabstop>
   <tabstop>pb_Cancel</tabstop>
  </tabstops>

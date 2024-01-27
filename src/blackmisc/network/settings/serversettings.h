@@ -50,22 +50,6 @@ namespace BlackMisc::Network::Settings
             return dv;
         }
     };
-
-    /*!
-     * Auto logoff
-     */
-    struct TAutoLogoff : public TSettingTrait<bool>
-    {
-        //! \copydoc BlackMisc::TSettingTrait::key
-        static const char *key() { return "network/autologoff"; }
-
-        //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable()
-        {
-            static const QString name("Auto logoff");
-            return name;
-        }
-    };
 } // ns
 
 #endif

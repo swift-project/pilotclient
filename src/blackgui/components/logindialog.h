@@ -30,9 +30,6 @@ namespace BlackGui::Components
         //! Destructor
         virtual ~CLoginDialog() override;
 
-        //! Set auto logoff
-        void setAutoLogoff(bool logoff);
-
         //! Init and show
         void show();
 
