@@ -15,6 +15,7 @@ namespace BlackMisc::Aviation
     class BLACKMISC_EXPORT CSsrEquipment : public BlackMisc::CValueObject<CSsrEquipment>
     {
     public:
+        //! Surveillance equipment options
         enum SsrEquipmentOption : int
         {
             None = (1 << 0),
@@ -36,8 +37,7 @@ namespace BlackMisc::Aviation
             AdsCD1 = (1 << 16),
             AdsCG1 = (1 << 17)
         };
-
-        Q_DECLARE_FLAGS(SSrEquipment, SsrEquipmentOption);
+        Q_DECLARE_FLAGS(SSrEquipment, SsrEquipmentOption)
 
         //! Create default SSR equipment with "None" equipment enabled
         CSsrEquipment() = default;

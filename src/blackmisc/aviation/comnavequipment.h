@@ -66,8 +66,8 @@ namespace BlackMisc::Aviation
             Other = (1 << 23)
         };
 
-        Q_DECLARE_FLAGS(ComNavEquipment, ComNavEquipmentOption);
-        Q_DECLARE_FLAGS(CpdlcSatcomEquipment, CpdlcSatcomEquipmentOption);
+        Q_DECLARE_FLAGS(ComNavEquipment, ComNavEquipmentOption)
+        Q_DECLARE_FLAGS(CpdlcSatcomEquipment, CpdlcSatcomEquipmentOption)
 
         //! Create default equipment with Standard COM/NAV
         CComNavEquipment() = default;
