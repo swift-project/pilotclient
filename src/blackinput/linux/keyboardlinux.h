@@ -51,7 +51,7 @@ namespace BlackInput
 
         void addRawInputDevice(const QString &filePath);
         void keyEvent(int keyCode, bool isPressed);
-        BlackMisc::Input::KeyCode convertToKey(int keyCode);
+        BlackMisc::Input::SwiftKeyCode convertToKey(int keyCode);
         bool isModifier(int keyCode);
         bool isMouseButton(int keyCode);
 

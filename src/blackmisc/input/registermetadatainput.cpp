@@ -22,8 +22,8 @@ namespace BlackMisc::Input
         CJoystickButtonList::registerMetadata();
         CKeyboardKey::registerMetadata();
         CKeyboardKeyList::registerMetadata();
-        qDBusRegisterMetaType<KeyCode>();
-        qRegisterMetaTypeStreamOperators<KeyCode>();
+        qDBusRegisterMetaType<SwiftKeyCode>();
+        qRegisterMetaTypeStreamOperators<SwiftKeyCode>();
     }
 
 } // ns

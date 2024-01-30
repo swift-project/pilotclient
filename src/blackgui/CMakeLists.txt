@@ -962,6 +962,8 @@ target_link_libraries(gui
         externals_qwt_plot
         )
 
+set_target_properties(gui PROPERTIES UNITY_BUILD OFF)
+
 target_compile_definitions(gui PRIVATE BUILD_BLACKGUI_LIB)
 target_compile_definitions(gui PRIVATE QWT_DLL)
 

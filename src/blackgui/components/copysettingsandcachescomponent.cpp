@@ -148,7 +148,7 @@ namespace BlackGui::Components
             const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsAudio.getFilename());
             if (!joStr.isEmpty())
             {
-                const Audio::CSettings audioSettings = Audio::CSettings::fromJsonNoThrow(joStr, true, success, errMsg);
+                const BlackMisc::Audio::CSettings audioSettings = BlackMisc::Audio::CSettings::fromJsonNoThrow(joStr, true, success, errMsg);
                 if (this->parsingMessage(success, errMsg, m_settingsAudio.getKey()))
                 {
                     this->displayStatusMessage(m_settingsAudio.setAndSave(audioSettings), audioSettings.toQString(true));

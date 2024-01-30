@@ -44,7 +44,7 @@ namespace BlackInput
 
         void processKeyEvent(IOHIDValueRef value);
 
-        static BlackMisc::Input::KeyCode convertToKey(quint32 keyCode);
+        static BlackMisc::Input::SwiftKeyCode convertToKey(quint32 keyCode);
         static void valueCallback(void *context, IOReturn result, void *sender, IOHIDValueRef value);
 
         IOHIDManagerRef m_hidManager = nullptr;

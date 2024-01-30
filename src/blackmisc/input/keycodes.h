@@ -12,7 +12,7 @@ namespace BlackMisc::Input
 {
     //! Key code
     //! http://www.kbdlayout.info/
-    enum KeyCode
+    enum SwiftKeyCode
     {
         Key_Unknown,
         Key_ShiftLeft,
@@ -132,6 +132,6 @@ namespace BlackMisc::Input
 
 } // namespace
 
-Q_DECLARE_METATYPE(BlackMisc::Input::KeyCode)
+Q_DECLARE_METATYPE(BlackMisc::Input::SwiftKeyCode)
 
 #endif // guard

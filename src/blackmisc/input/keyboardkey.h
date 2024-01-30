@@ -36,22 +36,22 @@ namespace BlackMisc::Input
         CKeyboardKey();
 
         //! Constructor
-        CKeyboardKey(BlackMisc::Input::KeyCode keyCode);
+        CKeyboardKey(BlackMisc::Input::SwiftKeyCode keyCode);
 
         //! Get key code
-        KeyCode getKey() const { return m_keyCode; }
+        SwiftKeyCode getKey() const { return m_keyCode; }
 
         //! Get key code
         QString getKeyAsString() const;
 
         //! Set key code
-        void setKey(KeyCode key) { m_keyCode = key; }
+        void setKey(SwiftKeyCode key) { m_keyCode = key; }
 
         //! Set key code
-        void setKey(int key) { m_keyCode = static_cast<KeyCode>(key); }
+        void setKey(int key) { m_keyCode = static_cast<SwiftKeyCode>(key); }
 
         //! Set key code
-        void setKey(char key) { m_keyCode = static_cast<KeyCode>(key); }
+        void setKey(char key) { m_keyCode = static_cast<SwiftKeyCode>(key); }
 
         //! Is unknown?
         bool isUnknown() const { return !this->hasKey(); }
@@ -65,7 +65,7 @@ namespace BlackMisc::Input
         //! with key?
         bool hasKey() const
         {
-            return !(m_keyCode == KeyCode::Key_Unknown);
+            return !(m_keyCode == SwiftKeyCode::Key_Unknown);
         }
 
         //! Set key object
@@ -81,9 +81,9 @@ namespace BlackMisc::Input
         QString convertToQString(bool i18n = false) const;
 
     private:
-        static const QList<KeyCode> &allModifiers();
+        static const QList<SwiftKeyCode> &allModifiers();
 
-        KeyCode m_keyCode; //!< Key code
+        SwiftKeyCode m_keyCode; //!< Key code
 
         BLACK_METACLASS(
             CKeyboardKey,

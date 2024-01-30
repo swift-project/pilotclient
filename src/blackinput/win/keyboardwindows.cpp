@@ -9,7 +9,7 @@ namespace BlackInput
 {
     static const auto &keyMapping()
     {
-        static const QHash<int, KeyCode> hash {
+        static const QHash<int, SwiftKeyCode> hash {
             { '0', Key_0 },
             { '1', Key_1 },
             { '2', Key_2 },

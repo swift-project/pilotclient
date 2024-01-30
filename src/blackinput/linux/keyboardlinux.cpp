@@ -17,7 +17,7 @@ using namespace BlackMisc::Input;
 namespace BlackInput
 {
     // https://www.cl.cam.ac.uk/~mgk25/ucs/keysymdef.h
-    static QHash<int, Input::KeyCode> keyMapping {
+    static QHash<int, Input::SwiftKeyCode> keyMapping {
         { XK_0, Key_0 },
         { XK_1, Key_1 },
         { XK_2, Key_2 },
@@ -280,7 +280,7 @@ namespace BlackInput
         }
     }
 
-    BlackMisc::Input::KeyCode CKeyboardLinux::convertToKey(int keyCode)
+    BlackMisc::Input::SwiftKeyCode CKeyboardLinux::convertToKey(int keyCode)
     {
         // The keycode received from kernel does not take keyboard layouts into account.
         // It always defaults to US keyboards. In contrast to kernel devices, X11 is aware

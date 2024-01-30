@@ -17,7 +17,7 @@ namespace BlackMisc::Input
     CKeyboardKey::CKeyboardKey() : m_keyCode(Key_Unknown)
     {}
 
-    CKeyboardKey::CKeyboardKey(KeyCode keyCode) : m_keyCode(keyCode)
+    CKeyboardKey::CKeyboardKey(SwiftKeyCode keyCode) : m_keyCode(keyCode)
     {}
 
     QString CKeyboardKey::convertToQString(bool /* i18n */) const
@@ -34,7 +34,7 @@ namespace BlackMisc::Input
     {
         if (m_keyCode == Key_Unknown) return QString();
 
-        static const QHash<KeyCode, QString> keyStrings = {
+        static const QHash<SwiftKeyCode, QString> keyStrings = {
             { Key_ShiftLeft, QStringLiteral("ShiftLeft") },
             { Key_ShiftRight, QStringLiteral("ShiftRight") },
             { Key_ControlLeft, QStringLiteral("CtrlLeft") },
@@ -113,9 +113,9 @@ namespace BlackMisc::Input
         }
     }
 
-    const QList<KeyCode> &CKeyboardKey::allModifiers()
+    const QList<SwiftKeyCode> &CKeyboardKey::allModifiers()
     {
-        static const QList<KeyCode> allModifiers = {
+        static const QList<SwiftKeyCode> allModifiers = {
             Key_ShiftLeft,
             Key_ShiftRight,
             Key_ControlLeft,
