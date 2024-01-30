@@ -15,18 +15,6 @@
   </property>
   <layout class="QVBoxLayout" name="vl_SettingsNetworkComponent">
    <item>
-    <widget class="QGroupBox" name="gb_Network">
-     <property name="title">
-      <string>Network</string>
-     </property>
-     <layout class="QVBoxLayout" name="vl_Network">
-      <item>
-       <widget class="BlackGui::Editors::CNetworkSetupForm" name="ediitor_NetworkSetup"/>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
     <widget class="QGroupBox" name="gb_Services">
      <property name="title">
       <string>Services</string>
@@ -71,12 +59,6 @@
    <class>BlackGui::Components::CSettingsVatsimReadersComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/settingsvatsimreaderscomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Editors::CNetworkSetupForm</class>
-   <extends>QFrame</extends>
-   <header>blackgui/editors/networksetupform.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

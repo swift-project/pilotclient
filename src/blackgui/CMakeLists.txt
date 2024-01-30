@@ -217,11 +217,9 @@ add_library(gui SHARED
         qml/AtcRing.qml
         textmessagetextedit.cpp
         labelandicon.ui
-        editors/networksetupform.ui
         editors/fsdsetupform.cpp
         editors/liveryform.ui
         editors/relativeaircraftposition.ui
-        editors/networksetupform.cpp
         editors/fsdsetupform.h
         editors/cockpitcomform.cpp
         editors/situationform.ui
@@ -255,7 +253,6 @@ add_library(gui SHARED
         editors/modelmappingform.h
         editors/modelmappingform.cpp
         editors/distributorform.ui
-        editors/networksetupform.h
         editors/aircrafticaoform.h
         editors/voicesetupform.ui
         editors/aircraftpartsform.ui
