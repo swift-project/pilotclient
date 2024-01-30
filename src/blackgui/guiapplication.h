@@ -10,6 +10,7 @@
 #include "blackgui/settings/updatenotification.h"
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/mainwindowaccess.h"
+#include "blackgui/splashscreen.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/blackguiexport.h"
 #include "blackcore/application.h"
@@ -30,7 +31,6 @@
 class QMenu;
 class QWidget;
 class QMainWindow;
-class CSplashScreen;
 
 namespace BlackMisc
 {
