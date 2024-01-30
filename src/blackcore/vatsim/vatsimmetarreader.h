@@ -32,7 +32,7 @@ namespace BlackCore::Vatsim
         //! Constructor
         explicit CVatsimMetarReader(QObject *owner);
 
-        //! Read / re-read bookings
+        //! Read / re-read metars
         void readInBackgroundThread();
 
         //! Get METARs

@@ -37,7 +37,7 @@ using namespace BlackCore::Db;
 
 namespace BlackCoreTest
 {
-    //! Test data readers (for bookings, JSON, etc.)
+    //! Test data readers (for ICAOs, JSON, etc.)
     class CTestReaders : public QObject
     {
         Q_OBJECT

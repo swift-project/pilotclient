@@ -90,7 +90,6 @@ namespace BlackCore
         connect(m_fsdClient, &CFSDClient::connectionStatusChanged, this, &CAirspaceMonitor::onConnectionStatusChanged);
         connect(m_fsdClient, &CFSDClient::revbAircraftConfigReceived, this, &CAirspaceMonitor::onRevBAircraftConfigReceived);
 
-        // AutoConnection: this should also avoid race conditions by updating the bookings
         Q_ASSERT_X(sApp && sApp->hasWebDataServices(), Q_FUNC_INFO, "Missing data reader");
 
         if (this->supportsVatsimDataFile())

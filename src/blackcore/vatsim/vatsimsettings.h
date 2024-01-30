@@ -81,27 +81,6 @@ namespace BlackCore::Vatsim
     };
 
     //! Reader settings
-    struct TVatsimBookings : public BlackMisc::TSettingTrait<CReaderSettings>
-    {
-        //! \copydoc BlackMisc::TSettingTrait::key
-        static const char *key() { return "vatsimreaders/bookings"; }
-
-        //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable()
-        {
-            static const QString name("VATSIM bookings");
-            return name;
-        }
-
-        //! \copydoc BlackMisc::TSettingTrait::defaultValue
-        static const BlackCore::Vatsim::CReaderSettings &defaultValue()
-        {
-            static const BlackCore::Vatsim::CReaderSettings reader { { 30.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() }, { 600.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() } };
-            return reader;
-        }
-    };
-
-    //! Reader settings
     struct TVatsimDataFile : public BlackMisc::TSettingTrait<CReaderSettings>
     {
         //! \copydoc BlackMisc::TSettingTrait::key

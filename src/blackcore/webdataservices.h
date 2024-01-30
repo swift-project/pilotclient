@@ -62,7 +62,6 @@ namespace BlackCore
 
     namespace Vatsim
     {
-        class CVatsimBookingReader;
         class CVatsimDataFileReader;
         class CVatsimMetarReader;
         class CVatsimStatusFileReader;
