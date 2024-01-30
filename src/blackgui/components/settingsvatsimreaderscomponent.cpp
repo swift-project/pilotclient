@@ -31,18 +31,12 @@ namespace BlackGui::Components
     void CSettingsVatsimReadersComponent::save()
     {
         const int metarSec = m_settingsMetars.get().getPeriodicTime().toMs() / 1000;
-        const int bookingsSec = m_settingsBookings.get().getPeriodicTime().toMs() / 1000;
         const int dataFileSec = m_settingsDataFile.get().getPeriodicTime().toMs() / 1000;
 
         const int newMetarSec = ui->sb_Metar->value();
         if (newMetarSec != metarSec)
         {
             m_settingsMetars.setAndSaveProperty(CReaderSettings::IndexPeriodicTime, CVariant::fromValue(CTime { static_cast<double>(newMetarSec), CTimeUnit::s() }));
-        }
-        const int newBookingsSec = ui->sb_Bookings->value();
-        if (newBookingsSec != bookingsSec)
-        {
-            m_settingsBookings.setAndSaveProperty(CReaderSettings::IndexPeriodicTime, CVariant::fromValue(CTime { static_cast<double>(newBookingsSec), CTimeUnit::s() }));
         }
         const int newDataFileSec = ui->sb_DataFile->value();
         if (newDataFileSec != dataFileSec)
@@ -59,11 +53,9 @@ namespace BlackGui::Components
     void CSettingsVatsimReadersComponent::initValues()
     {
         const int metarSec = m_settingsMetars.get().getPeriodicTime().toMs() / 1000;
-        const int bookingsSec = m_settingsBookings.get().getPeriodicTime().toMs() / 1000;
         const int dataFileSec = m_settingsDataFile.get().getPeriodicTime().toMs() / 1000;
 
         ui->sb_Metar->setValue(metarSec);
-        ui->sb_Bookings->setValue(bookingsSec);
         ui->sb_DataFile->setValue(dataFileSec);
     }
 } // ns
