@@ -47,7 +47,7 @@ namespace BlackGui::Components
         const int newDataFileSec = ui->sb_DataFile->value();
         if (newDataFileSec != dataFileSec)
         {
-            m_settingsBookings.setAndSaveProperty(CReaderSettings::IndexPeriodicTime, CVariant::fromValue(CTime { static_cast<double>(newDataFileSec), CTimeUnit::s() }));
+            m_settingsDataFile.setAndSaveProperty(CReaderSettings::IndexPeriodicTime, CVariant::fromValue(CTime { static_cast<double>(newDataFileSec), CTimeUnit::s() }));
         }
     }
 
