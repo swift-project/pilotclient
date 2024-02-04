@@ -37,11 +37,6 @@ namespace BlackGui::Components
         ui->comp_CopyConfiguration->setNameFilterDisables(disable);
     }
 
-    void CCopyConfigurationDialog::setWithBootstrapFile(bool withBootstrapFile)
-    {
-        ui->comp_CopyConfiguration->setWithBootstrapFile(withBootstrapFile);
-    }
-
     bool CCopyConfigurationDialog::event(QEvent *event)
     {
         if (CGuiApplication::triggerShowHelp(this, event)) { return true; }

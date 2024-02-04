@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     a.addDBusAddressOption();
     a.addVatlibOptions();
     a.addAudioOptions();
-    if (!a.parseAndSynchronizeSetup()) { return EXIT_FAILURE; }
+    if (!a.parseAndLoadSetup()) { return EXIT_FAILURE; }
 
     const QString dBusAdress(a.getCmdDBusAddressValue());
     a.useContexts(CCoreFacadeConfig::forCoreAllLocalInDBus(dBusAdress));

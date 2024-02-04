@@ -149,10 +149,6 @@ namespace BlackCore
 
             // global setup
             m_setupReader.reset(new CSetupReader(this));
-            connect(m_setupReader.data(), &CSetupReader::setupHandlingCompleted, this, &CApplication::onSetupHandlingCompleted, Qt::QueuedConnection);
-            connect(m_setupReader.data(), &CSetupReader::setupHandlingCompleted, this, &CApplication::setupHandlingCompleted, Qt::QueuedConnection); // hand thru
-
-            this->addParserOptions(m_setupReader->getCmdLineOptions()); // add options from reader
 
             // check for updates
             m_gitHubPackagesReader.reset(new CGitHubPackagesReader(this));
@@ -380,13 +376,7 @@ namespace BlackCore
                 });
             }
 
-            //! \fixme KB 9/17 waiting for setup reader here is supposed to be replaced by explicitly waiting for reader
-            if (!m_setupReader->isSetupAvailable())
-            {
-                msgs = this->requestReloadOfSetupAndVersion();
-                if (msgs.isFailure()) { break; }
-                if (msgs.isSuccess()) { msgs.push_back(this->waitForSetup()); }
-            }
+            Q_ASSERT_X(m_setupReader && m_setupReader->isSetupAvailable(), Q_FUNC_INFO, "Setup not available");
 
             // start hookin
             msgs.push_back(this->startHookIn());
@@ -413,60 +403,10 @@ namespace BlackCore
         return m_started;
     }
 
-    CStatusMessageList CApplication::waitForSetup(int timeoutMs)
-    {
-        if (!m_setupReader) { return CStatusMessage(this).error(u"No setup reader"); }
-        CEventLoop eventLoop(this);
-        eventLoop.stopWhen(this, &CApplication::setupHandlingCompleted);
-        if (!m_setupReader->isSetupAvailable())
-        {
-            eventLoop.exec(timeoutMs);
-        }
-
-        // setup handling completed with success or failure, or we run into time out
-        CStatusMessageList msgs;
-        if (!eventLoop.isGuardAlive())
-        {
-            msgs.push_back(CStatusMessage(this).error(u"Setup not available, already shutting down."));
-            return msgs;
-        }
-        bool forced = false;
-        if (!m_setupReader->isSetupAvailable())
-        {
-            forced = true;
-            m_setupReader->forceAvailabilityUpdate(); // maybe web reading still hanging
-        }
-        if (m_setupReader->isSetupAvailable())
-        {
-            msgs.push_back(CStatusMessage(this).info(forced ? QStringLiteral("Setup available after forcing (so likely web read still pending)") : QStringLiteral("Setup available")));
-            return msgs;
-        }
-
-        // getting here means no "real" read success, and NO available cache
-        msgs.push_back(CStatusMessage(this).error(u"Setup not available, setup reading failed or timed out."));
-        if (m_setupReader->getLastSetupReadErrorMessages().hasErrorMessages())
-        {
-            msgs.push_back(m_setupReader->getLastSetupReadErrorMessages());
-        }
-        if (m_setupReader->hasCmdLineBootstrapUrl())
-        {
-            msgs.push_back(CStatusMessage(this).info(u"Bootstrap URL cmd line argument '%1'") << m_setupReader->getCmdLineBootstrapUrl());
-        }
-        return msgs;
-    }
-
     bool CApplication::isSetupAvailable() const
     {
         if (m_shutdown || !m_setupReader) { return false; }
         return m_setupReader->isSetupAvailable();
-    }
-
-    CStatusMessageList CApplication::requestReloadOfSetupAndVersion()
-    {
-        if (m_shutdown) { return CStatusMessage(this).warning(u"Shutting down, not reading"); }
-        if (!m_setupReader) { return CStatusMessage(this).error(u"No reader for setup/version"); }
-        Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Not yet parsed");
-        return m_setupReader->asyncLoad();
     }
 
     bool CApplication::hasMinimumMappingVersion() const
@@ -1103,7 +1043,6 @@ namespace BlackCore
 
         if (m_setupReader)
         {
-            m_setupReader->gracefulShutdown();
             m_setupReader.reset();
         }
 
@@ -1448,15 +1387,26 @@ namespace BlackCore
         if (!this->parsingHookIn()) { return false; }
 
         // setup reader
-        m_setupReader->parseCmdLineArguments();
         m_parsed = true;
         return true;
     }
 
-    bool CApplication::parseAndSynchronizeSetup(int timeoutMs)
+    bool CApplication::parseAndLoadSetup()
     {
         if (!this->parseAndStartupCheck()) return false;
-        return !this->synchronizeSetup(timeoutMs).hasErrorMessages();
+        const CStatusMessageList msgs = loadSetup();
+
+        if (msgs.isFailure())
+        {
+            displaySetupLoadFailure(msgs);
+        }
+        return msgs.isSuccess();
+    }
+
+    void CApplication::displaySetupLoadFailure(BlackMisc::CStatusMessageList)
+    {
+        // Ignore for CLI application
+        // Already logged to console
     }
 
     bool CApplication::cmdLineWarningMessage(const QString &text, const QString &informativeText) const
@@ -1656,17 +1606,14 @@ namespace BlackCore
         return m_setupReader.data();
     }
 
-    QString CApplication::getLastSuccesfulSetupUrl() const
+    CStatusMessageList CApplication::loadSetup()
     {
-        if (!this->hasSetupReader()) { return {}; }
-        return m_setupReader->getLastSuccessfulSetupUrl();
-    }
-
-    CStatusMessageList CApplication::synchronizeSetup(int timeoutMs)
-    {
-        const CStatusMessageList requestMsgs = this->requestReloadOfSetupAndVersion();
-        if (requestMsgs.isFailure()) { return requestMsgs; } // request already failed
-        return this->waitForSetup(timeoutMs);
+        if (m_shutdown) { return CStatusMessage(this).warning(u"Shutting down, not reading"); }
+        if (!m_setupReader) { return CStatusMessage(this).error(u"No reader for setup/version"); }
+        Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Not yet parsed");
+        const CStatusMessageList requestMsgs = m_setupReader->loadSetup();
+        onSetupHandlingCompleted(requestMsgs.isSuccess());
+        return requestMsgs;
     }
 
     CUrlList CApplication::getVatsimMetarUrls() const

@@ -47,12 +47,9 @@ namespace BlackCore::Data
             IndexVatsimServer,
             IndexVatsimHttpFsd,
             IndexSwiftDbFiles,
-            IndexBootstrapFileUrls,
             IndexUpdateInfoFileUrls,
             IndexOnlineHelpUrls,
             IndexCrashReportServerUrl,
-            IndexWasLoadedFromWeb,
-            IndexWasLoadedFromFile,
             IndexSharedUrls,
             IndexMappingMinimumVersion,
             IndexPredefinedServers
@@ -71,15 +68,6 @@ namespace BlackCore::Data
 
         //! Default constructor
         CGlobalSetup();
-
-        //! Has data loaded from file
-        bool wasLoadedFromFile() const { return m_wasLoadedFromFile; }
-
-        //! Loaded (web/file)
-        bool wasLoaded() const;
-
-        //! Mark as loaded from file
-        void markAsLoadedFromFile(bool loaded) { m_wasLoadedFromFile = loaded; }
 
         //! Http port
         int getDbHttpPort() const { return m_dbHttpPort; }
@@ -143,14 +131,6 @@ namespace BlackCore::Data
 
         //! Shared URLs
         const BlackMisc::Network::CUrlList &getSwiftSharedUrls() const;
-
-        //! Get pure shared URL as in getSwiftSharedUrls from bootstrap, distribution or other shared URL
-        //! \remark normally based on one of the getSwiftSharedUrls
-        BlackMisc::Network::CUrl getCorrespondingSharedUrl(const BlackMisc::Network::CUrl &candidate) const;
-
-        //! Bootstrap URLs
-        //! \remark based on getSwiftSharedUrls
-        BlackMisc::Network::CUrlList getSwiftBootstrapFileUrls() const;
 
         //! Distribution URLs
         //! \remark based on getSwiftSharedUrls
@@ -216,9 +196,6 @@ namespace BlackCore::Data
         //! Schema version (shared files, bootstrap file)
         static const QString &schemaVersionString();
 
-        //! Build bootstrap file URL from shared URL
-        static QString buildBootstrapFileUrl(const QString &candidate);
-
         //! Build the full dbdata directory URL from shared URL
         static BlackMisc::Network::CUrl buildDbDataDirectoryUrl(const BlackMisc::Network::CUrl &candidate);
 
@@ -226,7 +203,6 @@ namespace BlackCore::Data
         static CGlobalSetup fromJsonFile(const QString &fileNameAndPath, bool acceptCacheFormat);
 
     private:
-        bool m_wasLoadedFromFile = false; //!< Loaded from local file
         int m_dbHttpPort = 80; //!< port
         int m_dbHttpsPort = 443; //!< SSL port
         qint64 m_pingIntervalSecs = 180; //!< seconds between datastore pings
@@ -252,7 +228,6 @@ namespace BlackCore::Data
 
         BLACK_METACLASS(
             CGlobalSetup,
-            BLACK_METAMEMBER(wasLoadedFromFile),
             BLACK_METAMEMBER(timestampMSecsSinceEpoch),
             BLACK_METAMEMBER(crashReportServerUrl),
             BLACK_METAMEMBER(dbRootDirectoryUrl),
@@ -274,16 +249,6 @@ namespace BlackCore::Data
             BLACK_METAMEMBER(ssrEquipmentHelpUrl),
             BLACK_METAMEMBER(dbDebugFlag)
         );
-    };
-
-    //! Trait for global setup data
-    struct TGlobalSetup : public BlackMisc::TDataTrait<CGlobalSetup>
-    {
-        //! Key in data cache
-        static const char *key() { return "bootstrap"; }
-
-        //! First load is synchronous
-        static constexpr bool isPinned() { return true; }
     };
 } // ns
 

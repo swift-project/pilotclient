@@ -41,9 +41,6 @@ namespace BlackGui::Components
         //! \copydoc QFileSystemModel::setNameFilterDisables
         void setNameFilterDisables(bool disable);
 
-        //! \copydoc CCopyConfigurationComponent::setWithBootstrapFile
-        void setWithBootstrapFile(bool withBootstrapFile);
-
     protected:
         //! \copydoc QObject::event
         virtual bool event(QEvent *event) override;

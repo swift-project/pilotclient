@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
         a.setSignalStartupAutomatically(false); // application will signal startup on its own
         a.splashScreen(CIcons::swift256());
         a.setMinimumSizeInCharacters(60, 42); // experimental
-        if (!a.parseAndSynchronizeSetup()) { return EXIT_FAILURE; }
+        if (!a.parseAndLoadSetup()) { return EXIT_FAILURE; }
         if (!a.hasSetupReader() || !a.start())
         {
             a.gracefulShutdown();

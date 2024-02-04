@@ -129,7 +129,6 @@ namespace BlackGui
         {
             CGuiApplication::registerMetadata();
             CApplication::init(false); // base class without metadata
-            if (this->hasSetupReader()) { this->getSetupReader()->setCheckCmdLineBootstrapUrl(false); } // no connect checks on setup reader (handled with interactive setup loading)
             CGuiApplication::adjustPalette();
             this->setWindowIcon(icon);
             this->settingsChanged();
@@ -138,9 +137,6 @@ namespace BlackGui
 
             connect(&m_styleSheetUtility, &CStyleSheetUtility::styleSheetsChanged, this, &CGuiApplication::onStyleSheetsChanged, Qt::QueuedConnection);
             connect(this, &CGuiApplication::startUpCompleted, this, &CGuiApplication::superviseWindowMinSizes, Qt::QueuedConnection);
-
-            // splash screen
-            connect(this->getSetupReader(), &CSetupReader::setupLoadingMessages, this, &CGuiApplication::displaySplashMessages, Qt::QueuedConnection);
         }
     }
 
@@ -1094,48 +1090,21 @@ namespace BlackGui
         m_minHeightChars = heightChars;
     }
 
-    bool CGuiApplication::interactivelySynchronizeSetup(int timeoutMs)
+    void CGuiApplication::displaySetupLoadFailure(BlackMisc::CStatusMessageList msgs)
     {
-        bool ok = false;
-        do
+        if (msgs.hasErrorMessages())
         {
-            const CStatusMessageList msgs = this->synchronizeSetup(timeoutMs);
-            if (msgs.hasErrorMessages())
+            CSetupLoadingDialog dialog(msgs, BlackGui::CGuiApplication::mainApplicationWidget());
+            if (sGui)
             {
-                CSetupLoadingDialog dialog(msgs, this->mainApplicationWidget());
-                if (sGui)
-                {
-                    static const QString style = sGui->getStyleSheetUtility().styles(
-                        { CStyleSheetUtility::fileNameFonts(),
-                          CStyleSheetUtility::fileNameStandardWidget() });
-                    dialog.setStyleSheet(style);
-                }
+                static const QString style = sGui->getStyleSheetUtility().styles(
+                    { CStyleSheetUtility::fileNameFonts(),
+                      CStyleSheetUtility::fileNameStandardWidget() });
+                dialog.setStyleSheet(style);
+            }
 
-                const int r = dialog.exec();
-                if (r == QDialog::Rejected)
-                {
-                    break; // exit with false state, as file was not loaded
-                }
-                else
-                {
-                    // run loop again and sync again
-                }
-            }
-            else
-            {
-                // setup loaded
-                ok = true;
-                break;
-            }
+            dialog.exec();
         }
-        while (!ok);
-        return ok;
-    }
-
-    bool CGuiApplication::parseAndSynchronizeSetup(int timeoutMs)
-    {
-        if (!this->parseAndStartupCheck()) { return false; }
-        return this->interactivelySynchronizeSetup(timeoutMs);
     }
 
     QDialog::DialogCode CGuiApplication::showCloseDialog(QMainWindow *mainWindow, QCloseEvent *closeEvent)

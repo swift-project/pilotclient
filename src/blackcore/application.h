@@ -298,8 +298,8 @@ namespace BlackCore
 
         //! Combined function
         //! \see parseAndStartupCheck
-        //! \see synchronizeSetup
-        virtual bool parseAndSynchronizeSetup(int timeoutMs = BlackMisc::Network::CNetworkUtils::getLongTimeoutMs());
+        //! \see loadSetup
+        bool parseAndLoadSetup();
 
         //! Display warning message
         virtual bool cmdLineWarningMessage(const QString &text, const QString &informativeText = "") const;
@@ -406,19 +406,8 @@ namespace BlackCore
 
         // ----------------------- setup data ---------------------------------
 
-        //! Last setup URL (successfully read)
-        //! \threadsafe
-        QString getLastSuccesfulSetupUrl() const;
-
-        //! Reload setup and version
-        BlackMisc::CStatusMessageList requestReloadOfSetupAndVersion();
-
         //! Minimum mapping version check
         virtual bool hasMinimumMappingVersion() const;
-
-        //! Read and wait for setup
-        //! \sa waitForSetup
-        BlackMisc::CStatusMessageList synchronizeSetup(int timeoutMs = BlackMisc::Network::CNetworkUtils::getLongTimeoutMs());
 
         //! Setup reader?
         bool hasSetupReader() const;
@@ -570,9 +559,6 @@ namespace BlackCore
         //! @}
 
     signals:
-        //! Setup available (cache, web load, ..) or failed to load setup
-        void setupHandlingCompleted(bool success);
-
         //! Update info available (cache, web load)
         void updateInfoAvailable(bool success);
 
@@ -597,12 +583,11 @@ namespace BlackCore
         void aboutToShutdown();
 
     protected:
+        //! Display the failures caused by loading the setup file
+        virtual void displaySetupLoadFailure(BlackMisc::CStatusMessageList msgs);
+
         //! Setup read/synchronized
         void onSetupHandlingCompleted(bool available);
-
-        //! Wait for setup data by calling the event loop and waiting until everything is ready
-        //! \remark requires parsing upfront
-        BlackMisc::CStatusMessageList waitForSetup(int timeoutMs = BlackMisc::Network::CNetworkUtils::getLongTimeoutMs());
 
         //! Startup completed
         virtual void onStartUpCompleted();
@@ -672,6 +657,9 @@ namespace BlackCore
         std::atomic_bool m_shutdownInProgress { false }; //!< shutdown in progress?
 
     private:
+        //! Read the setup
+        BlackMisc::CStatusMessageList loadSetup();
+
         //! Problem with network access manager
         void onChangedNetworkAccessibility(QNetworkAccessManager::NetworkAccessibility accessible);
 

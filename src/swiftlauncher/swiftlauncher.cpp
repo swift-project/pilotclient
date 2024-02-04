@@ -129,11 +129,6 @@ void CSwiftLauncher::installerMode()
         const QDir dir = CSwiftDirectories::logDirectory();
         if (!dir.exists()) { break; }
 
-        if (sGui && sGui->getSetupReader())
-        {
-            sGui->getSetupReader()->prefillCacheWithLocalResourceBootstrapFile();
-        }
-
         for (const CSimulatorInfo &sim : CSimulatorInfo::allSimulatorsSet())
         {
             this->synchronizeCache(sim);
