@@ -50,6 +50,7 @@ namespace BlackGui::Components
     void CStatusMessagesDetail::showDetails(bool details)
     {
         ui->form_StatusMessage->setVisible(details);
+        ui->tvp_StatusMessages->setMode(details ? Models::CStatusMessageListModel::Detailed : Models::CStatusMessageListModel::Simplified);
     }
 
     void CStatusMessagesDetail::showFilterDialog()
