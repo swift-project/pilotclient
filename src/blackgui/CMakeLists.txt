@@ -364,7 +364,6 @@ add_library(gui SHARED
         components/autopublishcomponent.h
         components/audioadvanceddistributeddialog.ui
         components/settingsadvancedcomponent.h
-        components/dbdebugdatabasesetup.h
         components/copyconfigurationcomponent.h
         components/airportdialog.h
         components/settingsmatchingdialog.cpp
@@ -537,7 +536,6 @@ add_library(gui SHARED
         components/interpolationcomponent.ui
         components/dbownmodelsetformdialog.h
         components/airportcompleter.cpp
-        components/dbdebugdatabasesetup.cpp
         components/modelmatcherlogenable.h
         components/updateinfocomponent.h
         components/countryselector.cpp
@@ -648,7 +646,6 @@ add_library(gui SHARED
         components/settingsviewupdatetimes.ui
         components/airportcompleter.h
         components/cockpitinfoareacomponent.cpp
-        components/dbdebugdatabasesetup.ui
         components/cockpittranspondermodeledscomponent.cpp
         components/installfsxterrainprobecomponent.h
         components/interpolationlogdisplay.h

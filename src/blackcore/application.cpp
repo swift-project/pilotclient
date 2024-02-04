@@ -533,12 +533,6 @@ namespace BlackCore
         const CDistribution d(this->getOwnDistribution());
         if (d.isRestricted() && this->isSet(m_cmdDevelopment)) { return true; }
 
-        // we can globally set a dev.flag
-        if (this->isSetupAvailable())
-        {
-            // assume value from setup
-            return this->getGlobalSetup().isDevelopment();
-        }
         return false;
     }
 
