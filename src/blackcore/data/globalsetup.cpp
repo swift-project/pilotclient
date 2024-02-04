@@ -158,13 +158,6 @@ namespace BlackCore::Data
         return url;
     }
 
-    CGlobalSetup CGlobalSetup::fromJsonFile(const QString &fileNameAndPath, bool acceptCacheFormat)
-    {
-        CGlobalSetup setup;
-        loadFromJsonFile(setup, fileNameAndPath, acceptCacheFormat);
-        return setup;
-    }
-
     CServerList CGlobalSetup::getPredefinedServersPlusHardcodedServers() const
     {
         static const CServerList hardcoded(

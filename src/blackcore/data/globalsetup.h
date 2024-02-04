@@ -199,9 +199,6 @@ namespace BlackCore::Data
         //! Build the full dbdata directory URL from shared URL
         static BlackMisc::Network::CUrl buildDbDataDirectoryUrl(const BlackMisc::Network::CUrl &candidate);
 
-        //! Object initialized by JSON file
-        static CGlobalSetup fromJsonFile(const QString &fileNameAndPath, bool acceptCacheFormat);
-
     private:
         int m_dbHttpPort = 80; //!< port
         int m_dbHttpsPort = 443; //!< SSL port
