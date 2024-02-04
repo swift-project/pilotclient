@@ -223,9 +223,6 @@ namespace BlackCore::Data
         BlackMisc::Network::CUrl m_ssrEquipmentHelpUrl; //!< Help URL for SSR equipment codes
         bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know what you are doing. Only works with CBuildConfig::isLocalDeveloperDebugBuild
 
-        //! Set the default URLs
-        void initDefaultValues();
-
         BLACK_METACLASS(
             CGlobalSetup,
             BLACK_METAMEMBER(timestampMSecsSinceEpoch),

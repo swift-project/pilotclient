@@ -29,33 +29,7 @@ namespace BlackCore::Data
 {
     CGlobalSetup::CGlobalSetup() : CIdentifiable("CGlobalSetup"),
                                    ITimestampBased(0)
-    {
-        this->initDefaultValues();
-    }
-
-    void CGlobalSetup::initDefaultValues()
-    {
-        m_mappingMinimumVersion = CBuildConfig::getVersionString();
-        m_dbRootDirectoryUrl = CUrl("https://datastore.swift-project.org/");
-        m_vatsimMetarsUrls = CUrlList { "http://metar.vatsim.net/metar.php" };
-        m_vatsimStatusFileUrls = CUrlList { "https://status.vatsim.net" };
-        m_vatsimDataFileUrls = CUrlList { "https://data.vatsim.net/v3/vatsim-data.json" };
-        m_vatsimServerFileUrl = CUrl("https://data.vatsim.net/v3/vatsim-servers.json");
-        m_vatsimFsdHttpUrl = CUrl("http://fsd.vatsim.net");
-        m_sharedUrls = CUrlList {
-            "http://download.swift-project.org/shared/",
-        };
-
-        m_onlineHelpUrls = CUrlList {
-            "https://datastore.swift-project.org/page/swifthelpdispatcher.html",
-        };
-        m_ncepGlobalForecastSystemUrl = CUrl("http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p50.pl");
-        m_ncepGlobalForecastSystemUrl25 = CUrl("http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl");
-
-        // hardcoded based on RR's information
-        // https://discordapp.com/channels/539048679160676382/539925070550794240/586879411002015756
-        m_crashReportServerUrl = CUrl();
-    }
+    {}
 
     CUrl CGlobalSetup::getDbIcaoReaderUrl() const
     {
