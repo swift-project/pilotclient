@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Loading the setup (&quot;bootstrap file&quot;)</string>
+   <string>Loading the setup file failed</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -36,173 +36,29 @@
     <number>6</number>
    </property>
    <item>
-    <widget class="QGroupBox" name="gb_Details">
-     <property name="title">
-      <string>Setup and caches</string>
+    <widget class="QLabel" name="lbl_Info">
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Loading the setup file (bootstrap.json) has failed!&lt;/span&gt; This file is required for &lt;span style=&quot; font-style:italic;&quot;&gt;swift&lt;/span&gt; to work properly. Fix the errors mentioned below and restart swift. You can also replace your bootstrap.json with the latest version available &lt;a href=&quot;https://raw.githubusercontent.com/swift-project/pilotclient/main/resources/share/shared/bootstrap/bootstrap.json&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;from GitHub.&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
-     <layout class="QGridLayout" name="gl_Details" columnstretch="0,0,0,0">
-      <property name="topMargin">
-       <number>6</number>
-      </property>
-      <property name="rightMargin">
-       <number>6</number>
-      </property>
-      <property name="bottomMargin">
-       <number>6</number>
-      </property>
-      <item row="2" column="1">
-       <widget class="QLineEdit" name="le_BootstrapMode">
-        <property name="whatsThis">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The mode: 'implicit' means no URL is provided and the value is obtained from an existing setup. 'explicit' means an URL is provided via command line arguments.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="lbl_BootstrapMode">
-        <property name="text">
-         <string>Mode:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QLineEdit" name="le_SetupCache">
-        <property name="whatsThis">
-         <string>Timestamp of the setup cache.</string>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="lbl_CmdLine">
-        <property name="text">
-         <string>Command:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="lbl_BootstrapUrl">
-        <property name="toolTip">
-         <string>Where the bootstrap file is located</string>
-        </property>
-        <property name="text">
-         <string>Bootstrap URL:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QLineEdit" name="le_BootstrapUrl">
-        <property name="whatsThis">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The bootstrap URL provided by command line options. This is where the setup data are loaded from.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1" colspan="3">
-       <widget class="QLineEdit" name="le_CmdLine">
-        <property name="whatsThis">
-         <string>The command line.</string>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="lbl_SetupCache">
-        <property name="text">
-         <string>Setup cache:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="lbl_CopyOver">
-        <property name="text">
-         <string>Copy over:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="2">
-       <widget class="QPushButton" name="pb_LoadFromDisk">
-        <property name="whatsThis">
-         <string>load the cache data from disk, i.e. from the file which came with the installer</string>
-        </property>
-        <property name="text">
-         <string>from disk</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0" colspan="4">
-       <widget class="QLabel" name="lbl_Info">
-        <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; font-weight:600;&quot;&gt;Loading the setup (aka &amp;quot;bootstrap file&amp;quot;) has failed!&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; This file is required for &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;swift&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; to work properly. You can try to load the file again (&amp;quot;Retry&amp;quot;) or give up (&amp;quot;Cancel&amp;quot;). If you have set an explicit bootstrap URL, you can also ignore this URL and use cached setup data (if there are any). If all goes wrong, you can try to load the setup cache from disk.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="textFormat">
-         <enum>Qt::RichText</enum>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2">
-       <widget class="QPushButton" name="pb_IgnoreExplicitBootstrapUrl">
-        <property name="whatsThis">
-         <string>ignore the bootstrap URL and try to read from cache</string>
-        </property>
-        <property name="text">
-         <string>ignore</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="3">
-       <widget class="QPushButton" name="pb_OpemDirectory">
-        <property name="text">
-         <string>open dir.</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="3">
-       <widget class="QPushButton" name="pb_Help">
-        <property name="text">
-         <string>help page</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QLineEdit" name="le_OtherSwiftVersions">
-        <property name="whatsThis">
-         <string>Info about other swift versions installed</string>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="2">
-       <widget class="QPushButton" name="pb_CopyFromSwift">
-        <property name="whatsThis">
-         <string>copy cache data from another swift version</string>
-        </property>
-        <property name="text">
-         <string>copy over</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2" colspan="2">
-       <widget class="QPushButton" name="pb_TryToFix">
-        <property name="text">
-         <string>try to fix</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <property name="textFormat">
+      <enum>Qt::RichText</enum>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+     <property name="openExternalLinks">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="lbl_ownBootstrap">
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+     <property name="openExternalLinks">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item>
@@ -236,7 +92,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Retry</set>
+      <set>QDialogButtonBox::Close</set>
      </property>
     </widget>
    </item>
@@ -250,18 +106,6 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>le_CmdLine</tabstop>
-  <tabstop>le_BootstrapMode</tabstop>
-  <tabstop>le_BootstrapUrl</tabstop>
-  <tabstop>pb_IgnoreExplicitBootstrapUrl</tabstop>
-  <tabstop>le_SetupCache</tabstop>
-  <tabstop>pb_LoadFromDisk</tabstop>
-  <tabstop>pb_Help</tabstop>
-  <tabstop>le_OtherSwiftVersions</tabstop>
-  <tabstop>pb_CopyFromSwift</tabstop>
-  <tabstop>pb_OpemDirectory</tabstop>
- </tabstops>
  <resources/>
  <connections>
   <connection>

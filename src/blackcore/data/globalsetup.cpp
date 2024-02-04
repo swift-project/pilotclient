@@ -33,11 +33,6 @@ namespace BlackCore::Data
         this->initDefaultValues();
     }
 
-    bool CGlobalSetup::wasLoaded() const
-    {
-        return this->wasLoadedFromFile();
-    }
-
     void CGlobalSetup::initDefaultValues()
     {
         m_mappingMinimumVersion = CBuildConfig::getVersionString();
@@ -85,17 +80,6 @@ namespace BlackCore::Data
     const CUrlList &CGlobalSetup::getSwiftSharedUrls() const
     {
         return m_sharedUrls;
-    }
-
-    CUrl CGlobalSetup::getCorrespondingSharedUrl(const CUrl &candidate) const
-    {
-        CUrlList sameHosts = this->getSwiftSharedUrls().findByHost(candidate.getHost());
-        return sameHosts.frontOrDefault();
-    }
-
-    CUrlList CGlobalSetup::getSwiftBootstrapFileUrls() const
-    {
-        return getSwiftSharedUrls().withAppendedPath(CGlobalSetup::schemaVersionString() + "/bootstrap/" + CSwiftDirectories::bootstrapFileName());
     }
 
     CUrlList CGlobalSetup::getSwiftUpdateInfoFileUrls() const
@@ -179,31 +163,6 @@ namespace BlackCore::Data
         m_dbDebugFlag = debug;
     }
 
-    QString CGlobalSetup::buildBootstrapFileUrl(const QString &candidate)
-    {
-        if (candidate.isEmpty()) return {}; // not possible
-        static const QString version(QString(CGlobalSetup::schemaVersionString()).append("/"));
-        if (candidate.endsWith(CSwiftDirectories::bootstrapFileName())) { return candidate; }
-        CUrl url(candidate);
-        if (candidate.contains("/bootstrap"))
-        {
-            url.appendPath(CSwiftDirectories::bootstrapFileName());
-        }
-        else if (candidate.endsWith(CGlobalSetup::schemaVersionString()) || candidate.endsWith(version))
-        {
-            url.appendPath("/bootstrap/" + CSwiftDirectories::bootstrapFileName());
-        }
-        else if (candidate.endsWith("shared") || candidate.endsWith("shared/"))
-        {
-            url.appendPath(CGlobalSetup::schemaVersionString() + "/bootstrap/" + CSwiftDirectories::bootstrapFileName());
-        }
-        else
-        {
-            url.appendPath("shared/" + CGlobalSetup::schemaVersionString() + "/bootstrap/" + CSwiftDirectories::bootstrapFileName());
-        }
-        return url.getFullUrl();
-    }
-
     CUrl CGlobalSetup::buildDbDataDirectoryUrl(const CUrl &candidate)
     {
         if (candidate.isEmpty()) return CUrl(); // not possible
@@ -257,11 +216,11 @@ namespace BlackCore::Data
     QString CGlobalSetup::convertToQString(const QString &separator, bool i18n) const
     {
         QString s =
-            u"timestamp: " % this->getFormattedUtcTimestampYmdhms() % separator % u"Global setup loaded: " % boolToYesNo(this->wasLoadedFromFile()) % separator
+            u"timestamp: " % this->getFormattedUtcTimestampYmdhms() % separator % u"Global setup loaded: "
 
             % u"Mapping min.version: " % this->getMappingMinimumVersionString() % separator
 
-            % u"Distribution URLs: " % getSwiftUpdateInfoFileUrls().toQString(i18n) % separator % u"Bootstrap URLs: " % getSwiftBootstrapFileUrls().toQString(i18n) % separator % u"Help URLs: " % m_onlineHelpUrls.toQString(i18n) % separator;
+            % u"Distribution URLs: " % getSwiftUpdateInfoFileUrls().toQString(i18n) % separator % u"Help URLs: " % m_onlineHelpUrls.toQString(i18n) % separator;
         s +=
             u"DB root directory: " % getDbRootDirectoryUrl().toQString(i18n) % separator % u"ICAO DB reader: " % getDbIcaoReaderUrl().toQString(i18n) % separator % u"Model DB reader: " % getDbModelReaderUrl().toQString(i18n) % separator % u"Airport DB reader: " % getDbAirportReaderUrl().toQString(i18n) % separator % u"DB home page: " % getDbHomePageUrl().toQString(i18n) % separator % u"DB login service: " % getDbLoginServiceUrl().toQString(i18n) % separator % u"DB client ping service: " % getDbClientPingServiceUrl().toQString(i18n);
         s +=
@@ -292,12 +251,10 @@ namespace BlackCore::Data
         case IndexVatsimServer: return QVariant::fromValue(m_vatsimServerFileUrl);
         case IndexVatsimHttpFsd: return QVariant::fromValue(m_vatsimFsdHttpUrl);
         case IndexVatsimMetars: return QVariant::fromValue(m_vatsimMetarsUrls);
-        case IndexBootstrapFileUrls: return QVariant::fromValue(this->getSwiftBootstrapFileUrls());
         case IndexUpdateInfoFileUrls: return QVariant::fromValue(this->getSwiftUpdateInfoFileUrls());
         case IndexSharedUrls: return QVariant::fromValue(m_sharedUrls);
         case IndexOnlineHelpUrls: return QVariant::fromValue(m_onlineHelpUrls);
         case IndexCrashReportServerUrl: return QVariant::fromValue(m_crashReportServerUrl);
-        case IndexWasLoadedFromFile: return QVariant::fromValue(m_wasLoadedFromFile);
         case IndexMappingMinimumVersion: return QVariant::fromValue(m_mappingMinimumVersion);
         case IndexPredefinedServers: return QVariant::fromValue(m_predefinedServers);
         default: return CValueObject::propertyByIndex(index);
@@ -332,7 +289,6 @@ namespace BlackCore::Data
         case IndexSharedUrls: m_sharedUrls = variant.value<CUrlList>(); break;
         case IndexOnlineHelpUrls: m_onlineHelpUrls = variant.value<CUrlList>(); break;
         case IndexCrashReportServerUrl: m_crashReportServerUrl = variant.value<CUrl>(); break;
-        case IndexWasLoadedFromFile: m_wasLoadedFromFile = variant.toBool(); break;
         case IndexMappingMinimumVersion: m_mappingMinimumVersion = variant.toString(); break;
         case IndexPredefinedServers: m_predefinedServers = variant.value<CServerList>(); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;

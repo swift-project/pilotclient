@@ -15,19 +15,14 @@ namespace Ui
 }
 namespace BlackGui::Components
 {
-    class CCopyModelsFromOtherSwiftVersionsDialog;
-
     /*!
-     * Setup dialog, if something goes wrong allows to copy bootstrap file
+     * Setup dialog, if loading the boostrap file fails
      */
     class CSetupLoadingDialog : public QDialog
     {
         Q_OBJECT
 
     public:
-        //! Ctor
-        explicit CSetupLoadingDialog(QWidget *parent = nullptr);
-
         //! Ctor with messages
         CSetupLoadingDialog(const BlackMisc::CStatusMessageList &msgs, QWidget *parent = nullptr);
 
@@ -36,46 +31,9 @@ namespace BlackGui::Components
 
     private:
         QScopedPointer<Ui::CSetupLoadingDialog> ui;
-        QScopedPointer<CCopyModelsFromOtherSwiftVersionsDialog> m_copyFromOtherSwiftVersion;
 
-        //! Cached setup available?
-        bool hasCachedSetup() const;
-
-        //! Setup reader?
-        bool hasSetupReader() const;
-
-        //! Display bootstrap URL
-        void displayCmdBoostrapUrl();
-
-        //! Display global setup
-        void displayGlobalSetup();
-
-        //! Open the help page
-        void openHelpPage();
-
-        //! Try again without explicit bootstrap URL
-        void tryAgainWithoutBootstrapUrl();
-
-        //! Try to fix
-        void tryToFix();
-
-        //! Prefill setup cache
-        void prefillSetupCache();
-
-        //! Display the setup cache info
-        void displaySetupCacheInfo();
-
-        //! Display other versions info
-        void displayOtherVersionsInfo();
-
-        //! Open directory
-        void openDirectory();
-
-        //! Copy from other swift versions
-        void copyFromOtherSwiftVersions();
-
-        //! Setup loading has been completed
-        void onSetupHandlingCompleted(bool success);
+        //! Ctor
+        explicit CSetupLoadingDialog(QWidget *parent = nullptr);
     };
 } // ns
 

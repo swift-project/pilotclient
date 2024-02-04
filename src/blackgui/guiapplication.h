@@ -217,13 +217,8 @@ namespace BlackGui
         //! \deprecated kept for experimental tests
         void setMinimumSizeInCharacters(int widthChars, int heightChars);
 
-        //! Wait for setup, in case it fails display a dialog how to continue
-        bool interactivelySynchronizeSetup(int timeoutMs = BlackMisc::Network::CNetworkUtils::getLongTimeoutMs());
-
-        //! Combined function
-        //! \see parseAndStartupCheck
-        //! \see interactivelySynchronizeSetup
-        virtual bool parseAndSynchronizeSetup(int timeoutMs = BlackMisc::Network::CNetworkUtils::getLongTimeoutMs()) override;
+        //! \copydoc BlackCore::CApplication::displaySetupLoadFailure
+        void displaySetupLoadFailure(BlackMisc::CStatusMessageList msgs) override;
 
         //! Show close dialog
         //! \remark will modify CApplication::saveSettingsOnShutdown

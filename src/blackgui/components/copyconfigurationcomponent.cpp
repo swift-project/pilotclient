@@ -377,12 +377,6 @@ namespace BlackGui::Components
             {
                 this->initMultiSimulatorCache(&m_modelCaches, file);
             }
-            else if (file.contains(CSwiftDirectories::bootstrapFileName()))
-            {
-                CData<TGlobalSetup> setup { this }; //!< data cache setup
-                const CGlobalSetup s = CGlobalSetup::fromJsonFile(file, true);
-                setup.set(s);
-            }
         }
 
         // allow the cache files to be generated before we will override them
