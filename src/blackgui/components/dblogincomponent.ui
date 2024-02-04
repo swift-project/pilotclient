@@ -88,16 +88,6 @@
               <property name="spacing">
                <number>6</number>
               </property>
-              <item row="5" column="0" colspan="3">
-               <widget class="BlackGui::Components::CDbDebugDatabaseSetup" name="comp_DebugSetup">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
               <item row="3" column="2">
                <widget class="QWidget" name="wi_Button" native="true">
                 <layout class="QHBoxLayout" name="hl_LoginFrame">
@@ -152,7 +142,7 @@
                 </property>
                </spacer>
               </item>
-              <item row="6" column="0">
+              <item row="5" column="0">
                <spacer name="vs_FrameLogin">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -406,14 +396,6 @@ p, li { white-space: pre-wrap; }
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>BlackGui::Components::CDbDebugDatabaseSetup</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/dbdebugdatabasesetup.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <tabstops>
   <tabstop>tb_LoginToDbAndHints</tabstop>
   <tabstop>le_Username</tabstop>

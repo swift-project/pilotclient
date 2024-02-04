@@ -93,9 +93,6 @@ namespace BlackCore::Data
         //! Set debug flag
         void setServerDebugFlag(bool debug);
 
-        //! Same type?
-        bool hasSameType(const CGlobalSetup &otherSetup) const;
-
         //! Crash report server url
         //! \deprecated NOT used anymore as by RR's info: https://discordapp.com/channels/539048679160676382/539925070550794240/586879411002015756
         BlackMisc::Network::CUrl getCrashReportServerUrl() const { return m_crashReportServerUrl; }
@@ -184,9 +181,6 @@ namespace BlackCore::Data
         //! Predefined plus hardcoded
         BlackMisc::Network::CServerList getPredefinedServersPlusHardcodedServers() const;
 
-        //! Is server a development server?
-        bool isDevelopment() const { return m_development; }
-
         //! Creating mappings requires at least this version or higher
         //! \remark only valid if wasLoaded() is \c true
         const QString &getMappingMinimumVersionString() const { return m_mappingMinimumVersion; }
@@ -194,9 +188,6 @@ namespace BlackCore::Data
         //! Meets the minimum mapping version
         //! \remark only valid if wasLoaded() is \c true
         bool isSwiftVersionMinimumMappingVersion() const;
-
-        //! Productive settings?
-        void setDevelopment(bool development) { m_development = development; }
 
         //! NCEP GFS Forecasts (0.50 degree grid) data url
         BlackMisc::Network::CUrl getNcepGlobalForecastSystemUrl() const { return m_ncepGlobalForecastSystemUrl; }
@@ -239,7 +230,6 @@ namespace BlackCore::Data
         int m_dbHttpPort = 80; //!< port
         int m_dbHttpsPort = 443; //!< SSL port
         qint64 m_pingIntervalSecs = 180; //!< seconds between datastore pings
-        bool m_development = false; //!< dev. version?
         QString m_mappingMinimumVersion; //!< minimum version
         BlackMisc::Network::CUrl m_crashReportServerUrl; //!< crash report server
         BlackMisc::Network::CUrl m_dbRootDirectoryUrl; //!< Root directory of DB
@@ -255,9 +245,7 @@ namespace BlackCore::Data
         BlackMisc::Network::CUrl m_ncepGlobalForecastSystemUrl25; //!< NCEP GFS url 0.25 degree resolution
         BlackMisc::Network::CUrl m_comNavEquipmentHelpUrl; //!< Help URL for COM/NAV equipment codes
         BlackMisc::Network::CUrl m_ssrEquipmentHelpUrl; //!< Help URL for SSR equipment codes
-
-        // transient members, to be switched on/off via GUI or set from reader
-        bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know what you are doing
+        bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know what you are doing. Only works with CBuildConfig::isLocalDeveloperDebugBuild
 
         //! Set the default URLs
         void initDefaultValues();
@@ -279,13 +267,12 @@ namespace BlackCore::Data
             BLACK_METAMEMBER(sharedUrls),
             BLACK_METAMEMBER(onlineHelpUrls),
             BLACK_METAMEMBER(predefinedServers),
-            BLACK_METAMEMBER(development),
             BLACK_METAMEMBER(mappingMinimumVersion),
             BLACK_METAMEMBER(ncepGlobalForecastSystemUrl),
             BLACK_METAMEMBER(ncepGlobalForecastSystemUrl25),
             BLACK_METAMEMBER(comNavEquipmentHelpUrl),
             BLACK_METAMEMBER(ssrEquipmentHelpUrl),
-            BLACK_METAMEMBER(dbDebugFlag, BlackMisc::DisabledForJson)
+            BLACK_METAMEMBER(dbDebugFlag)
         );
     };
 

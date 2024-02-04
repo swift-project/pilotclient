@@ -171,21 +171,12 @@ namespace BlackCore::Data
 
     bool CGlobalSetup::dbDebugFlag() const
     {
-        if (!m_dbDebugFlag) { return false; }
-
-        // further checks could go here
-        const bool f = this->isDevelopment() || CBuildConfig::isLocalDeveloperDebugBuild();
-        return f;
+        return m_dbDebugFlag && CBuildConfig::isLocalDeveloperDebugBuild();
     }
 
     void CGlobalSetup::setServerDebugFlag(bool debug)
     {
         m_dbDebugFlag = debug;
-    }
-
-    bool CGlobalSetup::hasSameType(const CGlobalSetup &otherSetup) const
-    {
-        return this->isDevelopment() == otherSetup.isDevelopment();
     }
 
     QString CGlobalSetup::buildBootstrapFileUrl(const QString &candidate)
@@ -267,8 +258,6 @@ namespace BlackCore::Data
     {
         QString s =
             u"timestamp: " % this->getFormattedUtcTimestampYmdhms() % separator % u"Global setup loaded: " % boolToYesNo(this->wasLoadedFromFile()) % separator
-
-            % u"For development: " % boolToYesNo(isDevelopment()) % separator
 
             % u"Mapping min.version: " % this->getMappingMinimumVersionString() % separator
 

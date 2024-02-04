@@ -686,8 +686,6 @@
   { include: [ "\"dbownmodelsetdialog.h\"", "private", "\"blackgui/components/dbownmodelsetdialog.h\"", "public" ] },
   { include: [ "\"components/settingssimulatorcomponent.h\"", "private", "\"blackgui/components/settingssimulatorcomponent.h\"", "public" ] },
   { include: [ "\"settingssimulatorcomponent.h\"", "private", "\"blackgui/components/settingssimulatorcomponent.h\"", "public" ] },
-  { include: [ "\"components/dbdebugdatabasesetup.h\"", "private", "\"blackgui/components/dbdebugdatabasesetup.h\"", "public" ] },
-  { include: [ "\"dbdebugdatabasesetup.h\"", "private", "\"blackgui/components/dbdebugdatabasesetup.h\"", "public" ] },
   { include: [ "\"components/internalscomponent.h\"", "private", "\"blackgui/components/internalscomponent.h\"", "public" ] },
   { include: [ "\"internalscomponent.h\"", "private", "\"blackgui/components/internalscomponent.h\"", "public" ] },
   { include: [ "\"components/modelmatchercomponent.h\"", "private", "\"blackgui/components/modelmatchercomponent.h\"", "public" ] },

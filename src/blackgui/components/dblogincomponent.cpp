@@ -49,9 +49,6 @@ namespace BlackGui::Components
         ui->tbr_InfoAndHints->setHtml(html);
         ui->tbr_InfoAndHints->setOpenExternalLinks(true);
 
-        const bool devEnv = sGui->isDeveloperFlagSet();
-        ui->comp_DebugSetup->setVisible(devEnv);
-
         const QString dbUrl = sGui->getGlobalSetup().getDbHomePageUrl().toQString();
         ui->lbl_DatabaseName->setText(asHyperlink(dbUrl));
         ui->lbl_DatabaseName->setTextFormat(Qt::RichText);
