@@ -226,7 +226,7 @@ https://swift-project.org/</text>
         </addFilesToUninstaller>
         <runProgram>
             <program>${installdir}/bin/swiftlauncher</program>
-            <programArguments>-i --bootstrapurl https://datastore.swift-project.org/shared/ &amp;</programArguments>
+            <programArguments>-i &amp;</programArguments>
             <progressText>Run swift launcher wizard</progressText>
             <ruleList>
                 <platformTest>
@@ -238,7 +238,7 @@ https://swift-project.org/</text>
         </runProgram>
         <runProgram>
             <program>open</program>
-            <programArguments>${Installdir}/bin/swiftlauncher.app --args -i --bootstrapurl https://datastore.swift-project.org/shared/ &amp;</programArguments>
+            <programArguments>${Installdir}/bin/swiftlauncher.app --args -i &amp;</programArguments>
             <progressText>Run swift launcher wizard</progressText>
             <ruleList>
                 <platformTest>
@@ -389,4 +389,3 @@ https://swift-project.org/</text>
         </platformOptions>
     </platformOptionsList>
 </project>
-
