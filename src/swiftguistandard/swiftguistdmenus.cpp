@@ -9,7 +9,6 @@
 #include "blackgui/foreignwindows.h"
 #include "blackgui/copyxswiftbusdialog.h"
 #include "blackmisc/aviation/altitude.h"
-#include "blackmisc/network/urllist.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/logmessage.h"
 #include "blackconfig/buildconfig.h"

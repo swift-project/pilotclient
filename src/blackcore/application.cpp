@@ -1337,34 +1337,34 @@ namespace BlackCore
         return requestMsgs;
     }
 
-    CUrlList CApplication::getVatsimMetarUrls() const
+    CUrl CApplication::getVatsimMetarUrl() const
     {
-        if (m_shutdown) { return CUrlList(); }
+        if (m_shutdown) { return {}; }
         if (m_webDataServices)
         {
-            const CUrlList urls(m_webDataServices->getVatsimMetarUrls());
-            if (!urls.isEmpty()) { return urls; }
+            const CUrl url(m_webDataServices->getVatsimMetarUrl());
+            if (!url.isEmpty()) { return url; }
         }
         if (m_setupReader)
         {
-            return m_setupReader->getSetup().getVatsimMetarsUrls();
+            return m_setupReader->getSetup().getVatsimMetarsUrl();
         }
-        return CUrlList();
+        return {};
     }
 
-    CUrlList CApplication::getVatsimDataFileUrls() const
+    CUrl CApplication::getVatsimDataFileUrl() const
     {
-        if (m_shutdown) { return CUrlList(); }
+        if (m_shutdown) { return {}; }
         if (m_webDataServices)
         {
-            const CUrlList urls(m_webDataServices->getVatsimDataFileUrls());
-            if (!urls.isEmpty()) { return urls; }
+            const CUrl url(m_webDataServices->getVatsimDataFileUrl());
+            if (!url.isEmpty()) { return url; }
         }
         if (m_setupReader)
         {
-            return m_setupReader->getSetup().getVatsimDataFileUrls();
+            return m_setupReader->getSetup().getVatsimDataFileUrl();
         }
-        return CUrlList();
+        return {};
     }
 
     CUrl CApplication::getVatsimServerFileUrl() const

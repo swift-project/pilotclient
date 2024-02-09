@@ -15,7 +15,7 @@
 #include "blackcore/inputmanager.h"
 #include "blackcore/webreaderflags.h"
 #include "blackmisc/db/updateinfo.h"
-#include "blackmisc/network/urllist.h"
+#include "blackmisc/network/url.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/slot.h"
@@ -395,11 +395,11 @@ namespace BlackCore
 
         //! Consolidated version of METAR URLs, either from CGlobalSetup or CVatsimSetup
         //! \threadsafe
-        BlackMisc::Network::CUrlList getVatsimMetarUrls() const;
+        BlackMisc::Network::CUrl getVatsimMetarUrl() const;
 
-        //! Consolidated version of data file URLs, either from CGlobalSetup or CVatsimSetup
+        //! Consolidated version of data file URL, either from CGlobalSetup or CVatsimSetup
         //! \threadsafe
-        BlackMisc::Network::CUrlList getVatsimDataFileUrls() const;
+        BlackMisc::Network::CUrl getVatsimDataFileUrl() const;
 
         //! Get URL to file which contains the list of VATSIM servers
         BlackMisc::Network::CUrl getVatsimServerFileUrl() const;

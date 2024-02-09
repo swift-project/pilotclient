@@ -224,32 +224,28 @@ namespace BlackGui::Components
 
         m_sharedValueCheckInProgress = true; // avoid processEvent (canConnect) calling this again before done
 
-        const CUrlList sharedUrls(sGui->getGlobalSetup().getSwiftSharedUrls());
+        const CUrl sharedUrl(sGui->getGlobalSetup().getSwiftSharedUrl());
         const QString valueHtml("<img src=\"%1\">&nbsp;%2");
         const QString urlLinkHtml("<a href=\"%1\">%2</a>");
 
         QStringList values;
-        for (const CUrl &sharedUrl : sharedUrls)
+
+        if (!sGui || sGui->isShuttingDown())
         {
-            if (!sGui || sGui->isShuttingDown())
-            {
-                // shutdown during connect test
-                m_sharedValueCheckInProgress = false;
-                return;
-            }
-            const bool canConnect = CNetworkUtils::canConnect(sharedUrl);
-            values.push_back(
-                valueHtml.arg(canConnect ? m_imgOk : m_imgFailed, urlLinkHtml.arg(sharedUrl.getFullUrl(), sharedUrl.getHost())));
+            // shutdown during connect test
+            m_sharedValueCheckInProgress = false;
+            return;
         }
+        const bool canConnect = CNetworkUtils::canConnect(sharedUrl);
+        values.push_back(
+            valueHtml.arg(canConnect ? m_imgOk : m_imgFailed, urlLinkHtml.arg(sharedUrl.getFullUrl(), sharedUrl.getHost())));
 
         const QString sharedUrlTable = toHtmTable(values, 2);
         ui->lbl_SharedUrls->setText(sharedUrlTable);
-        ui->lbl_SharedUrls->setMinimumHeight(10 + (18 * sharedUrls.size()));
-
-        const CUrlList urls = sGui->getGlobalSetup().getSwiftSharedUrls();
-        Q_ASSERT_X(!urls.empty(), Q_FUNC_INFO, "Need at least one shared URL");
+        ui->lbl_SharedUrls->setMinimumHeight(28);
+        const QString currentlyUsedSharedUrl = sGui->getGlobalSetup().getSwiftSharedUrl().toQString();
         ui->lbl_SharedUrls->setToolTip(
-            urls[0].isEmpty() ? "No shared URL" : "currently used: " + urls[0].toQString());
+            currentlyUsedSharedUrl.isEmpty() ? "No shared URL" : "currently used: " + currentlyUsedSharedUrl);
 
         m_sharedLastCheck = QDateTime::currentMSecsSinceEpoch();
         m_sharedValueCheckInProgress = false;

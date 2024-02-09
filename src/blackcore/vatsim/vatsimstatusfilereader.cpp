@@ -6,7 +6,6 @@
 #include "blackcore/data/globalsetup.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/url.h"
-#include "blackmisc/network/urllist.h"
 #include "blackmisc/statusmessage.h"
 
 #include <QByteArray>
@@ -45,14 +44,14 @@ namespace BlackCore::Vatsim
         });
     }
 
-    CUrlList CVatsimStatusFileReader::getMetarFileUrls() const
+    CUrl CVatsimStatusFileReader::getMetarFileUrl() const
     {
-        return m_lastGoodSetup.get().getMetarFileUrls();
+        return m_lastGoodSetup.get().getMetarFileUrl();
     }
 
-    CUrlList CVatsimStatusFileReader::getDataFileUrls() const
+    CUrl CVatsimStatusFileReader::getDataFileUrl() const
     {
-        return m_lastGoodSetup.get().getDataFileUrls();
+        return m_lastGoodSetup.get().getDataFileUrl();
     }
 
     void CVatsimStatusFileReader::read()
@@ -61,27 +60,10 @@ namespace BlackCore::Vatsim
         if (!this->doWorkCheck()) { return; }
 
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing application");
-        const CUrlList urls(sApp->getGlobalSetup().getVatsimStatusFileUrls());
-        const CUrl url = urls.getRandomUrl();
+        const CUrl url(sApp->getGlobalSetup().getVatsimStatusFileUrl());
         if (url.isEmpty()) { return; }
         CLogMessage(this).info(u"Trigger read of VATSIM status file from '%1'") << url.toQString(true);
         this->getFromNetworkAndLog(url, { this, &CVatsimStatusFileReader::parseVatsimFile });
-
-        if (urls.size() < 2) { return; }
-        const CUrl secondary = urls.getRandomWithout(url);
-        if (secondary.isEmpty()) { return; }
-
-        constexpr int DelayMs = 5000;
-        const QPointer<CVatsimStatusFileReader> myself(this);
-        QTimer::singleShot(DelayMs, this, [=] {
-            if (!myself) { return; }
-            const CVatsimSetup vs(m_lastGoodSetup.get());
-            if (vs.getTimeDifferenceToNowMs() > 2 * DelayMs)
-            {
-                // not yet read
-                this->getFromNetworkAndLog(url, { this, &CVatsimStatusFileReader::parseVatsimFile });
-            }
-        });
     }
 
     void CVatsimStatusFileReader::parseVatsimFile(QNetworkReply *nwReplyPtr)
@@ -111,9 +93,9 @@ namespace BlackCore::Vatsim
             const QList<QStringRef> lines = splitLinesRefs(dataFileData);
             if (lines.isEmpty()) { return; }
 
-            CUrlList dataFileUrls;
-            CUrlList serverFileUrls;
-            CUrlList metarFileUrls;
+            CUrl dataFileUrl;
+            CUrl serverFileUrl;
+            CUrl metarFileUrl;
 
             QString currentLine; // declared outside of the for loop, to amortize the cost of allocation
             for (const QStringRef &clRef : lines)
@@ -136,17 +118,18 @@ namespace BlackCore::Vatsim
                 const QString key(parts[0].trimmed().toLower());
                 const QString value(parts[1].trimmed());
                 const CUrl url(value);
+                // Always taking last in the file (at the time of writing, the status file also only contains a single URL for each type either)
                 if (key.startsWith("json3"))
                 {
-                    dataFileUrls.push_back(url);
+                    dataFileUrl = url;
                 }
                 else if (key.startsWith("url1"))
                 {
-                    serverFileUrls.push_back(url);
+                    serverFileUrl = url;
                 }
                 else if (key.startsWith("metar"))
                 {
-                    metarFileUrls.push_back(url);
+                    metarFileUrl = url;
                 }
                 else if (key.startsWith("atis"))
                 {
@@ -156,14 +139,14 @@ namespace BlackCore::Vatsim
 
             // cache itself is thread safe, avoid writing with unchanged data
             CVatsimSetup vs(m_lastGoodSetup.get());
-            const bool changed = vs.setUrls(dataFileUrls, serverFileUrls, metarFileUrls);
+            const bool changed = vs.setUrls(dataFileUrl, serverFileUrl, metarFileUrl);
             vs.setUtcTimestamp(QDateTime::currentDateTime());
             const CStatusMessage cacheMsg = m_lastGoodSetup.set(vs);
             if (cacheMsg.isFailure()) { CLogMessage::preformatted(cacheMsg); }
             else
             {
-                CLogMessage(this).info(u"Read VATSIM status file from '%1', %2 data file URLs, %3 server file URLs, %4 METAR file URLs")
-                    << urlString << dataFileUrls.size() << serverFileUrls.size() << metarFileUrls.size();
+                CLogMessage(this).info(u"Read VATSIM status file from '%1'")
+                    << urlString;
             }
             Q_UNUSED(changed);
 

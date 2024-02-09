@@ -9,50 +9,30 @@
     "ncepGlobalForecastSystemUrl25": {
         "url": "http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl"
     },
-    "onlineHelpUrls": {
-        "containerbase": [
-            {
-                "url": "https://datastore.swift-project.org/page/swifthelpdispatcher.html"
-            }
-        ]
+    "onlineHelpUrl": {
+        "url": "https://datastore.swift-project.org/page/swifthelpdispatcher.html"
     },
     "predefinedServers": {
         "containerbase": [
         ]
     },
-    "sharedUrls": {
-        "containerbase": [
-            {
-                "url": "http://download.swift-project.org/shared/"
-            }
-        ]
+    "sharedUrl": {
+        "url": "http://download.swift-project.org/shared/"
     },
-    "vatsimDataFileUrls": {
-        "containerbase": [
-            {
-                "url": "https://data.vatsim.net/v3/vatsim-data.json"
-            }
-        ]
+    "vatsimDataFileUrl": {
+        "url": "https://data.vatsim.net/v3/vatsim-data.json"
     },
     "vatsimServerFileUrl": {
-                "url": "https://data.vatsim.net/v3/vatsim-servers.json"
+        "url": "https://data.vatsim.net/v3/vatsim-servers.json"
     },
     "vatsimFsdHttpUrl": {
         "url": "http://fsd.vatsim.net"
     },
-    "vatsimMetarsUrls": {
-        "containerbase": [
-            {
-                "url": "http://metar.vatsim.net/metar.php"
-            }
-        ]
+    "vatsimMetarsUrl": {
+        "url": "http://metar.vatsim.net/metar.php"
     },
-    "vatsimStatusFileUrls": {
-        "containerbase": [
-            {
-                "url": "https://status.vatsim.net"
-            }
-        ]
+    "vatsimStatusFileUrl": {
+        "url": "https://status.vatsim.net"
     },
     "comNavEquipmentHelpUrl": {
         "url": "https://en.wikipedia.org/wiki/Equipment_codes#Radio_communication,_navigation_and_approach_aid_equipment_and_capabilities"

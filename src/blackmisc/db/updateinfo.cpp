@@ -158,8 +158,8 @@ namespace BlackMisc::Db
         const QString url = CBuildConfig::gitHubRepoUrl() + QStringLiteral("releases/download");
         CDistribution alphaDistribution("ALPHA", 5, false);
         CDistribution betaDistribution("BETA", 10, false);
-        alphaDistribution.addDownloadUrl(url);
-        betaDistribution.addDownloadUrl(url);
+        alphaDistribution.setDownloadUrl(url);
+        betaDistribution.setDownloadUrl(url);
 
         CUpdateInfo result;
         result.m_distributions = { alphaDistribution, betaDistribution };

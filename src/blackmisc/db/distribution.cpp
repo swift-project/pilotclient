@@ -24,15 +24,15 @@ namespace BlackMisc::Db
         m_channel = channel.trimmed().toUpper();
     }
 
-    void CDistribution::addDownloadUrl(const CUrl &url)
+    void CDistribution::setDownloadUrl(const CUrl &url)
     {
         if (url.isEmpty()) { return; }
-        m_downloadUrls.push_back(url);
+        m_downloadUrl = url;
     }
 
-    bool CDistribution::hasDownloadUrls() const
+    bool CDistribution::hasDownloadUrl() const
     {
-        return !m_downloadUrls.isEmpty();
+        return !m_downloadUrl.isEmpty();
     }
 
     CIcons::IconIndex CDistribution::getRestrictionIcon() const
@@ -61,8 +61,8 @@ namespace BlackMisc::Db
         return u"channel: " %
                this->getChannel() %
                separator %
-               u"download URLs: " %
-               getDownloadUrls().toQString(i18n) %
+               u"download URL: " %
+               getDownloadUrl().toQString(i18n) %
                separator %
                u"timestamp: " %
                this->getFormattedUtcTimestampYmdhms();
@@ -83,7 +83,7 @@ namespace BlackMisc::Db
         {
         case IndexChannel: return QVariant::fromValue(m_channel);
         case IndexStability: return QVariant::fromValue(m_stability);
-        case IndexDownloadUrls: return QVariant::fromValue(m_downloadUrls);
+        case IndexDownloadUrl: return QVariant::fromValue(m_downloadUrl);
         case IndexRestricted: return QVariant::fromValue(m_restricted);
         default: return CValueObject::propertyByIndex(index);
         }
@@ -107,7 +107,7 @@ namespace BlackMisc::Db
         {
         case IndexChannel: this->setChannel(variant.value<QString>()); break;
         case IndexStability: m_stability = variant.toInt(); break;
-        case IndexDownloadUrls: m_downloadUrls = variant.value<CUrlList>(); break;
+        case IndexDownloadUrl: m_downloadUrl = variant.value<CUrl>(); break;
         case IndexRestricted: m_restricted = variant.toBool(); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
@@ -139,7 +139,7 @@ namespace BlackMisc::Db
             const QString key = "url" + QString::number(i);
             const QString url = json.value(key).toString();
             if (url.isEmpty()) { continue; }
-            distribution.addDownloadUrl(CUrl(url));
+            distribution.setDownloadUrl(CUrl(url));
         }
         return distribution;
     }

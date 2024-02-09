@@ -25,7 +25,6 @@
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/network/url.h"
-#include "blackmisc/network/urllist.h"
 #include "blackmisc/network/urllog.h"
 #include "blackmisc/network/urlloglist.h"
 #include "blackmisc/network/user.h"
@@ -63,8 +62,6 @@ namespace BlackMisc
             CTextMessage::registerMetadata();
             CTextMessageList::registerMetadata();
             CUrl::registerMetadata();
-            CUrlList::registerMetadata();
-            CFailoverUrlList::registerMetadata();
             CUrlLog::registerMetadata();
             CUrlLogList::registerMetadata();
             CUser::registerMetadata();

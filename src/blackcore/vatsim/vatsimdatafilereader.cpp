@@ -10,7 +10,6 @@
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/url.h"
-#include "blackmisc/network/urllist.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/length.h"
@@ -168,12 +167,8 @@ namespace BlackCore::Vatsim
         this->threadAssertCheck();
         if (!this->doWorkCheck()) { return; }
 
-        // round robin for load balancing
-        // remark: Don't use QThread to run network operations in the background
-        // see http://qt-project.org/doc/qt-4.7/qnetworkaccessmanager.html
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing application");
-        CFailoverUrlList urls(sApp->getVatsimDataFileUrls());
-        const QUrl url(urls.obtainNextWorkingUrl(true));
+        const QUrl url(sApp->getVatsimDataFileUrl());
         if (url.isEmpty()) { return; }
         this->getFromNetworkAndLog(url, { this, &CVatsimDataFileReader::parseVatsimFile });
     }

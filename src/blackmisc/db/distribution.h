@@ -8,7 +8,7 @@
 
 #include "blackconfig/buildconfig.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/network/urllist.h"
+#include "blackmisc/network/url.h"
 #include "blackmisc/db/datastore.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/dictionary.h"
@@ -34,7 +34,7 @@ namespace BlackMisc::Db
             IndexChannel = CPropertyIndexRef::GlobalIndexCDistribution,
             IndexStability,
             IndexRestricted,
-            IndexDownloadUrls
+            IndexDownloadUrl
         };
 
         //! Default constructor
@@ -55,14 +55,14 @@ namespace BlackMisc::Db
         //! Order
         void setStability(int stability) { m_stability = stability; }
 
-        //! Download URLs, i.e. here one can download installer
-        const Network::CUrlList &getDownloadUrls() const { return m_downloadUrls; }
+        //! Download URL, i.e. here one can download installer
+        const Network::CUrl &getDownloadUrl() const { return m_downloadUrl; }
 
-        //! Add URL, ignored if empty
-        void addDownloadUrl(const Network::CUrl &url);
+        //! Set URL, ignored if empty
+        void setDownloadUrl(const BlackMisc::Network::CUrl &url);
 
-        //! At least one download URL?
-        bool hasDownloadUrls() const;
+        //! Has a download URL?
+        bool hasDownloadUrl() const;
 
         //! Restricted channel?
         bool isRestricted() const { return m_restricted; }
@@ -107,7 +107,7 @@ namespace BlackMisc::Db
         QString m_channel; //!< channel the files belong to
         int m_stability; //!< stability
         bool m_restricted = false; //!< restricted access (i.e. password for download needed)
-        Network::CUrlList m_downloadUrls; //!< download URLs, here I get the installer
+        Network::CUrl m_downloadUrl; //!< download URL, here I get the installer
 
         BLACK_METACLASS(
             CDistribution,
@@ -115,7 +115,7 @@ namespace BlackMisc::Db
             BLACK_METAMEMBER(timestampMSecsSinceEpoch),
             BLACK_METAMEMBER(channel),
             BLACK_METAMEMBER(stability),
-            BLACK_METAMEMBER(downloadUrls)
+            BLACK_METAMEMBER(downloadUrl)
         );
     };
 } // ns

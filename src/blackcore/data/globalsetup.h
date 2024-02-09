@@ -9,7 +9,6 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/url.h"
-#include "blackmisc/network/urllist.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/metaclass.h"
@@ -43,8 +42,8 @@ namespace BlackCore::Data
             IndexVatsimData,
             IndexVatsimServer,
             IndexVatsimHttpFsd,
-            IndexOnlineHelpUrls,
-            IndexSharedUrls,
+            IndexOnlineHelpUrl,
+            IndexSharedUrl,
             IndexMappingMinimumVersion,
             IndexPredefinedServers,
             IndexAfvApiServerUrl,
@@ -97,17 +96,17 @@ namespace BlackCore::Data
         //! \remark based on getDbRootDirectoryUrl
         BlackMisc::Network::CUrl getDbLoginServiceUrl() const;
 
-        //! Shared URLs
-        const BlackMisc::Network::CUrlList &getSwiftSharedUrls() const;
+        //! Shared URL
+        const BlackMisc::Network::CUrl &getSwiftSharedUrl() const;
 
         //! VATSIM METAR URL
-        const BlackMisc::Network::CUrlList &getVatsimMetarsUrls() const { return m_vatsimMetarsUrls; }
+        const BlackMisc::Network::CUrl &getVatsimMetarsUrl() const { return m_vatsimMetarsUrl; }
 
-        //! VATSIM status file URLs
-        const BlackMisc::Network::CUrlList &getVatsimStatusFileUrls() const { return m_vatsimStatusFileUrls; }
+        //! VATSIM status file URL
+        const BlackMisc::Network::CUrl &getVatsimStatusFileUrl() const { return m_vatsimStatusFileUrl; }
 
-        //! VATSIM data file URLs
-        const BlackMisc::Network::CUrlList &getVatsimDataFileUrls() const { return m_vatsimDataFileUrls; }
+        //! VATSIM data file URL
+        const BlackMisc::Network::CUrl &getVatsimDataFileUrl() const { return m_vatsimDataFileUrl; }
 
         //! VATSIM server file URL
         BlackMisc::Network::CUrl getVatsimServerFileUrl() const { return m_vatsimServerFileUrl; }
@@ -116,7 +115,6 @@ namespace BlackCore::Data
         BlackMisc::Network::CUrl getVatsimFsdHttpUrl() const { return m_vatsimFsdHttpUrl; }
 
         //! Help page URL
-        //! \remark working URL evaluated at runtime, based on getOnlineHelpUrls
         BlackMisc::Network::CUrl getHelpPageUrl(const QString &context = {}) const;
 
         //! Predefined servers
@@ -171,13 +169,13 @@ namespace BlackCore::Data
         int m_dbHttpsPort = 443; //!< SSL port
         QString m_mappingMinimumVersion; //!< minimum version
         BlackMisc::Network::CUrl m_dbRootDirectoryUrl; //!< Root directory of DB
-        BlackMisc::Network::CUrlList m_vatsimMetarsUrls; //!< METAR data
-        BlackMisc::Network::CUrlList m_vatsimStatusFileUrls; //!< Status file, where to find the VATSIM files (METAR, data, ATIS, other status files)
-        BlackMisc::Network::CUrlList m_vatsimDataFileUrls; //!< Overall VATSIM data file / merely for bootstrapping the first time
+        BlackMisc::Network::CUrl m_vatsimMetarsUrl; //!< METAR data
+        BlackMisc::Network::CUrl m_vatsimStatusFileUrl; //!< Status file, where to find the VATSIM files (METAR, data, ATIS, other status files)
+        BlackMisc::Network::CUrl m_vatsimDataFileUrl; //!< Overall VATSIM data file / merely for bootstrapping the first time
         BlackMisc::Network::CUrl m_vatsimServerFileUrl; //!< URL to list of VATSIM servers
         BlackMisc::Network::CUrl m_vatsimFsdHttpUrl; //!< URL to HTTP FSD server (for load-balancing and automatic server selection)
-        BlackMisc::Network::CUrlList m_sharedUrls; //!< where we can obtain shared info files such as bootstrap, ..
-        BlackMisc::Network::CUrlList m_onlineHelpUrls; //!< online help URLs
+        BlackMisc::Network::CUrl m_sharedUrl; //!< where we can obtain shared info files such as bootstrap, ..
+        BlackMisc::Network::CUrl m_onlineHelpUrl; //!< online help URL
         BlackMisc::Network::CServerList m_predefinedServers; //!< Predefined servers loaded from setup file
         BlackMisc::Network::CUrl m_ncepGlobalForecastSystemUrl25; //!< NCEP GFS url 0.25 degree resolution
         BlackMisc::Network::CUrl m_comNavEquipmentHelpUrl; //!< Help URL for COM/NAV equipment codes
@@ -191,13 +189,13 @@ namespace BlackCore::Data
             BLACK_METAMEMBER(dbRootDirectoryUrl, 0, RequiredForJson),
             BLACK_METAMEMBER(dbHttpPort, 0, RequiredForJson),
             BLACK_METAMEMBER(dbHttpsPort, 0, RequiredForJson),
-            BLACK_METAMEMBER(vatsimStatusFileUrls, 0, RequiredForJson),
-            BLACK_METAMEMBER(vatsimDataFileUrls, 0, RequiredForJson),
+            BLACK_METAMEMBER(vatsimStatusFileUrl, 0, RequiredForJson),
+            BLACK_METAMEMBER(vatsimDataFileUrl, 0, RequiredForJson),
             BLACK_METAMEMBER(vatsimServerFileUrl, 0, RequiredForJson),
             BLACK_METAMEMBER(vatsimFsdHttpUrl, 0, RequiredForJson),
-            BLACK_METAMEMBER(vatsimMetarsUrls, 0, RequiredForJson),
-            BLACK_METAMEMBER(sharedUrls, 0, RequiredForJson),
-            BLACK_METAMEMBER(onlineHelpUrls, 0, RequiredForJson),
+            BLACK_METAMEMBER(vatsimMetarsUrl, 0, RequiredForJson),
+            BLACK_METAMEMBER(sharedUrl, 0, RequiredForJson),
+            BLACK_METAMEMBER(onlineHelpUrl, 0, RequiredForJson),
             BLACK_METAMEMBER(predefinedServers, 0, RequiredForJson),
             BLACK_METAMEMBER(mappingMinimumVersion, 0, RequiredForJson),
             BLACK_METAMEMBER(ncepGlobalForecastSystemUrl25, 0, RequiredForJson),

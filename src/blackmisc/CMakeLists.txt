@@ -423,8 +423,6 @@ add_library(misc SHARED
         network/textmessagelist.h
         network/url.cpp
         network/url.h
-        network/urllist.cpp
-        network/urllist.h
         network/urllog.cpp
         network/urllog.h
         network/urlloglist.cpp
