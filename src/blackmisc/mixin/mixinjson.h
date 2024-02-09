@@ -155,7 +155,7 @@ namespace BlackMisc
                     const auto value = json.value(CExplicitLatin1String(member.latin1Name()));
                     if (value.isUndefined())
                     {
-                        constexpr bool required = false; //! \fixme add RequiredForJson flag in metaclass system
+                        constexpr bool required = decltype(member)::has(MetaFlags<RequiredForJson>());
                         // QLatin1String used instead of QStringLiteral below since the latter causes an internal compiler bug
                         // in GCC 8 and higher
                         if (required) { throw CJsonException(QLatin1String("Missing required member '%1'").arg(member.latin1Name())); } // cppcheck-suppress knownConditionTrueFalse
