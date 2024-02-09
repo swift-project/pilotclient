@@ -27,8 +27,7 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackCore::Data, CGlobalSetup)
 
 namespace BlackCore::Data
 {
-    CGlobalSetup::CGlobalSetup() : CIdentifiable("CGlobalSetup"),
-                                   ITimestampBased(0)
+    CGlobalSetup::CGlobalSetup() : CIdentifiable("CGlobalSetup")
     {}
 
     CUrl CGlobalSetup::getDbIcaoReaderUrl() const
@@ -183,9 +182,7 @@ namespace BlackCore::Data
     QString CGlobalSetup::convertToQString(const QString &separator, bool i18n) const
     {
         QString s =
-            u"timestamp: " % this->getFormattedUtcTimestampYmdhms() % separator % u"Global setup loaded: "
-
-            % u"Mapping min.version: " % this->getMappingMinimumVersionString() % separator
+            u"Global setup loaded: " % separator % u"Mapping min.version: " % this->getMappingMinimumVersionString() % separator
 
             % u"Distribution URLs: " % getSwiftUpdateInfoFileUrls().toQString(i18n) % separator % u"Help URLs: " % m_onlineHelpUrls.toQString(i18n) % separator;
         s +=
@@ -203,7 +200,6 @@ namespace BlackCore::Data
     QVariant CGlobalSetup::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return CVariant::fromValue(*this); }
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
@@ -233,11 +229,6 @@ namespace BlackCore::Data
         if (index.isMyself())
         {
             (*this) = variant.value<CGlobalSetup>();
-            return;
-        }
-        if (ITimestampBased::canHandleIndex(index))
-        {
-            ITimestampBased::setPropertyByIndex(index, variant);
             return;
         }
 

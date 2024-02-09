@@ -14,7 +14,6 @@
 #include "blackmisc/datacache.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/timestampbased.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
 
@@ -29,8 +28,7 @@ namespace BlackCore::Data
     //! \note also called the bootstrap file as it is required once to get information where all the data are located
     class BLACKCORE_EXPORT CGlobalSetup :
         public BlackMisc::CValueObject<CGlobalSetup>,
-        public BlackMisc::CIdentifiable,
-        public BlackMisc::ITimestampBased
+        public BlackMisc::CIdentifiable
     {
     public:
         //! Properties by index
@@ -222,7 +220,6 @@ namespace BlackCore::Data
 
         BLACK_METACLASS(
             CGlobalSetup,
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch),
             BLACK_METAMEMBER(crashReportServerUrl),
             BLACK_METAMEMBER(dbRootDirectoryUrl),
             BLACK_METAMEMBER(dbHttpPort),
