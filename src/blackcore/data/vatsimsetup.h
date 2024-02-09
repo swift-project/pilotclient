@@ -10,7 +10,7 @@
 #include "blackmisc/datacache.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/network/serverlist.h"
-#include "blackmisc/network/urllist.h"
+#include "blackmisc/network/url.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/timestampbased.h"
@@ -43,26 +43,26 @@ namespace BlackCore::Data
         //! Default constructor
         CVatsimSetup();
 
-        //! VATSIM data file URLs
-        const BlackMisc::Network::CUrlList &getDataFileUrls() const { return m_dataFileUrls; }
+        //! VATSIM data file URL
+        const BlackMisc::Network::CUrl &getDataFileUrl() const { return m_dataFileUrl; }
 
-        //! Set VATSIM data file URLs
-        void setDataFileUrls(const BlackMisc::Network::CUrlList &urls) { m_dataFileUrls = urls; }
+        //! Set VATSIM data file URL
+        void setDataFileUrl(const BlackMisc::Network::CUrl &url) { m_dataFileUrl = url; }
 
-        //! Server file URLs (like data file, only servers)
-        const BlackMisc::Network::CUrlList &getServerFileUrls() const { return m_serverFileUrls; }
+        //! Server file URL
+        const BlackMisc::Network::CUrl &getServerFileUrl() const { return m_serverFileUrl; }
 
-        //! Set server file URLs (like data file, only servers)
-        void setServerFileUrls(const BlackMisc::Network::CUrlList &urls) { m_serverFileUrls = urls; }
+        //! Set server file URL
+        void setServerFileUrl(const BlackMisc::Network::CUrl &url) { m_serverFileUrl = url; }
 
-        //! METAR file URLs
-        const BlackMisc::Network::CUrlList &getMetarFileUrls() const { return m_metarFileUrls; }
+        //! METAR file URL
+        const BlackMisc::Network::CUrl &getMetarFileUrl() const { return m_metarFileUrl; }
 
-        //! METAR file URLs
-        void setMetarFileUrls(const BlackMisc::Network::CUrlList &urls) { m_metarFileUrls = urls; }
+        //! METAR file URL
+        void setMetarFileUrl(const BlackMisc::Network::CUrl &url) { m_metarFileUrl = url; }
 
         //! Set all URLs and indicate if something has changed
-        bool setUrls(const BlackMisc::Network::CUrlList &dataFileUrls, const BlackMisc::Network::CUrlList &serverFileUrls, const BlackMisc::Network::CUrlList &metarFileUrls);
+        bool setUrls(const BlackMisc::Network::CUrl &dataFileUrl, const BlackMisc::Network::CUrl &serverFileUrl, const BlackMisc::Network::CUrl &metarFileUrl);
 
         //! FSD servers
         const BlackMisc::Network::CServerList &getFsdServers() const { return m_fsdServers; }
@@ -92,17 +92,17 @@ namespace BlackCore::Data
         void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
 
     private:
-        BlackMisc::Network::CUrlList m_serverFileUrls; //!< only the FSD servers
-        BlackMisc::Network::CUrlList m_dataFileUrls; //!< Full VATSIM files
-        BlackMisc::Network::CUrlList m_metarFileUrls; //!< METAR files
+        BlackMisc::Network::CUrl m_serverFileUrl; //!< only the FSD servers
+        BlackMisc::Network::CUrl m_dataFileUrl; //!< Full VATSIM file
+        BlackMisc::Network::CUrl m_metarFileUrl; //!< METAR file
         BlackMisc::Network::CServerList m_fsdServers; //!< FSD test servers
         BlackMisc::Network::CServerList m_voiceServers; //!< voice servers
 
         BLACK_METACLASS(
             CVatsimSetup,
-            BLACK_METAMEMBER(serverFileUrls),
-            BLACK_METAMEMBER(dataFileUrls),
-            BLACK_METAMEMBER(metarFileUrls),
+            BLACK_METAMEMBER(serverFileUrl),
+            BLACK_METAMEMBER(dataFileUrl),
+            BLACK_METAMEMBER(metarFileUrl),
             BLACK_METAMEMBER(fsdServers),
             BLACK_METAMEMBER(voiceServers),
             BLACK_METAMEMBER(timestampMSecsSinceEpoch)

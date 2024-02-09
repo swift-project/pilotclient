@@ -37,7 +37,7 @@ namespace BlackGui::Components
         if (r != QDialog::Accepted) { return r; }
         if (!ui->comp_UpdateInfo->isNewPilotClientVersionAvailable()) { return QDialog::Rejected; }
         const CDistribution distribution = ui->comp_UpdateInfo->getCurrentDistribution();
-        if (!distribution.hasDownloadUrls()) { return QDialog::Rejected; }
+        if (!distribution.hasDownloadUrl()) { return QDialog::Rejected; }
 
         ui->comp_UpdateInfo->triggerDownload();
         return r;

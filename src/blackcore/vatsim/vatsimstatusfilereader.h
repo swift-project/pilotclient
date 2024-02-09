@@ -10,7 +10,7 @@
 #include "blackcore/data/vatsimsetup.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/network/entityflags.h"
-#include "blackmisc/network/urllist.h"
+#include "blackmisc/network/url.h"
 #include "blackcore/threadedreader.h"
 
 #include <QObject>
@@ -29,13 +29,13 @@ namespace BlackCore::Vatsim
         //! Constructor
         explicit CVatsimStatusFileReader(QObject *owner);
 
-        //! METAR URLs
+        //! METAR URL
         //! \threadsafe
-        BlackMisc::Network::CUrlList getMetarFileUrls() const;
+        BlackMisc::Network::CUrl getMetarFileUrl() const;
 
-        //! Data file URLs
+        //! Data file URL
         //! \threadsafe
-        BlackMisc::Network::CUrlList getDataFileUrls() const;
+        BlackMisc::Network::CUrl getDataFileUrl() const;
 
         //! Start reading in own thread
         void readInBackgroundThread();

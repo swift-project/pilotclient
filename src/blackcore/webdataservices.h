@@ -20,7 +20,7 @@
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/network/serverlist.h"
-#include "blackmisc/network/urllist.h"
+#include "blackmisc/network/url.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/voicecapabilities.h"
@@ -118,13 +118,13 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Network::CServerList getVatsimFsdServers() const;
 
-        //! METAR URLs (from status file)
+        //! METAR URL (from status file)
         //! \threadsafe
-        BlackMisc::Network::CUrlList getVatsimMetarUrls() const;
+        BlackMisc::Network::CUrl getVatsimMetarUrl() const;
 
-        //! Data file locations (from status file)
+        //! Data file location (from status file)
         //! \threadsafe
-        BlackMisc::Network::CUrlList getVatsimDataFileUrls() const;
+        BlackMisc::Network::CUrl getVatsimDataFileUrl() const;
 
         //! Users by callsign
         //! \threadsafe

@@ -50,11 +50,10 @@ namespace BlackCore::Data
         return getDbRootDirectoryUrl();
     }
 
-    const CUrlList &CGlobalSetup::getSwiftSharedUrls() const
+    const CUrl &CGlobalSetup::getSwiftSharedUrl() const
     {
-        return m_sharedUrls;
+        return m_sharedUrl;
     }
-
     CUrl CGlobalSetup::getDbHomePageUrl() const
     {
         return getDbRootDirectoryUrl().withAppendedPath("/page/index.php");
@@ -62,11 +61,9 @@ namespace BlackCore::Data
 
     CUrl CGlobalSetup::getHelpPageUrl(const QString &context) const
     {
-        const CUrlList urls(m_onlineHelpUrls);
-
         // we display in the standard browser,
         // so the user will realize if the URL does not work
-        CUrl url = (urls.size() < 2) ? urls.frontOrDefault() : urls.getRandomUrl();
+        CUrl url = m_onlineHelpUrl;
         if (url.isEmpty()) { return url; }
 
         // context string something like "application.moreSpecific.evenMoreSpecific"
@@ -152,7 +149,7 @@ namespace BlackCore::Data
         s +=
             u"DB root directory: " % getDbRootDirectoryUrl().toQString(i18n) % separator % u"ICAO DB reader: " % getDbIcaoReaderUrl().toQString(i18n) % separator % u"Model DB reader: " % getDbModelReaderUrl().toQString(i18n) % separator % u"Airport DB reader: " % getDbAirportReaderUrl().toQString(i18n) % separator % u"DB home page: " % getDbHomePageUrl().toQString(i18n) % separator % u"DB login service: " % getDbLoginServiceUrl().toQString(i18n) % separator;
         s +=
-            u"VATSIM METARs: " % getVatsimMetarsUrls().toQString(i18n) % separator % u"VATSIM data file: " % getVatsimDataFileUrls().toQString(i18n) % separator % u"VATSIM server file: " % getVatsimServerFileUrl().toQString(i18n) % separator
+            u"VATSIM METARs: " % getVatsimMetarsUrl().toQString(i18n) % separator % u"VATSIM data file: " % getVatsimDataFileUrl().toQString(i18n) % separator % u"VATSIM server file: " % getVatsimServerFileUrl().toQString(i18n) % separator
 
             % u"Predefined servers: " % getPredefinedServers().toQString(i18n) % separator
 
@@ -207,9 +204,9 @@ namespace BlackCore::Data
         case IndexVatsimData: m_vatsimDataFileUrls = variant.value<CUrlList>(); break;
         case IndexVatsimServer: m_vatsimServerFileUrl = variant.value<CUrl>(); break;
         case IndexVatsimHttpFsd: m_vatsimFsdHttpUrl = variant.value<CUrl>(); break;
-        case IndexVatsimMetars: m_vatsimMetarsUrls = variant.value<CUrlList>(); break;
-        case IndexSharedUrls: m_sharedUrls = variant.value<CUrlList>(); break;
-        case IndexOnlineHelpUrls: m_onlineHelpUrls = variant.value<CUrlList>(); break;
+        case IndexVatsimMetars: m_vatsimMetarsUrl = variant.value<CUrl>(); break;
+        case IndexSharedUrl: m_sharedUrl = variant.value<CUrl>(); break;
+        case IndexOnlineHelpUrl: m_onlineHelpUrl = variant.value<CUrl>(); break;
         case IndexMappingMinimumVersion: m_mappingMinimumVersion = variant.toString(); break;
         case IndexPredefinedServers: m_predefinedServers = variant.value<CServerList>(); break;
         case IndexAfvApiServerUrl: m_afvApiServerUrl = variant.value<CUrl>(); break;

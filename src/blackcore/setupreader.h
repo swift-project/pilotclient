@@ -10,7 +10,6 @@
 #include "blackcore/data/globalsetup.h"
 #include "blackmisc/db/updateinfo.h"
 #include "blackmisc/datacache.h"
-#include "blackmisc/network/urllist.h"
 #include "blackmisc/statusmessagelist.h"
 
 #include <QCommandLineOption>

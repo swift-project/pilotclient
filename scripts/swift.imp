@@ -87,8 +87,6 @@
   { include: [ "\"fileutils.h\"", "private", "\"blackmisc/fileutils.h\"", "public" ] },
   { include: [ "\"network/serverlist.h\"", "private", "\"blackmisc/network/serverlist.h\"", "public" ] },
   { include: [ "\"serverlist.h\"", "private", "\"blackmisc/network/serverlist.h\"", "public" ] },
-  { include: [ "\"network/urllist.h\"", "private", "\"blackmisc/network/urllist.h\"", "public" ] },
-  { include: [ "\"urllist.h\"", "private", "\"blackmisc/network/urllist.h\"", "public" ] },
   { include: [ "\"network/server.h\"", "private", "\"blackmisc/network/server.h\"", "public" ] },
   { include: [ "\"server.h\"", "private", "\"blackmisc/network/server.h\"", "public" ] },
   { include: [ "\"network/user.h\"", "private", "\"blackmisc/network/user.h\"", "public" ] },
