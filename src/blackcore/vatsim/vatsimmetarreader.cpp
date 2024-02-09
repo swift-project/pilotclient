@@ -7,8 +7,6 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/url.h"
-#include "blackmisc/network/urllist.h"
-#include "blackmisc/statusmessage.h"
 
 #include <QByteArray>
 #include <QMetaObject>
@@ -68,8 +66,7 @@ namespace BlackCore::Vatsim
         if (!this->doWorkCheck()) { return; }
         if (!this->isInternetAccessible("No network/internet access, cannot read METARs")) { return; }
 
-        CFailoverUrlList urls(sApp->getVatsimMetarUrls());
-        const CUrl url(urls.obtainNextWorkingUrl(true));
+        const CUrl url(sApp->getVatsimMetarUrl());
         if (url.isEmpty()) { return; }
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "No Application");
         this->getFromNetworkAndLog(url.withAppendedQuery("id=all"), { this, &CVatsimMetarReader::decodeMetars });

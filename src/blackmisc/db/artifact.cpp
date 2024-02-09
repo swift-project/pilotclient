@@ -71,7 +71,7 @@ namespace BlackMisc::Db
         if (!this->hasDistributions()) { return CRemoteFile(); }
         CRemoteFile rf(this->getName(), this->getFileSize());
         const CDistribution d = this->getMostStableDistribution();
-        const CUrl url = d.getDownloadUrls().getRandomUrl();
+        const CUrl url = d.getDownloadUrl();
         if (url.isEmpty()) { return CRemoteFile(); }
         rf.setUtcTimestamp(this->getUtcTimestamp());
         rf.setUrl(url);

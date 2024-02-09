@@ -341,7 +341,7 @@ namespace BlackCore::Db
 
     void CNetworkWatchdog::initWorkingSharedUrlFromSetup()
     {
-        const CUrl workingUrl(CNetworkWatchdog::workingSharedUrlFromSetup()); // takes long
+        const CUrl workingUrl(sApp->getGlobalSetup().getSwiftSharedUrl());
         this->setWorkingSharedUrl(workingUrl);
     }
 
@@ -357,12 +357,5 @@ namespace BlackCore::Db
     {
         const QString host = dbTestUrl().getHost();
         return host;
-    }
-
-    CUrl CNetworkWatchdog::workingSharedUrlFromSetup()
-    {
-        const CUrlList urls(sApp->getGlobalSetup().getSwiftSharedUrls());
-        CFailoverUrlList failoverUrls(urls);
-        return failoverUrls.getRandomWorkingUrl(2, CanConnectTimeMs); // uses CNetworkUtils::canConnect
     }
 } // ns

@@ -168,10 +168,6 @@ namespace BlackCore::Db
         //! \remark depends on BlackCore::Application::getGlobalSetup()
         static QString dbHost();
 
-        //! Obtain working DB data file location URL
-        //! \remark depends on BlackCore::Application::getGlobalSetup()
-        static BlackMisc::Network::CUrl workingSharedUrlFromSetup();
-
         std::atomic_bool m_logOwnMessages { true };
         std::atomic_bool m_doDetailedCheck { true };
         std::atomic_bool m_networkAccessible { true };

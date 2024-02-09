@@ -109,16 +109,16 @@ namespace BlackCore
         return CServerList();
     }
 
-    CUrlList CWebDataServices::getVatsimMetarUrls() const
+    CUrl CWebDataServices::getVatsimMetarUrl() const
     {
-        if (m_vatsimStatusReader) { return m_vatsimStatusReader->getMetarFileUrls(); }
-        return CUrlList();
+        if (m_vatsimStatusReader) { return m_vatsimStatusReader->getMetarFileUrl(); }
+        return {};
     }
 
-    CUrlList CWebDataServices::getVatsimDataFileUrls() const
+    CUrl CWebDataServices::getVatsimDataFileUrl() const
     {
-        if (m_vatsimStatusReader) { return m_vatsimStatusReader->getDataFileUrls(); }
-        return CUrlList();
+        if (m_vatsimStatusReader) { return m_vatsimStatusReader->getDataFileUrl(); }
+        return {};
     }
 
     CUserList CWebDataServices::getUsersForCallsign(const CCallsign &callsign) const

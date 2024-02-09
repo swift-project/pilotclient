@@ -14,12 +14,12 @@ namespace BlackCore::Data
     CVatsimSetup::CVatsimSetup() : ITimestampBased(0)
     {}
 
-    bool CVatsimSetup::setUrls(const CUrlList &dataFileUrls, const CUrlList &serverFileUrls, const CUrlList &metarFileUrls)
+    bool CVatsimSetup::setUrls(const CUrl &dataFileUrl, const CUrl &serverFileUrl, const CUrl &metarFileUrl)
     {
-        const bool changed = (dataFileUrls != getDataFileUrls() || serverFileUrls != getServerFileUrls() || metarFileUrls != getMetarFileUrls());
-        this->setServerFileUrls(serverFileUrls);
-        this->setMetarFileUrls(metarFileUrls);
-        this->setDataFileUrls(dataFileUrls);
+        const bool changed = (dataFileUrl != getDataFileUrl() || serverFileUrl != getServerFileUrl() || metarFileUrl != getMetarFileUrl());
+        this->setServerFileUrl(serverFileUrl);
+        this->setMetarFileUrl(metarFileUrl);
+        this->setDataFileUrl(dataFileUrl);
         return changed;
     }
 
@@ -43,7 +43,7 @@ namespace BlackCore::Data
         s.append(separator);
 
         s.append("VATSIM data file: ");
-        s.append(getDataFileUrls().toQString(i18n));
+        s.append(getDataFileUrl().toQString(i18n));
         s.append(separator);
 
         s.append("FSD servers: ");
@@ -60,7 +60,7 @@ namespace BlackCore::Data
         switch (i)
         {
         case IndexFsdServers: return QVariant::fromValue(this->m_fsdServers);
-        case IndexDataFiles: return QVariant::fromValue(this->m_dataFileUrls);
+        case IndexDataFiles: return QVariant::fromValue(this->m_dataFileUrl);
         default: return CValueObject::propertyByIndex(index);
         }
     }
@@ -82,7 +82,7 @@ namespace BlackCore::Data
         switch (i)
         {
         case IndexFsdServers: this->m_fsdServers = variant.value<CServerList>(); break;
-        case IndexDataFiles: this->m_dataFileUrls = variant.value<CUrlList>(); break;
+        case IndexDataFiles: this->m_dataFileUrl = variant.value<CUrl>(); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
