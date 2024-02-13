@@ -1048,7 +1048,7 @@ namespace BlackSimPlugin::XPlane
         PlanesSurfaces planesSurfaces;
         PlanesTransponders planesTransponders;
 
-        int aircraftNumber = 0;
+        uint32_t aircraftNumber = 0;
         const bool updateAllAircraft = this->isUpdateAllRemoteAircraft(currentTimestamp);
         const CCallsignSet callsignsInRange = this->getAircraftInRangeCallsigns();
         for (const CXPlaneMPAircraft &xplaneAircraft : std::as_const(m_xplaneAircraftObjects))
@@ -1083,7 +1083,7 @@ namespace BlackSimPlugin::XPlane
                 // adjust altitude to compensate for XP12 temperature effect
                 const CLength relativeAltitude = interpolatedSituation.geodeticHeight() - getOwnAircraftPosition().geodeticHeight();
                 const double altitudeDeltaWeight = 2 - qBound(3000.0, relativeAltitude.abs().value(CLengthUnit::ft()), 6000.0) / 3000;
-                const CLength alt = interpolatedSituation.getAltitude() + m_altitudeDelta * altitudeDeltaWeight * (1 - interpolatedSituation.getOnGroundFactor());
+                const CLength alt = interpolatedSituation.getAltitude() + m_altitudeDelta * altitudeDeltaWeight * (1 - interpolatedSituation.getOnGroundInfo().getGroundFactor());
                 interpolatedSituation.setAltitude({ alt, interpolatedSituation.getAltitude().getReferenceDatum() });
 
                 // update situation

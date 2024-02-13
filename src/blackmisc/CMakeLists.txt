@@ -93,6 +93,8 @@ add_library(misc SHARED
         aviation/modulator.h
         aviation/navsystem.h
         aviation/percallsign.h
+        aviation/ongroundinfo.cpp
+        aviation/ongroundinfo.h
         aviation/registermetadataaviation.cpp
         aviation/registermetadataaviation.h
         aviation/selcal.cpp
@@ -541,22 +543,26 @@ add_library(misc SHARED
         simulation/fscommon/vpilotmodelruleset.h
         simulation/aircraftmodel.cpp
         simulation/distributor.cpp
-        simulation/interpolatorspline.h
+        simulation/interpolation/interpolatorspline.h
         simulation/distributorlist.cpp
         simulation/registermetadatasimulation.cpp
-        simulation/interpolatormulti.h
-        simulation/interpolationsetupprovider.h
+        simulation/interpolation/interpolatormulti.h
+        simulation/interpolation/interpolationsetupprovider.h
         simulation/aircraftmodellist.h
-        simulation/interpolationsetupprovider.cpp
-        simulation/interpolatorlinear.h
+        simulation/interpolation/interpolationsetupprovider.cpp
+        simulation/interpolation/interpolationstatus.cpp
+        simulation/interpolation/interpolationstatus.h
+        simulation/interpolation/interpolatorlinear.h
         simulation/backgroundvalidation.cpp
         simulation/airspaceaircraftsnapshot.cpp
         simulation/autopublishdata.h
-        simulation/interpolationrenderingsetup.h
+        simulation/interpolation/interpolationrenderingsetup.h
+        simulation/interpolation/interpolationresult.cpp
+        simulation/interpolation/interpolationresult.h
         simulation/matchingscriptmisc.h
-        simulation/interpolationsetuplist.cpp
+        simulation/interpolation/interpolationsetuplist.cpp
         simulation/remoteaircraftprovider.h
-        simulation/interpolant.h
+        simulation/interpolation/interpolant.h
         simulation/ownaircraftprovider.cpp
         simulation/backgroundvalidation.h
         simulation/xplane/xswiftbusconfigwriter.cpp
@@ -570,23 +576,23 @@ add_library(misc SHARED
         simulation/xplane/xswiftbusconfigwriter.h
         simulation/matchingutils.h
         simulation/registermetadatasimulation.h
-        simulation/interpolatorpbh.h
+        simulation/interpolation/interpolatorlinearpbh.h
         simulation/fsx/simconnectutilities.h
         simulation/fsx/simconnectutilities.cpp
         simulation/fsx/fsx.h
         simulation/aircraftmodelinterfaces.h
-        simulation/interpolationlogger.h
-        simulation/interpolatormulti.cpp
+        simulation/interpolation/interpolationlogger.h
+        simulation/interpolation/interpolatormulti.cpp
         simulation/remoteaircraftprovider.cpp
         simulation/modelconverterx.cpp
         simulation/simulatorinfolist.h
         simulation/simulationenvironmentprovider.cpp
-        simulation/interpolator.h
-        simulation/interpolatorspline.cpp
+        simulation/interpolation/interpolator.h
+        simulation/interpolation/interpolatorspline.cpp
         simulation/aircraftmodelloaderprovider.cpp
         simulation/simulatorplugininfolist.h
         simulation/remoteaircraftproviderdummy.cpp
-        simulation/interpolationlogger.cpp
+        simulation/interpolation/interpolationlogger.cpp
         simulation/matchingscript.h
         simulation/categorymatcher.h
         simulation/flightgear/flightgearutil.h
@@ -597,23 +603,25 @@ add_library(misc SHARED
         simulation/simulatedaircraft.cpp
         simulation/aircraftmodellist.cpp
         simulation/aircraftmodel.h
-        simulation/interpolatorlinear.cpp
+        simulation/interpolation/interpolatorlinear.cpp
         simulation/data/lastmodel.h
         simulation/data/modelcaches.h
         simulation/data/modelcaches.cpp
         simulation/airspaceaircraftsnapshot.h
-        simulation/interpolatorfunctions.h
+        simulation/interpolation/interpolatorfunctions.h
         simulation/ownaircraftprovider.h
         simulation/distributorlistpreferences.cpp
-        simulation/interpolatorpbh.cpp
+        simulation/interpolation/interpolatorlinearpbh.cpp
         simulation/reverselookup.h
         simulation/autopublishdata.cpp
         simulation/simulationenvironmentprovider.h
         simulation/simulatorplugininfo.h
-        simulation/interpolationrenderingsetup.cpp
+        simulation/interpolation/interpolationrenderingsetup.cpp
         simulation/simulatorinfo.cpp
         simulation/matchingstatistics.cpp
         simulation/ownaircraftproviderdummy.cpp
+        simulation/partsstatus.cpp
+        simulation/partsstatus.h
         simulation/simulatorinfolist.cpp
         simulation/aircraftmodelloader.cpp
         simulation/distributor.h
@@ -624,7 +632,7 @@ add_library(misc SHARED
         simulation/simulatorinternals.h
         simulation/distributorlist.h
         simulation/aircraftmodelutils.h
-        simulation/interpolator.cpp
+        simulation/interpolation/interpolator.cpp
         simulation/matchingstatistics.h
         simulation/modelconverterx.h
         simulation/settings/modelsettings.cpp
@@ -648,7 +656,8 @@ add_library(misc SHARED
         simulation/aircraftmodelutils.cpp
         simulation/simulatedaircraftlist.cpp
         simulation/matchingstatisticsentry.h
-        simulation/interpolationsetuplist.h
+        simulation/interpolation/interpolationsetuplist.h
+        simulation/interpolation/interpolatorpbh.h
 
         # Test
         test/testdata.cpp

@@ -7,7 +7,7 @@
 #define BLACKSIMPLUGIN_XPLANE_XPLANEMPAIRCRAFT_H
 
 #include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/interpolatormulti.h"
+#include "blackmisc/simulation/interpolation/interpolatormulti.h"
 #include <QSharedPointer>
 #include <QStringList>
 
@@ -57,7 +57,7 @@ namespace BlackSimPlugin::XPlane
         void attachInterpolatorLogger(BlackMisc::Simulation::CInterpolationLogger *logger) const;
 
         //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolation
-        BlackMisc::Simulation::CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoc, const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber) const;
+        BlackMisc::Simulation::CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoch, const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber) const;
 
         //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolationMessages
         BlackMisc::CStatusMessageList getInterpolationMessages(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;

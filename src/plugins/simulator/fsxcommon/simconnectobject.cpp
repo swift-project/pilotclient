@@ -6,7 +6,7 @@
 #include "simulatorfsxcommon.h"
 #include "blackcore/simulator.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/simulation/interpolatormulti.h"
+#include "blackmisc/simulation/interpolation/interpolatormulti.h"
 #include "blackconfig/buildconfig.h"
 
 using namespace BlackConfig;
@@ -205,15 +205,13 @@ namespace BlackSimPlugin::FsxCommon
         m_interpolator->attachLogger(logger);
     }
 
-    CInterpolationResult CSimConnectObject::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber) const
+    CInterpolationResult CSimConnectObject::getInterpolation(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber) const
     {
         if (!m_interpolator)
         {
-            CInterpolationResult result;
-            result.reset();
-            return result;
+            return {};
         }
-        return m_interpolator->getInterpolation(currentTimeSinceEpoc, setup, aircraftNumber);
+        return m_interpolator->getInterpolation(currentTimeSinceEpoch, setup, aircraftNumber);
     }
 
     const CAircraftSituation &CSimConnectObject::getLastInterpolatedSituation(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const

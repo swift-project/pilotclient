@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2018 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackmisc/simulation/interpolationsetupprovider.h"
+#include "blackmisc/simulation/interpolation/interpolationsetupprovider.h"
 
 using namespace BlackMisc::Aviation;
 

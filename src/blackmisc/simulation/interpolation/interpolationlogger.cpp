@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackmisc/simulation/interpolationlogger.h"
+#include "blackmisc/simulation/interpolation/interpolationlogger.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/heading.h"
 #include "blackmisc/geo/kmlutils.h"
@@ -290,7 +290,7 @@ namespace BlackMisc::Simulation
                 u"<thead><tr>"
                 u"<th title=\"changed situation\">cs.</th><th>Int</th>"
                 u"<th title=\"recalculated interpolant\">recalc</th>"
-                u"<th>CS</th><th>VTOL</th><th>timestamp</th><th>since</th>"
+                u"<th>CS</th><th>timestamp</th><th>since</th>"
                 u"<th>ts old</th><th>ts new</th><th>ts cur</th>"
                 u"<th>Interpolation ts.</th><th>Sample &Delta;t</th><th>fraction</th>"
                 u"<th>lat.old</th><th>lat.new</th><th>lat.cur</th>"
@@ -328,7 +328,6 @@ namespace BlackMisc::Simulation
                 u"<td>" % boolToYesNo(log.interpolantRecalc) % u"</td>"
                                                                u"<td>" %
                 log.callsign.asString() % u"</td>" %
-                u"<td>" % boolToYesNo(log.vtolAircraft) % u"</td>" %
                 u"<td>" % msSinceEpochToTime(log.tsCurrent) % u"</td>" %
                 u"<td>" % QString::number(log.tsCurrent - firstLog.tsCurrent) % u"</td>" %
 
@@ -361,9 +360,9 @@ namespace BlackMisc::Simulation
                 u"<td class=\"cur\">" % log.situationCurrent.getGroundElevation().valueRoundedWithUnit(ft, 1) % u" " % log.situationCurrent.getGroundElevationInfoAsString() % u"</td>" %
 
                 u"<td>" % QString::number(log.groundFactor) % u"</td>" %
-                u"<td class=\"old\">" % situationOld.getOnGroundInfo() % u"</td>" %
-                u"<td class=\"new\">" % situationNew.getOnGroundInfo() % u"</td>" %
-                u"<td class=\"cur\">" % log.situationCurrent.getOnGroundInfo() % u"</td>" %
+                u"<td class=\"old\">" % situationOld.getOnGroundInfo().toQString() % u"</td>" %
+                u"<td class=\"new\">" % situationNew.getOnGroundInfo().toQString() % u"</td>" %
+                u"<td class=\"cur\">" % log.situationCurrent.getOnGroundInfo().toQString() % u"</td>" %
 
                 // tableRows +=
                 u"<td>" % log.cgAboveGround.valueRoundedWithUnit(ft, 0) % u"</td>" %

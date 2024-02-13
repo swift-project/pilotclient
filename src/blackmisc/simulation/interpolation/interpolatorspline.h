@@ -3,21 +3,19 @@
 
 //! \file
 
-#ifndef BLACKMISC_SIMULATION_INTERPOLATORSPLINE_H
-#define BLACKMISC_SIMULATION_INTERPOLATORSPLINE_H
+#ifndef BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLATORSPLINE_H
+#define BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLATORSPLINE_H
 
-#include "blackmisc/simulation/interpolator.h"
-#include "blackmisc/simulation/interpolationlogger.h"
-#include "blackmisc/simulation/interpolant.h"
+#include "blackmisc/simulation/interpolation/interpolator.h"
+#include "blackmisc/simulation/interpolation/interpolationlogger.h"
+#include "blackmisc/simulation/interpolation/interpolant.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/blackmiscexport.h"
-#include <QString>
-#include <QtGlobal>
 
 namespace BlackMisc::Simulation
 {
     //! Cubic spline interpolator
-    class BLACKMISC_EXPORT CInterpolatorSpline : public CInterpolator<CInterpolatorSpline>
+    class BLACKMISC_EXPORT CInterpolatorSpline : public CInterpolator
     {
         virtual void anchor() override;
 
@@ -63,16 +61,13 @@ namespace BlackMisc::Simulation
             CInterpolant() : m_pa(PosArray::zeroPosArray()) {}
 
             //! Constructor
-            CInterpolant(const PosArray &pa, const PhysicalQuantities::CLengthUnit &altitudeUnit, const CInterpolatorPbh &pbh);
+            CInterpolant(const PosArray &pa, const PhysicalQuantities::CLengthUnit &altitudeUnit, const CInterpolatorLinearPbh &pbh);
 
-            //! Perform the interpolation
-            Aviation::CAircraftSituation interpolatePositionAndAltitude(const Aviation::CAircraftSituation &currentSituation, bool interpolateGndFactor) const;
+            //! \copydoc BlackMisc::Simulation::IInterpolant::interpolatePositionAndAltitude
+            std::tuple<Geo::CCoordinateGeodetic, Aviation::CAltitude> interpolatePositionAndAltitude() const override;
 
-            //! Old situation
-            const Aviation::CAircraftSituation &getOldSituation() const { return pbh().getOldSituation(); }
-
-            //! New situation
-            const Aviation::CAircraftSituation &getNewSituation() const { return pbh().getNewSituation(); }
+            //! \copydoc BlackMisc::Simulation::IInterpolant::interpolateGroundFactor
+            Aviation::COnGroundInfo interpolateGroundFactor() const override;
 
             //! Set the time values
             void setTimes(qint64 currentTimeMs, double timeFraction, qint64 interpolatedTimeMs);
@@ -80,14 +75,18 @@ namespace BlackMisc::Simulation
             //! \private UNIT tests/ASSERT only
             const PosArray &getPa() const { return m_pa; }
 
+            //! \copydoc BlackMisc::Simulation::IInterpolant::pbh
+            const IInterpolatorPbh &pbh() const override { return m_pbh; }
+
         private:
             PosArray m_pa; //!< current positions array, latest values last
             PhysicalQuantities::CLengthUnit m_altitudeUnit;
             qint64 m_currentTimeMsSinceEpoc { -1 };
+            CInterpolatorLinearPbh m_pbh; //!< the used PBH interpolator
         };
 
-        //! Strategy used by CInterpolator::getInterpolatedSituation
-        CInterpolant getInterpolant(SituationLog &log);
+        //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolant
+        const IInterpolant &getInterpolant(SituationLog &log) override;
 
     private:
         //! Update the elevations used in CInterpolatorSpline::m_s
@@ -101,6 +100,10 @@ namespace BlackMisc::Simulation
 
         //! Fill the situations array
         bool fillSituationsArray();
+
+        //! Verify gnd flag, times, ... true means "OK"
+        static bool verifyInterpolationSituations(const Aviation::CAircraftSituation &oldest, const Aviation::CAircraftSituation &newer, const Aviation::CAircraftSituation &latest,
+                                                  const CInterpolationAndRenderingSetupPerCallsign &setup = CInterpolationAndRenderingSetupPerCallsign::null());
 
         qint64 m_prevSampleAdjustedTime = 0; //!< previous sample time + offset
         qint64 m_nextSampleAdjustedTime = 0; //!< previous sample time + offset
