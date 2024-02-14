@@ -37,10 +37,10 @@ int main(int argc, char *argv[])
     int r = 0;
     {
         CSwiftGuiStdApplication a; // application with contexts
+        if (!a.parseCommandLineArgsAndLoadSetup()) { return EXIT_FAILURE; }
         a.splashScreen(CIcons::swift256());
         a.setMinimumSizeInCharacters(60, 42); // experimental
-        if (!a.parseAndLoadSetup()) { return EXIT_FAILURE; }
-        if (!a.hasSetupReader() || !a.start())
+        if (!a.start())
         {
             a.gracefulShutdown();
             return EXIT_FAILURE;

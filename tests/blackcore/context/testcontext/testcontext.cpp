@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
     BLACKTEST_INIT(BlackCoreTest::CTestContext)
     CApplication a(CApplicationInfo::UnitTest);
     a.addVatlibOptions();
-    const bool setup = a.parseAndLoadSetup();
+    const bool setup = a.parseCommandLineArgsAndLoadSetup();
     if (!setup) { qWarning() << "No setup loaded"; }
     int r = EXIT_FAILURE;
     if (a.start())

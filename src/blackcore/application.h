@@ -287,16 +287,13 @@ namespace BlackCore
         //! Delegates to QCommandLineParser::value
         QString getParserValue(const QCommandLineOption &option) const;
 
-        //! Parses and handles the standard options such as help, version, parse error
-        //! \note in some cases (error, version, help) application is terminated during this step
-        //! \sa parsingHookIn
-        //! \return true means to continue, false to stop
-        bool parseAndStartupCheck();
-
-        //! Combined function
-        //! \see parseAndStartupCheck
-        //! \see loadSetup
-        bool parseAndLoadSetup();
+        //! Combined function that does a startup check, parses the command line arguments and loads the setup
+        //! \see startupCheck
+        //! \see parseCommandLineArguments
+        //! \see loadSetupAndHandleErrors
+        //! \remark This function cannot automatically called from the constructor because (1) it calls virtual
+        //! functions to show error messages and (2) the some command line arguments are added after constructing the object
+        bool parseCommandLineArgsAndLoadSetup();
 
         //! Display warning message
         virtual bool cmdLineWarningMessage(const QString &text, const QString &informativeText = "") const;
@@ -711,6 +708,20 @@ namespace BlackCore
 
         //! Write meta information into the application directory so other swift versions can display them
         void tagApplicationDataDirectory();
+
+        //! Check if all required runtime files are in place
+        //! \returns true if the check succeeded
+        bool startupCheck() const;
+
+        //! Loads the setup (bootstrap) and handles/displays warnings and error messages
+        //! \returns true if loading succedded without errors
+        bool loadSetupAndHandleErrors();
+
+        //! Parses and handles the standard options such as help, version, parse error
+        //! \note in some cases (error, version, help) application is terminated during this step
+        //! \sa parsingHookIn
+        //! \return true means to continue, false to stop
+        bool parseCommandLineArguments();
 
         CInputManager *m_inputManager = nullptr; //!< Input devices and hotkeys
         QNetworkConfigurationManager *m_networkConfigManager = nullptr; //!< configuration

@@ -349,12 +349,7 @@ namespace BlackCore
     {
         m_started = false; // reset
 
-        // parse if needed, parsing contains its own error handling
-        if (!m_parsed)
-        {
-            const bool s = this->parseAndStartupCheck();
-            if (!s) { return false; }
-        }
+        Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Call this function after parsing");
 
         // parsing itself is done
         CStatusMessageList msgs;
@@ -1339,17 +1334,17 @@ namespace BlackCore
         return m_parser.value(option).trimmed();
     }
 
-    bool CApplication::parseAndStartupCheck()
+    bool CApplication::parseCommandLineArgsAndLoadSetup()
+    {
+        if (!this->startupCheck()) return false;
+        if (!this->parseCommandLineArguments()) return false;
+        if (!this->loadSetupAndHandleErrors()) return false;
+        return true;
+    }
+
+    bool CApplication::parseCommandLineArguments()
     {
         if (m_parsed) { return m_parsed; } // already done
-
-        // checks
-        const QStringList verifyErrors = CSwiftDirectories::verifyRuntimeDirectoriesAndFiles();
-        if (!verifyErrors.isEmpty() && !m_applicationInfo.isUnitTest())
-        {
-            this->cmdLineErrorMessage("Missing runtime directories/files:", verifyErrors.join(", "));
-            return false;
-        }
 
         // we call parse because we also want to display a GUI error message when applicable
         const QStringList args(QCoreApplication::instance()->arguments());
@@ -1390,9 +1385,19 @@ namespace BlackCore
         return true;
     }
 
-    bool CApplication::parseAndLoadSetup()
+    bool CApplication::startupCheck() const
     {
-        if (!this->parseAndStartupCheck()) return false;
+        const QStringList verifyErrors = CSwiftDirectories::verifyRuntimeDirectoriesAndFiles();
+        if (!verifyErrors.isEmpty() && !m_applicationInfo.isUnitTest())
+        {
+            cmdLineErrorMessage("Missing runtime directories/files:", verifyErrors.join(", "));
+            return false;
+        }
+        return true;
+    }
+
+    bool CApplication::loadSetupAndHandleErrors()
+    {
         const CStatusMessageList msgs = loadSetup();
 
         if (msgs.isFailure())
