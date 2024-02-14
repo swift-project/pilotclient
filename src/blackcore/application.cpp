@@ -930,12 +930,6 @@ namespace BlackCore
                                               QCoreApplication::translate("application", "Dev. system features?"));
         this->addParserOption(m_cmdDevelopment);
 
-        // can read a local bootstrap file
-        m_cmdSharedDir = QCommandLineOption({ "shared", "shareddir" },
-                                            QCoreApplication::translate("application", "Local shared directory."),
-                                            "shared");
-        this->addParserOption(m_cmdSharedDir);
-
         // Skip single application check
         m_cmdSkipSingleApp = QCommandLineOption({ "skipsa", "skipsingleapp" },
                                                 QCoreApplication::translate("application", "Skip the single app.test."));
@@ -1255,11 +1249,6 @@ namespace BlackCore
         const QString v(this->getParserValue(m_cmdDBusAddress));
         const QString dBusAddress(CDBusServer::normalizeAddress(v));
         return dBusAddress;
-    }
-
-    QString CApplication::getCmdSwiftPrivateSharedDir() const
-    {
-        return m_parser.value(m_cmdSharedDir);
     }
 
     bool CApplication::isParserOptionSet(const QString &option) const

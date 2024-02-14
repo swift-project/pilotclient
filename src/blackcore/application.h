@@ -266,9 +266,6 @@ namespace BlackCore
         //! Add the audio options
         void addAudioOptions();
 
-        //! Private resource dir for developer's own resource files
-        QString getCmdSwiftPrivateSharedDir() const;
-
         //! Called by installer?
         bool isInstallerOptionSet() const;
 
@@ -618,7 +615,6 @@ namespace BlackCore
         QCommandLineOption m_cmdVersion { "version" }; //!< version option
         QCommandLineOption m_cmdDBusAddress { "emptyDBus" }; //!< DBus address
         QCommandLineOption m_cmdDevelopment { "dev" }; //!< Development flag
-        QCommandLineOption m_cmdSharedDir { "shared" }; //!< Shared directory
         QCommandLineOption m_cmdClearCache { "clearcache" }; //!< Clear cache
         QCommandLineOption m_cmdTestCrashpad { "testcrashpad" }; //!< Test a crasphpad upload
         QCommandLineOption m_cmdSkipSingleApp { "skipsa" }; //!< Skip test for single application
