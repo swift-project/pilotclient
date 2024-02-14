@@ -106,8 +106,6 @@ void CSwiftData::init()
         this->checkMinimumVersion();
         this->checkAutoPublishing();
     });
-
-    emit sGui->startUpCompleted(true);
 }
 
 void CSwiftData::initLogDisplay()

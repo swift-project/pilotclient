@@ -190,14 +190,14 @@ namespace BlackCore
         //! Running with dev.flag?
         bool isDeveloperFlagSet() const { return m_devFlag; }
 
-        //! Signal startup automatically or individually
-        void setSignalStartupAutomatically(bool enabled) { m_signalStartup = enabled; }
-
         //! Comprehensive info
         QString getInfoString(const QString &separator) const;
 
         //! Stop and restart application
         void restartApplication(const QStringList &newArguments = {}, const QStringList &removeArguments = {});
+
+        //! Finishes initialization and executes the event loop
+        int exec();
 
         //! Directory for temporary files
         static QString getTemporaryDirectory();
@@ -209,9 +209,6 @@ namespace BlackCore
         //! Unregister from running
         //! \note Normally done automatically, needed for restart
         static bool unregisterAsRunning();
-
-        //! Run event loop
-        static int exec();
 
         //! Exit application, perform graceful shutdown and exit
         static void exit(int retcode = EXIT_SUCCESS);
@@ -563,8 +560,7 @@ namespace BlackCore
         void updateInfoAvailable(bool success);
 
         //! Startup has been completed
-        //! \remark needs to be triggered by application when it think it is done
-        //! \fixme http://doc.qt.io/qt-5/signalsandslots.html#signals recommends signals be only emitted by their own class
+        //! Will be triggered shortly before starting the event loop
         void startUpCompleted(bool success);
 
         //! Facade started
@@ -735,7 +731,6 @@ namespace BlackCore
         bool m_noNwAccessPoint = false; //!< no network access point?
         bool m_useContexts = false; //!< use contexts
         bool m_useWebData = false; //!< use web data
-        bool m_signalStartup = true; //!< signal startup automatically
         bool m_devFlag = false; //!< dev. environment
         bool m_saveSettingsOnShutdown = true; //!< saving all settings on shutdown
         bool m_localSettingsLoaded = false; //!< local settings loaded?

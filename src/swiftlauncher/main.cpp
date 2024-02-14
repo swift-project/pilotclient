@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     //! [SwiftApplicationDemo]
 
     CSwiftLauncher launcher;
-    const int res = CGuiApplication::exec();
+    const int res = a.exec();
     if (res != EXIT_SUCCESS || !launcher.shouldStartAppDetached())
     {
         return res;

@@ -196,7 +196,6 @@ void SwiftGuiStd::init()
     sGui->triggerNewVersionCheck(10 * 1000);
 
     // done
-    emit sGui->startUpCompleted(true);
     m_init = true;
 }
 

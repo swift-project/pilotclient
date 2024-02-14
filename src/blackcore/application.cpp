@@ -200,6 +200,7 @@ namespace BlackCore
     int CApplication::exec()
     {
         Q_ASSERT_X(instance(), Q_FUNC_INFO, "missing application");
+        emit this->startUpCompleted(true);
         CApplication::registerAsRunning();
         return QCoreApplication::exec();
     }
@@ -1074,8 +1075,6 @@ namespace BlackCore
             const CStatusMessageList msgs = this->asyncWebAndContextStart();
             m_started = msgs.isSuccess();
         }
-
-        if (m_signalStartup) { emit this->startUpCompleted(m_started); }
     }
 
     void CApplication::onStartUpCompleted()

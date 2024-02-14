@@ -25,7 +25,6 @@ int main(int argc, char *argv[])
 
     CCrashHandler::instance()->init();
     CGuiApplication a(CApplicationInfo::swiftMappingTool(), CApplicationInfo::MappingTool, CIcons::swiftDatabase48());
-    a.setSignalStartupAutomatically(false); // application will signal startup on its own
     a.splashScreen(CIcons::swiftDatabase256());
     if (!a.parseAndLoadSetup()) { return EXIT_FAILURE; }
     a.useWebDataServices(BlackCore::CWebReaderFlags::AllSwiftDbReaders, CDatabaseReaderConfigList::forMappingTool());

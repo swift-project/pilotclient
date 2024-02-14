@@ -37,7 +37,6 @@ int main(int argc, char *argv[])
     int r = 0;
     {
         CSwiftGuiStdApplication a; // application with contexts
-        a.setSignalStartupAutomatically(false); // application will signal startup on its own
         a.splashScreen(CIcons::swift256());
         a.setMinimumSizeInCharacters(60, 42); // experimental
         if (!a.parseAndLoadSetup()) { return EXIT_FAILURE; }
