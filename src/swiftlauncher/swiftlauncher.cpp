@@ -50,7 +50,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Data;
 using namespace BlackMisc::Simulation::FsCommon;
 
-CSwiftLauncher::CSwiftLauncher(QWidget *parent) : QDialog(parent, CEnableForFramelessWindow::modeToWindowFlags(CEnableForFramelessWindow::WindowNormal)),
+CSwiftLauncher::CSwiftLauncher(QWidget *parent) : QMainWindow(parent, CEnableForFramelessWindow::modeToWindowFlags(CEnableForFramelessWindow::WindowNormal)),
                                                   CEnableForFramelessWindow(CEnableForFramelessWindow::WindowFrameless, true, "framelessMainWindow", this),
                                                   CCentralMultiSimulatorModelSetCachesAware(),
                                                   CIdentifiable(this),
@@ -116,6 +116,8 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) : QDialog(parent, CEnableForFram
         this->requestMacMicrophoneAccess();
         this->installerMode();
     });
+
+    this->show();
 }
 
 void CSwiftLauncher::installerMode()
@@ -204,18 +206,18 @@ CoreModes::CoreMode CSwiftLauncher::getCoreMode() const
 
 void CSwiftLauncher::mousePressEvent(QMouseEvent *event)
 {
-    if (!handleMousePressEvent(event)) { QDialog::mousePressEvent(event); }
+    if (!handleMousePressEvent(event)) { QMainWindow::mousePressEvent(event); }
 }
 
 void CSwiftLauncher::mouseMoveEvent(QMouseEvent *event)
 {
-    if (!handleMouseMoveEvent(event)) { QDialog::mouseMoveEvent(event); }
+    if (!handleMouseMoveEvent(event)) { QMainWindow::mouseMoveEvent(event); }
 }
 
 void CSwiftLauncher::mouseReleaseEvent(QMouseEvent *event)
 {
     m_framelessDragPosition = QPoint();
-    QDialog::mouseReleaseEvent(event);
+    QMainWindow::mouseReleaseEvent(event);
 }
 
 void CSwiftLauncher::updateInfoAvailable()
@@ -443,7 +445,7 @@ void CSwiftLauncher::startButtonPressed()
             }
             else
             {
-                this->accept();
+                close();
             }
         }
     }
@@ -459,7 +461,7 @@ void CSwiftLauncher::startButtonPressed()
             }
             else
             {
-                this->accept();
+                close();
             }
         }
     }
@@ -610,6 +612,11 @@ void CSwiftLauncher::showSimulatorConfigDirs()
     m_textEditDialog->setReadOnly();
     m_textEditDialog->textEdit()->setText(info);
     m_textEditDialog->show();
+}
+
+bool CSwiftLauncher::shouldStartAppDetached() const
+{
+    return !m_executable.isEmpty();
 }
 
 void CSwiftLauncher::requestMacMicrophoneAccess()

@@ -21,7 +21,7 @@
 #    include "blackmisc/macos/microphoneaccess.h"
 #endif
 
-#include <QDialog>
+#include <QMainWindow>
 #include <QTimer>
 #include <QScopedPointer>
 #include <QNetworkReply>
@@ -41,10 +41,9 @@ namespace BlackGui::Components
  * \note Besides the fact the launcher makes it easy to start our applications it also pre-fetches some
  *       cache files, hence reducing load times in the subsequent applications. Therefor starting via the launcher
  *       is preferable, but not mandatory.
- * \fixme it was better if launcher was a QMainWindow, because we have to deal with main widgets QDialog and QMainWindow because of launcher
  */
 class CSwiftLauncher :
-    public QDialog,
+    public QMainWindow,
     public BlackGui::CEnableForFramelessWindow,
     public BlackGui::IMainWindowAccess,
     public BlackMisc::Simulation::Data::CCentralMultiSimulatorModelSetCachesAware,
@@ -81,6 +80,9 @@ public:
     //! Start currently set application detached
     //! \remark simplifies debugging
     bool startDetached();
+
+    //! Check if an app is set that should be started detached
+    bool shouldStartAppDetached() const;
 
 protected:
     //! Mouse events for frameless window

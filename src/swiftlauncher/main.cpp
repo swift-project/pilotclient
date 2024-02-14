@@ -40,11 +40,13 @@ int main(int argc, char *argv[])
     }
     //! [SwiftApplicationDemo]
 
-    // Dialog to decide external or internal core
     CSwiftLauncher launcher;
-    CGuiApplication::registerAsRunning(); // needed because launcher's exec is called (normally application exec)
-    if (launcher.exec() == QDialog::Rejected) { return EXIT_SUCCESS; }
-    launcher.close();
+    const int res = CGuiApplication::exec();
+    if (res != EXIT_SUCCESS || !launcher.shouldStartAppDetached())
+    {
+        return res;
+    }
+
     const bool s = launcher.startDetached();
     return s ? EXIT_SUCCESS : EXIT_FAILURE;
 }
