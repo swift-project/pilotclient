@@ -143,16 +143,7 @@ namespace BlackGui
 
         // -------- Splash screen related ---------
         //! Add a splash screen based on resource, empty means remove splash screen
-        void splashScreen(const QString &resource);
-
-        //! Add a splash screen based on resource, empty means remove splash screen
         void splashScreen(const QPixmap &pixmap);
-
-        //! @{
-        //! Display splash screen messages if screen is available and visible
-        void displaySplashMessage(const BlackMisc::CStatusMessage &msg);
-        void displaySplashMessages(const BlackMisc::CStatusMessageList &msgs);
-        //! @}
 
         // -------- Splash screen related ---------
 
@@ -380,9 +371,6 @@ namespace BlackGui
 
         //! Set current font values
         void setCurrentFontValues();
-
-        //! Web data services started
-        void onWebDataServicesStarted(bool success);
 
         //! \copydoc BlackGui::CGuiUtility::superviseMainWindowMinSizes
         void superviseWindowMinSizes();

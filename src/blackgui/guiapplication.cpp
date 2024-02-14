@@ -122,9 +122,6 @@ namespace BlackGui
         // notify when app goes down
         connect(qGuiApp, &QGuiApplication::lastWindowClosed, this, &CGuiApplication::gracefulShutdown);
 
-        // follow up on web data services
-        connect(this, &CApplication::webDataServicesStarted, this, &CGuiApplication::onWebDataServicesStarted);
-
         if (!sGui)
         {
             CGuiApplication::registerMetadata();
@@ -197,19 +194,6 @@ namespace BlackGui
         }
     }
 
-    void CGuiApplication::splashScreen(const QString &resource)
-    {
-        if (m_splashScreen)
-        {
-            m_splashScreen.reset(); // delete old one
-        }
-        if (!resource.isEmpty())
-        {
-            const QPixmap pm(resource);
-            this->splashScreen(pm);
-        }
-    }
-
     void CGuiApplication::splashScreen(const QPixmap &pixmap)
     {
         if (m_splashScreen)
@@ -227,29 +211,6 @@ namespace BlackGui
         m_splashScreen->show();
         m_splashScreen->showStatusMessage("Version " + CBuildConfig::getVersionString());
         m_splashScreen->setSplashFont(splashFont);
-
-        this->processEventsToRefreshGui();
-    }
-
-    void CGuiApplication::displaySplashMessage(const CStatusMessage &msg)
-    {
-        if (msg.isEmpty()) { return; }
-        if (!m_splashScreen) { return; }
-        if (this->isShuttingDown()) { return; }
-        if (!m_splashScreen->isVisible()) { return; }
-        m_splashScreen->showStatusMessage(msg);
-    }
-
-    void CGuiApplication::displaySplashMessages(const CStatusMessageList &msgs)
-    {
-        if (msgs.isEmpty()) { return; }
-        for (const CStatusMessage &m : msgs)
-        {
-            if (!m_splashScreen) { return; }
-            this->displaySplashMessage(m);
-            this->processEventsToRefreshGui();
-            if (!sGui) { return; }
-        }
     }
 
     void CGuiApplication::processEventsToRefreshGui() const
@@ -1399,14 +1360,6 @@ namespace BlackGui
         const QFont font = CGuiUtility::currentFont();
         m_fontFamily = font.family();
         m_fontPointSize = font.pointSize();
-    }
-
-    void CGuiApplication::onWebDataServicesStarted(bool success)
-    {
-        if (success)
-        {
-            connect(this->getWebDataServices(), &CWebDataServices::databaseReaderMessages, this, &CGuiApplication::displaySplashMessages, Qt::QueuedConnection);
-        }
     }
 
     void CGuiApplication::superviseWindowMinSizes()
