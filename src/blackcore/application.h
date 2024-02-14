@@ -595,12 +595,6 @@ namespace BlackCore
         //! Init class, allows to init from BlackGui::CGuiApplication as well (pseudo virtual)
         void init(bool withMetadata);
 
-        //! Display help message
-        virtual void cmdLineHelpMessage();
-
-        //! Display version message
-        virtual void cmdLineVersionMessage() const;
-
         //! Is the command line option represented in the given arguments?
         static int indexOfCommandLineOption(const QCommandLineOption &option, const QStringList &args = CApplication::arguments());
 
@@ -659,6 +653,12 @@ namespace BlackCore
     private:
         //! Read the setup
         BlackMisc::CStatusMessageList loadSetup();
+
+        //! Display help message
+        void cmdLineHelpMessage();
+
+        //! Display version message
+        void cmdLineVersionMessage();
 
         //! Problem with network access manager
         void onChangedNetworkAccessibility(QNetworkAccessManager::NetworkAccessibility accessible);

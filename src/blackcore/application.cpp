@@ -1459,9 +1459,10 @@ namespace BlackCore
         Q_UNREACHABLE();
     }
 
-    void CApplication::cmdLineVersionMessage() const
+    void CApplication::cmdLineVersionMessage()
     {
-        printf("%s %s\n", qPrintable(QCoreApplication::applicationName()), qPrintable(QCoreApplication::applicationVersion()));
+        m_parser.showVersion(); // terminates
+        Q_UNREACHABLE();
     }
 
     QStringList CApplication::argumentsJoined(const QStringList &newArguments, const QStringList &removeArguments) const

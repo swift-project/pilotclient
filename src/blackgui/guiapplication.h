@@ -309,12 +309,6 @@ namespace BlackGui
         void alwaysOnTop(bool onTop);
 
     protected:
-        //! @{
-        //! print messages generated during parsing / cmd handling
-        virtual void cmdLineHelpMessage() override;
-        virtual void cmdLineVersionMessage() const override;
-        //! @}
-
         //! Handle parsing of special GUI cmd arguments
         virtual bool parsingHookIn() override;
 
@@ -353,9 +347,6 @@ namespace BlackGui
         Components::CApplicationCloseDialog *m_closeDialog = nullptr; //!< close dialog (no QScopedPointer because I need to set parent)
         BlackMisc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings { this, &CGuiApplication::settingsChanged };
         BlackMisc::CSettingReadOnly<Settings::TUpdateNotificationSettings> m_updateSetting { this }; //!< update notification settings
-
-        //! Qt help message to formatted HTML
-        static QString beautifyHelpMessage(const QString &helpText);
 
         //! Reload widget style from settings
         void settingsChanged();

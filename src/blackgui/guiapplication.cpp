@@ -469,52 +469,6 @@ namespace BlackGui
         }
     }
 
-    QString CGuiApplication::beautifyHelpMessage(const QString &helpText)
-    {
-        // just formatting Qt help message into HTML table
-        if (helpText.isEmpty()) { return {}; }
-        const QStringList lines(helpText.split('\n'));
-        QString html;
-        bool tableMode = false;
-        bool pendingTr = false;
-        for (const QString &l : lines)
-        {
-            QString lt(l.trimmed());
-            if (!tableMode && lt.startsWith("-"))
-            {
-                tableMode = true;
-                html += "<table>\n";
-            }
-            if (!tableMode)
-            {
-                html += l.toHtmlEscaped();
-                html += "<br>";
-            }
-            else
-            {
-                // in table mode
-                if (lt.startsWith("-"))
-                {
-                    if (pendingTr)
-                    {
-                        html += "</td></tr>\n";
-                    }
-                    html += "<tr><td>";
-                    thread_local const QRegularExpression reg("[ ]{2,}");
-                    html += lt.replace(reg, "</td><td>");
-                    pendingTr = true;
-                }
-                else
-                {
-                    html += " ";
-                    html += l.simplified().toHtmlEscaped();
-                }
-            }
-        }
-        html += "</table>\n";
-        return html;
-    }
-
     double CGuiApplication::parseScaleFactor(int argc, char *argv[])
     {
         for (int i = 1; i < argc; ++i)
@@ -1096,35 +1050,6 @@ namespace BlackGui
             break;
         }
         return c;
-    }
-
-    void CGuiApplication::cmdLineHelpMessage()
-    {
-        if (CBuildConfig::isRunningOnWindowsNtPlatform())
-        {
-            const QString helpText(CGuiApplication::beautifyHelpMessage(m_parser.helpText()));
-            QMessageBox::information(nullptr, QGuiApplication::applicationDisplayName(),
-                                     "<html><head/><body>" + helpText + "</body></html>");
-        }
-        else
-        {
-            CApplication::cmdLineHelpMessage();
-        }
-    }
-
-    void CGuiApplication::cmdLineVersionMessage() const
-    {
-        if (CBuildConfig::isRunningOnWindowsNtPlatform())
-        {
-            QMessageBox::information(nullptr,
-                                     QGuiApplication::applicationDisplayName(),
-                                     QGuiApplication::applicationDisplayName() + ' ' +
-                                         QCoreApplication::applicationVersion());
-        }
-        else
-        {
-            CApplication::cmdLineVersionMessage();
-        }
     }
 
     bool CGuiApplication::parsingHookIn()
