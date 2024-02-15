@@ -263,9 +263,6 @@ namespace BlackCore
         //! Add the audio options
         void addAudioOptions();
 
-        //! Called by installer?
-        bool isInstallerOptionSet() const;
-
         //! Skip the single application check
         bool skipSingleApplicationCheck() const;
 

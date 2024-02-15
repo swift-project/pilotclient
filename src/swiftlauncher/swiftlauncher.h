@@ -63,7 +63,7 @@ public:
     };
 
     //! Constructor
-    explicit CSwiftLauncher(QWidget *parent = nullptr);
+    CSwiftLauncher(bool installerMode, QWidget *parent = nullptr);
 
     //! Destructor
     virtual ~CSwiftLauncher() override;

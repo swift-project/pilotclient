@@ -872,18 +872,6 @@ namespace BlackCore
                 new CWebDataServices(m_webReadersUsed, m_dbReaderConfig, {}, this));
             Q_ASSERT_X(m_webDataServices, Q_FUNC_INFO, "Missing web services");
 
-            // caches from local files (i.e. the files delivered)
-            if (this->isInstallerOptionSet())
-            {
-                const QDateTime ts = m_webDataServices->getLatestDbEntityCacheTimestamp();
-                if (!ts.isValid() || ts < QDateTime::currentDateTimeUtc().addYears(-2))
-                {
-                    // we only init, if there are:
-                    // a) no cache timestamps b) or it was not updated for some years
-                    msgs.push_back(m_webDataServices->initDbCachesFromLocalResourceFiles(false));
-                }
-            }
-
             // watchdog
             if (m_networkWatchDog)
             {
@@ -1249,11 +1237,6 @@ namespace BlackCore
     bool CApplication::isParserOptionSet(const QString &option) const
     {
         return m_parser.isSet(option);
-    }
-
-    bool CApplication::isInstallerOptionSet() const
-    {
-        return this->isParserOptionSet("installer");
     }
 
     bool CApplication::skipSingleApplicationCheck() const

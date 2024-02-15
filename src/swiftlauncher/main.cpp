@@ -6,6 +6,7 @@
 #include "blackcore/db/databasereaderconfig.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/icons.h"
+#include "blackcore/webdataservices.h"
 
 #include <QtGlobal>
 #include <QApplication>
@@ -17,6 +18,21 @@ using namespace BlackMisc;
 using namespace BlackCore;
 using namespace BlackCore::Db;
 
+//! Init the DB cache from local resource files if the cache has no timestamp or the cache was not updated since 2 years
+void initDbCacheFromResourceFileIfRequired(CGuiApplication &a)
+{
+    Q_ASSERT_X(a.hasWebDataServices(), Q_FUNC_INFO, "Requires web services");
+
+    CWebDataServices *webDataServices = a.getWebDataServices();
+
+    // caches from local files (i.e. the files delivered)
+    const QDateTime ts = webDataServices->getLatestDbEntityCacheTimestamp();
+    if (!ts.isValid() || ts < QDateTime::currentDateTimeUtc().addYears(-2))
+    {
+        webDataServices->initDbCachesFromLocalResourceFiles(false);
+    }
+}
+
 int main(int argc, char *argv[])
 {
     CGuiApplication::highDpiScreenSupport(CGuiApplication::scaleFactor(argc, argv));
@@ -24,9 +40,14 @@ int main(int argc, char *argv[])
     Q_UNUSED(qa)
     CGuiApplication a(CApplicationInfo::swiftLauncher(), CApplicationInfo::Laucher, CIcons::swiftLauncher1024());
     a.addVatlibOptions(); // so it can be passed (hand over) to started applications
-    a.addParserOption({ { "i", "installer" }, QCoreApplication::translate("main", "Installer setup.") });
+    const QCommandLineOption installerOption { { "i", "installer" }, QCoreApplication::translate("main", "Installer setup.") };
+    a.addParserOption(installerOption);
     if (!a.parseCommandLineArgsAndLoadSetup()) { return EXIT_FAILURE; }
     a.useWebDataServices(BlackCore::CWebReaderFlags::AllSwiftDbReaders, CDatabaseReaderConfigList::forLauncher());
+
+    const bool installMode = a.isParserOptionSet(installerOption);
+    if (installMode) initDbCacheFromResourceFileIfRequired(a);
+
     a.useFacadeNoContexts();
     if (!a.start())
     {
@@ -34,7 +55,7 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    CSwiftLauncher launcher;
+    CSwiftLauncher launcher(installMode);
     const int res = a.exec();
     if (res != EXIT_SUCCESS || !launcher.shouldStartAppDetached())
     {

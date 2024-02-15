@@ -50,11 +50,11 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Data;
 using namespace BlackMisc::Simulation::FsCommon;
 
-CSwiftLauncher::CSwiftLauncher(QWidget *parent) : QMainWindow(parent, CEnableForFramelessWindow::modeToWindowFlags(CEnableForFramelessWindow::WindowNormal)),
-                                                  CEnableForFramelessWindow(CEnableForFramelessWindow::WindowFrameless, true, "framelessMainWindow", this),
-                                                  CCentralMultiSimulatorModelSetCachesAware(),
-                                                  CIdentifiable(this),
-                                                  ui(new Ui::CSwiftLauncher)
+CSwiftLauncher::CSwiftLauncher(bool installerMode, QWidget *parent) : QMainWindow(parent, CEnableForFramelessWindow::modeToWindowFlags(CEnableForFramelessWindow::WindowNormal)),
+                                                                      CEnableForFramelessWindow(CEnableForFramelessWindow::WindowFrameless, true, "framelessMainWindow", this),
+                                                                      CCentralMultiSimulatorModelSetCachesAware(),
+                                                                      CIdentifiable(this),
+                                                                      ui(new Ui::CSwiftLauncher)
 {
     Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
     sGui->registerMainApplicationWidget(this);
@@ -100,7 +100,7 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) : QMainWindow(parent, CEnableFor
     }
 
     const QPointer<CSwiftLauncher> myself(this);
-    if (sGui->isInstallerOptionSet())
+    if (installerMode)
     {
         QTimer::singleShot(1000, this, [=] {
             if (!sGui || sGui->isShuttingDown() || !myself) { return; }
@@ -114,7 +114,7 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) : QMainWindow(parent, CEnableFor
         if (!sGui || sGui->isShuttingDown() || !myself) { return; }
         this->onCoreModeReleased();
         this->requestMacMicrophoneAccess();
-        this->installerMode();
+        if (installerMode) this->installerMode();
     });
 
     this->show();
@@ -123,7 +123,6 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) : QMainWindow(parent, CEnableFor
 void CSwiftLauncher::installerMode()
 {
     if (!sGui || sGui->isShuttingDown()) { return; }
-    if (!sGui->isInstallerOptionSet()) { return; }
 
     bool runDialog = false;
     do
