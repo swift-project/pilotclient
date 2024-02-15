@@ -3,16 +3,12 @@
 
 #include "swiftlauncher.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/registermetadata.h"
 #include "blackcore/db/databasereaderconfig.h"
 #include "blackmisc/directoryutils.h"
-#include "blackmisc/logmessage.h"
 #include "blackmisc/icons.h"
 
 #include <QtGlobal>
-#include <QProcess>
 #include <QApplication>
-#include <QMessageBox>
 #include <QPushButton>
 #include <QCommandLineParser>
 
@@ -23,7 +19,6 @@ using namespace BlackCore::Db;
 
 int main(int argc, char *argv[])
 {
-    //! [SwiftApplicationDemo]
     CGuiApplication::highDpiScreenSupport(CGuiApplication::scaleFactor(argc, argv));
     QApplication qa(argc, argv); // needed
     Q_UNUSED(qa)
@@ -38,7 +33,6 @@ int main(int argc, char *argv[])
         a.gracefulShutdown();
         return EXIT_FAILURE;
     }
-    //! [SwiftApplicationDemo]
 
     CSwiftLauncher launcher;
     const int res = a.exec();

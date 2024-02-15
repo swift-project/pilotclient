@@ -14,33 +14,27 @@
 #include "blackcore/setupreader.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/inputmanager.h"
-#include "blackmisc/atomicfile.h"
 #include "blackmisc/applicationinfo.h"
 #include "blackmisc/crashhandler.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
 #include "blackmisc/eventloop.h"
 #include "blackmisc/filelogger.h"
-#include "blackmisc/logcategories.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/logpattern.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/registermetadata.h"
 #include "blackmisc/settingscache.h"
-#include "blackmisc/slot.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/verify.h"
 
-#include <stdbool.h>
-#include <stdio.h>
+#include <cstdio>
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QEventLoop>
-#include <QFile>
 #include <QFileInfo>
 #include <QHttpMultiPart>
 #include <QNetworkReply>
@@ -54,7 +48,6 @@
 #include <QStringList>
 #include <QTemporaryDir>
 #include <QThread>
-#include <QTime>
 #include <QTimer>
 #include <QTranslator>
 #include <QWriteLocker>
@@ -125,7 +118,7 @@ namespace BlackCore
             // unit test
             if (this->getApplicationInfo().getApplication() == CApplicationInfo::UnitTest)
             {
-                const QString tempPath(this->getTemporaryDirectory());
+                const QString tempPath(CApplication::getTemporaryDirectory());
                 BlackMisc::setMockCacheRootDirectory(tempPath);
             }
             m_alreadyRunning = CApplication::getRunningApplications().containsApplication(CApplication::getApplicationInfo().getApplication());
@@ -140,7 +133,7 @@ namespace BlackCore
             // Translations
             QTranslator translator;
             if (translator.load("blackmisc_i18n_de", ":blackmisc/translations/")) { CLogMessage(this).debug() << "Translator loaded"; }
-            QCoreApplication::instance()->installTranslator(&translator);
+            QCoreApplication::installTranslator(&translator);
 
             // main app
             sApp = this;
@@ -212,7 +205,7 @@ namespace BlackCore
         const QStringList args = this->argumentsJoined(newArguments, removeArguments);
         this->gracefulShutdown();
         QProcess::startDetached(prg, args);
-        this->exit(0);
+        CApplication::exit(0);
     }
 
     CApplication::~CApplication()
@@ -828,7 +821,7 @@ namespace BlackCore
         return this->startCoreFacade(); // will do nothing if setup is not yet loaded
     }
 
-    CStatusMessageList CApplication::useWebDataServices(const CWebReaderFlags::WebReader webReaders, const CDatabaseReaderConfigList &dbReaderConfig)
+    CStatusMessageList CApplication::useWebDataServices(CWebReaderFlags::WebReader webReaders, const CDatabaseReaderConfigList &dbReaderConfig)
     {
         Q_ASSERT_X(m_webDataServices.isNull(), Q_FUNC_INFO, "Services already started");
         BLACK_VERIFY_X(QSslSocket::supportsSsl(), Q_FUNC_INFO, "No SSL");
@@ -1205,16 +1198,6 @@ namespace BlackCore
         });
     }
 
-    void CApplication::severeStartupProblem(const CStatusMessage &message)
-    {
-        CLogMessage::preformatted(message);
-        this->cmdLineErrorMessage(message.getMessage());
-        this->exit(EXIT_FAILURE);
-
-        // if I get here the event loop was not yet running
-        std::exit(EXIT_FAILURE);
-    }
-
     CApplication *BlackCore::CApplication::instance()
     {
         return sApp;
@@ -1322,7 +1305,7 @@ namespace BlackCore
         if (m_parsed) { return m_parsed; } // already done
 
         // we call parse because we also want to display a GUI error message when applicable
-        const QStringList args(QCoreApplication::instance()->arguments());
+        const QStringList args(QCoreApplication::arguments());
         if (!m_parser.parse(args))
         {
             this->cmdLineErrorMessage("Parser error:", m_parser.errorText());
@@ -1388,35 +1371,16 @@ namespace BlackCore
         // Already logged to console
     }
 
-    bool CApplication::cmdLineWarningMessage(const QString &text, const QString &informativeText) const
+    void CApplication::cmdLineErrorMessage(const QString &text, const QString &informativeText) const
     {
         fputs(qPrintable(text + informativeText), stderr);
-        return false;
     }
 
-    bool CApplication::cmdLineErrorMessage(const QString &text, const QString &informativeText, bool retry) const
+    void CApplication::cmdLineErrorMessage(const CStatusMessageList &msgs) const
     {
-        Q_UNUSED(retry) // only works with UI version
-        fputs(qPrintable(text + informativeText), stderr);
-        return false;
-    }
-
-    bool CApplication::cmdLineErrorMessage(const CStatusMessageList &msgs, bool retry) const
-    {
-        Q_UNUSED(retry) // only works with UI version
-        if (msgs.isEmpty()) { return false; }
-        if (!msgs.hasErrorMessages()) { return false; }
-        CApplication::cmdLineErrorMessage(
-            msgs.toQString(true));
-        return false;
-    }
-
-    QString CApplication::cmdLineArgumentsAsString(bool withExecutable)
-    {
-        QStringList args = QCoreApplication::arguments();
-        if (!withExecutable && !args.isEmpty()) args.removeFirst();
-        if (args.isEmpty()) return {};
-        return args.join(' ');
+        if (msgs.isEmpty()) { return; }
+        if (!msgs.hasErrorMessages()) { return; }
+        CApplication::cmdLineErrorMessage(msgs.toQString(true), "");
     }
 
     QPointer<ISimulator> CApplication::getISimulator() const

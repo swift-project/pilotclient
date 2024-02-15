@@ -54,14 +54,6 @@ namespace BlackGui
      *  - standard menus
      *  - splash screen support
      *
-     *  Simple example
-     *  \snippet swiftlauncher/main.cpp SwiftApplicationDemo
-     *
-     *  Derived class example, hence very short (logic in CSwiftGuiStdApplication)
-     *  \snippet swiftguistandard/main.cpp SwiftApplicationDemo
-     *
-     *  Longer example
-     *  \snippet swiftcore/main.cpp SwiftApplicationDemo
      */
     class BLACKGUI_EXPORT CGuiApplication :
         public BlackCore::CApplication,
@@ -84,10 +76,10 @@ namespace BlackGui
         static bool removeAllWindowsSwiftRegistryEntries();
 
         //! Constructor
-        CGuiApplication(const QString &applicationName = executable(), BlackMisc::CApplicationInfo::Application application = BlackMisc::CApplicationInfo::Unknown, const QPixmap &icon = BlackMisc::CIcons::swift64());
+        explicit CGuiApplication(const QString &applicationName = executable(), BlackMisc::CApplicationInfo::Application application = BlackMisc::CApplicationInfo::Unknown, const QPixmap &icon = BlackMisc::CIcons::swift64());
 
         //! Destructor
-        virtual ~CGuiApplication() override;
+        ~CGuiApplication() override;
 
         //! CMD line arguments
         void addWindowStateOption();
@@ -120,13 +112,10 @@ namespace BlackGui
         //! Set window title
         QString setExtraWindowTitle(const QString &extraInfo, QWidget *mainWindowWidget = mainApplicationWidget()) const;
 
-        //! print warning message
-        virtual bool cmdLineWarningMessage(const QString &text, const QString &informativeText) const override;
-
         //! @{
         //! print messages generated during parsing / cmd handling
-        virtual bool cmdLineErrorMessage(const QString &text, const QString &informativeText = "", bool retry = false) const override;
-        virtual bool cmdLineErrorMessage(const BlackMisc::CStatusMessageList &msgs, bool retry = false) const override;
+        void cmdLineErrorMessage(const QString &text, const QString &informativeText) const override;
+        void cmdLineErrorMessage(const BlackMisc::CStatusMessageList &msgs) const override;
         //! @}
 
         //! Window size reset mode set
@@ -134,11 +123,11 @@ namespace BlackGui
 
         //! @{
         //! direct access to main application window
-        virtual bool displayInStatusBar(const BlackMisc::CStatusMessage &message) override;
-        virtual bool displayTextInConsole(const QString &text) override;
-        virtual bool displayInOverlayWindow(const BlackMisc::CStatusMessage &message, int timeOutMs = -1) override;
-        virtual bool displayInOverlayWindow(const BlackMisc::CStatusMessageList &messages, int timeOutMs = -1) override;
-        virtual bool displayInOverlayWindow(const QString &html, int timeOutMs = -1) override;
+        bool displayInStatusBar(const BlackMisc::CStatusMessage &message) override;
+        bool displayTextInConsole(const QString &text) override;
+        bool displayInOverlayWindow(const BlackMisc::CStatusMessage &message, int timeOutMs = -1) override;
+        bool displayInOverlayWindow(const BlackMisc::CStatusMessageList &messages, int timeOutMs = -1) override;
+        bool displayInOverlayWindow(const QString &html, int timeOutMs = -1) override;
         //! @}
 
         // -------- Splash screen related ---------
@@ -219,7 +208,7 @@ namespace BlackGui
         void triggerNewVersionCheck(int delayedMs);
 
         //! \copydoc BlackCore::CApplication::gracefulShutdown
-        virtual void gracefulShutdown() override;
+        void gracefulShutdown() override;
 
         //! Toggle stay on top
         bool toggleStayOnTop();
@@ -257,7 +246,7 @@ namespace BlackGui
         void registerMainApplicationWidget(QWidget *mainWidget);
 
         //! \copydoc BlackCore::CApplication::hasMinimumMappingVersion
-        virtual bool hasMinimumMappingVersion() const override;
+        bool hasMinimumMappingVersion() const override;
 
         //! Main application window
         static QMainWindow *mainApplicationWindow();
@@ -310,13 +299,13 @@ namespace BlackGui
 
     protected:
         //! Handle parsing of special GUI cmd arguments
-        virtual bool parsingHookIn() override;
+        bool parsingHookIn() override;
 
         //! \copydoc BlackCore::CApplication::onCoreFacadeStarted
-        virtual void onCoreFacadeStarted() override;
+        void onCoreFacadeStarted() override;
 
         //! \copydoc BlackCore::CApplication::onStartUpCompleted
-        virtual void onStartUpCompleted() override;
+        void onStartUpCompleted() override;
 
         //! Check for a new version (update)
         void checkNewVersion(bool onlyIfNew);
@@ -354,7 +343,7 @@ namespace BlackGui
         //! Check new from menu
         void checkNewVersionMenu();
 
-        //! Fix the palette for better readibility
+        //! Fix the palette for better readability
         void adjustPalette();
 
         //! Style sheets have been changed

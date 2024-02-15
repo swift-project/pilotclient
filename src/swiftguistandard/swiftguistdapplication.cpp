@@ -83,7 +83,7 @@ bool CSwiftGuiStdApplication::parsingHookIn()
         // check if reachable
         if (!CDBusServer::isDBusAvailable(dBusAddress))
         {
-            this->cmdLineErrorMessage("DBus server at '" + dBusAddress + "' can not be reached");
+            this->cmdLineErrorMessage("DBus error", "DBus server at '" + dBusAddress + "' can not be reached");
             return false;
         }
     }

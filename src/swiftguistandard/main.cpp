@@ -8,14 +8,11 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackmisc/audio/audioutils.h"
-#include "blackmisc/directoryutils.h"
 #include "blackmisc/crashhandler.h"
 
-#include <stdlib.h>
-#include <iostream>
+#include <cstdlib>
 
 #include <QApplication>
-#include <QTextStream>
 
 using namespace BlackGui;
 using namespace BlackMisc;
@@ -24,7 +21,6 @@ using namespace BlackCore;
 
 int main(int argc, char *argv[])
 {
-    //! [SwiftApplicationDemo]
     CGuiApplication::highDpiScreenSupport(CGuiApplication::scaleFactor(argc, argv));
     QApplication qa(argc, argv);
     Q_UNUSED(qa) // application init needed
@@ -45,7 +41,6 @@ int main(int argc, char *argv[])
             a.gracefulShutdown();
             return EXIT_FAILURE;
         }
-        //! [SwiftApplicationDemo]
 
         // show window
         CEnableForFramelessWindow::WindowMode windowMode = a.getWindowMode();

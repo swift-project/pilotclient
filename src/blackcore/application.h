@@ -79,7 +79,7 @@ namespace BlackCore
      * it can be used everywhere via QApplication::instance
      *
      * - A swift standard cmd line parser is part of the application.
-     *   Hence cmd arguments can be optained any time / everywhere when required.
+     *   Hence cmd arguments can be obtained any time / everywhere when required.
      *   Also some standard swift cmd arguments do not need to be re-implemented for each swift application.
      * - The core facade (aka core runtime) is now part of the application. It can be started via cmd line arguments.
      * - Settings are loaded
@@ -104,13 +104,13 @@ namespace BlackCore
         static const QStringList &getLogCategories();
 
         //! Constructor
-        CApplication(BlackMisc::CApplicationInfo::Application application, bool init = true);
+        explicit CApplication(BlackMisc::CApplicationInfo::Application application, bool init = true);
 
         //! Constructor
-        CApplication(const QString &applicationName = executable(), BlackMisc::CApplicationInfo::Application application = BlackMisc::CApplicationInfo::Unknown, bool init = true);
+        explicit CApplication(const QString &applicationName = executable(), BlackMisc::CApplicationInfo::Application application = BlackMisc::CApplicationInfo::Unknown, bool init = true);
 
         //! Destructor
-        virtual ~CApplication() override;
+        ~CApplication() override;
 
         //! Information about all running apps (including this one only if exec() has already been called)
         static BlackMisc::CApplicationInfoList getRunningApplications();
@@ -240,7 +240,7 @@ namespace BlackCore
         // ----------------------- cmd line args / parsing ----------------------------------------
 
         //! Current parameters replaced by new arguments without the cmd line argument
-        virtual QStringList argumentsJoined(const QStringList &newArguments = {}, const QStringList &removeArguments = {}) const;
+        QStringList argumentsJoined(const QStringList &newArguments = {}, const QStringList &removeArguments = {}) const;
 
         //! Similar to QCoreApplication::arguments
         static QStringList arguments();
@@ -295,17 +295,11 @@ namespace BlackCore
         //! functions to show error messages and (2) the some command line arguments are added after constructing the object
         bool parseCommandLineArgsAndLoadSetup();
 
-        //! Display warning message
-        virtual bool cmdLineWarningMessage(const QString &text, const QString &informativeText = "") const;
+        //! Display error message
+        virtual void cmdLineErrorMessage(const QString &text, const QString &informativeText) const;
 
         //! Display error message
-        virtual bool cmdLineErrorMessage(const QString &text, const QString &informativeText = "", bool retry = false) const;
-
-        //! Display error message
-        virtual bool cmdLineErrorMessage(const BlackMisc::CStatusMessageList &msgs, bool retry = false) const;
-
-        //! cmd line arguments as string
-        virtual QString cmdLineArgumentsAsString(bool withExecutable = true);
+        virtual void cmdLineErrorMessage(const BlackMisc::CStatusMessageList &msgs) const;
 
         //! @}
 
@@ -366,7 +360,7 @@ namespace BlackCore
         //! Init web data services and start them
         //! \sa webDataServicesStarted
         //! \remark requires setup loaded
-        BlackMisc::CStatusMessageList useWebDataServices(const CWebReaderFlags::WebReader webReader, const Db::CDatabaseReaderConfigList &dbReaderConfig);
+        BlackMisc::CStatusMessageList useWebDataServices(CWebReaderFlags::WebReader webReader, const Db::CDatabaseReaderConfigList &dbReaderConfig);
 
         //! Get the facade
         CCoreFacade *getCoreFacade() { return m_coreFacade.data(); }
@@ -523,7 +517,7 @@ namespace BlackCore
         QNetworkReply *getFromNetwork(const QNetworkRequest &request, int logId,
                                       const CallbackSlot &callback, const ProgressSlot &progress, int maxRedirects = DefaultMaxRedirects);
 
-        //! Request to delete a network ressource from network, supporting BlackMisc::Network::CUrlLog
+        //! Request to delete a network resource from network, supporting BlackMisc::Network::CUrlLog
         //! \threadsafe
         QNetworkReply *deleteResourceFromNetwork(const QNetworkRequest &request, int logId,
                                                  const CallbackSlot &callback,
@@ -602,10 +596,6 @@ namespace BlackCore
 
         //! Flag set or explicitly set to true
         bool isSet(const QCommandLineOption &option) const;
-
-        //! Severe issue during startup, most likely it does not make sense to continue
-        //! \note call this here if the parsing stage is over and reaction to a runtime issue is needed
-        [[noreturn]] void severeStartupProblem(const BlackMisc::CStatusMessage &message);
 
         //! Start the core facade
         //! \note does nothing when setup is not yet loaded
@@ -708,7 +698,7 @@ namespace BlackCore
         bool startupCheck() const;
 
         //! Loads the setup (bootstrap) and handles/displays warnings and error messages
-        //! \returns true if loading succedded without errors
+        //! \returns true if loading succeeded without errors
         bool loadSetupAndHandleErrors();
 
         //! Parses and handles the standard options such as help, version, parse error

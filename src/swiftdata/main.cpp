@@ -3,12 +3,11 @@
 
 #include "blackcore/webreaderflags.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/directoryutils.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/crashhandler.h"
 #include "swiftdata.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <QApplication>
 #include <QtGlobal>
 

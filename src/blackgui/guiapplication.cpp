@@ -18,13 +18,11 @@
 #include "blackmisc/slot.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/logcategories.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/metadatautils.h"
-#include "blackmisc/registermetadata.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/verify.h"
 #include "blackconfig/buildconfig.h"
@@ -37,29 +35,21 @@
 #include <QDesktopServices>
 #include <QDir>
 #include <QEventLoop>
-#include <QApplication>
 #include <QGuiApplication>
 #include <QIcon>
 #include <QFont>
 #include <QKeySequence>
 #include <QMenu>
 #include <QMessageBox>
-#include <QProcess>
-#include <QRegularExpression>
 #include <QSettings>
-#include <QSplashScreen>
-#include <QMessageBox>
 #include <QStyleFactory>
 #include <QStringList>
 #include <QStringBuilder>
 #include <QStyle>
-#include <QSysInfo>
 #include <QToolBar>
 #include <QUrl>
 #include <QWidget>
-#include <QWindow>
 #include <QMainWindow>
-#include <QMessageBox>
 #include <QtGlobal>
 #include <QWhatsThis>
 #include <Qt>
@@ -127,7 +117,7 @@ namespace BlackGui
             CGuiApplication::registerMetadata();
             CApplication::init(false); // base class without metadata
             CGuiApplication::adjustPalette();
-            this->setWindowIcon(icon);
+            CGuiApplication::setWindowIcon(icon);
             this->settingsChanged();
             this->setCurrentFontValues(); // most likely the default font and not any stylesheet font at this time
             sGui = this;
@@ -234,7 +224,7 @@ namespace BlackGui
         if (this->getGlobalSetup().isSwiftVersionMinimumMappingVersion()) { return true; }
 
         const QString msg = QStringLiteral("Your are using swift version: '%1'.\nCreating mappings requires at least '%2'.").arg(CBuildConfig::getVersionString(), this->getGlobalSetup().getMappingMinimumVersionString());
-        QMessageBox::warning(this->mainApplicationWindow(), "Version check", msg, QMessageBox::Close);
+        QMessageBox::warning(CGuiApplication::mainApplicationWindow(), "Version check", msg, QMessageBox::Close);
         return false;
     }
 
@@ -266,7 +256,7 @@ namespace BlackGui
 
     void CGuiApplication::addWindowFlags(Qt::WindowFlags flags)
     {
-        QWidget *maw = this->mainApplicationWidget();
+        QWidget *maw = BlackGui::CGuiApplication::mainApplicationWidget();
         if (maw)
         {
             Qt::WindowFlags windowFlags = maw->windowFlags();
@@ -516,14 +506,7 @@ namespace BlackGui
         return "1.0";
     }
 
-    bool CGuiApplication::cmdLineWarningMessage(const QString &text, const QString &informativeText) const
-    {
-        QMessageBox warningBox(QMessageBox::Warning, QGuiApplication::applicationDisplayName(), "<b>" + text + "</b>");
-        warningBox.setInformativeText(informativeText);
-        return warningBox.exec();
-    }
-
-    bool CGuiApplication::cmdLineErrorMessage(const QString &text, const QString &informativeText, bool retry) const
+    void CGuiApplication::cmdLineErrorMessage(const QString &text, const QString &informativeText) const
     {
         QMessageBox errorBox(QMessageBox::Critical, QGuiApplication::applicationDisplayName(), "<b>" + text + "</b>");
         if (informativeText.length() < 300)
@@ -532,25 +515,20 @@ namespace BlackGui
             errorBox.setDetailedText(informativeText);
 
         errorBox.addButton(QMessageBox::Abort);
-        if (retry)
-            errorBox.addButton(QMessageBox::Retry);
 
-        const int r = errorBox.exec();
-
-        return (r == QMessageBox::Retry);
+        errorBox.exec();
     }
 
-    bool CGuiApplication::cmdLineErrorMessage(const CStatusMessageList &msgs, bool retry) const
+    void CGuiApplication::cmdLineErrorMessage(const CStatusMessageList &msgs) const
     {
-        if (msgs.isEmpty()) { return false; }
-        if (!msgs.hasErrorMessages()) { return false; }
+        if (msgs.isEmpty()) { return; }
+        if (!msgs.hasErrorMessages()) { return; }
         static const CPropertyIndexList propertiesSingle({ CStatusMessage::IndexMessage });
         static const CPropertyIndexList propertiesMulti({ CStatusMessage::IndexSeverityAsString, CStatusMessage::IndexMessage });
         const QString msgsHtml = msgs.toHtml(msgs.size() > 1 ? propertiesMulti : propertiesSingle);
-        const int r = QMessageBox::critical(nullptr,
-                                            QGuiApplication::applicationDisplayName(),
-                                            "<html><head><body>" + msgsHtml + "</body></html>", QMessageBox::Abort, retry ? QMessageBox::Retry : QMessageBox::NoButton);
-        return (r == QMessageBox::Retry);
+        QMessageBox::critical(nullptr,
+                              QGuiApplication::applicationDisplayName(),
+                              "<html><head><body>" + msgsHtml + "</body></html>", QMessageBox::Abort, QMessageBox::NoButton);
     }
 
     bool CGuiApplication::isCmdWindowSizeResetSet() const
@@ -734,8 +712,8 @@ namespace BlackGui
             a, &QAction::triggered, this, [=]() {
                 // a close event might already trigger a shutdown
                 if (!sGui || sGui->isShuttingDown()) { return; }
-                if (!this->mainApplicationWidget()) { return; }
-                this->mainApplicationWidget()->close();
+                if (!CGuiApplication::mainApplicationWidget()) { return; }
+                CGuiApplication::mainApplicationWidget()->close();
 
                 // T596, do not shutdown here, as close can be canceled
                 // if shutdown is called, there is no way back
@@ -1038,7 +1016,7 @@ namespace BlackGui
         }
 
         // dialog will handle the saving
-        const QDialog::DialogCode c = static_cast<QDialog::DialogCode>(m_closeDialog->exec());
+        const auto c = static_cast<QDialog::DialogCode>(m_closeDialog->exec());
 
         // settings already saved when reaching here
         switch (c)
@@ -1070,7 +1048,7 @@ namespace BlackGui
         if (!m_updateDialog)
         {
             // without parent stylesheet is not inherited
-            m_updateDialog = new CUpdateInfoDialog(this->mainApplicationWidget());
+            m_updateDialog = new CUpdateInfoDialog(CGuiApplication::mainApplicationWidget());
         }
 
         if (onlyIfNew && !m_updateDialog->isNewVersionAvailable()) { return; }
@@ -1080,7 +1058,7 @@ namespace BlackGui
 
     QString CGuiApplication::getFontInfo() const
     {
-        const QWidget *w = this->mainApplicationWidget();
+        const QWidget *w = CGuiApplication::mainApplicationWidget();
         if (!w) { return QStringLiteral("Font info not available"); }
         return QStringLiteral("Family: '%1', average width: %2").arg(w->font().family()).arg(w->fontMetrics().averageCharWidth());
     }
@@ -1099,7 +1077,7 @@ namespace BlackGui
     void CGuiApplication::windowToFront()
     {
         if (this->isShuttingDown()) { return; }
-        QMainWindow *w = sGui->mainApplicationWindow();
+        QMainWindow *w = CGuiApplication::mainApplicationWindow();
         if (!w) { return; }
 
         m_frontBack = true;
@@ -1113,7 +1091,7 @@ namespace BlackGui
     void CGuiApplication::windowToBack()
     {
         if (this->isShuttingDown()) { return; }
-        QMainWindow *w = this->mainApplicationWindow();
+        QMainWindow *w = CGuiApplication::mainApplicationWindow();
         if (!w) { return; }
 
         m_frontBack = false;
@@ -1128,7 +1106,7 @@ namespace BlackGui
     void CGuiApplication::windowToFrontBackToggle()
     {
         if (this->isShuttingDown()) { return; }
-        QMainWindow *w = sGui->mainApplicationWindow();
+        QMainWindow *w = CGuiApplication::mainApplicationWindow();
         if (!w) { return; }
         if (w->isMinimized())
         {
@@ -1159,7 +1137,7 @@ namespace BlackGui
     void CGuiApplication::windowMinimizeNormalToggle()
     {
         if (this->isShuttingDown()) { return; }
-        QMainWindow *w = sGui->mainApplicationWindow();
+        QMainWindow *w = CGuiApplication::mainApplicationWindow();
         if (!w) { return; }
         if (m_normalizeMinimize)
         {
@@ -1209,7 +1187,7 @@ namespace BlackGui
 
         //! \todo KB 3-2020 remove as soon as the info status bar blocks shutdown bug is fixed
         //! ref: https://discordapp.com/channels/539048679160676382/539846348275449887/693848134811517029
-        const QStringList docks = CGuiUtility::deleteLaterAllDockWidgetsGetTitles(this->mainApplicationWidget(), true);
+        const QStringList docks = CGuiUtility::deleteLaterAllDockWidgetsGetTitles(CGuiApplication::mainApplicationWidget(), true);
         if (docks.count() > 0)
         {
             // that should not happen
