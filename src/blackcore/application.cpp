@@ -264,11 +264,6 @@ namespace BlackCore
         return s;
     }
 
-    void CApplication::setSingleApplication(bool singleApplication)
-    {
-        m_singleApplication = singleApplication;
-    }
-
     QString CApplication::getExecutableForApplication(CApplicationInfo::Application application) const
     {
         QString searchFor;
@@ -1301,7 +1296,7 @@ namespace BlackCore
             return false;
         }
 
-        if (m_singleApplication && m_alreadyRunning && !this->skipSingleApplicationCheck())
+        if (m_alreadyRunning && !this->skipSingleApplicationCheck())
         {
             this->cmdLineErrorMessage("Program must only run once", "You cannot run two or more instances side-by-side.");
             return false;

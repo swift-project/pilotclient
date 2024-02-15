@@ -152,9 +152,6 @@ namespace BlackCore
         //! Version, name beta and dev info
         const QString &getApplicationNameVersionDetailed() const;
 
-        //! Force single application (only one instance)
-        void setSingleApplication(bool singleApplication);
-
         //! Executable names for the given applications
         QString getExecutableForApplication(BlackMisc::CApplicationInfo::Application application) const;
 
@@ -620,7 +617,6 @@ namespace BlackCore
         QCommandLineOption m_cmdSkipSingleApp { "skipsa" }; //!< Skip test for single application
         bool m_parsed = false; //!< Parsing accomplished?
         bool m_started = false; //!< Started with success?
-        bool m_singleApplication = true; //!< Only one instance of that application
         bool m_alreadyRunning = false; //!< Application already running
         std::atomic_bool m_shutdown { false }; //!< Is being shutdown?
         std::atomic_bool m_incognito { false }; //!< Incognito mode?
