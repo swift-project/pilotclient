@@ -579,9 +579,6 @@ namespace BlackCore
         //! Display the failures caused by loading the setup file
         virtual void displaySetupLoadFailure(BlackMisc::CStatusMessageList msgs);
 
-        //! Setup read/synchronized
-        void onSetupHandlingCompleted(bool available);
-
         //! Startup completed
         virtual void onStartUpCompleted();
 
@@ -612,7 +609,7 @@ namespace BlackCore
 
         //! Start the core facade
         //! \note does nothing when setup is not yet loaded
-        BlackMisc::CStatusMessageList startCoreFacadeAndWebDataServices();
+        BlackMisc::CStatusMessageList startCoreFacade();
 
         //! Start the web data services
         //! \note does nothing when setup is not yet loaded
@@ -680,9 +677,6 @@ namespace BlackCore
         //! Init the local settings
         BlackMisc::CStatusMessage initLocalSettings();
 
-        //! Async. start when setup is loaded
-        BlackMisc::CStatusMessageList asyncWebAndContextStart();
-
         using NetworkRequestOrPostFunction = std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)>;
 
         //! Implementation for getFromNetwork(), postToNetwork() and headerFromNetwork()
@@ -741,7 +735,6 @@ namespace BlackCore
         Db::CDatabaseReaderConfigList m_dbReaderConfig; //!< Load or used caching?
         bool m_noNwAccessPoint = false; //!< no network access point?
         bool m_useContexts = false; //!< use contexts
-        bool m_useWebData = false; //!< use web data
         bool m_devFlag = false; //!< dev. environment
         bool m_saveSettingsOnShutdown = true; //!< saving all settings on shutdown
         bool m_localSettingsLoaded = false; //!< local settings loaded?

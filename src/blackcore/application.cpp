@@ -808,12 +808,12 @@ namespace BlackCore
 
         // now we can use settings
         // if not yet initialized, init web data services
-        if (!m_useWebData)
+        if (!m_webDataServices)
         {
             const CStatusMessageList msgs = this->useWebDataServices(CWebReaderFlags::AllReaders, CDatabaseReaderConfigList::forPilotClient());
             if (msgs.hasErrorMessages()) { return msgs; }
         }
-        return this->startCoreFacadeAndWebDataServices(); // will do nothing if setup is not yet loaded
+        return this->startCoreFacade(); // will do nothing if setup is not yet loaded
     }
 
     CStatusMessageList CApplication::useFacadeNoContexts()
@@ -825,7 +825,7 @@ namespace BlackCore
         const CStatusMessage msg = this->initLocalSettings();
         if (msg.isFailure()) { return msg; }
 
-        return this->startCoreFacadeAndWebDataServices(); // will do nothing if setup is not yet loaded
+        return this->startCoreFacade(); // will do nothing if setup is not yet loaded
     }
 
     CStatusMessageList CApplication::useWebDataServices(const CWebReaderFlags::WebReader webReaders, const CDatabaseReaderConfigList &dbReaderConfig)
@@ -839,7 +839,6 @@ namespace BlackCore
 
         m_webReadersUsed = webReaders;
         m_dbReaderConfig = dbReaderConfig;
-        m_useWebData = true;
         return this->startWebDataServices();
     }
 
@@ -853,7 +852,7 @@ namespace BlackCore
         return this->getIContextApplication() && !this->getIContextApplication()->isUsingImplementingObject() && !this->getIContextApplication()->isEmptyObject();
     }
 
-    CStatusMessageList CApplication::startCoreFacadeAndWebDataServices()
+    CStatusMessageList CApplication::startCoreFacade()
     {
         Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Call this function after parsing");
 
@@ -862,9 +861,7 @@ namespace BlackCore
 
         Q_ASSERT_X(m_coreFacade.isNull(), Q_FUNC_INFO, "Cannot alter facade");
         Q_ASSERT_X(m_setupReader, Q_FUNC_INFO, "No facade without setup possible");
-        Q_ASSERT_X(m_useWebData, Q_FUNC_INFO, "Need web data services");
-
-        this->startWebDataServices();
+        Q_ASSERT_X(m_webDataServices, Q_FUNC_INFO, "Need running web data services");
 
         const CStatusMessageList msgs(CStatusMessage(this).info(u"Will start core facade now"));
         m_coreFacade.reset(new CCoreFacade(m_coreFacadeConfig));
@@ -876,7 +873,6 @@ namespace BlackCore
     {
         Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Call this function after parsing");
 
-        if (!m_useWebData) { return CStatusMessage(this).warning(u"No need to start web data services"); }
         if (!m_setupReader || !m_setupReader->isSetupAvailable()) { return CStatusMessage(this).error(u"No setup reader or setup available"); }
 
         Q_ASSERT_X(m_setupReader, Q_FUNC_INFO, "No web data services without setup possible");
@@ -1062,16 +1058,6 @@ namespace BlackCore
         disconnect(this);
     }
 
-    void CApplication::onSetupHandlingCompleted(bool available)
-    {
-        if (available)
-        {
-            // start follow ups when setup is avaialable
-            const CStatusMessageList msgs = this->asyncWebAndContextStart();
-            m_started = msgs.isSuccess();
-        }
-    }
-
     void CApplication::onStartUpCompleted()
     {
         // void
@@ -1217,17 +1203,6 @@ namespace BlackCore
             const QString r = CNetworkUtils::createNetworkConfigurationReport(m_networkConfigManager, m_accessManager);
             CLogMessage(this).info(u"Network report:\n%1") << r;
         });
-    }
-
-    CStatusMessageList CApplication::asyncWebAndContextStart()
-    {
-        if (m_started) { return CStatusMessage(this).info(u"Already started "); }
-
-        // follow up startups
-        CStatusMessageList msgs = this->startWebDataServices();
-        if (msgs.isFailure()) return msgs;
-        msgs.push_back(this->startCoreFacadeAndWebDataServices());
-        return msgs;
     }
 
     void CApplication::severeStartupProblem(const CStatusMessage &message)
@@ -1617,7 +1592,6 @@ namespace BlackCore
         if (!m_setupReader) { return CStatusMessage(this).error(u"No reader for setup/version"); }
         Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Not yet parsed");
         const CStatusMessageList requestMsgs = m_setupReader->loadSetup();
-        onSetupHandlingCompleted(requestMsgs.isSuccess());
         return requestMsgs;
     }
 
