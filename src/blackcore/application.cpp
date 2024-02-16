@@ -785,7 +785,7 @@ namespace BlackCore
         eventLoop.exec();
     }
 
-    CStatusMessageList CApplication::useContexts(const CCoreFacadeConfig &coreConfig)
+    CStatusMessageList CApplication::initContextsAndStartCoreFacade(const CCoreFacadeConfig &coreConfig)
     {
         Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Call this function after parsing");
 
@@ -798,17 +798,17 @@ namespace BlackCore
         // if not yet initialized, init web data services
         if (!m_webDataServices)
         {
-            const CStatusMessageList msgs = this->useWebDataServices(CWebReaderFlags::AllReaders, CDatabaseReaderConfigList::forPilotClient());
+            const CStatusMessageList msgs = this->initAndStartWebDataServices(CWebReaderFlags::AllReaders, CDatabaseReaderConfigList::forPilotClient());
             if (msgs.hasErrorMessages()) { return msgs; }
         }
         return this->startCoreFacade(); // will do nothing if setup is not yet loaded
     }
 
-    CStatusMessageList CApplication::useFacadeNoContexts()
+    CStatusMessageList CApplication::startCoreFacadeWithoutContexts()
     {
         Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Call this function after parsing");
 
-        m_useContexts = true; // otherwise startCoreFacadeAndWebDataServices will early-return
+        m_useContexts = true; // otherwise startCoreFacade will early-return
         m_coreFacadeConfig = CCoreFacadeConfig::allEmpty();
         const CStatusMessage msg = this->initLocalSettings();
         if (msg.isFailure()) { return msg; }
@@ -816,7 +816,7 @@ namespace BlackCore
         return this->startCoreFacade(); // will do nothing if setup is not yet loaded
     }
 
-    CStatusMessageList CApplication::useWebDataServices(CWebReaderFlags::WebReader webReaders, const CDatabaseReaderConfigList &dbReaderConfig)
+    CStatusMessageList CApplication::initAndStartWebDataServices(CWebReaderFlags::WebReader webReader, const Db::CDatabaseReaderConfigList &dbReaderConfig)
     {
         Q_ASSERT_X(m_webDataServices.isNull(), Q_FUNC_INFO, "Services already started");
         BLACK_VERIFY_X(QSslSocket::supportsSsl(), Q_FUNC_INFO, "No SSL");
@@ -825,7 +825,7 @@ namespace BlackCore
             return CStatusMessage(this).error(u"No SSL supported, can`t be used");
         }
 
-        m_webReadersUsed = webReaders;
+        m_webReadersUsed = webReader;
         m_dbReaderConfig = dbReaderConfig;
         return this->startWebDataServices();
     }

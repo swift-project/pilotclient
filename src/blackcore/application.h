@@ -341,17 +341,17 @@ namespace BlackCore
         //! Init the contexts part and start core facade
         //! \sa coreFacadeStarted
         //! \remark requires setup loaded
-        BlackMisc::CStatusMessageList useContexts(const CCoreFacadeConfig &coreConfig);
+        BlackMisc::CStatusMessageList initContextsAndStartCoreFacade(const CCoreFacadeConfig &coreConfig);
 
-        //! Init the core facade without any contexts
+        //! Starts the core facade without any contexts
         //! \sa coreFacadeStarted
         //! \remark requires setup loaded
-        BlackMisc::CStatusMessageList useFacadeNoContexts();
+        BlackMisc::CStatusMessageList startCoreFacadeWithoutContexts();
 
         //! Init web data services and start them
         //! \sa webDataServicesStarted
         //! \remark requires setup loaded
-        BlackMisc::CStatusMessageList useWebDataServices(CWebReaderFlags::WebReader webReader, const Db::CDatabaseReaderConfigList &dbReaderConfig);
+        BlackMisc::CStatusMessageList initAndStartWebDataServices(CWebReaderFlags::WebReader webReader, const Db::CDatabaseReaderConfigList &dbReaderConfig);
 
         //! Get the facade
         CCoreFacade *getCoreFacade() { return m_coreFacade.data(); }

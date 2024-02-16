@@ -69,7 +69,7 @@ CStatusMessageList CSwiftGuiStdApplication::startHookIn()
         break;
     }
 
-    const CStatusMessageList contextMsgs = this->useContexts(runtimeConfig);
+    const CStatusMessageList contextMsgs = this->initContextsAndStartCoreFacade(runtimeConfig);
     msgs.push_back(contextMsgs);
     return contextMsgs;
 }
