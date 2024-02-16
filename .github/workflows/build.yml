@@ -31,7 +31,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Get version number
@@ -42,13 +42,10 @@ jobs:
         uses: swift-project/delete-artifact@swift
         with:
           name: |
-            xswiftbus-thin-allos-${{ steps.version.outputs.value }}
-            xswiftbus-fat-allos-${{ steps.version.outputs.value }}
-            swiftsymbols-allos-${{ steps.version.outputs.value }}
-            swiftinstaller-linux-64-${{ steps.version.outputs.value }}
-            swiftinstaller-windows-64-${{ steps.version.outputs.value }}
-            swiftinstaller-windows-32-${{ steps.version.outputs.value }}
-            swiftinstaller-macos-64-${{ steps.version.outputs.value }}
+            xswiftbus-thin-*
+            xswiftbus-fat-*
+            swiftsymbols-*
+            swiftinstaller-*
           failOnError: false
           warnIfNotFound: false
 
@@ -58,13 +55,13 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
       - name: Run clang-format
         run: |
           scripts/run_clang_format.py
-      - uses: Trass3r/setup-cpp@master
+      - uses: Trass3r/setup-cpp@1b63900ecf3f0b7c60ee53aa7be122f2c4fe7a2c
       - name: Run cppcheck
         run: |
           sudo apt-get -y install cppcheck
@@ -79,7 +76,7 @@ jobs:
         env:
           DOXY_SRC_ROOT: ..
       - name: Upload doxygen
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
           path: docs/html/
 
@@ -99,7 +96,7 @@ jobs:
           cache: true
       - name: Cache InstallBuilder
         id: cache-bitrock
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/installbuilder.run
           key: installbuilder-${{ env.bitrock_version }}-linux-x64
@@ -121,7 +118,7 @@ jobs:
           sudo apt-get -y install dbus-x11 libglu1-mesa-dev libopus-dev libsodium-dev libpulse-dev libdbus-1-dev libevent-dev libpng-dev ninja-build
           pip3 install requests
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
           fetch-depth: 0
@@ -140,7 +137,7 @@ jobs:
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
-      - uses: Trass3r/setup-cpp@master
+      - uses: Trass3r/setup-cpp@1b63900ecf3f0b7c60ee53aa7be122f2c4fe7a2c
       - name: Build swift (without symbols)
         if: ${{ env.do_symbols != 'true' }}
         run: |
@@ -150,20 +147,20 @@ jobs:
         run: |
           python3 -u scripts/build.py -w 64 -t gcc -d -j2 -q "-DVATSIM_KEY_JSON=$vatsim_key_file" --upload
       - name: Upload installer
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: swiftinstaller-linux-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ env.do_symbols == 'true' }}
         with:
-          name: swiftsymbols-allos-${{ needs.preBuild.outputs.version }}
+          name: swiftsymbols-linux-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftsymbols-*
       - name: Upload xswiftbus
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: xswiftbus-thin-allos-${{ needs.preBuild.outputs.version }}
+          name: xswiftbus-thin-linux-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/xswiftbus-*
 
   buildWin64:
@@ -191,7 +188,7 @@ jobs:
           extra: --archives qtbase
       - name: Cache InstallBuilder
         id: cache-bitrock
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: C:\installbuilder.exe
           key: installbuilder-${{ env.bitrock_version }}-windows-x64
@@ -214,7 +211,7 @@ jobs:
         run: |
           pip install requests PyInstaller
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
           fetch-depth: 0
@@ -228,7 +225,7 @@ jobs:
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
-      - uses: Trass3r/setup-cpp@master
+      - uses: Trass3r/setup-cpp@1b63900ecf3f0b7c60ee53aa7be122f2c4fe7a2c
       - name: Build swift (without symbols)
         if: ${{ env.do_symbols != 'true' }}
         run: |
@@ -238,20 +235,20 @@ jobs:
         run: |
           python -u scripts/build.py -w 64 -t msvc -d -q "-DVATSIM_KEY_JSON=$env:vatsim_key_file" --upload
       - name: Upload installer
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: swiftinstaller-windows-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ env.do_symbols == 'true' }}
         with:
-          name: swiftsymbols-allos-${{ needs.preBuild.outputs.version }}
+          name: swiftsymbols-windows-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftsymbols-*
       - name: Upload xswiftbus
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: xswiftbus-thin-allos-${{ needs.preBuild.outputs.version }}
+          name: xswiftbus-thin-windows-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/xswiftbus-*
 
   buildWin32:
@@ -279,7 +276,7 @@ jobs:
           extra: --archives qtbase
       - name: Cache InstallBuilder
         id: cache-bitrock
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: C:\installbuilder.exe
           key: installbuilder-${{ env.bitrock_version }}-windows
@@ -302,7 +299,7 @@ jobs:
         run: |
           pip install requests PyInstaller
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
           fetch-depth: 0
@@ -316,7 +313,7 @@ jobs:
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
-      - uses: Trass3r/setup-cpp@master
+      - uses: Trass3r/setup-cpp@1b63900ecf3f0b7c60ee53aa7be122f2c4fe7a2c
       - name: Build swift (without symbols)
         if: ${{ env.do_symbols != 'true' }}
         run: |
@@ -326,15 +323,15 @@ jobs:
         run: |
           python -u scripts/build.py -w 32 -t msvc -d -q "-DVATSIM_KEY_JSON=$env:vatsim_key_file" --upload
       - name: Upload installer
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: swiftinstaller-windows-32-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ env.do_symbols == 'true' }}
         with:
-          name: swiftsymbols-allos-${{ needs.preBuild.outputs.version }}
+          name: swiftsymbols-windows-32-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftsymbols-*
 
   buildMacOS:
@@ -353,7 +350,7 @@ jobs:
           cache: true
       - name: Cache InstallBuilder
         id: cache-bitrock
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/installbuilder.dmg
           key: installbuilder-${{ env.bitrock_version }}-osx
@@ -380,7 +377,7 @@ jobs:
         run: |
           pip3 install requests
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
           fetch-depth: 0
@@ -394,7 +391,7 @@ jobs:
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
-      - uses: Trass3r/setup-cpp@master
+      - uses: Trass3r/setup-cpp@1b63900ecf3f0b7c60ee53aa7be122f2c4fe7a2c
       - name: Build swift (without symbols)
         if: ${{ env.do_symbols != 'true' }}
         run: |
@@ -404,20 +401,20 @@ jobs:
         run: |
           python3 -u scripts/build.py -w 64 -t clang -d -j2 -q "-DVATSIM_KEY_JSON=$vatsim_key_file" --upload
       - name: Upload installer
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: swiftinstaller-macos-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ env.do_symbols == 'true' }}
         with:
-          name: swiftsymbols-allos-${{ needs.preBuild.outputs.version }}
+          name: swiftsymbols-macos-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftsymbols-*
       - name: Upload xswiftbus
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: xswiftbus-thin-allos-${{ needs.preBuild.outputs.version }}
+          name: xswiftbus-thin-macos-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/xswiftbus-*
 
   postBuild:
@@ -426,9 +423,10 @@ jobs:
 
     steps:
       - name: Download xswiftbus-thin
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: xswiftbus-thin-allos-${{ needs.preBuild.outputs.version }}
+          pattern: xswiftbus-thin-*
+          merge-multiple: true
       - name: Repackage xswiftbus
         run: |
           7z x -y xswiftbus-windows-64-*.7z
@@ -436,14 +434,14 @@ jobs:
           7z x -y xswiftbus-macos-64-*.7z
           7z a -y -mx=9 xswiftbus-fat-allos-${{ needs.preBuild.outputs.version }}.7z xswiftbus
       - name: Upload xswiftbus-fat
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: xswiftbus-fat-allos-${{ needs.preBuild.outputs.version }}
           path: xswiftbus-fat-allos-*
-      - name: Remove xswiftbus-thin
+      - name: Remove xswiftbus-thin artifacts
         uses: swift-project/delete-artifact@swift
         with:
-          name: xswiftbus-thin-allos-${{ needs.preBuild.outputs.version }}
+          name: xswiftbus-thin-*
 
   release:
     runs-on: ubuntu-22.04
@@ -459,7 +457,7 @@ jobs:
 
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
       - name: Flatten directories
         run: |
           mv swiftinstaller-*/* .
