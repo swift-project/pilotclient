@@ -192,9 +192,7 @@ namespace BlackCore::Data
 
             % u"AFV voice server URL: " % getAfvApiServerUrl().toQString(i18n) % separator
 
-            % u"AFV map URL: " % getAfvMapUrl().toQString(i18n) % separator
-
-            % u"Crash report server: " % getCrashReportServerUrl().toQString(i18n);
+            % u"AFV map URL: " % getAfvMapUrl().toQString(i18n);
 
         return s;
     }
@@ -219,7 +217,6 @@ namespace BlackCore::Data
         case IndexUpdateInfoFileUrl: return QVariant::fromValue(this->getSwiftUpdateInfoFileUrl());
         case IndexSharedUrl: return QVariant::fromValue(m_sharedUrl);
         case IndexOnlineHelpUrl: return QVariant::fromValue(m_onlineHelpUrl);
-        case IndexCrashReportServerUrl: return QVariant::fromValue(m_crashReportServerUrl);
         case IndexMappingMinimumVersion: return QVariant::fromValue(m_mappingMinimumVersion);
         case IndexPredefinedServers: return QVariant::fromValue(m_predefinedServers);
         case IndexAfvApiServerUrl: return QVariant::fromValue(m_afvApiServerUrl);
@@ -250,7 +247,6 @@ namespace BlackCore::Data
         case IndexVatsimMetars: m_vatsimMetarsUrl = variant.value<CUrl>(); break;
         case IndexSharedUrl: m_sharedUrl = variant.value<CUrl>(); break;
         case IndexOnlineHelpUrl: m_onlineHelpUrl = variant.value<CUrl>(); break;
-        case IndexCrashReportServerUrl: m_crashReportServerUrl = variant.value<CUrl>(); break;
         case IndexMappingMinimumVersion: m_mappingMinimumVersion = variant.toString(); break;
         case IndexPredefinedServers: m_predefinedServers = variant.value<CServerList>(); break;
         case IndexAfvApiServerUrl: m_afvApiServerUrl = variant.value<CUrl>(); break;
