@@ -5,7 +5,7 @@
 #error This file is only to be included by buildconfig.h
 #endif
 
-// in-line definitions with qmake substitutions
+// in-line definitions with CMake substitutions
 #include "buildconfig_gen.inc"
 
 //! \cond PRIVATE
