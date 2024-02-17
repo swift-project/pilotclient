@@ -114,9 +114,6 @@ namespace BlackCore
         //! DB writer class
         Db::CDatabaseWriter *getDatabaseWriter() const { return m_databaseWriter; }
 
-        //! Reader flags
-        CWebReaderFlags::WebReader getReaderFlags() const { return m_readers; }
-
         //! All DB entities for those readers used and not ignored
         BlackMisc::Network::CEntityFlags::Entity allDbEntitiesForUsedReaders() const;
 
@@ -462,9 +459,6 @@ namespace BlackCore
         //! Has already successfully connect swift DB?
         bool hasSuccesfullyConnectedSwiftDb() const;
 
-        //! Reset the flags what was already signaled
-        void resetSignalFlags();
-
         //! Are all DB data for an aircraft entity available?
         bool hasDbAircraftData() const;
 
@@ -617,12 +611,9 @@ namespace BlackCore
         //! \remark sets the ecosystem
         void onConnectedNetworkServerChanged(const BlackMisc::Network::CServer &server);
 
-        CWebReaderFlags::WebReader m_readers = CWebReaderFlags::WebReaderFlag::None; //!< which readers are available
         BlackMisc::Network::CEntityFlags::Entity m_entitiesPeriodicallyRead = BlackMisc::Network::CEntityFlags::NoEntity; //!< entities permanently updated by timers
         BlackMisc::Network::CEntityFlags::Entity m_swiftDbEntitiesRead = BlackMisc::Network::CEntityFlags::NoEntity; //!< entities read
         BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig; //!< how to read DB data
-        bool m_initialRead = false; //!< initial read started
-        bool m_signalledHeaders = false; //!< headers loading has been signalled
         std::atomic_bool m_shuttingDown { false }; //!< shutting down?
         QDateTime m_dbInfoObjectTimeout; //!< started reading DB info objects
         QDateTime m_sharedInfoObjectsTimeout; //!< started reading shared info objects
