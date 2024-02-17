@@ -825,9 +825,7 @@ namespace BlackCore
             return CStatusMessage(this).error(u"No SSL supported, can`t be used");
         }
 
-        m_webReadersUsed = webReader;
-        m_dbReaderConfig = dbReaderConfig;
-        return this->startWebDataServices();
+        return this->startWebDataServices(webReader, dbReaderConfig);
     }
 
     bool CApplication::isLocalContext() const
@@ -857,7 +855,7 @@ namespace BlackCore
         return msgs;
     }
 
-    CStatusMessageList CApplication::startWebDataServices()
+    CStatusMessageList CApplication::startWebDataServices(CWebReaderFlags::WebReader webReader, const Db::CDatabaseReaderConfigList &dbReaderConfig)
     {
         Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Call this function after parsing");
 
@@ -868,8 +866,7 @@ namespace BlackCore
         if (!m_webDataServices)
         {
             msgs.push_back(CStatusMessage(this).info(u"Will start web data services now"));
-            m_webDataServices.reset(
-                new CWebDataServices(m_webReadersUsed, m_dbReaderConfig, {}, this));
+            m_webDataServices.reset(new CWebDataServices(webReader, dbReaderConfig, {}, this));
             Q_ASSERT_X(m_webDataServices, Q_FUNC_INFO, "Missing web services");
 
             // watchdog

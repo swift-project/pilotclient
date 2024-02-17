@@ -594,7 +594,7 @@ namespace BlackCore
 
         //! Start the web data services
         //! \note does nothing when setup is not yet loaded
-        BlackMisc::CStatusMessageList startWebDataServices();
+        BlackMisc::CStatusMessageList startWebDataServices(CWebReaderFlags::WebReader webReader, const Db::CDatabaseReaderConfigList &dbReaderConfig);
 
         //! executable name
         static const QString &executable();
@@ -710,8 +710,6 @@ namespace BlackCore
         const QString m_applicationName; //!< application name
         QReadWriteLock m_accessManagerLock; //!< lock to make access manager access threadsafe
         CCoreFacadeConfig m_coreFacadeConfig; //!< Core facade config if any
-        CWebReaderFlags::WebReader m_webReadersUsed; //!< Readers to be used
-        Db::CDatabaseReaderConfigList m_dbReaderConfig; //!< Load or used caching?
         bool m_noNwAccessPoint = false; //!< no network access point?
         bool m_useContexts = false; //!< use contexts
         bool m_devFlag = false; //!< dev. environment
