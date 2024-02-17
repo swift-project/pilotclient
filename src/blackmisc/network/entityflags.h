@@ -44,7 +44,7 @@ namespace BlackMisc::Network
             AllIcaoCountriesCategory = AllIcaoAndCountries | AircraftCategoryEntity, //!< includes category
             DistributorLiveryModel = DistributorEntity | LiveryEntity | ModelEntity, //!< Combined
             ModelMatchingEntities = AllIcaoEntities | LiveryEntity | ModelEntity, //!< all needed for model matching
-            AllDbEntitiesNoInfoObjects = AllIcaoCountriesCategory | DistributorLiveryModel | AirportEntity | AircraftCategoryEntity, //!< all DB entities, no info objects
+            AllDbEntitiesNoInfoObjects = AllIcaoCountriesCategory | DistributorLiveryModel | AirportEntity, //!< all DB entities, no info objects
             AllDbEntities = AllDbEntitiesNoInfoObjects | DbInfoObjectEntity, //!< all DB stuff
             AllDbEntitiesNoInfoObjectsNoAirportsAndCategories = AllIcaoAndCountries | DistributorLiveryModel //!< all DB entities, no info objects and airports
         };
