@@ -1019,7 +1019,6 @@ namespace BlackCore
         const bool needsSharedInfoObjects = dbReaderConfig.needsSharedInfoObjects(dbEntities);
         const bool needsDbInfoObjects = dbReaderConfig.possiblyReadsFromSwiftDb();
         bool c = false; // for signal connect
-        const Qt::ConnectionType typeReaderReadSignals = Qt::QueuedConnection; // Decouple processing of the reader signals from the readers
 
         // 1a. If any DB data, read the info objects upfront
         if (needsDbInfoObjects)
@@ -1052,7 +1051,7 @@ namespace BlackCore
         if (readersNeeded.testFlag(CWebReaderFlags::VatsimStatusReader) || readersNeeded.testFlag(CWebReaderFlags::VatsimDataReader) || readersNeeded.testFlag(CWebReaderFlags::VatsimMetarReader))
         {
             m_vatsimStatusReader = new CVatsimStatusFileReader(this);
-            c = connect(m_vatsimStatusReader, &CVatsimStatusFileReader::dataFileRead, this, &CWebDataServices::vatsimStatusFileRead, typeReaderReadSignals);
+            c = connect(m_vatsimStatusReader, &CVatsimStatusFileReader::dataFileRead, this, &CWebDataServices::vatsimStatusFileRead, Qt::QueuedConnection);
             CLogMessage(this).info(u"Trigger read of VATSIM status file");
             m_vatsimStatusReader->start(QThread::LowPriority);
 
@@ -1073,9 +1072,9 @@ namespace BlackCore
         if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::VatsimDataReader))
         {
             m_vatsimDataFileReader = new CVatsimDataFileReader(this);
-            c = connect(m_vatsimDataFileReader, &CVatsimDataFileReader::dataFileRead, this, &CWebDataServices::vatsimDataFileRead, typeReaderReadSignals);
+            c = connect(m_vatsimDataFileReader, &CVatsimDataFileReader::dataFileRead, this, &CWebDataServices::vatsimDataFileRead, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM data reader signals");
-            c = connect(m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CWebDataServices::dataRead, typeReaderReadSignals);
+            c = connect(m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CWebDataServices::dataRead, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM data file");
             m_entitiesPeriodicallyRead |= CEntityFlags::VatsimDataFile;
             m_vatsimDataFileReader->start(QThread::LowPriority);
@@ -1086,9 +1085,9 @@ namespace BlackCore
         if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::VatsimMetarReader))
         {
             m_vatsimMetarReader = new CVatsimMetarReader(this);
-            c = connect(m_vatsimMetarReader, &CVatsimMetarReader::metarsRead, this, &CWebDataServices::receivedMetars, typeReaderReadSignals);
+            c = connect(m_vatsimMetarReader, &CVatsimMetarReader::metarsRead, this, &CWebDataServices::receivedMetars, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM METAR reader signals");
-            c = connect(m_vatsimMetarReader, &CVatsimMetarReader::dataRead, this, &CWebDataServices::dataRead, typeReaderReadSignals);
+            c = connect(m_vatsimMetarReader, &CVatsimMetarReader::dataRead, this, &CWebDataServices::dataRead, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM METAR");
             m_entitiesPeriodicallyRead |= CEntityFlags::MetarEntity;
             m_vatsimMetarReader->start(QThread::LowPriority);
@@ -1099,13 +1098,13 @@ namespace BlackCore
         if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::IcaoDataReader))
         {
             m_icaoDataReader = new CIcaoDataReader(this, dbReaderConfig);
-            c = connect(m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader, typeReaderReadSignals);
+            c = connect(m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect ICAO reader signals");
-            c = connect(m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::dataRead, typeReaderReadSignals);
+            c = connect(m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::dataRead, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect ICAO reader signals");
-            c = connect(m_icaoDataReader, &CIcaoDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead, typeReaderReadSignals);
+            c = connect(m_icaoDataReader, &CIcaoDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(m_icaoDataReader, &CIcaoDataReader::entityDownloadProgress, this, &CWebDataServices::entityDownloadProgress, typeReaderReadSignals);
+            c = connect(m_icaoDataReader, &CIcaoDataReader::entityDownloadProgress, this, &CWebDataServices::entityDownloadProgress, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             m_icaoDataReader->start(QThread::LowPriority);
         }
@@ -1114,13 +1113,13 @@ namespace BlackCore
         if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::ModelReader))
         {
             m_modelDataReader = new CModelDataReader(this, dbReaderConfig);
-            c = connect(m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader, typeReaderReadSignals);
+            c = connect(m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::dataRead, typeReaderReadSignals);
+            c = connect(m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::dataRead, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(m_modelDataReader, &CModelDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead, typeReaderReadSignals);
+            c = connect(m_modelDataReader, &CModelDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(m_modelDataReader, &CModelDataReader::entityDownloadProgress, this, &CWebDataServices::entityDownloadProgress, typeReaderReadSignals);
+            c = connect(m_modelDataReader, &CModelDataReader::entityDownloadProgress, this, &CWebDataServices::entityDownloadProgress, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             m_modelDataReader->start(QThread::LowPriority);
         }
@@ -1129,13 +1128,13 @@ namespace BlackCore
         if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::AirportReader))
         {
             m_airportDataReader = new CAirportDataReader(this, dbReaderConfig);
-            c = connect(m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader, typeReaderReadSignals);
+            c = connect(m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::dataRead, typeReaderReadSignals);
+            c = connect(m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::dataRead, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(m_airportDataReader, &CAirportDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead, typeReaderReadSignals);
+            c = connect(m_airportDataReader, &CAirportDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(m_airportDataReader, &CAirportDataReader::entityDownloadProgress, this, &CWebDataServices::entityDownloadProgress, typeReaderReadSignals);
+            c = connect(m_airportDataReader, &CAirportDataReader::entityDownloadProgress, this, &CWebDataServices::entityDownloadProgress, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             m_airportDataReader->start(QThread::LowPriority);
         }
