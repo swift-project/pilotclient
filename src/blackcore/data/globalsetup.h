@@ -133,9 +133,6 @@ namespace BlackCore::Data
         //! \remark only valid if wasLoaded() is \c true
         bool isSwiftVersionMinimumMappingVersion() const;
 
-        //! NCEP GFS Forecasts (0.50 degree grid) data url
-        BlackMisc::Network::CUrl getNcepGlobalForecastSystemUrl() const { return m_ncepGlobalForecastSystemUrl; }
-
         //! NCEP GFS Forecasts (0.25 degree grid) data url
         BlackMisc::Network::CUrl getNcepGlobalForecastSystemUrl25() const { return m_ncepGlobalForecastSystemUrl25; }
 
@@ -182,7 +179,6 @@ namespace BlackCore::Data
         BlackMisc::Network::CUrlList m_sharedUrls; //!< where we can obtain shared info files such as bootstrap, ..
         BlackMisc::Network::CUrlList m_onlineHelpUrls; //!< online help URLs
         BlackMisc::Network::CServerList m_predefinedServers; //!< Predefined servers loaded from setup file
-        BlackMisc::Network::CUrl m_ncepGlobalForecastSystemUrl; //!< NCEP GFS url 0.5 degree resolution
         BlackMisc::Network::CUrl m_ncepGlobalForecastSystemUrl25; //!< NCEP GFS url 0.25 degree resolution
         BlackMisc::Network::CUrl m_comNavEquipmentHelpUrl; //!< Help URL for COM/NAV equipment codes
         BlackMisc::Network::CUrl m_ssrEquipmentHelpUrl; //!< Help URL for SSR equipment codes
@@ -204,7 +200,6 @@ namespace BlackCore::Data
             BLACK_METAMEMBER(onlineHelpUrls, 0, RequiredForJson),
             BLACK_METAMEMBER(predefinedServers, 0, RequiredForJson),
             BLACK_METAMEMBER(mappingMinimumVersion, 0, RequiredForJson),
-            BLACK_METAMEMBER(ncepGlobalForecastSystemUrl, 0, RequiredForJson),
             BLACK_METAMEMBER(ncepGlobalForecastSystemUrl25, 0, RequiredForJson),
             BLACK_METAMEMBER(comNavEquipmentHelpUrl, 0, RequiredForJson),
             BLACK_METAMEMBER(ssrEquipmentHelpUrl, 0, RequiredForJson),
