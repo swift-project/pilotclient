@@ -44,7 +44,6 @@ namespace BlackCore::Data
             IndexVatsimServer,
             IndexVatsimHttpFsd,
             IndexOnlineHelpUrls,
-            IndexCrashReportServerUrl,
             IndexSharedUrls,
             IndexMappingMinimumVersion,
             IndexPredefinedServers,
@@ -66,10 +65,6 @@ namespace BlackCore::Data
 
         //! Set debug flag
         void setServerDebugFlag(bool debug);
-
-        //! Crash report server url
-        //! \deprecated NOT used anymore as by RR's info: https://discordapp.com/channels/539048679160676382/539925070550794240/586879411002015756
-        BlackMisc::Network::CUrl getCrashReportServerUrl() const { return m_crashReportServerUrl; }
 
         //! Root directory of DB
         const BlackMisc::Network::CUrl &getDbRootDirectoryUrl() const { return m_dbRootDirectoryUrl; }
@@ -181,7 +176,6 @@ namespace BlackCore::Data
         int m_dbHttpPort = 80; //!< port
         int m_dbHttpsPort = 443; //!< SSL port
         QString m_mappingMinimumVersion; //!< minimum version
-        BlackMisc::Network::CUrl m_crashReportServerUrl; //!< crash report server
         BlackMisc::Network::CUrl m_dbRootDirectoryUrl; //!< Root directory of DB
         BlackMisc::Network::CUrlList m_vatsimMetarsUrls; //!< METAR data
         BlackMisc::Network::CUrlList m_vatsimStatusFileUrls; //!< Status file, where to find the VATSIM files (METAR, data, ATIS, other status files)
@@ -201,7 +195,6 @@ namespace BlackCore::Data
 
         BLACK_METACLASS(
             CGlobalSetup,
-            BLACK_METAMEMBER(crashReportServerUrl, 0, RequiredForJson),
             BLACK_METAMEMBER(dbRootDirectoryUrl, 0, RequiredForJson),
             BLACK_METAMEMBER(dbHttpPort, 0, RequiredForJson),
             BLACK_METAMEMBER(dbHttpsPort, 0, RequiredForJson),
