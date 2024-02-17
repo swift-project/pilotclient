@@ -481,7 +481,7 @@ namespace BlackCore::Db
             return this->getDbServiceBaseUrl().withAppendedPath("/service");
         case CDbFlags::SharedInfoOnly:
         case CDbFlags::Shared:
-            return CDatabaseReader::getWorkingSharedDbdataDirectoryUrl();
+            return sApp->getGlobalSetup().getSharedDbDataDirectoryUrl();
         default:
             qFatal("Wrong mode");
             break;
@@ -688,12 +688,6 @@ namespace BlackCore::Db
         if (!ts.isValid()) return {};
         const QString q = parameterLatestTimestamp() % u"=" % dateTimeToDbLatestTs(ts);
         return q;
-    }
-
-    CUrl CDatabaseReader::getWorkingSharedDbdataDirectoryUrl()
-    {
-        const CUrl sharedUrl(sApp->getWorkingSharedUrl());
-        return CGlobalSetup::buildDbDataDirectoryUrl(sharedUrl);
     }
 
     void CDatabaseReader::cacheHasChanged(CEntityFlags::Entity entities)
