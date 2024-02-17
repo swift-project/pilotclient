@@ -1,7 +1,4 @@
 {
-    "crashReportServerUrl": {
-        "url": "http://swift-project.sp.backtrace.io:6097/"
-    },
     "dbDebugFlag": false,
     "dbHttpPort": 80,
     "dbHttpsPort": 443,

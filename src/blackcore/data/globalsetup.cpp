@@ -163,9 +163,7 @@ namespace BlackCore::Data
 
             % u"AFV voice server URL: " % getAfvApiServerUrl().toQString(i18n) % separator
 
-            % u"AFV map URL: " % getAfvMapUrl().toQString(i18n) % separator
-
-            % u"Crash report server: " % getCrashReportServerUrl().toQString(i18n);
+            % u"AFV map URL: " % getAfvMapUrl().toQString(i18n);
 
         return s;
     }
@@ -185,10 +183,9 @@ namespace BlackCore::Data
         case IndexVatsimData: return QVariant::fromValue(m_vatsimDataFileUrls);
         case IndexVatsimServer: return QVariant::fromValue(m_vatsimServerFileUrl);
         case IndexVatsimHttpFsd: return QVariant::fromValue(m_vatsimFsdHttpUrl);
-        case IndexVatsimMetars: return QVariant::fromValue(m_vatsimMetarsUrls);
-        case IndexSharedUrls: return QVariant::fromValue(m_sharedUrls);
-        case IndexOnlineHelpUrls: return QVariant::fromValue(m_onlineHelpUrls);
-        case IndexCrashReportServerUrl: return QVariant::fromValue(m_crashReportServerUrl);
+        case IndexVatsimMetars: return QVariant::fromValue(m_vatsimMetarsUrl);
+        case IndexSharedUrl: return QVariant::fromValue(m_sharedUrl);
+        case IndexOnlineHelpUrl: return QVariant::fromValue(m_onlineHelpUrl);
         case IndexMappingMinimumVersion: return QVariant::fromValue(m_mappingMinimumVersion);
         case IndexPredefinedServers: return QVariant::fromValue(m_predefinedServers);
         case IndexAfvApiServerUrl: return QVariant::fromValue(m_afvApiServerUrl);
@@ -218,7 +215,6 @@ namespace BlackCore::Data
         case IndexVatsimMetars: m_vatsimMetarsUrls = variant.value<CUrlList>(); break;
         case IndexSharedUrls: m_sharedUrls = variant.value<CUrlList>(); break;
         case IndexOnlineHelpUrls: m_onlineHelpUrls = variant.value<CUrlList>(); break;
-        case IndexCrashReportServerUrl: m_crashReportServerUrl = variant.value<CUrl>(); break;
         case IndexMappingMinimumVersion: m_mappingMinimumVersion = variant.toString(); break;
         case IndexPredefinedServers: m_predefinedServers = variant.value<CServerList>(); break;
         case IndexAfvApiServerUrl: m_afvApiServerUrl = variant.value<CUrl>(); break;
