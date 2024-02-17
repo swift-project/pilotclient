@@ -119,11 +119,6 @@ namespace BlackCore::Data
         return pingUrl;
     }
 
-    CUrl CGlobalSetup::getAlphaXSwiftBusFilesServiceUrl() const
-    {
-        return getDbRootDirectoryUrl().withAppendedPath("/service/jsonalphaxswiftbusfiles.php").withSwitchedScheme("https", m_dbHttpsPort);
-    }
-
     bool CGlobalSetup::dbDebugFlag() const
     {
         return m_dbDebugFlag && CBuildConfig::isLocalDeveloperDebugBuild();

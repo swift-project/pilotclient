@@ -120,9 +120,6 @@ namespace BlackCore::Data
         //! Seconds between pings
         qint64 getDbClientPingIntervalSecs() const { return m_pingIntervalSecs; }
 
-        //! alpha XSwiftBus files available
-        BlackMisc::Network::CUrl getAlphaXSwiftBusFilesServiceUrl() const;
-
         //! Shared URL
         const BlackMisc::Network::CUrl &getSwiftSharedUrl() const;
 

@@ -380,36 +380,6 @@ namespace BlackCore::Db
         return m_sharedFileResponses[entity].getLastModifiedTimestamp();
     }
 
-    int CDatabaseReader::requestHeadersOfSharedFiles(CEntityFlags::Entity entities)
-    {
-        if (!this->isInternetAccessible(QStringLiteral("No network/internet access, will not read shared file headers for %1").arg(CEntityFlags::flagToString(entities)))) { return false; }
-
-        CEntityFlags::Entity allEntities = entities & CEntityFlags::AllDbEntitiesNoInfoObjects;
-        CEntityFlags::Entity currentEntity = CEntityFlags::iterateDbEntities(allEntities);
-        const CUrl urlSharedDbdata = CDatabaseReader::getWorkingSharedDbdataDirectoryUrl();
-        if (urlSharedDbdata.isEmpty())
-        {
-            CLogMessage(this).warning(u"No working shared URL, cannot request headers");
-            return 0;
-        }
-
-        int c = 0;
-        while (currentEntity != CEntityFlags::NoEntity)
-        {
-            const QString fileName = CDbInfo::entityToSharedName(currentEntity);
-            Q_ASSERT_X(!fileName.isEmpty(), Q_FUNC_INFO, "No file name for entity");
-            CUrl url = urlSharedDbdata;
-            url.appendPath(fileName);
-
-            const QString entityString = CEntityFlags::flagToString(currentEntity);
-            CLogMessage(this).info(u"Triggered read of header for shared file of '%1'") << entityString;
-            const QNetworkReply *reply = sApp->headerFromNetwork(url, { this, &CDatabaseReader::receivedSharedFileHeader });
-            if (reply) { c++; }
-            currentEntity = CEntityFlags::iterateDbEntities(allEntities);
-        }
-        return c > 0;
-    }
-
     bool CDatabaseReader::isSharedHeaderNewerThanCacheTimestamp(CEntityFlags::Entity entity) const
     {
         Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "need single entity");
@@ -718,18 +688,6 @@ namespace BlackCore::Db
         if (!ts.isValid()) return {};
         const QString q = parameterLatestTimestamp() % u"=" % dateTimeToDbLatestTs(ts);
         return q;
-    }
-
-    const QString &CDatabaseReader::parameterLatestId()
-    {
-        static const QString p("latestId");
-        return p;
-    }
-
-    const CUrl &CDatabaseReader::getDbUrl()
-    {
-        static const CUrl dbUrl(sApp->getGlobalSetup().getDbRootDirectoryUrl());
-        return dbUrl;
     }
 
     CUrl CDatabaseReader::getWorkingSharedDbdataDirectoryUrl()
