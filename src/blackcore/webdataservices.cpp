@@ -7,7 +7,6 @@
 #include "blackcore/db/infodatareader.h"
 #include "blackcore/db/icaodatareader.h"
 #include "blackcore/db/databasewriter.h"
-#include "blackcore/db/icaodatareader.h"
 #include "blackcore/db/modeldatareader.h"
 #include "blackcore/vatsim/vatsimdatafilereader.h"
 #include "blackcore/vatsim/vatsimmetarreader.h"
@@ -16,7 +15,6 @@
 #include "blackcore/webdataservices.h"
 #include "blackcore/setupreader.h"
 #include "blackcore/application.h"
-#include "blackmisc/network/networkutils.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/logcategories.h"
 #include "blackmisc/logmessage.h"
@@ -27,7 +25,6 @@
 #include "blackconfig/buildconfig.h"
 
 #include <QDir>
-#include <QFlags>
 #include <QJsonDocument>
 #include <QSslSocket>
 #include <QThread>
@@ -50,7 +47,7 @@ using namespace BlackMisc::Weather;
 
 namespace BlackCore
 {
-    CWebDataServices::CWebDataServices(CWebReaderFlags::WebReader readers, const CDatabaseReaderConfigList &dbReaderConfig, BlackMisc::Restricted<CApplication>, QObject *parent) : QObject(parent), m_readers(readers), m_dbReaderConfig(dbReaderConfig)
+    CWebDataServices::CWebDataServices(CWebReaderFlags::WebReader readers, const CDatabaseReaderConfigList &dbReaderConfig, BlackMisc::Restricted<CApplication>, QObject *parent) : QObject(parent), m_dbReaderConfig(dbReaderConfig)
     {
         if (!sApp) { return; } // shutting down
 
@@ -68,7 +65,6 @@ namespace BlackCore
         {
             // will remove info reader because not needed
             readers &= ~CWebReaderFlags::DbInfoDataReader;
-            m_readers = readers;
             CLogMessage(this).info(u"Remove info object reader because not needed");
         }
 
@@ -187,12 +183,6 @@ namespace BlackCore
         return false;
     }
 
-    void CWebDataServices::resetSignalFlags()
-    {
-        m_signalledEntities.clear();
-        m_signalledHeaders = false;
-    }
-
     bool CWebDataServices::hasDbAircraftData() const
     {
         return this->hasDbIcaoData() && this->hasDbModelData();
@@ -240,7 +230,6 @@ namespace BlackCore
     {
         if (m_shuttingDown) { return CEntityFlags::NoEntity; }
 
-        m_initialRead = true; // read started
         Q_ASSERT_X(!whatToRead.testFlag(CEntityFlags::DbInfoObjectEntity), Q_FUNC_INFO, "Info object must be read upfront");
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
         if (m_vatsimDataFileReader)
@@ -1408,7 +1397,6 @@ namespace BlackCore
     {
         if (m_shuttingDown) { return; }
 
-        m_initialRead = true; // read started
         if (CEntityFlags::anySwiftDbEntity(entities))
         {
             // with info objects wait until info objects are loaded
