@@ -35,7 +35,6 @@ namespace BlackMisc::Db
             CacheThenShared = Shared | Cached, //!< Cache where possible, otherwise shared
             CacheAndSharedInfo = SharedInfoOnly | Cached, //!< Cached data plus shared info file
             DbReadingOrShared = DbReading | Shared, //!< read from DB or shared
-            DbReadingOrAnyShared = DbReading | Shared | SharedInfoOnly //!< read from DB or shared/shared info
         };
         Q_DECLARE_FLAGS(DataRetrievalMode, DataRetrievalModeFlag)
 
