@@ -199,7 +199,7 @@ namespace BlackCore::Db
         }
 
         // parsing
-        emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadParsing, 0, url);
+        emit this->dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadParsing, 0, url);
         CAirportList airports;
         CAirportList inconsistent;
         if (res.isRestricted())
