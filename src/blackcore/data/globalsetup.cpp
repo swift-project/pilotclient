@@ -192,6 +192,10 @@ namespace BlackCore::Data
 
             % u"Predefined servers: " % getPredefinedServers().toQString(i18n) % separator
 
+            % u"AFV voice server URL: " % getAfvApiServerUrl().toQString(i18n) % separator
+
+            % u"AFV map URL: " % getAfvMapUrl().toQString(i18n) % separator
+
             % u"Crash report server: " % getCrashReportServerUrl().toQString(i18n);
 
         return s;
@@ -220,6 +224,8 @@ namespace BlackCore::Data
         case IndexCrashReportServerUrl: return QVariant::fromValue(m_crashReportServerUrl);
         case IndexMappingMinimumVersion: return QVariant::fromValue(m_mappingMinimumVersion);
         case IndexPredefinedServers: return QVariant::fromValue(m_predefinedServers);
+        case IndexAfvApiServerUrl: return QVariant::fromValue(m_afvApiServerUrl);
+        case IndexAfvMapUrl: return QVariant::fromValue(m_afvMapUrl);
         default: return CValueObject::propertyByIndex(index);
         }
     }
@@ -249,6 +255,8 @@ namespace BlackCore::Data
         case IndexCrashReportServerUrl: m_crashReportServerUrl = variant.value<CUrl>(); break;
         case IndexMappingMinimumVersion: m_mappingMinimumVersion = variant.toString(); break;
         case IndexPredefinedServers: m_predefinedServers = variant.value<CServerList>(); break;
+        case IndexAfvApiServerUrl: m_afvApiServerUrl = variant.value<CUrl>(); break;
+        case IndexAfvMapUrl: m_afvMapUrl = variant.value<CUrl>(); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }

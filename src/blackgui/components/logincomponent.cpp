@@ -95,10 +95,6 @@ namespace BlackGui::Components
         ui->form_FsdDetails->setFsdSetupEnabled(false);
         ui->form_FsdDetails->setAlwaysAllowOverride(true);
 
-        ui->form_Voice->showEnableInfo(true);
-        ui->form_Voice->setVoiceSetupEnabled(false);
-        ui->form_Voice->setAlwaysAllowOverride(true);
-
         ui->lblp_AircraftCombinedType->setToolTips("ok", "wrong");
         ui->lblp_AirlineIcao->setToolTips("ok", "wrong");
         ui->lblp_AircraftIcao->setToolTips("ok", "wrong");
@@ -273,12 +269,6 @@ namespace BlackGui::Components
                 currentServer.setFsdSetup(fsd);
             }
 
-            if (ui->form_Voice->isVoiceSetupEnabled())
-            {
-                const CVoiceSetup voice = ui->form_Voice->getValue();
-                currentServer.setVoiceSetup(voice);
-            }
-
             ui->frp_CurrentServer->setServer(currentServer);
             sGui->getIContextOwnAircraft()->updateOwnAircraftPilot(currentServer.getUser());
 
@@ -286,11 +276,6 @@ namespace BlackGui::Components
             ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
 
             // Login
-            if (sGui->getCContextAudioBase())
-            {
-                sGui->getCContextAudioBase()->setVoiceSetup(currentServer.getVoiceSetup());
-            }
-
             msg = sGui->getIContextNetwork()->connectToNetwork(currentServer, {}, true, {}, true, {}, mode);
             if (msg.isSuccess())
             {
@@ -460,7 +445,6 @@ namespace BlackGui::Components
 
         // only override if not yet enabled
         if (!ui->form_FsdDetails->isFsdSetupEnabled()) { ui->form_FsdDetails->setValue(server.getFsdSetup()); }
-        if (!ui->form_Voice->isVoiceSetupEnabled()) { ui->form_Voice->setValue(server.getVoiceSetup()); }
 
         ui->tw_Network->setVisible(showNetwork);
         ui->tw_Details->setMinimumHeight(showNetwork ? 0 : 125);

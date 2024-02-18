@@ -44,7 +44,6 @@ namespace BlackGui::Editors
         ui->le_Address->setText(server.getAddress());
         ui->le_Port->setText(QString::number(server.getPort()));
         ui->form_ServerFsd->setValue(server.getFsdSetup());
-        ui->form_Voice->setValue(server.getVoiceSetup());
     }
 
     CServer CServerForm::getServer() const
@@ -55,14 +54,13 @@ namespace BlackGui::Editors
             QString(),
             ui->le_Password->text().trimmed());
         const CFsdSetup fsdSetup(ui->form_ServerFsd->getValue());
-        const CVoiceSetup voiceSetup(ui->form_Voice->getValue());
         const CServer server(
             ui->le_Name->text().trimmed().simplified(),
             ui->le_Description->text().trimmed().simplified(),
             ui->le_Address->text().trimmed(),
             ui->le_Port->text().trimmed().toInt(),
             user,
-            fsdSetup, voiceSetup,
+            fsdSetup,
             ui->cbp_Ecosystem->getSelectedEcosystem(),
             this->getServerType(),
             true);
@@ -82,7 +80,6 @@ namespace BlackGui::Editors
     void CServerForm::setReadOnly(bool readOnly)
     {
         ui->form_ServerFsd->setReadOnly(readOnly);
-        ui->form_Voice->setReadOnly(readOnly);
 
         ui->le_NetworkId->setReadOnly(readOnly);
         ui->le_RealName->setReadOnly(readOnly);

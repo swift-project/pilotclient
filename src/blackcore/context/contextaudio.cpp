@@ -152,7 +152,7 @@ namespace BlackCore::Context
 
     void CContextAudioBase::initVoiceClient()
     {
-        if (m_voiceClient) { return; }
+        if (m_voiceClient || !sApp) { return; }
 
         const CAudioDeviceInfoList devices = CAudioDeviceInfoList::allDevices();
         if (devices != m_activeLocalDevices)
@@ -179,9 +179,7 @@ namespace BlackCore::Context
         }
 #endif
 
-        m_voiceClient = new CAfvClient(CVoiceSetup().getAfvVoiceServerUrl(), this);
-        const CVoiceSetup vs = m_voiceSettings.getThreadLocal();
-        m_voiceClient->updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
+        m_voiceClient = new CAfvClient(sApp->getGlobalSetup().getAfvApiServerUrl().toQString(), this);
 
         Q_ASSERT_X(m_voiceClient->thread() == qApp->thread(), Q_FUNC_INFO, "Should be in main thread");
         m_voiceClient->start(); // thread
@@ -287,9 +285,6 @@ namespace BlackCore::Context
             CLogMessage(this).info(u"Will not use AFV as ecosystem is '%1'") << ecoSystem.toQString(true);
             return false;
         }
-
-        const CVoiceSetup vs = m_voiceSettings.getThreadLocal();
-        m_voiceClient->updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
 
         const CUser connectedUser = this->getIContextNetwork()->getConnectedServer().getUser();
         const QString client = "swift " % BlackConfig::CBuildConfig::getShortVersionString();
@@ -540,17 +535,6 @@ namespace BlackCore::Context
         return m_voiceClient->isLoopback();
     }
 
-    void CContextAudioBase::setVoiceSetup(const CVoiceSetup &setup)
-    {
-        // could be recycled for some AFV setup
-        Q_UNUSED(setup)
-    }
-
-    CVoiceSetup CContextAudioBase::getVoiceSetup() const
-    {
-        return CVoiceSetup();
-    }
-
     void CContextAudioBase::setVoiceTransmission(bool enable, PTTCOM com)
     {
         if (!m_voiceClient) { return; }
@@ -580,12 +564,6 @@ namespace BlackCore::Context
         this->setMasterOutputVolume(s.getOutVolume());
         this->setComOutputVolume(CComSystem::Com1, s.getOutVolumeCom1());
         this->setComOutputVolume(CComSystem::Com2, s.getOutVolumeCom2());
-    }
-
-    void CContextAudioBase::onChangedVoiceSettings()
-    {
-        const CVoiceSetup vs = m_voiceSettings.getThreadLocal();
-        m_voiceClient->updateVoiceServerUrl(vs.getAfvVoiceServerUrl());
     }
 
     void CContextAudioBase::audioIncreaseVolume(bool enabled)

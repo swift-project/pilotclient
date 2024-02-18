@@ -82,7 +82,7 @@ namespace BlackGui::Components
         this->setForceSmall(true);
         this->showKillButton(false);
 
-        // override details/voice
+        // override details
         ui->comp_NetworkDetails->setAlwaysAllowOverride(true);
 
         // Stored data
@@ -164,12 +164,6 @@ namespace BlackGui::Components
                 currentServer.setFsdSetup(fsd);
             }
 
-            if (ui->comp_NetworkDetails->isVoiceSetupOverrideEnabled())
-            {
-                const CVoiceSetup voice = ui->comp_NetworkDetails->getVoiceSetup();
-                currentServer.setVoiceSetup(voice);
-            }
-
             // update for own aircraft context
             sGui->getIContextOwnAircraft()->updateOwnAircraftPilot(currentServer.getUser());
 
@@ -196,11 +190,6 @@ namespace BlackGui::Components
             }
 
             // Login
-            if (sGui && sGui->getCContextAudioBase())
-            {
-                sGui->getCContextAudioBase()->setVoiceSetup(currentServer.getVoiceSetup());
-            }
-
             msg = sGui->getIContextNetwork()->connectToNetwork(currentServer, values.ownLiverySend, values.useLivery, values.ownAircraftModelStringSend, values.useModelString, partnerCs, mode);
             if (msg.isSuccess())
             {

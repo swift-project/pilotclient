@@ -66,5 +66,11 @@
     },
     "ssrEquipmentHelpUrl": {
         "url": "https://en.wikipedia.org/wiki/Equipment_codes#Surveillance_equipment_codes"
+    },
+    "afvApiServerUrl": {
+        "url": "https://voice1.vatsim.net/"
+    },
+    "afvMapUrl": {
+        "url": "https://afv-map.vatsim.net/"
     }
 }

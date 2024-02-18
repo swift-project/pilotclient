@@ -14,8 +14,6 @@
 #include <Qt>
 #include <QtGlobal>
 
-using namespace BlackMisc::Audio;
-
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Network, CServer)
 
 namespace BlackMisc::Network
@@ -27,11 +25,11 @@ namespace BlackMisc::Network
     }
 
     CServer::CServer(const QString &name, const QString &description, const QString &address, int port, const CUser &user,
-                     const CFsdSetup &fsdSetup, const CVoiceSetup &voiceSetup, const CEcosystem &ecosytem, ServerType serverType, bool isAcceptingConnections)
+                     const CFsdSetup &fsdSetup, const CEcosystem &ecosytem, ServerType serverType, bool isAcceptingConnections)
         : m_name(CObfuscation::decode(name)), m_description(CObfuscation::decode(description)), m_address(CObfuscation::decode(address)), m_port(port), m_user(user),
           m_ecosystem(ecosytem),
           m_serverType(serverType), m_isAcceptingConnections(isAcceptingConnections),
-          m_fsdSetup(fsdSetup), m_voiceSetup(voiceSetup)
+          m_fsdSetup(fsdSetup)
     {}
 
     CServer::CServer(
@@ -59,7 +57,7 @@ namespace BlackMisc::Network
         static const CServer fsc = [] {
             CServer s = CServer("FSC", "FSC e.V.", "OBF:AwJIKfgkQDJEIRnno29DJlB+UK0=", 6809,
                                 CUser(),
-                                CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::privateFsd()), CServer::FSDServer);
+                                CFsdSetup(), CEcosystem(CEcosystem::privateFsd()), CServer::FSDServer);
             s.removeSendReceiveDetails(CFsdSetup::AllInterimPositions);
             return s;
         }();
@@ -70,7 +68,7 @@ namespace BlackMisc::Network
     {
         static const CServer s = CServer("ES Tower", "Euroscope Tower view", "localhost", 6809,
                                          CUser(),
-                                         CFsdSetup::vatsimStandard(), CVoiceSetup::vatsimStandard(), CEcosystem(CEcosystem::vatsim()), CServer::VoiceServerVatsim);
+                                         CFsdSetup::vatsimStandard(), CEcosystem(CEcosystem::vatsim()), CServer::VoiceServerVatsim);
         return s;
     }
 
@@ -157,7 +155,6 @@ namespace BlackMisc::Network
         if (this->getPort() < 1 || this->getPort() > 65535) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, u"Wrong port")); }
         msgs.push_back(this->getUser().validate());
         msgs.push_back(this->getFsdSetup().validate());
-        msgs.push_back(this->getVoiceSetup().validate());
         msgs.addCategories(cats);
         msgs.sortBySeverity();
         return msgs;
@@ -185,7 +182,6 @@ namespace BlackMisc::Network
         case IndexPort: return QVariant::fromValue(m_port);
         case IndexUser: return m_user.propertyByIndex(index.copyFrontRemoved());
         case IndexFsdSetup: return m_fsdSetup.propertyByIndex(index.copyFrontRemoved());
-        case IndexVoiceSetup: return m_voiceSetup.propertyByIndex(index.copyFrontRemoved());
         case IndexEcosystem: return m_ecosystem.propertyByIndex(index.copyFrontRemoved());
         case IndexIsAcceptingConnections: return QVariant::fromValue(m_isAcceptingConnections);
         case IndexServerType: return QVariant::fromValue(m_serverType);
@@ -216,7 +212,6 @@ namespace BlackMisc::Network
         case IndexName: this->setName(variant.value<QString>()); break;
         case IndexUser: m_user.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexFsdSetup: m_fsdSetup.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-        case IndexVoiceSetup: m_voiceSetup.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexEcosystem: m_ecosystem.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexServerType: this->setServerType(static_cast<ServerType>(variant.toInt())); break;
         case IndexIsAcceptingConnections: this->setIsAcceptingConnections(variant.value<bool>()); break;
@@ -234,7 +229,6 @@ namespace BlackMisc::Network
         case IndexAddress: return this->getAddress().compare(compareValue.getAddress(), Qt::CaseInsensitive);
         case IndexDescription: return this->getDescription().compare(compareValue.getDescription(), Qt::CaseInsensitive);
         case IndexFsdSetup: return m_fsdSetup.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getFsdSetup());
-        case IndexVoiceSetup: return m_voiceSetup.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getVoiceSetup());
         case IndexName: return this->getName().compare(compareValue.getName(), Qt::CaseInsensitive);
         case IndexPort: return Compare::compare(this->getPort(), compareValue.getPort());
         case IndexUser: return this->getUser().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getUser());

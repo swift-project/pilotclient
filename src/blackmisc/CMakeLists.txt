@@ -18,8 +18,6 @@ add_library(misc SHARED
         audio/ptt.h
         audio/registermetadataaudio.cpp
         audio/registermetadataaudio.h
-        audio/voicesetup.cpp
-        audio/voicesetup.h
 
         # Aviation
         aviation/aircraftcategory.cpp

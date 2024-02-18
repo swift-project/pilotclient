@@ -318,23 +318,6 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tb_ServerVoicce">
-      <attribute name="title">
-       <string>Voice</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="vl_VoiceSetup">
-       <item alignment="Qt::AlignTop">
-        <widget class="BlackGui::Editors::CVoiceSetupForm" name="form_Voice">
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
     </widget>
    </item>
   </layout>
@@ -344,12 +327,6 @@
    <class>BlackGui::Editors::CFsdSetupForm</class>
    <extends>QFrame</extends>
    <header>blackgui/editors/fsdsetupform.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Editors::CVoiceSetupForm</class>
-   <extends>QFrame</extends>
-   <header>blackgui/editors/voicesetupform.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

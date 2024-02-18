@@ -30,7 +30,8 @@ namespace BlackCore::Afv::Model
         QEventLoop loop(sApp);
         connect(sApp->getNetworkAccessManager(), &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
         connect(sApp, &CApplication::aboutToShutdown, &loop, &QEventLoop::quit);
-        QNetworkReply *reply = sApp->getNetworkAccessManager()->get(QNetworkRequest(QUrl("https://voice1.vatsim.net/api/v1/network/online/callsigns")));
+        const QUrl url = sApp->getGlobalSetup().getAfvApiServerUrl().withAppendedPath("/api/v1/network/online/callsigns");
+        QNetworkReply *reply = sApp->getNetworkAccessManager()->get(QNetworkRequest(url));
         while (reply && !reply->isFinished() && sApp && !sApp->isShuttingDown())
         {
             loop.exec();

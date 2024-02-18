@@ -46,9 +46,6 @@ namespace BlackGui::Components
         ui->form_FsdDetails->showEnableInfo(true);
         ui->form_FsdDetails->setFsdSetupEnabled(false);
         ui->form_FsdDetails->setReadOnly(false);
-        ui->form_Voice->showEnableInfo(true);
-        ui->form_Voice->setVoiceSetupEnabled(false);
-        ui->form_Voice->setReadOnly(false);
 
         constexpr int MaxLength = 10;
         constexpr int MinLength = 0;
@@ -94,16 +91,6 @@ namespace BlackGui::Components
         return ui->tw_Details->currentWidget() == ui->tb_OtherServers;
     }
 
-    CVoiceSetup CNetworkDetailsComponent::getVoiceSetup() const
-    {
-        return ui->form_Voice->getValue();
-    }
-
-    bool CNetworkDetailsComponent::isVoiceSetupOverrideEnabled() const
-    {
-        return ui->form_Voice->isVoiceSetupEnabled();
-    }
-
     CFsdSetup CNetworkDetailsComponent::getFsdSetup() const
     {
         return ui->form_FsdDetails->getValue();
@@ -112,7 +99,6 @@ namespace BlackGui::Components
     void CNetworkDetailsComponent::setAlwaysAllowOverride(bool allow)
     {
         ui->form_FsdDetails->setAlwaysAllowOverride(allow);
-        ui->form_Voice->setAlwaysAllowOverride(allow);
     }
 
     bool CNetworkDetailsComponent::isFsdSetupOverrideEnabled() const
@@ -139,7 +125,6 @@ namespace BlackGui::Components
 
         // only override if not yet enabled
         if (!ui->form_FsdDetails->isFsdSetupEnabled()) { ui->form_FsdDetails->setValue(server.getFsdSetup()); }
-        if (!ui->form_Voice->isVoiceSetupEnabled()) { ui->form_Voice->setValue(server.getVoiceSetup()); }
     }
 
     void CNetworkDetailsComponent::onOverrideCredentialsToPilot()

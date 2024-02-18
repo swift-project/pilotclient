@@ -50,7 +50,9 @@ namespace BlackCore::Data
             IndexCrashReportServerUrl,
             IndexSharedUrls,
             IndexMappingMinimumVersion,
-            IndexPredefinedServers
+            IndexPredefinedServers,
+            IndexAfvApiServerUrl,
+            IndexAfvMapUrl
         };
 
         //! Add info when pinging
@@ -179,6 +181,12 @@ namespace BlackCore::Data
         //! SSR equipment code help URL
         BlackMisc::Network::CUrl getSsrEquipmentHelpUrl() const { return m_ssrEquipmentHelpUrl; }
 
+        //! AFV voice server URL
+        BlackMisc::Network::CUrl getAfvApiServerUrl() const { return m_afvApiServerUrl; }
+
+        //! AFV map URL
+        BlackMisc::Network::CUrl getAfvMapUrl() const { return m_afvMapUrl; }
+
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
@@ -216,6 +224,8 @@ namespace BlackCore::Data
         BlackMisc::Network::CUrl m_ncepGlobalForecastSystemUrl25; //!< NCEP GFS url 0.25 degree resolution
         BlackMisc::Network::CUrl m_comNavEquipmentHelpUrl; //!< Help URL for COM/NAV equipment codes
         BlackMisc::Network::CUrl m_ssrEquipmentHelpUrl; //!< Help URL for SSR equipment codes
+        BlackMisc::Network::CUrl m_afvApiServerUrl; //!< AFV API server URL
+        BlackMisc::Network::CUrl m_afvMapUrl; //!< AFV map URL
         bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know what you are doing. Only works with CBuildConfig::isLocalDeveloperDebugBuild
 
         BLACK_METACLASS(
@@ -238,7 +248,9 @@ namespace BlackCore::Data
             BLACK_METAMEMBER(ncepGlobalForecastSystemUrl25, 0, RequiredForJson),
             BLACK_METAMEMBER(comNavEquipmentHelpUrl, 0, RequiredForJson),
             BLACK_METAMEMBER(ssrEquipmentHelpUrl, 0, RequiredForJson),
-            BLACK_METAMEMBER(dbDebugFlag, 0, RequiredForJson)
+            BLACK_METAMEMBER(dbDebugFlag, 0, RequiredForJson),
+            BLACK_METAMEMBER(afvApiServerUrl, 0, RequiredForJson),
+            BLACK_METAMEMBER(afvMapUrl, 0, RequiredForJson)
         );
     };
 } // ns

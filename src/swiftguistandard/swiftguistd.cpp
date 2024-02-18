@@ -671,7 +671,7 @@ bool SwiftGuiStd::startAFVMap()
     //! \todo KB 2019-11 AFV map workaround
     if (sGui && !sGui->isShuttingDown())
     {
-        sGui->openUrl("https://afv-map.vatsim.net/");
+        sGui->openUrl(sGui->getGlobalSetup().getAfvMapUrl());
     }
 
     return true;

@@ -20,7 +20,6 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Audio;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
@@ -142,7 +141,7 @@ namespace BlackCore::Vatsim
     {
         return CServer(server["name"].toString(), server["location"].toString(),
                        server["hostname_or_ip"].toString(), 6809, CUser("id", "real name", "email", "password"),
-                       CFsdSetup::vatsimStandard(), CVoiceSetup::vatsimStandard(), CEcosystem::VATSIM,
+                       CFsdSetup::vatsimStandard(), CEcosystem::VATSIM,
                        CServer::FSDServerVatsim, server["clients_connection_allowed"].toInt());
     }
 

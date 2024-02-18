@@ -26,7 +26,6 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Audio;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;
@@ -118,7 +117,7 @@ namespace BlackFsdTest
     {
         static const CServer dvp("Testserver", "Client project testserver", "localhost", 6809,
                                  CUser("1234567", "Test User", "", "123456"),
-                                 CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
+                                 CFsdSetup(), CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
         return dvp;
     }
 

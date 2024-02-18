@@ -227,7 +227,6 @@ add_library(gui SHARED
         editors/liveryform.h
         editors/situationform.h
         editors/aircraftmodelform.h
-        editors/voicesetupform.h
         editors/fsdsetupform.ui
         editors/aircraftpartsform.cpp
         editors/ownmodelsetform.h
@@ -254,7 +253,6 @@ add_library(gui SHARED
         editors/modelmappingform.cpp
         editors/distributorform.ui
         editors/aircrafticaoform.h
-        editors/voicesetupform.ui
         editors/aircraftpartsform.ui
         editors/serverform.cpp
         editors/modelmappingmodifyform.ui
@@ -279,7 +277,6 @@ add_library(gui SHARED
         editors/interpolationsetupform.cpp
         editors/aircrafticaoform.ui
         editors/pbhsform.h
-        editors/voicesetupform.cpp
         editors/aircrafticaoform.cpp
         editors/cockpitcomform.h
         blackguiexport.h

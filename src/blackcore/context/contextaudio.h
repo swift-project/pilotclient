@@ -19,7 +19,6 @@
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/audio/audiosettings.h"
-#include "blackmisc/audio/voicesetup.h"
 #include "blackmisc/audio/ptt.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/comsystem.h"
@@ -196,12 +195,6 @@ namespace BlackCore
             bool isAudioLoopbackEnabled() const;
             //! @}
 
-            //! @{
-            //! Voice setup
-            BlackMisc::Audio::CVoiceSetup getVoiceSetup() const;
-            void setVoiceSetup(const BlackMisc::Audio::CVoiceSetup &setup);
-            //! @}
-
             //! Info string about audio
             QString audioRunsWhereInfo() const;
 
@@ -328,9 +321,6 @@ namespace BlackCore
             //! Changed audio settings
             void onChangedAudioSettings();
 
-            //! Changed voice settings
-            void onChangedVoiceSettings();
-
             //! @{
             //! Audio increase/decrease volume
             void audioIncreaseVolume(bool enabled);
@@ -366,7 +356,6 @@ namespace BlackCore
 
             // settings
             BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &CContextAudioBase::onChangedAudioSettings };
-            BlackMisc::CSetting<BlackMisc::Audio::TVoiceSetup> m_voiceSettings { this, &CContextAudioBase::onChangedVoiceSettings };
 
             BlackMisc::CSetting<Audio::TInputDevice> m_inputDeviceSetting { this, &CContextAudioBase::changeDeviceSettings };
             BlackMisc::CSetting<Audio::TOutputDevice> m_outputDeviceSetting { this, &CContextAudioBase::changeDeviceSettings };

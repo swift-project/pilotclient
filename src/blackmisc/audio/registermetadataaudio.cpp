@@ -7,7 +7,6 @@
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/audio/audiosettings.h"
-#include "blackmisc/audio/voicesetup.h"
 
 #include "blackmisc/audio/ptt.h"
 #include <QDBusMetaType>
@@ -22,7 +21,6 @@ namespace BlackMisc
             CAudioDeviceInfo::registerMetadata();
             CAudioDeviceInfoList::registerMetadata();
             CSettings::registerMetadata();
-            CVoiceSetup::registerMetadata();
 
             // ENUMs
             qDBusRegisterMetaType<PTTCOM>();

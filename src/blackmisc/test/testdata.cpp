@@ -17,7 +17,6 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Math;
 using namespace BlackMisc::Network;
-using namespace BlackMisc::Audio;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 
@@ -33,7 +32,7 @@ namespace BlackMisc::Test
     {
         static const CServer trafficServer("fooserver", "a foo server", "localhost", 1234,
                                            CUser("112233", "Some real name", "email@xyz.com", "secret"),
-                                           CFsdSetup(), CVoiceSetup(), CEcosystem(CEcosystem::VATSIM), CServer::FSDServerVatsim);
+                                           CFsdSetup(), CEcosystem(CEcosystem::VATSIM), CServer::FSDServerVatsim);
         return trafficServer;
     }
 

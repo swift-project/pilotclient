@@ -13,7 +13,6 @@
 #include "blackmisc/network/data/lastserver.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/fsdsetup.h"
-#include "blackmisc/audio/voicesetup.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/network/connectionstatus.h"
@@ -49,7 +48,6 @@ namespace BlackGui::Components
         enum Details
         {
             DetailsServer,
-            DetailsVoice,
             DetailsBack
         };
 
@@ -67,12 +65,6 @@ namespace BlackGui::Components
 
         //! Specific setup enabled?
         bool isFsdSetupOverrideEnabled() const;
-
-        //! Voice setup
-        BlackMisc::Audio::CVoiceSetup getVoiceSetup() const;
-
-        //! Specific setup enabled?
-        bool isVoiceSetupOverrideEnabled() const;
 
         //! Login mode
         BlackMisc::Network::CLoginMode getLoginMode() const;

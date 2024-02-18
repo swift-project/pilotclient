@@ -9,7 +9,6 @@
 #include "blackmisc/network/user.h"
 #include "blackmisc/network/fsdsetup.h"
 #include "blackmisc/network/ecosystem.h"
-#include "blackmisc/audio/voicesetup.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindexref.h"
@@ -39,7 +38,6 @@ namespace BlackMisc::Network
             IndexPort,
             IndexUser,
             IndexFsdSetup,
-            IndexVoiceSetup,
             IndexEcosystem,
             IndexIsAcceptingConnections,
             IndexServerType,
@@ -69,7 +67,7 @@ namespace BlackMisc::Network
         //! Constructor.
         CServer(const QString &name, const QString &description, const QString &address, int port,
                 const CUser &user,
-                const CFsdSetup &fsdSetup, const Audio::CVoiceSetup &voiceSetup,
+                const CFsdSetup &fsdSetup,
                 const CEcosystem &ecosytem, ServerType serverType,
                 bool isAcceptingConnections = true);
 
@@ -163,12 +161,6 @@ namespace BlackMisc::Network
         //! Get server type
         ServerType getServerType() const { return static_cast<ServerType>(m_serverType); }
 
-        //! Get voice setup
-        const Audio::CVoiceSetup &getVoiceSetup() const { return m_voiceSetup; }
-
-        //! Set voice setup
-        void setVoiceSetup(const Audio::CVoiceSetup &setup) { m_voiceSetup = setup; }
-
         //! Unspecified?
         bool hasUnspecifiedServerType() const;
 
@@ -224,7 +216,6 @@ namespace BlackMisc::Network
         int m_serverType = static_cast<int>(Unspecified);
         bool m_isAcceptingConnections = true; //!< disable server for connections
         CFsdSetup m_fsdSetup;
-        Audio::CVoiceSetup m_voiceSetup;
 
         BLACK_METACLASS(
             CServer,
@@ -234,7 +225,6 @@ namespace BlackMisc::Network
             BLACK_METAMEMBER(port),
             BLACK_METAMEMBER(user),
             BLACK_METAMEMBER(fsdSetup),
-            BLACK_METAMEMBER(voiceSetup),
             BLACK_METAMEMBER(ecosystem),
             BLACK_METAMEMBER(serverType),
             BLACK_METAMEMBER(isAcceptingConnections),
