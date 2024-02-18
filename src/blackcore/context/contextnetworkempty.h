@@ -317,13 +317,6 @@ namespace BlackCore::Context
             return false;
         }
 
-        //! \copydoc IContextNetwork::getVatsimVoiceServers
-        virtual BlackMisc::Network::CServerList getVatsimVoiceServers() const override
-        {
-            logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Network::CServerList();
-        }
-
         //! \copydoc IContextNetwork::getVatsimFsdServers
         virtual BlackMisc::Network::CServerList getVatsimFsdServers() const override
         {

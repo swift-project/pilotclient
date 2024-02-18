@@ -126,10 +126,6 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Network::CServerList getVatsimFsdServers() const;
 
-        //! Voice servers
-        //! \threadsafe
-        BlackMisc::Network::CServerList getVatsimVoiceServers() const;
-
         //! METAR URLs (from status file)
         //! \threadsafe
         BlackMisc::Network::CUrlList getVatsimMetarUrls() const;

@@ -118,12 +118,6 @@ namespace BlackCore
         return CServerList();
     }
 
-    CServerList CWebDataServices::getVatsimVoiceServers() const
-    {
-        if (m_vatsimDataFileReader) { return m_vatsimDataFileReader->getVoiceServers(); }
-        return CServerList();
-    }
-
     CUrlList CWebDataServices::getVatsimMetarUrls() const
     {
         if (m_vatsimStatusReader) { return m_vatsimStatusReader->getMetarFileUrls(); }

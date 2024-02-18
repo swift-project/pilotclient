@@ -365,9 +365,6 @@ namespace BlackCore
             //! \copydoc BlackCore::Context::IContextNetwork::getVatsimFsdServers
             virtual BlackMisc::Network::CServerList getVatsimFsdServers() const override;
 
-            //! \copydoc BlackCore::Context::IContextNetwork::getVatsimVoiceServers
-            virtual BlackMisc::Network::CServerList getVatsimVoiceServers() const override;
-
             //! \copydoc BlackCore::Context::IContextNetwork::requestAircraftDataUpdates
             virtual void requestAircraftDataUpdates() override;
 

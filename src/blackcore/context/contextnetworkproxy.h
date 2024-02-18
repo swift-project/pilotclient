@@ -148,9 +148,6 @@ namespace BlackCore
             //! \copydoc BlackCore::Context::IContextNetwork::getClients
             virtual BlackMisc::Network::CClientList getClients() const override;
 
-            //! \copydoc BlackCore::Context::IContextNetwork::getVatsimVoiceServers
-            virtual BlackMisc::Network::CServerList getVatsimVoiceServers() const override;
-
             //! \copydoc BlackCore::Context::IContextNetwork::getVatsimFsdServers
             virtual BlackMisc::Network::CServerList getVatsimFsdServers() const override;
 

@@ -217,9 +217,6 @@ namespace BlackCore::Context
         //! Set client for given callsign
         virtual bool setOtherClient(const BlackMisc::Network::CClient &client) = 0;
 
-        //! Known voice servers, available when data file was first read
-        virtual BlackMisc::Network::CServerList getVatsimVoiceServers() const = 0;
-
         //! Known FSD servers, available when data file was first read
         virtual BlackMisc::Network::CServerList getVatsimFsdServers() const = 0;
 

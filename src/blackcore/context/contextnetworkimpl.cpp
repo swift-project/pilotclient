@@ -646,13 +646,6 @@ namespace BlackCore::Context
         return sApp->getWebDataServices()->getVatsimFsdServers();
     }
 
-    CServerList CContextNetwork::getVatsimVoiceServers() const
-    {
-        Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "Missing data reader");
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        return sApp->getWebDataServices()->getVatsimVoiceServers();
-    }
-
     void CContextNetwork::onFsdConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
     {
         // if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << from << to; }
