@@ -483,7 +483,7 @@ jobs:
             xswiftbus-fat-allos-${{ needs.preBuild.outputs.version }}.7z
             swiftsymbols-allos-${{ needs.preBuild.outputs.version }}:swiftsymbols
       - name: Publish doxygen
-        uses: actions/deploy-pages@v3
+        uses: actions/deploy-pages@v4
 
   notify:
     runs-on: ubuntu-22.04
