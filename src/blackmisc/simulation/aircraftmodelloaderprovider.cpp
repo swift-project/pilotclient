@@ -1,5 +1,10 @@
-// SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
-// SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
+/* Copyright (C) 2015
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
+ * or distributed except according to the terms contained in the LICENSE file.
+ */
 
 #include "blackmisc/simulation/aircraftmodelloaderprovider.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
@@ -28,7 +33,7 @@ namespace BlackMisc::Simulation
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Single simulator");
         if (simulator.isXPlane()) { return new CAircraftModelLoaderXPlane(parent); }
-        if (simulator.isFG()) { return new CAircraftModelLoaderFlightgear(parent); }
+        if (simulator.isFG())     { return new CAircraftModelLoaderFlightgear(parent); }
         return CAircraftCfgParser::createModelLoader(simulator, parent);
     }
 
@@ -38,30 +43,35 @@ namespace BlackMisc::Simulation
         switch (simulator.getSimulator())
         {
         case CSimulatorInfo::FSX:
-        {
-            if (!m_loaderFsx) { m_loaderFsx = this->initLoader(CSimulatorInfo::fsx()); }
-            return m_loaderFsx;
-        }
+            {
+                if (!m_loaderFsx) { m_loaderFsx = this->initLoader(CSimulatorInfo::fsx()); }
+                return m_loaderFsx;
+            }
         case CSimulatorInfo::P3D:
-        {
-            if (!m_loaderP3D) { m_loaderP3D = this->initLoader(CSimulatorInfo::p3d()); }
-            return m_loaderP3D;
-        }
+            {
+                if (!m_loaderP3D) { m_loaderP3D = this->initLoader(CSimulatorInfo::p3d()); }
+                return m_loaderP3D;
+            }
         case CSimulatorInfo::XPLANE:
-        {
-            if (!m_loaderXP) { m_loaderXP = this->initLoader(CSimulatorInfo::xplane()); }
-            return m_loaderXP;
-        }
+            {
+                if (!m_loaderXP) { m_loaderXP = this->initLoader(CSimulatorInfo::xplane()); }
+                return m_loaderXP;
+            }
         case CSimulatorInfo::FS9:
-        {
-            if (!m_loaderFS9) { m_loaderFS9 = this->initLoader(CSimulatorInfo::fs9()); }
-            return m_loaderFS9;
-        }
+            {
+                if (!m_loaderFS9) { m_loaderFS9 = this->initLoader(CSimulatorInfo::fs9()); }
+                return m_loaderFS9;
+            }
         case CSimulatorInfo::FG:
-        {
-            if (!m_loaderFG) { m_loaderFG = this->initLoader(CSimulatorInfo::fg()); }
-            return m_loaderFG;
-        }
+            {
+                if (!m_loaderFG) { m_loaderFG = this->initLoader(CSimulatorInfo::fg()); }
+                return m_loaderFG;
+            }
+        case CSimulatorInfo::MSFS:
+            {
+                if (!m_loaderMsfs) { m_loaderMsfs = this->initLoader(CSimulatorInfo::msfs()); }
+                return m_loaderMsfs;
+            }
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
             break;

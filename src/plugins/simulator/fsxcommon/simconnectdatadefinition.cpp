@@ -13,6 +13,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Simulation;
 using namespace BlackSimPlugin::FsCommon;
 
 namespace BlackSimPlugin::FsxCommon
@@ -69,7 +70,7 @@ namespace BlackSimPlugin::FsxCommon
 
     CSimConnectDefinitions::CSimConnectDefinitions() {}
 
-    HRESULT CSimConnectDefinitions::initDataDefinitionsWhenConnected(const HANDLE hSimConnect)
+    HRESULT CSimConnectDefinitions::initDataDefinitionsWhenConnected(const HANDLE hSimConnect, const CSimulatorInfo &simInfo)
     {
         HRESULT hr = s_ok();
         hr += initOwnAircraft(hSimConnect);
@@ -78,6 +79,10 @@ namespace BlackSimPlugin::FsxCommon
         hr += initRemoteAircraftSimDataSet(hSimConnect);
         hr += initSimulatorEnvironment(hSimConnect);
         hr += initSbDataArea(hSimConnect);
+        if(simInfo.isMSFS())
+        {
+            hr += initMSFSTransponder(hSimConnect);
+        }
         return hr;
     }
 
@@ -285,6 +290,18 @@ namespace BlackSimPlugin::FsxCommon
         if (isFailure(hr))
         {
             CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error(u"SimConnect error: SimConnect_SetClientData %1") << hr;
+        }
+        return hr;
+    }
+
+    HRESULT CSimConnectDefinitions::initMSFSTransponder(const HANDLE hSimConnect)
+    {
+        HRESULT hr = s_ok();
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataTransponderModeMSFS, "TRANSPONDER STATE:1", "Enum");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataTransponderModeMSFS, "TRANSPONDER IDENT:1", "Bool");
+        if (isFailure(hr))
+        {
+            CLogMessage(static_cast<CSimConnectDefinitions*>(nullptr)).error(u"SimConnect error: MSFS transponder data definitions %1") << hr;
         }
         return hr;
     }

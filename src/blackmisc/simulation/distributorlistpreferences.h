@@ -1,5 +1,10 @@
-// SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
-// SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
+/* Copyright (C) 2016
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
+ * or distributed except according to the terms contained in the LICENSE file.
+ */
 
 //! \file
 
@@ -38,7 +43,7 @@ namespace BlackMisc::Simulation
         CDistributor getFirstOrDefaultDistributor(const CSimulatorInfo &simulator) const;
 
         //! Last updated simulator
-        const CSimulatorInfo &getLastUpdatedSimulator() const { return m_lastUpdatedSimulator; }
+        const CSimulatorInfo &getLastUpdatedSimulator() const {  return m_lastUpdatedSimulator; }
 
         //! Get distributors
         void setDistributors(const CDistributorList &distributors, const CSimulatorInfo &simulator);
@@ -52,7 +57,8 @@ namespace BlackMisc::Simulation
         CDistributorList m_distributorsFs9;
         CDistributorList m_distributorsXPlane;
         CDistributorList m_distributorsFG;
-        CSimulatorInfo m_lastUpdatedSimulator;
+        CDistributorList m_distributorsMsfs;
+        CSimulatorInfo   m_lastUpdatedSimulator;
 
         BLACK_METACLASS(
             CDistributorListPreferences,
@@ -61,6 +67,7 @@ namespace BlackMisc::Simulation
             BLACK_METAMEMBER(distributorsFs9),
             BLACK_METAMEMBER(distributorsXPlane),
             BLACK_METAMEMBER(distributorsFG),
+            BLACK_METAMEMBER(distributorsMsfs),
             BLACK_METAMEMBER(lastUpdatedSimulator)
         );
     };
@@ -68,4 +75,4 @@ namespace BlackMisc::Simulation
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CDistributorListPreferences)
 
-#endif // guard
+#endif //guard

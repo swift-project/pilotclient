@@ -53,6 +53,15 @@ constexpr bool BlackConfig::CBuildConfig::isCompiledWithFGSupport()
     return SWIFTCONFIG_${SWIFT_BUILD_FLIGHTGEAR_PLUGIN};
 }
 
+constexpr bool BlackConfig::CBuildConfig::isCompiledWithMSFSSupport()
+{
+!!IF swiftConfig(sims.msfs)
+    return true;
+!!ELSE
+    return false;
+!!ENDIF
+}
+
 constexpr bool BlackConfig::CBuildConfig::isCompiledWithGui()
 {
     return SWIFTCONFIG_${SWIFT_BUILD_BLACKGUI};

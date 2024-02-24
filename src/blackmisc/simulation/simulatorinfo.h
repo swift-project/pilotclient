@@ -1,5 +1,10 @@
-// SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
-// SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
+ * or distributed except according to the terms contained in the LICENSE file.
+ */
 
 //! \file
 
@@ -43,21 +48,21 @@ namespace BlackMisc::Simulation
         //! Simulator
         enum SimulatorFlag
         {
-            None = 0,
-            FSX = 1 << 0,
-            FS9 = 1 << 1,
-            XPLANE = 1 << 2,
-            P3D = 1 << 3,
-            FG = 1 << 4,
-            MSFS = 1 << 5,
-            FSX_P3D = FSX | P3D,
+            None        = 0,
+            FSX         = 1 << 0,
+            FS9         = 1 << 1,
+            XPLANE      = 1 << 2,
+            P3D         = 1 << 3,
+            FG          = 1 << 4,
+            MSFS        = 1 << 5,
+            FSX_P3D     = FSX | P3D,
             AllFsFamily = FSX | FS9 | P3D | MSFS,
-            All = FSX | FS9 | XPLANE | P3D | FG | MSFS
+            All         = FSX | FS9 | XPLANE | P3D | FG | MSFS
         };
         Q_DECLARE_FLAGS(Simulator, SimulatorFlag)
 
         //! Number of known individual simulators
-        static constexpr int NumberOfSimulators = 5;
+        static constexpr int NumberOfSimulators = 6;
 
         //! Default constructor
         CSimulatorInfo();
@@ -75,7 +80,7 @@ namespace BlackMisc::Simulation
         CSimulatorInfo(int flagsAsInt);
 
         //! Constructor
-        CSimulatorInfo(bool isFSX, bool isFS9, bool xp, bool isP3D, bool fg);
+        CSimulatorInfo(bool isFSX, bool isFS9, bool xp, bool isP3D, bool fg, bool msfs);
 
         //! Unspecified simulator
         bool isUnspecified() const;
@@ -172,7 +177,7 @@ namespace BlackMisc::Simulation
         CStatusMessage validateSimulatorsForModel() const;
 
         //! Bool flags to enum
-        static Simulator boolToFlag(bool isFSX, bool isFS9, bool xp, bool isP3D, bool fg);
+        static Simulator boolToFlag(bool isFSX, bool isFS9, bool xp, bool isP3D, bool fg, bool msfs);
 
         //! Identifer, as provided by plugin
         static Simulator identifierToSimulator(const QString &identifier);
@@ -198,33 +203,14 @@ namespace BlackMisc::Simulation
         //! From database JSON
         static CSimulatorInfo fromDatabaseJson(const QJsonObject &json, const QString &prefix);
 
-        //! @{
         //! Const simulator info objects
-        static const CSimulatorInfo &fg()
-        {
-            static const CSimulatorInfo s(FG);
-            return s;
-        }
-        static const CSimulatorInfo &fsx()
-        {
-            static const CSimulatorInfo s(FSX);
-            return s;
-        }
-        static const CSimulatorInfo &p3d()
-        {
-            static const CSimulatorInfo s(P3D);
-            return s;
-        }
-        static const CSimulatorInfo &fs9()
-        {
-            static const CSimulatorInfo s(FS9);
-            return s;
-        }
-        static const CSimulatorInfo &xplane()
-        {
-            static const CSimulatorInfo s(XPLANE);
-            return s;
-        }
+        //! @{
+        static const CSimulatorInfo &fg()  { static const CSimulatorInfo s(FG);  return s; }
+        static const CSimulatorInfo &fsx() { static const CSimulatorInfo s(FSX); return s; }
+        static const CSimulatorInfo &p3d() { static const CSimulatorInfo s(P3D); return s; }
+        static const CSimulatorInfo &fs9() { static const CSimulatorInfo s(FS9); return s; }
+        static const CSimulatorInfo &msfs() { static const CSimulatorInfo s(MSFS); return s; }
+        static const CSimulatorInfo &xplane() { static const CSimulatorInfo s(XPLANE); return s; }
         //! @}
 
     private:
@@ -249,10 +235,10 @@ namespace BlackMisc::Simulation
         //! Unknown count
         int getCountForUnknownSimulators() const;
 
-        //! P3D, FSX, or FS9
+        //! P3D, FSX, MSFS or FS9
         int getCountForFsFamilySimulators() const;
 
-        //! P3D or FSX
+        //! P3D, MSFS or FSX
         int getCountForFsxFamilySimulators() const;
 
         //! Set count

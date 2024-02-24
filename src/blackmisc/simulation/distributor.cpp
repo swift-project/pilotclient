@@ -1,5 +1,10 @@
-// SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
-// SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
+/* Copyright (C) 2015
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
+ * or distributed except according to the terms contained in the LICENSE file.
+ */
 
 #include "blackmisc/logcategories.h"
 #include "blackmisc/simulation/distributor.h"
@@ -15,14 +20,15 @@ BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Simulation, CDistributor)
 
 namespace BlackMisc::Simulation
 {
-    CDistributor::CDistributor() {}
+    CDistributor::CDistributor() { }
 
     CDistributor::CDistributor(const QString &key)
     {
         this->setDbKey(unifyKeyOrAlias(key));
     }
 
-    CDistributor::CDistributor(const QString &id, const QString &description, const QString &alias1, const QString &alias2, const CSimulatorInfo &simulator) : m_description(description), m_alias1(alias1), m_alias2(alias2), m_simulator(simulator)
+    CDistributor::CDistributor(const QString &id, const QString &description, const QString &alias1, const QString &alias2, const CSimulatorInfo &simulator) :
+        m_description(description), m_alias1(alias1), m_alias2(alias2), m_simulator(simulator)
     {
         this->setDbKey(unifyKeyOrAlias(id));
     }
@@ -47,7 +53,7 @@ namespace BlackMisc::Simulation
     bool CDistributor::matchesKeyOrAlias(const CDistributor &distributor) const
     {
         if (distributor.hasValidDbKey() && this->matchesKeyOrAlias(distributor.getDbKey())) { return true; }
-        if (distributor.hasAlias1() && this->matchesKeyOrAlias(distributor.getAlias1())) { return true; }
+        if (distributor.hasAlias1()     && this->matchesKeyOrAlias(distributor.getAlias1())) { return true; }
         return (distributor.hasAlias2() && this->matchesKeyOrAlias(distributor.getAlias2()));
     }
 
@@ -76,21 +82,9 @@ namespace BlackMisc::Simulation
 
     void CDistributor::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself())
-        {
-            (*this) = variant.value<CDistributor>();
-            return;
-        }
-        if (IDatastoreObjectWithStringKey::canHandleIndex(index))
-        {
-            IDatastoreObjectWithStringKey::setPropertyByIndex(index, variant);
-            return;
-        }
-        if (IOrderable::canHandleIndex(index))
-        {
-            IOrderable::setPropertyByIndex(index, variant);
-            return;
-        }
+        if (index.isMyself()) { (*this) = variant.value<CDistributor>(); return; }
+        if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { IDatastoreObjectWithStringKey::setPropertyByIndex(index, variant); return; }
+        if (IOrderable::canHandleIndex(index)) { IOrderable::setPropertyByIndex(index, variant); return; }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
@@ -98,7 +92,7 @@ namespace BlackMisc::Simulation
         case IndexAlias1: m_alias1 = variant.value<QString>(); break;
         case IndexAlias2: m_alias2 = variant.value<QString>(); break;
         case IndexDescription: m_description = variant.value<QString>(); break;
-        case IndexSimulator: m_simulator.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexSimulator:   m_simulator.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
@@ -114,7 +108,7 @@ namespace BlackMisc::Simulation
         case IndexAlias1: return m_alias1.compare(compareValue.m_alias1, Qt::CaseInsensitive);
         case IndexAlias2: return m_alias2.compare(compareValue.m_alias2, Qt::CaseInsensitive);
         case IndexDescription: return m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
-        case IndexSimulator: return m_simulator.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_simulator);
+        case IndexSimulator:   return m_simulator.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_simulator);
         default:
             break;
         }
@@ -140,7 +134,7 @@ namespace BlackMisc::Simulation
     {
         static const CLogCategoryList cats(CLogCategoryList(this).withValidation());
         CStatusMessageList msgs;
-        if (!hasValidDbKey()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Distributor: missing id")); }
+        if (!hasValidDbKey())  { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Distributor: missing id")); }
         if (!hasDescription()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Distributor: missing description")); }
         return msgs;
     }
@@ -221,7 +215,7 @@ namespace BlackMisc::Simulation
 
     const QSet<QString> &CDistributor::standardAllFsFamily()
     {
-        static const QSet<QString> fsFamily({ standardFS9(), standardFSX(), standardP3D() });
+        static const QSet<QString> fsFamily({standardFS9(), standardFSX(), standardP3D(), standardMsfs()});
         return fsFamily;
     }
 
@@ -240,6 +234,12 @@ namespace BlackMisc::Simulation
     const QString &CDistributor::xplaneXcsl()
     {
         static const QString k("XCSL");
+        return k;
+    }
+
+    const QString &CDistributor::standardMsfs()
+    {
+        static const QString k("MSFS");
         return k;
     }
 

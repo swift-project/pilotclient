@@ -1,5 +1,10 @@
-﻿// SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
-// SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
+﻿/* Copyright (C) 2016
+ * swift project community / contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
+ * or distributed except according to the terms contained in the LICENSE file.
+ */
 
 //! \file
 
@@ -137,12 +142,12 @@ namespace BlackMisc::Simulation::Settings
         void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
     private:
-        QString m_simulatorDirectory; //!< Simulator directory
-        QStringList m_modelDirectories; //!< Model directory
+        QString     m_simulatorDirectory;       //!< Simulator directory
+        QStringList m_modelDirectories;         //!< Model directory
         QStringList m_excludeDirectoryPatterns; //!< Exclude model directory
-        bool m_comIntegration = false; //!< COM integration
-        bool m_recordGnd = false; //!< Record GND values (of own aircraft)
-        int m_cgSource = static_cast<int>(CGFromSimulatorFirst); //!< CG source
+        bool        m_comIntegration = false;   //!< COM integration
+        bool        m_recordGnd = false;        //!< Record GND values (of own aircraft)
+        int         m_cgSource = static_cast<int>(CGFromSimulatorFirst); //!< CG source
         PhysicalQuantities::CLength m_recordedGndRadius { 250.0, PhysicalQuantities::CLengthUnit::m() };
 
         BLACK_METACLASS(
@@ -165,8 +170,9 @@ namespace BlackMisc::Simulation::Settings
         CFsxP3DSettings() {}
 
         //! Constructor
-        CFsxP3DSettings(bool simulatedObject, bool sbOffsets) : m_useSimulatedObjectAdding(simulatedObject),
-                                                                m_useSbOffsets(sbOffsets)
+        CFsxP3DSettings(bool simulatedObject, bool sbOffsets) :
+            m_useSimulatedObjectAdding(simulatedObject),
+            m_useSbOffsets(sbOffsets)
         {}
 
         //! Use simulated object adding
@@ -192,7 +198,7 @@ namespace BlackMisc::Simulation::Settings
 
     private:
         bool m_useSimulatedObjectAdding = false; //!< COM integration
-        bool m_useSbOffsets = true; //!< use the SB offset
+        bool m_useSbOffsets = true;              //!< use the SB offset
 
         BLACK_METACLASS(
             CFsxP3DSettings,
@@ -273,7 +279,7 @@ namespace BlackMisc::Simulation::Settings
 
     protected:
         CSimulatorSettings m_genericSettings; //!< the generic settings
-        CSimulatorInfo m_simulator; //!< represented simulator
+        CSimulatorInfo     m_simulator;       //!< represented simulator
     };
 
     //! XPlane specific settings
@@ -299,11 +305,7 @@ namespace BlackMisc::Simulation::Settings
         static const char *key() { return "settingssimulatorfsx"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable()
-        {
-            static const QString name("FSX settings");
-            return name;
-        }
+        static const QString &humanReadable() { static const QString name("FSX settings"); return name; }
     };
 
     //! Trait for simulator settings
@@ -313,11 +315,7 @@ namespace BlackMisc::Simulation::Settings
         static const char *key() { return "settingssimulatorfs9"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable()
-        {
-            static const QString name("FS9 settings");
-            return name;
-        }
+        static const QString &humanReadable() { static const QString name("FS9 settings"); return name; }
     };
 
     //! Trait for simulator settings
@@ -327,11 +325,17 @@ namespace BlackMisc::Simulation::Settings
         static const char *key() { return "settingssimulatorp3d"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable()
-        {
-            static const QString name("P3D settings");
-            return name;
-        }
+        static const QString &humanReadable() { static const QString name("P3D settings"); return name; }
+    };
+
+    //! Trait for simulator settings
+    struct TSimulatorMsfs : public TSettingTrait<CSimulatorSettings>
+    {
+        //! \copydoc BlackMisc::TSettingTrait::key
+        static const char *key() { return "settingssimulatormsfs"; }
+
+        //! \copydoc BlackMisc::TSettingTrait::humanReadable
+        static const QString &humanReadable() { static const QString name("MSFS settings"); return name; }
     };
 
     //! Selected P3D version (64bit)
@@ -341,11 +345,7 @@ namespace BlackMisc::Simulation::Settings
         static const char *key() { return "simulator/p3dversion"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable()
-        {
-            static const QString name("P3D version");
-            return name;
-        }
+        static const QString &humanReadable() { static const QString name("P3D version"); return name; }
 
         //! \copydoc BlackMisc::TSettingTrait::defaultValue
         static const QString &defaultValue()
@@ -362,11 +362,7 @@ namespace BlackMisc::Simulation::Settings
         static const char *key() { return "simulator/fsxdetailsettings"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable()
-        {
-            static const QString name("FSX details");
-            return name;
-        }
+        static const QString &humanReadable() { static const QString name("FSX details"); return name; }
 
         //! \copydoc BlackMisc::TSettingTrait::defaultValue
         static const CFsxP3DSettings &defaultValue()
@@ -383,11 +379,7 @@ namespace BlackMisc::Simulation::Settings
         static const char *key() { return "simulator/p3ddetailsettings"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable()
-        {
-            static const QString name("P3D details");
-            return name;
-        }
+        static const QString &humanReadable() { static const QString name("P3D details"); return name; }
 
         //! \copydoc BlackMisc::TSettingTrait::defaultValue
         static const CFsxP3DSettings &defaultValue()
@@ -404,11 +396,7 @@ namespace BlackMisc::Simulation::Settings
         static const char *key() { return "settingssimulatorxplane"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable()
-        {
-            static const QString name("XPlane settings");
-            return name;
-        }
+        static const QString &humanReadable() { static const QString name("XPlane settings"); return name; }
 
         //! \copydoc BlackMisc::TSettingTrait::isValid
         static bool isValid(const CSimulatorSettings &value, QString &reason);
@@ -421,11 +409,7 @@ namespace BlackMisc::Simulation::Settings
         static const char *key() { return "settingssimulatorfg"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable()
-        {
-            static const QString name("FG settings");
-            return name;
-        }
+        static const QString &humanReadable() { static const QString name("FG settings"); return name; }
     };
 
     //! Bundle of detail settings
@@ -526,14 +510,16 @@ namespace BlackMisc::Simulation::Settings
         CSetting<Settings::TSimulatorFsx> m_simSettingsFsx { this, &CMultiSimulatorSettings::onFsxSettingsChanged }; //!< FSX settings
         CSetting<Settings::TSimulatorFs9> m_simSettingsFs9 { this, &CMultiSimulatorSettings::onFs9SettingsChanged }; //!< FS9 settings
         CSetting<Settings::TSimulatorP3D> m_simSettingsP3D { this, &CMultiSimulatorSettings::onP3DSettingsChanged }; //!< P3D settings
-        CSetting<Settings::TSimulatorXP> m_simSettingsXP { this, &CMultiSimulatorSettings::onXPSettingsChanged }; //!< XP settings
-        CSetting<Settings::TSimulatorFG> m_simSettingsFG { this, &CMultiSimulatorSettings::onFGSettingsChanged }; //!< FG settings
+        CSetting<Settings::TSimulatorMsfs> m_simSettingsMsfs { this, &CMultiSimulatorSettings::onMsfsSettingsChanged }; //!< MSFS settings
+        CSetting<Settings::TSimulatorXP>  m_simSettingsXP  { this, &CMultiSimulatorSettings::onXPSettingsChanged  }; //!< XP settings
+        CSetting<Settings::TSimulatorFG>  m_simSettingsFG  { this, &CMultiSimulatorSettings::onFGSettingsChanged  }; //!< FG settings
 
-        //! @{
         //! Settings changed, this will only detect if settings are changed elsewhere
+        //! @{
         void onFsxSettingsChanged();
         void onFs9SettingsChanged();
         void onP3DSettingsChanged();
+        void onMsfsSettingsChanged();
         void onXPSettingsChanged();
         void onFGSettingsChanged();
         //! @}
@@ -558,13 +544,13 @@ namespace BlackMisc::Simulation::Settings
         //! Enabled matching mode flags
         enum TextMessageTypeFlag
         {
-            NoTextMessages = 0,
-            TextMessagesUnicom = 1 << 0,
-            TextMessagesCom1 = 1 << 1,
-            TextMessagesCom2 = 1 << 2,
-            TextMessagePrivate = 1 << 3,
+            NoTextMessages        = 0,
+            TextMessagesUnicom    = 1 << 0,
+            TextMessagesCom1      = 1 << 1,
+            TextMessagesCom2      = 1 << 2,
+            TextMessagePrivate    = 1 << 3,
             TextMessageSupervisor = 1 << 4,
-            TextMessagesAll = TextMessagesUnicom | TextMessagesCom1 | TextMessagesCom2 | TextMessagePrivate
+            TextMessagesAll       = TextMessagesUnicom | TextMessagesCom1 | TextMessagesCom2 | TextMessagePrivate
         };
         Q_DECLARE_FLAGS(TextMessageType, TextMessageTypeFlag)
 
@@ -632,8 +618,8 @@ namespace BlackMisc::Simulation::Settings
         void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
     private:
-        int m_technicalLogLevel = CStatusMessage::SeverityError; //!< log level
-        int m_messageType = static_cast<int>(TextMessagePrivate | TextMessageSupervisor);
+        int m_technicalLogLevel     = CStatusMessage::SeverityError; //!< log level
+        int m_messageType           = static_cast<int>(TextMessagePrivate | TextMessageSupervisor);
         bool m_relayGloballyEnabled = true; //!< messsage relay enabled to simulator
 
         BLACK_METACLASS(
@@ -650,11 +636,7 @@ namespace BlackMisc::Simulation::Settings
         static const char *key() { return "settingssimulatormessages"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable()
-        {
-            static const QString name("Simulator messages");
-            return name;
-        }
+        static const QString &humanReadable() { static const QString name("Simulator messages"); return name; }
     };
 
     //! Selected weather scenario
@@ -664,11 +646,7 @@ namespace BlackMisc::Simulation::Settings
         static const char *key() { return "simulator/selectedweatherscenario"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable()
-        {
-            static const QString name("Weather scenario");
-            return name;
-        }
+        static const QString &humanReadable() { static const QString name("Weather scenario"); return name; }
 
         //! \copydoc BlackMisc::TSettingTrait::defaultValue
         static const Weather::CWeatherScenario &defaultValue()
