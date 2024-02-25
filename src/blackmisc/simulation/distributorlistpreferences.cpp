@@ -50,6 +50,8 @@ namespace BlackMisc::Simulation
         case CSimulatorInfo::FS9: m_distributorsFs9 = d; break;
         case CSimulatorInfo::FG: m_distributorsFG = d; break;
         case CSimulatorInfo::XPLANE: m_distributorsXPlane = d; break;
+        case CSimulatorInfo::MSFS: m_distributorsMsfs = d; break;
+
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
             break;

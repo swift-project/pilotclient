@@ -10,7 +10,7 @@ import multiprocessing
 import os
 import os.path as path
 import platform
-import requests
+#import requests
 import subprocess
 import sys
 import datastore
@@ -288,8 +288,8 @@ class Builder:
             ('token', token),
             ('tag', self.version),
         )
-        r = requests.post(url, params=params, data=data)
-        r.raise_for_status()
+       # r = requests.post(url, params=params, data=data)
+       # r.raise_for_status()
 
 
 class MSVCBuilder(Builder):
