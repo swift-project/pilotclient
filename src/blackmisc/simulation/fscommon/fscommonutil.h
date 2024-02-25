@@ -47,6 +47,10 @@ namespace BlackMisc::Simulation::FsCommon
         //! \remark only for FSX
         static CStatusMessageList validateFSXSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simulatorDir);
 
+        //! Validate if known SimObjects path are used
+        //! \remark only for MSFS
+        static CStatusMessageList validateMSFSSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simulatorDir);
+
     private:
         //! Validate if known SimObjects path are used
         //! \remark only for P3D/FSX

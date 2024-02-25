@@ -182,6 +182,8 @@ namespace BlackMisc::Simulation
             else if (simulator.isMSFS())
             {
                 // todo msfs: MSFS specific model validation
+                // const CStatusMessageList specificTests2 = FsCommon::CFsCommonUtil::validateMSFSSimObjectsPath(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped, simulatorDir);
+                // specificTests.push_back(specificTests2);
             }
         }
         else if (simulator.isXPlane() || models.isLikelyXPlaneModelList())

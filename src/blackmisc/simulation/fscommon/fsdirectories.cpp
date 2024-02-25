@@ -160,13 +160,34 @@ namespace BlackMisc::Simulation::FsCommon
         return CFsDirectories::fsxSimObjectsDirFromSimDir(dir);
     }
 
+    // TODO TZ
+    QString msfsSimObjectsDirImpl()
+    {
+        QString dir(CFsDirectories::msfsDir());
+        if (dir.isEmpty()) { return {}; }
+        return CFsDirectories::msfsSimObjectsDirFromSimDir(dir);
+    }
+
     const QString &CFsDirectories::fsxSimObjectsDir()
     {
         static const QString dir(fsxSimObjectsDirImpl());
         return dir;
     }
 
+    const QString &CFsDirectories::msfsSimObjectsDir()
+    {
+        static const QString dir(msfsSimObjectsDirImpl());
+        return dir;
+    }
+
     QString CFsDirectories::fsxSimObjectsDirFromSimDir(const QString &simDir)
+    {
+        if (simDir.isEmpty()) { return {}; }
+        return CFileUtils::appendFilePaths(CFileUtils::normalizeFilePathToQtStandard(simDir), "SimObjects");
+    }
+
+    // TODO TZ
+    QString CFsDirectories::msfsSimObjectsDirFromSimDir(const QString &simDir)
     {
         if (simDir.isEmpty()) { return {}; }
         return CFileUtils::appendFilePaths(CFileUtils::normalizeFilePathToQtStandard(simDir), "SimObjects");
@@ -266,6 +287,23 @@ namespace BlackMisc::Simulation::FsCommon
         // finding the user settings only works on P3D machine
         QStringList allPaths = CFsDirectories::allFsxSimObjectPaths().values();
         const QString sod = CFileUtils::normalizeFilePathToQtStandard(simObjectsDir.isEmpty() ? CFsDirectories::fsxSimObjectsDir() : simObjectsDir);
+        if (!sod.isEmpty() && !allPaths.contains(sod, Qt::CaseInsensitive))
+        {
+            // case insensitive is important here
+            allPaths.push_front(sod);
+        }
+
+        allPaths.removeAll({}); // remove all empty
+        allPaths.removeDuplicates();
+        allPaths.sort(Qt::CaseInsensitive);
+        return allPaths;
+    }
+
+    QStringList CFsDirectories::msfsSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir)
+    {
+        // finding the user settings only works on P3D machine
+        QStringList allPaths = CFsDirectories::allMsfsSimObjectPaths().values();
+        const QString sod = CFileUtils::normalizeFilePathToQtStandard(simObjectsDir.isEmpty() ? CFsDirectories::msfsSimObjectsDir() : simObjectsDir);
         if (!sod.isEmpty() && !allPaths.contains(sod, Qt::CaseInsensitive))
         {
             // case insensitive is important here
@@ -542,6 +580,11 @@ namespace BlackMisc::Simulation::FsCommon
         return CFsDirectories::fsxSimObjectsPaths(CFsDirectories::findFsxConfigFiles(), true);
     }
 
+    QSet<QString> CFsDirectories::allMsfsSimObjectPaths()
+    {
+        return CFsDirectories::msfsSimObjectsPaths(CFsDirectories::findMsfsConfigFiles(), true);
+    }
+
     QStringList CFsDirectories::findFsxConfigFiles()
     {
         const QStringList locations = QStandardPaths::standardLocations(QStandardPaths::AppDataLocation);
@@ -559,12 +602,42 @@ namespace BlackMisc::Simulation::FsCommon
         return files;
     }
 
+    // TODO TZ
+    QStringList CFsDirectories::findMsfsConfigFiles()
+    {
+        const QStringList locations = QStandardPaths::standardLocations(QStandardPaths::AppDataLocation);
+        QStringList files;
+        for (const QString &path : locations)
+        {
+            // TODO TZ this acts as a placeholder. the file msfs.cfg doesn't exist
+            const QString file = CFileUtils::appendFilePaths(CFileUtils::pathUp(path), "Microsoft/MSFS/msfs.cfg");
+            const QFileInfo fi(file);
+            if (fi.exists())
+            {
+                files.push_back(fi.absoluteFilePath());
+                if (logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"MSFS config file: '%1'") << fi.absoluteFilePath(); }
+            }
+        }
+        return files;
+    }
+
     QSet<QString> CFsDirectories::fsxSimObjectsPaths(const QStringList &fsxFiles, bool checked)
     {
         QSet<QString> paths;
         for (const QString &fsxFile : fsxFiles)
         {
             paths.unite(CFsDirectories::fsxSimObjectsPaths(fsxFile, checked));
+        }
+        return paths;
+    }
+
+    // TODO TZ
+    QSet<QString> CFsDirectories::msfsSimObjectsPaths(const QStringList &msfsFiles, bool checked)
+    {
+        QSet<QString> paths;
+        for (const QString &msfsFile : msfsFiles)
+        {
+            paths.unite(CFsDirectories::msfsSimObjectsPaths(msfsFile, checked));
         }
         return paths;
     }
@@ -613,6 +686,55 @@ namespace BlackMisc::Simulation::FsCommon
 
             paths.insert(afp);
             if (logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX SimObjects path: '%1' from '%2'") << afp << fsxFile; }
+        }
+        return paths;
+    }
+
+    // TODO TZ 
+    QSet<QString> CFsDirectories::msfsSimObjectsPaths(const QString &msfsFile, bool checked)
+    {
+        const QString fileContent = CFileUtils::readFileToString(msfsFile);
+        if (fileContent.isEmpty()) { return QSet<QString>(); }
+        const QList<QStringRef> lines = splitLinesRefs(fileContent);
+        static const QString p("SimObjectPaths.");
+
+        const QFileInfo fsxFileInfo(msfsFile);
+        const QString relPath = fsxFileInfo.absolutePath();
+
+        QSet<QString> paths;
+        for (const QStringRef &line : lines)
+        {
+            const int i1 = line.lastIndexOf(p, -1, Qt::CaseInsensitive);
+            if (i1 < 0) { continue; }
+            const int i2 = line.lastIndexOf('=');
+            if (i2 < 0 || i1 >= i2 || line.endsWith('=')) { continue; }
+            const QStringRef path = line.mid(i2 + 1);
+            QString soPath = QDir::fromNativeSeparators(path.toString());
+            if (logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"MSFS SimObjects path checked: '%1' in '%2'") << line << msfsFile; }
+
+            // ignore exclude patterns
+            if (containsAny(soPath, CFsDirectories::fsxSimObjectsExcludeDirectoryPatterns(), Qt::CaseInsensitive)) { continue; }
+
+            // make absolute
+            if (!soPath.leftRef(3).contains(':')) { soPath = CFileUtils::appendFilePaths(relPath, soPath); }
+
+            const QDir dir(soPath); // always absolute path now
+            if (checked && !dir.exists())
+            {
+                // skip, not existing
+                if (logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX SimObjects path skipped, not existing: '%1' in '%2'") << dir.absolutePath() << msfsFile; }
+                continue;
+            }
+
+            const QString afp = dir.absolutePath().toLower();
+            if (!CDirectoryUtils::containsFileInDir(afp, airFileFilter(), true))
+            {
+                if (logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX SimObjects path: Skipping '%1' from '%2', no '%3' file") << afp << msfsFile << airFileFilter(); }
+                continue;
+            }
+
+            paths.insert(afp);
+            if (logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX SimObjects path: '%1' from '%2'") << afp << msfsFile; }
         }
         return paths;
     }
