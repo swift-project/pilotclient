@@ -810,7 +810,8 @@ namespace BlackGui::Components
                 {
                     if (!myself) { return; }
                     myself->showOverlayMessagesOrHTMLMessage(statusMessages);
-                });
+                } 
+                );
             }
         }
 
