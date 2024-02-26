@@ -92,10 +92,10 @@ namespace BlackMisc::Simulation::FsCommon
     QString msfsDirImpl()
     {
         QStringList someDefaultDirs(
-        {
-            // C:\Users\rolan\AppData\Local\Packages\Microsoft.FlightSimulator_8wekyb3d8bbwe\
+            {
+                // C:\Users\rolan\AppData\Local\Packages\Microsoft.FlightSimulator_8wekyb3d8bbwe\
             // todo msfs: add default simulator directory
-        });
+            });
         const QStringList locations = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
         for (const QString &path : locations)
         {
@@ -121,9 +121,11 @@ namespace BlackMisc::Simulation::FsCommon
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) { return {}; }
 
         QTextStream in(&file);
-        while (!in.atEnd()) {
+        while (!in.atEnd())
+        {
             QString line = in.readLine();
-            if (line.contains("InstalledPackagesPath")) {
+            if (line.contains("InstalledPackagesPath"))
+            {
                 QStringList split = line.split(" ");
                 if (split.size() != 2) { return {}; }
                 QString packagePath = split[1].remove("\"");
@@ -690,7 +692,7 @@ namespace BlackMisc::Simulation::FsCommon
         return paths;
     }
 
-    // TODO TZ 
+    // TODO TZ
     QSet<QString> CFsDirectories::msfsSimObjectsPaths(const QString &msfsFile, bool checked)
     {
         const QString fileContent = CFileUtils::readFileToString(msfsFile);

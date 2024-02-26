@@ -79,7 +79,7 @@ namespace BlackSimPlugin::FsxCommon
         hr += initRemoteAircraftSimDataSet(hSimConnect);
         hr += initSimulatorEnvironment(hSimConnect);
         hr += initSbDataArea(hSimConnect);
-        if(simInfo.isMSFS())
+        if (simInfo.isMSFS())
         {
             hr += initMSFSTransponder(hSimConnect);
         }
@@ -301,7 +301,7 @@ namespace BlackSimPlugin::FsxCommon
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataTransponderModeMSFS, "TRANSPONDER IDENT:1", "Bool");
         if (isFailure(hr))
         {
-            CLogMessage(static_cast<CSimConnectDefinitions*>(nullptr)).error(u"SimConnect error: MSFS transponder data definitions %1") << hr;
+            CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error(u"SimConnect error: MSFS transponder data definitions %1") << hr;
         }
         return hr;
     }

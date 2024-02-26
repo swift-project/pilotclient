@@ -43,7 +43,7 @@ namespace BlackMisc::Simulation
         CDistributor getFirstOrDefaultDistributor(const CSimulatorInfo &simulator) const;
 
         //! Last updated simulator
-        const CSimulatorInfo &getLastUpdatedSimulator() const {  return m_lastUpdatedSimulator; }
+        const CSimulatorInfo &getLastUpdatedSimulator() const { return m_lastUpdatedSimulator; }
 
         //! Get distributors
         void setDistributors(const CDistributorList &distributors, const CSimulatorInfo &simulator);
@@ -58,7 +58,7 @@ namespace BlackMisc::Simulation
         CDistributorList m_distributorsXPlane;
         CDistributorList m_distributorsFG;
         CDistributorList m_distributorsMsfs;
-        CSimulatorInfo   m_lastUpdatedSimulator;
+        CSimulatorInfo m_lastUpdatedSimulator;
 
         BLACK_METACLASS(
             CDistributorListPreferences,
@@ -75,4 +75,4 @@ namespace BlackMisc::Simulation
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CDistributorListPreferences)
 
-#endif //guard
+#endif // guard

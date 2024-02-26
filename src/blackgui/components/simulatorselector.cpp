@@ -28,9 +28,8 @@ using namespace BlackCore::Context;
 
 namespace BlackGui::Components
 {
-    CSimulatorSelector::CSimulatorSelector(QWidget *parent) :
-        QFrame(parent),
-        ui(new Ui::CSimulatorSelector)
+    CSimulatorSelector::CSimulatorSelector(QWidget *parent) : QFrame(parent),
+                                                              ui(new Ui::CSimulatorSelector)
     {
         ui->setupUi(this);
 
@@ -40,14 +39,14 @@ namespace BlackGui::Components
         connect(ui->rb_FS9, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
         connect(ui->rb_FSX, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
         connect(ui->rb_P3D, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
-        connect(ui->rb_FG,  &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
+        connect(ui->rb_FG, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
         connect(ui->rb_XPlane, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
         connect(ui->rb_MSFS, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
 
         connect(ui->cb_FS9, &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
         connect(ui->cb_FSX, &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
         connect(ui->cb_P3D, &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
-        connect(ui->cb_FG,  &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
+        connect(ui->cb_FG, &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
         connect(ui->cb_XPlane, &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
         connect(ui->cb_MSFS, &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
 
@@ -55,7 +54,7 @@ namespace BlackGui::Components
     }
 
     CSimulatorSelector::~CSimulatorSelector()
-    { }
+    {}
 
     void CSimulatorSelector::setMode(CSimulatorSelector::Mode mode, bool forced)
     {
@@ -69,9 +68,9 @@ namespace BlackGui::Components
         switch (mode)
         {
         default:
-        case CheckBoxes:   ui->wi_CheckBoxes->setVisible(true);   break;
+        case CheckBoxes: ui->wi_CheckBoxes->setVisible(true); break;
         case RadioButtons: ui->wi_RadioButtons->setVisible(true); break;
-        case ComboBox:     ui->wi_ComboBox->setVisible(true);     break;
+        case ComboBox: ui->wi_ComboBox->setVisible(true); break;
         }
         this->setToLastSelection();
     }
@@ -83,9 +82,9 @@ namespace BlackGui::Components
         switch (m_mode)
         {
         default:
-        case CheckBoxes:   return CSimulatorInfo(ui->cb_FSX->isChecked(), ui->cb_FS9->isChecked(), ui->cb_XPlane->isChecked(), ui->cb_P3D->isChecked(), ui->cb_FG->isChecked(), ui->cb_MSFS->isChecked());
+        case CheckBoxes: return CSimulatorInfo(ui->cb_FSX->isChecked(), ui->cb_FS9->isChecked(), ui->cb_XPlane->isChecked(), ui->cb_P3D->isChecked(), ui->cb_FG->isChecked(), ui->cb_MSFS->isChecked());
         case RadioButtons: return CSimulatorInfo(ui->rb_FSX->isChecked(), ui->rb_FS9->isChecked(), ui->rb_XPlane->isChecked(), ui->rb_P3D->isChecked(), ui->rb_FG->isChecked(), ui->rb_MSFS->isChecked());
-        case ComboBox:     return CSimulatorInfo(ui->cb_Simulators->currentText());
+        case ComboBox: return CSimulatorInfo(ui->cb_Simulators->currentText());
         }
     }
 
@@ -106,20 +105,43 @@ namespace BlackGui::Components
         ui->cb_Simulators->setCurrentText(simulator.toQString(true));
 
         // radio buttons
-        if (simulator.isFSX())    { ui->rb_FSX->setChecked(simulator.isFSX()); return; }
-        if (simulator.isFS9())    { ui->rb_FS9->setChecked(simulator.isFS9()); return; }
-        if (simulator.isXPlane()) { ui->rb_XPlane->setChecked(simulator.isXPlane()); return; }
-        if (simulator.isP3D())    { ui->rb_P3D->setChecked(simulator.isP3D()); return; }
-        if (simulator.isFG())     { ui->rb_FG->setChecked(simulator.isFG());   return; }
-        if (simulator.isMSFS())   { ui->rb_MSFS->setChecked(simulator.isMSFS()); return; }
-
+        if (simulator.isFSX())
+        {
+            ui->rb_FSX->setChecked(simulator.isFSX());
+            return;
+        }
+        if (simulator.isFS9())
+        {
+            ui->rb_FS9->setChecked(simulator.isFS9());
+            return;
+        }
+        if (simulator.isXPlane())
+        {
+            ui->rb_XPlane->setChecked(simulator.isXPlane());
+            return;
+        }
+        if (simulator.isP3D())
+        {
+            ui->rb_P3D->setChecked(simulator.isP3D());
+            return;
+        }
+        if (simulator.isFG())
+        {
+            ui->rb_FG->setChecked(simulator.isFG());
+            return;
+        }
+        if (simulator.isMSFS())
+        {
+            ui->rb_MSFS->setChecked(simulator.isMSFS());
+            return;
+        }
     }
 
     void CSimulatorSelector::setToLastSelection()
     {
         const CSimulatorInfo simulator = (m_mode == RadioButtons || m_mode == ComboBox) ?
-                                            m_currentSimulator.get() :
-                                            m_currentSimulators.get();
+                                             m_currentSimulator.get() :
+                                             m_currentSimulators.get();
         this->setValue(simulator);
     }
 
@@ -161,8 +183,7 @@ namespace BlackGui::Components
 
         if (!sGui || sGui->isShuttingDown()) { return; }
         QPointer<CSimulatorSelector> myself(this);
-        QTimer::singleShot(deferredMs, this, [ = ]
-        {
+        QTimer::singleShot(deferredMs, this, [=] {
             if (!sGui || sGui->isShuttingDown() || !myself) { return; }
             this->setToConnectedSimulator(makeReadOnly);
         });
@@ -358,8 +379,7 @@ namespace BlackGui::Components
     void CSimulatorSelector::triggerSetToLastSelection()
     {
         QPointer<CSimulatorSelector> myself(this);
-        QTimer::singleShot(100, this, [ = ]
-        {
+        QTimer::singleShot(100, this, [=] {
             if (!myself) { return; }
             this->setToLastSelection();
         });
