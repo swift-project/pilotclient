@@ -1,10 +1,5 @@
-﻿/* Copyright (C) 2016
- * swift project community / contributors
- *
- * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
- * directory of this distribution. No part of swift project, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the LICENSE file.
- */
+﻿// SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
+// SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
@@ -174,7 +169,11 @@ namespace BlackMisc::Simulation::Settings
 
     void CSimulatorSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CSimulatorSettings>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CSimulatorSettings>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -501,15 +500,14 @@ namespace BlackMisc::Simulation::Settings
         if (msg.isRadioMessage())
         {
             const CFrequency f(msg.getFrequency());
-            // TODO TZ
-          /*  if (mt.testFlag(TextMessagesCom1))
+            if (mt.testFlag(TextMessagesCom1))
             {
-                if (aircraft.getCom1System().isActiveFrequencyWithin8_33kHzChannel(f)) { return true; }
+                if (aircraft.getCom1System().isActiveFrequencySameFrequency(f)) { return true; }
             }
             if (mt.testFlag(TextMessagesCom2))
             {
-                if (aircraft.getCom2System().isActiveFrequencyWithin8_33kHzChannel(f)) { return true; }
-            }*/
+                if (aircraft.getCom2System().isActiveFrequencySameFrequency(f)) { return true; }
+            }
         }
         return false;
     }
@@ -550,7 +548,11 @@ namespace BlackMisc::Simulation::Settings
 
     void CSimulatorMessagesSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (index.isMyself()) { (*this) = variant.value<CSimulatorMessagesSettings>(); return; }
+        if (index.isMyself())
+        {
+            (*this) = variant.value<CSimulatorMessagesSettings>();
+            return;
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -800,9 +802,7 @@ namespace BlackMisc::Simulation::Settings
 
     bool TSimulatorXP::isValid(const CSimulatorSettings &value, QString &reason)
     {
-        const QString simDir = value.hasSimulatorDirectory()
-                                ? value.getSimulatorDirectory()
-                                : CSpecializedSimulatorSettings::defaultSimulatorDirectory(CSimulatorInfo::XPLANE);
+        const QString simDir = value.hasSimulatorDirectory() ? value.getSimulatorDirectory() : CSpecializedSimulatorSettings::defaultSimulatorDirectory(CSimulatorInfo::XPLANE);
         const CStatusMessageList msgs = CXPlaneUtil::validateModelDirectories(simDir, value.getModelDirectories());
         if (msgs.isSuccess()) { return true; }
         reason = msgs.getErrorMessages().toSingleMessage().toQString(true);
