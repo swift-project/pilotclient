@@ -9,13 +9,7 @@ import datetime
 import zlib
 import base64
 import io
-import ssl
-
-try:
-    from urllib.request import urlopen
-    from urllib.error import HTTPError, URLError
-except ImportError:
-    from urllib2 import urlopen, HTTPError, URLError
+import requests
 
 
 class DbInfo:
@@ -116,22 +110,15 @@ class DbInfosLoaderRemote(DbInfosLoader):
         # Open the url
         url = host + '/shared/' + self.version + '/dbdata/' + self.file_name
         try:
-            ctx = ssl.create_default_context()
-            ctx.check_hostname = False
-            ctx.verify_mode = ssl.CERT_NONE
-            response = urlopen(url, context=ctx)
+            response = requests.get(url)
+            response.raise_for_status()
             timestamp = datetime.datetime.strptime(response.headers['last-modified'], '%a, %d %b %Y %H:%M:%S GMT')
             print("Getting db info " + url)
-            content = response.read().decode('utf-8')
-            j = json.loads(content)
+            j = response.json()
             db_infos = self.convert_json_to_db_infos(j)
             return db_infos, j, timestamp
-        except HTTPError as e:
-            error = "HTTP Error: " + str(e.code) + ' ' + url
-            print(error)
-        except URLError as e:
-            error = "HTTP Error: " + e.reason + ' ' + url
-            print(error)
+        except requests.HTTPError as e:
+            print(f"HTTP Error: {e}")
 
 
 def write_text_to_file(file_path, text_content, timestamp):
@@ -186,22 +173,15 @@ class BaseSync:
 
         url = self.host + '/shared/' + self.version + '/' + data_type + '/' + file_name
         try:
-            ctx = ssl.create_default_context()
-            ctx.check_hostname = False
-            ctx.verify_mode = ssl.CERT_NONE
-            response = urlopen(url, context=ctx)
+            response = requests.get(url)
+            response.raise_for_status()
             timestamp = datetime.datetime.strptime(response.headers['last-modified'], '%a, %d %b %Y %H:%M:%S GMT')
             print("Syncing file " + url)
             file_path = os.path.join(self.target_path, 'shared', data_type, file_name)
-            content = response.read().decode('utf-8')
-            write_text_to_file(file_path, content, timestamp)
+            write_text_to_file(file_path, response.text, timestamp)
 
-        except HTTPError as e:
-            error = "HTTP Error: " + str(e.code) + ' ' + url
-            print(error)
-        except URLError as e:
-            error = "HTTP Error: " + e.reason + ' ' + url
-            print(error)
+        except requests.HTTPError as e:
+            print(f"HTTP Error: {e}")
 
 
 class DbDataSync(BaseSync):
