@@ -3,10 +3,8 @@
 # SPDX-FileCopyrightText: Copyright (C) 2017 swift Project Community / Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-from datetime import date
 import getopt
 import json
-import multiprocessing
 import os
 import os.path as path
 import platform
@@ -35,9 +33,9 @@ class Builder:
         shared_path = os.path.abspath(os.path.join(source_path, 'resources', 'share'))
         datastore.update_shared(host, datastore_version, shared_path)
 
-    def build(self, jobs, cmake_args, dev_build):
+    def build(self, cmake_args):
         """
-        Run the build itself. Pass dev_build=True to enable a dev build
+        Run the build itself
         """
         print('Running build ...')
         build_path = self._get_swift_build_path()
@@ -151,10 +149,10 @@ class Builder:
         """
         Generates the binary symbols and archives them into a gzip archive, located in the swift source root.
         """
-        # Do not even generate symbols if they aren't used. They got so big now, that we cannot afford to archive them in Jenkins
+        # Do not even generate symbols if they aren't used. They got so big now, that we cannot afford to archive them.
         if not upload_symbols:
             return
-        
+
         if self._should_create_symbols():
             build_path = self._get_swift_build_path()
             os.chdir(build_path)
@@ -209,62 +207,77 @@ class Builder:
     def bundle_csl2xsb(self):
         pass
 
-    def _get_swift_source_path(self):
+    def _get_swift_source_path(self) -> str:
         return self.__source_path
 
-    def _get_swift_build_path(self):
+    def _get_swift_build_path(self) -> str:
         return self.__build_path
 
     def _specific_prepare(self):
         pass
 
-    def _get_qmake_spec(self):
+    def _get_platform_name(self) -> str:
         raise NotImplementedError()
 
-    def _get_generator(self):
+    def _get_generator(self) -> str:
         raise NotImplementedError()
 
-    def _should_run_checks(self):
+    def _should_run_checks(self) -> bool:
         return True
 
-    def _should_publish(self):
+    def _should_publish(self) -> bool:
         return True
 
-    def _should_create_symbols(self):
+    def _should_create_symbols(self) -> bool:
         return True
 
-    def _get_externals_path(self):
-        return path.abspath(path.join(self._get_swift_source_path(), 'externals', self._get_qmake_spec(), self.word_size, 'lib'))
+    def _get_externals_path(self) -> str:
+        return path.abspath(path.join(self._get_swift_source_path(), 'externals', self._get_platform_name(), self.word_size, 'lib'))
+
+    def _strip_debug(self):
+        raise NotImplementedError()
 
     def __init__(self, word_size):
         self.__source_path = path.abspath(path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
         self.__build_path = path.abspath(path.join(self.__source_path, 'build'))
 
         files = os.listdir(self.__source_path)
-        for dir in ['src', 'installer', 'third_party']:
-            if dir not in files:
-                raise RuntimeError('Cannot find {} folder! Are we in the right directory?'.format(dir))
+        for swift_dir in ['src', 'installer', 'third_party']:
+            if swift_dir not in files:
+                raise RuntimeError('Cannot find {} folder! Are we in the right directory?'.format(swift_dir))
 
         self.word_size = word_size
         self.version = self.__get_swift_version()
 
-    def __get_config_file(self):
+    def __get_version_file(self) -> str:
+        """
+        :return: Path to the version.json
+        """
         return path.abspath(path.join(self._get_swift_source_path(), 'version')) + '.json'
 
-    def __get_swift_version(self):
+    def __get_swift_version(self) -> str:
+        """
+        :return: Full version number (for example "0.12.123")
+        """
         return self.__get_swift_version_base() + '.' + str(self.__get_rev_count())
 
-    def __get_swift_version_base(self):
-        f = open(self.__get_config_file())
+    def __get_swift_version_base(self) -> str:
+        """
+        :return: Base version number without revision (for example "0.12")
+        """
+        f = open(self.__get_version_file())
         config_json = json.load(f)
         f.close()
         version_major = config_json['version']['major']
         version_minor = config_json['version']['minor']
         return '.'.join([str(version_major), str(version_minor)])
 
-    def __get_rev_count(self):
+    def __get_rev_count(self) -> int:
+        """
+        :return: Number of commits since the current major and minor version was set in version.json
+        """
         this_version = self.__get_swift_version_base()
-        config_log = subprocess.check_output(['git', 'log', '--format=%H', self.__get_config_file()])
+        config_log = subprocess.check_output(['git', 'log', '--format=%H', self.__get_version_file()])
         for sha in config_log.decode("utf-8").split():
             json_data = subprocess.check_output(['git', 'show', sha + ':version.json'])
             config_json = json.loads(json_data.decode("utf-8"))
@@ -303,15 +316,15 @@ class MSVCBuilder(Builder):
         os.environ.update(vs_env)
 
         # On Windows, the default Qt logger doesn't write to stderr, but uses
-        # the Win32 API OutputDebugString instead, which Jenkins can't see.
+        # the Win32 API OutputDebugString instead.
         # This environment variable forces it to use stderr. It also forces
         # QPlainTestLogger::outputMessage to print to stdout.
         os.environ['QT_FORCE_STDERR_LOGGING'] = '1'
 
-    def _get_qmake_spec(self):
+    def _get_platform_name(self) -> str:
         return 'win32-msvc'
 
-    def _get_generator(self):
+    def _get_generator(self) -> str:
         return "Ninja"
 
     def _strip_debug(self):
@@ -331,10 +344,10 @@ class LinuxBuilder(Builder):
     def _specific_prepare(self):
         pass
 
-    def _get_qmake_spec(self):
+    def _get_platform_name(self) -> str:
         return 'linux-g++'
 
-    def _get_generator(self):
+    def _get_generator(self) -> str:
         return 'Ninja'
 
     def _strip_debug(self):
@@ -374,13 +387,13 @@ class MacOSBuilder(Builder):
     def _specific_prepare(self):
         pass
 
-    def _get_qmake_spec(self):
+    def _get_platform_name(self) -> str:
         return 'macx-clang'
 
-    def _get_generator(self):
+    def _get_generator(self) -> str:
         return 'Unix Makefiles'
 
-    def _should_create_symbols(self):
+    def _should_create_symbols(self) -> bool:
         return True
 
     def _strip_debug(self):
@@ -426,20 +439,18 @@ def print_help():
                            'Windows': ['msvc']
                            }
     compiler_help = '|'.join(supported_compilers[platform.system()])
-    print('build.py -w <32|64> -t <' + compiler_help + '> [-v] [-d] [-q <extra qmake argument>]')
+    print('build.py -w <32|64> -t <' + compiler_help + '> [-v] [-c <extra CMake argument>]')
 
 
 # Entry point if called as a standalone program
 def main(argv):
     word_size = ''
     tool_chain = ''
-    dev_build = False
-    jobs = None
     upload_symbols = False
     cmake_args = []
 
     try:
-        opts, args = getopt.getopt(argv, 'hw:t:j:duq:v', ['wordsize=', 'toolchain=', 'jobs=', 'dev', 'upload', 'qmake-arg=', 'version'])
+        opts, args = getopt.getopt(argv, 'hw:t:uc:v', ['wordsize=', 'toolchain=', 'upload', 'cmake-arg=', 'version'])
     except getopt.GetoptError:
         print_help()
         sys.exit(2)
@@ -459,13 +470,9 @@ def main(argv):
             word_size = arg
         elif opt in ('-t', '--toolchain'):
             tool_chain = arg
-        elif opt in ('-j', '--jobs'):
-            jobs = arg
-        elif opt in ('-d', '--dev'):
-            dev_build = True
         elif opt in ('-u', '--upload'):
             upload_symbols = True
-        elif opt in ('-q', '--qmake-arg'):
+        elif opt in ('-c', '--cmake-arg'):
             cmake_args += [arg]
 
     if word_size not in ['32', '64']:
@@ -488,7 +495,7 @@ def main(argv):
     builder = builders[platform.system()][tool_chain](word_size)
 
     builder.prepare()
-    builder.build(jobs, cmake_args, dev_build)
+    builder.build(cmake_args)
     builder.bundle_csl2xsb()
     builder.checks()
     builder.install()
