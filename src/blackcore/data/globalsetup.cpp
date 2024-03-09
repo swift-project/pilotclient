@@ -55,11 +55,6 @@ namespace BlackCore::Data
         return m_sharedUrls;
     }
 
-    CUrlList CGlobalSetup::getSwiftUpdateInfoFileUrls() const
-    {
-        return getSwiftSharedUrls().withAppendedPath(CGlobalSetup::schemaVersionString() + "/updateinfo/updateinfo.json");
-    }
-
     CUrl CGlobalSetup::getDbHomePageUrl() const
     {
         return getDbRootDirectoryUrl().withAppendedPath("/page/index.php");
@@ -184,7 +179,7 @@ namespace BlackCore::Data
         QString s =
             u"Global setup loaded: " % separator % u"Mapping min.version: " % this->getMappingMinimumVersionString() % separator
 
-            % u"Distribution URLs: " % getSwiftUpdateInfoFileUrls().toQString(i18n) % separator % u"Help URLs: " % m_onlineHelpUrls.toQString(i18n) % separator;
+            % u"Help URLs: " % m_onlineHelpUrls.toQString(i18n) % separator;
         s +=
             u"DB root directory: " % getDbRootDirectoryUrl().toQString(i18n) % separator % u"ICAO DB reader: " % getDbIcaoReaderUrl().toQString(i18n) % separator % u"Model DB reader: " % getDbModelReaderUrl().toQString(i18n) % separator % u"Airport DB reader: " % getDbAirportReaderUrl().toQString(i18n) % separator % u"DB home page: " % getDbHomePageUrl().toQString(i18n) % separator % u"DB login service: " % getDbLoginServiceUrl().toQString(i18n) % separator % u"DB client ping service: " % getDbClientPingServiceUrl().toQString(i18n);
         s +=
@@ -218,7 +213,6 @@ namespace BlackCore::Data
         case IndexVatsimServer: return QVariant::fromValue(m_vatsimServerFileUrl);
         case IndexVatsimHttpFsd: return QVariant::fromValue(m_vatsimFsdHttpUrl);
         case IndexVatsimMetars: return QVariant::fromValue(m_vatsimMetarsUrls);
-        case IndexUpdateInfoFileUrls: return QVariant::fromValue(this->getSwiftUpdateInfoFileUrls());
         case IndexSharedUrls: return QVariant::fromValue(m_sharedUrls);
         case IndexOnlineHelpUrls: return QVariant::fromValue(m_onlineHelpUrls);
         case IndexCrashReportServerUrl: return QVariant::fromValue(m_crashReportServerUrl);

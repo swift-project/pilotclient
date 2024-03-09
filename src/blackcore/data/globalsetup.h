@@ -44,8 +44,6 @@ namespace BlackCore::Data
             IndexVatsimData,
             IndexVatsimServer,
             IndexVatsimHttpFsd,
-            IndexSwiftDbFiles,
-            IndexUpdateInfoFileUrls,
             IndexOnlineHelpUrls,
             IndexCrashReportServerUrl,
             IndexSharedUrls,
@@ -131,10 +129,6 @@ namespace BlackCore::Data
 
         //! Shared URLs
         const BlackMisc::Network::CUrlList &getSwiftSharedUrls() const;
-
-        //! Distribution URLs
-        //! \remark based on getSwiftSharedUrls
-        BlackMisc::Network::CUrlList getSwiftUpdateInfoFileUrls() const;
 
         //! VATSIM METAR URL
         const BlackMisc::Network::CUrlList &getVatsimMetarsUrls() const { return m_vatsimMetarsUrls; }
