@@ -145,6 +145,9 @@ namespace BlackCore::Context
         //! Network error
         void severeNetworkError(const QString &errorMessage);
 
+        //! Mute request received
+        void muteRequestReceived(bool mute);
+
         //! Connection status changed
         //! \sa IContextNetwork::connectedServerChanged
         void connectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);

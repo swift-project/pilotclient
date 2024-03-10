@@ -69,6 +69,7 @@ namespace BlackCore::Context
         connect(m_fsdClient, &CFSDClient::textMessagesReceived, this, &CContextNetwork::onTextMessagesReceived, Qt::QueuedConnection);
         connect(m_fsdClient, &CFSDClient::textMessageSent, this, &CContextNetwork::onTextMessageSent, Qt::QueuedConnection);
         connect(m_fsdClient, &CFSDClient::severeNetworkError, this, &CContextNetwork::severeNetworkError, Qt::QueuedConnection);
+        connect(m_fsdClient, &CFSDClient::muteRequestReceived, this, &CContextNetwork::muteRequestReceived, Qt::QueuedConnection);
 
         // 2. Update timer for data (network data such as frequency)
         // we use 2 timers so we can query at different times (not too many queirs at once)

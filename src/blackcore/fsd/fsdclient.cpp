@@ -35,6 +35,7 @@
 #include "blackcore/fsd/planeinformationfsinn.h"
 #include "blackcore/fsd/revbclientparts.h"
 #include "blackcore/fsd/rehost.h"
+#include "blackcore/fsd/mute.h"
 
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/network/rawfsdmessage.h"
@@ -1086,6 +1087,7 @@ namespace BlackCore::Fsd
         m_messageTypeMapping["#TM"] = MessageType::TextMessage;
         m_messageTypeMapping["#SB"] = MessageType::PilotClientCom;
         m_messageTypeMapping["$XX"] = MessageType::Rehost;
+        m_messageTypeMapping["#MU"] = MessageType::Mute;
 
         // Euroscope
         m_messageTypeMapping["SIMDATA"] = MessageType::EuroscopeSimData;
@@ -1662,6 +1664,13 @@ namespace BlackCore::Fsd
         });
 
         initiateConnection(rehostingSocket, rehost.m_hostname);
+    }
+
+    void CFSDClient::handleMute(const QStringList &tokens)
+    {
+        const Mute mute = Mute::fromTokens(tokens);
+        if (mute.receiver() != m_ownCallsign.asString()) { return; }
+        emit muteRequestReceived(mute.m_mute);
     }
 
     void CFSDClient::initiateConnection(std::shared_ptr<QTcpSocket> rehostingSocket, const QString &rehostingHost)
@@ -2306,6 +2315,7 @@ namespace BlackCore::Fsd
             case MessageType::VisualPilotDataToggle: handleVisualPilotDataToggle(tokens); break;
             case MessageType::EuroscopeSimData: handleEuroscopeSimData(tokens); break;
             case MessageType::Rehost: handleRehost(tokens); break;
+            case MessageType::Mute: handleMute(tokens); break;
 
             // normally we should not get here
             default:

@@ -291,6 +291,7 @@ namespace BlackCore::Fsd
         void rawFsdMessage(const BlackMisc::Network::CRawFsdMessage &rawFsdMessage);
         void planeInformationFsinnReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &modelString);
         void revbAircraftConfigReceived(const QString &sender, const QString &config, qint64 currentOffsetTimeMs);
+        void muteRequestReceived(bool mute);
 
         //! @}
 
@@ -442,6 +443,7 @@ namespace BlackCore::Fsd
         void handleFsdIdentification(const QStringList &tokens);
         void handleRevBClientPartsPacket(const QStringList &tokens);
         void handleRehost(const QStringList &tokens);
+        void handleMute(const QStringList &tokens);
 
         //
         void handleUnknownPacket(const QString &line);
