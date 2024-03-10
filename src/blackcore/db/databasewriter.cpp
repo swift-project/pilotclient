@@ -81,7 +81,6 @@ namespace BlackCore::Db
         QUrl url(m_modelPublishUrl.toQUrl());
         if (compress) { url.setQuery(CDatabaseUtils::getCompressedQuery()); }
         QNetworkRequest request(url);
-        CNetworkUtils::ignoreSslVerification(request);
         const QByteArray eInfo = extraInfo.toLatin1();
         request.setRawHeader(QByteArray("swift-extrainfo"), eInfo);
         const int logId = m_writeLog.addPendingUrl(url);
@@ -122,7 +121,6 @@ namespace BlackCore::Db
         url.setQuery(query);
 
         QNetworkRequest request(url);
-        CNetworkUtils::ignoreSslVerification(request);
         const int logId = m_writeLog.addPendingUrl(url);
         m_pendingAutoPublishReply = sApp->postToNetwork(request, logId, multiPart, { this, &CDatabaseWriter::postedAutoPublishResponse });
         m_autoPublishReplyPendingSince = QDateTime::currentMSecsSinceEpoch();

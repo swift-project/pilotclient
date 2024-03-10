@@ -11,24 +11,16 @@
 #include <QMetaEnum>
 #include <QHostAddress>
 #include <QList>
-#include <QProcess>
-#include <QNetworkAddressEntry>
 #include <QNetworkInterface>
 #include <QNetworkReply>
 #include <QNetworkConfiguration>
 #include <QObject>
 #include <QSignalMapper>
-#include <QSslCertificate>
-#include <QSslConfiguration>
-#include <QSslKey>
-#include <QSslSocket>
 #include <QTcpSocket>
-#include <QTextStream>
 #include <QUrl>
 #include <QUrlQuery>
 #include <QStringBuilder>
 #include <QVariant>
-#include <QtDebug>
 #include <QRegularExpression>
 
 using namespace BlackConfig;
@@ -173,13 +165,6 @@ namespace BlackMisc::Network
         return protocol + "://" + url;
     }
 
-    void CNetworkUtils::ignoreSslVerification(QNetworkRequest &request)
-    {
-        QSslConfiguration conf = request.sslConfiguration();
-        conf.setPeerVerifyMode(QSslSocket::VerifyNone);
-        request.setSslConfiguration(conf);
-    }
-
     void CNetworkUtils::setSwiftUserAgent(QNetworkRequest &request, const QString &userAgentDetails)
     {
         static const QString defaultUserAgent("swift/" + CBuildConfig::getVersionString());
@@ -205,7 +190,6 @@ namespace BlackMisc::Network
         default:
             break;
         }
-        CNetworkUtils::ignoreSslVerification(request);
         CNetworkUtils::setSwiftUserAgent(request, userAgentDetails);
         return request;
     }
@@ -213,7 +197,6 @@ namespace BlackMisc::Network
     QNetworkRequest CNetworkUtils::getSwiftNetworkRequest(const QNetworkRequest &request, const QString &userAgentDetails)
     {
         QNetworkRequest req(request); // copy
-        CNetworkUtils::ignoreSslVerification(req);
         CNetworkUtils::setSwiftUserAgent(req, userAgentDetails);
         return req;
     }
