@@ -114,9 +114,17 @@ namespace BlackCore::Afv::Clients
     {
         if (m_connectedWithContext) { return; }
         if (!hasContexts()) { return; }
-        this->disconnect(sApp->getIContextOwnAircraft());
-        sApp->getIContextOwnAircraft()->disconnect(this);
+
+        // Disconnect all previously connect signals between the AfvClient and the required contexts
+        for (auto context : QVector<QObject *> { sApp->getIContextOwnAircraft(), sApp->getIContextNetwork() })
+        {
+            this->disconnect(context);
+            context->disconnect(this);
+        }
+
         connect(sApp->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CAfvClient::onUpdateTransceiversFromContext, Qt::QueuedConnection);
+        connect(sApp->getIContextNetwork(), &IContextNetwork::muteRequestReceived, this, &CAfvClient::toggleTransmissionCapability, Qt::QueuedConnection);
+
         m_connectedWithContext = true;
     }
 
@@ -675,6 +683,12 @@ namespace BlackCore::Afv::Clients
         if (!m_isStarted)
         {
             CLogMessage(this).info(u"Voice client not started");
+            return;
+        }
+
+        if (active && m_disableTransmissionCapability)
+        {
+            // Block transmissions
             return;
         }
 
@@ -1303,6 +1317,18 @@ namespace BlackCore::Afv::Clients
             if (myself->isConnected()) { return; }
             this->connectTo(cid, password, callsign, client);
         });
+    }
+
+    void CAfvClient::toggleTransmissionCapability(bool disableTransmission)
+    {
+        if (m_disableTransmissionCapability == disableTransmission) { return; }
+        m_disableTransmissionCapability = disableTransmission;
+
+        if (disableTransmission)
+        {
+            // Stop current transmissions
+            setPtt(false);
+        }
     }
 
     QVector<StationDto> CAfvClient::getAliasedStations() const

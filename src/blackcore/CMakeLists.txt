@@ -152,6 +152,8 @@ add_library(core SHARED
         fsd/pilotdataupdate.cpp
         fsd/ping.cpp
         fsd/messagebase.cpp
+        fsd/mute.cpp
+        fsd/mute.h
         fsd/enums.h
         fsd/deleteatc.h
         fsd/clientidentification.h

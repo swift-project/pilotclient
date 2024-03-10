@@ -339,6 +339,10 @@ namespace BlackCore::Afv::Clients
         //! Connect again in given ms
         void reconnectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client, int delayMs, const BlackMisc::CStatusMessage &msg);
 
+        //! Toggle (enable/disable) the transmission capability.
+        //! This is triggered by the #MU FSD packet to mute the user remotely.
+        void toggleTransmissionCapability(bool disableTransmission);
+
         //! @{
         //! All aliased stations
         //! \threadsafe
@@ -385,6 +389,7 @@ namespace BlackCore::Afv::Clients
 
         std::atomic_bool m_transmit { false };
         std::atomic_bool m_transmitHistory { false };
+        std::atomic_bool m_disableTransmissionCapability { false }; //!< whether the user should be unable to transmit
         QVector<TxTransceiverDto> m_transmittingTransceivers;
         QVector<TransceiverDto> m_transceivers;
         QSet<quint16> m_enabledTransceivers;
