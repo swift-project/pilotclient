@@ -109,10 +109,10 @@ namespace BlackCore::Afv::Clients
         bool isStarted() const { return m_isStarted; }
 
         //! @{
-        //! Muted
+        //! Muted (output)
         //! \threadsafe
-        bool isMuted() const;
-        void setMuted(bool mute);
+        bool isOutputMuted() const;
+        void setOutputMuted(bool mute);
         //! @}
 
         //! @{
@@ -312,8 +312,8 @@ namespace BlackCore::Afv::Clients
         //! Audio has been stopped
         void stoppedAudio();
 
-        //! Mute changed
-        void changedMute(bool muted);
+        //! Output mute changed
+        void changedOutputMute(bool muted);
 
     protected:
         //! \copydoc BlackMisc::CContinuousWorker::initialize
