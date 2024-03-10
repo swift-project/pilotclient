@@ -489,6 +489,7 @@ BlackGui--CDockWidgetInfoArea > QMenu > QMenuWidget {
 /* reset menu style */
 QMenu {
   color: black;
+  background-color: white;
   font-style: normal;
   font-weight: normal;
   padding: 5px;
