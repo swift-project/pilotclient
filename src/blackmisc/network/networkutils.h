@@ -81,9 +81,6 @@ namespace BlackMisc::Network
         //! Build / concatenate an URL
         static QString buildUrl(const QString &protocol, const QString &server, const QString &baseUrl, const QString &serviceUrl);
 
-        //! Ignore SSL verification such as self signed certificates
-        static void ignoreSslVerification(QNetworkRequest &request);
-
         //! Set user agent for request
         static void setSwiftUserAgent(QNetworkRequest &request, const QString &userAgentDetails = {});
 
