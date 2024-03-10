@@ -59,7 +59,7 @@ class Builder:
             subprocess.check_call(["cmake", "--build", ".", "-j3"], env=dict(os.environ))
         elif self.__class__.__name__ == 'MSVCBuilder':
             # it seems that ninja does not automatically spawn the correct number of jobs on Windows
-            subprocess.check_call(["cmake", "--build", ".", "-j2"], env=dict(os.environ))
+            subprocess.check_call(["cmake", "--build", ".", "-j4"], env=dict(os.environ))
         else:
             subprocess.check_call(["cmake", "--build", "."], env=dict(os.environ))
 
