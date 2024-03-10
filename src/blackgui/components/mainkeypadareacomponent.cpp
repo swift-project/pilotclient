@@ -64,7 +64,7 @@ namespace BlackGui::Components
 
         connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMainKeypadAreaComponent::connectionStatusChanged);
         connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CMainKeypadAreaComponent::ownAircraftCockpitChanged);
-        connect(sGui->getCContextAudioBase(), &CContextAudioBase::changedMute, this, &CMainKeypadAreaComponent::muteChanged);
+        connect(sGui->getCContextAudioBase(), &CContextAudioBase::changedOutputMute, this, &CMainKeypadAreaComponent::outputMuteChanged);
         connect(this, &CMainKeypadAreaComponent::commandEntered, sGui->getCoreFacade(), &CCoreFacade::parseCommandLine);
 
         QPointer<CMainKeypadAreaComponent> myself(this);
@@ -139,8 +139,8 @@ namespace BlackGui::Components
         }
         else if (senderButton == ui->pb_SoundMute && sGui->getIContextAudio())
         {
-            const bool mute = sGui->getCContextAudioBase()->isMuted();
-            sGui->getCContextAudioBase()->setMute(!mute);
+            const bool mute = sGui->getCContextAudioBase()->isOutputMuted();
+            sGui->getCContextAudioBase()->setOutputMute(!mute);
         }
         else if (senderButton == ui->pb_Connect)
         {
@@ -184,7 +184,7 @@ namespace BlackGui::Components
         }
     }
 
-    void CMainKeypadAreaComponent::muteChanged(bool muted)
+    void CMainKeypadAreaComponent::outputMuteChanged(bool muted)
     {
         // check state to avoid undelibarate signals
         if (muted != ui->pb_SoundMute->isChecked())
@@ -257,7 +257,7 @@ namespace BlackGui::Components
         if (!sGui || sGui->isShuttingDown() || !sGui->supportsContexts()) { return; }
         if (sGui->getCContextAudioBase())
         {
-            this->muteChanged(sGui->getCContextAudioBase()->isMuted());
+            this->outputMuteChanged(sGui->getCContextAudioBase()->isOutputMuted());
         }
         this->updateConnectionStatus();
     }

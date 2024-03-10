@@ -178,8 +178,8 @@ namespace BlackCore
             void setComOutputVolume(BlackMisc::Aviation::CComSystem::ComUnit comUnit, int volume);
             int getMasterOutputVolume() const;
             int getComOutputVolume(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
-            void setMute(bool muted);
-            bool isMuted() const;
+            void setOutputMute(bool muted);
+            bool isOutputMuted() const;
             //! @}
 
             //! SELCAL
@@ -266,8 +266,8 @@ namespace BlackCore
             //! \sa setVoiceOutputVolume
             void changedAudioVolume(int volume);
 
-            //! Mute changed
-            void changedMute(bool muted);
+            //! Output mute changed
+            void changedOutputMute(bool muted);
 
             //! Changed audio devices (e.g. device enabled/disable)
             void changedLocalAudioDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices);

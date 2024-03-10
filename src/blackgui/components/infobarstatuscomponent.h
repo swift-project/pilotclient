@@ -79,8 +79,8 @@ namespace BlackGui::Components
         //! Context menu requested
         void onCustomAudioContextMenuRequested(const QPoint &position);
 
-        //! Mute changed
-        void onMuteChanged(bool muted);
+        //! Output mute changed
+        void onOutputMuteChanged(bool muted);
 
         //! Audio started
         void onAudioStarted(const BlackMisc::Audio::CAudioDeviceInfo &input, const BlackMisc::Audio::CAudioDeviceInfo &output);

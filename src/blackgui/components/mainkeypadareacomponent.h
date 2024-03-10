@@ -81,8 +81,8 @@ namespace BlackGui::Components
         //! \copydoc BlackCore::Context::IContextOwnAircraft::changedAircraftCockpit
         void ownAircraftCockpitChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
-        //! \copydoc BlackCore::Context::IContextAudio::changedMute
-        void muteChanged(bool muted);
+        //! \copydoc BlackCore::Context::IContextAudio::changedOutputMute
+        void outputMuteChanged(bool muted);
 
         //! If button is info area, identify it
         CMainInfoAreaComponent::InfoArea buttonToMainInfoArea(const QObject *button) const;

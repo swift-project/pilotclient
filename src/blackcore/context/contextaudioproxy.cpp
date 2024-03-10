@@ -83,7 +83,7 @@ namespace BlackCore::Context
                                     "changedAudioVolume", this, SIGNAL(changedAudioVolume(int)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
-                                "changedMute", this, SIGNAL(changedMute(bool)));
+                                "changedOutputMute", this, SIGNAL(changedOutputMute(bool)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
                                 "changedLocalAudioDevices", this, SIGNAL(changedLocalAudioDevices(BlackMisc::Audio::CAudioDeviceInfoList)));

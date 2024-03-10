@@ -72,7 +72,7 @@ namespace BlackGui::Components
         ui->led_Audio->setOn(CInfoBarStatusComponent::isAudioAvailableAndNotMuted());
         if (sGui->getCContextAudioBase())
         {
-            connect(sGui->getCContextAudioBase(), &CContextAudioBase::changedMute, this, &CInfoBarStatusComponent::onMuteChanged, Qt::QueuedConnection);
+            connect(sGui->getCContextAudioBase(), &CContextAudioBase::changedOutputMute, this, &CInfoBarStatusComponent::onOutputMuteChanged, Qt::QueuedConnection);
             connect(sGui->getCContextAudioBase(), &CContextAudioBase::startedAudio, this, &CInfoBarStatusComponent::onAudioStarted, Qt::QueuedConnection);
             connect(sGui->getCContextAudioBase(), &CContextAudioBase::stoppedAudio, this, &CInfoBarStatusComponent::onAudioStopped, Qt::QueuedConnection);
 
@@ -219,7 +219,7 @@ namespace BlackGui::Components
             if (selectedItem == actions.at(0))
             {
                 // toggle MUTED
-                sGui->getCContextAudioBase()->setMute(!sGui->getCContextAudioBase()->isMuted());
+                sGui->getCContextAudioBase()->setOutputMute(!sGui->getCContextAudioBase()->isOutputMuted());
             }
             else if (actions.size() > 1 && selectedItem == actions.at(1))
             {
@@ -228,7 +228,7 @@ namespace BlackGui::Components
         }
     }
 
-    void CInfoBarStatusComponent::onMuteChanged(bool muted)
+    void CInfoBarStatusComponent::onOutputMuteChanged(bool muted)
     {
         const bool on = !muted && isAudioAvailableAndNotMuted(); // make sure audio is started
         ui->led_Audio->setOn(on);
@@ -311,6 +311,6 @@ namespace BlackGui::Components
     {
         if (!sGui || !sGui->getCContextAudioBase() || sGui->isShuttingDown()) { return false; }
         if (!sGui->getCContextAudioBase()->isAudioStarted()) { return false; }
-        return !sGui->getCContextAudioBase()->isMuted();
+        return !sGui->getCContextAudioBase()->isOutputMuted();
     }
 } // namespace
