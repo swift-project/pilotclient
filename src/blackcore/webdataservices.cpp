@@ -82,11 +82,6 @@ namespace BlackCore
             this->initWriters();
         }
 
-        if (sApp)
-        {
-            connect(sApp, &CApplication::coreFacadeStarted, this, &CWebDataServices::onCoreFacadeStarted, Qt::QueuedConnection);
-        }
-
         // make sure this is called in event queue, so pending tasks cam be performed
         entities &= ~CEntityFlags::DbInfoObjectEntity; // triggered in init readers
         entities &= ~CEntityFlags::VatsimStatusFile; // triggered in init readers
@@ -1515,21 +1510,6 @@ namespace BlackCore
             this->readDeferredInBackground(entities, waitForInfoObjectsMs);
             return false; // wait
         }
-    }
-
-    void CWebDataServices::onCoreFacadeStarted()
-    {
-        if (sApp && sApp->supportsContexts() && sApp->getIContextNetwork())
-        {
-            connect(sApp->getIContextNetwork(), &IContextNetwork::connectedServerChanged, this, &CWebDataServices::onConnectedNetworkServerChanged, Qt::QueuedConnection);
-        }
-    }
-
-    void CWebDataServices::onConnectedNetworkServerChanged(const CServer &server)
-    {
-        const CEcosystem es(server.getEcosystem());
-        this->setCurrentEcosystem(es);
-        CLogMessage(this).info(u"Changed data service ecosystem to '%1'") << es.toQString(true);
     }
 
     bool CWebDataServices::writeDbDataToDisk(const QString &dir)

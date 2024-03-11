@@ -28,8 +28,7 @@ using namespace BlackCore::Data;
 
 namespace BlackCore::Vatsim
 {
-    CVatsimServerFileReader::CVatsimServerFileReader(QObject *owner) : CThreadedReader(owner, "CVatsimServerFileReader"),
-                                                                       CEcosystemAware(CEcosystemAware::providerIfPossible(owner))
+    CVatsimServerFileReader::CVatsimServerFileReader(QObject *owner) : CThreadedReader(owner, "CVatsimServerFileReader")
     {}
 
     CServerList CVatsimServerFileReader::getFsdServers() const
@@ -56,7 +55,6 @@ namespace BlackCore::Vatsim
         this->threadAssertCheck();
         if (!this->doWorkCheck()) { return; }
         if (!this->isInternetAccessible("No network/internet access, cannot read VATSIM server file")) { return; }
-        if (this->isNotVATSIMEcosystem()) { return; }
 
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing application");
         const QUrl url = sApp->getVatsimServerFileUrl();
@@ -70,7 +68,6 @@ namespace BlackCore::Vatsim
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
         this->threadAssertCheck();
-        if (this->isNotVATSIMEcosystem()) { return; }
 
         // Worker thread, make sure to write only synced here!
         if (!this->doWorkCheck())

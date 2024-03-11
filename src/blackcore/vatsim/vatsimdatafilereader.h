@@ -14,7 +14,6 @@
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/network/entityflags.h"
-#include "blackmisc/network/ecosystemprovider.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/network/voicecapabilities.h"
@@ -37,8 +36,7 @@ namespace BlackCore::Vatsim
 {
     //! Read vatsim data file
     class BLACKCORE_EXPORT CVatsimDataFileReader :
-        public CThreadedReader,
-        public BlackMisc::Network::CEcosystemAware
+        public CThreadedReader
     {
         Q_OBJECT
 
