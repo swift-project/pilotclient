@@ -269,15 +269,13 @@ namespace BlackCore::Vatsim
             }
 
             // data read finished
-            emit this->dataFileRead(dataFileData.size() / 1000);
-            emit this->dataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, dataFileData.size() / 1000, url);
+            emit this->dataRead(dataFileData.size() / 1000.0, url);
         }
         else
         {
             // network error
             CLogMessage(this).warning(u"Reading VATSIM data file failed '%1' '%2'") << nwReply->errorString() << urlString;
             nwReply->abort();
-            emit this->dataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFailed, 0, url);
         }
     }
 

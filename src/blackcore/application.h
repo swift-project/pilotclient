@@ -69,6 +69,11 @@ namespace BlackCore
         class IContextSimulator;
     }
 
+    namespace Vatsim
+    {
+        class CVatsimWebServices;
+    }
+
     /*!
      * Our runtime. Normally one instance is to be initialized at the beginning of main, and thereafter
      * it can be used everywhere via QApplication::instance
@@ -440,9 +445,17 @@ namespace BlackCore
         //! \threadsafe
         bool hasWebDataServices() const;
 
+        //! VATSIM web services available?
+        //! \threadsafe
+        bool hasVatsimWebServices() const;
+
         //! Get the web data services
         //! \remark use hasWebDataServices to test if services are available
         CWebDataServices *getWebDataServices() const;
+
+        //! Get the VATSIM web services
+        //! \remark use hasVatsimWebServices to test if services are available
+        Vatsim::CVatsimWebServices *getVatsimWebServices() const;
 
         //! Request to get network reply
         //! \threadsafe
@@ -555,6 +568,10 @@ namespace BlackCore
         //! \note does nothing when setup is not yet loaded
         BlackMisc::CStatusMessageList startWebDataServices(CWebReaderFlags::WebReader webReader, const Db::CDatabaseReaderConfigList &dbReaderConfig);
 
+        //! Start the VATSIM web services
+        //! \note does nothing when setup is not yet loaded
+        BlackMisc::CStatusMessageList startVatsimWebServices();
+
         //! executable name
         static const QString &executable();
 
@@ -646,6 +663,7 @@ namespace BlackCore
         QScopedPointer<CSetupReader> m_setupReader; //!< setup reader
         QScopedPointer<CGitHubPackagesReader> m_gitHubPackagesReader; //!< github packages reader
         QScopedPointer<CWebDataServices> m_webDataServices; //!< web data services
+        QScopedPointer<Vatsim::CVatsimWebServices> m_vatsimWebServices; //!< VATSIM web services
         QScopedPointer<BlackMisc::CFileLogger> m_fileLogger; //!< file logger
         QPointer<CCookieManager> m_cookieManager; //!< single cookie manager for our access manager
         const QString m_applicationName; //!< application name

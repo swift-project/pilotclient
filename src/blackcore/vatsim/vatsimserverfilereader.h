@@ -50,10 +50,7 @@ namespace BlackCore::Vatsim
 
     signals:
         //! Data have been read
-        void dataFileRead(int kB);
-
-        //! Data have been read
-        void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        void dataRead(double kB, const QUrl &url);
 
     protected:
         //! \name BlackCore::CThreadedReader overrides

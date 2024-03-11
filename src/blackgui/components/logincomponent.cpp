@@ -32,6 +32,8 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/crashhandler.h"
 #include "blackconfig/buildconfig.h"
+#include "blackcore/vatsim/vatsimwebservices.h"
+#include "blackcore/vatsim/vatsimdatafilereader.h"
 
 #include <QDialogButtonBox>
 #include <QMessageBox>
@@ -56,6 +58,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackCore;
 using namespace BlackCore::Data;
 using namespace BlackCore::Context;
+using namespace BlackCore::Vatsim;
 using namespace BlackGui;
 
 namespace BlackGui::Components
@@ -151,13 +154,13 @@ namespace BlackGui::Components
         // web service data
         if (sGui && sGui->getWebDataServices())
         {
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CLoginComponent::onWebServiceDataRead, Qt::QueuedConnection);
+            connect(sGui->getVatsimWebServices()->getVatsimDataFileReader(), &CVatsimDataFileReader::dataRead, this, &CLoginComponent::onWebServiceDataRead, Qt::QueuedConnection);
         }
 
         // inital setup, if data already available
         this->validateAircraftValues();
         ui->form_Pilot->validate();
-        this->onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1, {});
+        this->onWebServiceDataRead(-1);
         this->reloadOtherServersSetup();
 
         if (sGui && sGui->getIContextSimulator())
@@ -318,23 +321,16 @@ namespace BlackGui::Components
         }
     }
 
-    void CLoginComponent::onWebServiceDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number, const QUrl &url)
+    void CLoginComponent::onWebServiceDataRead([[maybe_unused]] double kB)
     {
-        if (!CEntityFlags::isFinishedReadState(state)) { return; }
         if (!sGui || !sGui->getIContextNetwork() || sGui->isShuttingDown()) { return; }
 
-        Q_UNUSED(number)
-        Q_UNUSED(url)
-
-        if (entity == CEntityFlags::VatsimDataFile)
-        {
-            CServerList vatsimFsdServers = sGui->getIContextNetwork()->getVatsimFsdServers();
-            if (vatsimFsdServers.isEmpty()) { return; }
-            vatsimFsdServers.sortBy(&CServer::getName);
-            const CServer currentServer = m_networkSetup.getLastVatsimServer();
-            ui->comp_VatsimServers->setServers(vatsimFsdServers, true);
-            ui->comp_VatsimServers->preSelect(currentServer.getName());
-        }
+        CServerList vatsimFsdServers = sGui->getIContextNetwork()->getVatsimFsdServers();
+        if (vatsimFsdServers.isEmpty()) { return; }
+        vatsimFsdServers.sortBy(&CServer::getName);
+        const CServer currentServer = m_networkSetup.getLastVatsimServer();
+        ui->comp_VatsimServers->setServers(vatsimFsdServers, true);
+        ui->comp_VatsimServers->preSelect(currentServer.getName());
     }
 
     void CLoginComponent::loadRememberedUserData()

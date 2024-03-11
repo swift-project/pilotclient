@@ -133,14 +133,13 @@ namespace BlackCore::Vatsim
             }
 
             emit metarsRead(metars);
-            emit dataRead(CEntityFlags::MetarEntity, CEntityFlags::ReadFinished, metars.size(), url);
+            emit dataRead(metarData.size() / 1000.0, url);
         }
         else
         {
             // network error
             CLogMessage(this).warning(u"Reading METARs failed '%1' for '%2'") << nwReply->errorString() << metarUrl;
             nwReply->abort();
-            emit this->dataRead(CEntityFlags::MetarEntity, CEntityFlags::ReadFailed, 0, url);
         }
     } // method
 

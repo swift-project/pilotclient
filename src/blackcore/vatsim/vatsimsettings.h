@@ -96,7 +96,7 @@ namespace BlackCore::Vatsim
         //! \copydoc BlackMisc::TSettingTrait::defaultValue
         static const BlackCore::Vatsim::CReaderSettings &defaultValue()
         {
-            static const BlackCore::Vatsim::CReaderSettings reader { { 25.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() }, { 120.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() } };
+            static const BlackCore::Vatsim::CReaderSettings reader { { 5.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() }, { 120.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() } };
             return reader;
         }
     };
@@ -117,7 +117,7 @@ namespace BlackCore::Vatsim
         //! \copydoc BlackMisc::TSettingTrait::defaultValue
         static const BlackCore::Vatsim::CReaderSettings &defaultValue()
         {
-            static const BlackCore::Vatsim::CReaderSettings reader { { 35.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() }, { 300.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() } };
+            static const BlackCore::Vatsim::CReaderSettings reader { { 10.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() }, { 300.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() } };
             return reader;
         }
     };

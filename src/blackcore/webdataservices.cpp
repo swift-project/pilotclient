@@ -8,10 +8,6 @@
 #include "blackcore/db/icaodatareader.h"
 #include "blackcore/db/databasewriter.h"
 #include "blackcore/db/modeldatareader.h"
-#include "blackcore/vatsim/vatsimdatafilereader.h"
-#include "blackcore/vatsim/vatsimmetarreader.h"
-#include "blackcore/vatsim/vatsimstatusfilereader.h"
-#include "blackcore/vatsim/vatsimserverfilereader.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/setupreader.h"
 #include "blackcore/application.h"
@@ -84,7 +80,6 @@ namespace BlackCore
 
         // make sure this is called in event queue, so pending tasks cam be performed
         entities &= ~CEntityFlags::DbInfoObjectEntity; // triggered in init readers
-        entities &= ~CEntityFlags::VatsimStatusFile; // triggered in init readers
         entities &= ~m_entitiesPeriodicallyRead; // will be triggered by timers
 
         // trigger reading
@@ -103,46 +98,6 @@ namespace BlackCore
         this->gracefulShutdown();
     }
 
-    CServerList CWebDataServices::getVatsimFsdServers() const
-    {
-        if (m_vatsimServerFileReader) { return m_vatsimServerFileReader->getFsdServers(); }
-        return CServerList();
-    }
-
-    CUrl CWebDataServices::getVatsimMetarUrl() const
-    {
-        if (m_vatsimStatusReader) { return m_vatsimStatusReader->getMetarFileUrl(); }
-        return {};
-    }
-
-    CUrl CWebDataServices::getVatsimDataFileUrl() const
-    {
-        if (m_vatsimStatusReader) { return m_vatsimStatusReader->getDataFileUrl(); }
-        return {};
-    }
-
-    CUserList CWebDataServices::getUsersForCallsign(const CCallsign &callsign) const
-    {
-        if (m_vatsimDataFileReader) { return m_vatsimDataFileReader->getUsersForCallsign(callsign); }
-        return CUserList();
-    }
-
-    CAtcStationList CWebDataServices::getAtcStationsForCallsign(const CCallsign &callsign) const
-    {
-        if (m_vatsimDataFileReader) { return m_vatsimDataFileReader->getAtcStationsForCallsign(callsign); }
-        return CAtcStationList();
-    }
-
-    CVoiceCapabilities CWebDataServices::getVoiceCapabilityForCallsign(const CCallsign &callsign) const
-    {
-        if (m_vatsimDataFileReader) { return m_vatsimDataFileReader->getVoiceCapabilityForCallsign(callsign); }
-        return CVoiceCapabilities();
-    }
-
-    void CWebDataServices::updateWithVatsimDataFileData(CSimulatedAircraft &aircraftToBeUdpated) const
-    {
-        if (m_vatsimDataFileReader) { m_vatsimDataFileReader->updateWithVatsimDataFileData(aircraftToBeUdpated); }
-    }
 
     CStatusMessageList CWebDataServices::asyncPublishModels(const CAircraftModelList &modelsToBePublished) const
     {
@@ -227,24 +182,6 @@ namespace BlackCore
 
         Q_ASSERT_X(!whatToRead.testFlag(CEntityFlags::DbInfoObjectEntity), Q_FUNC_INFO, "Info object must be read upfront");
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
-        if (m_vatsimDataFileReader)
-        {
-            if (whatToRead.testFlag(CEntityFlags::VatsimDataFile))
-            {
-                m_vatsimDataFileReader->readInBackgroundThread();
-                triggeredRead |= CEntityFlags::VatsimDataFile;
-            }
-        }
-
-        if (m_vatsimMetarReader)
-        {
-            if (whatToRead.testFlag(CEntityFlags::MetarEntity))
-            {
-                m_vatsimMetarReader->readInBackgroundThread();
-                triggeredRead |= CEntityFlags::MetarEntity;
-            }
-        }
-
         if (m_airportDataReader)
         {
             if (whatToRead.testFlag(CEntityFlags::AirportEntity))
@@ -502,8 +439,6 @@ namespace BlackCore
     {
         const QString db = this->getDbReadersLog(separator);
         QStringList report;
-        if (m_vatsimMetarReader) { report << m_vatsimMetarReader->getName() + ": " + m_vatsimMetarReader->getReadLog().getSummary(); }
-        if (m_vatsimStatusReader) { report << m_vatsimStatusReader->getName() + ": " + m_vatsimStatusReader->getReadLog().getSummary(); }
         if (report.isEmpty()) { return db; }
         return report.join(separator) + separator + db;
     }
@@ -836,18 +771,6 @@ namespace BlackCore
         return CCountry();
     }
 
-    CMetarList CWebDataServices::getMetars() const
-    {
-        if (m_vatsimMetarReader) { return m_vatsimMetarReader->getMetars(); }
-        return {};
-    }
-
-    CMetar CWebDataServices::getMetarForAirport(const CAirportIcaoCode &icao) const
-    {
-        if (m_vatsimMetarReader) { return m_vatsimMetarReader->getMetarForAirport(icao); }
-        return CMetar();
-    }
-
     CStatusMessageList CWebDataServices::validateForPublishing(const CAircraftModelList &modelsToBePublished, bool ignoreEqual, CAircraftModelList &validModels, CAircraftModelList &invalidModels) const
     {
         CStatusMessageList msgs(modelsToBePublished.validateForPublishing(validModels, invalidModels)); // technical validation
@@ -917,26 +840,6 @@ namespace BlackCore
         if (m_shuttingDown) { return; }
         m_shuttingDown = true;
         this->disconnect(); // all signals
-        if (m_vatsimMetarReader)
-        {
-            m_vatsimMetarReader->quitAndWait();
-            m_vatsimMetarReader = nullptr;
-        }
-        if (m_vatsimDataFileReader)
-        {
-            m_vatsimDataFileReader->quitAndWait();
-            m_vatsimDataFileReader = nullptr;
-        }
-        if (m_vatsimStatusReader)
-        {
-            m_vatsimStatusReader->quitAndWait();
-            m_vatsimStatusReader = nullptr;
-        }
-        if (m_vatsimServerFileReader)
-        {
-            m_vatsimServerFileReader->quitAndWait();
-            m_vatsimServerFileReader = nullptr;
-        }
         if (m_modelDataReader)
         {
             m_modelDataReader->quitAndWait();
@@ -1021,55 +924,7 @@ namespace BlackCore
             this->initSharedInfoObjectReaderAndTriggerRead();
         }
 
-        // 2. Status and server file, updating the VATSIM related caches
-        // Read as soon as initReaders is done
-        if (readersNeeded.testFlag(CWebReaderFlags::VatsimStatusReader) || readersNeeded.testFlag(CWebReaderFlags::VatsimDataReader) || readersNeeded.testFlag(CWebReaderFlags::VatsimMetarReader))
-        {
-            m_vatsimStatusReader = new CVatsimStatusFileReader(this);
-            c = connect(m_vatsimStatusReader, &CVatsimStatusFileReader::dataFileRead, this, &CWebDataServices::vatsimStatusFileRead, Qt::QueuedConnection);
-            CLogMessage(this).info(u"Trigger read of VATSIM status file");
-            m_vatsimStatusReader->start(QThread::LowPriority);
-
-            // run single shot in main loop, so readInBackgroundThread is not called before initReaders completes
-            const QPointer<CWebDataServices> myself(this);
-            QTimer::singleShot(0, this, [=]() {
-                if (!myself || m_shuttingDown) { return; }
-                if (!sApp || sApp->isShuttingDown()) { return; }
-                m_vatsimStatusReader->readInBackgroundThread();
-            });
-
-            startVatsimServerFileReader();
-        }
-
-        // ---- "normal data", triggerRead will start read, not starting directly
-
-        // 3. VATSIM data file
-        if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::VatsimDataReader))
-        {
-            m_vatsimDataFileReader = new CVatsimDataFileReader(this);
-            c = connect(m_vatsimDataFileReader, &CVatsimDataFileReader::dataFileRead, this, &CWebDataServices::vatsimDataFileRead, Qt::QueuedConnection);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM data reader signals");
-            c = connect(m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CWebDataServices::dataRead, Qt::QueuedConnection);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM data file");
-            m_entitiesPeriodicallyRead |= CEntityFlags::VatsimDataFile;
-            m_vatsimDataFileReader->start(QThread::LowPriority);
-            m_vatsimDataFileReader->startReader();
-        }
-
-        // 4. VATSIM METAR data
-        if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::VatsimMetarReader))
-        {
-            m_vatsimMetarReader = new CVatsimMetarReader(this);
-            c = connect(m_vatsimMetarReader, &CVatsimMetarReader::metarsRead, this, &CWebDataServices::receivedMetars, Qt::QueuedConnection);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM METAR reader signals");
-            c = connect(m_vatsimMetarReader, &CVatsimMetarReader::dataRead, this, &CWebDataServices::dataRead, Qt::QueuedConnection);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM METAR");
-            m_entitiesPeriodicallyRead |= CEntityFlags::MetarEntity;
-            m_vatsimMetarReader->start(QThread::LowPriority);
-            m_vatsimMetarReader->startReader();
-        }
-
-        // 5. ICAO data reader
+        // 2. ICAO data reader
         if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::IcaoDataReader))
         {
             m_icaoDataReader = new CIcaoDataReader(this, dbReaderConfig);
@@ -1084,7 +939,7 @@ namespace BlackCore
             m_icaoDataReader->start(QThread::LowPriority);
         }
 
-        // 6. Model reader
+        // 3. Model reader
         if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::ModelReader))
         {
             m_modelDataReader = new CModelDataReader(this, dbReaderConfig);
@@ -1099,7 +954,7 @@ namespace BlackCore
             m_modelDataReader->start(QThread::LowPriority);
         }
 
-        // 7. Airport reader
+        // 4. Airport reader
         if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::AirportReader))
         {
             m_airportDataReader = new CAirportDataReader(this, dbReaderConfig);
@@ -1125,22 +980,6 @@ namespace BlackCore
             // Rational: we cannot read shared info objects, but we have and use cached objects
             m_sharedInfoDataReader->setSeverityNoWorkingUrl(CStatusMessage::SeverityWarning);
         }
-    }
-
-    void CWebDataServices::startVatsimServerFileReader()
-    {
-        m_vatsimServerFileReader = new CVatsimServerFileReader(this);
-        connect(m_vatsimServerFileReader, &CVatsimServerFileReader::dataFileRead, this, &CWebDataServices::vatsimServerFileRead, Qt::QueuedConnection);
-        CLogMessage(this).info(u"Trigger read of VATSIM server file");
-        m_vatsimServerFileReader->start(QThread::LowPriority);
-
-        // run single shot in main loop, so readInBackgroundThread is not called before initReaders completes
-        const QPointer<CWebDataServices> myself(this);
-        QTimer::singleShot(0, this, [=]() {
-            if (!myself || m_shuttingDown) { return; }
-            if (!sApp || sApp->isShuttingDown()) { return; }
-            m_vatsimServerFileReader->readInBackgroundThread();
-        });
     }
 
     void CWebDataServices::initDbInfoObjectReaderAndTriggerRead()
@@ -1281,26 +1120,6 @@ namespace BlackCore
         if (m_icaoDataReader) { entities |= m_icaoDataReader->getEntitiesWithCacheTimestampNewerThan(threshold); }
         if (m_modelDataReader) { entities |= m_modelDataReader->getEntitiesWithCacheTimestampNewerThan(threshold); }
         return entities;
-    }
-
-    void CWebDataServices::receivedMetars(const CMetarList &metars)
-    {
-        CLogMessage(this).info(u"Read %1 METARs") << metars.size();
-    }
-
-    void CWebDataServices::vatsimDataFileRead(int kB)
-    {
-        CLogMessage(this).info(u"Read VATSIM data file, %1 kB") << kB;
-    }
-
-    void CWebDataServices::vatsimStatusFileRead(int lines)
-    {
-        CLogMessage(this).info(u"Read VATSIM status file, %1 lines") << lines;
-    }
-
-    void CWebDataServices::vatsimServerFileRead(int lines)
-    {
-        CLogMessage(this).info(u"Read VATSIM server file, %1 lines") << lines;
     }
 
     void CWebDataServices::readFromSwiftReader(CEntityFlags::Entity entities, CEntityFlags::ReadState state, int number, const QUrl &url)

@@ -123,7 +123,7 @@ namespace BlackGui::Components
         void onOverrideCredentialsToPilot();
 
         //! VATSIM data file was loaded
-        void onWebServiceDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        void onWebServiceDataRead(double kB);
 
         //! Change page
         void onChangePage();
