@@ -42,8 +42,6 @@
 namespace BlackMisc
 {
     class CLogCategoryList;
-    template <typename T>
-    class Restricted;
 
     namespace Aviation
     {
