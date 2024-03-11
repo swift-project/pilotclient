@@ -58,12 +58,6 @@ namespace BlackCore::Vatsim
         return m_metars.getMetarForAirport(icao);
     }
 
-    int CVatsimMetarReader::getMetarsCount() const
-    {
-        QReadLocker l(&m_lock);
-        return m_metars.size();
-    }
-
     void CVatsimMetarReader::doWorkImpl()
     {
         this->read();
