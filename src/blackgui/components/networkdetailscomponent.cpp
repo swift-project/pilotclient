@@ -6,7 +6,8 @@
 #include "blackgui/uppercasevalidator.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextnetwork.h"
-#include "blackcore/webdataservices.h"
+#include "blackcore/vatsim/vatsimwebservices.h"
+#include "blackcore/vatsim/vatsimdatafilereader.h"
 
 #include <QToolButton>
 
@@ -15,6 +16,7 @@ using namespace BlackMisc::Audio;
 using namespace BlackMisc::Aviation;
 using namespace BlackCore;
 using namespace BlackCore::Data;
+using namespace BlackCore::Vatsim;
 
 namespace BlackGui::Components
 {
@@ -40,7 +42,7 @@ namespace BlackGui::Components
         // web service data
         if (sGui && sGui->getWebDataServices())
         {
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CNetworkDetailsComponent::onWebServiceDataRead, Qt::QueuedConnection);
+            connect(sGui->getVatsimWebServices()->getVatsimDataFileReader(), &CVatsimDataFileReader::dataRead, this, &CNetworkDetailsComponent::onWebServiceDataRead, Qt::QueuedConnection);
         }
 
         ui->form_FsdDetails->showEnableInfo(true);
@@ -58,7 +60,7 @@ namespace BlackGui::Components
         ui->tw_Network->setCurrentIndex(tab);
 
         this->reloadOtherServersSetup();
-        this->onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1, {});
+        this->onWebServiceDataRead(-1);
     }
 
     CNetworkDetailsComponent::~CNetworkDetailsComponent()
@@ -159,21 +161,14 @@ namespace BlackGui::Components
         emit this->overridePilot(server.getUser());
     }
 
-    void CNetworkDetailsComponent::onWebServiceDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number, const QUrl &url)
+    void CNetworkDetailsComponent::onWebServiceDataRead([[maybe_unused]] double kB)
     {
-        if (!CEntityFlags::isFinishedReadState(state)) { return; }
-        Q_UNUSED(number)
-        Q_UNUSED(url)
-
-        if (entity == CEntityFlags::VatsimDataFile)
-        {
-            CServerList vatsimFsdServers = sGui->getIContextNetwork()->getVatsimFsdServers();
-            if (vatsimFsdServers.isEmpty()) { return; }
-            vatsimFsdServers.sortBy(&CServer::getName);
-            const CServer currentServer = m_networkSetup.getLastVatsimServer();
-            ui->comp_VatsimServers->setServers(vatsimFsdServers, true);
-            ui->comp_VatsimServers->preSelect(currentServer.getName());
-        }
+        CServerList vatsimFsdServers = sGui->getIContextNetwork()->getVatsimFsdServers();
+        if (vatsimFsdServers.isEmpty()) { return; }
+        vatsimFsdServers.sortBy(&CServer::getName);
+        const CServer currentServer = m_networkSetup.getLastVatsimServer();
+        ui->comp_VatsimServers->setServers(vatsimFsdServers, true);
+        ui->comp_VatsimServers->preSelect(currentServer.getName());
     }
 
     void CNetworkDetailsComponent::onChangePage()

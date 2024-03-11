@@ -152,15 +152,13 @@ namespace BlackCore::Vatsim
             Q_UNUSED(changed);
 
             // data read finished
-            emit this->dataFileRead(lines.count());
-            emit this->dataRead(CEntityFlags::VatsimStatusFile, CEntityFlags::ReadFinished, lines.count());
+            emit this->dataRead(dataFileData.size() / 1000.0);
         }
         else
         {
             // network error
             CLogMessage(this).warning(u"Reading VATSIM status file failed '%1' '%2'") << nwReply->errorString() << urlString;
             nwReply->abort();
-            emit this->dataRead(CEntityFlags::VatsimStatusFile, CEntityFlags::ReadFailed, 0);
         }
     }
 } // ns

@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
     const QCommandLineOption installerOption { { "i", "installer" }, QCoreApplication::translate("main", "Installer setup.") };
     a.addParserOption(installerOption);
     if (!a.parseCommandLineArgsAndLoadSetup()) { return EXIT_FAILURE; }
-    a.initAndStartWebDataServices(BlackCore::CWebReaderFlags::AllSwiftDbReaders, CDatabaseReaderConfigList::forLauncher());
+    a.initAndStartWebDataServices(BlackCore::CWebReaderFlags::AllReaders, CDatabaseReaderConfigList::forLauncher());
 
     const bool installMode = a.isParserOptionSet(installerOption);
     if (installMode) initDbCacheFromResourceFileIfRequired(a);

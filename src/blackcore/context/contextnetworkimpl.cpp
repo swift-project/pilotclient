@@ -10,7 +10,7 @@
 #include "blackcore/application.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/fsd/fsdclient.h"
-#include "blackcore/webdataservices.h"
+#include "blackcore/vatsim/vatsimwebservices.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircraftparts.h"
@@ -640,9 +640,9 @@ namespace BlackCore::Context
 
     CServerList CContextNetwork::getVatsimFsdServers() const
     {
-        Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "Missing data reader");
+        Q_ASSERT_X(sApp->getVatsimWebServices(), Q_FUNC_INFO, "Missing data reader");
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        return sApp->getWebDataServices()->getVatsimFsdServers();
+        return sApp->getVatsimWebServices()->getVatsimFsdServers();
     }
 
     void CContextNetwork::onFsdConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
@@ -1324,8 +1324,8 @@ namespace BlackCore::Context
     CMetar CContextNetwork::getMetarForAirport(const CAirportIcaoCode &airportIcaoCode) const
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << airportIcaoCode; }
-        if (!sApp || !sApp->getWebDataServices()) { return {}; }
-        return sApp->getWebDataServices()->getMetarForAirport(airportIcaoCode);
+        if (!sApp || !sApp->getVatsimWebServices()) { return {}; }
+        return sApp->getVatsimWebServices()->getMetarForAirport(airportIcaoCode);
     }
 
     CAtcStationList CContextNetwork::getSelectedAtcStations() const

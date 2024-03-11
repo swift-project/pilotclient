@@ -33,12 +33,9 @@ namespace BlackMisc::Network
             DistributorEntity = 1 << 5, //!< distributors
             LiveryEntity = 1 << 6, //!< liveries
             ModelEntity = 1 << 7, //!< models
-            MetarEntity = 1 << 8, //!< METAR
-            VatsimDataFile = 1 << 9, //!< the VATSIM data file (multiple data entities)
-            VatsimStatusFile = 1 << 10, //!< the VATSIM status file (URLs for data files etc.)
-            AirportEntity = 1 << 11, //!< airports
-            AircraftCategoryEntity = 1 << 12, //!< aircraft category entities
-            AllEntities = ((1 << 13) - 1), //!< everything
+            AirportEntity = 1 << 8, //!< airports
+            AircraftCategoryEntity = 1 << 9, //!< aircraft category entities
+            AllEntities = ((1 << 10) - 1), //!< everything
             AllIcaoEntities = AircraftIcaoEntity | AirlineIcaoEntity, //!< all ICAO codes
             AllIcaoAndCountries = AircraftIcaoEntity | AirlineIcaoEntity | CountryEntity, //!< all ICAO codes and countries
             AllIcaoCountriesCategory = AllIcaoAndCountries | AircraftCategoryEntity, //!< includes category

@@ -198,6 +198,8 @@ add_library(core SHARED
         vatsim/vatsimstatusfilereader.h
         vatsim/vatsimserverfilereader.cpp
         vatsim/vatsimserverfilereader.h
+        vatsim/vatsimwebservices.h
+        vatsim/vatsimwebservices.cpp
 
         # Main
         actionbind.cpp

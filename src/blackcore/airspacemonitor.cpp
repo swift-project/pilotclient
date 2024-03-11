@@ -6,6 +6,7 @@
 #include "blackcore/airspaceanalyzer.h"
 #include "blackcore/aircraftmatcher.h"
 #include "blackcore/application.h"
+#include "blackcore/vatsim/vatsimwebservices.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/fsd/fsdclient.h"
@@ -89,11 +90,12 @@ namespace BlackCore
         connect(m_fsdClient, &CFSDClient::connectionStatusChanged, this, &CAirspaceMonitor::onConnectionStatusChanged);
         connect(m_fsdClient, &CFSDClient::revbAircraftConfigReceived, this, &CAirspaceMonitor::onRevBAircraftConfigReceived);
 
-        Q_ASSERT_X(sApp && sApp->hasWebDataServices(), Q_FUNC_INFO, "Missing data reader");
+        Q_ASSERT_X(sApp && sApp->hasVatsimWebServices(), Q_FUNC_INFO, "Missing VATSIM web services");
+        Q_ASSERT_X(sApp && sApp->hasWebDataServices(), Q_FUNC_INFO, "Missing web data services");
 
         if (this->supportsVatsimDataFile())
         {
-            connect(sApp->getWebDataServices()->getVatsimDataFileReader(), &CVatsimDataFileReader::dataFileRead, this, &CAirspaceMonitor::onReceivedVatsimDataFile);
+            connect(sApp->getVatsimWebServices()->getVatsimDataFileReader(), &CVatsimDataFileReader::dataRead, this, &CAirspaceMonitor::onReceivedVatsimDataFile);
         }
 
         // Force snapshot in the main event loop
@@ -189,7 +191,7 @@ namespace BlackCore
         if (m_flightPlanCache.contains(callsign)) { return m_flightPlanCache[callsign].getFlightPlanRemarks(); }
 
         // remarks only
-        if (this->supportsVatsimDataFile()) { return sApp->getWebDataServices()->getVatsimDataFileReader()->getFlightPlanRemarksForCallsign(callsign); }
+        if (this->supportsVatsimDataFile()) { return sApp->getVatsimWebServices()->getVatsimDataFileReader()->getFlightPlanRemarksForCallsign(callsign); }
 
         // unsupported
         return CFlightPlanRemarks();
@@ -262,7 +264,7 @@ namespace BlackCore
         // those are the ones not in range
         for (const CCallsign &callsign : std::as_const(searchList))
         {
-            const CUserList usersByCallsign = sApp->getWebDataServices()->getUsersForCallsign(callsign);
+            const CUserList usersByCallsign = sApp->getVatsimWebServices()->getUsersForCallsign(callsign);
             if (usersByCallsign.isEmpty())
             {
                 const CUser user(callsign);
@@ -451,7 +453,7 @@ namespace BlackCore
     void CAirspaceMonitor::onRealNameReplyReceived(const CCallsign &callsign, const QString &realname)
     {
         if (!this->isConnectedAndNotShuttingDown() || realname.isEmpty()) { return; }
-        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->getVatsimWebServices()) { return; }
 
         bool wasAtc = false;
         const QString rn = CUser::beautifyRealName(realname);
@@ -471,7 +473,7 @@ namespace BlackCore
         }
 
         // Client
-        const CVoiceCapabilities voiceCaps = sApp->getWebDataServices()->getVoiceCapabilityForCallsign(callsign);
+        const CVoiceCapabilities voiceCaps = sApp->getVatsimWebServices()->getVoiceCapabilityForCallsign(callsign);
         CPropertyIndexVariantMap vm = CPropertyIndexVariantMap({ CClient::IndexUser, CUser::IndexRealName }, rn);
         vm.addValue({ CClient::IndexVoiceCapabilities }, voiceCaps);
         this->updateOrAddClient(callsign, vm, false);
@@ -480,7 +482,7 @@ namespace BlackCore
     void CAirspaceMonitor::onCapabilitiesReplyReceived(const CCallsign &callsign, CClient::Capabilities clientCaps)
     {
         if (!this->isConnectedAndNotShuttingDown() || callsign.isEmpty()) { return; }
-        const CVoiceCapabilities voiceCaps = sApp->getWebDataServices()->getVoiceCapabilityForCallsign(callsign);
+        const CVoiceCapabilities voiceCaps = sApp->getVatsimWebServices()->getVoiceCapabilityForCallsign(callsign);
         CPropertyIndexVariantMap vm(CClient::IndexCapabilities, CVariant::from(clientCaps));
         vm.addValue({ CClient::IndexVoiceCapabilities }, voiceCaps);
         this->updateOrAddClient(callsign, vm, false);
@@ -531,13 +533,13 @@ namespace BlackCore
     void CAirspaceMonitor::onReceivedVatsimDataFile()
     {
         Q_ASSERT(CThreadUtils::isInThisThread(this));
-        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->getVatsimWebServices()) { return; }
         CClientList clients(this->getClients()); // copy
         bool changed = false;
         for (auto client = clients.begin(); client != clients.end(); ++client)
         {
             if (client->hasSpecifiedVoiceCapabilities()) { continue; } // we already have voice caps
-            const CVoiceCapabilities vc = sApp->getWebDataServices()->getVoiceCapabilityForCallsign(client->getCallsign());
+            const CVoiceCapabilities vc = sApp->getVatsimWebServices()->getVoiceCapabilityForCallsign(client->getCallsign());
             if (vc.isUnknown()) { continue; }
             changed = true;
             client->setVoiceCapabilities(vc);
@@ -673,7 +675,7 @@ namespace BlackCore
         if (stationsWithCallsign.isEmpty())
         {
             // new station, init with data from data file
-            CAtcStation station(sApp->getWebDataServices()->getAtcStationsForCallsign(callsign).frontOrDefault());
+            CAtcStation station(sApp->getVatsimWebServices()->getAtcStationsForCallsign(callsign).frontOrDefault());
             station.setCallsign(callsign);
             station.setRange(range);
             station.setFrequency(frequency);
@@ -1009,7 +1011,7 @@ namespace BlackCore
         const CCallsign callsign = aircraft.getCallsign();
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
 
-        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return false; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->getVatsimWebServices()) { return false; }
 
         CSimulatedAircraft newAircraft(aircraft);
         newAircraft.setRendered(false); // reset rendering
@@ -1017,7 +1019,7 @@ namespace BlackCore
 
         if (this->getConnectedServer().getEcosystem() == CEcosystem::vatsim())
         {
-            sApp->getWebDataServices()->updateWithVatsimDataFileData(newAircraft);
+            sApp->getVatsimWebServices()->updateWithVatsimDataFileData(newAircraft);
         }
         const bool added = CRemoteAircraftProvider::addNewAircraftInRange(newAircraft);
         if (added)
@@ -1703,7 +1705,7 @@ namespace BlackCore
 
     bool CAirspaceMonitor::supportsVatsimDataFile() const
     {
-        const bool dataFile = sApp && sApp->getWebDataServices() && sApp->getWebDataServices()->getVatsimDataFileReader();
+        const bool dataFile = sApp && sApp->getWebDataServices() && sApp->getVatsimWebServices()->getVatsimDataFileReader();
         return dataFile && this->getConnectedServer().getEcosystem().isSystem(CEcosystem::VATSIM);
     }
 

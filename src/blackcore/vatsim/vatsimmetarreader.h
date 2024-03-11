@@ -46,7 +46,7 @@ namespace BlackCore::Vatsim
         void metarsRead(const BlackMisc::Weather::CMetarList &metars);
 
         //! Data have been read
-        void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        void dataRead(double kB, const QUrl &url);
 
     protected:
         // CThreadedReader overrides

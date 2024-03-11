@@ -29,8 +29,6 @@ namespace BlackMisc::Network
         case LiveryEntity: return QStringLiteral("Livery");
         case ModelEntity: return QStringLiteral("Model");
         case NoEntity: return QStringLiteral("no data");
-        case VatsimDataFile: return QStringLiteral("VATSIM data file");
-        case VatsimStatusFile: return QStringLiteral("VATSIM status file");
         default:
             BLACK_VERIFY_X(false, Q_FUNC_INFO, "wrong flags");
             return "wrong flags";
@@ -56,8 +54,6 @@ namespace BlackMisc::Network
         if (entities.testFlag(LiveryEntity)) list << QStringLiteral("Livery");
         if (entities.testFlag(ModelEntity)) list << QStringLiteral("Model");
         if (entities.testFlag(NoEntity)) list << QStringLiteral("no data");
-        if (entities.testFlag(VatsimDataFile)) list << QStringLiteral("VATSIM data file");
-        if (entities.testFlag(VatsimStatusFile)) list << QStringLiteral("VATSIM status file");
         return list;
     }
 

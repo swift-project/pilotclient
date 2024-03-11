@@ -17,15 +17,9 @@
 #include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/aviation/airporticaocode.h"
-#include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/url.h"
-#include "blackmisc/network/userlist.h"
 #include "blackmisc/network/entityflags.h"
-#include "blackmisc/network/voicecapabilities.h"
-#include "blackmisc/weather/metarlist.h"
-#include "blackmisc/weather/metar.h"
 #include "blackmisc/restricted.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/countrylist.h"
@@ -48,7 +42,6 @@ namespace BlackMisc
     }
     namespace Simulation
     {
-        class CSimulatedAircraft;
         class CAutoPublishData;
     }
 }
@@ -56,14 +49,6 @@ namespace BlackMisc
 namespace BlackCore
 {
     class CApplication;
-
-    namespace Vatsim
-    {
-        class CVatsimDataFileReader;
-        class CVatsimMetarReader;
-        class CVatsimStatusFileReader;
-        class CVatsimServerFileReader;
-    }
 
     namespace Db
     {
@@ -76,7 +61,7 @@ namespace BlackCore
     }
 
     /*!
-     * Encapsulates reading data from web sources
+     * Encapsulates reading data from the swift web database
      */
     class BLACKCORE_EXPORT CWebDataServices :
         public QObject
@@ -96,12 +81,6 @@ namespace BlackCore
         //! Shutdown
         void gracefulShutdown();
 
-        //! Data file reader
-        Vatsim::CVatsimDataFileReader *getVatsimDataFileReader() const { return m_vatsimDataFileReader; }
-
-        //! Metar reader
-        Vatsim::CVatsimMetarReader *getMetarReader() const { return m_vatsimMetarReader; }
-
         //! DB info data reader
         BlackCore::Db::CInfoDataReader *getDbInfoDataReader() const { return m_dbInfoDataReader; }
 
@@ -113,34 +92,6 @@ namespace BlackCore
 
         //! All DB entities for those readers used and not ignored
         BlackMisc::Network::CEntityFlags::Entity allDbEntitiesForUsedReaders() const;
-
-        //! FSD servers
-        //! \threadsafe
-        BlackMisc::Network::CServerList getVatsimFsdServers() const;
-
-        //! METAR URL (from status file)
-        //! \threadsafe
-        BlackMisc::Network::CUrl getVatsimMetarUrl() const;
-
-        //! Data file location (from status file)
-        //! \threadsafe
-        BlackMisc::Network::CUrl getVatsimDataFileUrl() const;
-
-        //! Users by callsign
-        //! \threadsafe
-        BlackMisc::Network::CUserList getUsersForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
-
-        //! ATC stations by callsign
-        //! \threadsafe
-        BlackMisc::Aviation::CAtcStationList getAtcStationsForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
-
-        //! Voice capabilities for given callsign
-        //! \threadsafe
-        BlackMisc::Network::CVoiceCapabilities getVoiceCapabilityForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
-
-        //! Update with web data
-        //! \threadsafe
-        void updateWithVatsimDataFileData(BlackMisc::Simulation::CSimulatedAircraft &aircraftToBeUdpated) const;
 
         //! Distributors
         //! \threadsafe
@@ -358,14 +309,6 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Aviation::CAirport getAirportForNameOrLocation(const QString &nameOrLocation) const;
 
-        //! Get METARs
-        //! \threadsafe
-        BlackMisc::Weather::CMetarList getMetars() const;
-
-        //! Get METAR for airport
-        //! \threadsafe
-        BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &icao) const;
-
         //! Validate for publishing
         //! \remark More detailed check than BlackMisc::Simulation::CAircraftModelList::validateForPublishing
         BlackMisc::CStatusMessageList validateForPublishing(
@@ -543,21 +486,6 @@ namespace BlackCore
         void readInBackground(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::AllEntities);
 
     private:
-        //! Received METAR data
-        void receivedMetars(const BlackMisc::Weather::CMetarList &metars);
-
-        //! VATSIM data file has been read
-        void vatsimDataFileRead(int kB);
-
-        //! VATSIM status file has been read
-        void vatsimStatusFileRead(int lines);
-
-        //! VATSIM server file has been read
-        void vatsimServerFileRead(int lines);
-
-        //! Initialize and start VATSIM server file reader
-        void startVatsimServerFileReader();
-
         //! Read finished from reader
         void readFromSwiftReader(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
@@ -609,11 +537,7 @@ namespace BlackCore
         QDateTime m_sharedInfoObjectsTimeout; //!< started reading shared info objects
         QSet<BlackMisc::Network::CEntityFlags::Entity> m_signalledEntities; //!< remember signalled entites
 
-        // for reading XML and VATSIM data files
-        Vatsim::CVatsimStatusFileReader *m_vatsimStatusReader = nullptr;
-        Vatsim::CVatsimDataFileReader *m_vatsimDataFileReader = nullptr;
-        Vatsim::CVatsimMetarReader *m_vatsimMetarReader = nullptr;
-        Vatsim::CVatsimServerFileReader *m_vatsimServerFileReader = nullptr;
+        // for reading swift data files
         Db::CIcaoDataReader *m_icaoDataReader = nullptr;
         Db::CModelDataReader *m_modelDataReader = nullptr;
         Db::CAirportDataReader *m_airportDataReader = nullptr;

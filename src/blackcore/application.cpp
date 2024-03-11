@@ -13,6 +13,7 @@
 #include "blackcore/registermetadata.h"
 #include "blackcore/setupreader.h"
 #include "blackcore/webdataservices.h"
+#include "blackcore/vatsim/vatsimwebservices.h"
 #include "blackcore/inputmanager.h"
 #include "blackmisc/applicationinfo.h"
 #include "blackmisc/crashhandler.h"
@@ -68,6 +69,7 @@ using namespace BlackCore::Context;
 using namespace BlackCore::Vatsim;
 using namespace BlackCore::Data;
 using namespace BlackCore::Db;
+using namespace BlackCore::Vatsim;
 
 BlackCore::CApplication *sApp = nullptr; // set by constructor
 
@@ -404,13 +406,24 @@ namespace BlackCore
         return m_webDataServices;
     }
 
+    bool CApplication::hasVatsimWebServices() const
+    {
+        if (this->isShuttingDown()) { return false; } // service will not survive for long
+        return m_vatsimWebServices;
+    }
+
     CWebDataServices *CApplication::getWebDataServices() const
     {
-        // use hasWebDataServices() to test if services are available
-        // getting the assert means web services are accessed before the are initialized
-
         Q_ASSERT_X(m_webDataServices, Q_FUNC_INFO, "Missing web data services, use hasWebDataServices to test if existing");
+        // getting the assert means web services are accessed before they are initialized
         return m_webDataServices.data();
+    }
+
+    CVatsimWebServices *CApplication::getVatsimWebServices() const
+    {
+        Q_ASSERT_X(m_vatsimWebServices, Q_FUNC_INFO, "Missing VATSIM web services, use hasVatsimWebServices to test if existing");
+        // getting the assert means VATSIM web services are accessed before they are initialized
+        return m_vatsimWebServices.data();
     }
 
     const QString &CApplication::versionStringDetailed() const
@@ -801,6 +814,13 @@ namespace BlackCore
             const CStatusMessageList msgs = this->initAndStartWebDataServices(CWebReaderFlags::AllReaders, CDatabaseReaderConfigList::forPilotClient());
             if (msgs.hasErrorMessages()) { return msgs; }
         }
+
+        if (!m_vatsimWebServices)
+        {
+            const CStatusMessageList msgs = this->startVatsimWebServices();
+            if (msgs.hasErrorMessages()) { return msgs; }
+        }
+
         return this->startCoreFacade(); // will do nothing if setup is not yet loaded
     }
 
@@ -848,6 +868,7 @@ namespace BlackCore
         Q_ASSERT_X(m_coreFacade.isNull(), Q_FUNC_INFO, "Cannot alter facade");
         Q_ASSERT_X(m_setupReader, Q_FUNC_INFO, "No facade without setup possible");
         Q_ASSERT_X(m_webDataServices, Q_FUNC_INFO, "Need running web data services");
+        Q_ASSERT_X(m_vatsimWebServices, Q_FUNC_INFO, "Need running VATSIM web services");
 
         const CStatusMessageList msgs(CStatusMessage(this).info(u"Will start core facade now"));
         m_coreFacade.reset(new CCoreFacade(m_coreFacadeConfig));
@@ -880,6 +901,32 @@ namespace BlackCore
         else
         {
             msgs.push_back(CStatusMessage(this).info(u"Web data services already running"));
+        }
+
+        return msgs;
+    }
+
+    CStatusMessageList CApplication::startVatsimWebServices()
+    {
+        BLACK_VERIFY_X(QSslSocket::supportsSsl(), Q_FUNC_INFO, "No SSL");
+        if (!QSslSocket::supportsSsl())
+        {
+            return CStatusMessage(this).error(u"No SSL supported, can`t be used");
+        }
+
+        Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Call this function after parsing");
+
+        if (!m_setupReader || !m_setupReader->isSetupAvailable()) { return CStatusMessage(this).error(u"No setup reader or setup available"); }
+
+        CStatusMessageList msgs;
+        if (!m_vatsimWebServices)
+        {
+            msgs.push_back(CStatusMessage(this).info(u"Will start VATSIM web services now"));
+            m_vatsimWebServices.reset(new CVatsimWebServices({}, this));
+        }
+        else
+        {
+            msgs.push_back(CStatusMessage(this).info(u"VATSIM web services already running"));
         }
 
         return msgs;
@@ -993,6 +1040,14 @@ namespace BlackCore
 
             m_webDataServices->gracefulShutdown();
             m_webDataServices.reset();
+        }
+
+        if (m_vatsimWebServices)
+        {
+            CLogMessage(this).info(u"Graceful shutdown of CApplication, shutdown of VATSIM web services");
+
+            m_vatsimWebServices->gracefulShutdown();
+            m_vatsimWebServices.reset();
         }
 
         if (m_gitHubPackagesReader)
@@ -1526,9 +1581,9 @@ namespace BlackCore
     CUrl CApplication::getVatsimMetarUrl() const
     {
         if (m_shutdown) { return {}; }
-        if (m_webDataServices)
+        if (m_vatsimWebServices)
         {
-            const CUrl url(m_webDataServices->getVatsimMetarUrl());
+            const CUrl url(m_vatsimWebServices->getVatsimMetarUrl());
             if (!url.isEmpty()) { return url; }
         }
         if (m_setupReader)
@@ -1541,9 +1596,9 @@ namespace BlackCore
     CUrl CApplication::getVatsimDataFileUrl() const
     {
         if (m_shutdown) { return {}; }
-        if (m_webDataServices)
+        if (m_vatsimWebServices)
         {
-            const CUrl url(m_webDataServices->getVatsimDataFileUrl());
+            const CUrl url(m_vatsimWebServices->getVatsimDataFileUrl());
             if (!url.isEmpty()) { return url; }
         }
         if (m_setupReader)
