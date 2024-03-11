@@ -55,7 +55,6 @@ namespace BlackGui::Components
         ui->le_MaxModelsStashed->setValidator(new QIntValidator(10, CDbStashComponent::MaxModelPublished, this));
         Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "Expect mapping componet");
 
-        connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAutoStashingComponent::onEntitiesRead, Qt::QueuedConnection);
         connect(ui->tb_ResetDescription, &QToolButton::clicked, this, &CDbAutoStashingComponent::resetDescription);
 
         this->resetDescription();
@@ -109,14 +108,6 @@ namespace BlackGui::Components
     {
         ui->bb_AutoStashing->setStandardButtons(QDialogButtonBox::Close);
         this->setVisible(true);
-    }
-
-    void CDbAutoStashingComponent::onEntitiesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count, const QUrl &url)
-    {
-        if (readState != CEntityFlags::ReadFinished) { return; }
-        Q_UNUSED(count)
-        Q_UNUSED(entity)
-        Q_UNUSED(url)
     }
 
     void CDbAutoStashingComponent::resetDescription()
