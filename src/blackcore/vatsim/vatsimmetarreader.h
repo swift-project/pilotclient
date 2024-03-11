@@ -10,7 +10,6 @@
 #include "blackmisc/weather/metar.h"
 #include "blackmisc/weather/metardecoder.h"
 #include "blackmisc/weather/metarlist.h"
-#include "blackmisc/network/ecosystemprovider.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/aviation/airporticaocode.h"
 #include "blackcore/threadedreader.h"
@@ -23,8 +22,7 @@ namespace BlackCore::Vatsim
 {
     //! Read METARs from VATSIM
     class BLACKCORE_EXPORT CVatsimMetarReader :
-        public BlackCore::CThreadedReader,
-        public BlackMisc::Network::CEcosystemAware
+        public BlackCore::CThreadedReader
     {
         Q_OBJECT
 

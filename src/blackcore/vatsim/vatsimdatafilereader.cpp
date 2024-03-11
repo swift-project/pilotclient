@@ -50,8 +50,7 @@ using namespace BlackCore::Data;
 
 namespace BlackCore::Vatsim
 {
-    CVatsimDataFileReader::CVatsimDataFileReader(QObject *owner) : CThreadedReader(owner, "CVatsimDataFileReader"),
-                                                                   CEcosystemAware(CEcosystemAware::providerIfPossible(owner))
+    CVatsimDataFileReader::CVatsimDataFileReader(QObject *owner) : CThreadedReader(owner, "CVatsimDataFileReader")
     {
         this->reloadSettings();
     }
@@ -174,7 +173,6 @@ namespace BlackCore::Vatsim
         this->threadAssertCheck();
         if (!this->doWorkCheck()) { return; }
         if (!this->isInternetAccessible("No network/internet access, cannot read VATSIM data file")) { return; }
-        if (this->isNotVATSIMEcosystem()) { return; }
 
         // round robin for load balancing
         // remark: Don't use QThread to run network operations in the background
@@ -192,7 +190,6 @@ namespace BlackCore::Vatsim
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
         this->threadAssertCheck();
-        if (this->isNotVATSIMEcosystem()) { return; }
 
         // Worker thread, make sure to write only synced here!
         if (!this->doWorkCheck())

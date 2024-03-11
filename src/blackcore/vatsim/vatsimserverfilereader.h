@@ -14,7 +14,6 @@
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/network/entityflags.h"
-#include "blackmisc/network/ecosystemprovider.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/network/voicecapabilities.h"
@@ -34,8 +33,7 @@ namespace BlackCore::Vatsim
     //! Read VATSIM server file
     //! \sa https://data.vatsim.net/v3/vatsim-servers.json
     class BLACKCORE_EXPORT CVatsimServerFileReader :
-        public CThreadedReader,
-        public BlackMisc::Network::CEcosystemAware
+        public CThreadedReader
     {
         Q_OBJECT
 

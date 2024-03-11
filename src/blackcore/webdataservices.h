@@ -19,7 +19,6 @@
 #include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/network/ecosystemprovider.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/urllist.h"
 #include "blackmisc/network/userlist.h"
@@ -80,11 +79,9 @@ namespace BlackCore
      * Encapsulates reading data from web sources
      */
     class BLACKCORE_EXPORT CWebDataServices :
-        public QObject,
-        public BlackMisc::Network::IEcosystemProvider
+        public QObject
     {
         Q_OBJECT
-        Q_INTERFACES(BlackMisc::Network::IEcosystemProvider)
 
     public:
         //! Log categories
@@ -603,13 +600,6 @@ namespace BlackCore
         //! Wait for info objects to be read
         //! \return true means info objects available
         bool waitForInfoObjectsThenRead(BlackMisc::Network::CEntityFlags::Entity entities, const QString &info, BlackCore::Db::CInfoDataReader *infoReader, QDateTime &timeOut);
-
-        //! \copydoc BlackCore::CApplication::coreFacadeStarted
-        void onCoreFacadeStarted();
-
-        //! \copydoc BlackCore::Context::IContextNetwork::connectedServerChanged
-        //! \remark sets the ecosystem
-        void onConnectedNetworkServerChanged(const BlackMisc::Network::CServer &server);
 
         BlackMisc::Network::CEntityFlags::Entity m_entitiesPeriodicallyRead = BlackMisc::Network::CEntityFlags::NoEntity; //!< entities permanently updated by timers
         BlackMisc::Network::CEntityFlags::Entity m_swiftDbEntitiesRead = BlackMisc::Network::CEntityFlags::NoEntity; //!< entities read
