@@ -874,12 +874,6 @@ namespace BlackCore
         return CMetar();
     }
 
-    int CWebDataServices::getMetarsCount() const
-    {
-        if (m_vatsimMetarReader) { return m_vatsimMetarReader->getMetarsCount(); }
-        return 0;
-    }
-
     CStatusMessageList CWebDataServices::validateForPublishing(const CAircraftModelList &modelsToBePublished, bool ignoreEqual, CAircraftModelList &validModels, CAircraftModelList &invalidModels) const
     {
         CStatusMessageList msgs(modelsToBePublished.validateForPublishing(validModels, invalidModels)); // technical validation

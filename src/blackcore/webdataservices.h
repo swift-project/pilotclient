@@ -374,10 +374,6 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &icao) const;
 
-        //! Get METARs count
-        //! \threadsafe
-        int getMetarsCount() const;
-
         //! Validate for publishing
         //! \remark More detailed check than BlackMisc::Simulation::CAircraftModelList::validateForPublishing
         BlackMisc::CStatusMessageList validateForPublishing(

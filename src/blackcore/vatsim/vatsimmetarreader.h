@@ -43,10 +43,6 @@ namespace BlackCore::Vatsim
         //! \threadsafe
         virtual BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &icao) const;
 
-        //! Get METARs count
-        //! \threadsafe
-        virtual int getMetarsCount() const;
-
     signals:
         //! METARs have been read and converted to BlackMisc::Weather::CMetarList
         void metarsRead(const BlackMisc::Weather::CMetarList &metars);
