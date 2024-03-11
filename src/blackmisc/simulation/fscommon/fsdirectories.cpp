@@ -206,6 +206,33 @@ namespace BlackMisc::Simulation::FsCommon
         return exclude;
     }
 
+    const QStringList &CFsDirectories::msfs20SimObjectsExcludeDirectoryPatterns()
+    {
+        static const QStringList exclude {
+            "OneStore/asobo-discovery",
+            "OneStore/asobo-flight",
+            "OneStore/asobo-landingchallenge",
+            "OneStore/asobo-mission",
+            "OneStore/asobo-tutorials",
+            "OneStore/asobo-vcockpits",
+            "OneStore/asobo-simobjects",
+            "OneStore/asobo-services",
+            "OneStore/asobo-vcockpits",
+            "OneStore/asobo-l",
+            "OneStore/asobo-m",
+            "OneStore/asobo-vfx",
+            "OneStore/fs",
+            "OneStore/esd",
+            "OneStore/microsoft-airport",
+            "OneStore/microsoft-bushtrip",
+            "OneStore/microsoft-discovery",
+            "landingchallenge",
+            "tutorials",
+
+        };
+        return exclude;
+    }
+
     QString p3dDirFromRegistryImpl()
     {
         QString p3dPath;

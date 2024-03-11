@@ -50,6 +50,9 @@ namespace BlackMisc::Simulation::FsCommon
         //! Exclude directories for simObjects
         static const QStringList &fsxSimObjectsExcludeDirectoryPatterns();
 
+        //! Exclude directories for simObjects
+        static const QStringList &msfs20SimObjectsExcludeDirectoryPatterns();
+
         //! FSX's simObject dir and the add on dirs
         static QStringList fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir = "");
 

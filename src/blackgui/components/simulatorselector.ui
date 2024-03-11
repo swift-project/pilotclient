@@ -91,7 +91,7 @@
       <item>
        <widget class="QCheckBox" name="cb_MSFS">
         <property name="text">
-         <string>MSFS</string>
+         <string>MSFS2020</string>
         </property>
        </widget>
       </item>
@@ -169,7 +169,7 @@
       <item>
        <widget class="QRadioButton" name="rb_MSFS">
         <property name="text">
-         <string>MSFS</string>
+         <string>MSFS2020</string>
         </property>
        </widget>
       </item>

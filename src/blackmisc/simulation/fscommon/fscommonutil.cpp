@@ -185,7 +185,6 @@ namespace BlackMisc::Simulation::FsCommon
     CStatusMessageList CFsCommonUtil::validateMSFSSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &stopped, const QString &simulatorDir)
     {
         Q_UNUSED(simulatorDir)
-        // TODO TZ
         const QStringList simObjectPaths = CFsDirectories::msfsSimObjectsDirPlusAddOnXmlSimObjectsPaths();
         return CFsCommonUtil::validateSimObjectsPath(QSet<QString>(simObjectPaths.begin(), simObjectPaths.end()), models, validModels, invalidModels, ignoreEmptyFileNames, stopAtFailedFiles, stopped);
     }

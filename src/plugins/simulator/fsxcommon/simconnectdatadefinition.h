@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Copyright (C) 2018 swift Project Community / Contributors
+// SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 //! \file
@@ -9,7 +9,7 @@
 #include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 #include "plugins/simulator/fsxcommon/simconnectwindows.h"
 #include "blackmisc/aviation/aircraftlights.h"
-#include <blackmisc/simulation/simulatorinfo.h>
+#include "blackmisc/simulation/simulatorinfo.h"
 
 #include <algorithm>
 #include <QtGlobal>

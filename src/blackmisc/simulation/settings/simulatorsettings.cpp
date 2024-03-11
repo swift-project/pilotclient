@@ -748,6 +748,7 @@ namespace BlackMisc::Simulation::Settings
         case CSimulatorInfo::FSX: return CFsDirectories::fsxSimObjectsExcludeDirectoryPatterns();
         case CSimulatorInfo::P3D: return CFsDirectories::p3dSimObjectsExcludeDirectoryPatterns();
         case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneModelExcludeDirectoryPatterns();
+        case CSimulatorInfo::MSFS: return CFsDirectories::msfs20SimObjectsExcludeDirectoryPatterns();
         default:
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
             break;

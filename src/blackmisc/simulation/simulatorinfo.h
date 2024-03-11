@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Copyright (C) 2018 swift Project Community / Contributors
+// SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 //! \file
@@ -220,14 +220,14 @@ namespace BlackMisc::Simulation
             static const CSimulatorInfo s(FS9);
             return s;
         }
-        static const CSimulatorInfo &msfs()
-        {
-            static const CSimulatorInfo s(MSFS);
-            return s;
-        }
         static const CSimulatorInfo &xplane()
         {
             static const CSimulatorInfo s(XPLANE);
+            return s;
+        }
+        static const CSimulatorInfo &msfs()
+        {
+            static const CSimulatorInfo s(MSFS);
             return s;
         }
         //! @}
