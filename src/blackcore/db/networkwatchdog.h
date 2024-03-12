@@ -126,10 +126,6 @@ namespace BlackCore::Db
         //! \threadsafe
         bool isNetworkAccessibilityCheckEnabled() const { return !this->isNetworkAccessibilityCheckDisabled(); }
 
-        //! URL referring to the DB
-        //! \remark depends on BlackCore::Application::getGlobalSetup()
-        static bool isDbUrl(const BlackMisc::Network::CUrl &url);
-
         //! The URL being tested
         //! \remark depends on BlackCore::Application::getGlobalSetup()
         //! \private primarily accessible for unit tests
@@ -163,10 +159,6 @@ namespace BlackCore::Db
 
         //! Received reply of client service ping
         void replyPingClientService(QNetworkReply *nwReply);
-
-        //! The DB server
-        //! \remark depends on BlackCore::Application::getGlobalSetup()
-        static QString dbHost();
 
         //! Obtain working DB data file location URL
         //! \remark depends on BlackCore::Application::getGlobalSetup()

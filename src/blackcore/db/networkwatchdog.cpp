@@ -96,12 +96,6 @@ namespace BlackCore::Db
         m_workingSharedUrl = workingUrl;
     }
 
-    bool CNetworkWatchdog::isDbUrl(const CUrl &url)
-    {
-        const QString host(url.getHost());
-        return host == dbHost();
-    }
-
     void CNetworkWatchdog::doWork()
     {
         if (!this->doWorkCheck()) { return; }
@@ -351,12 +345,6 @@ namespace BlackCore::Db
         if (!sApp || sApp->isShuttingDown()) { return CUrl(); }
         const CUrl testUrl(sApp->getGlobalSetup().getDbHomePageUrl());
         return testUrl;
-    }
-
-    QString CNetworkWatchdog::dbHost()
-    {
-        const QString host = dbTestUrl().getHost();
-        return host;
     }
 
     CUrl CNetworkWatchdog::workingSharedUrlFromSetup()
