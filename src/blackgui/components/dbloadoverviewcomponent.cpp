@@ -205,10 +205,9 @@ namespace BlackGui::Components
         ui->le_CategoriesSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::AircraftCategoryEntity));
 
         // DB URL
-        const QString dbUrlHtml("<img src=\"%1\">&nbsp;&nbsp;<a href=\"%2\">%3</a>");
+        const QString dbUrlHtml("<a href=\"%2\">%3</a>");
         const QString url = sGui->getGlobalSetup().getDbHomePageUrl().getFullUrl();
-        bool canConnect = sGui->isSwiftDbAccessible();
-        ui->lbl_DatabaseUrl->setText(dbUrlHtml.arg(canConnect ? m_imgOk : m_imgFailed, url, url));
+        ui->lbl_DatabaseUrl->setText(dbUrlHtml.arg(url, url));
         ui->lbl_DatabaseUrl->setToolTip(url);
 
         // Shared URLs
@@ -246,9 +245,11 @@ namespace BlackGui::Components
         const QString sharedUrlTable = toHtmTable(values, 2);
         ui->lbl_SharedUrls->setText(sharedUrlTable);
         ui->lbl_SharedUrls->setMinimumHeight(10 + (18 * sharedUrls.size()));
-        const QString currentlyUsedSharedUrl = sGui->getWorkingSharedUrl().toQString();
+
+        const CUrlList urls = sGui->getGlobalSetup().getSwiftSharedUrls();
+        Q_ASSERT_X(!urls.empty(), Q_FUNC_INFO, "Need at least one shared URL");
         ui->lbl_SharedUrls->setToolTip(
-            currentlyUsedSharedUrl.isEmpty() ? "No shared URL" : "currently used: " + currentlyUsedSharedUrl);
+            urls[0].isEmpty() ? "No shared URL" : "currently used: " + urls[0].toQString());
 
         m_sharedLastCheck = QDateTime::currentMSecsSinceEpoch();
         m_sharedValueCheckInProgress = false;
@@ -376,9 +377,8 @@ namespace BlackGui::Components
         {
             direct = true;
         }
-        else if (sGui->isSwiftDbAccessible())
+        else
         {
-            // do not trigger if cannot be connected
             sGui->getWebDataServices()->triggerReadOfDbInfoObjects();
         }
 

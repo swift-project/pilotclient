@@ -98,9 +98,6 @@ namespace BlackGui::Components
         //! PTT, as received in in audio
         void onAudioPtt(bool active, BlackMisc::Audio::PTTCOM pttcom, const BlackMisc::CIdentifier &identifier);
 
-        //! Internet accessible?
-        void onInternetAccessibleChanged(bool access);
-
         //! Update values
         void updateValues();
 

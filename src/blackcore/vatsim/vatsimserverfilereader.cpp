@@ -55,7 +55,6 @@ namespace BlackCore::Vatsim
     {
         this->threadAssertCheck();
         if (!this->doWorkCheck()) { return; }
-        if (!this->isInternetAccessible("No network/internet access, cannot read VATSIM server file")) { return; }
         if (this->isNotVATSIMEcosystem()) { return; }
 
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing application");

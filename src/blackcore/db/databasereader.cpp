@@ -4,7 +4,6 @@
 #include "blackcore/db/databasereader.h"
 #include "blackcore/db/infodatareader.h"
 #include "blackcore/db/databaseutils.h"
-#include "blackcore/db/networkwatchdog.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/application.h"
 #include "blackmisc/db/datastoreutility.h"
@@ -214,7 +213,6 @@ namespace BlackCore::Db
 
         // ps_read is implemented in the derived classes
         if (entities == CEntityFlags::NoEntity) { return; }
-        if (!this->isInternetAccessible(QStringLiteral("No network/internet access, will not read %1").arg(CEntityFlags::flagToString(entities)))) { return; }
 
         //! https://dev.swift-project.org/T490
         QPointer<CDatabaseReader> myself(this);
@@ -382,11 +380,9 @@ namespace BlackCore::Db
 
     int CDatabaseReader::requestHeadersOfSharedFiles(CEntityFlags::Entity entities)
     {
-        if (!this->isInternetAccessible(QStringLiteral("No network/internet access, will not read shared file headers for %1").arg(CEntityFlags::flagToString(entities)))) { return false; }
-
         CEntityFlags::Entity allEntities = entities & CEntityFlags::AllDbEntitiesNoInfoObjects;
         CEntityFlags::Entity currentEntity = CEntityFlags::iterateDbEntities(allEntities);
-        const CUrl urlSharedDbdata = CDatabaseReader::getWorkingSharedDbdataDirectoryUrl();
+        const CUrl urlSharedDbdata = CDatabaseReader::getSharedDbdataDirectoryUrl();
         if (urlSharedDbdata.isEmpty())
         {
             CLogMessage(this).warning(u"No working shared URL, cannot request headers");
@@ -511,7 +507,7 @@ namespace BlackCore::Db
             return this->getDbServiceBaseUrl().withAppendedPath("/service");
         case CDbFlags::SharedInfoOnly:
         case CDbFlags::Shared:
-            return CDatabaseReader::getWorkingSharedDbdataDirectoryUrl();
+            return CDatabaseReader::getSharedDbdataDirectoryUrl();
         default:
             qFatal("Wrong mode");
             break;
@@ -732,10 +728,11 @@ namespace BlackCore::Db
         return dbUrl;
     }
 
-    CUrl CDatabaseReader::getWorkingSharedDbdataDirectoryUrl()
+    CUrl CDatabaseReader::getSharedDbdataDirectoryUrl()
     {
-        const CUrl sharedUrl(sApp->getWorkingSharedUrl());
-        return CGlobalSetup::buildDbDataDirectoryUrl(sharedUrl);
+        const CUrlList sharedUrls = sApp->getGlobalSetup().getSwiftSharedUrls();
+        Q_ASSERT_X(!sharedUrls.empty(), Q_FUNC_INFO, "Need at least one shared URL");
+        return CGlobalSetup::buildDbDataDirectoryUrl(sharedUrls[0]);
     }
 
     void CDatabaseReader::cacheHasChanged(CEntityFlags::Entity entities)
@@ -794,7 +791,7 @@ namespace BlackCore::Db
 
     bool CDatabaseReader::JsonDatastoreResponse::isLoadedFromDb() const
     {
-        return CNetworkWatchdog::isDbUrl(this->getUrl());
+        return this->getUrl().getHost() == getDbUrl().getHost();
     }
 
     void CDatabaseReader::JsonDatastoreResponse::setJsonArray(const QJsonArray &value)

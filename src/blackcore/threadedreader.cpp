@@ -61,16 +61,6 @@ namespace BlackCore
         return delta <= timeLastMs;
     }
 
-    bool CThreadedReader::isInternetAccessible(const QString &logWarningMessage) const
-    {
-        const bool a = sApp->isInternetAccessible();
-        if (!a && !logWarningMessage.isEmpty())
-        {
-            CLogMessage(this).warning(logWarningMessage);
-        }
-        return a;
-    }
-
     void CThreadedReader::startReader()
     {
         Q_ASSERT(m_initialTime > 0);

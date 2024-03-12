@@ -73,7 +73,6 @@ namespace BlackCore::Vatsim
     {
         this->threadAssertCheck();
         if (!this->doWorkCheck()) { return; }
-        if (!this->isInternetAccessible("No network/internet access, cannot read METARs")) { return; }
         if (this->isNotVATSIMEcosystem()) { return; }
 
         CFailoverUrlList urls(sApp->getVatsimMetarUrls());

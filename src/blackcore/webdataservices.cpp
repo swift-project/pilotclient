@@ -298,11 +298,6 @@ namespace BlackCore
     {
         if (m_shuttingDown) { return CEntityFlags::NoEntity; }
         if (!sApp || sApp->isShuttingDown()) { return CEntityFlags::NoEntity; }
-        if (!sApp->isSwiftDbAccessible())
-        {
-            CLogMessage(this).warning(u"Not triggering load of '%1' because swift DB is not accessible") << CEntityFlags::flagToString(whatToRead);
-            return CEntityFlags::NoEntity;
-        }
 
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
         if (m_dbInfoDataReader)
@@ -348,11 +343,6 @@ namespace BlackCore
     {
         if (m_shuttingDown) { return CEntityFlags::NoEntity; }
         if (!sApp || sApp->isShuttingDown()) { return CEntityFlags::NoEntity; }
-        if (!sApp->hasWorkingSharedUrl())
-        {
-            CLogMessage(this).warning(u"Not triggering load of '%1' because no working shared URL") << CEntityFlags::flagToString(whatToRead);
-            return CEntityFlags::NoEntity;
-        }
 
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
         this->triggerReadOfSharedInfoObjects(); // trigger reload of info objects (for shared)
@@ -1041,20 +1031,10 @@ namespace BlackCore
         // 1a. If any DB data, read the info objects upfront
         if (needsDbInfoObjects)
         {
-            const bool databaseUp = sApp->isSwiftDbAccessible();
-            if (!databaseUp) { dbReaderConfig.markAsDbDown(); }
-
             if (anyDbEntities && readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::DbInfoDataReader))
             {
                 // info data reader has a special role, it will not be triggered in triggerRead()
-                if (databaseUp)
-                {
-                    this->initDbInfoObjectReaderAndTriggerRead();
-                }
-                else
-                {
-                    CLogMessage(this).warning(u"DB unreachable, skipping read from DB info data reader");
-                }
+                this->initDbInfoObjectReaderAndTriggerRead();
             }
         }
 

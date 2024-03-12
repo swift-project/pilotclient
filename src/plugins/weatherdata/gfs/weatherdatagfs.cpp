@@ -148,12 +148,6 @@ namespace BlackWxPlugin::Gfs
         m_maxRange = range;
         if (m_gribData.isEmpty())
         {
-            if (!sApp || !sApp->isInternetAccessible())
-            {
-                CLogMessage(this).error(u"No weather download since network/internet not accessible");
-                return;
-            }
-
             const QUrl url = getDownloadUrl().toQUrl();
             CLogMessage(this).debug() << "Started to download GFS data from" << url.toString();
             QNetworkRequest request(url);

@@ -182,11 +182,6 @@ namespace BlackCore::Db
         this->threadAssertCheck();
         if (!this->doWorkCheck()) { return; }
         entities &= CEntityFlags::DistributorLiveryModel;
-        if (!this->isInternetAccessible())
-        {
-            emit this->dataRead(entities, CEntityFlags::ReadSkipped, 0, {});
-            return;
-        }
 
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
         CUrl url;
