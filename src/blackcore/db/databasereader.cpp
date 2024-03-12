@@ -4,7 +4,6 @@
 #include "blackcore/db/databasereader.h"
 #include "blackcore/db/infodatareader.h"
 #include "blackcore/db/databaseutils.h"
-#include "blackcore/db/networkwatchdog.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/application.h"
 #include "blackmisc/db/datastoreutility.h"
@@ -794,7 +793,7 @@ namespace BlackCore::Db
 
     bool CDatabaseReader::JsonDatastoreResponse::isLoadedFromDb() const
     {
-        return CNetworkWatchdog::isDbUrl(this->getUrl());
+        return this->getUrl().getHost() == getDbUrl().getHost();
     }
 
     void CDatabaseReader::JsonDatastoreResponse::setJsonArray(const QJsonArray &value)
