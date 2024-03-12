@@ -453,12 +453,6 @@ namespace BlackCore
         //! \copydoc BlackCore::Db::CNetworkWatchdog::isSwiftDbAccessible
         bool isSwiftDbAccessible() const;
 
-        //! \copydoc BlackCore::Db::CNetworkWatchdog::hasWorkingSharedUrl
-        bool hasWorkingSharedUrl() const;
-
-        //! \copydoc BlackCore::Db::CNetworkWatchdog::getWorkingSharedUrl
-        BlackMisc::Network::CUrl getWorkingSharedUrl() const;
-
         //! Access to access manager
         //! \remark supposed to be used only in special cases
         const QNetworkAccessManager *getNetworkAccessManager() const { return m_accessManager; }

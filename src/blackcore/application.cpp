@@ -723,17 +723,6 @@ namespace BlackCore
         return m_networkWatchDog && m_networkWatchDog->isSwiftDbAccessible();
     }
 
-    bool CApplication::hasWorkingSharedUrl() const
-    {
-        return m_networkWatchDog && m_networkWatchDog->hasWorkingSharedUrl();
-    }
-
-    CUrl CApplication::getWorkingSharedUrl() const
-    {
-        if (!m_networkWatchDog || !this->isNetworkAccessible()) { return CUrl(); }
-        return m_networkWatchDog->getWorkingSharedUrl();
-    }
-
     void CApplication::exit(int retcode)
     {
         if (sApp) { instance()->gracefulShutdown(); }

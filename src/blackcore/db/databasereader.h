@@ -347,8 +347,8 @@ namespace BlackCore::Db
         //! DB base URL
         static const BlackMisc::Network::CUrl &getDbUrl();
 
-        //! Working shared "dbdata" directory URL
-        static BlackMisc::Network::CUrl getWorkingSharedDbdataDirectoryUrl();
+        //! shared "dbdata" directory URL
+        static BlackMisc::Network::CUrl getSharedDbdataDirectoryUrl();
 
         //! File name for given mode, either php service or shared file name
         static QString fileNameForMode(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode);

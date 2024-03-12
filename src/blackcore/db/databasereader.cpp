@@ -385,7 +385,7 @@ namespace BlackCore::Db
 
         CEntityFlags::Entity allEntities = entities & CEntityFlags::AllDbEntitiesNoInfoObjects;
         CEntityFlags::Entity currentEntity = CEntityFlags::iterateDbEntities(allEntities);
-        const CUrl urlSharedDbdata = CDatabaseReader::getWorkingSharedDbdataDirectoryUrl();
+        const CUrl urlSharedDbdata = CDatabaseReader::getSharedDbdataDirectoryUrl();
         if (urlSharedDbdata.isEmpty())
         {
             CLogMessage(this).warning(u"No working shared URL, cannot request headers");
@@ -510,7 +510,7 @@ namespace BlackCore::Db
             return this->getDbServiceBaseUrl().withAppendedPath("/service");
         case CDbFlags::SharedInfoOnly:
         case CDbFlags::Shared:
-            return CDatabaseReader::getWorkingSharedDbdataDirectoryUrl();
+            return CDatabaseReader::getSharedDbdataDirectoryUrl();
         default:
             qFatal("Wrong mode");
             break;
@@ -731,10 +731,11 @@ namespace BlackCore::Db
         return dbUrl;
     }
 
-    CUrl CDatabaseReader::getWorkingSharedDbdataDirectoryUrl()
+    CUrl CDatabaseReader::getSharedDbdataDirectoryUrl()
     {
-        const CUrl sharedUrl(sApp->getWorkingSharedUrl());
-        return CGlobalSetup::buildDbDataDirectoryUrl(sharedUrl);
+        const CUrlList sharedUrls = sApp->getGlobalSetup().getSwiftSharedUrls();
+        Q_ASSERT_X(!sharedUrls.empty(), Q_FUNC_INFO, "Need at least one shared URL");
+        return CGlobalSetup::buildDbDataDirectoryUrl(sharedUrls[0]);
     }
 
     void CDatabaseReader::cacheHasChanged(CEntityFlags::Entity entities)
