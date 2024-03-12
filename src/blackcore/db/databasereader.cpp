@@ -213,7 +213,6 @@ namespace BlackCore::Db
 
         // ps_read is implemented in the derived classes
         if (entities == CEntityFlags::NoEntity) { return; }
-        if (!this->isInternetAccessible(QStringLiteral("No network/internet access, will not read %1").arg(CEntityFlags::flagToString(entities)))) { return; }
 
         //! https://dev.swift-project.org/T490
         QPointer<CDatabaseReader> myself(this);
@@ -381,8 +380,6 @@ namespace BlackCore::Db
 
     int CDatabaseReader::requestHeadersOfSharedFiles(CEntityFlags::Entity entities)
     {
-        if (!this->isInternetAccessible(QStringLiteral("No network/internet access, will not read shared file headers for %1").arg(CEntityFlags::flagToString(entities)))) { return false; }
-
         CEntityFlags::Entity allEntities = entities & CEntityFlags::AllDbEntitiesNoInfoObjects;
         CEntityFlags::Entity currentEntity = CEntityFlags::iterateDbEntities(allEntities);
         const CUrl urlSharedDbdata = CDatabaseReader::getSharedDbdataDirectoryUrl();

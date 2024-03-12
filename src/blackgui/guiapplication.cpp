@@ -11,7 +11,6 @@
 #include "blackgui/registermetadata.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/data/globalsetup.h"
-#include "blackcore/db/networkwatchdog.h"
 #include "blackcore/db/infodatareader.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/setupreader.h"
@@ -659,14 +658,8 @@ namespace BlackGui
         a = menu.addAction(CIcons::monitorError16(), "Network config. (console)");
         c = connect(a, &QAction::triggered, this, [=]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
-            const QString r = CNetworkUtils::createNetworkConfigurationReport(this->getNetworkConfigurationManager(), this->getNetworkAccessManager());
+            const QString r = CNetworkUtils::createNetworkAccessManagerReport(this->getNetworkAccessManager());
             this->displayTextInConsole(r);
-
-            if (this->getNetworkWatchdog())
-            {
-                const QString w = this->getNetworkWatchdog()->getCheckInfo();
-                this->displayTextInConsole(w);
-            }
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         Q_UNUSED(c)

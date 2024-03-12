@@ -173,7 +173,6 @@ namespace BlackCore::Vatsim
     {
         this->threadAssertCheck();
         if (!this->doWorkCheck()) { return; }
-        if (!this->isInternetAccessible("No network/internet access, cannot read VATSIM data file")) { return; }
         if (this->isNotVATSIMEcosystem()) { return; }
 
         // round robin for load balancing
