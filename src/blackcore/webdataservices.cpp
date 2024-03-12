@@ -332,11 +332,6 @@ namespace BlackCore
     {
         if (m_shuttingDown) { return CEntityFlags::NoEntity; }
         if (!sApp || sApp->isShuttingDown()) { return CEntityFlags::NoEntity; }
-        if (!sApp->hasWorkingSharedUrl())
-        {
-            CLogMessage(this).warning(u"Not triggering load of '%1' because no working shared URL") << CEntityFlags::flagToString(whatToRead);
-            return CEntityFlags::NoEntity;
-        }
 
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
         this->triggerReadOfSharedInfoObjects(); // trigger reload of info objects (for shared)
