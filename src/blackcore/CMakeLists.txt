@@ -99,12 +99,10 @@ add_library(core SHARED
         db/databaseutils.h
         db/modeldatareader.h
         db/infodatareader.h
-        db/networkwatchdog.h
         db/databasereader.h
         db/databaseauthentication.cpp
         db/databasewriter.cpp
         db/databasereaderconfig.h
-        db/networkwatchdog.cpp
         db/backgrounddataupdater.h
         db/databaseutils.cpp
         db/modeldatareader.cpp

@@ -321,52 +321,6 @@ namespace BlackMisc::Network
         return msgs;
     }
 
-    QString CNetworkUtils::createNetworkConfigurationReport(const QNetworkConfigurationManager *qcm, const QNetworkAccessManager *qam, const QString &separator)
-    {
-        if (!qcm) { return QStringLiteral("No configuration manager"); }
-
-        static const QString empty;
-        QString report;
-        int c = 0;
-
-        int active = 0;
-        int inActive = 0;
-        int valid = 0;
-        for (const QNetworkConfiguration &config : qcm->allConfigurations())
-        {
-            if (config.state() == QNetworkConfiguration::Active) { active++; }
-            else { inActive++; }
-            if (config.isValid()) { valid++; }
-
-            report +=
-                (report.isEmpty() ? empty : separator) %
-                QString::number(++c) % u": " %
-                CNetworkUtils::networkConfigurationToString(config);
-        }
-
-        if (c < 1)
-        {
-            report = QStringLiteral("No network configurations!");
-        }
-        else
-        {
-            static const QString count("Network configurations: active %1 / inactive %2 / valid %3");
-            report +=
-                (report.isEmpty() ? empty : separator) %
-                count.arg(active).arg(inActive).arg(valid);
-        }
-
-        if (qam)
-        {
-            report +=
-                (report.isEmpty() ? empty : separator) %
-                u"QAM: " %
-                CNetworkUtils::createNetworkAccessManagerReport(qam);
-        }
-
-        return report;
-    }
-
     QString CNetworkUtils::createNetworkAccessManagerReport(const QNetworkAccessManager *qam)
     {
         static const QMetaEnum enumAccessible = QMetaEnum::fromType<QNetworkAccessManager::NetworkAccessibility>();

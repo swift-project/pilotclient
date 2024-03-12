@@ -38,7 +38,6 @@ namespace BlackCore::Data
             IndexDbHttpPort,
             IndexDbHttpsPort,
             IndexDbLoginService,
-            IndexDbClientPingService,
             IndexVatsimStatus,
             IndexVatsimMetars,
             IndexVatsimData,
@@ -52,17 +51,6 @@ namespace BlackCore::Data
             IndexAfvApiServerUrl,
             IndexAfvMapUrl
         };
-
-        //! Add info when pinging
-        enum PingTypeFlag
-        {
-            PingUnspecific = 0,
-            PingLogoff = 1 << 0,
-            PingStarted = 1 << 1,
-            PingShutdown = 1 << 2,
-            PingCompleteShutdown = PingLogoff | PingShutdown
-        };
-        Q_DECLARE_FLAGS(PingType, PingTypeFlag)
 
         //! Default constructor
         CGlobalSetup();
@@ -113,16 +101,6 @@ namespace BlackCore::Data
         //! Login service
         //! \remark based on getDbRootDirectoryUrl
         BlackMisc::Network::CUrl getDbLoginServiceUrl() const;
-
-        //! DB ping service
-        //! \remark based on getDbRootDirectoryUrl
-        BlackMisc::Network::CUrl getDbClientPingServiceUrl() const;
-
-        //! Ping the DB server, fire and forget (no feedback etc)
-        BlackMisc::Network::CUrl getDbClientPingServiceUrl(PingType type) const;
-
-        //! Seconds between pings
-        qint64 getDbClientPingIntervalSecs() const { return m_pingIntervalSecs; }
 
         //! alpha XSwiftBus files available
         BlackMisc::Network::CUrl getAlphaXSwiftBusFilesServiceUrl() const;
@@ -202,7 +180,6 @@ namespace BlackCore::Data
     private:
         int m_dbHttpPort = 80; //!< port
         int m_dbHttpsPort = 443; //!< SSL port
-        qint64 m_pingIntervalSecs = 180; //!< seconds between datastore pings
         QString m_mappingMinimumVersion; //!< minimum version
         BlackMisc::Network::CUrl m_crashReportServerUrl; //!< crash report server
         BlackMisc::Network::CUrl m_dbRootDirectoryUrl; //!< Root directory of DB
@@ -228,7 +205,6 @@ namespace BlackCore::Data
             BLACK_METAMEMBER(dbRootDirectoryUrl, 0, RequiredForJson),
             BLACK_METAMEMBER(dbHttpPort, 0, RequiredForJson),
             BLACK_METAMEMBER(dbHttpsPort, 0, RequiredForJson),
-            BLACK_METAMEMBER(pingIntervalSecs, 0, RequiredForJson),
             BLACK_METAMEMBER(vatsimStatusFileUrls, 0, RequiredForJson),
             BLACK_METAMEMBER(vatsimDataFileUrls, 0, RequiredForJson),
             BLACK_METAMEMBER(vatsimServerFileUrl, 0, RequiredForJson),
@@ -250,8 +226,5 @@ namespace BlackCore::Data
 } // ns
 
 Q_DECLARE_METATYPE(BlackCore::Data::CGlobalSetup)
-Q_DECLARE_METATYPE(BlackCore::Data::CGlobalSetup::PingTypeFlag)
-Q_DECLARE_METATYPE(BlackCore::Data::CGlobalSetup::PingType)
-Q_DECLARE_OPERATORS_FOR_FLAGS(BlackCore::Data::CGlobalSetup::PingType)
 
 #endif // guard

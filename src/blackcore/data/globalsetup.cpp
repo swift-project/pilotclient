@@ -90,32 +90,6 @@ namespace BlackCore::Data
         return getDbRootDirectoryUrl().withAppendedPath("/service/jsonauthenticate.php").withSwitchedScheme("https", m_dbHttpsPort);
     }
 
-    CUrl CGlobalSetup::getDbClientPingServiceUrl() const
-    {
-        return getDbRootDirectoryUrl().withAppendedPath("/service/clientping.php").withSwitchedScheme("https", m_dbHttpsPort);
-    }
-
-    CUrl CGlobalSetup::getDbClientPingServiceUrl(PingType type) const
-    {
-        CUrl pingUrl = this->getDbClientPingServiceUrl();
-        if (pingUrl.isEmpty()) { CUrl(); }
-
-        pingUrl.appendQuery("uuid", QSysInfo::machineUniqueId());
-        if (type.testFlag(PingLogoff)) { pingUrl.appendQuery("logoff", "true"); }
-        if (type.testFlag(PingShutdown)) { pingUrl.appendQuery("shutdown", "true"); }
-        if (type.testFlag(PingStarted)) { pingUrl.appendQuery("started", "true"); }
-        pingUrl.appendQuery("os", CBuildConfig::getPlatformString());
-        if (CBuildConfig::isLocalDeveloperDebugBuild()) { pingUrl.appendQuery("dev", "true"); }
-        if (sApp)
-        {
-            const CCrashInfo ci = CCrashHandler::instance()->getCrashInfo();
-            pingUrl.appendQuery("application", sApp->getApplicationNameAndVersion());
-            if (!ci.getSimulatorString().isEmpty()) { pingUrl.appendQuery("fs", ci.getSimulatorString()); }
-            if (!ci.getFlightNetworkString().isEmpty()) { pingUrl.appendQuery("network", ci.getFlightNetworkString()); }
-        }
-        return pingUrl;
-    }
-
     CUrl CGlobalSetup::getAlphaXSwiftBusFilesServiceUrl() const
     {
         return getDbRootDirectoryUrl().withAppendedPath("/service/jsonalphaxswiftbusfiles.php").withSwitchedScheme("https", m_dbHttpsPort);
@@ -181,7 +155,7 @@ namespace BlackCore::Data
 
             % u"Help URLs: " % m_onlineHelpUrls.toQString(i18n) % separator;
         s +=
-            u"DB root directory: " % getDbRootDirectoryUrl().toQString(i18n) % separator % u"ICAO DB reader: " % getDbIcaoReaderUrl().toQString(i18n) % separator % u"Model DB reader: " % getDbModelReaderUrl().toQString(i18n) % separator % u"Airport DB reader: " % getDbAirportReaderUrl().toQString(i18n) % separator % u"DB home page: " % getDbHomePageUrl().toQString(i18n) % separator % u"DB login service: " % getDbLoginServiceUrl().toQString(i18n) % separator % u"DB client ping service: " % getDbClientPingServiceUrl().toQString(i18n);
+            u"DB root directory: " % getDbRootDirectoryUrl().toQString(i18n) % separator % u"ICAO DB reader: " % getDbIcaoReaderUrl().toQString(i18n) % separator % u"Model DB reader: " % getDbModelReaderUrl().toQString(i18n) % separator % u"Airport DB reader: " % getDbAirportReaderUrl().toQString(i18n) % separator % u"DB home page: " % getDbHomePageUrl().toQString(i18n) % separator % u"DB login service: " % getDbLoginServiceUrl().toQString(i18n) % separator;
         s +=
             u"VATSIM METARs: " % getVatsimMetarsUrls().toQString(i18n) % separator % u"VATSIM data file: " % getVatsimDataFileUrls().toQString(i18n) % separator % u"VATSIM server file: " % getVatsimServerFileUrl().toQString(i18n) % separator
 
@@ -207,7 +181,6 @@ namespace BlackCore::Data
         case IndexDbHttpPort: return QVariant::fromValue(m_dbHttpPort);
         case IndexDbHttpsPort: return QVariant::fromValue(m_dbHttpsPort);
         case IndexDbLoginService: return QVariant::fromValue(this->getDbLoginServiceUrl());
-        case IndexDbClientPingService: return QVariant::fromValue(this->getDbClientPingServiceUrl());
         case IndexVatsimStatus: return QVariant::fromValue(m_vatsimStatusFileUrls);
         case IndexVatsimData: return QVariant::fromValue(m_vatsimDataFileUrls);
         case IndexVatsimServer: return QVariant::fromValue(m_vatsimServerFileUrl);
@@ -239,7 +212,6 @@ namespace BlackCore::Data
         case IndexDbHttpPort: m_dbHttpPort = variant.toInt(); break;
         case IndexDbHttpsPort: m_dbHttpsPort = variant.toInt(); break;
         case IndexDbLoginService: break; // cannot be changed
-        case IndexDbClientPingService: break; // cannot be changed
         case IndexVatsimData: m_vatsimDataFileUrls = variant.value<CUrlList>(); break;
         case IndexVatsimServer: m_vatsimServerFileUrl = variant.value<CUrl>(); break;
         case IndexVatsimHttpFsd: m_vatsimFsdHttpUrl = variant.value<CUrl>(); break;

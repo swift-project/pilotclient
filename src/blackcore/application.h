@@ -28,7 +28,6 @@
 #include <QCommandLineOption>
 #include <QCommandLineParser>
 #include <QNetworkAccessManager>
-#include <QNetworkConfigurationManager>
 #include <QReadWriteLock>
 #include <QStringList>
 #include <QString>
@@ -68,10 +67,6 @@ namespace BlackCore
         class IContextNetwork;
         class IContextOwnAircraft;
         class IContextSimulator;
-    }
-    namespace Db
-    {
-        class CNetworkWatchdog;
     }
 
     /*!
@@ -433,26 +428,6 @@ namespace BlackCore
         //! Delete all cookies from cookie manager
         void deleteAllCookies();
 
-        //! Get the watchdog
-        //! \private mostly for UNIT tests etc, normally not meant to be used directly
-        Db::CNetworkWatchdog *getNetworkWatchdog() const;
-
-        //! Allows to mark the DB as "up" or "down"
-        //! \see BlackCore::Db::CNetworkWatchdog::setDbAccessibility
-        void setSwiftDbAccessibility(bool accessible);
-
-        //! \copydoc BlackCore::Db::CNetworkWatchdog::triggerCheck
-        int triggerNetworkWatchdogChecks();
-
-        //! Is network accessible
-        bool isNetworkAccessible() const;
-
-        //! \copydoc BlackCore::Db::CNetworkWatchdog::isInternetAccessible
-        bool isInternetAccessible() const;
-
-        //! \copydoc BlackCore::Db::CNetworkWatchdog::isSwiftDbAccessible
-        bool isSwiftDbAccessible() const;
-
         //! Access to access manager
         //! \remark supposed to be used only in special cases
         const QNetworkAccessManager *getNetworkAccessManager() const { return m_accessManager; }
@@ -460,10 +435,6 @@ namespace BlackCore
         //! Access to access manager
         //! \remark supposed to be used only in special cases
         QNetworkAccessManager *getNetworkAccessManager() { return m_accessManager; }
-
-        //! Access to configuration manager
-        //! \remark supposed to be used only in special cases
-        const QNetworkConfigurationManager *getNetworkConfigurationManager() const { return m_networkConfigManager; }
 
         //! Web data services available?
         //! \threadsafe
@@ -545,12 +516,6 @@ namespace BlackCore
         //! Web data services started
         void webDataServicesStarted(bool success);
 
-        //! Internet accessibility changed
-        void changedInternetAccessibility(bool accessible);
-
-        //! DB accessibility changed
-        void changedSwiftDbAccessibility(bool accessible, const BlackMisc::Network::CUrl &testedUrl);
-
         //! About to shutdown
         void aboutToShutdown();
 
@@ -623,18 +588,6 @@ namespace BlackCore
         //! Display version message
         void cmdLineVersionMessage();
 
-        //! Problem with network access manager
-        void onChangedNetworkAccessibility(QNetworkAccessManager::NetworkAccessibility accessible);
-
-        //! Changed internet accessibility
-        void onChangedInternetAccessibility(bool accessible);
-
-        //! Changed swift DB accessibility
-        void onChangedSwiftDbAccessibility(bool accessible, const BlackMisc::Network::CUrl &url);
-
-        //! Network configurations update completed
-        void onNetworkConfigurationsUpdateCompleted();
-
         //! Init network
         void initNetwork();
 
@@ -669,10 +622,6 @@ namespace BlackCore
                                         int logId, const CallbackSlot &callback, const ProgressSlot &progress,
                                         int maxRedirects, NetworkRequestOrPostFunction getPostOrDeleteRequest);
 
-        //! Triggers a check of the network accessibility
-        //! \remark this is a check that will double check that the watchdog will receive the correct QNetworkAccessManager::NetworkAccessibility
-        void triggerNetworkAccessibilityCheck(int deferredMs);
-
         //! Write meta information into the application directory so other swift versions can display them
         void tagApplicationDataDirectory();
 
@@ -691,9 +640,7 @@ namespace BlackCore
         bool parseCommandLineArguments();
 
         CInputManager *m_inputManager = nullptr; //!< Input devices and hotkeys
-        QNetworkConfigurationManager *m_networkConfigManager = nullptr; //!< configuration
         QNetworkAccessManager *m_accessManager = nullptr; //!< single network access manager
-        Db::CNetworkWatchdog *m_networkWatchDog = nullptr; //!< checking DB/internet access
         BlackMisc::CApplicationInfo m_applicationInfo; //!< Application if specified
         QScopedPointer<CCoreFacade> m_coreFacade; //!< core facade if any
         QScopedPointer<CSetupReader> m_setupReader; //!< setup reader
@@ -706,7 +653,6 @@ namespace BlackCore
         CCoreFacadeConfig m_coreFacadeConfig; //!< Core facade config if any
         CWebReaderFlags::WebReader m_webReadersUsed; //!< Readers to be used
         Db::CDatabaseReaderConfigList m_dbReaderConfig; //!< Load or used caching?
-        bool m_noNwAccessPoint = false; //!< no network access point?
         bool m_useContexts = false; //!< use contexts
         bool m_devFlag = false; //!< dev. environment
         bool m_saveSettingsOnShutdown = true; //!< saving all settings on shutdown

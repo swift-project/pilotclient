@@ -28,11 +28,7 @@ namespace BlackGui::Components
         m_timer.setInterval(30 * 1000);
         m_timer.start();
         m_timer.setObjectName("CInfoBarWebReadersStatusBase::CheckSwiftDbTimer");
-        bool c = connect(&m_timer, &QTimer::timeout, this, &CInfoBarWebReadersStatusBase::checkServerAndData);
-        Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect");
-        c = connect(sGui, &CGuiApplication::changedInternetAccessibility, this, &CInfoBarWebReadersStatusBase::networkAccessibilityChanged);
-        Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect");
-        c = connect(sGui, &CGuiApplication::changedSwiftDbAccessibility, this, &CInfoBarWebReadersStatusBase::dbAccessibilityChanged);
+        bool c = connect(&m_timer, &QTimer::timeout, this, &CInfoBarWebReadersStatusBase::checkData);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect");
 
         if (sGui->hasWebDataServices())
@@ -58,7 +54,6 @@ namespace BlackGui::Components
     void CInfoBarWebReadersStatusBase::initLeds()
     {
         CLedWidget::LedShape shape = CLedWidget::Rounded;
-        m_ledSwiftDb->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "DB online", "DB offline", 14);
         m_ledDataReady->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "all data ready", "data missing", 14);
         if (m_ledConsolidation) { m_ledConsolidation->setValues(CLedWidget::Blue, CLedWidget::Black, shape, "consolidation running", "idle", 14); }
 
@@ -77,24 +72,8 @@ namespace BlackGui::Components
         if (!leds.isEmpty()) { this->setLedReadStates(leds, readState); }
     }
 
-    void CInfoBarWebReadersStatusBase::networkAccessibilityChanged(bool accessible)
+    void CInfoBarWebReadersStatusBase::checkData()
     {
-        Q_UNUSED(accessible);
-        this->checkServerAndData();
-    }
-
-    void CInfoBarWebReadersStatusBase::dbAccessibilityChanged(bool accessible, const CUrl &testedUrl)
-    {
-        Q_UNUSED(accessible);
-        Q_UNUSED(testedUrl);
-        this->checkServerAndData();
-    }
-
-    void CInfoBarWebReadersStatusBase::checkServerAndData()
-    {
-        const bool swift = sGui && sGui->isSwiftDbAccessible();
-        m_ledSwiftDb->setOn(swift);
-
         const bool allData = hasAllData();
         m_ledDataReady->setOn(allData);
     }
@@ -165,10 +144,9 @@ namespace BlackGui::Components
     }
 
     void CInfoBarWebReadersStatusBase::setLeds(
-        CLedWidget *ledDb, CLedWidget *ledDataReady, CLedWidget *ledConsolidation, CLedWidget *ledIcaoAircraft,
+        CLedWidget *ledDataReady, CLedWidget *ledConsolidation, CLedWidget *ledIcaoAircraft,
         CLedWidget *ledIcaoAirline, CLedWidget *ledCountries, CLedWidget *ledDistributors, CLedWidget *ledLiveries, CLedWidget *ledModels)
     {
-        m_ledSwiftDb = ledDb;
         m_ledDataReady = ledDataReady;
         m_ledConsolidation = ledConsolidation;
         m_ledIcaoAircraft = ledIcaoAircraft;
@@ -182,7 +160,7 @@ namespace BlackGui::Components
     CInfoBarWebReadersStatusComponent::CInfoBarWebReadersStatusComponent(QWidget *parent) : CInfoBarWebReadersStatusBase(parent), ui(new Ui::CInfoBarWebReadersStatusComponent)
     {
         ui->setupUi(this);
-        this->setLeds(ui->led_SwiftDb, ui->led_DataReady, ui->led_Consolidation, ui->led_IcaoAircraft, ui->led_IcaoAirline, ui->led_Countries, ui->led_Distributors, ui->led_Liveries, ui->led_Models);
+        this->setLeds(ui->led_DataReady, ui->led_Consolidation, ui->led_IcaoAircraft, ui->led_IcaoAirline, ui->led_Countries, ui->led_Distributors, ui->led_Liveries, ui->led_Models);
         this->init();
     }
 

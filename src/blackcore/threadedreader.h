@@ -50,10 +50,6 @@ namespace BlackCore
         //! \threadsafe
         bool updatedWithinLastMs(qint64 timeLastMs);
 
-        //! Network accessible?
-        //! \param logWarningMessage optional warning if not accessible
-        bool isInternetAccessible(const QString &logWarningMessage = {}) const;
-
         //! Is marked as read failed
         //! \threadsafe
         //! \deprecated likely to be removed

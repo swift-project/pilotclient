@@ -6,7 +6,6 @@
 //! \ingroup testblackcore
 
 #include "blackcore/application.h"
-#include "blackcore/db/networkwatchdog.h"
 #include "blackcore/setupreader.h"
 #include "blackmisc/applicationinfo.h"
 #include "blackmisc/network/networkutils.h"
@@ -43,23 +42,11 @@ namespace BlackCoreTest
 
         //! Ping test server
         void pingServer();
-
-        //! Test the watchdog BlackCore::Db::CNetworkWatchdog
-        void testNetworkWatchdog();
-
-    private:
-        int m_networkCheckCount = -1;
     };
 
     void CTestConnectivity::initTestCase()
     {
         QVERIFY2(sApp, "sApp not available");
-        QVERIFY2(sApp->getNetworkWatchdog(), "No network watchdog");
-
-        const int n = sApp->triggerNetworkWatchdogChecks();
-        QVERIFY2(n >= 0, "Cannot trigger setup reader");
-        m_networkCheckCount = n;
-        qDebug() << "Initial network check count:" << n;
     }
 
     void CTestConnectivity::checkSetupReader()
@@ -100,20 +87,6 @@ namespace BlackCoreTest
         int elapsedMs = timer.elapsed();
         qDebug() << "Completed" << max << "ping tests in" << elapsedMs << "ms to" << url.getFullUrl();
         QVERIFY2(true, "pingServer");
-    }
-
-    void CTestConnectivity::testNetworkWatchdog()
-    {
-        QVERIFY2(sApp->getNetworkWatchdog(), "No network watchdog");
-        const CUrl dbUrl = CNetworkWatchdog::dbTestUrl();
-        qDebug() << "Using DB test URL: " << dbUrl.toQString();
-        const bool ok = canPing(dbUrl);
-        if (!ok) { QSKIP(qPrintable("Cannot ping " + dbUrl.getFullUrl())); }
-
-        // only if URL is reachable
-        QTRY_VERIFY2_WITH_TIMEOUT(sApp->isSwiftDbAccessible(), "Watchdog cannot connect db", 20000);
-        QTRY_VERIFY2_WITH_TIMEOUT(sApp->getNetworkWatchdog()->getCheckCount() >= m_networkCheckCount + 1, "Timeout of network check", 30000);
-        qDebug() << "Current network check count:" << sApp->getNetworkWatchdog()->getCheckCount();
     }
 } // ns
 

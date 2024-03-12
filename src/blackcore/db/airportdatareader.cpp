@@ -244,11 +244,6 @@ namespace BlackCore::Db
         this->threadAssertCheck();
         if (!this->doWorkCheck()) { return; }
         entity &= CEntityFlags::AirportEntity;
-        if (!this->isInternetAccessible())
-        {
-            emit this->dataRead(entity, CEntityFlags::ReadSkipped, 0, {});
-            return;
-        }
 
         if (entity.testFlag(CEntityFlags::AirportEntity))
         {

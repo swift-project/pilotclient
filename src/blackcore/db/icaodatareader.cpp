@@ -171,12 +171,6 @@ namespace BlackCore::Db
         if (!this->doWorkCheck()) { return; }
         entities &= CEntityFlags::AllIcaoCountriesCategory;
 
-        if (!this->isInternetAccessible())
-        {
-            emit this->dataRead(entities, CEntityFlags::ReadSkipped, 0, {});
-            return;
-        }
-
         CEntityFlags::Entity entitiesTriggered = CEntityFlags::NoEntity;
         CUrl url;
         if (entities.testFlag(CEntityFlags::AircraftIcaoEntity))

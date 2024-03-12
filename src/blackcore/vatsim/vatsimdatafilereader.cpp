@@ -172,7 +172,6 @@ namespace BlackCore::Vatsim
     {
         this->threadAssertCheck();
         if (!this->doWorkCheck()) { return; }
-        if (!this->isInternetAccessible("No network/internet access, cannot read VATSIM data file")) { return; }
 
         // round robin for load balancing
         // remark: Don't use QThread to run network operations in the background

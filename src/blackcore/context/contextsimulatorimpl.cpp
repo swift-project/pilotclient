@@ -271,10 +271,6 @@ namespace BlackCore::Context
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         CStatusMessageList msgs;
-        if (!sApp || !sApp->isNetworkAccessible())
-        {
-            msgs.push_back(CStatusMessage(this).validationError(u"No network interface, simulation will not work properly"));
-        }
         const CSimulatorInfo simulators = this->simulatorsWithInitializedModelSet();
         if (simulators.isNoSimulator())
         {

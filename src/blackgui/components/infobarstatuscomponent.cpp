@@ -53,7 +53,6 @@ namespace BlackGui::Components
         {
             connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CInfoBarStatusComponent::onSimulatorStatusChanged, Qt::QueuedConnection);
             connect(sGui->getIContextSimulator(), &IContextSimulator::modelSetChanged, this, &CInfoBarStatusComponent::onMapperReady);
-            connect(sGui, &CGuiApplication::changedInternetAccessibility, this, &CInfoBarStatusComponent::onInternetAccessibleChanged);
 
             // initial values
             this->onMapperReady();
@@ -104,7 +103,6 @@ namespace BlackGui::Components
         shape = CLedWidget::Rounded;
         ui->led_Ptt->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Ptt", "Silence", 18);
         ui->led_Audio->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "On", "Muted", 18);
-        this->onInternetAccessibleChanged(sGui->isInternetAccessible());
     }
 
     void CInfoBarStatusComponent::adjustTextSize()
@@ -287,20 +285,6 @@ namespace BlackGui::Components
             this->onPttChanged(active);
         }
         */
-    }
-
-    void CInfoBarStatusComponent::onInternetAccessibleChanged(bool access)
-    {
-        if (access)
-        {
-            ui->led_Network->setOffColor(CLedWidget::Black);
-            ui->led_Network->setOffToolTip("Network disconnected");
-        }
-        else
-        {
-            ui->led_Network->setOffColor(CLedWidget::Red);
-            ui->led_Network->setOffToolTip("No network/internet access");
-        }
     }
 
     void CInfoBarStatusComponent::updateValues()

@@ -61,28 +61,21 @@ namespace BlackGui
             bool hasAllData() const;
 
             //! Initial setup of leds
-            void setLeds(BlackGui::CLedWidget *ledDb, BlackGui::CLedWidget *ledDataReady, CLedWidget *ledConsolidation,
+            void setLeds(BlackGui::CLedWidget *ledDataReady, CLedWidget *ledConsolidation,
                          BlackGui::CLedWidget *ledIcaoAircraft, BlackGui::CLedWidget *ledIcaoAirline, BlackGui::CLedWidget *ledCountries,
                          BlackGui::CLedWidget *ledDistributors, BlackGui::CLedWidget *ledLiveries, BlackGui::CLedWidget *ledModels);
 
             //! Data have been read
             void dataRead(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
 
-            //! Network accessibility changed
-            void networkAccessibilityChanged(bool accessible);
-
-            //! DB accessibility changed
-            void dbAccessibilityChanged(bool accessible, const BlackMisc::Network::CUrl &testedUrl);
-
-            //! Check server status
-            void checkServerAndData();
+            //! Check data status
+            void checkData();
 
             //! Show the consolidation status
             virtual void showConsolidationStatus(bool show);
 
         private:
             QTimer m_timer; //!< check timer
-            BlackGui::CLedWidget *m_ledSwiftDb = nullptr;
             BlackGui::CLedWidget *m_ledDataReady = nullptr;
             BlackGui::CLedWidget *m_ledConsolidation = nullptr;
             BlackGui::CLedWidget *m_ledIcaoAircraft = nullptr;

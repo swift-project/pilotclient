@@ -205,10 +205,9 @@ namespace BlackGui::Components
         ui->le_CategoriesSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::AircraftCategoryEntity));
 
         // DB URL
-        const QString dbUrlHtml("<img src=\"%1\">&nbsp;&nbsp;<a href=\"%2\">%3</a>");
+        const QString dbUrlHtml("<a href=\"%2\">%3</a>");
         const QString url = sGui->getGlobalSetup().getDbHomePageUrl().getFullUrl();
-        bool canConnect = sGui->isSwiftDbAccessible();
-        ui->lbl_DatabaseUrl->setText(dbUrlHtml.arg(canConnect ? m_imgOk : m_imgFailed, url, url));
+        ui->lbl_DatabaseUrl->setText(dbUrlHtml.arg(url, url));
         ui->lbl_DatabaseUrl->setToolTip(url);
 
         // Shared URLs
@@ -378,9 +377,8 @@ namespace BlackGui::Components
         {
             direct = true;
         }
-        else if (sGui->isSwiftDbAccessible())
+        else
         {
-            // do not trigger if cannot be connected
             sGui->getWebDataServices()->triggerReadOfDbInfoObjects();
         }
 
