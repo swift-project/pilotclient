@@ -1973,9 +1973,6 @@ namespace BlackSimPlugin::FsxCommon
         static_assert(sizeof(DataDefinitionRemoteAircraftPartsWithoutLights) == sizeof(double) * 10, "DataDefinitionRemoteAircraftPartsWithoutLights has an incorrect size.");
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "thread");
 
-        // Freeze interpolation while paused
-        if (this->isPaused() && m_pausedSimFreezesInterpolation) { return; }
-
         // nothing to do, reset request id and exit
         const int remoteAircraftNo = this->getAircraftInRangeCount();
         if (remoteAircraftNo < 1)

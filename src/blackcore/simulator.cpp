@@ -62,7 +62,7 @@ namespace BlackCore
 
     bool ISimulator::logicallyRemoveRemoteAircraft(const CCallsign &callsign)
     {
-        // if not restriced, directly change
+        // if not restricted, directly change
         if (!this->getInterpolationSetupGlobal().isRenderingRestricted())
         {
             m_statsPhysicallyAddedAircraft++;
@@ -90,7 +90,7 @@ namespace BlackCore
         if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QStringLiteral("Restricted: %1 cs: '%2' enabled: %3").arg(boolToYesNo(renderingRestricted), remoteAircraft.getCallsignAsString(), boolToYesNo(remoteAircraft.isEnabled()))); }
         if (!remoteAircraft.isEnabled()) { return false; }
 
-        // if not restriced, directly change
+        // if not restricted, directly change
         if (!renderingRestricted)
         {
             this->callPhysicallyAddRemoteAircraft(remoteAircraft);
@@ -756,8 +756,8 @@ namespace BlackCore
                 this, // receiver must match object in bind
                 nullptr,
                 nullptr,
-                std::bind(&ISimulator::rapOnRemoteProviderRemovedAircraft, this, std::placeholders::_1),
-                std::bind(&ISimulator::rapOnRecalculatedRenderedAircraft, this, std::placeholders::_1)));
+                [](const Aviation::CCallsign &) { /* currently not used, the calls are handled by context call logicallyRemoveRemoteAircraft*/ },
+                [this](const CAirspaceAircraftSnapshot &snapshot) { this->rapOnRecalculatedRenderedAircraft(snapshot); }));
 
         // timer
         connect(&m_oneSecondTimer, &QTimer::timeout, this, &ISimulator::oneSecondTimerTimeout);
@@ -832,7 +832,7 @@ namespace BlackCore
                 {
                     Q_ASSERT_X(aircraft.isEnabled(), Q_FUNC_INFO, "Disabled aircraft detected as to be added");
                     Q_ASSERT_X(aircraft.hasModelString(), Q_FUNC_INFO, "Missing model string");
-                    this->callPhysicallyAddRemoteAircraft(aircraft); // recalcuate snapshot
+                    this->callPhysicallyAddRemoteAircraft(aircraft); // recalculate snapshot
                     changed = true;
                 }
             }
@@ -875,7 +875,7 @@ namespace BlackCore
         // a default implementation, but normally overridden by the sims
         const CCallsignSet callsigns = this->getAircraftInRangeCallsigns();
 
-        // normally that would be already done in the specializied implementation
+        // normally that would be already done in the specialized implementation
         const int r = this->physicallyRemoveMultipleRemoteAircraft(callsigns);
 
         // leave no trash
@@ -885,15 +885,15 @@ namespace BlackCore
 
     CAirportList ISimulator::getWebServiceAirports() const
     {
-        if (this->isShuttingDown()) { return CAirportList(); }
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return CAirportList(); }
+        if (this->isShuttingDown()) { return {}; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return {}; }
         return sApp->getWebDataServices()->getAirports();
     }
 
     CAirport ISimulator::getWebServiceAirport(const CAirportIcaoCode &icao) const
     {
-        if (this->isShuttingDown()) { return CAirport(); }
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return CAirport(); }
+        if (this->isShuttingDown()) { return {}; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return {}; }
         return sApp->getWebDataServices()->getAirports().findFirstByIcao(icao);
     }
 
@@ -968,7 +968,7 @@ namespace BlackCore
         if (oldStatus != newStatus)
         {
             // decouple, follow up of signal can include unloading
-            // simulator so this should happen strictly asyncronously (which is like forcing Qt::QueuedConnection)
+            // simulator so this should happen strictly asynchronously (which is like forcing Qt::QueuedConnection)
             QPointer<ISimulator> myself(this);
             QTimer::singleShot(0, this, [=] {
                 if (!myself || !sApp || sApp->isShuttingDown()) { return; }
@@ -1012,8 +1012,8 @@ namespace BlackCore
     CAirportList ISimulator::getAirportsInRange(bool recalculateDistance) const
     {
         // default implementation
-        if (this->isShuttingDown()) { return CAirportList(); }
-        if (!sApp || !sApp->hasWebDataServices()) { return CAirportList(); }
+        if (this->isShuttingDown()) { return {}; }
+        if (!sApp || !sApp->hasWebDataServices()) { return {}; }
 
         const CAirportList airports = sApp->getWebDataServices()->getAirports();
         if (airports.isEmpty()) { return airports; }
@@ -1145,25 +1145,6 @@ namespace BlackCore
         return true;
     }
 
-    CCallsignSet ISimulator::unrenderedEnabledAircraft() const
-    {
-        const CSimulatedAircraftList aircraft = this->getAircraftInRange().findByEnabled(true);
-        if (aircraft.isEmpty()) { return CCallsignSet(); }
-        CCallsignSet enabledOnes = aircraft.getCallsigns();
-        const CCallsignSet renderedOnes = this->physicallyRenderedAircraft();
-        enabledOnes.remove(renderedOnes);
-        return enabledOnes;
-    }
-
-    CCallsignSet ISimulator::renderedDisabledAircraft() const
-    {
-        const CSimulatedAircraftList aircraft = this->getAircraftInRange().findByEnabled(false);
-        if (aircraft.isEmpty()) { return CCallsignSet(); }
-        const CCallsignSet disabledOnes = aircraft.getCallsigns();
-        const CCallsignSet renderedOnes = this->physicallyRenderedAircraft();
-        return renderedOnes.intersection(disabledOnes);
-    }
-
     bool ISimulator::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft)
     {
         if (this->isShuttingDown()) { return false; }
@@ -1279,7 +1260,7 @@ namespace BlackCore
     CAircraftModelList ISimulator::getModelSet() const
     {
         const CSimulatorInfo simulator = this->getSimulatorInfo();
-        if (!simulator.isSingleSimulator()) { return CAircraftModelList(); }
+        if (!simulator.isSingleSimulator()) { return {}; }
 
         CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().synchronizeCache(simulator);
         return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator);
@@ -1333,12 +1314,6 @@ namespace BlackCore
         if (!this->isConnected()) { return; }
         if (this->isShuttingDown()) { return; }
         this->onRecalculatedRenderedAircraft(snapshot);
-    }
-
-    void ISimulator::rapOnRemoteProviderRemovedAircraft(const CCallsign &callsign)
-    {
-        Q_UNUSED(callsign)
-        // currently not used, the calls are handled by context call logicallyRemoveRemoteAircraft
     }
 
     void ISimulator::callPhysicallyAddRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
@@ -1405,7 +1380,7 @@ namespace BlackCore
         {
             if (CDatabaseUtils::hasDbAircraftData())
             {
-                const CAircraftModel newModel = this->reverseLookupModel(model);
+                const CAircraftModel newModel = BlackCore::ISimulator::reverseLookupModel(model);
                 const bool updated = this->updateOwnModel(newModel); // update in provider (normally the context)
                 if (updated)
                 {

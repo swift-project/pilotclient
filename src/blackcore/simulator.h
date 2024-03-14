@@ -40,16 +40,9 @@
 #include <QString>
 #include <atomic>
 
-namespace BlackMisc
+namespace BlackMisc::Network
 {
-    namespace Aviation
-    {
-        class CCallsign;
-    }
-    namespace Network
-    {
-        class CTextMessage;
-    }
+    class CTextMessage;
 }
 
 namespace BlackCore
@@ -85,11 +78,8 @@ namespace BlackCore
         //! Log categories
         static const QStringList &getLogCategories();
 
-        //! Render all aircraft if number of aircraft >= MaxAircraftInfinite
-        const int MaxAircraftInfinite = 100;
-
         //! Destructor
-        virtual ~ISimulator() override;
+        ~ISimulator() override;
 
         //! Combined status
         virtual SimulatorStatus getSimulatorStatus() const;
@@ -126,12 +116,6 @@ namespace BlackCore
         {
             return this->physicallyRemoveAllRemoteAircraft();
         }
-
-        //! Find the unrendered enabled aircraft
-        virtual BlackMisc::Aviation::CCallsignSet unrenderedEnabledAircraft() const;
-
-        //! Find the rendered disabled aircraft
-        virtual BlackMisc::Aviation::CCallsignSet renderedDisabledAircraft() const;
 
         //! Change remote aircraft per property
         virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
@@ -225,7 +209,7 @@ namespace BlackCore
         //! Number of track miles over-reported, due to low FPS
         double getTrackMilesShort() const { return m_trackMilesShort; }
 
-        //! Number of minutes behind scedule, due to low FPS
+        //! Number of minutes behind schedule, due to low FPS
         double getMinutesLate() const { return m_minutesLate; }
 
         //! Send situation/parts for testing
@@ -262,7 +246,7 @@ namespace BlackCore
         //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
         //! \remark needs to be overridden if the concrete driver supports such an option
         //! \sa ISimulator::callbackReceivedRequestedElevation
-        virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
+        bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
 
         //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
         bool requestElevation(const BlackMisc::Aviation::CAircraftSituation &situation) { return this->requestElevation(situation, situation.getCallsign()); }
@@ -275,13 +259,13 @@ namespace BlackCore
         virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
 
         //! Allows to print out simulator specific statistics
-        virtual QString getStatisticsSimulatorSpecific() const { return QString(); }
+        virtual QString getStatisticsSimulatorSpecific() const { return {}; }
 
         //! Reset the statistics
         virtual void resetAircraftStatistics();
 
         //! \copydoc BlackMisc::IProvider::asQObject
-        virtual QObject *asQObject() override { return this; }
+        QObject *asQObject() override { return this; }
 
         //! Is this the emulated driver just pretending to be P3D, FSX, or XPlane
         bool isEmulatedDriver() const;
@@ -310,7 +294,7 @@ namespace BlackCore
         BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign getInterpolationSetupConsolidated(const BlackMisc::Aviation::CCallsign &callsign, bool forceFullUpdate) const;
 
         //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::setInterpolationSetupGlobal
-        virtual bool setInterpolationSetupGlobal(const BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal &setup) override;
+        bool setInterpolationSetupGlobal(const BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal &setup) override;
 
         //! Interpolation messages for callsign
         virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
@@ -325,7 +309,7 @@ namespace BlackCore
         int getStatisticsPhysicallyRemovedAircraft() const { return m_statsPhysicallyRemovedAircraft; }
 
         //! Current update time in ms
-        double getStatisticsCurrentUpdateTimeMs() const { return m_statsCurrentUpdateTimeMs; }
+        qint64 getStatisticsCurrentUpdateTimeMs() const { return m_statsCurrentUpdateTimeMs; }
 
         //! Average update time in ms
         double getStatisticsAverageUpdateTimeMs() const { return m_statsUpdateAircraftTimeAvgMs; }
@@ -475,7 +459,7 @@ namespace BlackCore
         void emitSimulatorCombinedStatus(SimulatorStatus oldStatus = Unspecified);
 
         //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::emitInterpolationSetupChanged
-        virtual void emitInterpolationSetupChanged() override;
+        void emitInterpolationSetupChanged() override;
 
         //! Display a debug log message based on BlackMisc::Simulation::CInterpolationAndRenderingSetup
         //! remark shows log messages of functions calls
@@ -586,7 +570,6 @@ namespace BlackCore
         //! Lookup against DB data
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
 
-        bool m_pausedSimFreezesInterpolation = false; //!< paused simulator will also pause interpolation (so AI aircraft will hold)
         bool m_updateRemoteAircraftInProgress = false; //!< currently updating remote aircraft
         bool m_enablePseudoElevation = false; //!< return faked elevations (testing)
         int m_timerId = -1; //!< dispatch timer id
@@ -633,7 +616,6 @@ namespace BlackCore
     private:
         // remote aircraft provider ("rap") bound
         void rapOnRecalculatedRenderedAircraft(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
-        void rapOnRemoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
         // call with counters updated
         void callPhysicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
@@ -653,7 +635,6 @@ namespace BlackCore
         BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft; //!< all other aircraft are to be ignored
 
         // timer
-        int m_timerCounter = 0; //!< allows to calculate n seconds
         QTimer m_oneSecondTimer; //!< multi purpose timer with 1 sec. interval
 
         // misc.
@@ -673,7 +654,7 @@ namespace BlackCore
 
     public:
         //! Destructor
-        virtual ~ISimulatorListener() = default;
+        ~ISimulatorListener() override = default;
 
         //! Corresponding info
         const BlackMisc::Simulation::CSimulatorPluginInfo &getPluginInfo() const { return m_info; }
@@ -704,7 +685,7 @@ namespace BlackCore
     protected:
         //! Constructor
         //! \sa ISimulatorFactory::createListener().
-        ISimulatorListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
+        explicit ISimulatorListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
         //! Overall (swift) application shutting down
         virtual bool isShuttingDown() const;
@@ -732,7 +713,7 @@ namespace BlackCore
     {
     public:
         //! ISimulatorVirtual destructor
-        virtual ~ISimulatorFactory() {}
+        virtual ~ISimulatorFactory() = default;
 
         //! @{
         //! Not copyable
