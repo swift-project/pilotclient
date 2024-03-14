@@ -84,9 +84,6 @@ namespace BlackGui
             //! Enable gnd. flag (enable gnd flag capability for given aircraft)
             void toggleSupportingGndFlag();
 
-            //! Highlight aircraft in simulator
-            void requestHighlightInSimulator();
-
             //! Follow in simulator
             void requestFollowInSimulator();
 
@@ -131,9 +128,6 @@ namespace BlackGui
 
             //! Aircraft supporting parts?
             bool isSupportingAircraftParts(const BlackMisc::Aviation::CCallsign &cs) const;
-
-            //! Highlight in simulator
-            void highlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Fully recalculate all aircraft
             void recalculateAllAircraft();

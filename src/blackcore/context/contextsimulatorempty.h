@@ -291,15 +291,6 @@ namespace BlackCore::Context
             return BlackMisc::CPixmap();
         }
 
-        //! \copydoc IContextSimulator::highlightAircraft
-        virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override
-        {
-            Q_UNUSED(aircraftToHighlight)
-            Q_UNUSED(enableHighlight)
-            Q_UNUSED(displayTime)
-            logEmptyContextWarning(Q_FUNC_INFO);
-        }
-
         //! \copydoc IContextSimulator::followAircraft
         virtual bool followAircraft(const BlackMisc::Aviation::CCallsign &callsign) override
         {

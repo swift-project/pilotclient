@@ -115,9 +115,6 @@ namespace BlackGui::Views
                     }
                     menuActions.addAction(CIcons::appAircraft16(), "Zero 0 pitch on ground", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::request0PitchOnGround });
                     menuActions.addAction(CIcons::appAircraft16(), "Remove pitch manipulation", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::requestNullPitchOnGround });
-
-                    if (!menuActions.isEmpty()) { menuActions.addSeparator(CMenuAction::pathClientSimulationDisplay()); }
-                    menuActions.addAction(CIcons::appSimulator16(), "Highlight in simulator", CMenuAction::pathClientSimulationDisplay(), { this, &CSimulatedAircraftView::requestHighlightInSimulator });
                 }
                 if (m_withMenuEnableGndFlag)
                 {
@@ -167,13 +164,6 @@ namespace BlackGui::Views
         if (aircraft.getCallsign().isEmpty()) { return; }
         aircraft.setSupportingGndFlag(!aircraft.isSupportingGndFlag());
         this->updateAircraftSupportingGndFLag(aircraft);
-    }
-
-    void CSimulatedAircraftView::requestHighlightInSimulator()
-    {
-        const CSimulatedAircraft aircraft(this->selectedObject());
-        if (aircraft.getCallsign().isEmpty()) { return; }
-        this->highlightInSimulator(aircraft);
     }
 
     void CSimulatedAircraftView::requestFollowInSimulator()
@@ -304,13 +294,6 @@ namespace BlackGui::Views
         const IContextNetwork *netContext = networkContext();
         if (!netContext) { return false; }
         return netContext->isRemoteAircraftSupportingParts(cs);
-    }
-
-    void CSimulatedAircraftView::highlightInSimulator(const CSimulatedAircraft &aircraft)
-    {
-        IContextSimulator *simContext = simulatorContext();
-        if (!simContext) { return; }
-        simContext->highlightAircraft(aircraft, true, IContextSimulator::HighlightTime());
     }
 
     void CSimulatedAircraftView::recalculateAllAircraft()

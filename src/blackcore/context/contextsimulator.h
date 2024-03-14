@@ -291,9 +291,6 @@ namespace BlackCore::Context
         //! Enable mapping logging
         virtual void enableMatchingMessages(BlackMisc::Simulation::MatchingLog enabled) = 0;
 
-        //! Highlight aircraft in simulator
-        virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) = 0;
-
         //! Follow aircraft im simulator view
         virtual bool followAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 

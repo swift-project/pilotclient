@@ -284,11 +284,6 @@ namespace BlackCore::Context
         return m_dBusInterface->callDBusRet<CPixmap>(QLatin1String("iconForModel"), modelString);
     }
 
-    void CContextSimulatorProxy::highlightAircraft(const CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const CTime &displayTime)
-    {
-        m_dBusInterface->callDBus(QLatin1String("highlightAircraft"), aircraftToHighlight, enableHighlight, displayTime);
-    }
-
     bool CContextSimulatorProxy::followAircraft(const CCallsign &callsign)
     {
         return m_dBusInterface->callDBusRet<bool>(QLatin1String("followAircraft"), callsign);

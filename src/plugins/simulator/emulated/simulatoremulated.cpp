@@ -249,12 +249,6 @@ namespace BlackSimPlugin::Emulated
         return true;
     }
 
-    void CSimulatorEmulated::highlightAircraft(const CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const CTime &displayTime)
-    {
-        if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraftToHighlight.toQString(), boolToTrueFalse(enableHighlight), displayTime.toQString()); }
-        ISimulator::highlightAircraft(aircraftToHighlight, enableHighlight, displayTime);
-    }
-
     bool CSimulatorEmulated::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
     {
         if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, commandLine, originator.toQString()); }

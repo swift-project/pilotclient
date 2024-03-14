@@ -101,18 +101,6 @@ namespace BlackCore
         return false;
     }
 
-    void ISimulator::highlightAircraft(const CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const CTime &displayTime)
-    {
-        const CCallsign cs(aircraftToHighlight.getCallsign());
-        m_highlightedAircraft.removeByCallsign(cs);
-        if (enableHighlight)
-        {
-            const qint64 deltaT = displayTime.valueInteger(CTimeUnit::ms());
-            m_highlightEndTimeMsEpoch = QDateTime::currentMSecsSinceEpoch() + deltaT;
-            m_highlightedAircraft.push_back(aircraftToHighlight);
-        }
-    }
-
     bool ISimulator::followAircraft(const CCallsign &callsign)
     {
         Q_UNUSED(callsign)
@@ -202,7 +190,6 @@ namespace BlackCore
         m_updateRemoteAircraftInProgress = false;
 
         this->clearInterpolationSetupsPerCallsign();
-        this->resetHighlighting();
         this->resetAircraftStatistics();
     }
 
@@ -248,7 +235,6 @@ namespace BlackCore
 
     void ISimulator::clearData(const CCallsign &callsign)
     {
-        m_highlightedAircraft.removeByCallsign(callsign);
         m_statsPhysicallyRemovedAircraft++;
         m_lastSentParts.remove(callsign);
         m_lastSentSituations.remove(callsign);
@@ -307,32 +293,6 @@ namespace BlackCore
         m_updateAllRemoteAircraftUntil = -1;
     }
 
-    void ISimulator::resetHighlighting()
-    {
-        m_highlightedAircraft.clear();
-        m_blinkCycle = false;
-        m_highlightEndTimeMsEpoch = false;
-    }
-
-    void ISimulator::stopHighlighting()
-    {
-        // restore
-        const CSimulatedAircraftList highlightedAircraft(m_highlightedAircraft);
-        for (const CSimulatedAircraft &aircraft : highlightedAircraft)
-        {
-            // get the current state for this aircraft
-            // it might has been removed in the meantime
-            const CCallsign cs(aircraft.getCallsign());
-            this->resetAircraftFromProvider(cs);
-        }
-        this->resetHighlighting();
-    }
-
-    void ISimulator::oneSecondTimerTimeout()
-    {
-        this->blinkHighlightedAircraft();
-    }
-
     void ISimulator::safeKillTimer()
     {
         if (m_timerId < 0) { return; }
@@ -344,26 +304,6 @@ namespace BlackCore
     void ISimulator::injectWeatherGrid(const CWeatherGrid &weatherGrid)
     {
         Q_UNUSED(weatherGrid)
-    }
-
-    void ISimulator::blinkHighlightedAircraft()
-    {
-        if (m_highlightedAircraft.isEmpty() || m_highlightEndTimeMsEpoch < 1) { return; }
-        if (this->isShuttingDown()) { return; }
-        m_blinkCycle = !m_blinkCycle;
-
-        if (QDateTime::currentMSecsSinceEpoch() > m_highlightEndTimeMsEpoch)
-        {
-            this->stopHighlighting();
-            return;
-        }
-
-        // blink mode, toggle aircraft
-        for (const CSimulatedAircraft &aircraft : std::as_const(m_highlightedAircraft))
-        {
-            if (m_blinkCycle) { this->callPhysicallyRemoveRemoteAircraft(aircraft.getCallsign(), true); }
-            else { this->callPhysicallyAddRemoteAircraft(aircraft); }
-        }
     }
 
     CInterpolationAndRenderingSetupPerCallsign ISimulator::getInterpolationSetupConsolidated(const CCallsign &callsign, bool forceFullUpdate) const
@@ -759,11 +699,6 @@ namespace BlackCore
                 [](const Aviation::CCallsign &) { /* currently not used, the calls are handled by context call logicallyRemoveRemoteAircraft*/ },
                 [this](const CAirspaceAircraftSnapshot &snapshot) { this->rapOnRecalculatedRenderedAircraft(snapshot); }));
 
-        // timer
-        connect(&m_oneSecondTimer, &QTimer::timeout, this, &ISimulator::oneSecondTimerTimeout);
-        m_oneSecondTimer.setObjectName(this->objectName().append(":m_oneSecondTimer"));
-        m_oneSecondTimer.start(1000);
-
         // swift data
         if (sApp && sApp->hasWebDataServices())
         {
@@ -860,7 +795,6 @@ namespace BlackCore
     int ISimulator::physicallyRemoveMultipleRemoteAircraft(const CCallsignSet &callsigns)
     {
         if (callsigns.isEmpty()) { return 0; }
-        this->stopHighlighting();
         int removed = 0;
         for (const CCallsign &callsign : callsigns)
         {
@@ -1128,7 +1062,6 @@ namespace BlackCore
         if (this->isShuttingDown()) { return false; }
         if (callsign.isEmpty()) { return false; }
 
-        this->stopHighlighting();
         this->logicallyRemoveRemoteAircraft(callsign);
         if (!this->isAircraftInRange(callsign)) { return false; }
         const QPointer<ISimulator> myself(this);
@@ -1322,9 +1255,9 @@ namespace BlackCore
         this->physicallyAddRemoteAircraft(remoteAircraft);
     }
 
-    void ISimulator::callPhysicallyRemoveRemoteAircraft(const CCallsign &remoteCallsign, bool blinking)
+    void ISimulator::callPhysicallyRemoveRemoteAircraft(const CCallsign &remoteCallsign)
     {
-        if (!blinking) { this->clearData(remoteCallsign); }
+        this->clearData(remoteCallsign);
         this->physicallyRemoveRemoteAircraft(remoteCallsign);
     }
 

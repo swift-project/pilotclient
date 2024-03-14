@@ -1109,13 +1109,6 @@ namespace BlackCore::Context
         return m_simulatorPlugin.second;
     }
 
-    void CContextSimulator::highlightAircraft(const CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const CTime &displayTime)
-    {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << aircraftToHighlight << enableHighlight << displayTime; }
-        if (!m_simulatorPlugin.second) { return; }
-        m_simulatorPlugin.second->highlightAircraft(aircraftToHighlight, enableHighlight, displayTime);
-    }
-
     bool CContextSimulator::followAircraft(const CCallsign &callsign)
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign; }

@@ -1852,7 +1852,6 @@ namespace BlackSimPlugin::FsxCommon
     {
         // make sure they are not added again
         // cleaning here is somewhat redundant, but double checks
-        this->resetHighlighting();
         m_addPendingAircraft.clear();
         m_addAgainAircraftWhenRemoved.clear();
 

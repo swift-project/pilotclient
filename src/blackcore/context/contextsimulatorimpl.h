@@ -177,9 +177,6 @@ namespace BlackCore
             //! \copydoc BlackCore::Context::IContextSimulator::iconForModel
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
 
-            //! \copydoc BlackCore::Context::IContextSimulator::highlightAircraft
-            virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
-
             //! \copydoc BlackCore::Context::IContextSimulator::followAircraft
             virtual bool followAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 

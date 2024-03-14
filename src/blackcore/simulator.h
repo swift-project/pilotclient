@@ -153,9 +153,6 @@ namespace BlackCore
         //! This shall only return aircraft handled in the simulator
         virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const = 0;
 
-        //! Highlight the aircraft for given time (or disable highlight)
-        virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime);
-
         //! Follow aircraft
         virtual bool followAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
@@ -498,20 +495,8 @@ namespace BlackCore
         //! Reset
         void resetUpdateAllRemoteAircraft();
 
-        //! Reset highlighting
-        void resetHighlighting();
-
-        //! Restore all highlighted aircraft
-        void stopHighlighting();
-
-        //! Slow timer used to highlight aircraft, can be used for other things too
-        virtual void oneSecondTimerTimeout();
-
         //! Kill timer if id is valid
         void safeKillTimer();
-
-        //! Blink the highlighted aircraft
-        void blinkHighlightedAircraft();
 
         //! Equal to last sent situation
         bool isEqualLastSent(const BlackMisc::Aviation::CAircraftSituation &compare) const;
@@ -619,7 +604,7 @@ namespace BlackCore
 
         // call with counters updated
         void callPhysicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
-        void callPhysicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &remoteCallsign, bool blinking = false);
+        void callPhysicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &remoteCallsign);
 
         //! Display a logged situation in simulator
         void displayLoggedSituationInSimulator(const BlackMisc::Aviation::CCallsign &cs, bool stopLogging, int times = 40);
@@ -628,14 +613,6 @@ namespace BlackCore
         // those are the added counters, overflow will not be an issue here (discussed in T171 review)
         int m_statsPhysicallyAddedAircraft = 0; //!< statistics, how many aircraft added
         int m_statsPhysicallyRemovedAircraft = 0; //!< statistics, how many aircraft removed
-
-        // highlighting
-        bool m_blinkCycle = false; //!< used for highlighting
-        qint64 m_highlightEndTimeMsEpoch = 0; //!< end highlighting
-        BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft; //!< all other aircraft are to be ignored
-
-        // timer
-        QTimer m_oneSecondTimer; //!< multi purpose timer with 1 sec. interval
 
         // misc.
         bool m_networkConnected = false; //!< flight network connected
