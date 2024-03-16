@@ -66,10 +66,6 @@ namespace BlackGui
         //! \remark might be scaled depending on CGuiUtility::mainApplicationWidgetPixelRatio
         static QSize desktopSize();
 
-        //! Pysical screen resolution
-        //! \remark unscaled
-        static QSizeF physicalScreenSize(QWidget *currentWidget = nullptr);
-
         //! Qt independent implementation
         //! \remark allows to return values before QGuiApplication is initialized
         static QSize physicalScreenSizeOs();

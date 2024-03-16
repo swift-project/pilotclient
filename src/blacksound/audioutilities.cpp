@@ -40,13 +40,6 @@ namespace BlackSound
         return output;
     }
 
-    QVector<qint16> convertFloatBytesTo16BitPCM(const QByteArray &input)
-    {
-        Q_UNUSED(input)
-        // qFatal("Not implemented");
-        return {};
-    }
-
     QVector<float> convertFromMonoToStereo(const QVector<float> &mono)
     {
         QVector<float> stereo;

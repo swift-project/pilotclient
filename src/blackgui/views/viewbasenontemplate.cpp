@@ -17,7 +17,6 @@
 
 #include <QApplication>
 #include <QAction>
-#include <QDesktopWidget>
 #include <QMetaMethod>
 #include <QShortcut>
 

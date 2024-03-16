@@ -24,6 +24,7 @@
 #include <QPixmap>
 #include <QString>
 #include <QVariant>
+#include <QSequentialIterable>
 #include <QtGlobal>
 #include <algorithm>
 #include <type_traits>

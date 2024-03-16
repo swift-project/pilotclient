@@ -31,7 +31,6 @@
 #include <QPointer>
 #include <QtGlobal>
 #include <QApplication>
-#include <QDesktopWidget>
 
 using namespace BlackMisc;
 using namespace BlackGui::Components;
