@@ -1037,7 +1037,7 @@ namespace BlackGui::Components
         {
             auto item = list->findItems(enabledOption, Qt::MatchExactly);
             Q_ASSERT_X(item.size() == 1, Q_FUNC_INFO, "Expected exactly one item per option");
-            list->setItemSelected(item[0], true);
+            item[0]->setSelected(true);
         }
         list->blockSignals(false);
     }

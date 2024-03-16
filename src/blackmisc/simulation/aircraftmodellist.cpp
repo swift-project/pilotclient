@@ -1389,7 +1389,7 @@ namespace BlackMisc::Simulation
             if (log) { log->push_back(subMsgs); }
             CCallsign::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("--- End calculating #%1 ---").arg(c));
             c++;
-            scoreMap.insertMulti(score, model);
+            scoreMap.insert(score, model);
         }
         CCallsign::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("--- End scoring ---"));
         return scoreMap;

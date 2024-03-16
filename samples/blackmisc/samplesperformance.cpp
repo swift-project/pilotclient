@@ -263,7 +263,7 @@ namespace BlackSample
 
         timer.start();
         situations.convertFromJson(json);
-        out << "Convert 100,000 aircraft situations from JSON:      " << timer.elapsed() << "ms" << endl
+        out << "Convert 100,000 aircraft situations from JSON:      " << timer.elapsed() << "ms" << Qt::endl
             << Qt::endl;
 
         timer.start();
@@ -272,7 +272,7 @@ namespace BlackSample
 
         timer.start();
         models.convertFromJson(json);
-        out << "Convert 10,000 aircraft models from JSON (naive):   " << timer.elapsed() << "ms" << endl
+        out << "Convert 10,000 aircraft models from JSON (naive):   " << timer.elapsed() << "ms" << Qt::endl
             << Qt::endl;
 
         timer.start();
@@ -281,7 +281,7 @@ namespace BlackSample
 
         timer.start();
         models.convertFromMemoizedJson(json);
-        out << "Convert 10,000 aircraft models from JSON (memoize): " << timer.elapsed() << "ms" << endl
+        out << "Convert 10,000 aircraft models from JSON (memoize): " << timer.elapsed() << "ms" << Qt::endl
             << Qt::endl;
 
         return EXIT_SUCCESS;
@@ -383,7 +383,7 @@ namespace BlackSample
             auto c = s.contains(upperRegex);
             Q_UNUSED(c);
         }
-        out << "Check 100,000 strings for containing uppercase letter: (regex)       " << timer.elapsed() << "ms" << endl
+        out << "Check 100,000 strings for containing uppercase letter: (regex)       " << timer.elapsed() << "ms" << Qt::endl
             << Qt::endl;
 
         timer.start();
@@ -400,7 +400,7 @@ namespace BlackSample
             auto i = s.indexOf(upperRegex);
             Q_UNUSED(i);
         }
-        out << "Check 100,000 strings for index of first uppercase letter: (regex)   " << timer.elapsed() << "ms" << endl
+        out << "Check 100,000 strings for index of first uppercase letter: (regex)   " << timer.elapsed() << "ms" << Qt::endl
             << Qt::endl;
 
         auto temp = strings;
@@ -417,7 +417,7 @@ namespace BlackSample
         {
             s.remove(upperRegex);
         }
-        out << "Remove from 100,000 strings all uppercase letters: (regex)           " << timer.elapsed() << "ms" << endl
+        out << "Remove from 100,000 strings all uppercase letters: (regex)           " << timer.elapsed() << "ms" << Qt::endl
             << Qt::endl;
 
         timer.start();

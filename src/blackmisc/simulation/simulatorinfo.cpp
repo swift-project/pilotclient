@@ -391,7 +391,7 @@ namespace BlackMisc::Simulation
         QMultiMap<int, CSimulatorInfo> counts;
         for (int i = 0; i < m_counts.size(); i++)
         {
-            counts.insertMulti(m_counts[i], simulator(i));
+            counts.insert(m_counts[i], simulator(i));
         }
         return counts;
     }

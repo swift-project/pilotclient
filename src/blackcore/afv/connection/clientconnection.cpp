@@ -26,7 +26,7 @@ namespace BlackCore::Afv::Connection
 
         connect(m_voiceServerTimer, &QTimer::timeout, this, &CClientConnection::voiceServerHeartbeat); // sends heartbeat to server
         connect(m_udpSocket, &QUdpSocket::readyRead, this, &CClientConnection::readPendingDatagrams);
-        connect(m_udpSocket, qOverload<QAbstractSocket::SocketError>(&QUdpSocket::error), this, &CClientConnection::handleSocketError);
+        connect(m_udpSocket, &QAbstractSocket::errorOccurred, this, &CClientConnection::handleSocketError);
     }
 
     void CClientConnection::connectTo(const QString &userName, const QString &password, const QString &callsign, const QString &client, ConnectionCallback callback)

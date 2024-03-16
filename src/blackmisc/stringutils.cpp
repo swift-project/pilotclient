@@ -37,7 +37,7 @@ namespace BlackMisc
             {
                 if ((latin >= 'a' && latin <= 'z') || (latin >= 'A' && latin <= 'Z') || (latin >= '0' && latin <= '9') || allow.contains(latin))
                 {
-                    result += c;
+                    result += c.toLatin1();
                 }
                 else
                 {

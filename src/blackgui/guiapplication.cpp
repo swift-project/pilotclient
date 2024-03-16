@@ -646,14 +646,6 @@ namespace BlackGui
         a = menu.addAction(CIcons::swift24(), "Check for updates");
         c = connect(a, &QAction::triggered, this, &CGuiApplication::checkNewVersionMenu);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-
-        a = menu.addAction(CIcons::monitorError16(), "Network config. (console)");
-        c = connect(a, &QAction::triggered, this, [=]() {
-            if (!sGui || sGui->isShuttingDown()) { return; }
-            const QString r = CNetworkUtils::createNetworkAccessManagerReport(this->getNetworkAccessManager());
-            CLogMessage(this).info(r);
-        });
-        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         Q_UNUSED(c)
     }
 

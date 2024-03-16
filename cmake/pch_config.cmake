@@ -41,7 +41,6 @@ set(SWIFT_MISC_PCH
     <QJsonValue>
     <QJsonValueRef>
     <QLatin1Char>
-    <QLatin1Literal>
     <QLatin1String>
     <QList>
     <QLoggingCategory>

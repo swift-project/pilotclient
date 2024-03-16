@@ -23,8 +23,8 @@ namespace BlackGui
         QVBoxLayout *layout = new QVBoxLayout;
         setLayout(layout);
 
-        connect(m_detailsButtonMapper, qOverload<const QString &>(&QSignalMapper::mapped), this, &CPluginSelector::pluginDetailsRequested);
-        connect(m_configButtonMapper, qOverload<const QString &>(&QSignalMapper::mapped), this, &CPluginSelector::pluginConfigRequested);
+        connect(m_detailsButtonMapper, &QSignalMapper::mappedString, this, &CPluginSelector::pluginDetailsRequested);
+        connect(m_configButtonMapper, &QSignalMapper::mappedString, this, &CPluginSelector::pluginConfigRequested);
     }
 
     void CPluginSelector::addPlugin(const QString &identifier, const QString &name, bool hasConfig, bool enabled)
