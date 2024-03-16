@@ -51,9 +51,14 @@ namespace BlackMisc::SharedState::DBus
     void CDuplex::requestPeerSubscriptions()
     {
         QSet<QString> channels;
-        for (auto client : m_hub->clients())
+        for (const auto &client : m_hub->clients())
         {
-            if (client != this) { channels.unite(client->m_subscriptions.keys().toSet()); }
+            if (client != this)
+            {
+                const auto &keys = client->m_subscriptions.keys();
+                const QSet subscriptions(keys.begin(), keys.end());
+                channels.unite(subscriptions);
+            }
         }
         for (const auto &channel : channels)
         {

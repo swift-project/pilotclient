@@ -30,6 +30,7 @@
 #include <Qt>
 #include <QHash>
 #include <QMap>
+#include <QMultiMap>
 #include <atomic>
 
 BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Simulation, CAircraftModel, CAircraftModelList)
@@ -46,7 +47,7 @@ namespace BlackMisc
     namespace Simulation
     {
         //! Individual (matching) score for each model
-        using ScoredModels = QMap<int, CAircraftModel>;
+        using ScoredModels = QMultiMap<int, CAircraftModel>;
 
         //! Value object encapsulating a list of aircraft models
         class BLACKMISC_EXPORT CAircraftModelList :

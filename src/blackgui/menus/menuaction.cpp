@@ -230,7 +230,7 @@ namespace BlackGui::Menus
     CMenuAction CMenuActions::addAction(const CMenuAction &menuAction)
     {
         Q_ASSERT_X(!menuAction.getPath().isEmpty(), Q_FUNC_INFO, "Need path");
-        m_actions.insertMulti(menuAction.getPath(), menuAction);
+        m_actions.insert(menuAction.getPath(), menuAction);
         return menuAction;
     }
 
