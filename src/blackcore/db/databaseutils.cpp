@@ -418,7 +418,7 @@ namespace BlackCore::Db
                 if (size < 1) break;
 
                 QByteArray ba;
-                ba.append(content.mid(contentIndex));
+                ba.append(content.mid(contentIndex).toUtf8());
                 ba = QByteArray::fromBase64(ba);
                 ba.insert(0, CCompressUtils::lengthHeader(size)); // adding 4 bytes length header
                 byteData = qUncompress(ba);
