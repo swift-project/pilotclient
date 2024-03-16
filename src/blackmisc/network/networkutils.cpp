@@ -13,7 +13,6 @@
 #include <QList>
 #include <QNetworkInterface>
 #include <QNetworkReply>
-#include <QNetworkConfiguration>
 #include <QObject>
 #include <QSignalMapper>
 #include <QTcpSocket>
@@ -62,11 +61,11 @@ namespace BlackMisc::Network
         QTcpSocket socket;
         QSignalMapper mapper;
         QObject::connect(&socket, &QTcpSocket::connected, &mapper, qOverload<>(&QSignalMapper::map));
-        QObject::connect(&socket, qOverload<QAbstractSocket::SocketError>(&QTcpSocket::error), &mapper, qOverload<>(&QSignalMapper::map));
+        QObject::connect(&socket, &QAbstractSocket::errorOccurred, &mapper, qOverload<>(&QSignalMapper::map));
         mapper.setMapping(&socket, 0);
 
         CEventLoop eventLoop;
-        eventLoop.stopWhen(&mapper, qOverload<int>(&QSignalMapper::mapped));
+        eventLoop.stopWhen(&mapper, &QSignalMapper::mappedInt);
         socket.connectToHost(hostAddress, static_cast<quint16>(port));
         const bool timedOut = !eventLoop.exec(timeoutMs);
 
@@ -280,109 +279,6 @@ namespace BlackMisc::Network
         if (errorMessage.length() < 50) { return false; }
         if (errorMessage.contains("xdebug", Qt::CaseInsensitive)) { return true; }
         return false;
-    }
-
-    CStatusMessageList CNetworkUtils::createNetworkReport(const QNetworkAccessManager *am)
-    {
-        return CNetworkUtils::createNetworkReport(QUrl(), am);
-    }
-
-    CStatusMessageList CNetworkUtils::createNetworkReport(const QUrl &url, const QNetworkAccessManager *qam)
-    {
-        static const CLogCategoryList cats({ CLogCategories::network() });
-        CStatusMessageList msgs;
-
-        if (!url.isEmpty())
-        {
-            const QString host = url.host();
-            const bool canPing = Network::canPing(host);
-            const CStatusMessage ping(cats, canPing ? CStatusMessage::SeverityInfo : CStatusMessage::SeverityError, "Host: " + host + " ping: " + boolToYesNo(canPing));
-            msgs.push_back(ping);
-
-            QString msg;
-            const bool canConnect = CNetworkUtils::canConnect(url, msg, getTimeoutMs() * 2);
-            if (canConnect)
-            {
-                msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityInfo, u"Can connect to " % url.toString()));
-            }
-            else
-            {
-                msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Cannot connect to " % url.toString() % u" msg: " % msg));
-            }
-        }
-
-        if (qam)
-        {
-            const QString msg = CNetworkUtils::createNetworkAccessManagerReport(qam);
-            const bool accessible = qam->networkAccessible() == QNetworkAccessManager::Accessible;
-            msgs.push_back(CStatusMessage(cats, accessible ? CStatusMessage::SeverityInfo : CStatusMessage::SeverityError, msg));
-        }
-
-        return msgs;
-    }
-
-    QString CNetworkUtils::createNetworkAccessManagerReport(const QNetworkAccessManager *qam)
-    {
-        static const QMetaEnum enumAccessible = QMetaEnum::fromType<QNetworkAccessManager::NetworkAccessibility>();
-        static const QString info("Accessible: '%1' (%2) config: %3");
-
-        const bool accessible = qam->networkAccessible() == QNetworkAccessManager::Accessible;
-        return info.arg(boolToYesNo(accessible), enumAccessible.valueToKey(qam->networkAccessible()), CNetworkUtils::networkConfigurationToString(qam->configuration()));
-    }
-
-    QString CNetworkUtils::networkConfigurationToString(const QNetworkConfiguration &configuration)
-    {
-        static const QString s("'%1' '%2' valid: '%3' '%4' '%5'");
-        const QString stateFlagsStr = networkStatesToString(configuration.state());
-        return s.arg(configuration.name(), configuration.identifier(), boolToYesNo(configuration.isValid()), stateFlagsStr, networkTypeToString(configuration.type()));
-    }
-
-    const QString &CNetworkUtils::networkTypeToString(QNetworkConfiguration::Type type)
-    {
-        static const QString iap("InternetAccessPoint");
-        static const QString sn("ServiceNetwork");
-        static const QString i("Invalid");
-        static const QString uc("UserChoice");
-
-        switch (type)
-        {
-        case QNetworkConfiguration::InternetAccessPoint: return iap;
-        case QNetworkConfiguration::ServiceNetwork: return sn;
-        case QNetworkConfiguration::UserChoice: return uc;
-        default:
-        case QNetworkConfiguration::Invalid: break;
-        }
-
-        return i;
-    }
-
-    const QString &CNetworkUtils::networkStateToString(QNetworkConfiguration::StateFlag state)
-    {
-        static const QString disco("Discovered");
-        static const QString a("Active");
-        static const QString u("Undefined");
-        static const QString d("Defined");
-
-        switch (state)
-        {
-        case QNetworkConfiguration::Defined: return d;
-        case QNetworkConfiguration::Active: return a;
-        case QNetworkConfiguration::Discovered: return disco;
-        default:
-        case QNetworkConfiguration::Undefined: break;
-        }
-
-        return u;
-    }
-
-    QString CNetworkUtils::networkStatesToString(QNetworkConfiguration::StateFlags states)
-    {
-        QStringList statesSl;
-        if (states.testFlag(QNetworkConfiguration::Active)) { statesSl << networkStateToString(QNetworkConfiguration::Active); }
-        if (states.testFlag(QNetworkConfiguration::Discovered)) { statesSl << networkStateToString(QNetworkConfiguration::Discovered); }
-        if (states.testFlag(QNetworkConfiguration::Defined)) { statesSl << networkStateToString(QNetworkConfiguration::Defined); }
-        if (states.testFlag(QNetworkConfiguration::Undefined)) { statesSl << networkStateToString(QNetworkConfiguration::Undefined); }
-        return statesSl.join(", ");
     }
 
     const QString &CNetworkUtils::networkOperationToString(QNetworkAccessManager::Operation operation)

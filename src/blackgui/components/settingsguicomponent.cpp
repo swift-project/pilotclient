@@ -29,7 +29,7 @@ namespace BlackGui::Components
 
         // Widget style
         connect(ui->hs_SettingsGuiOpacity, &QSlider::valueChanged, this, &CSettingsGuiComponent::changedWindowsOpacity);
-        connect(ui->cb_SettingsGuiWidgetStyle, qOverload<const QString &>(&QComboBox::currentIndexChanged), this, &CSettingsGuiComponent::widgetStyleChanged, Qt::QueuedConnection);
+        connect(ui->cb_SettingsGuiWidgetStyle, qOverload<int>(&QComboBox::currentIndexChanged), this, &CSettingsGuiComponent::widgetStyleChanged, Qt::QueuedConnection);
 
         ui->comp_SettingsFonts->setStyleSheetDefaultColor();
 
@@ -87,8 +87,9 @@ namespace BlackGui::Components
         }
     }
 
-    void CSettingsGuiComponent::widgetStyleChanged(const QString &widgetStyle)
+    void CSettingsGuiComponent::widgetStyleChanged(int index)
     {
+        const QString widgetStyle = ui->cb_SettingsGuiWidgetStyle->itemText(index);
         const CGeneralGuiSettings settings = m_guiSettings.getThreadLocal();
         if (!settings.isDifferentValidWidgetStyle(widgetStyle)) { return; }
 

@@ -111,7 +111,7 @@ namespace BlackMisc
         QByteArray baseData;
         baseData.append(getMachineId());
         baseData.append(reinterpret_cast<const char *>(&m_processId), sizeof(m_processId));
-        baseData.append(getName());
+        baseData.append(getName().toUtf8());
         return QUuid::createUuidV5(ns, baseData);
     }
 

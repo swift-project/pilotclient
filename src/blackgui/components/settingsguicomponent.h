@@ -51,7 +51,7 @@ namespace BlackGui::Components
         void guiSettingsChanged();
 
         //! Widget style has changed
-        void widgetStyleChanged(const QString &widgetStyle);
+        void widgetStyleChanged(int index);
 
         QScopedPointer<Ui::CSettingsGuiComponent> ui;
         BlackMisc::CSetting<Settings::TGeneralGui> m_guiSettings { this, &CSettingsGuiComponent::guiSettingsChanged };
