@@ -15,7 +15,6 @@
 #include "ui_weathercomponent.h"
 
 #include <QCompleter>
-#include <QRegExpValidator>
 #include <QRegularExpression>
 #include <QStringView>
 #include <QStringBuilder>

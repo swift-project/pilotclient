@@ -11,7 +11,6 @@
 #include "blackmisc/valueobject.h"
 #include "blackmisc/blackmiscexport.h"
 
-#include <QAudioDeviceInfo>
 #include <QMetaType>
 #include <QString>
 
@@ -82,9 +81,6 @@ namespace BlackMisc::Audio
 
         //! Matching name, type and machine and process
         bool matchesNameTypeMachineProcess(const CAudioDeviceInfo &device) const;
-
-        //! Convert the Qt type
-        static DeviceType fromQtMode(QAudio::Mode m);
 
         //! Default output device
         static CAudioDeviceInfo getDefaultOutputDevice();

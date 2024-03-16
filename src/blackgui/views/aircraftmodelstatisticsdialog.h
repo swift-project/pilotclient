@@ -14,11 +14,6 @@ namespace Ui
 {
     class CAircraftModelStatisticsDialog;
 }
-namespace QtCharts
-{
-    class QBarSeries;
-    class QHorizontalBarSeries;
-}
 namespace BlackGui::Views
 {
     //! Info about the models
