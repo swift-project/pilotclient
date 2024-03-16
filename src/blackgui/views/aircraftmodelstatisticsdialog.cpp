@@ -13,7 +13,6 @@
 #include <QStringBuilder>
 #include <QStringList>
 
-using namespace QtCharts;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 

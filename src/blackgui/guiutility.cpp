@@ -116,20 +116,6 @@ namespace BlackGui
         return QApplication::desktop()->screenGeometry(QApplication::desktop()).size();
     }
 
-    QSizeF CGuiUtility::physicalScreenSize(QWidget *currentWidget)
-    {
-        QScreen *s = QGuiApplication::screens().front();
-        if (currentWidget)
-        {
-            const int sn = QApplication::desktop()->screenNumber(currentWidget);
-            s = QGuiApplication::screens().at(sn);
-        }
-
-        if (!s) { return QSizeF(); }
-        const QSizeF ps1 = s->physicalSize();
-        return ps1;
-    }
-
     namespace Private
     {
 #ifdef Q_OS_WINDOWS
