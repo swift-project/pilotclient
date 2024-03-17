@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 message(STATUS "Running windeployqt")
-execute_process(COMMAND qmake -query QT_INSTALL_BINS OUTPUT_VARIABLE QT_INSTALL_BINS)
+execute_process(COMMAND qmake6 -query QT_INSTALL_BINS OUTPUT_VARIABLE QT_INSTALL_BINS)
 
 string(STRIP ${QT_INSTALL_BINS} QT_INSTALL_BINS)
 
@@ -19,11 +19,8 @@ execute_process(COMMAND ${QT_INSTALL_BINS}/windeployqt.exe
                         --no-translations
                         --no-compiler-runtime
                         --no-system-d3d-compiler
+                        --no-system-dxc-compiler
                         --no-opengl-sw
-                        --no-webkit2
-                        --no-virtualkeyboard
                         -opengl # not detected automatically
+                        --skip-plugin-types generic,multimedia,networkinformation,qmltooling
                         WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin)
-
-# Remove unused files
-file(REMOVE_RECURSE ${CMAKE_INSTALL_PREFIX}/bin/playlistformats ${CMAKE_INSTALL_PREFIX}/bin/styles)

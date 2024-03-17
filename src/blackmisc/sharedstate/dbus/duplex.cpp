@@ -29,7 +29,7 @@ namespace BlackMisc::SharedState::DBus
     {
         const auto token = getToken();
         auto future = m_receivedRequests.insert(token, {})->future();
-        emit requestReceived(channel, param, token, {});
+        emit requestReceived(channel, param, token, QPrivateSignal {});
         return future;
     }
 

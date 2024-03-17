@@ -19,7 +19,7 @@
             <file>swift.xml</file>
         </include>
         <include>
-            <file>qt5-binaries.xml</file>
+            <file>qt6-binaries.xml</file>
         </include>
         <include>
             <file>vcredist-x86.xml</file>

@@ -3,10 +3,10 @@
 	SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 -->
 <componentGroup>
-    <name>qt5binaries</name>
-    <description>Qt5 binaries</description>
+    <name>qt6binaries</name>
+    <description>Qt6 binaries</description>
     <canBeEdited>1</canBeEdited>
-    <detailedDescription>Qt5 runtime binaries</detailedDescription>
+    <detailedDescription>Qt6 runtime binaries</detailedDescription>
     <selected>1</selected>
     <show>1</show>
     <folderList>
@@ -17,58 +17,43 @@
             <platforms>windows</platforms>
             <distributionFileList>
                 <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/Qt5Core*.dll</origin>
+                    <origin>../../dist/bin/Qt6Core.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/Qt5DBus*.dll</origin>
+                    <origin>../../dist/bin/Qt6Core5Compat.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/Qt5Gui*.dll</origin>
+                    <origin>../../dist/bin/Qt6DBus.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/Qt5Multimedia*.dll</origin>
+                    <origin>../../dist/bin/Qt6Gui.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/Qt5Network*.dll</origin>
+                    <origin>../../dist/bin/Qt6Multimedia.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/Qt5OpenGL*.dll</origin>
+                    <origin>../../dist/bin/Qt6Network.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/Qt5Qml*.dll</origin>
+                    <origin>../../dist/bin/Qt6OpenGL.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/Qt5Svg*.dll</origin>
+                    <origin>../../dist/bin/Qt6Qml.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/Qt5Widgets*.dll</origin>
+                    <origin>../../dist/bin/Qt6Svg.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/Qt5Xml*.dll</origin>
+                    <origin>../../dist/bin/Qt6Widgets.dll</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/bin/Qt6Xml.dll</origin>
                 </distributionFile>
                 <distributionFile>
                     <origin>../../dist/bin/dbus-1-3.dll</origin>
                 </distributionFile>
                 <distributionFile>
                     <origin>../../dist/bin/dbus-daemon.exe</origin>
-                </distributionFile>
-                <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/libcrypto-1_1*.dll</origin>
-                </distributionFile>
-                <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/libssl-1_1*.dll</origin>
                 </distributionFile>
             </distributionFileList>
         </folder>
@@ -79,52 +64,52 @@
             <platforms>linux linux-x64</platforms>
             <distributionFileList>
                 <distributionFile>
-                    <origin>../../dist/lib/libicudata.so.56</origin>
+                    <origin>../../dist/lib/libicudata.so.73</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libicui18n.so.56</origin>
+                    <origin>../../dist/lib/libicui18n.so.73</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libicuuc.so.56</origin>
+                    <origin>../../dist/lib/libicuuc.so.73</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libQt5Core.so.5</origin>
+                    <origin>../../dist/lib/libQt6Core.so.6</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libQt5DBus.so.5</origin>
+                    <origin>../../dist/lib/libQt6Core5Compat.so.6</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libQt5Gui.so.5</origin>
+                    <origin>../../dist/lib/libQt6DBus.so.6</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libQt5Multimedia.so.5</origin>
+                    <origin>../../dist/lib/libQt6Gui.so.6</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libQt5MultimediaGstTools.so.5</origin>
+                    <origin>../../dist/lib/libQt6Multimedia.so.6</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libQt5MultimediaWidgets.so.5</origin>
+                    <origin>../../dist/lib/libQt6MultimediaWidgets.so.6</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libQt5Network.so.5</origin>
+                    <origin>../../dist/lib/libQt6Network.so.6</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libQt5OpenGL.so.5</origin>
+                    <origin>../../dist/lib/libQt6OpenGL.so.6</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libQt5Qml.so.5</origin>
+                    <origin>../../dist/lib/libQt6Qml.so.6</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libQt5Svg.so.5</origin>
+                    <origin>../../dist/lib/libQt6Svg.so.6</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libQt5Widgets.so.5</origin>
+                    <origin>../../dist/lib/libQt6Widgets.so.6</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libQt5XcbQpa.so.5</origin>
+                    <origin>../../dist/lib/libQt6XcbQpa.so.6</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libQt5Xml.so.5</origin>
+                    <origin>../../dist/lib/libQt6Xml.so.6</origin>
                 </distributionFile>
             </distributionFileList>
         </folder>
@@ -142,6 +127,9 @@
                 </distributionDirectory>
                 <distributionDirectory>
                     <origin>../../dist/lib/QtCore.framework</origin>
+                </distributionDirectory>
+                <distributionDirectory>
+                    <origin>../../dist/lib/QtCore5Compat.framework</origin>
                 </distributionDirectory>
                 <distributionDirectory>
                     <origin>../../dist/lib/QtDBus.framework</origin>
@@ -196,22 +184,11 @@
             <platforms>all</platforms>
             <distributionFileList>
                 <distributionDirectory>
-                    <origin>../../dist/bin/audio</origin>
-                    <onPackingFilterList>
-                        <fileNameFilter pattern="*wasapi*.dll" logic="does_not_match" patternType="glob"/>
-                    </onPackingFilterList>
-                </distributionDirectory>
-                <distributionDirectory>
-                    <origin>../../dist/bin/bearer</origin>
-                </distributionDirectory>
-                <distributionDirectory>
-                    <origin>../../dist/bin/iconengines</origin>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/iconengines*</origin>
                 </distributionDirectory>
                 <distributionDirectory>
                     <origin>../../dist/bin/imageformats</origin>
-                </distributionDirectory>
-                <distributionDirectory>
-                    <origin>../../dist/bin/mediaservice</origin>
                 </distributionDirectory>
                 <distributionDirectory>
                     <origin>../../dist/bin/platforms</origin>
@@ -226,20 +203,16 @@
                 </distributionDirectory>
                 <distributionDirectory>
                     <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/styles*</origin>
+                </distributionDirectory>
+                <distributionDirectory>
+                    <origin>../../dist/bin/tls</origin>
+                </distributionDirectory>
+                <distributionDirectory>
+                    <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/xcbglintegrations*</origin>
                 </distributionDirectory>
             </distributionFileList>
         </folder>
     </folderList>
-    <postInstallationActionList>
-        <deleteFile>
-            <path>${installdir}/bin/audio/*wasapi*.dll</path>
-            <progressText>Delete old version of Qt audio plugin</progressText>
-            <ruleList>
-                <platformTest>
-                    <type>windows</type>
-                </platformTest>
-            </ruleList>
-        </deleteFile>
-    </postInstallationActionList>
 </componentGroup>

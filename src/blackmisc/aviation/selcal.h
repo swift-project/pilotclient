@@ -15,8 +15,6 @@
 #include <QMetaType>
 #include <QString>
 
-class QStringList;
-
 BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CSelcal)
 namespace BlackMisc::PhysicalQuantities
 {

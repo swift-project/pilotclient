@@ -148,7 +148,7 @@ namespace BlackGui::Views
                 {
                     m_frame = new QFrame(this);
                     QHBoxLayout *layout = new QHBoxLayout(m_frame);
-                    layout->setMargin(2);
+                    layout->setContentsMargins(2, 2, 2, 2);
                     m_frame->setLayout(layout);
                     m_leOrder = new QLineEdit(m_frame);
                     QLabel *icon = new QLabel(m_frame);

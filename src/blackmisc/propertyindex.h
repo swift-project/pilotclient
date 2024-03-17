@@ -54,9 +54,6 @@ namespace BlackMisc
         //! Initializer list constructor
         CPropertyIndex(std::initializer_list<int> il);
 
-        //! Construct from a vector of indexes.
-        CPropertyIndex(const QVector<int> &indexes);
-
         //! Construct from a list of indexes.
         CPropertyIndex(const QList<int> &indexes);
 
@@ -77,9 +74,6 @@ namespace BlackMisc
 
         //! Empty?
         bool isEmpty() const;
-
-        //! Index vector
-        QVector<int> indexVector() const;
 
         //! Index list
         QList<int> indexList() const;
@@ -162,7 +156,7 @@ namespace BlackMisc
         void parseFromString(const QString &indexes);
 
     private:
-        QVector<int> m_indexes;
+        QList<int> m_indexes;
 
         BLACK_METACLASS(
             CPropertyIndex,

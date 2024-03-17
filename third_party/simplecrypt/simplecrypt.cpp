@@ -29,6 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QtDebug>
 #include <QtGlobal>
 #include <QDateTime>
+#include <QIODevice> // added by swift for Qt 6 compatibility
 #include <QCryptographicHash>
 #include <QRandomGenerator>
 #include <QDataStream>

@@ -54,7 +54,7 @@ namespace BlackMisc
             struct EventFilter : public QAbstractNativeEventFilter
             {
                 // Prevent Qt from handling Windows Messages while the messagebox is open
-                virtual bool nativeEventFilter(const QByteArray &, void *message, long *result) override
+                virtual bool nativeEventFilter(const QByteArray &, void *message, qintptr *result) override
                 {
                     auto msg = static_cast<MSG *>(message);
                     *result = DefWindowProc(msg->hwnd, msg->message, msg->wParam, msg->lParam);

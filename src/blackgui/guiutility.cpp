@@ -36,7 +36,6 @@
 #include <QStringBuilder>
 #include <QGraphicsOpacityEffect>
 #include <QPropertyAnimation>
-#include <QDesktopWidget>
 
 // for the screen size
 
@@ -110,10 +109,12 @@ namespace BlackGui
     QSize CGuiUtility::desktopSize()
     {
         const QWidget *mw = CGuiUtility::mainApplicationWidget();
-        if (mw) { return QApplication::desktop()->screenGeometry(mw).size(); }
+        if (!mw) return QGuiApplication::primaryScreen()->size();
 
-        // main screen
-        return QApplication::desktop()->screenGeometry(QApplication::desktop()).size();
+        const QWindow *win = mw->windowHandle();
+        if (!win) return QGuiApplication::primaryScreen()->size();
+
+        return win->size();
     }
 
     namespace Private
@@ -742,9 +743,8 @@ namespace BlackGui
         static const QString s("01234567890123456789012345678901234567890123456789012345678901234567890123456789");
         const QFontMetricsF fm = CGuiUtility::currentFontMetricsF();
         const qreal scale = withRatio ? CGuiUtility::mainApplicationWidgetPixelRatio() : 1.0;
-        const qreal w = fm.width(s) * scale;
-        const qreal h = fm.height() * scale;
-        return QSizeF(w, h);
+        const QSizeF size = fm.size(Qt::TextSingleLine, s);
+        return size * scale;
     }
 
     QSizeF CGuiUtility::fontMetricsLazyDog43Chars(bool withRatio)
@@ -753,9 +753,8 @@ namespace BlackGui
         static const QString s("The quick brown fox jumps over the lazy dog");
         const QFontMetricsF fm = CGuiUtility::currentFontMetrics();
         const qreal scale = withRatio ? CGuiUtility::mainApplicationWidgetPixelRatio() : 1.0;
-        const qreal w = fm.width(s) * scale;
-        const qreal h = fm.height() * scale;
-        return QSizeF(w, h);
+        const QSizeF size = fm.size(Qt::TextSingleLine, s);
+        return size * scale;
     }
 
     QSizeF CGuiUtility::fontMetricsEstimateSize(int xCharacters, int yCharacters, bool withRatio)
@@ -773,8 +772,8 @@ namespace BlackGui
 
     void CGuiUtility::centerWidget(QWidget *widget)
     {
-        // const QRect screenGeometry = QApplication::desktop()->screenGeometry();
-        const QScreen *pScreen = QGuiApplication::screenAt(widget->mapToGlobal({ widget->width() / 2, 0 }));
+        const QPoint point(widget->width() / 2.0, 0);
+        const QScreen *pScreen = QGuiApplication::screenAt(widget->mapToGlobal(point));
         const QRect screenGeometry = pScreen->availableGeometry();
         const int x = (screenGeometry.width() - widget->width()) / 2;
         const int y = (screenGeometry.height() - widget->height()) / 2;
@@ -808,8 +807,7 @@ namespace BlackGui
         const QWidget *mainWidget = CGuiUtility::mainApplicationWidget();
         if (mainWidget)
         {
-            // const QSize sd = QApplication::desktop()->screenGeometry().size();
-            const QSize sd = QApplication::desktop()->screenGeometry(mainWidget).size();
+            const QSize sd = QGuiApplication::primaryScreen()->geometry().size();
             desktop = QStringLiteral("Desktop w%1 w%2").arg(sd.width()).arg(sd.height());
             ratio = QStringLiteral("ratio: %1").arg(mainWidget->devicePixelRatioF());
         }

@@ -822,10 +822,10 @@ namespace BlackMisc::Aviation
         }
 
         // turn E to P engine
-        if (combinedCode.endsWith("E")) { return QStringList({ combinedCode.leftRef(2) % u'P' }); }
+        if (combinedCode.endsWith("E")) { return QStringList({ QStringView { combinedCode }.left(2) % u'P' }); }
 
         // turn T to H plane (tilt wing to helicopter
-        if (combinedCode.startsWith("T")) { return QStringList({ u'H' % combinedCode.rightRef(2) }); }
+        if (combinedCode.startsWith("T")) { return QStringList({ u'H' % QStringView { combinedCode }.right(2) }); }
 
         // based on engine count
         QStringList codes;

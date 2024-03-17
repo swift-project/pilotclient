@@ -14,8 +14,6 @@
 #include <QString>
 #include <QTimer>
 
-class QStringList;
-
 namespace BlackGui::Components
 {
     //! Selector for the transponder mode

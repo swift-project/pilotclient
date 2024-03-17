@@ -140,7 +140,7 @@ namespace BlackMisc
         return m_values.size();
     }
 
-    uint CPropertyIndexVariantMap::getValueHash() const
+    size_t CPropertyIndexVariantMap::getValueHash() const
     {
         // there is no hash for map, so I use this workaround here
         return qHash(this->toQString(false));

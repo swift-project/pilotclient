@@ -25,7 +25,6 @@
 
 class QDateTime;
 class QPixmap;
-class QStringList;
 
 /*!
  * \defgroup JSON Streaming operators for JSON

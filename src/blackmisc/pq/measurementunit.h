@@ -291,7 +291,7 @@ namespace BlackMisc::PhysicalQuantities
         }
 
         //! \copydoc CValueObject::qHash
-        friend uint qHash(const CMeasurementUnit &unit)
+        friend size_t qHash(const CMeasurementUnit &unit)
         {
             return ::qHash(unit.getName());
         }

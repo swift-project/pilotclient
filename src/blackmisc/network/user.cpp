@@ -124,7 +124,7 @@ namespace BlackMisc::Network
             {
                 const int pos = match.capturedStart(0);
                 const QString icao = match.captured(0).trimmed().right(4);
-                rn = rn.leftRef(pos).trimmed().toString();
+                rn = QStringView { rn }.left(pos).trimmed().toString();
                 this->setHomeBase(CAirportIcaoCode(icao));
             }
         }

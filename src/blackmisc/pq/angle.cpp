@@ -65,10 +65,10 @@ namespace BlackMisc::PhysicalQuantities
         }
 
         QString str = QStringLiteral("%1").arg(dms, 14, 'f', 10, '0'); // 000.0000000000
-        values.deg = str.midRef(0, 3).toInt();
-        values.min = str.midRef(4, 2).toInt();
-        values.sec = str.midRef(6, 2).toInt();
-        values.fractionalSec = str.midRef(8, 6).toInt() / 1000000.0;
+        values.deg = QStringView { str }.mid(0, 3).toInt();
+        values.min = QStringView { str }.mid(4, 2).toInt();
+        values.sec = QStringView { str }.mid(6, 2).toInt();
+        values.fractionalSec = QStringView { str }.mid(8, 6).toInt() / 1000000.0;
         return values;
     }
 

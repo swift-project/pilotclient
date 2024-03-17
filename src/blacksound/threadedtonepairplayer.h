@@ -11,12 +11,13 @@
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/worker.h"
 
-#include <QAudioOutput>
+#include <QAudioSink>
 #include <QBuffer>
 #include <QMap>
 #include <QReadWriteLock>
 #include <QtEndian>
 #include <QtGlobal>
+#include <QAudioFormat>
 
 class QTimer;
 
@@ -65,7 +66,7 @@ namespace BlackSound
         void writeAmplitudeToBuffer(double amplitude, unsigned char *bufferPointer);
 
         BlackMisc::Audio::CAudioDeviceInfo m_deviceInfo;
-        QAudioOutput *m_audioOutput = nullptr;
+        QAudioSink *m_audioOutput = nullptr;
         QByteArray m_bufferData;
         QBuffer m_buffer;
         QAudioFormat m_audioFormat;

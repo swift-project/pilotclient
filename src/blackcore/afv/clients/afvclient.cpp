@@ -1025,23 +1025,6 @@ namespace BlackCore::Afv::Clients
 
     void CAfvClient::initialize()
     {
-#ifdef Q_OS_WIN
-        if (!m_winCoInitialized)
-        {
-            HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-
-            // RPC_E_CHANGED_MODE: CoInitializeEx was already called by someone else in this thread with a different mode.
-            if (hr == RPC_E_CHANGED_MODE)
-            {
-                CLogMessage(this).debug(u"CoInitializeEx was already called with a different mode. Trying again.");
-                hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
-            }
-
-            // S_OK: The COM library was initialized successfully on this thread.
-            // S_FALSE: The COM library is already initialized on this thread. Reference count was incremented. This is not an error.
-            if (hr == S_OK || hr == S_FALSE) { m_winCoInitialized = true; }
-        }
-#endif
         CLogMessage(this).info(u"Initialize AFV client in thread %1") << CThreadUtils::currentThreadInfo();
     }
 

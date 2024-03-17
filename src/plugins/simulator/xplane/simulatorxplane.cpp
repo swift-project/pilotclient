@@ -697,8 +697,8 @@ namespace BlackSimPlugin::XPlane
         // (e.g. std::lower_bound) using a model path as the search key.
         struct PrefixComparator
         {
-            bool operator()(const Prefix &a, const QString &b) const { return QStringRef(&a.s) < b.leftRef(a.s.size()); }
-            bool operator()(const QString &a, const Prefix &b) const { return a.leftRef(b.s.size()) < QStringRef(&b.s); }
+            bool operator()(const Prefix &a, const QString &b) const { return QStringView(a.s) < QStringView(b).left(a.s.size()); }
+            bool operator()(const QString &a, const Prefix &b) const { return QStringView(a).left(b.s.size()) < QStringView(b.s); }
         };
 
         // The list of packages discovered so far.
@@ -1238,7 +1238,7 @@ namespace BlackSimPlugin::XPlane
             CLogMessage(this).warning(u"Adding '%1' failed, but aircraft no longer in range, will be removed") << callsign;
         }
 
-        const bool wasPending = (m_addingInProgressAircraft.remove(cs) > 0);
+        const bool wasPending = (static_cast<int>(m_addingInProgressAircraft.remove(cs)) > 0);
         Q_UNUSED(wasPending)
 
         if (failedRemoteAircraft.hasCallsign() && !m_aircraftAddedFailed.containsCallsign(cs))

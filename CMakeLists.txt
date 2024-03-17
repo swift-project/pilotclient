@@ -91,7 +91,7 @@ if(MSVC)
 endif()
 
 # Find dependencies
-find_package(Qt5 REQUIRED COMPONENTS Core DBus Gui Multimedia Network OpenGL Concurrent Xml Qml Widgets Svg Test)
+find_package(Qt6 REQUIRED COMPONENTS Core DBus Gui Multimedia Network OpenGL Concurrent Xml Qml Widgets Svg Test Core5Compat)
 
 # Global compiler options
 if(MSVC)
@@ -147,7 +147,6 @@ add_subdirectory(cmake/msgpack)
 add_subdirectory(cmake/rapidjson)
 add_subdirectory(cmake/opus)
 add_subdirectory(cmake/crashpad)
-add_subdirectory(cmake/tls)
 add_subdirectory(cmake/simconnect)
 add_subdirectory(cmake/dplay)
 add_subdirectory(third_party)

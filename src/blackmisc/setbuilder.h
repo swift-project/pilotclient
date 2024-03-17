@@ -42,8 +42,6 @@ namespace BlackMisc
         operator QSet<T>() && { return convertTo<QSet>(sortAndDeduplicate(std::move(m_list))); }
         operator std::set<T>() const & { return convertTo<std::set>(sortAndDeduplicate(m_list)); }
         operator std::set<T>() && { return convertTo<std::set>(sortAndDeduplicate(std::move(m_list))); }
-        operator QVector<T>() const & { return convertTo<QVector>(sortAndDeduplicate(m_list)); }
-        operator QVector<T>() && { return convertTo<QVector>(sortAndDeduplicate(std::move(m_list))); }
         operator std::vector<T>() const & { return convertTo<std::vector>(sortAndDeduplicate(m_list)); }
         operator std::vector<T>() && { return convertTo<std::vector>(sortAndDeduplicate(std::move(m_list))); }
         template <typename U = T, typename = std::enable_if_t<std::is_same_v<U, QString>>>

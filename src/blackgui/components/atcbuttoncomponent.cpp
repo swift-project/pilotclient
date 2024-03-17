@@ -52,7 +52,6 @@ namespace BlackGui::Components
 
         layout->setObjectName("gl_CAtcButtonComponent");
         layout->setSpacing(4);
-        layout->setMargin(0);
         layout->setContentsMargins(0, 0, 0, 0);
 
         int row = 0;

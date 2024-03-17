@@ -87,10 +87,10 @@
 // *INDENT-ON*
 
 //! std::string qHash
-inline uint qHash(const std::string &key, uint seed) { return qHash(QString::fromStdString(key), seed); }
+inline size_t qHash(const std::string &key, uint seed) { return qHash(QString::fromStdString(key), seed); }
 
 //! std::string qHash
-inline uint qHash(const std::string &key) { return qHash(QString::fromStdString(key)); }
+inline size_t qHash(const std::string &key) { return qHash(QString::fromStdString(key)); }
 
 namespace BlackMisc
 {

@@ -11,7 +11,7 @@
 #include <QtGlobal>
 #include <QStringBuilder>
 #include <QDebug>
-#include <QAudioDeviceInfo>
+#include <QAudioDevice>
 #include <cmath>
 
 using namespace BlackMisc;
@@ -101,14 +101,11 @@ namespace BlackCore::Afv::Audio
         QAudioFormat inputFormat;
         inputFormat.setSampleRate(m_sampleRate); // normally 48000
         inputFormat.setChannelCount(1);
-        inputFormat.setSampleSize(16);
-        inputFormat.setSampleType(QAudioFormat::SignedInt);
-        inputFormat.setByteOrder(QAudioFormat::LittleEndian);
-        inputFormat.setCodec("audio/pcm");
+        inputFormat.setSampleFormat(QAudioFormat::Int16);
 
-        QAudioDeviceInfo selectedDevice = getLowestLatencyDevice(inputDevice, inputFormat);
+        QAudioDevice selectedDevice = getLowestLatencyDevice(inputDevice, inputFormat);
         m_inputFormat = inputFormat;
-        m_audioInput.reset(new QAudioInput(selectedDevice, m_inputFormat));
+        m_audioInput.reset(new QAudioSource(selectedDevice, m_inputFormat));
         if (!m_audioInputBuffer) { m_audioInputBuffer = new CAudioInputBuffer(this); }
         else { m_audioInputBuffer->disconnect(); } // make sure disconnected in any case
         m_audioInputBuffer->start(m_inputFormat);
@@ -139,7 +136,7 @@ namespace BlackCore::Afv::Audio
         m_started = true;
 #endif
         const QString format = toQString(m_inputFormat);
-        CLogMessage(this).info(u"Starting: '%1' with: %2") << selectedDevice.deviceName() << format;
+        CLogMessage(this).info(u"Starting: '%1' with: %2") << selectedDevice.description() << format;
     }
 
     void CInput::stop()
@@ -158,6 +155,7 @@ namespace BlackCore::Afv::Audio
 
     void CInput::audioInDataAvailable(const QByteArray &frame)
     {
+        static_assert(Q_BYTE_ORDER == Q_LITTLE_ENDIAN);
         QVector<qint16> samples = convertBytesTo16BitPCM(frame);
 
         if (m_inputFormat.channelCount() == 2)

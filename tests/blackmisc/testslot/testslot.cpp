@@ -27,7 +27,7 @@ namespace BlackMiscTest
     void CTestSlot::slotBasics()
     {
         QObject *obj = new QObject(this);
-        CSlot<void(const QString &)> slot1 = { obj, &QObject::setObjectName };
+        CSlot<void(const QString &)> slot1 = { obj, [&](const QString &name) { obj->setObjectName(name); } };
         QVERIFY2(slot1, "Slot has valid object and function - can be called.");
 
         // KB 8/17 T125, CSlot can no longer be constructed with null object

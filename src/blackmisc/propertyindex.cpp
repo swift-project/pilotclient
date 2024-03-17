@@ -16,10 +16,7 @@ namespace BlackMisc
     CPropertyIndex::CPropertyIndex(std::initializer_list<int> il) : m_indexes(il)
     {}
 
-    CPropertyIndex::CPropertyIndex(const QVector<int> &indexes) : m_indexes(indexes)
-    {}
-
-    CPropertyIndex::CPropertyIndex(const QList<int> &indexes) : m_indexes(indexes.toVector())
+    CPropertyIndex::CPropertyIndex(const QList<int> &indexes) : m_indexes(indexes)
     {}
 
     CPropertyIndex::CPropertyIndex(const QString &indexes)
@@ -73,7 +70,7 @@ namespace BlackMisc
     {
         m_indexes.clear();
         if (indexes.isEmpty()) { return; }
-        for (const QStringRef &index : indexes.splitRef(';'))
+        for (const auto &index : QStringView { indexes }.split(';'))
         {
             if (index.isEmpty()) { continue; }
             bool ok;
@@ -98,14 +95,9 @@ namespace BlackMisc
         this->parseFromString(value.toString());
     }
 
-    QVector<int> CPropertyIndex::indexVector() const
-    {
-        return m_indexes;
-    }
-
     QList<int> CPropertyIndex::indexList() const
     {
-        return m_indexes.toList();
+        return m_indexes;
     }
 
     void CPropertyIndex::prepend(int newLeftIndex)

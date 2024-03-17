@@ -15,8 +15,6 @@
 #include <QString>
 #include <tuple>
 
-class QStringList;
-
 BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CCallsign)
 
 namespace BlackMisc

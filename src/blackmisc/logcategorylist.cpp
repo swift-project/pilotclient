@@ -64,7 +64,6 @@ namespace BlackMisc
     {
         qRegisterMetaType<CLogCategoryList>();
         qDBusRegisterMetaType<CLogCategoryList>();
-        qRegisterMetaTypeStreamOperators<CLogCategoryList>();
         registerMetaValueType<CLogCategoryList>();
     }
 }

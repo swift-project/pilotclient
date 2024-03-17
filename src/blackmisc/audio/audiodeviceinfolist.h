@@ -13,7 +13,7 @@
 #include "blackmisc/blackmiscexport.h"
 
 #include <QMetaType>
-#include <QAudioDeviceInfo>
+#include <QAudioDevice>
 #include <QStringList>
 
 BLACK_DECLARE_SEQUENCE_MIXINS(BlackMisc::Audio, CAudioDeviceInfo, CAudioDeviceInfoList)
@@ -88,10 +88,10 @@ namespace BlackMisc::Audio
         static CAudioDeviceInfoList allInputDevicesPlusDefault();
         static CAudioDeviceInfoList allOutputDevicesPlusDefault();
         static CAudioDeviceInfoList allDevicesPlusDefault();
-        static QList<QAudioDeviceInfo> allQtInputDevices();
-        static QList<QAudioDeviceInfo> allQtOutputDevices();
-        static QAudioDeviceInfo defaultQtInputDevice();
-        static QAudioDeviceInfo defaultQtOutputDevice();
+        static QList<QAudioDevice> allQtInputDevices();
+        static QList<QAudioDevice> allQtOutputDevices();
+        static QAudioDevice defaultQtInputDevice();
+        static QAudioDevice defaultQtOutputDevice();
         static CAudioDeviceInfo defaultInputDevice();
         static CAudioDeviceInfo defaultOutputDevice();
         //! @}

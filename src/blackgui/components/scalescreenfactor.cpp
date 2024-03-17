@@ -5,7 +5,6 @@
 #include "ui_scalescreenfactor.h"
 #include "blackgui/guiutility.h"
 
-#include <QDesktopWidget>
 #include <QScreen>
 #include <QIntValidator>
 
@@ -20,23 +19,7 @@ namespace BlackGui::Components
         connect(ui->hs_Factor, &QSlider::valueChanged, this, &CScaleScreenFactor::onSliderChanged);
         connect(ui->le_Factor, &QLineEdit::editingFinished, this, &CScaleScreenFactor::onEditFinished);
 
-        const QDesktopWidget *w = qApp->desktop();
-        const QString tt = QStringLiteral(
-                               "Scaling only works on High DPI screens\n"
-                               "Width/height: %1/%2 Ratio: %3\n"
-                               "Logical DPI x/y: %4/%5\n"
-                               "Physical DPI x/y: %6/%7\n"
-                               "width/height MM: %8/%9")
-                               .arg(w->width())
-                               .arg(w->height())
-                               .arg(QString::number(CGuiUtility::mainApplicationWidgetPixelRatio(), 'f', 2))
-                               .arg(w->logicalDpiX())
-                               .arg(w->logicalDpiY())
-                               .arg(w->physicalDpiX())
-                               .arg(w->physicalDpiY())
-                               .arg(w->widthMM())
-                               .arg(w->heightMM());
-
+        const QString tt = QStringLiteral("Scaling only works on High DPI screens");
         this->setToolTip(tt);
     }
 

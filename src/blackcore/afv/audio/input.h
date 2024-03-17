@@ -14,7 +14,7 @@
 #    include "blackmisc/macos/microphoneaccess.h"
 #endif
 
-#include <QAudioInput>
+#include <QAudioSource>
 #include <QString>
 #include <QDateTime>
 #include <QSharedPointer>
@@ -138,7 +138,7 @@ namespace BlackCore::Afv::Audio
         int m_sampleRate = 0;
 
         BlackSound::Codecs::COpusEncoder m_encoder;
-        QScopedPointer<QAudioInput> m_audioInput;
+        QScopedPointer<QAudioSource> m_audioInput;
         BlackMisc::Audio::CAudioDeviceInfo m_device;
         QAudioFormat m_inputFormat;
 

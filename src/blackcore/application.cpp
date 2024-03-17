@@ -392,7 +392,7 @@ namespace BlackCore
     bool CApplication::hasWebDataServices() const
     {
         if (this->isShuttingDown()) { return false; } // service will not survive for long
-        return m_webDataServices;
+        return !m_webDataServices.isNull();
     }
 
     CWebDataServices *CApplication::getWebDataServices() const
@@ -1300,7 +1300,7 @@ namespace BlackCore
 
     bool CApplication::hasSetupReader() const
     {
-        return m_setupReader;
+        return !m_setupReader.isNull();
     }
 
     CSetupReader *CApplication::getSetupReader() const

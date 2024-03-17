@@ -41,7 +41,7 @@ namespace BlackMisc
             virtual QJsonObject toMemoizedJson(const void *object) const = 0;
             virtual void convertFromMemoizedJson(const QJsonObject &json, void *object, bool allowFallbackToJson) const = 0;
             virtual void unmarshall(const QDBusArgument &arg, void *object) const = 0;
-            virtual uint getValueHash(const void *object) const = 0;
+            virtual size_t getValueHash(const void *object) const = 0;
             virtual int getMetaTypeId() const = 0;
             virtual const void *upCastTo(const void *object, int metaTypeId) const = 0;
             virtual int compareImpl(const void *lhs, const void *rhs) const = 0;
@@ -124,12 +124,12 @@ namespace BlackMisc
             }
 
             template <typename T>
-            static uint getValueHash(const T &object, decltype(static_cast<void>(qHash(object)), 0))
+            static size_t getValueHash(const T &object, decltype(static_cast<void>(qHash(object)), 0))
             {
                 return qHash(object);
             }
             template <typename T>
-            static uint getValueHash(const T &object, ...)
+            static size_t getValueHash(const T &object, ...)
             {
                 throw CVariantException(object, "getValueHash");
             }
@@ -218,7 +218,7 @@ namespace BlackMisc
             virtual QJsonObject toMemoizedJson(const void *object) const override;
             virtual void convertFromMemoizedJson(const QJsonObject &json, void *object, bool allowFallbackToJson) const override;
             virtual void unmarshall(const QDBusArgument &arg, void *object) const override;
-            virtual uint getValueHash(const void *object) const override;
+            virtual size_t getValueHash(const void *object) const override;
             virtual int getMetaTypeId() const override;
             virtual const void *upCastTo(const void *object, int metaTypeId) const override;
             virtual int compareImpl(const void *lhs, const void *rhs) const override;
@@ -275,7 +275,7 @@ namespace BlackMisc
             arg >> cast(object);
         }
         template <typename T>
-        uint CValueObjectMetaInfo<T>::getValueHash(const void *object) const
+        size_t CValueObjectMetaInfo<T>::getValueHash(const void *object) const
         {
             return CValueObjectMetaInfoHelper::getValueHash(cast(object), 0);
         }
@@ -384,7 +384,6 @@ namespace BlackMisc
             {
                 qRegisterMetaType<T>();
                 qDBusRegisterMetaType<T>();
-                qRegisterMetaTypeStreamOperators<T>();
                 registerMetaValueType<T>();
                 maybeRegisterMetaList();
             }

@@ -36,7 +36,7 @@ namespace BlackGui::Components
         QScopedPointer<Ui::CAircraftPartsHistory> ui;
         QTimer m_timerUpdateHistory;
         QTextDocument m_text { this };
-        uint m_htmlHash = 0;
+        size_t m_htmlHash = 0;
 
         //! Init
         void initGui();

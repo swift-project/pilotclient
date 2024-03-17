@@ -68,7 +68,7 @@ namespace BlackMisc
         worker->setStarted();
         auto *thread = new CRegularThread(owner);
 
-        if (typeId != QMetaType::Void) { worker->m_result = QVariant(typeId, nullptr); }
+        if (typeId != QMetaType::Void) { worker->m_result = QVariant(QMetaType(typeId), nullptr); }
 
         const QString ownerName = owner->objectName().isEmpty() ? owner->metaObject()->className() : owner->objectName();
         thread->setObjectName(ownerName + ":" + name);

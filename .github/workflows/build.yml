@@ -17,7 +17,7 @@ concurrency:
 env:
   do_vatsim_key: ${{ github.event_name == 'push' }}
   do_symbols:    ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-  qt_version:    5.15.2
+  qt_version:    6.8.0
   bitrock_version: qt-professional-24.7.0
   bitrock_url:     https://releases.installbuilder.com/installbuilder
   externals: swift-project/externals
@@ -94,6 +94,7 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.qt_version }}
+          modules: 'qtmultimedia qt5compat'
           cache: true
       - name: Cache InstallBuilder
         id: cache-bitrock
@@ -186,13 +187,14 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.qt_version }}
-          arch: win64_msvc2019_64
+          modules: 'qtmultimedia qt5compat'
+          arch: win64_msvc2022_64
           cache: true
       - name: Install Qt debug info
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.qt_version }}
-          arch: win64_msvc2019_64
+          arch: win64_msvc2022_64
           cache: true
           modules: debug_info
           extra: --archives qtbase
@@ -283,6 +285,7 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.qt_version }}
+          modules: 'qtmultimedia qt5compat'
           cache: true
       - name: Cache InstallBuilder
         id: cache-bitrock

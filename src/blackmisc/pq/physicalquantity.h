@@ -301,10 +301,10 @@ namespace BlackMisc::PhysicalQuantities
         void unmarshalFromDataStream(QDataStream &stream);
 
         //! \copydoc BlackMisc::Mixin::HashByMetaClass::qHash
-        uint getValueHash() const;
+        size_t getValueHash() const;
 
         //! \copydoc CValueObject::qHash
-        friend uint qHash(const PQ &pq) { return pq.getValueHash(); } // clazy:exclude=qhash-namespace
+        friend size_t qHash(const PQ &pq) { return pq.getValueHash(); } // clazy:exclude=qhash-namespace
 
         //! \copydoc BlackMisc::Mixin::JsonByMetaClass::toJson
         QJsonObject toJson() const;

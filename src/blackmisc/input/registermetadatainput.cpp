@@ -23,7 +23,6 @@ namespace BlackMisc::Input
         CKeyboardKey::registerMetadata();
         CKeyboardKeyList::registerMetadata();
         qDBusRegisterMetaType<KeyCode>();
-        qRegisterMetaTypeStreamOperators<KeyCode>();
     }
 
 } // ns

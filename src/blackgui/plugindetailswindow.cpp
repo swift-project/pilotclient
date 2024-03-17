@@ -5,7 +5,6 @@
 #include "ui_plugindetailswindow.h"
 
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QFont>
 #include <QLabel>
 #include <QPushButton>
@@ -51,16 +50,5 @@ namespace BlackGui
     void CPluginDetailsWindow::setPluginAuthors(const QString &authors)
     {
         ui->lbl_Authors->setText(authors);
-    }
-
-    void CPluginDetailsWindow::showEvent(QShowEvent *event)
-    {
-        this->setGeometry(
-            QStyle::alignedRect(
-                Qt::LeftToRight,
-                Qt::AlignCenter,
-                this->size(),
-                QDesktopWidget().screenGeometry(qApp->activeWindow())));
-        Q_UNUSED(event);
     }
 }

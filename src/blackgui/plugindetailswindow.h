@@ -47,10 +47,6 @@ namespace BlackGui
         //! Sets the plugin authors
         void setPluginAuthors(const QString &authors);
 
-    protected:
-        //! \copydoc QWidget::showEvent()
-        virtual void showEvent(QShowEvent *event) override;
-
     private:
         QScopedPointer<Ui::CPluginDetailsWindow> ui;
     };

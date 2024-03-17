@@ -906,7 +906,7 @@ namespace BlackSimPlugin::Flightgear
             CLogMessage(this).warning(u"Adding '%1' failed, but aircraft no longer in range, will be removed") << callsign;
         }
 
-        const bool wasPending = (m_addingInProgressAircraft.remove(cs) > 0);
+        const bool wasPending = (static_cast<int>(m_addingInProgressAircraft.remove(cs)) > 0);
         Q_UNUSED(wasPending)
 
         if (failedRemoteAircraft.hasCallsign() && !m_aircraftAddedFailed.containsCallsign(cs))

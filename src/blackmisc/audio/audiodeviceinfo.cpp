@@ -9,7 +9,8 @@
 #include <QStringBuilder>
 #include <QHostInfo>
 #include <QtGlobal>
-#include <QAudioDeviceInfo>
+#include <QAudioDevice>
+#include <QMediaDevices>
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Audio, CAudioDeviceInfo)
 
@@ -26,8 +27,8 @@ namespace BlackMisc::Audio
     {
         if (m_deviceName.isEmpty()) { return false; }
         if (m_deviceName == "default") { return true; }
-        if (this->isInputDevice() && m_deviceName == QAudioDeviceInfo::defaultInputDevice().deviceName()) { return true; }
-        if (this->isOutputDevice() && m_deviceName == QAudioDeviceInfo::defaultOutputDevice().deviceName()) { return true; }
+        if (this->isInputDevice() && m_deviceName == QMediaDevices::defaultAudioInput().description()) { return true; }
+        if (this->isOutputDevice() && m_deviceName == QMediaDevices::defaultAudioOutput().description()) { return true; }
         return false;
     }
 
@@ -48,12 +49,12 @@ namespace BlackMisc::Audio
 
     CAudioDeviceInfo CAudioDeviceInfo::getDefaultOutputDevice()
     {
-        return CAudioDeviceInfo(OutputDevice, QAudioDeviceInfo::defaultOutputDevice().deviceName());
+        return CAudioDeviceInfo(OutputDevice, QMediaDevices::defaultAudioOutput().description());
     }
 
     CAudioDeviceInfo CAudioDeviceInfo::getDefaultInputDevice()
     {
-        return CAudioDeviceInfo(InputDevice, QAudioDeviceInfo::defaultInputDevice().deviceName());
+        return CAudioDeviceInfo(InputDevice, QMediaDevices::defaultAudioInput().description());
     }
 
     QVariant CAudioDeviceInfo::propertyByIndex(CPropertyIndexRef index) const

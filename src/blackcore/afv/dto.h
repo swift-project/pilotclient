@@ -168,7 +168,7 @@ namespace BlackCore::Afv
         static StationDto fromJson(const QJsonObject &json)
         {
             StationDto dto;
-            dto.id = json.value("id").toString();
+            dto.id = QUuid(json.value("id").toString());
             dto.name = json.value("name").toString();
             dto.frequencyHz = static_cast<quint32>(json.value("frequency").toInt());
             dto.frequencyAliasHz = static_cast<quint32>(json.value("frequencyAlias").toInt());

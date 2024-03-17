@@ -60,10 +60,10 @@ namespace BlackMisc::PhysicalQuantities
 
         if (ts.contains(":") && (ts.length() == 8 || ts.length() == 5))
         {
-            const int hour = ts.midRef(0, 2).toInt();
-            const int minute = ts.midRef(3, 2).toInt();
+            const int hour = QStringView { ts }.mid(0, 2).toInt();
+            const int minute = QStringView { ts }.mid(3, 2).toInt();
             int second = 0;
-            if (ts.length() == 8) second = ts.midRef(6, 2).toInt();
+            if (ts.length() == 8) second = QStringView { ts }.mid(6, 2).toInt();
             (*this) = CTime(hour, minute, second);
 
             // fix sign if required

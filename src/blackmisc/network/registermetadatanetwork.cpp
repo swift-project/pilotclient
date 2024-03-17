@@ -41,9 +41,7 @@ namespace BlackMisc
             CConnectionStatus::registerMetadata();
             CClient::registerMetadata();
             qDBusRegisterMetaType<BlackMisc::Network::CClient::Capability>();
-            qRegisterMetaTypeStreamOperators<BlackMisc::Network::CClient::Capability>();
             qDBusRegisterMetaType<BlackMisc::Network::CClient::Capabilities>();
-            qRegisterMetaTypeStreamOperators<BlackMisc::Network::CClient::Capabilities>();
             CClientList::registerMetadata();
             CEcosystem::registerMetadata();
             CEcosystemList::registerMetadata();

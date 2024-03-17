@@ -65,13 +65,10 @@ namespace BlackMisc
     {
         qRegisterMetaType<BlackMisc::CSequence<CPlatform>>();
         qDBusRegisterMetaType<BlackMisc::CSequence<CPlatform>>();
-        qRegisterMetaTypeStreamOperators<BlackMisc::CSequence<CPlatform>>();
         qRegisterMetaType<BlackMisc::CCollection<CPlatform>>();
         qDBusRegisterMetaType<BlackMisc::CCollection<CPlatform>>();
-        qRegisterMetaTypeStreamOperators<BlackMisc::CCollection<CPlatform>>();
         qRegisterMetaType<CPlatformSet>();
         qDBusRegisterMetaType<CPlatformSet>();
-        qRegisterMetaTypeStreamOperators<CPlatformSet>();
         registerMetaValueType<CPlatformSet>();
     }
 } // namespace

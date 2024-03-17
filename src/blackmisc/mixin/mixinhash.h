@@ -46,27 +46,27 @@ namespace BlackMisc
         {
         public:
             //! qHash overload, needed for storing value in a QSet.
-            friend uint qHash(const Derived &value, uint seed = 0) // clazy:exclude=qhash-namespace
+            friend size_t qHash(const Derived &value, size_t seed = 0) // clazy:exclude=qhash-namespace
             {
                 return ::qHash(hashImpl(value), seed);
             }
 
         private:
-            static uint hashImpl(const Derived &value);
+            static size_t hashImpl(const Derived &value);
 
             template <typename T>
-            static uint baseHash(const T *base)
+            static size_t baseHash(const T *base)
             {
                 return qHash(*base);
             }
-            static uint baseHash(const void *);
-            static uint baseHash(const CEmpty *);
+            static size_t baseHash(const void *);
+            static size_t baseHash(const CEmpty *);
         };
 
         template <class Derived>
-        uint HashByMetaClass<Derived>::hashImpl(const Derived &value)
+        size_t HashByMetaClass<Derived>::hashImpl(const Derived &value)
         {
-            uint hash = baseHash(static_cast<const TBaseOfT<Derived> *>(&value));
+            size_t hash = baseHash(static_cast<const TBaseOfT<Derived> *>(&value));
             introspect<Derived>().forEachMember([&](auto member) {
                 if constexpr (!decltype(member)::has(MetaFlags<DisabledForHashing>()))
                 {
@@ -77,13 +77,13 @@ namespace BlackMisc
         }
 
         template <class Derived>
-        uint HashByMetaClass<Derived>::baseHash(const void *)
+        size_t HashByMetaClass<Derived>::baseHash(const void *)
         {
             return 0;
         }
 
         template <class Derived>
-        uint HashByMetaClass<Derived>::baseHash(const CEmpty *)
+        size_t HashByMetaClass<Derived>::baseHash(const CEmpty *)
         {
             return 0;
         }

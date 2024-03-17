@@ -24,7 +24,6 @@ namespace BlackMisc
             // ENUMs
             qDBusRegisterMetaType<CNotificationSounds::NotificationFlag>();
             qDBusRegisterMetaType<CAudioDeviceInfo::DeviceType>();
-            qRegisterMetaTypeStreamOperators<CNotificationSounds::NotificationFlag>();
         }
     }
 

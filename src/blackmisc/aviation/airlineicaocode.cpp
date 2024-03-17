@@ -511,7 +511,7 @@ namespace BlackMisc::Aviation
             bool ok = fn.size() > 5;
             if (!ok) { continue; }
             BLACK_VERIFY_X(ok, Q_FUNC_INFO, "wrong file name");
-            const int id = fn.leftRef(5).toInt(&ok);
+            const int id = QStringView { fn }.left(5).toInt(&ok);
             BLACK_VERIFY_X(ok, Q_FUNC_INFO, "wrong id format");
             if (!ok) { continue; }
             ids.insert(id);

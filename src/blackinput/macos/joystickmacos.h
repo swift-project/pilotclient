@@ -41,11 +41,6 @@ namespace BlackInput
         void buttonChanged(const BlackMisc::Input::CJoystickButton &joystickButton, bool isPressed);
 
     private:
-        friend bool operator==(const CJoystickDevice &lhs, const CJoystickDevice &rhs);
-
-        //! Poll the device buttons
-        void pollDeviceState();
-
         void processButtonEvent(IOHIDValueRef value);
 
         static void valueCallback(void *context, IOReturn result, void *sender, IOHIDValueRef value);

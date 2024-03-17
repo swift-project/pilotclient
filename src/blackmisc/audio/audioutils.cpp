@@ -5,7 +5,7 @@
 #include "blackmisc/audio/audioutils.h"
 
 #include <QProcess>
-#include <QAudioDeviceInfo>
+#include <QMediaDevices>
 
 using namespace BlackConfig;
 
@@ -23,8 +23,9 @@ namespace BlackMisc::Audio
 
         // force init of device lists
         // see https://discordapp.com/channels/539048679160676382/539925070550794240/676418182038421534
-        QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
-        QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
+        // TODO Is this still required with Qt 6?
+        QMediaDevices::audioInputs();
+        QMediaDevices::audioOutputs();
     }
 
 } // ns

@@ -26,9 +26,22 @@ namespace BlackCore::Afv::Audio
         this->setObjectName(on);
     }
 
+#ifdef Q_OS_WIN
+    qint64 CAudioOutputBuffer::bytesAvailable() const
+    {
+        // Workaround to mimic the pre-Qt6 behavior.
+        // With Qt6, the QAudioSink on Windows uses the bytesAvailable function to trigger
+        // a call to readData() only when data is available. Other platforms still use a
+        // pull procedure that automatically calls readData() afer a specific period. Until
+        // a proper solution for the bytesAvailable() is implemented, this uses a fixed number.
+        // readData() will handle it itself if actually no data is available.
+        return 3840 + QIODevice::bytesAvailable();
+    }
+#endif
+
     qint64 CAudioOutputBuffer::readData(char *data, qint64 maxlen)
     {
-        const int sampleBytes = m_outputFormat.sampleSize() / 8;
+        const int sampleBytes = m_outputFormat.bytesPerSample();
         const int channelCount = m_outputFormat.channelCount();
         const qint64 count = maxlen / (sampleBytes * channelCount);
         QVector<float> buffer;
@@ -92,16 +105,14 @@ namespace BlackCore::Afv::Audio
         QAudioFormat outputFormat;
         outputFormat.setSampleRate(48000);
         outputFormat.setChannelCount(1);
-        outputFormat.setSampleSize(32);
-        outputFormat.setSampleType(QAudioFormat::Float);
-        outputFormat.setByteOrder(QAudioFormat::LittleEndian);
-        outputFormat.setCodec("audio/pcm");
+        outputFormat.setSampleFormat(QAudioFormat::Float);
+        static_assert(Q_BYTE_ORDER == Q_LITTLE_ENDIAN);
 
         const QString format = toQString(outputFormat);
-        const QAudioDeviceInfo selectedDevice = getLowestLatencyDevice(outputDevice, outputFormat);
-        CLogMessage(this).info(u"Starting: '%1' with: %2") << selectedDevice.deviceName() << format;
+        const QAudioDevice selectedDevice = getLowestLatencyDevice(outputDevice, outputFormat);
+        CLogMessage(this).info(u"Starting: '%1' with: %2") << selectedDevice.description() << format;
 
-        m_audioOutput.reset(new QAudioOutput(selectedDevice, outputFormat));
+        m_audioOutput.reset(new QAudioSink(selectedDevice, outputFormat));
         m_audioOutputBuffer->open(QIODevice::ReadWrite | QIODevice::Unbuffered);
         m_audioOutputBuffer->setAudioFormat(outputFormat);
         m_audioOutput->start(m_audioOutputBuffer);

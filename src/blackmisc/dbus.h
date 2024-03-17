@@ -77,29 +77,6 @@ const QDBusArgument &operator>>(const QDBusArgument &arg, QFlags<T> &value)
     return arg;
 }
 
-/*!
- * Operator for streaming pairs to QDBusArgument.
- */
-template <class A, class B>
-QDBusArgument &operator<<(QDBusArgument &arg, const std::pair<A, B> &pair)
-{
-    arg.beginStructure();
-    arg << pair.first << pair.second;
-    arg.endStructure();
-    return arg;
-}
-
-/*!
- * Operator for streaming pairs from QDBusArgument.
- */
-template <class A, class B>
-const QDBusArgument &operator>>(const QDBusArgument &arg, std::pair<A, B> &pair)
-{
-    arg.beginStructure();
-    arg >> pair.first >> pair.second;
-    arg.endStructure();
-    return arg;
-}
 // *INDENT-ON*
 
 //! Windows: prevents unloading of QtDBus shared library until the process is terminated.

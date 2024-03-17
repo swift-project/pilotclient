@@ -32,7 +32,7 @@ namespace BlackSound::SampleProvider
         m_data->samples.clear();
         if (wavFile.open(m_data->fileName))
         {
-            if (wavFile.fileFormat().sampleType() == QAudioFormat::Float)
+            if (wavFile.fileFormat().sampleFormat() == QAudioFormat::Float)
             {
                 // Not implemented
                 // m_samples = convertFloatBytesTo16BitPCM(wavFile.audioData());

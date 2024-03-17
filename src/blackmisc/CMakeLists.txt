@@ -200,7 +200,6 @@ add_library(misc SHARED
         crashinfo.h
         datacache.cpp
         datacache.h
-        datastream.h
         dbus.cpp
         dbus.h
         dbusserver.cpp
@@ -702,6 +701,7 @@ target_link_libraries(misc
             Qt::Network
             Qt::Multimedia
             externals_rapidjson # used by xswiftbussettingsqtfree.inc
+            Qt::Core5Compat # for QStringRef
         PRIVATE
             Qt::Xml
             SimpleCrypt

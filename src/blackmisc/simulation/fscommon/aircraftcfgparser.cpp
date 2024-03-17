@@ -430,13 +430,13 @@ namespace BlackMisc::Simulation::FsCommon
 
         // Remove inline comments starting with ;
         const int indexComment = line.indexOf(';');
-        QString content = line.leftRef(indexComment - 1).trimmed().toString();
+        QString content = QStringView { line }.left(indexComment - 1).trimmed().toString();
 
         const int index = line.indexOf('=');
         if (index < 0) { return {}; }
         if (line.length() < index + 1) { return {}; }
 
-        content = content.midRef(index + 1).trimmed().toString();
+        content = QStringView { content }.mid(index + 1).trimmed().toString();
 
         // fix "" strings, some are malformed and just contain " at beginning, not at the end
         if (hasBalancedQuotes(content, '"'))

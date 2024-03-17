@@ -10,7 +10,7 @@
 #include "blackmisc/audio/audiodeviceinfo.h"
 
 #include <QObject>
-#include <QAudioOutput>
+#include <QAudioSink>
 
 namespace BlackCore::Afv::Audio
 {
@@ -39,6 +39,11 @@ namespace BlackCore::Afv::Audio
         void outputVolumeStream(const OutputVolumeStreamArgs &args);
 
     protected:
+#ifdef Q_OS_WIN
+        //! \copydoc QIODevice::bytesAvailable
+        qint64 bytesAvailable() const override;
+#endif
+
         //! \copydoc QIODevice::readData
         virtual qint64 readData(char *data, qint64 maxlen) override;
 
@@ -95,7 +100,7 @@ namespace BlackCore::Afv::Audio
     private:
         bool m_started = false;
         BlackMisc::Audio::CAudioDeviceInfo m_device;
-        QScopedPointer<QAudioOutput> m_audioOutput;
+        QScopedPointer<QAudioSink> m_audioOutput;
         CAudioOutputBuffer *m_audioOutputBuffer = nullptr;
     };
 } // ns

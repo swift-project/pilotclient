@@ -54,7 +54,7 @@ namespace BlackGui::Settings
         s.append(boolToTrueFalse(this->m_frameless));
         s.append(separator);
         s.append("columns: ");
-        s.append(this->m_columns);
+        s.append(QString::number(this->m_columns));
         return s;
     }
 
