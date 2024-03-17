@@ -33,7 +33,7 @@ namespace BlackMisc
             //! \name Interface implementations
             //! @{
             virtual bool isConnected() const override;
-            virtual std::pair<QSharedPointer<IDuplex>, QFuture<void>> getDuplex(const CIdentifier &) override;
+            virtual std::pair<QSharedPointer<IDuplex>, QFuture<bool>> getDuplex(const CIdentifier &) override;
             //! @}
 
         public slots:
@@ -50,7 +50,7 @@ namespace BlackMisc
         protected:
             //! \name Interface implementations
             //! @{
-            virtual QFuture<void> openDuplexAsync(const CIdentifier &client) override;
+            virtual QFuture<bool> openDuplexAsync(const CIdentifier &client) override;
             //! @}
 
         private:
