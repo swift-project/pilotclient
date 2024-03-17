@@ -278,7 +278,7 @@ namespace BlackGui
     {
         // init style sheets with this widget
         QStyleOption opt;
-        opt.init(this);
+        opt.initFrom(this);
 
         // paint
         QPainter painter(this);

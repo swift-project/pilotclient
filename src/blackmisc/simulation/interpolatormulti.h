@@ -61,7 +61,7 @@ namespace BlackMisc::Simulation
             CInterpolationLogger *logger = nullptr);
 
         //! Has interpolator initialized?
-        bool hasInterpolator() const { return m_interpolator; }
+        bool hasInterpolator() const { return !m_interpolator.isNull(); }
 
         //! Interpolator
         CInterpolatorMulti *interpolator() const { return m_interpolator.data(); }

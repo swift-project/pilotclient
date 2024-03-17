@@ -99,7 +99,7 @@ namespace BlackGui::Components
         virtual void paintEvent(QPaintEvent *event) override;
 
         //! \copydoc QDialog::enterEvent
-        virtual void enterEvent(QEvent *event) override;
+        virtual void enterEvent(QEnterEvent *event) override;
         //! @}
 
     private:

@@ -6,7 +6,6 @@
 #include "blackmisc/swiftdirectories.h"
 #include "blacksound/sampleprovider/samples.h"
 #include <QTimer>
-#include <QSound>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;
@@ -31,12 +30,6 @@ namespace BlackSound
                 m_playingEffect = effect;
                 effect->setVolume(v); // 0..1
                 effect->play();
-
-                /** for testing
-                QString fn = effect->source().toLocalFile();
-                QSound s(fn);
-                s.play();
-                **/
 
                 // used for too long or hanging sounds
                 QPointer<CNotificationPlayer> myself(this);

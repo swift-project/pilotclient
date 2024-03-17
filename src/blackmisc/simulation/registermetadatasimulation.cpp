@@ -92,16 +92,6 @@ namespace BlackMisc::Simulation
         qDBusRegisterMetaType<MatchingLog>();
         qDBusRegisterMetaType<ReverseLookupLoggingFlag>();
         qDBusRegisterMetaType<ReverseLookupLogging>();
-
-        qRegisterMetaTypeStreamOperators<CSimulatorSettings::CGSource>();
-        qRegisterMetaTypeStreamOperators<CInterpolationAndRenderingSetupBase::InterpolatorMode>();
-        qRegisterMetaTypeStreamOperators<CAircraftMatcherSetup::MatchingAlgorithm>();
-        qRegisterMetaTypeStreamOperators<CAircraftMatcherSetup::MatchingModeFlag>();
-        qRegisterMetaTypeStreamOperators<MatchingLogFlag>();
-        qRegisterMetaTypeStreamOperators<MatchingLog>();
-        qRegisterMetaTypeStreamOperators<CAircraftMatcherSetup::PickSimilarStrategy>();
-        qRegisterMetaTypeStreamOperators<ReverseLookupLoggingFlag>();
-        qRegisterMetaTypeStreamOperators<ReverseLookupLogging>();
     }
 
 } // ns

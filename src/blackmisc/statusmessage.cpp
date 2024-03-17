@@ -30,7 +30,7 @@ namespace BlackMisc
             QString &temp = t_tempBuffer.localData();
             temp.resize(0); // unlike clear(), resize(0) doesn't release the capacity if there are no implicitly shared copies
 
-            quint64 unusedArgs = (1ULL << std::min(63, args.size())) - 1;
+            quint64 unusedArgs = (1ULL << std::min(qsizetype(63), args.size())) - 1;
             for (auto it = format.begin();;)
             {
                 const auto pc = std::find(it, format.end(), u'%');
@@ -321,7 +321,6 @@ namespace BlackMisc
         CValueObject<CStatusMessage>::registerMetadata();
         qRegisterMetaType<CStatusMessage::StatusSeverity>();
         qDBusRegisterMetaType<CStatusMessage::StatusSeverity>();
-        qRegisterMetaTypeStreamOperators<CStatusMessage::StatusSeverity>();
     }
 
     CStatusMessage::StatusSeverity CStatusMessage::stringToSeverity(const QString &severity)

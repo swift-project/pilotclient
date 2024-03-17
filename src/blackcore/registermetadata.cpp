@@ -40,9 +40,6 @@ namespace BlackCore
         qDBusRegisterMetaType<BlackCore::ISimulator::SimulatorStatusFlag>();
         qDBusRegisterMetaType<BlackCore::ISimulator::SimulatorStatus>();
 
-        qRegisterMetaTypeStreamOperators<Context::CSettingsDictionary>();
-        qRegisterMetaTypeStreamOperators<BlackMisc::Network::CLoginMode>();
-
         Db::CDatabaseReaderConfig::registerMetadata();
         Db::CDatabaseReaderConfigList::registerMetadata();
         Data::CGlobalSetup::registerMetadata();

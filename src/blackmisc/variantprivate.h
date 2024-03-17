@@ -384,7 +384,6 @@ namespace BlackMisc
             {
                 qRegisterMetaType<T>();
                 qDBusRegisterMetaType<T>();
-                qRegisterMetaTypeStreamOperators<T>();
                 registerMetaValueType<T>();
                 maybeRegisterMetaList();
             }

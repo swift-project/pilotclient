@@ -46,7 +46,7 @@ namespace BlackMisc
         m_logFile.setFileName(getLogFilePath());
         m_logFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
         m_stream.setDevice(&m_logFile);
-        m_stream.setCodec("UTF-8");
+        m_stream.setEncoding(QStringConverter::Utf8);
         writeHeaderToFile();
     }
 
