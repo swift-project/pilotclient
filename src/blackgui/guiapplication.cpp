@@ -29,7 +29,6 @@
 #include <QAction>
 #include <QCloseEvent>
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QCommandLineParser>
 #include <QDesktopServices>
 #include <QDir>
@@ -305,9 +304,6 @@ namespace BlackGui
 
         sf = cleanNumber(sf);
 
-        QApplication::setAttribute(Qt::AA_EnableHighDpiScaling); // DPI support
-        QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps); // HiDPI pixmaps
-
         // qputenv("QT_ENABLE_HIGHDPI_SCALING", "1");
         QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::Floor);
 
@@ -323,9 +319,15 @@ namespace BlackGui
     QScreen *CGuiApplication::currentScreen()
     {
         const QWidget *w = CGuiApplication::mainApplicationWidget();
-        const int s = QApplication::desktop()->screenNumber(w);
-        if (s >= 0 && s < QGuiApplication::screens().size()) { return QGuiApplication::screens().at(s); }
-        return QGuiApplication::primaryScreen();
+        if (!w) return QGuiApplication::primaryScreen();
+
+        const QWindow *win = w->windowHandle();
+
+        if (!win) return QGuiApplication::primaryScreen();
+
+        QScreen *screen = win->screen();
+
+        return screen ? screen : QGuiApplication::primaryScreen();
     }
 
     QRect CGuiApplication::currentScreenGeometry()
@@ -352,7 +354,7 @@ namespace BlackGui
 
     int CGuiApplication::hashForStateSettingsSchema(const QMainWindow *window)
     {
-        unsigned int hash = 0;
+        size_t hash = 0;
         for (auto obj : window->findChildren<QToolBar *>(QString(), Qt::FindDirectChildrenOnly))
         {
             hash ^= qHash(obj->objectName());

@@ -123,11 +123,14 @@ namespace BlackMisc
         int n;
         bool operator<(const CNotHashable &other) const { return n < other.n; }
         QString toQString(bool = false) const { return {}; }
+        bool operator==(const CNotHashable &other) const { return n == other.n; }
     };
     inline QJsonArray &operator<<(QJsonArray &a, const CNotHashable &) { return a; }
     inline const QJsonValueRef &operator>>(const QJsonValueRef &v, CNotHashable &) { return v; }
     inline QDBusArgument &operator<<(QDBusArgument &a, const CNotHashable &) { return a; }
     inline const QDBusArgument &operator>>(const QDBusArgument &a, const CNotHashable &) { return a; }
+    inline QDataStream &operator<<(QDataStream &a, const CNotHashable &) { return a; }
+    inline QDataStream &operator>>(QDataStream &a, const CNotHashable &) { return a; }
     //! \endcond
 
 } // namespace

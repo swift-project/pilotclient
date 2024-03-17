@@ -140,7 +140,6 @@ namespace BlackMisc
     {
         MetaType::registerMetadata();
         qDBusRegisterMetaType<value_type>();
-        qRegisterMetaTypeStreamOperators<value_type>();
     }
 
     ////////////////////////////////

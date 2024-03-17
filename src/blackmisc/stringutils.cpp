@@ -382,9 +382,9 @@ namespace BlackMisc
 
         // yyyyMMddHHmmsszzz
         // 01234567890123456
-        int year(dateTimeString.leftRef(4).toInt());
-        int month(dateTimeString.midRef(4, 2).toInt());
-        int day(dateTimeString.midRef(6, 2).toInt());
+        int year(QStringView { dateTimeString }.left(4).toInt());
+        int month(QStringView { dateTimeString }.mid(4, 2).toInt());
+        int day(QStringView { dateTimeString }.mid(6, 2).toInt());
         QDate date;
         date.setDate(year, month, day);
         QDateTime dt;
@@ -393,10 +393,10 @@ namespace BlackMisc
         if (dateTimeString.length() < 12) { return dt; }
 
         QTime t;
-        const int hour(dateTimeString.midRef(8, 2).toInt());
-        const int minute(dateTimeString.midRef(10, 2).toInt());
-        const int second(dateTimeString.length() < 14 ? 0 : dateTimeString.midRef(12, 2).toInt());
-        const int ms(dateTimeString.length() < 17 ? 0 : dateTimeString.rightRef(3).toInt());
+        const int hour(QStringView { dateTimeString }.mid(8, 2).toInt());
+        const int minute(QStringView { dateTimeString }.mid(10, 2).toInt());
+        const int second(dateTimeString.length() < 14 ? 0 : QStringView { dateTimeString }.mid(12, 2).toInt());
+        const int ms(dateTimeString.length() < 17 ? 0 : QStringView { dateTimeString }.right(3).toInt());
 
         t.setHMS(hour, minute, second, ms);
         dt.setTime(t);

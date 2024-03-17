@@ -5,7 +5,7 @@
 #include "blackmisc/stringutils.h"
 
 #include <QString>
-#include <QAudioDeviceInfo>
+#include <QMediaDevices>
 #include <algorithm>
 
 BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc::Audio, CAudioDeviceInfo, CAudioDeviceInfoList)
@@ -147,9 +147,9 @@ namespace BlackMisc::Audio
     CAudioDeviceInfoList CAudioDeviceInfoList::allInputDevices()
     {
         CAudioDeviceInfoList devices;
-        for (const QAudioDeviceInfo &inputDevice : allQtInputDevices())
+        for (const QAudioDevice &inputDevice : allQtInputDevices())
         {
-            const CAudioDeviceInfo d(CAudioDeviceInfo::InputDevice, inputDevice.deviceName());
+            const CAudioDeviceInfo d(CAudioDeviceInfo::InputDevice, inputDevice.description());
             if (!devices.contains(d)) { devices.push_back(d); }
         }
         return devices;
@@ -158,9 +158,9 @@ namespace BlackMisc::Audio
     CAudioDeviceInfoList CAudioDeviceInfoList::allOutputDevices()
     {
         CAudioDeviceInfoList devices;
-        for (const QAudioDeviceInfo &outputDevice : allQtOutputDevices())
+        for (const QAudioDevice &outputDevice : allQtOutputDevices())
         {
-            const CAudioDeviceInfo d(CAudioDeviceInfo::OutputDevice, outputDevice.deviceName());
+            const CAudioDeviceInfo d(CAudioDeviceInfo::OutputDevice, outputDevice.description());
             if (!devices.contains(d)) { devices.push_back(d); }
         }
         return devices;
@@ -194,36 +194,36 @@ namespace BlackMisc::Audio
         return i;
     }
 
-    QList<QAudioDeviceInfo> CAudioDeviceInfoList::allQtInputDevices()
+    QList<QAudioDevice> CAudioDeviceInfoList::allQtInputDevices()
     {
-        const QList<QAudioDeviceInfo> devices = QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
+        const QList<QAudioDevice> devices = QMediaDevices::audioInputs();
         return devices;
     }
 
-    QList<QAudioDeviceInfo> CAudioDeviceInfoList::allQtOutputDevices()
+    QList<QAudioDevice> CAudioDeviceInfoList::allQtOutputDevices()
     {
-        const QList<QAudioDeviceInfo> devices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
+        const QList<QAudioDevice> devices = QMediaDevices::audioOutputs();
         return devices;
     }
 
-    QAudioDeviceInfo CAudioDeviceInfoList::defaultQtInputDevice()
+    QAudioDevice CAudioDeviceInfoList::defaultQtInputDevice()
     {
-        return QAudioDeviceInfo::defaultInputDevice();
+        return QMediaDevices::defaultAudioInput();
     }
 
-    QAudioDeviceInfo CAudioDeviceInfoList::defaultQtOutputDevice()
+    QAudioDevice CAudioDeviceInfoList::defaultQtOutputDevice()
     {
-        return QAudioDeviceInfo::defaultOutputDevice();
+        return QMediaDevices::defaultAudioOutput();
     }
 
     CAudioDeviceInfo CAudioDeviceInfoList::defaultInputDevice()
     {
-        return CAudioDeviceInfo(CAudioDeviceInfo::InputDevice, defaultQtInputDevice().deviceName());
+        return CAudioDeviceInfo(CAudioDeviceInfo::InputDevice, defaultQtInputDevice().description());
     }
 
     CAudioDeviceInfo CAudioDeviceInfoList::defaultOutputDevice()
     {
-        return CAudioDeviceInfo(CAudioDeviceInfo::OutputDevice, defaultQtOutputDevice().deviceName());
+        return CAudioDeviceInfo(CAudioDeviceInfo::OutputDevice, defaultQtOutputDevice().description());
     }
 
 } // namespace

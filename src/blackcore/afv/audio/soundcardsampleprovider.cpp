@@ -19,10 +19,8 @@ namespace BlackCore::Afv::Audio
 
         m_waveFormat.setSampleRate(sampleRate);
         m_waveFormat.setChannelCount(1);
-        m_waveFormat.setSampleSize(16);
-        m_waveFormat.setSampleType(QAudioFormat::SignedInt);
-        m_waveFormat.setByteOrder(QAudioFormat::LittleEndian);
-        m_waveFormat.setCodec("audio/pcm");
+        m_waveFormat.setSampleFormat(QAudioFormat::Int16);
+        static_assert(Q_BYTE_ORDER == Q_LITTLE_ENDIAN);
 
         m_mixer = new CMixingSampleProvider(this);
         m_receiverIDs = transceiverIDs;
@@ -148,7 +146,7 @@ namespace BlackCore::Afv::Audio
                 return p->getId() == radioTransceiver.id;
             });
 
-            if (it)
+            if (it != m_receiverInputs.end())
             {
                 (*it)->setFrequency(radioTransceiver.frequencyHz);
             }

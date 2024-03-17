@@ -366,7 +366,7 @@ namespace BlackMisc
 
     QFileInfo CFileUtils::findLastModified(const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories)
     {
-        if (isExcludedDirectory(dir, excludeDirectories)) { return QString(); }
+        if (isExcludedDirectory(dir, excludeDirectories)) { return {}; }
         const QFileInfoList files = enumerateFiles(dir, recursive, nameFilters, excludeDirectories);
         if (files.isEmpty()) { return {}; }
 
@@ -378,7 +378,7 @@ namespace BlackMisc
 
     QFileInfo CFileUtils::findLastCreated(const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories)
     {
-        if (isExcludedDirectory(dir, excludeDirectories)) { return QString(); }
+        if (isExcludedDirectory(dir, excludeDirectories)) { return {}; }
         const QFileInfoList files = enumerateFiles(dir, recursive, nameFilters, excludeDirectories);
         if (files.isEmpty()) { return {}; }
 

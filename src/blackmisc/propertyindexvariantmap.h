@@ -117,10 +117,10 @@ namespace BlackMisc
         const QMap<CPropertyIndex, CVariant> &map() const { return m_values; }
 
         //! Hash value
-        uint getValueHash() const;
+        size_t getValueHash() const;
 
         //! \copydoc CValueObject::qHash
-        friend uint qHash(const CPropertyIndexVariantMap &vm) { return vm.getValueHash(); }
+        friend size_t qHash(const CPropertyIndexVariantMap &vm) { return vm.getValueHash(); }
 
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;

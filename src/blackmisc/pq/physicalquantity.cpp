@@ -423,7 +423,7 @@ namespace BlackMisc::PhysicalQuantities
     }
 
     template <class MU, class PQ>
-    uint CPhysicalQuantity<MU, PQ>::getValueHash() const
+    size_t CPhysicalQuantity<MU, PQ>::getValueHash() const
     {
         // there is no double qHash
         // also unit and rounding has to be considered

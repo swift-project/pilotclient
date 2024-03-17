@@ -121,7 +121,7 @@ namespace BlackGui::Components
             }
         }
 
-        const uint hash = qHash(html);
+        const size_t hash = qHash(html);
         if (hash == m_htmlHash) { return; } // avoid to always scroll to the end when there is no update
         m_htmlHash = hash;
         m_text.setHtml(html);

@@ -56,16 +56,14 @@ namespace BlackSound
         QAudioFormat format;
         format.setSampleRate(44100);
         format.setChannelCount(1);
-        format.setSampleSize(16); // 8 or 16 works
-        format.setCodec("audio/pcm");
-        format.setByteOrder(QAudioFormat::LittleEndian);
-        format.setSampleType(QAudioFormat::SignedInt);
+        format.setSampleFormat(QAudioFormat::Int16);
+        static_assert(Q_BYTE_ORDER == Q_LITTLE_ENDIAN);
 
         // find best device
-        const QAudioDeviceInfo selectedDevice = getHighestCompatibleOutputDevice(m_deviceInfo, format);
+        const QAudioDevice selectedDevice = getHighestCompatibleOutputDevice(m_deviceInfo, format);
         m_audioFormat = format;
-        m_audioOutput = new QAudioOutput(selectedDevice, m_audioFormat, this);
-        connect(m_audioOutput, &QAudioOutput::stateChanged, this, &CThreadedTonePairPlayer::handleStateChanged);
+        m_audioOutput = new QAudioSink(selectedDevice, m_audioFormat, this);
+        connect(m_audioOutput, &QAudioSink::stateChanged, this, &CThreadedTonePairPlayer::handleStateChanged);
     }
 
     void CThreadedTonePairPlayer::beforeQuit() noexcept
@@ -128,8 +126,8 @@ namespace BlackSound
 
     QByteArray CThreadedTonePairPlayer::generateAudioFromTonePairs(const CTonePair &tonePair)
     {
-        const int bytesPerSample = m_audioFormat.sampleSize() / 8;
-        const int bytesForAllChannels = m_audioFormat.channelCount() * bytesPerSample;
+        const int bytesPerSample = m_audioFormat.bytesPerSample();
+        const int bytesForAllChannels = m_audioFormat.bytesPerFrame();
 
         QByteArray bufferData;
         qint64 bytesPerTonePair = m_audioFormat.sampleRate() * bytesForAllChannels * tonePair.getDurationMs() / 1000;
@@ -196,11 +194,14 @@ namespace BlackSound
 
     void CThreadedTonePairPlayer::writeAmplitudeToBuffer(double amplitude, unsigned char *bufferPointer)
     {
-        Q_ASSERT(this->m_audioFormat.sampleSize() == 16);
-        Q_ASSERT(this->m_audioFormat.sampleType() == QAudioFormat::SignedInt);
-        Q_ASSERT(this->m_audioFormat.byteOrder() == QAudioFormat::LittleEndian);
-
+        Q_ASSERT(this->m_audioFormat.sampleFormat() == QAudioFormat::Int16);
+        static_assert(Q_BYTE_ORDER == Q_LITTLE_ENDIAN);
         const qint16 value = static_cast<qint16>(amplitude * 32767);
+
+#if Q_BYTE_ORDER == Q_BIG_ENDIAN
+        qToBigEndian<qint16>(value, bufferPointer);
+#else
         qToLittleEndian<qint16>(value, bufferPointer);
+#endif
     }
 }

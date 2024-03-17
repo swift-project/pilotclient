@@ -19,7 +19,6 @@
 
 class QMouseEvent;
 class QPaintEvent;
-class QStringList;
 class QSvgRenderer;
 
 namespace BlackGui

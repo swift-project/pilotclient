@@ -7,7 +7,9 @@
 
 #include <QStringBuilder>
 #include <QAudioInput>
-#include <QAudioOutput>
+#include <QAudioSink>
+#include <QAudioSource>
+#include <QMediaDevices>
 
 using namespace BlackConfig;
 using namespace BlackMisc::Audio;
@@ -73,67 +75,52 @@ namespace BlackSound
         return output;
     }
 
-    QAudioDeviceInfo getLowestLatencyDevice(const CAudioDeviceInfo &device, QAudioFormat &format)
+    QAudioDevice getLowestLatencyDevice(const CAudioDeviceInfo &device, QAudioFormat &format)
     {
         if (device.isDefault() || !device.isValid())
         {
-            const QAudioDeviceInfo defDevice = device.isInputDevice() ? QAudioDeviceInfo::defaultInputDevice() : QAudioDeviceInfo::defaultOutputDevice();
-            if (!defDevice.isFormatSupported(format))
-            {
-                format = defDevice.nearestFormat(format);
-            }
+            const QAudioDevice defDevice = device.isInputDevice() ? QMediaDevices::defaultAudioInput() : QMediaDevices::defaultAudioOutput();
+            Q_ASSERT_X(defDevice.isFormatSupported(format), Q_FUNC_INFO, "Device does not support format");
             return defDevice;
         }
 
-        const QList<QAudioDeviceInfo> allQtDevices =
+        const QList<QAudioDevice> allQtDevices =
             device.isInputDevice() ?
                 CAudioDeviceInfoList::allQtInputDevices() :
                 CAudioDeviceInfoList::allQtOutputDevices();
 
         // Find the one with lowest latency.
-        QList<QAudioDeviceInfo> supportedDevices;
-        for (const QAudioDeviceInfo &d : allQtDevices)
+        QList<QAudioDevice> supportedDevices;
+        for (const QAudioDevice &d : allQtDevices)
         {
-            if (d.deviceName() == device.getName())
+            if (d.description() == device.getName() && d.isFormatSupported(format))
             {
-                if (!d.isFormatSupported(format))
-                {
-                    // Check whether the nearest format is acceptable for our needs
-                    const QAudioFormat nearestFormat = d.nearestFormat(format);
-                    if (nearestFormat.sampleRate() != format.sampleRate() ||
-                        nearestFormat.sampleSize() != format.sampleSize() ||
-                        nearestFormat.sampleType() != format.sampleType() ||
-                        nearestFormat.byteOrder() != format.byteOrder() ||
-                        nearestFormat.codec() != format.codec())
-                    {
-                        continue;
-                    }
-                }
                 supportedDevices.push_back(d);
             }
         }
 
         if (supportedDevices.isEmpty()) { return {}; }
 
-        QAudioDeviceInfo deviceWithLowestLatency = supportedDevices.at(0);
+        QAudioDevice deviceWithLowestLatency = supportedDevices.at(0);
+        deviceWithLowestLatency = device.isInputDevice() ? QMediaDevices::defaultAudioInput() : QMediaDevices::defaultAudioOutput();
 
         if (supportedDevices.size() > 1)
         {
-            QAudioFormat nearestFormat = format;
             int lowestBufferSize = std::numeric_limits<int>::max();
-            for (const QAudioDeviceInfo &d : supportedDevices)
+            for (const QAudioDevice &d : supportedDevices)
             {
+                if (!d.isFormatSupported(format)) continue;
                 int bufferSize = 0;
                 if (device.getType() == CAudioDeviceInfo::InputDevice)
                 {
-                    QAudioInput input(d, d.nearestFormat(format));
+                    QAudioSource input(d, format);
                     input.start();
                     input.stop();
                     bufferSize = input.bufferSize();
                 }
                 else
                 {
-                    QAudioOutput output(d, d.nearestFormat(format));
+                    QAudioSink output(d, format);
                     output.start();
                     output.stop();
                     bufferSize = output.bufferSize();
@@ -142,24 +129,22 @@ namespace BlackSound
                 if (bufferSize < lowestBufferSize)
                 {
                     deviceWithLowestLatency = d;
-                    nearestFormat = d.nearestFormat(format);
                     lowestBufferSize = bufferSize;
                 }
             }
-            format = nearestFormat;
         }
         return deviceWithLowestLatency;
     }
 
-    QAudioDeviceInfo getHighestCompatibleOutputDevice(const CAudioDeviceInfo &device, QAudioFormat &format)
+    QAudioDevice getHighestCompatibleOutputDevice(const CAudioDeviceInfo &device, QAudioFormat &format)
     {
         if (device.isDefault()) { return CAudioDeviceInfoList::defaultQtOutputDevice(); }
-        const QList<QAudioDeviceInfo> allQtDevices = CAudioDeviceInfoList::allQtOutputDevices();
+        const QList<QAudioDevice> allQtDevices = CAudioDeviceInfoList::allQtOutputDevices();
 
-        QList<QAudioDeviceInfo> supportedDevices;
-        for (const QAudioDeviceInfo &d : allQtDevices)
+        QList<QAudioDevice> supportedDevices;
+        for (const QAudioDevice &d : allQtDevices)
         {
-            if (d.deviceName() == device.getName())
+            if (d.description() == device.getName())
             {
                 // exact match, format supported
                 if (d.isFormatSupported(format)) { return d; }
@@ -171,53 +156,47 @@ namespace BlackSound
         if (supportedDevices.isEmpty())
         {
             format = QAudioFormat();
-            return QAudioDeviceInfo();
+            return {};
         }
 
         // here we could "search the best device", currently only first is taken
-        QAudioDeviceInfo usedDevice = supportedDevices.front();
-        if (!usedDevice.isFormatSupported(format))
-        {
-            format = usedDevice.nearestFormat(format);
-        }
+        QAudioDevice usedDevice = supportedDevices.front();
+        Q_ASSERT_X(usedDevice.isFormatSupported(format), Q_FUNC_INFO, "Device does not support format");
         return usedDevice;
     }
 
     QString toQString(const QAudioFormat &format)
     {
-        return QStringLiteral("Sample rate: %1 channels: %2 sample size: %3 codec: %4 order: %5 type: %6 bytes/frame: %7")
+        return QStringLiteral("Sample rate: %1 channels: %2 sample format: %3 bytes/frame: %4")
             .arg(format.sampleRate())
             .arg(format.channelCount())
-            .arg(format.sampleSize())
-            .arg(format.codec())
-            .arg(toQString(format.byteOrder()))
-            .arg(toQString(format.sampleType()))
+            .arg(format.sampleFormat())
             .arg(format.bytesPerFrame());
     }
 
-    const QString &toQString(QAudioFormat::Endian s)
+    const QString &toQString(QSysInfo::Endian s)
     {
         static const QString l("little");
         static const QString b("big");
         switch (s)
         {
-        case QAudioFormat::BigEndian: return b;
-        case QAudioFormat::LittleEndian: return l;
+        case QSysInfo::BigEndian: return b;
+        case QSysInfo::LittleEndian: return l;
         default: break;
         }
         static const QString u("??");
         return u;
     }
 
-    const QString &toQString(QAudioFormat::SampleType e)
+    const QString &toQString(QAudioFormat::SampleFormat e)
     {
-        static const QString s("signed int");
-        static const QString u("unsigned int");
+        static const QString s("signed int 16");
+        static const QString u("unsigned int 8");
         static const QString f("float");
         switch (e)
         {
-        case QAudioFormat::SignedInt: return s;
-        case QAudioFormat::UnSignedInt: return u;
+        case QAudioFormat::Int16: return s;
+        case QAudioFormat::UInt8: return u;
         case QAudioFormat::Float: return f;
         case QAudioFormat::Unknown:
         default: break;
@@ -240,7 +219,7 @@ namespace BlackSound
     void occupyAudioInputDevice()
     {
         if (!CBuildConfig::isRunningOnWindows10()) { return; }
-        static const QAudioInput input(QAudioDeviceInfo::defaultInputDevice());
+        static const QAudioInput input(QMediaDevices::defaultAudioInput());
     }
 
 } // ns

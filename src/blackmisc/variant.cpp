@@ -21,6 +21,7 @@
 #include <QTime>
 #include <Qt>
 #include <QtDebug>
+#include <QDataStream>
 
 namespace BlackMisc
 {
@@ -29,7 +30,7 @@ namespace BlackMisc
 
     Private::IValueObjectMetaInfo *Private::getValueObjectMetaInfo(int typeId)
     {
-        return getValueObjectMetaInfo(QVariant(typeId, nullptr));
+        return getValueObjectMetaInfo(QVariant(QMetaType(typeId), nullptr));
     }
 
     Private::IValueObjectMetaInfo *Private::getValueObjectMetaInfo(const QVariant &v)
@@ -49,7 +50,7 @@ namespace BlackMisc
         }
         if (userType() == qMetaTypeId_CVariantList)
         {
-            return QVariant::fromValue(QVector<CVariant>()).canConvert(typeId) || QVariant(typeId, nullptr).canConvert<QVariantList>();
+            return QVariant::fromValue(QVector<CVariant>()).canConvert(typeId) || QVariant(QMetaType(typeId), nullptr).canConvert<QVariantList>();
         }
         return false;
     }
@@ -167,9 +168,10 @@ namespace BlackMisc
                 return 0;
             }
         }
-        if (a.m_v < b.m_v) { return -1; }
-        if (a.m_v > b.m_v) { return 1; }
-        return 0;
+        const QPartialOrdering order = QVariant::compare(a.m_v, b.m_v);
+        if (order == QPartialOrdering::Less) { return -1; }
+        if (order == QPartialOrdering::Greater) { return 1; }
+        return 0; // for "Equivalent" and "Unordered"
     }
 
     QJsonObject CVariant::toJson() const
@@ -264,12 +266,12 @@ namespace BlackMisc
                 {
                     CJsonScope scope("value"); // tracker
                     Q_UNUSED(scope);
-                    m_v = QVariant(typeId, nullptr);
+                    m_v = QVariant(QMetaType(typeId), nullptr);
 
                     // this will call convertFromJson if there is no MemoizedJson
                     meta->convertFromMemoizedJson(value.toObject(), data(), true);
                 }
-                else if (QMetaType::hasRegisteredConverterFunction(qMetaTypeId<QString>(), typeId))
+                else if (QMetaType::hasRegisteredConverterFunction(QMetaType(qMetaTypeId<QString>()), QMetaType(typeId)))
                 {
                     m_v.setValue(value.toString());
                     if (!m_v.convert(typeId))
@@ -347,7 +349,7 @@ namespace BlackMisc
                 if (value.isUndefined()) { throw CJsonException("Missing 'value'"); }
 
                 CJsonScope scope("value");
-                m_v = QVariant(typeId, nullptr);
+                m_v = QVariant(QMetaType(typeId), nullptr);
                 meta->convertFromMemoizedJson(value.toObject(), data(), allowFallbackToJson);
             }
             catch (const Private::CVariantException &ex)
@@ -374,7 +376,7 @@ namespace BlackMisc
         return {};
     }
 
-    uint CVariant::getValueHash() const
+    size_t CVariant::getValueHash() const
     {
         switch (m_v.type())
         {
@@ -607,7 +609,7 @@ namespace BlackMisc
         }
         else
         {
-            QVariant valueVariant(localUserType, nullptr);
+            QVariant valueVariant(QMetaType(localUserType), nullptr);
             auto *meta = Private::getValueObjectMetaInfo(valueVariant);
             if (meta)
             {

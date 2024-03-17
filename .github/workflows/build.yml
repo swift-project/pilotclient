@@ -17,7 +17,7 @@ concurrency:
 env:
   do_vatsim_key: ${{ github.event_name == 'push' }}
   do_symbols:    ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-  qt_version:    5.15.2
+  qt_version:    6.7.1
   bitrock_version: qt-professional-23.11.0
   bitrock_url:     https://releases.installbuilder.com/installbuilder
   externals: swift-project/externals

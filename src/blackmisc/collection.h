@@ -280,15 +280,13 @@ namespace BlackMisc
 
         //! Remove the element pointed to by the given iterator.
         //! \return An iterator to the position of the next element after the one removed.
-        //! \fixme Relying on implementation detail of QMap to reinterpret_cast to the necessary iterator type.
         iterator erase(iterator pos)
         {
-            return m_impl.erase(const_cast<QMapNode<T, T> *&>(reinterpret_cast<const QMapNode<T, T> *&>(pos)));
+            return m_impl.erase(pos);
         }
 
         //! Remove the range of elements between two iterators.
         //! \return An iterator to the position of the next element after the one removed.
-        //! \fixme Relying on implementation detail of QMap to reinterpret_cast to the necessary iterator type.
         iterator erase(iterator it1, iterator it2)
         {
             while (it1 != it2) { it1 = erase(it1); }

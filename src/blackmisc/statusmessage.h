@@ -110,7 +110,7 @@ namespace BlackMisc
         friend int compare(const CStrongStringView &a, const CStrongStringView &b) { return a.m_view.compare(b.m_view); }
 
         //! Hash value.
-        friend uint qHash(const CStrongStringView &obj, uint seed = 0) { return ::qHash(obj.m_view, seed); }
+        friend size_t qHash(const CStrongStringView &obj, uint seed = 0) { return ::qHash(obj.m_view, seed); }
 
         //! @{
         //! DBus marshalling.

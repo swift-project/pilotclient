@@ -21,13 +21,10 @@ namespace BlackMisc
     {
         qRegisterMetaType<BlackMisc::CSequence<CIcon>>();
         qDBusRegisterMetaType<BlackMisc::CSequence<CIcon>>();
-        qRegisterMetaTypeStreamOperators<BlackMisc::CSequence<CIcon>>();
         qRegisterMetaType<BlackMisc::CCollection<CIcon>>();
         qDBusRegisterMetaType<BlackMisc::CCollection<CIcon>>();
-        qRegisterMetaTypeStreamOperators<BlackMisc::CCollection<CIcon>>();
         qRegisterMetaType<CIconList>();
         qDBusRegisterMetaType<CIconList>();
-        qRegisterMetaTypeStreamOperators<CIconList>();
         registerMetaValueType<CIconList>();
     }
 } // ns
