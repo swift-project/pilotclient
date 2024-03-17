@@ -58,7 +58,7 @@ namespace BlackGui::Models
     bool CStatusMessageListModel::sortedByTimestampOrOrder(const CPropertyIndex &p)
     {
         if (p.isEmpty()) { return false; }
-        const int last = p.indexVector().last();
+        const int last = p.indexList().last();
         return IOrderable::isAnyOrderIndex(last) || ITimestampBased::isAnyTimestampIndex(last);
     }
 

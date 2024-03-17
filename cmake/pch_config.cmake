@@ -6,6 +6,7 @@
 # For example "core" uses the same PCH as "misc" but with additional headers included.
 
 set(SWIFT_MISC_PCH
+    <QAudioDevice>
     [["blackmisc/collection.h"]]
     [["blackmisc/containerbase.h"]]
     [["blackmisc/dbus.h"]]

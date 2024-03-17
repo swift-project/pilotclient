@@ -18,9 +18,9 @@ namespace BlackMisc::SharedState
     {
         CPromise<CVariant> promise;
         emit requestPosted(param, promise);
-        doAfter(promise.future(), this, [callback = std::move(callback), weakRef = weakRef()](const CVariant &reply) {
+        doAfter(promise.future(), this, [callback = std::move(callback), weakRef = weakRef()](const QFuture<CVariant> &reply) {
             const auto lock = weakRef.lock();
-            if (lock) { callback(reply); }
+            if (lock) { callback(reply.result()); }
         });
     }
 }

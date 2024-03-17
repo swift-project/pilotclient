@@ -232,7 +232,7 @@ namespace BlackGui
         QString fs;
         if (font.pixelSize() >= 0)
         {
-            fs.append(font.pixelSize()).append("px");
+            fs.append(QString::number(font.pixelSize())).append("px");
         }
         else
         {

@@ -95,7 +95,7 @@ namespace BlackMisc
         CVariant(const char *string) : m_v(string) {}
 
         //! Construct a variant from the given type and opaque pointer.
-        CVariant(int typeId, const void *copy) : m_v(typeId, copy) {}
+        CVariant(int typeId, const void *copy) : m_v(QMetaType(typeId), copy) {}
 
         //! \copydoc CValueObject::qHash
         friend uint qHash(const CVariant &var) { return var.getValueHash(); }
@@ -350,11 +350,6 @@ namespace BlackMisc
             return toImpl<QList<T>>();
         }
         template <typename T>
-        QVector<T> to(tag<QVector<T>>) const
-        {
-            return toImpl<QVector<T>>();
-        }
-        template <typename T>
         CSequence<T> to(tag<CSequence<T>>) const
         {
             return toImpl<CSequence<T>>();
@@ -388,7 +383,7 @@ namespace BlackMisc::Private
     {
         if constexpr (canConvertVariantList<T>(0))
         {
-            if (QMetaType::hasRegisteredConverterFunction(qMetaTypeId<T>(), qMetaTypeId<QVector<CVariant>>())) { return; }
+            if (QMetaType::hasRegisteredConverterFunction(QMetaType(qMetaTypeId<T>()), QMetaType(qMetaTypeId<QVector<CVariant>>()))) { return; }
 
             QMetaType::registerConverter<T, QVector<CVariant>>([](const T &list) -> QVector<CVariant> {
                 return list.transform([](const typename T::value_type &v) { return CVariant::from(v); });

@@ -10,7 +10,7 @@
 #include "blackmisc/audio/audiodeviceinfo.h"
 
 #include <QObject>
-#include <QAudioOutput>
+#include <QAudioSink>
 
 namespace BlackCore::Afv::Audio
 {
@@ -95,7 +95,7 @@ namespace BlackCore::Afv::Audio
     private:
         bool m_started = false;
         BlackMisc::Audio::CAudioDeviceInfo m_device;
-        QScopedPointer<QAudioOutput> m_audioOutput;
+        QScopedPointer<QAudioSink> m_audioOutput;
         CAudioOutputBuffer *m_audioOutputBuffer = nullptr;
     };
 } // ns

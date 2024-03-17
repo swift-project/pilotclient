@@ -125,14 +125,11 @@ namespace BlackMisc
         //! Initializer list constructor.
         CSequence(std::initializer_list<T> il) : m_impl(il) {}
 
-        //! By QVector of type T.
-        CSequence(const QVector<T> &vector) : m_impl(vector) {}
-
-        //! By QVector of type T.
-        CSequence(QVector<T> &&vector) : m_impl(std::move(vector)) {}
+        //! By QList of type T.
+        CSequence(QList<T> &&list) : m_impl(std::move(list)) {}
 
         //! By QList of type T.
-        CSequence(const QList<T> &list) : m_impl(list.toVector()) {}
+        CSequence(const QList<T> &list) : m_impl(list) {}
 
         //! Range constructor.
         template <typename It>
@@ -702,7 +699,7 @@ namespace BlackMisc
         void unmarshalFromDataStream(QDataStream &stream) { stream >> m_impl; }
 
     private:
-        QVector<T> m_impl;
+        QList<T> m_impl;
     };
 } // namespace BlackMisc
 

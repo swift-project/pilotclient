@@ -1963,7 +1963,7 @@ namespace BlackCore
     QString CAircraftMatcher::scoresToString(const ScoredModels &scores, int lastElements)
     {
         if (scores.isEmpty()) { return {}; }
-        QMapIterator<int, CAircraftModel> i(scores);
+        QMultiMapIterator<int, CAircraftModel> i(scores);
         i.toBack();
         int c = 0;
         QString str;

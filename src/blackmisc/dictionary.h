@@ -9,7 +9,6 @@
 #include "blackmisc/containerbase.h"
 #include "blackmisc/mixin/mixindbus.h"
 #include "blackmisc/mixin/mixindatastream.h"
-#include "blackmisc/datastream.h"
 #include "blackmisc/inheritancetraits.h"
 #include "blackmisc/iterator.h"
 #include "blackmisc/mixin/mixinjson.h"
@@ -464,7 +463,29 @@ namespace BlackMisc
         //! \copydoc BlackMisc::CValueObject::marshallToDbus
         void marshallToDbus(QDBusArgument &argument) const
         {
-            argument << m_impl;
+            if constexpr (std::is_same_v<Value, std::pair<CVariant, long long>>)
+            {
+                // \fixme Workaround for https://bugreports.qt.io/browse/QTBUG-123401
+                // the following code is taken (and slightly adjusted) from the Qt source code (qdbusargument.h)
+                // BEGIN
+                // Copyright (C) 2016 The Qt Company Ltd.
+                // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
+                argument.beginMap(QMetaType::fromType<Key>(), QMetaType::fromType<Value>());
+                auto it = m_impl.begin();
+                auto end = m_impl.end();
+                for (; it != end; ++it)
+                {
+                    argument.beginMapEntry();
+                    argument << it.key() << it.value();
+                    argument.endMapEntry();
+                }
+                argument.endMap();
+                // END
+            }
+            else
+            {
+                argument << m_impl;
+            }
         }
 
         //! \copydoc BlackMisc::CValueObject::unmarshallFromDbus

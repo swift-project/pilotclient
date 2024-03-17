@@ -78,7 +78,7 @@ namespace BlackGui::Components
         if (horizontal) { ledLayout = new QHBoxLayout(this); }
         else { ledLayout = new QVBoxLayout(this); }
 
-        ledLayout->setMargin(0);
+        ledLayout->setContentsMargins(0, 0, 0, 0);
         ledLayout->addWidget(m_ledStandby.data());
         ledLayout->addWidget(m_ledModes.data());
         ledLayout->addWidget(m_ledIdent.data());

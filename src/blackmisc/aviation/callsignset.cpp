@@ -58,13 +58,10 @@ namespace BlackMisc::Aviation
     {
         qRegisterMetaType<BlackMisc::CSequence<CCallsign>>();
         qDBusRegisterMetaType<BlackMisc::CSequence<CCallsign>>();
-        qRegisterMetaTypeStreamOperators<BlackMisc::CSequence<CCallsign>>();
         qRegisterMetaType<BlackMisc::CCollection<CCallsign>>();
         qDBusRegisterMetaType<BlackMisc::CCollection<CCallsign>>();
-        qRegisterMetaTypeStreamOperators<BlackMisc::CCollection<CCallsign>>();
         qRegisterMetaType<CCallsignSet>();
         qDBusRegisterMetaType<CCallsignSet>();
-        qRegisterMetaTypeStreamOperators<CCallsignSet>();
         registerMetaValueType<CCallsignSet>();
     }
 } // namespace

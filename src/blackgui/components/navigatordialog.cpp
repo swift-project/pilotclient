@@ -86,7 +86,6 @@ namespace BlackGui::Components
         QGridLayout *gridLayout = new QGridLayout(ui->fr_NavigatorDialogInner);
         gridLayout->setObjectName("gl_CNavigatorDialog");
         gridLayout->setSpacing(0);
-        gridLayout->setMargin(0);
         gridLayout->setContentsMargins(0, 0, 0, 0);
         ui->fr_NavigatorDialogInner->setLayout(gridLayout);
         int r = 0;
@@ -257,7 +256,7 @@ namespace BlackGui::Components
         QDialog::paintEvent(event);
     }
 
-    void CNavigatorDialog::enterEvent(QEvent *event)
+    void CNavigatorDialog::enterEvent(QEnterEvent *event)
     {
         // event called when mouse is over, acts as auto-focus
         QApplication::setActiveWindow(this);

@@ -6,8 +6,9 @@
 #ifndef BLACKSAMPLE_SAMPLEUTILS_H
 #define BLACKSAMPLE_SAMPLEUTILS_H
 
+#include <QStringList>
+
 class QString;
-class QStringList;
 class QTextStream;
 
 namespace BlackMisc

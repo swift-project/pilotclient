@@ -26,7 +26,6 @@ namespace BlackMisc
             qDBusRegisterMetaType<PTTCOM>();
             qDBusRegisterMetaType<CNotificationSounds::NotificationFlag>();
             qDBusRegisterMetaType<CAudioDeviceInfo::DeviceType>();
-            qRegisterMetaTypeStreamOperators<CNotificationSounds::NotificationFlag>();
         }
     }
 
