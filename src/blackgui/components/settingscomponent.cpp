@@ -53,13 +53,7 @@ namespace BlackGui::Components
         connect(ui->pb_DataLoadAndCaches, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
     }
 
-    CSettingsComponent::~CSettingsComponent()
-    {}
-
-    bool CSettingsComponent::playNotificationSounds() const
-    {
-        return ui->comp_AudioNotification->playNotificationSounds();
-    }
+    CSettingsComponent::~CSettingsComponent() = default; // declared in cpp to avoid incomplete type of Ui::CSettingsComponent
 
     CSpecializedSimulatorSettings CSettingsComponent::getSimulatorSettings(const CSimulatorInfo &simulator) const
     {

@@ -49,10 +49,7 @@ namespace BlackGui::Components
         explicit CSettingsComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CSettingsComponent();
-
-        //! \copydoc CAudioNotificationComponent::playNotificationSounds
-        bool playNotificationSounds() const;
+        ~CSettingsComponent() override;
 
         //! Settings for given simulator
         BlackMisc::Simulation::Settings::CSpecializedSimulatorSettings getSimulatorSettings(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
@@ -69,15 +66,6 @@ namespace BlackGui::Components
     signals:
         //! Change the windows opacity 0..100
         void changedWindowsOpacity(int opacity);
-
-        //! Update interval changed (ATC)
-        void changedAtcStationsUpdateInterval(int seconds);
-
-        //! Update interval changed (aircrafts)
-        void changedAircraftUpdateInterval(int seconds);
-
-        //! Update interval changed (users)
-        void changedUsersUpdateInterval(int seconds);
 
     private:
         //! An overview button was clicked

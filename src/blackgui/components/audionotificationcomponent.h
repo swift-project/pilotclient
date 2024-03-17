@@ -32,10 +32,7 @@ namespace BlackGui::Components
         explicit CAudioNotificationComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAudioNotificationComponent() override;
-
-        //! Play any sounds?
-        bool playNotificationSounds() const;
+        ~CAudioNotificationComponent() override;
 
     private:
         //! Init

@@ -4,7 +4,6 @@
 #include "blackgui/components/audionotificationcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextaudio.h"
-#include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/sequence.h"
@@ -81,15 +80,6 @@ namespace BlackGui::Components
 
     CAudioNotificationComponent::~CAudioNotificationComponent()
     {}
-
-    bool CAudioNotificationComponent::playNotificationSounds() const
-    {
-        return ui->cb_SetupAudioPTTClickDown->isChecked() || ui->cb_SetupAudioPTTClickUp->isChecked() ||
-               ui->cb_SetupAudioNotificationTextMessageFrequency->isChecked() || ui->cb_SetupAudioNotificationTextMessageUnicom->isChecked() ||
-               ui->cb_SetupAudioNotificationTextMessagePrivate->isChecked() || ui->cb_SetupAudioNotificationTextMessageSupervisor->isChecked() ||
-               ui->cb_SetupAudioNotificationTextCallsignMentioned->isChecked() ||
-               ui->cb_SetupAfvBlocked->isChecked() || ui->cb_SetupAfvClicked->isChecked() || ui->cb_SetupAudioNotificationLogin->isChecked() || ui->cb_SetupAudioNotificationLogoff->isChecked();
-    }
 
     void CAudioNotificationComponent::reloadSettings()
     {
