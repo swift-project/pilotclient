@@ -83,12 +83,6 @@ namespace BlackGui::Components
         //! An overview button was clicked
         void onOverviewButtonClicked();
 
-        //! Action triggered
-        void onActionTriggered();
-
-        //! Init actions
-        void initActions();
-
         QScopedPointer<Ui::CSettingsComponent> ui;
     };
 } // namespace

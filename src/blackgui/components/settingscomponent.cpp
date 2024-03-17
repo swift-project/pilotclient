@@ -4,20 +4,15 @@
 #include "blackgui/components/audionotificationcomponent.h"
 #include "blackgui/components/settingscomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackgui/stylesheetutility.h"
 #include "blackconfig/buildconfig.h"
-#include "blackmisc/logmessage.h"
 #include "ui_settingscomponent.h"
 
 #include <QAction>
 #include <QComboBox>
 #include <QLineEdit>
-#include <QSlider>
-#include <QString>
 #include <QTabBar>
 #include <QToolButton>
 #include <QtGlobal>
-#include <QKeySequence>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
@@ -56,71 +51,10 @@ namespace BlackGui::Components
         connect(ui->pb_SimulatorMessages, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
         connect(ui->pb_Matching, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
         connect(ui->pb_DataLoadAndCaches, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
-
-        this->initActions();
     }
 
     CSettingsComponent::~CSettingsComponent()
     {}
-
-    void CSettingsComponent::initActions()
-    {
-        QAction *a = new QAction(this);
-        a->setObjectName("overview");
-        a->setShortcut(QKeySequence(static_cast<Qt::Key>(Qt::ALT) + Qt::Key_S, Qt::Key_O));
-        connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
-        this->addAction(a);
-        ui->lbl_Hint->setText("Hint: See tooltips for shortcuts, \"ALT+S, O\" for overview.");
-
-        a = new QAction(this);
-        a->setObjectName("audio");
-        a->setShortcut(QKeySequence(static_cast<Qt::Key>(Qt::ALT) + Qt::Key_S, Qt::Key_A));
-        ui->pb_Audio->setToolTip(a->shortcut().toString());
-        connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
-        this->addAction(a);
-
-        a = new QAction(this);
-        a->setObjectName("data");
-        a->setShortcut(QKeySequence(static_cast<Qt::Key>(Qt::ALT) + Qt::Key_S, Qt::Key_D));
-        ui->pb_DataLoadAndCaches->setToolTip(a->shortcut().toString());
-        connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
-        this->addAction(a);
-
-        a = new QAction(this);
-        a->setObjectName("gui");
-        a->setShortcut(QKeySequence(static_cast<Qt::Key>(Qt::ALT) + Qt::Key_S, Qt::Key_G));
-        ui->pb_Gui->setToolTip(a->shortcut().toString());
-        connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
-        this->addAction(a);
-
-        a = new QAction(this);
-        a->setObjectName("hotkeys");
-        a->setShortcut(QKeySequence(static_cast<Qt::Key>(Qt::ALT) + Qt::Key_S, Qt::Key_H));
-        ui->pb_Hotkeys->setToolTip(a->shortcut().toString());
-        connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
-        this->addAction(a);
-
-        a = new QAction(this);
-        a->setObjectName("network");
-        a->setShortcut(QKeySequence(static_cast<Qt::Key>(Qt::ALT) + Qt::Key_S, Qt::Key_N));
-        ui->pb_Network->setToolTip(a->shortcut().toString());
-        connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
-        this->addAction(a);
-
-        a = new QAction(this);
-        a->setObjectName("simulator");
-        a->setShortcut(QKeySequence(static_cast<Qt::Key>(Qt::ALT) + Qt::Key_S, Qt::Key_S));
-        ui->pb_Simulator->setToolTip(a->shortcut().toString());
-        connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
-        this->addAction(a);
-
-        a = new QAction(this);
-        a->setObjectName("matching");
-        a->setShortcut(QKeySequence(static_cast<Qt::Key>(Qt::ALT) + Qt::Key_S, Qt::Key_M));
-        ui->pb_Matching->setToolTip(a->shortcut().toString());
-        connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
-        this->addAction(a);
-    }
 
     bool CSettingsComponent::playNotificationSounds() const
     {
@@ -206,56 +140,5 @@ namespace BlackGui::Components
             return;
         }
         this->setCurrentIndex(SettingTabOverview);
-    }
-
-    void CSettingsComponent::onActionTriggered()
-    {
-        const QString a = QObject::sender()->objectName().toLower().trimmed();
-        if (a.isEmpty()) { return; }
-        if (a.contains("audio"))
-        {
-            this->setCurrentIndex(SettingTabAudio);
-            return;
-        }
-        if (a.contains("data"))
-        {
-            this->setCurrentIndex(SettingTabDataAndCaches);
-            return;
-        }
-        if (a.contains("gui"))
-        {
-            this->setCurrentIndex(SettingTabGui);
-            return;
-        }
-        if (a.contains("hot"))
-        {
-            this->setCurrentIndex(SettingTabHotkeys);
-            return;
-        }
-        if (a.contains("network"))
-        {
-            this->setCurrentIndex(SettingTabNetwork);
-            return;
-        }
-        if (a.contains("overview"))
-        {
-            this->setCurrentIndex(SettingTabOverview);
-            return;
-        }
-        if (a.contains("simulator"))
-        {
-            this->setCurrentIndex(SettingTabSimulator);
-            return;
-        }
-        if (a.contains("matching"))
-        {
-            this->setCurrentIndex(SettingTabMatching);
-            return;
-        }
-        if (a.contains("advanced"))
-        {
-            this->setCurrentIndex(SettingTabAdvanced);
-            return;
-        }
     }
 } // namespace
