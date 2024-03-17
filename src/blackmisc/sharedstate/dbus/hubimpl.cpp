@@ -15,7 +15,7 @@ namespace BlackMisc::SharedState::DBus
         if (server) { server->addObject(BLACKMISC_HUB_PATH, this); }
     }
 
-    std::pair<QSharedPointer<IDuplex>, QFuture<void>> CHub::getDuplex(const CIdentifier &identifier)
+    std::pair<QSharedPointer<IDuplex>, QFuture<bool>> CHub::getDuplex(const CIdentifier &identifier)
     {
         auto future = openDuplexAsync(identifier);
         return std::make_pair(m_clients.value(identifier), future);
@@ -37,12 +37,12 @@ namespace BlackMisc::SharedState::DBus
         m_clients.take(client);
     }
 
-    QFuture<void> CHub::openDuplexAsync(const CIdentifier &client)
+    QFuture<bool> CHub::openDuplexAsync(const CIdentifier &client)
     {
         openDuplex(client);
 
-        CPromise<void> promise;
-        promise.setResult();
+        CPromise<bool> promise;
+        promise.setResult(true);
         return promise.future();
     }
 

@@ -22,7 +22,7 @@ namespace BlackMisc::SharedState::DBus
         return m_interface->isValid();
     }
 
-    std::pair<QSharedPointer<IDuplex>, QFuture<void>> CHubProxy::getDuplex(const CIdentifier &identifier)
+    std::pair<QSharedPointer<IDuplex>, QFuture<bool>> CHubProxy::getDuplex(const CIdentifier &identifier)
     {
         auto duplex = QSharedPointer<CDuplexProxy>::create(m_interface->connection(), m_service, this);
         connect(duplex.get(), &QObject::destroyed, this, [=] { closeDuplex(identifier); });
@@ -39,7 +39,7 @@ namespace BlackMisc::SharedState::DBus
         m_interface->callDBus(QLatin1String("closeDuplex"), client);
     }
 
-    QFuture<void> CHubProxy::openDuplexAsync(const CIdentifier &client)
+    QFuture<bool> CHubProxy::openDuplexAsync(const CIdentifier &client)
     {
         return m_interface->callDBusFuture<bool>(QLatin1String("openDuplex"), client);
     }
