@@ -109,10 +109,10 @@ namespace BlackCore::Afv::Clients
         bool isStarted() const { return m_isStarted; }
 
         //! @{
-        //! Muted
+        //! Muted (output)
         //! \threadsafe
-        bool isMuted() const;
-        void setMuted(bool mute);
+        bool isOutputMuted() const;
+        void setOutputMuted(bool mute);
         //! @}
 
         //! @{
@@ -312,8 +312,8 @@ namespace BlackCore::Afv::Clients
         //! Audio has been stopped
         void stoppedAudio();
 
-        //! Mute changed
-        void changedMute(bool muted);
+        //! Output mute changed
+        void changedOutputMute(bool muted);
 
     protected:
         //! \copydoc BlackMisc::CContinuousWorker::initialize
@@ -342,6 +342,10 @@ namespace BlackCore::Afv::Clients
 
         //! Connect again in given ms
         void reconnectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client, int delayMs, const BlackMisc::CStatusMessage &msg);
+
+        //! Toggle (enable/disable) the transmission capability.
+        //! This is triggered by the #MU FSD packet to mute the user remotely.
+        void toggleTransmissionCapability(bool disableTransmission);
 
         //! @{
         //! All aliased stations
@@ -389,6 +393,7 @@ namespace BlackCore::Afv::Clients
 
         std::atomic_bool m_transmit { false };
         std::atomic_bool m_transmitHistory { false };
+        std::atomic_bool m_disableTransmissionCapability { false }; //!< whether the user should be unable to transmit
         QVector<TxTransceiverDto> m_transmittingTransceivers;
         QVector<TransceiverDto> m_transceivers;
         QSet<quint16> m_enabledTransceivers;

@@ -87,12 +87,12 @@ namespace BlackCore::Context
 
         if (parser.matchesCommand(".mute"))
         {
-            this->setMute(true);
+            this->setOutputMute(true);
             return true;
         }
         else if (parser.matchesCommand(".unmute"))
         {
-            this->setMute(false);
+            this->setOutputMute(false);
             return true;
         }
         else if (parser.commandStartsWith("vol") && parser.countParts() > 1)
@@ -193,7 +193,7 @@ namespace BlackCore::Context
         connect(m_voiceClient, &CAfvClient::startedAudio, this, &CContextAudioBase::startedAudio, Qt::QueuedConnection);
         connect(m_voiceClient, &CAfvClient::stoppedAudio, this, &CContextAudioBase::stoppedAudio, Qt::QueuedConnection);
         connect(m_voiceClient, &CAfvClient::ptt, this, &CContextAudioBase::ptt, Qt::QueuedConnection);
-        connect(m_voiceClient, &CAfvClient::changedMute, this, &CContextAudioBase::changedMute, Qt::QueuedConnection);
+        connect(m_voiceClient, &CAfvClient::changedOutputMute, this, &CContextAudioBase::changedOutputMute, Qt::QueuedConnection);
         connect(m_voiceClient, &CAfvClient::connectionStatusChanged, this, &CContextAudioBase::onAfvConnectionStatusChanged, Qt::QueuedConnection);
         connect(m_voiceClient, &CAfvClient::afvConnectionFailure, this, &CContextAudioBase::onAfvConnectionFailure, Qt::QueuedConnection);
     }
@@ -405,7 +405,7 @@ namespace BlackCore::Context
     {
         if (!m_voiceClient) { return; }
 
-        const bool wasMuted = this->isMuted();
+        const bool wasMuted = this->isOutputMuted();
         volume = CSettings::fixOutVolume(volume);
 
         const int currentVolume = m_voiceClient->getNormalizedMasterOutputVolume();
@@ -420,7 +420,7 @@ namespace BlackCore::Context
             if ((volume > 0 && wasMuted) || (volume < 1 && !wasMuted))
             {
                 // inform about muted
-                emit this->changedMute(volume < 1);
+                emit this->changedOutputMute(volume < 1);
             }
         }
 
@@ -472,24 +472,24 @@ namespace BlackCore::Context
         return m_voiceClient->getNormalizedComOutputVolume(comUnit);
     }
 
-    void CContextAudioBase::setMute(bool muted)
+    void CContextAudioBase::setOutputMute(bool muted)
     {
         if (!m_voiceClient) { return; }
-        if (this->isMuted() == muted) { return; } // avoid roundtrips / unnecessary signals
+        if (this->isOutputMuted() == muted) { return; } // avoid roundtrips / unnecessary signals
 
         if (muted) { m_outMasterVolumeBeforeMute = m_voiceClient->getNormalizedMasterOutputVolume(); }
 
-        m_voiceClient->setMuted(muted);
+        m_voiceClient->setOutputMuted(muted);
         if (!muted) { m_voiceClient->setNormalizedMasterOutputVolume(m_outMasterVolumeBeforeMute); }
 
         // signal no longer need, signaled by m_voiceClient->setMuted
         // emit this->changedMute(muted);
     }
 
-    bool CContextAudioBase::isMuted() const
+    bool CContextAudioBase::isOutputMuted() const
     {
         if (!m_voiceClient) { return false; }
-        return m_voiceClient->isMuted();
+        return m_voiceClient->isOutputMuted();
     }
 
     void CContextAudioBase::playSelcalTone(const CSelcal &selcal)

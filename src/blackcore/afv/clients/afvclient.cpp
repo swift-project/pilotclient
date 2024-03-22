@@ -114,9 +114,17 @@ namespace BlackCore::Afv::Clients
     {
         if (m_connectedWithContext) { return; }
         if (!hasContexts()) { return; }
-        this->disconnect(sApp->getIContextOwnAircraft());
-        sApp->getIContextOwnAircraft()->disconnect(this);
+
+        // Disconnect all previously connect signals between the AfvClient and the required contexts
+        for (auto context : QVector<QObject *> { sApp->getIContextOwnAircraft(), sApp->getIContextNetwork() })
+        {
+            this->disconnect(context);
+            context->disconnect(this);
+        }
+
         connect(sApp->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CAfvClient::onUpdateTransceiversFromContext, Qt::QueuedConnection);
+        connect(sApp->getIContextNetwork(), &IContextNetwork::muteRequestReceived, this, &CAfvClient::toggleTransmissionCapability, Qt::QueuedConnection);
+
         m_connectedWithContext = true;
     }
 
@@ -251,17 +259,17 @@ namespace BlackCore::Afv::Clients
         }
     }
 
-    bool CAfvClient::isMuted() const
+    bool CAfvClient::isOutputMuted() const
     {
         const int v = this->getNormalizedMasterOutputVolume();
         return v < 1;
     }
 
-    void CAfvClient::setMuted(bool mute)
+    void CAfvClient::setOutputMuted(bool mute)
     {
-        if (this->isMuted() == mute) { return; }
+        if (this->isOutputMuted() == mute) { return; }
         this->setNormalizedMasterOutputVolume(mute ? 0 : 50);
-        emit this->changedMute(mute);
+        emit this->changedOutputMute(mute);
     }
 
     void CAfvClient::startAudio()
@@ -339,10 +347,10 @@ namespace BlackCore::Afv::Clients
 
         emit this->startedAudio(useInputDevice, useOutputDevice);
 
-        if (this->isMuted())
+        if (this->isOutputMuted())
         {
             // un-mute after startup
-            this->setMuted(false);
+            this->setOutputMuted(false);
         }
     }
 
@@ -380,7 +388,7 @@ namespace BlackCore::Afv::Clients
         }
         CLogMessage(this).info(u"AFV Client stopped");
 
-        if (this->isMuted()) { this->setMuted(false); }
+        if (this->isOutputMuted()) { this->setOutputMuted(false); }
 
         emit this->inputVolumePeakVU(0.0);
         emit this->outputVolumePeakVU(0.0);
@@ -682,6 +690,12 @@ namespace BlackCore::Afv::Clients
         if (!m_isStarted)
         {
             CLogMessage(this).info(u"Voice client not started");
+            return;
+        }
+
+        if (active && m_disableTransmissionCapability)
+        {
+            // Block transmissions
             return;
         }
 
@@ -1310,6 +1324,18 @@ namespace BlackCore::Afv::Clients
             if (myself->isConnected()) { return; }
             this->connectTo(cid, password, callsign, client);
         });
+    }
+
+    void CAfvClient::toggleTransmissionCapability(bool disableTransmission)
+    {
+        if (m_disableTransmissionCapability == disableTransmission) { return; }
+        m_disableTransmissionCapability = disableTransmission;
+
+        if (disableTransmission)
+        {
+            // Stop current transmissions
+            setPtt(false);
+        }
     }
 
     QVector<StationDto> CAfvClient::getAliasedStations() const
