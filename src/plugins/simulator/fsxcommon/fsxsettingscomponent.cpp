@@ -75,7 +75,7 @@ namespace BlackSimPlugin::FsxCommon
         ui->cb_SBOffsets->setEnabled(localSim);
         ui->cb_UseFsuipc->setEnabled(localSim);
 
-        const bool terrainProbe = CBuildConfig::isRunningOnWindowsNtPlatform() && (CBuildConfig::buildWordSize() == 32);
+        const bool terrainProbe = CBuildConfig::isRunningOnWindowsNtPlatform() && (CBuildConfig::buildWordSize() == 32) && localSim;
         ui->cb_EnableTerrainProbe->setEnabled(terrainProbe);
     }
 
