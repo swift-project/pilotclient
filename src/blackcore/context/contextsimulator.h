@@ -330,9 +330,6 @@ namespace BlackCore::Context
         //! Get matching setup
         virtual BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const = 0;
 
-        //! Copy the terrain probe
-        virtual BlackMisc::CStatusMessageList copyFsxTerrainProbe(const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
-
     protected:
         //! Constructor
         IContextSimulator(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContext(mode, runtime) {}

@@ -14,7 +14,6 @@
 #include "blackcore/simulator.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
-#include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/matchingutils.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/pq/units.h"
@@ -45,7 +44,6 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::XPlane;
-using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Weather;
 using namespace BlackMisc::Simulation;
@@ -1002,34 +1000,6 @@ namespace BlackCore::Context
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         return m_aircraftMatcher.getSetup();
-    }
-
-    CStatusMessageList CContextSimulator::copyFsxTerrainProbe(const CSimulatorInfo &simulator)
-    {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << simulator.toQString(); }
-
-        CStatusMessageList msgs;
-        if (!simulator.isFsxP3DFamily())
-        {
-            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, u"Wrong simulator " % simulator.toQString()));
-            return msgs;
-        }
-
-        const QStringList modelDirs = m_multiSimulatorSettings.getModelDirectoriesOrDefault(simulator);
-        if (modelDirs.isEmpty() || modelDirs.front().isEmpty())
-        {
-            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, u"No model directory"));
-            return msgs;
-        }
-
-        const int copied = CFsCommonUtil::copyFsxTerrainProbeFiles(modelDirs.front(), msgs);
-        if (copied < 1 && !msgs.hasWarningOrErrorMessages())
-        {
-            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, u"No files copied"));
-            return msgs;
-        }
-
-        return msgs;
     }
 
     bool CContextSimulator::testRemoteAircraft(const CSimulatedAircraft &aircraft, bool add)

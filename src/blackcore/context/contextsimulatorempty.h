@@ -435,13 +435,6 @@ namespace BlackCore::Context
             logEmptyContextWarning(Q_FUNC_INFO);
             return BlackMisc::Simulation::CAircraftMatcherSetup();
         }
-
-        //! \copydoc IContextSimulator::copyFsxTerrainProbe
-        virtual BlackMisc::CStatusMessageList copyFsxTerrainProbe(const BlackMisc::Simulation::CSimulatorInfo &simulator) override
-        {
-            Q_UNUSED(simulator)
-            return BlackMisc::CStatusMessageList();
-        }
     };
 } // namespace
 

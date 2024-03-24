@@ -58,9 +58,6 @@ namespace BlackSimPlugin::FsxCommon
         //! Offsets on/off
         void onSBOffsetsChanged();
 
-        //! Copy the terrain probe
-        void copyTerrainProbe();
-
         //! Status has been changed
         void onSimulatorStatusChanged(int status);
 

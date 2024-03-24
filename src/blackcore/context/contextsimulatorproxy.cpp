@@ -366,11 +366,6 @@ namespace BlackCore::Context
         return m_dBusInterface->callDBusRet<CAircraftMatcherSetup>(QLatin1String("getMatchingSetup"));
     }
 
-    CStatusMessageList CContextSimulatorProxy::copyFsxTerrainProbe(const CSimulatorInfo &simulator)
-    {
-        return m_dBusInterface->callDBusRet<CStatusMessageList>(QLatin1String("copyFsxTerrainProbe"), simulator);
-    }
-
     bool CContextSimulatorProxy::testRemoteAircraft(const CSimulatedAircraft &aircraft, bool add)
     {
         return m_dBusInterface->callDBusRet<bool>(QLatin1String("testRemoteAircraft"), aircraft, add);
