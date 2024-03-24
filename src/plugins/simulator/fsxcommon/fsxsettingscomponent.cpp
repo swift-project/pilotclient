@@ -32,7 +32,6 @@ namespace BlackSimPlugin::FsxCommon
         connect(ui->cb_EnableTerrainProbe, &QCheckBox::released, this, &CFsxSettingsComponent::onEnableTerrainProbeChanged);
         connect(ui->cb_UseFsuipc, &QCheckBox::released, this, &CFsxSettingsComponent::onFsuipcChanged);
         connect(ui->cb_SBOffsets, &QCheckBox::released, this, &CFsxSettingsComponent::onSBOffsetsChanged);
-        connect(ui->pb_CopyTerrainProbe, &QPushButton::released, this, &CFsxSettingsComponent::copyTerrainProbe);
         connect(ui->pb_Refresh, &QPushButton::released, this, &CFsxSettingsComponent::refresh);
 
         if (sGui && sGui->getIContextSimulator())
@@ -78,7 +77,6 @@ namespace BlackSimPlugin::FsxCommon
 
         const bool terrainProbe = CBuildConfig::isRunningOnWindowsNtPlatform() && (CBuildConfig::buildWordSize() == 32);
         ui->cb_EnableTerrainProbe->setEnabled(terrainProbe);
-        ui->pb_CopyTerrainProbe->setVisible(terrainProbe);
     }
 
     void CFsxSettingsComponent::onSimConnectTraceChanged()
@@ -114,16 +112,6 @@ namespace BlackSimPlugin::FsxCommon
         CSimulatorFsxCommon *fsxOrP3D = this->getFsxOrP3DSimulator();
         if (!fsxOrP3D) { return; }
         fsxOrP3D->setUsingSbOffsetValues(ui->cb_SBOffsets->isChecked());
-    }
-
-    void CFsxSettingsComponent::copyTerrainProbe()
-    {
-        if (!sGui || !sGui->getIContextSimulator() || sGui->isShuttingDown()) { return; }
-        const CSimulatorInfo simulator(this->getSimulator());
-        const CStatusMessageList msgs = sGui->getIContextSimulator()->copyFsxTerrainProbe(simulator);
-        CLogMessage::preformatted(msgs);
-        if (!m_mf) { m_mf = CGuiUtility::nextOverlayMessageFrame(this); }
-        if (m_mf) { m_mf->showOverlayMessages(msgs); }
     }
 
     void CFsxSettingsComponent::onSimulatorStatusChanged(int status)
