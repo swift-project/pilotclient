@@ -59,9 +59,6 @@ namespace BlackMisc::Network
         //! Get the system string
         const QString &getSystemString() const;
 
-        //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-        CIcons::IconIndex toIcon() const;
-
         //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
         QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
 
