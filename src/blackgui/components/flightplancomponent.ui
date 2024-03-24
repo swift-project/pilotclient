@@ -722,7 +722,7 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="2">
+           <item row="0" column="0">
             <widget class="QPushButton" name="pb_SimBrief">
              <property name="text">
               <string>SimBrief</string>
@@ -1141,10 +1141,10 @@
   <tabstop>le_PilotsName</tabstop>
   <tabstop>le_PilotsHomeBase</tabstop>
   <tabstop>le_LastSent</tabstop>
+  <tabstop>pb_SimBrief</tabstop>
   <tabstop>pb_Reset</tabstop>
   <tabstop>pb_Send</tabstop>
   <tabstop>pb_Download</tabstop>
-  <tabstop>pb_SimBrief</tabstop>
   <tabstop>pb_SaveDisk</tabstop>
   <tabstop>pb_LoadDisk</tabstop>
   <tabstop>pb_SaveTemplate</tabstop>
