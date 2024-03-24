@@ -30,19 +30,18 @@ namespace BlackCore
         ContextMode m_audio;
         ContextMode m_network;
         ContextMode m_ownAircraft;
-        ContextMode m_settings;
         ContextMode m_simulator;
         QString m_dbusAddress; //!< for boot strapping
 
     public:
         //! Constructor
-        CCoreFacadeConfig(ContextMode allTheSame = NotUsed, const QString &dbusBootstrapAddress = "") : m_application(allTheSame), m_audio(allTheSame), m_network(allTheSame), m_ownAircraft(allTheSame), m_settings(allTheSame), m_simulator(allTheSame),
+        CCoreFacadeConfig(ContextMode allTheSame = NotUsed, const QString &dbusBootstrapAddress = "") : m_application(allTheSame), m_audio(allTheSame), m_network(allTheSame), m_ownAircraft(allTheSame), m_simulator(allTheSame),
                                                                                                         m_dbusAddress(dbusBootstrapAddress)
         {}
 
         //! Constructor
-        CCoreFacadeConfig(ContextMode application, ContextMode audio, ContextMode network, ContextMode ownAircraft, ContextMode settings, ContextMode simulator, const QString &dbusBootstrapAddress = "") : m_application(application), m_audio(audio), m_network(network), m_ownAircraft(ownAircraft), m_settings(settings), m_simulator(simulator),
-                                                                                                                                                                                                             m_dbusAddress(dbusBootstrapAddress)
+        CCoreFacadeConfig(ContextMode application, ContextMode audio, ContextMode network, ContextMode ownAircraft, ContextMode simulator, const QString &dbusBootstrapAddress = "") : m_application(application), m_audio(audio), m_network(network), m_ownAircraft(ownAircraft), m_simulator(simulator),
+                                                                                                                                                                                       m_dbusAddress(dbusBootstrapAddress)
         {}
 
         //! Application mode
@@ -57,14 +56,8 @@ namespace BlackCore
         //! Own aircraft
         ContextMode getModeOwnAircraft() const { return m_ownAircraft; }
 
-        //! Settings mode
-        ContextMode getModeSettings() const { return m_settings; }
-
         //! Simulator mode
         ContextMode getModeSimulator() const { return m_simulator; }
-
-        //! Local settings?
-        bool hasLocalSettings() const { return m_settings == Local || m_settings == LocalInDBusServer; }
 
         //! Local core?
         bool hasLocalCore() const { return m_application == Local || m_application == LocalInDBusServer; }

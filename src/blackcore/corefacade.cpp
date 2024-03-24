@@ -23,15 +23,11 @@
 #include "blackmisc/identifier.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/registermetadata.h"
-#include "blackmisc/settingscache.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/verify.h"
 
-#include <stdbool.h>
-#include <QByteArray>
 #include <QDBusConnection>
-#include <QDBusError>
 #include <QMap>
 #include <QObject>
 #include <QStringBuilder>
@@ -171,12 +167,6 @@ namespace BlackCore
 
         // flag
         m_initalized = true;
-    }
-
-    bool CCoreFacade::hasRemoteApplicationContext() const
-    {
-        Q_ASSERT(m_contextApplication);
-        return !m_contextApplication->isUsingImplementingObject();
     }
 
     void CCoreFacade::registerMetadata()
@@ -492,11 +482,6 @@ namespace BlackCore
     {
         Q_ASSERT_X(m_contextAudio && m_contextAudio->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextAudio *>(m_contextAudio);
-    }
-
-    bool CCoreFacade::hasLocalAudio() const
-    {
-        return m_contextAudio && m_contextAudio->isUsingImplementingObject();
     }
 
     const CContextAudio *CCoreFacade::getCContextAudio() const

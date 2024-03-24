@@ -381,9 +381,6 @@ namespace BlackMisc::Aviation
         //! From multiple formats
         static CFlightPlan fromMultipleFormats(const QString &data, const QString &fileSuffix);
 
-        //! From multiple formats
-        static CFlightPlan fromMultipleFormatsNoThrow(const QString &data, const QString &fileSuffix);
-
         //! Load from multiple formats
         static CFlightPlan loadFromMultipleFormats(const QString &fileName, CStatusMessageList *msgs = nullptr);
 
