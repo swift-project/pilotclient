@@ -104,20 +104,6 @@ namespace BlackCore::Context
         }
     }
 
-    bool CContextApplication::writeToFile(const QString &fileName, const QString &content)
-    {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << fileName << content.left(25); }
-        if (fileName.isEmpty()) { return false; }
-        QFile file(fileName);
-        if (file.open(QIODevice::WriteOnly | QIODevice::Text))
-        {
-            QTextStream out(&file);
-            out << content;
-            return true;
-        }
-        return false;
-    }
-
     CIdentifier CContextApplication::registerApplication(const CIdentifier &application)
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << application; }
@@ -159,35 +145,6 @@ namespace BlackCore::Context
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         return this->identifier();
-    }
-
-    QString CContextApplication::readFromFile(const QString &fileName) const
-    {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << fileName; }
-        QFile file(fileName);
-        QString content;
-        if (fileName.isEmpty()) return content;
-        if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-        {
-            QTextStream in(&file);
-            in >> content;
-            file.close();
-        }
-        return content;
-    }
-
-    bool CContextApplication::removeFile(const QString &fileName)
-    {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << fileName; }
-        if (fileName.isEmpty()) { return false; }
-        return QFile::remove(fileName);
-    }
-
-    bool CContextApplication::existsFile(const QString &fileName) const
-    {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << fileName; }
-        if (fileName.isEmpty()) return false;
-        return QFile::exists(fileName);
     }
 
     QString CContextApplication::dotCommandsHtmlHelp() const

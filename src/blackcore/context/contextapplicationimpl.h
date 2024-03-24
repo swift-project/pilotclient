@@ -71,9 +71,6 @@ namespace BlackCore
             //! \copydoc BlackCore::Context::IContextApplication::callHotkeyActionRemotely
             virtual void callHotkeyActionRemotely(const QString &action, bool argument, const BlackMisc::CIdentifier &origin) override;
 
-            //! \copydoc BlackCore::Context::IContextApplication::writeToFile
-            virtual bool writeToFile(const QString &fileName, const QString &content) override;
-
             //! \copydoc BlackCore::Context::IContextApplication::registerApplication
             virtual BlackMisc::CIdentifier registerApplication(const BlackMisc::CIdentifier &application) override;
 
@@ -85,15 +82,6 @@ namespace BlackCore
 
             //! \copydoc BlackCore::Context::IContextApplication::getApplicationIdentifier
             virtual BlackMisc::CIdentifier getApplicationIdentifier() const override;
-
-            //! \copydoc BlackCore::Context::IContextApplication::readFromFile
-            virtual QString readFromFile(const QString &fileName) const override;
-
-            //! \copydoc BlackCore::Context::IContextApplication::removeFile
-            virtual bool removeFile(const QString &fileName) override;
-
-            //! \copydoc BlackCore::Context::IContextApplication::existsFile
-            virtual bool existsFile(const QString &fileName) const override;
 
             //! \copydoc BlackCore::Context::IContextApplication::dotCommandsHtmlHelp
             virtual QString dotCommandsHtmlHelp() const override;

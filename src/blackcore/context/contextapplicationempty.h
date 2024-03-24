@@ -103,15 +103,6 @@ namespace BlackCore
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
-            //! \copydoc IContextApplication::writeToFile
-            virtual bool writeToFile(const QString &fileName, const QString &content) override
-            {
-                Q_UNUSED(fileName);
-                Q_UNUSED(content);
-                logEmptyContextWarning(Q_FUNC_INFO);
-                return false;
-            }
-
             //! \copydoc IContextApplication::registerApplication
             virtual BlackMisc::CIdentifier registerApplication(const BlackMisc::CIdentifier &application) override
             {
@@ -139,30 +130,6 @@ namespace BlackCore
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::CIdentifier();
-            }
-
-            //! \copydoc IContextApplication::readFromFile
-            virtual QString readFromFile(const QString &fileName) const override
-            {
-                Q_UNUSED(fileName);
-                logEmptyContextWarning(Q_FUNC_INFO);
-                return QString();
-            }
-
-            //! \copydoc IContextApplication::removeFile
-            virtual bool removeFile(const QString &fileName) override
-            {
-                Q_UNUSED(fileName);
-                logEmptyContextWarning(Q_FUNC_INFO);
-                return false;
-            }
-
-            //! \copydoc IContextApplication::existsFile
-            virtual bool existsFile(const QString &fileName) const override
-            {
-                Q_UNUSED(fileName);
-                logEmptyContextWarning(Q_FUNC_INFO);
-                return false;
             }
 
             //! \copydoc IContextApplication::dotCommandsHtmlHelp
