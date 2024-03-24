@@ -86,9 +86,6 @@ namespace BlackCore
             //! \copydoc BlackCore::Context::IContextApplication::getApplicationIdentifier
             virtual BlackMisc::CIdentifier getApplicationIdentifier() const override;
 
-            //! \copydoc BlackCore::Context::IContextApplication::dotCommandsHtmlHelp
-            virtual QString dotCommandsHtmlHelp() const override;
-
             //! Used to test if there is a core running?
             //! \note creates and connects via proxy object, so not meant for very frequent tests
             //! \sa CDBusServer::isDBusAvailable as lightweight, but less accurate alternative
