@@ -509,7 +509,7 @@ namespace BlackCore::Context
 
     void CContextAudioBase::playNotification(CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume)
     {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << notification; }
+        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << notification; }
 
         const CSettings settings = m_audioSettings.getThreadLocal();
         const bool play = !considerSettings || settings.isNotificationFlagSet(notification);
