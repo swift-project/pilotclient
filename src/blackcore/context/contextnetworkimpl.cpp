@@ -108,7 +108,7 @@ namespace BlackCore::Context
 
     CContextNetwork *CContextNetwork::registerWithDBus(BlackMisc::CDBusServer *server)
     {
-        if (!server || m_mode != CCoreFacadeConfig::LocalInDBusServer) return this;
+        if (!server || getMode() != CCoreFacadeConfig::LocalInDBusServer) return this;
         server->addObject(IContextNetwork::ObjectPath(), this);
         return this;
     }

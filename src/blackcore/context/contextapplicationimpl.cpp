@@ -25,7 +25,7 @@ namespace BlackCore::Context
 
     CContextApplication *CContextApplication::registerWithDBus(BlackMisc::CDBusServer *server)
     {
-        if (!server || m_mode != CCoreFacadeConfig::LocalInDBusServer) { return this; }
+        if (!server || getMode() != CCoreFacadeConfig::LocalInDBusServer) { return this; }
         server->addObject(IContextApplication::ObjectPath(), this);
         return this;
     }
@@ -38,19 +38,19 @@ namespace BlackCore::Context
 
     BlackMisc::CValueCachePacket CContextApplication::getAllSettings() const
     {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         return CSettingsCache::instance()->getAllValuesWithTimestamps();
     }
 
     QStringList CContextApplication::getUnsavedSettingsKeys() const
     {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         return CSettingsCache::instance()->getAllUnsavedKeys();
     }
 
     CSettingsDictionary CContextApplication::getUnsavedSettingsKeysDescribed() const
     {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         const QStringList keys = CSettingsCache::instance()->getAllUnsavedKeys();
         CSettingsDictionary result;
         for (const QString &key : keys) { result.insert(key, CSettingsCache::instance()->getHumanReadableName(key)); }
@@ -64,19 +64,19 @@ namespace BlackCore::Context
 
     BlackMisc::CStatusMessage CContextApplication::saveSettings(const QString &keyPrefix)
     {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << keyPrefix; }
+        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << keyPrefix; }
         return CSettingsCache::instance()->saveToStore(keyPrefix);
     }
 
     BlackMisc::CStatusMessage CContextApplication::saveSettingsByKey(const QStringList &keys)
     {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << keys.join(", "); }
+        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << keys.join(", "); }
         return CSettingsCache::instance()->saveToStore(keys);
     }
 
     BlackMisc::CStatusMessage CContextApplication::loadSettings()
     {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         return CSettingsCache::instance()->loadFromStore();
     }
 
@@ -106,7 +106,7 @@ namespace BlackCore::Context
 
     CIdentifier CContextApplication::registerApplication(const CIdentifier &application)
     {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << application; }
+        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << application; }
 
         if (!m_registeredApplications.contains(application))
         {
@@ -121,7 +121,7 @@ namespace BlackCore::Context
 
     void CContextApplication::unregisterApplication(const CIdentifier &application)
     {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << application; }
+        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << application; }
         int r = m_registeredApplications.remove(application);
         this->cleanupRegisteredApplications();
         if (r > 0) { emit registrationChanged(); }
@@ -135,7 +135,7 @@ namespace BlackCore::Context
 
     CIdentifierList CContextApplication::getRegisteredApplications() const
     {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         // static const int outdatedMs = qRound(1.5 * PingIdentifiersMs);
         // return m_registeredApplications.findAfterNowMinusOffset(outdatedMs);
         return m_registeredApplications;
@@ -143,7 +143,7 @@ namespace BlackCore::Context
 
     CIdentifier CContextApplication::getApplicationIdentifier() const
     {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         return this->identifier();
     }
 } // ns
