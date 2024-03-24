@@ -206,9 +206,6 @@ namespace BlackGui::Components
         //! Load Flightplan
         void loadFlightPlanFromNetwork();
 
-        //! Validate Flightplan
-        void validateFlightPlan();
-
         //! Remarks
         void buildRemarksString();
 

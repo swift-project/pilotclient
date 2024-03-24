@@ -708,17 +708,6 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
-            <widget class="QPushButton" name="pb_ValidateFlightPlan">
-             <property name="text">
-              <string>&amp;Validate</string>
-             </property>
-             <property name="icon">
-              <iconset resource="../../blackmisc/blackmisc.qrc">
-               <normaloff>:/diagona/icons/diagona/icons/abacus.png</normaloff>:/diagona/icons/diagona/icons/abacus.png</iconset>
-             </property>
-            </widget>
-           </item>
            <item row="2" column="1">
             <widget class="QPushButton" name="pb_LoadDisk">
              <property name="toolTip">
@@ -1168,7 +1157,6 @@
   <tabstop>le_LastSent</tabstop>
   <tabstop>pb_Prefill</tabstop>
   <tabstop>pb_Reset</tabstop>
-  <tabstop>pb_ValidateFlightPlan</tabstop>
   <tabstop>pb_Send</tabstop>
   <tabstop>pb_Download</tabstop>
   <tabstop>pb_SimBrief</tabstop>

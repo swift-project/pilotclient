@@ -124,7 +124,6 @@ namespace BlackGui::Components
         connect(ui->pb_Send, &QPushButton::pressed, this, &CFlightPlanComponent::sendFlightPlan, Qt::QueuedConnection);
         connect(ui->pb_Download, &QPushButton::pressed, this, &CFlightPlanComponent::loadFlightPlanFromNetwork, Qt::QueuedConnection);
         connect(ui->pb_Reset, &QPushButton::pressed, this, &CFlightPlanComponent::resetFlightPlan, Qt::QueuedConnection);
-        connect(ui->pb_ValidateFlightPlan, &QPushButton::pressed, this, &CFlightPlanComponent::validateFlightPlan, Qt::QueuedConnection);
         connect(ui->tb_SyncWithSimulator, &QPushButton::released, this, &CFlightPlanComponent::syncWithSimulator, Qt::QueuedConnection);
         connect(ui->pb_Prefill, &QPushButton::pressed, this, &CFlightPlanComponent::anticipateValues, Qt::QueuedConnection);
         connect(ui->pb_SimBrief, &QPushButton::pressed, this, &CFlightPlanComponent::loadFromSimBrief, Qt::QueuedConnection);
@@ -526,13 +525,6 @@ namespace BlackGui::Components
         {
             this->showOverlayMessages(messages);
         }
-    }
-
-    void CFlightPlanComponent::validateFlightPlan()
-    {
-        CFlightPlan flightPlan;
-        const CStatusMessageList messages = this->validateAndInitializeFlightPlan(flightPlan);
-        this->showOverlayMessages(messages);
     }
 
     void CFlightPlanComponent::resetFlightPlan()
