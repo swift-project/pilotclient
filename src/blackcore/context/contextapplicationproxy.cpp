@@ -129,30 +129,6 @@ namespace BlackCore::Context
         return m_dBusInterface->callDBusRet<BlackMisc::CIdentifier>(QLatin1String("getApplicationIdentifier"));
     }
 
-    bool CContextApplicationProxy::writeToFile(const QString &fileName, const QString &content)
-    {
-        if (fileName.isEmpty()) { return false; }
-        return m_dBusInterface->callDBusRet<bool>(QLatin1String("writeToFile"), fileName, content);
-    }
-
-    QString CContextApplicationProxy::readFromFile(const QString &fileName) const
-    {
-        if (fileName.isEmpty()) { return {}; }
-        return m_dBusInterface->callDBusRet<QString>(QLatin1String("readFromFile"), fileName);
-    }
-
-    bool CContextApplicationProxy::removeFile(const QString &fileName)
-    {
-        if (fileName.isEmpty()) { return false; }
-        return m_dBusInterface->callDBusRet<bool>(QLatin1String("removeFile"), fileName);
-    }
-
-    bool CContextApplicationProxy::existsFile(const QString &fileName) const
-    {
-        if (fileName.isEmpty()) { return false; }
-        return m_dBusInterface->callDBusRet<bool>(QLatin1String("existsFile"), fileName);
-    }
-
     QString CContextApplicationProxy::dotCommandsHtmlHelp() const
     {
         return m_dBusInterface->callDBusRet<QString>(QLatin1String("dotCommandsHtmlHelp"));

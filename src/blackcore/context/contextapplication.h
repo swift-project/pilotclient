@@ -146,18 +146,6 @@ namespace BlackCore
             //! Identifier of application, remote side if distributed
             virtual BlackMisc::CIdentifier getApplicationIdentifier() const = 0;
 
-            //! Remote enabled version of writing a text file
-            virtual bool writeToFile(const QString &fileName, const QString &content) = 0;
-
-            //! Remote enabled version of reading a text file
-            virtual QString readFromFile(const QString &fileName) const = 0;
-
-            //! Remote enabled version of deleting a file
-            virtual bool removeFile(const QString &fileName) = 0;
-
-            //! Remote enabled version of file exists
-            virtual bool existsFile(const QString &fileName) const = 0;
-
             //! Forward to facade
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
 
