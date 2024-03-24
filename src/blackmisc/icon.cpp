@@ -148,8 +148,6 @@ namespace BlackMisc
               CIcon(CIcons::NetworkRoleSup, "supervisor"),
               CIcon(CIcons::NetworkRoleTower, "ATC tower"),
               CIcon(CIcons::NetworkRoleUnknown, "unknown"),
-              CIcon(CIcons::NetworkVatsimLogo, "VATSIM"),
-              CIcon(CIcons::NetworkVatsimLogoWhite, "VATSIM"),
               CIcon(CIcons::NotSet, "?"),
               CIcon(CIcons::OSAll, "All OS"),
               CIcon(CIcons::OSLinux, "Linux"),

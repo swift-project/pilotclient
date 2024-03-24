@@ -43,7 +43,7 @@ namespace BlackGui
         this->clear();
         for (const CEcosystem &e : m_systems)
         {
-            this->addItem(BlackMisc::CIcon(e.toIcon()).toPixmap(), e.getSystemString());
+            this->addItem(e.getSystemString());
         }
     }
 } // ns

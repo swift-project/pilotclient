@@ -127,8 +127,8 @@ namespace BlackMisc::Aviation
         if (QStringView(u"FSS") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleFss); }
         if (QStringView(u"ATIS") == sfx) { return CIcon::iconByIndex(CIcons::AviationAtis); }
         if (QStringView(u"EXAM") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleMnt); }
-        if (QStringView(u"VATSIM") == sfx) { return CIcon::iconByIndex(CIcons::NetworkVatsimLogoWhite); }
-        if (QStringView(u"VATGOV") == sfx) { return CIcon::iconByIndex(CIcons::NetworkVatsimLogoWhite); }
+        if (QStringView(u"VATSIM") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleSup); }
+        if (QStringView(u"VATGOV") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleSup); }
         return CIcon::iconByIndex(CIcons::NetworkRoleUnknown);
     }
 

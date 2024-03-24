@@ -84,8 +84,6 @@ namespace BlackMisc
             NetworkRoleSup,
             NetworkRoleTower,
             NetworkRoleUnknown,
-            NetworkVatsimLogo,
-            NetworkVatsimLogoWhite,
             NotSet,
             OSAll,
             OSLinux,
@@ -675,18 +673,6 @@ namespace BlackMisc
 
         //! Unknown
         static const QPixmap &roleUnknown();
-
-        //! VATSIM logo
-        static const QPixmap &vatsimLogo16();
-
-        //! VATSIM logo
-        static const QPixmap &vatsimLogo32();
-
-        //! VATSIM logo
-        static const QPixmap &vatsimLogoWhite16();
-
-        //! VATSIM logo
-        static const QPixmap &vatsimLogoWhite32();
 
         //! Full voice capability
         static const QPixmap &capabilityVoice();
