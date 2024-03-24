@@ -129,11 +129,6 @@ namespace BlackCore::Context
         return m_dBusInterface->callDBusRet<BlackMisc::CIdentifier>(QLatin1String("getApplicationIdentifier"));
     }
 
-    QString CContextApplicationProxy::dotCommandsHtmlHelp() const
-    {
-        return m_dBusInterface->callDBusRet<QString>(QLatin1String("dotCommandsHtmlHelp"));
-    }
-
     void CContextApplicationProxy::reRegisterApplications()
     {
         if (!m_dBusInterface) { return; }

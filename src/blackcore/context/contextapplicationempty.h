@@ -131,13 +131,6 @@ namespace BlackCore
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::CIdentifier();
             }
-
-            //! \copydoc IContextApplication::dotCommandsHtmlHelp
-            virtual QString dotCommandsHtmlHelp() const override
-            {
-                logEmptyContextWarning(Q_FUNC_INFO);
-                return QString();
-            }
         };
     } // namespace
 } // namespace

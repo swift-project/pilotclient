@@ -83,9 +83,6 @@ namespace BlackCore
             //! \copydoc BlackCore::Context::IContextApplication::getApplicationIdentifier
             virtual BlackMisc::CIdentifier getApplicationIdentifier() const override;
 
-            //! \copydoc BlackCore::Context::IContextApplication::dotCommandsHtmlHelp
-            virtual QString dotCommandsHtmlHelp() const override;
-
         protected:
             //! Constructor
             CContextApplication(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);

@@ -146,9 +146,4 @@ namespace BlackCore::Context
         if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         return this->identifier();
     }
-
-    QString CContextApplication::dotCommandsHtmlHelp() const
-    {
-        return CSimpleCommandParser::commandsHtmlHelp();
-    }
 } // ns

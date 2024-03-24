@@ -149,9 +149,6 @@ namespace BlackCore
             //! Forward to facade
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
 
-            //! The HTML help for dot commands
-            virtual QString dotCommandsHtmlHelp() const = 0;
-
         protected:
             static constexpr int PingIdentifiersMs = 20000; //!< how often identifiers are pinged
 

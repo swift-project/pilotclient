@@ -81,12 +81,9 @@ namespace BlackGui::Components
 
     void CCommandInput::setCommandToolTip()
     {
-        const bool context = (sGui && sGui->getIContextApplication());
         if (m_showToolTip)
         {
-            this->setToolTip(context ?
-                                 sGui->getIContextApplication()->dotCommandsHtmlHelp() :
-                                 CSimpleCommandParser::commandsHtmlHelp());
+            this->setToolTip(CSimpleCommandParser::commandsHtmlHelp());
         }
         else
         {
