@@ -29,12 +29,6 @@ namespace BlackCore::Context
         return s;
     }
 
-    const PhysicalQuantities::CTime &IContextSimulator::HighlightTime()
-    {
-        static const CTime t(10.0, CTimeUnit::s());
-        return t;
-    }
-
     IContextSimulator *IContextSimulator::create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &connection)
     {
         switch (mode)

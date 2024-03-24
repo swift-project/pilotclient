@@ -68,9 +68,6 @@ namespace BlackCore::Context
         //! Service path
         static const QString &ObjectPath();
 
-        //! Highlight time
-        static const BlackMisc::PhysicalQuantities::CTime &HighlightTime();
-
         //! \copydoc IContext::getPathAndContextId()
         virtual QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
 
