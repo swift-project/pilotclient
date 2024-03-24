@@ -310,10 +310,7 @@ namespace BlackGui::Components
     CStatusMessageList CFlightPlanComponent::validateAndInitializeFlightPlan(CFlightPlan &flightPlan)
     {
         CStatusMessageList messages;
-        const bool strict = ui->cb_StrictCheck->isChecked();
         const bool vfr = this->isVfr();
-        const CStatusMessage::StatusSeverity severity = strict ? CStatusMessage::SeverityError : CStatusMessage::SeverityWarning;
-        messages.push_back(CStatusMessage(this).validationInfo(strict ? QStringLiteral("Strict validation") : QStringLiteral("Lenient validation")));
 
         const CFlightPlan::FlightRules rules = this->getFlightRules();
         flightPlan.setFlightRule(rules);
@@ -396,7 +393,7 @@ namespace BlackGui::Components
         v = ui->le_EstimatedTimeEnroute->text();
         if (v.isEmpty() || v == defaultTime())
         {
-            messages.push_back(CStatusMessage(this).validation(severity, u"Missing '%1'") << ui->lbl_EstimatedTimeEnroute->text());
+            messages.push_back(CStatusMessage(this).validationWarning(u"Missing '%1'") << ui->lbl_EstimatedTimeEnroute->text());
         }
         flightPlan.setEnrouteTime(v);
 
@@ -404,7 +401,7 @@ namespace BlackGui::Components
         v = ui->le_FuelOnBoard->text();
         if (v.isEmpty() || v == defaultTime())
         {
-            messages.push_back(CStatusMessage(this).validation(severity, u"Missing '%1'") << ui->lbl_FuelOnBoard->text());
+            messages.push_back(CStatusMessage(this).validationWarning(u"Missing '%1'") << ui->lbl_FuelOnBoard->text());
         }
         flightPlan.setFuelTime(v);
 
@@ -412,7 +409,7 @@ namespace BlackGui::Components
         v = ui->le_TakeOffTimePlanned->text();
         if (v.isEmpty() || v == defaultTime())
         {
-            messages.push_back(CStatusMessage(this).validation(severity, u"Missing '%1'") << ui->lbl_TakeOffTimePlanned->text());
+            messages.push_back(CStatusMessage(this).validationWarning(u"Missing '%1'") << ui->lbl_TakeOffTimePlanned->text());
         }
         flightPlan.setTakeoffTimePlanned(v);
 
@@ -433,11 +430,7 @@ namespace BlackGui::Components
         else
         {
             flightPlan.setDestinationAirportIcao(v);
-            if (strict && !flightPlan.getDestinationAirportIcao().hasValidIcaoCode(true))
-            {
-                messages.push_back(CStatusMessage(this).validationError(u"Invalid destination ICAO code '%1'") << v);
-            }
-            else if (!flightPlan.getDestinationAirportIcao().hasValidIcaoCode(false))
+            if (!flightPlan.getDestinationAirportIcao().hasValidIcaoCode(false))
             {
                 messages.push_back(CStatusMessage(this).validationWarning(u"Wrong or missing '%1'") << ui->lbl_DestinationAirport->text());
             }
@@ -453,11 +446,7 @@ namespace BlackGui::Components
         else
         {
             flightPlan.setOriginAirportIcao(v);
-            if (strict && !flightPlan.getOriginAirportIcao().hasValidIcaoCode(true))
-            {
-                messages.push_back(CStatusMessage(this).validationError(u"Invalid origin ICAO code '%1'") << v);
-            }
-            else if (!flightPlan.getOriginAirportIcao().hasValidIcaoCode(false))
+            if (!flightPlan.getOriginAirportIcao().hasValidIcaoCode(false))
             {
                 messages.push_back(CStatusMessage(this).validationWarning(u"Wrong or missing '%1'") << ui->lbl_DestinationAirport->text());
             }

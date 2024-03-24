@@ -708,16 +708,6 @@
              </property>
             </widget>
            </item>
-           <item row="2" column="2">
-            <widget class="QCheckBox" name="cb_StrictCheck">
-             <property name="toolTip">
-              <string>strict check</string>
-             </property>
-             <property name="text">
-              <string>strict &amp;check</string>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="2">
             <widget class="QPushButton" name="pb_ValidateFlightPlan">
              <property name="text">
@@ -1184,7 +1174,6 @@
   <tabstop>pb_SimBrief</tabstop>
   <tabstop>pb_SaveDisk</tabstop>
   <tabstop>pb_LoadDisk</tabstop>
-  <tabstop>cb_StrictCheck</tabstop>
   <tabstop>pb_SaveTemplate</tabstop>
   <tabstop>pb_LoadTemplate</tabstop>
   <tabstop>pb_ClearTemplate</tabstop>
