@@ -35,6 +35,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/lib)
 option(SWIFT_BUILD_SAMPLES "Build samples" ON)
 option(SWIFT_BUILD_UNIT_TESTS "Build unit tests" ON)
 option(SWIFT_BUILD_DOCUMENTATION "Build documentation" ON)
+option(SWIFT_ENABLE_CLANG_TIDY "Enable clang-tidy" OFF)
 
 cmake_dependent_option(SWIFT_BUILD_FS9_PLUGIN "Build FS9 plugin" ON SWIFT_WIN32 OFF)
 cmake_dependent_option(SWIFT_BUILD_FSX_PLUGIN "Build FSX plugin" ON SWIFT_WIN32 OFF)

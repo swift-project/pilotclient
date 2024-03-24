@@ -747,3 +747,7 @@ install(TARGETS misc
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
 )
+
+if(SWIFT_ENABLE_CLANG_TIDY AND UNIX AND NOT APPLE)
+    set_target_properties(misc PROPERTIES CXX_CLANG_TIDY "clang-tidy")
+endif()
