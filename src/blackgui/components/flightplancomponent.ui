@@ -743,20 +743,6 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QPushButton" name="pb_Prefill">
-             <property name="toolTip">
-              <string>Anticipate (guess) some values</string>
-             </property>
-             <property name="text">
-              <string>&amp;Prefill</string>
-             </property>
-             <property name="icon">
-              <iconset resource="../../blackmisc/blackmisc.qrc">
-               <normaloff>:/diagona/icons/diagona/icons/compass--pencil.png</normaloff>:/diagona/icons/diagona/icons/compass--pencil.png</iconset>
-             </property>
-            </widget>
-           </item>
            <item row="3" column="0">
             <widget class="QPushButton" name="pb_SaveTemplate">
              <property name="text">
@@ -1155,7 +1141,6 @@
   <tabstop>le_PilotsName</tabstop>
   <tabstop>le_PilotsHomeBase</tabstop>
   <tabstop>le_LastSent</tabstop>
-  <tabstop>pb_Prefill</tabstop>
   <tabstop>pb_Reset</tabstop>
   <tabstop>pb_Send</tabstop>
   <tabstop>pb_Download</tabstop>

@@ -125,7 +125,6 @@ namespace BlackGui::Components
         connect(ui->pb_Download, &QPushButton::pressed, this, &CFlightPlanComponent::loadFlightPlanFromNetwork, Qt::QueuedConnection);
         connect(ui->pb_Reset, &QPushButton::pressed, this, &CFlightPlanComponent::resetFlightPlan, Qt::QueuedConnection);
         connect(ui->tb_SyncWithSimulator, &QPushButton::released, this, &CFlightPlanComponent::syncWithSimulator, Qt::QueuedConnection);
-        connect(ui->pb_Prefill, &QPushButton::pressed, this, &CFlightPlanComponent::anticipateValues, Qt::QueuedConnection);
         connect(ui->pb_SimBrief, &QPushButton::pressed, this, &CFlightPlanComponent::loadFromSimBrief, Qt::QueuedConnection);
 
         connect(ui->pb_SaveTemplate, &QPushButton::released, this, &CFlightPlanComponent::saveTemplateToDisk, Qt::QueuedConnection);
@@ -810,62 +809,6 @@ namespace BlackGui::Components
             if (reply != QMessageBox::Yes) { return false; }
         }
         return true;
-    }
-
-    void CFlightPlanComponent::anticipateValues()
-    {
-        if (!this->overrideRemarks()) { return; }
-        CStatusMessageList msgs;
-        const bool vfr = this->isVfr();
-        const bool airline = m_model.hasAirlineDesignator();
-
-        if (vfr)
-        {
-            ui->cb_NoSidsStarts->setChecked(true);
-            msgs.push_back(CStatusMessage(this).validationInfo(u"No SID/STARs"));
-            ui->cb_RequiredNavigationPerformance->setCurrentIndex(0);
-            ui->cb_PerformanceCategory->setCurrentIndex(0);
-            msgs.push_back(CStatusMessage(this).validationInfo(u"Set performance to VFR"));
-        }
-        else
-        {
-            // IFR
-            const CAircraftIcaoCode icao = this->getAircraftIcaoCode();
-            if (icao.isLoadedFromDb())
-            {
-                if (icao.getEnginesCount() >= 2 && icao.getEngineType() == "J")
-                {
-                    // jet with >=2 engines
-                    msgs.push_back(CStatusMessage(this).validationInfo(u"Jet >=2 engines"));
-                    msgs.push_back(CStatusMessage(this).validationInfo(u"SID/STARs"));
-                    ui->cb_NoSidsStarts->setChecked(false);
-                    msgs.push_back(CStatusMessage(this).validationInfo(u"Capable of SIDs/STARs"));
-
-                    // reset those values
-                    ui->cb_RequiredNavigationPerformance->setCurrentIndex(0);
-                    ui->cb_PerformanceCategory->setCurrentIndex(0);
-                }
-            } // ICAO
-        }
-
-        // further info if having model from DB
-        if (m_model.isLoadedFromDb())
-        {
-            if (airline)
-            {
-                ui->le_AirlineOperator->setText(m_model.getAirlineIcaoCode().getName());
-            }
-        }
-
-        // messages
-        this->showOverlayMessages(msgs, false, OverlayTimeoutMs);
-
-        // copy over
-        if (msgs.isSuccess())
-        {
-            this->buildRemarksString();
-            this->copyRemarks(false);
-        }
     }
 
     void CFlightPlanComponent::updateDirectorySettings(const QString &fileOrDirectory)

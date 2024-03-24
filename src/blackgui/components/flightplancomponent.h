@@ -242,9 +242,6 @@ namespace BlackGui::Components
         //! Override remarks message dialog
         bool overrideRemarks();
 
-        //! Guess some FP values/setting
-        void anticipateValues();
-
         //! Update the diretcory settings
         void updateDirectorySettings(const QString &fileOrDirectory);
 
