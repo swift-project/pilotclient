@@ -213,14 +213,7 @@ namespace BlackCore
             std::atomic_bool m_history { true }; //!< enable history
             BlackMisc::Aviation::CAircraftSituationList m_situationHistory; //!< history, latest situation first
 
-            BlackMisc::Aviation::CComSystem m_lastEvaluatedCom1;
-            BlackMisc::Aviation::CComSystem m_lastEvaluatedCom2;
-
             BlackMisc::CSetting<BlackMisc::Network::Settings::TCurrentTrafficServer> m_currentNetworkServer { this };
-
-            //! Station has disconnected
-            //! \ingroup crosscontextfunction
-            void xCtxAtcStationDisconnected(const BlackMisc::Aviation::CAtcStation &atcStation);
 
             //! Simulator model has been changed
             //! \ingroup crosscontextfunction
@@ -247,9 +240,6 @@ namespace BlackCore
 
             //! Update own model and emit signal with identifier
             bool updateOwnModel(const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &identifier);
-
-            //! Evaluate COM stations
-            void evaluateComStations(bool atcChanged);
 
             //! Reverse lookup of the model against DB data
             static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);

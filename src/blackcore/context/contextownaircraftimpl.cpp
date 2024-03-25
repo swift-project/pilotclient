@@ -6,7 +6,6 @@
 // ----- cross context -----
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextaudio.h"
-#include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulator.h"
 // ----- cross context -----
 
@@ -242,39 +241,6 @@ namespace BlackCore::Context
         return true;
     }
 
-    void CContextOwnAircraft::evaluateComStations(bool atcChanged)
-    {
-        if (!sApp || sApp->isShuttingDown() || !sApp->getCContextAudioBase() || !sApp->getIContextNetwork()) { return; }
-
-        CComSystem com1;
-        CComSystem com2;
-        CComSystem lastCom1;
-        CComSystem lastCom2;
-        {
-            QReadLocker l(&m_lockAircraft);
-            com1 = m_ownAircraft.getCom1System();
-            com2 = m_ownAircraft.getCom2System();
-            lastCom1 = m_lastEvaluatedCom1;
-            lastCom2 = m_lastEvaluatedCom2;
-        }
-
-        const bool changedCom1Freq = (lastCom1.getFrequencyActive() != com1.getFrequencyActive());
-        const bool changedCom2Freq = (lastCom2.getFrequencyActive() != com2.getFrequencyActive());
-
-        if (!atcChanged && !changedCom1Freq && !changedCom2Freq) { return; }
-
-        const CAtcStationList atcs = sApp->getIContextNetwork()->getAtcStationsOnline(true).findInRange();
-        const bool atcCom1 = atcs.hasComUnitTunedInChannelSpacing(com1);
-        const bool atcCom2 = atcs.hasComUnitTunedInChannelSpacing(com2);
-
-        // remember if I was tuned in, abusing the flag
-        com1.setReceiveEnabled(atcCom1);
-        com2.setReceiveEnabled(atcCom2);
-        QWriteLocker l(&m_lockAircraft);
-        m_lastEvaluatedCom1 = com1;
-        m_lastEvaluatedCom2 = com1;
-    }
-
     bool CContextOwnAircraft::updateOwnSituation(const CAircraftSituation &situation)
     {
         QWriteLocker l(&m_lockAircraft);
@@ -339,7 +305,6 @@ namespace BlackCore::Context
         }
         if (changed)
         {
-            this->evaluateComStations(false);
             emit this->changedAircraftCockpit(m_ownAircraft, originator);
         }
         return changed;
@@ -382,7 +347,6 @@ namespace BlackCore::Context
         }
 
         const bool changed = this->updateCockpit(com1, com2, xpdr, originator);
-        if (changed) { this->evaluateComStations(false); }
         return changed;
     }
 
@@ -447,12 +411,6 @@ namespace BlackCore::Context
         }
         emit this->changedSelcal(selcal, originator);
         return true;
-    }
-
-    void CContextOwnAircraft::xCtxAtcStationDisconnected(const CAtcStation &atcStation)
-    {
-        Q_UNUSED(atcStation)
-        this->evaluateComStations(true);
     }
 
     void CContextOwnAircraft::xCtxChangedSimulatorModel(const CAircraftModel &model, const CIdentifier &identifier)
