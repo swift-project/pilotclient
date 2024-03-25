@@ -33,15 +33,6 @@ namespace BlackMisc::Network
 
         //! Construct from a base class object.
         CClientList(const CSequence &other);
-
-        //! Has client for callsign the given capability?
-        bool hasCapability(const Aviation::CCallsign &callsign, CClient::Capability capability) const;
-
-        //! Capabilities of client for callsign
-        CClient::Capabilities getCapabilities(const Aviation::CCallsign &callsign) const;
-
-        //! Filter pilots by callsign in set
-        CClientList filterPilotsByCallsign(const Aviation::CCallsignSet &callsigns) const;
     };
 
     //! Client per callsign
