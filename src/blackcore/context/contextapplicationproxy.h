@@ -9,7 +9,6 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackmisc/identifierset.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/valuecache.h"
 
@@ -17,6 +16,7 @@
 #include <QString>
 #include <QStringList>
 #include <QTimer>
+#include <QSet>
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -100,7 +100,7 @@ namespace BlackCore
 
         private:
             BlackMisc::CGenericDBusInterface *m_dBusInterface = nullptr; //!< interface
-            BlackMisc::CIdentifierSet m_proxyPingIdentifiers; //!< automatically ping the implementing side
+            QSet<BlackMisc::CIdentifier> m_proxyPingIdentifiers; //!< automatically ping the implementing side
             QTimer m_pingTimer;
 
             //! Relay connection signals to local signals

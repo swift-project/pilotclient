@@ -133,7 +133,7 @@ namespace BlackCore::Context
     {
         if (!m_dBusInterface) { return; }
         if (m_proxyPingIdentifiers.isEmpty()) { return; }
-        const CIdentifierSet identifiers = m_proxyPingIdentifiers; // copy so member can be modified
+        const QSet<BlackMisc::CIdentifier> identifiers = m_proxyPingIdentifiers; // copy so member can be modified
         for (const CIdentifier &identifier : identifiers)
         {
             this->registerApplication(identifier);

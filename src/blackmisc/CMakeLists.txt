@@ -234,8 +234,6 @@ add_library(misc SHARED
         identifier.h
         identifierlist.cpp
         identifierlist.h
-        identifierset.cpp
-        identifierset.h
         imageutils.cpp
         imageutils.h
         inheritancetraits.h
