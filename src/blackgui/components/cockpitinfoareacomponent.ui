@@ -195,7 +195,7 @@
     <set>Qt::BottomDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string>Adv./distributed audio</string>
+    <string>Distributed audio</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>8</number>

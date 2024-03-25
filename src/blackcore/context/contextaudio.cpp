@@ -227,19 +227,6 @@ namespace BlackCore::Context
         QObject::disconnect(this);
     }
 
-    void CContextAudioBase::enableVoiceClientAndStart()
-    {
-        this->initVoiceClient();
-        if (m_voiceClient)
-        {
-            m_voiceClient->startAudio();
-            const bool connected = this->connectAudioWithNetworkCredentials();
-            Q_UNUSED(connected)
-
-            // one reason for not connecting is NOT using the VATSIM ecosystem
-        }
-    }
-
     void CContextAudioBase::setRxTx(bool rx1, bool tx1, bool rx2, bool tx2)
     {
         if (m_voiceClient)

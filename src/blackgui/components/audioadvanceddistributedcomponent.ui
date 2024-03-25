@@ -14,13 +14,6 @@
    <string>Frame</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="2">
-    <widget class="QPushButton" name="pb_EnableDisable">
-     <property name="text">
-      <string>enable</string>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="0" colspan="3">
     <widget class="BlackGui::Views::CAudioDeviceInfoView" name="tvp_RegisteredDevices">
      <property name="selectionMode">
@@ -35,20 +28,6 @@
      <attribute name="verticalHeaderHighlightSections">
       <bool>true</bool>
      </attribute>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QPushButton" name="pb_StartStop">
-     <property name="text">
-      <string>stop</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="lbl_EnableDisable">
-     <property name="text">
-      <string>Audio:</string>
-     </property>
     </widget>
    </item>
    <item row="3" column="2">
@@ -68,8 +47,6 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>pb_StartStop</tabstop>
-  <tabstop>pb_EnableDisable</tabstop>
   <tabstop>tvp_RegisteredDevices</tabstop>
   <tabstop>pb_ReloadRegistered</tabstop>
  </tabstops>

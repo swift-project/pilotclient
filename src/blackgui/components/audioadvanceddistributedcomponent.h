@@ -35,21 +35,6 @@ namespace BlackGui::Components
     private:
         QScopedPointer<Ui::CAudioAdvancedDistributedComponent> ui;
 
-        //! Audio start/stop
-        void toggleAudioStartStop();
-
-        //! Audio enable/disable
-        void toggleAudioEnableDisable();
-
-        //! @{
-        //! Start/stop button
-        void setButtons();
-        void setButtons(int delayMs);
-        //! @}
-
-        void onAudioStarted(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
-        void onAudioStoppend();
-
         //! Contexts
         static bool hasContexts();
     };
