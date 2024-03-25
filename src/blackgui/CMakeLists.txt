@@ -591,7 +591,6 @@ add_library(gui SHARED
         components/remoteaircraftselector.ui
         components/aircraftcombinedtypeselector.ui
         components/infobarwebreadersstatuscomponent.cpp
-        components/afvmapdialog.ui
         components/dbdistributorselectorcomponent.cpp
         components/networkdetailscomponent.h
         components/otherswiftversionsdialog.h
@@ -660,7 +659,6 @@ add_library(gui SHARED
         components/coreinfoareacomponent.h
         components/rawfsdmessagesdialog.ui
         components/dbautostashingcomponent.h
-        components/afvmapdialog.h
         components/transpondermodecomponent.h
         components/remoteaircraftselector.cpp
         components/stringlistdialog.cpp
@@ -669,7 +667,6 @@ add_library(gui SHARED
         components/settingssimulatorcomponent.cpp
         components/dbairlineicaoselectorbase.h
         components/dbownmodelsdialog.ui
-        components/afvmapdialog.cpp
         components/dbmodelcomponent.ui
         components/modelmatcherlogcomponent.cpp
         components/airportcompleter.ui

@@ -7,7 +7,6 @@
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/dbloaddatadialog.h"
 #include "blackgui/components/autopublishdialog.h"
-#include "blackgui/components/afvmapdialog.h"
 #include "blackgui/components/logindialog.h"
 #include "blackgui/components/modelbrowserdialog.h"
 #include "blackgui/components/settingscomponent.h"
@@ -645,16 +644,6 @@ bool SwiftGuiStd::startModelBrowser()
 
 bool SwiftGuiStd::startAFVMap()
 {
-    /**
-    if (!m_mapDialog)
-    {
-        m_mapDialog.reset(new CAfvMapDialog(this));
-        m_mapDialog->setWindowModality(Qt::NonModal);
-    }
-    m_mapDialog->exec();
-    **/
-
-    //! \todo KB 2019-11 AFV map workaround
     if (sGui && !sGui->isShuttingDown())
     {
         sGui->openUrl(sGui->getGlobalSetup().getAfvMapUrl());
