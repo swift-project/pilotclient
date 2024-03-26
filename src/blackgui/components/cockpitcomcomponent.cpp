@@ -112,16 +112,6 @@ namespace BlackGui::Components
 
         // update transponder
         ui->editor_Com->setTransponder(transponder);
-
-        // selected stations
-        if (sGui)
-        {
-            if (sGui->getIContextNetwork())
-            {
-                const CAtcStationList selectedStations = sGui->getIContextNetwork()->getSelectedAtcStations();
-                ui->editor_Com->setSelectedAtcStations(selectedStations);
-            }
-        }
     }
 
     void CCockpitComComponent::testSelcal()

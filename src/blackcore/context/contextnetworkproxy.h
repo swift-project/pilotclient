@@ -133,9 +133,6 @@ namespace BlackCore
             //! \copydoc BlackCore::Context::IContextNetwork::getMetarForAirport
             BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) const override;
 
-            //! \copydoc BlackCore::Context::IContextNetwork::getSelectedAtcStations
-            virtual BlackMisc::Aviation::CAtcStationList getSelectedAtcStations() const override;
-
             //! \copydoc BlackCore::Context::IContextNetwork::getUsers
             virtual BlackMisc::Network::CUserList getUsers() const override;
 
