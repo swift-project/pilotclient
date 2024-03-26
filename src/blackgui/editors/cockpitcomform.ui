@@ -133,9 +133,6 @@
        </widget>
       </item>
       <item>
-       <widget class="BlackGui::CLedWidget" name="led_ComPanelCom2" native="true"/>
-      </item>
-      <item>
        <widget class="BlackGui::CLedWidget" name="led_ComPanelCom2T" native="true"/>
       </item>
       <item>
@@ -258,9 +255,6 @@
          <cstring>qw_ComPanelCom1Active</cstring>
         </property>
        </widget>
-      </item>
-      <item>
-       <widget class="BlackGui::CLedWidget" name="led_ComPanelCom1" native="true"/>
       </item>
       <item>
        <widget class="BlackGui::CLedWidget" name="led_ComPanelCom1T" native="true"/>

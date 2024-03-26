@@ -187,14 +187,6 @@ namespace BlackCore::Context
             return {};
         }
 
-        //! \copydoc IContextNetwork::getSelectedAtcStations
-        virtual BlackMisc::Aviation::CAtcStationList getSelectedAtcStations() const override
-        {
-            logEmptyContextWarning(Q_FUNC_INFO);
-            // normally 2 entries
-            return BlackMisc::Aviation::CAtcStationList({ BlackMisc::Aviation::CAtcStation(), BlackMisc::Aviation::CAtcStation() });
-        }
-
         //! \copydoc IContextNetwork::getUsers()
         virtual BlackMisc::Network::CUserList getUsers() const override
         {

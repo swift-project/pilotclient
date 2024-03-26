@@ -39,9 +39,6 @@ namespace BlackGui::Editors
         //! Set the XPDR values
         void setTransponder(const BlackMisc::Aviation::CTransponder &transponder);
 
-        //! Set selected stations
-        void setSelectedAtcStations(const BlackMisc::Aviation::CAtcStationList &selectedStations);
-
         //! Set to BlackMisc::Aviation::CTransponder::StateIdent
         void setTransponderModeStateIdent();
 

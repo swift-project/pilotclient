@@ -1331,18 +1331,6 @@ namespace BlackCore::Context
         return sApp->getWebDataServices()->getMetarForAirport(airportIcaoCode);
     }
 
-    CAtcStationList CContextNetwork::getSelectedAtcStations() const
-    {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        CAtcStation com1Station = m_airspace->getAtcStationForComUnit(this->ownAircraft().getCom1System());
-        CAtcStation com2Station = m_airspace->getAtcStationForComUnit(this->ownAircraft().getCom2System());
-
-        CAtcStationList selectedStations;
-        selectedStations.push_back(com1Station);
-        selectedStations.push_back(com2Station);
-        return selectedStations;
-    }
-
     QMetaObject::Connection CContextNetwork::connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot)
     {
         Q_ASSERT_X(receiver, Q_FUNC_INFO, "Missing receiver");
