@@ -86,12 +86,6 @@ namespace BlackCore::Context
         //! Current simulator
         BlackMisc::Simulation::CSimulatorInfo getSimulatorInfo() const;
 
-        //! Update current settings
-        bool updateCurrentSettings(const BlackMisc::Simulation::Settings::CSimulatorSettings &settings);
-
-        //! Update current setting for COM integration (aka "synced")
-        bool updateCurrentSettingComIntegration(bool comIntegration);
-
     signals:
         //! Simulator combined status
         //! \sa ISimulator::SimulatorStatus

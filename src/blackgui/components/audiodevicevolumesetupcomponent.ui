@@ -246,16 +246,6 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QCheckBox" name="cb_IntegratedWithCom">
-        <property name="toolTip">
-         <string>integrated with sim. cockpit</string>
-        </property>
-        <property name="text">
-         <string>sync.</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
@@ -413,7 +403,6 @@
   <tabstop>cb_1Tx</tabstop>
   <tabstop>cb_2Rec</tabstop>
   <tabstop>cb_2Tx</tabstop>
-  <tabstop>cb_IntegratedWithCom</tabstop>
   <tabstop>cb_SetupAudioInputDevice</tabstop>
   <tabstop>tb_RefreshInDevice</tabstop>
   <tabstop>cb_SetupAudioOutputDevice</tabstop>
