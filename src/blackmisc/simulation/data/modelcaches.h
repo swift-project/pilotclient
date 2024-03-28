@@ -392,7 +392,7 @@ namespace BlackMisc::Simulation::Data
         CData<Data::TModelSetCacheFG> m_modelCacheFG { this, &CModelSetCaches::changedFG }; //!< FG cache
         CData<Data::TModelSetCacheMsfs> m_modelCacheMsfs { this, &CModelSetCaches::changedMsfs }; //!< MSFS cache
         //! \copydoc BlackMisc::Simulation::Data::IMultiSimulatorModelCaches::getCachedModels
-        
+
         //! Non virtual version (can be used in ctor)
         void synchronizeCacheImpl(const CSimulatorInfo &simulator);
 
