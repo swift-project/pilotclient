@@ -480,9 +480,12 @@ namespace BlackSimPlugin::FsxCommon
         //! \threadsafe
         void updateOwnAircraftFromSimulator(const DataDefinitionClientAreaSb &sbDataArea);
 
-        //! Update from FSUIPC
+        //! Update transponder mode
         //! \threadsafe
-        void updateOwnAircraftFromSimulatorFsuipc(const BlackMisc::Aviation::CTransponder &xpdr);
+        void updateTransponderMode(const BlackMisc::Aviation::CTransponder::TransponderMode xpdrMode);
+
+        //! Update transponder mode from MSFS
+        void updateMSFSTransponderMode(const DataDefinitionMSFSTransponderMode transponderMode);
 
         //! An AI aircraft was added in the simulator
         bool simulatorReportedObjectAdded(DWORD objectId);

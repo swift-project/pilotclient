@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>188</width>
-    <height>66</height>
+    <width>271</width>
+    <height>74</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -88,6 +88,13 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QCheckBox" name="cb_MSFS">
+        <property name="text">
+         <string>MSFS2020</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -156,6 +163,13 @@
         </property>
         <property name="text">
          <string>FG</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="rb_MSFS">
+        <property name="text">
+         <string>MSFS2020</string>
         </property>
        </widget>
       </item>

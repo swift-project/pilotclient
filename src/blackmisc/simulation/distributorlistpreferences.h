@@ -52,6 +52,7 @@ namespace BlackMisc::Simulation
         CDistributorList m_distributorsFs9;
         CDistributorList m_distributorsXPlane;
         CDistributorList m_distributorsFG;
+        CDistributorList m_distributorsMsfs;
         CSimulatorInfo m_lastUpdatedSimulator;
 
         BLACK_METACLASS(
@@ -61,6 +62,7 @@ namespace BlackMisc::Simulation
             BLACK_METAMEMBER(distributorsFs9),
             BLACK_METAMEMBER(distributorsXPlane),
             BLACK_METAMEMBER(distributorsFG),
+            BLACK_METAMEMBER(distributorsMsfs),
             BLACK_METAMEMBER(lastUpdatedSimulator)
         );
     };

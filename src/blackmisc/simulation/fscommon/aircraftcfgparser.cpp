@@ -149,7 +149,8 @@ namespace BlackMisc::Simulation::FsCommon
         // set directory with name filters, get aircraft.cfg and sub directories
         static const QString NoNameFilter;
         QDir dir(directory, NoNameFilter, QDir::Name, QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot);
-        dir.setNameFilters(fileNameFilters());
+        // for MSFS we need only aircraft.cfg
+        dir.setNameFilters(fileNameFilters(getSimulator().isMSFS()));
         if (!dir.exists())
         {
             return CAircraftCfgEntriesList(); // can happen if there are shortcuts or linked dirs not available
@@ -469,9 +470,9 @@ namespace BlackMisc::Simulation::FsCommon
         return content;
     }
 
-    const QStringList &CAircraftCfgParser::fileNameFilters()
+    const QStringList &CAircraftCfgParser::fileNameFilters(bool isMSFS)
     {
-        if (CBuildConfig::buildWordSize() == 32)
+        if (CBuildConfig::buildWordSize() == 32 || isMSFS)
         {
             static const QStringList f({ "aircraft.cfg" });
             return f;

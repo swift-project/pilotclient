@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
+// SPDX-FileCopyrightText: Copyright (C) 2018 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simulatorfsxcommon.h"
@@ -137,31 +137,6 @@ namespace BlackSimPlugin::FsxCommon
         return this->physicallyAddRemoteAircraftImpl(newRemoteAircraft, ExternalCall);
     }
 
-    bool CSimulatorFsxCommon::updateCOMFromSwiftToSimulator(const CFrequency &newFreq, const CFrequency &lastSimFreq, CFrequency &last25kHzSimFreq, EventIds id)
-    {
-        if (newFreq == lastSimFreq) { return false; }
-
-        if (CComSystem::isExclusiveWithin8_33kHzChannel(newFreq) && last25kHzSimFreq.isNull())
-        {
-            // Switch from 25 to 8.33
-            // Store last 25 kHz frequency and do not send to simulator
-            last25kHzSimFreq = lastSimFreq;
-            return false;
-        }
-
-        if (CComSystem::isWithin25kHzChannel(newFreq))
-        {
-            // Send to simulator
-            last25kHzSimFreq.setNull();
-            SimConnect_TransmitClientEvent(m_hSimConnect, 0, id,
-                                           CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-            return true;
-        }
-
-        // Already 8.33 -> nothing to do
-        return false;
-    }
-
     bool CSimulatorFsxCommon::updateOwnSimulatorCockpit(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
     {
         if (originator == this->identifier()) { return false; }
@@ -173,11 +148,42 @@ namespace BlackSimPlugin::FsxCommon
         const CTransponder newTransponder = ownAircraft.getTransponder();
 
         bool changed = false;
+        if (newCom1.getFrequencyActive() != m_simCom1.getFrequencyActive())
+        {
+            const CFrequency newFreq = newCom1.getFrequencyActive();
+            SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom1Active,
+                                           CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            changed = true;
+        }
+        if (newCom1.getFrequencyStandby() != m_simCom1.getFrequencyStandby())
+        {
+            const CFrequency newFreq = newCom1.getFrequencyStandby();
+            SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom1Standby,
+                                           CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            changed = true;
+        }
 
-        changed |= updateCOMFromSwiftToSimulator(newCom1.getFrequencyActive(), m_simCom1.getFrequencyActive(), m_lastCom1Active, EventSetCom1Active);
-        changed |= updateCOMFromSwiftToSimulator(newCom1.getFrequencyStandby(), m_simCom1.getFrequencyStandby(), m_lastCom1Standby, EventSetCom1Standby);
-        changed |= updateCOMFromSwiftToSimulator(newCom2.getFrequencyActive(), m_simCom2.getFrequencyActive(), m_lastCom2Active, EventSetCom2Active);
-        changed |= updateCOMFromSwiftToSimulator(newCom2.getFrequencyStandby(), m_simCom2.getFrequencyStandby(), m_lastCom2Standby, EventSetCom2Standby);
+        if (newCom2.getFrequencyActive() != m_simCom2.getFrequencyActive())
+        {
+            const CFrequency newFreq = newCom2.getFrequencyActive();
+            SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom2Active,
+                                           CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            changed = true;
+        }
+        if (newCom2.getFrequencyStandby() != m_simCom2.getFrequencyStandby())
+        {
+            const CFrequency newFreq = newCom2.getFrequencyStandby();
+            SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom2Standby,
+                                           CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            changed = true;
+        }
+
+        if (newTransponder.getTransponderCode() != m_simTransponder.getTransponderCode())
+        {
+            SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTransponderCode,
+                                           CBcdConversions::transponderCodeToBcd(newTransponder), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            changed = true;
+        }
 
         if (newTransponder.getTransponderMode() != m_simTransponder.getTransponderMode())
         {
@@ -208,6 +214,25 @@ namespace BlackSimPlugin::FsxCommon
             else if (m_useFsuipc && m_fsuipc)
             {
                 m_fsuipc->write(newTransponder);
+                changed = true;
+            }
+            else if (this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS())
+            {
+                DataDefinitionMSFSTransponderMode t;
+                t.transponderMode = (newTransponder.isInStandby() ? 1 : 4);
+                t.ident = newTransponder.isIdentifying();
+
+                HRESULT hr = s_ok();
+
+                hr += SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataTransponderModeMSFS,
+                                                    SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0,
+                                                    sizeof(DataDefinitionMSFSTransponderMode), &t);
+
+                if (isFailure(hr))
+                {
+                    CLogMessage(this).warning(u"Setting transponder mode failed (MSFS)");
+                }
+
                 changed = true;
             }
         }
@@ -484,32 +509,48 @@ namespace BlackSimPlugin::FsxCommon
         const CFsxP3DSettings settings = m_detailsSettings.getSettings(this->getSimulatorInfo());
         m_useAddSimulatedObj = settings.isAddingAsSimulatedObjectEnabled();
         m_useSbOffsets = settings.isSbOffsetsEnabled();
+        if (this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS())
+        {
+            m_useSbOffsets = false; // Always disable SbOffsets for MSFS. Using new transponder mode property directly
+        }
 
-        const HRESULT hr1 = this->logAndTraceSendId(
+        HRESULT hr = s_ok();
+        hr += this->logAndTraceSendId(
             SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestOwnAircraft,
                                               CSimConnectDefinitions::DataOwnAircraft, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_VISUAL_FRAME),
             "Cannot request own aircraft data", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
 
-        const HRESULT hr2 = this->logAndTraceSendId(
+        hr += this->logAndTraceSendId(
             SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestOwnAircraftTitle,
                                               CSimConnectDefinitions::DataOwnAircraftTitle,
                                               SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SECOND, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
             "Cannot request title", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
 
-        const HRESULT hr3 = this->logAndTraceSendId(
+        hr += this->logAndTraceSendId(
             SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestSimEnvironment,
                                               CSimConnectDefinitions::DataSimEnvironment,
                                               SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SECOND, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
             "Cannot request sim.env.", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
 
-        // Request the data from SB only when its changed and only ONCE so we don't have to run a 1sec event to get/set this info ;)
-        // there was a bug with SIMCONNECT_CLIENT_DATA_PERIOD_ON_SET, see https://www.prepar3d.com/forum/viewtopic.php?t=124789
-        const HRESULT hr4 = this->logAndTraceSendId(
-            SimConnect_RequestClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::RequestSbData,
-                                         CSimConnectDefinitions::DataClientAreaSb, SIMCONNECT_CLIENT_DATA_PERIOD_SECOND, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED),
-            "Cannot request client data", Q_FUNC_INFO, "SimConnect_RequestClientData");
+        if (!this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS())
+        {
+            // Request the data from SB only when its changed and only ONCE so we don't have to run a 1sec event to get/set this info ;)
+            // there was a bug with SIMCONNECT_CLIENT_DATA_PERIOD_ON_SET, see https://www.prepar3d.com/forum/viewtopic.php?t=124789
+            hr += this->logAndTraceSendId(
+                SimConnect_RequestClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::RequestSbData,
+                                             CSimConnectDefinitions::DataClientAreaSb, SIMCONNECT_CLIENT_DATA_PERIOD_SECOND, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED),
+                "Cannot request client data", Q_FUNC_INFO, "SimConnect_RequestClientData");
+        }
+        else
+        {
+            hr += this->logAndTraceSendId(
+                SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestMSFSTransponder,
+                                                  CSimConnectDefinitions::DataTransponderModeMSFS,
+                                                  SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_VISUAL_FRAME, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
+                "Cannot request MSFS transponder data", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
+        }
 
-        if (isFailure(hr1, hr2, hr3, hr4)) { return; }
+        if (isFailure(hr)) { return; }
         this->emitSimulatorCombinedStatus(); // force sending status
     }
 
@@ -690,7 +731,7 @@ namespace BlackSimPlugin::FsxCommon
 
         for (int index = 0; index < simulatorOwnAircraft.numberOfEngines; ++index)
         {
-            engines.push_back(CAircraftEngine(index + 1, helperList.value(index, true)));
+            engines.push_back(CAircraftEngine(index + 1, helperList.at(index)));
         }
 
         const CAircraftParts parts(lights,
@@ -726,31 +767,7 @@ namespace BlackSimPlugin::FsxCommon
             const int com1Status = qRound(simulatorOwnAircraft.comStatus1); // Radio status flag : -1 =Invalid 0 = OK 1 = Does not exist 2 = No electricity 3 = Failed
             com1.setTransmitEnabled(com1Status == 0 && com1Transmit);
             com1.setReceiveEnabled(com1Status == 0 && (comReceiveAll || com1Transmit));
-
-            const bool changedCom1Active = myAircraft.getCom1System().getFrequencyActive() != com1.getFrequencyActive() && com1.getFrequencyActive() != m_lastCom1Active;
-            const bool changedCom1Standby = myAircraft.getCom1System().getFrequencyStandby() != com1.getFrequencyStandby() && com1.getFrequencyStandby() != m_lastCom1Standby;
-
-            // Avoid overwrite of 8.33 kHz frequency with data from simulator
-            if (!changedCom1Active)
-            {
-                com1.setFrequencyActive(myAircraft.getCom1System().getFrequencyActive());
-            }
-            else
-            {
-                m_lastCom1Active.setNull();
-            }
-
-            if (!changedCom1Standby)
-            {
-                com1.setFrequencyStandby(myAircraft.getCom1System().getFrequencyStandby());
-            }
-            else
-            {
-                m_lastCom1Standby.setNull();
-            }
-
             const bool changedCom1 = myAircraft.getCom1System() != com1;
-
             m_simCom1 = com1;
             Q_UNUSED(com1Test)
 
@@ -761,30 +778,7 @@ namespace BlackSimPlugin::FsxCommon
             const int com2Status = qRound(simulatorOwnAircraft.comStatus2); // Radio status flag : -1 =Invalid 0 = OK 1 = Does not exist 2 = No electricity 3 = Failed
             com2.setTransmitEnabled(com2Status == 0 && com2Transmit);
             com2.setReceiveEnabled(com2Status == 0 && (comReceiveAll || com2Transmit));
-            const bool changedCom2Active = myAircraft.getCom2System().getFrequencyActive() != com2.getFrequencyActive() && com2.getFrequencyActive() != m_lastCom2Active;
-            const bool changedCom2Standby = myAircraft.getCom2System().getFrequencyStandby() != com2.getFrequencyStandby() && com2.getFrequencyStandby() != m_lastCom2Standby;
-
-            // Avoid overwrite of 8.33 kHz frequency with data from simulator
-            if (!changedCom2Active)
-            {
-                com2.setFrequencyActive(myAircraft.getCom2System().getFrequencyActive());
-            }
-            else
-            {
-                m_lastCom2Active.setNull();
-            }
-
-            if (!changedCom2Standby)
-            {
-                com2.setFrequencyStandby(myAircraft.getCom2System().getFrequencyStandby());
-            }
-            else
-            {
-                m_lastCom2Standby.setNull();
-            }
-
             const bool changedCom2 = myAircraft.getCom2System() != com2;
-
             m_simCom2 = com2;
             Q_UNUSED(com2Test)
 
@@ -959,16 +953,25 @@ namespace BlackSimPlugin::FsxCommon
         this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), xpdr, this->identifier());
     }
 
-    void CSimulatorFsxCommon::updateOwnAircraftFromSimulatorFsuipc(const CTransponder &xpdr)
+    void CSimulatorFsxCommon::updateTransponderMode(const CTransponder::TransponderMode xpdrMode)
     {
-        if (!m_useFsuipc) { return; }
         if (m_skipCockpitUpdateCycles > 0) { return; }
         const CSimulatedAircraft myAircraft(this->getOwnAircraft());
-        const bool changed = (myAircraft.getTransponderMode() != xpdr.getTransponderMode());
+        const bool changed = (myAircraft.getTransponderMode() != xpdrMode);
         if (!changed) { return; }
         CTransponder myXpdr = myAircraft.getTransponder();
-        myXpdr.setTransponderMode(xpdr.getTransponderMode());
+        myXpdr.setTransponderMode(xpdrMode);
         this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), myXpdr, this->identifier());
+    }
+
+    void CSimulatorFsxCommon::updateMSFSTransponderMode(const DataDefinitionMSFSTransponderMode transponderMode)
+    {
+        auto mode = CTransponder::StateIdent;
+        if (!transponderMode.ident)
+        {
+            qRound(transponderMode.transponderMode) >= 3 ? mode = CTransponder::ModeC : mode = CTransponder::StateStandby;
+        }
+        this->updateTransponderMode(mode);
     }
 
     bool CSimulatorFsxCommon::simulatorReportedObjectAdded(DWORD objectId)
@@ -1209,7 +1212,7 @@ namespace BlackSimPlugin::FsxCommon
             verified = true;
         }
 
-        if (!verified) // cppcheck-suppress knownConditionTrueFalse
+        if (!verified)
         {
             CLogMessage(this).info(u"Disable probes: '%1' failed to relase control") << cs.asString();
             m_useFsxTerrainProbe = false;
@@ -1529,7 +1532,7 @@ namespace BlackSimPlugin::FsxCommon
                     const bool ok = m_fsuipc->read(fsuipcAircraft, true, false, false);
                     if (ok)
                     {
-                        this->updateOwnAircraftFromSimulatorFsuipc(fsuipcAircraft.getTransponder());
+                        this->updateTransponderMode(fsuipcAircraft.getTransponder().getTransponderMode());
                     }
                 }
             }
@@ -1942,7 +1945,7 @@ namespace BlackSimPlugin::FsxCommon
 
     HRESULT CSimulatorFsxCommon::initDataDefinitionsWhenConnected()
     {
-        return CSimConnectDefinitions::initDataDefinitionsWhenConnected(m_hSimConnect);
+        return CSimConnectDefinitions::initDataDefinitionsWhenConnected(m_hSimConnect, this->getSimulatorPluginInfo().getSimulatorInfo());
     }
 
     HRESULT CSimulatorFsxCommon::initWhenConnected()
@@ -2632,7 +2635,8 @@ namespace BlackSimPlugin::FsxCommon
     void CSimulatorFsxCommon::traceSendId(const CSimConnectObject &simObject, const QString &functionName, const QString &details, bool forceTrace)
     {
         if (!forceTrace && !this->isTracingSendId()) { return; }
-        if (MaxSendIdTraces < 1) { return; } // cppcheck-suppress knownConditionTrueFalse
+        // cppcheck-suppress knownConditionTrueFalse
+        if (MaxSendIdTraces < 1) { return; }
         DWORD dwLastId = 0;
         const HRESULT hr = SimConnect_GetLastSentPacketID(m_hSimConnect, &dwLastId);
         if (isFailure(hr)) { return; }
