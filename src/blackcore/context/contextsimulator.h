@@ -270,9 +270,6 @@ namespace BlackCore::Context
         //! Is available simulator simulating? Returns false if no simulator is available
         bool isSimulatorSimulating() const;
 
-        //! Used to decide if simulator is still alive, used for crash detection
-        bool isSimulatorVital() const;
-
         //! Icon representing the model
         virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const = 0;
 

@@ -78,12 +78,4 @@ namespace BlackCore::Context
         if (!isSimulatorAvailable() || !getSimulatorStatusEnum().testFlag(ISimulator::Simulating)) { return false; }
         return true;
     }
-
-    bool IContextSimulator::isSimulatorVital() const
-    {
-        if (!isSimulatorAvailable()) { return false; } // we cannot be vital
-        if (isSimulatorSimulating()) { return true; } // we are vital
-        if (getSimulatorStatusEnum().testFlag(ISimulator::Paused)) { return true; }
-        return false;
-    }
 } // namespace
