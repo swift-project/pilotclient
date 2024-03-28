@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Copyright (C) 2018 swift Project Community / Contributors
+// SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 //! \file
@@ -523,12 +523,6 @@ namespace BlackMisc
         static const QPixmap &simulatorFS916();
         //! @}
 
-        //! Simulator MSFS
-        //! @{
-        static const QPixmap &simulatorMSFS();
-        static const QPixmap &simulatorMSFS16();
-        //! @}
-
         //! Simulator FG
         //! @{
         static const QPixmap &simulatorFG();
@@ -539,6 +533,12 @@ namespace BlackMisc
         //! @{
         static const QPixmap &simulatorXPlane();
         static const QPixmap &simulatorXPlane16();
+        //! @}
+
+        //! Simulator MSFS
+        //! @{
+        static const QPixmap &simulatorMSFS();
+        static const QPixmap &simulatorMSFS16();
         //! @}
 
         // --------------------------------------------------
