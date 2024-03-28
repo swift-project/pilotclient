@@ -130,6 +130,7 @@ namespace BlackMisc::Simulation
         static const QSet<QString> &xplaneMostPopular();
         static const QString &xplaneBlueBell();
         static const QString &xplaneXcsl();
+        static const QString &standardMsfs();
         //! @}
 
     private:

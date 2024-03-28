@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
+// SPDX-FileCopyrightText: Copyright (C) 2018 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackmisc/icon.h"
@@ -163,6 +163,8 @@ namespace BlackMisc
               CIcon(CIcons::SimulatorFSX16, "FSX"),
               CIcon(CIcons::SimulatorP3D, "P3D"),
               CIcon(CIcons::SimulatorP3D16, "P3D"),
+              CIcon(CIcons::SimulatorMSFS, "MSFS"),
+              CIcon(CIcons::SimulatorMSFS16, "MSFS"),
               CIcon(CIcons::SimulatorXPlane, "XPlane"),
               CIcon(CIcons::SimulatorXPlane16, "XPlane"),
               CIcon(CIcons::StandardIconAppAircraft16, "aircraft"),
