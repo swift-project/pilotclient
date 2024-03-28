@@ -172,7 +172,7 @@ namespace BlackSimPlugin::FsxCommon
             return;
         }
 
-        if (sGui->getIContextApplication()->writeToFile(fileName, CSimConnectUtilities::simConnectCfg(address, p)))
+        if (CFileUtils::writeStringToFile(CSimConnectUtilities::simConnectCfg(address, p), fileName))
         {
             QMessageBox::information(qApp->activeWindow(), tr("File saved"), tr("File '%1' saved.").arg(fileName));
             this->checkSwiftSimConnectCfgFile();

@@ -6,7 +6,6 @@
 // ----- cross context -----
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextaudio.h"
-#include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulator.h"
 // ----- cross context -----
 
@@ -74,28 +73,28 @@ namespace BlackCore::Context
 
     CContextOwnAircraft *CContextOwnAircraft::registerWithDBus(CDBusServer *server)
     {
-        if (!server || m_mode != CCoreFacadeConfig::LocalInDBusServer) { return this; }
+        if (!server || getMode() != CCoreFacadeConfig::LocalInDBusServer) { return this; }
         server->addObject(IContextOwnAircraft::ObjectPath(), this);
         return this;
     }
 
     CSimulatedAircraft CContextOwnAircraft::getOwnAircraft() const
     {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         QReadLocker l(&m_lockAircraft);
         return m_ownAircraft;
     }
 
     CComSystem CContextOwnAircraft::getOwnComSystem(CComSystem::ComUnit unit) const
     {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         QReadLocker l(&m_lockAircraft);
         return m_ownAircraft.getComSystem(unit);
     }
 
     CTransponder CContextOwnAircraft::getOwnTransponder() const
     {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         QReadLocker l(&m_lockAircraft);
         return m_ownAircraft.getTransponder();
     }
@@ -242,39 +241,6 @@ namespace BlackCore::Context
         return true;
     }
 
-    void CContextOwnAircraft::evaluateComStations(bool atcChanged)
-    {
-        if (!sApp || sApp->isShuttingDown() || !sApp->getCContextAudioBase() || !sApp->getIContextNetwork()) { return; }
-
-        CComSystem com1;
-        CComSystem com2;
-        CComSystem lastCom1;
-        CComSystem lastCom2;
-        {
-            QReadLocker l(&m_lockAircraft);
-            com1 = m_ownAircraft.getCom1System();
-            com2 = m_ownAircraft.getCom2System();
-            lastCom1 = m_lastEvaluatedCom1;
-            lastCom2 = m_lastEvaluatedCom2;
-        }
-
-        const bool changedCom1Freq = (lastCom1.getFrequencyActive() != com1.getFrequencyActive());
-        const bool changedCom2Freq = (lastCom2.getFrequencyActive() != com2.getFrequencyActive());
-
-        if (!atcChanged && !changedCom1Freq && !changedCom2Freq) { return; }
-
-        const CAtcStationList atcs = sApp->getIContextNetwork()->getAtcStationsOnline(true).findInRange();
-        const bool atcCom1 = atcs.hasComUnitTunedInChannelSpacing(com1);
-        const bool atcCom2 = atcs.hasComUnitTunedInChannelSpacing(com2);
-
-        // remember if I was tuned in, abusing the flag
-        com1.setReceiveEnabled(atcCom1);
-        com2.setReceiveEnabled(atcCom2);
-        QWriteLocker l(&m_lockAircraft);
-        m_lastEvaluatedCom1 = com1;
-        m_lastEvaluatedCom2 = com1;
-    }
-
     bool CContextOwnAircraft::updateOwnSituation(const CAircraftSituation &situation)
     {
         QWriteLocker l(&m_lockAircraft);
@@ -309,7 +275,7 @@ namespace BlackCore::Context
 
     bool CContextOwnAircraft::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const CAltitude &pressureAltitude)
     {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << position << altitude; }
+        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << position << altitude; }
         QWriteLocker l(&m_lockAircraft);
         bool changed = (m_ownAircraft.getPosition() != position);
         if (changed) { m_ownAircraft.setPosition(position); }
@@ -330,7 +296,7 @@ namespace BlackCore::Context
 
     bool CContextOwnAircraft::updateCockpit(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder, const CIdentifier &originator)
     {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << com1 << com2 << transponder; }
+        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << com1 << com2 << transponder; }
         bool changed;
         {
             QWriteLocker l(&m_lockAircraft);
@@ -339,7 +305,6 @@ namespace BlackCore::Context
         }
         if (changed)
         {
-            this->evaluateComStations(false);
             emit this->changedAircraftCockpit(m_ownAircraft, originator);
         }
         return changed;
@@ -347,7 +312,7 @@ namespace BlackCore::Context
 
     bool CContextOwnAircraft::updateTransponderMode(const CTransponder::TransponderMode &transponderMode, const CIdentifier &originator)
     {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << transponderMode; }
+        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << transponderMode; }
         bool changed;
         {
             QWriteLocker l(&m_lockAircraft);
@@ -382,7 +347,6 @@ namespace BlackCore::Context
         }
 
         const bool changed = this->updateCockpit(com1, com2, xpdr, originator);
-        if (changed) { this->evaluateComStations(false); }
         return changed;
     }
 
@@ -447,13 +411,6 @@ namespace BlackCore::Context
         }
         emit this->changedSelcal(selcal, originator);
         return true;
-    }
-
-    void CContextOwnAircraft::xCtxChangedAtcStationOnlineConnectionStatus(const CAtcStation &atcStation, bool connected)
-    {
-        Q_UNUSED(connected)
-        Q_UNUSED(atcStation)
-        this->evaluateComStations(true);
     }
 
     void CContextOwnAircraft::xCtxChangedSimulatorModel(const CAircraftModel &model, const CIdentifier &identifier)

@@ -136,10 +136,6 @@ namespace BlackCore::Context
         void changedLogOrDebugSettings();
 
     protected:
-        CCoreFacadeConfig::ContextMode m_mode; //!< How context is used
-        qint64 m_contextId; //!< unique identifer, avoid redirection rountrips
-        bool m_debugEnabled = false; //!< debug messages enabled
-
         //! Constructor
         IContext(CCoreFacadeConfig::ContextMode mode, QObject *parent);
 
@@ -163,6 +159,11 @@ namespace BlackCore::Context
 
         //! Standard message when status message is returned in empty context
         static const BlackMisc::CStatusMessage &statusMessageEmptyContext();
+
+    private:
+        CCoreFacadeConfig::ContextMode m_mode; //!< How context is used
+        qint64 m_contextId; //!< unique identifer, avoid redirection rountrips
+        bool m_debugEnabled = false; //!< debug messages enabled
     };
 } // ns
 #endif // guard

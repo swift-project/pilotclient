@@ -68,9 +68,6 @@ namespace BlackCore::Context
         //! Service path
         static const QString &ObjectPath();
 
-        //! Highlight time
-        static const BlackMisc::PhysicalQuantities::CTime &HighlightTime();
-
         //! \copydoc IContext::getPathAndContextId()
         virtual QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
 
@@ -88,12 +85,6 @@ namespace BlackCore::Context
 
         //! Current simulator
         BlackMisc::Simulation::CSimulatorInfo getSimulatorInfo() const;
-
-        //! Update current settings
-        bool updateCurrentSettings(const BlackMisc::Simulation::Settings::CSimulatorSettings &settings);
-
-        //! Update current setting for COM integration (aka "synced")
-        bool updateCurrentSettingComIntegration(bool comIntegration);
 
     signals:
         //! Simulator combined status
@@ -276,9 +267,6 @@ namespace BlackCore::Context
         //! Is available simulator simulating? Returns false if no simulator is available
         bool isSimulatorSimulating() const;
 
-        //! Used to decide if simulator is still alive, used for crash detection
-        bool isSimulatorVital() const;
-
         //! Icon representing the model
         virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const = 0;
 
@@ -335,9 +323,6 @@ namespace BlackCore::Context
 
         //! Get matching setup
         virtual BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const = 0;
-
-        //! Copy the terrain probe
-        virtual BlackMisc::CStatusMessageList copyFsxTerrainProbe(const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
 
     protected:
         //! Constructor

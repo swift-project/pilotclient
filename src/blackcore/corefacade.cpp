@@ -23,15 +23,11 @@
 #include "blackmisc/identifier.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/registermetadata.h"
-#include "blackmisc/settingscache.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/verify.h"
 
-#include <stdbool.h>
-#include <QByteArray>
 #include <QDBusConnection>
-#include <QDBusError>
 #include <QMap>
 #include <QObject>
 #include <QStringBuilder>
@@ -173,12 +169,6 @@ namespace BlackCore
         m_initalized = true;
     }
 
-    bool CCoreFacade::hasRemoteApplicationContext() const
-    {
-        Q_ASSERT(m_contextApplication);
-        return !m_contextApplication->isUsingImplementingObject();
-    }
-
     void CCoreFacade::registerMetadata()
     {
         BlackMisc::registerMetadata();
@@ -292,16 +282,6 @@ namespace BlackCore
 
             // times
             times.insert("Post setup, sim.connects", time.restart());
-        }
-
-        // only where network and(!) own aircraft run locally
-        // -> in the core or an all local implementation
-        if (m_contextNetwork && m_contextOwnAircraft && m_contextNetwork->isUsingImplementingObject() && m_contextOwnAircraft->isUsingImplementingObject())
-        {
-            c = connect(m_contextNetwork, &IContextNetwork::changedAtcStationOnlineConnectionStatus,
-                        this->getCContextOwnAircraft(), &CContextOwnAircraft::xCtxChangedAtcStationOnlineConnectionStatus);
-            Q_ASSERT(c);
-            times.insert("Post setup, connects network", time.restart());
         }
 
         // connection status of network changed
@@ -492,11 +472,6 @@ namespace BlackCore
     {
         Q_ASSERT_X(m_contextAudio && m_contextAudio->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextAudio *>(m_contextAudio);
-    }
-
-    bool CCoreFacade::hasLocalAudio() const
-    {
-        return m_contextAudio && m_contextAudio->isUsingImplementingObject();
     }
 
     const CContextAudio *CCoreFacade::getCContextAudio() const

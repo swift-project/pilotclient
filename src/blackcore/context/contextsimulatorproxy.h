@@ -216,9 +216,6 @@ namespace BlackCore
             //! \copydoc BlackCore::Context::IContextSimulator::getMatchingSetup
             virtual BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const override;
 
-            //! \copydoc BlackCore::Context::IContextSimulator::copyFsxTerrainProbe
-            virtual BlackMisc::CStatusMessageList copyFsxTerrainProbe(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
-
             //! \copydoc BlackCore::Context::IContextSimulator::testRemoteAircraft
             virtual bool testRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool add) override;
 

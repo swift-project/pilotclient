@@ -67,20 +67,6 @@ namespace BlackMisc::Network
         }
     }
 
-    CIcons::IconIndex CEcosystem::toIcon() const
-    {
-        switch (this->getSystem())
-        {
-        case VATSIM: return CIcons::NetworkVatsimLogo;
-        case Swift: return CIcons::Swift24;
-        case SwiftTest: return CIcons::Swift24;
-        case PrivateFSD: return CIcons::StandardIconAppAircraft16;
-        case NoSystem: return CIcons::StandardIconCrossCircle16;
-        case Unspecified:
-        default: return CIcons::StandardIconUnknown16;
-        }
-    }
-
     QVariant CEcosystem::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }

@@ -121,10 +121,8 @@ namespace BlackGui::Components
 
         void setAudioRunsWhere();
 
-        bool updateIntegrateWithComFlagUi();
         bool isComIntegrated() const;
 
-        void onIntegratedFlagChanged(bool checked);
         void onRxTxChanged(bool checked);
         void setRxTxCheckboxes(bool rx1, bool tx1, bool rx2, bool tx2);
 
@@ -156,6 +154,9 @@ namespace BlackGui::Components
         BlackMisc::Audio::CAudioDeviceInfoList m_cbDevices; //!< devices to be displayed in the checkbox
         BlackMisc::CDigestSignal m_volumeSliderChanged { this, &CAudioDeviceVolumeSetupComponent::saveVolumes, 1000, 10 };
         BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &CAudioDeviceVolumeSetupComponent::reloadSettings };
+
+    private slots:
+        void simulatorSettingsChanged();
     };
 } // namespace
 
