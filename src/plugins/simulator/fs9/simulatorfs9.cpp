@@ -219,19 +219,13 @@ namespace BlackSimPlugin::Fs9
         if (!this->isSimulating()) { return false; }
 
         // actually those data should be the same as ownAircraft
-        const CComSystem newCom1 = ownAircraft.getCom1System();
-        const CComSystem newCom2 = ownAircraft.getCom2System();
         const CTransponder newTransponder = ownAircraft.getTransponder();
 
         bool changed = false;
-        if (newCom1.getFrequencyActive() != m_simCom1.getFrequencyActive()) { changed = true; }
-        if (newCom1.getFrequencyStandby() != m_simCom1.getFrequencyStandby()) { changed = true; }
-        if (newCom2.getFrequencyActive() != m_simCom2.getFrequencyActive()) { changed = true; }
-        if (newCom2.getFrequencyStandby() != m_simCom2.getFrequencyStandby()) { changed = true; }
         if (newTransponder.getTransponderCode() != m_simTransponder.getTransponderCode()) { changed = true; }
         if (newTransponder.getTransponderMode() != m_simTransponder.getTransponderMode()) { changed = true; }
 
-        m_fsuipc->write(ownAircraft);
+        m_fsuipc->write(newTransponder);
 
         // avoid changes of cockpit back to old values due to an outdated read back value
         if (changed) { m_skipCockpitUpdateCycles = SkipUpdateCyclesForCockpit; }
@@ -416,25 +410,11 @@ namespace BlackSimPlugin::Fs9
         // To avoid jitters, I wait some update cylces to stabilize the values
         if (m_skipCockpitUpdateCycles < 1)
         {
-            const auto dontOverwrite = [](const CFrequency &from, const CFrequency &to) {
-                // don't overwrite 8.33 kHz frequencies
-                return CComSystem::isExclusiveWithin8_33kHzChannel(from) &&
-                       from.valueInteger(CFrequencyUnit::kHz()) / 10 == to.valueInteger(CFrequencyUnit::kHz()) / 10;
-            };
-            CComSystem com1 = simDataOwnAircraft.getCom1System();
-            CComSystem com2 = simDataOwnAircraft.getCom2System();
+            // we always use COM1 and COM2 from swift
             const CComSystem oldCom1 = getOwnComSystem(CComSystem::Com1);
             const CComSystem oldCom2 = getOwnComSystem(CComSystem::Com2);
-            if (dontOverwrite(oldCom1.getFrequencyActive(), com1.getFrequencyActive()))
-                com1.setFrequencyActive(oldCom1.getFrequencyActive());
-            if (dontOverwrite(oldCom1.getFrequencyStandby(), com1.getFrequencyStandby()))
-                com1.setFrequencyStandby(oldCom1.getFrequencyStandby());
-            if (dontOverwrite(oldCom2.getFrequencyActive(), com2.getFrequencyActive()))
-                com2.setFrequencyActive(oldCom2.getFrequencyActive());
-            if (dontOverwrite(oldCom2.getFrequencyStandby(), com2.getFrequencyStandby()))
-                com2.setFrequencyStandby(oldCom2.getFrequencyStandby());
 
-            this->updateCockpit(com1, com2, simDataOwnAircraft.getTransponder(), this->identifier());
+            this->updateCockpit(oldCom1, oldCom2, simDataOwnAircraft.getTransponder(), this->identifier());
         }
         else
         {

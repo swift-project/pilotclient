@@ -50,3 +50,4 @@ cmake-build-*/
 # Install folders
 /out/
 /dist/
+CMakePresets.json

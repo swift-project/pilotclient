@@ -37,9 +37,6 @@ namespace BlackSimPlugin::FsCommon
         //! Really open, means connected and data can be sent
         bool isOpen() const;
 
-        //! Write aircraft
-        bool write(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
-
         //! Write variables
         bool write(const BlackMisc::Aviation::CTransponder &xpdr);
 

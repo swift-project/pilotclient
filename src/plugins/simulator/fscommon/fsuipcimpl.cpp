@@ -143,48 +143,21 @@ namespace BlackSimPlugin::FsCommon
         return false;
     }
 
-    bool CFsuipc::write(const CSimulatedAircraft &aircraft)
-    {
-        Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Open not threadsafe");
-        if (!this->isOpened()) { return false; }
-
-        quint16 com1ActiveRaw = static_cast<quint16>(aircraft.getCom1System().getFrequencyActive().value(CFrequencyUnit::MHz()) * 100);
-        quint16 com2ActiveRaw = static_cast<quint16>(aircraft.getCom2System().getFrequencyActive().value(CFrequencyUnit::MHz()) * 100);
-        quint16 com1StandbyRaw = static_cast<quint16>(aircraft.getCom1System().getFrequencyStandby().value(CFrequencyUnit::MHz()) * 100);
-        quint16 com2StandbyRaw = static_cast<quint16>(aircraft.getCom2System().getFrequencyStandby().value(CFrequencyUnit::MHz()) * 100);
-        com1ActiveRaw = static_cast<quint16>(CBcdConversions::dec2Bcd(com1ActiveRaw - 10000));
-        com2ActiveRaw = static_cast<quint16>(CBcdConversions::dec2Bcd(com2ActiveRaw - 10000));
-        com1StandbyRaw = static_cast<quint16>(CBcdConversions::dec2Bcd(com1StandbyRaw - 10000));
-        com2StandbyRaw = static_cast<quint16>(CBcdConversions::dec2Bcd(com2StandbyRaw - 10000));
-        quint16 transponderCodeRaw = static_cast<quint16>(aircraft.getTransponderCode());
-        transponderCodeRaw = static_cast<quint16>(CBcdConversions::dec2Bcd(transponderCodeRaw));
-
-        DWORD dwResult = 0;
-        bool ok =
-            FSUIPC_Write(0x034e, 2, &com1ActiveRaw, &dwResult) &&
-            FSUIPC_Write(0x3118, 2, &com2ActiveRaw, &dwResult) &&
-            FSUIPC_Write(0x311a, 2, &com1StandbyRaw, &dwResult) &&
-            FSUIPC_Write(0x311c, 2, &com2StandbyRaw, &dwResult) &&
-            FSUIPC_Write(0x0354, 2, &transponderCodeRaw, &dwResult);
-        if (ok) { FSUIPC_Process(&dwResult); }
-
-        ok = ok && write(aircraft.getTransponder());
-
-        return ok && dwResult == 0;
-    }
-
     bool CFsuipc::write(const CTransponder &xpdr)
     {
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Open not threadsafe");
         if (!this->isOpened()) { return false; }
 
         // should be the same as writing via SimConnect data area
+        quint16 transponderCodeRaw = static_cast<quint16>(xpdr.getTransponderCode());
+        transponderCodeRaw = static_cast<quint16>(CBcdConversions::dec2Bcd(transponderCodeRaw));
         DWORD dwResult;
         byte xpdrModeSb3Raw = xpdr.isInStandby() ? 1U : 0U;
         byte xpdrIdentSb3Raw = xpdr.isIdentifying() ? 1U : 0U;
         const bool ok =
             FSUIPC_Write(0x7b91, 1, &xpdrModeSb3Raw, &dwResult) &&
-            FSUIPC_Write(0x7b93, 1, &xpdrIdentSb3Raw, &dwResult);
+            FSUIPC_Write(0x7b93, 1, &xpdrIdentSb3Raw, &dwResult) &&
+            FSUIPC_Write(0x0354, 2, &transponderCodeRaw, &dwResult);
         if (ok) { FSUIPC_Process(&dwResult); }
         return ok && dwResult == 0;
     }
