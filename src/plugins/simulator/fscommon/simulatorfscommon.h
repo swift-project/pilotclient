@@ -10,6 +10,7 @@
 #include "plugins/simulator/plugincommon/simulatorplugincommon.h"
 #include "blackmisc/simulation/interpolator.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
+#include "plugins/simulator/fscommon/fscommonexport.h"
 
 #include <QObject>
 #include <memory>
