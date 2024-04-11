@@ -55,9 +55,6 @@ namespace BlackSimPlugin::FsxCommon
         //! Using simulated objects
         void onSimulatedObjectChanged();
 
-        //! FSUIPC setting changed
-        void onFsuipcChanged();
-
         //! Offsets on/off
         void onSBOffsetsChanged();
 

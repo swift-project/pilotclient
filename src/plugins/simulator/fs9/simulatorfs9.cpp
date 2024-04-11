@@ -45,7 +45,8 @@ namespace BlackSimPlugin::Fs9
                                  IClientProvider *clientProvider,
                                  QObject *parent) : CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent),
                                                     m_fs9Host(fs9Host),
-                                                    m_lobbyClient(lobbyClient)
+                                                    m_lobbyClient(lobbyClient),
+                                                    m_fsuipc(new CFsuipc(this))
     {
         // disabled CG/elevation parts
         this->setSimulationProviderEnabled(false, false);
@@ -73,7 +74,8 @@ namespace BlackSimPlugin::Fs9
         Q_ASSERT_X(m_fsuipc, Q_FUNC_INFO, "No FSUIPC");
         m_connectionHostMessages = connect(m_fs9Host.data(), &CFs9Host::customPacketReceived, this, &CSimulatorFs9::processFs9Message);
 
-        useFsuipc(true);
+        m_fsuipc->open();
+
         this->initSimulatorInternals();
         m_timerId = startTimer(50);
         return true;
@@ -88,7 +90,9 @@ namespace BlackSimPlugin::Fs9
         safeKillTimer();
         disconnectAllClients();
 
-        //  disconnect FSUIPC and status
+        if (m_fsuipc) { m_fsuipc->close(); }
+
+        //  emit status
         CSimulatorFsCommon::disconnectFrom();
         m_simConnected = false;
         emitSimulatorCombinedStatus();
@@ -246,7 +250,7 @@ namespace BlackSimPlugin::Fs9
 
     void CSimulatorFs9::dispatch()
     {
-        if (m_useFsuipc && m_fsuipc && m_fsuipc->isOpened())
+        if (m_fsuipc && m_fsuipc->isOpened())
         {
             CSimulatedAircraft fsuipcAircraft(getOwnAircraft());
             const bool ok = m_fsuipc->read(fsuipcAircraft, true, true, true);
@@ -410,7 +414,7 @@ namespace BlackSimPlugin::Fs9
     {
         if (!m_simTimeSynced) { return; }
         if (!this->isConnected()) { return; }
-        if (!m_useFsuipc || !m_fsuipc) { return; }
+        if (!m_fsuipc) { return; }
         if (!m_fsuipc->isOpened()) { return; }
 
         QDateTime myDateTime = QDateTime::currentDateTimeUtc();
@@ -442,7 +446,7 @@ namespace BlackSimPlugin::Fs9
             return;
         }
 
-        if (!m_useFsuipc || !m_fsuipc) { return; }
+        if (!m_fsuipc) { return; }
         if (!m_fsuipc->isOpened()) { return; }
         if (weatherGrid.isEmpty())
         {

@@ -480,10 +480,6 @@ namespace BlackSimPlugin::FsxCommon
         //! \threadsafe
         void updateOwnAircraftFromSimulator(const DataDefinitionClientAreaSb &sbDataArea);
 
-        //! Update from FSUIPC
-        //! \threadsafe
-        void updateOwnAircraftFromSimulatorFsuipc(const BlackMisc::Aviation::CTransponder &xpdr);
-
         //! An AI aircraft was added in the simulator
         bool simulatorReportedObjectAdded(DWORD objectId);
 

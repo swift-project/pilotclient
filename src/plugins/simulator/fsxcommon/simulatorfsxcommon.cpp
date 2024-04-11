@@ -59,7 +59,6 @@ namespace BlackSimPlugin::FsxCommon
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing global object");
 
         m_simObjectTimer.setInterval(AddPendingAircraftIntervalMs);
-        m_useFsuipc = false;
         // default model will be set in derived class
 
         CSimulatorFsxCommon::registerHelp();
@@ -69,7 +68,6 @@ namespace BlackSimPlugin::FsxCommon
     CSimulatorFsxCommon::~CSimulatorFsxCommon()
     {
         this->disconnectFrom();
-        // fsuipc is disconnected in CSimulatorFsCommon
     }
 
     bool CSimulatorFsxCommon::isConnected() const
@@ -93,12 +91,6 @@ namespace BlackSimPlugin::FsxCommon
             // reset state as expected for unconnected
             this->reset();
             return false;
-        }
-
-        // FSUIPC too
-        if (m_useFsuipc)
-        {
-            m_fsuipc->open();
         }
 
         // set structures and move on
@@ -127,7 +119,7 @@ namespace BlackSimPlugin::FsxCommon
             m_simConnected = false;
         }
 
-        // emit status and disconnect FSUIPC
+        // emit status
         return CSimulatorFsCommon::disconnectFrom();
     }
 
@@ -181,7 +173,6 @@ namespace BlackSimPlugin::FsxCommon
 
         if (newTransponder.getTransponderMode() != m_simTransponder.getTransponderMode())
         {
-            // use one way to transfer XPDR ident/mode not both
             if (m_useSbOffsets)
             {
                 byte ident = newTransponder.isIdentifying() ? 1U : 0U; // 1 is ident
@@ -203,11 +194,6 @@ namespace BlackSimPlugin::FsxCommon
                         CLogMessage(this).info(lm);
                     }
                 }
-                changed = true;
-            }
-            else if (m_useFsuipc && m_fsuipc)
-            {
-                m_fsuipc->write(newTransponder);
                 changed = true;
             }
         }
@@ -959,18 +945,6 @@ namespace BlackSimPlugin::FsxCommon
         this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), xpdr, this->identifier());
     }
 
-    void CSimulatorFsxCommon::updateOwnAircraftFromSimulatorFsuipc(const CTransponder &xpdr)
-    {
-        if (!m_useFsuipc) { return; }
-        if (m_skipCockpitUpdateCycles > 0) { return; }
-        const CSimulatedAircraft myAircraft(this->getOwnAircraft());
-        const bool changed = (myAircraft.getTransponderMode() != xpdr.getTransponderMode());
-        if (!changed) { return; }
-        CTransponder myXpdr = myAircraft.getTransponder();
-        myXpdr.setTransponderMode(xpdr.getTransponderMode());
-        this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), myXpdr, this->identifier());
-    }
-
     bool CSimulatorFsxCommon::simulatorReportedObjectAdded(DWORD objectId)
     {
         if (this->isShuttingDownOrDisconnected()) { return true; } // pretend everything is fine
@@ -1518,26 +1492,6 @@ namespace BlackSimPlugin::FsxCommon
             return;
         }
         m_dispatchErrors = 0;
-        if (m_useFsuipc && m_fsuipc)
-        {
-            if (m_dispatchProcCount % 10 == 0)
-            {
-                // slow updates, here only when SB/SimConnect is disabled as those do the same thing
-                if (!m_useSbOffsets)
-                {
-                    CSimulatedAircraft fsuipcAircraft(this->getOwnAircraft());
-                    const bool ok = m_fsuipc->read(fsuipcAircraft, true, false, false);
-                    if (ok)
-                    {
-                        this->updateOwnAircraftFromSimulatorFsuipc(fsuipcAircraft.getTransponder());
-                    }
-                }
-            }
-            else
-            {
-                // fast
-            }
-        }
     }
 
     bool CSimulatorFsxCommon::physicallyAddRemoteAircraftImpl(const CSimulatedAircraft &newRemoteAircraft, CSimulatorFsxCommon::AircraftAddMode addMode, const CSimConnectObject &correspondingSimObject)

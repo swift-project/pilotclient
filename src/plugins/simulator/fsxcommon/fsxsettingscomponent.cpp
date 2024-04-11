@@ -30,7 +30,6 @@ namespace BlackSimPlugin::FsxCommon
         connect(ui->cb_AddingAsSimulatedObject, &QCheckBox::released, this, &CFsxSettingsComponent::onSimulatedObjectChanged);
         connect(ui->cb_TraceSimConnectCalls, &QCheckBox::released, this, &CFsxSettingsComponent::onSimConnectTraceChanged);
         connect(ui->cb_EnableTerrainProbe, &QCheckBox::released, this, &CFsxSettingsComponent::onEnableTerrainProbeChanged);
-        connect(ui->cb_UseFsuipc, &QCheckBox::released, this, &CFsxSettingsComponent::onFsuipcChanged);
         connect(ui->cb_SBOffsets, &QCheckBox::released, this, &CFsxSettingsComponent::onSBOffsetsChanged);
         connect(ui->pb_CopyTerrainProbe, &QPushButton::released, this, &CFsxSettingsComponent::copyTerrainProbe);
         connect(ui->pb_Refresh, &QPushButton::released, this, &CFsxSettingsComponent::refresh);
@@ -66,7 +65,6 @@ namespace BlackSimPlugin::FsxCommon
             ui->cb_TraceSimConnectCalls->setChecked(fsxOrP3D->isTraceSendId());
             ui->cb_EnableTerrainProbe->setChecked(fsxOrP3D->isUsingFsxTerrainProbe());
             ui->cb_SBOffsets->setChecked(fsxOrP3D->isUsingSbOffsetValues());
-            ui->cb_UseFsuipc->setChecked(fsxOrP3D->isFsuipcOpened());
             ui->cb_AddingAsSimulatedObject->setChecked(fsxOrP3D->isAddingAsSimulatedObjectEnabled());
         }
 
@@ -74,7 +72,6 @@ namespace BlackSimPlugin::FsxCommon
         ui->cb_TraceSimConnectCalls->setEnabled(localSim);
         ui->cb_EnableTerrainProbe->setEnabled(localSim);
         ui->cb_SBOffsets->setEnabled(localSim);
-        ui->cb_UseFsuipc->setEnabled(localSim);
 
         const bool terrainProbe = CBuildConfig::isRunningOnWindowsNtPlatform() && (CBuildConfig::buildWordSize() == 32);
         ui->cb_EnableTerrainProbe->setEnabled(terrainProbe);
@@ -100,13 +97,6 @@ namespace BlackSimPlugin::FsxCommon
         CSimulatorFsxCommon *fsxOrP3D = this->getFsxOrP3DSimulator();
         if (!fsxOrP3D) { return; }
         fsxOrP3D->setUsingFsxTerrainProbe(ui->cb_EnableTerrainProbe->isChecked());
-    }
-
-    void CFsxSettingsComponent::onFsuipcChanged()
-    {
-        CSimulatorFsxCommon *fsxOrP3D = this->getFsxOrP3DSimulator();
-        if (!fsxOrP3D) { return; }
-        fsxOrP3D->useFsuipc(ui->cb_UseFsuipc->isChecked());
     }
 
     void CFsxSettingsComponent::onSBOffsetsChanged()

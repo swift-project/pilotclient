@@ -6,7 +6,6 @@
 #ifndef BLACKSIMPLUGIN_FSCOMMON_SIMULATORFSCOMMON_H
 #define BLACKSIMPLUGIN_FSCOMMON_SIMULATORFSCOMMON_H
 
-#include "plugins/simulator/fscommon/fsuipc.h"
 #include "plugins/simulator/plugincommon/simulatorplugincommon.h"
 #include "blackmisc/simulation/interpolator.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
@@ -28,12 +27,6 @@ namespace BlackSimPlugin::FsCommon
     public:
         //! Destructor
         virtual ~CSimulatorFsCommon() override;
-
-        //! FSUIPC connected?
-        bool isFsuipcOpened() const;
-
-        //! FSUIPC on/off, correctly disconnecting/connecting
-        bool useFsuipc(bool on);
 
         // ---------------------- ISimulator ------------------
         virtual bool disconnectFrom() override;
@@ -59,22 +52,14 @@ namespace BlackSimPlugin::FsCommon
         //! When swift DB data are read
         virtual void onSwiftDbAirportsRead() override;
 
-        //! \ingroup swiftdotcommands
-        //! <pre>
-        //! .drv fsuipc  on|off      FSUIPC on/off
-        //! </pre>
-        virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
-
         //! \copydoc BlackCore::ISimulator::reset
         virtual void reset() override;
 
         //! Register help
         static void registerHelp();
 
-        CFsuipc *m_fsuipc = nullptr; //!< FSUIPC
         int m_ownAircraftUpdateCycles = 0; //!< own aircraft updates, even with 50 updates/sec long enough even for 32bit
         int m_skipCockpitUpdateCycles = 0; //!< skip some update cycles to allow changes in simulator cockpit to be set
-        bool m_useFsuipc = false; //!< use FSUIPC
         bool m_simPaused = false; //!< simulator paused?
         bool m_simTimeSynced = false; //!< time synchronized?
         BlackMisc::PhysicalQuantities::CTime m_syncTimeOffset; //!< time offset

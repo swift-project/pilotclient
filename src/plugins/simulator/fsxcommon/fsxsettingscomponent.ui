@@ -51,13 +51,6 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="0">
-    <widget class="QCheckBox" name="cb_UseFsuipc">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
    <item row="4" column="0">
     <widget class="QCheckBox" name="cb_AddingAsSimulatedObject">
      <property name="text">
@@ -105,13 +98,6 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
-    <widget class="QLabel" name="lbl_UseFsuipc">
-     <property name="text">
-      <string>Enable FSUIPC support</string>
-     </property>
-    </widget>
-   </item>
    <item row="5" column="0">
     <widget class="QCheckBox" name="cb_EnableTerrainProbe">
      <property name="text">
@@ -140,7 +126,6 @@
  </widget>
  <tabstops>
   <tabstop>cb_TraceSimConnectCalls</tabstop>
-  <tabstop>cb_UseFsuipc</tabstop>
   <tabstop>cb_SBOffsets</tabstop>
   <tabstop>cb_AddingAsSimulatedObject</tabstop>
   <tabstop>cb_EnableTerrainProbe</tabstop>

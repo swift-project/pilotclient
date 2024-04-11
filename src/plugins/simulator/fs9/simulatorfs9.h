@@ -16,6 +16,7 @@
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/pixmap.h"
+#include "plugins/simulator/fscommon/fsuipc.h"
 #include <QObject>
 #include <QtPlugin>
 #include <QList>
@@ -96,6 +97,7 @@ namespace BlackSimPlugin::Fs9
         //! Sync time with user's computer
         void synchronizeTime();
 
+        BlackSimPlugin::FsCommon::CFsuipc *m_fsuipc = nullptr; //!< FSUIPC
         QHash<BlackMisc::Aviation::CCallsign, QPointer<CFs9Client>> m_hashFs9Clients;
         QMetaObject::Connection m_connectionHostMessages;
         bool m_simConnected = false; //!< Is simulator connected?

@@ -26,8 +26,7 @@ namespace BlackSimPlugin::FsCommon
         IRemoteAircraftProvider *renderedAircraftProvider,
         IWeatherGridProvider *weatherGridProvider,
         IClientProvider *clientProvider,
-        QObject *parent) : CSimulatorPluginCommon(info, ownAircraftProvider, renderedAircraftProvider, weatherGridProvider, clientProvider, parent),
-                           m_fsuipc(new CFsuipc(this))
+        QObject *parent) : CSimulatorPluginCommon(info, ownAircraftProvider, renderedAircraftProvider, weatherGridProvider, clientProvider, parent)
     {
         CSimulatorFsCommon::registerHelp();
     }
@@ -38,26 +37,6 @@ namespace BlackSimPlugin::FsCommon
     {
         CSimulatorPluginCommon::initSimulatorInternals();
         m_simulatorInternals.setSimulatorVersion(this->getSimulatorVersion());
-        m_simulatorInternals.setValue("fscommon/fsuipc", boolToOnOff(m_useFsuipc));
-        if (m_fsuipc)
-        {
-            const QString v(m_fsuipc->getVersion());
-            if (!v.isEmpty()) { m_simulatorInternals.setValue("fscommon/fsuipcversion", v); }
-            m_simulatorInternals.setValue("fscommon/fsuipcopen", boolToYesNo(m_fsuipc->isOpened()));
-        }
-    }
-
-    bool CSimulatorFsCommon::parseDetails(const CSimpleCommandParser &parser)
-    {
-        // .driver fsuipc on|off
-        if (parser.matchesPart(1, "fsuipc") && parser.hasPart(2))
-        {
-            const bool on = parser.toBool(2);
-            const bool s = this->useFsuipc(on);
-            CLogMessage(this, CLogCategories::cmdLine()).info(u"FSUIPC is '%1'") << boolToOnOff(s);
-            return s;
-        }
-        return CSimulatorPluginCommon::parseDetails(parser);
     }
 
     void CSimulatorFsCommon::reset()
@@ -72,41 +51,15 @@ namespace BlackSimPlugin::FsCommon
     {
         if (CSimpleCommandParser::registered("BlackSimPlugin::FsCommon::CSimulatorFsCommon")) { return; }
         CSimpleCommandParser::registerCommand({ ".drv", "alias: .driver .plugin" });
-        CSimpleCommandParser::registerCommand({ ".drv fsuipc on|off", "FSUIPC on|off if applicable" });
     }
 
     bool CSimulatorFsCommon::disconnectFrom()
     {
-        if (m_fsuipc) { m_fsuipc->close(); }
-
         // reset flags
         m_simPaused = false;
         const bool r = CSimulatorPluginCommon::disconnectFrom();
         this->emitSimulatorCombinedStatus();
         return r;
-    }
-
-    bool CSimulatorFsCommon::isFsuipcOpened() const
-    {
-        return m_fsuipc && m_fsuipc->isOpened();
-    }
-
-    bool CSimulatorFsCommon::useFsuipc(bool on)
-    {
-        if (!m_fsuipc) { return false; } // no FSUIPC available
-        if (m_useFsuipc == on) { return m_useFsuipc; } // nothing changed
-        m_useFsuipc = on;
-        if (on)
-        {
-            m_useFsuipc = m_fsuipc->open();
-        }
-        else
-        {
-            m_fsuipc->close();
-        }
-
-        this->initSimulatorInternals(); // update internals
-        return m_useFsuipc;
     }
 
     CTime CSimulatorFsCommon::getTimeSynchronizationOffset() const
