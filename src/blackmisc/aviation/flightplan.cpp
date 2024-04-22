@@ -330,59 +330,6 @@ namespace BlackMisc::Aviation
         return s;
     }
 
-    CFlightPlan CFlightPlan::fromVPilotFormat(const QString &vPilotData)
-    {
-        if (vPilotData.isEmpty()) { return CFlightPlan(); }
-        QDomDocument doc;
-        doc.setContent(vPilotData);
-        const QDomElement fpDom = doc.firstChildElement();
-        const QString type = fpDom.attribute("FlightType");
-
-        CFlightPlan fp;
-        fp.setFlightRule(CFlightPlan::stringToFlightRules(type));
-
-        const int airspeedKts = fpDom.attribute("CruiseSpeed").toInt();
-        const CSpeed airspeed(airspeedKts, CSpeedUnit::kts());
-        fp.setCruiseTrueAirspeed(airspeed);
-
-        fp.setOriginAirportIcao(fpDom.attribute("DepartureAirport"));
-        fp.setDestinationAirportIcao(fpDom.attribute("DestinationAirport"));
-        fp.setAlternateAirportIcao(fpDom.attribute("AlternateAirport"));
-        fp.setRemarks(fpDom.attribute("Remarks"));
-        fp.setRoute(fpDom.attribute("Route"));
-
-        const QString voice = fpDom.attribute("VoiceType");
-        fp.setVoiceCapabilities(voice);
-
-        // Ignoring equipment prefix, suffix and IsHeavy flag
-
-        const int fuelMins = fpDom.attribute("FuelMinutes").toInt() + 60 * fpDom.attribute("FuelHours").toInt();
-        const CTime fuelTime(fuelMins, CTimeUnit::min());
-
-        const int enrouteMins = fpDom.attribute("EnrouteMinutes").toInt() + 60 * fpDom.attribute("EnrouteHours").toInt();
-        const CTime enrouteTime(enrouteMins, CTimeUnit::min());
-
-        const QString altStr = fpDom.attribute("CruiseAltitude");
-        CAltitude alt(altStr.length() < 4 ? "FL" + altStr : altStr + "ft");
-        alt.toFlightLevel();
-
-        fp.setCruiseAltitude(alt);
-        fp.setFuelTime(fuelTime);
-        fp.setEnrouteTime(enrouteTime);
-
-        const QString departureTime = fpDom.attribute("DepartureTime");
-        if (departureTime.length() == 4)
-        {
-            CTime depTime;
-            if (depTime.parseFromString_hhmm(departureTime))
-            {
-                fp.setTakeoffTimePlanned(depTime.toQDateTime());
-            }
-        }
-
-        return fp;
-    }
-
     CFlightPlan CFlightPlan::fromSB4Format(const QString &sbData)
     {
         if (sbData.isEmpty()) { return CFlightPlan(); }
@@ -554,7 +501,6 @@ namespace BlackMisc::Aviation
         }
 
         if (data.contains("[SBFlightPlan]", Qt::CaseInsensitive)) { return CFlightPlan::fromSB4Format(data); }
-        if (data.contains("<FlightPlan", Qt::CaseInsensitive) && data.contains("<?xml", Qt::CaseInsensitive)) { return CFlightPlan::fromVPilotFormat(data); }
         return CFlightPlan::fromJson(data);
     }
 
@@ -600,7 +546,6 @@ namespace BlackMisc::Aviation
             }
 
             if (fileName.endsWith(".sfp", Qt::CaseInsensitive)) { return CFlightPlan::fromSB4Format(data); }
-            if (fileName.endsWith(".vfp", Qt::CaseInsensitive)) { return CFlightPlan::fromVPilotFormat(data); }
             if (fileName.endsWith(".json", Qt::CaseInsensitive))
             {
                 do
