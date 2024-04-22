@@ -1558,16 +1558,16 @@ namespace BlackSimPlugin::XPlane
         const QString xswiftbusCommitHash = service.getCommitHash();
         if (xswiftbusVersion.isEmpty())
         {
-            CLogMessage(this).warning(u"Could not determine which version of XSwiftBus is running. Mismatched versions might cause instability.");
+            CLogMessage(this).warning(u"Could not determine which version of xswiftbus is running. Mismatched versions might cause instability.");
         }
         else if (commitHash() != xswiftbusCommitHash)
         {
-            CLogMessage(this).error(u"You are using an incorrect version of XSwiftBus. The version of XSwiftBus (%1) should match the version of swift (%2). Consider upgrading!") << xswiftbusVersion << swiftVersion;
+            CLogMessage(this).error(u"You are using an incorrect version of xswiftbus. The version of xswiftbus (%1) should match the version of swift (%2). Consider upgrading!") << xswiftbusVersion << swiftVersion;
         }
 
         if (!traffic.initialize())
         {
-            CLogMessage(this).error(u"Connection to XSwiftBus successful, but could not initialize XSwiftBus. Check X-Plane Log.txt.");
+            CLogMessage(this).error(u"Connection to xswiftbus successful, but could not initialize xswiftbus. Check X-Plane Log.txt.");
             return;
         }
 
@@ -1575,7 +1575,7 @@ namespace BlackSimPlugin::XPlane
         if (!info.hasAcquired)
         {
             const QString owner = info.owner.trimmed().isEmpty() ? QStringLiteral("unknown plugin") : info.owner.trimmed();
-            CLogMessage(this).error(u"Connection to XSwiftBus successful, but could not acquire multiplayer planes. '%1' has acquired them already. Disable '%2' or remove it if not required and reload XSwiftBus.") << owner << owner.toLower();
+            CLogMessage(this).error(u"Connection to xswiftbus successful, but could not acquire multiplayer planes. '%1' has acquired them already. Disable '%2' or remove it if not required and reload xswiftbus.") << owner << owner.toLower();
             return;
         }
 

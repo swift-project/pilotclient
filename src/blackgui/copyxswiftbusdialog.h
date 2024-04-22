@@ -11,11 +11,11 @@
 
 namespace BlackGui
 {
-    //! Show dialog about to copy XSwiftBus build files
+    //! Show dialog about to copy xswiftbus build files
     class BLACKGUI_EXPORT CCopyXSwiftBusDialog
     {
     public:
-        //! Display a dialog to copy the latest XSwiftBus files
+        //! Display a dialog to copy the latest xswiftbus files
         //! \remark normally only displayed in a local environment
         static int displayDialogAndCopyBuildFiles(const QString &xplaneRootDir, bool checkLatestFile = true, QWidget *parent = nullptr);
     };

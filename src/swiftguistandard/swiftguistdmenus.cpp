@@ -144,7 +144,7 @@ void SwiftGuiStd::initMenus()
 
     if (CBuildConfig::isLocalDeveloperDebugBuild() && ui->menu_File && ui->menu_File->actions().size() > 5)
     {
-        QAction *act = new QAction(CIcons::swift16(), "Copy XSwiftBus dialog");
+        QAction *act = new QAction(CIcons::swift16(), "Copy xswiftbus dialog");
         ui->menu_File->insertAction(ui->menu_File->actions().at(5), act);
         c = connect(
             act, &QAction::triggered, this, [=] {
@@ -170,7 +170,7 @@ void SwiftGuiStd::copyXSwiftBusDialog(bool checkFileTimestamp)
     if (!xpDirExists)
     {
         if (checkFileTimestamp) { return; }
-        QMessageBox::warning(this, tr("Copy XSwiftBus"), tr("XPlane directory does not exists!"), QMessageBox::Close);
+        QMessageBox::warning(this, tr("Copy xswiftbus"), tr("XPlane directory does not exists!"), QMessageBox::Close);
         return;
     }
 

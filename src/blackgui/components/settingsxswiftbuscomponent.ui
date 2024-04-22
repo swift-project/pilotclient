@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>XSwiftBus settings</string>
+   <string>xswiftbus settings</string>
   </property>
   <layout class="QHBoxLayout" name="hl_SettingsXSwiftBus">
    <item>

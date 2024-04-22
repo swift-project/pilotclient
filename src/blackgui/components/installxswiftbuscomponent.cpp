@@ -149,7 +149,7 @@ namespace BlackGui::Components
         const QFileInfo destFile(destFileName);
         if (!destFile.exists())
         {
-            const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"XSwiftBus file '%1' does not exist") << destFileName;
+            const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"xswiftbus file '%1' does not exist") << destFileName;
             this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
             return;
         }
@@ -159,7 +159,7 @@ namespace BlackGui::Components
         if (CCompressUtils::zip7Uncompress(destFile.absoluteFilePath(), xSwiftBusDirectory, &stdOutAndError))
         {
             // capture values by copy!
-            const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).info(u"Uncompressed XSwiftBus in '%1'") << xSwiftBusDirectory;
+            const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).info(u"Uncompressed xswiftbus in '%1'") << xSwiftBusDirectory;
             this->showOverlayMessagesWithConfirmation(msg, false, "Delete downloaded file?", [=] {
                 if (!myself) { return; }
                 QFile downloadFile(downloadFileName);
@@ -178,7 +178,7 @@ namespace BlackGui::Components
         //! fixme Ref T253, once we have a zip library we will directly unzip
         const QMessageBox::StandardButton reply = QMessageBox::question(this,
                                                                         "Install XSwiftXBus",
-                                                                        "You need to manually unzip XSwiftBus into the plugins directory.\nIt needs to look like 'plugin/xswiftbus'.\n\nOpen the archive?",
+                                                                        "You need to manually unzip xswiftbus into the plugins directory.\nIt needs to look like 'plugin/xswiftbus'.\n\nOpen the archive?",
                                                                         QMessageBox::Yes | QMessageBox::No);
 
         if (reply == QMessageBox::Yes)
@@ -194,9 +194,9 @@ namespace BlackGui::Components
         if (!rf.getBaseName().contains(CBuildConfig::getVersionString()))
         {
             const QMessageBox::StandardButton reply = QMessageBox::question(this,
-                                                                            "Download XSwiftBus",
+                                                                            "Download xswiftbus",
                                                                             QStringLiteral(
-                                                                                u"The XSwiftBus versions seems to be for a different version\n"
+                                                                                u"The xswiftbus versions seems to be for a different version\n"
                                                                                 u"Your version is '%1'. Use this version.\n\n"
                                                                                 u"If not available, you can try the version next to your version number.\n\n"
                                                                                 u"Continue with this version?")
@@ -244,7 +244,7 @@ namespace BlackGui::Components
         const QNetworkReply *r = sGui->downloadFromNetwork(download, saveAsFile, { this, &CInstallXSwiftBusComponent::downloadedXSwiftBusFile });
         if (r)
         {
-            CLogMessage(this).info(u"Triggered downloading of XSwiftBus file from '%1'") << download.getHost();
+            CLogMessage(this).info(u"Triggered downloading of xswiftbus file from '%1'") << download.getHost();
             this->showLoading(120 * 1000); // timeout in any case
         }
         else

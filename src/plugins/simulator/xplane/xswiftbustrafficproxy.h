@@ -138,7 +138,7 @@ namespace BlackSimPlugin::XPlane
     //! Multiplayer Acquire Info
     struct MultiplayerAcquireInfo
     {
-        bool hasAcquired; //!< Has XSwiftBus acquired multiplayer planes?
+        bool hasAcquired; //!< Has xswiftbus acquired multiplayer planes?
         QString owner; //!< Name of the plugin having multiplayer planes acquired
     };
 

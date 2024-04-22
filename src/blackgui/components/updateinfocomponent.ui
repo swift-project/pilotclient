@@ -81,7 +81,7 @@
       <string>Only required for XP</string>
      </property>
      <property name="text">
-      <string>XSwiftBus:</string>
+      <string>xswiftbus:</string>
      </property>
     </widget>
    </item>

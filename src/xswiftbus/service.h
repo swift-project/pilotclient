@@ -28,7 +28,7 @@
 namespace XSwiftBus
 {
     /*!
-     * XSwiftBus service object which is accessible through DBus
+     * xswiftbus service object which is accessible through DBus
      */
     class CService : public CDBusObject
     {
@@ -59,7 +59,7 @@ namespace XSwiftBus
         //! Called by XPluginReceiveMessage when some scenery is loaded.
         void onSceneryLoaded();
 
-        //! Returns the XSwiftBus version number
+        //! Returns the xswiftbus version number
         std::string getVersionNumber() const;
 
         //! Returns the SHA1 of the last commit that could influence xswiftbus.

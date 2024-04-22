@@ -27,7 +27,7 @@
 namespace XSwiftBus
 {
     /*!
-     * XSwiftBus service object for traffic aircraft which is accessible through DBus
+     * xswiftbus service object for traffic aircraft which is accessible through DBus
      */
     class CTraffic : public CDBusObject
     {

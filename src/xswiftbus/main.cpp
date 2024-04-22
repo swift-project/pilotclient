@@ -24,8 +24,8 @@ PLUGIN_API int XPluginStart(char *o_name, char *o_sig, char *o_desc)
     XPLMEnableFeature("XPLM_USE_NATIVE_PATHS", 1);
 #endif
 
-    INFO_LOG("XSwiftBus plugin starting");
-    std::strcpy(o_name, "XSwiftBus");
+    INFO_LOG("xswiftbus plugin starting");
+    std::strcpy(o_name, "xswiftbus");
     std::strcpy(o_sig, "org.swift-project.xswiftbus");
     std::strcpy(o_desc, "Allows swift to connect to X-Plane via D-Bus IPC");
     return 1;

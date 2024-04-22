@@ -12,7 +12,7 @@
 
 namespace BlackMisc::Simulation::XPlane
 {
-    //! XSwiftBus configuration file writer
+    //! xswiftbus configuration file writer
     class BLACKMISC_EXPORT CXSwiftBusConfigWriter : public QObject
     {
         Q_OBJECT

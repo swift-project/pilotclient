@@ -2,6 +2,6 @@
     "identifier" : "org.swift-project.plugins.simulator.xplane",
     "name" : "X-Plane",
     "simulator" : "xplane",
-    "description" : "Support for the X-Plane simulator via the XSwiftBus plugin.",
+    "description" : "Support for the X-Plane simulator via the xswiftbus plugin.",
     "config" : "org.swift-project.plugins.simulator.xplane.config"
 }

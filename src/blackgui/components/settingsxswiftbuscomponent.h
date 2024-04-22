@@ -20,7 +20,7 @@ namespace Ui
 namespace BlackGui::Components
 {
     /*!
-     * XSwiftBus setup
+     * xswiftbus setup
      */
     class BLACKGUI_EXPORT CSettingsXSwiftBusComponent : public QFrame
     {

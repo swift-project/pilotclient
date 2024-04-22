@@ -19,7 +19,7 @@ BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackMisc::Simulation::Settings, CXSwiftBusSett
 
 namespace BlackMisc::Simulation::Settings
 {
-    //! XSwiftBus settings
+    //! xswiftbus settings
     class BLACKMISC_EXPORT CXSwiftBusSettings final :
         public CValueObject<CXSwiftBusSettings>,
         public CXSwiftBusSettingsQtFree,
@@ -105,7 +105,7 @@ namespace BlackMisc::Simulation::Settings
     };
 
     /*!
-     * Setting for XSwiftBus.
+     * Setting for xswiftbus.
      */
     struct TXSwiftBusSettings : public TSettingTrait<CXSwiftBusSettings>
     {
@@ -115,7 +115,7 @@ namespace BlackMisc::Simulation::Settings
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
         static const QString &humanReadable()
         {
-            static const QString name("XSwiftBus");
+            static const QString name("xswiftbus");
             return name;
         }
 

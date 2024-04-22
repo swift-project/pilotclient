@@ -96,7 +96,7 @@ namespace BlackMisc
 
         SharedState::CAnyMatch::registerMetadata();
 
-        // needed by XSwiftBus proxy class
+        // needed by xswiftbus proxy class
         qDBusRegisterMetaType<CSequence<double>>();
         qRegisterMetaTypeStreamOperators<CSequence<double>>();
     }

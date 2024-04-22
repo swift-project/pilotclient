@@ -233,7 +233,7 @@
     <string>Simulator specific installations</string>
    </property>
    <property name="subTitle">
-    <string>Install XSwiftBus (X-Plane only) or swift terrain probe (FSX/P3D only)</string>
+    <string>Install xswiftbus (X-Plane only) or swift terrain probe (FSX/P3D only)</string>
    </property>
    <layout class="QVBoxLayout" name="vl_SimulatorSpecific">
     <item>
@@ -276,7 +276,7 @@
         </rect>
        </property>
        <attribute name="label">
-        <string extracomment="Install the XSwiftBus component">XPlane: Install XSwiftBus</string>
+        <string extracomment="Install the xswiftbus component">XPlane: Install xswiftbus</string>
        </attribute>
        <layout class="QVBoxLayout" name="vl_XPlane">
         <item alignment="Qt::AlignTop">

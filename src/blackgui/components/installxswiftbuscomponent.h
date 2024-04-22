@@ -25,7 +25,7 @@ namespace Ui
 namespace BlackGui::Components
 {
     /*!
-     * Download and install XSwiftBus
+     * Download and install xswiftbus
      */
     class CInstallXSwiftBusComponent :
         public COverlayMessagesFrame,
@@ -65,19 +65,19 @@ namespace BlackGui::Components
         //! Install from download directory to X-Plane directory
         void installXSwiftBus();
 
-        //! Trigger downloading of the XSwiftBus file
+        //! Trigger downloading of the xswiftbus file
         void triggerDownloadingOfXSwiftBusFile();
 
-        //! Downloaded XSwiftBus file
+        //! Downloaded xswiftbus file
         void downloadedXSwiftBusFile(const BlackMisc::CStatusMessage &status);
 
-        //! Full filename + path for the downloaded XSwiftBus file
+        //! Full filename + path for the downloaded xswiftbus file
         BlackMisc::Network::CRemoteFile getRemoteFileSelected() const;
 
         //! Download dir from UI
         QString downloadDir() const;
 
-        //! XSwiftBus dir from UI
+        //! xswiftbus dir from UI
         QString xSwiftBusDir() const;
 
         //! Is the download dir existing?

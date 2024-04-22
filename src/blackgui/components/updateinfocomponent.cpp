@@ -126,8 +126,8 @@ namespace BlackGui::Components
 
         if (!stringCompare(currentXsb, currentSwift, Qt::CaseInsensitive))
         {
-            const QString msg = QStringLiteral("XSwiftBus '%1' does NOT match swift version, download anyway?").arg(currentXsb, currentSwift);
-            const QMessageBox::StandardButton reply = QMessageBox::question(this, QStringLiteral("Download XSwiftBus"), msg, QMessageBox::Yes | QMessageBox::No);
+            const QString msg = QStringLiteral("xswiftbus '%1' does NOT match swift version, download anyway?").arg(currentXsb, currentSwift);
+            const QMessageBox::StandardButton reply = QMessageBox::question(this, QStringLiteral("Download xswiftbus"), msg, QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) { return; }
         }
 
@@ -206,7 +206,7 @@ namespace BlackGui::Components
         const CDistribution selectedDistribution(this->getSelectedOrDefaultDistribution());
         const CPlatform selectedPlatform(this->getSelectedOrDefaultPlatform());
 
-        // for XSwiftBus we only show public (unrestricted) ones, as the follow up dialog will only show unrestricted
+        // for xswiftbus we only show public (unrestricted) ones, as the follow up dialog will only show unrestricted
         const CUpdateInfo updateInfo(m_updateInfo.get());
         const CArtifactList artifactsPilotClient = updateInfo.getArtifactsPilotClient().findByDistributionAndPlatform(selectedDistribution, selectedPlatform, true);
         const CArtifactList artifactsXsb = updateInfo.getArtifactsXSwiftBus().findWithUnrestrictedDistributions().findByDistributionAndPlatform(selectedDistribution, selectedPlatform, true);

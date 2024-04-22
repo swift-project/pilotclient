@@ -92,7 +92,7 @@ namespace BlackSimPlugin::XPlane
         void sceneryLoaded();
 
     public slots:
-        //! Get XSwiftBus version number
+        //! Get xswiftbus version number
         QString getVersionNumber();
 
         //! Get SHA1 of the last commit that could influence xswiftbus

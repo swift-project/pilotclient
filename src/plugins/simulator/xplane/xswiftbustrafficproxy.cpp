@@ -152,7 +152,7 @@ namespace BlackSimPlugin::XPlane
             else
             {
                 const QString errorMsg = reply.error().message();
-                CLogMessage(this).warning(u"XSwiftBus DBus error getRemoteAircraftData: %1") << errorMsg;
+                CLogMessage(this).warning(u"xswiftbus DBus error getRemoteAircraftData: %1") << errorMsg;
             }
             watcher->deleteLater();
         };

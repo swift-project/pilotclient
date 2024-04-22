@@ -9,7 +9,7 @@
 namespace XSwiftBus
 {
     /*!
-     * XSwiftBus configuration class
+     * xswiftbus configuration class
      */
     class CConfig
     {

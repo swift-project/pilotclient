@@ -62,10 +62,10 @@ namespace BlackMisc::Simulation::XPlane
         //! Exclude directories for models
         static const QStringList &xplaneModelExcludeDirectoryPatterns();
 
-        //! XSwiftBus plugin directory
+        //! xswiftbus plugin directory
         static QString xswiftbusPluginDir(const QString &xplaneRootDir = CXPlaneUtil::xplaneRootDir());
 
-        //! XSwiftBus legacy directory
+        //! xswiftbus legacy directory
         static QString xswiftbusLegacyDir(const QString &xplaneRootDir = CXPlaneUtil::xplaneRootDir());
 
         //! Both directories, plugin and
@@ -78,17 +78,17 @@ namespace BlackMisc::Simulation::XPlane
         //! \remark uses CXPlaneUtil::xplanePluginPath as default
         static QStringList findAllXplFiles(const QString &pluginDir = {});
 
-        //! Newer XSwiftBus build
+        //! Newer xswiftbus build
         static bool hasNewerXSwiftBusBuild(const QString &xplaneRootDir = CXPlaneUtil::xplaneRootDir());
 
-        //! Copy a XSwiftBus build
+        //! Copy a xswiftbus build
         //! \remark only copying in a local build environment
         static int copyXSwiftBusBuildFiles(const QString &xplaneRootDir = CXPlaneUtil::xplaneRootDir());
 
         //! XPlane relative plugin path
         static const QString &xplanePluginPathName();
 
-        //! XSwiftBus path name
+        //! xswiftbus path name
         static const QString &xswiftbusPathName();
 
         //! Filter filter for xpl files

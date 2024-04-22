@@ -22,7 +22,7 @@ namespace
 namespace XSwiftBus
 {
     CPlugin::CPlugin()
-        : m_dbusConnection(std::make_shared<CDBusConnection>()), m_menu(CMenu::mainMenu().subMenu("XSwiftBus"))
+        : m_dbusConnection(std::make_shared<CDBusConnection>()), m_menu(CMenu::mainMenu().subMenu("xswiftbus"))
     {
         m_showHideLabelsMenuItem = m_menu.item("Show/Hide Aircraft Labels", [this] {
             m_traffic->setDrawingLabels(!m_traffic->isDrawingLabels());
@@ -55,7 +55,7 @@ namespace XSwiftBus
             }
         });*/
 
-        // Delay the start of XSwiftBus.
+        // Delay the start of xswiftbus.
         // http://www.xsquawkbox.net/xpsdk/mediawiki/DeferredInitialization
         XPLMRegisterFlightLoopCallback(startServerDeferred, -1, this);
 
@@ -102,7 +102,7 @@ namespace XSwiftBus
             std::string listenAddress = "tcp:host=" + m_pluginConfig.getDBusAddress() + ",port=" + std::to_string(m_pluginConfig.getDBusPort());
             if (!m_dbusP2PServer->listen(listenAddress))
             {
-                m_service->addTextMessage("XSwiftBus startup failed!", 255, 0, 0);
+                m_service->addTextMessage("xswiftbus startup failed!", 255, 0, 0);
                 return;
             }
             m_dbusP2PServer->setDispatcher(&m_dbusDispatcher);
@@ -141,7 +141,7 @@ namespace XSwiftBus
         }
 
         //! todo RR: Send all logs to the the message window.
-        const std::string msg = "XSwiftBus " + m_service->getVersionNumber() + " started.";
+        const std::string msg = "xswiftbus " + m_service->getVersionNumber() + " started.";
         INFO_LOG(msg);
         m_service->addTextMessage(msg, 0, 255, 255);
     }
@@ -179,7 +179,7 @@ namespace XSwiftBus
         {
             plugin->startServer();
             plugin->m_isRunning = true;
-            INFO_LOG("XSwiftBus plugin started (deferred)");
+            INFO_LOG("xswiftbus plugin started (deferred)");
         }
         return 0;
     }

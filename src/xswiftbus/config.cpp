@@ -70,7 +70,7 @@ namespace XSwiftBus
 
     void CConfig::print()
     {
-        DEBUG_LOG("XSwiftBus configuration:");
+        DEBUG_LOG("xswiftbus configuration:");
         DEBUG_LOG("DBus mode: " + dbusModeToString(m_dbusMode));
         DEBUG_LOG("DBus server address: " + m_dbusAddress);
         DEBUG_LOG("DBus server port: " + std::to_string(m_dbusPort));
@@ -114,7 +114,7 @@ namespace XSwiftBus
         localtime_r(&now, &tms);
 #endif
         configFile << std::endl;
-        configFile << "# Updated by XSwiftBus plugin " << std::put_time(&tms, "%T");
+        configFile << "# Updated by xswiftbus plugin " << std::put_time(&tms, "%T");
         configFile << std::endl;
         configFile.close();
         return true;

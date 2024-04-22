@@ -72,7 +72,7 @@ namespace BlackMisc::Simulation::XPlane
         configFile.remove();
         if (configFile.open(QIODevice::WriteOnly))
         {
-            // this code should be similar to XSwiftBus config.cpp
+            // this code should be similar to xswiftbus config.cpp
             QTextStream ts(&configFile);
             ts << "# DBus Mode - Options: p2p, session" << Qt::endl;
             ts << "dbusMode = " << m_dbusMode << Qt::endl;

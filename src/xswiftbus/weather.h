@@ -20,7 +20,7 @@
 namespace XSwiftBus
 {
     /*!
-     * XSwiftBus weather object which is accessible through DBus
+     * xswiftbus weather object which is accessible through DBus
      */
     class CWeather : public CDBusObject
     {

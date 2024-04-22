@@ -82,7 +82,7 @@ namespace BlackGui::Components
         //! Selection changed
         void uiSelectionChanged();
 
-        //! Install XSwiftBus dialog
+        //! Install xswiftbus dialog
         void downloadXSwiftBusDialog();
 
         //! Download installer dialog

@@ -12,8 +12,8 @@
 namespace BlackMisc::Simulation::Settings
 {
     /*!
-     * XSwiftBus/swift side settings class, JSON capable, shared among all services
-     * \details Used on swift and XSwiftBus side, MUST BE Qt free
+     * xswiftbus/swift side settings class, JSON capable, shared among all services
+     * \details Used on swift and xswiftbus side, MUST BE Qt free
      */
     class CXSwiftBusSettingsQtFree
     {

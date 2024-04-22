@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Install XSwiftBus</string>
+   <string>Install xswiftbus</string>
   </property>
   <layout class="QVBoxLayout" name="vl_XSwiftBusComponent">
    <item>
@@ -42,7 +42,7 @@
       <item>
        <widget class="QLabel" name="lbl_Explaination">
         <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;XSwiftBus&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; is an X-Plane plugin that allows X-Plane and &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;swift&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; to communicate with each other. If you want to use &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;swift&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; with X-Plane you will need to install &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;XSwiftBus&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;. Download &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;XSwiftBus&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; and extract it into the &lt;/span&gt;&lt;span style=&quot; font-size:9pt; text-decoration: underline;&quot;&gt;X-Plane/Resources/plugins&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; folder.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;xswiftbus&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; is an X-Plane plugin that allows X-Plane and &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;swift&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; to communicate with each other. If you want to use &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;swift&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; with X-Plane you will need to install &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;xswiftbus&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;. Download &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;xswiftbus&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; and extract it into the &lt;/span&gt;&lt;span style=&quot; font-size:9pt; text-decoration: underline;&quot;&gt;X-Plane/Resources/plugins&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; folder.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="textFormat">
          <enum>Qt::RichText</enum>
@@ -58,7 +58,7 @@
    <item>
     <widget class="QGroupBox" name="gb_DownloadAndInstall">
      <property name="title">
-      <string>Download and install XSwiftBus</string>
+      <string>Download and install xswiftbus</string>
      </property>
      <layout class="QGridLayout" name="gl_DownloadAndInstall">
       <property name="leftMargin">
@@ -162,7 +162,7 @@
       <item row="0" column="0" colspan="4">
        <widget class="QLabel" name="lbl_Warning">
         <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Warning: &lt;/span&gt;Possible conflicts with plugins using the same libraries &lt;span style=&quot; font-style:italic;&quot;&gt;(e.g. XSquawkBox&lt;/span&gt;). You have to disable those pluigns before you can use &lt;span style=&quot; font-style:italic;&quot;&gt;swiftXSwiftBus&lt;/span&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Warning: &lt;/span&gt;Possible conflicts with plugins using the same libraries &lt;span style=&quot; font-style:italic;&quot;&gt;(e.g. XSquawkBox&lt;/span&gt;). You have to disable those plugins before you can use &lt;span style=&quot; font-style:italic;&quot;&gt;xswiftbus&lt;/span&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>
@@ -175,7 +175,7 @@
    <item>
     <widget class="QGroupBox" name="gb_XSwiftBusSettings">
      <property name="title">
-      <string>XSwiftBus settings</string>
+      <string>xswiftbus settings</string>
      </property>
      <layout class="QVBoxLayout" name="vl_XSwiftBusSettings">
       <property name="leftMargin">

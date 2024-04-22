@@ -102,13 +102,13 @@ namespace XSwiftBus
     }
 
     CMessageBoxControl::CMessageBoxControl(int left, int right, int top) : m_messageBox(left, right, top),
-                                                                           m_showCommand("org/swift-project/xswiftbus/show_messages", "Show XSwiftBus text messages", [this] { show(); }),
-                                                                           m_hideCommand("org/swift-project/xswiftbus/hide_messages", "Hide XSwiftBus text messages", [this] { hide(); }),
-                                                                           m_toggleCommand("org/swift-project/xswiftbus/toggle_messages", "Toggle XSwiftBus text messages", [this] { toggle(); }),
-                                                                           m_scrollUpCommand("org/swift-project/xswiftbus/scroll_up", "Scroll up XSwiftBus text messages", [this] { scrollUp(); }),
-                                                                           m_scrollDownCommand("org/swift-project/xswiftbus/scroll_down", "Scroll down XSwiftBus text messages", [this] { scrollDown(); }),
-                                                                           m_scrollToTopCommand("org/swift-project/xswiftbus/scroll_top", "Scroll to top of XSwiftBus text messages", [this] { scrollToTop(); }),
-                                                                           m_scrollToBottomCommand("org/swift-project/xswiftbus/scroll_bottom", "Scroll to bottom of XSwiftBus text messages", [this] { scrollToBottom(); })
+                                                                           m_showCommand("org/swift-project/xswiftbus/show_messages", "Show xswiftbus text messages", [this] { show(); }),
+                                                                           m_hideCommand("org/swift-project/xswiftbus/hide_messages", "Hide xswiftbus text messages", [this] { hide(); }),
+                                                                           m_toggleCommand("org/swift-project/xswiftbus/toggle_messages", "Toggle xswiftbus text messages", [this] { toggle(); }),
+                                                                           m_scrollUpCommand("org/swift-project/xswiftbus/scroll_up", "Scroll up xswiftbus text messages", [this] { scrollUp(); }),
+                                                                           m_scrollDownCommand("org/swift-project/xswiftbus/scroll_down", "Scroll down xswiftbus text messages", [this] { scrollDown(); }),
+                                                                           m_scrollToTopCommand("org/swift-project/xswiftbus/scroll_top", "Scroll to top of xswiftbus text messages", [this] { scrollToTop(); }),
+                                                                           m_scrollToBottomCommand("org/swift-project/xswiftbus/scroll_bottom", "Scroll to bottom of xswiftbus text messages", [this] { scrollToBottom(); })
     {
         show();
     }

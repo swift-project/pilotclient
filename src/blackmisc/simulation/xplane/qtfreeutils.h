@@ -14,8 +14,8 @@
 #include <algorithm>
 #include <iterator>
 
-// Strict header only X-Plane model parser utils shared between BlackMisc and XSwiftBus.
-// Header only is necessary to no require XSwiftBus to link against BlackMisc.
+// Strict header only X-Plane model parser utils shared between BlackMisc and xswiftbus.
+// Header only is necessary to no require xswiftbus to link against BlackMisc.
 
 namespace BlackMisc::Simulation::XPlane::QtFreeUtils
 {

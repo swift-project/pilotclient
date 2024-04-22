@@ -38,7 +38,7 @@
    <item row="0" column="0">
     <widget class="QGroupBox" name="gb_DBus">
      <property name="title">
-      <string>XSwiftBus DBus</string>
+      <string>xswiftbus DBus</string>
      </property>
      <layout class="QVBoxLayout" name="vl_DBus">
       <property name="leftMargin">

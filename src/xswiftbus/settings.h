@@ -12,7 +12,7 @@
 namespace XSwiftBus
 {
     /*!
-     * XSwiftBus/swift side settings class, JSON capable, shared among all services
+     * xswiftbus/swift side settings class, JSON capable, shared among all services
      */
     class CSettings final : public BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree
     {

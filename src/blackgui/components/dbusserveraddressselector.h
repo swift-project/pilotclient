@@ -52,7 +52,7 @@ namespace BlackGui::Components
         //! P2P visible
         void setP2PDBusVisible(bool visible);
 
-        //! Set to be used for XSwiftBus
+        //! Set to be used for xswiftbus
         void setForXSwiftBus();
 
     signals:
