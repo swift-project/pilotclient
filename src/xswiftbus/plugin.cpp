@@ -24,8 +24,6 @@ namespace XSwiftBus
     CPlugin::CPlugin()
         : m_dbusConnection(std::make_shared<CDBusConnection>()), m_menu(CMenu::mainMenu().subMenu("XSwiftBus"))
     {
-        // m_startServerMenuItem = m_menu.item("Start XSwiftBus", [this]{ startServer(CDBusConnection::SessionBus); });
-
         m_showHideLabelsMenuItem = m_menu.item("Show/Hide Aircraft Labels", [this] {
             m_traffic->setDrawingLabels(!m_traffic->isDrawingLabels());
         });
