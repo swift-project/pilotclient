@@ -60,10 +60,6 @@ namespace BlackCore::Vatsim
         //! \threadsafe
         BlackMisc::Aviation::CAtcStationList getAtcStationsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const;
 
-        //! Get all voice servers
-        //! \threadsafe
-        BlackMisc::Network::CServerList getVoiceServers() const;
-
         //! Users for callsign(s)
         //! \threadsafe
         BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const;

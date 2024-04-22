@@ -330,9 +330,6 @@ namespace BlackMisc::Aviation
         //! Get flight rules as in FlightRules
         FlightRules getFlightRules() const { return m_flightRules; }
 
-        //! Rules only as IFR or VFR
-        FlightRules getFlightRulesAsVFRorIFR() const;
-
         //! Get flight rules as in FlightRules as string
         QString getFlightRulesAsString() const { return CFlightPlan::flightRulesToString(this->getFlightRules()); }
 

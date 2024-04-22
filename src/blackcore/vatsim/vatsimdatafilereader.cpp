@@ -78,11 +78,6 @@ namespace BlackCore::Vatsim
         return this->getAtcStations().findByCallsigns(callsigns);
     }
 
-    CServerList CVatsimDataFileReader::getVoiceServers() const
-    {
-        return {}; // TODO: Method not used anymore with AFV.
-    }
-
     CUserList CVatsimDataFileReader::getPilotsForCallsigns(const CCallsignSet &callsigns) const
     {
         return this->getAircraft().findByCallsigns(callsigns).transform(Predicates::MemberTransform(&CSimulatedAircraft::getPilot));

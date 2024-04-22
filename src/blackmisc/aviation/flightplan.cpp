@@ -258,20 +258,6 @@ namespace BlackMisc::Aviation
         return m_takeoffTimeActual.toString("hh:mm");
     }
 
-    CFlightPlan::FlightRules CFlightPlan::getFlightRulesAsVFRorIFR() const
-    {
-        switch (this->getFlightRules())
-        {
-        case IFR: return IFR;
-        case VFR:
-        case SVFR:
-        case DVFR: return VFR;
-        case UNKNOWN:
-        default: break;
-        }
-        return UNKNOWN;
-    }
-
     QVariant CFlightPlan::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
