@@ -3,7 +3,6 @@
 
 #include "blackcore/context/contextaudioproxy.h"
 #include "blackcore/afv/clients/afvclient.h"
-#include "blackmisc/audio/ptt.h"
 #include "blackmisc/dbus.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/genericdbusinterface.h"

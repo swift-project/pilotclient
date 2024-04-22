@@ -9,7 +9,6 @@
 #include "blackcore/actionbind.h"
 #include "blackgui/blackguiexport.h"
 
-#include "blackmisc/audio/ptt.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/input/actionhotkeydefs.h"
 #include "blackmisc/network/connectionstatus.h"
@@ -94,9 +93,6 @@ namespace BlackGui::Components
 
         //! PTT button changed
         void onPttChanged(bool enabled);
-
-        //! PTT, as received in in audio
-        void onAudioPtt(bool active, BlackMisc::Audio::PTTCOM pttcom, const BlackMisc::CIdentifier &identifier);
 
         //! Update values
         void updateValues();

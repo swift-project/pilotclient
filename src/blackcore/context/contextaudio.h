@@ -19,7 +19,6 @@
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/audio/audiosettings.h"
-#include "blackmisc/audio/ptt.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/selcal.h"
@@ -280,7 +279,7 @@ namespace BlackCore
             void stoppedAudio();
 
             //! PTT in voice client received
-            void ptt(bool active, BlackMisc::Audio::PTTCOM pttcom, const BlackMisc::CIdentifier &identifier);
+            void ptt(bool active, const BlackMisc::CIdentifier &identifier);
 
             /*
              * Workaround those must be invisible for DBus
@@ -309,11 +308,8 @@ namespace BlackCore
             //! Terminate the voice client
             void terminateVoiceClient();
 
-            //! @{
-            //! Enable/disable voice transmission, nornally used with hotkey
-            void setVoiceTransmission(bool enable, BlackMisc::Audio::PTTCOM com);
-            void setVoiceTransmissionComActive(bool enabled);
-            //! @}
+            //! Enable/disable voice transmission, normally used with hotkey
+            void setVoiceTransmission(bool enable);
 
             //! Change the device settings
             void changeDeviceSettings();
@@ -340,7 +336,7 @@ namespace BlackCore
             //! AFV client authentication failed
             void onAfvConnectionFailure(const BlackMisc::CStatusMessage &msg);
 
-            CActionBind m_actionPtt { BlackMisc::Input::pttHotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudioBase::setVoiceTransmissionComActive };
+            CActionBind m_actionPtt { BlackMisc::Input::pttHotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudioBase::setVoiceTransmission };
             CActionBind m_actionAudioVolumeIncrease { BlackMisc::Input::audioVolumeIncreaseHotkeyAction(), BlackMisc::Input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudioBase::audioIncreaseVolume };
             CActionBind m_actionAudioVolumeDecrease { BlackMisc::Input::audioVolumeDecreaseHotkeyAction(), BlackMisc::Input::audioVolumeDecreaseHotkeyIcon(), this, &CContextAudioBase::audioDecreaseVolume };
             CActionBind m_actionAudioVolumeIncreaseCom1 { BlackMisc::Input::audioVolumeIncreaseCom1HotkeyAction(), BlackMisc::Input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudioBase::audioIncreaseVolumeCom1 };

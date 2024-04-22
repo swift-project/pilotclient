@@ -270,23 +270,6 @@ namespace BlackGui::Components
         ui->led_Ptt->setOn(enabled);
     }
 
-    void CInfoBarStatusComponent::onAudioPtt(bool active, PTTCOM pttcom, const CIdentifier &identifier)
-    {
-        // those here come directly from AUDIO client,
-        // we display COM1/2 directly, but COM is directly hooked up with onPttChanged
-
-        Q_UNUSED(identifier)
-        Q_UNUSED(active)
-        Q_UNUSED(pttcom)
-
-        /*
-        if (pttcom == COM1 || pttcom == COM2)
-        {
-            this->onPttChanged(active);
-        }
-        */
-    }
-
     void CInfoBarStatusComponent::updateValues()
     {
         if (!sGui || sGui->isShuttingDown()) { return; }

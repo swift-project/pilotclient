@@ -535,15 +535,10 @@ namespace BlackCore::Context
         return m_voiceClient->isLoopback();
     }
 
-    void CContextAudioBase::setVoiceTransmission(bool enable, PTTCOM com)
+    void CContextAudioBase::setVoiceTransmission(bool enable)
     {
         if (!m_voiceClient) { return; }
-        m_voiceClient->setPttForCom(enable, com);
-    }
-
-    void CContextAudioBase::setVoiceTransmissionComActive(bool enabled)
-    {
-        this->setVoiceTransmission(enabled, COMActive);
+        m_voiceClient->setPtt(enable);
     }
 
     void CContextAudioBase::changeDeviceSettings()

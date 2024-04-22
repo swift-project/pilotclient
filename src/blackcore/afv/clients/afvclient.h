@@ -17,7 +17,6 @@
 #include "blacksound/sampleprovider/volumesampleprovider.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/audio/audiosettings.h"
-#include "blackmisc/audio/ptt.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/logcategories.h"
 #include "blackmisc/identifiable.h"
@@ -205,12 +204,9 @@ namespace BlackCore::Afv::Clients
         //! \threadsafe
         void updateFromOwnAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool withSignals = true);
 
-        //! @{
         //! Push to talk
         //! \threadsafe
         Q_INVOKABLE void setPtt(bool active);
-        void setPttForCom(bool active, BlackMisc::Audio::PTTCOM com);
-        //! @}
 
         //! @{
         //! Loopback
@@ -298,7 +294,7 @@ namespace BlackCore::Afv::Clients
         void updatedFromOwnAircraftCockpit();
 
         //! PTT status in this particular AFV client
-        void ptt(bool active, BlackMisc::Audio::PTTCOM pttcom, const BlackMisc::CIdentifier &identifier);
+        void ptt(bool active, const BlackMisc::CIdentifier &identifier);
 
         //! @{
         //! VU levels

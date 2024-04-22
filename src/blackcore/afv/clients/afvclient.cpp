@@ -672,13 +672,6 @@ namespace BlackCore::Afv::Clients
 
     void CAfvClient::setPtt(bool active)
     {
-        this->setPttForCom(active, COMUnspecified);
-    }
-
-    void CAfvClient::setPttForCom(bool active, PTTCOM com)
-    {
-        Q_UNUSED(com)
-
         if (!m_isStarted)
         {
             CLogMessage(this).info(u"Voice client not started");
@@ -708,7 +701,7 @@ namespace BlackCore::Afv::Clients
             **/
         }
 
-        emit this->ptt(active, com, this->identifier());
+        emit this->ptt(active, this->identifier());
     }
 
     double CAfvClient::getInputVolumeDb() const
