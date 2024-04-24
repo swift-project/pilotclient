@@ -26,7 +26,7 @@ namespace BlackCore::Db
     {
         return CDbFlags::flagToString(this->getRetrievalMode()) %
                u' ' %
-               CEntityFlags::flagToString(this->getEntities()) %
+               CEntityFlags::entitiesToString(this->getEntities()) %
                u' ' %
                m_cacheLifetime.toQString(i18n);
     }

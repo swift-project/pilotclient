@@ -57,7 +57,7 @@ namespace BlackCore::Db
         while (currentEntity)
         {
             const CDatabaseReaderConfig config(this->getConfigForEntity(currentEntity));
-            const QString currentEntityName = CEntityFlags::flagToString(currentEntity);
+            const QString currentEntityName = CEntityFlags::entitiesToString(currentEntity);
 
             // retrieval mode
             const CDbFlags::DataRetrievalMode rm = config.getRetrievalMode(); // DB reading, cache, shared
@@ -159,14 +159,14 @@ namespace BlackCore::Db
         // Real read from DB
         if (dbEntities != CEntityFlags::NoEntity)
         {
-            CLogMessage(this).info(u"Start reading DB entities: %1") << CEntityFlags::flagToString(dbEntities);
+            CLogMessage(this).info(u"Start reading DB entities: %1") << CEntityFlags::entitiesToString(dbEntities);
             this->startReadFromBackendInBackgroundThread(dbEntities, CDbFlags::DbReading, newerThan);
         }
 
         // Real read from shared
         if (sharedEntities != CEntityFlags::NoEntity)
         {
-            CLogMessage(this).info(u"Start reading shared entities: %1") << CEntityFlags::flagToString(sharedEntities);
+            CLogMessage(this).info(u"Start reading shared entities: %1") << CEntityFlags::entitiesToString(sharedEntities);
             this->startReadFromBackendInBackgroundThread(dbEntities, CDbFlags::Shared, newerThan);
         }
     }
@@ -186,7 +186,7 @@ namespace BlackCore::Db
             if (newerHeaderEntities != entities)
             {
                 const CEntityFlags::Entity validInCacheEntities = (entities ^ newerHeaderEntities) & entities;
-                CLogMessage(this).info(u"Reduced '%1' to '%2' before triggering load of shared files (still in cache)") << CEntityFlags::flagToString(entities) << CEntityFlags::flagToString(newerHeaderEntities);
+                CLogMessage(this).info(u"Reduced '%1' to '%2' before triggering load of shared files (still in cache)") << CEntityFlags::entitiesToString(entities) << CEntityFlags::entitiesToString(newerHeaderEntities);
 
                 // In case we have difference entities we treat them as they were loaded, they result from still being in the cache
                 // Using timer to first finish this function, then the resulting signal
@@ -397,7 +397,7 @@ namespace BlackCore::Db
             CUrl url = urlSharedDbdata;
             url.appendPath(fileName);
 
-            const QString entityString = CEntityFlags::flagToString(currentEntity);
+            const QString entityString = CEntityFlags::entitiesToString(currentEntity);
             CLogMessage(this).info(u"Triggered read of header for shared file of '%1'") << entityString;
             const QNetworkReply *reply = sApp->headerFromNetwork(url, { this, &CDatabaseReader::receivedSharedFileHeader });
             if (reply) { c++; }
@@ -488,13 +488,13 @@ namespace BlackCore::Db
     {
         // never emit when lock is held, deadlock
         Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Expect single entity");
-        CLogMessage(this).info(u"Read %1 entities of '%2' from '%3' (%4)") << number << CEntityFlags::flagToString(entity) << res.getUrlString() << res.getLoadTimeStringWithStartedHint();
+        CLogMessage(this).info(u"Read %1 entities of '%2' from '%3' (%4)") << number << CEntityFlags::entitiesToString(entity) << res.getUrlString() << res.getLoadTimeStringWithStartedHint();
         emit this->dataRead(entity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, number, res.getUrl());
     }
 
     void CDatabaseReader::logNoWorkingUrl(CEntityFlags::Entity entity)
     {
-        const CStatusMessage msg = CStatusMessage(this, m_severityNoWorkingUrl, u"No working URL for '%1'") << CEntityFlags::flagToString(entity);
+        const CStatusMessage msg = CStatusMessage(this, m_severityNoWorkingUrl, u"No working URL for '%1'") << CEntityFlags::entitiesToString(entity);
         CLogMessage::preformatted(msg);
     }
 
@@ -569,7 +569,7 @@ namespace BlackCore::Db
 
     QString CDatabaseReader::getSupportedEntitiesAsString() const
     {
-        return CEntityFlags::flagToString(this->getSupportedEntities());
+        return CEntityFlags::entitiesToString(this->getSupportedEntities());
     }
 
     CEntityFlags::Entity CDatabaseReader::maskBySupportedEntities(CEntityFlags::Entity entities) const
@@ -609,8 +609,8 @@ namespace BlackCore::Db
         {
             const bool s = this->readFromJsonFilesInBackground(CSwiftDirectories::staticDbFilesDirectory(), entities, overrideNewerOnly);
             return s ?
-                       CStatusMessage(this).info(u"Started reading in background from '%1' of entities: '%2'") << CSwiftDirectories::staticDbFilesDirectory() << CEntityFlags::flagToString(entities) :
-                       CStatusMessage(this).error(u"Starting reading in background from '%1' of entities: '%2' failed") << CSwiftDirectories::staticDbFilesDirectory() << CEntityFlags::flagToString(entities);
+                       CStatusMessage(this).info(u"Started reading in background from '%1' of entities: '%2'") << CSwiftDirectories::staticDbFilesDirectory() << CEntityFlags::entitiesToString(entities) :
+                       CStatusMessage(this).error(u"Starting reading in background from '%1' of entities: '%2' failed") << CSwiftDirectories::staticDbFilesDirectory() << CEntityFlags::entitiesToString(entities);
         }
         else
         {

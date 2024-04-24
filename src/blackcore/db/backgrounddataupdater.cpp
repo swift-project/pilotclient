@@ -159,7 +159,7 @@ namespace BlackCore::Db
         if (!latestCacheTs.isValid()) { return; }
 
         const QDateTime latestDbTs = sApp->getWebDataServices()->getLatestDbEntityTimestamp(entity);
-        const QString entityStr = CEntityFlags::flagToString(entity);
+        const QString entityStr = CEntityFlags::entitiesToString(entity);
         const QString latestCacheTsStr = latestCacheTs.toString(Qt::ISODate);
 
         if (!latestDbTs.isValid()) { return; }

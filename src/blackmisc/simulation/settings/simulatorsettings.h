@@ -510,14 +510,6 @@ namespace BlackMisc::Simulation::Settings
         //! Default model path per simulator
         const QStringList &defaultModelDirectories(const CSimulatorInfo &simulator) const;
 
-        //! Default model exclude patterns per simulator
-        //! \deprecated use CSpecializedSimulatorSettings::defaultModelExcludeDirectoryPatterns
-        // static const QStringList &defaultModelExcludeDirectoryPatterns(const CSimulatorInfo &simulator);
-
-        //! Default simulator path per simulator
-        //! \deprecated use CSpecializedSimulatorSettings::defaultSimulatorDirectory
-        // static const QString &defaultSimulatorDirectory(const CSimulatorInfo &simulator);
-
     signals:
         //! Simulator settings have been changed
         void settingsChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);

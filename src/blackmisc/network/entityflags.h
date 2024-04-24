@@ -67,10 +67,6 @@ namespace BlackMisc::Network
         //! Convert to string
         static QString flagToString(CEntityFlags::EntityFlag flag);
 
-        //! Convert to string
-        //! \deprecated use entities to string
-        static QString flagToString(CEntityFlags::Entity entities);
-
         //! Entities to string list
         static QStringList entitiesToStringList(CEntityFlags::Entity entities);
 

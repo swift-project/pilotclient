@@ -37,11 +37,6 @@ namespace BlackMisc::Network
         }
     }
 
-    QString CEntityFlags::flagToString(CEntityFlags::Entity entities)
-    {
-        return entitiesToString(entities, ", ");
-    }
-
     QStringList CEntityFlags::entitiesToStringList(CEntityFlags::Entity entities)
     {
         QStringList list;

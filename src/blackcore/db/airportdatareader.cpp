@@ -72,7 +72,7 @@ namespace BlackCore::Db
         whatToRead &= CEntityFlags::AirportEntity; // can handle these entities
         if (whatToRead == CEntityFlags::NoEntity)
         {
-            return CStatusMessage(this).info(u"'%1' No entity for this reader") << CEntityFlags::flagToString(whatToRead);
+            return CStatusMessage(this).info(u"'%1' No entity for this reader") << CEntityFlags::entitiesToString(whatToRead);
         }
 
         int c = 0;
