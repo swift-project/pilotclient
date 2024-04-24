@@ -672,8 +672,14 @@ namespace BlackCore
         const CAtcStationList stationsWithCallsign = m_atcStationsOnline.findByCallsign(callsign);
         if (stationsWithCallsign.isEmpty())
         {
-            // new station, init with data from data file
-            CAtcStation station(sApp->getWebDataServices()->getAtcStationsForCallsign(callsign).frontOrDefault());
+            CAtcStation station;
+
+            // if connected to VATSIM, init with data from data file
+            if (this->getConnectedServer().getEcosystem() == CEcosystem::vatsim())
+            {
+                station = sApp->getWebDataServices()->getAtcStationsForCallsign(callsign).frontOrDefault();
+            }
+
             station.setCallsign(callsign);
             station.setRange(range);
             station.setFrequency(frequency);
