@@ -82,15 +82,6 @@ QDialog::separator:hover {
   background: transparent;
 }
 
-/* selector QWizard not working, so using individual components */
-/* the wizard pages are currently hardcoded */
-/*
-BlackGui--Components--CCopyConfigurationComponent {
-  background: black;
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
-}
-*/
-
 /* setup load dialog details frame */
 /*
 BlackGui--Components--CSetupLoadingDialog #fr_Details {

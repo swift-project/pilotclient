@@ -341,7 +341,6 @@ add_library(gui SHARED
         components/loginoverviewcomponent.h
         components/updateinfodialog.ui
         components/aircraftpartshistory.ui
-        components/copyconfigurationdialog.ui
         components/autopublishdialog.ui
         components/logincomponent.h
         components/audionotificationcomponent.ui
@@ -358,7 +357,6 @@ add_library(gui SHARED
         components/autopublishcomponent.h
         components/audioadvanceddistributeddialog.ui
         components/settingsadvancedcomponent.h
-        components/copyconfigurationcomponent.h
         components/airportdialog.h
         components/settingsmatchingdialog.cpp
         components/modelmatcherlogcomponent.h
@@ -693,7 +691,6 @@ add_library(gui SHARED
         components/logindialog.ui
         components/cockpitcomcomponent.cpp
         components/logcomponent.cpp
-        components/copyconfigurationdialog.cpp
         components/configurationwizard.cpp
         components/downloadcomponent.ui
         components/dbquickmappingwizard.cpp
@@ -725,7 +722,6 @@ add_library(gui SHARED
         components/interpolationlogdisplaydialog.ui
         components/installxswiftbusdialog.h
         components/settingssimulatorbasicscomponent.ui
-        components/copyconfigurationdialog.h
         components/scalescreenfactor.cpp
         components/downloadcomponent.h
         components/audioadvanceddistributeddialog.cpp
@@ -774,7 +770,6 @@ add_library(gui SHARED
         components/loginadvcomponent.ui
         components/datasettingscomponent.ui
         components/cockpitcomtransmissioncomponent.cpp
-        components/copyconfigurationcomponent.cpp
         components/firstmodelsetcomponent.ui
         components/settingsnetworkcomponent.ui
         components/cgsourceselector.cpp
@@ -794,7 +789,6 @@ add_library(gui SHARED
         components/datainfoareacomponent.h
         components/dbownmodelscomponent.cpp
         components/marginsinput.h
-        components/copyconfigurationcomponent.ui
         components/registercomponent.cpp
         components/statusmessageform.cpp
         components/settingsxswiftbuscomponent.h
