@@ -535,8 +535,8 @@ namespace BlackMisc
         static const QPixmap &simulatorXPlane16();
         //! @}
 
-        //! Simulator MSFS
         //! @{
+        //! Simulator MSFS
         static const QPixmap &simulatorMSFS();
         static const QPixmap &simulatorMSFS16();
         //! @}

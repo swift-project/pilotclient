@@ -124,7 +124,6 @@ namespace BlackCore::Fsd
 
         if (!m_statistics && (CBuildConfig::isLocalDeveloperDebugBuild() || (sApp && sApp->getOwnDistribution().isRestricted())))
         {
-            // TOTO TZ
             CLogMessage("Enabled network statistics");
             m_statistics = true;
         }
