@@ -198,8 +198,8 @@ namespace BlackMisc::Simulation
         //! From database JSON
         static CSimulatorInfo fromDatabaseJson(const QJsonObject &json, const QString &prefix);
 
-        //! Const simulator info objects
         //! @{
+        //! Const simulator info objects
         static const CSimulatorInfo &fg()
         {
             static const CSimulatorInfo s(FG);
