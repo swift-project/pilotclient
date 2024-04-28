@@ -90,7 +90,7 @@ namespace BlackCore::Application
         }
 
         //! \copydoc BlackMisc::TSettingTrait::defaultValue
-        static bool defaultValue() { return true; }
+        static bool defaultValue() { return false; }
     };
 } // ns
 
