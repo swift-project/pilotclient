@@ -196,8 +196,6 @@ add_library(misc SHARED
         crashhandler.h
         crashinfo.cpp
         crashinfo.h
-        crashsettings.cpp
-        crashsettings.h
         datacache.cpp
         datacache.h
         datastream.h

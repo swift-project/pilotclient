@@ -1383,7 +1383,7 @@ namespace BlackCore
 
     void CApplication::onCrashDumpUploadEnabledChanged()
     {
-        const bool enabled = CBuildConfig::isReleaseBuild() && m_crashDumpSettings.getThreadLocal().isEnabled();
+        const bool enabled = CBuildConfig::isReleaseBuild() && m_crashDumpUploadEnabled.getThreadLocal();
         this->enableCrashDumpUpload(enabled);
     }
 
