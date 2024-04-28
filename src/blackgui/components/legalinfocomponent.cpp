@@ -31,12 +31,6 @@ namespace BlackGui::Components
         ui->cb_Agree->setChecked(CBuildConfig::isLocalDeveloperDebugBuild());
 
         connect(ui->cb_CrashDumps, &QCheckBox::toggled, this, &CLegalInfoComponent::onAllowCrashDumps);
-
-        QPointer<CLegalInfoComponent> myself(this);
-        QTimer::singleShot(5000, this, [=] {
-            if (!sApp || sApp->isShuttingDown() || !myself) { return; }
-            myself->showCrashDumpHint();
-        });
     }
 
     CLegalInfoComponent::~CLegalInfoComponent()
@@ -58,13 +52,6 @@ namespace BlackGui::Components
     void CLegalInfoComponent::onAllowCrashDumps(bool checked)
     {
         CLogMessage::preformatted(m_crashDumpUploadEnabled.setAndSave(checked));
-    }
-
-    void CLegalInfoComponent::showCrashDumpHint()
-    {
-        if (ui->cb_CrashDumps->isChecked()) { return; }
-        const CStatusMessage m = CStatusMessage(this).info(u"We recommend to enable crash dump uploads");
-        this->showOverlayHTMLMessage(m, 7500);
     }
 
     void CLegalInfoComponent::setChecklistInfo()
