@@ -49,7 +49,7 @@ namespace BlackGui::Components
         void setChecklistInfo();
 
         QScopedPointer<Ui::CLegalInfoComponent> ui;
-        BlackMisc::CSetting<BlackCore::Application::TCrashDumpSettings> m_crashDumpSettings { this };
+        BlackMisc::CSetting<BlackCore::Application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this };
     };
 
     /*!

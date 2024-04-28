@@ -9,7 +9,6 @@
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/input/actionhotkeylist.h"
 #include "blackmisc/settingscache.h"
-#include "blackmisc/crashsettings.h"
 #include "blackconfig/buildconfig.h"
 
 #include <QStringList>
@@ -78,11 +77,10 @@ namespace BlackCore::Application
     };
 
     //! Uploading of crash dumps is enabled or disabled
-    //! \deprecated remove after changing to
-    struct TCrashDumpSettings : public BlackMisc::TSettingTrait<BlackMisc::Settings::CCrashSettings>
+    struct TCrashDumpUploadEnabled : public BlackMisc::TSettingTrait<bool>
     {
         //! \copydoc BlackMisc::TSettingTrait::key
-        static const char *key() { return "application/crashdump"; }
+        static const char *key() { return "application/crashdumpuploadenabled"; }
 
         //! \copydoc BlackMisc::TSettingTrait::humanReadable
         static const QString &humanReadable()
@@ -92,7 +90,7 @@ namespace BlackCore::Application
         }
 
         //! \copydoc BlackMisc::TSettingTrait::defaultValue
-        // static bool defaultValue() { return BlackMisc::Settings::CCrashSettings(); }
+        static bool defaultValue() { return true; }
     };
 } // ns
 
