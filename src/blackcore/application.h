@@ -657,7 +657,7 @@ namespace BlackCore
         bool m_localSettingsLoaded = false; //!< local settings loaded?
 
         // -------------- crashpad -----------------
-        BlackMisc::CSettingReadOnly<Application::TCrashDumpSettings> m_crashDumpSettings { this, &CApplication::onCrashDumpUploadEnabledChanged };
+        BlackMisc::CSettingReadOnly<Application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this, &CApplication::onCrashDumpUploadEnabledChanged };
 
         //! Upload settings changed
         void onCrashDumpUploadEnabledChanged();

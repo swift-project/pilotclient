@@ -7,7 +7,6 @@
 #include "blackgui/guiapplication.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackmisc/network/url.h"
-#include "blackmisc/crashsettings.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
 #include "blackconfig/buildconfig.h"
@@ -16,7 +15,6 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
-using namespace BlackMisc::Settings;
 using namespace BlackCore::Data;
 using namespace BlackConfig;
 
@@ -28,8 +26,8 @@ namespace BlackGui::Components
         ui->setupUi(this);
         this->setChecklistInfo();
 
-        const CCrashSettings settings = m_crashDumpSettings.get();
-        ui->cb_CrashDumps->setChecked(settings.isEnabled());
+        const bool crashDumpUploadEnabled = m_crashDumpUploadEnabled.getThreadLocal();
+        ui->cb_CrashDumps->setChecked(crashDumpUploadEnabled);
         ui->cb_Agree->setChecked(CBuildConfig::isLocalDeveloperDebugBuild());
 
         connect(ui->cb_CrashDumps, &QCheckBox::toggled, this, &CLegalInfoComponent::onAllowCrashDumps);
@@ -59,9 +57,7 @@ namespace BlackGui::Components
 
     void CLegalInfoComponent::onAllowCrashDumps(bool checked)
     {
-        CCrashSettings settings = m_crashDumpSettings.get();
-        settings.setEnabled(checked);
-        CLogMessage::preformatted(m_crashDumpSettings.setAndSave(settings));
+        CLogMessage::preformatted(m_crashDumpUploadEnabled.setAndSave(checked));
     }
 
     void CLegalInfoComponent::showCrashDumpHint()

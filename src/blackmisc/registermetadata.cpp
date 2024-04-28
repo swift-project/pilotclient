@@ -15,7 +15,6 @@
 #include "blackmisc/sharedstate/passiveobserver.h"
 #include "blackmisc/applicationinfolist.h"
 #include "blackmisc/countrylist.h"
-#include "blackmisc/crashsettings.h"
 #include "blackmisc/directories.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/identifierlist.h"
@@ -91,7 +90,6 @@ namespace BlackMisc
         Network::registerMetadata();
         PhysicalQuantities::registerMetadata();
         Simulation::registerMetadata();
-        Settings::CCrashSettings::registerMetadata();
         Weather::registerMetadata();
 
         SharedState::CAnyMatch::registerMetadata();
