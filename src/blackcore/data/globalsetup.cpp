@@ -152,7 +152,6 @@ namespace BlackCore::Data
         switch (i)
         {
         case IndexDbRootDirectory: return QVariant::fromValue(m_dbRootDirectoryUrl);
-        case IndexDbHttpPort: return QVariant::fromValue(m_dbHttpPort);
         case IndexDbHttpsPort: return QVariant::fromValue(m_dbHttpsPort);
         case IndexDbLoginService: return QVariant::fromValue(this->getDbLoginServiceUrl());
         case IndexVatsimStatus: return QVariant::fromValue(m_vatsimStatusFileUrl);
@@ -182,7 +181,6 @@ namespace BlackCore::Data
         switch (i)
         {
         case IndexDbRootDirectory: m_dbRootDirectoryUrl.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-        case IndexDbHttpPort: m_dbHttpPort = variant.toInt(); break;
         case IndexDbHttpsPort: m_dbHttpsPort = variant.toInt(); break;
         case IndexDbLoginService: break; // cannot be changed
         case IndexVatsimData: m_vatsimDataFileUrl = variant.value<CUrl>(); break;

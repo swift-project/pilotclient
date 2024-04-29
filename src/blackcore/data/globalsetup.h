@@ -34,7 +34,6 @@ namespace BlackCore::Data
         enum ColumnIndex
         {
             IndexDbRootDirectory = BlackMisc::CPropertyIndexRef::GlobalIndexCGlobalSetup,
-            IndexDbHttpPort,
             IndexDbHttpsPort,
             IndexDbLoginService,
             IndexVatsimStatus,
@@ -52,9 +51,6 @@ namespace BlackCore::Data
 
         //! Default constructor
         CGlobalSetup();
-
-        //! Http port
-        int getDbHttpPort() const { return m_dbHttpPort; }
 
         //! Https port
         int getDbHttpsPort() const { return m_dbHttpsPort; }
@@ -165,7 +161,6 @@ namespace BlackCore::Data
         static const QString &schemaVersionString();
 
     private:
-        int m_dbHttpPort = 80; //!< port
         int m_dbHttpsPort = 443; //!< SSL port
         QString m_mappingMinimumVersion; //!< minimum version
         BlackMisc::Network::CUrl m_dbRootDirectoryUrl; //!< Root directory of DB
@@ -187,7 +182,6 @@ namespace BlackCore::Data
         BLACK_METACLASS(
             CGlobalSetup,
             BLACK_METAMEMBER(dbRootDirectoryUrl, 0, RequiredForJson),
-            BLACK_METAMEMBER(dbHttpPort, 0, RequiredForJson),
             BLACK_METAMEMBER(dbHttpsPort, 0, RequiredForJson),
             BLACK_METAMEMBER(vatsimStatusFileUrl, 0, RequiredForJson),
             BLACK_METAMEMBER(vatsimDataFileUrl, 0, RequiredForJson),

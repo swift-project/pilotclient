@@ -1,6 +1,5 @@
 {
     "dbDebugFlag": false,
-    "dbHttpPort": 80,
     "dbHttpsPort": 443,
     "dbRootDirectoryUrl": {
         "url": "https://datastore.swift-project.org/"
