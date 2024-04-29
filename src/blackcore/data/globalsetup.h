@@ -152,6 +152,9 @@ namespace BlackCore::Data
         //! To string with separator
         QString convertToQString(const QString &separator, bool i18n = false) const;
 
+        //! Get shared DB data directory URL
+        BlackMisc::Network::CUrl getSharedDbDataDirectoryUrl();
+
         //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
         QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
 
@@ -160,9 +163,6 @@ namespace BlackCore::Data
 
         //! Schema version (shared files, bootstrap file)
         static const QString &schemaVersionString();
-
-        //! Build the full dbdata directory URL from shared URL
-        static BlackMisc::Network::CUrl buildDbDataDirectoryUrl(const BlackMisc::Network::CUrl &candidate);
 
     private:
         int m_dbHttpPort = 80; //!< port

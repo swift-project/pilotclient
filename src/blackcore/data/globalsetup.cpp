@@ -97,25 +97,9 @@ namespace BlackCore::Data
         m_dbDebugFlag = debug;
     }
 
-    CUrl CGlobalSetup::buildDbDataDirectoryUrl(const CUrl &candidate)
+    CUrl CGlobalSetup::getSharedDbDataDirectoryUrl()
     {
-        if (candidate.isEmpty()) return CUrl(); // not possible
-        static const QString version(QString(schemaVersionString()).append("/"));
-        if (candidate.pathEndsWith("dbdata") || candidate.pathEndsWith("dbdata/")) { return candidate; }
-        CUrl url(candidate);
-        if (candidate.pathEndsWith(schemaVersionString()) || candidate.pathEndsWith(version))
-        {
-            url.appendPath("/dbdata");
-        }
-        else if (candidate.pathEndsWith("shared") || candidate.pathEndsWith("shared/"))
-        {
-            url.appendPath(CGlobalSetup::schemaVersionString() + "/dbdata/");
-        }
-        else
-        {
-            url.appendPath("shared/" + CGlobalSetup::schemaVersionString() + "/dbdata/");
-        }
-        return url;
+        return m_sharedUrl.withAppendedPath(CGlobalSetup::schemaVersionString() + "/dbdata/");
     }
 
     CServerList CGlobalSetup::getPredefinedServersPlusHardcodedServers() const
