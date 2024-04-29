@@ -478,7 +478,7 @@ namespace BlackCore::Db
             return this->getDbServiceBaseUrl().withAppendedPath("/service");
         case CDbFlags::SharedInfoOnly:
         case CDbFlags::Shared:
-            return CDatabaseReader::getSharedDbdataDirectoryUrl();
+            return sApp->getGlobalSetup().getSharedDbDataDirectoryUrl();
         default:
             qFatal("Wrong mode");
             break;
@@ -691,13 +691,6 @@ namespace BlackCore::Db
     {
         static const CUrl dbUrl(sApp->getGlobalSetup().getDbRootDirectoryUrl());
         return dbUrl;
-    }
-
-    CUrl CDatabaseReader::getSharedDbdataDirectoryUrl()
-    {
-        const CUrlList sharedUrls = sApp->getGlobalSetup().getSwiftSharedUrls();
-        Q_ASSERT_X(!sharedUrls.empty(), Q_FUNC_INFO, "Need at least one shared URL");
-        return CGlobalSetup::buildDbDataDirectoryUrl(sharedUrls[0]);
     }
 
     void CDatabaseReader::cacheHasChanged(CEntityFlags::Entity entities)
