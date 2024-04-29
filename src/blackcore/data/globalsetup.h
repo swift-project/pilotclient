@@ -97,9 +97,6 @@ namespace BlackCore::Data
         //! \remark based on getDbRootDirectoryUrl
         BlackMisc::Network::CUrl getDbLoginServiceUrl() const;
 
-        //! alpha xswiftbus files available
-        BlackMisc::Network::CUrl getAlphaXSwiftBusFilesServiceUrl() const;
-
         //! Shared URLs
         const BlackMisc::Network::CUrlList &getSwiftSharedUrls() const;
 

@@ -254,10 +254,6 @@ namespace BlackCore::Db
         //! Those entities where the timestamp of a shared info object is newer than the cache timestamp
         BlackMisc::Network::CEntityFlags::Entity getEntitesWithNewerSharedInfoObject(BlackMisc::Network::CEntityFlags::Entity entities) const;
 
-        //! Request headers of shared file
-        //! \return number of requested headers
-        int requestHeadersOfSharedFiles(BlackMisc::Network::CEntityFlags::Entity entities);
-
         //! Status message (error message)
         const QString &getStatusMessage() const;
 
@@ -355,9 +351,6 @@ namespace BlackCore::Db
 
         //! Name of latest timestamp
         static const QString &parameterLatestTimestamp();
-
-        //! Name of parameter for latest id
-        static const QString &parameterLatestId();
 
         //! A newer than value understood by swift DB
         //! \sa CDatabaseReader::parameterLatestTimestamp
