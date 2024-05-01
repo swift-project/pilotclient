@@ -21,26 +21,6 @@
     <widget class="QFrame" name="fr_InfoHeader">
      <layout class="QHBoxLayout" name="hl_InfoHeader" stretch="1,1,3">
       <item>
-       <widget class="QLabel" name="lbl_FSX">
-        <property name="styleSheet">
-         <string notr="true">background: &quot;lightgrey&quot;</string>
-        </property>
-        <property name="text">
-         <string>&lt;img width=&quot;100&quot; src=&quot;:/simulators/icons/simulators/FSX.png&quot;/&gt;</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="lbl_P3D">
-        <property name="styleSheet">
-         <string notr="true">background: &quot;lightgrey&quot;</string>
-        </property>
-        <property name="text">
-         <string>&lt;img width=&quot;130&quot; src=&quot;:/simulators/icons/simulators/Prepar3D.png&quot;/&gt;</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QLabel" name="lbl_Explaination">
         <property name="text">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;The &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;swift&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; probe allows to query data around the displayed aircraft. It is needed whenever you use the 32bit version of the P3D/FSX driver. The probe will be copied into the SimObjects/Misc folder.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>

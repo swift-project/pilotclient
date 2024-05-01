@@ -33,13 +33,6 @@
        <number>6</number>
       </property>
       <item>
-       <widget class="QLabel" name="lbl_XplaneIcon">
-        <property name="text">
-         <string>&lt;html&gt;&lt;img src=&quot;:/simulators/icons/simulators/XPlane.png&quot; width=175&gt;&lt;/html&gt;</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QLabel" name="lbl_Explaination">
         <property name="text">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;xswiftbus&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; is an X-Plane plugin that allows X-Plane and &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;swift&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; to communicate with each other. If you want to use &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;swift&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; with X-Plane you will need to install &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;xswiftbus&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;. Download &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;xswiftbus&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; and extract it into the &lt;/span&gt;&lt;span style=&quot; font-size:9pt; text-decoration: underline;&quot;&gt;X-Plane/Resources/plugins&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; folder.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>

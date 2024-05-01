@@ -51,16 +51,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="2" alignment="Qt::AlignHCenter">
-       <widget class="QLabel" name="lbl_FS9">
-        <property name="styleSheet">
-         <string notr="true">background: &quot;lightgrey&quot;</string>
-        </property>
-        <property name="text">
-         <string>&lt;img width=&quot;100&quot; src=&quot;:/simulators/icons/simulators/FS9.png&quot;/&gt;</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="0" alignment="Qt::AlignHCenter">
        <widget class="QCheckBox" name="cb_P3D">
         <property name="text">
@@ -75,16 +65,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1" alignment="Qt::AlignHCenter">
-       <widget class="QLabel" name="lbl_FSX">
-        <property name="styleSheet">
-         <string notr="true">background: &quot;lightgrey&quot;</string>
-        </property>
-        <property name="text">
-         <string>&lt;img width=&quot;100&quot; src=&quot;:/simulators/icons/simulators/FSX.png&quot;/&gt;</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="2" alignment="Qt::AlignHCenter">
        <widget class="QCheckBox" name="cb_FS9">
         <property name="text">
@@ -95,33 +75,6 @@
           <width>64</width>
           <height>64</height>
          </size>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3" alignment="Qt::AlignHCenter">
-       <widget class="QLabel" name="lbl_XP">
-        <property name="styleSheet">
-         <string notr="true">background: &quot;lightgrey&quot;</string>
-        </property>
-        <property name="text">
-         <string>&lt;img width=&quot;100&quot; src=&quot;:/simulators/icons/simulators/XPlane.png&quot;/&gt;</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="lbl_P3D">
-        <property name="styleSheet">
-         <string notr="true">background: &quot;lightgrey&quot;</string>
-        </property>
-        <property name="text">
-         <string>&lt;img width=&quot;130&quot; src=&quot;:/simulators/icons/simulators/Prepar3D.png&quot;/&gt;</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="4" alignment="Qt::AlignHCenter">
-       <widget class="QLabel" name="lbl_FG">
-        <property name="text">
-         <string>&lt;img width=&quot;50&quot; src=&quot;:/simulators/icons/simulators/FG.png&quot;/&gt;</string>
         </property>
        </widget>
       </item>

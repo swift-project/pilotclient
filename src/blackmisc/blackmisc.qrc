@@ -579,13 +579,6 @@
         <file>icons/misc/cn.png</file>
         <file>icons/misc/ru.png</file>
     </qresource>
-    <qresource prefix="/simulators">
-        <file>icons/simulators/FS9.png</file>
-        <file>icons/simulators/FSX.png</file>
-        <file>icons/simulators/Prepar3D.png</file>
-        <file>icons/simulators/XPlane.png</file>
-        <file>icons/simulators/FG.png</file>
-    </qresource>
     <qresource prefix="/famfamfam">
         <file>icons/famfamfam/icons/silk/control_eject.png</file>
         <file>icons/famfamfam/icons/silk/control_eject_blue.png</file>

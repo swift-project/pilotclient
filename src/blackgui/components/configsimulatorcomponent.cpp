@@ -77,15 +77,6 @@ namespace BlackGui::Components
         CGuiUtility::checkBoxReadOnly(ui->cb_XP, !CBuildConfig::isCompiledWithXPlaneSupport());
         CGuiUtility::checkBoxReadOnly(ui->cb_FG, !CBuildConfig::isCompiledWithFGSupport());
 
-        /** does NOT work
-        const qreal fadeOut = 0.25;
-        ui->lbl_P3D->setWindowOpacity(CBuildConfig::isCompiledWithP3DSupport() ? 1.0 : fadeOut);
-        ui->lbl_FSX->setWindowOpacity(CBuildConfig::isCompiledWithFsxSupport() ? 1.0 : fadeOut);
-        ui->lbl_FS9->setWindowOpacity(CBuildConfig::isCompiledWithFs9Support() ? 1.0 : fadeOut);
-        ui->lbl_XP->setWindowOpacity(CBuildConfig::isCompiledWithXPlaneSupport() ? 1.0 : fadeOut);
-        ui->lbl_FG->setWindowOpacity(CBuildConfig::isCompiledWithFGSupport() ? 1.0 : fadeOut);
-        **/
-
         if (p3d) { ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::P3D)); }
         else if (fsx) { ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::FSX)); }
         else if (fs9) { ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::FS9)); }

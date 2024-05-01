@@ -537,66 +537,6 @@ namespace BlackMisc
         return pm;
     }
 
-    const QPixmap &CIcons::simulatorFSX()
-    {
-        static const QPixmap pm(":/simulators/icons/simulators/FSX.png");
-        return pm;
-    }
-
-    const QPixmap &CIcons::simulatorFSX16()
-    {
-        static const QPixmap pm(simulatorFSX().scaled(32, 16, Qt::KeepAspectRatio));
-        return pm;
-    }
-
-    const QPixmap &CIcons::simulatorP3D()
-    {
-        static const QPixmap pm(":/simulators/icons/simulators/Prepar3D.png");
-        return pm;
-    }
-
-    const QPixmap &CIcons::simulatorP3D16()
-    {
-        static const QPixmap pm(simulatorP3D().scaled(32, 16, Qt::KeepAspectRatio));
-        return pm;
-    }
-
-    const QPixmap &CIcons::simulatorFS9()
-    {
-        static const QPixmap pm(":/simulators/icons/simulators/FS9.png");
-        return pm;
-    }
-
-    const QPixmap &CIcons::simulatorFS916()
-    {
-        static const QPixmap pm(simulatorFS9().scaled(32, 16, Qt::KeepAspectRatio));
-        return pm;
-    }
-
-    const QPixmap &CIcons::simulatorFG()
-    {
-        static const QPixmap pm(":/simulators/icons/simulators/FG.png");
-        return pm;
-    }
-
-    const QPixmap &CIcons::simulatorFG16()
-    {
-        static const QPixmap pm(simulatorFG().scaled(32, 16, Qt::KeepAspectRatio));
-        return pm;
-    }
-
-    const QPixmap &CIcons::simulatorXPlane()
-    {
-        static const QPixmap pm(":/simulators/icons/simulators/FS9.png");
-        return pm;
-    }
-
-    const QPixmap &CIcons::simulatorXPlane16()
-    {
-        static const QPixmap pm(simulatorXPlane().scaled(32, 16, Qt::KeepAspectRatio));
-        return pm;
-    }
-
     const QPixmap &CIcons::swift16()
     {
         static const QPixmap pm(":/own/icons/own/swift3D/sw3DBlue-16.png");
@@ -1213,16 +1153,6 @@ namespace BlackMisc
         case OSLinux: return osLinux();
         case OSMacOs: return osMac();
         case OSWindows: return osWindows();
-        case SimulatorFG: return simulatorFG();
-        case SimulatorFG16: return simulatorFG16();
-        case SimulatorFS9: return simulatorFS9();
-        case SimulatorFS916: return simulatorFS916();
-        case SimulatorFSX: return simulatorFSX();
-        case SimulatorFSX16: return simulatorFSX16();
-        case SimulatorP3D: return simulatorP3D();
-        case SimulatorP3D16: return simulatorP3D16();
-        case SimulatorXPlane: return simulatorXPlane();
-        case SimulatorXPlane16: return simulatorXPlane16();
         case StandardIconAppAircraft16: return appAircraft16();
         case StandardIconAppAtc16: return appAtc16();
         case StandardIconAppFlightPlan16: return appFlightPlan16();
