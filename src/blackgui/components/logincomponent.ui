@@ -74,9 +74,6 @@
             <number>0</number>
            </property>
            <widget class="QWidget" name="tb_NetworkVatsim">
-            <property name="toolTip">
-             <string>Login at VATSIM</string>
-            </property>
             <attribute name="title">
              <string>VATSIM</string>
             </attribute>
