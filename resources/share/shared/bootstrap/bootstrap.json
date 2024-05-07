@@ -44,5 +44,8 @@
     },
     "afvMapUrl": {
         "url": "https://afv-map.vatsim.net/"
+    },
+    "vatsimAuthUrl": {
+        "url": "https://auth.vatsim.net/api/fsd-jwt"
     }
 }

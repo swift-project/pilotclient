@@ -1016,7 +1016,8 @@ namespace BlackCore::Fsd
 
     void CFSDClient::getVatsimAuthToken(const QString &cid, const QString &password, const BlackMisc::CSlot<void(const QString &)> &callback)
     {
-        QNetworkRequest nwRequest(QUrl("https://auth.vatsim.net/api/fsd-jwt"));
+        Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need app");
+        QNetworkRequest nwRequest(sApp->getGlobalSetup().getVatsimAuthUrl());
         nwRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
         const QJsonObject jsonRequest { { "cid", cid }, { "password", password } };
 

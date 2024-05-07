@@ -142,6 +142,9 @@ namespace BlackCore::Data
         //! AFV map URL
         BlackMisc::Network::CUrl getAfvMapUrl() const { return m_afvMapUrl; }
 
+        //! VATSIM auth URL
+        BlackMisc::Network::CUrl getVatsimAuthUrl() const { return m_vatsimAuthUrl; }
+
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
@@ -177,6 +180,7 @@ namespace BlackCore::Data
         BlackMisc::Network::CUrl m_ssrEquipmentHelpUrl; //!< Help URL for SSR equipment codes
         BlackMisc::Network::CUrl m_afvApiServerUrl; //!< AFV API server URL
         BlackMisc::Network::CUrl m_afvMapUrl; //!< AFV map URL
+        BlackMisc::Network::CUrl m_vatsimAuthUrl; //!< VATSIM Auth URL
         bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know what you are doing. Only works with CBuildConfig::isLocalDeveloperDebugBuild
 
         BLACK_METACLASS(
@@ -197,7 +201,8 @@ namespace BlackCore::Data
             BLACK_METAMEMBER(ssrEquipmentHelpUrl, 0, RequiredForJson),
             BLACK_METAMEMBER(dbDebugFlag, 0, RequiredForJson),
             BLACK_METAMEMBER(afvApiServerUrl, 0, RequiredForJson),
-            BLACK_METAMEMBER(afvMapUrl, 0, RequiredForJson)
+            BLACK_METAMEMBER(afvMapUrl, 0, RequiredForJson),
+            BLACK_METAMEMBER(vatsimAuthUrl, 0, RequiredForJson)
         );
     };
 } // ns
