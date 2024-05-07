@@ -1298,9 +1298,9 @@ namespace BlackCore
         CLogMessage(this).info(u"Read VATSIM status file, %1 lines") << lines;
     }
 
-    void CWebDataServices::vatsimServerFileRead(int lines)
+    void CWebDataServices::vatsimServerFileRead(int bytes)
     {
-        CLogMessage(this).info(u"Read VATSIM server file, %1 lines") << lines;
+        CLogMessage(this).info(u"Read VATSIM server file, %1 bytes") << bytes;
     }
 
     void CWebDataServices::readFromSwiftReader(CEntityFlags::Entity entities, CEntityFlags::ReadState state, int number, const QUrl &url)

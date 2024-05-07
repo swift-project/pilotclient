@@ -121,7 +121,7 @@ namespace BlackCore::Vatsim
             }
 
             // data read finished
-            emit this->dataFileRead(dataFileData.size() / 1000);
+            emit this->dataFileRead(dataFileData.size());
             emit this->dataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, dataFileData.size() / 1000, url);
         }
         else

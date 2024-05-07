@@ -553,7 +553,7 @@ namespace BlackCore
         void vatsimStatusFileRead(int lines);
 
         //! VATSIM server file has been read
-        void vatsimServerFileRead(int lines);
+        void vatsimServerFileRead(int bytes);
 
         //! Initialize and start VATSIM server file reader
         void startVatsimServerFileReader();
