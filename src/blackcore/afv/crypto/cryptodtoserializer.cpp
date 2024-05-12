@@ -48,6 +48,7 @@ namespace BlackCore::Afv::Crypto
             QByteArray key;
             if (loopback) { key = channel.getTransmitKey(CryptoDtoMode::AEAD_ChaCha20Poly1305); }
             else { key = channel.getReceiveKey(CryptoDtoMode::AEAD_ChaCha20Poly1305); }
+            Q_ASSERT_X(key.size() == crypto_aead_chacha20poly1305_IETF_KEYBYTES, Q_FUNC_INFO, "");
             int result = crypto_aead_chacha20poly1305_ietf_decrypt(reinterpret_cast<unsigned char *>(decryptedPayload.data()), &mlen, nullptr,
                                                                    reinterpret_cast<const unsigned char *>(aePayloadBuffer.constData()), aePayloadBuffer.size(),
                                                                    reinterpret_cast<const unsigned char *>(adBuffer.constData()), adBuffer.size(),

@@ -42,7 +42,14 @@ namespace BlackCore::Afv::Connection
             CLogMessage(this).warning(u"Tokens not set");
             return;
         }
-        m_voiceCryptoChannel.reset(new CCryptoDtoChannel(m_tokens.VoiceServer.channelConfig));
+        try
+        {
+            m_voiceCryptoChannel.reset(new CCryptoDtoChannel(m_tokens.VoiceServer.channelConfig));
+        }
+        catch (const std::invalid_argument &)
+        {
+            m_voiceCryptoChannel.reset();
+        }
     }
 
     void CClientConnectionData::setTsAuthenticatedToNow()

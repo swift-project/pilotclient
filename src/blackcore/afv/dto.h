@@ -16,6 +16,7 @@
 namespace BlackCore::Afv
 {
     //! Channel config DTO
+    //! \warning Data inside the DTO is taken from the network AS IS. No content verification is performed.
     struct CryptoDtoChannelConfigDto
     {
         //! @{

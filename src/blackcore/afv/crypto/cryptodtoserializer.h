@@ -35,6 +35,7 @@ namespace BlackCore::Afv::Crypto
         template <typename T>
         static QByteArray serialize(const QString &channelTag, CryptoDtoMode mode, const QByteArray &transmitKey, uint sequenceToBeSent, T dto)
         {
+            Q_ASSERT_X(transmitKey.size() == crypto_aead_chacha20poly1305_IETF_KEYBYTES, Q_FUNC_INFO, "");
             const CryptoDtoHeaderDto header = { channelTag.toStdString(), sequenceToBeSent, mode };
 
             QBuffer headerBuffer;

@@ -3,6 +3,7 @@
 
 #include "blackcore/afv/crypto/cryptodtochannel.h"
 #include "blackmisc/verify.h"
+#include "sodium/crypto_aead_chacha20poly1305.h"
 
 using namespace BlackMisc;
 
@@ -10,6 +11,18 @@ namespace BlackCore::Afv::Crypto
 {
     CCryptoDtoChannel::CCryptoDtoChannel(const CryptoDtoChannelConfigDto &channelConfig, int receiveSequenceHistorySize) : m_aeadTransmitKey(channelConfig.aeadTransmitKey), m_aeadReceiveKey(channelConfig.aeadReceiveKey), m_receiveSequenceSizeMaxSize(receiveSequenceHistorySize), m_hmacKey(channelConfig.hmacKey), m_channelTag(channelConfig.channelTag)
     {
+        if (m_aeadTransmitKey.size() != crypto_aead_chacha20poly1305_IETF_KEYBYTES)
+        {
+            BLACK_AUDIT_X(false, Q_FUNC_INFO, "wrong transmit key size");
+            throw std::invalid_argument("wrong transmit key size");
+        }
+
+        if (m_aeadReceiveKey.size() != crypto_aead_chacha20poly1305_IETF_KEYBYTES)
+        {
+            BLACK_AUDIT_X(false, Q_FUNC_INFO, "wrong receive key size");
+            throw std::invalid_argument("wrong receive key size");
+        }
+
         if (m_receiveSequenceSizeMaxSize < 1) { m_receiveSequenceSizeMaxSize = 1; }
         m_receiveSequenceHistory.fill(0, m_receiveSequenceSizeMaxSize);
         m_receiveSequenceHistoryDepth = 0;
