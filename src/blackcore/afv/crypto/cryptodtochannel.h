@@ -22,9 +22,6 @@ namespace BlackCore::Afv::Crypto
     {
     public:
         //! Ctor
-        CCryptoDtoChannel(const QString &channelTag, const QByteArray &aeadReceiveKey, const QByteArray &aeadTransmitKey, int receiveSequenceHistorySize = 10);
-
-        //! Ctor
         CCryptoDtoChannel(const CryptoDtoChannelConfigDto &channelConfig, int receiveSequenceHistorySize = 10);
 
         //! @{

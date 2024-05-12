@@ -58,7 +58,7 @@ namespace BlackCore::Afv::Crypto
             {
                 decryptedPayload.resize(mlen);
 
-                // Fix this:
+                // FIXME:
                 // if (! channel.checkReceivedSequence(header.Sequence)) { }
 
                 QBuffer decryptedPayloadBuffer(&decryptedPayload);

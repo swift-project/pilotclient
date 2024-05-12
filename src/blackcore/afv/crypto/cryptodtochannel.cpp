@@ -8,14 +8,6 @@ using namespace BlackMisc;
 
 namespace BlackCore::Afv::Crypto
 {
-    CCryptoDtoChannel::CCryptoDtoChannel(const QString &channelTag, const QByteArray &aeadReceiveKey, const QByteArray &aeadTransmitKey, int receiveSequenceHistorySize) : m_aeadTransmitKey(aeadTransmitKey), m_aeadReceiveKey(aeadReceiveKey), m_receiveSequenceSizeMaxSize(receiveSequenceHistorySize), m_channelTag(channelTag)
-
-    {
-        if (m_receiveSequenceSizeMaxSize < 1) { m_receiveSequenceSizeMaxSize = 1; }
-        m_receiveSequenceHistory.fill(0, m_receiveSequenceSizeMaxSize);
-        m_receiveSequenceHistoryDepth = 0;
-    }
-
     CCryptoDtoChannel::CCryptoDtoChannel(const CryptoDtoChannelConfigDto &channelConfig, int receiveSequenceHistorySize) : m_aeadTransmitKey(channelConfig.aeadTransmitKey), m_aeadReceiveKey(channelConfig.aeadReceiveKey), m_receiveSequenceSizeMaxSize(receiveSequenceHistorySize), m_hmacKey(channelConfig.hmacKey), m_channelTag(channelConfig.channelTag)
     {
         if (m_receiveSequenceSizeMaxSize < 1) { m_receiveSequenceSizeMaxSize = 1; }

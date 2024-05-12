@@ -323,7 +323,6 @@ namespace BlackCore::Afv::Clients
         void audioOutDataAvailable(const AudioRxOnTransceiversDto &dto); // threadsafe
         void inputVolumeStream(const Audio::InputVolumeStreamArgs &args);
         void outputVolumeStream(const Audio::OutputVolumeStreamArgs &args);
-        void inputOpusDataAvailable();
 
         void onTimerUpdate();
         void onSettingsChanged();

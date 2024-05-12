@@ -15,8 +15,6 @@
 
 namespace BlackCore::Afv
 {
-    // struct IMsgPack { };
-
     //! Channel config DTO
     struct CryptoDtoChannelConfigDto
     {
