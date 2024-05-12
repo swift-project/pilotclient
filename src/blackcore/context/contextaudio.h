@@ -141,13 +141,6 @@ namespace BlackCore
             void gracefulShutdown();
 
             //! @{
-            //! Enable/disable
-            void enableVoiceClient() { this->initVoiceClient(); }
-            void enableVoiceClientAndStart();
-            void disableVoiceClient() { this->terminateVoiceClient(); }
-            //! @}
-
-            //! @{
             //! Receive/transmit
             void setRxTx(bool rx1, bool tx1, bool rx2, bool tx2);
             void getRxTx(bool &rx1, bool &tx1, bool &rx2, bool &tx2) const;

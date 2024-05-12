@@ -173,11 +173,6 @@ namespace BlackCore::Context
         return m_dBusInterface->callDBusRet<bool>(QLatin1String("setOtherClient"), client);
     }
 
-    CAtcStationList CContextNetworkProxy::getSelectedAtcStations() const
-    {
-        return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1String("getSelectedAtcStations"));
-    }
-
     void CContextNetworkProxy::requestAircraftDataUpdates()
     {
         m_dBusInterface->callDBus(QLatin1String("requestAircraftDataUpdates"));

@@ -263,9 +263,6 @@ namespace BlackCore::Context
         //! Load flight plan (from network)
         virtual BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
-        //! Use the selected COM1/2 frequencies, and get the corresponding ATC stations for it
-        virtual BlackMisc::Aviation::CAtcStationList getSelectedAtcStations() const = 0;
-
         //! Request data updates (pilot's frequencies, ATIS, ..)
         virtual void requestAircraftDataUpdates() = 0;
 

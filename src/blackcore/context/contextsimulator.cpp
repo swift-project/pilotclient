@@ -29,12 +29,6 @@ namespace BlackCore::Context
         return s;
     }
 
-    const PhysicalQuantities::CTime &IContextSimulator::HighlightTime()
-    {
-        static const CTime t(10.0, CTimeUnit::s());
-        return t;
-    }
-
     IContextSimulator *IContextSimulator::create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &connection)
     {
         switch (mode)
@@ -60,20 +54,6 @@ namespace BlackCore::Context
         return this->getSimulatorPluginInfo().getSimulatorInfo();
     }
 
-    bool IContextSimulator::updateCurrentSettings(const Simulation::Settings::CSimulatorSettings &settings)
-    {
-        const CSimulatorInfo sim = this->getSimulatorInfo();
-        if (!sim.isSingleSimulator()) { return false; }
-        return this->setSimulatorSettings(settings, sim);
-    }
-
-    bool IContextSimulator::updateCurrentSettingComIntegration(bool comIntegration)
-    {
-        Simulation::Settings::CSimulatorSettings settings = this->getSimulatorSettings();
-        settings.setComIntegrated(comIntegration);
-        return this->updateCurrentSettings(settings);
-    }
-
     bool IContextSimulator::isSimulatorAvailable() const
     {
         return CBuildConfig::isCompiledWithFlightSimulatorSupport() && !this->getSimulatorPluginInfo().isUnspecified();
@@ -83,13 +63,5 @@ namespace BlackCore::Context
     {
         if (!isSimulatorAvailable() || !getSimulatorStatusEnum().testFlag(ISimulator::Simulating)) { return false; }
         return true;
-    }
-
-    bool IContextSimulator::isSimulatorVital() const
-    {
-        if (!isSimulatorAvailable()) { return false; } // we cannot be vital
-        if (isSimulatorSimulating()) { return true; } // we are vital
-        if (getSimulatorStatusEnum().testFlag(ISimulator::Paused)) { return true; }
-        return false;
     }
 } // namespace

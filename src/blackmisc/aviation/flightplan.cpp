@@ -490,21 +490,6 @@ namespace BlackMisc::Aviation
         return CFlightPlan::fromJson(data);
     }
 
-    CFlightPlan CFlightPlan::fromMultipleFormatsNoThrow(const QString &data, const QString &fileSuffix)
-    {
-        CFlightPlan fp;
-        try
-        {
-            fp = CFlightPlan::fromMultipleFormats(data, fileSuffix);
-        }
-        catch (const CJsonException &ex)
-        {
-            const CStatusMessage m = CStatusMessage::fromJsonException(ex, &fp, QString("Parsing flight plan from failed."));
-            Q_UNUSED(m)
-        }
-        return fp;
-    }
-
     CFlightPlan CFlightPlan::loadFromMultipleFormats(const QString &fileName, CStatusMessageList *msgs)
     {
         try

@@ -108,7 +108,7 @@ namespace BlackCore::Context
 
     CContextNetwork *CContextNetwork::registerWithDBus(BlackMisc::CDBusServer *server)
     {
-        if (!server || m_mode != CCoreFacadeConfig::LocalInDBusServer) return this;
+        if (!server || getMode() != CCoreFacadeConfig::LocalInDBusServer) return this;
         server->addObject(IContextNetwork::ObjectPath(), this);
         return this;
     }
@@ -1327,18 +1327,6 @@ namespace BlackCore::Context
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << airportIcaoCode; }
         if (!sApp || !sApp->getWebDataServices()) { return {}; }
         return sApp->getWebDataServices()->getMetarForAirport(airportIcaoCode);
-    }
-
-    CAtcStationList CContextNetwork::getSelectedAtcStations() const
-    {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        CAtcStation com1Station = m_airspace->getAtcStationForComUnit(this->ownAircraft().getCom1System());
-        CAtcStation com2Station = m_airspace->getAtcStationForComUnit(this->ownAircraft().getCom2System());
-
-        CAtcStationList selectedStations;
-        selectedStations.push_back(com1Station);
-        selectedStations.push_back(com2Station);
-        return selectedStations;
     }
 
     QMetaObject::Connection CContextNetwork::connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot)

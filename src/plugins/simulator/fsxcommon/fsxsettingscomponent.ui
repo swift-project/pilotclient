@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>296</width>
-    <height>275</height>
+    <height>400</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -59,42 +59,19 @@
     </widget>
    </item>
    <item row="6" column="2">
-    <widget class="QWidget" name="wi_Buttons" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item alignment="Qt::AlignRight">
-       <widget class="QPushButton" name="pb_CopyTerrainProbe">
-        <property name="text">
-         <string>copy terrain probe</string>
-        </property>
-       </widget>
-      </item>
-      <item alignment="Qt::AlignRight">
-       <widget class="QPushButton" name="pb_Refresh">
-        <property name="text">
-         <string>refresh</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="hs_Buttons">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
+    <widget class="QPushButton" name="pb_Refresh">
+     <property name="text">
+      <string>refresh</string>
+     </property>
     </widget>
    </item>
    <item row="5" column="2">
     <widget class="QLabel" name="lbl_TraceTerrainProbe">
      <property name="text">
-      <string>Use the terrain probe (32bit only)</string>
+      <string>Use the terrain probe (32bit only) (needs to be installed through the config wizard first)</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -129,7 +106,6 @@
   <tabstop>cb_SBOffsets</tabstop>
   <tabstop>cb_AddingAsSimulatedObject</tabstop>
   <tabstop>cb_EnableTerrainProbe</tabstop>
-  <tabstop>pb_CopyTerrainProbe</tabstop>
   <tabstop>pb_Refresh</tabstop>
  </tabstops>
  <resources/>

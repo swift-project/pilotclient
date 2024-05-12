@@ -68,14 +68,8 @@ namespace BlackCore
         //! Transport mechanism for sharing state between applications
         BlackMisc::SharedState::CDataLinkDBus *getDataLinkDBus() { return this->m_dataLinkDBus; }
 
-        //! DBus server (if applicable)
-        const BlackMisc::CDBusServer *getDBusServer() const { return this->m_dbusServer; }
-
         //! In case connection between DBus parties is lost, try to reconnect
         BlackMisc::CStatusMessage tryToReconnectWithDBus();
-
-        //! DBus connection (if applicable)
-        const QDBusConnection &getDBusConnection() const { return this->m_dbusConnection; }
 
         //! Clean up (will be connected to signal QCoreApplication::aboutToQuit)
         void gracefulShutdown();
@@ -138,9 +132,6 @@ namespace BlackCore
         //! \remarks only applicable for local object
         Context::CContextAudio *getCContextAudio();
 
-        //! Local audio context, means audio really runs here
-        bool hasLocalAudio() const;
-
         //! Context for audio
         //! \remarks only applicable for local object
         const Context::CContextAudio *getCContextAudio() const;
@@ -171,9 +162,6 @@ namespace BlackCore
 
         //! DBus address if any
         QString getDBusAddress() const;
-
-        //! Remote application context, indicates distributed environment
-        bool hasRemoteApplicationContext() const;
 
         //! Register metadata
         static void registerMetadata();

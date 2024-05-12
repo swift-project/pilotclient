@@ -49,7 +49,6 @@ namespace BlackGui::Components
     class CAutoPublishDialog;
     class CLoginDialog;
     class CModelBrowserDialog;
-    class CAfvMapDialog;
 }
 namespace Ui
 {
@@ -125,7 +124,6 @@ private:
     QScopedPointer<BlackGui::Components::CAutoPublishDialog> m_autoPublishDialog; //!< auto publish dialog
     QScopedPointer<BlackGui::Components::CLoginDialog> m_loginDialog; //!< login dialog
     QScopedPointer<BlackGui::Components::CModelBrowserDialog> m_modelBrower; //!< model browser
-    QScopedPointer<BlackGui::Components::CAfvMapDialog> m_mapDialog; //!< map dialog
     QScopedPointer<BlackGui::Components::CAircraftModelSetValidationDialog> m_validationDialog; //!< aircraft model validation dialog
     BlackMisc::CData<BlackMisc::Simulation::Data::TLastAutoPublish> m_lastAutoPublish { this };
     BlackCore::CActionBind m_actionPtt { BlackMisc::Input::pttHotkeyAction(), BlackMisc::CIcons::StandardIconRadio16, this, &SwiftGuiStd::onPttChanged };

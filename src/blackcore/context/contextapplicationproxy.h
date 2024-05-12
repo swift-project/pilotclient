@@ -9,7 +9,6 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackmisc/identifierset.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/valuecache.h"
 
@@ -17,6 +16,7 @@
 #include <QString>
 #include <QStringList>
 #include <QTimer>
+#include <QSet>
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -86,21 +86,6 @@ namespace BlackCore
             //! \copydoc BlackCore::Context::IContextApplication::getApplicationIdentifier
             virtual BlackMisc::CIdentifier getApplicationIdentifier() const override;
 
-            //! \copydoc BlackCore::Context::IContextApplication::writeToFile
-            virtual bool writeToFile(const QString &fileName, const QString &content) override;
-
-            //! \copydoc BlackCore::Context::IContextApplication::readFromFile
-            virtual QString readFromFile(const QString &fileName) const override;
-
-            //! \copydoc BlackCore::Context::IContextApplication::removeFile
-            virtual bool removeFile(const QString &fileName) override;
-
-            //! \copydoc BlackCore::Context::IContextApplication::existsFile
-            virtual bool existsFile(const QString &fileName) const override;
-
-            //! \copydoc BlackCore::Context::IContextApplication::dotCommandsHtmlHelp
-            virtual QString dotCommandsHtmlHelp() const override;
-
             //! Used to test if there is a core running?
             //! \note creates and connects via proxy object, so not meant for very frequent tests
             //! \sa CDBusServer::isDBusAvailable as lightweight, but less accurate alternative
@@ -115,7 +100,7 @@ namespace BlackCore
 
         private:
             BlackMisc::CGenericDBusInterface *m_dBusInterface = nullptr; //!< interface
-            BlackMisc::CIdentifierSet m_proxyPingIdentifiers; //!< automatically ping the implementing side
+            QSet<BlackMisc::CIdentifier> m_proxyPingIdentifiers; //!< automatically ping the implementing side
             QTimer m_pingTimer;
 
             //! Relay connection signals to local signals

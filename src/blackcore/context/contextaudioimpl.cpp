@@ -23,7 +23,7 @@ namespace BlackCore::Context
 
     CContextAudio *CContextAudio::registerWithDBus(CDBusServer *server)
     {
-        if (!server || m_mode != CCoreFacadeConfig::LocalInDBusServer) { return this; }
+        if (!server || getMode() != CCoreFacadeConfig::LocalInDBusServer) { return this; }
 
         // remark that registers all SIGNALS, not only the interface ons
         server->addObject(IContextAudio::ObjectPath(), this);

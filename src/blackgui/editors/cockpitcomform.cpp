@@ -83,32 +83,6 @@ namespace BlackGui::Editors
         return msgs;
     }
 
-    void CCockpitComForm::setSelectedAtcStations(const CAtcStationList &selectedStations)
-    {
-        const CAtcStation com1Ttation = selectedStations.size() > 0 ? selectedStations[0] : CAtcStation();
-        const CAtcStation com2Station = selectedStations.size() > 1 ? selectedStations[1] : CAtcStation();
-        if (com1Ttation.getCallsign().isEmpty())
-        {
-            ui->lbl_ComPanelCom1Active->setToolTip("");
-            ui->led_ComPanelCom1->setOn(false);
-        }
-        else
-        {
-            ui->lbl_ComPanelCom1Active->setToolTip(com1Ttation.getCallsign().getStringAsSet());
-            ui->led_ComPanelCom1->setOn(true);
-        }
-        if (com2Station.getCallsign().isEmpty())
-        {
-            ui->lbl_ComPanelCom2Active->setToolTip("");
-            ui->led_ComPanelCom2->setOn(false);
-        }
-        else
-        {
-            ui->lbl_ComPanelCom2Active->setToolTip(com2Station.getCallsign().getStringAsSet());
-            ui->led_ComPanelCom2->setOn(true);
-        }
-    }
-
     void CCockpitComForm::setTransponderModeStateIdent()
     {
         ui->cbp_ComPanelTransponderMode->setSelectedTransponderModeStateIdent();
@@ -136,8 +110,6 @@ namespace BlackGui::Editors
     void CCockpitComForm::initLeds()
     {
         const CLedWidget::LedShape shape = CLedWidget::Rounded;
-        ui->led_ComPanelCom1->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM1 connected to station", "COM1 disconnected", 14);
-        ui->led_ComPanelCom2->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 connected to station", "COM2 disconnected", 14);
 
         ui->led_ComPanelCom1R->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM1 receive (sim)", "COM1 not receiving", 14);
         ui->led_ComPanelCom1T->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM1 transmit (sim)", "COM1 not transmitting", 14);
