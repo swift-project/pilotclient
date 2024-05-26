@@ -58,6 +58,11 @@ option(SWIFT_VATSIM_SUPPORT "Build with VATSIM support" ON)
 set(VATSIM_KEY_JSON "" CACHE STRING "Path to JSON containing VATSIM key")
 load_vatsim_key()
 
+if(NOT CMAKE_BUILD_TYPE)
+    message(STATUS "CMAKE_BUILD_TYPE not defined. Falling back to Debug")
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
+
 if(SWIFT_MINIFY_DEBUG_SYMBOLS)
     if(MSVC)
         add_link_options(/OPT:REF /OPT:ICF)
