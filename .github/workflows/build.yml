@@ -20,6 +20,9 @@ env:
   qt_version:    5.15.2
   bitrock_version: qt-professional-23.11.0
   bitrock_url:     https://releases.installbuilder.com/installbuilder
+  externals: swift-project/externals
+  externals_sha: 53e671fc3ba76f2036b9130314507776d161c6e0
+  use_externals: ${{ secrets.EXTERNALS_PAT != '' }}
 
 jobs:
 
@@ -56,8 +59,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          submodules: true
       - name: Run clang-format
         run: |
           scripts/run_clang_format.py
@@ -65,7 +66,7 @@ jobs:
       - name: Run cppcheck
         run: |
           sudo apt-get -y install cppcheck
-          cppcheck --template=gcc --inline-suppr --std=c++17 --enable=style,unusedFunction -i externals \
+          cppcheck --template=gcc --inline-suppr --std=c++17 --enable=style,unusedFunction \
                    -i src/plugins/weatherdata/gfs/g2clib -DCPPCHECK --force --suppressions-list=cppcheck.supp \
                    --library=qt.cfg --library=posix.cfg .
       - name: Run doxygen
@@ -122,6 +123,16 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
+      - name: Checkout externals
+        if: ${{ env.use_externals == 'true' }}
+        uses: actions/checkout@v4
+        env:
+          EXTERNALS_PAT: ${{ secrets.EXTERNALS_PAT }}
+        with:
+          repository: ${{ env.externals }}
+          ref: ${{ env.externals_sha }}
+          token: ${{ env.EXTERNALS_PAT }}
+          path: 'third_party/externals'
       - name: Start DBus session bus
         run: |
           dbus-launch --sh-syntax | tee session.sh
@@ -215,6 +226,16 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
+      - name: Checkout externals
+        if: ${{ env.use_externals == 'true' }}
+        uses: actions/checkout@v4
+        env:
+          EXTERNALS_PAT: ${{ secrets.EXTERNALS_PAT }}
+        with:
+          repository: ${{ env.externals }}
+          ref: ${{ env.externals_sha }}
+          token: ${{ env.EXTERNALS_PAT }}
+          path: 'third_party/externals'
       - name: Create Vatsim key file
         if: ${{ env.do_vatsim_key == 'true' }}
         run: |
@@ -303,6 +324,16 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
+      - name: Checkout externals
+        if: ${{ env.use_externals == 'true' }}
+        uses: actions/checkout@v4
+        env:
+          EXTERNALS_PAT: ${{ secrets.EXTERNALS_PAT }}
+        with:
+          repository: ${{ env.externals }}
+          ref: ${{ env.externals_sha }}
+          token: ${{ env.EXTERNALS_PAT }}
+          path: 'third_party/externals'
       - name: Create Vatsim key file
         if: ${{ env.do_vatsim_key == 'true' }}
         run: |
@@ -381,6 +412,16 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
+      - name: Checkout externals
+        if: ${{ env.use_externals == 'true' }}
+        uses: actions/checkout@v4
+        env:
+          EXTERNALS_PAT: ${{ secrets.EXTERNALS_PAT }}
+        with:
+          repository: ${{ env.externals }}
+          ref: ${{ env.externals_sha }}
+          token: ${{ env.EXTERNALS_PAT }}
+          path: 'third_party/externals'
       - name: Create Vatsim key file
         if: ${{ env.do_vatsim_key == 'true' }}
         run: |
