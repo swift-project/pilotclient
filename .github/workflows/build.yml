@@ -366,7 +366,7 @@ jobs:
           path: ${{ github.workspace }}/swiftsymbols-*
 
   buildMacOS:
-    runs-on: macos-11
+    runs-on: macos-12
     needs: [preBuild, checks]
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
