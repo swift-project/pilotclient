@@ -285,9 +285,6 @@ add_library(gui SHARED
         loadindicator.h
         pluginselector.h
         infoarea.cpp
-        graphs
-        graphs/barchart.h
-        graphs/barchart.cpp
         overlaymessagesframe.cpp
         managedstatusbar.h
         lineedithistory.cpp
@@ -944,11 +941,9 @@ target_link_libraries(gui
         core
         Qt::Widgets
         Qt::Svg
-        externals_qwt_plot
         )
 
 target_compile_definitions(gui PRIVATE BUILD_BLACKGUI_LIB)
-target_compile_definitions(gui PRIVATE QWT_DLL)
 
 target_precompile_headers(gui
         PRIVATE

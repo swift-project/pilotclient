@@ -29,9 +29,6 @@
                     <origin>../../dist/bin/libsodium*.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/bin/qwt.dll</origin>
-                </distributionFile>
-                <distributionFile>
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/SimConnect*.dll</origin>
                 </distributionFile>
@@ -87,9 +84,6 @@
                     <origin>../../dist/lib/libvatsimauth.so</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libqwt.so</origin>
-                </distributionFile>
-                <distributionFile>
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/lib/libsodium.so.*</origin>
                 </distributionFile>
@@ -110,9 +104,6 @@
                 <distributionFile>
                     <origin>../../dist/lib/libvatsimauth.dylib</origin>
                 </distributionFile>
-                <distributionDirectory>
-                    <origin>../../dist/lib/qwt.framework</origin>
-                </distributionDirectory>
             </distributionFileList>
         </folder>
     </folderList>

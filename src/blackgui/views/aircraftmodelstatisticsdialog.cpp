@@ -27,7 +27,6 @@ namespace BlackGui::Views
         this->setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
         connect(ui->pb_GenerateMatrix, &QPushButton::released, this, &CAircraftModelStatisticsDialog::displayHTMLMatrix);
-        connect(ui->pb_ShowChart, &QPushButton::released, this, &CAircraftModelStatisticsDialog::showChart);
     }
 
     CAircraftModelStatisticsDialog::~CAircraftModelStatisticsDialog()
@@ -45,75 +44,4 @@ namespace BlackGui::Views
         if (file.isEmpty()) { return; }
         QDesktopServices::openUrl(QUrl::fromLocalFile(file));
     }
-
-    void CAircraftModelStatisticsDialog::showChart()
-    {
-        if (ui->rb_Distributors->isChecked())
-        {
-            this->chartDistributors();
-            return;
-        }
-        if (ui->rb_AircraftIcao->isChecked())
-        {
-            this->chartAircraftIcao();
-            return;
-        }
-    }
-
-    void CAircraftModelStatisticsDialog::chartDistributors()
-    {
-        const QMap<CDistributor, int> distributors = m_models.countPerDistributor();
-        QStringList distributorsForAxis;
-
-        QList<double> series;
-        CDistributorList distributorList(distributors.keys());
-        distributorList.sortByKey();
-        for (const CDistributor &distributor : std::as_const(distributorList))
-        {
-            const int c = distributors[distributor];
-            if (c < 1) { continue; }
-            distributorsForAxis << (distributor.getDbKey() % u" (" % QString::number(c) % u")");
-            series << c;
-        }
-
-        QwtText title("distributor");
-        title.setRenderFlags(Qt::AlignLeft);
-        ui->qwt_Chart->setSymbols("distributors", "white");
-        ui->qwt_Chart->setTitle(title);
-        ui->qwt_Chart->setSamples1Bar(series, distributorsForAxis, this->getOrientation());
-    }
-
-    void CAircraftModelStatisticsDialog::chartAircraftIcao()
-    {
-        const QMap<CAircraftIcaoCode, int> icaos = m_models.countPerAircraftIcao();
-        QStringList icaosForAxis;
-
-        QList<double> series;
-        CAircraftIcaoCodeList icaoList(icaos.keys());
-        icaoList.sortByDesignatorAndRank();
-
-        for (const CAircraftIcaoCode &icao : std::as_const(icaoList))
-        {
-            const int c = icaos[icao];
-            if (c < 1) { continue; }
-            if (!icao.hasKnownDesignator())
-            {
-                continue;
-            }
-            icaosForAxis << (icao.getDesignatorDbKey() % u" (" % QString::number(c) % u")");
-            series << c;
-        }
-
-        QwtText title("aircraft ICAO");
-        title.setRenderFlags(Qt::AlignLeft);
-        ui->qwt_Chart->setSymbols("aircraft", "white");
-        ui->qwt_Chart->setTitle(title);
-        ui->qwt_Chart->setSamples1Bar(series, icaosForAxis, this->getOrientation());
-    }
-
-    Qt::Orientation CAircraftModelStatisticsDialog::getOrientation() const
-    {
-        return ui->rb_Vertical->isChecked() ? Qt::Vertical : Qt::Horizontal;
-    }
-
 } // ns

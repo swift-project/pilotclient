@@ -139,7 +139,6 @@ endif()
 
 # Add external folders
 add_subdirectory(cmake/vatsimauth)
-add_subdirectory(cmake/qwt_plot)
 add_subdirectory(cmake/dbus)
 add_subdirectory(cmake/sodium)
 add_subdirectory(cmake/msgpack)
