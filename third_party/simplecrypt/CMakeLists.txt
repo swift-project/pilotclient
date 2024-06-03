@@ -15,3 +15,4 @@ target_include_directories(SimpleCrypt
     PUBLIC
         ${PROJECT_SOURCE_DIR}/third_party
 )
+set_property(TARGET SimpleCrypt PROPERTY POSITION_INDEPENDENT_CODE ON)
