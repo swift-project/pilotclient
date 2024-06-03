@@ -19,3 +19,4 @@ target_include_directories(blackconfig
         ${PROJECT_SOURCE_DIR}/src
         ${CMAKE_CURRENT_BINARY_DIR}
 )
+set_property(TARGET blackconfig PROPERTY POSITION_INDEPENDENT_CODE ON)
