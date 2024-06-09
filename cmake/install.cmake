@@ -4,7 +4,6 @@
 # Readme, License etc.
 set(GENERAL_FILES
         ${swift_SOURCE_DIR}/LICENSES/LicenseRef-swift-pilot-client-1.txt
-        ${swift_SOURCE_DIR}/LICENSES/LicenseRef-swift-pilot-client-1.html
         )
 install(FILES ${GENERAL_FILES} DESTINATION bin)
 
