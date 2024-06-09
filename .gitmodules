@@ -4,3 +4,6 @@
 [submodule "src/xswiftbus/xplanemp2"]
 	path = src/xswiftbus/xplanemp2
 	url = git@github.com:swift-project/xplanemp2.git
+[submodule "third_party/msgpack"]
+	path = third_party/msgpack
+	url = https://github.com/msgpack/msgpack-c.git
