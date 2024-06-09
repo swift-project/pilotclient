@@ -260,7 +260,7 @@ target_link_libraries(core
             input
             sound
             externals_sodium
-            externals_msgpack
+            msgpack-cxx
             blackconfig
             externals_vatsim_auth
         PRIVATE
