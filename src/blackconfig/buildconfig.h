@@ -98,11 +98,13 @@ namespace BlackConfig
         //! Known executable
         static bool isKnownExecutableName(const QString &executable);
 
+#ifdef SWIFT_VATSIM_SUPPORT
         //! Vatsim client id
         static int vatsimClientId(); // defined in buildconfig_gen.cpp.in
 
         //! Vatsim client key
         static const QString &vatsimPrivateKey(); // defined in buildconfig_gen.cpp.in
+#endif
 
         //! Backtrace token for minidump uploads
         static const QString &backtraceToken(); // defined in buildconfig_gen.cpp.in

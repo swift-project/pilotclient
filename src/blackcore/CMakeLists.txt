@@ -262,12 +262,15 @@ target_link_libraries(core
             externals_sodium
             msgpack-cxx
             blackconfig
-            externals_vatsim_auth
         PRIVATE
             Qt::Qml
             Qt::Xml
             QJsonWebToken
 )
+
+if(SWIFT_VATSIM_SUPPORT)
+    target_link_libraries(core PUBLIC externals_vatsim_auth)
+endif()
 
 target_compile_definitions(core PRIVATE BUILD_BLACKCORE_LIB)
 

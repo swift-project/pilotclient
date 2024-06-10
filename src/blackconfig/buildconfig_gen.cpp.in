@@ -5,6 +5,7 @@
 #include <QString>
 #include <QDateTime>
 
+#ifdef SWIFT_VATSIM_SUPPORT
 int BlackConfig::CBuildConfig::vatsimClientId()
 {
     static const int id { ${SWIFT_VATSIM_ID} };
@@ -16,6 +17,7 @@ const QString &BlackConfig::CBuildConfig::vatsimPrivateKey()
     static const auto pk = QString { "${SWIFT_VATSIM_KEY}" };
     return pk;
 }
+#endif
 
 const QString &BlackConfig::CBuildConfig::backtraceToken()
 {

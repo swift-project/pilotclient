@@ -32,14 +32,17 @@ namespace BlackCore::Context
     {
         static const QList<QCommandLineOption> e;
         static const QList<QCommandLineOption> opts {
+#ifdef SWIFT_VATSIM_SUPPORT
             QCommandLineOption({ "idAndKey", "clientIdAndKey" },
                                QCoreApplication::translate("CContextNetwork", "Client id and key pair separated by ':', e.g. <id>:<key>."), "clientIdAndKey")
+#endif
         };
 
         // only in not officially shipped versions
         return (CBuildConfig::isLocalDeveloperDebugBuild()) ? opts : e;
     }
 
+#ifdef SWIFT_VATSIM_SUPPORT
     bool IContextNetwork::getCmdLineClientIdAndKey(int &id, QString &key)
     {
         // init values
@@ -59,5 +62,6 @@ namespace BlackCore::Context
         key = stringList[1];
         return true;
     }
+#endif
 
 } // namesapce
