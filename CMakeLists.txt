@@ -144,7 +144,6 @@ endif()
 # Add external folders
 add_subdirectory(cmake/dbus)
 add_subdirectory(cmake/sodium)
-add_subdirectory(cmake/rapidjson)
 add_subdirectory(cmake/opus)
 add_subdirectory(cmake/crashpad)
 add_subdirectory(cmake/tls)
