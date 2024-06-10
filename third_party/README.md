@@ -4,4 +4,3 @@
 -->
 
 This folder contains third-party dependencies for swift.
-The ``externals`` submodule mainly holds prebuilt libraries required by swift.
