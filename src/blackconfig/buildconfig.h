@@ -62,9 +62,6 @@ namespace BlackConfig
         //! Local build for developers
         static bool isLocalDeveloperDebugBuild();
 
-        //! Vatsim enabled version?
-        static constexpr bool isVatsimVersion(); // defined in buildconfig_gen.inc.in
-
         //! Running on Windows NT platform?
         static constexpr bool isRunningOnWindowsNtPlatform();
 
