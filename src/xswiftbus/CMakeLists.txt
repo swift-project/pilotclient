@@ -104,7 +104,7 @@ elseif(UNIX)
 endif()
 
 
-target_link_libraries(xswiftbus PUBLIC externals_event externals_dbus externals_xplm)
+target_link_libraries(xswiftbus PUBLIC externals_event nlohmann_json::nlohmann_json externals_dbus externals_xplm)
 
 
 if(SWIFT_WIN32)
