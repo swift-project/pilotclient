@@ -55,9 +55,10 @@ option(SWIFT_USE_CRASHPAD "Use crashpad" OFF)
 
 # VATSIM related options
 option(SWIFT_VATSIM_SUPPORT "Build with VATSIM support" ON)
-set(VATSIM_KEY_JSON "" CACHE STRING "Path to JSON containing VATSIM key")
-load_vatsim_key()
 if(SWIFT_VATSIM_SUPPORT)
+    find_package(vatsimauth REQUIRED)
+    set(VATSIM_KEY_JSON "" CACHE STRING "Path to JSON containing VATSIM key")
+    load_vatsim_key()
     add_compile_definitions(SWIFT_VATSIM_SUPPORT)
 endif()
 
@@ -141,7 +142,6 @@ if(MSVC)
 endif()
 
 # Add external folders
-add_subdirectory(cmake/vatsimauth)
 add_subdirectory(cmake/dbus)
 add_subdirectory(cmake/sodium)
 add_subdirectory(cmake/rapidjson)
