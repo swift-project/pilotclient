@@ -33,6 +33,9 @@ namespace BlackGui::Components
         //! Init values
         void init();
 
+        void loadSwiftLicense();
+        void loadThirdPartyLicenses();
+
         QScopedPointer<Ui::CAboutDialog> ui;
     };
 } // ns

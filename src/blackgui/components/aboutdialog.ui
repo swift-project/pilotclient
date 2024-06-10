@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>320</width>
-    <height>258</height>
+    <width>666</width>
+    <height>748</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -57,6 +57,30 @@
          <bool>true</bool>
         </property>
        </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gb_swiftLicense">
+     <property name="title">
+      <string>swift license</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QTextBrowser" name="tbr_swiftLicense"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gb_ThirdPartyLicenses">
+     <property name="title">
+      <string>Third-Party licenses</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QTextBrowser" name="tbr_ThirdPartyLicenses"/>
       </item>
      </layout>
     </widget>
