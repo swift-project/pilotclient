@@ -30,7 +30,9 @@
 #include "blackmisc/digestsignal.h"
 #include "blackmisc/tokenbucket.h"
 
-#include "vatsim/vatsimauth.h"
+#ifdef SWIFT_VATSIM_SUPPORT
+#    include "vatsim/vatsimauth.h"
+#endif
 
 #include <QtGlobal>
 #include <QHash>
@@ -114,7 +116,11 @@ namespace BlackCore::Fsd
             m_versionMajor = major;
             m_versionMinor = minor;
         }
+
+#ifdef SWIFT_VATSIM_SUPPORT
         void setClientIdAndKey(quint16 id, const QByteArray &key);
+#endif
+
         void setClientCapabilities(Capabilities capabilities)
         {
             QWriteLocker l(&m_lockUserClientBuffered);
@@ -404,7 +410,9 @@ namespace BlackCore::Fsd
         void sendAuthResponse(const QString &response);
         void sendPong(const QString &receiver, const QString &timestamp);
         void sendClientResponse(ClientQueryType queryType, const QString &receiver);
+#ifdef SWIFT_VATSIM_SUPPORT
         void sendClientIdentification(const QString &fsdChallenge);
+#endif
         void sendIncrementalAircraftConfig();
 
         void readDataFromSocket() { this->readDataFromSocketMaxLines(); }
@@ -423,8 +431,10 @@ namespace BlackCore::Fsd
         //! @{
         //! Handle response tokens
         void handleAtcDataUpdate(const QStringList &tokens);
+#ifdef SWIFT_VATSIM_SUPPORT
         void handleAuthChallenge(const QStringList &tokens);
         void handleAuthResponse(const QStringList &tokens);
+#endif
         void handleDeleteATC(const QStringList &tokens);
         void handleDeletePilot(const QStringList &tokens);
         void handleTextMessage(const QStringList &tokens);
@@ -440,7 +450,9 @@ namespace BlackCore::Fsd
         void handleClientResponse(const QStringList &tokens);
         void handleServerError(const QStringList &tokens);
         void handleCustomPilotPacket(const QStringList &tokens);
+#ifdef SWIFT_VATSIM_SUPPORT
         void handleFsdIdentification(const QStringList &tokens);
+#endif
         void handleRevBClientPartsPacket(const QStringList &tokens);
         void handleRehost(const QStringList &tokens);
         void handleMute(const QStringList &tokens);
@@ -529,8 +541,10 @@ namespace BlackCore::Fsd
         //! Convert FlightRules to FlightType
         static FlightType getFlightType(BlackMisc::Aviation::CFlightPlan::FlightRules flightRule);
 
+#ifdef SWIFT_VATSIM_SUPPORT
         vatsim_auth *m_clientAuth = nullptr;
         vatsim_auth *m_serverAuth = nullptr;
+#endif
         QString m_lastServerAuthChallenge;
         qint64 m_loginSince = -1; //!< when login was triggered
         static constexpr qint64 PendingConnectionTimeoutMs = 7500;

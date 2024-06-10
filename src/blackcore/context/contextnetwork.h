@@ -362,8 +362,10 @@ namespace BlackCore::Context
         //! Cmd.line arguments
         static const QList<QCommandLineOption> &getCmdLineOptions();
 
+#ifdef SWIFT_VATSIM_SUPPORT
         //! Client id and key from cmd.line
         static bool getCmdLineClientIdAndKey(int &id, QString &key);
+#endif
 
     protected:
         //! Constructor

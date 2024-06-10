@@ -152,8 +152,10 @@ namespace BlackFsdTest
         m_client->setPilotRating(PilotRating::Student);
         m_client->setSimType(CSimulatorInfo::xplane());
         m_client->setPilotRating(PilotRating::Student);
+#ifdef SWIFT_VATSIM_SUPPORT
         QString key("727d1efd5cb9f8d2c28372469d922bb4");
         m_client->setClientIdAndKey(0xb9ba, key.toLocal8Bit());
+#endif
     }
 
     void CTestFSDClient::cleanup()
