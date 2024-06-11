@@ -3,13 +3,13 @@
 # SPDX-FileCopyrightText: Copyright (C) 2017 swift Project Community / Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-import getopt
+import argparse
 import os
 import os.path as path
 import platform
+
 import requests
 import subprocess
-import sys
 import datastore
 import tarfile
 from lib.util import get_vs_env
@@ -122,10 +122,10 @@ class Builder:
             os_map = {'Linux': 'linux', 'Darwin': 'macos', 'Windows': 'windows'}
             extension_map = {'Linux': 'run', 'Darwin': 'dmg', 'Windows': 'exe'}
             version_segments = self.version.split('.')
-            lastSegment = version_segments.pop()
+            last_segment = version_segments.pop()
             version_without_timestamp = '.'.join(version_segments)
             installer_name_old = '-'.join(['swiftinstaller', os_map[platform.system()], self.word_size, version_without_timestamp])
-            installer_name_new = '.'.join([installer_name_old, lastSegment])
+            installer_name_new = '.'.join([installer_name_old, last_segment])
             installer_name_old = installer_name_old + '.' + extension_map[platform.system()]
             installer_name_new = installer_name_new + '.' + extension_map[platform.system()]
             build_path = os.path.abspath(path.join(self._get_swift_build_path(), installer_name_old))
@@ -390,48 +390,8 @@ class MacOSBuilder(Builder):
         Builder.__init__(self, word_size)
 
 
-def print_help():
-    supported_compilers = {'Linux': ['gcc'],
-                           'Darwin': ['clang'],
-                           'Windows': ['msvc']
-                           }
-    compiler_help = '|'.join(supported_compilers[platform.system()])
-    print('build.py -w <32|64> -t <' + compiler_help + '> [-c <extra CMake argument>]')
-
-
 # Entry point if called as a standalone program
-def main(argv):
-    word_size = ''
-    tool_chain = ''
-    upload_symbols = False
-    cmake_args = []
-
-    try:
-        opts, args = getopt.getopt(argv, 'hw:t:uc', ['wordsize=', 'toolchain=', 'upload', 'cmake-arg='])
-    except getopt.GetoptError:
-        print_help()
-        sys.exit(2)
-
-    if len(opts) == 0:
-        print_help()
-        sys.exit(2)
-
-    for opt, arg in opts:
-        if opt == '-h':
-            print_help()
-            sys.exit()
-        elif opt in ('-w', '--wordsize'):
-            word_size = arg
-        elif opt in ('-t', '--toolchain'):
-            tool_chain = arg
-        elif opt in ('-u', '--upload'):
-            upload_symbols = True
-        elif opt in ('-c', '--cmake-arg'):
-            cmake_args += [arg]
-
-    if word_size not in ['32', '64']:
-        print('Unsupported word size. Choose 32 or 64')
-        sys.exit(2)
+def main():
 
     builders = {'Linux': {
                     'gcc': LinuxBuilder},
@@ -442,23 +402,33 @@ def main(argv):
                 }
     }
 
-    if tool_chain not in builders[platform.system()]:
-        print('Unknown or unsupported tool chain!')
-        sys.exit(2)
+    supported_wordsizes = ['32', '64'] if platform.system() == 'Windows' else ['64']
 
-    builder = builders[platform.system()][tool_chain](word_size)
+    supported_toolchains = list(builders[platform.system()].keys())
+
+    parser = argparse.ArgumentParser(prog="swift build helper")
+    parser.add_argument("-w", "--wordsize", choices=supported_wordsizes, required=True, help='Wordsize for the build')
+    parser.add_argument("-t", "--toolchain", choices=supported_toolchains, required=True, help='Toolchain for the build')
+    parser.add_argument("-u", "--upload-symbols", action='store_true', help='Upload the symbols')
+    parser.add_argument("-c", "--cmake-args", action='extend', nargs="+", type=str, help='Arguments to pass to CMake')
+
+    args = parser.parse_args()
+
+    word_size = int(args.wordsize)
+
+    builder = builders[platform.system()][args.toolchain](word_size)
 
     builder.prepare()
-    builder.build(cmake_args)
+    builder.build(args.cmake_args)
     builder.bundle_csl2xsb()
     builder.checks()
     builder.install()
     builder.publish()
-    if word_size == '64':
+    if word_size == 64:
         builder.package_xswiftbus()
-    builder.symbols(upload_symbols)
+    builder.symbols(args.upload_symbols)
 
 
 # run main if run directly
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    main()
