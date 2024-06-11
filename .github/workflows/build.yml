@@ -156,7 +156,7 @@ jobs:
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' }}
         run: |
-          python3 -u scripts/build.py -w 64 -t gcc -c "-DVATSIM_KEY_JSON=$vatsim_key_file" --upload
+          python3 -u scripts/build.py -w 64 -t gcc -c "-DVATSIM_KEY_JSON=$vatsim_key_file" --upload-symbols
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
@@ -254,7 +254,7 @@ jobs:
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' }}
         run: |
-          python -u scripts/build.py -w 64 -t msvc -c "-DVATSIM_KEY_JSON=$env:vatsim_key_file" --upload
+          python -u scripts/build.py -w 64 -t msvc -c "-DVATSIM_KEY_JSON=$env:vatsim_key_file" --upload-symbols
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
@@ -352,7 +352,7 @@ jobs:
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' }}
         run: |
-          python -u scripts/build.py -w 32 -t msvc -c "-DVATSIM_KEY_JSON=$env:vatsim_key_file" --upload
+          python -u scripts/build.py -w 32 -t msvc -c "-DVATSIM_KEY_JSON=$env:vatsim_key_file" --upload-symbols
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
@@ -440,7 +440,7 @@ jobs:
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' }}
         run: |
-          python3 -u scripts/build.py -w 64 -t clang -c "-DVATSIM_KEY_JSON=$vatsim_key_file" --upload
+          python3 -u scripts/build.py -w 64 -t clang -c "-DVATSIM_KEY_JSON=$vatsim_key_file" --upload-symbols
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
