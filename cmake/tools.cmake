@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 macro(get_version_number)
-    execute_process(COMMAND python scripts/utils.py --version
+    execute_process(COMMAND python3 scripts/utils.py --version
                 WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                 OUTPUT_VARIABLE SWIFT_VERSION
                 OUTPUT_STRIP_TRAILING_WHITESPACE)
