@@ -1,9 +1,6 @@
 # SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
 # SPDX-License-Identifier: CC0-1.0
 
-[submodule "externals"]
-	path = third_party/externals
-	url = git@github.com:swift-project/externals.git
 [submodule "src/xswiftbus/xplanemp2"]
 	path = src/xswiftbus/xplanemp2
 	url = git@github.com:swift-project/xplanemp2.git
