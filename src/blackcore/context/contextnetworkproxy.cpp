@@ -52,7 +52,7 @@ namespace BlackCore::Context
                                "changedAircraftInRange", this, SIGNAL(changedAircraftInRange()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "changedAtcStationOnlineConnectionStatus", this, SIGNAL(changedAtcStationOnlineConnectionStatus(BlackMisc::Aviation::CAtcStation, bool)));
+                               "atcStationDisconnected", this, SIGNAL(atcStationDisconnected(BlackMisc::Aviation::CAtcStation)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "changedAircraftInRangeDigest", this, SIGNAL(changedAircraftInRangeDigest()));

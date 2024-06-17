@@ -136,8 +136,8 @@ namespace BlackCore::Context
         //! Changed gnd. flag capability
         void changedGndFlagCapability(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
-        //! Connection status changed for online station
-        void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &atcStation, bool connected);
+        //! ATC station disconnected
+        void atcStationDisconnected(const BlackMisc::Aviation::CAtcStation &atcStation);
 
         //! User has been kicked from network
         void kicked(const QString &kickMessage);

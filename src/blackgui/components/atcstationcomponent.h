@@ -87,8 +87,8 @@ namespace BlackGui
             //! Set timestampd and call update
             void forceUpdate();
 
-            //! \copydoc Models::CAtcStationListModel::changedAtcStationConnectionStatus
-            void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
+            //! ATC station disconnected
+            void atcStationDisconnected(const BlackMisc::Aviation::CAtcStation &station);
 
             //! Get all METARs
             void getMetarAsEntered();
