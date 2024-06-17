@@ -463,14 +463,6 @@ namespace BlackGui::Components
                 {
                     ui->sp_AtcSplitter->setSizes(m_splitterSizes);
                 }
-
-                /* before splitter
-                if (m_stretch.size() > 1)
-                {
-                    layout->setStretchFactor(ui->tw_Atc,     m_stretch.at(0));
-                    layout->setStretchFactor(ui->gb_Details, m_stretch.at(1));
-                }
-                */
             }
             else
             {
@@ -484,11 +476,6 @@ namespace BlackGui::Components
                     newSizes.push_back(min);
                     ui->sp_AtcSplitter->setSizes(newSizes);
                 }
-
-                /* before splitter
-                layout->setStretchFactor(ui->tw_Atc,     0);
-                layout->setStretchFactor(ui->gb_Details, 0);
-                */
             }
         }
 
