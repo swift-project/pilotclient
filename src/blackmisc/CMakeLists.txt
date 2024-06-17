@@ -716,7 +716,7 @@ target_link_libraries(misc
             Qt::DBus
             Qt::Network
             Qt::Multimedia
-            externals_rapidjson # used by xswiftbussettingsqtfree.inc
+            nlohmann_json
         PRIVATE
             Qt::Xml
             SimpleCrypt

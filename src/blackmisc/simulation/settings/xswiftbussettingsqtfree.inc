@@ -3,11 +3,10 @@
 
 #include "xswiftbussettingsqtfree.h"
 
-#include "rapidjson/document.h"     // rapidjson's DOM-style API
-#include "rapidjson/prettywriter.h" // for stringify JSON
-
 #include <string>
 #include <chrono>
+
+#include "nlohmann/json.hpp"
 
 #ifdef __GNUC__
 #pragma GCC diagnostic push
@@ -16,8 +15,6 @@
 
 using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::Simulation::XPlane;
-
-using namespace rapidjson;
 
 //! @cond SWIFT_INTERNAL
 constexpr char BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::JsonDBusServerAddress[];
@@ -43,64 +40,63 @@ namespace BlackMisc
             bool CXSwiftBusSettingsQtFree::parseXSwiftBusString(const std::string &json)
             {
                 if (json.empty()) { return false; }
-                const char *jsonCStr = json.c_str();
 
-                Document settingsDoc;
-                // "normal" parsing, decode strings to new buffers. Can use other input stream via ParseStream().
-                if (settingsDoc.Parse(jsonCStr).HasParseError()) { return false; }
+                const nlohmann::basic_json parsed = nlohmann::json::parse(json, nullptr, false);
+
+                if (parsed.is_discarded()) { return false; }
 
                 int c = 0;
-                if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonDBusServerAddress) && settingsDoc[CXSwiftBusSettingsQtFree::JsonDBusServerAddress].IsString())
+                if (parsed.contains(CXSwiftBusSettingsQtFree::JsonDBusServerAddress) && parsed[CXSwiftBusSettingsQtFree::JsonDBusServerAddress].is_string())
                 {
-                    m_dBusServerAddress = settingsDoc[CXSwiftBusSettingsQtFree::JsonDBusServerAddress].GetString();  c++;
+                    m_dBusServerAddress = parsed[CXSwiftBusSettingsQtFree::JsonDBusServerAddress].get<std::string>();  c++;
                 }
-                if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonMessageBox) && settingsDoc[CXSwiftBusSettingsQtFree::JsonMessageBox].IsString())
+                if (parsed.contains(CXSwiftBusSettingsQtFree::JsonMessageBox) && parsed[CXSwiftBusSettingsQtFree::JsonMessageBox].is_string())
                 {
-                    m_msgBox = settingsDoc[CXSwiftBusSettingsQtFree::JsonMessageBox].GetString();  c++;
+                    m_msgBox = parsed[CXSwiftBusSettingsQtFree::JsonMessageBox].get<std::string>();  c++;
                 }
-                if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonNightTextureMode) && settingsDoc[CXSwiftBusSettingsQtFree::JsonNightTextureMode].IsString())
+                if (parsed.contains(CXSwiftBusSettingsQtFree::JsonNightTextureMode) && parsed[CXSwiftBusSettingsQtFree::JsonNightTextureMode].is_string())
                 {
-                    m_nightTextureMode = settingsDoc[CXSwiftBusSettingsQtFree::JsonNightTextureMode].GetString();  c++;
+                    m_nightTextureMode = parsed[CXSwiftBusSettingsQtFree::JsonNightTextureMode].get<std::string>();  c++;
                 }
-                if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonDrawingLabels) && settingsDoc[CXSwiftBusSettingsQtFree::JsonDrawingLabels].IsBool())
+                if (parsed.contains(CXSwiftBusSettingsQtFree::JsonDrawingLabels) && parsed[CXSwiftBusSettingsQtFree::JsonDrawingLabels].is_boolean())
                 {
-                    m_drawingLabels = settingsDoc[CXSwiftBusSettingsQtFree::JsonDrawingLabels].GetBool();  c++;
+                    m_drawingLabels = parsed[CXSwiftBusSettingsQtFree::JsonDrawingLabels].get<bool>();  c++;
                 }
-                if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonLabelColor) && settingsDoc[CXSwiftBusSettingsQtFree::JsonLabelColor].IsInt())
+                if (parsed.contains(CXSwiftBusSettingsQtFree::JsonLabelColor) && parsed[CXSwiftBusSettingsQtFree::JsonLabelColor].is_number_integer())
                 {
-                    m_labelColor = settingsDoc[CXSwiftBusSettingsQtFree::JsonLabelColor].GetInt();  c++;
+                    m_labelColor = parsed[CXSwiftBusSettingsQtFree::JsonLabelColor].get<int>();  c++;
                 }
-                if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonBundleTaxiLandingLights) && settingsDoc[CXSwiftBusSettingsQtFree::JsonBundleTaxiLandingLights].IsBool())
+                if (parsed.contains(CXSwiftBusSettingsQtFree::JsonBundleTaxiLandingLights) && parsed[CXSwiftBusSettingsQtFree::JsonBundleTaxiLandingLights].is_boolean())
                 {
-                    m_bundleTaxiLandingLights = settingsDoc[CXSwiftBusSettingsQtFree::JsonBundleTaxiLandingLights].GetBool();  c++;
+                    m_bundleTaxiLandingLights = parsed[CXSwiftBusSettingsQtFree::JsonBundleTaxiLandingLights].get<bool>();  c++;
                 }
-                if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonTcas) && settingsDoc[CXSwiftBusSettingsQtFree::JsonTcas].IsBool())
+                if (parsed.contains(CXSwiftBusSettingsQtFree::JsonTcas) && parsed[CXSwiftBusSettingsQtFree::JsonTcas].is_boolean())
                 {
-                    m_tcasEnabled = settingsDoc[CXSwiftBusSettingsQtFree::JsonTcas].GetBool();  c++;
+                    m_tcasEnabled = parsed[CXSwiftBusSettingsQtFree::JsonTcas].get<bool>();  c++;
                 }
-                if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonTerrainProbe) && settingsDoc[CXSwiftBusSettingsQtFree::JsonTerrainProbe].IsBool())
+                if (parsed.contains(CXSwiftBusSettingsQtFree::JsonTerrainProbe) && parsed[CXSwiftBusSettingsQtFree::JsonTerrainProbe].is_boolean())
                 {
-                    m_terrainProbeEnabled = settingsDoc[CXSwiftBusSettingsQtFree::JsonTerrainProbe].GetBool();  c++;
+                    m_terrainProbeEnabled = parsed[CXSwiftBusSettingsQtFree::JsonTerrainProbe].get<bool>();  c++;
                 }
-                if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonLogRenderPhases) && settingsDoc[CXSwiftBusSettingsQtFree::JsonLogRenderPhases].IsBool())
+                if (parsed.contains(CXSwiftBusSettingsQtFree::JsonLogRenderPhases) && parsed[CXSwiftBusSettingsQtFree::JsonLogRenderPhases].is_boolean())
                 {
-                    m_logRenderPhases = settingsDoc[CXSwiftBusSettingsQtFree::JsonLogRenderPhases].GetBool();  c++;
+                    m_logRenderPhases = parsed[CXSwiftBusSettingsQtFree::JsonLogRenderPhases].get<bool>();  c++;
                 }
-                if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonMaxPlanes) && settingsDoc[CXSwiftBusSettingsQtFree::JsonMaxPlanes].IsInt())
+                if (parsed.contains(CXSwiftBusSettingsQtFree::JsonMaxPlanes) && parsed[CXSwiftBusSettingsQtFree::JsonMaxPlanes].is_number_integer())
                 {
-                    m_maxPlanes = settingsDoc[CXSwiftBusSettingsQtFree::JsonMaxPlanes].GetInt();  c++;
+                    m_maxPlanes = parsed[CXSwiftBusSettingsQtFree::JsonMaxPlanes].get<int>();  c++;
                 }
-                if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonMaxDrawDistance) && settingsDoc[CXSwiftBusSettingsQtFree::JsonMaxDrawDistance].IsDouble())
+                if (parsed.contains(CXSwiftBusSettingsQtFree::JsonMaxDrawDistance) && parsed[CXSwiftBusSettingsQtFree::JsonMaxDrawDistance].is_number_float())
                 {
-                    m_maxDrawDistanceNM = settingsDoc[CXSwiftBusSettingsQtFree::JsonMaxDrawDistance].GetDouble();  c++;
+                    m_maxDrawDistanceNM = parsed[CXSwiftBusSettingsQtFree::JsonMaxDrawDistance].get<int>();  c++;
                 }
-                if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonFollowAircraftDistanceM) && settingsDoc[CXSwiftBusSettingsQtFree::JsonFollowAircraftDistanceM].IsInt())
+                if (parsed.contains(CXSwiftBusSettingsQtFree::JsonFollowAircraftDistanceM) && parsed[CXSwiftBusSettingsQtFree::JsonFollowAircraftDistanceM].is_number_integer())
                 {
-                    m_followAircraftDistanceM = settingsDoc[CXSwiftBusSettingsQtFree::JsonFollowAircraftDistanceM].GetInt();  c++;
+                    m_followAircraftDistanceM = parsed[CXSwiftBusSettingsQtFree::JsonFollowAircraftDistanceM].get<int>();  c++;
                 }
-                if (settingsDoc.HasMember(CXSwiftBusSettingsQtFree::JsonTimestamp) && settingsDoc[CXSwiftBusSettingsQtFree::JsonTimestamp].IsInt64())
+                if (parsed.contains(CXSwiftBusSettingsQtFree::JsonTimestamp) && parsed[CXSwiftBusSettingsQtFree::JsonTimestamp].is_number_integer())
                 {
-                    m_msSinceEpochQtFree = settingsDoc[CXSwiftBusSettingsQtFree::JsonTimestamp].GetInt64();  c++;
+                    m_msSinceEpochQtFree = parsed[CXSwiftBusSettingsQtFree::JsonTimestamp].get<int64_t>();  c++;
                 }
                 this->objectUpdated(); // post processing
                 return c == 13;
@@ -108,38 +104,24 @@ namespace BlackMisc
 
             std::string CXSwiftBusSettingsQtFree::toXSwiftBusJsonString() const
             {
-                Document document;
-                document.SetObject();
+                nlohmann::json json;
 
-                // 1st version, we could also just concat the JSON string
-                // Explicit key/value
-                Document::AllocatorType &a = document.GetAllocator();
-                // Value k1(JsonDBusServerAddress, a);
-                // Value v1(m_dBusServerAddress, a);
-                document.AddMember(JsonDBusServerAddress, StringRef(m_dBusServerAddress.c_str()), a);
-                document.AddMember(JsonNightTextureMode,  StringRef(m_nightTextureMode.c_str()), a);
-                document.AddMember(JsonMessageBox,        StringRef(m_msgBox.c_str()), a);
-                document.AddMember(JsonMaxPlanes,         m_maxPlanes, a);
-                document.AddMember(JsonMaxDrawDistance,   m_maxDrawDistanceNM,  a);
-                document.AddMember(JsonTimestamp,         m_msSinceEpochQtFree, a);
-                document.AddMember(JsonDrawingLabels,     m_drawingLabels, a);
-                document.AddMember(JsonLabelColor,        m_labelColor,    a);
-                document.AddMember(JsonBundleTaxiLandingLights, m_bundleTaxiLandingLights, a);
-                document.AddMember(JsonFollowAircraftDistanceM, m_followAircraftDistanceM, a);
-                document.AddMember(JsonLogRenderPhases,   m_logRenderPhases,     a);
-                document.AddMember(JsonTcas,              m_tcasEnabled,         a);
-                document.AddMember(JsonTerrainProbe,      m_terrainProbeEnabled, a);
 
-                // document[CXSwiftBusSettingsQtFree::JsonDBusServerAddress].SetString(StringRef(m_dBusServerAddress.c_str(), m_dBusServerAddress.size()));
-                // document[CXSwiftBusSettingsQtFree::JsonDrawingLabels].SetBool(m_drawingLabels);
-                // document[CXSwiftBusSettingsQtFree::JsonMaxPlanes].SetInt(m_maxPlanes);
-                // document[CXSwiftBusSettingsQtFree::JsonMaxDrawDistance].SetDouble(m_maxDrawDistanceNM);
+                json[JsonDBusServerAddress] = m_dBusServerAddress;
+                json[JsonNightTextureMode] = m_nightTextureMode;
+                json[JsonMessageBox] = m_msgBox;
+                json[JsonMaxPlanes] = m_maxPlanes;
+                json[JsonMaxDrawDistance] = m_maxDrawDistanceNM;
+                json[JsonTimestamp] = m_msSinceEpochQtFree;
+                json[JsonDrawingLabels] = m_drawingLabels;
+                json[JsonLabelColor] = m_labelColor;
+                json[JsonBundleTaxiLandingLights] = m_bundleTaxiLandingLights;
+                json[JsonFollowAircraftDistanceM] = m_followAircraftDistanceM;
+                json[JsonLogRenderPhases] = m_logRenderPhases;
+                json[JsonTcas] = m_tcasEnabled;
+                json[JsonTerrainProbe] = m_terrainProbeEnabled;
 
-                StringBuffer sb;
-                PrettyWriter<StringBuffer> writer(sb);
-                document.Accept(writer);    // Accept() traverses the DOM and generates Handler events.
-                const std::string json = sb.GetString();
-                return json;
+                return json.dump(2);
             }
 
             std::string CXSwiftBusSettingsQtFree::convertToString() const

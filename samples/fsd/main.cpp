@@ -25,8 +25,10 @@ int main(int argc, char *argv[])
     client.setClientName("Test Client");
     client.setHostApplication("None");
     client.setVersion(0, 8);
+#ifdef SWIFT_VATSIM_SUPPORT
     QString key("727d1efd5cb9f8d2c28372469d922bb4");
     client.setClientIdAndKey(0xb9ba, key.toLocal8Bit());
+#endif
     client.setClientCapabilities(Capabilities::AtcInfo | Capabilities::AircraftInfo | Capabilities::AircraftConfig);
 
     const CUser user("1234567", "Test user - EDDM", "", "123456");

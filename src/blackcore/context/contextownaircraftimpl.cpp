@@ -449,9 +449,8 @@ namespace BlackCore::Context
         return true;
     }
 
-    void CContextOwnAircraft::xCtxChangedAtcStationOnlineConnectionStatus(const CAtcStation &atcStation, bool connected)
+    void CContextOwnAircraft::xCtxAtcStationDisconnected(const CAtcStation &atcStation)
     {
-        Q_UNUSED(connected)
         Q_UNUSED(atcStation)
         this->evaluateComStations(true);
     }

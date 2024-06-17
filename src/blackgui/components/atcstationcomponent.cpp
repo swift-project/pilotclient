@@ -101,8 +101,6 @@ namespace BlackGui::Components
         connect(ui->tvp_AtcStationsOnlineTree, &CAtcStationTreeView::objectSelected, this, &CAtcStationComponent::onOnlineAtcStationSelected, Qt::QueuedConnection);
         connect(ui->tvp_AtcStationsOnlineTree, &CAtcStationTreeView::requestTextMessageWidget, this, &CAtcStationComponent::requestTextMessageWidget);
 
-        connect(ui->comp_AtcStationsSettings, &CSettingsAtcStationsInlineComponent::changed, this, &CAtcStationComponent::forceUpdate, Qt::QueuedConnection);
-
         connect(ui->tb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::requestAtisUpdates);
         connect(&m_updateTimer, &QTimer::timeout, this, &CAtcStationComponent::update);
 
@@ -113,7 +111,7 @@ namespace BlackGui::Components
         if (sGui)
         {
             connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this, &CAtcStationComponent::changedAtcStationsOnline, Qt::QueuedConnection);
-            connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationOnlineConnectionStatus, this, &CAtcStationComponent::changedAtcStationOnlineConnectionStatus, Qt::QueuedConnection);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::atcStationDisconnected, this, &CAtcStationComponent::atcStationDisconnected, Qt::QueuedConnection);
             connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAtcStationComponent::connectionStatusChanged, Qt::QueuedConnection);
         }
 
@@ -164,12 +162,6 @@ namespace BlackGui::Components
         return c && parentDockableWidget;
     }
 
-    void CAtcStationComponent::forceUpdate()
-    {
-        m_timestampOnlineStationsChanged = QDateTime::currentDateTimeUtc();
-        this->update();
-    }
-
     void CAtcStationComponent::update()
     {
         if (!this->canAccessContext()) { return; }
@@ -190,25 +182,14 @@ namespace BlackGui::Components
             // update
             if (m_timestampOnlineStationsChanged > m_timestampLastReadOnlineStations)
             {
-                const CAtcStationsSettings settings = ui->comp_AtcStationsSettings->getSettings();
                 CAtcStationList onlineStations = sGui->getIContextNetwork()->getAtcStationsOnline(true);
                 const int allStationsCount = onlineStations.sizeInt();
-                int inRangeCount = -1;
-
-                if (settings.showOnlyWithValidFrequency()) { onlineStations = onlineStations.stationsWithValidFrequency(); }
-                if (settings.showOnlyInRange())
-                {
-                    onlineStations.removeIfOutsideRange();
-                    inRangeCount = onlineStations.sizeInt();
-                }
-
                 const int stationsCount = onlineStations.sizeInt();
                 ui->tvp_AtcStationsOnline->updateContainerMaybeAsync(onlineStations);
                 m_timestampLastReadOnlineStations = QDateTime::currentDateTimeUtc();
                 m_timestampOnlineStationsChanged = m_timestampLastReadOnlineStations;
                 this->updateTreeView();
                 this->setOnlineTabs(allStationsCount, stationsCount);
-                ui->comp_AtcStationsSettings->setCounts(allStationsCount, inRangeCount);
 
                 if (stationsCount < 1 && allStationsCount > 0)
                 {
@@ -245,10 +226,10 @@ namespace BlackGui::Components
         }
     }
 
-    void CAtcStationComponent::changedAtcStationOnlineConnectionStatus(const CAtcStation &station, bool added)
+    void CAtcStationComponent::atcStationDisconnected(const CAtcStation &station)
     {
         // trick here is, we want to display a station ASAP
-        ui->tvp_AtcStationsOnline->changedAtcStationConnectionStatus(station, added);
+        ui->tvp_AtcStationsOnline->changedAtcStationConnectionStatus(station, false);
     }
 
     void CAtcStationComponent::getMetarAsEntered()
@@ -463,14 +444,6 @@ namespace BlackGui::Components
                 {
                     ui->sp_AtcSplitter->setSizes(m_splitterSizes);
                 }
-
-                /* before splitter
-                if (m_stretch.size() > 1)
-                {
-                    layout->setStretchFactor(ui->tw_Atc,     m_stretch.at(0));
-                    layout->setStretchFactor(ui->gb_Details, m_stretch.at(1));
-                }
-                */
             }
             else
             {
@@ -484,16 +457,10 @@ namespace BlackGui::Components
                     newSizes.push_back(min);
                     ui->sp_AtcSplitter->setSizes(newSizes);
                 }
-
-                /* before splitter
-                layout->setStretchFactor(ui->tw_Atc,     0);
-                layout->setStretchFactor(ui->gb_Details, 0);
-                */
             }
         }
 
         ui->te_AtcStationsOnlineInfo->setVisible(checked);
-        ui->comp_AtcStationsSettings->setVisible(checked);
         ui->le_AtcStationsOnlineMetar->setVisible(checked);
         ui->tb_AtcStationsAtisReload->setVisible(checked);
         ui->tb_AtcStationsLoadMetar->setVisible(checked);

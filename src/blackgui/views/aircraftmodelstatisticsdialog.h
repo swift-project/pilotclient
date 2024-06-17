@@ -40,18 +40,6 @@ namespace BlackGui::Views
         //! Display the HTML matrix
         void displayHTMLMatrix();
 
-        //! Chart
-        void showChart();
-
-        //! Chart for distributors
-        void chartDistributors();
-
-        //! Chart for aircraft ICAO
-        void chartAircraftIcao();
-
-        //! Orientation
-        Qt::Orientation getOrientation() const;
-
         QScopedPointer<Ui::CAircraftModelStatisticsDialog> ui;
         BlackMisc::Simulation::CAircraftModelList m_models;
     };

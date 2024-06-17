@@ -58,11 +58,6 @@ constexpr bool BlackConfig::CBuildConfig::isCompiledWithGui()
     return SWIFTCONFIG_${SWIFT_BUILD_BLACKGUI};
 }
 
-constexpr bool BlackConfig::CBuildConfig::isVatsimVersion()
-{
-    return SWIFTCONFIG_${SWIFT_VATSIM_SUPPORT};
-}
-
 constexpr int BlackConfig::CBuildConfig::versionMajor() { return ${SWIFT_VERSION_MAJOR}; }
 constexpr int BlackConfig::CBuildConfig::versionMinor() { return ${SWIFT_VERSION_MINOR}; }
 

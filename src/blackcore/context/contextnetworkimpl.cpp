@@ -97,7 +97,7 @@ namespace BlackCore::Context
             this->getRuntime()->getCContextSimulator(),
             m_fsdClient, this);
         m_fsdClient->setClientProvider(m_airspace);
-        connect(m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus, Qt::QueuedConnection);
+        connect(m_airspace, &CAirspaceMonitor::atcStationDisconnected, this, &CContextNetwork::atcStationDisconnected, Qt::QueuedConnection);
         connect(m_airspace, &CAirspaceMonitor::changedAtcStationsOnline, this, &CContextNetwork::changedAtcStationsOnline, Qt::QueuedConnection);
         connect(m_airspace, &CAirspaceMonitor::changedAircraftInRange, this, &CContextNetwork::changedAircraftInRange, Qt::QueuedConnection);
         connect(m_airspace, &CAirspaceMonitor::removedAircraft, this, &IContextNetwork::removedAircraft, Qt::QueuedConnection); // DBus
@@ -273,6 +273,7 @@ namespace BlackCore::Context
         m_fsdClient->setClientName(sApp->swiftVersionChar());
         m_fsdClient->setVersion(CBuildConfig::getVersion().majorVersion(), CBuildConfig::getVersion().minorVersion());
 
+#ifdef SWIFT_VATSIM_SUPPORT
         int clientId = 0;
         QString clientKey;
         if (!getCmdLineClientIdAndKey(clientId, clientKey))
@@ -282,6 +283,7 @@ namespace BlackCore::Context
         }
 
         m_fsdClient->setClientIdAndKey(static_cast<quint16>(clientId), clientKey.toLocal8Bit());
+#endif
         m_fsdClient->setClientCapabilities(Capabilities::AircraftInfo | Capabilities::FastPos | Capabilities::VisPos | Capabilities::AtcInfo | Capabilities::AircraftConfig | Capabilities::IcaoEquipment);
         m_fsdClient->setServer(server);
 

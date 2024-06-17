@@ -123,7 +123,7 @@
      </widget>
      <widget class="QGroupBox" name="gb_Details">
       <property name="title">
-       <string>Details (METAR, ATIS, range)</string>
+       <string>Details (METAR, ATIS)</string>
       </property>
       <property name="checkable">
        <bool>true</bool>
@@ -141,16 +141,6 @@
        <property name="bottomMargin">
         <number>3</number>
        </property>
-       <item>
-        <widget class="BlackGui::Components::CSettingsAtcStationsInlineComponent" name="comp_AtcStationsSettings">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>25</height>
-          </size>
-         </property>
-        </widget>
-       </item>
        <item>
         <widget class="QWidget" name="wi_ButtonsAndEntry" native="true">
          <layout class="QHBoxLayout" name="hl_ButtonsAndEntry">
@@ -264,12 +254,6 @@
    <class>BlackGui::Views::CAtcStationView</class>
    <extends>QTableView</extends>
    <header>blackgui/views/atcstationview.h</header>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Components::CSettingsAtcStationsInlineComponent</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/settingsatcstationsinlinecomponent.h</header>
-   <container>1</container>
   </customwidget>
   <customwidget>
    <class>BlackGui::Views::CAtcStationTreeView</class>

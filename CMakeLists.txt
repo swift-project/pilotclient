@@ -55,8 +55,17 @@ option(SWIFT_USE_CRASHPAD "Use crashpad" OFF)
 
 # VATSIM related options
 option(SWIFT_VATSIM_SUPPORT "Build with VATSIM support" ON)
-set(VATSIM_KEY_JSON "" CACHE STRING "Path to JSON containing VATSIM key")
-load_vatsim_key()
+if(SWIFT_VATSIM_SUPPORT)
+    find_package(vatsimauth REQUIRED)
+    set(VATSIM_KEY_JSON "" CACHE STRING "Path to JSON containing VATSIM key")
+    load_vatsim_key()
+    add_compile_definitions(SWIFT_VATSIM_SUPPORT)
+endif()
+
+if(NOT CMAKE_BUILD_TYPE)
+    message(STATUS "CMAKE_BUILD_TYPE not defined. Falling back to Debug")
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
 
 if(SWIFT_MINIFY_DEBUG_SYMBOLS)
     if(MSVC)
@@ -133,12 +142,8 @@ if(MSVC)
 endif()
 
 # Add external folders
-add_subdirectory(cmake/vatsimauth)
-add_subdirectory(cmake/qwt_plot)
 add_subdirectory(cmake/dbus)
 add_subdirectory(cmake/sodium)
-add_subdirectory(cmake/msgpack)
-add_subdirectory(cmake/rapidjson)
 add_subdirectory(cmake/opus)
 add_subdirectory(cmake/crashpad)
 add_subdirectory(cmake/tls)

@@ -138,12 +138,14 @@ namespace BlackCore::Fsd
         connect(m_socket.get(), &QTcpSocket::errorOccurred, this, &CFSDClient::handleSocketError, Qt::QueuedConnection);
     }
 
+#ifdef SWIFT_VATSIM_SUPPORT
     void CFSDClient::setClientIdAndKey(quint16 id, const QByteArray &key)
     {
         QWriteLocker l(&m_lockUserClientBuffered);
         m_clientAuth = vatsim_auth_create(id, qPrintable(key));
         m_serverAuth = vatsim_auth_create(id, qPrintable(key));
     }
+#endif
 
     void CFSDClient::setServer(const CServer &server)
     {
@@ -970,7 +972,9 @@ namespace BlackCore::Fsd
             const int altitude = situation.getAltitude().valueInteger(CLengthUnit::ft());
 
             std::array<char, 50> sysuid = {};
+#ifdef SWIFT_VATSIM_SUPPORT
             vatsim_get_system_unique_id(sysuid.data());
+#endif
 
             const QString userInfo = QStringLiteral("CID=") % cid % " " % m_clientName % " IP=" % m_socket->localAddress().toString() %
                                      " SYS_UID=" % sysuid.data() % " FSVER=" % m_hostApplication % " LT=" % QString::number(latitude) %
@@ -990,6 +994,7 @@ namespace BlackCore::Fsd
         }
     }
 
+#ifdef SWIFT_VATSIM_SUPPORT
     void CFSDClient::sendClientIdentification(const QString &fsdChallenge)
     {
         std::array<char, 50> sysuid = {};
@@ -1013,6 +1018,7 @@ namespace BlackCore::Fsd
         }
         increaseStatisticsValue(QStringLiteral("sendClientIdentification"));
     }
+#endif
 
     void CFSDClient::getVatsimAuthToken(const QString &cid, const QString &password, const BlackMisc::CSlot<void(const QString &)> &callback)
     {
@@ -1129,6 +1135,7 @@ namespace BlackCore::Fsd
         m_atcStations.replaceOrAddObjectByCallsign({ cs, {}, freq, position, range });
     }
 
+#ifdef SWIFT_VATSIM_SUPPORT
     void CFSDClient::handleAuthChallenge(const QStringList &tokens)
     {
         const AuthChallenge authChallenge = AuthChallenge::fromTokens(tokens);
@@ -1141,7 +1148,9 @@ namespace BlackCore::Fsd
         m_lastServerAuthChallenge = QString(challenge);
         sendAuthChallenge(m_lastServerAuthChallenge);
     }
+#endif
 
+#ifdef SWIFT_VATSIM_SUPPORT
     void CFSDClient::handleAuthResponse(const QStringList &tokens)
     {
         const AuthResponse authResponse = AuthResponse::fromTokens(tokens);
@@ -1154,6 +1163,7 @@ namespace BlackCore::Fsd
             disconnectFromServer();
         }
     }
+#endif
 
     void CFSDClient::handleDeleteATC(const QStringList &tokens)
     {
@@ -1798,6 +1808,7 @@ namespace BlackCore::Fsd
         }
     }
 
+#ifdef SWIFT_VATSIM_SUPPORT
     void CFSDClient::handleFsdIdentification(const QStringList &tokens)
     {
         if (m_protocolRevision >= PROTOCOL_REVISION_VATSIM_AUTH)
@@ -1816,6 +1827,7 @@ namespace BlackCore::Fsd
             disconnectFromServer();
         }
     }
+#endif
 
     void CFSDClient::handleUnknownPacket(const QString &line)
     {
@@ -2294,14 +2306,18 @@ namespace BlackCore::Fsd
 
             // handled ones
             case MessageType::AtcDataUpdate: handleAtcDataUpdate(tokens); break;
+#ifdef SWIFT_VATSIM_SUPPORT
             case MessageType::AuthChallenge: handleAuthChallenge(tokens); break;
             case MessageType::AuthResponse: handleAuthResponse(tokens); break;
+#endif
             case MessageType::ClientQuery: handleClientQuery(tokens); break;
             case MessageType::ClientResponse: handleClientResponse(tokens); break;
             case MessageType::DeleteATC: handleDeleteATC(tokens); break;
             case MessageType::DeletePilot: handleDeletePilot(tokens); break;
             case MessageType::FlightPlan: handleFlightPlan(tokens); break;
+#ifdef SWIFT_VATSIM_SUPPORT
             case MessageType::FsdIdentification: handleFsdIdentification(tokens); break;
+#endif
             case MessageType::KillRequest: handleKillRequest(tokens); break;
             case MessageType::PilotDataUpdate: handlePilotDataUpdate(tokens); break;
             case MessageType::Ping: handlePing(tokens); break;

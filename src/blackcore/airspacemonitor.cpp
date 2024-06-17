@@ -696,8 +696,6 @@ namespace BlackCore
             m_atcStationsOnline.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftSituation());
 
             emit this->changedAtcStationsOnline();
-            // Remark: this->changedAtcStationOnlineConnectionStatus
-            // will be triggered in onAtisVoiceRoomReceived
         }
         else
         {
@@ -722,7 +720,7 @@ namespace BlackCore
             const CAtcStation removedStation = m_atcStationsOnline.findFirstByCallsign(callsign);
             m_atcStationsOnline.removeByCallsign(callsign);
             emit this->changedAtcStationsOnline();
-            emit this->changedAtcStationOnlineConnectionStatus(removedStation, false);
+            emit this->atcStationDisconnected(removedStation);
         }
     }
 

@@ -3,17 +3,17 @@
 # SPDX-FileCopyrightText: Copyright (C) 2017 swift Project Community / Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-import getopt
-import json
+import argparse
 import os
 import os.path as path
 import platform
+
 import requests
 import subprocess
-import sys
 import datastore
 import tarfile
 from lib.util import get_vs_env
+import utils
 
 
 class Builder:
@@ -29,7 +29,7 @@ class Builder:
         print('Updating from datastore ...')
         host = 'https://datastore.swift-project.org'
         datastore_version = '0.7.0'
-        source_path = self._get_swift_source_path()
+        source_path = utils.get_swift_source_path()
         shared_path = os.path.abspath(os.path.join(source_path, 'resources', 'share'))
         datastore.update_shared(host, datastore_version, shared_path)
 
@@ -54,7 +54,7 @@ class Builder:
                       '-DSWIFT_USE_CRASHPAD={}'.format(use_crashpad)] + cmake_args
         subprocess.check_call(cmake_call, env=dict(os.environ))
 
-        # Workaround while using Make for MacOS to pass number of jobs
+        # Workaround while using Make for macOS to pass number of jobs
         if self.__class__.__name__ == 'MacOSBuilder':
             subprocess.check_call(["cmake", "--build", ".", "-j3"], env=dict(os.environ))
         elif self.__class__.__name__ == 'MSVCBuilder':
@@ -76,14 +76,14 @@ class Builder:
 
     def create_installer(self):
         bitrock_builder_bin = os.environ["BITROCK_BUILDER"]
-        os.chdir(self._get_swift_source_path())
+        os.chdir(utils.get_swift_source_path())
         os_map = {'Linux': 'linux', 'Darwin': 'macos', 'Windows': 'windows'}
         installer_platform_map = {'Linux': 'linux-x{}'.format(self.word_size), 'Darwin': 'osx', 'Windows': 'windows'}
         extension_map = {'Linux': 'run', 'Darwin': 'app', 'Windows': 'exe'}
         extension = extension_map[platform.system()]
         os_name = os_map[platform.system()]
-        version_full = self.__get_swift_version_base()
-        version_rev = self.__get_rev_count()
+        version_full = utils.get_swift_version_base()
+        version_rev = utils.get_rev_count()
         windows64 = 1 if os_name == 'windows' and int(self.word_size) == 64 else 0
         installer_platform = installer_platform_map[platform.system()]
 
@@ -122,10 +122,10 @@ class Builder:
             os_map = {'Linux': 'linux', 'Darwin': 'macos', 'Windows': 'windows'}
             extension_map = {'Linux': 'run', 'Darwin': 'dmg', 'Windows': 'exe'}
             version_segments = self.version.split('.')
-            lastSegment = version_segments.pop()
+            last_segment = version_segments.pop()
             version_without_timestamp = '.'.join(version_segments)
             installer_name_old = '-'.join(['swiftinstaller', os_map[platform.system()], self.word_size, version_without_timestamp])
-            installer_name_new = '.'.join([installer_name_old, lastSegment])
+            installer_name_new = '.'.join([installer_name_old, last_segment])
             installer_name_old = installer_name_old + '.' + extension_map[platform.system()]
             installer_name_new = installer_name_new + '.' + extension_map[platform.system()]
             build_path = os.path.abspath(path.join(self._get_swift_build_path(), installer_name_old))
@@ -142,7 +142,7 @@ class Builder:
         os_map = {'Linux': 'linux', 'Darwin': 'macos', 'Windows': 'windows'}
         archive_name = '-'.join(['xswiftbus', os_map[platform.system()], self.word_size, self.version]) + '.7z'
         archive_path = path.abspath(path.join(os.pardir, archive_name))
-        content_path = path.abspath(path.join(self._get_swift_source_path(), 'dist', 'xswiftbus'))
+        content_path = path.abspath(path.join(utils.get_swift_source_path(), 'dist', 'xswiftbus'))
         subprocess.check_call(['7z', 'a', '-mx=9', archive_path, content_path, "-xr!*.debug", "-xr!*.dSYM"], env=dict(os.environ))
 
     def symbols(self, upload_symbols):
@@ -163,12 +163,12 @@ class Builder:
             if platform.system() == 'Windows':
                 binary_path = path.abspath(path.join(build_path, 'out'))
             else:
-                binary_path = path.abspath(path.join(self._get_swift_source_path(), 'dist'))
+                binary_path = path.abspath(path.join(utils.get_swift_source_path(), 'dist'))
 
             os_map = {'Linux': 'linux', 'Darwin': 'macos', 'Windows': 'windows'}
             tar_filename = '-'.join(
                 ['swiftsymbols', os_map[platform.system()], self.word_size, self.version]) + '.tar.gz'
-            tar_path = path.abspath(path.join(self._get_swift_source_path(), tar_filename))
+            tar_path = path.abspath(path.join(utils.get_swift_source_path(), tar_filename))
             tar = tarfile.open(tar_path, "w:gz")
 
             ignore_list = ['sample', 'test', 'win', 'liblin.so', 'libmac.dylib']
@@ -207,9 +207,6 @@ class Builder:
     def bundle_csl2xsb(self):
         pass
 
-    def _get_swift_source_path(self) -> str:
-        return self.__source_path
-
     def _get_swift_build_path(self) -> str:
         return self.__build_path
 
@@ -232,63 +229,23 @@ class Builder:
         return True
 
     def _get_externals_path(self) -> str:
-        return path.abspath(path.join(self._get_swift_source_path(), 'externals', self._get_platform_name(), self.word_size, 'lib'))
+        return path.abspath(path.join(utils.get_swift_source_path(), 'externals', self._get_platform_name(), self.word_size, 'lib'))
 
     def _strip_debug(self):
         raise NotImplementedError()
 
     def __init__(self, word_size):
-        self.__source_path = path.abspath(path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
-        self.__build_path = path.abspath(path.join(self.__source_path, 'build'))
+        self.__build_path = path.abspath(path.join(utils.get_swift_source_path(), 'build'))
 
-        files = os.listdir(self.__source_path)
+        files = os.listdir(utils.get_swift_source_path())
         for swift_dir in ['src', 'installer', 'third_party']:
             if swift_dir not in files:
                 raise RuntimeError('Cannot find {} folder! Are we in the right directory?'.format(swift_dir))
 
         self.word_size = word_size
-        self.version = self.__get_swift_version()
+        self.version = utils.get_swift_version()
 
-    def __get_version_file(self) -> str:
-        """
-        :return: Path to the version.json
-        """
-        return path.abspath(path.join(self._get_swift_source_path(), 'version')) + '.json'
 
-    def __get_swift_version(self) -> str:
-        """
-        :return: Full version number (for example "0.12.123")
-        """
-        return self.__get_swift_version_base() + '.' + str(self.__get_rev_count())
-
-    def __get_swift_version_base(self) -> str:
-        """
-        :return: Base version number without revision (for example "0.12")
-        """
-        f = open(self.__get_version_file())
-        config_json = json.load(f)
-        f.close()
-        version_major = config_json['version']['major']
-        version_minor = config_json['version']['minor']
-        return '.'.join([str(version_major), str(version_minor)])
-
-    def __get_rev_count(self) -> int:
-        """
-        :return: Number of commits since the current major and minor version was set in version.json
-        """
-        this_version = self.__get_swift_version_base()
-        config_log = subprocess.check_output(['git', 'log', '--format=%H', self.__get_version_file()])
-        for sha in config_log.decode("utf-8").split():
-            json_data = subprocess.check_output(['git', 'show', sha + ':version.json'])
-            config_json = json.loads(json_data.decode("utf-8"))
-            version_major = config_json['version']['major']
-            version_minor = config_json['version']['minor']
-            if this_version == '.'.join([str(version_major), str(version_minor)]):
-                base_commit = sha
-            else:
-                break
-        count = subprocess.check_output(['git', 'rev-list', '--count', 'HEAD', '^' + base_commit])
-        return int(count.decode("utf-8"))
 
     def __upload_symbol_files(self, symbols_package):
         print('Uploading symbols')
@@ -331,7 +288,7 @@ class MSVCBuilder(Builder):
         pass
 
     def bundle_csl2xsb(self):
-        os.chdir(self._get_swift_source_path())
+        os.chdir(utils.get_swift_source_path())
         subprocess.check_call(["pyinstaller", "-y", "--distpath", "dist/share",
                                 "--workpath", os.environ["TEMP"], "scripts/csl2xsb/CSL2XSB.py"])
 
@@ -371,7 +328,7 @@ class LinuxBuilder(Builder):
             "bin/plugins/weatherdata/libweatherdatagfs.so",
             "xswiftbus/64/lin.xpl",
         ]
-        dist_path = path.join(self._get_swift_source_path(), "dist")
+        dist_path = path.join(utils.get_swift_source_path(), "dist")
         for file in files:
             subprocess.check_call(["objcopy", "--only-keep-debug",
                                    path.join(dist_path, file),
@@ -420,7 +377,7 @@ class MacOSBuilder(Builder):
             "bin/plugins/weatherdata/libweatherdatagfs.dylib",
             "xswiftbus/64/mac.xpl",
         ]
-        dist_path = path.join(self._get_swift_source_path(), "dist")
+        dist_path = path.join(utils.get_swift_source_path(), "dist")
 
         # Put output of bundle files directly in bin folder
         for file in bundle_files:
@@ -433,51 +390,8 @@ class MacOSBuilder(Builder):
         Builder.__init__(self, word_size)
 
 
-def print_help():
-    supported_compilers = {'Linux': ['gcc'],
-                           'Darwin': ['clang'],
-                           'Windows': ['msvc']
-                           }
-    compiler_help = '|'.join(supported_compilers[platform.system()])
-    print('build.py -w <32|64> -t <' + compiler_help + '> [-v] [-c <extra CMake argument>]')
-
-
 # Entry point if called as a standalone program
-def main(argv):
-    word_size = ''
-    tool_chain = ''
-    upload_symbols = False
-    cmake_args = []
-
-    try:
-        opts, args = getopt.getopt(argv, 'hw:t:uc:v', ['wordsize=', 'toolchain=', 'upload', 'cmake-arg=', 'version'])
-    except getopt.GetoptError:
-        print_help()
-        sys.exit(2)
-
-    if len(opts) == 0:
-        print_help()
-        sys.exit(2)
-
-    for opt, arg in opts:
-        if opt == '-h':
-            print_help()
-            sys.exit()
-        elif opt in ('-v', '--version'):
-            print(Builder(None).version)
-            sys.exit()
-        elif opt in ('-w', '--wordsize'):
-            word_size = arg
-        elif opt in ('-t', '--toolchain'):
-            tool_chain = arg
-        elif opt in ('-u', '--upload'):
-            upload_symbols = True
-        elif opt in ('-c', '--cmake-arg'):
-            cmake_args += [arg]
-
-    if word_size not in ['32', '64']:
-        print('Unsupported word size. Choose 32 or 64')
-        sys.exit(2)
+def main():
 
     builders = {'Linux': {
                     'gcc': LinuxBuilder},
@@ -488,23 +402,33 @@ def main(argv):
                 }
     }
 
-    if tool_chain not in builders[platform.system()]:
-        print('Unknown or unsupported tool chain!')
-        sys.exit(2)
+    supported_wordsizes = ['32', '64'] if platform.system() == 'Windows' else ['64']
 
-    builder = builders[platform.system()][tool_chain](word_size)
+    supported_toolchains = list(builders[platform.system()].keys())
+
+    parser = argparse.ArgumentParser(prog="swift build helper")
+    parser.add_argument("-w", "--wordsize", choices=supported_wordsizes, required=True, help='Wordsize for the build')
+    parser.add_argument("-t", "--toolchain", choices=supported_toolchains, required=True, help='Toolchain for the build')
+    parser.add_argument("-u", "--upload-symbols", action='store_true', help='Upload the symbols')
+    parser.add_argument("-c", "--cmake-args", action='extend', nargs="+", type=str, help='Arguments to pass to CMake')
+
+    args = parser.parse_args()
+
+    word_size = int(args.wordsize)
+
+    builder = builders[platform.system()][args.toolchain](word_size)
 
     builder.prepare()
-    builder.build(cmake_args)
+    builder.build(args.cmake_args)
     builder.bundle_csl2xsb()
     builder.checks()
     builder.install()
     builder.publish()
-    if word_size == '64':
+    if word_size == 64:
         builder.package_xswiftbus()
-    builder.symbols(upload_symbols)
+    builder.symbols(args.upload_symbols)
 
 
 # run main if run directly
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    main()

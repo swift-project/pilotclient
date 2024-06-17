@@ -298,8 +298,8 @@ namespace BlackCore
         // -> in the core or an all local implementation
         if (m_contextNetwork && m_contextOwnAircraft && m_contextNetwork->isUsingImplementingObject() && m_contextOwnAircraft->isUsingImplementingObject())
         {
-            c = connect(m_contextNetwork, &IContextNetwork::changedAtcStationOnlineConnectionStatus,
-                        this->getCContextOwnAircraft(), &CContextOwnAircraft::xCtxChangedAtcStationOnlineConnectionStatus);
+            c = connect(m_contextNetwork, &IContextNetwork::atcStationDisconnected,
+                        this->getCContextOwnAircraft(), &CContextOwnAircraft::xCtxAtcStationDisconnected);
             Q_ASSERT(c);
             times.insert("Post setup, connects network", time.restart());
         }

@@ -31,12 +31,6 @@ redundantInitialization
 redundantAssignment:samples/blackmisc/samplesperformance.*
 unreadVariable:samples/blackmisc/samplesperformance.*
 
-// Benign
-duplicateCondition:src/xswiftbus/libxplanemp/src/XPMPPlaneRenderer.cpp
-
-// Unused file
-unknownMacro:src/xswiftbus/libxplanemp/src/BitmapUtils.cpp
-
 // False positives
 returnDanglingLifetime:src/blackmisc/iterator.h
 unreadVariable:tests/blackcore/testreaders/testreaders.cpp
@@ -45,7 +39,6 @@ unknownMacro:src/blackmisc/geo/coordinategeodetic.cpp
 unknownMacro:src/blackmisc/geo/elevationplane.h
 unknownMacro:src/blackmisc/identifier.cpp
 unknownMacro:tests/blackmisc/testsharedstate/testsharedstate.h
-ctuArrayIndex:src/xswiftbus/libxplanemp/src/XPMPPlaneRenderer.cpp
 
 // False positive memory leaks due to Qt parent/child relationship
 unsafeClassCanLeak

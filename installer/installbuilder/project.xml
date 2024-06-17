@@ -9,7 +9,7 @@
 
     <!-- <version>0.7.0</version> -->
     <licenseFile>../../dist/bin/LicenseRef-swift-pilot-client-1.txt</licenseFile>
-    <htmlLicenseFile>../../dist/bin/LicenseRef-swift-pilot-client-1.html</htmlLicenseFile>
+    <htmlLicenseFile>../../dist/share/legal/LicenseRef-swift-pilot-client-1.html</htmlLicenseFile>
     <leftImage>../images/leftimage.png</leftImage>
     <logoImage>../images/logo.png</logoImage>
     <splashImage>../images/splashscreen.png</splashImage>
@@ -323,7 +323,7 @@ https://swift-project.org/</text>
             <code>en</code>
             <encoding>utf-8</encoding>
             <file>../../dist/bin/LicenseRef-swift-pilot-client-1.txt</file>
-            <htmlFile>../../dist/bin/LicenseRef-swift-pilot-client-1.html</htmlFile>
+            <htmlFile>../../dist/share/legal/LicenseRef-swift-pilot-client-1.html</htmlFile>
         </licenseFile>
     </licenseFileList>
     <parameterList>

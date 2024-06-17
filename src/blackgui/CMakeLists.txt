@@ -285,9 +285,6 @@ add_library(gui SHARED
         loadindicator.h
         pluginselector.h
         infoarea.cpp
-        graphs
-        graphs/barchart.h
-        graphs/barchart.cpp
         overlaymessagesframe.cpp
         managedstatusbar.h
         lineedithistory.cpp
@@ -412,7 +409,6 @@ add_library(gui SHARED
         components/commandinput.h
         components/configsimulatorcomponent.ui
         components/datamaininfoareacomponent.cpp
-        components/settingsatcstationsinlinecomponent.cpp
         components/applicationclosedialog.cpp
         components/settingshotkeycomponent.h
         components/datamaininfoareacomponent.h
@@ -553,7 +549,6 @@ add_library(gui SHARED
         components/dbcountryselectorcomponent.ui
         components/dbusserveraddressselector.h
         components/copysettingsandcachescomponent.cpp
-        components/settingstextmessageinlinecomponent.ui
         components/colorselector.ui
         components/dbusserveraddressselector.cpp
         components/audioadvanceddistributedcomponent.h
@@ -625,7 +620,6 @@ add_library(gui SHARED
         components/texteditdialog.cpp
         components/dbairlineicaoselectorbase.cpp
         components/aircraftmodelstringcompleter.h
-        components/settingsatcstationsinlinecomponent.ui
         components/modelbrowserdialog.cpp
         components/airportdialog.cpp
         components/rawfsdmessagescomponent.ui
@@ -660,7 +654,6 @@ add_library(gui SHARED
         components/dblogincomponent.cpp
         components/aircraftmodelsetvalidationdialog.h
         components/audiodevicevolumesetupcomponent.cpp
-        components/settingsatcstationsinlinecomponent.h
         components/aboutdialog.h
         components/textmessagecomponent.ui
         components/aircraftmodelsetvalidationdialog.cpp
@@ -907,10 +900,8 @@ add_library(gui SHARED
         settings/navigatorsettings.cpp
         settings/guisettings.cpp
         settings/textmessagesettings.h
-        settings/atcstationssettings.h
         settings/dockwidgetsettings.cpp
         settings/textmessagesettings.cpp
-        settings/atcstationssettings.cpp
         managedstatusbar.cpp
         sharedstringlistcompleter.cpp
         overlaymessages.ui
@@ -944,11 +935,9 @@ target_link_libraries(gui
         core
         Qt::Widgets
         Qt::Svg
-        externals_qwt_plot
         )
 
 target_compile_definitions(gui PRIVATE BUILD_BLACKGUI_LIB)
-target_compile_definitions(gui PRIVATE QWT_DLL)
 
 target_precompile_headers(gui
         PRIVATE

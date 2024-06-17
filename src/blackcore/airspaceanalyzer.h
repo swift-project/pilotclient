@@ -108,8 +108,8 @@ namespace BlackCore
         //! Network position update
         void onNetworkPositionUpdate(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
 
-        //! ATC stations online
-        void onChangedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool isConnected);
+        //! ATC station disconnected
+        void onAtcStationDisconnected(const BlackMisc::Aviation::CAtcStation &station);
 
         //! Run a check
         void onTimeout();

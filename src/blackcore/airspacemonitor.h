@@ -180,8 +180,8 @@ namespace BlackCore
         //! Online ATC stations were changed
         void changedAtcStationsOnline();
 
-        //! Connection status of an ATC station was changed
-        void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool isConnected);
+        //! ATC station disconnected
+        void atcStationDisconnected(const BlackMisc::Aviation::CAtcStation &station);
 
         //! Raw data as received from network
         //! \remark used for statistics

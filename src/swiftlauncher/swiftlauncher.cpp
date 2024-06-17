@@ -298,6 +298,7 @@ bool CSwiftLauncher::setSwiftDataExecutable()
     m_executable = CSwiftDirectories::executableFilePath(CBuildConfig::swiftDataExecutableName());
 
     QStringList fsdArgs;
+#ifdef SWIFT_VATSIM_SUPPORT
     int id = 0;
     QString key;
     if (IContextNetwork::getCmdLineClientIdAndKey(id, key))
@@ -306,6 +307,7 @@ bool CSwiftLauncher::setSwiftDataExecutable()
         fsdArgs << "--idAndKey";
         fsdArgs << sApp->getParserValue("clientIdAndKey"); // as typed in
     }
+#endif
 
     m_executableArgs = sGui->argumentsJoined({}, fsdArgs);
     return true;

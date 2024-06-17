@@ -1382,7 +1382,7 @@ namespace BlackCore::Afv::Clients
                     else
                     {
                         // Ups!
-                        CLogMessage(this).debug(u"Station '%1' NOT found! Using original frequency %2Hz") << it->name << roundedFrequencyHz;
+                        CLogMessage(this).debug(u"Station '%1' NOT found! Candidate was '%2'. Using original frequency %3 Hz") << it->name << closest.getCallsign().asString() << roundedFrequencyHz;
                     }
                 }
                 else
