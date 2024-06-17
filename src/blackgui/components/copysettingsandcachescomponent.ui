@@ -223,13 +223,6 @@
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="cb_SettingsAtcStations">
-              <property name="text">
-               <string>ATC stations</string>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QCheckBox" name="cb_SettingsTextMessages">
               <property name="text">
                <string>Text Messages</string>
@@ -351,7 +344,6 @@
   <tabstop>cb_SettingsConsolidation</tabstop>
   <tabstop>cb_SettingsActionHotkeys</tabstop>
   <tabstop>cb_SettingsDirectories</tabstop>
-  <tabstop>cb_SettingsAtcStations</tabstop>
   <tabstop>cb_SettingsTextMessages</tabstop>
   <tabstop>le_Status</tabstop>
   <tabstop>pb_DeselectAll</tabstop>

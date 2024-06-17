@@ -70,7 +70,6 @@ namespace BlackGui::Components
 
         readOnlyCheckbox(ui->cb_SettingsActionHotkeys, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsActionHotkeys.getFilename()));
         readOnlyCheckbox(ui->cb_SettingsTextMessages, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsTextMessage.getFilename()));
-        readOnlyCheckbox(ui->cb_SettingsAtcStations, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsAtcStations.getFilename()));
         readOnlyCheckbox(ui->cb_SettingsDirectories, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsDirectories.getFilename()));
 
         readOnlyCheckbox(ui->cb_SettingsConsolidation, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsConsolidation.getFilename()));
@@ -119,7 +118,6 @@ namespace BlackGui::Components
     void CCopySettingsAndCachesComponent::initMisc()
     {
         ui->cb_SettingsActionHotkeys->setText(checkBoxText(TActionHotkeys::humanReadable(), true));
-        ui->cb_SettingsAtcStations->setText(checkBoxText(TAtcStationsSettings::humanReadable(), true));
         ui->cb_SettingsTextMessages->setText(checkBoxText(TextMessageSettings::humanReadable(), true));
         ui->cb_SettingsDirectories->setText(checkBoxText(TDirectorySettings::humanReadable(), true));
     }
@@ -357,20 +355,6 @@ namespace BlackGui::Components
                 if (this->parsingMessage(success, errMsg, m_settingsActionHotkeys.getKey()))
                 {
                     this->displayStatusMessage(m_settingsActionHotkeys.setAndSave(hotkeys), hotkeys.toQString(true));
-                    copied++;
-                }
-            }
-        }
-
-        if (ui->cb_SettingsAtcStations->isChecked())
-        {
-            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsAtcStations.getFilename());
-            if (!joStr.isEmpty())
-            {
-                const CAtcStationsSettings settings = CAtcStationsSettings::fromJsonNoThrow(joStr, true, success, errMsg);
-                if (this->parsingMessage(success, errMsg, m_settingsAtcStations.getKey()))
-                {
-                    this->displayStatusMessage(m_settingsAtcStations.setAndSave(settings), settings.toQString(true));
                     copied++;
                 }
             }

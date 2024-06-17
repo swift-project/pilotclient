@@ -101,8 +101,6 @@ namespace BlackGui::Components
         connect(ui->tvp_AtcStationsOnlineTree, &CAtcStationTreeView::objectSelected, this, &CAtcStationComponent::onOnlineAtcStationSelected, Qt::QueuedConnection);
         connect(ui->tvp_AtcStationsOnlineTree, &CAtcStationTreeView::requestTextMessageWidget, this, &CAtcStationComponent::requestTextMessageWidget);
 
-        connect(ui->comp_AtcStationsSettings, &CSettingsAtcStationsInlineComponent::changed, this, &CAtcStationComponent::forceUpdate, Qt::QueuedConnection);
-
         connect(ui->tb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::requestAtisUpdates);
         connect(&m_updateTimer, &QTimer::timeout, this, &CAtcStationComponent::update);
 
@@ -164,12 +162,6 @@ namespace BlackGui::Components
         return c && parentDockableWidget;
     }
 
-    void CAtcStationComponent::forceUpdate()
-    {
-        m_timestampOnlineStationsChanged = QDateTime::currentDateTimeUtc();
-        this->update();
-    }
-
     void CAtcStationComponent::update()
     {
         if (!this->canAccessContext()) { return; }
@@ -190,25 +182,14 @@ namespace BlackGui::Components
             // update
             if (m_timestampOnlineStationsChanged > m_timestampLastReadOnlineStations)
             {
-                const CAtcStationsSettings settings = ui->comp_AtcStationsSettings->getSettings();
                 CAtcStationList onlineStations = sGui->getIContextNetwork()->getAtcStationsOnline(true);
                 const int allStationsCount = onlineStations.sizeInt();
-                int inRangeCount = -1;
-
-                if (settings.showOnlyWithValidFrequency()) { onlineStations = onlineStations.stationsWithValidFrequency(); }
-                if (settings.showOnlyInRange())
-                {
-                    onlineStations.removeIfOutsideRange();
-                    inRangeCount = onlineStations.sizeInt();
-                }
-
                 const int stationsCount = onlineStations.sizeInt();
                 ui->tvp_AtcStationsOnline->updateContainerMaybeAsync(onlineStations);
                 m_timestampLastReadOnlineStations = QDateTime::currentDateTimeUtc();
                 m_timestampOnlineStationsChanged = m_timestampLastReadOnlineStations;
                 this->updateTreeView();
                 this->setOnlineTabs(allStationsCount, stationsCount);
-                ui->comp_AtcStationsSettings->setCounts(allStationsCount, inRangeCount);
 
                 if (stationsCount < 1 && allStationsCount > 0)
                 {
@@ -480,7 +461,6 @@ namespace BlackGui::Components
         }
 
         ui->te_AtcStationsOnlineInfo->setVisible(checked);
-        ui->comp_AtcStationsSettings->setVisible(checked);
         ui->le_AtcStationsOnlineMetar->setVisible(checked);
         ui->tb_AtcStationsAtisReload->setVisible(checked);
         ui->tb_AtcStationsLoadMetar->setVisible(checked);
