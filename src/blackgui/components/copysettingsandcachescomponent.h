@@ -10,7 +10,6 @@
 #include "blackgui/settings/dockwidgetsettings.h"
 #include "blackgui/settings/viewupdatesettings.h"
 #include "blackgui/settings/textmessagesettings.h"
-#include "blackgui/settings/atcstationssettings.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
 #include "blackcore/data/launchersetup.h"
@@ -116,7 +115,6 @@ namespace BlackGui::Components
         BlackMisc::CSetting<Settings::TDockWidget> m_settingsDockWidget { this };
         BlackMisc::CSetting<Settings::TViewUpdateSettings> m_settingsViewUpdate { this };
         BlackMisc::CSetting<Settings::TBackgroundConsolidation> m_settingsConsolidation { this }; //!< consolidation time
-        BlackMisc::CSetting<Settings::TAtcStationsSettings> m_settingsAtcStations { this };
         BlackMisc::CSetting<Settings::TextMessageSettings> m_settingsTextMessage { this };
         BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_settingsEnabledSimulators { this };
         BlackMisc::CSetting<BlackCore::Application::TActionHotkeys> m_settingsActionHotkeys { this };

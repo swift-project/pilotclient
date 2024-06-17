@@ -7,7 +7,6 @@
 #define BLACKGUI_COMPONENTS_ATCSTATIONCOMPONENT_H
 
 #include "blackgui/settings/viewupdatesettings.h"
-#include "blackgui/settings/atcstationssettings.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/atcstation.h"
@@ -84,9 +83,6 @@ namespace BlackGui
             void requestAudioWidget();
 
         private:
-            //! Set timestampd and call update
-            void forceUpdate();
-
             //! ATC station disconnected
             void atcStationDisconnected(const BlackMisc::Aviation::CAtcStation &station);
 
