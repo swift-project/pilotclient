@@ -97,7 +97,7 @@ namespace BlackCore::Context
             this->getRuntime()->getCContextSimulator(),
             m_fsdClient, this);
         m_fsdClient->setClientProvider(m_airspace);
-        connect(m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus, Qt::QueuedConnection);
+        connect(m_airspace, &CAirspaceMonitor::atcStationDisconnected, this, &CContextNetwork::atcStationDisconnected, Qt::QueuedConnection);
         connect(m_airspace, &CAirspaceMonitor::changedAtcStationsOnline, this, &CContextNetwork::changedAtcStationsOnline, Qt::QueuedConnection);
         connect(m_airspace, &CAirspaceMonitor::changedAircraftInRange, this, &CContextNetwork::changedAircraftInRange, Qt::QueuedConnection);
         connect(m_airspace, &CAirspaceMonitor::removedAircraft, this, &IContextNetwork::removedAircraft, Qt::QueuedConnection); // DBus

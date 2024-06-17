@@ -218,9 +218,9 @@ namespace BlackCore
 
             BlackMisc::CSetting<BlackMisc::Network::Settings::TCurrentTrafficServer> m_currentNetworkServer { this };
 
-            //! Station has been changed, needed to tune in/out voice room
+            //! Station has disconnected
             //! \ingroup crosscontextfunction
-            void xCtxChangedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &atcStation, bool connected);
+            void xCtxAtcStationDisconnected(const BlackMisc::Aviation::CAtcStation &atcStation);
 
             //! Simulator model has been changed
             //! \ingroup crosscontextfunction

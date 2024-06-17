@@ -63,7 +63,7 @@ namespace BlackCore
         Q_ASSERT(c);
         c = connect(airspaceMonitorParent, &CAirspaceMonitor::removedAircraft, this, &CAirspaceAnalyzer::watchdogRemoveAircraftCallsign);
         Q_ASSERT(c);
-        c = connect(airspaceMonitorParent, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CAirspaceAnalyzer::onChangedAtcStationOnlineConnectionStatus);
+        c = connect(airspaceMonitorParent, &CAirspaceMonitor::atcStationDisconnected, this, &CAirspaceAnalyzer::onAtcStationDisconnected);
         Q_ASSERT(c);
 
         // --------------------
@@ -97,17 +97,10 @@ namespace BlackCore
         this->watchdogTouchAircraftCallsign(situation);
     }
 
-    void CAirspaceAnalyzer::onChangedAtcStationOnlineConnectionStatus(const CAtcStation &station, bool isConnected)
+    void CAirspaceAnalyzer::onAtcStationDisconnected(const CAtcStation &station)
     {
         const CCallsign cs = station.getCallsign();
-        if (isConnected)
-        {
-            m_atcCallsignTimestamps[cs] = QDateTime::currentMSecsSinceEpoch();
-        }
-        else
-        {
-            this->watchdogRemoveAtcCallsign(cs);
-        }
+        this->watchdogRemoveAtcCallsign(cs);
     }
 
     void CAirspaceAnalyzer::watchdogTouchAircraftCallsign(const CAircraftSituation &situation)

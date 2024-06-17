@@ -113,7 +113,7 @@ namespace BlackGui::Components
         if (sGui)
         {
             connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this, &CAtcStationComponent::changedAtcStationsOnline, Qt::QueuedConnection);
-            connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationOnlineConnectionStatus, this, &CAtcStationComponent::changedAtcStationOnlineConnectionStatus, Qt::QueuedConnection);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::atcStationDisconnected, this, &CAtcStationComponent::atcStationDisconnected, Qt::QueuedConnection);
             connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAtcStationComponent::connectionStatusChanged, Qt::QueuedConnection);
         }
 
@@ -245,10 +245,10 @@ namespace BlackGui::Components
         }
     }
 
-    void CAtcStationComponent::changedAtcStationOnlineConnectionStatus(const CAtcStation &station, bool added)
+    void CAtcStationComponent::atcStationDisconnected(const CAtcStation &station)
     {
         // trick here is, we want to display a station ASAP
-        ui->tvp_AtcStationsOnline->changedAtcStationConnectionStatus(station, added);
+        ui->tvp_AtcStationsOnline->changedAtcStationConnectionStatus(station, false);
     }
 
     void CAtcStationComponent::getMetarAsEntered()
