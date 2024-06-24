@@ -62,14 +62,6 @@
                 <distributionFile>
                     <origin>../../dist/bin/dbus-daemon.exe</origin>
                 </distributionFile>
-                <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/libcrypto-1_1*.dll</origin>
-                </distributionFile>
-                <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/libssl-1_1*.dll</origin>
-                </distributionFile>
             </distributionFileList>
         </folder>
         <folder>
