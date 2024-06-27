@@ -354,7 +354,7 @@ namespace BlackGui
 
     int CGuiApplication::hashForStateSettingsSchema(const QMainWindow *window)
     {
-        unsigned int hash = 0;
+        size_t hash = 0;
         for (auto obj : window->findChildren<QToolBar *>(QString(), Qt::FindDirectChildrenOnly))
         {
             hash ^= qHash(obj->objectName());

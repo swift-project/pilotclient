@@ -86,12 +86,12 @@ namespace BlackCore
 
     bool CThreadedReader::didContentChange(const QString &content, int startPosition)
     {
-        uint oldHash = 0;
+        size_t oldHash = 0;
         {
             QReadLocker rl(&m_lock);
             oldHash = m_contentHash;
         }
-        uint newHash = qHash(startPosition < 0 ? content : content.mid(startPosition));
+        size_t newHash = qHash(startPosition < 0 ? content : content.mid(startPosition));
         if (oldHash == newHash) { return false; }
         {
             QWriteLocker wl(&m_lock);

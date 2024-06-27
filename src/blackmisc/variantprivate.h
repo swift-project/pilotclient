@@ -124,7 +124,7 @@ namespace BlackMisc
             }
 
             template <typename T>
-            static uint getValueHash(const T &object, decltype(static_cast<void>(qHash(object)), 0))
+            static size_t getValueHash(const T &object, decltype(static_cast<void>(qHash(object)), 0))
             {
                 return qHash(object);
             }

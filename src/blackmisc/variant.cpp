@@ -376,7 +376,7 @@ namespace BlackMisc
         return {};
     }
 
-    uint CVariant::getValueHash() const
+    size_t CVariant::getValueHash() const
     {
         switch (m_v.type())
         {

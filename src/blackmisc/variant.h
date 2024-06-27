@@ -98,7 +98,7 @@ namespace BlackMisc
         CVariant(int typeId, const void *copy) : m_v(QMetaType(typeId), copy) {}
 
         //! \copydoc CValueObject::qHash
-        friend uint qHash(const CVariant &var) { return var.getValueHash(); }
+        friend size_t qHash(const CVariant &var) { return var.getValueHash(); }
 
         //! Change the internal QVariant.
         void reset(const QVariant &var) { m_v = var; }
@@ -335,7 +335,7 @@ namespace BlackMisc
         const void *data() const { return m_v.data(); }
 
         static int compareImpl(const CVariant &, const CVariant &);
-        uint getValueHash() const;
+        size_t getValueHash() const;
 
         template <typename T>
         T to(tag<T>) const
