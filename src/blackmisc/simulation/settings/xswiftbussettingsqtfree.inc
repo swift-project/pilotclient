@@ -88,7 +88,7 @@ namespace BlackMisc
                 }
                 if (parsed.contains(CXSwiftBusSettingsQtFree::JsonMaxDrawDistance) && parsed[CXSwiftBusSettingsQtFree::JsonMaxDrawDistance].is_number_float())
                 {
-                    m_maxDrawDistanceNM = parsed[CXSwiftBusSettingsQtFree::JsonMaxDrawDistance].get<int>();  c++;
+                    m_maxDrawDistanceNM = parsed[CXSwiftBusSettingsQtFree::JsonMaxDrawDistance].get<double>();  c++;
                 }
                 if (parsed.contains(CXSwiftBusSettingsQtFree::JsonFollowAircraftDistanceM) && parsed[CXSwiftBusSettingsQtFree::JsonFollowAircraftDistanceM].is_number_integer())
                 {
