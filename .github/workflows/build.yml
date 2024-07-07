@@ -144,7 +144,6 @@ jobs:
           cat >vatsim.json <<EOF
           { "vatsim": { "id": "$VATSIM_ID", "key": "$VATSIM_KEY" } }
           EOF
-          echo "vatsim_key_file=vatsim.json" >>$GITHUB_ENV
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
@@ -152,11 +151,11 @@ jobs:
       - name: Build swift (without symbols)
         if: ${{ env.do_symbols != 'true' }}
         run: |
-          python3 -u scripts/build.py -w 64 -t gcc -c "-DVATSIM_KEY_JSON=$vatsim_key_file"
+          python3 -u scripts/build.py -w 64 -t gcc
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' }}
         run: |
-          python3 -u scripts/build.py -w 64 -t gcc -c "-DVATSIM_KEY_JSON=$vatsim_key_file" --upload-symbols
+          python3 -u scripts/build.py -w 64 -t gcc --upload-symbols
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
@@ -242,7 +241,6 @@ jobs:
           echo >vatsim.json @"
           { "vatsim": { "id": "$env:VATSIM_ID", "key": "$env:VATSIM_KEY" } }
           "@
-          echo "vatsim_key_file=vatsim.json" >>$env:GITHUB_ENV
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
@@ -250,11 +248,11 @@ jobs:
       - name: Build swift (without symbols)
         if: ${{ env.do_symbols != 'true' }}
         run: |
-          python -u scripts/build.py -w 64 -t msvc -c "-DVATSIM_KEY_JSON=$env:vatsim_key_file"
+          python -u scripts/build.py -w 64 -t msvc
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' }}
         run: |
-          python -u scripts/build.py -w 64 -t msvc -c "-DVATSIM_KEY_JSON=$env:vatsim_key_file" --upload-symbols
+          python -u scripts/build.py -w 64 -t msvc --upload-symbols
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
@@ -340,7 +338,6 @@ jobs:
           echo >vatsim.json @"
           { "vatsim": { "id": "$env:VATSIM_ID", "key": "$env:VATSIM_KEY" } }
           "@
-          echo "vatsim_key_file=vatsim.json" >>$env:GITHUB_ENV
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
@@ -348,11 +345,11 @@ jobs:
       - name: Build swift (without symbols)
         if: ${{ env.do_symbols != 'true' }}
         run: |
-          python -u scripts/build.py -w 32 -t msvc -c "-DVATSIM_KEY_JSON=$env:vatsim_key_file"
+          python -u scripts/build.py -w 32 -t msvc
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' }}
         run: |
-          python -u scripts/build.py -w 32 -t msvc -c "-DVATSIM_KEY_JSON=$env:vatsim_key_file" --upload-symbols
+          python -u scripts/build.py -w 32 -t msvc --upload-symbols
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
@@ -428,7 +425,6 @@ jobs:
           cat >vatsim.json <<EOF
           { "vatsim": { "id": "$VATSIM_ID", "key": "$VATSIM_KEY" } }
           EOF
-          echo "vatsim_key_file=vatsim.json" >>$GITHUB_ENV
         env:
           VATSIM_ID: ${{ secrets.VATSIM_ID }}
           VATSIM_KEY: ${{ secrets.VATSIM_KEY }}
@@ -436,11 +432,11 @@ jobs:
       - name: Build swift (without symbols)
         if: ${{ env.do_symbols != 'true' }}
         run: |
-          python3 -u scripts/build.py -w 64 -t clang -c "-DVATSIM_KEY_JSON=$vatsim_key_file"
+          python3 -u scripts/build.py -w 64 -t clang
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' }}
         run: |
-          python3 -u scripts/build.py -w 64 -t clang -c "-DVATSIM_KEY_JSON=$vatsim_key_file" --upload-symbols
+          python3 -u scripts/build.py -w 64 -t clang --upload-symbols
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:

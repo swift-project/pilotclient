@@ -1,0 +1,69 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "ci-base",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "SWIFT_MINIFY_DEBUG_SYMBOLS": "ON",
+        "SWIFT_USE_CRASHPAD": "ON",
+        "VATSIM_KEY_JSON": "vatsim.json",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/dist"
+        }
+    },
+    {
+      "name": "ci-build-windows",
+      "displayName": "CI Build Windows",
+      "inherits": "ci-base",
+      "generator": "Ninja",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "cacheVariables": {
+        "SWIFT_USE_CRASHPAD": "ON"
+      }
+    },
+    {
+      "name": "ci-build-macos",
+      "displayName": "CI Build macOS",
+      "inherits": "ci-base",
+      "generator": "Unix Makefiles",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "SWIFT_USE_CRASHPAD": "ON"
+      }
+    },
+    {
+      "name": "ci-build-linux",
+      "displayName": "CI Build Linux",
+      "inherits": "ci-base",
+      "generator": "Ninja",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "SWIFT_USE_CRASHPAD": "OFF"
+      }
+    },
+    {
+      "name": "dev-debug",
+      "displayName": "Development Debug",
+      "description": "Base preset that can either be used directly or can be customized through a CMakeUserPresets.json",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "SWIFT_USE_CRASHPAD": "OFF",
+        "SWIFT_VATSIM_SUPPORT": "OFF",
+        "SWIFT_MINIFY_DEBUG_SYMBOLS": "OFF"
+      }
+    }
+  ]
+}

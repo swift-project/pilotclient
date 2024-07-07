@@ -33,7 +33,7 @@ class Builder:
         shared_path = os.path.abspath(os.path.join(source_path, 'resources', 'share'))
         datastore.update_shared(host, datastore_version, shared_path)
 
-    def build(self, cmake_args):
+    def build(self):
         """
         Run the build itself
         """
@@ -43,15 +43,9 @@ class Builder:
             os.makedirs(build_path)
         os.chdir(build_path)
 
-        use_crashpad = "ON" if platform.system() == 'Darwin' or platform.system() == 'Windows' else "OFF"
-
         cmake_call = ['cmake',
                       '..',
-                      '-G {}'.format(self._get_generator()),
-                      '-DCMAKE_BUILD_TYPE=RelWithDebInfo',
-                      '-DSWIFT_MINIFY_DEBUG_SYMBOLS=ON',
-                      '-DCMAKE_INSTALL_PREFIX=../dist',
-                      '-DSWIFT_USE_CRASHPAD={}'.format(use_crashpad)] + cmake_args
+                      f'--preset=ci-build-{self.os_map[platform.system()]}']
         subprocess.check_call(cmake_call, env=dict(os.environ))
 
         # Workaround while using Make for macOS to pass number of jobs
@@ -77,11 +71,10 @@ class Builder:
     def create_installer(self):
         bitrock_builder_bin = os.environ["BITROCK_BUILDER"]
         os.chdir(utils.get_swift_source_path())
-        os_map = {'Linux': 'linux', 'Darwin': 'macos', 'Windows': 'windows'}
         installer_platform_map = {'Linux': 'linux-x{}'.format(self.word_size), 'Darwin': 'osx', 'Windows': 'windows'}
         extension_map = {'Linux': 'run', 'Darwin': 'app', 'Windows': 'exe'}
         extension = extension_map[platform.system()]
-        os_name = os_map[platform.system()]
+        os_name = self.os_map[platform.system()]
         version_full = utils.get_swift_version_base()
         version_rev = utils.get_rev_count()
         windows64 = 1 if os_name == 'windows' and int(self.word_size) == 64 else 0
@@ -119,12 +112,11 @@ class Builder:
 
     def publish(self):
         if self._should_publish():
-            os_map = {'Linux': 'linux', 'Darwin': 'macos', 'Windows': 'windows'}
             extension_map = {'Linux': 'run', 'Darwin': 'dmg', 'Windows': 'exe'}
             version_segments = self.version.split('.')
             last_segment = version_segments.pop()
             version_without_timestamp = '.'.join(version_segments)
-            installer_name_old = '-'.join(['swiftinstaller', os_map[platform.system()], self.word_size, version_without_timestamp])
+            installer_name_old = '-'.join(['swiftinstaller', self.os_map[platform.system()], self.word_size, version_without_timestamp])
             installer_name_new = '.'.join([installer_name_old, last_segment])
             installer_name_old = installer_name_old + '.' + extension_map[platform.system()]
             installer_name_new = installer_name_new + '.' + extension_map[platform.system()]
@@ -216,9 +208,6 @@ class Builder:
     def _get_platform_name(self) -> str:
         raise NotImplementedError()
 
-    def _get_generator(self) -> str:
-        raise NotImplementedError()
-
     def _should_run_checks(self) -> bool:
         return True
 
@@ -235,6 +224,7 @@ class Builder:
         raise NotImplementedError()
 
     def __init__(self, word_size):
+        self.os_map = {'Linux': 'linux', 'Darwin': 'macos', 'Windows': 'windows'}
         self.__build_path = path.abspath(path.join(utils.get_swift_source_path(), 'build'))
 
         files = os.listdir(utils.get_swift_source_path())
@@ -304,9 +294,6 @@ class LinuxBuilder(Builder):
     def _get_platform_name(self) -> str:
         return 'linux-g++'
 
-    def _get_generator(self) -> str:
-        return 'Ninja'
-
     def _strip_debug(self):
         files = [
             "bin/swiftcore",
@@ -346,9 +333,6 @@ class MacOSBuilder(Builder):
 
     def _get_platform_name(self) -> str:
         return 'macx-clang'
-
-    def _get_generator(self) -> str:
-        return 'Unix Makefiles'
 
     def _should_create_symbols(self) -> bool:
         return True
@@ -410,14 +394,13 @@ def main():
     parser.add_argument("-w", "--wordsize", choices=supported_wordsizes, required=True, help='Wordsize for the build')
     parser.add_argument("-t", "--toolchain", choices=supported_toolchains, required=True, help='Toolchain for the build')
     parser.add_argument("-u", "--upload-symbols", action='store_true', help='Upload the symbols')
-    parser.add_argument("-c", "--cmake-args", action='extend', nargs="+", type=str, help='Arguments to pass to CMake')
 
     args = parser.parse_args()
 
     builder = builders[platform.system()][args.toolchain](args.wordsize)
 
     builder.prepare()
-    builder.build(args.cmake_args)
+    builder.build()
     builder.bundle_csl2xsb()
     builder.checks()
     builder.install()
