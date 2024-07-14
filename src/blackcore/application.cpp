@@ -965,7 +965,7 @@ namespace BlackCore
     {
         if (!m_accessManager) { m_accessManager = new QNetworkAccessManager(this); }
 
-        m_cookieManager = new CCookieManager({}, this);
+        m_cookieManager = new CCookieManager(this);
         m_cookieManager->setParent(m_accessManager);
         m_accessManager->setCookieJar(m_cookieManager);
 
