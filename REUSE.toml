@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
+# SPDX-License-Identifier: CC0-1.0
+
+version = 1
+SPDX-PackageName = "swift pilotclient"
+SPDX-PackageDownloadLocation = "https://github.com/swift-project/pilotclient"
+
+[[annotations]]
+path = "scripts/csl2xsb/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Copyright (c) 2019 B.Hoppe"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "src/blackgui/**.ui"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Copyright (C) swift Project Community / Contributors"
+SPDX-License-Identifier = "GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1"
