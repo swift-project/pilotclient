@@ -36,7 +36,6 @@ namespace BlackGui::Components
         connect(ui->pb_SetRelativePosition, &QPushButton::released, this, &CModelBrowserComponent::onSetRelativePosition, Qt::QueuedConnection);
         connect(ui->pb_LoadModelSet, &QPushButton::released, this, &CModelBrowserComponent::loadModelSet, Qt::QueuedConnection);
         connect(ui->pb_Display, &QPushButton::released, this, &CModelBrowserComponent::display, Qt::QueuedConnection);
-        connect(ui->pb_Parts, &QPushButton::released, this, &CModelBrowserComponent::selectTabParts);
         connect(ui->pb_Remove, &QPushButton::released, this, &CModelBrowserComponent::remove, Qt::QueuedConnection);
         connect(ui->editor_Coordinate, &CCoordinateForm::changedCoordinate, this, &CModelBrowserComponent::onSetAbsolutePosition, Qt::QueuedConnection);
         connect(ui->editor_Pbh, &CPbhsForm::changeValues, this, &CModelBrowserComponent::onSetPBH, Qt::QueuedConnection);
@@ -192,11 +191,6 @@ namespace BlackGui::Components
         if (!sGui->getIContextOwnAircraft()) { return false; }
         if (!sGui->getIContextSimulator()) { return false; }
         return true;
-    }
-
-    void CModelBrowserComponent::selectTabParts()
-    {
-        ui->tw_Tab->setCurrentIndex(1);
     }
 
     void CModelBrowserComponent::onCGChecked(bool checked)

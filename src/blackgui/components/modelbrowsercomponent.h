@@ -47,7 +47,6 @@ namespace BlackGui::Components
         void remove();
         void loadModelSet();
         bool hasContexts() const;
-        void selectTabParts();
         void onCGChecked(bool checked);
         void updatePartsAndPBH(bool setPbh, bool setParts);
         void fetchSimulatorValues();
