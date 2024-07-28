@@ -42,10 +42,10 @@ namespace BlackCore::Vatsim
 
     signals:
         //! Data have been read
-        void dataFileRead(int lines);
+        void statusFileRead(int bytes);
 
         //! Data have been read
-        void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+        void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int bytes);
 
     private:
         //! Read / re-read data file

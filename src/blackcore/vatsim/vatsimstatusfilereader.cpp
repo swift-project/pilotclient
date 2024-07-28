@@ -86,56 +86,33 @@ namespace BlackCore::Vatsim
 
         if (nwReply->error() == QNetworkReply::NoError)
         {
-            const QString dataFileData = nwReply->readAll();
+            const QString statusFileData = nwReply->readAll();
             nwReply->close(); // close asap
 
-            if (dataFileData.isEmpty()) return;
-            const QList<QStringRef> lines = splitLinesRefs(dataFileData);
-            if (lines.isEmpty()) { return; }
+            if (statusFileData.isEmpty()) return;
+            auto jsonDoc = QJsonDocument::fromJson(statusFileData.toUtf8());
+            if (jsonDoc.isEmpty()) { return; }
 
             CUrl dataFileUrl;
             CUrl serverFileUrl;
             CUrl metarFileUrl;
 
-            QString currentLine; // declared outside of the for loop, to amortize the cost of allocation
-            for (const QStringRef &clRef : lines)
+            // Always taking the first URL from the file
+            // (at the time of writing, also only one URL per service is available anyway)
+            if (const QJsonArray dataUrls = jsonDoc["data"]["v3"].toArray(); !dataUrls.empty())
             {
-                if (!this->doWorkCheck())
-                {
-                    CLogMessage(this).debug() << Q_FUNC_INFO;
-                    CLogMessage(this).info(u"Terminated status parsing process"); // for users
-                    return; // stop, terminate straight away, ending thread
-                }
+                dataFileUrl = QUrl(dataUrls.at(0).toString());
+            }
 
-                // parse lines
-                currentLine = clRef.toString().trimmed();
-                if (currentLine.isEmpty()) { continue; }
-                if (currentLine.startsWith(";")) { continue; }
-                if (!currentLine.contains("=")) { continue; }
+            if (const QJsonArray serverFileUrls = jsonDoc["data"]["servers"].toArray(); !serverFileUrls.empty())
+            {
+                serverFileUrl = QUrl(serverFileUrls.at(0).toString());
+            }
 
-                const QStringList parts(currentLine.split('='));
-                if (parts.length() != 2) { continue; }
-                const QString key(parts[0].trimmed().toLower());
-                const QString value(parts[1].trimmed());
-                const CUrl url(value);
-                // Always taking last in the file (at the time of writing, the status file also only contains a single URL for each type either)
-                if (key.startsWith("json3"))
-                {
-                    dataFileUrl = url;
-                }
-                else if (key.startsWith("url1"))
-                {
-                    serverFileUrl = url;
-                }
-                else if (key.startsWith("metar"))
-                {
-                    metarFileUrl = url;
-                }
-                else if (key.startsWith("atis"))
-                {
-                    // not yet used
-                }
-            } // for each line
+            if (const QJsonArray metarUrls = jsonDoc["metar"].toArray(); !metarUrls.empty())
+            {
+                metarFileUrl = QUrl(metarUrls.at(0).toString());
+            }
 
             // cache itself is thread safe, avoid writing with unchanged data
             CVatsimSetup vs(m_lastGoodSetup.get());
@@ -151,8 +128,8 @@ namespace BlackCore::Vatsim
             Q_UNUSED(changed);
 
             // data read finished
-            emit this->dataFileRead(lines.count());
-            emit this->dataRead(CEntityFlags::VatsimStatusFile, CEntityFlags::ReadFinished, lines.count());
+            emit this->statusFileRead(statusFileData.count());
+            emit this->dataRead(CEntityFlags::VatsimStatusFile, CEntityFlags::ReadFinished, statusFileData.count());
         }
         else
         {

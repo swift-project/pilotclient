@@ -1026,7 +1026,7 @@ namespace BlackCore
         if (readersNeeded.testFlag(CWebReaderFlags::VatsimStatusReader) || readersNeeded.testFlag(CWebReaderFlags::VatsimDataReader) || readersNeeded.testFlag(CWebReaderFlags::VatsimMetarReader))
         {
             m_vatsimStatusReader = new CVatsimStatusFileReader(this);
-            c = connect(m_vatsimStatusReader, &CVatsimStatusFileReader::dataFileRead, this, &CWebDataServices::vatsimStatusFileRead, Qt::QueuedConnection);
+            c = connect(m_vatsimStatusReader, &CVatsimStatusFileReader::statusFileRead, this, &CWebDataServices::vatsimStatusFileRead, Qt::QueuedConnection);
             CLogMessage(this).info(u"Trigger read of VATSIM status file");
             m_vatsimStatusReader->start(QThread::LowPriority);
 
@@ -1293,9 +1293,9 @@ namespace BlackCore
         CLogMessage(this).info(u"Read VATSIM data file, %1 kB") << kB;
     }
 
-    void CWebDataServices::vatsimStatusFileRead(int lines)
+    void CWebDataServices::vatsimStatusFileRead(int bytes)
     {
-        CLogMessage(this).info(u"Read VATSIM status file, %1 lines") << lines;
+        CLogMessage(this).info(u"Read VATSIM status file, %1 bytes") << bytes;
     }
 
     void CWebDataServices::vatsimServerFileRead(int bytes)
