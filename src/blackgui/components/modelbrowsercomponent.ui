@@ -129,13 +129,6 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="3">
-           <widget class="QPushButton" name="pb_Parts">
-            <property name="text">
-             <string>parts</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </widget>
        </item>
