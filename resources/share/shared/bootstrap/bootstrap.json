@@ -28,7 +28,7 @@
         "url": "http://fsd.vatsim.net"
     },
     "vatsimMetarsUrl": {
-        "url": "http://metar.vatsim.net/metar.php"
+        "url": "https://metar.vatsim.net/metar.php"
     },
     "vatsimStatusFileUrl": {
         "url": "https://status.vatsim.net/status.json"
