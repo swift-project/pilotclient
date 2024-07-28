@@ -42,14 +42,11 @@ namespace BlackGui::Components
         //! Allow crash dumps
         void onAllowCrashDumps(bool checked);
 
-        //! Crashdum hint
-        void showCrashDumpHint();
-
         //! Set the checklist info
         void setChecklistInfo();
 
         QScopedPointer<Ui::CLegalInfoComponent> ui;
-        BlackMisc::CSetting<BlackCore::Application::TCrashDumpSettings> m_crashDumpSettings { this };
+        BlackMisc::CSetting<BlackCore::Application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this };
     };
 
     /*!
