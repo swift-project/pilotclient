@@ -1311,7 +1311,8 @@ namespace BlackCore
     {
         onAircraftUpdateReceived(situation, CTransponder(2000, CTransponder::ModeC));
 
-        const CAircraftModel &model = getAircraftInRangeForCallsign(situation.getCallsign()).getNetworkModel();
+        const CSimulatedAircraft aircraft = getAircraftInRangeForCallsign(situation.getCallsign());
+        const CAircraftModel &model = aircraft.getNetworkModel();
         if (model.getAircraftIcaoCodeDesignator() != aircraftIcao)
         {
             onIcaoCodesReceived(situation.getCallsign(), aircraftIcao, airlineIcao, airlineIcao);
