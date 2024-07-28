@@ -28,10 +28,10 @@
         "url": "http://fsd.vatsim.net"
     },
     "vatsimMetarsUrl": {
-        "url": "http://metar.vatsim.net/metar.php"
+        "url": "https://metar.vatsim.net/metar.php"
     },
     "vatsimStatusFileUrl": {
-        "url": "https://status.vatsim.net"
+        "url": "https://status.vatsim.net/status.json"
     },
     "comNavEquipmentHelpUrl": {
         "url": "https://en.wikipedia.org/wiki/Equipment_codes#Radio_communication,_navigation_and_approach_aid_equipment_and_capabilities"
