@@ -11,7 +11,6 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
-using namespace BlackMisc::Weather;
 using namespace BlackCore;
 using namespace BlackSimPlugin::FsxCommon;
 
@@ -20,9 +19,8 @@ namespace BlackSimPlugin::Msfs
     CSimulatorMsFs::CSimulatorMsFs(const CSimulatorPluginInfo &info,
                                    IOwnAircraftProvider *ownAircraftProvider,
                                    IRemoteAircraftProvider *remoteAircraftProvider,
-                                   IWeatherGridProvider *weatherGridProvider,
                                    IClientProvider *clientProvider,
-                                   QObject *parent) : CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
+                                   QObject *parent) : CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent)
     {
         this->setDefaultModel(
             { "Airbus A320 Neo Asobo",

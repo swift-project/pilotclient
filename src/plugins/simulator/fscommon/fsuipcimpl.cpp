@@ -42,20 +42,9 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Weather;
 
 namespace BlackSimPlugin::FsCommon
 {
-    //! Fsuipc weather message
-    struct CFsuipc::FsuipcWeatherMessage
-    {
-        FsuipcWeatherMessage() = default;
-        FsuipcWeatherMessage(unsigned int offset, const QByteArray &data, int leftTrials);
-        int m_offset = 0;
-        QByteArray m_messageData;
-        int m_leftTrials = 0;
-    };
-
     CFsuipc::CFsuipc(QObject *parent) : QObject(parent)
     {
         startTimer(100);
@@ -160,143 +149,6 @@ namespace BlackSimPlugin::FsCommon
             FSUIPC_Write(0x0354, 2, &transponderCodeRaw, &dwResult);
         if (ok) { FSUIPC_Process(&dwResult); }
         return ok && dwResult == 0;
-    }
-
-    bool CFsuipc::write(const CWeatherGrid &weatherGrid)
-    {
-        Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Open not threadsafe");
-        if (!this->isOpened()) { return false; }
-
-        if (weatherGrid.isEmpty()) { return false; }
-        this->clearAllWeather();
-        CLogMessage(this).debug(u"FSUIPC cleared weather");
-
-        const CGridPoint gridPoint = weatherGrid.front();
-        NewWeather nw;
-
-        // Clear new weather
-        nw.uCommand = NW_SET;
-        nw.uFlags = 0;
-        nw.ulSignature = 0;
-        nw.uDynamics = 0;
-        for (std::size_t i = 0; i < sizeof(nw.uSpare) / sizeof(nw.uSpare[0]); i++) { nw.uSpare[i] = 0; }
-
-        nw.dLatitude = 0.0;
-        nw.dLongitude = 0.0;
-        nw.nElevation = 0;
-        nw.ulTimeStamp = 0;
-        nw.nTempCtr = 0;
-        nw.nWindsCtr = 0;
-        nw.nCloudsCtr = 0;
-        nw.nElevation = 0; // meters * 65536;
-        nw.nUpperVisCtr = 0;
-
-        // todo: Take station from weather grid
-        memcpy(nw.chICAO, "GLOB", 4);
-
-        const CVisibilityLayerList visibilityLayers = gridPoint.getVisibilityLayers().sortedBy(&CVisibilityLayer::getBase);
-        const auto surfaceVisibility = visibilityLayers.frontOrDefault();
-        NewVis vis;
-        vis.LowerAlt = static_cast<short>(surfaceVisibility.getBase().valueInteger(CLengthUnit::m()));
-        vis.UpperAlt = static_cast<ushort>(surfaceVisibility.getTop().valueInteger(CLengthUnit::m()));
-        // Range is measured in: 1/100ths sm
-        vis.Range = static_cast<ushort>(surfaceVisibility.getVisibility().value(CLengthUnit::SM()) * 100);
-        vis.Spare = 0;
-        nw.Vis = vis;
-
-        for (const auto &visibilityLayer : visibilityLayers)
-        {
-            vis.LowerAlt = static_cast<short>(visibilityLayer.getBase().valueInteger(CLengthUnit::m()));
-            vis.UpperAlt = static_cast<ushort>(visibilityLayer.getTop().valueInteger(CLengthUnit::m()));
-            vis.Range = static_cast<ushort>(visibilityLayer.getVisibility().value(CLengthUnit::SM()) * 100);
-            vis.Spare = 0;
-            nw.UpperVis[nw.nUpperVisCtr++] = vis;
-        }
-        CLogMessage(this).debug(u"FSUIPC updated %1 visibility layers") << visibilityLayers.size();
-
-        const CTemperatureLayerList temperatureLayers = gridPoint.getTemperatureLayers().sortedBy(&CTemperatureLayer::getLevel);
-        for (const auto &temperatureLayer : temperatureLayers)
-        {
-            NewTemp temp;
-            temp.Alt = static_cast<ushort>(temperatureLayer.getLevel().valueInteger(CLengthUnit::m()));
-            temp.Day = static_cast<short>(temperatureLayer.getTemperature().valueInteger(CTemperatureUnit::C()));
-            temp.DayNightVar = 3;
-            temp.DewPoint = static_cast<short>(temperatureLayer.getDewPoint().value(CTemperatureUnit::C()));
-            nw.Temp[nw.nTempCtr++] = temp;
-        }
-        CLogMessage(this).debug(u"FSUIPC updated %1 temperature layers") << temperatureLayers.size();
-
-        const CCloudLayerList cloudLayers = gridPoint.getCloudLayers().sortedBy(&CCloudLayer::getBase);
-        for (const auto &cloudLayer : cloudLayers)
-        {
-            NewCloud cloud;
-            switch (cloudLayer.getCoverage())
-            {
-            case CCloudLayer::None: cloud.Coverage = 0; break;
-            case CCloudLayer::Few: cloud.Coverage = 2; break;
-            case CCloudLayer::Scattered: cloud.Coverage = 4; break;
-            case CCloudLayer::Broken: cloud.Coverage = 6; break;
-            case CCloudLayer::Overcast: cloud.Coverage = 8; break;
-            default: cloud.Coverage = 0; break;
-            }
-
-            cloud.Deviation = 0;
-            cloud.Icing = 0;
-            cloud.LowerAlt = static_cast<ushort>(cloudLayer.getBase().valueInteger(CLengthUnit::m()));
-            cloud.PrecipBase = 0;
-
-            // Light rain - when the precipitation rate is < 2.5 mm (0.098 in) per hour
-            // Moderate rain - when the precipitation rate is between 2.5 mm (0.098 in) - 7.6 mm (0.30 in) or 10 mm (0.39 in) per hour
-            // Heavy rain - when the precipitation rate is > 7.6 mm (0.30 in) per hour, or between 10 mm (0.39 in) and 50 mm (2.0 in) per hour
-            // Violent rain - when the precipitation rate is > 50 mm (2.0 in) per hour
-
-            cloud.PrecipRate = 2 * static_cast<unsigned char>(cloudLayer.getPrecipitationRate());
-            cloud.PrecipType = static_cast<unsigned char>(cloudLayer.getPrecipitation());
-            cloud.TopShape = 0;
-            cloud.Turbulence = 0;
-
-            switch (cloudLayer.getClouds())
-            {
-            case CCloudLayer::NoClouds: cloud.Type = 0; break;
-            case CCloudLayer::Cirrus: cloud.Type = 1; break;
-            case CCloudLayer::Stratus: cloud.Type = 8; break;
-            case CCloudLayer::Cumulus: cloud.Type = 9; break;
-            case CCloudLayer::Thunderstorm: cloud.Type = 10; break;
-            default: cloud.Type = 0;
-            }
-
-            cloud.UpperAlt = static_cast<ushort>(cloudLayer.getTop().valueInteger(CLengthUnit::m()));
-            nw.Cloud[nw.nCloudsCtr++] = cloud;
-        }
-        CLogMessage(this).debug(u"FSUIPC updated %1 cloud layers") << cloudLayers.size();
-
-        const CWindLayerList windLayers = gridPoint.getWindLayers().sortedBy(&CWindLayer::getLevel);
-        for (const auto &windLayer : windLayers)
-        {
-            NewWind wind;
-            wind.Direction = static_cast<ushort>(windLayer.getDirection().value(CAngleUnit::deg()) * 65536 / 360.0);
-            wind.GapAbove = 0;
-            wind.Gust = static_cast<ushort>(windLayer.getGustSpeed().valueInteger(CSpeedUnit::kts()));
-            wind.Shear = 0;
-            wind.Speed = static_cast<ushort>(windLayer.getSpeed().valueInteger(CSpeedUnit::kts()));
-            wind.SpeedFract = 0;
-            wind.Turbulence = 0;
-            wind.UpperAlt = static_cast<ushort>(windLayer.getLevel().valueInteger(CLengthUnit::m()));
-            wind.Variance = 0;
-            nw.Wind[nw.nWindsCtr++] = wind;
-        }
-        CLogMessage(this).debug(u"FSUIPC updated %1 wind layers") << windLayers.size();
-
-        NewPress press;
-        press.Drift = 0;
-        // Pressure is measured in: 16 x mb
-        press.Pressure = static_cast<ushort>(gridPoint.getPressureAtMsl().value(CPressureUnit::mbar()) * 16);
-        nw.Press = press;
-
-        // writing will take place in
-        QByteArray weatherData(reinterpret_cast<const char *>(&nw), sizeof(NewWeather));
-        m_weatherMessageQueue.append(FsuipcWeatherMessage(0xC800, weatherData, 5));
-        return true;
     }
 
     bool CFsuipc::setSimulatorTime(int hour, int minute)
@@ -538,67 +390,6 @@ namespace BlackSimPlugin::FsCommon
             CLogMessage(this).warning(u"FSUIPC read error '%1'") << m_lastErrorMessage;
         }
         return read;
-    }
-
-    void CFsuipc::timerEvent(QTimerEvent *event)
-    {
-        Q_UNUSED(event)
-        processWeatherMessages();
-    }
-
-    CFsuipc::FsuipcWeatherMessage::FsuipcWeatherMessage(unsigned int offset, const QByteArray &data, int leftTrials) : m_offset(static_cast<int>(offset)), m_messageData(data), m_leftTrials(leftTrials)
-    {}
-
-    void CFsuipc::clearAllWeather()
-    {
-        if (!this->isOpened()) { return; }
-
-        // clear all weather
-        NewWeather nw;
-
-        // Clear new weather
-        nw.uCommand = NW_CLEAR;
-        nw.uFlags = 0;
-        nw.ulSignature = 0;
-        nw.uDynamics = 0;
-        for (std::size_t i = 0; i < sizeof(nw.uSpare) / sizeof(nw.uSpare[0]); i++) { nw.uSpare[i] = 0; }
-
-        nw.dLatitude = 0.0;
-        nw.dLongitude = 0.0;
-        nw.nElevation = 0;
-        nw.ulTimeStamp = 0;
-        nw.nTempCtr = 0;
-        nw.nWindsCtr = 0;
-        nw.nCloudsCtr = 0;
-        const QByteArray clearWeather(reinterpret_cast<const char *>(&nw), sizeof(NewWeather));
-        m_weatherMessageQueue.append(FsuipcWeatherMessage(0xC800, clearWeather, 1));
-    }
-
-    void CFsuipc::processWeatherMessages()
-    {
-        if (m_weatherMessageQueue.isEmpty()) { return; }
-        if (!m_opened) { return; }
-        FsuipcWeatherMessage &weatherMessage = m_weatherMessageQueue.first();
-
-        DWORD dwResult;
-        weatherMessage.m_leftTrials--;
-        FSUIPC_Write(static_cast<DWORD>(weatherMessage.m_offset), static_cast<DWORD>(weatherMessage.m_messageData.size()), reinterpret_cast<void *>(weatherMessage.m_messageData.data()), &dwResult);
-
-        unsigned int timeStamp = 0;
-        FSUIPC_Read(0xC824, sizeof(timeStamp), &timeStamp, &dwResult);
-        FSUIPC_Process(&dwResult);
-        if (timeStamp > m_lastTimestamp)
-        {
-            m_weatherMessageQueue.removeFirst();
-            m_lastTimestamp = timeStamp;
-            return;
-        }
-
-        if (weatherMessage.m_leftTrials < 1)
-        {
-            CLogMessage(this).debug() << "Number of trials reached for weather message. Dropping it.";
-            m_weatherMessageQueue.removeFirst();
-        }
     }
 
     double CFsuipc::intToFractional(double fractional)

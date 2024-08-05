@@ -41,7 +41,6 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Simulation::Fsx;
 using namespace BlackMisc::Simulation::Settings;
-using namespace BlackMisc::Weather;
 using namespace BlackCore;
 using namespace BlackSimPlugin::FsCommon;
 
@@ -50,9 +49,8 @@ namespace BlackSimPlugin::FsxCommon
     CSimulatorFsxCommon::CSimulatorFsxCommon(const CSimulatorPluginInfo &info,
                                              IOwnAircraftProvider *ownAircraftProvider,
                                              IRemoteAircraftProvider *remoteAircraftProvider,
-                                             IWeatherGridProvider *weatherGridProvider,
                                              IClientProvider *clientProvider,
-                                             QObject *parent) : CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
+                                             QObject *parent) : CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent)
     {
         Q_ASSERT_X(ownAircraftProvider, Q_FUNC_INFO, "Missing provider");
         Q_ASSERT_X(remoteAircraftProvider, Q_FUNC_INFO, "Missing provider");
@@ -797,20 +795,6 @@ namespace BlackSimPlugin::FsxCommon
         // slower updates
         if (m_ownAircraftUpdateCycles % 10 == 0)
         {
-            if (m_isWeatherActivated)
-            {
-                const auto currentPosition = CCoordinateGeodetic { aircraftSituation.latitude(), aircraftSituation.longitude() };
-                if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()))
-                {
-                    if (m_lastWeatherPosition.isNull() ||
-                        calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
-                    {
-                        m_lastWeatherPosition = currentPosition;
-                        requestWeatherGrid(currentPosition, this->identifier());
-                    }
-                }
-            }
-
             // init terrain probes here has the advantage we can also switch it on/off at runtime
             if (m_useFsxTerrainProbe && !m_initFsxTerrainProbes)
             {
@@ -2376,41 +2360,6 @@ namespace BlackSimPlugin::FsxCommon
         {
             m_syncTimeDeferredCounter = 5; // allow some time to sync
             CLogMessage(this).info(u"Synchronized time to '%1' UTC") << currentDateTime.toString();
-        }
-    }
-
-    void CSimulatorFsxCommon::injectWeatherGrid(const CWeatherGrid &weatherGrid)
-    {
-        if (this->isShuttingDownOrDisconnected()) { return; }
-        if (weatherGrid.isEmpty()) { return; }
-
-        if (!CThreadUtils::isInThisThread(this))
-        {
-            BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Wrong thread");
-            QPointer<CSimulatorFsxCommon> myself(this);
-            QTimer::singleShot(0, this, [=] {
-                if (!myself) { return; }
-                myself->injectWeatherGrid(weatherGrid);
-            });
-            return;
-        }
-
-        // So far, there is only global weather
-        const bool isFSX = this->getSimulatorPluginInfo().getSimulatorInfo().isFSX();
-        CGridPoint glob = weatherGrid.frontOrDefault();
-        glob.setIdentifier("GLOB");
-        const QString metar = CSimConnectUtilities::convertToSimConnectMetar(glob, isFSX);
-        const QByteArray metarBa = toFsxChar(metar);
-
-        // send
-        SimConnect_WeatherSetModeCustom(m_hSimConnect);
-        SimConnect_WeatherSetModeGlobal(m_hSimConnect);
-
-        if (!metarBa.isEmpty())
-        {
-            // Q_ASSERT_X(metarBa.back() == 0, Q_FUNC_INFO, "Need 0 terminated string");
-            SimConnect_WeatherSetObservation(m_hSimConnect, 0, metarBa.constData());
-            CLogMessage(this).debug(u"Injecting weather: %1") << metar;
         }
     }
 

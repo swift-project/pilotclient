@@ -23,7 +23,6 @@
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/network/clientprovider.h"
-#include "blackmisc/weather/weathergridprovider.h"
 #include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
@@ -52,7 +51,6 @@ namespace BlackCore
         public QObject,
         public BlackMisc::Simulation::COwnAircraftAware, // access to in memory own aircraft data
         public BlackMisc::Simulation::CRemoteAircraftAware, // access to in memory remote aircraft data
-        public BlackMisc::Weather::CWeatherGridAware, // access to in memory weather grid
         public BlackMisc::Network::CClientAware, // the network client with its capabilities
         public BlackMisc::Simulation::ISimulationEnvironmentProvider, // give access to elevation etc.
         public BlackMisc::Simulation::IInterpolationSetupProvider, // setup
@@ -159,12 +157,6 @@ namespace BlackCore
         //! Recalculate all aircraft
         virtual void recalculateAllAircraft();
 
-        //! Weather activated
-        virtual bool isWeatherActivated() const;
-
-        //! Activates or deactivates simulator weather
-        virtual void setWeatherActivated(bool activated);
-
         //! Flight network has been connected
         //! \remark hint if network connected and we expect any planes
         //! \sa ISimulator::isFlightNetworkConnected
@@ -172,9 +164,6 @@ namespace BlackCore
 
         //! Is the flight network connected
         bool isFlightNetworkConnected() const { return m_networkConnected; }
-
-        //! Reload weather settings
-        void reloadWeatherSettings();
 
         //! Settings for current simulator
         BlackMisc::Simulation::Settings::CSpecializedSimulatorSettings getSimulatorSettings() const { return m_multiSettings.getSpecializedSettings(this->getSimulatorInfo()); }
@@ -251,9 +240,6 @@ namespace BlackCore
         //! A requested elevation has been received
         //! \remark public for testing purposes
         virtual void callbackReceivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign, bool isWater);
-
-        //! Inject weather grid to simulator
-        virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
 
         //! Allows to print out simulator specific statistics
         virtual QString getStatisticsSimulatorSpecific() const { return {}; }
@@ -396,7 +382,6 @@ namespace BlackCore
         ISimulator(const BlackMisc::Simulation::CSimulatorPluginInfo &pluginInfo,
                    BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                    BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                   BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                    BlackMisc::Network::IClientProvider *clientProvider,
                    QObject *parent = nullptr);
 
@@ -590,11 +575,6 @@ namespace BlackCore
         // general settings
         BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_multiSettings { this }; //!< simulator settings for all simulators
 
-        // weather
-        bool m_isWeatherActivated = false; //!< Is simulator weather activated?
-        BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
-        BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &ISimulator::reloadWeatherSettings }; //!< Selected weather scenario
-
     private:
         // remote aircraft provider ("rap") bound
         void rapOnRecalculatedRenderedAircraft(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
@@ -699,7 +679,6 @@ namespace BlackCore
         //! \param info                      metadata about simulator
         //! \param ownAircraftProvider       in memory access to own aircraft data
         //! \param remoteAircraftProvider    in memory access to rendered aircraft data such as situation history and aircraft itself
-        //! \param weatherGridProvider       in memory access to weather grid data
         //! \param clientProvider            in memory access to client data
         //! \return driver instance
         //!
@@ -707,7 +686,6 @@ namespace BlackCore
             const BlackMisc::Simulation::CSimulatorPluginInfo &info,
             BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
             BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-            BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
             BlackMisc::Network::IClientProvider *clientProvider) = 0;
 
         //! Simulator listener instance

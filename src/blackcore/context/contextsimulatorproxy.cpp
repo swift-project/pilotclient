@@ -85,9 +85,6 @@ namespace BlackCore::Context
                                "airspaceSnapshotHandled", this, SIGNAL(airspaceSnapshotHandled()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                               "weatherGridReceived", this, SIGNAL(weatherGridReceived(BlackMisc::Weather::CWeatherGrid, BlackMisc::CIdentifier)));
-        Q_ASSERT(s);
-        s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                "driverMessages", this, SIGNAL(driverMessages(BlackMisc::CStatusMessageList)));
 
         Q_ASSERT(s);
@@ -294,21 +291,6 @@ namespace BlackCore::Context
     bool CContextSimulatorProxy::resetToModelMatchingAircraft(const CCallsign &callsign)
     {
         return m_dBusInterface->callDBusRet<bool>(QLatin1String("resetToModelMatchingAircraft"), callsign);
-    }
-
-    bool CContextSimulatorProxy::isWeatherActivated() const
-    {
-        return m_dBusInterface->callDBusRet<bool>(QLatin1String("isWeatherActivated"));
-    }
-
-    void CContextSimulatorProxy::setWeatherActivated(bool activated)
-    {
-        m_dBusInterface->callDBus(QLatin1String("setWeatherActivated"), activated);
-    }
-
-    void CContextSimulatorProxy::requestWeatherGrid(const CCoordinateGeodetic &position, const CIdentifier &identifier)
-    {
-        m_dBusInterface->callDBus(QLatin1String("requestWeatherGrid"), position, identifier);
     }
 
     bool CContextSimulatorProxy::requestElevationBySituation(const CAircraftSituation &situation)

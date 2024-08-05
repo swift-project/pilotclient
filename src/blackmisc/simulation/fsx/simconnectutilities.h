@@ -8,7 +8,6 @@
 
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/aviation/aircraftlights.h"
-#include "blackmisc/weather/gridpoint.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/windllutils.h"
 
@@ -227,9 +226,6 @@ namespace BlackMisc::Simulation::Fsx
         //! Lights to states
         static int lightsToLightStates(const Aviation::CAircraftLights &lights);
 
-        //! Converts the weather at gridPoint to a SimConnect METAR string
-        static QString convertToSimConnectMetar(const Weather::CGridPoint &gridPoint, bool isFSX, bool useWindLayers = true, bool useVisibilityLayers = true, bool useCloudLayers = true, bool useTempLayers = true);
-
         //! Get info about SimConnect DLL
         static BlackMisc::CWinDllUtils::DLLInfo simConnectDllInfo();
 
@@ -246,11 +242,6 @@ namespace BlackMisc::Simulation::Fsx
         //! \param enumName name of the resolved enum
         //! \return enum element's name
         static QString resolveEnumToString(const DWORD id, const char *enumName);
-
-        static QString windsToSimConnectMetar(const BlackMisc::Weather::CWindLayerList &windLayers, bool isFSX);
-        static QString visibilitiesToSimConnectMetar(const BlackMisc::Weather::CVisibilityLayerList &visibilityLayers);
-        static QString cloudsToSimConnectMetar(const BlackMisc::Weather::CCloudLayerList &cloudLayers);
-        static QString temperaturesToSimConnectMetar(const BlackMisc::Weather::CTemperatureLayerList &temperatureLayers);
 
         //! Hidden constructor
         CSimConnectUtilities();

@@ -65,7 +65,6 @@ namespace BlackCore::Context
         m_plugins->collectPlugins();
         this->restoreSimulatorPlugins();
 
-        connect(&m_weatherManager, &CWeatherManager::weatherGridReceived, this, &CContextSimulator::onWeatherGridReceived, Qt::QueuedConnection);
         connect(&m_aircraftMatcher, &CAircraftMatcher::setupChanged, this, &CContextSimulator::matchingSetupChanged);
         connect(&CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance(), &CCentralMultiSimulatorModelSetCachesProvider::cacheChanged, this, &CContextSimulator::modelSetChanged);
 
@@ -470,7 +469,7 @@ namespace BlackCore::Context
         IOwnAircraftProvider *ownAircraftProvider = this->getRuntime()->getCContextOwnAircraft();
         IRemoteAircraftProvider *renderedAircraftProvider = this->getRuntime()->getCContextNetwork();
         IClientProvider *clientProvider = this->getRuntime()->getCContextNetwork();
-        ISimulator *simulator = factory->create(simulatorPluginInfo, ownAircraftProvider, renderedAircraftProvider, &m_weatherManager, clientProvider);
+        ISimulator *simulator = factory->create(simulatorPluginInfo, ownAircraftProvider, renderedAircraftProvider, clientProvider);
         Q_ASSERT_X(simulator, Q_FUNC_INFO, "no simulator driver can be created");
 
         this->setRemoteAircraftProvider(renderedAircraftProvider);
@@ -543,8 +542,6 @@ namespace BlackCore::Context
             return false;
         }
 
-        simulator->setWeatherActivated(m_isWeatherActivated);
-
         // when everything is set up connected, update the current plugin info
         m_simulatorPlugin.first = simulatorPluginInfo;
         m_simulatorPlugin.second = simulator;
@@ -559,9 +556,6 @@ namespace BlackCore::Context
                 CLogMessage(this).info(u"Simulator plugin loaded: '%1' connected: %2")
                     << simulatorPluginInfo.toQString(true)
                     << boolToYesNo(connected);
-
-                // weather in sim.
-                this->setWeatherActivated(m_isWeatherActivated);
 
                 // use the real driver as this will also work eith emulated driver
                 emit this->simulatorPluginChanged(m_simulatorPlugin.second->getSimulatorPluginInfo());
@@ -864,24 +858,6 @@ namespace BlackCore::Context
         emit this->addingRemoteModelFailed(remoteAircraft, disabled, failover, message);
     }
 
-    void CContextSimulator::onWeatherGridReceived(const CWeatherGrid &weatherGrid, const CIdentifier &identifier)
-    {
-        if (!sApp || sApp->isShuttingDown()) { return; }
-        emit this->weatherGridReceived(weatherGrid, identifier);
-
-        if (!this->isSimulatorPluginAvailable()) { return; }
-        if (!m_simulatorPlugin.second) { return; }
-
-        if (m_simulatorPlugin.second && m_simulatorPlugin.second->identifier() == identifier)
-        {
-            // ONLY send if WEATHER is ON
-            if (m_simulatorPlugin.second->isWeatherActivated())
-            {
-                m_simulatorPlugin.second->injectWeatherGrid(weatherGrid);
-            }
-        }
-    }
-
     void CContextSimulator::xCtxUpdateSimulatorCockpitFromContext(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
     {
         if (!this->isSimulatorAvailable()) { return; }
@@ -1093,26 +1069,6 @@ namespace BlackCore::Context
             this->xCtxAddedRemoteAircraftReadyForModelMatching(aircraft);
         });
         return true;
-    }
-
-    bool CContextSimulator::isWeatherActivated() const
-    {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return m_isWeatherActivated; }
-        return m_simulatorPlugin.second->isWeatherActivated();
-    }
-
-    void CContextSimulator::setWeatherActivated(bool activated)
-    {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return; }
-        m_simulatorPlugin.second->setWeatherActivated(activated);
-    }
-
-    void CContextSimulator::requestWeatherGrid(const CCoordinateGeodetic &position, const CIdentifier &identifier)
-    {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << identifier; }
-        m_weatherManager.requestWeatherGrid(position, identifier);
     }
 
     bool CContextSimulator::requestElevationBySituation(const CAircraftSituation &situation)

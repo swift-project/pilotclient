@@ -29,7 +29,6 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
-using namespace BlackMisc::Weather;
 using namespace BlackCore;
 using namespace BlackSimPlugin::FsCommon;
 using namespace BlackConfig;
@@ -41,9 +40,8 @@ namespace BlackSimPlugin::Fs9
                                  const QSharedPointer<CLobbyClient> &lobbyClient,
                                  IOwnAircraftProvider *ownAircraftProvider,
                                  IRemoteAircraftProvider *remoteAircraftProvider,
-                                 IWeatherGridProvider *weatherGridProvider,
                                  IClientProvider *clientProvider,
-                                 QObject *parent) : CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent),
+                                 QObject *parent) : CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent),
                                                     m_fs9Host(fs9Host),
                                                     m_lobbyClient(lobbyClient),
                                                     m_fsuipc(new CFsuipc(this))
@@ -364,19 +362,6 @@ namespace BlackSimPlugin::Fs9
 
         this->updateOwnParts(simDataOwnAircraft.getParts());
 
-        if (m_isWeatherActivated)
-        {
-            if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()))
-            {
-                if (m_lastWeatherPosition.isNull() ||
-                    calculateGreatCircleDistance(m_lastWeatherPosition, aircraftSituation).value(CLengthUnit::mi()) > 20)
-                {
-                    m_lastWeatherPosition = aircraftSituation;
-                    requestWeatherGrid(aircraftSituation, this->identifier());
-                }
-            }
-        } // weather
-
         // slow updates
         if (m_ownAircraftUpdateCycles % 25 == 0)
         {
@@ -428,32 +413,6 @@ namespace BlackSimPlugin::Fs9
         const int h = myTime.hour();
         const int m = myTime.minute();
         m_fsuipc->setSimulatorTime(h, m);
-    }
-
-    void CSimulatorFs9::injectWeatherGrid(const CWeatherGrid &weatherGrid)
-    {
-        if (this->isShuttingDownOrDisconnected()) { return; }
-        if (weatherGrid.isEmpty()) { return; }
-
-        if (!CThreadUtils::isInThisThread(this))
-        {
-            BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Wrong thread");
-            QPointer<CSimulatorFs9> myself(this);
-            QTimer::singleShot(0, this, [=] {
-                if (!myself) { return; }
-                myself->injectWeatherGrid(weatherGrid);
-            });
-            return;
-        }
-
-        if (!m_fsuipc) { return; }
-        if (!m_fsuipc->isOpened()) { return; }
-        if (weatherGrid.isEmpty())
-        {
-            CLogMessage(this).info(u"Empty FS9 weather grid");
-            return;
-        }
-        m_fsuipc->write(weatherGrid);
     }
 
     CSimulatorFs9Listener::CSimulatorFs9Listener(const CSimulatorPluginInfo &info,
@@ -554,10 +513,9 @@ namespace BlackSimPlugin::Fs9
     ISimulator *CSimulatorFs9Factory::create(const CSimulatorPluginInfo &info,
                                              IOwnAircraftProvider *ownAircraftProvider,
                                              IRemoteAircraftProvider *remoteAircraftProvider,
-                                             IWeatherGridProvider *weatherGridProvider,
                                              IClientProvider *clientProvider)
     {
-        return new CSimulatorFs9(info, m_fs9Host, m_lobbyClient, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, this);
+        return new CSimulatorFs9(info, m_fs9Host, m_lobbyClient, ownAircraftProvider, remoteAircraftProvider, clientProvider, this);
     }
 
     ISimulatorListener *CSimulatorFs9Factory::createListener(const CSimulatorPluginInfo &info)

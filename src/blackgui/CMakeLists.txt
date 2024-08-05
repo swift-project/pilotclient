@@ -100,8 +100,6 @@ add_library(gui SHARED
         models/statusmessagefilter.h
         models/listmodelbasenontemplate.cpp
         models/countrylistmodel.h
-        models/temperaturelayerlistmodel.h
-        models/temperaturelayerlistmodel.cpp
         models/serverlistmodel.cpp
         models/countryfilter.cpp
         models/applicationinfolistmodel.h
@@ -128,7 +126,6 @@ add_library(gui SHARED
         views/viewbase.h
         views/viewbasemisc.cpp
         views/windlayerview.cpp
-        views/temperaturelayerview.h
         views/distributorview.h
         views/checkboxdelegate.cpp
         views/viewbaseproxystyle.cpp
@@ -142,7 +139,6 @@ add_library(gui SHARED
         views/viewtimestampobjects.h
         views/atcstationview.h
         views/aircraftsituationview.cpp
-        views/temperaturelayerview.cpp
         views/viewbaseproxystyle.h
         views/identifierview.h
         views/simulatedaircraftview.cpp
@@ -374,7 +370,6 @@ add_library(gui SHARED
         components/usercomponent.ui
         components/dbreducemodelduplicates.ui
         components/installfsxterrainprobecomponent.cpp
-        components/weathercomponent.h
         components/interpolationsetupcomponent.h
         components/registermetadatacomponents.cpp
         components/networkaircraftvaluescomponent.h
@@ -396,7 +391,6 @@ add_library(gui SHARED
         components/dbstashcomponent.cpp
         components/texteditdialog.ui
         components/dbownmodelsetcomponent.ui
-        components/weathercomponent.cpp
         components/scalescreenfactor.h
         components/rawfsdmessagesdialog.cpp
         components/flightplancomponent.h
@@ -690,7 +684,6 @@ add_library(gui SHARED
         components/otherswiftversionsdialog.ui
         components/dbreducemodelduplicates.h
         components/colorselector.h
-        components/weathercomponent.ui
         components/dbstashcomponent.h
         components/transpondercodespinbox.cpp
         components/interpolationcomponent.h

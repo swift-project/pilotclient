@@ -11,8 +11,6 @@ add_library(simulatorxplane SHARED
         xswiftbusserviceproxy.h
         xswiftbustrafficproxy.cpp
         xswiftbustrafficproxy.h
-        xswiftbusweatherproxy.cpp
-        xswiftbusweatherproxy.h
 )
 
 include(${PROJECT_SOURCE_DIR}/cmake/xswiftbus_tools.cmake)

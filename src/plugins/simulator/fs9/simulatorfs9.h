@@ -37,7 +37,6 @@ namespace BlackSimPlugin::Fs9
                       const QSharedPointer<CLobbyClient> &lobbyClient,
                       BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                       BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                      BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                       BlackMisc::Network::IClientProvider *clientProvider,
                       QObject *parent = nullptr);
 
@@ -59,7 +58,6 @@ namespace BlackSimPlugin::Fs9
         virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
         virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
         virtual bool testSendSituationAndParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) override;
-        virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
         //! @}
 
     protected:
@@ -162,7 +160,6 @@ namespace BlackSimPlugin::Fs9
             const BlackMisc::Simulation::CSimulatorPluginInfo &info,
             BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
             BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-            BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
             BlackMisc::Network::IClientProvider *clientProvider) override;
 
         //! \copydoc BlackCore::ISimulatorFactory::createListener

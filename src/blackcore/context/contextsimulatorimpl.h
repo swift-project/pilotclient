@@ -12,7 +12,6 @@
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/aircraftmatcher.h"
 #include "blackcore/blackcoreexport.h"
-#include "blackcore/weathermanager.h"
 #include "blackmisc/network/connectionstatus.h"
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/simulation/settings/modelmatchersettings.h"
@@ -186,15 +185,6 @@ namespace BlackCore
             //! \copydoc BlackCore::Context::IContextSimulator::resetToModelMatchingAircraft
             virtual bool resetToModelMatchingAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 
-            //! \copydoc BlackCore::Context::IContextSimulator::isWeatherActivated
-            virtual bool isWeatherActivated() const override;
-
-            //! \copydoc BlackCore::Context::IContextSimulator::setWeatherActivated
-            virtual void setWeatherActivated(bool activated) override;
-
-            //! \copydoc BlackCore::Context::IContextSimulator::requestWeatherGrid
-            virtual void requestWeatherGrid(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::CIdentifier &identifier) override;
-
             //! \copydoc BlackCore::Context::IContextSimulator::requestElevationBySituation
             virtual bool requestElevationBySituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
 
@@ -340,9 +330,6 @@ namespace BlackCore
             //! Failed adding remote aircraft
             void onAddingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, bool disabled, bool requestFailover, const BlackMisc::CStatusMessage &message);
 
-            //! Weather request was received
-            void onWeatherGridReceived(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier);
-
             //! Relay status message to simulator under consideration of settings
             void relayStatusMessageToSimulator(const BlackMisc::CStatusMessage &message);
 
@@ -387,12 +374,10 @@ namespace BlackCore
             QMap<BlackMisc::Aviation::CCallsign, int> m_failoverAddingCounts;
             CPluginManagerSimulator *m_plugins = nullptr; //!< plugin manager
             BlackMisc::CRegularThread m_listenersThread; //!< waiting for plugin
-            CWeatherManager m_weatherManager { this }; //!< weather management
             CAircraftMatcher m_aircraftMatcher { this }; //!< model matcher
 
             bool m_wasSimulating = false;
             bool m_initallyAddAircraft = false;
-            bool m_isWeatherActivated = false; // used to activate after plugin is loaded
             BlackMisc::Simulation::MatchingLog m_logMatchingMessages = BlackMisc::Simulation::MatchingLogSimplified;
 
             QString m_networkSessionId; //!< Network session of CServer::getServerSessionId, if not connected empty (for statistics, ..)

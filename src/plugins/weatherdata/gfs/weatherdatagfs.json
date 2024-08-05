@@ -1,5 +1,0 @@
-{
-    "identifier" : "org.swift-project.plugins.weatherdata.gfs",
-    "name" : "gfs",
-    "description" : "Global forecast from National Centers for Environmental Prediction."
-}

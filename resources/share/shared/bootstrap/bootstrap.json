@@ -5,9 +5,6 @@
         "url": "https://datastore.swift-project.org/"
     },
     "mappingMinimumVersion": "0.9.0",
-    "ncepGlobalForecastSystemUrl25": {
-        "url": "http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p25.pl"
-    },
     "onlineHelpUrl": {
         "url": "https://datastore.swift-project.org/page/swifthelpdispatcher.html"
     },

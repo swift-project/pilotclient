@@ -14,7 +14,6 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
-using namespace BlackMisc::Weather;
 using namespace BlackCore;
 using namespace BlackSimPlugin::Common;
 
@@ -24,9 +23,8 @@ namespace BlackSimPlugin::FsCommon
         const CSimulatorPluginInfo &info,
         IOwnAircraftProvider *ownAircraftProvider,
         IRemoteAircraftProvider *renderedAircraftProvider,
-        IWeatherGridProvider *weatherGridProvider,
         IClientProvider *clientProvider,
-        QObject *parent) : CSimulatorPluginCommon(info, ownAircraftProvider, renderedAircraftProvider, weatherGridProvider, clientProvider, parent)
+        QObject *parent) : CSimulatorPluginCommon(info, ownAircraftProvider, renderedAircraftProvider, clientProvider, parent)
     {
         CSimulatorFsCommon::registerHelp();
     }

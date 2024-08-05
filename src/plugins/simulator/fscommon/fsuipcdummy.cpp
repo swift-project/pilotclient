@@ -7,16 +7,11 @@
 
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Weather;
 
 namespace BlackSimPlugin
 {
     namespace FsCommon
     {
-        //! Dummy FsuipcWeatherMessage
-        struct CFsuipc::FsuipcWeatherMessage
-        {};
-
         CFsuipc::CFsuipc(QObject *parent)
             : QObject(parent)
         {}
@@ -49,12 +44,6 @@ namespace BlackSimPlugin
             return false;
         }
 
-        bool CFsuipc::write(const CWeatherGrid &weatherGrid)
-        {
-            Q_UNUSED(weatherGrid);
-            return false;
-        }
-
         bool CFsuipc::setSimulatorTime(int hour, int minute)
         {
             Q_UNUSED(hour);
@@ -76,12 +65,6 @@ namespace BlackSimPlugin
             Q_UNUSED(aircraftParts);
             return false;
         }
-
-        void CFsuipc::timerEvent(QTimerEvent *event)
-        {
-            Q_UNUSED(event);
-        }
-
     } // namespace
 } // namespace
 

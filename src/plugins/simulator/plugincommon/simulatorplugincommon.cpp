@@ -12,7 +12,6 @@ using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Weather;
 
 namespace BlackSimPlugin::Common
 {
@@ -20,9 +19,8 @@ namespace BlackSimPlugin::Common
         const CSimulatorPluginInfo &info,
         IOwnAircraftProvider *ownAircraftProvider,
         IRemoteAircraftProvider *renderedAircraftProvider,
-        IWeatherGridProvider *weatherGridProvider,
         IClientProvider *clientProvider,
-        QObject *parent) : ISimulator(info, ownAircraftProvider, renderedAircraftProvider, weatherGridProvider, clientProvider, parent)
+        QObject *parent) : ISimulator(info, ownAircraftProvider, renderedAircraftProvider, clientProvider, parent)
     {
         CSimulatorPluginCommon::registerHelp();
     }

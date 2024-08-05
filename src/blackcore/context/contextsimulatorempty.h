@@ -325,29 +325,7 @@ namespace BlackCore::Context
             return false;
         }
 
-        //! \copydoc IContextSimulator::isWeatherActivated
-        virtual bool isWeatherActivated() const override
-        {
-            logEmptyContextWarning(Q_FUNC_INFO);
-            return false;
-        }
-
-        //! \copydoc IContextSimulator::setWeatherActivated
-        virtual void setWeatherActivated(bool activated) override
-        {
-            Q_UNUSED(activated)
-            logEmptyContextWarning(Q_FUNC_INFO);
-        }
-
-        //! \copydoc IContextSimulator::requestWeatherGrid
-        virtual void requestWeatherGrid(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::CIdentifier &identifier) override
-        {
-            Q_UNUSED(position)
-            Q_UNUSED(identifier)
-            logEmptyContextWarning(Q_FUNC_INFO);
-        }
-
-        //! \copydoc IContextSimulator::requestWeatherGrid
+        //! \copydoc IContextSimulator::requestElevationBySituation
         virtual bool requestElevationBySituation(const BlackMisc::Aviation::CAircraftSituation &situation) override
         {
             Q_UNUSED(situation)

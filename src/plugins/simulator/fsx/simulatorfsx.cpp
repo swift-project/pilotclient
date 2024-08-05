@@ -11,7 +11,6 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
-using namespace BlackMisc::Weather;
 using namespace BlackCore;
 
 namespace BlackSimPlugin::Fsx
@@ -19,9 +18,8 @@ namespace BlackSimPlugin::Fsx
     CSimulatorFsx::CSimulatorFsx(const CSimulatorPluginInfo &info,
                                  IOwnAircraftProvider *ownAircraftProvider,
                                  IRemoteAircraftProvider *remoteAircraftProvider,
-                                 IWeatherGridProvider *weatherGridProvider,
                                  IClientProvider *clientProvider,
-                                 QObject *parent) : CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
+                                 QObject *parent) : CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent)
     {
         this->setDefaultModel(
             { "Boeing 737-800 Paint1",

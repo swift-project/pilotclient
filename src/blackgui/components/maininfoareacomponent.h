@@ -34,7 +34,6 @@ namespace BlackGui::Components
     class CSimulatorComponent;
     class CTextMessageComponent;
     class CUserComponent;
-    class CWeatherComponent;
 
     //! Main info area of pilot client
     class BLACKGUI_EXPORT CMainInfoAreaComponent : public BlackGui::CInfoArea
@@ -59,12 +58,11 @@ namespace BlackGui::Components
             InfoAreaTextMessages = 4,
             InfoAreaSimulator = 5,
             InfoAreaFlightPlan = 6,
-            InfoAreaWeather = 7,
-            InfoAreaMapping = 8, //!< aka rendering, models
-            InfoAreaInterpolation = 9,
-            InfoAreaSettings = 10,
-            InfoAreaLog = 11,
-            InfoAreaRadar = 12,
+            InfoAreaMapping = 7, //!< aka rendering, models
+            InfoAreaInterpolation = 8,
+            InfoAreaSettings = 9,
+            InfoAreaLog = 10,
+            InfoAreaRadar = 11,
             InfoAreaNone = -1
         };
 
@@ -91,9 +89,6 @@ namespace BlackGui::Components
 
         //! Settings
         CSettingsComponent *getSettingsComponent();
-
-        //! Weather component
-        CWeatherComponent *getWeatherComponent();
 
         //! Log messages
         CLogComponent *getLogComponent();

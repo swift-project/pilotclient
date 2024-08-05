@@ -11,7 +11,6 @@
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/simulator.h"
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/weather/weathergrid.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/aircraftmatchersetup.h"
@@ -133,9 +132,6 @@ namespace BlackCore::Context
 
         //! An airspace snapshot was handled
         void airspaceSnapshotHandled();
-
-        //! A weather grid, requested with requestWeatherGrid(), is received
-        void weatherGridReceived(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier);
 
         //! Relevant simulator messages to be explicitly displayed
         void driverMessages(const BlackMisc::CStatusMessageList &messages);
@@ -284,15 +280,6 @@ namespace BlackCore::Context
 
         //! Reset model by matching it again
         virtual bool resetToModelMatchingAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
-
-        //! Is simulator weather activated or deactivated?
-        virtual bool isWeatherActivated() const = 0;
-
-        //! Activates or deactivates simulator weather
-        virtual void setWeatherActivated(bool activated) = 0;
-
-        //! Request weather grid. Argument identifier is past in the signal to identify the requestor
-        virtual void requestWeatherGrid(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::CIdentifier &identifier) = 0;
 
         //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevationBySituation
         virtual bool requestElevationBySituation(const BlackMisc::Aviation::CAircraftSituation &situation) = 0;

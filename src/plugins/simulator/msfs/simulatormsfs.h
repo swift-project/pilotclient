@@ -20,7 +20,6 @@ namespace BlackSimPlugin::Msfs
         CSimulatorMsFs(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                        BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                        BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                       BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                        BlackMisc::Network::IClientProvider *clientProvider,
                        QObject *parent = nullptr);
 

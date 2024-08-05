@@ -6,6 +6,5 @@
 namespace BlackGui::Views
 {
     template class CViewBase<BlackGui::Models::CCloudLayerListModel>;
-    template class CViewBase<BlackGui::Models::CTemperatureLayerListModel>;
     template class CViewBase<BlackGui::Models::CWindLayerListModel>;
 } // namespace

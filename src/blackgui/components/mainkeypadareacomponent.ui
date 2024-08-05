@@ -126,22 +126,6 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="3">
-       <widget class="QPushButton" name="pb_MainWeather">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Weather</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
       <item row="5" column="0">
        <widget class="QPushButton" name="pb_Audio">
         <property name="sizePolicy">
@@ -425,7 +409,6 @@
   <tabstop>pb_MainFlightplan</tabstop>
   <tabstop>pb_MainLog</tabstop>
   <tabstop>pb_MainSettings</tabstop>
-  <tabstop>pb_MainWeather</tabstop>
   <tabstop>pb_MainUsers</tabstop>
   <tabstop>pb_Opacity050</tabstop>
   <tabstop>pb_Opacity100</tabstop>

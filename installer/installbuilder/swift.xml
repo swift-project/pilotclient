@@ -17,9 +17,6 @@
             <file>swift-plugin-simulators.xml</file>
         </include>
         <include>
-            <file>swift-plugin-weatherdata.xml</file>
-        </include>
-        <include>
             <file>swift-externals.xml</file>
         </include>
         <!-- <include>

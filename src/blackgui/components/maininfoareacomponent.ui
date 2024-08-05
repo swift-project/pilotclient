@@ -482,72 +482,6 @@
     </layout>
    </widget>
   </widget>
-  <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Weather">
-   <property name="minimumSize">
-    <size>
-     <width>157</width>
-     <height>78</height>
-    </size>
-   </property>
-   <property name="allowedAreas">
-    <set>Qt::NoDockWidgetArea</set>
-   </property>
-   <property name="windowTitle">
-    <string>Weather</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>4</number>
-   </attribute>
-   <widget class="QWidget" name="qw_WeatherOuter">
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>0</height>
-     </size>
-    </property>
-    <layout class="QVBoxLayout" name="vl_Weather">
-     <property name="spacing">
-      <number>0</number>
-     </property>
-     <property name="leftMargin">
-      <number>0</number>
-     </property>
-     <property name="topMargin">
-      <number>0</number>
-     </property>
-     <property name="rightMargin">
-      <number>0</number>
-     </property>
-     <property name="bottomMargin">
-      <number>0</number>
-     </property>
-     <item>
-      <widget class="QFrame" name="fr_WeatherInner">
-       <layout class="QVBoxLayout" name="vl_WeatherInner">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>2</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="BlackGui::Components::CWeatherComponent" name="comp_Weather"/>
-        </item>
-       </layout>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
   <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Rendering">
    <property name="allowedAreas">
     <set>Qt::NoDockWidgetArea</set>
@@ -912,12 +846,6 @@
    <class>BlackGui::Components::CMappingComponent</class>
    <extends>QTabWidget</extends>
    <header>blackgui/components/mappingcomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Components::CWeatherComponent</class>
-   <extends>QTabWidget</extends>
-   <header>blackgui/components/weathercomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

@@ -21,7 +21,6 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Math;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Settings;
-using namespace BlackMisc::Weather;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 
@@ -30,9 +29,8 @@ namespace BlackSimPlugin::Emulated
     CSimulatorEmulated::CSimulatorEmulated(const CSimulatorPluginInfo &info,
                                            IOwnAircraftProvider *ownAircraftProvider,
                                            IRemoteAircraftProvider *remoteAircraftProvider,
-                                           IWeatherGridProvider *weatherGridProvider,
                                            IClientProvider *clientProvider,
-                                           QObject *parent) : CSimulatorPluginCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
+                                           QObject *parent) : CSimulatorPluginCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent)
     {
         Q_ASSERT_X(sApp && sApp->getIContextSimulator(), Q_FUNC_INFO, "Need context");
 
@@ -109,13 +107,6 @@ namespace BlackSimPlugin::Emulated
     {
         if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, callsigns.toQString());
         return ISimulator::physicallyRemoveMultipleRemoteAircraft(callsigns);
-    }
-
-    void CSimulatorEmulated::injectWeatherGrid(const CWeatherGrid &weatherGrid)
-    {
-        const QString wg = QStringLiteral("Weather grid with %1 entries").arg(weatherGrid.size());
-        if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, wg);
-        m_monitorWidget->receivedWeather(weatherGrid);
     }
 
     bool CSimulatorEmulated::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft)
@@ -309,20 +300,6 @@ namespace BlackSimPlugin::Emulated
     {
         if (m_myAircraft.getSituation() == situation) { return false; }
         m_myAircraft.setSituation(situation);
-
-        if (m_isWeatherActivated)
-        {
-            const auto currentPosition = CCoordinateGeodetic { situation.latitude(), situation.longitude() };
-            if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()))
-            {
-                if (m_lastWeatherPosition.isNull() ||
-                    calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
-                {
-                    m_lastWeatherPosition = currentPosition;
-                    requestWeatherGrid(currentPosition, this->identifier());
-                }
-            }
-        }
 
         return this->updateOwnSituationAndGroundElevation(situation);
     }
@@ -566,22 +543,6 @@ namespace BlackSimPlugin::Emulated
         }
 
         this->finishUpdateRemoteAircraftAndSetStatistics(now);
-    }
-
-    bool CSimulatorEmulated::requestWeather()
-    {
-        if (!m_isWeatherActivated) { return false; }
-
-        this->getOwnAircraftPosition();
-        const CCoordinateGeodetic currentPosition = this->getOwnAircraftPosition();
-        this->requestWeatherGrid(currentPosition, this->identifier());
-
-        // crashing version
-        // kept for testing purposes
-        // CWeatherGrid g(currentPosition);
-        // this->requestWeatherGrid(g, { this, &CSimulatorEmulated::injectWeatherGrid});
-
-        return true;
     }
 
     CSimulatorEmulatedListener::CSimulatorEmulatedListener(const CSimulatorPluginInfo &info)

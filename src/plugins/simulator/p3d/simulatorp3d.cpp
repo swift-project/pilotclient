@@ -17,7 +17,6 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackSimPlugin::FsxCommon;
-using namespace BlackMisc::Weather;
 using namespace BlackCore;
 using namespace BlackSimPlugin::FsCommon;
 
@@ -26,9 +25,8 @@ namespace BlackSimPlugin::P3D
     CSimulatorP3D::CSimulatorP3D(const CSimulatorPluginInfo &info,
                                  IOwnAircraftProvider *ownAircraftProvider,
                                  IRemoteAircraftProvider *remoteAircraftProvider,
-                                 IWeatherGridProvider *weatherGridProvider,
                                  IClientProvider *clientProvider,
-                                 QObject *parent) : CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
+                                 QObject *parent) : CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent)
     {
         // set build/sim specific SimConnectProc, which is the FSX SimConnectProc on WIN32 systems
         if (CBuildConfig::isCompiledWithP3DSupport() && CBuildConfig::isRunningOnWindowsNtPlatform() && CBuildConfig::buildWordSize() == 64)

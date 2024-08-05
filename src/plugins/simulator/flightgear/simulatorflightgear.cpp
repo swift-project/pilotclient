@@ -11,11 +11,6 @@
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/weather/cloudlayer.h"
 #include "blackmisc/weather/cloudlayerlist.h"
-#include "blackmisc/weather/gridpoint.h"
-#include "blackmisc/weather/temperaturelayer.h"
-#include "blackmisc/weather/temperaturelayerlist.h"
-#include "blackmisc/weather/visibilitylayer.h"
-#include "blackmisc/weather/visibilitylayerlist.h"
 #include "blackmisc/weather/windlayer.h"
 #include "blackmisc/weather/windlayerlist.h"
 #include "blackmisc/aviation/aircraftengine.h"
@@ -84,9 +79,8 @@ namespace BlackSimPlugin::Flightgear
     CSimulatorFlightgear::CSimulatorFlightgear(const CSimulatorPluginInfo &info,
                                                IOwnAircraftProvider *ownAircraftProvider,
                                                IRemoteAircraftProvider *remoteAircraftProvider,
-                                               IWeatherGridProvider *weatherGridProvider,
                                                IClientProvider *clientProvider,
-                                               QObject *parent) : CSimulatorPluginCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
+                                               QObject *parent) : CSimulatorPluginCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent)
     {
         m_watcher = new QDBusServiceWatcher(this);
         m_watcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
@@ -1004,10 +998,9 @@ namespace BlackSimPlugin::Flightgear
     ISimulator *CSimulatorFlightgearFactory::create(const CSimulatorPluginInfo &info,
                                                     IOwnAircraftProvider *ownAircraftProvider,
                                                     IRemoteAircraftProvider *remoteAircraftProvider,
-                                                    IWeatherGridProvider *weatherGridProvider,
                                                     IClientProvider *clientProvider)
     {
-        return new CSimulatorFlightgear(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, this);
+        return new CSimulatorFlightgear(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, this);
     }
 
     CSimulatorFlightgearListener::CSimulatorFlightgearListener(const CSimulatorPluginInfo &info) : ISimulatorListener(info)

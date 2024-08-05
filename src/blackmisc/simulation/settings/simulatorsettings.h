@@ -9,7 +9,6 @@
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/network/textmessage.h"
-#include "blackmisc/weather/weatherscenario.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/statusmessage.h"
@@ -649,26 +648,6 @@ namespace BlackMisc::Simulation::Settings
         }
     };
 
-    //! Selected weather scenario
-    struct TSelectedWeatherScenario : public TSettingTrait<Weather::CWeatherScenario>
-    {
-        //! \copydoc BlackMisc::TSettingTrait::key
-        static const char *key() { return "simulator/selectedweatherscenario"; }
-
-        //! \copydoc BlackMisc::TSettingTrait::humanReadable
-        static const QString &humanReadable()
-        {
-            static const QString name("Weather scenario");
-            return name;
-        }
-
-        //! \copydoc BlackMisc::TSettingTrait::defaultValue
-        static const Weather::CWeatherScenario &defaultValue()
-        {
-            static const Weather::CWeatherScenario scenario {};
-            return scenario;
-        }
-    };
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::Settings::CSimulatorSettings)

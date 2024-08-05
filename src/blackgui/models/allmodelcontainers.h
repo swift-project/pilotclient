@@ -25,7 +25,6 @@
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/weather/cloudlayerlist.h"
 #include "blackmisc/weather/presentweatherlist.h"
-#include "blackmisc/weather/temperaturelayerlist.h"
 #include "blackmisc/weather/windlayerlist.h"
 #include "blackmisc/input/actionhotkeylist.h"
 #include "blackmisc/applicationinfolist.h"

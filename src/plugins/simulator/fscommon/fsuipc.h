@@ -8,7 +8,6 @@
 
 #include "plugins/simulator/fscommon/fscommonexport.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/weather/weathergrid.h"
 #include <QStringList>
 
 namespace BlackSimPlugin::FsCommon
@@ -39,9 +38,6 @@ namespace BlackSimPlugin::FsCommon
 
         //! Write variables
         bool write(const BlackMisc::Aviation::CTransponder &xpdr);
-
-        //! Write weather grid to simulator
-        bool write(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
 
         //! Set simulator time
         bool setSimulatorTime(int hour, int minute);
@@ -106,17 +102,7 @@ namespace BlackSimPlugin::FsCommon
             return unknown;
         }
 
-    protected:
-        //! \copydoc QObject::timerEvent
-        void timerEvent(QTimerEvent *event) override;
-
     private:
-        //! Clear weather
-        void clearAllWeather();
-
-        //! Process weather
-        void processWeatherMessages();
-
         bool m_opened = false;
         int m_openCount = 0; //!< statistics
         int m_closeCount = 0; //!< statistics
@@ -124,8 +110,6 @@ namespace BlackSimPlugin::FsCommon
         QString m_lastErrorMessage;
         QString m_fsuipcVersion;
 
-        struct FsuipcWeatherMessage;
-        QVector<FsuipcWeatherMessage> m_weatherMessageQueue;
         unsigned int m_lastTimestamp = 0;
 
         //! Integer representing fractional

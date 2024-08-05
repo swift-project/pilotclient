@@ -8,7 +8,6 @@
 
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/network/textmessage.h"
-#include "blackmisc/weather/weathergrid.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/logcategories.h"
 #include "blackmisc/identifiable.h"
@@ -63,9 +62,6 @@ namespace BlackSimPlugin::Emulated
         //! The title
         void updateWindowTitleAndUiValues(const BlackMisc::Simulation::CSimulatorInfo &info);
 
-        //! Display weather grid
-        void receivedWeather(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
-
     private:
         static int constexpr MaxLogMessages = 500; //!< desired log message number
 
@@ -116,9 +112,6 @@ namespace BlackSimPlugin::Emulated
 
         //! Can use the emulated simulator
         bool canUseSimulator() const;
-
-        //! Request weather
-        void requestWeather();
 
         QScopedPointer<Ui::CSimulatorEmulatedMonitorDialog> ui;
         CSimulatorEmulated *m_simulator = nullptr;

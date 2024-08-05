@@ -68,11 +68,6 @@ namespace BlackGui::Components
         return ui->comp_Settings;
     }
 
-    CWeatherComponent *CMainInfoAreaComponent::getWeatherComponent()
-    {
-        return ui->comp_Weather;
-    }
-
     CLogComponent *CMainInfoAreaComponent::getLogComponent()
     {
         return ui->comp_Log;
@@ -146,7 +141,6 @@ namespace BlackGui::Components
         case InfoAreaInterpolation:
         case InfoAreaSettings:
         case InfoAreaTextMessages:
-        case InfoAreaWeather:
         case InfoAreaRadar:
             return QSize(600, 400);
         case InfoAreaFlightPlan:
@@ -175,7 +169,6 @@ namespace BlackGui::Components
         {
         case InfoAreaCockpit: return CIcons::appCockpit16();
         case InfoAreaUsers: return CIcons::appUsers16();
-        case InfoAreaWeather: return CIcons::appWeather16();
         case InfoAreaAtc: return CIcons::appAtc16();
         case InfoAreaAircraft: return CIcons::appAircraft16();
         case InfoAreaSettings: return CIcons::appSettings16();
