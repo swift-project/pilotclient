@@ -94,6 +94,7 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.qt_version }}
+          modules: 'qtmultimedia'
           cache: true
       - name: Cache InstallBuilder
         id: cache-bitrock
@@ -183,13 +184,14 @@ jobs:
 
     steps:
       - name: Install Qt
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.qt_version }}
+          modules: 'qtmultimedia'
           arch: win64_msvc2019_64
           cache: true
       - name: Install Qt debug info
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.qt_version }}
           arch: win64_msvc2019_64
@@ -283,6 +285,7 @@ jobs:
         uses: jurplel/install-qt-action@v3
         with:
           version: ${{ env.qt_version }}
+          modules: 'qtmultimedia'
           cache: true
       - name: Cache InstallBuilder
         id: cache-bitrock
