@@ -228,8 +228,6 @@ add_library(core SHARED
         pluginmanager.h
         pluginmanagersimulator.cpp
         pluginmanagersimulator.h
-        pluginmanagerweatherdata.cpp
-        pluginmanagerweatherdata.h
         progress.h
         registermetadata.cpp
         registermetadata.h
@@ -239,9 +237,6 @@ add_library(core SHARED
         simulator.h
         threadedreader.cpp
         threadedreader.h
-        weatherdata.h
-        weathermanager.cpp
-        weathermanager.h
         webdataservices.cpp
         webdataservices.h
         webdataservicesms.cpp

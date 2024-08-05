@@ -19,9 +19,8 @@ namespace BlackSimPlugin::Fsx
     CSimulatorFsx::CSimulatorFsx(const CSimulatorPluginInfo &info,
                                  IOwnAircraftProvider *ownAircraftProvider,
                                  IRemoteAircraftProvider *remoteAircraftProvider,
-                                 IWeatherGridProvider *weatherGridProvider,
                                  IClientProvider *clientProvider,
-                                 QObject *parent) : CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
+                                 QObject *parent) : CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent)
     {
         this->setDefaultModel(
             { "Boeing 737-800 Paint1",

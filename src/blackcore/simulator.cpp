@@ -112,73 +112,9 @@ namespace BlackCore
         this->setUpdateAllRemoteAircraft();
     }
 
-    bool ISimulator::isWeatherActivated() const
-    {
-        return m_isWeatherActivated;
-    }
-
-    void ISimulator::setWeatherActivated(bool activated)
-    {
-        m_isWeatherActivated = activated;
-        if (m_isWeatherActivated)
-        {
-            const auto selectedWeatherScenario = m_weatherScenarioSettings.get();
-            if (CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
-            {
-                if (m_lastWeatherPosition.isNull())
-                {
-                    const CCoordinateGeodetic p = this->getOwnAircraftPosition();
-                    if (!p.isNull())
-                    {
-                        m_lastWeatherPosition = p;
-                        this->requestWeatherGrid(p, this->identifier());
-                    }
-                }
-            }
-            else
-            {
-                m_lastWeatherPosition.setNull();
-                this->injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
-            }
-        }
-        else
-        {
-            m_lastWeatherPosition.setNull(); // clean up so next time we fetch weather again
-        }
-    }
-
     void ISimulator::setFlightNetworkConnected(bool connected)
     {
         m_networkConnected = connected;
-    }
-
-    void ISimulator::reloadWeatherSettings()
-    {
-        // log crash info about weather
-        if (!this->isShuttingDown()) { CCrashHandler::instance()->crashAndLogAppendInfo(u"Simulator weather: " % boolToYesNo(m_isWeatherActivated)); }
-        if (!m_isWeatherActivated) { return; }
-
-        m_lastWeatherPosition.setNull();
-        const CWeatherScenario selectedWeatherScenario = m_weatherScenarioSettings.get();
-        if (CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
-        {
-            if (m_lastWeatherPosition.isNull())
-            {
-                const CCoordinateGeodetic p = this->getOwnAircraftPosition();
-                if (!p.isNull())
-                {
-                    m_lastWeatherPosition = p;
-                    this->requestWeatherGrid(p, this->identifier());
-                }
-            }
-        }
-        else
-        {
-            this->injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
-        }
-
-        // log crash info about weather
-        if (!this->isShuttingDown()) { CCrashHandler::instance()->crashAndLogAppendInfo(selectedWeatherScenario.toQString(true)); }
     }
 
     void ISimulator::clearAllRemoteAircraftData()
@@ -299,11 +235,6 @@ namespace BlackCore
         BLACK_AUDIT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Try to kill timer from another thread");
         this->killTimer(m_timerId);
         m_timerId = -1;
-    }
-
-    void ISimulator::injectWeatherGrid(const CWeatherGrid &weatherGrid)
-    {
-        Q_UNUSED(weatherGrid)
     }
 
     CInterpolationAndRenderingSetupPerCallsign ISimulator::getInterpolationSetupConsolidated(const CCallsign &callsign, bool forceFullUpdate) const
@@ -674,12 +605,10 @@ namespace BlackCore
     ISimulator::ISimulator(const CSimulatorPluginInfo &pluginInfo,
                            IOwnAircraftProvider *ownAircraftProvider,
                            IRemoteAircraftProvider *remoteAircraftProvider,
-                           IWeatherGridProvider *weatherGridProvider,
                            IClientProvider *clientProvider,
                            QObject *parent) : QObject(parent),
                                               COwnAircraftAware(ownAircraftProvider),
                                               CRemoteAircraftAware(remoteAircraftProvider),
-                                              CWeatherGridAware(weatherGridProvider),
                                               CClientAware(clientProvider),
                                               ISimulationEnvironmentProvider(pluginInfo),
                                               IInterpolationSetupProvider(),

@@ -14,7 +14,6 @@
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/settings/xswiftbussettings.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/weather/weathergrid.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/geo/coordinategeodetic.h"
@@ -56,17 +55,12 @@ namespace BlackMisc
         class IOwnAircraftProvider;
         class IRemoteAircraftProvider;
     }
-    namespace Weather
-    {
-        class IWeatherGridProvider;
-    }
 }
 
 namespace BlackSimPlugin::XPlane
 {
     class CXSwiftBusServiceProxy;
     class CXSwiftBusTrafficProxy;
-    class CXSwiftBusWeatherProxy;
 
     //! X-Plane data
     struct XPlaneData
@@ -125,7 +119,6 @@ namespace BlackSimPlugin::XPlane
         CSimulatorXPlane(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                          BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                          BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                         BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                          BlackMisc::Network::IClientProvider *clientProvider,
                          QObject *parent = nullptr);
 
@@ -152,7 +145,6 @@ namespace BlackSimPlugin::XPlane
         virtual void resetAircraftStatistics() override;
         virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
         virtual bool testSendSituationAndParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) override;
-        virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
         virtual void callbackReceivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign, bool isWater) override;
         virtual void setFlightNetworkConnected(bool connected) override;
         //! @}
@@ -269,7 +261,6 @@ namespace BlackSimPlugin::XPlane
         QDBusServiceWatcher *m_watcher { nullptr };
         CXSwiftBusServiceProxy *m_serviceProxy { nullptr };
         CXSwiftBusTrafficProxy *m_trafficProxy { nullptr };
-        CXSwiftBusWeatherProxy *m_weatherProxy { nullptr };
         QTimer m_fastTimer;
         QTimer m_slowTimer;
         QTimer m_airportUpdater;
@@ -344,7 +335,6 @@ namespace BlackSimPlugin::XPlane
         virtual BlackCore::ISimulator *create(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                                               BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                                               BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                                              BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                                               BlackMisc::Network::IClientProvider *clientProvider) override;
 
         //! \copydoc BlackCore::ISimulatorFactory::createListener

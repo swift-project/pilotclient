@@ -31,7 +31,6 @@ namespace XSwiftBus
 {
     class CService;
     class CTraffic;
-    class CWeather;
 
     /*!
      * Main plugin class
@@ -73,7 +72,6 @@ namespace XSwiftBus
         std::shared_ptr<CDBusConnection> m_dbusConnection;
         std::unique_ptr<CService> m_service;
         std::unique_ptr<CTraffic> m_traffic;
-        std::unique_ptr<CWeather> m_weather;
         CMenu m_menu;
         CMenuItem m_showHideLabelsMenuItem;
         CMenuItem m_enableDisableXPlaneAtisMenuItem;

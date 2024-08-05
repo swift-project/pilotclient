@@ -22,10 +22,6 @@
 #include "blackmisc/weather/metardecoder.h"
 #include "blackmisc/weather/presentweather.h"
 #include "blackmisc/weather/presentweatherlist.h"
-#include "blackmisc/weather/temperaturelayer.h"
-#include "blackmisc/weather/temperaturelayerlist.h"
-#include "blackmisc/weather/visibilitylayer.h"
-#include "blackmisc/weather/visibilitylayerlist.h"
 #include "blackmisc/weather/windlayer.h"
 #include "blackmisc/weather/windlayerlist.h"
 #include "test.h"
@@ -46,12 +42,6 @@ namespace BlackMiscTest
     private slots:
         //! Testing CCloudLayer/CCloudLayerList
         void cloudLayer();
-
-        //! Testing CTemperatureLayer/CTemperatureLayerList
-        void temperatureLayer();
-
-        //! Testing CVisibilityLayer/CVisibilityLayerList
-        void visibilityLayer();
 
         //! Testing CWindLayer/CWindLayerList
         void windLayer();
@@ -92,46 +82,6 @@ namespace BlackMiscTest
         QVERIFY(cll.findByBase(base1) != CCloudLayer());
         QVERIFY(cll.findByBase(base2) != CCloudLayer());
         QVERIFY(cll.findByBase(base3) == CCloudLayer());
-    }
-
-    void CTestWeather::temperatureLayer()
-    {
-        const CAltitude level1 { 0, CAltitude::AboveGround, CLengthUnit::ft() };
-        const CTemperature temp1 { 25, CTemperatureUnit::C() };
-        const CTemperature dp1 { 15, CTemperatureUnit::C() };
-        const double rh = 80.0;
-
-        CTemperatureLayer tl1(level1, temp1, dp1, rh);
-        QVERIFY(tl1.getLevel() == level1);
-        QVERIFY(tl1.getTemperature() == temp1);
-        QVERIFY(tl1.getDewPoint() == dp1);
-        QCOMPARE(tl1.getRelativeHumidity(), rh);
-
-        CAltitude level2 { 25000, CAltitude::AboveGround, CLengthUnit::ft() };
-        CTemperatureLayerList tll { tl1 };
-        QVERIFY(tll.containsLevel(level1));
-        QVERIFY(!tll.containsLevel(level2));
-        QVERIFY(tll.findByLevel(level1) != CTemperatureLayer());
-        QVERIFY(tll.findByLevel(level2) == CTemperatureLayer());
-    }
-
-    void CTestWeather::visibilityLayer()
-    {
-        const CAltitude base1 { 0, CAltitude::AboveGround, CLengthUnit::ft() };
-        const CAltitude top1 { 5000, CAltitude::AboveGround, CLengthUnit::ft() };
-        const CLength visibility1 { 10, CLengthUnit::SM() };
-
-        CVisibilityLayer vl1(base1, top1, visibility1);
-        QVERIFY(vl1.getBase() == base1);
-        QVERIFY(vl1.getTop() == top1);
-        QVERIFY(vl1.getVisibility() == visibility1);
-
-        const CAltitude base2 { 25000, CAltitude::AboveGround, CLengthUnit::ft() };
-        CVisibilityLayerList vll { vl1 };
-        QVERIFY(vll.containsBase(base1));
-        QVERIFY(!vll.containsBase(base2));
-        QVERIFY(vll.findByBase(base1) != CVisibilityLayer());
-        QVERIFY(vll.findByBase(base2) == CVisibilityLayer());
     }
 
     void CTestWeather::windLayer()

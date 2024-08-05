@@ -660,8 +660,6 @@ add_library(misc SHARED
         weather/cloudlayer.h
         weather/cloudlayerlist.cpp
         weather/cloudlayerlist.h
-        weather/gridpoint.cpp
-        weather/gridpoint.h
         weather/metar.cpp
         weather/metar.h
         weather/metardecoder.cpp
@@ -674,24 +672,6 @@ add_library(misc SHARED
         weather/presentweatherlist.h
         weather/registermetadataweather.cpp
         weather/registermetadataweather.h
-        weather/temperaturelayer.cpp
-        weather/temperaturelayer.h
-        weather/temperaturelayerlist.cpp
-        weather/temperaturelayerlist.h
-        weather/visibilitylayer.cpp
-        weather/visibilitylayer.h
-        weather/visibilitylayerlist.cpp
-        weather/visibilitylayerlist.h
-        weather/weatherdataplugininfo.cpp
-        weather/weatherdataplugininfo.h
-        weather/weatherdataplugininfolist.cpp
-        weather/weatherdataplugininfolist.h
-        weather/weathergrid.cpp
-        weather/weathergrid.h
-        weather/weathergridprovider.cpp
-        weather/weathergridprovider.h
-        weather/weatherscenario.cpp
-        weather/weatherscenario.h
         weather/windlayer.cpp
         weather/windlayer.h
         weather/windlayerlist.cpp

@@ -127,7 +127,6 @@ namespace BlackSimPlugin::FsxCommon
         CSimulatorFsxCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                             BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                             BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                            BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                             BlackMisc::Network::IClientProvider *clientProvider,
                             QObject *parent = nullptr);
 
@@ -153,7 +152,6 @@ namespace BlackSimPlugin::FsxCommon
         virtual void setFlightNetworkConnected(bool connected) override;
         virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
         virtual bool testSendSituationAndParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) override;
-        virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
         //! @}
 
         //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation

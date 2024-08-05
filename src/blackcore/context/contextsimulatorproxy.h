@@ -174,15 +174,6 @@ namespace BlackCore
             //! \copydoc BlackCore::Context::IContextSimulator::resetToModelMatchingAircraft
             virtual bool resetToModelMatchingAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 
-            //! \copydoc BlackCore::Context::IContextSimulator::isWeatherActivated
-            virtual bool isWeatherActivated() const override;
-
-            //! \copydoc BlackCore::Context::IContextSimulator::setWeatherActivated
-            virtual void setWeatherActivated(bool activated) override;
-
-            //! \copydoc BlackCore::Context::IContextSimulator::requestWeatherGrid
-            virtual void requestWeatherGrid(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::CIdentifier &identifier) override;
-
             //! \copydoc BlackCore::Context::IContextSimulator::requestElevationBySituation
             virtual bool requestElevationBySituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
 

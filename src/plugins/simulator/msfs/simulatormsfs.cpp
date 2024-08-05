@@ -20,9 +20,8 @@ namespace BlackSimPlugin::Msfs
     CSimulatorMsFs::CSimulatorMsFs(const CSimulatorPluginInfo &info,
                                    IOwnAircraftProvider *ownAircraftProvider,
                                    IRemoteAircraftProvider *remoteAircraftProvider,
-                                   IWeatherGridProvider *weatherGridProvider,
                                    IClientProvider *clientProvider,
-                                   QObject *parent) : CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
+                                   QObject *parent) : CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent)
     {
         this->setDefaultModel(
             { "Airbus A320 Neo Asobo",

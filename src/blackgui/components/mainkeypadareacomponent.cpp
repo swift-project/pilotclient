@@ -46,7 +46,6 @@ namespace BlackGui::Components
         connect(ui->pb_MainSimulator, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
         connect(ui->pb_MainTextMessages, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
         connect(ui->pb_MainUsers, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
-        connect(ui->pb_MainWeather, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
 
         // non info areas
         connect(ui->pb_Connect, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
@@ -207,7 +206,6 @@ namespace BlackGui::Components
         if (button == ui->pb_MainSimulator) return CMainInfoAreaComponent::InfoAreaSimulator;
         if (button == ui->pb_MainTextMessages) return CMainInfoAreaComponent::InfoAreaTextMessages;
         if (button == ui->pb_MainUsers) return CMainInfoAreaComponent::InfoAreaUsers;
-        if (button == ui->pb_MainWeather) return CMainInfoAreaComponent::InfoAreaWeather;
         return CMainInfoAreaComponent::InfoAreaNone;
     }
 
@@ -227,7 +225,6 @@ namespace BlackGui::Components
         case CMainInfoAreaComponent::InfoAreaSimulator: return ui->pb_MainSimulator;
         case CMainInfoAreaComponent::InfoAreaTextMessages: return ui->pb_MainTextMessages;
         case CMainInfoAreaComponent::InfoAreaUsers: return ui->pb_MainUsers;
-        case CMainInfoAreaComponent::InfoAreaWeather: return ui->pb_MainWeather;
         default: break;
         }
         return nullptr;
@@ -247,7 +244,6 @@ namespace BlackGui::Components
         ui->pb_MainSimulator->setChecked(false);
         ui->pb_MainTextMessages->setChecked(false);
         ui->pb_MainUsers->setChecked(false);
-        ui->pb_MainWeather->setChecked(false);
 
         this->updateConnectionStatus();
     }

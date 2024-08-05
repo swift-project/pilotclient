@@ -14,7 +14,6 @@
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/settings/fgswiftbussettings.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/weather/weathergrid.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/geo/coordinategeodetic.h"
@@ -55,10 +54,6 @@ namespace BlackMisc
         class CSimulatorPluginInfo;
         class IOwnAircraftProvider;
         class IRemoteAircraftProvider;
-    }
-    namespace Weather
-    {
-        class IWeatherGridProvider;
     }
 }
 
@@ -120,7 +115,6 @@ namespace BlackSimPlugin::Flightgear
         CSimulatorFlightgear(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                              BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                              BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                             BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                              BlackMisc::Network::IClientProvider *clientProvider,
                              QObject *parent = nullptr);
 
@@ -299,7 +293,6 @@ namespace BlackSimPlugin::Flightgear
         virtual BlackCore::ISimulator *create(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                                               BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                                               BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                                              BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                                               BlackMisc::Network::IClientProvider *clientProvider) override;
 
         //! \copydoc BlackCore::ISimulatorFactory::createListener

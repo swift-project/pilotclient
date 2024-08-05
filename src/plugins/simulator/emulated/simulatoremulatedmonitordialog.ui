@@ -457,32 +457,6 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tb_Weather">
-      <attribute name="title">
-       <string>Weather</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="vl_Weather">
-       <item>
-        <widget class="QGroupBox" name="gb_RequestWeather">
-         <property name="title">
-          <string>Request weather</string>
-         </property>
-         <layout class="QVBoxLayout" name="vl_GbWeather">
-          <item alignment="Qt::AlignRight">
-           <widget class="QPushButton" name="pb_RequestWeather">
-            <property name="text">
-             <string>request weather</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QTextEdit" name="te_Weather"/>
-          </item>
-         </layout>
-        </widget>
-       </item>
-      </layout>
-     </widget>
      <widget class="QWidget" name="tb_LogMessages">
       <attribute name="title">
        <string>API/Log information</string>

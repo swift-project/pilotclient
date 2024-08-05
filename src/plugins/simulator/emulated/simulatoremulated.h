@@ -39,7 +39,6 @@ namespace BlackSimPlugin::Emulated
             const BlackMisc::Simulation::CSimulatorPluginInfo &info,
             BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
             BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-            BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
             BlackMisc::Network::IClientProvider *clientProvider,
             QObject *parent = nullptr);
 
@@ -67,7 +66,6 @@ namespace BlackSimPlugin::Emulated
         virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
         virtual bool testSendSituationAndParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) override;
         virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
-        virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
 
         // ----- functions just logged -------
         virtual bool logicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
@@ -159,9 +157,6 @@ namespace BlackSimPlugin::Emulated
         //! Fetch data from interpolator
         //! \remarks basically does the same as a real driver, obtains data from the interpolator
         void updateRemoteAircraft();
-
-        //! Request weather
-        bool requestWeather();
 
         bool m_log = false; //!< from settings
         bool m_paused = false;

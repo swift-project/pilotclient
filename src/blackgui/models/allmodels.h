@@ -28,7 +28,6 @@
 #include "blackgui/models/serverlistmodel.h"
 #include "blackgui/models/simulatedaircraftlistmodel.h"
 #include "blackgui/models/statusmessagelistmodel.h"
-#include "blackgui/models/temperaturelayerlistmodel.h"
 #include "blackgui/models/textmessagelistmodel.h"
 #include "blackgui/models/userlistmodel.h"
 #include "blackgui/models/windlayerlistmodel.h"

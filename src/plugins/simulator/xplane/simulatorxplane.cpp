@@ -5,7 +5,6 @@
 #include "qcompilerdetection.h"
 #include "xswiftbusserviceproxy.h"
 #include "xswiftbustrafficproxy.h"
-#include "xswiftbusweatherproxy.h"
 #include "blackcore/aircraftmatcher.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
@@ -13,11 +12,6 @@
 #include "blackmisc/simulation/settings/xswiftbussettingsqtfree.inc"
 #include "blackmisc/weather/cloudlayer.h"
 #include "blackmisc/weather/cloudlayerlist.h"
-#include "blackmisc/weather/gridpoint.h"
-#include "blackmisc/weather/temperaturelayer.h"
-#include "blackmisc/weather/temperaturelayerlist.h"
-#include "blackmisc/weather/visibilitylayer.h"
-#include "blackmisc/weather/visibilitylayerlist.h"
 #include "blackmisc/weather/windlayer.h"
 #include "blackmisc/weather/windlayerlist.h"
 #include "blackmisc/aviation/aircraftengine.h"
@@ -91,9 +85,8 @@ namespace BlackSimPlugin::XPlane
     CSimulatorXPlane::CSimulatorXPlane(const CSimulatorPluginInfo &info,
                                        IOwnAircraftProvider *ownAircraftProvider,
                                        IRemoteAircraftProvider *remoteAircraftProvider,
-                                       IWeatherGridProvider *weatherGridProvider,
                                        IClientProvider *clientProvider,
-                                       QObject *parent) : CSimulatorPluginCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
+                                       QObject *parent) : CSimulatorPluginCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent)
     {
         m_watcher = new QDBusServiceWatcher(this);
         m_watcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
@@ -382,19 +375,6 @@ namespace BlackSimPlugin::XPlane
             {
                 this->updateCockpit(com1, com2, transponder, identifier());
             }
-
-            if (m_isWeatherActivated)
-            {
-                if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()))
-                {
-                    if (m_lastWeatherPosition.isNull() ||
-                        calculateGreatCircleDistance(m_lastWeatherPosition, situation).value(CLengthUnit::mi()) > 20)
-                    {
-                        m_lastWeatherPosition = situation;
-                        requestWeatherGrid(situation, this->identifier());
-                    }
-                }
-            } // weather
         }
     }
 
@@ -484,7 +464,7 @@ namespace BlackSimPlugin::XPlane
 
     bool CSimulatorXPlane::isConnected() const
     {
-        return m_serviceProxy && m_trafficProxy && m_weatherProxy;
+        return m_serviceProxy && m_trafficProxy;
     }
 
     bool CSimulatorXPlane::connectTo()
@@ -506,13 +486,12 @@ namespace BlackSimPlugin::XPlane
 
         m_serviceProxy = new CXSwiftBusServiceProxy(m_dBusConnection, this);
         m_trafficProxy = new CXSwiftBusTrafficProxy(m_dBusConnection, this);
-        m_weatherProxy = new CXSwiftBusWeatherProxy(m_dBusConnection, this);
 
         // hook up disconnected slot of connection
         bool s = m_dBusConnection.connect(QString(), DBUS_PATH_LOCAL, DBUS_INTERFACE_LOCAL,
                                           "Disconnected", this, SLOT(onDBusServiceUnregistered()));
         Q_ASSERT(s);
-        if (!m_serviceProxy->isValid() || !m_trafficProxy->isValid() || !m_weatherProxy->isValid())
+        if (!m_serviceProxy->isValid() || !m_trafficProxy->isValid())
         {
             this->disconnectFrom();
             return false;
@@ -551,10 +530,8 @@ namespace BlackSimPlugin::XPlane
         if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
         delete m_serviceProxy;
         delete m_trafficProxy;
-        delete m_weatherProxy;
         m_serviceProxy = nullptr;
         m_trafficProxy = nullptr;
-        m_weatherProxy = nullptr;
         m_fastTimerCalls = 0;
         m_slowTimerCalls = 0;
 
@@ -572,10 +549,8 @@ namespace BlackSimPlugin::XPlane
         if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
         delete m_serviceProxy;
         delete m_trafficProxy;
-        delete m_weatherProxy;
         m_serviceProxy = nullptr;
         m_trafficProxy = nullptr;
-        m_weatherProxy = nullptr;
         this->emitSimulatorCombinedStatus();
     }
 
@@ -925,111 +900,6 @@ namespace BlackSimPlugin::XPlane
         if (!m_trafficProxy || !m_trafficProxy->isValid()) { return false; }
         m_trafficProxy->setFollowedAircraft(callsign.toQString());
         return true;
-    }
-
-    void CSimulatorXPlane::injectWeatherGrid(const CWeatherGrid &weatherGrid)
-    {
-        if (this->isShuttingDownOrDisconnected()) { return; }
-        if (weatherGrid.isEmpty()) { return; }
-        if (!this->isWeatherActivated()) { return; }
-
-        if (!CThreadUtils::isInThisThread(this))
-        {
-
-            BLACK_VERIFY_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Wrong thread");
-            QPointer<CSimulatorXPlane> myself(this);
-            QTimer::singleShot(0, this, [=] {
-                if (!myself) { return; }
-                myself->injectWeatherGrid(weatherGrid);
-            });
-            return;
-        }
-
-        // XPlane weather off
-        m_weatherProxy->setUseRealWeather(false);
-
-        //! TODO: find the closest
-        if (weatherGrid.isEmpty()) { return; }
-        const CGridPoint gridPoint = weatherGrid.front();
-
-        // todo: find the closest
-        auto visibilityLayers = gridPoint.getVisibilityLayers();
-        visibilityLayers.sortBy(&CVisibilityLayer::getBase);
-        const CVisibilityLayer visibilityLayer = visibilityLayers.frontOrDefault();
-        m_weatherProxy->setVisibility(visibilityLayer.getVisibility().value(CLengthUnit::m()));
-
-        CTemperatureLayerList temperatureLayers = gridPoint.getTemperatureLayers();
-        temperatureLayers.sortBy(&CTemperatureLayer::getLevel);
-        const CTemperatureLayer temperatureLayer = temperatureLayers.frontOrDefault();
-        m_weatherProxy->setTemperature(temperatureLayer.getTemperature().valueInteger(CTemperatureUnit::C()));
-        m_weatherProxy->setDewPoint(temperatureLayer.getDewPoint().valueInteger(CTemperatureUnit::C()));
-        m_weatherProxy->setQNH(gridPoint.getPressureAtMsl().value(CPressureUnit::inHg()));
-
-        int layerNumber = 0;
-        CCloudLayerList cloudLayers = gridPoint.getCloudLayers();
-        auto numberOfLayers = cloudLayers.size();
-        // Fill cloud layers if less then 3
-        while (numberOfLayers < 3)
-        {
-            cloudLayers.push_back(CCloudLayer());
-            numberOfLayers++;
-        }
-        cloudLayers.sortBy(&CCloudLayer::getBase);
-        // todo: Instead of truncate, find the 3 vertical closest cloud layers
-        cloudLayers.truncate(3);
-        for (const auto &cloudLayer : std::as_const(cloudLayers))
-        {
-            const int base = cloudLayer.getBase().valueInteger(CLengthUnit::m());
-            const int top = cloudLayer.getTop().valueInteger(CLengthUnit::m());
-
-            int coverage = 0;
-            switch (cloudLayer.getCoverage())
-            {
-            case CCloudLayer::None: coverage = 0; break;
-            case CCloudLayer::Few: coverage = 2; break;
-            case CCloudLayer::Scattered: coverage = 3; break;
-            case CCloudLayer::Broken: coverage = 4; break;
-            case CCloudLayer::Overcast: coverage = 6; break;
-            default: coverage = 0; break;
-            }
-
-            // Clear = 0, High Cirrus = 1, Scattered = 2, Broken = 3, Overcast = 4, Stratus = 5
-            int type = 0;
-            switch (cloudLayer.getClouds())
-            {
-            case CCloudLayer::NoClouds: type = 0; break;
-            case CCloudLayer::Cirrus: type = 1; break;
-            case CCloudLayer::Stratus: type = 5; break;
-            default: type = 0; break;
-            }
-
-            m_weatherProxy->setCloudLayer(layerNumber, base, top, type, coverage);
-            layerNumber++;
-        }
-
-        layerNumber = 0;
-        CWindLayerList windLayers = gridPoint.getWindLayers();
-        numberOfLayers = windLayers.size();
-        // Fill cloud layers if less then 3
-        while (numberOfLayers < 3)
-        {
-            windLayers.push_back(CWindLayer());
-            numberOfLayers++;
-        }
-        windLayers.sortBy(&CWindLayer::getLevel);
-        // todo: Instead of truncate, find the 3 vertical closest cloud layers
-        windLayers.truncate(3);
-        for (const auto &windLayer : windLayers)
-        {
-            const int altitudeMeter = windLayer.getLevel().valueInteger(CLengthUnit::m());
-            const double directionDeg = windLayer.getDirection().value(CAngleUnit::deg());
-            const int speedKts = windLayer.getSpeed().valueInteger(CSpeedUnit::kts());
-            m_weatherProxy->setWindLayer(layerNumber, altitudeMeter, directionDeg, speedKts, 0, 0, 0);
-            layerNumber++;
-        }
-
-        m_weatherProxy->setPrecipitationRatio(cloudLayers.frontOrDefault().getPrecipitationRate());
-        m_weatherProxy->setThunderstormRatio(0.0);
     }
 
     void CSimulatorXPlane::updateRemoteAircraft()
@@ -1459,10 +1329,9 @@ namespace BlackSimPlugin::XPlane
     ISimulator *CSimulatorXPlaneFactory::create(const CSimulatorPluginInfo &info,
                                                 IOwnAircraftProvider *ownAircraftProvider,
                                                 IRemoteAircraftProvider *remoteAircraftProvider,
-                                                IWeatherGridProvider *weatherGridProvider,
                                                 IClientProvider *clientProvider)
     {
-        return new CSimulatorXPlane(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, this);
+        return new CSimulatorXPlane(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, this);
     }
 
     CSimulatorXPlaneListener::CSimulatorXPlaneListener(const CSimulatorPluginInfo &info) : ISimulatorListener(info)
@@ -1548,9 +1417,8 @@ namespace BlackSimPlugin::XPlane
     {
         CXSwiftBusServiceProxy service(m_DBusConnection);
         CXSwiftBusTrafficProxy traffic(m_DBusConnection);
-        CXSwiftBusWeatherProxy weather(m_DBusConnection);
 
-        const bool result = service.isValid() && traffic.isValid() && weather.isValid();
+        const bool result = service.isValid() && traffic.isValid();
         if (!result) { return; }
 
         const QString swiftVersion = CBuildConfig::getVersionString();

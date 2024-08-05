@@ -8,7 +8,6 @@ endif()
 add_library(xswiftbus SHARED
         org.swift_project.xswiftbus.service.xml
         org.swift_project.xswiftbus.traffic.xml
-        org.swift_project.xswiftbus.weather.xml
         xswiftbus.conf
         command.h
         config.cpp
@@ -47,8 +46,6 @@ add_library(xswiftbus SHARED
         traffic.h
         utils.cpp
         utils.h
-        weather.cpp
-        weather.h
 
         xplanemp2/src/CSL.cpp
         xplanemp2/src/CSL.h

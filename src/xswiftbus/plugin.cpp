@@ -4,7 +4,6 @@
 #include "plugin.h"
 #include "service.h"
 #include "traffic.h"
-#include "weather.h"
 #include "utils.h"
 #include "XPLM/XPLMProcessing.h"
 #include <cmath>
@@ -90,7 +89,6 @@ namespace XSwiftBus
 
         m_service = std::make_unique<CService>(this);
         m_traffic = std::make_unique<CTraffic>(this);
-        m_weather = std::make_unique<CWeather>(this);
 
         m_traffic->setPlaneViewMenu(m_planeViewSubMenu);
 
@@ -114,8 +112,6 @@ namespace XSwiftBus
                 m_service->registerDBusObjectPath(m_service->InterfaceName(), m_service->ObjectPath());
                 m_traffic->setDBusConnection(m_dbusConnection);
                 m_traffic->registerDBusObjectPath(m_traffic->InterfaceName(), m_traffic->ObjectPath());
-                m_weather->setDBusConnection(m_dbusConnection);
-                m_weather->registerDBusObjectPath(m_weather->InterfaceName(), m_weather->ObjectPath());
             });
         }
         else
@@ -136,8 +132,6 @@ namespace XSwiftBus
             m_service->registerDBusObjectPath(m_service->InterfaceName(), m_service->ObjectPath());
             m_traffic->setDBusConnection(m_dbusConnection);
             m_traffic->registerDBusObjectPath(m_traffic->InterfaceName(), m_traffic->ObjectPath());
-            m_weather->setDBusConnection(m_dbusConnection);
-            m_weather->registerDBusObjectPath(m_weather->InterfaceName(), m_weather->ObjectPath());
         }
 
         //! todo RR: Send all logs to the the message window.
@@ -190,7 +184,6 @@ namespace XSwiftBus
 
         plugin->m_dbusDispatcher.runOnce();
         if (plugin->m_service) { plugin->m_service->process(); }
-        if (plugin->m_weather) { plugin->m_weather->process(); }
         if (plugin->m_traffic) { plugin->m_traffic->process(); }
         return -1;
     }

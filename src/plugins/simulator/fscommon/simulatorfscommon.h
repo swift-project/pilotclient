@@ -42,7 +42,6 @@ namespace BlackSimPlugin::FsCommon
         CSimulatorFsCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                            BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                            BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
-                           BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                            BlackMisc::Network::IClientProvider *clientProvider,
                            QObject *parent = nullptr);
 
