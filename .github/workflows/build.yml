@@ -82,7 +82,7 @@ jobs:
           path: docs/html/
 
   buildLinux:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [preBuild, checks]
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
