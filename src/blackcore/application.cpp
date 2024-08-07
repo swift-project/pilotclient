@@ -38,7 +38,6 @@
 #include <QHttpMultiPart>
 #include <QNetworkReply>
 #include <QNetworkRequest>
-#include <QNetworkConfigurationManager>
 #include <QProcess>
 #include <QRegularExpression>
 #include <QSslSocket>
@@ -971,19 +970,6 @@ namespace BlackCore
 
         // Init network
         Q_ASSERT_X(m_accessManager, Q_FUNC_INFO, "Need QAM");
-
-        CLogMessage::preformatted(CNetworkUtils::createNetworkReport(m_accessManager));
-
-        // enable by setting accessible
-        // http://doc.qt.io/qt-5/qnetworkaccessmanager.html#setNetworkAccessible
-        m_accessManager->setNetworkAccessible(QNetworkAccessManager::Accessible);
-
-        // create a network report in the log
-        QTimer::singleShot(4000, this, [=] {
-            if (!sApp || sApp->isShuttingDown()) { return; }
-            const QString r = CNetworkUtils::createNetworkAccessManagerReport(m_accessManager);
-            CLogMessage(this).info(u"Network report:\n%1") << r;
-        });
     }
 
     CApplication *BlackCore::CApplication::instance()

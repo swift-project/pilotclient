@@ -11,7 +11,7 @@
 #include <QIcon>
 #include <QImage>
 #include <QMap>
-#include <QMatrix>
+#include <QTransform>
 #include <QPainter>
 #include <QSize>
 #include <QtGlobal>
@@ -1301,9 +1301,9 @@ namespace BlackMisc
 
     QPixmap CIcons::rotate(int rotateDegrees, const QPixmap &original)
     {
-        QMatrix rm;
-        rm.rotate(rotateDegrees);
-        QPixmap rotated = original.transformed(rm);
+        QTransform rt;
+        rt.rotate(rotateDegrees);
+        QPixmap rotated = original.transformed(rt);
         int xoffset = (rotated.width() - original.width()) / 2;
         int yoffset = (rotated.height() - original.height()) / 2;
         rotated = rotated.copy(xoffset, yoffset, original.width(), original.height());

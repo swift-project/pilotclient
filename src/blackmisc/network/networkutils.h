@@ -12,7 +12,6 @@
 
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
-#include <QNetworkConfiguration>
 #include <QString>
 #include <QStringList>
 #include <QtGlobal>
@@ -123,28 +122,6 @@ namespace BlackMisc::Network
 
         //! Looks like PHP error messages
         static bool looksLikePhpErrorMessage(const QString &errorMessage);
-
-        //! Status about network
-        static BlackMisc::CStatusMessageList createNetworkReport(const QNetworkAccessManager *am);
-
-        //! Status about network, can be used when an URL fails to resolve issues
-        //! \remark that can take a moment to complete, as it checks network
-        static BlackMisc::CStatusMessageList createNetworkReport(const QUrl &url, const QNetworkAccessManager *qam = nullptr);
-
-        //! Report for QAM
-        static QString createNetworkAccessManagerReport(const QNetworkAccessManager *qam);
-
-        //! Configuration as string
-        static QString networkConfigurationToString(const QNetworkConfiguration &configuration);
-
-        //! Type to string
-        static const QString &networkTypeToString(QNetworkConfiguration::Type type);
-
-        //! State to string
-        static const QString &networkStateToString(QNetworkConfiguration::StateFlag state);
-
-        //! States to string
-        static QString networkStatesToString(QNetworkConfiguration::StateFlags states);
 
         //! Operation to string
         static const QString &networkOperationToString(QNetworkAccessManager::Operation operation);

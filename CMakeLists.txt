@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.26)
 
 if(APPLE)
     set(CMAKE_OSX_ARCHITECTURES "x86_64")
-    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13")
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15")
 endif()
 
 set(SWIFT_LANGUAGES C CXX)

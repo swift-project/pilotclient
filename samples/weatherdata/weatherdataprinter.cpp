@@ -52,7 +52,7 @@ void CWeatherDataPrinter::fetchAndPrintWeatherData(const CCoordinateGeodetic &po
 void CWeatherDataPrinter::printWeatherData(const CWeatherGrid &weatherGrid)
 {
     QTextStream qtout(stdout);
-    qtout << "... finished." << endl;
+    qtout << "... finished." << Qt::endl;
     qtout << weatherGrid.getDescription();
-    qtout << endl;
+    qtout << Qt::endl;
 }

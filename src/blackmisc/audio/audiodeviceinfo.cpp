@@ -46,17 +46,6 @@ namespace BlackMisc::Audio
                stringCompare(device.getMachineName(), this->getMachineName(), Qt::CaseInsensitive);
     }
 
-    CAudioDeviceInfo::DeviceType CAudioDeviceInfo::fromQtMode(QAudio::Mode m)
-    {
-        switch (m)
-        {
-        case QAudio::AudioInput: return InputDevice;
-        case QAudio::AudioOutput: return OutputDevice;
-        default: break;
-        }
-        return Unknown;
-    }
-
     CAudioDeviceInfo CAudioDeviceInfo::getDefaultOutputDevice()
     {
         return CAudioDeviceInfo(OutputDevice, QAudioDeviceInfo::defaultOutputDevice().deviceName());
