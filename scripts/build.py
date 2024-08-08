@@ -312,7 +312,6 @@ class LinuxBuilder(Builder):
             "bin/plugins/simulator/libsimulatorflightgearconfig.so",
             "bin/plugins/simulator/libsimulatorxplane.so",
             "bin/plugins/simulator/libsimulatorxplaneconfig.so",
-            "bin/plugins/weatherdata/libweatherdatagfs.so",
             "xswiftbus/64/lin.xpl",
         ]
         dist_path = path.join(utils.get_swift_source_path(), "dist")
@@ -358,7 +357,6 @@ class MacOSBuilder(Builder):
             "bin/plugins/simulator/libsimulatorflightgearconfig.dylib",
             "bin/plugins/simulator/libsimulatorxplane.dylib",
             "bin/plugins/simulator/libsimulatorxplaneconfig.dylib",
-            "bin/plugins/weatherdata/libweatherdatagfs.dylib",
             "xswiftbus/64/mac.xpl",
         ]
         dist_path = path.join(utils.get_swift_source_path(), "dist")
