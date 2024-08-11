@@ -24,6 +24,8 @@ else()
         set(LIBEVENT_CORE_ABS "${dir}/${LIBEVENT_CORE_ABS}")
     endif()
 
+    string(REGEX MATCH "libevent_core-2.1.so.[1-9]+" SOMAJOR_VERSION ${LIBEVENT_CORE_ABS})
+    set_target_properties(externals_event PROPERTIES IMPORTED_SONAME ${SOMAJOR_VERSION})
     set_target_properties(externals_event PROPERTIES IMPORTED_LOCATION ${LIBEVENT_CORE_ABS})
 endif()
 

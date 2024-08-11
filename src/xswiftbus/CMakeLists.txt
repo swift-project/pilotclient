@@ -158,6 +158,8 @@ target_compile_definitions(xswiftbus PUBLIC XSWIFTBUS_VERSION="${swift_version_m
 
 if(APPLE)
     set_target_properties(xswiftbus PROPERTIES INSTALL_RPATH @loader_path/)
+elseif(UNIX)
+    set_target_properties(xswiftbus PROPERTIES INSTALL_RPATH $ORIGIN)
 endif()
 
 include(${PROJECT_SOURCE_DIR}/cmake/xswiftbus_tools.cmake)
