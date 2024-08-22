@@ -252,8 +252,8 @@ namespace BlackCore
         //! DBus address from CMD line, otherwise ""
         QString getCmdDBusAddressValue() const;
 
-        //! Add the VATLIB options
-        void addVatlibOptions();
+        //! Add the network options
+        void addNetworkOptions();
 
         //! Add the audio options
         void addAudioOptions();
