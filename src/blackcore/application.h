@@ -253,7 +253,7 @@ namespace BlackCore
         QString getCmdDBusAddressValue() const;
 
         //! Add the VATLIB options
-        void addVatlibOptions();
+        void addNetworkOptions();
 
         //! Add the audio options
         void addAudioOptions();

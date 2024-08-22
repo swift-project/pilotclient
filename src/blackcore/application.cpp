@@ -1027,7 +1027,7 @@ namespace BlackCore
         this->addParserOption(m_cmdDBusAddress);
     }
 
-    void CApplication::addVatlibOptions()
+    void CApplication::addNetworkOptions()
     {
         this->addParserOptions(IContextNetwork::getCmdLineOptions());
     }
