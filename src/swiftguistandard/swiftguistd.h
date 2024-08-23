@@ -47,7 +47,6 @@ namespace BlackGui::Components
 {
     class CDbLoadDataDialog;
     class CAutoPublishDialog;
-    class CLoginDialog;
     class CModelBrowserDialog;
 }
 namespace Ui
@@ -122,7 +121,6 @@ private:
     QScopedPointer<BlackGui::Components::CNavigatorDialog> m_navigator { new BlackGui::Components::CNavigatorDialog() }; //!< navigator dialog bar, if I pass the parent, the dialog is always centered over the parent
     QScopedPointer<BlackGui::Components::CDbLoadDataDialog> m_dbLoadDialog; //!< load DB data, lazy init UI component
     QScopedPointer<BlackGui::Components::CAutoPublishDialog> m_autoPublishDialog; //!< auto publish dialog
-    QScopedPointer<BlackGui::Components::CLoginDialog> m_loginDialog; //!< login dialog
     QScopedPointer<BlackGui::Components::CModelBrowserDialog> m_modelBrower; //!< model browser
     QScopedPointer<BlackGui::Components::CAircraftModelSetValidationDialog> m_validationDialog; //!< aircraft model validation dialog
     BlackMisc::CData<BlackMisc::Simulation::Data::TLastAutoPublish> m_lastAutoPublish { this };

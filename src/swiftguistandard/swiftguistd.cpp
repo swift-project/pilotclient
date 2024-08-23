@@ -7,7 +7,6 @@
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/dbloaddatadialog.h"
 #include "blackgui/components/autopublishdialog.h"
-#include "blackgui/components/logindialog.h"
 #include "blackgui/components/modelbrowserdialog.h"
 #include "blackgui/components/settingscomponent.h"
 #include "blackgui/components/textmessagecomponent.h"
@@ -244,22 +243,12 @@ void SwiftGuiStd::loginRequested()
 {
     if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork()) { return; }
 
-    const bool shift = QApplication::keyboardModifiers() & Qt::ShiftModifier;
-    if (shift)
+    const bool changed = MainPageLogin != ui->sw_MainMiddle->currentIndex();
+    this->setMainPage(MainPageLogin);
+    if (!changed)
     {
-        if (!m_loginDialog) { m_loginDialog.reset(new CLoginDialog(this)); }
-        connect(m_loginDialog.data(), &CLoginDialog::requestNetworkSettings, this, &SwiftGuiStd::displayNetworkSettings);
-        m_loginDialog->show();
-    }
-    else
-    {
-        const bool changed = MainPageLogin != ui->sw_MainMiddle->currentIndex();
-        this->setMainPage(MainPageLogin);
-        if (!changed)
-        {
-            // fake changed signal to trigger blinking disconnect button (issue #115)
-            emit this->currentMainInfoAreaChanged(ui->sw_MainMiddle->currentWidget());
-        }
+        // fake changed signal to trigger blinking disconnect button (issue #115)
+        emit this->currentMainInfoAreaChanged(ui->sw_MainMiddle->currentWidget());
     }
 }
 
