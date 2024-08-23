@@ -81,9 +81,6 @@ namespace BlackGui::Components
         this->setForceSmall(true);
         this->showKillButton(false);
 
-        // override details
-        ui->comp_NetworkDetails->setAlwaysAllowOverride(true);
-
         // Stored data
         this->loadRememberedUserData();
 
@@ -156,13 +153,6 @@ namespace BlackGui::Components
             const CUser user = this->getUserFromPilotGuiValues();
             currentServer.setUser(user);
 
-            // FSD setup, then override
-            if (ui->comp_NetworkDetails->isFsdSetupOverrideEnabled())
-            {
-                const CFsdSetup fsd = ui->comp_NetworkDetails->getFsdSetup();
-                currentServer.setFsdSetup(fsd);
-            }
-
             // update for own aircraft context
             sGui->getIContextOwnAircraft()->updateOwnAircraftPilot(currentServer.getUser());
 
@@ -224,11 +214,6 @@ namespace BlackGui::Components
         {
             emit this->loginOrLogoffCancelled();
         }
-    }
-
-    void CLoginAdvComponent::resetState()
-    {
-        ui->comp_NetworkDetails->resetState();
     }
 
     void CLoginAdvComponent::loadRememberedUserData()

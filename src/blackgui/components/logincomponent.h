@@ -227,9 +227,6 @@ namespace BlackGui::Components
         //! Set the server buttons visible
         void setServerButtonsVisible(bool visible);
 
-        //! Tab index changed
-        void onDetailsTabChanged(int index);
-
         static constexpr int OverlayMessageMs = 5000;
         static constexpr int LogoffIntervalSeconds = 20; //!< time before logoff
 

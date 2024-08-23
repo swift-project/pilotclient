@@ -27,10 +27,6 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QStackedWidget" name="sw_NetworkServerDetails">
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
      <widget class="QWidget" name="tb_NetworkServer">
       <layout class="QVBoxLayout" name="vl_NetworkServerPage">
        <property name="leftMargin">
@@ -100,13 +96,6 @@
                  </size>
                 </property>
                </spacer>
-              </item>
-              <item>
-               <widget class="QPushButton" name="pb_DetailsVatsim">
-                <property name="text">
-                 <string>details</string>
-                </property>
-               </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pb_OverrideCredentialsVatsim">
@@ -202,13 +191,6 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pb_DetailsOtherServers">
-                <property name="text">
-                 <string>details</string>
-                </property>
-               </widget>
-              </item>
-              <item>
                <widget class="QPushButton" name="pb_OverrideCredentialsOtherServers">
                 <property name="toolTip">
                  <string>copy credentials to pilot section</string>
@@ -282,77 +264,6 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tb_NetworkDetails">
-      <layout class="QVBoxLayout" name="vl_NetworkDetailsPage">
-       <property name="leftMargin">
-        <number>2</number>
-       </property>
-       <property name="topMargin">
-        <number>2</number>
-       </property>
-       <property name="rightMargin">
-        <number>2</number>
-       </property>
-       <property name="bottomMargin">
-        <number>2</number>
-       </property>
-       <item>
-        <widget class="QTabWidget" name="tw_Details">
-         <property name="currentIndex">
-          <number>0</number>
-         </property>
-         <widget class="QWidget" name="tb_FsdDetails">
-          <attribute name="title">
-           <string>FSD details</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="vl_FsdDetails">
-           <property name="leftMargin">
-            <number>3</number>
-           </property>
-           <property name="topMargin">
-            <number>3</number>
-           </property>
-           <property name="rightMargin">
-            <number>3</number>
-           </property>
-           <property name="bottomMargin">
-            <number>3</number>
-           </property>
-           <item alignment="Qt::AlignLeft|Qt::AlignTop">
-            <widget class="BlackGui::Editors::CFsdSetupForm" name="form_FsdDetails">
-             <property name="minimumSize">
-              <size>
-               <width>150</width>
-               <height>75</height>
-              </size>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="tb_BackToServer">
-          <attribute name="icon">
-           <iconset resource="../../blackmisc/blackmisc.qrc">
-            <normaloff>:/pastel/icons/pastel/16/close.png</normaloff>:/pastel/icons/pastel/16/close.png</iconset>
-          </attribute>
-          <attribute name="title">
-           <string>Back to server</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout">
-           <item alignment="Qt::AlignRight">
-            <widget class="QPushButton" name="pb_BackToServer">
-             <property name="text">
-              <string>back to server</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </widget>
    </item>
   </layout>
  </widget>
@@ -378,16 +289,12 @@
  <tabstops>
   <tabstop>tw_Network</tabstop>
   <tabstop>comp_VatsimServers</tabstop>
-  <tabstop>pb_DetailsVatsim</tabstop>
   <tabstop>pb_OverrideCredentialsVatsim</tabstop>
   <tabstop>le_PartnerCallsign</tabstop>
   <tabstop>comp_OtherServers</tabstop>
   <tabstop>pb_RefreshOtherServers</tabstop>
   <tabstop>pb_OtherServersGotoSettings</tabstop>
-  <tabstop>pb_DetailsOtherServers</tabstop>
   <tabstop>pb_OverrideCredentialsOtherServers</tabstop>
-  <tabstop>tw_Details</tabstop>
-  <tabstop>pb_BackToServer</tabstop>
  </tabstops>
  <resources>
   <include location="../../blackmisc/blackmisc.qrc"/>

@@ -258,59 +258,6 @@
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="tb_FsdDetails">
-            <attribute name="title">
-             <string>FSD details</string>
-            </attribute>
-            <layout class="QVBoxLayout" name="vl_FsdDetails">
-             <property name="leftMargin">
-              <number>3</number>
-             </property>
-             <property name="topMargin">
-              <number>3</number>
-             </property>
-             <property name="rightMargin">
-              <number>3</number>
-             </property>
-             <property name="bottomMargin">
-              <number>3</number>
-             </property>
-             <item>
-              <widget class="QScrollArea" name="sa_FsdDetails">
-               <property name="widgetResizable">
-                <bool>true</bool>
-               </property>
-               <widget class="QWidget" name="qw_FsdDetails">
-                <property name="geometry">
-                 <rect>
-                  <x>0</x>
-                  <y>0</y>
-                  <width>293</width>
-                  <height>55</height>
-                 </rect>
-                </property>
-                <layout class="QVBoxLayout" name="vl_ScrollAreaFsdDetails">
-                 <property name="leftMargin">
-                  <number>2</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>2</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>2</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>2</number>
-                 </property>
-                 <item alignment="Qt::AlignLeft">
-                  <widget class="BlackGui::Editors::CFsdSetupForm" name="form_FsdDetails"/>
-                 </item>
-                </layout>
-               </widget>
-              </widget>
-             </item>
-            </layout>
-           </widget>
            <widget class="QWidget" name="tb_MatchingLog">
             <attribute name="title">
              <string>Matching log</string>
@@ -887,7 +834,6 @@
   <tabstop>pb_RefreshOtherServers</tabstop>
   <tabstop>pb_OtherServersGotoSettings</tabstop>
   <tabstop>pb_OverrideCredentialsOtherServers</tabstop>
-  <tabstop>sa_FsdDetails</tabstop>
  </tabstops>
  <resources/>
  <connections/>
