@@ -37,43 +37,17 @@ namespace BlackGui::Components
             LoginOthers,
         };
 
-        //! Pages
-        enum Page
-        {
-            PageServer,
-            PageDetails
-        };
-
-        //! Details
-        enum Details
-        {
-            DetailsServer,
-            DetailsBack
-        };
-
         //! Ctor
         explicit CNetworkDetailsComponent(QWidget *parent = nullptr);
 
         //! Dtor
         virtual ~CNetworkDetailsComponent() override;
 
-        //! FSD setup
-        BlackMisc::Network::CFsdSetup getFsdSetup() const;
-
-        //! Allow override even in read only mode
-        void setAlwaysAllowOverride(bool allow);
-
-        //! Specific setup enabled?
-        bool isFsdSetupOverrideEnabled() const;
-
         //! Login mode
         BlackMisc::Network::CLoginMode getLoginMode() const;
 
         //! Login mode
         void setLoginMode(BlackMisc::Network::CLoginMode mode);
-
-        //! Reset state
-        void resetState();
 
         //! @{
         //! Selected server
@@ -116,20 +90,11 @@ namespace BlackGui::Components
         //! Set the server buttons visible
         void setServerButtonsVisible(bool visible);
 
-        //! Tab index changed
-        void onDetailsTabChanged(int index);
-
         //! Override credentials
         void onOverrideCredentialsToPilot();
 
         //! VATSIM data file was loaded
         void onWebServiceDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
-
-        //! Change page
-        void onChangePage();
-
-        //! Set the back tab
-        void setBackTabName();
 
         BlackCore::Data::CNetworkSetup m_networkSetup; //!< servers last used
         bool m_updatePilotOnServerChanges = true;

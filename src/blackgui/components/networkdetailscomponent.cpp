@@ -22,19 +22,13 @@ namespace BlackGui::Components
                                                                           ui(new Ui::CNetworkDetailsComponent)
     {
         ui->setupUi(this);
-        ui->tw_Details->setCurrentIndex(0);
-        ui->sw_NetworkServerDetails->setCurrentIndex(PageServer);
 
         connect(ui->comp_OtherServers, &CServerListSelector::serverChanged, this, &CNetworkDetailsComponent::onSelectedServerChanged);
         connect(ui->comp_VatsimServers, &CServerListSelector::serverChanged, this, &CNetworkDetailsComponent::onSelectedServerChanged);
         connect(ui->tw_Network, &QTabWidget::currentChanged, this, &CNetworkDetailsComponent::onServerTabWidgetChanged);
-        connect(ui->tw_Details, &QTabWidget::currentChanged, this, &CNetworkDetailsComponent::onDetailsTabChanged);
         connect(ui->pb_OtherServersGotoSettings, &QPushButton::pressed, this, &CNetworkDetailsComponent::requestNetworkSettings);
         connect(ui->pb_OverrideCredentialsVatsim, &QPushButton::clicked, this, &CNetworkDetailsComponent::onOverrideCredentialsToPilot);
         connect(ui->pb_OverrideCredentialsOtherServers, &QPushButton::clicked, this, &CNetworkDetailsComponent::onOverrideCredentialsToPilot);
-        connect(ui->pb_DetailsVatsim, &QPushButton::clicked, this, &CNetworkDetailsComponent::onChangePage);
-        connect(ui->pb_DetailsOtherServers, &QPushButton::clicked, this, &CNetworkDetailsComponent::onChangePage);
-        connect(ui->pb_BackToServer, &QPushButton::clicked, this, &CNetworkDetailsComponent::onChangePage);
         connect(&m_networkSetup, &CNetworkSetup::setupChanged, this, &CNetworkDetailsComponent::reloadOtherServersSetup, Qt::QueuedConnection);
 
         // web service data
@@ -42,10 +36,6 @@ namespace BlackGui::Components
         {
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CNetworkDetailsComponent::onWebServiceDataRead, Qt::QueuedConnection);
         }
-
-        ui->form_FsdDetails->showEnableInfo(true);
-        ui->form_FsdDetails->setFsdSetupEnabled(false);
-        ui->form_FsdDetails->setReadOnly(false);
 
         constexpr int MaxLength = 10;
         constexpr int MinLength = 0;
@@ -74,12 +64,6 @@ namespace BlackGui::Components
         ui->frp_LoginMode->setLoginMode(mode);
     }
 
-    void CNetworkDetailsComponent::resetState()
-    {
-        ui->sw_NetworkServerDetails->setCurrentIndex(PageServer);
-        this->setBackTabName();
-    }
-
     bool CNetworkDetailsComponent::isVatsimServerSelected() const
     {
         const bool vatsim = ui->tw_Network->currentWidget() == ui->tb_NetworkVatsim;
@@ -88,43 +72,13 @@ namespace BlackGui::Components
 
     bool CNetworkDetailsComponent::isOtherServerSelected() const
     {
-        return ui->tw_Details->currentWidget() == ui->tb_OtherServers;
-    }
-
-    CFsdSetup CNetworkDetailsComponent::getFsdSetup() const
-    {
-        return ui->form_FsdDetails->getValue();
-    }
-
-    void CNetworkDetailsComponent::setAlwaysAllowOverride(bool allow)
-    {
-        ui->form_FsdDetails->setAlwaysAllowOverride(allow);
-    }
-
-    bool CNetworkDetailsComponent::isFsdSetupOverrideEnabled() const
-    {
-        return ui->form_FsdDetails->isFsdSetupEnabled();
+        return ui->tw_Network->currentWidget() == ui->tb_OtherServers;
     }
 
     void CNetworkDetailsComponent::setServerButtonsVisible(bool visible)
     {
         ui->wi_OtherServersButtons->setVisible(visible);
         ui->wi_VatsimButtons->setVisible(visible);
-    }
-
-    void CNetworkDetailsComponent::onDetailsTabChanged(int index)
-    {
-        if (index == DetailsBack)
-        {
-            ui->sw_NetworkServerDetails->setCurrentIndex(PageServer);
-            return;
-        }
-
-        Q_UNUSED(index)
-        const CServer server = this->getCurrentServer();
-
-        // only override if not yet enabled
-        if (!ui->form_FsdDetails->isFsdSetupEnabled()) { ui->form_FsdDetails->setValue(server.getFsdSetup()); }
     }
 
     void CNetworkDetailsComponent::onOverrideCredentialsToPilot()
@@ -174,28 +128,6 @@ namespace BlackGui::Components
             ui->comp_VatsimServers->setServers(vatsimFsdServers, true);
             ui->comp_VatsimServers->preSelect(currentServer.getName());
         }
-    }
-
-    void CNetworkDetailsComponent::onChangePage()
-    {
-        const QObject *s = QObject::sender();
-        if (s == ui->pb_DetailsVatsim || s == ui->pb_DetailsOtherServers)
-        {
-            ui->sw_NetworkServerDetails->setCurrentIndex(PageDetails);
-            ui->tw_Details->setCurrentIndex(DetailsServer);
-        }
-        else
-        {
-            ui->sw_NetworkServerDetails->setCurrentIndex(PageServer);
-        }
-        this->setBackTabName();
-    }
-
-    void CNetworkDetailsComponent::setBackTabName()
-    {
-        const QString name = this->getCurrentServer().getName();
-        const int index = ui->tw_Details->indexOf(ui->tb_BackToServer);
-        ui->tw_Details->setTabText(index, QStringLiteral("Back to server '%1'").arg(name));
     }
 
     CServer CNetworkDetailsComponent::getCurrentVatsimServer() const

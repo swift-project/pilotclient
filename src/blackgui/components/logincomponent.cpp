@@ -89,10 +89,6 @@ namespace BlackGui::Components
         connect(ui->pb_OtherServersGotoSettings, &QPushButton::pressed, this, &CLoginComponent::requestNetworkSettings);
         connect(&m_networkSetup, &CNetworkSetup::setupChanged, this, &CLoginComponent::reloadOtherServersSetup, Qt::QueuedConnection);
 
-        ui->form_FsdDetails->showEnableInfo(true);
-        ui->form_FsdDetails->setFsdSetupEnabled(false);
-        ui->form_FsdDetails->setAlwaysAllowOverride(true);
-
         ui->lblp_AircraftCombinedType->setToolTips("ok", "wrong");
         ui->lblp_AirlineIcao->setToolTips("ok", "wrong");
         ui->lblp_AircraftIcao->setToolTips("ok", "wrong");
@@ -124,7 +120,6 @@ namespace BlackGui::Components
         connect(ui->le_AircraftCombinedType, &QLineEdit::editingFinished, this, &CLoginComponent::validateAircraftValues);
         connect(ui->selector_AircraftIcao, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CLoginComponent::onChangedAircraftIcao, Qt::QueuedConnection);
         connect(ui->selector_AirlineIcao, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CLoginComponent::onChangedAirlineIcao, Qt::QueuedConnection);
-        connect(ui->tw_Details, &QTabWidget::currentChanged, this, &CLoginComponent::onDetailsTabChanged);
 
         if (sGui && sGui->getIContextSimulator())
         {
@@ -258,13 +253,6 @@ namespace BlackGui::Components
             currentServer = this->getCurrentServer();
             const CUser user = this->getUserFromPilotGuiValues();
             currentServer.setUser(user);
-
-            // FSD setup, then override
-            if (ui->form_FsdDetails->isFsdSetupEnabled())
-            {
-                const CFsdSetup fsd = ui->form_FsdDetails->getValue();
-                currentServer.setFsdSetup(fsd);
-            }
 
             ui->frp_CurrentServer->setServer(currentServer);
             sGui->getIContextOwnAircraft()->updateOwnAircraftPilot(currentServer.getUser());
@@ -431,20 +419,6 @@ namespace BlackGui::Components
     {
         ui->wi_OtherServersButtons->setVisible(visible);
         ui->wi_VatsimButtons->setVisible(visible);
-    }
-
-    void CLoginComponent::onDetailsTabChanged(int index)
-    {
-        Q_UNUSED(index)
-        const bool showNetwork = (ui->tw_Details->currentWidget() != ui->tb_FsdDetails);
-
-        const CServer server = this->getCurrentServer();
-
-        // only override if not yet enabled
-        if (!ui->form_FsdDetails->isFsdSetupEnabled()) { ui->form_FsdDetails->setValue(server.getFsdSetup()); }
-
-        ui->tw_Network->setVisible(showNetwork);
-        ui->tw_Details->setMinimumHeight(showNetwork ? 0 : 125);
     }
 
     CLoginComponent::CGuiAircraftValues CLoginComponent::getAircraftValuesFromGui() const

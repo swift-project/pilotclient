@@ -51,10 +51,6 @@ namespace BlackGui::Components
             {
                 ui->comp_LoginOverviewComponent->showCurrentValues();
             }
-            else
-            {
-                ui->comp_LoginComponent->resetState();
-            }
         }
 
         ui->comp_LoginComponent->setVisible(!connected);
