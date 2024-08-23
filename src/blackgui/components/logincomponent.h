@@ -94,43 +94,19 @@ namespace BlackGui::Components
         void loginDataChangedDigest();
 
     private:
-        //! GUI aircraft values, formatted
-        struct CGuiAircraftValues
-        {
-            BlackMisc::Aviation::CCallsign ownCallsign;
-            BlackMisc::Aviation::CAircraftIcaoCode ownAircraftIcao;
-            BlackMisc::Aviation::CAirlineIcaoCode ownAirlineIcao;
-            QString ownAircraftCombinedType;
-            QString ownAircraftSimulatorModel;
-        };
-
         // -------------- values from GUI -----------------
-
-        //! Values from GUI
-        CGuiAircraftValues getAircraftValuesFromGui() const;
 
         //! User from VATSIM data
         BlackMisc::Network::CUser getUserFromPilotGuiValues() const;
-
-        //! Callsign from GUI
-        BlackMisc::Aviation::CCallsign getCallsignFromGui() const;
 
         //! Update own callsign (own aircraft from what is set in the GUI)
         //! \return changed?
         bool updateOwnAircraftCallsignAndPilotFromGuiValues();
 
-        //! Update own ICAO values (own aircraft from what is set in the GUI)
-        //! \return changed?
-        bool updateOwnAircaftIcaoValuesFromGuiValues();
-
         // -------------- values to GUI -----------------
 
         //! Update GUI values
         void updateGui();
-
-        //! Set ICAO values
-        //! \return changed values?
-        bool setGuiIcaoValues(const BlackMisc::Simulation::CAircraftModel &model, bool onlyIfEmpty);
 
         //! Set the "login as" values
         void setGuiLoginAsValues(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
@@ -151,21 +127,6 @@ namespace BlackGui::Components
 
         //! Login cancelled
         void loginCancelled();
-
-        //! VATSIM data file was loaded
-        void onWebServiceDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
-
-        //! Validate aircaft
-        bool validateAircraftValues();
-
-        //! Aircraft ICAO code has been changed
-        void onChangedAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
-
-        //! Airline ICAO code has been changed
-        void onChangedAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
-
-        //! Settings have been changed
-        void reloadOtherServersSetup();
 
         //! Logoff countdown
         void logoffCountdown();
@@ -188,26 +149,17 @@ namespace BlackGui::Components
         //! Make disconnect button flash briefly to catch the user's attention
         void blinkConnectButton();
 
-        //! Own model and ICAO data for GUI and own aircraft
-        void setOwnModelAndIcaoValues(const BlackMisc::Simulation::CAircraftModel &ownModel = {});
-
         //! Set OK button string
         void setOkButtonString(bool connected);
 
         //! Logoff countdown
         void startLogoffTimerCountdown();
 
-        //! Highlight model field according to model data
-        void highlightModelField(const BlackMisc::Simulation::CAircraftModel &model = {});
-
         //! Is the VATSIM network tab selected?
         bool isVatsimNetworkTabSelected() const;
 
         //! Load from settings
         void loadRememberedUserData();
-
-        //! Copy credentials to pilot
-        void overrideCredentialsToPilot();
 
         //! Server changed
         void onSelectedServerChanged(const BlackMisc::Network::CServer &server);
@@ -223,9 +175,6 @@ namespace BlackGui::Components
 
         //! Has contexts?
         bool hasValidContexts() const;
-
-        //! Set the server buttons visible
-        void setServerButtonsVisible(bool visible);
 
         static constexpr int OverlayMessageMs = 5000;
         static constexpr int LogoffIntervalSeconds = 20; //!< time before logoff

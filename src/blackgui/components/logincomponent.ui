@@ -65,221 +65,11 @@
          <property name="bottomMargin">
           <number>3</number>
          </property>
-         <item alignment="Qt::AlignTop">
-          <widget class="QTabWidget" name="tw_Network">
-           <property name="tabPosition">
-            <enum>QTabWidget::North</enum>
+         <item>
+          <widget class="BlackGui::Components::CNetworkDetailsComponent" name="comp_NetworkDetails">
+           <property name="frameShape">
+            <enum>QFrame::Panel</enum>
            </property>
-           <property name="currentIndex">
-            <number>0</number>
-           </property>
-           <widget class="QWidget" name="tb_NetworkVatsim">
-            <attribute name="title">
-             <string>VATSIM</string>
-            </attribute>
-            <layout class="QGridLayout" name="gl_NetworkVATSIM">
-             <property name="leftMargin">
-              <number>3</number>
-             </property>
-             <property name="topMargin">
-              <number>3</number>
-             </property>
-             <property name="rightMargin">
-              <number>3</number>
-             </property>
-             <property name="bottomMargin">
-              <number>3</number>
-             </property>
-             <property name="horizontalSpacing">
-              <number>3</number>
-             </property>
-             <item row="1" column="0">
-              <widget class="QWidget" name="wi_VatsimButtons" native="true">
-               <layout class="QHBoxLayout" name="hl_VatsimButtons">
-                <property name="leftMargin">
-                 <number>0</number>
-                </property>
-                <property name="topMargin">
-                 <number>0</number>
-                </property>
-                <property name="rightMargin">
-                 <number>0</number>
-                </property>
-                <property name="bottomMargin">
-                 <number>0</number>
-                </property>
-                <item>
-                 <spacer name="hs_VatsimButtons">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="pb_OverrideCredentialsVatsim">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="toolTip">
-                   <string>copy credentials to pilot section</string>
-                  </property>
-                  <property name="text">
-                   <string> override pilot </string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="BlackGui::Components::CServerListSelector" name="comp_VatsimServers"/>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QWidget" name="tb_OtherServers">
-            <attribute name="title">
-             <string>Other servers</string>
-            </attribute>
-            <layout class="QGridLayout" name="gl_OtherServers">
-             <property name="leftMargin">
-              <number>3</number>
-             </property>
-             <property name="topMargin">
-              <number>3</number>
-             </property>
-             <property name="rightMargin">
-              <number>3</number>
-             </property>
-             <property name="bottomMargin">
-              <number>3</number>
-             </property>
-             <property name="horizontalSpacing">
-              <number>3</number>
-             </property>
-             <item row="0" column="0">
-              <widget class="BlackGui::Components::CServerListSelector" name="comp_OtherServers"/>
-             </item>
-             <item row="1" column="0">
-              <widget class="QWidget" name="wi_OtherServersButtons" native="true">
-               <layout class="QHBoxLayout" name="hl_OtherServersButtons">
-                <property name="leftMargin">
-                 <number>0</number>
-                </property>
-                <property name="topMargin">
-                 <number>0</number>
-                </property>
-                <property name="rightMargin">
-                 <number>0</number>
-                </property>
-                <property name="bottomMargin">
-                 <number>0</number>
-                </property>
-                <item>
-                 <spacer name="hs_OtherServersButtons">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="pb_RefreshOtherServers">
-                  <property name="text">
-                   <string>reload</string>
-                  </property>
-                  <property name="icon">
-                   <iconset>
-                    <normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</iconset>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="pb_OtherServersGotoSettings">
-                  <property name="text">
-                   <string> goto settings </string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="pb_OverrideCredentialsOtherServers">
-                  <property name="toolTip">
-                   <string>copy credentials to pilot section</string>
-                  </property>
-                  <property name="text">
-                   <string> override pilot </string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </widget>
-         </item>
-         <item alignment="Qt::AlignTop">
-          <widget class="QTabWidget" name="tw_Details">
-           <property name="currentIndex">
-            <number>0</number>
-           </property>
-           <widget class="QWidget" name="tb_LoginMode">
-            <attribute name="title">
-             <string>Mode</string>
-            </attribute>
-            <layout class="QVBoxLayout" name="vl_LoginMode">
-             <property name="leftMargin">
-              <number>3</number>
-             </property>
-             <property name="topMargin">
-              <number>3</number>
-             </property>
-             <property name="rightMargin">
-              <number>3</number>
-             </property>
-             <property name="bottomMargin">
-              <number>3</number>
-             </property>
-             <item alignment="Qt::AlignTop">
-              <widget class="BlackGui::CLoginModeButtons" name="frp_LoginMode"/>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QWidget" name="tb_MatchingLog">
-            <attribute name="title">
-             <string>Matching log</string>
-            </attribute>
-            <layout class="QVBoxLayout" name="vl_MatchingLog">
-             <property name="leftMargin">
-              <number>3</number>
-             </property>
-             <property name="topMargin">
-              <number>3</number>
-             </property>
-             <property name="rightMargin">
-              <number>3</number>
-             </property>
-             <property name="bottomMargin">
-              <number>3</number>
-             </property>
-             <item alignment="Qt::AlignTop">
-              <widget class="BlackGui::Components::CModelMatcherLogEnable" name="comp_MatchingLogEnabled"/>
-             </item>
-            </layout>
-           </widget>
           </widget>
          </item>
         </layout>
@@ -333,186 +123,26 @@
         <property name="checkable">
          <bool>false</bool>
         </property>
-        <layout class="QGridLayout" name="gl_OwnAircraft">
+        <layout class="QVBoxLayout" name="vl_OwnAircraft">
          <property name="leftMargin">
-          <number>6</number>
+          <number>2</number>
          </property>
          <property name="topMargin">
-          <number>10</number>
+          <number>2</number>
          </property>
          <property name="rightMargin">
-          <number>6</number>
+          <number>2</number>
          </property>
          <property name="bottomMargin">
-          <number>3</number>
+          <number>2</number>
          </property>
-         <item row="2" column="4">
-          <widget class="BlackGui::Components::CDbAirlineIcaoSelectorComponent" name="selector_AirlineIcao">
-           <property name="minimumSize">
-            <size>
-             <width>75</width>
-             <height>0</height>
-            </size>
+         <item>
+          <widget class="BlackGui::Components::COwnAircraftComponent" name="comp_OwnAircraft">
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
            </property>
-           <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="4">
-          <widget class="BlackGui::Components::CDbAircraftIcaoSelectorComponent" name="selector_AircraftIcao">
-           <property name="minimumSize">
-            <size>
-             <width>75</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1" colspan="5">
-          <widget class="QWidget" name="wi_SimulatorModel" native="true">
-           <layout class="QHBoxLayout" name="hl_AircraftModel">
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLineEdit" name="le_SimulatorModel">
-              <property name="readOnly">
-               <bool>true</bool>
-              </property>
-              <property name="placeholderText">
-               <string>unique model identifier</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item row="1" column="2">
-          <widget class="BlackGui::CTickLabel" name="lblp_Callsign">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="lbl_Model">
-           <property name="toolTip">
-            <string>Launch </string>
-           </property>
-           <property name="text">
-            <string>Model</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="lbl_Callsign">
-           <property name="text">
-            <string>Callsign</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="3">
-          <widget class="QLabel" name="lbl_AircraftIcaoDesignator">
-           <property name="toolTip">
-            <string>ICAO code e.g.  B737, A320, F18</string>
-           </property>
-           <property name="text">
-            <string>Aircraft</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="5">
-          <widget class="BlackGui::CTickLabel" name="lblp_AirlineIcao">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="3">
-          <widget class="QLabel" name="lbl_AircraftIcaoAirline">
-           <property name="toolTip">
-            <string>ICAO code e.g. DLH, LHA, ...</string>
-           </property>
-           <property name="text">
-            <string>Airline</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLineEdit" name="le_AircraftCombinedType">
-           <property name="toolTip">
-            <string>e.g. L2J</string>
-           </property>
-           <property name="inputMask">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="maxLength">
-            <number>3</number>
-           </property>
-           <property name="placeholderText">
-            <string>e.g. &quot;L2J&quot;</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="5">
-          <widget class="BlackGui::CTickLabel" name="lblp_AircraftIcao">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="le_Callsign">
-           <property name="toolTip">
-            <string>e.g. DEMBZ</string>
-           </property>
-           <property name="inputMethodHints">
-            <set>Qt::ImhUppercaseOnly</set>
-           </property>
-           <property name="maxLength">
-            <number>10</number>
-           </property>
-           <property name="placeholderText">
-            <string>e.g. DEMBZ</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="lbl_AircraftCombinedType">
-           <property name="toolTip">
-            <string>Aircraft type e.g. L2J, L1P, ....</string>
-           </property>
-           <property name="text">
-            <string>Type</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="BlackGui::CTickLabel" name="lblp_AircraftCombinedType">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text">
-            <string/>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
            </property>
           </widget>
          </item>
@@ -770,6 +400,18 @@
    <header>blackgui/components/serverlistselector.h</header>
   </customwidget>
   <customwidget>
+   <class>BlackGui::Components::CNetworkDetailsComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/networkdetailscomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::COwnAircraftComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/ownaircraftcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>BlackGui::CLoginModeButtons</class>
    <extends>QFrame</extends>
    <header>blackgui/loginmodebuttons.h</header>
@@ -812,16 +454,8 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>tw_Network</tabstop>
-  <tabstop>comp_VatsimServers</tabstop>
-  <tabstop>pb_OverrideCredentialsVatsim</tabstop>
-  <tabstop>tw_Details</tabstop>
+  <tabstop>comp_NetworkDetails</tabstop>
   <tabstop>form_Pilot</tabstop>
-  <tabstop>le_SimulatorModel</tabstop>
-  <tabstop>le_Callsign</tabstop>
-  <tabstop>selector_AircraftIcao</tabstop>
-  <tabstop>le_AircraftCombinedType</tabstop>
-  <tabstop>selector_AirlineIcao</tabstop>
   <tabstop>frp_CurrentServer</tabstop>
   <tabstop>le_LoginCallsign</tabstop>
   <tabstop>le_LoginHomeBase</tabstop>
@@ -830,10 +464,6 @@
   <tabstop>tb_Timeout</tabstop>
   <tabstop>pb_Ok</tabstop>
   <tabstop>pb_Cancel</tabstop>
-  <tabstop>comp_OtherServers</tabstop>
-  <tabstop>pb_RefreshOtherServers</tabstop>
-  <tabstop>pb_OtherServersGotoSettings</tabstop>
-  <tabstop>pb_OverrideCredentialsOtherServers</tabstop>
  </tabstops>
  <resources/>
  <connections/>

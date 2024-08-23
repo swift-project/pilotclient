@@ -69,30 +69,13 @@ namespace BlackGui::Components
                                                         ui(new Ui::CLoginComponent)
     {
         ui->setupUi(this);
-        ui->tw_Details->setCurrentWidget(ui->tb_LoginMode);
         m_logoffCountdownTimer.setObjectName("CLoginComponent:m_logoffCountdownTimer");
-
-        ui->tw_Network->setCurrentIndex(0);
-        ui->selector_AircraftIcao->displayWithIcaoDescription(false);
-        ui->selector_AirlineIcao->displayWithIcaoDescription(false);
-        ui->selector_AircraftIcao->displayMode(CDbAircraftIcaoSelectorComponent::DisplayIcaoAndId);
-        ui->selector_AirlineIcao->displayMode(CDbAirlineIcaoSelectorComponent::DisplayVDesignatorAndId);
 
         this->setLogoffCountdown();
         connect(&m_logoffCountdownTimer, &QTimer::timeout, this, &CLoginComponent::logoffCountdown);
-        connect(ui->comp_OtherServers, &CServerListSelector::serverChanged, this, &CLoginComponent::onSelectedServerChanged);
-        connect(ui->comp_VatsimServers, &CServerListSelector::serverChanged, this, &CLoginComponent::onSelectedServerChanged);
-        connect(ui->pb_RefreshOtherServers, &QToolButton::clicked, this, &CLoginComponent::reloadOtherServersSetup);
-        connect(ui->tw_Network, &QTabWidget::currentChanged, this, &CLoginComponent::onServerTabWidgetChanged);
         connect(ui->pb_Cancel, &QPushButton::clicked, this, &CLoginComponent::loginCancelled, Qt::QueuedConnection);
         connect(ui->pb_Ok, &QPushButton::clicked, this, &CLoginComponent::toggleNetworkConnection, Qt::QueuedConnection);
-        connect(ui->pb_OtherServersGotoSettings, &QPushButton::pressed, this, &CLoginComponent::requestNetworkSettings);
-        connect(&m_networkSetup, &CNetworkSetup::setupChanged, this, &CLoginComponent::reloadOtherServersSetup, Qt::QueuedConnection);
-
-        ui->lblp_AircraftCombinedType->setToolTips("ok", "wrong");
-        ui->lblp_AirlineIcao->setToolTips("ok", "wrong");
-        ui->lblp_AircraftIcao->setToolTips("ok", "wrong");
-        ui->lblp_Callsign->setToolTips("ok", "wrong");
+        connect(ui->comp_NetworkDetails, &CNetworkDetailsComponent::requestNetworkSettings, this, &CLoginComponent::requestNetworkSettings, Qt::QueuedConnection);
 
         // overlay
         this->setOverlaySizeFactors(0.8, 0.5);
@@ -105,21 +88,6 @@ namespace BlackGui::Components
 
         // Remark: The validators affect the signals such as returnPressed, editingFinished
         // So I use no ranges in the CUpperCaseValidators, as this disables the signals for invalid values
-
-        // own aircraft
-        constexpr int MaxLength = 10;
-        constexpr int MinLength = 0;
-        CUpperCaseValidator *ucv = new CUpperCaseValidator(MinLength, MaxLength, ui->le_Callsign);
-        // ucv->setAllowedCharacters09AZ();
-        ui->le_Callsign->setMaxLength(MaxLength);
-        ui->le_Callsign->setValidator(ucv);
-        connect(ui->le_Callsign, &QLineEdit::editingFinished, this, &CLoginComponent::validateAircraftValues);
-
-        ui->le_AircraftCombinedType->setMaxLength(3);
-        ui->le_AircraftCombinedType->setValidator(new CUpperCaseValidator(this));
-        connect(ui->le_AircraftCombinedType, &QLineEdit::editingFinished, this, &CLoginComponent::validateAircraftValues);
-        connect(ui->selector_AircraftIcao, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CLoginComponent::onChangedAircraftIcao, Qt::QueuedConnection);
-        connect(ui->selector_AirlineIcao, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CLoginComponent::onChangedAirlineIcao, Qt::QueuedConnection);
 
         if (sGui && sGui->getIContextSimulator())
         {
@@ -140,30 +108,15 @@ namespace BlackGui::Components
         ui->tb_Timeout->setIcon(m_iconPause);
         connect(ui->tb_Timeout, &QToolButton::clicked, this, &CLoginComponent::toggleTimeout);
 
-        // web service data
-        if (sGui && sGui->getWebDataServices())
-        {
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CLoginComponent::onWebServiceDataRead, Qt::QueuedConnection);
-        }
-
         // inital setup, if data already available
-        this->validateAircraftValues();
         ui->form_Pilot->validate();
-        this->onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1, {});
-        this->reloadOtherServersSetup();
 
         if (sGui && sGui->getIContextSimulator())
         {
             this->onSimulatorStatusChanged(sGui->getIContextSimulator()->getSimulatorStatus());
         }
 
-        connect(ui->pb_OverrideCredentialsVatsim, &QPushButton::clicked, this, &CLoginComponent::overrideCredentialsToPilot);
-        connect(ui->pb_OverrideCredentialsOtherServers, &QPushButton::clicked, this, &CLoginComponent::overrideCredentialsToPilot);
-
         this->updateUiConnectState();
-
-        const int tab = m_networkSetup.wasLastUsedWithOtherServer() ? LoginOthers : LoginVATSIM;
-        ui->tw_Network->setCurrentIndex(tab);
 
         QPointer<CLoginComponent> myself(this);
         QTimer::singleShot(5000, this, [=] {
@@ -184,7 +137,7 @@ namespace BlackGui::Components
         }
         else
         {
-            this->setOwnModelAndIcaoValues();
+            ui->comp_OwnAircraft->setOwnModelAndIcaoValues();
             m_networkConnected = sGui->getIContextNetwork()->isConnected();
             this->updateUiConnectState();
             this->blinkConnectButton();
@@ -228,7 +181,8 @@ namespace BlackGui::Components
         CStatusMessage msg;
         if (!m_networkConnected)
         {
-            if (!this->validateAircraftValues())
+            const CStatusMessageList aircraftMsgs = ui->comp_OwnAircraft->validate();
+            if (aircraftMsgs.isFailure())
             {
                 this->showOverlayHTMLMessage(CStatusMessage(this).validationWarning(u"Invalid aircraft data, login not possible"), OverlayMessageMs);
                 return;
@@ -242,11 +196,12 @@ namespace BlackGui::Components
             }
 
             // sync values with GUI values
+            const COwnAircraftComponent::CGuiAircraftValues values = ui->comp_OwnAircraft->getAircraftValuesFromGui();
             this->updateOwnAircraftCallsignAndPilotFromGuiValues();
-            this->updateOwnAircaftIcaoValuesFromGuiValues();
+            ui->comp_OwnAircraft->updateOwnAircaftIcaoValuesFromGuiValues();
 
             // Login mode
-            const CLoginMode mode = ui->frp_LoginMode->getLoginMode();
+            const CLoginMode mode = ui->comp_NetworkDetails->getLoginMode();
             if (mode.isObserver()) { CLogMessage(this).info(u"Login in observer mode"); }
 
             // Server
@@ -260,8 +215,27 @@ namespace BlackGui::Components
             // set own aircraft from all values
             ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
 
+            // check the copilot stuff
+            CCallsign partnerCs;
+            if (ui->comp_NetworkDetails->hasPartnerCallsign())
+            {
+                partnerCs = ui->comp_NetworkDetails->getPartnerCallsign();
+                if (partnerCs == ownAircraft.getCallsign())
+                {
+                    this->showOverlayHTMLMessage("Your callsign and the pilot/copilot callsign must be NOT the same", OverlayMessageMs);
+                    return;
+                }
+
+                const bool ok = (partnerCs.asString().startsWith(ownAircraft.getCallsignAsString(), Qt::CaseInsensitive) || ownAircraft.getCallsignAsString().startsWith(partnerCs.asString(), Qt::CaseInsensitive));
+                if (!ok)
+                {
+                    this->showOverlayHTMLMessage("Callsign and the pilot/copilot callsign appear not to be synchronized", OverlayMessageMs);
+                    return;
+                }
+            }
+
             // Login
-            msg = sGui->getIContextNetwork()->connectToNetwork(currentServer, {}, true, {}, true, {}, mode);
+            msg = sGui->getIContextNetwork()->connectToNetwork(currentServer, values.ownLiverySend, values.useLivery, values.ownAircraftModelStringSend, values.useModelString, partnerCs, mode);
             if (msg.isSuccess())
             {
                 Q_ASSERT_X(currentServer.isValidForLogin(), Q_FUNC_INFO, "invalid server");
@@ -303,63 +277,12 @@ namespace BlackGui::Components
         }
     }
 
-    void CLoginComponent::onWebServiceDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number, const QUrl &url)
-    {
-        if (!CEntityFlags::isFinishedReadState(state)) { return; }
-        if (!sGui || !sGui->getIContextNetwork() || sGui->isShuttingDown()) { return; }
-
-        Q_UNUSED(number)
-        Q_UNUSED(url)
-
-        if (entity == CEntityFlags::VatsimDataFile)
-        {
-            CServerList vatsimFsdServers = sGui->getIContextNetwork()->getVatsimFsdServers();
-            if (vatsimFsdServers.isEmpty()) { return; }
-            vatsimFsdServers.sortBy(&CServer::getName);
-            const CServer currentServer = m_networkSetup.getLastVatsimServer();
-            ui->comp_VatsimServers->setServers(vatsimFsdServers, true);
-            ui->comp_VatsimServers->preSelect(currentServer.getName());
-        }
-    }
-
     void CLoginComponent::loadRememberedUserData()
     {
         const CServer lastServer = m_networkSetup.getLastServer();
-        if (!lastServer.isNull())
-        {
-            ui->tw_Network->setCurrentWidget(
-                lastServer.getServerType() == CServer::FSDServerVatsim ?
-                    ui->tb_NetworkVatsim :
-                    ui->tb_OtherServers);
-        }
-
         const CUser lastUser = lastServer.getUser();
         ui->form_Pilot->setUser(lastUser);
-        if (lastUser.hasCallsign())
-        {
-            ui->le_Callsign->setText(lastUser.getCallsign().asString());
-        }
-        else if (CBuildConfig::isLocalDeveloperDebugBuild())
-        {
-            ui->le_Callsign->setText("SWIFT");
-        }
-    }
-
-    void CLoginComponent::overrideCredentialsToPilot()
-    {
-        CServer server;
-        const QObject *s = QObject::sender();
-        if (s == ui->pb_OverrideCredentialsOtherServers)
-        {
-            server = this->getCurrentOtherServer();
-        }
-        else if (s == ui->pb_OverrideCredentialsVatsim)
-        {
-            // the VATSIM server selected has no valid user credentials
-            server = m_networkSetup.getLastVatsimServer();
-        }
-        else { return; }
-        ui->form_Pilot->setUser(server.getUser(), true);
+        ui->comp_OwnAircraft->setUser(lastUser);
     }
 
     void CLoginComponent::onSelectedServerChanged(const CServer &server)
@@ -415,39 +338,16 @@ namespace BlackGui::Components
         return true;
     }
 
-    void CLoginComponent::setServerButtonsVisible(bool visible)
-    {
-        ui->wi_OtherServersButtons->setVisible(visible);
-        ui->wi_VatsimButtons->setVisible(visible);
-    }
-
-    CLoginComponent::CGuiAircraftValues CLoginComponent::getAircraftValuesFromGui() const
-    {
-        CGuiAircraftValues values;
-        values.ownCallsign = CCallsign(ui->le_Callsign->text().trimmed().toUpper());
-        values.ownAircraftIcao = ui->selector_AircraftIcao->getAircraftIcao();
-        values.ownAirlineIcao = ui->selector_AirlineIcao->getAirlineIcao();
-        values.ownAircraftCombinedType = ui->le_AircraftCombinedType->text().trimmed().toUpper();
-        values.ownAircraftSimulatorModel = ui->le_SimulatorModel->text().trimmed().toUpper();
-        return values;
-    }
-
     CUser CLoginComponent::getUserFromPilotGuiValues() const
     {
         CUser user = ui->form_Pilot->getUser();
-        user.setCallsign(this->getCallsignFromGui());
+        user.setCallsign(ui->comp_OwnAircraft->getCallsignFromGui());
         return user;
-    }
-
-    CCallsign CLoginComponent::getCallsignFromGui() const
-    {
-        const CCallsign cs(ui->le_Callsign->text().trimmed().toUpper());
-        return cs;
     }
 
     CServer CLoginComponent::getCurrentVatsimServer() const
     {
-        CServer server = ui->comp_VatsimServers->currentServer();
+        CServer server = ui->comp_NetworkDetails->getCurrentVatsimServer();
         if (!server.getUser().hasValidVatsimId())
         {
             // normally VATSIM server have no valid user associated
@@ -459,7 +359,7 @@ namespace BlackGui::Components
 
     CServer CLoginComponent::getCurrentOtherServer() const
     {
-        return ui->comp_OtherServers->currentServer();
+        return ui->comp_NetworkDetails->getCurrentOtherServer();
     }
 
     CServer CLoginComponent::getCurrentServer() const
@@ -475,91 +375,6 @@ namespace BlackGui::Components
         ui->fr_TimeoutConnected->show();
     }
 
-    void CLoginComponent::setOwnModelAndIcaoValues(const CAircraftModel &ownModel)
-    {
-        if (!this->hasValidContexts()) { return; }
-        CAircraftModel model = ownModel;
-        const bool simulating = sGui->getIContextSimulator() &&
-                                (sGui->getIContextSimulator()->getSimulatorStatus() & ISimulator::Simulating);
-
-        // fill simulator related values
-        if (simulating)
-        {
-            if (!model.hasModelString())
-            {
-                model = sGui->getIContextOwnAircraft()->getOwnAircraft().getModel();
-            }
-            const QString modelAndKey(model.getModelStringAndDbKey());
-            ui->le_SimulatorModel->setText(modelAndKey);
-            ui->le_SimulatorModel->home(false);
-            this->highlightModelField(model);
-
-            const CSimulatorInfo sim = sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator();
-            const CSimulatorInternals simulatorInternals = sGui->getIContextSimulator()->getSimulatorInternals();
-            const QString simStr = sim.toQString() + QStringLiteral(" ") + simulatorInternals.getSimulatorVersion();
-            CCrashHandler::instance()->crashAndLogInfoSimulator(simStr);
-        }
-        else
-        {
-            ui->le_SimulatorModel->clear();
-            this->highlightModelField();
-        }
-        ui->le_SimulatorModel->setToolTip(model.asHtmlSummary());
-
-        // reset the model
-        bool changedOwnAircraftIcaoValues = false;
-
-        if (model.isLoadedFromDb() || (model.getAircraftIcaoCode().isLoadedFromDb() && model.getLivery().isLoadedFromDb()))
-        {
-            // full model from DB, take all values
-            this->setGuiIcaoValues(model, false);
-        }
-        else
-        {
-            // we have a model, which is not from DB
-            model = this->getPrefillModel(); // manually entered values
-            if (model.getLivery().hasValidDbKey() && model.getLivery().isColorLivery())
-            {
-                // special case for color liveries/NO airline
-                ui->selector_AirlineIcao->clear();
-            }
-
-            this->setGuiIcaoValues(model, true);
-            changedOwnAircraftIcaoValues = this->updateOwnAircaftIcaoValuesFromGuiValues();
-        }
-
-        const bool changedOwnAircraftCallsignPilot = this->updateOwnAircraftCallsignAndPilotFromGuiValues();
-        if (changedOwnAircraftIcaoValues || changedOwnAircraftCallsignPilot)
-        {
-            m_changedLoginDataDigestSignal.inputSignal();
-        }
-    }
-
-    bool CLoginComponent::setGuiIcaoValues(const CAircraftModel &model, bool onlyIfEmpty)
-    {
-        bool changed = false;
-        if (!onlyIfEmpty || !ui->selector_AircraftIcao->isSet())
-        {
-            changed = ui->selector_AircraftIcao->setAircraftIcao(model.getAircraftIcaoCode());
-        }
-        if (!onlyIfEmpty || !ui->selector_AirlineIcao->isSet())
-        {
-            const bool c = ui->selector_AirlineIcao->setAirlineIcao(model.getAirlineIcaoCode());
-            changed |= c;
-        }
-        if (!onlyIfEmpty || ui->le_AircraftCombinedType->text().trimmed().isEmpty())
-        {
-            const QString combined(model.getAircraftIcaoCode().getCombinedType());
-            if (ui->le_AircraftCombinedType->text() != combined)
-            {
-                ui->le_AircraftCombinedType->setText(combined);
-                changed = true;
-            }
-        }
-        const bool valid = this->validateAircraftValues();
-        return valid ? changed : false;
-    }
-
     void CLoginComponent::setGuiLoginAsValues(const CSimulatedAircraft &ownAircraft)
     {
         const QString ac(
@@ -571,56 +386,6 @@ namespace BlackGui::Components
         ui->le_LoginAsAircaft->setText(ac);
         ui->le_LoginAsAircaft->home(false);
         ui->le_LoginCallsign->setText(cs);
-        if (!cs.isEmpty()) { ui->le_Callsign->setText(cs); }
-    }
-
-    bool CLoginComponent::validateAircraftValues()
-    {
-        CGuiAircraftValues values = this->getAircraftValuesFromGui();
-
-        // fill in combined type if empty
-        if (ui->le_AircraftCombinedType->text().isEmpty() && values.ownAircraftIcao.isLoadedFromDb())
-        {
-            ui->le_AircraftCombinedType->setText(values.ownAircraftIcao.getCombinedType());
-            values.ownAircraftCombinedType = values.ownAircraftIcao.getCombinedType();
-        }
-
-        const bool validCombinedType = CAircraftIcaoCode::isValidCombinedType(values.ownAircraftCombinedType);
-        ui->lblp_AircraftCombinedType->setTicked(validCombinedType);
-
-        // airline is optional, e.g. C172 has no airline
-        const bool validAirlineDesignator = values.ownAirlineIcao.hasValidDesignator() || values.ownAirlineIcao.getDesignator().isEmpty();
-        ui->lblp_AirlineIcao->setTicked(validAirlineDesignator);
-
-        const bool validAircraftDesignator = values.ownAircraftIcao.hasValidDesignator();
-        ui->lblp_AircraftIcao->setTicked(validAircraftDesignator);
-
-        const bool validCallsign = CCallsign::isValidAircraftCallsign(values.ownCallsign);
-        ui->lblp_Callsign->setTicked(validCallsign);
-
-        // model intentionally ignored
-        return validCombinedType && validAirlineDesignator && validAircraftDesignator && validCallsign;
-    }
-
-    void CLoginComponent::onChangedAircraftIcao(const CAircraftIcaoCode &icao)
-    {
-        if (icao.isLoadedFromDb())
-        {
-            ui->le_AircraftCombinedType->setText(icao.getCombinedType());
-        }
-        this->validateAircraftValues();
-    }
-
-    void CLoginComponent::onChangedAirlineIcao(const CAirlineIcaoCode &icao)
-    {
-        Q_UNUSED(icao)
-        this->validateAircraftValues();
-    }
-
-    void CLoginComponent::reloadOtherServersSetup()
-    {
-        const CServerList otherServers(m_networkSetup.getOtherServersPlusPredefinedServers());
-        ui->comp_OtherServers->setServers(otherServers);
     }
 
     void CLoginComponent::logoffCountdown()
@@ -689,7 +454,7 @@ namespace BlackGui::Components
             CLogMessage(this).validationInfo(u"Hint: Are you using the emulated driver? Set a model if so!");
             return;
         }
-        this->setOwnModelAndIcaoValues(reverseModel);
+        ui->comp_OwnAircraft->setOwnModelAndIcaoValues(reverseModel);
 
         // check state of own aircraft
         this->updateOwnAircraftCallsignAndPilotFromGuiValues();
@@ -750,17 +515,9 @@ namespace BlackGui::Components
         timer->start(blinkLength);
     }
 
-    void CLoginComponent::highlightModelField(const CAircraftModel &model)
-    {
-        if (!model.hasModelString()) { ui->le_SimulatorModel->setProperty("validation", "error"); }
-        else if (!model.isLoadedFromDb()) { ui->le_SimulatorModel->setProperty("validation", "warning"); }
-        else { ui->le_SimulatorModel->setProperty("validation", "ok"); }
-        ui->le_SimulatorModel->setStyleSheet(""); // force update
-    }
-
     bool CLoginComponent::isVatsimNetworkTabSelected() const
     {
-        return (ui->tw_Network->currentWidget() == ui->tb_NetworkVatsim);
+        return ui->comp_NetworkDetails->isVatsimServerSelected();
     }
 
     CAircraftModel CLoginComponent::getPrefillModel() const
@@ -774,13 +531,12 @@ namespace BlackGui::Components
     {
         if (!this->hasValidContexts()) { return false; }
         CSimulatedAircraft ownAircraft(sGui->getIContextOwnAircraft()->getOwnAircraft());
-        const QString cs(ui->le_Callsign->text().trimmed().toUpper());
+        const CCallsign cs = ui->comp_OwnAircraft->getCallsignFromGui();
         bool changedCallsign = false;
         if (!cs.isEmpty() && ownAircraft.getCallsignAsString() != cs)
         {
-            const CCallsign callsign(cs, CCallsign::Aircraft);
-            sGui->getIContextOwnAircraft()->updateOwnCallsign(callsign);
-            ownAircraft.setCallsign(callsign); // also update
+            sGui->getIContextOwnAircraft()->updateOwnCallsign(cs);
+            ownAircraft.setCallsign(cs); // also update
             changedCallsign = true;
         }
         CUser pilot = ownAircraft.getPilot();
@@ -798,35 +554,6 @@ namespace BlackGui::Components
         return changedCallsign || changedPilot;
     }
 
-    bool CLoginComponent::updateOwnAircaftIcaoValuesFromGuiValues()
-    {
-        if (!this->hasValidContexts()) { return false; }
-        const CSimulatedAircraft ownAircraft(sGui->getIContextOwnAircraft()->getOwnAircraft());
-        const CGuiAircraftValues aircraftValues = this->getAircraftValuesFromGui();
-
-        CAircraftIcaoCode aircraftCode(ownAircraft.getAircraftIcaoCode());
-        CAirlineIcaoCode airlineCode(ownAircraft.getAirlineIcaoCode());
-
-        bool changedIcaoCodes = false;
-        if (aircraftValues.ownAircraftIcao.hasValidDesignator() && aircraftValues.ownAircraftIcao != aircraftCode)
-        {
-            aircraftCode = aircraftValues.ownAircraftIcao;
-            changedIcaoCodes = true;
-        }
-        if (aircraftValues.ownAirlineIcao.hasValidDesignator() && aircraftValues.ownAirlineIcao != airlineCode)
-        {
-            airlineCode = aircraftValues.ownAirlineIcao;
-            changedIcaoCodes = true;
-        }
-
-        if (changedIcaoCodes)
-        {
-            sGui->getIContextOwnAircraft()->updateOwnIcaoCodes(aircraftCode, airlineCode);
-        }
-
-        return changedIcaoCodes;
-    }
-
     void CLoginComponent::updateGui()
     {
         if (!m_networkConnected) { return; }
@@ -836,10 +563,10 @@ namespace BlackGui::Components
         const CSimulatedAircraft ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
         this->setGuiLoginAsValues(ownAircraft);
         this->updateUiConnectState();
-        this->setOwnModelAndIcaoValues();
+        ui->comp_OwnAircraft->setOwnModelAndIcaoValues();
         const CServer server = nwc->getConnectedServer();
         ui->le_LoginHomeBase->setText(server.getUser().getHomeBase().asString());
         ui->frp_CurrentServer->setServer(server);
-        ui->frp_LoginMode->setLoginMode(nwc->getLoginMode());
+        ui->comp_NetworkDetails->setLoginMode(nwc->getLoginMode());
     }
 } // namespace
