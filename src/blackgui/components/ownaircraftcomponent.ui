@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>282</width>
-    <height>132</height>
+    <width>341</width>
+    <height>137</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Own aircraft</string>
   </property>
-  <layout class="QGridLayout" name="gl_OwnAircraftComponent" columnstretch="0,0,0,0,0,0,0,0,0">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <property name="leftMargin">
     <number>2</number>
    </property>
@@ -26,79 +26,7 @@
    <property name="bottomMargin">
     <number>2</number>
    </property>
-   <item row="1" column="2">
-    <widget class="QCheckBox" name="cb_Model">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
-    <widget class="QLabel" name="lbl_AircraftCombinedType">
-     <property name="toolTip">
-      <string>Aircraft type e.g. L2J, L1P, ....</string>
-     </property>
-     <property name="text">
-      <string>Type</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="2" colspan="2">
-    <widget class="QLineEdit" name="le_Callsign">
-     <property name="toolTip">
-      <string>e.g. DEMBZ</string>
-     </property>
-     <property name="inputMethodHints">
-      <set>Qt::ImhUppercaseOnly</set>
-     </property>
-     <property name="maxLength">
-      <number>10</number>
-     </property>
-     <property name="placeholderText">
-      <string>e.g. DEMBZ</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="6" colspan="2">
-    <widget class="BlackGui::Components::CDbAirlineIcaoSelectorComponent" name="selector_AirlineIcao">
-     <property name="minimumSize">
-      <size>
-       <width>75</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="5">
-    <widget class="QLabel" name="lbl_AircraftIcaoDesignator">
-     <property name="toolTip">
-      <string>ICAO code e.g.  B737, A320, F18</string>
-     </property>
-     <property name="text">
-      <string>Aircraft</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="3" colspan="6">
-    <widget class="BlackGui::Components::CAircraftModelStringCompleter" name="comp_ModelStringCompleter">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>20</height>
-      </size>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="2" colspan="7">
+   <item>
     <widget class="QWidget" name="wi_ModelString" native="true">
      <layout class="QHBoxLayout" name="hl_ModelString">
       <property name="leftMargin">
@@ -114,151 +42,292 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QLineEdit" name="le_SimulatorModel">
-        <property name="readOnly">
-         <bool>true</bool>
+       <widget class="QTabWidget" name="tabWidget">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
-        <property name="placeholderText">
-         <string>unique model identifier</string>
+        <property name="currentIndex">
+         <number>0</number>
         </property>
+        <widget class="QWidget" name="tb_general">
+         <attribute name="title">
+          <string>General</string>
+         </attribute>
+         <layout class="QGridLayout" name="gl_general">
+          <item row="1" column="3">
+           <widget class="BlackGui::CTickLabel" name="lblp_AircraftCombinedType">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="7">
+           <widget class="BlackGui::CTickLabel" name="lblp_AircraftIcao">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5">
+           <widget class="QLabel" name="lbl_AircraftIcaoDesignator">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="toolTip">
+             <string>ICAO code e.g.  B737, A320, F18</string>
+            </property>
+            <property name="text">
+             <string>Aircraft</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="lbl_AircraftCombinedType">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="toolTip">
+             <string>Aircraft type e.g. L2J, L1P, ....</string>
+            </property>
+            <property name="text">
+             <string>Type</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="6">
+           <widget class="BlackGui::Components::CDbAirlineIcaoSelectorComponent" name="selector_AirlineIcao">
+            <property name="minimumSize">
+             <size>
+              <width>75</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="focusPolicy">
+             <enum>Qt::FocusPolicy::StrongFocus</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="6">
+           <widget class="BlackGui::Components::CDbAircraftIcaoSelectorComponent" name="selector_AircraftIcao">
+            <property name="minimumSize">
+             <size>
+              <width>75</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="focusPolicy">
+             <enum>Qt::FocusPolicy::StrongFocus</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="7">
+           <widget class="BlackGui::CTickLabel" name="lblp_AirlineIcao">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="5">
+           <widget class="QLabel" name="lbl_AircraftIcaoAirline">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="toolTip">
+             <string>ICAO code e.g. DLH, LHA, ...</string>
+            </property>
+            <property name="text">
+             <string>Airline</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLineEdit" name="le_AircraftCombinedType">
+            <property name="toolTip">
+             <string>e.g. L2J</string>
+            </property>
+            <property name="inputMask">
+             <string/>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="maxLength">
+             <number>3</number>
+            </property>
+            <property name="placeholderText">
+             <string>e.g. &quot;L2J&quot;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLineEdit" name="le_Callsign">
+            <property name="toolTip">
+             <string>e.g. DEMBZ</string>
+            </property>
+            <property name="inputMethodHints">
+             <set>Qt::InputMethodHint::ImhUppercaseOnly</set>
+            </property>
+            <property name="maxLength">
+             <number>10</number>
+            </property>
+            <property name="placeholderText">
+             <string>e.g. DEMBZ</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbl_Callsign">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Callsign</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="BlackGui::CTickLabel" name="lblp_Callsign">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tb_advanced">
+         <attribute name="title">
+          <string>Advanced</string>
+         </attribute>
+         <layout class="QGridLayout" name="gl_advanced">
+          <item row="2" column="1">
+           <widget class="QCheckBox" name="cb_Model">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="lbl_ModelSent">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Send model</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" colspan="3">
+           <widget class="QLineEdit" name="le_SimulatorModel">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>unique model identifier</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="BlackGui::Components::CAircraftModelStringCompleter" name="comp_ModelStringCompleter">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="focusPolicy">
+             <enum>Qt::FocusPolicy::StrongFocus</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbl_Model">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="toolTip">
+             <string>Launch </string>
+            </property>
+            <property name="text">
+             <string>Model</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="lbl_LiverySend">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Send livery</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QCheckBox" name="cb_Livery">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QLineEdit" name="le_SendLivery">
+            <property name="placeholderText">
+             <string>livery string send</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="3">
+           <widget class="QPushButton" name="pb_Clear">
+            <property name="toolTip">
+             <string>clear livery</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../../blackmisc/blackmisc.qrc">
+              <normaloff>:/diagona/icons/diagona/icons/cross.png</normaloff>:/diagona/icons/diagona/icons/cross.png</iconset>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </widget>
       </item>
      </layout>
-    </widget>
-   </item>
-   <item row="5" column="6" colspan="2">
-    <widget class="BlackGui::Components::CDbAircraftIcaoSelectorComponent" name="selector_AircraftIcao">
-     <property name="minimumSize">
-      <size>
-       <width>75</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="2" colspan="2">
-    <widget class="QLineEdit" name="le_AircraftCombinedType">
-     <property name="toolTip">
-      <string>e.g. L2J</string>
-     </property>
-     <property name="inputMask">
-      <string/>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="maxLength">
-      <number>3</number>
-     </property>
-     <property name="placeholderText">
-      <string>e.g. &quot;L2J&quot;</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="QLabel" name="lbl_LiverySend">
-     <property name="text">
-      <string>Send livery</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="8">
-    <widget class="BlackGui::CTickLabel" name="lblp_AirlineIcao">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="4">
-    <widget class="BlackGui::CTickLabel" name="lblp_Callsign">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="3" colspan="5">
-    <widget class="QLineEdit" name="le_SendLivery">
-     <property name="placeholderText">
-      <string>livery string send</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QLabel" name="lbl_Model">
-     <property name="toolTip">
-      <string>Launch </string>
-     </property>
-     <property name="text">
-      <string>Model</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="1">
-    <widget class="QLabel" name="lbl_Callsign">
-     <property name="text">
-      <string>Callsign</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QLabel" name="lbl_ModelSent">
-     <property name="text">
-      <string>Send model</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="4">
-    <widget class="BlackGui::CTickLabel" name="lblp_AircraftCombinedType">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="5">
-    <widget class="QLabel" name="lbl_AircraftIcaoAirline">
-     <property name="toolTip">
-      <string>ICAO code e.g. DLH, LHA, ...</string>
-     </property>
-     <property name="text">
-      <string>Airline</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="2">
-    <widget class="QCheckBox" name="cb_Livery">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="8">
-    <widget class="BlackGui::CTickLabel" name="lblp_AircraftIcao">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="8">
-    <widget class="QPushButton" name="pb_Clear">
-     <property name="toolTip">
-      <string>clear livery</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/diagona/icons/diagona/icons/cross.png</normaloff>:/diagona/icons/diagona/icons/cross.png</iconset>
-     </property>
     </widget>
    </item>
   </layout>
@@ -289,16 +358,17 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>le_SimulatorModel</tabstop>
-  <tabstop>cb_Model</tabstop>
-  <tabstop>comp_ModelStringCompleter</tabstop>
-  <tabstop>cb_Livery</tabstop>
-  <tabstop>le_SendLivery</tabstop>
-  <tabstop>pb_Clear</tabstop>
+  <tabstop>tabWidget</tabstop>
   <tabstop>le_Callsign</tabstop>
   <tabstop>selector_AircraftIcao</tabstop>
   <tabstop>le_AircraftCombinedType</tabstop>
   <tabstop>selector_AirlineIcao</tabstop>
+  <tabstop>le_SimulatorModel</tabstop>
+  <tabstop>comp_ModelStringCompleter</tabstop>
+  <tabstop>cb_Model</tabstop>
+  <tabstop>cb_Livery</tabstop>
+  <tabstop>le_SendLivery</tabstop>
+  <tabstop>pb_Clear</tabstop>
  </tabstops>
  <resources>
   <include location="../../blackmisc/blackmisc.qrc"/>
