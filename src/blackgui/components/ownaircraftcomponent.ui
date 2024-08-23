@@ -123,23 +123,6 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="pb_SimulatorLookup">
-        <property name="maximumSize">
-         <size>
-          <width>35</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>refresh</string>
-        </property>
-        <property name="icon">
-         <iconset resource="../../blackmisc/blackmisc.qrc">
-          <normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</iconset>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
@@ -307,7 +290,6 @@
  </customwidgets>
  <tabstops>
   <tabstop>le_SimulatorModel</tabstop>
-  <tabstop>pb_SimulatorLookup</tabstop>
   <tabstop>cb_Model</tabstop>
   <tabstop>comp_ModelStringCompleter</tabstop>
   <tabstop>cb_Livery</tabstop>

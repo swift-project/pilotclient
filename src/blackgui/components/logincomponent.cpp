@@ -124,7 +124,6 @@ namespace BlackGui::Components
         connect(ui->le_AircraftCombinedType, &QLineEdit::editingFinished, this, &CLoginComponent::validateAircraftValues);
         connect(ui->selector_AircraftIcao, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CLoginComponent::onChangedAircraftIcao, Qt::QueuedConnection);
         connect(ui->selector_AirlineIcao, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CLoginComponent::onChangedAirlineIcao, Qt::QueuedConnection);
-        connect(ui->pb_SimulatorLookup, &QToolButton::clicked, this, &CLoginComponent::lookupOwnAircraftModel);
         connect(ui->tw_Details, &QTabWidget::currentChanged, this, &CLoginComponent::onDetailsTabChanged);
 
         if (sGui && sGui->getIContextSimulator())
@@ -693,14 +692,6 @@ namespace BlackGui::Components
         }
 
         emit this->requestLoginPage();
-    }
-
-    void CLoginComponent::lookupOwnAircraftModel()
-    {
-        if (!this->hasValidContexts()) { return; }
-        if (!sGui->getIContextSimulator()->isSimulatorAvailable()) { return; }
-        const CAircraftModel model(sGui->getIContextOwnAircraft()->getOwnAircraft().getModel());
-        this->onSimulatorModelChanged(model);
     }
 
     void CLoginComponent::onSimulatorModelChanged(const CAircraftModel &model)
