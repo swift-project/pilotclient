@@ -4,7 +4,6 @@
 #include "ui_logincomponent.h"
 #include "logincomponent.h"
 #include "blackgui/components/serverlistselector.h"
-#include "blackgui/components/dbquickmappingwizard.h"
 #include "blackgui/editors/serverform.h"
 #include "blackgui/editors/pilotform.h"
 #include "blackgui/guiapplication.h"
@@ -88,7 +87,6 @@ namespace BlackGui::Components
         connect(ui->pb_Cancel, &QPushButton::clicked, this, &CLoginComponent::loginCancelled, Qt::QueuedConnection);
         connect(ui->pb_Ok, &QPushButton::clicked, this, &CLoginComponent::toggleNetworkConnection, Qt::QueuedConnection);
         connect(ui->pb_OtherServersGotoSettings, &QPushButton::pressed, this, &CLoginComponent::requestNetworkSettings);
-        connect(ui->pb_MappingWizard, &QToolButton::clicked, this, &CLoginComponent::mappingWizard, Qt::QueuedConnection);
         connect(&m_networkSetup, &CNetworkSetup::setupChanged, this, &CLoginComponent::reloadOtherServersSetup, Qt::QueuedConnection);
 
         ui->form_FsdDetails->showEnableInfo(true);
@@ -728,42 +726,11 @@ namespace BlackGui::Components
         }
         this->setOwnModelAndIcaoValues(reverseModel);
 
-        // open dialog for model mapping
-        if (m_autoPopupWizard && !reverseModel.isLoadedFromDb())
-        {
-            this->mappingWizard();
-        }
-
         // check state of own aircraft
         this->updateOwnAircraftCallsignAndPilotFromGuiValues();
 
         // let others know data changed
         m_changedLoginDataDigestSignal.inputSignal();
-    }
-
-    void CLoginComponent::mappingWizard()
-    {
-        if (!sGui || !sGui->getIContextOwnAircraft() || sGui->isShuttingDown()) { return; }
-        if (!sGui->hasMinimumMappingVersion()) { return; }
-
-        if (!m_mappingWizard)
-        {
-            m_mappingWizard.reset(new CDbQuickMappingWizard(this));
-        }
-
-        if (sGui->getIContextSimulator()->isSimulatorAvailable())
-        {
-            // preset on model
-            const CAircraftModel model(sGui->getIContextOwnAircraft()->getOwnAircraft().getModel());
-            m_mappingWizard->presetModel(model);
-        }
-        else
-        {
-            // preset on GUI values only
-            const CAircraftIcaoCode icao(ui->selector_AircraftIcao->getAircraftIcao());
-            m_mappingWizard->presetAircraftIcao(icao);
-        }
-        m_mappingWizard->show();
     }
 
     void CLoginComponent::toggleTimeout()

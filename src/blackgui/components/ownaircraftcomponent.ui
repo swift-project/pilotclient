@@ -140,23 +140,6 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="pb_MappingWizard">
-        <property name="maximumSize">
-         <size>
-          <width>35</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>quick mapping wizard</string>
-        </property>
-        <property name="icon">
-         <iconset resource="../../blackmisc/blackmisc.qrc">
-          <normaloff>:/own/icons/own/swift3D/sw3DGreen-24.png</normaloff>:/own/icons/own/swift3D/sw3DGreen-24.png</iconset>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
@@ -325,7 +308,6 @@
  <tabstops>
   <tabstop>le_SimulatorModel</tabstop>
   <tabstop>pb_SimulatorLookup</tabstop>
-  <tabstop>pb_MappingWizard</tabstop>
   <tabstop>cb_Model</tabstop>
   <tabstop>comp_ModelStringCompleter</tabstop>
   <tabstop>cb_Livery</tabstop>

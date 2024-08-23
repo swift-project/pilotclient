@@ -3,7 +3,6 @@
 
 #include "ownaircraftcomponent.h"
 #include "ui_ownaircraftcomponent.h"
-#include "blackgui/components/dbquickmappingwizard.h"
 
 #include "blackgui/uppercasevalidator.h"
 #include "blackgui/guiapplication.h"
@@ -65,7 +64,6 @@ namespace BlackGui::Components
         connect(ui->selector_AircraftIcao, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &COwnAircraftComponent::changedAircraftIcao, Qt::QueuedConnection);
         connect(ui->selector_AirlineIcao, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &COwnAircraftComponent::changedAirlineIcao, Qt::QueuedConnection);
         connect(ui->pb_SimulatorLookup, &QPushButton::clicked, this, &COwnAircraftComponent::lookupOwnAircraftModel);
-        connect(ui->pb_MappingWizard, &QPushButton::clicked, this, &COwnAircraftComponent::mappingWizard, Qt::QueuedConnection);
         connect(ui->pb_Clear, &QPushButton::clicked, this, &COwnAircraftComponent::clearLivery, Qt::QueuedConnection);
 
         if (sGui && sGui->getIContextSimulator())
@@ -125,12 +123,6 @@ namespace BlackGui::Components
             return;
         }
         this->setOwnModelAndIcaoValues(reverseModel);
-
-        // open dialog for model mapping
-        if (m_autoPopupWizard && !reverseModel.isLoadedFromDb())
-        {
-            this->mappingWizard();
-        }
 
         emit this->aircraftDataChanged();
     }
@@ -347,31 +339,6 @@ namespace BlackGui::Components
                 ui->selector_AirlineIcao->clear();
             }
         }
-    }
-
-    void COwnAircraftComponent::mappingWizard()
-    {
-        if (!sGui || !sGui->getIContextOwnAircraft() || sGui->isShuttingDown()) { return; }
-        if (!sGui->hasMinimumMappingVersion()) { return; }
-
-        if (!m_mappingWizard)
-        {
-            m_mappingWizard.reset(new CDbQuickMappingWizard(this));
-        }
-
-        if (sGui->getIContextSimulator()->isSimulatorAvailable())
-        {
-            // preset on model
-            const CAircraftModel model(sGui->getIContextOwnAircraft()->getOwnAircraft().getModel());
-            m_mappingWizard->presetModel(model);
-        }
-        else
-        {
-            // preset on GUI values only
-            const CAircraftIcaoCode icao(ui->selector_AircraftIcao->getAircraftIcao());
-            m_mappingWizard->presetAircraftIcao(icao);
-        }
-        m_mappingWizard->show();
     }
 
     bool COwnAircraftComponent::updateOwnAircaftIcaoValuesFromGuiValues()

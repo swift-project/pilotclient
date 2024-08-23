@@ -384,7 +384,7 @@ add_library(gui SHARED
         components/dbreducemodelduplicates.cpp
         components/countryselector.ui
         components/coordinatedialog.ui
-        components/dbquickmappingwizard.h
+        #components/dbquickmappingwizard.h
         components/dbmodelcomponent.cpp
         components/modelconverterxsetupcomponent.cpp
         components/logcomponent.h
@@ -509,7 +509,7 @@ add_library(gui SHARED
         components/mappingcomponent.ui
         components/datasettingscomponent.h
         components/dbmodelworkbenchcomponent.cpp
-        components/dbquickmappingwizard.ui
+        #components/dbquickmappingwizard.ui
         components/aircraftpartshistory.cpp
         components/radarcomponent.ui
         components/simbriefdownloaddialog.h
@@ -677,7 +677,7 @@ add_library(gui SHARED
         components/logcomponent.cpp
         components/configurationwizard.cpp
         components/downloadcomponent.ui
-        components/dbquickmappingwizard.cpp
+        #components/dbquickmappingwizard.cpp
         components/aircraftcombinedtypeselector.h
         components/dbownmodelsetformdialog.cpp
         components/dbmodelworkbenchcomponent.ui

@@ -38,8 +38,6 @@ namespace BlackMisc::Simulation
 }
 namespace BlackGui::Components
 {
-    class CDbQuickMappingWizard;
-
     /*!
      * Login component to flight network
      */
