@@ -103,22 +103,6 @@
                 </property>
                </spacer>
               </item>
-              <item>
-               <widget class="QPushButton" name="pb_OverrideCredentialsVatsim">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="toolTip">
-                 <string>copy credentials to pilot section</string>
-                </property>
-                <property name="text">
-                 <string> override pilot </string>
-                </property>
-               </widget>
-              </item>
              </layout>
             </widget>
            </item>
@@ -193,16 +177,6 @@
                <widget class="QPushButton" name="pb_OtherServersGotoSettings">
                 <property name="text">
                  <string>settings </string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="pb_OverrideCredentialsOtherServers">
-                <property name="toolTip">
-                 <string>copy credentials to pilot section</string>
-                </property>
-                <property name="text">
-                 <string> override pilot </string>
                 </property>
                </widget>
               </item>
@@ -295,12 +269,10 @@
  <tabstops>
   <tabstop>tw_Network</tabstop>
   <tabstop>comp_VatsimServers</tabstop>
-  <tabstop>pb_OverrideCredentialsVatsim</tabstop>
   <tabstop>le_PartnerCallsign</tabstop>
   <tabstop>comp_OtherServers</tabstop>
   <tabstop>pb_RefreshOtherServers</tabstop>
   <tabstop>pb_OtherServersGotoSettings</tabstop>
-  <tabstop>pb_OverrideCredentialsOtherServers</tabstop>
  </tabstops>
  <resources>
   <include location="../../blackmisc/blackmisc.qrc"/>

@@ -27,8 +27,6 @@ namespace BlackGui::Components
         connect(ui->comp_VatsimServers, &CServerListSelector::serverChanged, this, &CNetworkDetailsComponent::onSelectedServerChanged);
         connect(ui->tw_Network, &QTabWidget::currentChanged, this, &CNetworkDetailsComponent::onServerTabWidgetChanged);
         connect(ui->pb_OtherServersGotoSettings, &QPushButton::pressed, this, &CNetworkDetailsComponent::requestNetworkSettings);
-        connect(ui->pb_OverrideCredentialsVatsim, &QPushButton::clicked, this, &CNetworkDetailsComponent::onOverrideCredentialsToPilot);
-        connect(ui->pb_OverrideCredentialsOtherServers, &QPushButton::clicked, this, &CNetworkDetailsComponent::onOverrideCredentialsToPilot);
         connect(&m_networkSetup, &CNetworkSetup::setupChanged, this, &CNetworkDetailsComponent::reloadOtherServersSetup, Qt::QueuedConnection);
 
         // web service data
@@ -79,23 +77,6 @@ namespace BlackGui::Components
     {
         ui->wi_OtherServersButtons->setVisible(visible);
         ui->wi_VatsimButtons->setVisible(visible);
-    }
-
-    void CNetworkDetailsComponent::onOverrideCredentialsToPilot()
-    {
-        CServer server;
-        const QObject *s = QObject::sender();
-        if (s == ui->pb_OverrideCredentialsOtherServers)
-        {
-            server = this->getCurrentOtherServer();
-        }
-        else if (s == ui->pb_OverrideCredentialsVatsim)
-        {
-            // the VATSIM server selected has no valid user credentials
-            server = m_networkSetup.getLastVatsimServer();
-        }
-        else { return; }
-        emit this->overridePilot(server.getUser());
     }
 
     void CNetworkDetailsComponent::onServerTabWidgetChanged(int index)

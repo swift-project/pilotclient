@@ -90,9 +90,6 @@ namespace BlackGui::Components
         //! Set the server buttons visible
         void setServerButtonsVisible(bool visible);
 
-        //! Override credentials
-        void onOverrideCredentialsToPilot();
-
         //! VATSIM data file was loaded
         void onWebServiceDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
