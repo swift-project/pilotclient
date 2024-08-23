@@ -63,7 +63,6 @@ namespace BlackGui::Components
         connect(ui->le_AircraftCombinedType, &QLineEdit::editingFinished, this, &COwnAircraftComponent::validate);
         connect(ui->selector_AircraftIcao, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &COwnAircraftComponent::changedAircraftIcao, Qt::QueuedConnection);
         connect(ui->selector_AirlineIcao, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &COwnAircraftComponent::changedAirlineIcao, Qt::QueuedConnection);
-        connect(ui->pb_SimulatorLookup, &QPushButton::clicked, this, &COwnAircraftComponent::lookupOwnAircraftModel);
         connect(ui->pb_Clear, &QPushButton::clicked, this, &COwnAircraftComponent::clearLivery, Qt::QueuedConnection);
 
         if (sGui && sGui->getIContextSimulator())
@@ -91,14 +90,6 @@ namespace BlackGui::Components
         {
             ui->le_Callsign->setText("SWIFT");
         }
-    }
-
-    void COwnAircraftComponent::lookupOwnAircraftModel()
-    {
-        if (!this->hasValidContexts()) { return; }
-        if (!sGui->getIContextSimulator()->isSimulatorAvailable()) { return; }
-        const CAircraftModel model(sGui->getIContextOwnAircraft()->getOwnAircraft().getModel());
-        this->onSimulatorModelChanged(model);
     }
 
     void COwnAircraftComponent::onSimulatorModelChanged(const CAircraftModel &model)

@@ -450,23 +450,6 @@
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QPushButton" name="pb_SimulatorLookup">
-              <property name="maximumSize">
-               <size>
-                <width>35</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="toolTip">
-               <string>refresh</string>
-              </property>
-              <property name="icon">
-               <iconset>
-                <normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</iconset>
-              </property>
-             </widget>
-            </item>
            </layout>
           </widget>
          </item>
@@ -888,7 +871,6 @@
   <tabstop>tw_Details</tabstop>
   <tabstop>form_Pilot</tabstop>
   <tabstop>le_SimulatorModel</tabstop>
-  <tabstop>pb_SimulatorLookup</tabstop>
   <tabstop>le_Callsign</tabstop>
   <tabstop>selector_AircraftIcao</tabstop>
   <tabstop>le_AircraftCombinedType</tabstop>

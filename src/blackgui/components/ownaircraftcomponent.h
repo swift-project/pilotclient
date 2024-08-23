@@ -72,9 +72,6 @@ namespace BlackGui::Components
         void aircraftDataChanged();
 
     private:
-        //! Lookup own model
-        void lookupOwnAircraftModel();
-
         //! Simulator model has been changed
         void onSimulatorModelChanged(const BlackMisc::Simulation::CAircraftModel &model);
 

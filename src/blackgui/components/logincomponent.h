@@ -176,9 +176,6 @@ namespace BlackGui::Components
         //! Logoff due to insufficient simulator frame rate
         void autoLogoffFrameRate(bool fatal);
 
-        //! Lookup own model
-        void lookupOwnAircraftModel();
-
         //! Simulator model has been changed
         void onSimulatorModelChanged(const BlackMisc::Simulation::CAircraftModel &model);
 
