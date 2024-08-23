@@ -41,8 +41,6 @@ namespace BlackMisc::Simulation
 }
 namespace BlackGui::Components
 {
-    class CDbQuickMappingWizard;
-
     /*!
      * Login component to flight network
      */
@@ -184,9 +182,6 @@ namespace BlackGui::Components
         //! Simulator model has been changed
         void onSimulatorModelChanged(const BlackMisc::Simulation::CAircraftModel &model);
 
-        //! Launch mapping wizard
-        void mappingWizard();
-
         //! Pause/Continue timeout
         void toggleTimeout();
 
@@ -242,9 +237,7 @@ namespace BlackGui::Components
         static constexpr int LogoffIntervalSeconds = 20; //!< time before logoff
 
         QScopedPointer<Ui::CLoginComponent> ui;
-        QScopedPointer<CDbQuickMappingWizard> m_mappingWizard; //!< mapping wizard
         BlackMisc::CDigestSignal m_changedLoginDataDigestSignal { this, &CLoginComponent::loginDataChangedDigest, 1500, 10 };
-        bool m_autoPopupWizard = false; //!< automatically popup wizard if mapping is needed
         bool m_updatePilotOnServerChanges = true;
         bool m_networkConnected = false;
         bool m_simulatorConnected = false;

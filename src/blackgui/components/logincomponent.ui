@@ -467,23 +467,6 @@
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QPushButton" name="pb_MappingWizard">
-              <property name="maximumSize">
-               <size>
-                <width>35</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="toolTip">
-               <string>quick mapping wizard</string>
-              </property>
-              <property name="icon">
-               <iconset>
-                <normaloff>:/own/icons/own/swift3D/sw3DGreen-24.png</normaloff>:/own/icons/own/swift3D/sw3DGreen-24.png</iconset>
-              </property>
-             </widget>
-            </item>
            </layout>
           </widget>
          </item>
@@ -906,7 +889,6 @@
   <tabstop>form_Pilot</tabstop>
   <tabstop>le_SimulatorModel</tabstop>
   <tabstop>pb_SimulatorLookup</tabstop>
-  <tabstop>pb_MappingWizard</tabstop>
   <tabstop>le_Callsign</tabstop>
   <tabstop>selector_AircraftIcao</tabstop>
   <tabstop>le_AircraftCombinedType</tabstop>
