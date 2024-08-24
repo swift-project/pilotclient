@@ -48,7 +48,6 @@
 #include <QTemporaryDir>
 #include <QThread>
 #include <QTimer>
-#include <QTranslator>
 #include <QWriteLocker>
 #include <Qt>
 #include <QtGlobal>
@@ -127,11 +126,6 @@ namespace BlackCore
             //
             // cmd line arguments not yet parsed here
             //
-
-            // Translations
-            QTranslator translator;
-            if (translator.load("blackmisc_i18n_de", ":blackmisc/translations/")) { CLogMessage(this).debug() << "Translator loaded"; }
-            QCoreApplication::installTranslator(&translator);
 
             // main app
             sApp = this;
