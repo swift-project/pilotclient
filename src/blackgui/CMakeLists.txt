@@ -389,7 +389,6 @@ add_library(gui SHARED
         components/dbreducemodelduplicates.cpp
         components/countryselector.ui
         components/coordinatedialog.ui
-        components/dbquickmappingwizard.h
         components/dbmodelcomponent.cpp
         components/modelconverterxsetupcomponent.cpp
         components/logcomponent.h
@@ -405,7 +404,6 @@ add_library(gui SHARED
         components/aircraftmodelvalidationcomponent.h
         components/autopublishdialog.h
         components/maininfoareacomponent.h
-        components/logindialog.h
         components/commandinput.h
         components/configsimulatorcomponent.ui
         components/datamaininfoareacomponent.cpp
@@ -471,7 +469,6 @@ add_library(gui SHARED
         components/logcomponent.ui
         components/settingsmatchingdialog.ui
         components/settingsfontdialog.ui
-        components/loginadvcomponent.h
         components/simulatorselector.ui
         components/aircraftcomponent.ui
         components/scalescreenfactor.ui
@@ -515,7 +512,6 @@ add_library(gui SHARED
         components/mappingcomponent.ui
         components/datasettingscomponent.h
         components/dbmodelworkbenchcomponent.cpp
-        components/dbquickmappingwizard.ui
         components/aircraftpartshistory.cpp
         components/radarcomponent.ui
         components/simbriefdownloaddialog.h
@@ -681,12 +677,10 @@ add_library(gui SHARED
         components/dbliverycolorsearchdialog.h
         components/modelbrowserdialog.h
         components/aboutdialog.ui
-        components/logindialog.ui
         components/cockpitcomcomponent.cpp
         components/logcomponent.cpp
         components/configurationwizard.cpp
         components/downloadcomponent.ui
-        components/dbquickmappingwizard.cpp
         components/aircraftcombinedtypeselector.h
         components/dbownmodelsetformdialog.cpp
         components/dbmodelworkbenchcomponent.ui
@@ -698,7 +692,6 @@ add_library(gui SHARED
         components/transpondercodespinbox.cpp
         components/interpolationcomponent.h
         components/dbairlineicaoselectorcomponent.h
-        components/logindialog.cpp
         components/maininfoareacomponent.cpp
         components/mappingcomponent.h
         components/dbautostashingcomponent.ui
@@ -744,7 +737,6 @@ add_library(gui SHARED
         components/logincomponent.ui
         components/stringlistdialog.ui
         components/dbcountrycomponent.ui
-        components/loginadvcomponent.cpp
         components/selcalcodeselector.h
         components/navigatordialog.cpp
         components/dblogincomponent.ui
@@ -760,7 +752,6 @@ add_library(gui SHARED
         components/networkaircraftvaluescomponent.ui
         components/dbaircrafticaocomponent.h
         components/corestatuscomponent.ui
-        components/loginadvcomponent.ui
         components/datasettingscomponent.ui
         components/cockpitcomtransmissioncomponent.cpp
         components/firstmodelsetcomponent.ui

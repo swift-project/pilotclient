@@ -22,8 +22,6 @@ namespace Ui
 }
 namespace BlackGui::Components
 {
-    class CDbQuickMappingWizard;
-
     //! Own aircraft
     class COwnAircraftComponent : public QFrame
     {
@@ -74,12 +72,6 @@ namespace BlackGui::Components
         void aircraftDataChanged();
 
     private:
-        //! Launch mapping wizard
-        void mappingWizard();
-
-        //! Lookup own model
-        void lookupOwnAircraftModel();
-
         //! Simulator model has been changed
         void onSimulatorModelChanged(const BlackMisc::Simulation::CAircraftModel &model);
 
@@ -111,8 +103,6 @@ namespace BlackGui::Components
         //! Get a prefill model
         BlackMisc::Simulation::CAircraftModel getPrefillModel() const;
 
-        bool m_autoPopupWizard = false; //!< automatically popup wizard if mapping is needed
-        QScopedPointer<CDbQuickMappingWizard> m_mappingWizard; //!< mapping wizard
         BlackMisc::CData<BlackMisc::Simulation::Data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
         QScopedPointer<Ui::COwnAircraftComponent> ui;
     };
