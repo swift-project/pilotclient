@@ -4,11 +4,6 @@
 -->
 
 <RCC>
-    <qresource prefix="/blackmisc">
-        <file>translations/blackmisc_i18n_de.qm</file>
-        <file>translations/blackmisc_i18n_fr.qm</file>
-        <file>translations/blackmisc_i18n_en.qm</file>
-    </qresource>
     <qresource prefix="/pastel">
         <file>icons/pastel/16/accept.png</file>
         <file>icons/pastel/16/add.png</file>
