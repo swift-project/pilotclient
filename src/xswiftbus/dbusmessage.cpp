@@ -56,17 +56,17 @@ namespace XSwiftBus
         return dbus_message_get_serial(m_message);
     }
 
-    string_view CDBusMessage::getInterfaceName() const
+    std::string_view CDBusMessage::getInterfaceName() const
     {
         return dbus_message_get_interface(m_message);
     }
 
-    string_view CDBusMessage::getObjectPath() const
+    std::string_view CDBusMessage::getObjectPath() const
     {
         return dbus_message_get_path(m_message);
     }
 
-    string_view CDBusMessage::getMethodName() const
+    std::string_view CDBusMessage::getMethodName() const
     {
         return dbus_message_get_member(m_message);
     }

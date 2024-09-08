@@ -7,23 +7,10 @@
 #include "dbus/dbus.h"
 #include <string>
 #include <vector>
-#if defined(_MSC_VER)
-#    include <experimental/string>
-#elif defined(__clang__)
-#    include <string_view>
-#else
-#    include <experimental/string_view>
-#endif
+#include <string_view>
 
 namespace XSwiftBus
 {
-
-#if defined(_MSC_VER) || defined(__clang__)
-    using std::string_view;
-#else
-    using std::experimental::string_view;
-#endif
-
     //! DBus Message
     class CDBusMessage
     {
@@ -53,13 +40,13 @@ namespace XSwiftBus
         dbus_uint32_t getSerial() const;
 
         //! Get the called interface name
-        string_view getInterfaceName() const;
+        std::string_view getInterfaceName() const;
 
         //! Get the called object path
-        string_view getObjectPath() const;
+        std::string_view getObjectPath() const;
 
         //! Get the called method name
-        string_view getMethodName() const;
+        std::string_view getMethodName() const;
 
         //! Begin writing argument
         void beginArgumentWrite();
