@@ -131,7 +131,6 @@ private:
     BlackCore::CActionBind m_actionPtt { BlackMisc::Input::pttHotkeyAction(), BlackMisc::CIcons::StandardIconRadio16, this, &SwiftGuiStd::onPttChanged };
     BlackCore::CActionBindings m_menuHotkeyHandlers;
     BlackGui::CManagedStatusBar m_statusBar;
-    BlackMisc::CLogHistoryReplica m_logHistoryForStatus { this };
     BlackMisc::CLogHistoryReplica m_logHistoryForLogButtons { this };
     BlackMisc::CLogHistoryReplica m_logHistoryForOverlay { this };
     BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this };

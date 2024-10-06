@@ -75,13 +75,8 @@ void SwiftGuiStd::init()
     sGui->initMainApplicationWidget(this);
 
     // log messages
-    m_logHistoryForStatus.setFilter(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
     m_logHistoryForOverlay.setFilter(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityError));
     m_logHistoryForLogButtons.setFilter(CLogPattern().withSeverityAtOrAbove(SeverityWarning));
-    connect(&m_logHistoryForStatus, &CLogHistoryReplica::elementAdded, this, [this](const CStatusMessage &message) {
-        m_statusBar.displayStatusMessage(message);
-        ui->comp_MainInfoArea->displayStatusMessage(message);
-    });
     connect(&m_logHistoryForOverlay, &CLogHistoryReplica::elementAdded, this, [this](const CStatusMessage &message) {
         //! \todo filter out validation messages at CLogPattern level
         if (!message.getCategories().contains(CLogCategories::validation())) { ui->fr_CentralFrameInside->showOverlayMessage(message); }
@@ -96,7 +91,6 @@ void SwiftGuiStd::init()
             m_statusBar.showWarningButton();
         }
     });
-    m_logHistoryForStatus.initialize(sApp->getDataLinkDBus());
     m_logHistoryForOverlay.initialize(sApp->getDataLinkDBus());
     m_logHistoryForLogButtons.initialize(sApp->getDataLinkDBus());
 
