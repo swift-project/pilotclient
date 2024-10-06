@@ -124,7 +124,6 @@ namespace BlackGui
         //! @{
         //! direct access to main application window
         bool displayInStatusBar(const BlackMisc::CStatusMessage &message) override;
-        bool displayTextInConsole(const QString &text) override;
         bool displayInOverlayWindow(const BlackMisc::CStatusMessage &message, int timeOutMs = -1) override;
         bool displayInOverlayWindow(const BlackMisc::CStatusMessageList &messages, int timeOutMs = -1) override;
         bool displayInOverlayWindow(const QString &html, int timeOutMs = -1) override;

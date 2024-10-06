@@ -45,8 +45,6 @@ namespace BlackCore::Context
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
                                "remoteHotkeyAction", this, SIGNAL(remoteHotkeyAction(QString, bool, BlackMisc::CIdentifier)));
         Q_ASSERT(s);
-        s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                               "requestDisplayOnConsole", this, SIGNAL(requestDisplayOnConsole(QString)));
         Q_UNUSED(s);
         this->relayBaseClassSignals(serviceName, connection, IContextApplication::ObjectPath(), IContextApplication::InterfaceName());
     }

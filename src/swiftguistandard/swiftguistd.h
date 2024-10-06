@@ -191,9 +191,6 @@ private:
     //! Play notifcation sound
     void playNotifcationSound(BlackMisc::Audio::CNotificationSounds::NotificationFlag notification) const;
 
-    //! Display console
-    void displayConsole();
-
     //! Display log
     void displayLog();
 
@@ -280,9 +277,6 @@ private:
 
     //! Whole main info area floating
     void onChangedMainInfoAreaFloating(bool floating);
-
-    //! UI Console message has been recevied
-    void onRequestedConsoleMessage(const QString &logMsg, bool clear);
 
     //! Reported issue with the client
     void onAudioClientFailure(const BlackMisc::CStatusMessage &msg);

@@ -97,10 +97,6 @@ namespace BlackCore
             //! \note Used for hotkey action, do not use directly
             void remoteHotkeyAction(const QString &action, bool argument, const BlackMisc::CIdentifier &origin);
 
-            //! Request a message to be displayed on console, whatever the console is
-            //! \note no guarantee it is really written to console
-            void requestDisplayOnConsole(const QString &message);
-
         public slots:
             //! Ratify some settings changed by another process
             //! \note Not pure because it can be called from the base class constructor.

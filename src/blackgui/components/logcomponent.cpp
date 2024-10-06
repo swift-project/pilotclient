@@ -45,7 +45,6 @@ namespace BlackGui::Components
     CLogComponent::CLogComponent(QWidget *parent) : QFrame(parent), ui(new Ui::CLogComponent), m_history(this)
     {
         ui->setupUi(this);
-        connect(ui->comp_StatusMessages, &CStatusMessagesDetail::modelDataChangedDigest, this, &CLogComponent::onStatusMessageDataChanged);
 
         connect(&m_history, &CLogHistoryReplica::elementAdded, this, [this](const CStatusMessage &message) {
             ui->comp_StatusMessages->appendStatusMessageToList(message);
@@ -66,13 +65,6 @@ namespace BlackGui::Components
 
     void CLogComponent::displayLog(bool attention)
     {
-        ui->tw_StatusPage->setCurrentIndex(0);
-        if (attention) { emit this->requestAttention(); }
-    }
-
-    void CLogComponent::displayConsole(bool attention)
-    {
-        ui->tw_StatusPage->setCurrentIndex(1);
         if (attention) { emit this->requestAttention(); }
     }
 
@@ -118,33 +110,11 @@ namespace BlackGui::Components
 
     void CLogComponent::clear()
     {
-        ui->tep_StatusPageConsole->clear();
         ui->comp_StatusMessages->clear();
-    }
-
-    void CLogComponent::clearConsole()
-    {
-        ui->tep_StatusPageConsole->clear();
     }
 
     void CLogComponent::clearMessages()
     {
         ui->comp_StatusMessages->clear();
-    }
-
-    void CLogComponent::appendPlainTextToConsole(const QString &text)
-    {
-        ui->tep_StatusPageConsole->appendPlainText(text);
-    }
-
-    void CLogComponent::onStatusMessageDataChanged(int count, bool withFilter)
-    {
-        Q_UNUSED(count);
-        Q_UNUSED(withFilter);
-        const int i = ui->tw_StatusPage->indexOf(ui->pg_LogPage);
-        QString o = ui->tw_StatusPage->tabText(i);
-        const QString f = withFilter ? "F" : "";
-        o = CGuiUtility::replaceTabCountValue(o, ui->comp_StatusMessages->rowCount()) + f;
-        ui->tw_StatusPage->setTabText(i, o);
     }
 } // namespace

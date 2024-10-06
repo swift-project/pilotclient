@@ -68,9 +68,6 @@ namespace BlackGui::Components
         //! Display the log
         void displayLog();
 
-        //! Display console
-        void displayConsole();
-
     public slots:
         //! Select log area
         void selectLog();

@@ -1285,7 +1285,6 @@ namespace BlackCore
         if (!dm.isEmpty())
         {
             this->displayStatusMessage(CStatusMessage(this).info(dm));
-            emit this->requestUiConsoleMessage(dm, true);
         }
 
         const int t = CMathUtils::randomInteger(4500, 5500); // makes sure not always using the same time difference

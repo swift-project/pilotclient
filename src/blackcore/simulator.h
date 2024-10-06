@@ -379,9 +379,6 @@ namespace BlackCore
         //! Relevant simulator messages to be explicitly displayed
         void driverMessages(const BlackMisc::CStatusMessageList &messages);
 
-        //! Request a console message (whatever the console maybe)
-        void requestUiConsoleMessage(const QString &driverMessage, bool clear);
-
         //! Requested elevation, call pending
         void requestedElevation(const BlackMisc::Aviation::CCallsign &callsign);
 

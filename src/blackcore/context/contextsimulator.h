@@ -149,9 +149,6 @@ namespace BlackCore::Context
         //! Relevant simulator messages to be explicitly displayed
         void driverMessages(const BlackMisc::CStatusMessageList &messages);
 
-        //! Request a console message (whatever the console maybe)
-        void requestUiConsoleMessage(const QString &driverMessage, bool clear);
-
         //! Validated model set
         void validatedModelSet(const BlackMisc::Simulation::CSimulatorInfo &simulator,
                                const BlackMisc::Simulation::CAircraftModelList &valid, const BlackMisc::Simulation::CAircraftModelList &invalid,

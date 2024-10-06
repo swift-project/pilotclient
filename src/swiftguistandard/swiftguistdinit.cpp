@@ -145,8 +145,6 @@ void SwiftGuiStd::init()
     Q_ASSERT(s);
     s = connect(sGui->getIContextNetwork(), &IContextNetwork::kicked, this, &SwiftGuiStd::onKickedFromNetwork, Qt::QueuedConnection);
     Q_ASSERT(s);
-    s = connect(sGui->getIContextSimulator(), &IContextSimulator::requestUiConsoleMessage, this, &SwiftGuiStd::onRequestedConsoleMessage, Qt::QueuedConnection);
-    Q_ASSERT(s);
     s = connect(sGui->getIContextSimulator(), &IContextSimulator::validatedModelSet, this, &SwiftGuiStd::onValidatedModelSet, Qt::QueuedConnection);
     Q_ASSERT(s);
     s = connect(&m_timerContextWatchdog, &QTimer::timeout, this, &SwiftGuiStd::handleTimerBasedUpdates);
@@ -177,8 +175,6 @@ void SwiftGuiStd::init()
     this->initMenus();
 
     // info
-    ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(sGui->swiftVersionString());
-    ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CBuildConfig::compiledWithInfo());
     connect(ui->comp_InfoBarStatus, &CInfoBarStatusComponent::transponderModeChanged, ui->dw_InfoBarStatus, &CDockWidgetInfoBar::reloadStyleSheet, Qt::QueuedConnection);
 
     // Show kill button

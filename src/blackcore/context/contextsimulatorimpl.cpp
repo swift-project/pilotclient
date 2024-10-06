@@ -515,8 +515,6 @@ namespace BlackCore::Context
         Q_ASSERT(c);
         c = connect(simulator, &ISimulator::driverMessages, this, &IContextSimulator::driverMessages);
         Q_ASSERT(c);
-        c = connect(simulator, &ISimulator::requestUiConsoleMessage, this, &IContextSimulator::requestUiConsoleMessage);
-        Q_ASSERT(c);
         c = connect(simulator, &ISimulator::autoPublishDataWritten, this, &IContextSimulator::autoPublishDataWritten);
         Q_ASSERT(c);
 
@@ -1074,14 +1072,6 @@ namespace BlackCore::Context
         {
             CInterpolationAndRenderingSetupGlobal rs = this->getInterpolationAndRenderingSetupGlobal();
             const QString p1 = parser.part(1);
-            if (p1 == "show")
-            {
-                if (this->getIContextApplication())
-                {
-                    emit this->getIContextApplication()->requestDisplayOnConsole(rs.toQString(true));
-                }
-                return true;
-            }
             if (!parser.hasPart(2)) { return false; }
             const bool on = stringToBool(parser.part(2));
             if (p1 == "debug") { rs.setSimulatorDebuggingMessages(on); }

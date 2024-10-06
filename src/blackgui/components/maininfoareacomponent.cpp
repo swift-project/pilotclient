@@ -99,12 +99,6 @@ namespace BlackGui::Components
         this->selectArea(InfoAreaLog);
     }
 
-    void CMainInfoAreaComponent::displayConsole()
-    {
-        ui->comp_Log->displayConsole();
-        this->selectArea(InfoAreaLog);
-    }
-
     void CMainInfoAreaComponent::selectArea(CMainInfoAreaComponent::InfoArea infoArea)
     {
         CInfoArea::selectArea(static_cast<int>(infoArea));

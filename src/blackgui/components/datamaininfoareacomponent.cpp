@@ -67,14 +67,6 @@ namespace BlackGui::Components
         this->getLogComponent()->displayLog();
     }
 
-    void CDataMainInfoAreaComponent::displayConsole()
-    {
-        this->selectArea(InfoAreaLog);
-        BLACK_VERIFY_X(this->getLogComponent(), Q_FUNC_INFO, "No log component");
-        if (!this->getLogComponent()) { return; }
-        this->getLogComponent()->displayConsole();
-    }
-
     void CDataMainInfoAreaComponent::selectLog()
     {
         this->selectArea(InfoAreaLog);

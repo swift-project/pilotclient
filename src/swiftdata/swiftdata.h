@@ -81,7 +81,6 @@ private:
 
     void performGracefulShutdown();
     void consolidationSettingChanged();
-    void displayConsole();
     void displayLog();
     void checkMinimumVersion();
 

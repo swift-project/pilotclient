@@ -570,14 +570,6 @@ namespace BlackGui
         return m->displayInOverlayWindow(html, timeOutMs);
     }
 
-    bool CGuiApplication::displayTextInConsole(const QString &text)
-    {
-        IMainWindowAccess *m = mainWindowAccess();
-        BLACK_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
-        if (!m) { return false; }
-        return m->displayTextInConsole(text);
-    }
-
     void CGuiApplication::addMenuForSettingsAndCache(QMenu &menu)
     {
         QMenu *sm = menu.addMenu(CIcons::appSettings16(), "Settings");
@@ -597,7 +589,7 @@ namespace BlackGui
         c = connect(a, &QAction::triggered, this, [=] {
             if (!sGui || sGui->isShuttingDown()) { return; }
             CSettingsCache::instance()->clearAllValues();
-            this->displayTextInConsole("Cleared all settings!");
+            CLogMessage(this).info(u"Cleared all settings!");
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
@@ -605,7 +597,7 @@ namespace BlackGui
         c = connect(a, &QAction::triggered, this, [=]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             const QStringList files(CSettingsCache::instance()->enumerateStore());
-            this->displayTextInConsole(files.join("\n"));
+            CLogMessage(this).info(files.join("\n"));
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
@@ -625,7 +617,7 @@ namespace BlackGui
         c = connect(a, &QAction::triggered, this, [=]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             const QStringList files = CApplication::clearCaches();
-            this->displayTextInConsole(u"Cleared caches! " % QString::number(files.size()) + " files");
+            CLogMessage(this).info(u"Cleared caches! " % QString::number(files.size()) + " files");
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
@@ -633,7 +625,7 @@ namespace BlackGui
         c = connect(a, &QAction::triggered, this, [=]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             const QStringList files(CDataCache::instance()->enumerateStore());
-            this->displayTextInConsole(files.join("\n"));
+            CLogMessage(this).info(files.join("\n"));
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
@@ -659,7 +651,7 @@ namespace BlackGui
         c = connect(a, &QAction::triggered, this, [=]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             const QString r = CNetworkUtils::createNetworkAccessManagerReport(this->getNetworkAccessManager());
-            this->displayTextInConsole(r);
+            CLogMessage(this).info(r);
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         Q_UNUSED(c)
@@ -725,7 +717,7 @@ namespace BlackGui
             a, &QAction::triggered, this, [=]() {
                 if (!sGui || sGui->isShuttingDown()) { return; }
                 const CGlobalSetup s = this->getGlobalSetup();
-                this->displayTextInConsole(s.toJsonString());
+                CLogMessage(this).info(s.toJsonString());
             },
             Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
@@ -735,7 +727,7 @@ namespace BlackGui
             a, &QAction::triggered, this, [=]() {
                 if (!sGui || sGui->isShuttingDown()) { return; }
                 const CUpdateInfo info = this->getUpdateInfo();
-                this->displayTextInConsole(info.toJsonString());
+                CLogMessage(this).info(info.toJsonString());
             },
             Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
@@ -746,8 +738,7 @@ namespace BlackGui
             c = connect(
                 a, &QAction::triggered, this, [=]() {
                     if (!sGui || sGui->isShuttingDown()) { return; }
-                    this->displayTextInConsole(this->getWebDataServices()->getReadersLog());
-                    CLogMessage(this).info(u"Displayed services log.");
+                    CLogMessage(this).info(this->getWebDataServices()->getReadersLog());
                 },
                 Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
@@ -758,7 +749,7 @@ namespace BlackGui
                     if (!sGui || sGui->isShuttingDown()) { return; }
                     if (!this->getWebDataServices()->getDbInfoDataReader()) { return; }
                     const CDbInfoList info = this->getWebDataServices()->getDbInfoDataReader()->getInfoObjects();
-                    this->displayTextInConsole(u"DB info:\n" % info.toJsonString());
+                    CLogMessage(this).info(u"DB info:\n" % info.toJsonString());
                 },
                 Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
@@ -769,7 +760,7 @@ namespace BlackGui
                     if (!sGui || sGui->isShuttingDown()) { return; }
                     if (!this->getWebDataServices()->getDbInfoDataReader()) { return; }
                     const CDbInfoList info = this->getWebDataServices()->getSharedInfoDataReader()->getInfoObjects();
-                    this->displayTextInConsole(u"Shared info:\n" % info.toJsonString());
+                    CLogMessage(this).info(u"Shared info:\n" % info.toJsonString());
                 },
                 Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
@@ -779,7 +770,7 @@ namespace BlackGui
         c = connect(
             a, &QAction::triggered, this, [=]() {
                 if (!sGui || sGui->isShuttingDown()) { return; }
-                this->displayTextInConsole(getAllUserMetatypesTypes());
+                CLogMessage(this).info(getAllUserMetatypesTypes());
             },
             Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
@@ -1030,10 +1021,7 @@ namespace BlackGui
 
     void CGuiApplication::onCoreFacadeStarted()
     {
-        if (this->supportsContexts())
-        {
-            connect(this->getIContextApplication(), &IContextApplication::requestDisplayOnConsole, this, &CGuiApplication::displayTextInConsole);
-        }
+        // Nothing to do here
     }
 
     void CGuiApplication::checkNewVersion(bool onlyIfNew)

@@ -37,9 +37,6 @@ namespace BlackGui
         //! Copy assignment operator
         IMainWindowAccess &operator=(const IMainWindowAccess &) = delete;
 
-        //! Display in console
-        virtual bool displayTextInConsole(const QString &message);
-
         //! Display in status bar
         virtual bool displayInStatusBar(const BlackMisc::CStatusMessage &message);
 

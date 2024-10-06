@@ -171,11 +171,6 @@ void CSwiftData::consolidationSettingChanged()
     }
 }
 
-void CSwiftData::displayConsole()
-{
-    ui->comp_MainInfoArea->displayConsole();
-}
-
 void CSwiftData::displayLog()
 {
     ui->comp_MainInfoArea->displayLog();

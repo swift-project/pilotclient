@@ -92,9 +92,6 @@ namespace BlackCore::Context
 
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                               "requestUiConsoleMessage", this, SIGNAL(requestUiConsoleMessage(QString, bool)));
-        Q_ASSERT(s);
-        s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                "validatedModelSet", this, SIGNAL(validatedModelSet(BlackMisc::Simulation::CSimulatorInfo, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModelList, bool, BlackMisc::CStatusMessageList)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),

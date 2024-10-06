@@ -110,9 +110,6 @@ namespace BlackGui::Components
         //! Display the log
         void displayLog();
 
-        //! Display console
-        void displayConsole();
-
         //! Toggle floating of given area
         void toggleFloating(InfoArea infoArea) { CInfoArea::toggleFloatingByIndex(static_cast<int>(infoArea)); }
 

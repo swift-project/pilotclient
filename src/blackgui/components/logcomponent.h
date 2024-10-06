@@ -55,9 +55,6 @@ namespace BlackGui::Components
         //! Display log
         void displayLog(bool attention = false);
 
-        //! Display console
-        void displayConsole(bool attention = false);
-
         //! \copydoc BlackGui::Components::CStatusMessagesDetail::filterUseRadioButtonDescriptiveIcons
         void filterUseRadioButtonDescriptiveIcons(bool oneLetterText);
 
@@ -86,13 +83,7 @@ namespace BlackGui::Components
         void clear();
 
         //! Clear
-        void clearConsole();
-
-        //! Clear
         void clearMessages();
-
-        //! Append plain text to console
-        void appendPlainTextToConsole(const QString &text);
 
     signals:
         //! Make me visible
@@ -101,9 +92,6 @@ namespace BlackGui::Components
     private:
         QScopedPointer<Ui::CLogComponent> ui;
         BlackMisc::CLogHistoryReplica m_history;
-
-        //! Status messages changed
-        void onStatusMessageDataChanged(int count, bool withFilter);
     };
 } // ns
 #endif // guard

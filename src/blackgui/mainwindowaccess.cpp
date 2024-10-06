@@ -15,15 +15,6 @@ namespace BlackGui
         // void
     }
 
-    bool IMainWindowAccess::displayTextInConsole(const QString &message)
-    {
-        if (message.isEmpty()) { return false; }
-        if (!m_mwaLogComponent) { return false; }
-        m_mwaLogComponent->appendPlainTextToConsole(message);
-        m_mwaLogComponent->displayConsole(true);
-        return true;
-    }
-
     bool IMainWindowAccess::displayInStatusBar(const CStatusMessage &message)
     {
         if (message.isEmpty()) { return false; }
