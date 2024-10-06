@@ -104,7 +104,6 @@ if(MSVC)
     add_compile_options(/utf-8)
     add_compile_options(/permissive-)
     add_compile_options(/Zc:lambda)
-    add_compile_options(/FI${PROJECT_SOURCE_DIR}/src/permissiveworkarounds.h)
 
     # Workaround C1128 error
     add_compile_options(/bigobj)
