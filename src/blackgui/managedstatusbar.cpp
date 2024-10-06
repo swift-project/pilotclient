@@ -29,6 +29,8 @@ namespace BlackGui
         // we are not necessarily the owner of the status bar
         m_statusBar->removeWidget(m_statusBarLabel);
         m_statusBar->removeWidget(m_statusBarIcon);
+        m_statusBar->removeWidget(m_errorButton);
+        m_statusBar->removeWidget(m_warningButton);
 
         // labels will be deleted with status bar
         if (m_ownedStatusBar) { delete m_statusBar; }
@@ -46,11 +48,24 @@ namespace BlackGui
         m_statusBarLabel = new QLabel(m_statusBar);
         m_statusBarLabel->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
         m_statusBarLabel->setObjectName(QString("lbl_StatusBarLabel").append(m_statusBar->objectName()));
+        m_warningButton = new QPushButton("WARN", m_statusBar);
+        m_warningButton->setObjectName(QString("btn_StatusBarWarn").append(m_statusBar->objectName()));
+        m_warningButton->setHidden(!m_showWarnButtonInitially);
+        m_warningButton->setToolTip("ACK and show logs");
+        connect(m_warningButton, &QPushButton::pressed, this, &CManagedStatusBar::pressedWarnButton);
+        m_errorButton = new QPushButton("ERROR", m_statusBar);
+        m_errorButton->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Expanding);
+        m_errorButton->setObjectName(QString("btn_StatusBarError").append(m_statusBar->objectName()));
+        m_errorButton->setHidden(!m_showErrorButtonInitially);
+        m_errorButton->setToolTip("ACK and show logs");
+        connect(m_errorButton, &QPushButton::pressed, this, &CManagedStatusBar::pressedErrorButton);
 
         // use insert to insert from left to right
         // this keeps any grip on the right size
         m_statusBar->insertPermanentWidget(0, m_statusBarIcon, 0); // status icon
         m_statusBar->insertPermanentWidget(1, m_statusBarLabel, 1); // status text
+        m_statusBar->insertPermanentWidget(2, m_warningButton, 0);
+        m_statusBar->insertPermanentWidget(3, m_errorButton, 0);
 
         // timer
         m_timerStatusBar.setObjectName(this->objectName().append(":m_timerStatusBar"));
@@ -69,6 +84,30 @@ namespace BlackGui
             m_statusBar->setMinimumHeight(24); // with no minimum height the layout always adjustes when displaying a status message
             m_statusBar->setSizePolicy(sizePolicy);
             m_statusBar->setSizeGripEnabled(false);
+        }
+    }
+
+    void CManagedStatusBar::showWarningButton()
+    {
+        if (!m_warningButton)
+        {
+            m_showWarnButtonInitially = true;
+        }
+        else
+        {
+            m_warningButton->setHidden(false);
+        }
+    }
+
+    void CManagedStatusBar::showErrorButton()
+    {
+        if (!m_errorButton)
+        {
+            m_showErrorButtonInitially = true;
+        }
+        else
+        {
+            m_errorButton->setHidden(false);
         }
     }
 
@@ -146,4 +185,19 @@ namespace BlackGui
         m_statusBarIcon->clear();
         m_statusBarLabel->clear();
     }
+
+    void CManagedStatusBar::pressedWarnButton()
+    {
+        Q_ASSERT_X(m_warningButton, Q_FUNC_INFO, "Missing warning button");
+        m_warningButton->setHidden(true);
+        emit requestLogPage();
+    }
+
+    void CManagedStatusBar::pressedErrorButton()
+    {
+        Q_ASSERT_X(m_errorButton, Q_FUNC_INFO, "Missing error button");
+        m_errorButton->setHidden(true);
+        emit requestLogPage();
+    }
+
 } // namespace

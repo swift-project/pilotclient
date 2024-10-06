@@ -77,6 +77,7 @@ void SwiftGuiStd::init()
     // log messages
     m_logHistoryForStatus.setFilter(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
     m_logHistoryForOverlay.setFilter(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityError));
+    m_logHistoryForLogButtons.setFilter(CLogPattern().withSeverityAtOrAbove(SeverityWarning));
     connect(&m_logHistoryForStatus, &CLogHistoryReplica::elementAdded, this, [this](const CStatusMessage &message) {
         m_statusBar.displayStatusMessage(message);
         ui->comp_MainInfoArea->displayStatusMessage(message);
@@ -85,8 +86,19 @@ void SwiftGuiStd::init()
         //! \todo filter out validation messages at CLogPattern level
         if (!message.getCategories().contains(CLogCategories::validation())) { ui->fr_CentralFrameInside->showOverlayMessage(message); }
     });
+    connect(&m_logHistoryForLogButtons, &CLogHistoryReplica::elementAdded, this, [this](const CStatusMessage &message) {
+        if (message.getSeverity() == CStatusMessage::SeverityError)
+        {
+            m_statusBar.showErrorButton();
+        }
+        else if (message.getSeverity() == CStatusMessage::SeverityWarning)
+        {
+            m_statusBar.showWarningButton();
+        }
+    });
     m_logHistoryForStatus.initialize(sApp->getDataLinkDBus());
     m_logHistoryForOverlay.initialize(sApp->getDataLinkDBus());
+    m_logHistoryForLogButtons.initialize(sApp->getDataLinkDBus());
 
     // style
     this->initStyleSheet();
@@ -116,6 +128,7 @@ void SwiftGuiStd::init()
 
     // info bar and status bar
     m_statusBar.initStatusBar(ui->sb_MainStatusBar);
+    connect(&m_statusBar, &CManagedStatusBar::requestLogPage, ui->comp_MainInfoArea, &CMainInfoAreaComponent::displayLog);
     ui->dw_InfoBarStatus->allowStatusBar(false);
     ui->dw_InfoBarStatus->setPreferredSizeWhenFloating(ui->dw_InfoBarStatus->size()); // set floating size
 

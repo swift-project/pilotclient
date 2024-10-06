@@ -718,6 +718,16 @@ QStatusBar QLabel {
   padding-left: 5px;
 }
 
+#btn_StatusBarWarnsb_MainStatusBar {
+  background-color: yellow;
+  color: black;
+}
+
+#btn_StatusBarErrorsb_MainStatusBar {
+  background-color: red;
+  color: white;
+}
+
 QToolTip {
   color: black;
   background-color: darkgray;
