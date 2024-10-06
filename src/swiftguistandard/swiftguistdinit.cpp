@@ -74,10 +74,6 @@ void SwiftGuiStd::init()
     m_mwaLogComponent = ui->comp_MainInfoArea->getLogComponent();
     sGui->initMainApplicationWidget(this);
 
-    // experimental: avoid mic flickering
-    // disabled for 5.14.1
-    // if (CBuildConfig::isLocalDeveloperDebugBuild()) { BlackSound::occupyAudioInputDevice(); }
-
     // log messages
     m_logHistoryForStatus.setFilter(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
     m_logHistoryForOverlay.setFilter(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityError));
