@@ -271,7 +271,7 @@ jobs:
           path: ${{ github.workspace }}/xswiftbus-*
 
   buildMacOS:
-    runs-on: macos-12
+    runs-on: macos-13
     needs: [preBuild, checks]
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
