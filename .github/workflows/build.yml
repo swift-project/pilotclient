@@ -183,13 +183,13 @@ jobs:
 
     steps:
       - name: Install Qt
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.qt_version }}
           arch: win64_msvc2019_64
           cache: true
       - name: Install Qt debug info
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.qt_version }}
           arch: win64_msvc2019_64
@@ -280,7 +280,7 @@ jobs:
 
     steps:
       - name: Install Qt
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.qt_version }}
           cache: true
