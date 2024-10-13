@@ -69,11 +69,8 @@ namespace BlackSimPlugin::FsxCommon
 
         ui->lbl_NoLocalSimulator->setVisible(!localSim);
         ui->cb_TraceSimConnectCalls->setEnabled(localSim);
-        ui->cb_EnableTerrainProbe->setEnabled(localSim);
+        ui->cb_EnableTerrainProbe->setEnabled(CBuildConfig::isRunningOnWindowsNtPlatform() && (CBuildConfig::buildWordSize() == 32) && localSim);
         ui->cb_SBOffsets->setEnabled(localSim);
-
-        const bool terrainProbe = CBuildConfig::isRunningOnWindowsNtPlatform() && (CBuildConfig::buildWordSize() == 32) && localSim;
-        ui->cb_EnableTerrainProbe->setEnabled(terrainProbe);
     }
 
     void CFsxSettingsComponent::onSimConnectTraceChanged()
