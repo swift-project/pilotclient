@@ -125,7 +125,7 @@ namespace BlackCore::Fsd
 
         if (!m_statistics && (CBuildConfig::isLocalDeveloperDebugBuild() || (sApp && sApp->getOwnDistribution().isRestricted())))
         {
-            CLogMessage("Enabled network statistics");
+            CLogMessage(this).info(u"Enabled network statistics");
             m_statistics = true;
         }
     }
