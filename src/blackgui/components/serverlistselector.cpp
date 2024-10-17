@@ -27,10 +27,10 @@ namespace BlackGui::Components
         connect(this, &QComboBox::currentTextChanged, this, &CServerListSelector::onServerTextChanged);
     }
 
-    void CServerListSelector::setServers(const CServerList &servers, bool nameIsCountry)
+    void CServerListSelector::setServers(const CServerList &servers)
     {
         if (m_servers == servers) { return; }
-        this->setServerItems(servers, nameIsCountry);
+        this->setServerItems(servers);
         if (!servers.isEmpty() && !m_pendingPreselect.isEmpty())
         {
             this->preSelect(m_pendingPreselect);
@@ -64,7 +64,7 @@ namespace BlackGui::Components
         return false;
     }
 
-    void CServerListSelector::setServerItems(const CServerList &servers, bool nameToCountry)
+    void CServerListSelector::setServerItems(const CServerList &servers)
     {
         QString currentlySelected(this->currentText());
         int index = -1;
@@ -72,7 +72,6 @@ namespace BlackGui::Components
         m_items.clear();
         this->clear(); // ui
 
-        nameToCountry = nameToCountry && knowsAllCountries();
         for (const CServer &server : servers)
         {
             const QString d(server.getName() + ": " + server.getDescription());
@@ -82,22 +81,7 @@ namespace BlackGui::Components
                 index = m_items.size() - 1;
             }
 
-            if (nameToCountry)
-            {
-                const CCountry country(this->findCountry(server));
-                if (country.getName().isEmpty())
-                {
-                    this->addItem(CIcons::empty16(), d);
-                }
-                else
-                {
-                    this->addItem(CIcon(country.toIcon()).toPixmap(), d);
-                }
-            }
-            else
-            {
-                this->addItem(d);
-            }
+            this->addItem(d);
         }
 
         // reselect
@@ -118,29 +102,4 @@ namespace BlackGui::Components
         emit this->serverChanged(this->currentServer());
     }
 
-    bool CServerListSelector::knowsAllCountries()
-    {
-        return (sGui && sGui->getWebDataServices() && sGui->getWebDataServices()->getCountriesCount() > 0);
-    }
-
-    CCountry CServerListSelector::findCountry(const CServer &server)
-    {
-        if (!CServerListSelector::knowsAllCountries()) { return CCountry(); }
-        static const CCountryList countries(sGui->getWebDataServices()->getCountries());
-        const CCountry ctryByName = countries.findBestMatchByCountryName(server.getName());
-        if (ctryByName.isValid()) { return ctryByName; }
-
-        // own approach, see if description contains a valid countr name
-        for (const CCountry &testCtry : countries)
-        {
-            if (testCtry.getName().isEmpty()) { continue; }
-            if (server.getDescription().contains(testCtry.getName(), Qt::CaseInsensitive))
-            {
-                return testCtry;
-            }
-        }
-
-        const CCountry ctryByDescription = countries.findBestMatchByCountryName(server.getDescription());
-        return ctryByDescription;
-    }
 } // ns

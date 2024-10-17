@@ -9,7 +9,6 @@
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/network/data/lastserver.h"
 #include "blackmisc/network/serverlist.h"
-#include "blackmisc/country.h"
 #include "blackmisc/datacache.h"
 
 #include <QComboBox>
@@ -28,7 +27,7 @@ namespace BlackGui::Components
         explicit CServerListSelector(QWidget *parent = nullptr);
 
         //! Set the servers
-        void setServers(const BlackMisc::Network::CServerList &servers, bool nameIsCountry = false);
+        void setServers(const BlackMisc::Network::CServerList &servers);
 
         //! Get the current server
         BlackMisc::Network::CServer currentServer() const;
@@ -42,16 +41,10 @@ namespace BlackGui::Components
 
     private:
         //! Build the item string descriptions
-        void setServerItems(const BlackMisc::Network::CServerList &servers, bool nameToCountry);
+        void setServerItems(const BlackMisc::Network::CServerList &servers);
 
         //! Server index has been changed
         void onServerTextChanged(const QString &text);
-
-        //! Do we know all countries?
-        static bool knowsAllCountries();
-
-        //! Turn server name into country (for VATSIM servers)
-        static BlackMisc::CCountry findCountry(const BlackMisc::Network::CServer &server);
 
         BlackMisc::Network::CServerList m_servers; //!< corresponding servers
         QStringList m_items; //!< items strings

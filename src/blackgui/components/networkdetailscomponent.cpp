@@ -106,7 +106,7 @@ namespace BlackGui::Components
             if (vatsimFsdServers.isEmpty()) { return; }
             vatsimFsdServers.sortBy(&CServer::getName);
             const CServer currentServer = m_networkSetup.getLastVatsimServer();
-            ui->comp_VatsimServers->setServers(vatsimFsdServers, true);
+            ui->comp_VatsimServers->setServers(vatsimFsdServers);
             ui->comp_VatsimServers->preSelect(currentServer.getName());
         }
     }
