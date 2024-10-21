@@ -3,7 +3,7 @@
 
 //! \file
 
-#include "blackmisc/simulation/interpolatormulti.h"
+#include "blackmisc/simulation/interpolation/interpolatormulti.h"
 
 using namespace BlackMisc::Aviation;
 
@@ -13,12 +13,12 @@ namespace BlackMisc::Simulation
                                                                                                                                                                                                         m_linear(callsign, p1, p2, p3, logger)
     {}
 
-    CInterpolationResult CInterpolatorMulti::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber)
+    CInterpolationResult CInterpolatorMulti::getInterpolation(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber)
     {
         switch (setup.getInterpolatorMode())
         {
-        case CInterpolationAndRenderingSetupBase::Linear: return m_linear.getInterpolation(currentTimeSinceEpoc, setup, aircraftNumber);
-        case CInterpolationAndRenderingSetupBase::Spline: return m_spline.getInterpolation(currentTimeSinceEpoc, setup, aircraftNumber);
+        case CInterpolationAndRenderingSetupBase::Linear: return m_linear.getInterpolation(currentTimeSinceEpoch, setup, aircraftNumber);
+        case CInterpolationAndRenderingSetupBase::Spline: return m_spline.getInterpolation(currentTimeSinceEpoch, setup, aircraftNumber);
         default: break;
         }
 

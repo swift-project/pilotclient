@@ -12,7 +12,7 @@
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/interpolatormulti.h"
+#include "blackmisc/simulation/interpolation/interpolatormulti.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/geo/elevationplane.h"
@@ -652,7 +652,7 @@ namespace BlackSimPlugin::FsxCommon
         aircraftSituation.setPressureAltitude(CAltitude(simulatorOwnAircraft.pressureAltitudeM, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::m()));
         // set on ground also in situation for consistency and future usage
         // it is duplicated in parts
-        aircraftSituation.setOnGround(dtb(simulatorOwnAircraft.simOnGround) ? CAircraftSituation::OnGround : CAircraftSituation::NotOnGround, CAircraftSituation::OutOnGroundOwnAircraft);
+        aircraftSituation.setOnGroundInfo({ dtb(simulatorOwnAircraft.simOnGround) ? COnGroundInfo::OnGround : COnGroundInfo::NotOnGround, COnGroundInfo::OutOnGroundOwnAircraft });
 
         CAircraftVelocity aircraftVelocity(simulatorOwnAircraft.velocityWorldX,
                                            simulatorOwnAircraft.velocityWorldY,
@@ -1930,7 +1930,7 @@ namespace BlackSimPlugin::FsxCommon
         // interpolation for all remote aircraft
         const QList<CSimConnectObject> simObjects(m_simConnectObjects.values());
 
-        int simObjectNumber = 0;
+        uint32_t simObjectNumber = 0;
         const bool traceSendId = this->isTracingSendId();
         const bool updateAllAircraft = this->isUpdateAllRemoteAircraft(currentTimestamp);
         for (const CSimConnectObject &simObject : simObjects)
@@ -2236,7 +2236,7 @@ namespace BlackSimPlugin::FsxCommon
         // send GND flag also when underflow detection is available
         if ((sendGnd || forceUnderflowDetection) && situation.isOnGroundInfoAvailable())
         {
-            const bool onGround = (situation.getOnGround() == CAircraftSituation::OnGround);
+            const bool onGround = situation.isOnGround();
             position.OnGround = onGround ? 1U : 0U;
         }
 

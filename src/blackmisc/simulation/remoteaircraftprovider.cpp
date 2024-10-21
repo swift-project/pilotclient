@@ -303,7 +303,7 @@ namespace BlackMisc::Simulation
                 // unify all inbound ground information
                 if (situation.hasInboundGroundDetails())
                 {
-                    newSituationsList.setOnGroundDetails(situation.getOnGroundDetails());
+                    newSituationsList.setOnGroundDetails(situation.getOnGroundInfo().getGroundDetails());
                 }
             }
             m_latestSituationByCallsign[cs] = situationCorrected;
@@ -332,16 +332,6 @@ namespace BlackMisc::Simulation
         Q_ASSERT_X(!updatedSituations.isEmpty(), Q_FUNC_INFO, "Missing situations");
         const CAircraftSituationChange change(updatedSituations, situationCorrected.getCG(), aircraftModel.isVtol(), true, true);
         this->storeChange(change);
-
-        if (change.hasSceneryDeviation())
-        {
-            const CLength offset = change.getGuessedSceneryDeviation();
-            situationCorrected.setSceneryOffset(offset);
-
-            QWriteLocker lock(&m_lockSituations);
-            m_latestSituationByCallsign[cs].setSceneryOffset(offset);
-            m_situationsByCallsign[cs].front().setSceneryOffset(offset);
-        }
 
         // situation has been added
         emit this->addedAircraftSituation(situationCorrected);

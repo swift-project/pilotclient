@@ -1584,13 +1584,13 @@ namespace BlackCore
         while (false); // do we need elevation, find on
 
         // do we already have ground details?
-        if (situation.getOnGroundDetails() == CAircraftSituation::NotSetGroundDetails)
+        if (situation.getOnGroundInfo().getGroundDetails() == COnGroundInfo::NotSetGroundDetails)
         {
             const CClient client = this->getClientOrDefaultForCallsign(callsign);
             if (client.hasCapability(CClient::FsdWithGroundFlag))
             {
                 // we rely on situation gnd.flag
-                correctedSituation.setOnGroundDetails(CAircraftSituation::InFromNetwork);
+                correctedSituation.setOnGroundDetails(COnGroundInfo::InFromNetwork);
             }
             else if (client.hasCapability(CClient::FsdWithAircraftConfig))
             {

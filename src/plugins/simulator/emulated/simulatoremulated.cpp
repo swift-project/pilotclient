@@ -524,7 +524,7 @@ namespace BlackSimPlugin::Emulated
     {
         const qint64 now = QDateTime::currentMSecsSinceEpoch();
         const bool updateAllAircraft = this->isUpdateAllRemoteAircraft(now);
-        int aircraftNumber = 0;
+        uint32_t aircraftNumber = 0;
 
         for (const CSimulatedAircraft &aircraft : m_renderedAircraft)
         {

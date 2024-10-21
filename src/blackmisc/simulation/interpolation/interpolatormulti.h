@@ -3,11 +3,11 @@
 
 //! \file
 
-#ifndef BLACKMISC_SIMULATION_INTERPOLATORMULTI_H
-#define BLACKMISC_SIMULATION_INTERPOLATORMULTI_H
+#ifndef BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLATORMULTI_H
+#define BLACKMISC_SIMULATION_INTERPOLATION_INTERPOLATORMULTI_H
 
-#include "blackmisc/simulation/interpolatorlinear.h"
-#include "blackmisc/simulation/interpolatorspline.h"
+#include "blackmisc/simulation/interpolation/interpolatorlinear.h"
+#include "blackmisc/simulation/interpolation/interpolatorspline.h"
 #include "blackmisc/statusmessagelist.h"
 
 namespace BlackMisc::Simulation
@@ -22,7 +22,7 @@ namespace BlackMisc::Simulation
                            CInterpolationLogger *logger = nullptr);
 
         //! \copydoc CInterpolator::getInterpolation
-        CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber);
+        CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber);
 
         //! \copydoc CInterpolator::getLastInterpolatedSituation
         const Aviation::CAircraftSituation &getLastInterpolatedSituation(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;

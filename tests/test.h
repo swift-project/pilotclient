@@ -48,7 +48,8 @@
         {                                   \
             return EXIT_FAILURE;            \
         }                                   \
-    }
+    }                                       \
+    static_assert(true)
 
 //! Implements a main() function that executes all tests in TestObject
 //! including instantiating a QCoreApplication object.
@@ -66,7 +67,8 @@
         {                                     \
             return EXIT_FAILURE;              \
         }                                     \
-    }
+    }                                         \
+    static_assert(true)
 
 //! \endcond
 

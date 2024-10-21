@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright (C) 2017 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackmisc/simulation/interpolatorspline.h"
-#include "blackmisc/simulation/interpolatorfunctions.h"
+#include "blackmisc/simulation/interpolation/interpolatorspline.h"
+#include "blackmisc/simulation/interpolation/interpolatorfunctions.h"
 #include "blackmisc/network/fsdsetup.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/verify.h"
@@ -159,7 +159,7 @@ namespace BlackMisc::Simulation
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            const bool verified = this->verifyInterpolationSituations(m_s[0], m_s[1], m_s[2]); // oldest -> latest, only verify order
+            const bool verified = verifyInterpolationSituations(m_s[0], m_s[1], m_s[2]); // oldest -> latest, only verify order
             if (!verified)
             {
                 static const QString vm("Unverified situations, m0-2 (oldest latest) %1 %2 %3");
@@ -175,7 +175,7 @@ namespace BlackMisc::Simulation
     void CInterpolatorSpline::anchor()
     {}
 
-    CInterpolatorSpline::CInterpolant CInterpolatorSpline::getInterpolant(SituationLog &log)
+    const IInterpolant &CInterpolatorSpline::getInterpolant(SituationLog &log)
     {
         // recalculate derivatives only if they changed
         // m_situationsLastModified updated in initIniterpolationStepData
@@ -218,7 +218,7 @@ namespace BlackMisc::Simulation
             const double a1 = m_s[1].getCorrectedAltitude(cg).value(altUnit);
             const double a2 = m_s[2].getCorrectedAltitude(cg).value(altUnit); // latest
             pa.a = { { a0, a1, a2 } };
-            pa.gnd = { { m_s[0].getOnGroundFactor(), m_s[1].getOnGroundFactor(), m_s[2].getOnGroundFactor() } };
+            pa.gnd = { { m_s[0].getOnGroundInfo().getGroundFactor(), m_s[1].getOnGroundInfo().getGroundFactor(), m_s[2].getOnGroundInfo().getGroundFactor() } };
             pa.da = getDerivatives(pa.t, pa.a);
             pa.dgnd = getDerivatives(pa.t, pa.gnd);
 
@@ -226,7 +226,7 @@ namespace BlackMisc::Simulation
             m_nextSampleAdjustedTime = m_s[2].getAdjustedMSecsSinceEpoch(); // latest
             m_prevSampleTime = m_s[1].getMSecsSinceEpoch(); // last interpolated situation normally
             m_nextSampleTime = m_s[2].getMSecsSinceEpoch(); // latest
-            m_interpolant = CInterpolant(pa, altUnit, CInterpolatorPbh(m_s[1], m_s[2])); // older, newer
+            m_interpolant = CInterpolant(pa, altUnit, CInterpolatorLinearPbh(m_s[1], m_s[2])); // older, newer
             Q_ASSERT_X(m_prevSampleAdjustedTime < m_nextSampleAdjustedTime, Q_FUNC_INFO, "Wrong time order");
         }
 
@@ -309,13 +309,12 @@ namespace BlackMisc::Simulation
         return false;
     }
 
-    CInterpolatorSpline::CInterpolant::CInterpolant(const CInterpolatorSpline::PosArray &pa, const CLengthUnit &altitudeUnit, const CInterpolatorPbh &pbh) : m_pa(pa), m_altitudeUnit(altitudeUnit)
+    CInterpolatorSpline::CInterpolant::CInterpolant(const CInterpolatorSpline::PosArray &pa, const CLengthUnit &altitudeUnit, const CInterpolatorLinearPbh &pbh) : m_pa(pa), m_altitudeUnit(altitudeUnit)
     {
         m_pbh = pbh;
-        m_situationsAvailable = pa.size();
     }
 
-    CAircraftSituation CInterpolatorSpline::CInterpolant::interpolatePositionAndAltitude(const CAircraftSituation &currentSituation, bool interpolateGndFactor) const
+    std::tuple<Geo::CCoordinateGeodetic, Aviation::CAltitude> CInterpolatorSpline::CInterpolant::interpolatePositionAndAltitude() const
     {
         const double t1 = m_pa.t[1];
         const double t2 = m_pa.t[2]; // latest (adjusted)
@@ -327,7 +326,7 @@ namespace BlackMisc::Simulation
             BLACK_VERIFY_X(m_currentTimeMsSinceEpoc >= t1, Q_FUNC_INFO, "invalid timestamp t1");
             BLACK_VERIFY_X(m_currentTimeMsSinceEpoc < t2, Q_FUNC_INFO, "invalid timestamp t2"); // t1==t2 results in div/0
         }
-        if (!valid) { return CAircraftSituation::null(); }
+        if (!valid) { return { {}, {} }; }
 
         const double newX = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.x[1], m_pa.x[2], m_pa.dx[1], m_pa.dx[2]);
         const double newY = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.y[1], m_pa.y[2], m_pa.dy[1], m_pa.dy[2]);
@@ -340,9 +339,8 @@ namespace BlackMisc::Simulation
             BLACK_VERIFY_X(CAircraftSituation::isValidVector(m_pa.y), Q_FUNC_INFO, "invalid Y"); // all y values
             BLACK_VERIFY_X(CAircraftSituation::isValidVector(m_pa.z), Q_FUNC_INFO, "invalid Z"); // all z values
         }
-        if (!valid) { return CAircraftSituation::null(); }
+        if (!valid) { return { {}, {} }; }
 
-        CAircraftSituation newSituation(currentSituation);
         const std::array<double, 3> normalVector = { { newX, newY, newZ } };
         const CCoordinateGeodetic currentPosition(normalVector);
 
@@ -350,41 +348,39 @@ namespace BlackMisc::Simulation
         if (!valid && CBuildConfig::isLocalDeveloperDebugBuild())
         {
             BLACK_VERIFY_X(valid, Q_FUNC_INFO, "invalid vector");
-            CLogMessage(this).warning(u"Invalid vector for '%1' v: %2 %3 %4") << currentSituation.getCallsign().asString() << normalVector[0] << normalVector[1] << normalVector[2];
+            CLogMessage(this).warning(u"Invalid vector v: %2 %3 %4") << normalVector[0] << normalVector[1] << normalVector[2];
         }
-        if (!valid) { return CAircraftSituation::null(); }
+        if (!valid) { return { {}, {} }; }
 
         const double newA = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.a[1], m_pa.a[2], m_pa.da[1], m_pa.da[2]);
         const CAltitude alt(newA, m_altitudeUnit);
 
-        newSituation.setPosition(currentPosition);
-        newSituation.setAltitude(alt);
-        newSituation.setMSecsSinceEpoch(this->getInterpolatedTime());
+        return { currentPosition, alt };
+    }
 
-        if (interpolateGndFactor)
+    Aviation::COnGroundInfo CInterpolatorSpline::CInterpolant::interpolateGroundFactor() const
+    {
+        const double t1 = m_pa.t[1];
+        const double t2 = m_pa.t[2]; // latest (adjusted)
+        bool valid = (t1 < t2) && (m_currentTimeMsSinceEpoc >= t1) && (m_currentTimeMsSinceEpoc < t2);
+        if (!valid) { return { COnGroundInfo::OnGroundSituationUnknown, COnGroundInfo::NotSetGroundDetails }; }
+
+        const double gnd1 = m_pa.gnd[1];
+        const double gnd2 = m_pa.gnd[2]; // latest
+
+        if (CAircraftSituation::isGfEqualAirborne(gnd1, gnd2))
         {
-            const double gnd1 = m_pa.gnd[1];
-            const double gnd2 = m_pa.gnd[2]; // latest
-            do
-            {
-                newSituation.setOnGroundDetails(CAircraftSituation::OnGroundByInterpolation);
-                if (CAircraftSituation::isGfEqualAirborne(gnd1, gnd2))
-                {
-                    newSituation.setOnGround(false);
-                    break;
-                }
-                if (CAircraftSituation::isGfEqualOnGround(gnd1, gnd2))
-                {
-                    newSituation.setOnGround(true);
-                    break;
-                }
-                const double newGnd = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, gnd1, gnd2, m_pa.dgnd[1], m_pa.dgnd[2]);
-                newSituation.setOnGroundFactor(newGnd);
-                newSituation.setOnGroundFromGroundFactorFromInterpolation(groundInterpolationFactor());
-            }
-            while (false);
+            return { COnGroundInfo::NotOnGround, COnGroundInfo::OnGroundByInterpolation };
         }
-        return newSituation;
+        else if (CAircraftSituation::isGfEqualOnGround(gnd1, gnd2))
+        {
+            return { COnGroundInfo::OnGround, COnGroundInfo::OnGroundByInterpolation };
+        }
+        else
+        {
+            const double newGnd = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, gnd1, gnd2, m_pa.dgnd[1], m_pa.dgnd[2]);
+            return COnGroundInfo(newGnd);
+        }
     }
 
     void CInterpolatorSpline::CInterpolant::setTimes(qint64 currentTimeMs, double timeFraction, qint64 interpolatedTimeMs)
@@ -421,4 +417,42 @@ namespace BlackMisc::Simulation
         }();
         return pa;
     }
+
+    bool CInterpolatorSpline::verifyInterpolationSituations(const CAircraftSituation &oldest, const CAircraftSituation &newer, const CAircraftSituation &latest, const CInterpolationAndRenderingSetupPerCallsign &setup)
+    {
+        if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return true; }
+        CAircraftSituationList situations;
+
+        // oldest last, null ignored
+        if (!latest.isNull()) { situations.push_back(latest); }
+        if (!newer.isNull()) { situations.push_back(newer); }
+        if (!oldest.isNull()) { situations.push_back(oldest); }
+
+        const bool sorted = situations.isSortedAdjustedLatestFirstWithoutNullPositions();
+        if (setup.isNull() || !setup.isAircraftPartsEnabled()) { return sorted; }
+
+        bool details = false;
+        if (situations.containsOnGroundDetails(COnGroundInfo::InFromParts))
+        {
+            // if a client supports parts, all ground situations are supposed to be parts based
+            details = situations.areAllOnGroundDetailsSame(COnGroundInfo::InFromParts);
+            BLACK_VERIFY_X(details, Q_FUNC_INFO, "Once gnd.from parts -> always gnd. from parts");
+        }
+
+        for (const CAircraftSituation &s : situations)
+        {
+            if (!s.hasGroundElevation()) { continue; }
+            BLACK_VERIFY_X(!s.getGroundElevation().isZeroEpsilonConsidered(), Q_FUNC_INFO, "Suspicous 0 gnd. value");
+        }
+
+        // check if middle situation is missing
+        if (latest.hasGroundElevation() && oldest.hasGroundElevation())
+        {
+            BLACK_VERIFY_X(newer.hasGroundElevation(), Q_FUNC_INFO, "Middle ground elevation is missing");
+        }
+
+        // result
+        return sorted && details;
+    }
+
 } // ns

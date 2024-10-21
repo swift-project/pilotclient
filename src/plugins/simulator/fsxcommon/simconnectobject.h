@@ -9,7 +9,7 @@
 #include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 #include "plugins/simulator/fsxcommon/simconnectdatadefinition.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/interpolatormulti.h"
+#include "blackmisc/simulation/interpolation/interpolatormulti.h"
 #include <QSharedPointer>
 #include <QStringList>
 #include <QByteArray>
@@ -275,7 +275,7 @@ namespace BlackSimPlugin::FsxCommon
         void attachInterpolatorLogger(BlackMisc::Simulation::CInterpolationLogger *logger) const;
 
         //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolation
-        BlackMisc::Simulation::CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoc, const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber) const;
+        BlackMisc::Simulation::CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoch, const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber) const;
 
         //! \copydoc BlackMisc::Simulation::CInterpolator::getLastInterpolatedSituation
         const BlackMisc::Aviation::CAircraftSituation &getLastInterpolatedSituation(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
