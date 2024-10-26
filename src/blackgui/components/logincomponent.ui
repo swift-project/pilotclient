@@ -173,25 +173,6 @@
       <property name="bottomMargin">
        <number>5</number>
       </property>
-      <item>
-       <widget class="QGroupBox" name="gb_MatchingLogConnected">
-        <property name="title">
-         <string>Matching log.</string>
-        </property>
-        <layout class="QVBoxLayout" name="vl_MatchingLogConnected">
-         <item>
-          <widget class="BlackGui::Components::CModelMatcherLogEnable" name="comp_MatchingLog">
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
       <item alignment="Qt::AlignTop">
        <widget class="QGroupBox" name="gb_CurrentLoginConnected">
         <property name="title">
@@ -426,12 +407,6 @@
    <class>BlackGui::Editors::CServerForm</class>
    <extends>QFrame</extends>
    <header>blackgui/editors/serverform.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Components::CModelMatcherLogEnable</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/modelmatcherlogenable.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
