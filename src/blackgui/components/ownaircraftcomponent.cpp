@@ -90,6 +90,7 @@ namespace BlackGui::Components
         {
             ui->le_Callsign->setText("SWIFT");
         }
+        this->validate();
     }
 
     void COwnAircraftComponent::onSimulatorModelChanged(const CAircraftModel &model)
