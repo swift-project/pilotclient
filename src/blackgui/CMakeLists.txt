@@ -331,7 +331,6 @@ add_library(gui SHARED
         components/settingsxswiftbuscomponent.ui
         components/selcalcodeselector.cpp
         components/audionotificationcomponent.h
-        components/loginoverviewcomponent.h
         components/updateinfodialog.ui
         components/aircraftpartshistory.ui
         components/autopublishdialog.ui
@@ -415,7 +414,6 @@ add_library(gui SHARED
         components/aircraftmodelvalidationcomponent.cpp
         components/settingsguicomponent.h
         components/dbaircrafticaocomponent.cpp
-        components/loginoverviewcomponent.ui
         components/setuploadingdialog.ui
         components/dbmappingcomponent.ui
         components/mappingcomponent.cpp
@@ -639,7 +637,6 @@ add_library(gui SHARED
         components/copymodelsfromotherswiftversionscomponent.cpp
         components/settingssimulatormessagescomponent.cpp
         components/dbaircraftcategorycomponent.ui
-        components/loginoverviewcomponent.cpp
         components/cockpitcomtransmissioncomponent.ui
         components/interpolationlogdisplay.cpp
         components/dblogincomponent.cpp
