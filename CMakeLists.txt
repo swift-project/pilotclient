@@ -200,6 +200,11 @@ if(WIN32)
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
 
+# Configure installer file
+if(WIN32)
+    configure_file(installer/innosetup/installer.iss.in ${CMAKE_CURRENT_SOURCE_DIR}/installer/innosetup/installer.iss)
+endif()
+
 message(STATUS "Simulators:")
 message(STATUS "\t FS9: ${SWIFT_BUILD_FS9_PLUGIN}")
 message(STATUS "\t FSX: ${SWIFT_BUILD_FSX_PLUGIN}")

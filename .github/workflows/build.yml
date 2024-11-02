@@ -179,7 +179,6 @@ jobs:
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
       BACKTRACE_MINIDUMP_TOKEN: ${{ secrets.BACKTRACE_MINIDUMP_TOKEN }}
-      BITROCK_BUILDER: "~/installbuilder/bin/builder-cli.exe"
 
     steps:
       - name: Install Qt
@@ -196,27 +195,6 @@ jobs:
           cache: true
           modules: debug_info
           extra: --archives qtbase
-      - name: Cache InstallBuilder
-        id: cache-bitrock
-        uses: actions/cache@v4
-        with:
-          path: C:\installbuilder.exe
-          key: installbuilder-${{ env.bitrock_version }}-windows-x64
-      - name: Download InstallBuilder
-        if: steps.cache-bitrock.outputs.cache-hit != 'true'
-        shell: C:\msys64\usr\bin\bash.exe -le {0}
-        run: |
-          wget --retry-connrefused -t 10 -w 10 -T 60 -O /c/installbuilder.exe ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-windows-x64-installer.exe
-        env:
-          MSYSTEM: MSYS2
-      - name: Install InstallBuilder
-        run: |
-          start -wait "C:\installbuilder.exe" @("--mode", "unattended", "--prefix", "$HOME\installbuilder")
-          echo >$HOME\license.xml @"
-          $env:BITROCK_LICENSE
-          "@
-        env:
-          BITROCK_LICENSE: ${{ secrets.BITROCK_LICENSE }}
       - name: Install dependencies
         run: |
           pip install requests PyInstaller

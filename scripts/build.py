@@ -120,7 +120,11 @@ class Builder:
             installer_name_new = '.'.join([installer_name_old, last_segment])
             installer_name_old = installer_name_old + '.' + extension_map[platform.system()]
             installer_name_new = installer_name_new + '.' + extension_map[platform.system()]
-            build_path = os.path.abspath(path.join(self._get_swift_build_path(), installer_name_old))
+            if platform.system() == 'Windows':
+                installer_name_old = '-'.join(['swiftinstaller', self.version]) + '.' + extension_map[platform.system()]
+                build_path = os.path.abspath(path.join(utils.get_swift_source_path(), "installer/innosetup/Output", installer_name_old))
+            else:
+                build_path = os.path.abspath(path.join(self._get_swift_build_path(), installer_name_old))
             dest_path = os.path.abspath(path.join(self._get_swift_build_path(), os.pardir, installer_name_new))
             os.rename(build_path, dest_path)
 
@@ -276,6 +280,12 @@ class MSVCBuilder(Builder):
 
     def _strip_debug(self):
         pass
+
+    def create_installer(self):
+        os.chdir(utils.get_swift_source_path())
+        subprocess.check_call(["ISCC.exe",
+                                "installer/innosetup/installer.iss"])
+
 
     def bundle_csl2xsb(self):
         os.chdir(utils.get_swift_source_path())
