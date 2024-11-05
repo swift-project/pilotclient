@@ -70,6 +70,7 @@ jobs:
                    -i src/plugins/weatherdata/gfs/g2clib -DCPPCHECK --force --suppressions-list=cppcheck.supp \
                    --library=qt.cfg --library=posix.cfg .
       - name: Run doxygen
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         working-directory: docs
         run: |
           sudo apt-get -y install doxygen graphviz
@@ -77,6 +78,7 @@ jobs:
         env:
           DOXY_SRC_ROOT: ..
       - name: Upload doxygen
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs/html/
