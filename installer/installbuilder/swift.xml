@@ -19,8 +19,5 @@
         <include>
             <file>swift-externals.xml</file>
         </include>
-        <!-- <include>
-            <file>swift-samples.xml</file>
-        </include> -->
     </componentList>
 </componentGroup>
