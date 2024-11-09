@@ -298,7 +298,6 @@ add_library(misc SHARED
         range.h
         registermetadata.cpp
         registermetadata.h
-        restricted.h
         rgbcolor.cpp
         rgbcolor.h
         sequence.cpp

@@ -7,7 +7,6 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
-#include "blackmisc/restricted.h"
 
 #include <QAbstractScrollArea>
 #include <QCoreApplication>
@@ -31,7 +30,7 @@ using namespace BlackMisc;
 
 namespace BlackGui
 {
-    CStyleSheetUtility::CStyleSheetUtility(BlackMisc::Restricted<CGuiApplication>, QObject *parent) : QObject(parent)
+    CStyleSheetUtility::CStyleSheetUtility(QObject *parent) : QObject(parent)
     {
         this->read();
         connect(&m_fileWatcher, &QFileSystemWatcher::directoryChanged, this, &CStyleSheetUtility::qssDirectoryChanged);

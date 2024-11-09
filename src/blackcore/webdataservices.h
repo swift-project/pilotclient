@@ -26,7 +26,6 @@
 #include "blackmisc/network/voicecapabilities.h"
 #include "blackmisc/weather/metarlist.h"
 #include "blackmisc/weather/metar.h"
-#include "blackmisc/restricted.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/countrylist.h"
 
@@ -55,8 +54,6 @@ namespace BlackMisc
 
 namespace BlackCore
 {
-    class CApplication;
-
     namespace Vatsim
     {
         class CVatsimDataFileReader;
@@ -88,7 +85,7 @@ namespace BlackCore
         static const QStringList &getLogCategories();
 
         //! Constructor, only allowed from BlackCore::CApplication
-        CWebDataServices(CWebReaderFlags::WebReader readerFlags, const BlackCore::Db::CDatabaseReaderConfigList &dbReaderConfig, BlackMisc::Restricted<CApplication>, QObject *parent = nullptr);
+        CWebDataServices(CWebReaderFlags::WebReader readerFlags, const BlackCore::Db::CDatabaseReaderConfigList &dbReaderConfig, QObject *parent = nullptr);
 
         //! Destructor
         virtual ~CWebDataServices() override;

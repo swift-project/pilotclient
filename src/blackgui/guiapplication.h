@@ -325,7 +325,7 @@ namespace BlackGui
         QCommandLineOption m_cmdWindowMode { "emptyWindowMode" }; //!< window mode (flags: frameless ...)
         QCommandLineOption m_cmdWindowSizeReset { "emptySizeReset" }; //!< window size reset
         QCommandLineOption m_cmdWindowScaleSize { "emptyScale" }; //!< window scale size
-        CStyleSheetUtility m_styleSheetUtility { {}, this }; //!< style sheet utility
+        CStyleSheetUtility m_styleSheetUtility { this }; //!< style sheet utility
         bool m_uiSetupCompleted = false; //!< ui setup completed
         bool m_saveMainWidgetState = true; //!< save/restore main widget's state
         bool m_frontBack = true; //!< for front/back toggle

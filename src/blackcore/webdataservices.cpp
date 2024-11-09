@@ -18,7 +18,6 @@
 #include "blackmisc/fileutils.h"
 #include "blackmisc/logcategories.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/restricted.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/threadutils.h"
@@ -47,7 +46,7 @@ using namespace BlackMisc::Weather;
 
 namespace BlackCore
 {
-    CWebDataServices::CWebDataServices(CWebReaderFlags::WebReader readers, const CDatabaseReaderConfigList &dbReaderConfig, BlackMisc::Restricted<CApplication>, QObject *parent) : QObject(parent), m_dbReaderConfig(dbReaderConfig)
+    CWebDataServices::CWebDataServices(CWebReaderFlags::WebReader readers, const CDatabaseReaderConfigList &dbReaderConfig, QObject *parent) : QObject(parent), m_dbReaderConfig(dbReaderConfig)
     {
         if (!sApp) { return; } // shutting down
 

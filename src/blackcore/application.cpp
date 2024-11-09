@@ -805,7 +805,7 @@ namespace BlackCore
         if (!m_webDataServices)
         {
             msgs.push_back(CStatusMessage(this).info(u"Will start web data services now"));
-            m_webDataServices.reset(new CWebDataServices(webReader, dbReaderConfig, {}, this));
+            m_webDataServices.reset(new CWebDataServices(webReader, dbReaderConfig, this));
             Q_ASSERT_X(m_webDataServices, Q_FUNC_INFO, "Missing web services");
 
             emit this->webDataServicesStarted(true);

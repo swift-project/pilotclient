@@ -8,7 +8,6 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/logcategories.h"
-#include "blackmisc/restricted.h"
 #include "blackmisc/digestsignal.h"
 
 #include <QFileSystemWatcher>
@@ -25,8 +24,6 @@ class QWidget;
 
 namespace BlackGui
 {
-    class CGuiApplication;
-
     //! Reads and provides style sheets
     class BLACKGUI_EXPORT CStyleSheetUtility : public QObject
     {
@@ -34,7 +31,7 @@ namespace BlackGui
 
     public:
         //! Constructor
-        explicit CStyleSheetUtility(BlackMisc::Restricted<CGuiApplication>, QObject *parent = nullptr);
+        explicit CStyleSheetUtility(QObject *parent = nullptr);
 
         //! Log cats.
         static const QStringList &getLogCategories();
