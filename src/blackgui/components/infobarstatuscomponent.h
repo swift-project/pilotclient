@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_INFOBARSTATUSCOMPONENT_H
 #define BLACKGUI_INFOBARSTATUSCOMPONENT_H
 
-#include "blackcore/actionbind.h"
+#include "core/actionbind.h"
 #include "blackgui/blackguiexport.h"
 
 #include "misc/audio/audiodeviceinfo.h"
@@ -57,7 +57,7 @@ namespace BlackGui::Components
 
     private:
         QScopedPointer<Ui::CInfoBarStatusComponent> ui;
-        BlackCore::CActionBind m_actionPtt { swift::misc::input::pttHotkeyAction(), swift::misc::input::pttHotkeyIcon(), this, &CInfoBarStatusComponent::onPttChanged };
+        swift::core::CActionBind m_actionPtt { swift::misc::input::pttHotkeyAction(), swift::misc::input::pttHotkeyIcon(), this, &CInfoBarStatusComponent::onPttChanged };
 
         swift::misc::CDigestSignal m_dsResize { this, &CInfoBarStatusComponent::adjustTextSize, 1000, 50 };
 

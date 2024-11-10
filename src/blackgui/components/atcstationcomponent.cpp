@@ -11,9 +11,9 @@
 #include "blackgui/guiutility.h"
 #include "blackgui/dockwidgetinfoarea.h"
 #include "blackgui/infoarea.h"
-#include "blackcore/context/contextnetwork.h"
-#include "blackcore/context/contextownaircraft.h"
-#include "blackcore/webdataservices.h"
+#include "core/context/contextnetwork.h"
+#include "core/context/contextownaircraft.h"
+#include "core/webdataservices.h"
 #include "misc/aviation/atcstationlist.h"
 #include "misc/aviation/informationmessage.h"
 #include "misc/weather/metar.h"
@@ -45,8 +45,8 @@ using namespace swift::misc::aviation;
 using namespace swift::misc::network;
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::weather;
-using namespace BlackCore;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::context;
 
 namespace BlackGui::Components
 {

@@ -7,7 +7,7 @@
 #define BLACKGUI_GUIACTIONBIND_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackcore/actionbind.h"
+#include "core/actionbind.h"
 
 #include <QMenu>
 #include <QList>
@@ -17,7 +17,7 @@
 
 namespace BlackGui
 {
-    //! QObject derived handler to be registered with BlackCore::CActionBind
+    //! QObject derived handler to be registered with swift::core::CActionBind
     class BLACKGUI_EXPORT CGuiActionBindHandler : public QObject
     {
         Q_OBJECT
@@ -26,18 +26,18 @@ namespace BlackGui
         //! Destructor
         virtual ~CGuiActionBindHandler();
 
-        //! Bound function for BlackCore::CActionBind
+        //! Bound function for swift::core::CActionBind
         void boundFunction(bool enabled);
 
         //! Bind whole menu
-        //! \remark keep BlackCore::CActionBindings as long you want to keep this binding alive
-        static BlackCore::CActionBindings bindMenu(QMenu *menu, const QString &path = {});
+        //! \remark keep swift::core::CActionBindings as long you want to keep this binding alive
+        static swift::core::CActionBindings bindMenu(QMenu *menu, const QString &path = {});
 
         //! Bind button, with relative name
-        //! \remark keep BlackCore::CActionBinding as long you want to keep this binding alive
-        static BlackCore::CActionBinding bindButton(QAbstractButton *button, const QString &path, bool absoluteName);
+        //! \remark keep swift::core::CActionBinding as long you want to keep this binding alive
+        static swift::core::CActionBinding bindButton(QAbstractButton *button, const QString &path, bool absoluteName);
 
-        //! Corresponding BlackCore::CActionBind died, so delete CGuiActionBindHandler
+        //! Corresponding swift::core::CActionBind died, so delete CGuiActionBindHandler
         static void actionBindWasDestroyed(CGuiActionBindHandler *bindHandler);
 
         //! Path

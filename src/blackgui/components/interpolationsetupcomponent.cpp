@@ -5,7 +5,7 @@
 #include "ui_interpolationsetupcomponent.h"
 #include "blackgui/views/interpolationsetupview.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/context/contextsimulator.h"
+#include "core/context/contextsimulator.h"
 #include "misc/simulation/interpolation/interpolationsetuplist.h"
 #include "misc/statusmessage.h"
 #include <QPointer>
@@ -14,7 +14,7 @@ using namespace BlackGui::Views;
 using namespace swift::misc;
 using namespace swift::misc::aviation;
 using namespace swift::misc::simulation;
-using namespace BlackCore::Context;
+using namespace swift::core::context;
 
 namespace BlackGui::Components
 {

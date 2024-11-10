@@ -11,15 +11,15 @@
 #include "blackgui/uppercasevalidator.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackcore/context/contextsimulator.h"
-#include "blackcore/db/databasewriter.h"
-#include "blackcore/webdataservices.h"
+#include "core/context/contextsimulator.h"
+#include "core/db/databasewriter.h"
+#include "core/webdataservices.h"
 #include "config/buildconfig.h"
 
 #include <QStringBuilder>
 
-using namespace BlackCore;
-using namespace BlackCore::Db;
+using namespace swift::core;
+using namespace swift::core::db;
 using namespace swift::config;
 using namespace swift::misc;
 using namespace swift::misc::aviation;

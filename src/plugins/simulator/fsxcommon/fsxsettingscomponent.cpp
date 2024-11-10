@@ -6,14 +6,14 @@
 #include "simulatorfsxcommon.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/context/contextsimulator.h"
+#include "core/context/contextsimulator.h"
 #include "config/buildconfig.h"
 
 #include <QPointer>
 #include <QTimer>
 
-using namespace BlackCore;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::context;
 using namespace BlackGui;
 using namespace swift::misc;
 using namespace swift::misc::simulation;

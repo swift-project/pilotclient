@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_SETTINGSSIMULATORCOMPONENT_H
 #define BLACKGUI_COMPONENTS_SETTINGSSIMULATORCOMPONENT_H
 
-#include "blackcore/application/applicationsettings.h"
+#include "core/application/applicationsettings.h"
 #include "blackgui/blackguiexport.h"
 #include "misc/simulation/settings/simulatorsettings.h"
 #include "misc/simulation/simulatorplugininfolist.h"
@@ -21,7 +21,7 @@ namespace Ui
 {
     class CSettingsSimulatorComponent;
 }
-namespace BlackCore
+namespace swift::core
 {
     class CPluginManagerSimulator;
 }
@@ -106,8 +106,8 @@ namespace BlackGui::Components
 
         QScopedPointer<Ui::CSettingsSimulatorComponent> ui; //!< UI
         bool m_pluginLoaded = false; //!< plugin loaded?
-        BlackCore::CPluginManagerSimulator *m_plugins = nullptr;
-        swift::misc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CSettingsSimulatorComponent::onEnabledSimulatorsChanged };
+        swift::core::CPluginManagerSimulator *m_plugins = nullptr;
+        swift::misc::CSetting<swift::core::application::TEnabledSimulators> m_enabledSimulators { this, &CSettingsSimulatorComponent::onEnabledSimulatorsChanged };
     };
 } // namespace
 

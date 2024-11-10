@@ -6,7 +6,7 @@
 #ifndef SWIFT_MISC_SHAREDSTATE_DBUS_HUB_H
 #define SWIFT_MISC_SHAREDSTATE_DBUS_HUB_H
 
-#include "blackcore/corefacadeconfig.h"
+#include "core/corefacadeconfig.h"
 #include "misc/swiftmiscexport.h"
 #include <QSharedPointer>
 #include <QObject>

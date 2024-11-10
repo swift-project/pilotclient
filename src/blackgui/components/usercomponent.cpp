@@ -6,7 +6,7 @@
 #include "blackgui/guiutility.h"
 #include "blackgui/views/clientview.h"
 #include "blackgui/views/userview.h"
-#include "blackcore/context/contextnetwork.h"
+#include "core/context/contextnetwork.h"
 #include "misc/network/connectionstatus.h"
 #include "misc/network/userlist.h"
 #include "ui_usercomponent.h"
@@ -18,8 +18,8 @@ using namespace swift::misc::network;
 using namespace BlackGui;
 using namespace BlackGui::Views;
 using namespace BlackGui::Settings;
-using namespace BlackCore;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::context;
 
 namespace BlackGui::Components
 {

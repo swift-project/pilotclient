@@ -6,8 +6,8 @@
 #ifndef BLACKGUI_LOGINCOMPONENT_H
 #define BLACKGUI_LOGINCOMPONENT_H
 
-#include "blackcore/vatsim/vatsimsettings.h"
-#include "blackcore/data/networksetup.h"
+#include "core/vatsim/vatsimsettings.h"
+#include "core/data/networksetup.h"
 #include "blackgui/settings/guisettings.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
@@ -190,7 +190,7 @@ namespace BlackGui::Components
         QTimer m_logoffCountdownTimer; //!< timer for logoff countdown
 
         swift::misc::CData<swift::misc::simulation::data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
-        BlackCore::Data::CNetworkSetup m_networkSetup; //!< servers last used
+        swift::core::data::CNetworkSetup m_networkSetup; //!< servers last used
     };
 } // namespace
 

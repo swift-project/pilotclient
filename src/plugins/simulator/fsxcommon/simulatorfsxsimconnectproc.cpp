@@ -3,7 +3,7 @@
 
 #include "simulatorfsxcommon.h"
 #include "simconnectdatadefinition.h"
-#include "blackcore/application.h"
+#include "core/application.h"
 #include "misc/simulation/fscommon/bcdconversions.h"
 #include "misc/simulation/fsx/simconnectutilities.h"
 #include "misc/simulation/simulatorplugininfo.h"
@@ -13,7 +13,7 @@
 
 #include <cstring>
 
-using namespace BlackCore;
+using namespace swift::core;
 using namespace swift::config;
 using namespace swift::misc;
 using namespace swift::misc::simulation;

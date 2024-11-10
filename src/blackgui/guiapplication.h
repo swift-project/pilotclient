@@ -13,7 +13,7 @@
 #include "blackgui/splashscreen.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/blackguiexport.h"
-#include "blackcore/application.h"
+#include "core/application.h"
 #include "misc/network/networkutils.h"
 #include "misc/icons.h"
 #include "misc/statusmessage.h"
@@ -44,7 +44,7 @@ namespace BlackGui::Components
 namespace BlackGui
 {
     /*!
-     * \brief GUI application, a specialized version of BlackCore::CApplication for GUI applications.
+     * \brief GUI application, a specialized version of swift::core::CApplication for GUI applications.
      *
      * \details Analog to QCoreApplication and QApplication this class provides more details for swift
      * GUI applications. It is normally used via the global sGui pointer. As an example of how to extend this
@@ -56,7 +56,7 @@ namespace BlackGui
      *
      */
     class BLACKGUI_EXPORT CGuiApplication :
-        public BlackCore::CApplication,
+        public swift::core::CApplication,
         public IMainWindowAccess
     {
         Q_OBJECT
@@ -196,7 +196,7 @@ namespace BlackGui
         //! \deprecated kept for experimental tests
         void setMinimumSizeInCharacters(int widthChars, int heightChars);
 
-        //! \copydoc BlackCore::CApplication::displaySetupLoadFailure
+        //! \copydoc swift::core::CApplication::displaySetupLoadFailure
         void displaySetupLoadFailure(swift::misc::CStatusMessageList msgs) override;
 
         //! Show close dialog
@@ -206,7 +206,7 @@ namespace BlackGui
         //! Trigger new version check
         void triggerNewVersionCheck(int delayedMs);
 
-        //! \copydoc BlackCore::CApplication::gracefulShutdown
+        //! \copydoc swift::core::CApplication::gracefulShutdown
         void gracefulShutdown() override;
 
         //! Toggle stay on top
@@ -244,7 +244,7 @@ namespace BlackGui
         //! \copydoc BlackGui::CGuiUtility::registerMainApplicationWidget
         void registerMainApplicationWidget(QWidget *mainWidget);
 
-        //! \copydoc BlackCore::CApplication::hasMinimumMappingVersion
+        //! \copydoc swift::core::CApplication::hasMinimumMappingVersion
         bool hasMinimumMappingVersion() const override;
 
         //! Main application window
@@ -300,10 +300,10 @@ namespace BlackGui
         //! Handle parsing of special GUI cmd arguments
         bool parsingHookIn() override;
 
-        //! \copydoc BlackCore::CApplication::onCoreFacadeStarted
+        //! \copydoc swift::core::CApplication::onCoreFacadeStarted
         void onCoreFacadeStarted() override;
 
-        //! \copydoc BlackCore::CApplication::onStartUpCompleted
+        //! \copydoc swift::core::CApplication::onStartUpCompleted
         void onStartUpCompleted() override;
 
         //! Check for a new version (update)

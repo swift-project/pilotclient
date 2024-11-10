@@ -16,7 +16,7 @@ namespace BlackSimPlugin::Fsx
         Q_OBJECT
 
     public:
-        //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
+        //! Constructor, parameters as in \sa swift::core::ISimulatorFactory::create
         CSimulatorFsx(const swift::misc::simulation::CSimulatorPluginInfo &info,
                       swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
                       swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,

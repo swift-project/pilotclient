@@ -10,13 +10,13 @@
 #include "blackgui/loginmodebuttons.h"
 #include "blackgui/ticklabel.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackcore/context/contextaudio.h"
-#include "blackcore/context/contextnetwork.h"
-#include "blackcore/context/contextownaircraft.h"
-#include "blackcore/context/contextsimulator.h"
-#include "blackcore/webdataservices.h"
-#include "blackcore/data/globalsetup.h"
-#include "blackcore/simulator.h"
+#include "core/context/contextaudio.h"
+#include "core/context/contextnetwork.h"
+#include "core/context/contextownaircraft.h"
+#include "core/context/contextsimulator.h"
+#include "core/webdataservices.h"
+#include "core/data/globalsetup.h"
+#include "core/simulator.h"
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/aviation/airporticaocode.h"
@@ -52,9 +52,9 @@ using namespace swift::misc::aviation;
 using namespace swift::misc::audio;
 using namespace swift::misc::network;
 using namespace swift::misc::simulation;
-using namespace BlackCore;
-using namespace BlackCore::Data;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::data;
+using namespace swift::core::context;
 using namespace BlackGui;
 
 namespace BlackGui::Components

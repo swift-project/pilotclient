@@ -4,7 +4,7 @@
 #include <QMessageBox>
 #include "copyxswiftbusdialog.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/context/contextsimulator.h"
+#include "core/context/contextsimulator.h"
 #include "misc/simulation/xplane/xplaneutil.h"
 #include "misc/swiftdirectories.h"
 #include "misc/directoryutils.h"
@@ -13,7 +13,7 @@
 using namespace swift::config;
 using namespace swift::misc;
 using namespace swift::misc::simulation::xplane;
-using namespace BlackCore::Context;
+using namespace swift::core::context;
 
 namespace BlackGui
 {

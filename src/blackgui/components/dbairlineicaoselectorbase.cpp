@@ -3,7 +3,7 @@
 
 #include "blackgui/components/dbairlineicaoselectorbase.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 #include "misc/aviation/airlineicaocodelist.h"
 #include "misc/db/datastoreutility.h"
 #include "misc/mixin/mixincompare.h"
@@ -20,7 +20,7 @@
 #include <QPointer>
 
 using namespace BlackGui;
-using namespace BlackCore;
+using namespace swift::core;
 using namespace swift::misc;
 using namespace swift::misc::db;
 using namespace swift::misc::network;

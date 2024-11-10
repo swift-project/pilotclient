@@ -13,12 +13,12 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/overlaymessagesframe.h"
-#include "blackcore/context/contextapplication.h"
-#include "blackcore/context/contextaudio.h"
-#include "blackcore/context/contextnetwork.h"
-#include "blackcore/context/contextsimulator.h"
-#include "blackcore/webdataservices.h"
-#include "blackcore/corefacadeconfig.h"
+#include "core/context/contextapplication.h"
+#include "core/context/contextaudio.h"
+#include "core/context/contextnetwork.h"
+#include "core/context/contextsimulator.h"
+#include "core/webdataservices.h"
+#include "core/corefacadeconfig.h"
 #include "misc/audio/notificationsounds.h"
 #include "misc/icons.h"
 #include "misc/logcategories.h"
@@ -58,8 +58,8 @@ namespace swift::misc
     class CIdentifiable;
 }
 
-using namespace BlackCore;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::context;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 using namespace swift::misc;

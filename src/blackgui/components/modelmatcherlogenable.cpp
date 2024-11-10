@@ -4,14 +4,14 @@
 #include "modelmatcherlogenable.h"
 #include "blackgui/guiapplication.h"
 #include "ui_modelmatcherlogenable.h"
-#include "blackcore/context/contextnetwork.h"
-#include "blackcore/context/contextsimulator.h"
+#include "core/context/contextnetwork.h"
+#include "core/context/contextsimulator.h"
 
 #include <QPointer>
 #include <QTimer>
 
-using namespace BlackCore;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::context;
 using namespace swift::misc::network;
 using namespace swift::misc::simulation;
 

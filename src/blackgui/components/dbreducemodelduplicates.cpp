@@ -6,7 +6,7 @@
 
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 #include "misc/statusmessage.h"
 
 #include <QCompleter>

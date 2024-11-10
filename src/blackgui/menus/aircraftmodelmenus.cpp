@@ -5,8 +5,8 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/components/dbmappingcomponentaware.h"
-#include "blackcore/webdataservices.h"
-#include "blackcore/db/databaseutils.h"
+#include "core/webdataservices.h"
+#include "core/db/databaseutils.h"
 #include "misc/verify.h"
 #include "misc/icons.h"
 #include "misc/logmessage.h"
@@ -22,7 +22,7 @@ using namespace BlackGui;
 using namespace BlackGui::Views;
 using namespace BlackGui::Models;
 using namespace BlackGui::Components;
-using namespace BlackCore::Db;
+using namespace swift::core::db;
 
 namespace BlackGui::Menus
 {

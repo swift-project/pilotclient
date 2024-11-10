@@ -88,7 +88,7 @@ namespace swift::misc::simulation
         static bool needsCacheSynchronized(LoadMode mode);
 
         //! Callback to consolidate data, normally with DB data
-        //! \remark this has to be a abstarct, as DB handling is subject of BlackCore
+        //! \remark this has to be a abstarct, as DB handling is subject of swift::core
         using ModelConsolidationCallback = std::function<int(swift::misc::simulation::CAircraftModelList &, bool)>;
 
         //! Destructor

@@ -17,7 +17,7 @@
 using namespace BlackGui;
 using namespace swift::misc;
 using namespace swift::misc::audio;
-using namespace BlackCore;
+using namespace swift::core;
 
 int main(int argc, char *argv[])
 {

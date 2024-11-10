@@ -3,7 +3,7 @@
 
 #include "ui_simulatorflightgearconfigwindow.h"
 #include "simulatorflightgearconfigwindow.h"
-#include "blackcore/application.h"
+#include "core/application.h"
 #include "blackgui/guiapplication.h"
 
 #include <QComboBox>

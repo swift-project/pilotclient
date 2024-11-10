@@ -7,7 +7,7 @@
 
 using namespace swift::misc::network;
 using namespace swift::misc::simulation;
-using namespace BlackCore;
+using namespace swift::core;
 
 namespace BlackSimPlugin::Msfs
 {

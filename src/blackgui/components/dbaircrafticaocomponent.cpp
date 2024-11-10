@@ -6,7 +6,7 @@
 #include "blackgui/views/aircrafticaoview.h"
 #include "blackgui/views/viewbase.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 #include "dbaircrafticaocomponent.h"
 #include "ui_dbaircrafticaocomponent.h"
 
@@ -14,7 +14,7 @@
 #include <QtGlobal>
 #include <QStringBuilder>
 
-using namespace BlackCore;
+using namespace swift::core;
 using namespace swift::misc::network;
 using namespace swift::misc::aviation;
 using namespace BlackGui::Views;

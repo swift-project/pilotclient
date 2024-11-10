@@ -4,8 +4,8 @@
 #include "modelbrowsercomponent.h"
 #include "ui_modelbrowsercomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/context/contextownaircraft.h"
-#include "blackcore/context/contextsimulator.h"
+#include "core/context/contextownaircraft.h"
+#include "core/context/contextsimulator.h"
 #include "misc/aviation/heading.h"
 #include "misc/pq/angle.h"
 #include "misc/pq/speed.h"
@@ -17,8 +17,8 @@ using namespace swift::misc::physical_quantities;
 using namespace swift::misc::geo;
 using namespace BlackGui::Editors;
 using namespace BlackGui::Views;
-using namespace BlackCore;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::context;
 
 namespace BlackGui::Components
 {

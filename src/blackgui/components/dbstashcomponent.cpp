@@ -7,10 +7,10 @@
 #include "blackgui/views/viewbase.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/models/aircraftmodellistmodel.h"
-#include "blackcore/db/databasewriter.h"
-#include "blackcore/db/databaseutils.h"
-#include "blackcore/application.h"
-#include "blackcore/webdataservices.h"
+#include "core/db/databasewriter.h"
+#include "core/db/databaseutils.h"
+#include "core/application.h"
+#include "core/webdataservices.h"
 #include "misc/simulation/aircraftmodel.h"
 #include "misc/simulation/distributorlist.h"
 #include "misc/aviation/aircrafticaocode.h"
@@ -29,8 +29,8 @@
 #include <QtGlobal>
 #include <iterator>
 
-using namespace BlackCore;
-using namespace BlackCore::Db;
+using namespace swift::core;
+using namespace swift::core::db;
 using namespace swift::misc;
 using namespace swift::misc::simulation;
 using namespace swift::misc::aviation;

@@ -10,7 +10,7 @@
 #include "samplesfsuipc.h"
 #include "samplesmodelmapping.h"
 #include "samplesvpilotrules.h"
-#include "blackcore/application.h"
+#include "core/application.h"
 #include "misc/directoryutils.h"
 
 #include <stdio.h>
@@ -28,7 +28,7 @@ using namespace BlackSample;
 int main(int argc, char *argv[])
 {
     QCoreApplication qa(argc, argv);
-    BlackCore::CApplication a;
+    swift::core::CApplication a;
     Q_UNUSED(a);
     Q_UNUSED(qa);
 

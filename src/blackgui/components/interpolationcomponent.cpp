@@ -6,7 +6,7 @@
 
 #include "blackgui/guiapplication.h"
 #include "blackgui/views/statusmessageview.h"
-#include "blackcore/context/contextsimulator.h"
+#include "core/context/contextsimulator.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;

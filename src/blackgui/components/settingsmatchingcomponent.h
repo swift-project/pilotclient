@@ -10,7 +10,7 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace BlackCore::Context
+namespace swift::core::context
 {
     class IContextSimulator;
 }
@@ -60,7 +60,7 @@ namespace BlackGui::Components
         void deferredReload(int deferMs);
 
         //! Network context
-        static BlackCore::Context::IContextSimulator *simulatorContext();
+        static swift::core::context::IContextSimulator *simulatorContext();
     };
 } // ns
 

@@ -4,10 +4,10 @@
 #include "matchingstatisticscomponent.h"
 #include "ui_matchingstatisticscomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/context/contextsimulator.h"
+#include "core/context/contextsimulator.h"
 
 using namespace swift::misc::simulation;
-using namespace BlackCore::Context;
+using namespace swift::core::context;
 using namespace BlackGui::Views;
 
 namespace BlackGui::Components

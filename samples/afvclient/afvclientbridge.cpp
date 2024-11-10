@@ -3,7 +3,7 @@
 
 #include "afvclientbridge.h"
 
-using namespace BlackCore::Afv::Clients;
+using namespace swift::core::afv::clients;
 
 CAfvClientBridge::CAfvClientBridge(CAfvClient *afvClient, QObject *parent) : QObject(parent),
                                                                              m_afvClient(afvClient)

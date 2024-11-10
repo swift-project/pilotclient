@@ -6,12 +6,12 @@
 
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 #include "misc/countrylist.h"
 #include <QCompleter>
 
 using namespace swift::misc;
-using namespace BlackCore;
+using namespace swift::core;
 
 namespace BlackGui::Components
 {

@@ -4,7 +4,7 @@
 #include "settingsmodelcomponent.h"
 #include "ui_settingsmodelcomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/db/backgrounddataupdater.h"
+#include "core/db/backgrounddataupdater.h"
 #include "misc/logmessage.h"
 
 #include <QValidator>
@@ -12,7 +12,7 @@
 using namespace swift::misc;
 using namespace swift::misc::simulation::settings;
 using namespace BlackGui::Settings;
-using namespace BlackCore::Db;
+using namespace swift::core::db;
 
 namespace BlackGui::Components
 {

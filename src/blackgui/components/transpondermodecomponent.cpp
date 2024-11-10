@@ -4,7 +4,7 @@
 #include "transpondermodecomponent.h"
 #include "ui_transpondermodecomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/context/contextownaircraft.h"
+#include "core/context/contextownaircraft.h"
 #include "misc/aviation/transponder.h"
 
 #include <QTimer>
@@ -13,7 +13,7 @@
 using namespace swift::misc;
 using namespace swift::misc::aviation;
 using namespace swift::misc::simulation;
-using namespace BlackCore::Context;
+using namespace swift::core::context;
 
 namespace BlackGui::Components
 {

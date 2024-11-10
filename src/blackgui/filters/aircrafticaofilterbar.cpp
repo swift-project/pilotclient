@@ -7,7 +7,7 @@
 #include "blackgui/models/aircrafticaofilter.h"
 #include "blackgui/uppercasevalidator.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/aircrafticaocodelist.h"
 #include "ui_aircrafticaofilterbar.h"
@@ -19,7 +19,7 @@
 using namespace swift::misc::aviation;
 using namespace BlackGui;
 using namespace BlackGui::Models;
-using namespace BlackCore;
+using namespace swift::core;
 
 namespace BlackGui::Filters
 {

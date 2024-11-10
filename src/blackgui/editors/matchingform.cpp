@@ -10,7 +10,7 @@
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
-using namespace BlackCore;
+using namespace swift::core;
 
 namespace BlackGui::Editors
 {

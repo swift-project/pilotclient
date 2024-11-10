@@ -4,7 +4,7 @@
 //! \file
 //! \ingroup samplefsd
 
-#include "blackcore/fsd/fsdclient.h"
+#include "core/fsd/fsdclient.h"
 #include "misc/network/clientprovider.h"
 #include "misc/simulation/ownaircraftproviderdummy.h"
 #include "misc/simulation/remoteaircraftproviderdummy.h"
@@ -13,7 +13,7 @@
 
 using namespace swift::misc::network;
 using namespace swift::misc::simulation;
-using namespace BlackCore::Fsd;
+using namespace swift::core::fsd;
 
 //! main
 int main(int argc, char *argv[])

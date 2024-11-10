@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackcore/corefacadeconfig.h"
+#include "core/corefacadeconfig.h"
 #include "blackgui/guiapplication.h"
 #include "misc/icons.h"
 #include "misc/crashhandler.h"
@@ -14,7 +14,7 @@
 #include <Qt>
 
 using namespace swift::misc;
-using namespace BlackCore;
+using namespace swift::core;
 using namespace BlackGui;
 
 int main(int argc, char *argv[])

@@ -7,7 +7,7 @@
 #define BLACKSIMPLUGIN_COMMON_SIMULATORPLUGINCOMMON_H
 
 #include "plugins/simulator/plugincommon/simulatorplugincommonexport.h"
-#include "blackcore/simulator.h"
+#include "core/simulator.h"
 #include <QObject>
 #include <QPointer>
 
@@ -18,10 +18,10 @@ namespace BlackGui::Components
 namespace BlackSimPlugin::Common
 {
     //! Common base class for simulator plugins
-    class SIMULATORPLUGINCOMMON_EXPORT CSimulatorPluginCommon : public BlackCore::ISimulator
+    class SIMULATORPLUGINCOMMON_EXPORT CSimulatorPluginCommon : public swift::core::ISimulator
     {
         Q_OBJECT
-        Q_INTERFACES(BlackCore::ISimulator)
+        Q_INTERFACES(swift::core::ISimulator)
         Q_INTERFACES(swift::misc::simulation::ISimulationEnvironmentProvider)
         Q_INTERFACES(swift::misc::simulation::IInterpolationSetupProvider)
 

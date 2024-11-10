@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 #include "blackgui/components/dbcountryselectorcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
@@ -23,7 +23,7 @@
 #include <Qt>
 
 using namespace BlackGui;
-using namespace BlackCore;
+using namespace swift::core;
 using namespace swift::misc;
 using namespace swift::misc::network;
 

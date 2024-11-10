@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 add_subdirectory(config)
-add_subdirectory(blackcore)
+add_subdirectory(core)
 add_subdirectory(misc)
 add_subdirectory(blackgui)
 add_subdirectory(input)

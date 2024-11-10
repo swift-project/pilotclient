@@ -11,7 +11,7 @@
 #include "plugins/simulator/fsxcommon/simconnectobject.h"
 #include "plugins/simulator/fsxcommon/simconnectwindows.h"
 #include "plugins/simulator/fscommon/simulatorfscommon.h"
-#include "blackcore/simulator.h"
+#include "core/simulator.h"
 #include "misc/simulation/interpolation/interpolatorlinear.h"
 #include "misc/simulation/simulatorplugininfo.h"
 #include "misc/simulation/settings/simulatorsettings.h"
@@ -118,12 +118,12 @@ namespace BlackSimPlugin::FsxCommon
     class FSXCOMMON_EXPORT CSimulatorFsxCommon : public FsCommon::CSimulatorFsCommon
     {
         Q_OBJECT
-        Q_INTERFACES(BlackCore::ISimulator)
+        Q_INTERFACES(swift::core::ISimulator)
         Q_INTERFACES(swift::misc::simulation::ISimulationEnvironmentProvider)
         Q_INTERFACES(swift::misc::simulation::IInterpolationSetupProvider)
 
     public:
-        //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
+        //! Constructor, parameters as in \sa swift::core::ISimulatorFactory::create
         CSimulatorFsxCommon(const swift::misc::simulation::CSimulatorPluginInfo &info,
                             swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
                             swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
@@ -644,7 +644,7 @@ namespace BlackSimPlugin::FsxCommon
     };
 
     //! Listener for FSX
-    class FSXCOMMON_EXPORT CSimulatorFsxCommonListener : public BlackCore::ISimulatorListener
+    class FSXCOMMON_EXPORT CSimulatorFsxCommonListener : public swift::core::ISimulatorListener
     {
         Q_OBJECT
 
@@ -652,17 +652,17 @@ namespace BlackSimPlugin::FsxCommon
         //! Constructor
         CSimulatorFsxCommonListener(const swift::misc::simulation::CSimulatorPluginInfo &info);
 
-        //! \copydoc BlackCore::ISimulatorListener::backendInfo
+        //! \copydoc swift::core::ISimulatorListener::backendInfo
         virtual QString backendInfo() const override;
 
     protected:
-        //! \copydoc BlackCore::ISimulatorListener::startImpl
+        //! \copydoc swift::core::ISimulatorListener::startImpl
         virtual void startImpl() override;
 
-        //! \copydoc BlackCore::ISimulatorListener::stopImpl
+        //! \copydoc swift::core::ISimulatorListener::stopImpl
         virtual void stopImpl() override;
 
-        //! \copydoc BlackCore::ISimulatorListener::checkImpl
+        //! \copydoc swift::core::ISimulatorListener::checkImpl
         virtual void checkImpl() override;
 
     private:

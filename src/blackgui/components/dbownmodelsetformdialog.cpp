@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackcore/modelsetbuilder.h"
+#include "core/modelsetbuilder.h"
 #include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/components/dbownmodelsetformdialog.h"
 #include "blackgui/editors/ownmodelsetform.h"
@@ -17,7 +17,7 @@
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
-using namespace BlackCore;
+using namespace swift::core;
 using namespace BlackGui::Editors;
 
 namespace BlackGui::Components

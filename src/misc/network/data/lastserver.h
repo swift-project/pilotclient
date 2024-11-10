@@ -14,13 +14,13 @@ namespace swift::misc::network::data
     //! Trait for last (most recently) used server and user
     struct TLastServer : public TDataTrait<CServer>
     {
-        //! \copydoc BlackCore::TDataTrait::key
+        //! \copydoc swift::core::TDataTrait::key
         static const char *key() { return "lastserver"; }
 
-        //! \copydoc BlackCore::TDataTrait::isPinned
+        //! \copydoc swift::core::TDataTrait::isPinned
         static constexpr bool isPinned() { return true; }
 
-        //! \copydoc BlackCore::TDataTrait::humanReadable
+        //! \copydoc swift::core::TDataTrait::humanReadable
         static const QString &humanReadable()
         {
             static const QString name("Last used server");

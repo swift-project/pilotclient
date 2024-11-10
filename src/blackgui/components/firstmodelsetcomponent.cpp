@@ -10,7 +10,7 @@
 
 #include "blackgui/views/distributorview.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 #include "misc/directoryutils.h"
 #include "misc/verify.h"
 #include "config/buildconfig.h"

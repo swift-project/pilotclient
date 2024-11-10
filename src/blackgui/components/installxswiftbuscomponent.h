@@ -8,8 +8,8 @@
 
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/loadindicator.h"
-#include "blackcore/application/applicationsettings.h"
-#include "blackcore/application/updatesettings.h"
+#include "core/application/applicationsettings.h"
+#include "core/application/updatesettings.h"
 #include "misc/db/updateinfo.h"
 #include "misc/simulation/settings/simulatorsettings.h"
 #include "misc/network/remotefilelist.h"
@@ -49,7 +49,7 @@ namespace BlackGui::Components
         QScopedPointer<Ui::CInstallXSwiftBusComponent> ui;
         swift::misc::simulation::settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for directories of XPlane
         swift::misc::CDataReadOnly<swift::misc::db::TUpdateInfo> m_updates { this, &CInstallXSwiftBusComponent::updatesChanged };
-        swift::misc::CSettingReadOnly<BlackCore::Application::TUpdatePreferences> m_updateSettings { this }; //!< channel/platform selected
+        swift::misc::CSettingReadOnly<swift::core::application::TUpdatePreferences> m_updateSettings { this }; //!< channel/platform selected
         const QFileDialog::Options m_fileDialogOptions { QFileDialog::ShowDirsOnly | QFileDialog::ReadOnly | QFileDialog::DontResolveSymlinks };
 
         // the xSwiftBus artifacts

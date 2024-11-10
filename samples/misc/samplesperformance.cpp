@@ -5,7 +5,7 @@
 //! \ingroup samplemisc
 
 #include "samplesperformance.h"
-#include "blackcore/db/databasereader.h"
+#include "core/db/databasereader.h"
 #include "misc/simulation/aircraftmodellist.h"
 #include "misc/simulation/distributorlist.h"
 #include "misc/aviation/aircrafticaocodelist.h"
@@ -48,7 +48,7 @@ using namespace swift::misc::network;
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::simulation;
 using namespace swift::misc::test;
-using namespace BlackCore::Db;
+using namespace swift::core::db;
 
 namespace BlackSample
 {

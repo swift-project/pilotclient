@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackcore/context/contextapplication.h"
+#include "core/context/contextapplication.h"
 #include "blackgui/components/registercomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/views/identifierview.h"
@@ -9,8 +9,8 @@
 
 #include <QtGlobal>
 
-using namespace BlackCore;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::context;
 using namespace BlackGui::Views;
 
 namespace BlackGui::Components

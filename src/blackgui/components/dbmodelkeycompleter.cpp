@@ -4,10 +4,10 @@
 #include "dbmodelkeycompleter.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 #include <QCompleter>
 
-using namespace BlackCore;
+using namespace swift::core;
 using namespace swift::misc::simulation;
 
 namespace BlackGui::Components

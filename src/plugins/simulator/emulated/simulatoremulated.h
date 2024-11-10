@@ -27,14 +27,14 @@ namespace BlackSimPlugin::Emulated
     class CSimulatorEmulated : public Common::CSimulatorPluginCommon
     {
         Q_OBJECT
-        Q_INTERFACES(BlackCore::ISimulator)
+        Q_INTERFACES(swift::core::ISimulator)
         Q_INTERFACES(swift::misc::simulation::ISimulationEnvironmentProvider)
         Q_INTERFACES(swift::misc::simulation::IInterpolationSetupProvider)
 
         friend class CSimulatorEmulatedMonitorDialog; //!< the monitor widget represents the simulator and needs access to internals (i.e. private/protected)
 
     public:
-        //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
+        //! Constructor, parameters as in \sa swift::core::ISimulatorFactory::create
         CSimulatorEmulated(
             const swift::misc::simulation::CSimulatorPluginInfo &info,
             swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
@@ -78,7 +78,7 @@ namespace BlackSimPlugin::Emulated
         //! .drv show   show emulated driver window     BlackSimPlugin::Swift::CSimulatorEmulated
         //! .drv hide   hide emulated driver window     BlackSimPlugin::Swift::CSimulatorEmulated
         //! </pre>
-        //! \copydoc BlackCore::ISimulator::parseCommandLine
+        //! \copydoc swift::core::ISimulator::parseCommandLine
         virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override;
 
         //! UI setter
@@ -129,7 +129,7 @@ namespace BlackSimPlugin::Emulated
         virtual bool physicallyRemoveRemoteAircraft(const swift::misc::aviation::CCallsign &callsign) override;
         virtual int physicallyRemoveAllRemoteAircraft() override;
 
-        //! \copydoc BlackCore::ISimulator::parseDetails
+        //! \copydoc swift::core::ISimulator::parseDetails
         virtual bool parseDetails(const swift::misc::CSimpleCommandParser &parser) override;
 
     private:
@@ -176,7 +176,7 @@ namespace BlackSimPlugin::Emulated
     };
 
     //! Listener for swift
-    class CSimulatorEmulatedListener : public BlackCore::ISimulatorListener
+    class CSimulatorEmulatedListener : public swift::core::ISimulatorListener
     {
         Q_OBJECT
 
@@ -185,13 +185,13 @@ namespace BlackSimPlugin::Emulated
         CSimulatorEmulatedListener(const swift::misc::simulation::CSimulatorPluginInfo &info);
 
     protected:
-        //! \copydoc BlackCore::ISimulatorListener::startImpl
+        //! \copydoc swift::core::ISimulatorListener::startImpl
         virtual void startImpl() override;
 
-        //! \copydoc BlackCore::ISimulatorListener::stopImpl
+        //! \copydoc swift::core::ISimulatorListener::stopImpl
         virtual void stopImpl() override;
 
-        //! \copydoc BlackCore::ISimulatorListener::stopImpl
+        //! \copydoc swift::core::ISimulatorListener::stopImpl
         virtual void checkImpl() override;
     };
 } // ns

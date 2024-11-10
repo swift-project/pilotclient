@@ -96,10 +96,10 @@ namespace swift::config
         static bool isKnownExecutableName(const QString &executable);
 
 #ifdef SWIFT_VATSIM_SUPPORT
-        //! Vatsim client id
+        //! VATSIM client id
         static int vatsimClientId(); // defined in buildconfig_gen.cpp.in
 
-        //! Vatsim client key
+        //! VATSIM client key
         static const QString &vatsimPrivateKey(); // defined in buildconfig_gen.cpp.in
 #endif
 

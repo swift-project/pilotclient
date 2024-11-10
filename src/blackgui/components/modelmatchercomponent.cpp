@@ -14,7 +14,7 @@
 #include "blackgui/uppercasevalidator.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 #include "misc/simulation/data/modelcaches.h"
 #include "misc/simulation/matchingutils.h"
 #include "misc/aviation/aircrafticaocode.h"
@@ -42,7 +42,7 @@ using namespace swift::misc::simulation::data;
 using namespace swift::misc::network;
 using namespace BlackGui::Models;
 using namespace BlackGui::Views;
-using namespace BlackCore;
+using namespace swift::core;
 
 namespace BlackGui::Components
 {

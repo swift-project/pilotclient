@@ -38,7 +38,7 @@ namespace swift::misc::simulation
 
         //! Check if the provided plugin metadata is valid.
         //! Simulator plugin (driver) has to meet the following requirements:
-        //!  * implements org.swift-project.blackcore.simulatorinterface;
+        //!  * implements org.swift-project.swift_core.simulatorinterface;
         //!  * provides plugin name;
         //!  * specifies simulator it handles.
         //! Unspecified sim is considered as invalid.

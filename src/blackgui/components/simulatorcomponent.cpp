@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "ui_simulatorcomponent.h"
-#include "blackcore/simulator.h"
+#include "core/simulator.h"
 #include "blackgui/components/simulatorcomponent.h"
 #include "blackgui/views/namevariantpairview.h"
-#include "blackcore/context/contextownaircraft.h"
-#include "blackcore/context/contextsimulator.h"
+#include "core/context/contextownaircraft.h"
+#include "core/context/contextsimulator.h"
 #include "blackgui/guiapplication.h"
 #include "misc/simulation/simulatedaircraft.h"
 #include "misc/simulation/simulatorplugininfo.h"
@@ -26,8 +26,8 @@ using namespace swift::misc;
 using namespace swift::misc::aviation;
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::simulation;
-using namespace BlackCore;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::context;
 
 namespace BlackGui::Components
 {

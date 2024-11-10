@@ -23,7 +23,7 @@ namespace Ui
 {
     class CAudioDeviceVolumeSetupComponent;
 }
-namespace BlackCore::Afv::Clients
+namespace swift::core::afv::clients
 {
     class CAfvClient;
 }
@@ -146,7 +146,7 @@ namespace BlackGui::Components
         void setVolumeSlidersReadOnly(bool readonly);
 
         //! Direct access to client
-        static BlackCore::Afv::Clients::CAfvClient *afvClient();
+        static swift::core::afv::clients::CAfvClient *afvClient();
 
         bool m_init = false;
         swift::misc::CConnectionGuard m_afvConnections;

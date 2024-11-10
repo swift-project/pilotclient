@@ -7,7 +7,7 @@
 #define BLACKGUI_COMPONENTS_CONFIGSIMULATORCOMPONENT_H
 
 #include "misc/simulation/data/modelcaches.h"
-#include "blackcore/application/applicationsettings.h"
+#include "core/application/applicationsettings.h"
 #include <QWizardPage>
 #include <QFrame>
 #include <QScopedPointer>
@@ -48,7 +48,7 @@ namespace BlackGui::Components
         //! Get the plugin ids
         QStringList selectedSimsToPluginIds();
 
-        swift::misc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this };
+        swift::misc::CSetting<swift::core::application::TEnabledSimulators> m_enabledSimulators { this };
         swift::misc::simulation::data::CModelSetCaches m_modelSets { true, this };
         QScopedPointer<Ui::CConfigSimulatorComponent> ui;
     };

@@ -5,7 +5,7 @@
 #include "ui_datasettingscomponent.h"
 
 using namespace BlackGui;
-using namespace BlackCore::Db;
+using namespace swift::core::db;
 
 namespace BlackGui::Components
 {

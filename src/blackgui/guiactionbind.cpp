@@ -6,7 +6,7 @@
 #include "misc/imageutils.h"
 
 using namespace swift::misc;
-using namespace BlackCore;
+using namespace swift::core;
 
 namespace BlackGui
 {

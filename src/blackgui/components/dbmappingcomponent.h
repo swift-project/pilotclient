@@ -11,7 +11,7 @@
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
-#include "blackcore/data/authenticateduser.h"
+#include "core/data/authenticateduser.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/network/entityflags.h"
 #include "misc/simulation/aircraftmodellist.h"
@@ -329,7 +329,7 @@ namespace BlackGui
             QScopedPointer<CDbModelMappingModifyDialog> m_modelModifyDialog; //!< dialog when modifying models
             swift::misc::simulation::fscommon::CVPilotRulesReader m_vPilotReader; //!< read vPilot rules
             swift::misc::CDigestSignal m_dsStashedModelsChanged { this, &CDbMappingComponent::onStashedModelsChangedDigest, 750, 25 };
-            swift::misc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this, &CDbMappingComponent::onUserChanged };
+            swift::misc::CDataReadOnly<swift::core::data::TAuthenticatedDbUser> m_swiftDbUser { this, &CDbMappingComponent::onUserChanged };
             const bool vPilotSupport = true; //!< vPilot support (will be removed in future)
             bool m_vPilot1stInit = true; //!< vPilot extensions initalized?
             bool m_vPilotEnabled = false; //!< use vPilot extensions

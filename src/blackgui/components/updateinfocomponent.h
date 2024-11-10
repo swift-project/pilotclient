@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_UPDATEINFOCOMPONENT_H
 #define BLACKGUI_COMPONENTS_UPDATEINFOCOMPONENT_H
 
-#include "blackcore/application/updatesettings.h"
+#include "core/application/updatesettings.h"
 #include "blackgui/blackguiexport.h"
 #include "misc/db/updateinfo.h"
 #include "misc/db/artifact.h"
@@ -64,7 +64,7 @@ namespace BlackGui::Components
         QScopedPointer<CInstallXSwiftBusDialog> m_installXSwiftBusDialog; //!< dialog, install XSwiftXBus
         QScopedPointer<CDownloadDialog> m_downloadDialog; //!< dialog, download installer
         swift::misc::CDataReadOnly<swift::misc::db::TUpdateInfo> m_updateInfo { this, &CUpdateInfoComponent::changedUpdateInfo }; //!< version cache
-        swift::misc::CSetting<BlackCore::Application::TUpdatePreferences> m_updateSettings { this }; //!< channel/platform selected
+        swift::misc::CSetting<swift::core::application::TUpdatePreferences> m_updateSettings { this }; //!< channel/platform selected
         swift::misc::CDigestSignal m_dsDistributionAvailable { this, &CUpdateInfoComponent::updateInfoAvailable, 15000, 2 };
 
         //! Load latest version

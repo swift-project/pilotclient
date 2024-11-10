@@ -9,7 +9,7 @@
 #include "blackgui/settings/guisettings.h"
 #include "blackgui/mainwindowaccess.h"
 #include "blackgui/managedstatusbar.h"
-#include "blackcore/db/backgrounddataupdater.h"
+#include "core/db/backgrounddataupdater.h"
 #include "misc/loghistory.h"
 #include "misc/identifiable.h"
 #include "misc/statusmessage.h"
@@ -22,7 +22,7 @@ namespace Ui
 {
     class CSwiftData;
 }
-namespace BlackCore
+namespace swift::core
 {
     class CWebDataServices;
 }
@@ -86,7 +86,7 @@ private:
 
     QScopedPointer<Ui::CSwiftData> ui;
     BlackGui::CManagedStatusBar m_statusBar;
-    BlackCore::Db::CBackgroundDataUpdater *m_updater = nullptr; //!< consolidate with DB data
+    swift::core::db::CBackgroundDataUpdater *m_updater = nullptr; //!< consolidate with DB data
     swift::misc::CSettingReadOnly<BlackGui::Settings::TBackgroundConsolidation> m_consolidationSettings { this, &CSwiftData::consolidationSettingChanged }; //!< consolidation time
     swift::misc::CLogHistoryReplica m_logHistory { this };
 

@@ -8,7 +8,7 @@
 
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
-#include "blackcore/simulator.h"
+#include "core/simulator.h"
 #include "misc/simulation/interpolation/interpolationlogger.h"
 #include "misc/aviation/aircraftsituationlist.h"
 #include "misc/aviation/callsign.h"
@@ -25,7 +25,7 @@ namespace Ui
 {
     class CInterpolationLogDisplay;
 }
-namespace BlackCore
+namespace swift::core
 {
     class CAirspaceMonitor;
 }
@@ -62,10 +62,10 @@ namespace BlackGui::Components
         virtual ~CInterpolationLogDisplay() override;
 
         //! Set simulator
-        void setSimulator(BlackCore::ISimulator *simulator);
+        void setSimulator(swift::core::ISimulator *simulator);
 
         //! Set corresponding airspace monitor
-        void setAirspaceMonitor(BlackCore::CAirspaceMonitor *airspaceMonitor);
+        void setAirspaceMonitor(swift::core::CAirspaceMonitor *airspaceMonitor);
 
         //! If possible link with airspace monitor
         void linkWithAirspaceMonitor();
@@ -113,19 +113,19 @@ namespace BlackGui::Components
         //! Simulator unloaded
         void onSimulatorUnloaded();
 
-        //! \copydoc BlackCore::CAirspaceMonitor::addedAircraftSituation
+        //! \copydoc swift::core::CAirspaceMonitor::addedAircraftSituation
         void onSituationAdded(const swift::misc::aviation::CAircraftSituation &situation);
 
-        //! \copydoc BlackCore::CAirspaceMonitor::addedAircraftSituation
+        //! \copydoc swift::core::CAirspaceMonitor::addedAircraftSituation
         void onPartsAdded(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CAircraftParts &parts);
 
-        //! \copydoc BlackCore::ISimulator::simulatorStatusChanged
-        void onSimulatorStatusChanged(BlackCore::ISimulator::SimulatorStatus status);
+        //! \copydoc swift::core::ISimulator::simulatorStatusChanged
+        void onSimulatorStatusChanged(swift::core::ISimulator::SimulatorStatus status);
 
-        //! \copydoc BlackCore::ISimulator::receivedRequestedElevation
+        //! \copydoc swift::core::ISimulator::receivedRequestedElevation
         void onElevationReceived(const swift::misc::geo::CElevationPlane &elevationPlane, const swift::misc::aviation::CCallsign &callsign);
 
-        //! \copydoc BlackCore::ISimulator::requestedElevation
+        //! \copydoc swift::core::ISimulator::requestedElevation
         void onElevationRequested(const swift::misc::aviation::CCallsign &callsign);
 
         //! Call the callback of requested elevations as it would come from the simulator
@@ -134,10 +134,10 @@ namespace BlackGui::Components
         //! Entering a count failed
         void onElevationHistoryCountFinished();
 
-        //! \copydoc BlackCore::ISimulator::resetAircraftStatistics
+        //! \copydoc swift::core::ISimulator::resetAircraftStatistics
         void resetStatistics();
 
-        //! \copydoc BlackCore::ISimulator::resetLastSentValues
+        //! \copydoc Blackswift::coreCore::ISimulator::resetLastSentValues
         void resetLastSentValues();
 
         //! Clear
@@ -187,8 +187,8 @@ namespace BlackGui::Components
 
         QScopedPointer<Ui::CInterpolationLogDisplay> ui;
         QTimer m_updateTimer;
-        QPointer<BlackCore::ISimulator> m_simulator; //!< related simulator
-        QPointer<BlackCore::CAirspaceMonitor> m_airspaceMonitor; //!< related airspace monitor
+        QPointer<swift::core::ISimulator> m_simulator; //!< related simulator
+        QPointer<swift::core::CAirspaceMonitor> m_airspaceMonitor; //!< related airspace monitor
         swift::misc::aviation::CAircraftSituationList m_lastInterpolations; //!< list of last interpolations
         swift::misc::aviation::CCallsign m_callsign; //!< current callsign
 

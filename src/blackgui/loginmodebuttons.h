@@ -32,7 +32,7 @@ namespace BlackGui
         //! Destructor
         virtual ~CLoginModeButtons() override;
 
-        //! Get login mode, \sa BlackCore::INetwork::LoginMode
+        //! Get login mode, \sa swift::core::INetwork::LoginMode
         swift::misc::network::CLoginMode getLoginMode() const;
 
         //! Set login mode

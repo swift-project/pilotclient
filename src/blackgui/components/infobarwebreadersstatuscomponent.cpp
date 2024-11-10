@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 #include "blackgui/components/infobarwebreadersstatuscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "misc/verify.h"
@@ -11,7 +11,7 @@
 
 using namespace BlackGui;
 using namespace swift::misc;
-using namespace BlackCore;
+using namespace swift::core;
 using namespace swift::misc::network;
 
 namespace BlackGui::Components

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackcore/application.h"
+#include "core/application.h"
 #include "blackgui/models/actionitem.h"
 #include "blackgui/models/actionmodel.h"
 #include "misc/icons.h"
@@ -12,7 +12,7 @@
 #include <QtGlobal>
 
 using namespace swift::misc;
-using namespace BlackCore;
+using namespace swift::core;
 
 namespace BlackGui::Models
 {

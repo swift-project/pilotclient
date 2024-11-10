@@ -4,16 +4,16 @@
 #include "blackgui/components/serverlistselector.h"
 #include "blackgui/guiapplication.h"
 #include "misc/sequence.h"
-#include "blackcore/webdataservices.h"
-#include "blackcore/db/icaodatareader.h"
+#include "core/webdataservices.h"
+#include "core/db/icaodatareader.h"
 
 #include <QString>
 
 using namespace swift::misc;
 using namespace swift::misc::network;
 using namespace BlackGui;
-using namespace BlackCore;
-using namespace BlackCore::Db;
+using namespace swift::core;
+using namespace swift::core::db;
 
 namespace BlackGui::Components
 {

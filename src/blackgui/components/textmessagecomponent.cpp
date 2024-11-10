@@ -7,11 +7,11 @@
 #include "blackgui/dockwidgetinfoarea.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/textmessagetextedit.h"
-#include "blackcore/context/contextaudio.h"
-#include "blackcore/context/contextnetwork.h"
-#include "blackcore/context/contextownaircraft.h"
-#include "blackcore/application.h"
-#include "blackcore/corefacade.h"
+#include "core/context/contextaudio.h"
+#include "core/context/contextnetwork.h"
+#include "core/context/contextownaircraft.h"
+#include "core/application.h"
+#include "core/corefacade.h"
 #include "misc/audio/notificationsounds.h"
 #include "misc/network/textmessage.h"
 #include "misc/network/user.h"
@@ -39,8 +39,8 @@
 #include <QtGlobal>
 #include <QStringBuilder>
 
-using namespace BlackCore;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::context;
 using namespace swift::misc;
 using namespace BlackGui;
 using namespace BlackGui::Settings;

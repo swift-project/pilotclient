@@ -5,12 +5,12 @@
 #include "ui_audioadvanceddistributedcomponent.h"
 
 #include "blackgui/guiapplication.h"
-#include "blackcore/context/contextaudio.h"
-#include "blackcore/context/contextnetwork.h"
-#include "blackcore/afv/clients/afvclient.h"
+#include "core/context/contextaudio.h"
+#include "core/context/contextnetwork.h"
+#include "core/afv/clients/afvclient.h"
 
 using namespace swift::misc::audio;
-using namespace BlackCore::Context;
+using namespace swift::core::context;
 
 namespace BlackGui::Components
 {

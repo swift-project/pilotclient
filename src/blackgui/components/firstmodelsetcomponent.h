@@ -8,7 +8,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/overlaymessagesframe.h"
-#include "blackcore/application/applicationsettings.h"
+#include "core/application/applicationsettings.h"
 #include "misc/simulation/settings/simulatorsettings.h"
 #include "misc/simulation/aircraftmodelloader.h"
 #include "misc/simulation/simulatorinfo.h"

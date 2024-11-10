@@ -123,11 +123,11 @@ set(SWIFT_CORE_PCH
 )
 
 set(SWIFT_GUI_PCH
-    [["blackcore/context/contextapplication.h"]]
-    [["blackcore/context/contextaudio.h"]]
-    [["blackcore/context/contextnetwork.h"]]
-    [["blackcore/context/contextownaircraft.h"]]
-    [["blackcore/context/contextsimulator.h"]]
+    [["core/context/contextapplication.h"]]
+    [["core/context/contextaudio.h"]]
+    [["core/context/contextnetwork.h"]]
+    [["core/context/contextownaircraft.h"]]
+    [["core/context/contextsimulator.h"]]
 
     <QAbstractButton>
     <QAbstractItemModel>

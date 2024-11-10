@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_DBREDUCEMODELDUPLICATES_H
 #define BLACKGUI_COMPONENTS_DBREDUCEMODELDUPLICATES_H
 
-#include "blackcore/progress.h"
+#include "core/progress.h"
 #include "misc/simulation/aircraftmodellist.h"
 #include "misc/simulation/settings/modelsettings.h"
 #include "misc/settingscache.h"
@@ -23,7 +23,7 @@ namespace BlackGui::Components
     //! Reduce modelss
     class CDbReduceModelDuplicates :
         public QDialog,
-        public BlackCore::IProgressIndicator
+        public swift::core::IProgressIndicator
     {
         Q_OBJECT
 
@@ -40,7 +40,7 @@ namespace BlackGui::Components
         //! Process models
         void process();
 
-        //! \copydoc BlackCore::IProgressIndicator::updateProgressIndicator
+        //! \copydoc swift::core::IProgressIndicator::updateProgressIndicator
         virtual void updateProgressIndicator(int percentage) override;
 
         //! The models to be removed

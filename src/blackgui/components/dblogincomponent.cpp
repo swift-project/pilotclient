@@ -6,7 +6,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/overlaymessagesframe.h"
-#include "blackcore/data/globalsetup.h"
+#include "core/data/globalsetup.h"
 #include "misc/network/authenticateduser.h"
 #include "misc/network/url.h"
 #include "misc/htmlutils.h"
@@ -25,8 +25,8 @@
 #include <Qt>
 #include <QtGlobal>
 
-using namespace BlackCore;
-using namespace BlackCore::Db;
+using namespace swift::core;
+using namespace swift::core::db;
 using namespace BlackGui;
 using namespace swift::config;
 using namespace swift::misc;

@@ -22,9 +22,9 @@ using namespace swift::misc::network::data;
 using namespace swift::misc::network::settings;
 using namespace swift::misc::settings;
 using namespace swift::misc::simulation::settings;
-using namespace BlackCore::Audio;
-using namespace BlackCore::Application;
-using namespace BlackCore::Data;
+using namespace swift::core::audio;
+using namespace swift::core::application;
+using namespace swift::core::data;
 using namespace BlackGui::Settings;
 
 namespace BlackGui::Components

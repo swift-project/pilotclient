@@ -7,7 +7,7 @@
 #define BLACKGUI_COMPONENTS_SETTINGSGENERALCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackcore/application/applicationsettings.h"
+#include "core/application/applicationsettings.h"
 #include "misc/settingscache.h"
 
 #include <QFrame>
@@ -36,7 +36,7 @@ namespace BlackGui::Components
         void crashDumpUploadEnabledChanged(int state);
 
         QScopedPointer<Ui::CSettingsAdvancedComponent> ui;
-        swift::misc::CSetting<BlackCore::Application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this };
+        swift::misc::CSetting<swift::core::application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this };
     };
 } // ns
 

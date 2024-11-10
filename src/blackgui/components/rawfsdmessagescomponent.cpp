@@ -4,7 +4,7 @@
 #include "ui_rawfsdmessagescomponent.h"
 #include "blackgui/components/rawfsdmessagescomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/context/contextnetwork.h"
+#include "core/context/contextnetwork.h"
 #include "misc/directoryutils.h"
 
 #include <QFileDialog>
@@ -14,8 +14,8 @@
 
 using namespace swift::misc;
 using namespace swift::misc::network;
-using namespace BlackCore;
-using namespace BlackCore::Vatsim;
+using namespace swift::core;
+using namespace swift::core::vatsim;
 
 namespace BlackGui::Components
 {
@@ -89,7 +89,7 @@ namespace BlackGui::Components
             ui->lbl_EnabledDisabled->setText("Disabled (Display + File)");
             ui->lbl_EnabledDisabled->setStyleSheet("background: darkred;");
         }
-        m_setting.setProperty(Vatsim::CRawFsdMessageSettings::IndexRawFsdMessagesEnabled, CVariant::fromValue(enable));
+        m_setting.setProperty(vatsim::CRawFsdMessageSettings::IndexRawFsdMessagesEnabled, CVariant::fromValue(enable));
     }
 
     void CRawFsdMessagesComponent::expandFilters(bool expand)
@@ -180,13 +180,13 @@ namespace BlackGui::Components
         fileDir = QFileDialog::getExistingDirectory(this, tr("Select File Directory"), fileDir);
         if (fileDir.isEmpty()) { return; }
         ui->le_FileDir->setText(fileDir);
-        m_setting.setProperty(Vatsim::CRawFsdMessageSettings::IndexFileDir, CVariant::fromValue(fileDir));
+        m_setting.setProperty(vatsim::CRawFsdMessageSettings::IndexFileDir, CVariant::fromValue(fileDir));
     }
 
     void CRawFsdMessagesComponent::changeFileWritingMode()
     {
         const CRawFsdMessageSettings::FileWriteMode mode = ui->cb_FileWritingMode->currentData().value<CRawFsdMessageSettings::FileWriteMode>();
-        m_setting.setProperty(Vatsim::CRawFsdMessageSettings::IndexFileWriteMode, CVariant::fromValue(mode));
+        m_setting.setProperty(vatsim::CRawFsdMessageSettings::IndexFileWriteMode, CVariant::fromValue(mode));
     }
 
     void CRawFsdMessagesComponent::addFsdMessage(const CRawFsdMessage &rawFsdMessage)
@@ -207,7 +207,7 @@ namespace BlackGui::Components
 
     void CRawFsdMessagesComponent::readSettings()
     {
-        const Vatsim::CRawFsdMessageSettings setting = m_setting.get();
+        const vatsim::CRawFsdMessageSettings setting = m_setting.get();
         const bool enable = setting.areRawFsdMessagesEnabled();
         if (enable)
         {

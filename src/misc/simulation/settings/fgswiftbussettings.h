@@ -61,7 +61,7 @@ namespace swift::misc::simulation::settings
         //! \copydoc swift::misc::TSettingTrait::key
         static const char *key() { return "fgswiftbus/settings"; }
 
-        //! \copydoc BlackCore::TSettingTrait::humanReadable
+        //! \copydoc swift::core::TSettingTrait::humanReadable
         static const QString &humanReadable()
         {
             static const QString name("FGSwiftBus");

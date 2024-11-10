@@ -6,7 +6,7 @@
 #ifndef SWIFTCORE_H
 #define SWIFTCORE_H
 
-#include "blackcore/coremodeenums.h"
+#include "core/coremodeenums.h"
 #include "blackgui/mainwindowaccess.h"
 #include "blackgui/systemtraywindow.h"
 #include "misc/identifiable.h"

@@ -9,7 +9,7 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/dbmappingcomponentaware.h"
 #include "blackgui/views/aircraftmodelview.h"
-#include "blackcore/progress.h"
+#include "core/progress.h"
 #include "misc/simulation/aircraftmodel.h"
 #include "misc/statusmessage.h"
 #include <QDialog>
@@ -28,7 +28,7 @@ namespace BlackGui::Components
     class BLACKGUI_EXPORT CDbAutoSimulatorStashingComponent :
         public QDialog,
         public Components::CDbMappingComponentAware,
-        public BlackCore::IProgressIndicator
+        public swift::core::IProgressIndicator
     {
         Q_OBJECT
         Q_INTERFACES(BlackGui::Components::CDbMappingComponentAware)
@@ -51,7 +51,7 @@ namespace BlackGui::Components
         //! At least run once and completed
         bool isCompleted() const { return m_state == Completed; }
 
-        //! \copydoc BlackCore::IProgressIndicator::updateProgressIndicator
+        //! \copydoc swift::core::IProgressIndicator::updateProgressIndicator
         virtual void updateProgressIndicator(int percent) override;
 
     public slots:

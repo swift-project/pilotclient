@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_ATCBUTTONCOMPONENT_H
 #define BLACKGUI_COMPONENTS_ATCBUTTONCOMPONENT_H
 
-#include "blackcore/context/contextnetwork.h"
+#include "core/context/contextnetwork.h"
 #include "misc/network/connectionstatus.h"
 #include <QFrame>
 #include <QScopedPointer>

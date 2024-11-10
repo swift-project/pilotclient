@@ -4,7 +4,7 @@
 #include "blackgui/components/simulatorselector.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackcore/context/contextsimulator.h"
+#include "core/context/contextsimulator.h"
 #include "misc/icons.h"
 #include "misc/mixin/mixincompare.h"
 #include "config/buildconfig.h"
@@ -19,7 +19,7 @@
 using namespace swift::config;
 using namespace swift::misc;
 using namespace swift::misc::simulation;
-using namespace BlackCore::Context;
+using namespace swift::core::context;
 
 namespace BlackGui::Components
 {

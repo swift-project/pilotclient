@@ -10,16 +10,16 @@ using namespace swift::misc::network;
 
 namespace BlackSimPlugin::P3D
 {
-    BlackCore::ISimulator *CSimulatorP3DFactory::create(const CSimulatorPluginInfo &info,
-                                                        IOwnAircraftProvider *ownAircraftProvider,
-                                                        IRemoteAircraftProvider *remoteAircraftProvider,
-                                                        IClientProvider *clientProvider)
+    swift::core::ISimulator *CSimulatorP3DFactory::create(const CSimulatorPluginInfo &info,
+                                                          IOwnAircraftProvider *ownAircraftProvider,
+                                                          IRemoteAircraftProvider *remoteAircraftProvider,
+                                                          IClientProvider *clientProvider)
     {
         Q_ASSERT(ownAircraftProvider);
         return new CSimulatorP3D(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, this);
     }
 
-    BlackCore::ISimulatorListener *CSimulatorP3DFactory::createListener(const CSimulatorPluginInfo &info)
+    swift::core::ISimulatorListener *CSimulatorP3DFactory::createListener(const CSimulatorPluginInfo &info)
     {
         return new CSimulatorP3DListener(info);
     }

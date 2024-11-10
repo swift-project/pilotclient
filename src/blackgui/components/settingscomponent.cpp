@@ -22,7 +22,7 @@ using namespace swift::misc::physical_quantities;
 using namespace swift::misc::input;
 using namespace swift::misc::simulation;
 using namespace swift::misc::simulation::settings;
-using namespace BlackCore;
+using namespace swift::core;
 using namespace BlackGui;
 using namespace swift::config;
 

@@ -1,14 +1,14 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackcore/context/contextnetwork.h"
+#include "core/context/contextnetwork.h"
 #include "blackgui/components/settingsnetworkcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "ui_settingsnetworkcomponent.h"
 
 #include <QCheckBox>
 
-using namespace BlackCore;
+using namespace swift::core;
 
 namespace BlackGui::Components
 {

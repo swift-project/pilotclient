@@ -4,8 +4,8 @@
 #include "blackgui/components/hotkeydialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
-#include "blackcore/context/contextapplication.h"
-#include "blackcore/inputmanager.h"
+#include "core/context/contextapplication.h"
+#include "core/inputmanager.h"
 #include "misc/icons.h"
 #include "misc/identifier.h"
 #include "misc/input/hotkeycombination.h"
@@ -34,7 +34,7 @@
 
 using namespace swift::misc;
 using namespace swift::misc::input;
-using namespace BlackCore;
+using namespace swift::core;
 using namespace BlackGui::Models;
 
 namespace BlackGui::Components
@@ -105,8 +105,8 @@ namespace BlackGui::Components
 
         if (sGui && sGui->getInputManager())
         {
-            connect(sGui->getInputManager(), &BlackCore::CInputManager::combinationSelectionChanged, this, &CHotkeyDialog::combinationSelectionChanged);
-            connect(sGui->getInputManager(), &BlackCore::CInputManager::combinationSelectionFinished, this, &CHotkeyDialog::combinationSelectionFinished);
+            connect(sGui->getInputManager(), &swift::core::CInputManager::combinationSelectionChanged, this, &CHotkeyDialog::combinationSelectionChanged);
+            connect(sGui->getInputManager(), &swift::core::CInputManager::combinationSelectionFinished, this, &CHotkeyDialog::combinationSelectionFinished);
         }
 
         initStyleSheet();

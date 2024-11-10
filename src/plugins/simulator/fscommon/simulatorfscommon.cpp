@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simulatorfscommon.h"
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 #include "misc/simplecommandparser.h"
 #include "misc/logmessage.h"
 #include "misc/stringutils.h"
@@ -14,7 +14,7 @@ using namespace swift::misc::geo;
 using namespace swift::misc::network;
 using namespace swift::misc::simulation;
 using namespace swift::misc::simulation::fscommon;
-using namespace BlackCore;
+using namespace swift::core;
 using namespace BlackSimPlugin::Common;
 
 namespace BlackSimPlugin::FsCommon

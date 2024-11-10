@@ -20,7 +20,7 @@ namespace BlackSimPlugin::FsCommon
     class FSCOMMON_EXPORT CSimulatorFsCommon : public Common::CSimulatorPluginCommon
     {
         Q_OBJECT
-        Q_INTERFACES(BlackCore::ISimulator)
+        Q_INTERFACES(swift::core::ISimulator)
         Q_INTERFACES(swift::misc::simulation::ISimulationEnvironmentProvider)
         Q_INTERFACES(swift::misc::simulation::IInterpolationSetupProvider)
 
@@ -51,7 +51,7 @@ namespace BlackSimPlugin::FsCommon
         //! When swift DB data are read
         virtual void onSwiftDbAirportsRead() override;
 
-        //! \copydoc BlackCore::ISimulator::reset
+        //! \copydoc swift::core::ISimulator::reset
         virtual void reset() override;
 
         //! Register help

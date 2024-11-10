@@ -4,13 +4,13 @@
 #include "ui_aircraftmodelvalidationcomponent.h"
 #include "aircraftmodelvalidationcomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/context/contextsimulator.h"
+#include "core/context/contextsimulator.h"
 
 #include <QPointer>
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
-using namespace BlackCore::Context;
+using namespace swift::core::context;
 
 namespace BlackGui::Components
 {

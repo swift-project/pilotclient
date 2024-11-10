@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackcore/context/contextnetwork.h"
+#include "core/context/contextnetwork.h"
 #include "blackgui/components/remoteaircraftselector.h"
 #include "blackgui/guiapplication.h"
 #include "misc/aviation/aircrafticaocode.h"
@@ -19,8 +19,8 @@
 using namespace swift::misc;
 using namespace swift::misc::aviation;
 using namespace swift::misc::simulation;
-using namespace BlackCore;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::context;
 
 namespace BlackGui::Components
 {

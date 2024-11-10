@@ -3,7 +3,7 @@
 
 #include "simulatoremulated.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/context/contextsimulator.h"
+#include "core/context/contextsimulator.h"
 #include "misc/simulation/simulatorplugininfo.h"
 #include "misc/aviation/altitude.h"
 #include "misc/math/mathutils.h"
@@ -21,8 +21,8 @@ using namespace swift::misc::network;
 using namespace swift::misc::math;
 using namespace swift::misc::simulation;
 using namespace swift::misc::simulation::settings;
-using namespace BlackCore;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::context;
 
 namespace BlackSimPlugin::Emulated
 {

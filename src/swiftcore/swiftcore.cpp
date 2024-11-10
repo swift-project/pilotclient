@@ -11,9 +11,9 @@
 #include "blackgui/components/rawfsdmessagesdialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
-#include "blackcore/context/contextaudio.h"
-#include "blackcore/context/contextnetwork.h"
-#include "blackcore/corefacade.h"
+#include "core/context/contextaudio.h"
+#include "core/context/contextnetwork.h"
+#include "core/corefacade.h"
 #include "misc/dbusserver.h"
 #include "misc/icons.h"
 #include "misc/loghandler.h"
@@ -32,7 +32,7 @@
 #include <QMessageBox>
 
 using namespace swift::misc;
-using namespace BlackCore;
+using namespace swift::core;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 

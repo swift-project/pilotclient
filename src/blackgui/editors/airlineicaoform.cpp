@@ -10,7 +10,7 @@
 #include "blackgui/guiutility.h"
 #include "blackgui/labelandicon.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 #include "misc/aviation/airlineicaocodelist.h"
 #include "misc/mixin/mixincompare.h"
 #include "misc/icons.h"

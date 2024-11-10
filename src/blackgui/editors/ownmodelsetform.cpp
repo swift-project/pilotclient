@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 #include "blackgui/editors/ownmodelsetform.h"
 #include "blackgui/models/distributorlistmodel.h"
 #include "blackgui/guiapplication.h"

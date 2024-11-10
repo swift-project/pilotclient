@@ -6,8 +6,8 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 
-#include "blackcore/webdataservices.h"
-#include "blackcore/db/databasewriter.h"
+#include "core/webdataservices.h"
+#include "core/db/databasewriter.h"
 #include "misc/simulation/aircraftmodellist.h"
 
 #include <QDateTime>
@@ -18,7 +18,7 @@
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
-using namespace BlackCore::Db;
+using namespace swift::core::db;
 
 namespace BlackGui::Components
 {

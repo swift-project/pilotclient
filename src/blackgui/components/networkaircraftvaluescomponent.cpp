@@ -5,10 +5,10 @@
 #include "ui_networkaircraftvaluescomponent.h"
 
 #include "blackgui/guiapplication.h"
-#include "blackcore/context/contextownaircraft.h"
-#include "blackcore/context/contextnetwork.h"
+#include "core/context/contextownaircraft.h"
+#include "core/context/contextnetwork.h"
 
-using namespace BlackCore::Context;
+using namespace swift::core::context;
 
 namespace BlackGui::Components
 {

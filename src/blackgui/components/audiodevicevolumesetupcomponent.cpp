@@ -4,9 +4,9 @@
 #include "blackgui/components/audiodevicevolumesetupcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackcore/afv/clients/afvclient.h"
-#include "blackcore/context/contextsimulator.h"
-#include "blackcore/context/contextaudioimpl.h"
+#include "core/afv/clients/afvclient.h"
+#include "core/context/contextsimulator.h"
+#include "core/context/contextaudioimpl.h"
 
 #include "misc/simulation/settings/simulatorsettings.h"
 #include "misc/audio/audiodeviceinfo.h"
@@ -23,10 +23,10 @@
 #include <QFileDialog>
 #include <QStringLiteral>
 
-using namespace BlackCore;
-using namespace BlackCore::Afv::Audio;
-using namespace BlackCore::Afv::Clients;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::afv::audio;
+using namespace swift::core::afv::clients;
+using namespace swift::core::context;
 using namespace swift::misc;
 using namespace swift::misc::aviation;
 using namespace swift::misc::audio;

@@ -11,7 +11,7 @@
 #include <QSharedPointer>
 #include <QStringList>
 
-namespace BlackCore
+namespace swift::core
 {
     class ISimulator;
 }
@@ -26,7 +26,7 @@ namespace BlackSimPlugin::Flightgear
 
         //! Constructor providing initial situation/parts
         CFlightgearMPAircraft(const swift::misc::simulation::CSimulatedAircraft &aircraft,
-                              BlackCore::ISimulator *simulator,
+                              swift::core::ISimulator *simulator,
                               swift::misc::simulation::CInterpolationLogger *logger);
 
         //! Destructor

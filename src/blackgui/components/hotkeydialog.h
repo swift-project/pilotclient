@@ -22,7 +22,7 @@ namespace Ui
 {
     class CHotkeyDialog;
 }
-namespace BlackCore
+namespace swift::core
 {
     class CInputManager;
 }

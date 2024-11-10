@@ -5,11 +5,11 @@
 #include "ui_flightplandialog.h"
 
 #include "blackgui/guiapplication.h"
-#include "blackcore/context/contextnetwork.h"
+#include "core/context/contextnetwork.h"
 #include "misc/aviation/flightplan.h"
 
 using namespace swift::misc::aviation;
-using namespace BlackCore::Context;
+using namespace swift::core::context;
 using namespace BlackGui::Components;
 
 namespace BlackGui::Views

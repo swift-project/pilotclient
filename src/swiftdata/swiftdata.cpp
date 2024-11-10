@@ -9,7 +9,7 @@
 #include "blackgui/components/autopublishdialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
-#include "blackcore/data/globalsetup.h"
+#include "core/data/globalsetup.h"
 #include "misc/simulation/autopublishdata.h"
 #include "misc/simulation/distributorlist.h"
 #include "misc/sharedstate/datalinkdbus.h"
@@ -31,9 +31,9 @@
 using namespace swift::misc;
 using namespace swift::misc::network;
 using namespace swift::misc::simulation;
-using namespace BlackCore;
-using namespace BlackCore::Data;
-using namespace BlackCore::Db;
+using namespace swift::core;
+using namespace swift::core::data;
+using namespace swift::core::db;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 using namespace swift::config;

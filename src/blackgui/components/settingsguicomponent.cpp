@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "settingsguicomponent.h"
-#include "blackcore/context/contextnetwork.h"
+#include "core/context/contextnetwork.h"
 #include "blackgui/guiapplication.h"
 #include "misc/logmessage.h"
 #include "ui_settingsguicomponent.h"
@@ -14,7 +14,7 @@
 
 using namespace swift::misc;
 using namespace BlackGui::Settings;
-using namespace BlackCore::Context;
+using namespace swift::core::context;
 
 namespace BlackGui::Components
 {

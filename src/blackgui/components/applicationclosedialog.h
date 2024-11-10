@@ -9,7 +9,7 @@
 #include <QDialog>
 #include <QScopedPointer>
 #include <QAbstractButton>
-#include "blackcore/context/contextapplication.h"
+#include "core/context/contextapplication.h"
 
 namespace Ui
 {
@@ -34,7 +34,7 @@ namespace BlackGui::Components
     private:
         QScopedPointer<Ui::CApplicationCloseDialog> ui;
         QStringList m_settingsDescriptions; //!< values as displayed
-        BlackCore::Context::CSettingsDictionary m_settingsDictionary; //!< values and descriptions, unsorted
+        swift::core::context::CSettingsDictionary m_settingsDictionary; //!< values and descriptions, unsorted
 
         //! Accepted
         void onAccepted();

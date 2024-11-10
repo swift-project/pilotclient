@@ -1,14 +1,14 @@
 // SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackcore/db/databaseutils.h"
+#include "core/db/databaseutils.h"
 #include "dbautosimulatorstashingcomponent.h"
 #include "blackgui/components/dbmappingcomponent.h"
 #include "ui_dbautosimulatorstashingcomponent.h"
 #include <QIntValidator>
 
 using namespace BlackGui;
-using namespace BlackCore::Db;
+using namespace swift::core::db;
 using namespace swift::misc;
 using namespace swift::misc::simulation;
 

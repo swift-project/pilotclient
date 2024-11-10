@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "config/buildconfig.h"
-#include "blackcore/context/contextapplication.h"
-#include "blackcore/data/globalsetup.h"
+#include "core/context/contextapplication.h"
+#include "core/data/globalsetup.h"
 #include "blackgui/editors/serverform.h"
 #include "blackgui/components/settingsnetworkserverscomponent.h"
 #include "blackgui/guiapplication.h"
@@ -20,8 +20,8 @@
 #include <QTableView>
 
 using namespace swift::config;
-using namespace BlackCore;
-using namespace BlackCore::Data;
+using namespace swift::core;
+using namespace swift::core::data;
 using namespace BlackGui;
 using namespace swift::misc;
 using namespace swift::misc::network;

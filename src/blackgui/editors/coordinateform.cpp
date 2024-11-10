@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "coordinateform.h"
-#include "blackcore/context/contextownaircraft.h"
-#include "blackcore/db/airportdatareader.h"
-#include "blackcore/webdataservices.h"
+#include "core/context/contextownaircraft.h"
+#include "core/db/airportdatareader.h"
+#include "core/webdataservices.h"
 #include "blackgui/guiapplication.h"
 #include "misc/aviation/airport.h"
 #include "ui_coordinateform.h"

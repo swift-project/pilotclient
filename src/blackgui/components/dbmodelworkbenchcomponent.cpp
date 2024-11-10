@@ -8,8 +8,8 @@
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackgui/models/aircraftmodellistmodel.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/webdataservices.h"
-#include "blackcore/db/databaseutils.h"
+#include "core/webdataservices.h"
+#include "core/db/databaseutils.h"
 #include "misc/icons.h"
 #include "misc/logmessage.h"
 #include "misc/statusmessage.h"
@@ -25,7 +25,7 @@
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
-using namespace BlackCore::Db;
+using namespace swift::core::db;
 using namespace BlackGui::Menus;
 using namespace BlackGui::Views;
 using namespace BlackGui::Models;

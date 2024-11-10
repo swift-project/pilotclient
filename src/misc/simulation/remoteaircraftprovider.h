@@ -400,7 +400,7 @@ namespace swift::misc::simulation
         //! An aircraft disappeared
         void removedAircraft(const swift::misc::aviation::CCallsign &callsign);
 
-        //! \copydoc BlackCore::CAirspaceAnalyzer::airspaceAircraftSnapshot
+        //! \copydoc swift::core::CAirspaceAnalyzer::airspaceAircraftSnapshot
         void airspaceAircraftSnapshot(const swift::misc::simulation::CAirspaceAircraftSnapshot &snapshot);
 
     protected:

@@ -3,7 +3,7 @@
 
 #include "blackgui/components/audionotificationcomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/context/contextaudio.h"
+#include "core/context/contextaudio.h"
 #include "misc/audio/notificationsounds.h"
 #include "misc/audio/audiosettings.h"
 #include "misc/sequence.h"
@@ -16,8 +16,8 @@
 #include <QPointer>
 #include <QFileDialog>
 
-using namespace BlackCore;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::context;
 using namespace swift::misc;
 using namespace swift::misc::aviation;
 using namespace swift::misc::audio;

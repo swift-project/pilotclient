@@ -8,11 +8,11 @@
 #include "blackgui/components/texteditdialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
-#include "blackcore/context/contextapplicationproxy.h"
-#include "blackcore/setupreader.h"
+#include "core/context/contextapplicationproxy.h"
+#include "core/setupreader.h"
 #include "sound/audioutilities.h"
 #include "misc/simulation/fscommon/fsdirectories.h"
-#include "blackcore/context/contextnetwork.h"
+#include "core/context/contextnetwork.h"
 #include "misc/network/networkutils.h"
 #include "misc/dbusserver.h"
 #include "misc/swiftdirectories.h"
@@ -38,10 +38,10 @@
 using namespace swift::config;
 using namespace BlackGui;
 using namespace BlackGui::Components;
-using namespace BlackCore;
-using namespace BlackCore::Context;
-using namespace BlackCore::Data;
-using namespace BlackCore::Vatsim;
+using namespace swift::core;
+using namespace swift::core::context;
+using namespace swift::core::data;
+using namespace swift::core::vatsim;
 using namespace swift::sound;
 using namespace swift::misc;
 using namespace swift::misc::db;

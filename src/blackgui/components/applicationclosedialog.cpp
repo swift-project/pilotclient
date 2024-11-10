@@ -5,7 +5,7 @@
 #include "ui_applicationclosedialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackcore/context/contextapplication.h"
+#include "core/context/contextapplication.h"
 #include "misc/settingscache.h"
 #include "misc/logmessage.h"
 #include <QStringListModel>
@@ -15,7 +15,7 @@
 
 using namespace swift::misc;
 using namespace BlackGui;
-using namespace BlackCore::Context;
+using namespace swift::core::context;
 
 namespace BlackGui::Components
 {

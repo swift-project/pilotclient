@@ -4,11 +4,11 @@
 #include "dbaircraftcategorycomponent.h"
 #include "ui_dbaircraftcategorycomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 
 #include <QStringBuilder>
 
-using namespace BlackCore;
+using namespace swift::core;
 using namespace swift::misc::network;
 using namespace swift::misc::aviation;
 using namespace BlackGui::Views;

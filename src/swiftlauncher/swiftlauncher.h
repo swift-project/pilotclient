@@ -9,9 +9,9 @@
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/mainwindowaccess.h"
-#include "blackcore/data/globalsetup.h"
-#include "blackcore/data/launchersetup.h"
-#include "blackcore/coremodeenums.h"
+#include "core/data/globalsetup.h"
+#include "core/data/launchersetup.h"
+#include "core/coremodeenums.h"
 #include "misc/simulation/data/modelcaches.h"
 #include "misc/db/artifact.h"
 #include "misc/identifiable.h"
@@ -100,7 +100,7 @@ private:
     QScopedPointer<Ui::CSwiftLauncher> ui;
     QScopedPointer<BlackGui::Components::CConfigurationWizard> m_wizard;
     QScopedPointer<BlackGui::Components::CTextEditDialog> m_textEditDialog;
-    swift::misc::CData<BlackCore::Data::TLauncherSetup> m_setup { this }; //!< setup, i.e. last user selection
+    swift::misc::CData<swift::core::data::TLauncherSetup> m_setup { this }; //!< setup, i.e. last user selection
     swift::misc::CLogHistoryReplica m_logHistory { this }; //!< for the overlay
 #ifdef Q_OS_MAC
     swift::misc::CMacOSMicrophoneAccess m_micAccess;
@@ -114,7 +114,7 @@ private:
     int m_startGuiWaitCycles = 0;
 
     //! Get core mode
-    BlackCore::CoreModes::CoreMode getCoreMode() const;
+    swift::core::CoreModes::CoreMode getCoreMode() const;
 
     //! Selected window mode
     BlackGui::CEnableForFramelessWindow::WindowMode getWindowMode() const;

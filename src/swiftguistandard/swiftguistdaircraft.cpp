@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackcore/context/contextownaircraft.h"
+#include "core/context/contextownaircraft.h"
 #include "blackgui/guiapplication.h"
 #include "misc/mixin/mixincompare.h"
 #include "misc/geo/coordinategeodetic.h"
@@ -14,7 +14,7 @@
 
 #include <QString>
 
-using namespace BlackCore;
+using namespace swift::core;
 using namespace swift::misc;
 using namespace BlackGui;
 using namespace swift::misc::network;

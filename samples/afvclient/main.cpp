@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "afvclientbridge.h"
-#include "blackcore/afv/model/atcstationmodel.h"
-#include "blackcore/afv/model/afvmapreader.h"
-#include "blackcore/afv/clients/afvclient.h"
-#include "blackcore/registermetadata.h"
+#include "core/afv/model/atcstationmodel.h"
+#include "core/afv/model/afvmapreader.h"
+#include "core/afv/clients/afvclient.h"
+#include "core/registermetadata.h"
 
-#include "blackcore/application.h"
+#include "core/application.h"
 #include "misc/network/user.h"
 #include "misc/obfuscation.h"
 #include "config/buildconfig.h"
@@ -22,17 +22,17 @@
 using namespace swift::config;
 using namespace swift::misc;
 using namespace swift::misc::network;
-using namespace BlackCore;
-using namespace BlackCore::Afv::Clients;
-using namespace BlackCore::Afv::Model;
+using namespace swift::core;
+using namespace swift::core::afv::clients;
+using namespace swift::core::afv::model;
 
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication qa(argc, argv);
 
-    BlackCore::registerMetadata();
-    BlackCore::CApplication a("sampleafvclient", CApplicationInfo::Sample);
+    swift::core::registerMetadata();
+    swift::core::CApplication a("sampleafvclient", CApplicationInfo::Sample);
 
     CAfvMapReader *afvMapReader = new CAfvMapReader(&a);
     afvMapReader->updateFromMap();

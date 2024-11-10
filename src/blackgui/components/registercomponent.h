@@ -18,7 +18,7 @@ namespace Ui
 namespace BlackGui::Components
 {
     //! Show registered applications (registered with core) in the GUI
-    //! \sa BlackCore::Context::IContextApplication::getRegisteredApplications
+    //! \sa swift::core::context::IContextApplication::getRegisteredApplications
     class BLACKGUI_EXPORT CRegisterComponent : public QFrame
     {
         Q_OBJECT

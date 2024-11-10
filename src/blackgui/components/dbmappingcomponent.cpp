@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 #include "blackgui/components/dbautostashingcomponent.h"
 #include "blackgui/components/dbautosimulatorstashingcomponent.h"
 #include "blackgui/components/dbmappingcomponent.h"
@@ -47,7 +47,7 @@
 #include <Qt>
 #include <QtGlobal>
 
-using namespace BlackCore;
+using namespace swift::core;
 using namespace swift::misc;
 using namespace swift::misc::aviation;
 using namespace swift::misc::network;

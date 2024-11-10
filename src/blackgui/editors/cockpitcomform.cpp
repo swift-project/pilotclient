@@ -4,7 +4,7 @@
 #include "cockpitcomform.h"
 #include "ui_cockpitcomform.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/context/contextsimulator.h"
+#include "core/context/contextsimulator.h"
 #include "misc/math/mathutils.h"
 #include "misc/logmessage.h"
 #include "misc/icons.h"
@@ -17,7 +17,7 @@ using namespace swift::misc::audio;
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::math;
 using namespace swift::misc::simulation;
-using namespace BlackCore::Context;
+using namespace swift::core::context;
 using namespace BlackGui::Components;
 
 namespace BlackGui::Editors

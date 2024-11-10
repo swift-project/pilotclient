@@ -5,7 +5,7 @@
 #include "blackgui/components/copymodelsfromotherswiftversionsdialog.h"
 #include "ui_setuploadingdialog.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/setupreader.h"
+#include "core/setupreader.h"
 #include "misc/swiftdirectories.h"
 
 #include <QPushButton>
@@ -13,8 +13,8 @@
 
 using namespace swift::misc;
 using namespace swift::misc::network;
-using namespace BlackCore;
-using namespace BlackCore::Data;
+using namespace swift::core;
+using namespace swift::core::data;
 
 namespace BlackGui::Components
 {

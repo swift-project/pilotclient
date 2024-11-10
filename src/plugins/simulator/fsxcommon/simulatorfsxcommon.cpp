@@ -4,7 +4,7 @@
 #include "simulatorfsxcommon.h"
 #include "simconnectsymbols.h"
 #include "../fscommon/simulatorfscommonfunctions.h"
-#include "blackcore/application.h"
+#include "core/application.h"
 #include "misc/network/textmessage.h"
 #include "misc/simulation/fsx/simconnectutilities.h"
 #include "misc/simulation/fscommon/aircraftcfgparser.h"
@@ -41,7 +41,7 @@ using namespace swift::misc::simulation;
 using namespace swift::misc::simulation::fscommon;
 using namespace swift::misc::simulation::Fsx;
 using namespace swift::misc::simulation::settings;
-using namespace BlackCore;
+using namespace swift::core;
 using namespace BlackSimPlugin::FsCommon;
 
 namespace BlackSimPlugin::FsxCommon

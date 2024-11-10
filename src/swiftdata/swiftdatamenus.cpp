@@ -20,7 +20,7 @@
 #include <QtGlobal>
 
 using namespace BlackGui;
-using namespace BlackCore;
+using namespace swift::core;
 using namespace BlackGui::Components;
 using namespace swift::misc;
 

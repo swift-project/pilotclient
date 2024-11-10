@@ -9,11 +9,11 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/registermetadata.h"
-#include "blackcore/context/contextnetwork.h"
-#include "blackcore/data/globalsetup.h"
-#include "blackcore/db/infodatareader.h"
-#include "blackcore/webdataservices.h"
-#include "blackcore/setupreader.h"
+#include "core/context/contextnetwork.h"
+#include "core/data/globalsetup.h"
+#include "core/db/infodatareader.h"
+#include "core/webdataservices.h"
+#include "core/setupreader.h"
 #include "misc/slot.h"
 #include "misc/stringutils.h"
 #include "misc/swiftdirectories.h"
@@ -57,9 +57,9 @@ using namespace swift::misc;
 using namespace swift::misc::db;
 using namespace swift::misc::network;
 using namespace BlackGui::Components;
-using namespace BlackCore;
-using namespace BlackCore::Data;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::data;
+using namespace swift::core::context;
 
 BlackGui::CGuiApplication *sGui = nullptr; // set by constructor
 

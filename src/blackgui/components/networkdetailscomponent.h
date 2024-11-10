@@ -9,7 +9,7 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-#include "blackcore/data/networksetup.h"
+#include "core/data/networksetup.h"
 #include "misc/network/data/lastserver.h"
 #include "misc/network/entityflags.h"
 #include "misc/network/fsdsetup.h"
@@ -93,7 +93,7 @@ namespace BlackGui::Components
         //! VATSIM data file was loaded
         void onWebServiceDataRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
-        BlackCore::Data::CNetworkSetup m_networkSetup; //!< servers last used
+        swift::core::data::CNetworkSetup m_networkSetup; //!< servers last used
         bool m_updatePilotOnServerChanges = true;
         QScopedPointer<Ui::CNetworkDetailsComponent> ui;
     };

@@ -6,8 +6,8 @@
 
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackcore/webdataservices.h"
-#include "blackcore/db/infodatareader.h"
+#include "core/webdataservices.h"
+#include "core/db/infodatareader.h"
 #include "misc/network/networkutils.h"
 #include "misc/htmlutils.h"
 
@@ -15,7 +15,7 @@
 #include <QMessageBox>
 
 using namespace BlackGui;
-using namespace BlackCore;
+using namespace swift::core;
 using namespace swift::misc;
 using namespace swift::misc::network;
 

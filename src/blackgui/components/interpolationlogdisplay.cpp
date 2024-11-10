@@ -5,16 +5,16 @@
 #include "ui_interpolationlogdisplay.h"
 #include "blackgui/editors/coordinateform.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/context/contextnetworkimpl.h"
-#include "blackcore/context/contextsimulator.h"
-#include "blackcore/airspacemonitor.h"
+#include "core/context/contextnetworkimpl.h"
+#include "core/context/contextsimulator.h"
+#include "core/airspacemonitor.h"
 #include "misc/timestampobjectlist.h"
 #include "misc/stringutils.h"
 
 #include <QStringLiteral>
 
-using namespace BlackCore;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::context;
 using namespace BlackGui::Views;
 using namespace BlackGui::Editors;
 using namespace swift::misc;

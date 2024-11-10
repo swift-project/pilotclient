@@ -4,8 +4,8 @@
 #include "simconnectobject.h"
 #include "misc/stringutils.h"
 #include "simulatorfsxcommon.h"
-#include "blackcore/simulator.h"
-#include "blackcore/simulator.h"
+#include "core/simulator.h"
+#include "core/simulator.h"
 #include "misc/simulation/interpolation/interpolatormulti.h"
 #include "config/buildconfig.h"
 
@@ -13,7 +13,7 @@ using namespace swift::config;
 using namespace swift::misc;
 using namespace swift::misc::aviation;
 using namespace swift::misc::simulation;
-using namespace BlackCore;
+using namespace swift::core;
 
 namespace BlackSimPlugin::FsxCommon
 {

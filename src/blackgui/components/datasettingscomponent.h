@@ -17,7 +17,7 @@ namespace Ui
 {
     class CDataSettingsComponent;
 }
-namespace BlackCore::Db
+namespace swift::core::db
 {
     class CBackgroundDataUpdater;
 }
@@ -38,7 +38,7 @@ namespace BlackGui::Components
         virtual ~CDataSettingsComponent();
 
         //! Background updater
-        void setBackgroundUpdater(const BlackCore::Db::CBackgroundDataUpdater *updater);
+        void setBackgroundUpdater(const swift::core::db::CBackgroundDataUpdater *updater);
 
     private:
         QScopedPointer<Ui::CDataSettingsComponent> ui;

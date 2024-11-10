@@ -6,8 +6,8 @@
 
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackcore/context/contextnetwork.h"
-#include "blackcore/context/contextsimulator.h"
+#include "core/context/contextnetwork.h"
+#include "core/context/contextsimulator.h"
 #include "misc/propertyindexlist.h"
 #include "misc/htmlutils.h"
 
@@ -16,8 +16,8 @@
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
-using namespace BlackCore;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::context;
 
 namespace BlackGui::Components
 {

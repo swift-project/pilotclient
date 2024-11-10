@@ -8,7 +8,7 @@
 
 using namespace BlackGui;
 using namespace BlackGui::Components;
-using namespace BlackCore;
+using namespace swift::core;
 using namespace swift::misc;
 using namespace swift::misc::network;
 using namespace swift::misc::simulation;

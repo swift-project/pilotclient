@@ -1,11 +1,11 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackcore/context/contextapplication.h"
-#include "blackcore/context/contextaudio.h"
-#include "blackcore/context/contextnetwork.h"
-#include "blackcore/context/contextownaircraft.h"
-#include "blackcore/corefacade.h"
+#include "core/context/contextapplication.h"
+#include "core/context/contextaudio.h"
+#include "core/context/contextnetwork.h"
+#include "core/context/contextownaircraft.h"
+#include "core/corefacade.h"
 #include "blackgui/components/mainkeypadareacomponent.h"
 #include "blackgui/guiapplication.h"
 #include "misc/aviation/transponder.h"
@@ -21,8 +21,8 @@ using namespace swift::misc;
 using namespace swift::misc::aviation;
 using namespace swift::misc::network;
 using namespace swift::misc::simulation;
-using namespace BlackCore;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::context;
 
 namespace BlackGui::Components
 {

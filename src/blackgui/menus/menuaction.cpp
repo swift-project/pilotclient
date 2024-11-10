@@ -3,7 +3,7 @@
 
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 #include "misc/icons.h"
 #include "misc/slot.h"
 #include "misc/verify.h"

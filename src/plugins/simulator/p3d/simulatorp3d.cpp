@@ -17,7 +17,7 @@ using namespace swift::misc::network;
 using namespace swift::misc::simulation;
 using namespace swift::misc::simulation::fscommon;
 using namespace BlackSimPlugin::FsxCommon;
-using namespace BlackCore;
+using namespace swift::core;
 using namespace BlackSimPlugin::FsCommon;
 
 namespace BlackSimPlugin::P3D

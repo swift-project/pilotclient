@@ -10,7 +10,7 @@
 #include <QScopedPointer>
 #include <QDialog>
 
-namespace BlackCore
+namespace swift::core
 {
     class ISimulator;
     class CAirspaceMonitor;
@@ -31,17 +31,17 @@ namespace BlackGui::Components
     public:
         //! Constructor
         explicit CInterpolationLogDisplayDialog(
-            BlackCore::ISimulator *simulator, BlackCore::CAirspaceMonitor *airspaceMonitor,
+            swift::core::ISimulator *simulator, swift::core::CAirspaceMonitor *airspaceMonitor,
             QWidget *parent = nullptr);
 
         //! Destructor
         virtual ~CInterpolationLogDisplayDialog() override;
 
         //! Set simulator
-        void setSimulator(BlackCore::ISimulator *simulator);
+        void setSimulator(swift::core::ISimulator *simulator);
 
         //! Set airspace monitor
-        void setAirspaceMonitor(BlackCore::CAirspaceMonitor *airspaceMonitor);
+        void setAirspaceMonitor(swift::core::CAirspaceMonitor *airspaceMonitor);
 
     protected:
         //! \copydoc QObject::event

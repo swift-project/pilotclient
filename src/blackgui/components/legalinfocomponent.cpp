@@ -5,7 +5,7 @@
 #include "ui_legalinfocomponent.h"
 
 #include "blackgui/guiapplication.h"
-#include "blackcore/data/globalsetup.h"
+#include "core/data/globalsetup.h"
 #include "misc/network/url.h"
 #include "misc/logmessage.h"
 #include "misc/statusmessage.h"
@@ -15,7 +15,7 @@
 
 using namespace swift::misc;
 using namespace swift::misc::network;
-using namespace BlackCore::Data;
+using namespace swift::core::data;
 using namespace swift::config;
 
 namespace BlackGui::Components

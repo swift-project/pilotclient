@@ -5,16 +5,16 @@
 #include "ui_networkdetailscomponent.h"
 #include "blackgui/uppercasevalidator.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/context/contextnetwork.h"
-#include "blackcore/webdataservices.h"
+#include "core/context/contextnetwork.h"
+#include "core/webdataservices.h"
 
 #include <QToolButton>
 
 using namespace swift::misc::network;
 using namespace swift::misc::audio;
 using namespace swift::misc::aviation;
-using namespace BlackCore;
-using namespace BlackCore::Data;
+using namespace swift::core;
+using namespace swift::core::data;
 
 namespace BlackGui::Components
 {

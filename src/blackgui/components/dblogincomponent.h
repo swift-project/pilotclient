@@ -6,8 +6,8 @@
 #ifndef BLACKGUI_COMPONENTS_DBLOGINCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DBLOGINCOMPONENT_H
 
-#include "blackcore/db/databaseauthentication.h"
-#include "blackcore/data/globalsetup.h"
+#include "core/db/databaseauthentication.h"
+#include "core/data/globalsetup.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/loadindicator.h"
 #include "misc/statusmessagelist.h"
@@ -28,7 +28,7 @@ namespace BlackGui::Components
 {
     /*!
      * Login to DB
-     * \sa BlackCore::Db::CDatabaseAuthenticationService
+     * \sa swift::core::db::CDatabaseAuthenticationService
      */
     class BLACKGUI_EXPORT CDbLoginComponent :
         public QFrame,
@@ -51,7 +51,7 @@ namespace BlackGui::Components
 
     private:
         QScopedPointer<Ui::CDbLoginComponent> ui;
-        BlackCore::Db::CDatabaseAuthenticationService m_loginService { this }; //!< login service
+        swift::core::db::CDatabaseAuthenticationService m_loginService { this }; //!< login service
 
         //! Overlay messages
         void displayOverlayMessages(const swift::misc::CStatusMessageList &msgs);

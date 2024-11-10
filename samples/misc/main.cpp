@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackcore/application.h"
+#include "core/application.h"
 #include "misc/directoryutils.h"
 #include "samplesalgorithm.h"
 #include "sampleschangeobject.h"
@@ -21,7 +21,7 @@
 
 using namespace swift::misc;
 using namespace BlackSample;
-using namespace BlackCore;
+using namespace swift::core;
 
 //! main
 int main(int argc, char *argv[])

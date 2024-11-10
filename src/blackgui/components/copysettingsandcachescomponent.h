@@ -12,11 +12,11 @@
 #include "blackgui/settings/textmessagesettings.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
-#include "blackcore/data/launchersetup.h"
-#include "blackcore/data/vatsimsetup.h"
-#include "blackcore/audio/audiosettings.h"
-#include "blackcore/application/applicationsettings.h"
-#include "blackcore/application/updatesettings.h"
+#include "core/data/launchersetup.h"
+#include "core/data/vatsimsetup.h"
+#include "core/audio/audiosettings.h"
+#include "core/application/applicationsettings.h"
+#include "core/application/updatesettings.h"
 #include "misc/simulation/data/modelcaches.h"
 #include "misc/simulation/data/lastmodel.h"
 #include "misc/simulation/settings/simulatorsettings.h"
@@ -109,15 +109,15 @@ namespace BlackGui::Components
 
         QScopedPointer<Ui::CCopySettingsAndCachesComponent> ui;
 
-        swift::misc::CSetting<BlackCore::Audio::TInputDevice> m_settingsAudioInputDevice { this };
-        swift::misc::CSetting<BlackCore::Audio::TOutputDevice> m_settingsAudioOutputDevice { this };
+        swift::misc::CSetting<swift::core::audio::TInputDevice> m_settingsAudioInputDevice { this };
+        swift::misc::CSetting<swift::core::audio::TOutputDevice> m_settingsAudioOutputDevice { this };
         swift::misc::CSetting<Settings::TGeneralGui> m_settingsGuiGeneral { this };
         swift::misc::CSetting<Settings::TDockWidget> m_settingsDockWidget { this };
         swift::misc::CSetting<Settings::TViewUpdateSettings> m_settingsViewUpdate { this };
         swift::misc::CSetting<Settings::TBackgroundConsolidation> m_settingsConsolidation { this }; //!< consolidation time
         swift::misc::CSetting<Settings::TextMessageSettings> m_settingsTextMessage { this };
-        swift::misc::CSetting<BlackCore::Application::TEnabledSimulators> m_settingsEnabledSimulators { this };
-        swift::misc::CSetting<BlackCore::Application::TActionHotkeys> m_settingsActionHotkeys { this };
+        swift::misc::CSetting<swift::core::application::TEnabledSimulators> m_settingsEnabledSimulators { this };
+        swift::misc::CSetting<swift::core::application::TActionHotkeys> m_settingsActionHotkeys { this };
         swift::misc::CSetting<swift::misc::audio::TSettings> m_settingsAudio { this };
         swift::misc::CSetting<swift::misc::settings::TDirectorySettings> m_settingsDirectories { this };
         swift::misc::CSetting<swift::misc::network::settings::TTrafficServers> m_settingsNetworkServers { this };
@@ -127,9 +127,9 @@ namespace BlackGui::Components
         swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorXP> m_settingsSimulatorXPlane { this }; //!< XP settings
         swift::misc::CSetting<swift::misc::simulation::settings::TModel> m_settingsModel { this }; //!< model setting
 
-        swift::misc::CData<BlackCore::Data::TVatsimLastServer> m_cacheLastVatsimServer { this }; //!< recently used VATSIM server
-        swift::misc::CData<BlackCore::Data::TLauncherSetup> m_cacheLauncherSetup { this };
-        swift::misc::CData<BlackCore::Data::TVatsimSetup> m_cacheVatsimSetup { this };
+        swift::misc::CData<swift::core::data::TVatsimLastServer> m_cacheLastVatsimServer { this }; //!< recently used VATSIM server
+        swift::misc::CData<swift::core::data::TLauncherSetup> m_cacheLauncherSetup { this };
+        swift::misc::CData<swift::core::data::TVatsimSetup> m_cacheVatsimSetup { this };
         swift::misc::CData<swift::misc::network::data::TLastServer> m_cacheLastNetworkServer { this }; //!< recently used server (VATSIM, other)
         swift::misc::CData<swift::misc::simulation::data::TSimulatorLastSelection> m_cacheModelSetCurrentSimulator { this };
         swift::misc::CData<swift::misc::simulation::data::TModelCacheLastSelection> m_cacheModelsCurrentSimulator { this };

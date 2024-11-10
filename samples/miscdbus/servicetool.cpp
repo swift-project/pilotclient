@@ -5,7 +5,7 @@
 //! \ingroup samplemiscdbus
 
 #include "servicetool.h"
-#include "blackcore/application.h"
+#include "core/application.h"
 #include "misc/test/testservice.h"
 #include "misc/test/testserviceinterface.h"
 #include "misc/dbusserver.h"
@@ -46,7 +46,7 @@ using namespace swift::misc::geo;
 using namespace swift::misc::network;
 using namespace swift::misc::simulation::fscommon;
 using namespace swift::misc::test;
-using namespace BlackCore;
+using namespace swift::core;
 
 namespace BlackSample
 {

@@ -6,8 +6,8 @@
 
 using namespace swift::misc;
 using namespace swift::misc::physical_quantities;
-using namespace BlackCore;
-using namespace BlackCore::Vatsim;
+using namespace swift::core;
+using namespace swift::core::vatsim;
 
 namespace BlackGui::Components
 {

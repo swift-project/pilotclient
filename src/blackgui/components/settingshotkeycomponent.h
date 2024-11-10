@@ -8,8 +8,8 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/actionhotkeylistmodel.h"
-#include "blackcore/actionbind.h"
-#include "blackcore/application/applicationsettings.h"
+#include "core/actionbind.h"
+#include "core/application/applicationsettings.h"
 #include "misc/identifierlist.h"
 #include "misc/settingscache.h"
 #include "misc/icons.h"
@@ -60,8 +60,8 @@ namespace BlackGui::Components
 
         QScopedPointer<Ui::CSettingsHotkeyComponent> ui;
         Models::CActionHotkeyListModel m_model; //!< hotkeys model
-        swift::misc::CSetting<BlackCore::Application::TActionHotkeys> m_actionHotkeys { this, &CSettingsHotkeyComponent::reloadHotkeysFromSettings };
-        BlackCore::CActionBind m_action { "/Test/Message", swift::misc::CIcons::StandardIconWrench16, this, &CSettingsHotkeyComponent::hotkeySlot };
+        swift::misc::CSetting<swift::core::application::TActionHotkeys> m_actionHotkeys { this, &CSettingsHotkeyComponent::reloadHotkeysFromSettings };
+        swift::core::CActionBind m_action { "/Test/Message", swift::misc::CIcons::StandardIconWrench16, this, &CSettingsHotkeyComponent::hotkeySlot };
     };
 
     /*!

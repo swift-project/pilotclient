@@ -9,7 +9,7 @@
 #include "directplayerror.h"
 #include "directplayutils.h"
 #include "../fscommon/simulatorfscommonfunctions.h"
-#include "blackcore/simulator.h"
+#include "core/simulator.h"
 #include "misc/aviation/aircraftsituation.h"
 #include "misc/geo/coordinategeodetic.h"
 #include "misc/logmessage.h"
@@ -20,7 +20,7 @@ using namespace swift::misc::aviation;
 using namespace swift::misc::simulation;
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::geo;
-using namespace BlackCore;
+using namespace swift::core;
 using namespace BlackSimPlugin::FsCommon;
 
 namespace BlackSimPlugin::Fs9

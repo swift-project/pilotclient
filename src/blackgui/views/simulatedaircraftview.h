@@ -26,7 +26,7 @@ namespace swift::misc
     }
 }
 
-namespace BlackCore::Context
+namespace swift::core::context
 {
     class IContextSimulator;
     class IContextNetwork;
@@ -151,10 +151,10 @@ namespace BlackGui
             void showFlightPlanDialog();
 
             //! Simulator context
-            static BlackCore::Context::IContextSimulator *simulatorContext();
+            static swift::core::context::IContextSimulator *simulatorContext();
 
             //! Network context
-            static BlackCore::Context::IContextNetwork *networkContext();
+            static swift::core::context::IContextNetwork *networkContext();
 
             bool m_withRecalculate = true;
             bool m_withMenuHighlightAndFollow = true;

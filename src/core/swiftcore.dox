@@ -1,0 +1,40 @@
+// SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
+// SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
+
+//! \file
+
+/*!
+ * \defgroup swift_core Core Library
+ * Backend services of the swift project, like dealing with the network or the simulators.
+ */
+
+/*!
+ * \namespace swift::core
+ * Backend services of the swift project, like dealing with the network or the simulators.
+ */
+
+/*!
+ * \namespace swift::core::data
+ * Core data traits (aka cached values) and classes.
+ */
+
+/*!
+ * \namespace swift::core::db
+ * Classes interacting with the swift database (aka "datastore"). This includes the readers and related classes.
+ * Related model classes can be found in swift::misc::db
+ */
+
+/*!
+ * \namespace swift::core::Settings
+ * Core settings traits.
+ */
+
+/*!
+ * \namespace swift::core::Settings::Network
+ * Network settings traits.
+ */
+
+/*!
+ * \defgroup dbus DBus related functions, classes, or definitions.
+ * \ingroup swift_core
+ */

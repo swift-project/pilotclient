@@ -5,7 +5,7 @@
 #include "qcompilerdetection.h"
 #include "fgswiftbusserviceproxy.h"
 #include "fgswiftbustrafficproxy.h"
-#include "blackcore/aircraftmatcher.h"
+#include "core/aircraftmatcher.h"
 #include "misc/simulation/aircraftmodel.h"
 #include "misc/simulation/simulatedaircraft.h"
 #include "misc/simulation/simulatedaircraftlist.h"
@@ -61,7 +61,7 @@ using namespace swift::misc::simulation;
 using namespace swift::misc::geo;
 using namespace swift::misc::simulation;
 using namespace swift::misc::weather;
-using namespace BlackCore;
+using namespace swift::core;
 
 namespace
 {

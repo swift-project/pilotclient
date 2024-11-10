@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackcore/application.h"
-#include "blackcore/webdataservices.h"
+#include "core/application.h"
+#include "core/webdataservices.h"
 #include "blackgui/components/dbcountrycomponent.h"
 #include "blackgui/filters/countryfilterbar.h"
 #include "blackgui/guiapplication.h"
@@ -12,7 +12,7 @@
 
 #include <QtGlobal>
 
-using namespace BlackCore;
+using namespace swift::core;
 using namespace swift::misc::network;
 using namespace BlackGui::Views;
 

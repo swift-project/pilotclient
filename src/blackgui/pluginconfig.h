@@ -21,7 +21,7 @@ namespace BlackGui
      * The plugin config plugin is always called from the GUI process in order
      * to make it possible to create a config window.
      *
-     * \sa BlackCore::ISimulator.
+     * \sa swift::core::ISimulator.
      */
     class BLACKGUI_EXPORT IPluginConfig
     {

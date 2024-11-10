@@ -4,7 +4,7 @@
 #include "copymodelsfromotherswiftversionscomponent.h"
 #include "ui_copymodelsfromotherswiftversionscomponent.h"
 #include "blackgui/models/aircraftmodellistmodel.h"
-#include "blackcore/application.h"
+#include "core/application.h"
 #include "misc/stringutils.h"
 #include "misc/fileutils.h"
 #include "misc/swiftdirectories.h"
@@ -15,7 +15,7 @@
 #include <QFileInfo>
 #include <QMessageBox>
 
-using namespace BlackCore;
+using namespace swift::core;
 using namespace swift::misc;
 using namespace swift::misc::simulation;
 using namespace BlackGui::Models;

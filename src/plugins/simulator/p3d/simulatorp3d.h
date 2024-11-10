@@ -23,12 +23,12 @@ namespace BlackSimPlugin::P3D
     class CSimulatorP3D : public FsxCommon::CSimulatorFsxCommon
     {
         Q_OBJECT
-        Q_INTERFACES(BlackCore::ISimulator)
+        Q_INTERFACES(swift::core::ISimulator)
         Q_INTERFACES(swift::misc::simulation::ISimulationEnvironmentProvider)
         Q_INTERFACES(swift::misc::simulation::IInterpolationSetupProvider)
 
     public:
-        //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
+        //! Constructor, parameters as in \sa swift::core::ISimulatorFactory::create
         CSimulatorP3D(const swift::misc::simulation::CSimulatorPluginInfo &info,
                       swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
                       swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
@@ -44,7 +44,7 @@ namespace BlackSimPlugin::P3D
         //! \copydoc swift::misc::simulation::ISimulationEnvironmentProvider::requestElevation
         virtual bool requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference, const swift::misc::aviation::CCallsign &callsign) override;
 
-        //! \copydoc BlackCore::ISimulator::followAircraft
+        //! \copydoc swift::core::ISimulator::followAircraft
         virtual bool followAircraft(const swift::misc::aviation::CCallsign &callsign) override;
 #endif // guard
 

@@ -4,7 +4,7 @@
 #include "simulatoremulatedmonitordialog.h"
 #include "ui_simulatoremulatedmonitordialog.h"
 #include "simulatoremulated.h"
-#include "blackcore/context/contextsimulator.h"
+#include "core/context/contextsimulator.h"
 #include "blackgui/components/cockpitcomtransmissioncomponent.h"
 #include "blackgui/guiapplication.h"
 #include "misc/logmessage.h"

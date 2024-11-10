@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "flightgearmpaircraft.h"
-#include "blackcore/simulator.h"
+#include "core/simulator.h"
 #include "misc/simulation/interpolation/interpolatormulti.h"
 
-using namespace BlackCore;
+using namespace swift::core;
 using namespace swift::misc;
 using namespace swift::misc::aviation;
 using namespace swift::misc::simulation;

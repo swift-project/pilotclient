@@ -14,7 +14,7 @@
 
 //! \file
 
-namespace BlackCore
+namespace swift::core
 {
     class ISimulator;
 }
@@ -37,7 +37,7 @@ namespace BlackSimPlugin::Fs9
         CFs9Client(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft,
                    const swift::misc::physical_quantities::CTime &updateInterval,
                    swift::misc::simulation::CInterpolationLogger *logger,
-                   BlackCore::ISimulator *simulator);
+                   swift::core::ISimulator *simulator);
 
         //! Destructor
         virtual ~CFs9Client() override;
@@ -96,7 +96,7 @@ namespace BlackSimPlugin::Fs9
         void handleConnectionCompleted();
 
         //! Simulator interface
-        const BlackCore::ISimulator *simulator() const;
+        const swift::core::ISimulator *simulator() const;
 
         swift::misc::simulation::CSimulatedAircraft m_remoteAircraft;
         swift::misc::physical_quantities::CTime m_updateInterval;

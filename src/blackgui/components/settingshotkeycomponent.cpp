@@ -5,9 +5,9 @@
 #include "blackgui/components/settingshotkeycomponent.h"
 #include "blackgui/components/hotkeydialog.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/context/contextapplication.h"
-#include "blackcore/context/contextaudio.h"
-#include "blackcore/inputmanager.h"
+#include "core/context/contextapplication.h"
+#include "core/context/contextaudio.h"
+#include "core/inputmanager.h"
 #include "misc/input/actionhotkeydefs.h"
 #include "misc/metadatautils.h"
 #include "ui_settingshotkeycomponent.h"
@@ -28,8 +28,8 @@
 using namespace swift::misc;
 using namespace swift::misc::input;
 using namespace BlackGui::Models;
-using namespace BlackCore;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::context;
 
 namespace BlackGui::Components
 {

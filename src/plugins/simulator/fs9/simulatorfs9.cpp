@@ -29,7 +29,7 @@ using namespace swift::misc::geo;
 using namespace swift::misc::network;
 using namespace swift::misc::simulation;
 using namespace swift::misc::simulation::fscommon;
-using namespace BlackCore;
+using namespace swift::core;
 using namespace BlackSimPlugin::FsCommon;
 using namespace swift::config;
 

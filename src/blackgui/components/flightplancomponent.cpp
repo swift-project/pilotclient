@@ -9,10 +9,10 @@
 #include "blackgui/uppercasevalidator.h"
 #include "blackgui/eventfilter.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/context/contextnetwork.h"
-#include "blackcore/context/contextownaircraft.h"
-#include "blackcore/context/contextsimulator.h"
-#include "blackcore/webdataservices.h"
+#include "core/context/contextnetwork.h"
+#include "core/context/contextownaircraft.h"
+#include "core/context/contextsimulator.h"
+#include "core/webdataservices.h"
 #include "misc/simulation/simulatedaircraft.h"
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/airportlist.h"
@@ -57,7 +57,7 @@ using namespace swift::misc::network;
 using namespace swift::misc::simulation;
 using namespace swift::misc::physical_quantities;
 using namespace BlackGui;
-using namespace BlackCore;
+using namespace swift::core;
 using namespace swift::config;
 
 namespace BlackGui::Components

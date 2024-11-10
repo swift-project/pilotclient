@@ -5,15 +5,15 @@
 #include "ui_aircraftmodelstringcompleter.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackcore/webdataservices.h"
-#include "blackcore/context/contextsimulator.h"
+#include "core/webdataservices.h"
+#include "core/context/contextsimulator.h"
 
 #include <QRadioButton>
 #include <QStringListModel>
 #include <QPointer>
 
-using namespace BlackCore;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::context;
 using namespace swift::misc::simulation;
 using namespace swift::misc::simulation::data;
 

@@ -4,9 +4,9 @@
 #include "interpolationlogdisplaydialog.h"
 #include "ui_interpolationlogdisplaydialog.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/simulator.h"
+#include "core/simulator.h"
 
-using namespace BlackCore;
+using namespace swift::core;
 
 namespace BlackGui::Components
 {

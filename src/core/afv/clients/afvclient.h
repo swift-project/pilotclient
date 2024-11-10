@@ -1,0 +1,446 @@
+// SPDX-FileCopyrightText: Copyright (C) 2019 swift Project Community / Contributors
+// SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
+
+//! \file
+
+#ifndef SWIFT_CORE_AFV_CLIENTS_AFVCLIENT_H
+#define SWIFT_CORE_AFV_CLIENTS_AFVCLIENT_H
+
+#include "core/context/contextownaircraft.h"
+#include "core/afv/connection/clientconnection.h"
+#include "core/afv/audio/input.h"
+#include "core/afv/audio/output.h"
+#include "core/afv/audio/soundcardsampleprovider.h"
+#include "core/afv/dto.h"
+#include "core/swiftcoreexport.h"
+
+#include "sound/sampleprovider/volumesampleprovider.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/audio/audiosettings.h"
+#include "misc/audio/audiodeviceinfo.h"
+#include "misc/logcategories.h"
+#include "misc/identifiable.h"
+#include "misc/settingscache.h"
+#include "misc/worker.h"
+
+#include <QDateTime>
+#include <QAudioInput>
+#include <QAudioOutput>
+#include <QObject>
+#include <QString>
+#include <QVector>
+
+#include <atomic>
+
+namespace swift::core::afv::clients
+{
+    //! AFV client
+    class SWIFT_CORE_EXPORT CAfvClient final : public swift::misc::CContinuousWorker, public swift::misc::CIdentifiable
+    {
+        Q_OBJECT
+
+        //! @{
+        //! AFV client properties
+        Q_PROPERTY(double inputVolumePeakVU READ getInputVolumePeakVU NOTIFY inputVolumePeakVU)
+        Q_PROPERTY(double outputVolumePeakVU READ getOutputVolumePeakVU NOTIFY outputVolumePeakVU)
+        Q_PROPERTY(swift::core::afv::clients::CAfvClient::ConnectionStatus connectionStatus READ getConnectionStatus NOTIFY connectionStatusChanged)
+        Q_PROPERTY(QString receivingCallsignsCom1 READ getReceivingCallsignsStringCom1 NOTIFY receivingCallsignsChanged)
+        Q_PROPERTY(QString receivingCallsignsCom2 READ getReceivingCallsignsStringCom2 NOTIFY receivingCallsignsChanged)
+        //! @}
+
+    public:
+        //! Categories
+        static const QStringList &getLogCategories();
+
+        //! Connection status
+        enum ConnectionStatus
+        {
+            Disconnected,
+            Connected
+        };
+        Q_ENUM(ConnectionStatus)
+
+        //! Ctor
+        CAfvClient(const QString &apiServer, QObject *owner);
+
+        //! Dtor
+        virtual ~CAfvClient() override { this->stopAudio(); }
+
+        //! @{
+        //! Corresponding callsign
+        //! \threadsafe
+        QString getCallsign() const;
+        void setCallsign(const QString &getCallsign);
+        //! @}
+
+        //! Is connected to network?
+        //! \threadsafe
+        bool isConnected() const;
+
+        //! Connection status
+        //! \threadsafe
+        ConnectionStatus getConnectionStatus() const;
+
+        //! Connect to network
+        //! \threadsafe
+        //! \remark runs in thread of CAfvClient object and is ASYNC when called from another thread
+        Q_INVOKABLE void connectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client);
+
+        //! @{
+        //! Disconnect from network
+        //! \threadsafe
+        //! \remark runs in thread of CAfvClient object and is ASYNC when called from another thread
+        void disconnectFrom(bool stop);
+        Q_INVOKABLE void disconnectFrom() { this->disconnectFrom(false); }
+        void disconnectFromAndStop() { this->disconnectFrom(true); }
+        //! @}
+
+        //! @{
+        //! Audio devices
+        Q_INVOKABLE QStringList availableInputDevices() const;
+        Q_INVOKABLE QStringList availableOutputDevices() const;
+        //! @}
+
+        //! Enable/disable VHF simulation, true means effects are NOT used
+        Q_INVOKABLE void setBypassEffects(bool value);
+
+        //! Client started?
+        bool isStarted() const { return m_isStarted; }
+
+        //! @{
+        //! Muted (output)
+        //! \threadsafe
+        bool isOutputMuted() const;
+        void setOutputMuted(bool mute);
+        //! @}
+
+        //! @{
+        //! Start/stop client
+        void startAudio();
+        void startAudio(const swift::misc::audio::CAudioDeviceInfo &inputDevice, const swift::misc::audio::CAudioDeviceInfo &outputDevice);
+        Q_INVOKABLE void startAudio(const QString &inputDeviceName, const QString &outputDeviceName);
+        void stopAudio();
+        void restartAudio();
+        //! @}
+
+        //! Is integrated with COM unit
+        //! \threadsafe
+        bool isComUnitIntegrated() const { return m_integratedComUnit; }
+
+        /* NOT used
+        //! @{
+        //! The device's volume 0..1
+        double getDeviceInputVolume() const;
+        bool   setDeviceInputVolume(double volume);
+        double getDeviceOutputVolume() const;
+        bool   setDeviceOutputVolume(double volume);
+        //! @}
+        */
+
+        //! Receive audio
+        //! \threadsafe
+        void setReceiveAudio(bool receive);
+
+        //! @{
+        //! Enable COM unit/transceiver
+        //! \threadsafe
+        Q_INVOKABLE void enableTransceiver(quint16 id, bool enable);
+        void enableComUnit(swift::misc::aviation::CComSystem::ComUnit comUnit, bool enable);
+        bool isEnabledTransceiver(quint16 id) const;
+        bool isEnabledComUnit(swift::misc::aviation::CComSystem::ComUnit comUnit) const;
+        //! @}
+
+        //! @{
+        //! Set transmitting transceivers
+        //! \threadsafe
+        void setTransmittingTransceiver(quint16 transceiverID);
+        void setTransmittingComUnit(swift::misc::aviation::CComSystem::ComUnit comUnit);
+        void setTransmittingTransceivers(const QVector<TxTransceiverDto> &transceivers);
+        //! @}
+
+        //! @{
+        //! Transmitting transceiver/COM unit
+        //! \threadsafe
+        bool isTransmittingTransceiver(quint16 id) const;
+        bool isTransmittingComUnit(swift::misc::aviation::CComSystem::ComUnit comUnit) const;
+        //! @}
+
+        //! @{
+        //! Simplified enable/disable
+        //! \threadsafe
+        void setRxTx(bool rx1, bool tx1, bool rx2, bool tx2);
+        void getRxTx(bool &rx1, bool &tx1, bool &rx2, bool &tx2) const;
+        //! @}
+
+        //! @{
+        //! Get transceivers
+        //! \threadsafe
+        QVector<TransceiverDto> getTransceivers() const;
+        QVector<TxTransceiverDto> getTransmittingTransceivers() const;
+        QSet<quint16> getEnabledTransceivers() const;
+        //! @}
+
+        //! @{
+        //! Aliased stations enabled?
+        //! \threadsafe
+        bool isAliasedStationsEnabled() const { return m_enableAliased; }
+        void enableAliasedStations(bool enabled) { m_enableAliased = enabled; }
+        //! @}
+
+        //! @{
+        //! Update frequency
+        //! \threadsafe
+        Q_INVOKABLE void updateComFrequency(quint16 id, quint32 frequencyHz);
+        void updateComFrequency(swift::misc::aviation::CComSystem::ComUnit comUnit, const swift::misc::physical_quantities::CFrequency &comFrequency);
+        void updateComFrequency(swift::misc::aviation::CComSystem::ComUnit comUnit, const swift::misc::aviation::CComSystem &comSystem);
+        //! @}
+
+        //! Update own aircraft position
+        //! \threadsafe
+        Q_INVOKABLE void updatePosition(double latitudeDeg, double longitudeDeg, double heightMeters);
+
+        //! Update from own aircraft
+        //! \remark full update of frequency, position and enabled transceivers in one step
+        //! \threadsafe
+        void updateFromOwnAircraft(const swift::misc::simulation::CSimulatedAircraft &aircraft, bool withSignals = true);
+
+        //! Push to talk
+        //! \threadsafe
+        Q_INVOKABLE void setPtt(bool active);
+
+        //! @{
+        //! Loopback
+        //! \threadsafe
+        Q_INVOKABLE void setLoopBack(bool on) { m_loopbackOn = on; }
+        Q_INVOKABLE bool isLoopback() const { return m_loopbackOn; }
+        //! @}
+
+        //! @{
+        //! Input volume in dB, [MinDbIn, MaxDbIn]dB
+        //! \threadsafe
+        double getInputVolumeDb() const;
+        Q_INVOKABLE bool setInputVolumeDb(double valueDb);
+        //! @}
+
+        //! @{
+        //! Output volume for each COM in dB, [MinDbOut, MaxDbOut]dB
+        //! \threadsafe
+        double getComOutputVolumeDb(swift::misc::aviation::CComSystem::ComUnit comUnit) const;
+        Q_INVOKABLE bool setComOutputVolumeDb(swift::misc::aviation::CComSystem::ComUnit comUnit, double valueDb);
+        //! @}
+
+        //! Gain ratio
+        //! \threadsafe
+        double getOutputGainRatio(swift::misc::aviation::CComSystem::ComUnit comUnit) const;
+
+        //! @{
+        //! Normalized volumes 0..100
+        //! \threadsafe
+        int getNormalizedInputVolume() const;
+        int getNormalizedComOutputVolume(swift::misc::aviation::CComSystem::ComUnit comUnit) const;
+        int getNormalizedMasterOutputVolume() const;
+        bool setNormalizedInputVolume(int volume);
+        bool setNormalizedComOutputVolume(swift::misc::aviation::CComSystem::ComUnit comUnit, int volume);
+        bool setNormalizedMasterOutputVolume(int volume);
+        //! @}
+
+        //! @{
+        //! VU values, 0..1
+        //! \threadsafe
+        double getInputVolumePeakVU() const;
+        double getOutputVolumePeakVU() const;
+        //! @}
+
+        //! @{
+        //! Recently used device
+        //! \threadsafe
+        const swift::misc::audio::CAudioDeviceInfo &getInputDevice() const;
+        const swift::misc::audio::CAudioDeviceInfo &getOutputDevice() const;
+        bool usesSameDevices(const swift::misc::audio::CAudioDeviceInfo &inputDevice, const swift::misc::audio::CAudioDeviceInfo &outputDevice);
+        //! @}
+
+        //! @{
+        //! Callsigns currently received
+        //! \threadsafe
+        QString getReceivingCallsignsStringCom1() const;
+        QString getReceivingCallsignsStringCom2() const;
+        swift::misc::aviation::CCallsignSet getReceivingCallsignsCom1() const;
+        swift::misc::aviation::CCallsignSet getReceivingCallsignsCom2() const;
+        QStringList getReceivingCallsignsStringCom1Com2() const;
+        //! @}
+
+        //! Update the voice server URL
+        bool updateVoiceServerUrl(const QString &url);
+
+        //! Gracefully shut down AFV client
+        void gracefulShutdown();
+
+    signals:
+        //! Receiving callsigns have been changed
+        //! \remark callsigns I do receive
+        void receivingCallsignsChanged(const swift::core::afv::audio::TransceiverReceivingCallsignsChangedArgs &args);
+
+        //! Received callsigns have been changed
+        //! \remark swift style per com units
+        void receivedCallsignsChanged(const swift::misc::aviation::CCallsignSet &com1Callsigns, const swift::misc::aviation::CCallsignSet &com2Callsigns);
+
+        //! Connection status has been changed
+        void connectionStatusChanged(ConnectionStatus status);
+
+        //! Authentication has failed with AFV server
+        void afvConnectionFailure(const swift::misc::CStatusMessage &msg);
+
+        //! Client updated from own aicraft data
+        void updatedFromOwnAircraftCockpit();
+
+        //! PTT status in this particular AFV client
+        void ptt(bool active, const swift::misc::CIdentifier &identifier);
+
+        //! @{
+        //! VU levels
+        void inputVolumePeakVU(double value);
+        void outputVolumePeakVU(double value);
+        //! @}
+
+        //! Started audio with devices
+        void startedAudio(const swift::misc::audio::CAudioDeviceInfo &inputDevice, const swift::misc::audio::CAudioDeviceInfo &outputDevice);
+
+        //! Audio has been stopped
+        void stoppedAudio();
+
+        //! Output mute changed
+        void changedOutputMute(bool muted);
+
+    protected:
+        //! \copydoc swift::misc::CContinuousWorker::initialize
+        virtual void initialize() override;
+
+        //! \copydoc swift::misc::CContinuousWorker::cleanup
+        virtual void cleanup() override;
+
+    private:
+        void opusDataAvailable(const audio::OpusDataAvailableArgs &args); // threadsafe
+        void audioOutDataAvailable(const AudioRxOnTransceiversDto &dto); // threadsafe
+        void inputVolumeStream(const audio::InputVolumeStreamArgs &args);
+        void outputVolumeStream(const audio::OutputVolumeStreamArgs &args);
+
+        void onTimerUpdate();
+        void onSettingsChanged();
+        void autoLogoffWithoutFsdNetwork();
+
+        void updateTransceivers(bool updateFrequencies = true);
+        void onUpdateTransceiversFromContext(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator);
+        void onReceivingCallsignsChanged(const swift::core::afv::audio::TransceiverReceivingCallsignsChangedArgs &args);
+
+        //! Re-try connection to server
+        void retryConnectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client, const QString &reason);
+
+        //! Connect again in given ms
+        void reconnectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client, int delayMs, const swift::misc::CStatusMessage &msg);
+
+        //! Toggle (enable/disable) the transmission capability.
+        //! This is triggered by the #MU FSD packet to mute the user remotely.
+        void toggleTransmissionCapability(bool disableTransmission);
+
+        //! @{
+        //! All aliased stations
+        //! \threadsafe
+        QVector<StationDto> getAliasedStations() const;
+        void setAliasedStations(const QVector<StationDto> &stations);
+        //! @}
+
+        //! Frequency from aliased stations
+        //! \threadsafe
+        quint32 getAliasFrequencyHz(quint32 frequencyHz) const;
+
+        //! Voice server alive
+        //! \threadsafe
+        bool isVoiceServerAlive() const;
+
+        //! Get voice server URL
+        //! \threadsafe
+        const QString &getVoiceServerUrl() const;
+
+        bool fuzzyMatchCallsign(const QString &callsign, const QString &compareTo) const;
+        void getPrefixSuffix(const QString &callsign, QString &prefix, QString &suffix) const;
+
+        static constexpr int PositionUpdatesMs = 20000; //!< position timer
+        static constexpr int SampleRate = 48000;
+        static constexpr int FrameSize = static_cast<int>(SampleRate * 0.02); //!< 20ms
+        static constexpr double MinDbIn = -18.0;
+        static constexpr double MaxDbIn = 18.0;
+        static constexpr double MinDbOut = -60.0;
+        static constexpr double MaxDbOut = 18.0;
+        static constexpr quint32 UniCom = 122800000;
+
+        static quint16 comUnitToTransceiverId(swift::misc::aviation::CComSystem::ComUnit comUnit);
+        static swift::misc::aviation::CComSystem::ComUnit transceiverIdToComUnit(quint16 id);
+
+        connection::CClientConnection *m_connection = nullptr;
+        swift::misc::CSetting<swift::misc::audio::TSettings> m_audioSettings { this, &CAfvClient::onSettingsChanged };
+        QString m_callsign;
+
+        audio::CInput *m_input = nullptr;
+        audio::COutput *m_output = nullptr;
+
+        audio::CSoundcardSampleProvider *m_soundcardSampleProvider = nullptr;
+        swift::sound::sample_provider::CVolumeSampleProvider *m_outputSampleProvider = nullptr;
+
+        std::atomic_bool m_transmit { false };
+        std::atomic_bool m_transmitHistory { false };
+        std::atomic_bool m_disableTransmissionCapability { false }; //!< whether the user should be unable to transmit
+        QVector<TxTransceiverDto> m_transmittingTransceivers;
+        QVector<TransceiverDto> m_transceivers;
+        QSet<quint16> m_enabledTransceivers;
+        static const QVector<quint16> &allTransceiverIds()
+        {
+            static const QVector<quint16> transceiverIds { 0, 1 };
+            return transceiverIds;
+        }
+
+        std::atomic_int m_fsdConnectMismatches { 0 }; //!< FSD no longer connected?
+        std::atomic_int m_retryConnectAttempt { 0 }; //!< try to connect the n-th time
+        std::atomic_int m_heartBeatFailures { 0 }; //!< voice server heartbeat failures
+        std::atomic_bool m_isStarted { false };
+        std::atomic_bool m_loopbackOn { false };
+        std::atomic_bool m_enableAliased { true };
+        std::atomic_bool m_winCoInitialized { false }; //!< Windows only CoInitializeEx
+        std::atomic_bool m_integratedComUnit { false }; //!< is COM unit sychronized, integrated?
+
+        double m_inputVolumeDb = 0.0;
+        int m_outputMasterVolumeNormalized = 0;
+        int m_outputVolumeCom1Normalized = 0;
+        int m_outputVolumeCom2Normalized = 0;
+        double m_outputVolumeDbCom1 = 0.0;
+        double m_outputGainRatioCom1 = 1.0; //!< 0dB
+        double m_outputVolumeDbCom2 = 0.0;
+        double m_outputGainRatioCom2 = 1.0; //!< 0dB
+        double m_maxDbReadingInPTTInterval = -100;
+
+        QTimer *m_voiceServerTimer = nullptr;
+        QVector<StationDto> m_aliasedStations;
+
+        audio::InputVolumeStreamArgs m_inputVolumeStream;
+        audio::OutputVolumeStreamArgs m_outputVolumeStream;
+
+        void checkServerHeartbeat();
+        void deferredInit();
+        void initTransceivers();
+        void connectWithContexts();
+        void fetchSimulatorSettings();
+        static bool hasContexts();
+
+        std::atomic_bool m_connectedWithContext { false };
+
+        mutable QRecursiveMutex m_mutex;
+        mutable QRecursiveMutex m_mutexInputStream;
+        mutable QRecursiveMutex m_mutexOutputStream;
+        mutable QRecursiveMutex m_mutexTransceivers;
+        mutable QRecursiveMutex m_mutexCallsign;
+        mutable QRecursiveMutex m_mutexConnection;
+        mutable QRecursiveMutex m_mutexVolume;
+        mutable QRecursiveMutex m_mutexSampleProviders;
+    };
+} // ns
+
+#endif

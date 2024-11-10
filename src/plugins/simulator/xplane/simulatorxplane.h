@@ -290,7 +290,7 @@ namespace BlackSimPlugin::XPlane
     };
 
     //! Listener waits for xswiftbus service to show up
-    class CSimulatorXPlaneListener : public BlackCore::ISimulatorListener
+    class CSimulatorXPlaneListener : public swift::core::ISimulatorListener
     {
         Q_OBJECT
 
@@ -299,13 +299,13 @@ namespace BlackSimPlugin::XPlane
         CSimulatorXPlaneListener(const swift::misc::simulation::CSimulatorPluginInfo &info);
 
     protected:
-        //! \copydoc BlackCore::ISimulatorListener::startImpl
+        //! \copydoc swift::core::ISimulatorListener::startImpl
         virtual void startImpl() override;
 
-        //! \copydoc BlackCore::ISimulatorListener::stopImpl
+        //! \copydoc swift::core::ISimulatorListener::stopImpl
         virtual void stopImpl() override;
 
-        //! \copydoc BlackCore::ISimulatorListener::checkImpl
+        //! \copydoc swift::core::ISimulatorListener::checkImpl
         virtual void checkImpl() override;
 
     private:
@@ -324,21 +324,21 @@ namespace BlackSimPlugin::XPlane
     };
 
     //! Factory for creating CSimulatorXPlane instance
-    class CSimulatorXPlaneFactory : public QObject, public BlackCore::ISimulatorFactory
+    class CSimulatorXPlaneFactory : public QObject, public swift::core::ISimulatorFactory
     {
         Q_OBJECT
-        Q_PLUGIN_METADATA(IID "org.swift-project.blackcore.simulatorinterface" FILE "simulatorxplane.json")
-        Q_INTERFACES(BlackCore::ISimulatorFactory)
+        Q_PLUGIN_METADATA(IID "org.swift-project.swift_core.simulatorinterface" FILE "simulatorxplane.json")
+        Q_INTERFACES(swift::core::ISimulatorFactory)
 
     public:
-        //! \copydoc BlackCore::ISimulatorFactory::create
-        virtual BlackCore::ISimulator *create(const swift::misc::simulation::CSimulatorPluginInfo &info,
+        //! \copydoc swift::core::ISimulatorFactory::create
+        virtual swift::core::ISimulator *create(const swift::misc::simulation::CSimulatorPluginInfo &info,
                                               swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
                                               swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                                               swift::misc::network::IClientProvider *clientProvider) override;
 
-        //! \copydoc BlackCore::ISimulatorFactory::createListener
-        virtual BlackCore::ISimulatorListener *createListener(const swift::misc::simulation::CSimulatorPluginInfo &info) override { return new CSimulatorXPlaneListener(info); }
+        //! \copydoc swift::core::ISimulatorFactory::createListener
+        virtual swift::core::ISimulatorListener *createListener(const swift::misc::simulation::CSimulatorPluginInfo &info) override { return new CSimulatorXPlaneListener(info); }
     };
 } // ns
 

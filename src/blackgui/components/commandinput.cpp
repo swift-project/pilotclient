@@ -3,15 +3,15 @@
 
 #include "blackgui/components/commandinput.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/context/contextapplication.h"
-#include "blackcore/context/contextsimulator.h"
-#include "blackcore/context/contextnetwork.h"
+#include "core/context/contextapplication.h"
+#include "core/context/contextsimulator.h"
+#include "core/context/contextnetwork.h"
 #include "misc/simplecommandparser.h"
 
 using namespace swift::misc;
 using namespace swift::misc::network;
 using namespace swift::misc::simulation;
-using namespace BlackCore::Context;
+using namespace swift::core::context;
 
 namespace BlackGui::Components
 {

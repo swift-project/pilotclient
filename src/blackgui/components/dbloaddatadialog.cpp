@@ -4,8 +4,8 @@
 #include "blackgui/components/dbloaddatadialog.h"
 #include "ui_dbloaddatadialog.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/webdataservices.h"
-#include "blackcore/db/databaseutils.h"
+#include "core/webdataservices.h"
+#include "core/db/databaseutils.h"
 #include "misc/simulation/aircraftmodellist.h"
 #include "misc/logmessage.h"
 
@@ -18,8 +18,8 @@ using namespace swift::misc;
 using namespace swift::misc::network;
 using namespace swift::misc::simulation;
 using namespace swift::misc::simulation::data;
-using namespace BlackCore;
-using namespace BlackCore::Db;
+using namespace swift::core;
+using namespace swift::core::db;
 
 namespace BlackGui::Components
 {

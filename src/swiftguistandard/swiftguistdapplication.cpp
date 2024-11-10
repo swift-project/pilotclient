@@ -2,16 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "swiftguistdapplication.h"
-#include "blackcore/application.h"
-#include "blackcore/corefacadeconfig.h"
-#include "blackcore/coremodeenums.h"
+#include "core/application.h"
+#include "core/corefacadeconfig.h"
+#include "core/coremodeenums.h"
 #include "misc/dbusserver.h"
 #include "misc/icons.h"
 
 #include <QtGlobal>
 
 using namespace swift::misc;
-using namespace BlackCore;
+using namespace swift::core;
 
 CSwiftGuiStdApplication::CSwiftGuiStdApplication() : CGuiApplication(CApplicationInfo::swiftPilotClientGui(), CApplicationInfo::PilotClientGui, CIcons::swift1024())
 {

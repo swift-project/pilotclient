@@ -12,8 +12,8 @@
 #include "misc/aviation/callsign.h"
 #include "misc/simulation/simulatedaircraft.h"
 #include "misc/network/textmessage.h"
-#include "blackcore/context/contextownaircraft.h"
-#include "blackcore/application.h"
+#include "core/context/contextownaircraft.h"
+#include "core/application.h"
 #include "ui_overlaymessages.h"
 
 #include <QKeyEvent>
@@ -35,8 +35,8 @@ using namespace swift::misc;
 using namespace swift::misc::aviation;
 using namespace swift::misc::network;
 using namespace swift::misc::simulation;
-using namespace BlackCore;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::context;
 using namespace BlackGui::Models;
 using namespace BlackGui::Views;
 using namespace BlackGui::Settings;

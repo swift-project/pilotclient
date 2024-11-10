@@ -14,7 +14,7 @@
 #include "blackgui/mainwindowaccess.h"
 #include "blackgui/managedstatusbar.h"
 #include "blackgui/guiactionbind.h"
-#include "blackcore/actionbind.h"
+#include "core/actionbind.h"
 #include "misc/network/connectionstatus.h"
 #include "misc/simulation/simulatedaircraft.h"
 #include "misc/simulation/autopublishdata.h"
@@ -124,8 +124,8 @@ private:
     QScopedPointer<BlackGui::Components::CModelBrowserDialog> m_modelBrower; //!< model browser
     QScopedPointer<BlackGui::Components::CAircraftModelSetValidationDialog> m_validationDialog; //!< aircraft model validation dialog
     swift::misc::CData<swift::misc::simulation::data::TLastAutoPublish> m_lastAutoPublish { this };
-    BlackCore::CActionBind m_actionPtt { swift::misc::input::pttHotkeyAction(), swift::misc::CIcons::StandardIconRadio16, this, &SwiftGuiStd::onPttChanged };
-    BlackCore::CActionBindings m_menuHotkeyHandlers;
+    swift::core::CActionBind m_actionPtt { swift::misc::input::pttHotkeyAction(), swift::misc::CIcons::StandardIconRadio16, this, &SwiftGuiStd::onPttChanged };
+    swift::core::CActionBindings m_menuHotkeyHandlers;
     BlackGui::CManagedStatusBar m_statusBar;
     swift::misc::CLogHistoryReplica m_logHistoryForLogButtons { this };
     swift::misc::CLogHistoryReplica m_logHistoryForOverlay { this };

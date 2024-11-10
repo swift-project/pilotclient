@@ -7,7 +7,7 @@
 #include "samplesaviation.h"
 #include "samplesgeo.h"
 #include "samplesphysicalquantities.h"
-#include "blackcore/application.h"
+#include "core/application.h"
 #include "misc/directoryutils.h"
 
 #include <stdio.h>
@@ -18,7 +18,7 @@
 
 using namespace swift::misc;
 using namespace BlackSample;
-using namespace BlackCore;
+using namespace swift::core;
 
 //! main
 int main(int argc, char *argv[])

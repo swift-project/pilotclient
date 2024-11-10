@@ -11,16 +11,16 @@ using namespace swift::misc::simulation;
 
 namespace BlackSimPlugin::Emulated
 {
-    BlackCore::ISimulator *CSimulatorEmulatedFactory::create(const CSimulatorPluginInfo &info,
-                                                             IOwnAircraftProvider *ownAircraftProvider,
-                                                             IRemoteAircraftProvider *remoteAircraftProvider,
-                                                             network::IClientProvider *clientProvider)
+    swift::core::ISimulator *CSimulatorEmulatedFactory::create(const CSimulatorPluginInfo &info,
+                                                               IOwnAircraftProvider *ownAircraftProvider,
+                                                               IRemoteAircraftProvider *remoteAircraftProvider,
+                                                               network::IClientProvider *clientProvider)
     {
         Q_ASSERT(ownAircraftProvider);
         return new CSimulatorEmulated(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, this);
     }
 
-    BlackCore::ISimulatorListener *CSimulatorEmulatedFactory::createListener(const CSimulatorPluginInfo &info)
+    swift::core::ISimulatorListener *CSimulatorEmulatedFactory::createListener(const CSimulatorPluginInfo &info)
     {
         return new CSimulatorEmulatedListener(info);
     }

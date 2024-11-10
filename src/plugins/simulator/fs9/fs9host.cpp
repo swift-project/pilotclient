@@ -3,7 +3,7 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-#include "blackcore/application.h"
+#include "core/application.h"
 #include "misc/logmessage.h"
 #include "directplayerror.h"
 #include "directplayutils.h"

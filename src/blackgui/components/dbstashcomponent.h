@@ -9,7 +9,7 @@
 #include "blackgui/components/dbmappingcomponentaware.h"
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
-#include "blackcore/data/authenticateduser.h"
+#include "core/data/authenticateduser.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/propertyindexvariantmap.h"
 #include "misc/network/authenticateduser.h"
@@ -143,7 +143,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CDbStashComponent> ui;
-            swift::misc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this, &CDbStashComponent::onUserChanged }; //!< authenticated user
+            swift::misc::CDataReadOnly<swift::core::data::TAuthenticatedDbUser> m_swiftDbUser { this, &CDbStashComponent::onUserChanged }; //!< authenticated user
 
             //! Unstash pressed
             void onUnstashPressed();

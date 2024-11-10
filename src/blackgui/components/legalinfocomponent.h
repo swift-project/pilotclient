@@ -7,7 +7,7 @@
 #define BLACKGUI_COMPONENTS_LEGALINFOCOMPONENT_H
 
 #include "blackgui/overlaymessagesframe.h"
-#include "blackcore/application/applicationsettings.h"
+#include "core/application/applicationsettings.h"
 #include <QFrame>
 #include <QScopedPointer>
 #include <QWizardPage>
@@ -46,7 +46,7 @@ namespace BlackGui::Components
         void setChecklistInfo();
 
         QScopedPointer<Ui::CLegalInfoComponent> ui;
-        swift::misc::CSetting<BlackCore::Application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this };
+        swift::misc::CSetting<swift::core::application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this };
     };
 
     /*!

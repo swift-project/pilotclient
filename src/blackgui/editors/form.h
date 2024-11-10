@@ -8,7 +8,7 @@
 
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
-#include "blackcore/data/authenticateduser.h"
+#include "core/data/authenticateduser.h"
 #include "misc/datacache.h"
 #include <QFrame>
 #include <QObject>
@@ -83,7 +83,7 @@ namespace BlackGui::Editors
         //! User has been changed
         virtual void userChanged();
 
-        swift::misc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this, &CFormDbUser::userChanged }; //!< authenticated user
+        swift::misc::CDataReadOnly<swift::core::data::TAuthenticatedDbUser> m_swiftDbUser { this, &CFormDbUser::userChanged }; //!< authenticated user
     };
 } // ns
 

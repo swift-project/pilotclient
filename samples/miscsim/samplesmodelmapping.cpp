@@ -6,7 +6,7 @@
 
 #include "samplesmodelmapping.h"
 #include "sampleutils.h"
-#include "blackcore/aircraftmatcher.h"
+#include "core/aircraftmatcher.h"
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/simulation/aircraftmodellist.h"
@@ -23,7 +23,7 @@
 #include <QStringList>
 #include <QTextStream>
 
-using namespace BlackCore;
+using namespace swift::core;
 using namespace swift::misc;
 using namespace swift::misc::simulation;
 using namespace swift::misc::simulation::fscommon;

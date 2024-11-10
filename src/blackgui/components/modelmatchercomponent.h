@@ -7,7 +7,7 @@
 #define BLACKGUI_COMPONENT_MODELMATCHERCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackcore/aircraftmatcher.h"
+#include "core/aircraftmatcher.h"
 #include "misc/simulation/settings/modelmatchersettings.h"
 #include "misc/simulation/aircraftmodel.h"
 #include "misc/simulation/simulatedaircraft.h"
@@ -101,7 +101,7 @@ namespace BlackGui
             QScopedPointer<Ui::CModelMatcherComponent> ui;
             QPointer<Views::CAircraftModelView> m_workbenchView; //!< an external workbenc
             CSettingsMatchingDialog *m_settingsDialog = nullptr; //!< matching settings as dialog
-            BlackCore::CAircraftMatcher m_matcher { this }; //!< used matcher
+            swift::core::CAircraftMatcher m_matcher { this }; //!< used matcher
             swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TModelMatching> m_matchingSettings { this }; //!< settings
         };
     } // ns

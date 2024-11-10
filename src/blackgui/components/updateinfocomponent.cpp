@@ -16,7 +16,7 @@
 #include <QMessageBox>
 
 using namespace swift::config;
-using namespace BlackCore::Application;
+using namespace swift::core::application;
 using namespace swift::misc;
 using namespace swift::misc::db;
 using namespace swift::misc::network;

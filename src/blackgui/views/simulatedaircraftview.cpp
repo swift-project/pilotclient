@@ -6,8 +6,8 @@
 #include "blackgui/models/simulatedaircraftlistmodel.h"
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/context/contextsimulator.h"
-#include "blackcore/context/contextnetwork.h"
+#include "core/context/contextsimulator.h"
+#include "core/context/contextnetwork.h"
 #include "misc/simulation/simulatedaircraftlist.h"
 #include "misc/aviation/callsign.h"
 #include "misc/icons.h"
@@ -22,7 +22,7 @@ using namespace swift::misc;
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::aviation;
 using namespace swift::misc::simulation;
-using namespace BlackCore::Context;
+using namespace swift::core::context;
 using namespace BlackGui::Models;
 using namespace BlackGui::Menus;
 

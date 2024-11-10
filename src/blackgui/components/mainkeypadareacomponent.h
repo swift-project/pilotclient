@@ -75,13 +75,13 @@ namespace BlackGui::Components
         //! Button was clicked
         void buttonSelected();
 
-        //! \copydoc BlackCore::Context::IContextNetwork::connectionStatusChanged
+        //! \copydoc swift::core::context::IContextNetwork::connectionStatusChanged
         void connectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
 
-        //! \copydoc BlackCore::Context::IContextOwnAircraft::changedAircraftCockpit
+        //! \copydoc swift::core::context::IContextOwnAircraft::changedAircraftCockpit
         void ownAircraftCockpitChanged(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator);
 
-        //! \copydoc BlackCore::Context::IContextAudio::changedOutputMute
+        //! \copydoc swift::core::context::IContextAudio::changedOutputMute
         void outputMuteChanged(bool muted);
 
         //! If button is info area, identify it

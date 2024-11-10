@@ -4,7 +4,7 @@
 #include "situationform.h"
 #include "ui_situationform.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/context/contextownaircraft.h"
+#include "core/context/contextownaircraft.h"
 #include "misc/pq/pressure.h"
 #include "misc/pq/angle.h"
 #include "misc/stringutils.h"

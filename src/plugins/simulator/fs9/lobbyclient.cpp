@@ -3,8 +3,8 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-#include "blackcore/actionbind.h"
-#include "blackcore/application.h"
+#include "core/actionbind.h"
+#include "core/application.h"
 #include "directplayerror.h"
 #include "directplayutils.h"
 #include "fs9.h"

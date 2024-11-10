@@ -33,7 +33,7 @@ unreadVariable:samples/misc/samplesperformance.*
 
 // False positives
 returnDanglingLifetime:src/misc/iterator.h
-unreadVariable:tests/blackcore/testreaders/testreaders.cpp
+unreadVariable:tests/core/testreaders/testreaders.cpp
 unknownMacro:src/misc/aviation/altitude.h
 unknownMacro:src/misc/geo/coordinategeodetic.cpp
 unknownMacro:src/misc/geo/elevationplane.h

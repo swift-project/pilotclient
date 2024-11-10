@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 #include "blackgui/components/dbliverycomponent.h"
 #include "blackgui/filters/liveryfilterbar.h"
 #include "blackgui/guiapplication.h"
@@ -11,7 +11,7 @@
 #include <QtGlobal>
 #include <QStringBuilder>
 
-using namespace BlackCore;
+using namespace swift::core;
 using namespace BlackGui::Views;
 using namespace swift::misc::aviation;
 using namespace swift::misc::network;

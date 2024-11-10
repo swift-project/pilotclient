@@ -3,10 +3,10 @@
 
 #include "swiftlauncher.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/db/databasereaderconfig.h"
+#include "core/db/databasereaderconfig.h"
 #include "misc/directoryutils.h"
 #include "misc/icons.h"
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 
 #include <QtGlobal>
 #include <QApplication>
@@ -15,8 +15,8 @@
 
 using namespace BlackGui;
 using namespace swift::misc;
-using namespace BlackCore;
-using namespace BlackCore::Db;
+using namespace swift::core;
+using namespace swift::core::db;
 
 //! Init the DB cache from local resource files if the cache has no timestamp or the cache was not updated since 2 years
 void initDbCacheFromResourceFileIfRequired(CGuiApplication &a)
@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
     const QCommandLineOption installerOption { { "i", "installer" }, QCoreApplication::translate("main", "Installer setup.") };
     a.addParserOption(installerOption);
     if (!a.parseCommandLineArgsAndLoadSetup()) { return EXIT_FAILURE; }
-    a.initAndStartWebDataServices(BlackCore::CWebReaderFlags::AllSwiftDbReaders, CDatabaseReaderConfigList::forLauncher());
+    a.initAndStartWebDataServices(swift::core::CWebReaderFlags::AllSwiftDbReaders, CDatabaseReaderConfigList::forLauncher());
 
     const bool installMode = a.isParserOptionSet(installerOption);
     if (installMode) initDbCacheFromResourceFileIfRequired(a);

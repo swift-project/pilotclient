@@ -5,8 +5,8 @@
 #include "blackgui/filters/aircraftmodelfilterbar.h"
 #include "blackgui/models/aircraftmodellistmodel.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/application.h"
-#include "blackcore/webdataservices.h"
+#include "core/application.h"
+#include "core/webdataservices.h"
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackgui/views/viewbase.h"
 #include "misc/simulation/aircraftmodel.h"
@@ -20,7 +20,7 @@
 using namespace swift::misc;
 using namespace swift::misc::network;
 using namespace swift::misc::simulation;
-using namespace BlackCore;
+using namespace swift::core;
 using namespace BlackGui::Views;
 using namespace BlackGui::Models;
 

@@ -5,11 +5,11 @@
 #include "ui_airportcompleter.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 #include "misc/aviation/airportlist.h"
 #include <QCompleter>
 
-using namespace BlackCore;
+using namespace swift::core;
 using namespace swift::misc::aviation;
 
 namespace BlackGui::Components

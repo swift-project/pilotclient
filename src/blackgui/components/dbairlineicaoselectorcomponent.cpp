@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "ui_dbairlineicaoselectorcomponent.h"
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 #include "blackgui/components/dbairlineicaoselectorcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
@@ -15,7 +15,7 @@
 #include <QLineEdit>
 #include <Qt>
 
-using namespace BlackCore;
+using namespace swift::core;
 using namespace BlackGui;
 using namespace swift::misc;
 using namespace swift::misc::db;

@@ -4,7 +4,7 @@
 #include "ui_dbairlinenameselectorcomponent.h"
 #include "blackgui/components/dbairlinenameselectorcomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 #include "misc/aviation/airlineicaocodelist.h"
 #include "misc/db/datastoreutility.h"
 
@@ -13,7 +13,7 @@
 #include <QString>
 #include <Qt>
 
-using namespace BlackCore;
+using namespace swift::core;
 using namespace BlackGui;
 using namespace swift::misc;
 using namespace swift::misc::aviation;

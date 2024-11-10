@@ -22,10 +22,10 @@
 #include "blackgui/managedstatusbar.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/stylesheetutility.h"
-#include "blackcore/webdataservices.h"
-#include "blackcore/context/contextnetwork.h"
-#include "blackcore/context/contextsimulator.h"
-#include "blackcore/context/contextaudio.h"
+#include "core/webdataservices.h"
+#include "core/context/contextnetwork.h"
+#include "core/context/contextsimulator.h"
+#include "core/context/contextaudio.h"
 #include "sound/audioutilities.h"
 #include "misc/network/networkutils.h"
 #include "misc/sharedstate/datalinkdbus.h"
@@ -48,8 +48,8 @@
 #include <QHBoxLayout>
 
 using namespace swift::config;
-using namespace BlackCore;
-using namespace BlackCore::Context;
+using namespace swift::core;
+using namespace swift::core::context;
 using namespace swift::misc;
 using namespace swift::misc::aviation;
 using namespace swift::misc::network;

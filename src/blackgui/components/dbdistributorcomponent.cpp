@@ -6,14 +6,14 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/views/distributorview.h"
 #include "blackgui/views/viewbase.h"
-#include "blackcore/webdataservices.h"
+#include "core/webdataservices.h"
 #include "misc/simulation/simulatorinfo.h"
 
 #include <QFrame>
 #include <QPointer>
 #include <QtGlobal>
 
-using namespace BlackCore;
+using namespace swift::core;
 using namespace swift::misc::network;
 using namespace swift::misc::simulation;
 using namespace BlackGui::Views;

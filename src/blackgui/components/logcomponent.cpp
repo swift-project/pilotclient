@@ -7,7 +7,7 @@
 #include "blackgui/views/statusmessageview.h"
 #include "blackgui/views/viewbase.h"
 #include "blackgui/guiutility.h"
-#include "blackcore/application.h"
+#include "core/application.h"
 #include "misc/icons.h"
 #include "misc/logpattern.h"
 #include "misc/sharedstate/datalinkdbus.h"
@@ -20,7 +20,7 @@
 #include <QtGlobal>
 
 using namespace swift::misc;
-using namespace BlackCore;
+using namespace swift::core;
 using namespace BlackGui;
 using namespace BlackGui::Views;
 using namespace BlackGui::Menus;

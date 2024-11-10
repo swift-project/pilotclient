@@ -5,8 +5,8 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/infoarea.h"
 #include "blackgui/components/radarcomponent.h"
-#include "blackcore/context/contextnetwork.h"
-#include "blackcore/context/contextownaircraft.h"
+#include "core/context/contextnetwork.h"
+#include "core/context/contextownaircraft.h"
 #include "misc/simulation/simulatedaircraft.h"
 
 #include <QtMath>

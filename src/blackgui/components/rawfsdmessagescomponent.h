@@ -7,7 +7,7 @@
 #define BLACKGUI_RAWFSDMESSAGESCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackcore/vatsim/vatsimsettings.h"
+#include "core/vatsim/vatsimsettings.h"
 #include "misc/network/rawfsdmessagelist.h"
 #include "misc/connectionguard.h"
 
@@ -48,7 +48,7 @@ namespace BlackGui::Components
 
         static QString rawFsdMessageToString(const swift::misc::network::CRawFsdMessage &rawFsdMessage);
 
-        swift::misc::CSetting<BlackCore::Vatsim::TRawFsdMessageSetting> m_setting { this };
+        swift::misc::CSetting<swift::core::vatsim::TRawFsdMessageSetting> m_setting { this };
 
         QScopedPointer<Ui::CRawFsdMessagesComponent> ui;
         swift::misc::CConnectionGuard m_signalConnections; //!< connected signal/slots
