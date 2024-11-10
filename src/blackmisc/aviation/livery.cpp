@@ -245,7 +245,7 @@ namespace BlackMisc::Aviation
         livery.setKeyVersionTimestampFromDatabaseJson(json, prefix);
 
         // color liveries must have default ICAO, but airline liveries must have DB airline
-        BLACK_VERIFY_X((livery.isColorLivery() && !livery.getAirlineIcaoCode().hasValidDbKey()) || (livery.isAirlineLivery() && livery.getAirlineIcaoCode().hasValidDbKey()), Q_FUNC_INFO, "inconsistent data");
+        SWIFT_VERIFY_X((livery.isColorLivery() && !livery.getAirlineIcaoCode().hasValidDbKey()) || (livery.isAirlineLivery() && livery.getAirlineIcaoCode().hasValidDbKey()), Q_FUNC_INFO, "inconsistent data");
 
         return livery;
     }
@@ -293,7 +293,7 @@ namespace BlackMisc::Aviation
         livery.setKeyVersionTimestampFromDatabaseJson(json, prefix);
 
         // color liveries must have default ICAO, but airline liveries must have DB airline
-        BLACK_VERIFY_X((livery.isColorLivery() && !livery.getAirlineIcaoCode().hasValidDbKey()) || (livery.isAirlineLivery() && livery.getAirlineIcaoCode().hasValidDbKey()), Q_FUNC_INFO, "inconsistent data");
+        SWIFT_VERIFY_X((livery.isColorLivery() && !livery.getAirlineIcaoCode().hasValidDbKey()) || (livery.isAirlineLivery() && livery.getAirlineIcaoCode().hasValidDbKey()), Q_FUNC_INFO, "inconsistent data");
 
         return livery;
     }

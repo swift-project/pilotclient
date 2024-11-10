@@ -758,7 +758,7 @@ namespace BlackCore
     CStatusMessageList CApplication::initAndStartWebDataServices(CWebReaderFlags::WebReader webReader, const Db::CDatabaseReaderConfigList &dbReaderConfig)
     {
         Q_ASSERT_X(m_webDataServices.isNull(), Q_FUNC_INFO, "Services already started");
-        BLACK_VERIFY_X(QSslSocket::supportsSsl(), Q_FUNC_INFO, "No SSL");
+        SWIFT_VERIFY_X(QSslSocket::supportsSsl(), Q_FUNC_INFO, "No SSL");
         if (!QSslSocket::supportsSsl())
         {
             return CStatusMessage(this).error(u"No SSL supported, can`t be used");

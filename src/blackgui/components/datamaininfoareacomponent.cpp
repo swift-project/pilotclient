@@ -62,7 +62,7 @@ namespace BlackGui::Components
     void CDataMainInfoAreaComponent::displayLog()
     {
         this->selectArea(InfoAreaLog);
-        BLACK_VERIFY_X(this->getLogComponent(), Q_FUNC_INFO, "No log component");
+        SWIFT_VERIFY_X(this->getLogComponent(), Q_FUNC_INFO, "No log component");
         if (!this->getLogComponent()) { return; }
         this->getLogComponent()->displayLog();
     }

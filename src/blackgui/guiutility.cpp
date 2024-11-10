@@ -274,8 +274,8 @@ namespace BlackGui
         QString c(comparison.trimmed().toLower().simplified());
 
         // we should not have empty titles
-        BLACK_VERIFY_X(!t.isEmpty(), Q_FUNC_INFO, "missing title");
-        BLACK_VERIFY_X(!c.isEmpty(), Q_FUNC_INFO, "missing comparison value");
+        SWIFT_VERIFY_X(!t.isEmpty(), Q_FUNC_INFO, "missing title");
+        SWIFT_VERIFY_X(!c.isEmpty(), Q_FUNC_INFO, "missing comparison value");
         if (t.isEmpty() || c.isEmpty()) { return false; }
 
         // same?
@@ -443,7 +443,7 @@ namespace BlackGui
     void CGuiUtility::checkBoxReadOnly(QCheckBox *checkBox, bool readOnly)
     {
         static const QCheckBox defaultBox;
-        BLACK_VERIFY_X(checkBox, Q_FUNC_INFO, "no checkbox");
+        SWIFT_VERIFY_X(checkBox, Q_FUNC_INFO, "no checkbox");
         if (!checkBox) { return; }
 
         static const QString background("background: rgb(40,40,40)"); //! \fixme hardcoded stylesheet setting, should come from stylesheet

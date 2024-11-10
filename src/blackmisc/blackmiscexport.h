@@ -33,13 +33,13 @@
 #endif
 
 /*!
- * \def BLACK_NO_INLINE
+ * \def SWIFT_NO_INLINE
  * Prevent function inlining
  */
 #ifdef Q_CC_MSVC
-#    define BLACK_NO_INLINE __declspec(noinline)
+#    define SWIFT_NO_INLINE __declspec(noinline)
 #else
-#    define BLACK_NO_INLINE __attribute__((noinline))
+#    define SWIFT_NO_INLINE __attribute__((noinline))
 #endif
 
 #endif // guard

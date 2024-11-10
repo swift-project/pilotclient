@@ -125,14 +125,14 @@ namespace BlackMisc::Simulation::Data
 
     CAircraftModelList IMultiSimulatorModelCaches::getSynchronizedCachedModels(const CSimulatorInfo &simulator)
     {
-        BLACK_VERIFY_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
+        SWIFT_VERIFY_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
         this->synchronizeCache(simulator);
         return this->getCachedModels(simulator);
     }
 
     QDateTime IMultiSimulatorModelCaches::getSynchronizedTimestamp(const CSimulatorInfo &simulator)
     {
-        BLACK_VERIFY_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
+        SWIFT_VERIFY_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
         this->synchronizeCache(simulator);
         return this->getCacheTimestamp(simulator);
     }

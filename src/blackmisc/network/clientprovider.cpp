@@ -51,7 +51,7 @@ namespace BlackMisc::Network
     bool CClientProvider::setOtherClient(const CClient &client)
     {
         const bool hasCallsign = !client.getCallsign().isEmpty();
-        BLACK_VERIFY_X(hasCallsign, Q_FUNC_INFO, "Need callsign in client");
+        SWIFT_VERIFY_X(hasCallsign, Q_FUNC_INFO, "Need callsign in client");
         if (!hasCallsign) { return false; }
         QWriteLocker l(&m_lockClient);
         m_clients[client.getCallsign()] = client;
@@ -68,7 +68,7 @@ namespace BlackMisc::Network
     bool CClientProvider::addNewClient(const CClient &client)
     {
         const CCallsign callsign = client.getCallsign();
-        BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing client callsign");
+        SWIFT_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing client callsign");
         if (callsign.isEmpty()) { return false; }
         if (this->hasClientInfo(callsign)) { return false; }
         QWriteLocker l(&m_lockClient);
@@ -78,7 +78,7 @@ namespace BlackMisc::Network
 
     int CClientProvider::updateOrAddClient(const CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues)
     {
-        BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing client callsign");
+        SWIFT_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing client callsign");
         if (callsign.isEmpty()) { return 0; }
         int c = 0;
         if (this->hasClientInfo(callsign))
@@ -118,7 +118,7 @@ namespace BlackMisc::Network
 
     bool CClientProvider::setClientGndCapability(const CCallsign &callsign, bool supportGndFlag)
     {
-        BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing client callsign");
+        SWIFT_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing client callsign");
         if (callsign.isEmpty()) { return 0; }
 
         CClient client = this->getClientOrDefaultForCallsign(callsign);

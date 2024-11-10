@@ -1070,7 +1070,7 @@ namespace BlackSimPlugin::FsxCommon
         simObjAddAgain.increaseAddingExceptions();
         if (!simObject.hasCallsign())
         {
-            BLACK_VERIFY_X(false, Q_FUNC_INFO, "Missing callsign");
+            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Missing callsign");
             return;
         }
 
@@ -1200,7 +1200,7 @@ namespace BlackSimPlugin::FsxCommon
 
         for (const CSimConnectObject &pendingSimObj : std::as_const(m_addPendingAircraft))
         {
-            BLACK_VERIFY_X(pendingSimObj.hasCallsign(), Q_FUNC_INFO, "missing callsign");
+            SWIFT_VERIFY_X(pendingSimObj.hasCallsign(), Q_FUNC_INFO, "missing callsign");
             if (!pendingSimObj.hasCallsign()) { continue; }
             if (pendingSimObj.isTerrainProbe() || aircraftCallsignsInRange.contains(pendingSimObj.getCallsign()))
             {
@@ -1568,7 +1568,7 @@ namespace BlackSimPlugin::FsxCommon
             canAdd = situation.isPositionOrAltitudeNull();
             if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
-                BLACK_VERIFY_X(canAdd, Q_FUNC_INFO, "Expect valid situation");
+                SWIFT_VERIFY_X(canAdd, Q_FUNC_INFO, "Expect valid situation");
                 CLogMessage(this).warning(u"Invalid situation for '%1'") << callsign;
             }
         }
@@ -1942,8 +1942,8 @@ namespace BlackSimPlugin::FsxCommon
             const CCallsign callsign(simObject.getCallsign());
             const bool hasCs = !callsign.isEmpty();
             const bool hasValidIds = simObject.hasValidRequestAndObjectId();
-            BLACK_VERIFY_X(hasCs, Q_FUNC_INFO, "missing callsign");
-            BLACK_AUDIT_X(hasValidIds, Q_FUNC_INFO, "Missing ids");
+            SWIFT_VERIFY_X(hasCs, Q_FUNC_INFO, "missing callsign");
+            SWIFT_AUDIT_X(hasValidIds, Q_FUNC_INFO, "Missing ids");
             if (!hasCs || !hasValidIds) { continue; } // not supposed to happen
             const DWORD objectId = simObject.getObjectId();
 
@@ -2260,7 +2260,7 @@ namespace BlackSimPlugin::FsxCommon
         // crosscheck
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            BLACK_VERIFY_X(isValidFsxPosition(position), Q_FUNC_INFO, "Invalid FSX pos.");
+            SWIFT_VERIFY_X(isValidFsxPosition(position), Q_FUNC_INFO, "Invalid FSX pos.");
         }
 
         return position;

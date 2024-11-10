@@ -95,7 +95,7 @@ namespace BlackCore::Afv::Audio
     {
         if (m_started) { return; }
 
-        BLACK_VERIFY_X(inputDevice.isValid() && inputDevice.isInputDevice(), Q_FUNC_INFO, "Wrong input device");
+        SWIFT_VERIFY_X(inputDevice.isValid() && inputDevice.isInputDevice(), Q_FUNC_INFO, "Wrong input device");
         m_device = inputDevice;
 
         QAudioFormat inputFormat;

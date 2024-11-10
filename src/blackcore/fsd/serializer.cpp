@@ -32,7 +32,7 @@ namespace BlackCore::Fsd
             {
                 // developers should record these types and EXPLICITLY exclude them
                 const QByteArray msg = message.toLatin1();
-                BLACK_VERIFY_X(false, Q_FUNC_INFO, msg);
+                SWIFT_VERIFY_X(false, Q_FUNC_INFO, msg);
             }
 
             CLogMessage(CLogCategories::fsd()).info(u"%1. Please report this to the DEVELOPERS!") << message;

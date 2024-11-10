@@ -350,7 +350,7 @@ namespace BlackMisc::Aviation
         default: break;
         }
         const QString assertMsg("No comparison for index " + index.toQString());
-        BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(assertMsg));
+        SWIFT_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(assertMsg));
         return 0;
     }
 
@@ -612,12 +612,12 @@ namespace BlackMisc::Aviation
         // sanity checks
         if (std::isnan(gh.value()))
         {
-            BLACK_VERIFY_X(false, Q_FUNC_INFO, "nan ground");
+            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "nan ground");
             return CLength::null();
         }
         if (std::isnan(this->getAltitude().value()))
         {
-            BLACK_VERIFY_X(false, Q_FUNC_INFO, "nan altitude");
+            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "nan altitude");
             return CLength::null();
         }
 
@@ -653,7 +653,7 @@ namespace BlackMisc::Aviation
         // above ground
         if (this->getAltitude().getReferenceDatum() == CAltitude::AboveGround)
         {
-            BLACK_VERIFY_X(false, Q_FUNC_INFO, "Unsupported");
+            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Unsupported");
             if (correction) { *correction = AGL; }
             return this->getAltitude();
         }

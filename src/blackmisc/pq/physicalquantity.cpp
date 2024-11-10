@@ -558,7 +558,7 @@ namespace BlackMisc::PhysicalQuantities
         case IndexValue: return Compare::compare(m_value, pq.m_value);
         default: break;
         }
-        BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable("No comparison for index " + index.toQString()));
+        SWIFT_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable("No comparison for index " + index.toQString()));
         return 0;
     }
 

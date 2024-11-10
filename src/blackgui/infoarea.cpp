@@ -128,12 +128,12 @@ namespace BlackGui
                 toggleFloatingMenuAction->setChecked(!dw->isFloating());
                 subMenuToggleFloat->addAction(toggleFloatingMenuAction);
                 c = connect(toggleFloatingMenuAction, &QAction::toggled, signalMapperToggleFloating, qOverload<>(&QSignalMapper::map));
-                BLACK_VERIFY_X(c, Q_FUNC_INFO, "Cannot map floating action"); // do not make that shutdown reason in a release build
+                SWIFT_VERIFY_X(c, Q_FUNC_INFO, "Cannot map floating action"); // do not make that shutdown reason in a release build
                 signalMapperToggleFloating->setMapping(toggleFloatingMenuAction, i);
             }
 
             c = connect(signalMapperToggleFloating, &QSignalMapper::mappedInt, this, &CInfoArea::toggleFloatingByIndex);
-            BLACK_VERIFY_X(c, Q_FUNC_INFO, "Cannot connect mapper"); // do not make that shutdown reason in a release build
+            SWIFT_VERIFY_X(c, Q_FUNC_INFO, "Cannot connect mapper"); // do not make that shutdown reason in a release build
 
             menu->addMenu(subMenuDisplay);
             if (c) { menu->addMenu(subMenuToggleFloat); }
@@ -385,7 +385,7 @@ namespace BlackGui
     {
         if (!this->isValidAreaIndex(areaIndex)) { return; }
         CDockWidgetInfoArea *dw = m_dockWidgetInfoAreas.at(areaIndex);
-        BLACK_VERIFY_X(dw, Q_FUNC_INFO, "Missing info area");
+        SWIFT_VERIFY_X(dw, Q_FUNC_INFO, "Missing info area");
         if (!dw) { return; }
         dw->toggleFloating();
     }
@@ -394,7 +394,7 @@ namespace BlackGui
     {
         if (!this->isValidAreaIndex(areaIndex)) { return; }
         CDockWidgetInfoArea *dw = m_dockWidgetInfoAreas.at(areaIndex);
-        BLACK_VERIFY_X(dw, Q_FUNC_INFO, "Missing info area");
+        SWIFT_VERIFY_X(dw, Q_FUNC_INFO, "Missing info area");
         if (!dw) { return; }
         dw->toggleVisibility();
     }
@@ -402,7 +402,7 @@ namespace BlackGui
     void CInfoArea::selectArea(int areaIndex)
     {
         CDockWidgetInfoArea *dw = m_dockWidgetInfoAreas.at(areaIndex);
-        BLACK_VERIFY_X(dw, Q_FUNC_INFO, "Missing info area");
+        SWIFT_VERIFY_X(dw, Q_FUNC_INFO, "Missing info area");
         if (!dw) { return; }
         Q_ASSERT(m_tabBar);
         if (m_tabBar->count() < 1) { return; }
@@ -420,7 +420,7 @@ namespace BlackGui
     void CInfoArea::resetPosition(int areaIndex)
     {
         CDockWidgetInfoArea *dw = m_dockWidgetInfoAreas.at(areaIndex);
-        BLACK_VERIFY_X(dw, Q_FUNC_INFO, "Missing info area");
+        SWIFT_VERIFY_X(dw, Q_FUNC_INFO, "Missing info area");
         if (!dw) { return; }
         dw->resetPosition();
     }
@@ -429,7 +429,7 @@ namespace BlackGui
     {
         const QObject *sender = QObject::sender();
         const QAction *action = qobject_cast<const QAction *>(sender);
-        BLACK_VERIFY(action);
+        SWIFT_VERIFY(action);
         if (!action) { return; }
         const int index = action->data().toInt();
         this->selectArea(index);
@@ -439,7 +439,7 @@ namespace BlackGui
     {
         const QObject *sender = QObject::sender();
         const QAction *action = qobject_cast<const QAction *>(sender);
-        BLACK_VERIFY(action);
+        SWIFT_VERIFY(action);
         if (!action) { return; }
         const int index = action->data().toInt();
         this->resetPosition(index);
@@ -449,7 +449,7 @@ namespace BlackGui
     {
         const QObject *sender = QObject::sender();
         const QAction *action = qobject_cast<const QAction *>(sender);
-        BLACK_VERIFY(action);
+        SWIFT_VERIFY(action);
         if (!action) { return; }
         const int index = action->data().toInt();
         this->toggleFloatingByIndex(index);
@@ -459,7 +459,7 @@ namespace BlackGui
     {
         const QObject *sender = QObject::sender();
         const QAction *action = qobject_cast<const QAction *>(sender);
-        BLACK_VERIFY(action);
+        SWIFT_VERIFY(action);
         if (!action) { return; }
         const int index = action->data().toInt();
         this->restoreDockWidgetInfoAreaByIndex(index);
@@ -755,7 +755,7 @@ namespace BlackGui
 
     int CInfoArea::getTabBarIndexByTitle(const QString &title) const
     {
-        BLACK_VERIFY_X(!title.isEmpty(), Q_FUNC_INFO, "No title");
+        SWIFT_VERIFY_X(!title.isEmpty(), Q_FUNC_INFO, "No title");
         if (title.isEmpty()) { return -1; }
 
         if (m_tabBar->count() < 1) { return -1; }

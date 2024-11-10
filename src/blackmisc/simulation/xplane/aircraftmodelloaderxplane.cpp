@@ -281,7 +281,7 @@ namespace BlackMisc::Simulation::XPlane
 
                 if (CBuildConfig::isLocalDeveloperDebugBuild())
                 {
-                    BLACK_AUDIT_X(modelFileInfo.exists(), Q_FUNC_INFO, "Model does NOT exist");
+                    SWIFT_AUDIT_X(modelFileInfo.exists(), Q_FUNC_INFO, "Model does NOT exist");
                 }
 
                 CLivery livery;

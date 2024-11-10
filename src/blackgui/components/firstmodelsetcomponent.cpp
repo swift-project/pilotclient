@@ -70,7 +70,7 @@ namespace BlackGui::Components
         if (!simulator.isSingleSimulator())
         {
             //! \fixme KB 2019-01 reported by RR/crash dump sometimes happening and leading to ASSERT/CTD avoiding the "crash" for better infos
-            if (CBuildConfig::isLocalDeveloperDebugBuild()) { BLACK_VERIFY_X(false, Q_FUNC_INFO, "Need single simulator"); }
+            if (CBuildConfig::isLocalDeveloperDebugBuild()) { SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Need single simulator"); }
             CLogMessage(this).error(u"Changing to non-single simulator %1 ignored") << simulator.toQString();
             return;
         }

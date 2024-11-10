@@ -118,7 +118,7 @@ namespace BlackMisc::Aviation
         {
             // does the value make any sense?
             const bool validGuessedSpeed = (guessedRotateSpeed.value(CSpeedUnit::km_h()) > 5.0);
-            BLACK_VERIFY_X(validGuessedSpeed, Q_FUNC_INFO, "Wrong guessed value for lift off");
+            SWIFT_VERIFY_X(validGuessedSpeed, Q_FUNC_INFO, "Wrong guessed value for lift off");
             if (!validGuessedSpeed) { guessedRotateSpeed = CSpeed(80, CSpeedUnit::kts()); } // fix
             sureRotateSpeed = guessedRotateSpeed * 1.25;
         }

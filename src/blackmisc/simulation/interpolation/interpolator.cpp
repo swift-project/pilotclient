@@ -228,7 +228,7 @@ namespace BlackMisc::Simulation
             // if we get here and the vector is invalid it means we haven't handled it correctly in one of the interpolators
             if (!currentSituation.isValidVectorRange())
             {
-                if (CBuildConfig::isLocalDeveloperDebugBuild()) { BLACK_VERIFY_X(false, Q_FUNC_INFO, "Invalid interpolation situation"); }
+                if (CBuildConfig::isLocalDeveloperDebugBuild()) { SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Invalid interpolation situation"); }
                 return CAircraftSituation::null();
             }
 
@@ -530,7 +530,7 @@ namespace BlackMisc::Simulation
             const CLength aboveGnd = situation.getHeightAboveGround();
             if (aboveGnd.isNull() || std::isnan(aboveGnd.value()))
             {
-                BLACK_VERIFY_X(false, Q_FUNC_INFO, "above gnd.is null");
+                SWIFT_VERIFY_X(false, Q_FUNC_INFO, "above gnd.is null");
                 return parts;
             }
 
@@ -673,7 +673,7 @@ namespace BlackMisc::Simulation
         CAircraftSituation currentSituation = m_lastSituation.isNull() ? m_currentSituations.front() : m_lastSituation;
         if (currentSituation.getCallsign() != m_callsign)
         {
-            BLACK_VERIFY_X(false, Q_FUNC_INFO, "Wrong callsign");
+            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Wrong callsign");
             currentSituation.setCallsign(m_callsign);
         }
 

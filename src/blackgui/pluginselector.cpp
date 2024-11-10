@@ -30,7 +30,7 @@ namespace BlackGui
     void CPluginSelector::addPlugin(const QString &identifier, const QString &name, bool hasConfig, bool enabled)
     {
         // skip if identifier is missing, which should normally not happen
-        BLACK_VERIFY_X(!identifier.isEmpty(), Q_FUNC_INFO, "Missing identifier");
+        SWIFT_VERIFY_X(!identifier.isEmpty(), Q_FUNC_INFO, "Missing identifier");
         if (identifier.isEmpty()) { return; }
 
         QWidget *pw = new QWidget;

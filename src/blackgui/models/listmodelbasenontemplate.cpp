@@ -158,8 +158,8 @@ namespace BlackGui::Models
 
     void CListModelBaseNonTemplate::emitDataChanged(int startRowIndex, int endRowIndex)
     {
-        BLACK_VERIFY_X(startRowIndex <= endRowIndex, Q_FUNC_INFO, "check rows");
-        BLACK_VERIFY_X(startRowIndex >= 0 && endRowIndex >= 0, Q_FUNC_INFO, "check rows");
+        SWIFT_VERIFY_X(startRowIndex <= endRowIndex, Q_FUNC_INFO, "check rows");
+        SWIFT_VERIFY_X(startRowIndex >= 0 && endRowIndex >= 0, Q_FUNC_INFO, "check rows");
 
         const int columns = columnCount();
         const int rows = rowCount();

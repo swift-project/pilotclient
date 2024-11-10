@@ -108,7 +108,7 @@ namespace BlackMisc::Simulation
         case IndexPitchOnGround: return QVariant::fromValue(m_pitchOnGround);
         default: break;
         }
-        BLACK_VERIFY_X(false, Q_FUNC_INFO, "Cannot handle index");
+        SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Cannot handle index");
         return QStringLiteral("Wrong index for %1").arg(i);
     }
 
@@ -128,7 +128,7 @@ namespace BlackMisc::Simulation
         case IndexPitchOnGround: m_pitchOnGround.setPropertyByIndex(index.copyFrontRemoved(), variant); return;
         default: break;
         }
-        BLACK_VERIFY_X(false, Q_FUNC_INFO, "Cannot handle index");
+        SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Cannot handle index");
     }
 
     QString CInterpolationAndRenderingSetupBase::convertToQString(bool i18n) const

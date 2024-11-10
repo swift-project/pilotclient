@@ -18,7 +18,7 @@ namespace BlackMisc::Simulation
     {
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            BLACK_VERIFY_X(isValidTimeFraction(m_simulationTimeFraction), Q_FUNC_INFO, "Time fraction needs to be within [0;1]");
+            SWIFT_VERIFY_X(isValidTimeFraction(m_simulationTimeFraction), Q_FUNC_INFO, "Time fraction needs to be within [0;1]");
         }
     }
 
@@ -35,7 +35,7 @@ namespace BlackMisc::Simulation
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            BLACK_VERIFY_X(isAcceptableTimeFraction(timeFraction0to1), Q_FUNC_INFO, "0..1 fraction needed");
+            SWIFT_VERIFY_X(isAcceptableTimeFraction(timeFraction0to1), Q_FUNC_INFO, "0..1 fraction needed");
         }
 
         //! make sure to not end up we extrapolation
@@ -53,7 +53,7 @@ namespace BlackMisc::Simulation
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            BLACK_VERIFY_X(headingStart.getReferenceNorth() == headingEnd.getReferenceNorth(), Q_FUNC_INFO, "Need same reference");
+            SWIFT_VERIFY_X(headingStart.getReferenceNorth() == headingEnd.getReferenceNorth(), Q_FUNC_INFO, "Need same reference");
         }
         return CHeading(interpolateAngle(headingStart, headingEnd, m_simulationTimeFraction), headingEnd.getReferenceNorth());
     }
@@ -79,7 +79,7 @@ namespace BlackMisc::Simulation
     {
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            BLACK_VERIFY_X(isValidTimeFraction(tf), Q_FUNC_INFO, "Time fraction needs to be 0-1");
+            SWIFT_VERIFY_X(isValidTimeFraction(tf), Q_FUNC_INFO, "Time fraction needs to be 0-1");
         }
         m_simulationTimeFraction = clampValidTimeFraction(tf);
     }

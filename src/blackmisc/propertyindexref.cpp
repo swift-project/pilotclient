@@ -19,7 +19,7 @@ namespace BlackMisc
 
     CPropertyIndexRef CPropertyIndexRef::copyFrontRemoved() const
     {
-        BLACK_VERIFY_X(!this->isEmpty(), Q_FUNC_INFO, "Empty index");
+        SWIFT_VERIFY_X(!this->isEmpty(), Q_FUNC_INFO, "Empty index");
         if (this->isEmpty() || !m_begin) { return -1; }
         CPropertyIndexRef copy = *this;
         ++copy.m_begin;

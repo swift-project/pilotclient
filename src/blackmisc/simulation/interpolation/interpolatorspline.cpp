@@ -90,8 +90,8 @@ namespace BlackMisc::Simulation
 
             if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
-                BLACK_VERIFY_X(t >= 0, Q_FUNC_INFO, "Expect t >= 0");
-                BLACK_VERIFY_X(t <= 1.0, Q_FUNC_INFO, "Expect t <= 1");
+                SWIFT_VERIFY_X(t >= 0, Q_FUNC_INFO, "Expect t >= 0");
+                SWIFT_VERIFY_X(t <= 1.0, Q_FUNC_INFO, "Expect t <= 1");
             }
             return y;
         }
@@ -248,9 +248,9 @@ namespace BlackMisc::Simulation
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            BLACK_VERIFY_X(dt1 >= 0, Q_FUNC_INFO, "Expect postive dt1");
-            BLACK_VERIFY_X(dt2 > 0, Q_FUNC_INFO, "Expect postive dt2");
-            BLACK_VERIFY_X(isAcceptableTimeFraction(timeFraction), Q_FUNC_INFO, "Expect fraction 0-1");
+            SWIFT_VERIFY_X(dt1 >= 0, Q_FUNC_INFO, "Expect postive dt1");
+            SWIFT_VERIFY_X(dt2 > 0, Q_FUNC_INFO, "Expect postive dt2");
+            SWIFT_VERIFY_X(isAcceptableTimeFraction(timeFraction), Q_FUNC_INFO, "Expect fraction 0-1");
         }
         timeFraction = clampValidTimeFraction(timeFraction);
         const qint64 interpolatedTime = m_prevSampleTime + qRound64(timeFraction * dt2);
@@ -323,8 +323,8 @@ namespace BlackMisc::Simulation
         if (!valid && CBuildConfig::isLocalDeveloperDebugBuild())
         {
             Q_ASSERT_X(t1 < t2, Q_FUNC_INFO, "Expect sorted times, latest first"); // that means a bug in our code init the values
-            BLACK_VERIFY_X(m_currentTimeMsSinceEpoc >= t1, Q_FUNC_INFO, "invalid timestamp t1");
-            BLACK_VERIFY_X(m_currentTimeMsSinceEpoc < t2, Q_FUNC_INFO, "invalid timestamp t2"); // t1==t2 results in div/0
+            SWIFT_VERIFY_X(m_currentTimeMsSinceEpoc >= t1, Q_FUNC_INFO, "invalid timestamp t1");
+            SWIFT_VERIFY_X(m_currentTimeMsSinceEpoc < t2, Q_FUNC_INFO, "invalid timestamp t2"); // t1==t2 results in div/0
         }
         if (!valid) { return { {}, {} }; }
 
@@ -335,9 +335,9 @@ namespace BlackMisc::Simulation
         valid = CAircraftSituation::isValidVector(m_pa.x) && CAircraftSituation::isValidVector(m_pa.y) && CAircraftSituation::isValidVector(m_pa.z);
         if (!valid && CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            BLACK_VERIFY_X(CAircraftSituation::isValidVector(m_pa.x), Q_FUNC_INFO, "invalid X"); // all x values
-            BLACK_VERIFY_X(CAircraftSituation::isValidVector(m_pa.y), Q_FUNC_INFO, "invalid Y"); // all y values
-            BLACK_VERIFY_X(CAircraftSituation::isValidVector(m_pa.z), Q_FUNC_INFO, "invalid Z"); // all z values
+            SWIFT_VERIFY_X(CAircraftSituation::isValidVector(m_pa.x), Q_FUNC_INFO, "invalid X"); // all x values
+            SWIFT_VERIFY_X(CAircraftSituation::isValidVector(m_pa.y), Q_FUNC_INFO, "invalid Y"); // all y values
+            SWIFT_VERIFY_X(CAircraftSituation::isValidVector(m_pa.z), Q_FUNC_INFO, "invalid Z"); // all z values
         }
         if (!valid) { return { {}, {} }; }
 
@@ -347,7 +347,7 @@ namespace BlackMisc::Simulation
         valid = CAircraftSituation::isValidVector(normalVector);
         if (!valid && CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            BLACK_VERIFY_X(valid, Q_FUNC_INFO, "invalid vector");
+            SWIFT_VERIFY_X(valid, Q_FUNC_INFO, "invalid vector");
             CLogMessage(this).warning(u"Invalid vector v: %2 %3 %4") << normalVector[0] << normalVector[1] << normalVector[2];
         }
         if (!valid) { return { {}, {} }; }
@@ -436,19 +436,19 @@ namespace BlackMisc::Simulation
         {
             // if a client supports parts, all ground situations are supposed to be parts based
             details = situations.areAllOnGroundDetailsSame(COnGroundInfo::InFromParts);
-            BLACK_VERIFY_X(details, Q_FUNC_INFO, "Once gnd.from parts -> always gnd. from parts");
+            SWIFT_VERIFY_X(details, Q_FUNC_INFO, "Once gnd.from parts -> always gnd. from parts");
         }
 
         for (const CAircraftSituation &s : situations)
         {
             if (!s.hasGroundElevation()) { continue; }
-            BLACK_VERIFY_X(!s.getGroundElevation().isZeroEpsilonConsidered(), Q_FUNC_INFO, "Suspicous 0 gnd. value");
+            SWIFT_VERIFY_X(!s.getGroundElevation().isZeroEpsilonConsidered(), Q_FUNC_INFO, "Suspicous 0 gnd. value");
         }
 
         // check if middle situation is missing
         if (latest.hasGroundElevation() && oldest.hasGroundElevation())
         {
-            BLACK_VERIFY_X(newer.hasGroundElevation(), Q_FUNC_INFO, "Middle ground elevation is missing");
+            SWIFT_VERIFY_X(newer.hasGroundElevation(), Q_FUNC_INFO, "Middle ground elevation is missing");
         }
 
         // result

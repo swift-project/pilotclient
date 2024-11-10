@@ -202,7 +202,7 @@ namespace BlackMisc::Simulation
         case CComSystem::Com2: return this->getCom2System();
         default: break;
         }
-        BLACK_VERIFY_X(false, Q_FUNC_INFO, "Wrong unit");
+        SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Wrong unit");
         return CComSystem(); // avoid warning
     }
 
@@ -218,7 +218,7 @@ namespace BlackMisc::Simulation
         {
         case CComSystem::Com1: this->setCom1System(com); break;
         case CComSystem::Com2: this->setCom2System(com); break;
-        default: BLACK_VERIFY_X(false, Q_FUNC_INFO, "Wrong unit"); break;
+        default: SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Wrong unit"); break;
         }
     }
 
@@ -243,7 +243,7 @@ namespace BlackMisc::Simulation
         {
         case CComSystem::Com1: return this->setCom1ActiveFrequency(frequency);
         case CComSystem::Com2: return this->setCom2ActiveFrequency(frequency);
-        default: BLACK_VERIFY_X(false, Q_FUNC_INFO, "Wrong unit"); break;
+        default: SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Wrong unit"); break;
         }
         return false;
     }
@@ -445,7 +445,7 @@ namespace BlackMisc::Simulation
             }
             break;
         }
-        BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable("No comparison for index " + index.toQString()));
+        SWIFT_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable("No comparison for index " + index.toQString()));
         return 0;
     }
 

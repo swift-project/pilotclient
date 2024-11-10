@@ -66,10 +66,10 @@ namespace BlackMisc
     namespace Private
     {
         //! \private Decouple finding from value type.
-        BLACKMISC_EXPORT BLACK_NO_INLINE QVector<int> findIndices(int size, const std::function<bool(int)> &predicate);
+        BLACKMISC_EXPORT SWIFT_NO_INLINE QVector<int> findIndices(int size, const std::function<bool(int)> &predicate);
 
         //! \private Decouple sorting from value type.
-        BLACKMISC_EXPORT BLACK_NO_INLINE QVector<int> sortIndices(int size, const std::function<bool(int, int)> &cmp);
+        BLACKMISC_EXPORT SWIFT_NO_INLINE QVector<int> sortIndices(int size, const std::function<bool(int, int)> &cmp);
     }
 
     /*!

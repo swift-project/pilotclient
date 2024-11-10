@@ -458,7 +458,7 @@ namespace BlackGui::Components
     void CDbStashComponent::copyOverValuesToSelectedModels()
     {
         const QObject *sender = QObject::sender();
-        BLACK_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "Missing mapping component");
+        SWIFT_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "Missing mapping component");
         if (!this->getMappingComponent()) { return; }
         if (!ui->tvp_StashAircraftModels->hasSelection()) { return; }
 
@@ -523,7 +523,7 @@ namespace BlackGui::Components
     {
         if (msgs.isEmpty()) { return false; }
         if (!msgs.hasErrorMessages() && onlyErrors) { return false; }
-        BLACK_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
+        SWIFT_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
         if (!this->getMappingComponent()) { return false; }
 
         this->getMappingComponent()->showOverlayMessages(msgs, appendOldMessages, timeoutMs);
@@ -536,7 +536,7 @@ namespace BlackGui::Components
     {
         if (msgs.isEmpty()) { return false; }
         if (!msgs.hasErrorMessages() && onlyErrors) { return false; }
-        BLACK_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
+        SWIFT_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
         if (!this->getMappingComponent()) { return false; }
         this->getMappingComponent()->showOverlayMessagesWithConfirmation(msgs, appendOldMessages, confirmation, okLambda, defaultButton, timeoutMs);
         return true;
@@ -545,7 +545,7 @@ namespace BlackGui::Components
     bool CDbStashComponent::showOverlayMessage(const CStatusMessage &msg, int timeoutMs)
     {
         if (msg.isEmpty()) { return false; }
-        BLACK_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
+        SWIFT_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
         if (!this->getMappingComponent()) { return false; }
         this->getMappingComponent()->showOverlayMessage(msg, timeoutMs);
         return true;
@@ -553,7 +553,7 @@ namespace BlackGui::Components
 
     void CDbStashComponent::clearOverlayMessages()
     {
-        BLACK_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
+        SWIFT_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
         if (!this->getMappingComponent()) { return; }
         this->getMappingComponent()->clearOverlayMessages();
     }

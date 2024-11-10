@@ -232,7 +232,7 @@ namespace BlackCore
     void ISimulator::safeKillTimer()
     {
         if (m_timerId < 0) { return; }
-        BLACK_AUDIT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Try to kill timer from another thread");
+        SWIFT_AUDIT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Try to kill timer from another thread");
         this->killTimer(m_timerId);
         m_timerId = -1;
     }
@@ -566,7 +566,7 @@ namespace BlackCore
         // normally we should never end up without callsign, but it has happened in real world scenarios
         // https://discordapp.com/channels/539048679160676382/568904623151382546/575712119513677826
         const bool hasCs = sent.hasCallsign();
-        BLACK_VERIFY_X(hasCs, Q_FUNC_INFO, "Need callsign");
+        SWIFT_VERIFY_X(hasCs, Q_FUNC_INFO, "Need callsign");
         if (!hasCs) { return; }
         m_lastSentSituations.insert(sent.getCallsign(), sent);
     }
@@ -575,7 +575,7 @@ namespace BlackCore
     {
         // normally we should never end up without callsign, but it has happened in real world scenarios
         // https://discordapp.com/channels/539048679160676382/568904623151382546/575712119513677826
-        BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
+        SWIFT_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
         if (callsign.isEmpty()) { return; }
         m_lastSentParts.insert(callsign, sent);
     }
@@ -1110,7 +1110,7 @@ namespace BlackCore
                     if (CBuildConfig::isLocalDeveloperDebugBuild())
                     {
                         const bool invalid = situation.isOnGround() && elevation.isZeroEpsilonConsidered();
-                        BLACK_AUDIT_X(!invalid, Q_FUNC_INFO, "On ground in water");
+                        SWIFT_AUDIT_X(!invalid, Q_FUNC_INFO, "On ground in water");
                     }
                     Q_UNUSED(remembered) // false means it was already in that cache, or something else is wrong
                 }

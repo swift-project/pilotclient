@@ -510,9 +510,9 @@ namespace BlackMisc::Aviation
             const QString fn(fileInfo.fileName());
             bool ok = fn.size() > 5;
             if (!ok) { continue; }
-            BLACK_VERIFY_X(ok, Q_FUNC_INFO, "wrong file name");
+            SWIFT_VERIFY_X(ok, Q_FUNC_INFO, "wrong file name");
             const int id = QStringView { fn }.left(5).toInt(&ok);
-            BLACK_VERIFY_X(ok, Q_FUNC_INFO, "wrong id format");
+            SWIFT_VERIFY_X(ok, Q_FUNC_INFO, "wrong id format");
             if (!ok) { continue; }
             ids.insert(id);
         }

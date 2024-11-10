@@ -461,7 +461,7 @@ namespace BlackGui
         this->initStatusBarAndProperties();
 
         // for the first time resize
-        BLACK_VERIFY(!m_preferredSizeWhenFloating.isNull());
+        SWIFT_VERIFY(!m_preferredSizeWhenFloating.isNull());
         if (!m_preferredSizeWhenFloating.isNull())
         {
             m_initialDockedMinimumSize = this->minimumSize();
@@ -702,7 +702,7 @@ namespace BlackGui
 
     void CDockWidget::saveSettings(const CDockWidgetSettings &settings)
     {
-        BLACK_VERIFY_X(!this->objectName().isEmpty(), Q_FUNC_INFO, "Need object name for settings %OwnerName%");
+        SWIFT_VERIFY_X(!this->objectName().isEmpty(), Q_FUNC_INFO, "Need object name for settings %OwnerName%");
         if (this->objectName().isEmpty())
         {
             CStatusMessage(this).error(u"Settings cannot be saved!");

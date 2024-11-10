@@ -966,7 +966,7 @@ namespace BlackMisc::Simulation
     {
         if (mode.isEmpty() || mode.startsWith('I', Qt::CaseInsensitive)) { return Include; }
         if (mode.startsWith('E', Qt::CaseInsensitive)) { return Exclude; }
-        BLACK_VERIFY_X(false, Q_FUNC_INFO, "wrong mode");
+        SWIFT_VERIFY_X(false, Q_FUNC_INFO, "wrong mode");
         return Include; // default
     }
 

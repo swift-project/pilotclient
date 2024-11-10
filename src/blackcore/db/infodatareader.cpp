@@ -45,21 +45,21 @@ namespace BlackCore::Db
     void CInfoDataReader::synchronizeCaches(CEntityFlags::Entity entities)
     {
         // no caching used here
-        BLACK_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
+        SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
         Q_UNUSED(entities);
     }
 
     void CInfoDataReader::admitCaches(CEntityFlags::Entity entities)
     {
         // no caching used here
-        BLACK_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
+        SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
         Q_UNUSED(entities);
     }
 
     void CInfoDataReader::invalidateCaches(CEntityFlags::Entity entities)
     {
         // no caching used here
-        BLACK_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
+        SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
         Q_UNUSED(entities);
     }
 
@@ -72,7 +72,7 @@ namespace BlackCore::Db
 
         if (entity == CEntityFlags::DbInfoObjectEntity || entity == CEntityFlags::SharedInfoObjectEntity)
         {
-            BLACK_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
+            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
             return QDateTime();
         }
 
@@ -90,7 +90,7 @@ namespace BlackCore::Db
 
         if (entity == CEntityFlags::DbInfoObjectEntity || entity == CEntityFlags::SharedInfoObjectEntity)
         {
-            BLACK_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
+            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
             return 0;
         }
 
@@ -101,14 +101,14 @@ namespace BlackCore::Db
 
     CEntityFlags::Entity CInfoDataReader::getEntitiesWithCacheCount() const
     {
-        BLACK_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
+        SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
         return CEntityFlags::NoEntity;
     }
 
     CEntityFlags::Entity CInfoDataReader::getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const
     {
         Q_UNUSED(threshold);
-        BLACK_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
+        SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
         return CEntityFlags::NoEntity;
     }
 

@@ -109,7 +109,7 @@ namespace BlackMisc::Aviation
 
     bool COnGroundInfo::isOnGround() const
     {
-        BLACK_VERIFY_X(m_onGroundFactor >= 0.0, Q_FUNC_INFO, "Should only be called with positive groundfactors");
+        SWIFT_VERIFY_X(m_onGroundFactor >= 0.0, Q_FUNC_INFO, "Should only be called with positive groundfactors");
         if (m_onGroundDetails == OnGroundDetails::OnGroundByInterpolation)
         {
             return m_onGroundFactor > m_groundFactorThreshold;

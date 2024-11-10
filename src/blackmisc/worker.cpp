@@ -57,7 +57,7 @@ namespace BlackMisc
         const bool ok = wait(timeoutMs); //! \todo KB 2017-10 temp workaround: in T145 this will be fixed, sometimes (very rarely) hanging here during shutdown
         const QString as = QStringLiteral("Wait timeout after %1ms for '%2'").arg(timeoutMs).arg(name);
         const QByteArray asBA = as.toLatin1();
-        BLACK_AUDIT_X(ok, Q_FUNC_INFO, asBA); // MS 2018-09 assert because we want a stack trace of all threads, via breakpad
+        SWIFT_AUDIT_X(ok, Q_FUNC_INFO, asBA); // MS 2018-09 assert because we want a stack trace of all threads, via breakpad
         Q_UNUSED(ok)
     }
 
@@ -104,7 +104,7 @@ namespace BlackMisc
             const bool ok = workerThread->wait(5000);
             const QString as = QStringLiteral("Worker thread '%2' refuses to stop after worker finished").arg(workerThread->objectName());
             const QByteArray asBA = as.toLatin1();
-            BLACK_AUDIT_X(ok, Q_FUNC_INFO, asBA);
+            SWIFT_AUDIT_X(ok, Q_FUNC_INFO, asBA);
 
             workerThread->deleteLater();
         });
@@ -160,7 +160,7 @@ namespace BlackMisc
 
     void CContinuousWorker::start(QThread::Priority priority)
     {
-        BLACK_VERIFY_X(!hasStarted(), Q_FUNC_INFO, "Tried to start a worker that was already started");
+        SWIFT_VERIFY_X(!hasStarted(), Q_FUNC_INFO, "Tried to start a worker that was already started");
         if (hasStarted()) { return; }
 
         // avoid message "QObject: Cannot create children for a parent that is in a different thread"
@@ -217,7 +217,7 @@ namespace BlackMisc
         waitTime = QDateTime::currentMSecsSinceEpoch() - waitTime;
         const QString msg = QStringLiteral("Waiting for quitAndWait of '%1' for %2ms").arg(name).arg(waitTime);
         const QByteArray msgBA = msg.toLatin1();
-        BLACK_AUDIT_X(ok, Q_FUNC_INFO, msgBA); // MS 2019-05 AUDIT because we want a stack trace of all threads, via breakpad
+        SWIFT_AUDIT_X(ok, Q_FUNC_INFO, msgBA); // MS 2019-05 AUDIT because we want a stack trace of all threads, via breakpad
         CLogMessage(this).info(msg);
         Q_UNUSED(ok)
     }
@@ -289,7 +289,7 @@ namespace BlackMisc
             const bool ok = workerThread->wait(5000);
             const QString as = QStringLiteral("Worker thread '%2' refuses to stop after worker finished").arg(workerThread->objectName());
             const QByteArray asBA = as.toLatin1();
-            BLACK_AUDIT_X(ok, Q_FUNC_INFO, asBA);
+            SWIFT_AUDIT_X(ok, Q_FUNC_INFO, asBA);
 
             workerThread->deleteLater();
         });

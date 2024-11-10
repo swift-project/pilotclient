@@ -77,19 +77,19 @@ namespace BlackMisc::Aviation
 
     QVariant CAircraftVelocity::propertyByIndex(CPropertyIndexRef index) const
     {
-        BLACK_VERIFY(index.isMyself());
+        SWIFT_VERIFY(index.isMyself());
         return QVariant::fromValue(*this);
     }
 
     void CAircraftVelocity::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        BLACK_VERIFY(index.isMyself());
+        SWIFT_VERIFY(index.isMyself());
         *this = variant.value<CAircraftVelocity>();
     }
 
     int CAircraftVelocity::comparePropertyByIndex(CPropertyIndexRef index, const CAircraftVelocity &compareValue) const
     {
-        BLACK_VERIFY(index.isMyself());
+        SWIFT_VERIFY(index.isMyself());
         return compare(*this, compareValue);
     }
 }

@@ -68,7 +68,7 @@ namespace BlackCore::Context
         case CCoreFacadeConfig::Remote:
             return new CContextAudioProxy(CDBusServer::coreServiceName(connection), connection, mode, runtime);
         case CCoreFacadeConfig::NotUsed:
-            BLACK_VERIFY_X(false, Q_FUNC_INFO, "Empty context not supported for audio (since AFV)");
+            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Empty context not supported for audio (since AFV)");
             return nullptr;
         }
     }
@@ -599,7 +599,7 @@ namespace BlackCore::Context
         if (!m_voiceClient) { return; }
 
         Q_UNUSED(from)
-        BLACK_VERIFY_X(this->getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
+        SWIFT_VERIFY_X(this->getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
 
         // we only change network connection of AFV client here
         if (to.isConnected() && this->getIContextNetwork())

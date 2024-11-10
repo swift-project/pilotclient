@@ -265,7 +265,7 @@ namespace BlackGui::Components
             }
             else
             {
-                BLACK_AUDIT_X(false, Q_FUNC_INFO, "Wrong message type");
+                SWIFT_AUDIT_X(false, Q_FUNC_INFO, "Wrong message type");
                 continue;
             }
 
@@ -574,7 +574,7 @@ namespace BlackGui::Components
         if (!tab) { tab = this->addNewTextMessageTab(cs); }
         Q_ASSERT_X(tab, Q_FUNC_INFO, "Missing tab");
         CTextMessageTextEdit *textEdit = tab->findChild<CTextMessageTextEdit *>();
-        BLACK_VERIFY_X(textEdit, Q_FUNC_INFO, "Missing text edit");
+        SWIFT_VERIFY_X(textEdit, Q_FUNC_INFO, "Missing text edit");
         if (!textEdit) { return; } // do not crash, though this situation should not happen
         textEdit->insertTextMessage(textMessage);
 

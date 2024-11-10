@@ -66,7 +66,7 @@ namespace BlackCore::Afv::Connection
         {
             if (!m_connection.m_voiceCryptoChannel || !m_udpSocket)
             {
-                BLACK_VERIFY_X(false, Q_FUNC_INFO, "sendVoice used without crypto channel or socket");
+                SWIFT_VERIFY_X(false, Q_FUNC_INFO, "sendVoice used without crypto channel or socket");
                 return;
             }
             const QUrl voiceServerUrl("udp://" + m_connection.getTokens().VoiceServer.addressIpV4);

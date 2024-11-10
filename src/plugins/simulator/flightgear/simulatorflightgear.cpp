@@ -647,7 +647,7 @@ namespace BlackSimPlugin::Flightgear
             if (!hasCallsign)
             {
                 // does not make sense to continue here
-                BLACK_VERIFY_X(false, Q_FUNC_INFO, "missing callsign");
+                SWIFT_VERIFY_X(false, Q_FUNC_INFO, "missing callsign");
                 continue;
             }
 
@@ -702,7 +702,7 @@ namespace BlackSimPlugin::Flightgear
         {
             if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
-                BLACK_VERIFY_X(planesPositions.hasSameSizes(), Q_FUNC_INFO, "Mismatching sizes");
+                SWIFT_VERIFY_X(planesPositions.hasSameSizes(), Q_FUNC_INFO, "Mismatching sizes");
             }
             m_trafficProxy->setPlanesPositions(planesPositions);
         }
@@ -770,12 +770,12 @@ namespace BlackSimPlugin::Flightgear
         for (int i = 0; i < size; i++)
         {
             const bool emptyCs = callsigns[i].isEmpty();
-            BLACK_VERIFY_X(!emptyCs, Q_FUNC_INFO, "Need callsign");
+            SWIFT_VERIFY_X(!emptyCs, Q_FUNC_INFO, "Need callsign");
             if (emptyCs) { continue; }
             const CCallsign cs(callsigns[i]);
             if (!m_flightgearAircraftObjects.contains(cs)) { continue; }
             const CFlightgearMPAircraft fgAircraft = m_flightgearAircraftObjects[cs];
-            BLACK_VERIFY_X(fgAircraft.hasCallsign(), Q_FUNC_INFO, "Need callsign");
+            SWIFT_VERIFY_X(fgAircraft.hasCallsign(), Q_FUNC_INFO, "Need callsign");
             if (!fgAircraft.hasCallsign()) { continue; }
 
             CElevationPlane elevation = CElevationPlane::null();
@@ -815,7 +815,7 @@ namespace BlackSimPlugin::Flightgear
 
     void CSimulatorFlightgear::onRemoteAircraftAdded(const QString &callsign)
     {
-        BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
+        SWIFT_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
         if (callsign.isEmpty()) { return; }
         const CCallsign cs(callsign);
         CSimulatedAircraft addedRemoteAircraft = this->getAircraftInRangeForCallsign(cs);
@@ -891,7 +891,7 @@ namespace BlackSimPlugin::Flightgear
 
     void CSimulatorFlightgear::onRemoteAircraftAddingFailed(const QString &callsign)
     {
-        BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
+        SWIFT_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
         if (callsign.isEmpty()) { return; }
         const CCallsign cs(callsign);
         CSimulatedAircraft failedRemoteAircraft = this->getAircraftInRangeForCallsign(cs);

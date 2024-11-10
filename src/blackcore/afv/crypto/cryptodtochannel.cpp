@@ -13,13 +13,13 @@ namespace BlackCore::Afv::Crypto
     {
         if (m_aeadTransmitKey.size() != crypto_aead_chacha20poly1305_IETF_KEYBYTES)
         {
-            BLACK_AUDIT_X(false, Q_FUNC_INFO, "wrong transmit key size");
+            SWIFT_AUDIT_X(false, Q_FUNC_INFO, "wrong transmit key size");
             throw std::invalid_argument("wrong transmit key size");
         }
 
         if (m_aeadReceiveKey.size() != crypto_aead_chacha20poly1305_IETF_KEYBYTES)
         {
-            BLACK_AUDIT_X(false, Q_FUNC_INFO, "wrong receive key size");
+            SWIFT_AUDIT_X(false, Q_FUNC_INFO, "wrong receive key size");
             throw std::invalid_argument("wrong receive key size");
         }
 
@@ -35,7 +35,7 @@ namespace BlackCore::Afv::Crypto
         case CryptoDtoMode::AEAD_ChaCha20Poly1305: return m_aeadTransmitKey;
         case CryptoDtoMode::Undefined:
         case CryptoDtoMode::None:
-            BLACK_VERIFY_X(false, Q_FUNC_INFO, "GetTransmitKey called with wrong argument.");
+            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "GetTransmitKey called with wrong argument.");
             break;
         }
 
@@ -53,7 +53,7 @@ namespace BlackCore::Afv::Crypto
         case CryptoDtoMode::AEAD_ChaCha20Poly1305: return m_aeadTransmitKey;
         case CryptoDtoMode::Undefined:
         case CryptoDtoMode::None:
-            BLACK_VERIFY_X(false, Q_FUNC_INFO, "GetTransmitKey called with wrong argument.");
+            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "GetTransmitKey called with wrong argument.");
             break;
         }
 
@@ -72,7 +72,7 @@ namespace BlackCore::Afv::Crypto
         case CryptoDtoMode::AEAD_ChaCha20Poly1305: return m_aeadReceiveKey;
         case CryptoDtoMode::Undefined:
         case CryptoDtoMode::None:
-            BLACK_VERIFY_X(false, Q_FUNC_INFO, "GetReceiveKey called with wrong argument.");
+            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "GetReceiveKey called with wrong argument.");
             break;
         }
 

@@ -102,7 +102,7 @@ namespace BlackMisc::Audio
         case IndexIdentifier: return m_identifier.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIdentifier());
         default: break;
         }
-        BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable("No comparison for index " + index.toQString()));
+        SWIFT_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable("No comparison for index " + index.toQString()));
         return 0;
     }
 

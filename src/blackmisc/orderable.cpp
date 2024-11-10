@@ -52,7 +52,7 @@ namespace BlackMisc
             }
         }
         const QString m = QStringLiteral("Cannot handle index %1").arg(index.toQString());
-        BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
+        SWIFT_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
         return QVariant::fromValue(m);
     }
 
@@ -70,7 +70,7 @@ namespace BlackMisc
             }
         }
         const QString m = QStringLiteral("Cannot handle index %1").arg(index.toQString());
-        BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
+        SWIFT_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
     }
 
     int IOrderable::comparePropertyByIndex(CPropertyIndexRef index, const IOrderable &compareValue) const

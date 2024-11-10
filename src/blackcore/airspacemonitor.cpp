@@ -829,7 +829,7 @@ namespace BlackCore
     {
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "not in main thread");
         if (!this->isConnectedAndNotShuttingDown()) { return; }
-        if (CBuildConfig::isLocalDeveloperDebugBuild()) { BLACK_VERIFY_X(callsign.isValid(), Q_FUNC_INFO, "invalid callsign"); }
+        if (CBuildConfig::isLocalDeveloperDebugBuild()) { SWIFT_VERIFY_X(callsign.isValid(), Q_FUNC_INFO, "invalid callsign"); }
         if (!callsign.isValid()) { return; }
         if (!this->isAircraftInRange(callsign)) { return; } // FSD overload issue, do not do anything if unknown
 
@@ -1363,7 +1363,7 @@ namespace BlackCore
     {
 
         Q_ASSERT(CThreadUtils::isInThisThread(this));
-        BLACK_AUDIT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
+        SWIFT_AUDIT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
         if (callsign.isEmpty()) { return; }
 
         unsigned long pp = 0;
@@ -1422,7 +1422,7 @@ namespace BlackCore
     void CAirspaceMonitor::onAircraftConfigReceived(const CCallsign &callsign, const QJsonObject &jsonObject, qint64 currentOffsetMs)
     {
         Q_ASSERT(CThreadUtils::isInThisThread(this));
-        BLACK_AUDIT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
+        SWIFT_AUDIT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
         if (callsign.isEmpty()) { return; }
 
         // store parts
@@ -1439,7 +1439,7 @@ namespace BlackCore
     CAircraftSituation CAirspaceMonitor::storeAircraftSituation(const CAircraftSituation &situation, bool allowTestOffset)
     {
         const CCallsign callsign(situation.getCallsign());
-        BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
+        SWIFT_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
         if (callsign.isEmpty()) { return situation; }
 
         CAircraftSituation correctedSituation(allowTestOffset ? this->addTestAltitudeOffsetToSituation(situation) : situation);
@@ -1564,7 +1564,7 @@ namespace BlackCore
                     if (CBuildConfig::isLocalDeveloperDebugBuild())
                     {
                         // experimental, could become ASSERT
-                        BLACK_VERIFY_X(needToRequestElevation, Q_FUNC_INFO, "Request should already be set");
+                        SWIFT_VERIFY_X(needToRequestElevation, Q_FUNC_INFO, "Request should already be set");
                     }
                     needToRequestElevation = true; // should be "true" already
 
@@ -1576,7 +1576,7 @@ namespace BlackCore
                     // sanity check on the situation
                     if (CBuildConfig::isLocalDeveloperDebugBuild())
                     {
-                        BLACK_VERIFY_X(!correctedSituation.getGroundElevation().isZeroEpsilonConsidered(), Q_FUNC_INFO, "Suspicious elevation");
+                        SWIFT_VERIFY_X(!correctedSituation.getGroundElevation().isZeroEpsilonConsidered(), Q_FUNC_INFO, "Suspicious elevation");
                     }
                 }
             } // gnd. elevation

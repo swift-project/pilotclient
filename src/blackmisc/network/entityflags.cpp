@@ -32,7 +32,7 @@ namespace BlackMisc::Network
         case VatsimDataFile: return QStringLiteral("VATSIM data file");
         case VatsimStatusFile: return QStringLiteral("VATSIM status file");
         default:
-            BLACK_VERIFY_X(false, Q_FUNC_INFO, "wrong flags");
+            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "wrong flags");
             return "wrong flags";
         }
     }
@@ -102,7 +102,7 @@ namespace BlackMisc::Network
         case ReadSkipped: return s;
         case ReadStarted: return st;
         default:
-            BLACK_VERIFY_X(false, Q_FUNC_INFO, "wrong flags");
+            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "wrong flags");
             return x;
         }
     }

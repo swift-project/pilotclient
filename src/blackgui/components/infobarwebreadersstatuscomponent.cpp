@@ -114,7 +114,7 @@ namespace BlackGui::Components
             led->setTriState(2 * resetTimeMs);
             break;
         default:
-            BLACK_VERIFY_X(false, Q_FUNC_INFO, "read state not handled");
+            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "read state not handled");
             break;
         }
     }

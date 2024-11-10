@@ -23,7 +23,7 @@ namespace BlackMisc::Simulation
     {
         if (!elevationCoordinate.hasMSLGeodeticHeight())
         {
-            BLACK_AUDIT_X(false, Q_FUNC_INFO, "Elevation needs to be MSL NON NULL");
+            SWIFT_AUDIT_X(false, Q_FUNC_INFO, "Elevation needs to be MSL NON NULL");
             return false;
         }
 
@@ -52,7 +52,7 @@ namespace BlackMisc::Simulation
             {
                 // such a huge distance to existing value
                 CLogMessage(this).debug(u"Suspicious GND elevation distance '%1': %2ft at %3") << requestedForCallsign.asString() << distFt << elevationCoordinate.geodeticHeight().valueRoundedAsString(CLengthUnit::ft(), 1);
-                BLACK_AUDIT_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Suspicious gnd. elevation distance");
+                SWIFT_AUDIT_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Suspicious gnd. elevation distance");
             }
             return false;
         }
@@ -67,7 +67,7 @@ namespace BlackMisc::Simulation
             {
                 // such a huge distance to existing value
                 CLogMessage(this).debug(u"Suspicious NON GND elevation distance for '%1': %2ft at %3") << requestedForCallsign.asString() << distFt << elevationCoordinate.geodeticHeight().valueRoundedAsString(CLengthUnit::ft(), 1);
-                // BLACK_AUDIT_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Suspicious elevation distance");
+                // SWIFT_AUDIT_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Suspicious elevation distance");
             }
             return false;
         }
@@ -106,7 +106,7 @@ namespace BlackMisc::Simulation
     {
         if (!elevationPlane.hasMSLGeodeticHeight())
         {
-            BLACK_AUDIT_X(false, Q_FUNC_INFO, "Elevation plane needs to be MSL NON NULL");
+            SWIFT_AUDIT_X(false, Q_FUNC_INFO, "Elevation plane needs to be MSL NON NULL");
             return false;
         }
         return this->rememberGroundElevation(requestedForCallsign, likelyOnGroundElevation, elevationPlane, elevationPlane.getRadius());

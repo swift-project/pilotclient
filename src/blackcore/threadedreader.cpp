@@ -206,7 +206,7 @@ namespace BlackCore
         if (funcInfo)
         {
             const QByteArray m(logMsg.getMessage().toLatin1());
-            BLACK_AUDIT_X(false, funcInfo, m.constData());
+            SWIFT_AUDIT_X(false, funcInfo, m.constData());
         }
         CLogMessage::preformatted(logMsg);
     }

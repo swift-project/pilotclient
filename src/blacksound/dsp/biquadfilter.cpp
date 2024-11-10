@@ -31,7 +31,7 @@ namespace BlackSound::Dsp
 
     void BiQuadFilter::setCoefficients(double aa0, double aa1, double aa2, double b0, double b1, double b2)
     {
-        if (CBuildConfig::isLocalDeveloperDebugBuild()) { BLACK_VERIFY_X(qAbs(aa0) > 1E-06, Q_FUNC_INFO, "Div by zero?"); }
+        if (CBuildConfig::isLocalDeveloperDebugBuild()) { SWIFT_VERIFY_X(qAbs(aa0) > 1E-06, Q_FUNC_INFO, "Div by zero?"); }
 
         // precompute the coefficients
         m_a0 = b0 / aa0;

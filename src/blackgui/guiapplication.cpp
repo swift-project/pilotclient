@@ -540,7 +540,7 @@ namespace BlackGui
     bool CGuiApplication::displayInStatusBar(const CStatusMessage &message)
     {
         IMainWindowAccess *m = mainWindowAccess();
-        BLACK_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
+        SWIFT_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
         if (!m) { return false; }
         return m->displayInStatusBar(message);
     }
@@ -549,7 +549,7 @@ namespace BlackGui
     {
         if (message.isEmpty()) { return false; }
         IMainWindowAccess *m = mainWindowAccess();
-        BLACK_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
+        SWIFT_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
         if (!m) { return IMainWindowAccess::displayInOverlayWindow(message, timeOutMs); }
         return m->displayInOverlayWindow(message, timeOutMs);
     }
@@ -558,7 +558,7 @@ namespace BlackGui
     {
         if (messages.isEmpty()) { return false; }
         IMainWindowAccess *m = mainWindowAccess();
-        BLACK_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
+        SWIFT_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
         if (!m) { return IMainWindowAccess::displayInOverlayWindow(messages, timeOutMs); }
         return m->displayInOverlayWindow(messages, timeOutMs);
     }
@@ -567,7 +567,7 @@ namespace BlackGui
     {
         if (html.isEmpty()) { return false; }
         IMainWindowAccess *m = mainWindowAccess();
-        BLACK_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
+        SWIFT_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
         if (!m) { return IMainWindowAccess::displayInOverlayWindow(html, timeOutMs); }
         return m->displayInOverlayWindow(html, timeOutMs);
     }

@@ -94,7 +94,7 @@ namespace BlackCore::Afv::Audio
     {
         if (m_started) { return; }
 
-        BLACK_VERIFY_X(outputDevice.isValid() && outputDevice.isOutputDevice(), Q_FUNC_INFO, "Wrong output device");
+        SWIFT_VERIFY_X(outputDevice.isValid() && outputDevice.isOutputDevice(), Q_FUNC_INFO, "Wrong output device");
 
         if (m_audioOutputBuffer) { m_audioOutputBuffer->deleteLater(); }
         m_audioOutputBuffer = new CAudioOutputBuffer(sampleProvider, this);

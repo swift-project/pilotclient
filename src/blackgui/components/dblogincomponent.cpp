@@ -87,7 +87,7 @@ namespace BlackGui::Components
     {
         if (msgs.isEmpty()) { return; }
         COverlayMessagesFrame *mf = CGuiUtility::nextOverlayMessageFrame(this);
-        BLACK_VERIFY_X(mf, Q_FUNC_INFO, "No overlay widget");
+        SWIFT_VERIFY_X(mf, Q_FUNC_INFO, "No overlay widget");
         if (!mf) { return; }
         mf->showOverlayMessages(msgs);
     }

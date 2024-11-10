@@ -771,7 +771,7 @@ namespace BlackCore::Fsd
         }
 
         const bool connected = isConnected();
-        BLACK_VERIFY_X(connected, Q_FUNC_INFO, "Can't send to server when disconnected");
+        SWIFT_VERIFY_X(connected, Q_FUNC_INFO, "Can't send to server when disconnected");
         if (!connected) { return; }
 
         const CSimulatedAircraft myAircraft(getOwnAircraft());
@@ -1655,7 +1655,7 @@ namespace BlackCore::Fsd
 
         CLogMessage(this).info(u"Server requested we switch server to %1") << rehost.m_hostname;
 
-        BLACK_AUDIT_X(!m_rehosting, Q_FUNC_INFO, "Rehosting already in progress");
+        SWIFT_AUDIT_X(!m_rehosting, Q_FUNC_INFO, "Rehosting already in progress");
 
         m_rehosting = true;
         auto rehostingSocket = std::make_shared<QTcpSocket>();
@@ -2573,7 +2573,7 @@ namespace BlackCore::Fsd
     {
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            BLACK_VERIFY_X(false, Q_FUNC_INFO, "Illegal FSD state");
+            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Illegal FSD state");
         }
         CLogMessage(this).warning(message);
     }

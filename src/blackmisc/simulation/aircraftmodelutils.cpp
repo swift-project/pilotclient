@@ -126,7 +126,7 @@ namespace BlackMisc::Simulation
         if (html.isEmpty()) { return {}; }
 
         QDir dir(tempDir);
-        BLACK_VERIFY_X(dir.exists(), Q_FUNC_INFO, "Directory does not exist");
+        SWIFT_VERIFY_X(dir.exists(), Q_FUNC_INFO, "Directory does not exist");
         if (!dir.exists()) { return {}; }
 
         const QString htmlTemplate = CFileUtils::readFileToString(CSwiftDirectories::htmlTemplateFilePath());

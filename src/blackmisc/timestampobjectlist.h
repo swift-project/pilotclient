@@ -565,8 +565,8 @@ namespace BlackMisc
 
             if (swift::config::CBuildConfig::isLocalDeveloperDebugBuild())
             {
-                BLACK_VERIFY_X(front.isNewerThanAdjusted(second), Q_FUNC_INFO, "Front/second timestamp");
-                BLACK_VERIFY_X(this->isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
+                SWIFT_VERIFY_X(front.isNewerThanAdjusted(second), Q_FUNC_INFO, "Front/second timestamp");
+                SWIFT_VERIFY_X(this->isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
             }
         }
 
@@ -590,7 +590,7 @@ namespace BlackMisc
             const qint64 os = -1 * qAbs(deltaTimeMs < 0 ? osTime : deltaTimeMs);
             if (swift::config::CBuildConfig::isLocalDeveloperDebugBuild())
             {
-                BLACK_VERIFY_X(os < 0, Q_FUNC_INFO, "Need negative offset time to prefill time");
+                SWIFT_VERIFY_X(os < 0, Q_FUNC_INFO, "Need negative offset time to prefill time");
             }
             this->container().push_front(value);
             for (int i = 1; i < elements; i++)

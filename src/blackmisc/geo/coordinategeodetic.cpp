@@ -51,7 +51,7 @@ namespace BlackMisc::Geo
 
         const float d = earthRadiusMeters * std::atan2(QVector3D::crossProduct(v1, v2).length(), QVector3D::dotProduct(v1, v2));
 
-        BLACK_VERIFY_X(!std::isnan(d), Q_FUNC_INFO, "Distance calculation: NaN in result");
+        SWIFT_VERIFY_X(!std::isnan(d), Q_FUNC_INFO, "Distance calculation: NaN in result");
         if (std::isnan(d))
         {
             CLogMessage().debug(u"Distance calculation: NaN in result (given arguments %1 %2 %3; %4 %5 %6)") << static_cast<double>(v1.x()) << static_cast<double>(v1.y()) << static_cast<double>(v1.z()) << static_cast<double>(v2.x()) << static_cast<double>(v2.y()) << static_cast<double>(v2.z());
@@ -144,7 +144,7 @@ namespace BlackMisc::Geo
         }
 
         const QString m = QString("no property, index ").append(index.toQString());
-        BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
+        SWIFT_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
         return QVariant::fromValue(m);
     }
 
@@ -166,7 +166,7 @@ namespace BlackMisc::Geo
         }
 
         const QString m = QString("no property, index ").append(index.toQString());
-        BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
+        SWIFT_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
         return 0;
     }
 
@@ -453,7 +453,7 @@ namespace BlackMisc::Geo
             }
         }
         const QString m = QString("no property, index ").append(index.toQString());
-        BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
+        SWIFT_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
         return QVariant::fromValue(m);
     }
 
@@ -469,7 +469,7 @@ namespace BlackMisc::Geo
             case IndexRelativeDistance: m_relativeDistance.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             default:
                 const QString m = QString("no property, index ").append(index.toQString());
-                BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
+                SWIFT_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
                 break;
             }
         }

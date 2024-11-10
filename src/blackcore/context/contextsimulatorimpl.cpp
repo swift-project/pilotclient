@@ -478,7 +478,7 @@ namespace BlackCore::Context
         CSimulatorInfo simInfo = simulator->getSimulatorInfo();
         if (!simInfo.isSingleSimulator())
         {
-            BLACK_VERIFY_X(false, Q_FUNC_INFO, "Invalid simulator from plugin");
+            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Invalid simulator from plugin");
             simInfo = CSimulatorInfo::p3d();
             if (simulator->isEmulatedDriver())
             {
@@ -659,7 +659,7 @@ namespace BlackCore::Context
         if (!this->isSimulatorPluginAvailable()) { return; }
 
         const CCallsign callsign = remoteAircraft.getCallsign();
-        BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Remote aircraft with empty callsign");
+        SWIFT_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Remote aircraft with empty callsign");
         if (callsign.isEmpty()) { return; }
 
         // here we find the best simulator model for a resolved model
@@ -746,7 +746,7 @@ namespace BlackCore::Context
             const CSimulatedAircraftList aircraft = networkContext->getAircraftInRange();
             for (const CSimulatedAircraft &simulatedAircraft : aircraft)
             {
-                BLACK_VERIFY_X(!simulatedAircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "Need callsign");
+                SWIFT_VERIFY_X(!simulatedAircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "Need callsign");
                 this->xCtxAddedRemoteAircraftReadyForModelMatching(simulatedAircraft);
             }
             m_initallyAddAircraft = false;
@@ -804,7 +804,7 @@ namespace BlackCore::Context
     void CContextSimulator::xCtxNetworkConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
     {
         Q_UNUSED(from)
-        BLACK_VERIFY_X(this->getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
+        SWIFT_VERIFY_X(this->getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
         if (to.isConnected() && this->getIContextNetwork())
         {
             m_networkSessionId = this->getIContextNetwork()->getConnectedServer().getServerSessionId(false);

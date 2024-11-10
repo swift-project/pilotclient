@@ -198,7 +198,7 @@ namespace BlackMisc::Simulation::Settings
         if (!simulator.isSingleSimulator())
         {
             // mostly happening with emulated driver, VERIFY for better debugging
-            BLACK_VERIFY_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+            SWIFT_VERIFY_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
             return CSimulatorSettings();
         }
         switch (simulator.getSimulator())

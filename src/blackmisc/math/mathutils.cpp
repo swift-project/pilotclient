@@ -147,7 +147,7 @@ namespace BlackMisc::Math
 
     double CMathUtils::mean(const QList<double> &values)
     {
-        BLACK_VERIFY_X(!values.isEmpty(), Q_FUNC_INFO, "Need values");
+        SWIFT_VERIFY_X(!values.isEmpty(), Q_FUNC_INFO, "Need values");
         return sum(values) / values.size();
     }
 

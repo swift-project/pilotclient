@@ -261,8 +261,8 @@ namespace BlackMisc::Simulation
         // testing
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            BLACK_VERIFY_X(situation.getTimeOffsetMs() > 0, Q_FUNC_INFO, "Missing offset");
-            BLACK_VERIFY_X(situation.isValidVectorRange(), Q_FUNC_INFO, "Invalid vector");
+            SWIFT_VERIFY_X(situation.getTimeOffsetMs() > 0, Q_FUNC_INFO, "Missing offset");
+            SWIFT_VERIFY_X(situation.isValidVectorRange(), Q_FUNC_INFO, "Invalid vector");
         }
 
         // add altitude offset (for testing only)
@@ -311,9 +311,9 @@ namespace BlackMisc::Simulation
             // check sort order
             if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
-                BLACK_VERIFY_X(newSituationsList.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "wrong adjusted sort order");
-                BLACK_VERIFY_X(newSituationsList.isSortedLatestFirst(), Q_FUNC_INFO, "wrong sort order");
-                BLACK_VERIFY_X(newSituationsList.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
+                SWIFT_VERIFY_X(newSituationsList.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "wrong adjusted sort order");
+                SWIFT_VERIFY_X(newSituationsList.isSortedLatestFirst(), Q_FUNC_INFO, "wrong sort order");
+                SWIFT_VERIFY_X(newSituationsList.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
             }
 
             if (!situation.hasInboundGroundDetails())
@@ -342,7 +342,7 @@ namespace BlackMisc::Simulation
 
     void CRemoteAircraftProvider::storeAircraftParts(const CCallsign &callsign, const CAircraftParts &parts, bool removeOutdated)
     {
-        BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
+        SWIFT_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
         if (callsign.isEmpty()) { return; }
 
         // list sorted from new to old
@@ -419,7 +419,7 @@ namespace BlackMisc::Simulation
                     // validation in dev.env.
                     const int attributes = jsonObject.size();
                     const bool correctCount = (attributes == CAircraftParts::attributesCountFullJson);
-                    BLACK_VERIFY_X(correctCount || !CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Wrong full aircraft parts");
+                    SWIFT_VERIFY_X(correctCount || !CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Wrong full aircraft parts");
                     if (!correctCount)
                     {
                         CLogMessage(this).warning(u"Wrong full parts attributes, %1 (expected %2)") << attributes << CAircraftParts::attributesCountFullJson;

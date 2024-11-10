@@ -172,7 +172,7 @@ namespace BlackGui::Components
         }
 
         // sanity
-        BLACK_VERIFY_X(requested, Q_FUNC_INFO, "Entity not supported");
+        SWIFT_VERIFY_X(requested, Q_FUNC_INFO, "Entity not supported");
         Q_UNUSED(requested);
     }
 } // ns

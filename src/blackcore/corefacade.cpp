@@ -90,7 +90,7 @@ namespace BlackCore
             if (!m_dbusConnection.isConnected())
             {
                 const QString e = m_dbusConnection.lastError().message();
-                BLACK_VERIFY_X(false, "CRuntime::init DBus problem", e.toUtf8().constData());
+                SWIFT_VERIFY_X(false, "CRuntime::init DBus problem", e.toUtf8().constData());
                 CLogMessage(this).error(u"DBus connection failed: '%1'") << e;
                 return;
             }

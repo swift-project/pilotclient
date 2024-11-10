@@ -35,7 +35,7 @@ namespace BlackMisc::Simulation
     {
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            BLACK_VERIFY_X(isValidTimeFraction(m_simulationTimeFraction), Q_FUNC_INFO, "Time fraction needs to be within [0;1]");
+            SWIFT_VERIFY_X(isValidTimeFraction(m_simulationTimeFraction), Q_FUNC_INFO, "Time fraction needs to be within [0;1]");
         }
         m_pbh = CInterpolatorLinearPbh(m_simulationTimeFraction, startSituation, endSituation);
     }
@@ -50,9 +50,9 @@ namespace BlackMisc::Simulation
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            BLACK_VERIFY_X(CAircraftSituation::isValidVector(startVec), Q_FUNC_INFO, "Invalid start vector");
-            BLACK_VERIFY_X(CAircraftSituation::isValidVector(endVec), Q_FUNC_INFO, "Invalid end vector");
-            BLACK_VERIFY_X(isAcceptableTimeFraction(m_simulationTimeFraction), Q_FUNC_INFO, "Invalid fraction");
+            SWIFT_VERIFY_X(CAircraftSituation::isValidVector(startVec), Q_FUNC_INFO, "Invalid start vector");
+            SWIFT_VERIFY_X(CAircraftSituation::isValidVector(endVec), Q_FUNC_INFO, "Invalid end vector");
+            SWIFT_VERIFY_X(isAcceptableTimeFraction(m_simulationTimeFraction), Q_FUNC_INFO, "Invalid fraction");
         }
 
         // Interpolate position: pos = (posB - posA) * t + posA
@@ -64,7 +64,7 @@ namespace BlackMisc::Simulation
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            BLACK_VERIFY_X(interpolatedPosition.isValidVectorRange(), Q_FUNC_INFO, "Invalid vector");
+            SWIFT_VERIFY_X(interpolatedPosition.isValidVectorRange(), Q_FUNC_INFO, "Invalid vector");
         }
 
         // Interpolate altitude: Alt = (AltB - AltA) * t + AltA

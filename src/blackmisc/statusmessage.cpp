@@ -51,13 +51,13 @@ namespace BlackMisc
                 if (is09(*it))
                 {
                     int n = it->unicode() - u'0';
-                    BLACK_VERIFY(n >= 0 && n <= 9);
+                    SWIFT_VERIFY(n >= 0 && n <= 9);
                     if (++it != format.end() && is09(*it))
                     {
                         n = n * 10 + it->unicode() - u'0';
                         ++it;
                     }
-                    BLACK_VERIFY(n > 0 && n <= 99);
+                    SWIFT_VERIFY(n > 0 && n <= 99);
                     if (n > 0 && n <= args.size())
                     {
                         temp += args[n - 1];

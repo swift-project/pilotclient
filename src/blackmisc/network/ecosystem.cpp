@@ -103,7 +103,7 @@ namespace BlackMisc::Network
         case IndexSystem: return Compare::compare(m_system, compareValue.m_system);
         default: break;
         }
-        BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable("No comparison for index " + index.toQString()));
+        SWIFT_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable("No comparison for index " + index.toQString()));
         return 0;
     }
 } // namespace

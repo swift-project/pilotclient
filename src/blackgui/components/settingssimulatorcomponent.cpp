@@ -402,7 +402,7 @@ namespace BlackGui::Components
         Q_ASSERT_X(aw, Q_FUNC_INFO, "Missing active window");
 
         CPluginDetailsWindow *w = new CPluginDetailsWindow(aw);
-        BLACK_VERIFY_X(w, Q_FUNC_INFO, "Missing window");
+        SWIFT_VERIFY_X(w, Q_FUNC_INFO, "Missing window");
         if (!w) { return; }
 
         w->setAttribute(Qt::WA_DeleteOnClose);
@@ -420,11 +420,11 @@ namespace BlackGui::Components
 
         const QString configId = m_plugins->getPluginConfigId(selected.getIdentifier());
         IPluginConfig *config = m_plugins->getPluginById<IPluginConfig>(configId);
-        BLACK_VERIFY_X(config, Q_FUNC_INFO, "Missing config");
+        SWIFT_VERIFY_X(config, Q_FUNC_INFO, "Missing config");
         if (!config) { return; }
 
         CPluginConfigWindow *window = config->createConfigWindow(qApp->activeWindow());
-        BLACK_VERIFY_X(window, Q_FUNC_INFO, "Missing window");
+        SWIFT_VERIFY_X(window, Q_FUNC_INFO, "Missing window");
         if (!window) { return; }
 
         window->setAttribute(Qt::WA_DeleteOnClose);

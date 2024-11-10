@@ -292,8 +292,8 @@ namespace BlackCore::Afv::Clients
         const CAudioDeviceInfo useInputDevice = inputDevice.isValid() ? inputDevice : CAudioDeviceInfo::getDefaultInputDevice();
         const CAudioDeviceInfo useOutputDevice = outputDevice.isValid() ? outputDevice : CAudioDeviceInfo::getDefaultOutputDevice();
 
-        BLACK_VERIFY_X(useInputDevice.isValid() && useInputDevice.isInputDevice(), Q_FUNC_INFO, "Wrong input device");
-        BLACK_VERIFY_X(useOutputDevice.isValid() && useOutputDevice.isOutputDevice(), Q_FUNC_INFO, "Wrong output device");
+        SWIFT_VERIFY_X(useInputDevice.isValid() && useInputDevice.isInputDevice(), Q_FUNC_INFO, "Wrong input device");
+        SWIFT_VERIFY_X(useOutputDevice.isValid() && useOutputDevice.isOutputDevice(), Q_FUNC_INFO, "Wrong output device");
 
         if (m_isStarted)
         {
