@@ -7,7 +7,7 @@
 
 using namespace swift::config;
 using namespace BlackMisc;
-using namespace BlackSound::SampleProvider;
+using namespace swift::sound::sample_provider;
 
 namespace BlackCore::Afv::Audio
 {

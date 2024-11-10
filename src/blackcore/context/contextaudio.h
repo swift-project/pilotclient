@@ -13,8 +13,8 @@
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/afv/audio/receiversampleprovider.h"
-#include "blacksound/selcalplayer.h"
-#include "blacksound/notificationplayer.h"
+#include "sound/selcalplayer.h"
+#include "sound/notificationplayer.h"
 #include "blackmisc/macos/microphoneaccess.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/audio/notificationsounds.h"
@@ -355,8 +355,8 @@ namespace BlackCore
             BlackMisc::Audio::CAudioDeviceInfoList m_activeLocalDevices;
 
             // Players
-            BlackSound::CSelcalPlayer *m_selcalPlayer = nullptr;
-            BlackSound::CNotificationPlayer m_notificationPlayer;
+            swift::sound::CSelcalPlayer *m_selcalPlayer = nullptr;
+            swift::sound::CNotificationPlayer m_notificationPlayer;
         };
     } // ns
 } // ns

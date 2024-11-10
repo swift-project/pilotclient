@@ -6,7 +6,7 @@
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/application.h"
-#include "blacksound/audioutilities.h"
+#include "sound/audioutilities.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/threadutils.h"
@@ -27,8 +27,8 @@ using namespace BlackMisc::Audio;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;
-using namespace BlackSound;
-using namespace BlackSound::SampleProvider;
+using namespace swift::sound;
+using namespace swift::sound::sample_provider;
 
 namespace BlackCore::Afv::Clients
 {

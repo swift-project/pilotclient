@@ -7,14 +7,14 @@
 #define BLACKCORE_AFV_AUDIO_CALLSIGNSAMPLEPROVIDER_H
 
 #include "blackcore/afv/dto.h"
-#include "blacksound/sampleprovider/pinknoisegenerator.h"
-#include "blacksound/sampleprovider/bufferedwaveprovider.h"
-#include "blacksound/sampleprovider/mixingsampleprovider.h"
-#include "blacksound/sampleprovider/equalizersampleprovider.h"
-#include "blacksound/sampleprovider/sawtoothgenerator.h"
-#include "blacksound/sampleprovider/simplecompressoreffect.h"
-#include "blacksound/sampleprovider/resourcesoundsampleprovider.h"
-#include "blacksound/codecs/opusdecoder.h"
+#include "sound/sampleprovider/pinknoisegenerator.h"
+#include "sound/sampleprovider/bufferedwaveprovider.h"
+#include "sound/sampleprovider/mixingsampleprovider.h"
+#include "sound/sampleprovider/equalizersampleprovider.h"
+#include "sound/sampleprovider/sawtoothgenerator.h"
+#include "sound/sampleprovider/simplecompressoreffect.h"
+#include "sound/sampleprovider/resourcesoundsampleprovider.h"
+#include "sound/codecs/opusdecoder.h"
 
 #include <QAudioFormat>
 #include <QSoundEffect>
@@ -27,7 +27,7 @@ namespace BlackCore::Afv::Audio
     class CReceiverSampleProvider;
 
     //! Callsign provider
-    class CCallsignSampleProvider : public BlackSound::SampleProvider::ISampleProvider
+    class CCallsignSampleProvider : public swift::sound::sample_provider::ISampleProvider
     {
         Q_OBJECT
 
@@ -89,17 +89,17 @@ namespace BlackCore::Afv::Audio
         bool m_bypassEffects = false;
         float m_distanceRatio = 1.0;
         const CReceiverSampleProvider *m_receiver = nullptr;
-        BlackSound::SampleProvider::CMixingSampleProvider *m_mixer = nullptr;
-        BlackSound::SampleProvider::CResourceSoundSampleProvider *m_crackleSoundProvider = nullptr;
-        BlackSound::SampleProvider::CResourceSoundSampleProvider *m_whiteNoise = nullptr;
-        BlackSound::SampleProvider::CResourceSoundSampleProvider *m_hfWhiteNoise = nullptr;
-        BlackSound::SampleProvider::CSawToothGenerator *m_acBusNoise = nullptr;
-        BlackSound::SampleProvider::CSimpleCompressorEffect *m_simpleCompressorEffect = nullptr;
-        BlackSound::SampleProvider::CEqualizerSampleProvider *m_voiceEqualizer = nullptr;
-        BlackSound::SampleProvider::CBufferedWaveProvider *m_audioInput = nullptr;
+        swift::sound::sample_provider::CMixingSampleProvider *m_mixer = nullptr;
+        swift::sound::sample_provider::CResourceSoundSampleProvider *m_crackleSoundProvider = nullptr;
+        swift::sound::sample_provider::CResourceSoundSampleProvider *m_whiteNoise = nullptr;
+        swift::sound::sample_provider::CResourceSoundSampleProvider *m_hfWhiteNoise = nullptr;
+        swift::sound::sample_provider::CSawToothGenerator *m_acBusNoise = nullptr;
+        swift::sound::sample_provider::CSimpleCompressorEffect *m_simpleCompressorEffect = nullptr;
+        swift::sound::sample_provider::CEqualizerSampleProvider *m_voiceEqualizer = nullptr;
+        swift::sound::sample_provider::CBufferedWaveProvider *m_audioInput = nullptr;
         QTimer *m_timer = nullptr;
 
-        BlackSound::Codecs::COpusDecoder m_decoder;
+        swift::sound::codecs::COpusDecoder m_decoder;
         bool m_lastPacketLatch = false;
         QDateTime m_lastSamplesAddedUtc;
         bool m_underflow = false;

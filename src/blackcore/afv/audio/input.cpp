@@ -4,7 +4,7 @@
 //! \file
 
 #include "blackcore/afv/audio/input.h"
-#include "blacksound/audioutilities.h"
+#include "sound/audioutilities.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/verify.h"
 
@@ -16,7 +16,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;
-using namespace BlackSound;
+using namespace swift::sound;
 
 namespace BlackCore::Afv::Audio
 {

@@ -25,7 +25,7 @@ using namespace BlackMisc::Audio;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
-using namespace BlackSound;
+using namespace swift::sound;
 using namespace BlackCore::Afv::Clients;
 
 //! \cond

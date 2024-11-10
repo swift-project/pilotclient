@@ -6,8 +6,8 @@
 #ifndef BLACKCORE_AFV_AUDIO_AUDIO_INPUT_H
 #define BLACKCORE_AFV_AUDIO_AUDIO_INPUT_H
 
-#include "blacksound/sampleprovider/bufferedwaveprovider.h"
-#include "blacksound/codecs/opusencoder.h"
+#include "sound/sampleprovider/bufferedwaveprovider.h"
+#include "sound/codecs/opusencoder.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 
 #ifdef Q_OS_MAC
@@ -137,7 +137,7 @@ namespace BlackCore::Afv::Audio
         static constexpr qint64 c_frameSize = 960;
         int m_sampleRate = 0;
 
-        BlackSound::Codecs::COpusEncoder m_encoder;
+        swift::sound::codecs::COpusEncoder m_encoder;
         QScopedPointer<QAudioSource> m_audioInput;
         BlackMisc::Audio::CAudioDeviceInfo m_device;
         QAudioFormat m_inputFormat;

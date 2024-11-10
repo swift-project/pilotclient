@@ -5,8 +5,8 @@
 #include "blackcore/afv/audio/callsigndelaycache.h"
 
 #include "blackcore/afv/audio/receiversampleprovider.h"
-#include "blacksound/sampleprovider/samples.h"
-#include "blacksound/audioutilities.h"
+#include "sound/sampleprovider/samples.h"
+#include "sound/audioutilities.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/metadatautils.h"
 #include "config/buildconfig.h"
@@ -17,7 +17,7 @@
 #include <QStringBuilder>
 
 using namespace BlackMisc;
-using namespace BlackSound::SampleProvider;
+using namespace swift::sound::sample_provider;
 using namespace swift::config;
 
 namespace BlackCore::Afv::Audio
@@ -136,7 +136,7 @@ namespace BlackCore::Afv::Audio
         setEffects();
 
         const QVector<qint16> audio = decodeOpus(audioDto.audio);
-        m_audioInput->addSamples(BlackSound::convertFromShortToFloat(audio));
+        m_audioInput->addSamples(swift::sound::convertFromShortToFloat(audio));
         m_lastPacketLatch = audioDto.lastPacket;
         if (audioDto.lastPacket && !m_underflow) { CallsignDelayCache::instance().success(m_callsign); }
         m_lastSamplesAddedUtc = QDateTime::currentDateTimeUtc();

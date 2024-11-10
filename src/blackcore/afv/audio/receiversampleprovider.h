@@ -7,10 +7,10 @@
 #define BLACKCORE_AFV_AUDIO_RECEIVERSAMPLEPROVIDER_H
 
 #include "blackcore/afv/audio/callsignsampleprovider.h"
-#include "blacksound/sampleprovider/sampleprovider.h"
-#include "blacksound/sampleprovider/mixingsampleprovider.h"
-#include "blacksound/sampleprovider/sinusgenerator.h"
-#include "blacksound/sampleprovider/volumesampleprovider.h"
+#include "sound/sampleprovider/sampleprovider.h"
+#include "sound/sampleprovider/mixingsampleprovider.h"
+#include "sound/sampleprovider/sinusgenerator.h"
+#include "sound/sampleprovider/volumesampleprovider.h"
 
 #include "blackmisc/logcategories.h"
 #include "blackmisc/aviation/callsignset.h"
@@ -28,7 +28,7 @@ namespace BlackCore::Afv::Audio
     };
 
     //! A sample provider
-    class CReceiverSampleProvider : public BlackSound::SampleProvider::ISampleProvider
+    class CReceiverSampleProvider : public swift::sound::sample_provider::ISampleProvider
     {
         Q_OBJECT
 
@@ -57,7 +57,7 @@ namespace BlackCore::Afv::Audio
         void setMute(bool value);
         //! @}
 
-        //! \copydoc BlackSound::SampleProvider::ISampleProvider::readSamples
+        //! \copydoc swift::sound::sample_provider::ISampleProvider::readSamples
         virtual int readSamples(QVector<float> &samples, qint64 count) override;
 
         //! @{
@@ -100,9 +100,9 @@ namespace BlackCore::Afv::Audio
         quint16 m_id;
         BlackMisc::CSettingReadOnly<BlackMisc::Audio::TSettings> m_audioSettings { this };
 
-        BlackSound::SampleProvider::CVolumeSampleProvider *m_volume = nullptr;
-        BlackSound::SampleProvider::CMixingSampleProvider *m_mixer = nullptr;
-        BlackSound::SampleProvider::CSinusGenerator *m_blockTone = nullptr;
+        swift::sound::sample_provider::CVolumeSampleProvider *m_volume = nullptr;
+        swift::sound::sample_provider::CMixingSampleProvider *m_mixer = nullptr;
+        swift::sound::sample_provider::CSinusGenerator *m_blockTone = nullptr;
         QVector<CCallsignSampleProvider *> m_voiceInputs;
         qint64 m_lastLogMessage = -1;
 

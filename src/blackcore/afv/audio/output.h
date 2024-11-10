@@ -6,7 +6,7 @@
 #ifndef BLACKCORE_AFV_AUDIO_OUTPUT_H
 #define BLACKCORE_AFV_AUDIO_OUTPUT_H
 
-#include "blacksound/sampleprovider/sampleprovider.h"
+#include "sound/sampleprovider/sampleprovider.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 
 #include <QObject>
@@ -29,7 +29,7 @@ namespace BlackCore::Afv::Audio
 
     public:
         //! Ctor
-        CAudioOutputBuffer(BlackSound::SampleProvider::ISampleProvider *sampleProvider, QObject *parent);
+        CAudioOutputBuffer(swift::sound::sample_provider::ISampleProvider *sampleProvider, QObject *parent);
 
         //! Set the format
         void setAudioFormat(const QAudioFormat &format) { m_outputFormat = format; }
@@ -51,7 +51,7 @@ namespace BlackCore::Afv::Audio
         virtual qint64 writeData(const char *data, qint64 len) override;
 
     private:
-        BlackSound::SampleProvider::ISampleProvider *m_sampleProvider = nullptr; //!< related provider
+        swift::sound::sample_provider::ISampleProvider *m_sampleProvider = nullptr; //!< related provider
 
         static constexpr int SampleCountPerEvent = 4800;
         QAudioFormat m_outputFormat;
@@ -77,7 +77,7 @@ namespace BlackCore::Afv::Audio
         }
 
         //! Start output
-        void start(const BlackMisc::Audio::CAudioDeviceInfo &outputDevice, BlackSound::SampleProvider::ISampleProvider *sampleProvider);
+        void start(const BlackMisc::Audio::CAudioDeviceInfo &outputDevice, swift::sound::sample_provider::ISampleProvider *sampleProvider);
 
         //! Stop output
         void stop();

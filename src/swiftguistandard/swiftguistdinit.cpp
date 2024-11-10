@@ -26,7 +26,7 @@
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/context/contextaudio.h"
-#include "blacksound/audioutilities.h"
+#include "sound/audioutilities.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/sharedstate/datalinkdbus.h"
 #include "blackmisc/loghandler.h"

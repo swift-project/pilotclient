@@ -10,7 +10,7 @@
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/context/contextapplicationproxy.h"
 #include "blackcore/setupreader.h"
-#include "blacksound/audioutilities.h"
+#include "sound/audioutilities.h"
 #include "blackmisc/simulation/fscommon/fsdirectories.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackmisc/network/networkutils.h"
@@ -42,7 +42,7 @@ using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackCore::Data;
 using namespace BlackCore::Vatsim;
-using namespace BlackSound;
+using namespace swift::sound;
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;

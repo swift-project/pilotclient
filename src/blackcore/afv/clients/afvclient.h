@@ -14,7 +14,7 @@
 #include "blackcore/afv/dto.h"
 #include "blackcore/blackcoreexport.h"
 
-#include "blacksound/sampleprovider/volumesampleprovider.h"
+#include "sound/sampleprovider/volumesampleprovider.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
@@ -384,7 +384,7 @@ namespace BlackCore::Afv::Clients
         Audio::COutput *m_output = nullptr;
 
         Audio::CSoundcardSampleProvider *m_soundcardSampleProvider = nullptr;
-        BlackSound::SampleProvider::CVolumeSampleProvider *m_outputSampleProvider = nullptr;
+        swift::sound::sample_provider::CVolumeSampleProvider *m_outputSampleProvider = nullptr;
 
         std::atomic_bool m_transmit { false };
         std::atomic_bool m_transmitHistory { false };

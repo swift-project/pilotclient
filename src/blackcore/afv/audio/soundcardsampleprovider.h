@@ -6,8 +6,8 @@
 #ifndef BLACKCORE_AFV_AUDIO_SOUNDCARDSAMPLEPROVIDER_H
 #define BLACKCORE_AFV_AUDIO_SOUNDCARDSAMPLEPROVIDER_H
 
-#include "blacksound/sampleprovider/sampleprovider.h"
-#include "blacksound/sampleprovider/mixingsampleprovider.h"
+#include "sound/sampleprovider/sampleprovider.h"
+#include "sound/sampleprovider/mixingsampleprovider.h"
 #include "blackcore/afv/audio/receiversampleprovider.h"
 #include "blackmisc/aviation/callsignset.h"
 
@@ -17,7 +17,7 @@
 namespace BlackCore::Afv::Audio
 {
     //! Soundcard sample
-    class CSoundcardSampleProvider : public BlackSound::SampleProvider::ISampleProvider
+    class CSoundcardSampleProvider : public swift::sound::sample_provider::ISampleProvider
     {
         Q_OBJECT
 
@@ -34,7 +34,7 @@ namespace BlackCore::Afv::Audio
         //! Update PTT
         void pttUpdate(bool active, const QVector<TxTransceiverDto> &txTransceivers);
 
-        //! \copydoc BlackSound::SampleProvider::ISampleProvider::readSamples
+        //! \copydoc swift::sound::sample_provider::ISampleProvider::readSamples
         virtual int readSamples(QVector<float> &samples, qint64 count) override;
 
         //! Add OPUS samples
@@ -58,7 +58,7 @@ namespace BlackCore::Afv::Audio
 
     private:
         QAudioFormat m_waveFormat;
-        BlackSound::SampleProvider::CMixingSampleProvider *m_mixer = nullptr;
+        swift::sound::sample_provider::CMixingSampleProvider *m_mixer = nullptr;
         QVector<CReceiverSampleProvider *> m_receiverInputs;
         QVector<quint16> m_receiverIDs;
     };

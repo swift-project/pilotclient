@@ -13,7 +13,7 @@ namespace BlackMisc::Audio
 {
     /*!
      * Simplified enums to play sounds.
-     * \remarks Currently located in project BlackMisc (i.e. outside project BlackSound)
+     * \remarks Currently located in project BlackMisc (i.e. outside project swift::sound)
      *          as this allows to trigger sounds without using Multimedia libraries.
      */
     struct BLACKMISC_EXPORT CNotificationSounds
@@ -38,7 +38,7 @@ namespace BlackMisc::Audio
             // 1 << 9 previously used for PTTBlocked
 
             // AFVClicked and AFVBlocked are not played back from the notification player itself (except for preview playback).
-            // Instead, they are provided from BlackSound::SampleProvider::Samples.
+            // Instead, they are provided from swift::sound::sample_provider::Samples.
             // They are included here to allow to disable playing them.
             AFVClicked = 1 << 14,
             AFVBlocked = 1 << 15

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackcore/afv/audio/output.h"
-#include "blacksound/audioutilities.h"
+#include "sound/audioutilities.h"
 #include "blackmisc/metadatautils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/verify.h"
@@ -13,8 +13,8 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;
-using namespace BlackSound;
-using namespace BlackSound::SampleProvider;
+using namespace swift::sound;
+using namespace swift::sound::sample_provider;
 
 namespace BlackCore::Afv::Audio
 {
