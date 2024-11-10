@@ -4,11 +4,11 @@
 #include "blackcore/application.h"
 #include "blackcore/context/contextapplicationimpl.h"
 #include "blackcore/inputmanager.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/settingscache.h"
-#include "blackmisc/simplecommandparser.h"
+#include "misc/dbusserver.h"
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
+#include "misc/settingscache.h"
+#include "misc/simplecommandparser.h"
 
 #include <QFile>
 #include <QFlags>
@@ -16,14 +16,14 @@
 #include <QTextStream>
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackCore::Context
 {
     CContextApplication::CContextApplication(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextApplication(mode, runtime), CIdentifiable(this)
     {}
 
-    CContextApplication *CContextApplication::registerWithDBus(BlackMisc::CDBusServer *server)
+    CContextApplication *CContextApplication::registerWithDBus(swift::misc::CDBusServer *server)
     {
         if (!server || getMode() != CCoreFacadeConfig::LocalInDBusServer) { return this; }
         server->addObject(IContextApplication::ObjectPath(), this);
@@ -36,7 +36,7 @@ namespace BlackCore::Context
         emit this->settingsChanged(settings, origin);
     }
 
-    BlackMisc::CValueCachePacket CContextApplication::getAllSettings() const
+    swift::misc::CValueCachePacket CContextApplication::getAllSettings() const
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         return CSettingsCache::instance()->getAllValuesWithTimestamps();
@@ -62,19 +62,19 @@ namespace BlackCore::Context
         // no-op: proxy implements this method by calling getAllSettings
     }
 
-    BlackMisc::CStatusMessage CContextApplication::saveSettings(const QString &keyPrefix)
+    swift::misc::CStatusMessage CContextApplication::saveSettings(const QString &keyPrefix)
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << keyPrefix; }
         return CSettingsCache::instance()->saveToStore(keyPrefix);
     }
 
-    BlackMisc::CStatusMessage CContextApplication::saveSettingsByKey(const QStringList &keys)
+    swift::misc::CStatusMessage CContextApplication::saveSettingsByKey(const QStringList &keys)
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << keys.join(", "); }
         return CSettingsCache::instance()->saveToStore(keys);
     }
 
-    BlackMisc::CStatusMessage CContextApplication::loadSettings()
+    swift::misc::CStatusMessage CContextApplication::loadSettings()
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         return CSettingsCache::instance()->loadFromStore();

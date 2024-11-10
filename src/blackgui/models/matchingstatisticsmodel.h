@@ -8,14 +8,14 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodelbase.h"
-#include "blackmisc/simulation/matchingstatistics.h"
+#include "misc/simulation/matchingstatistics.h"
 
 class QObject;
 
 namespace BlackGui::Models
 {
     //! Matching statistics entry
-    class BLACKGUI_EXPORT CMatchingStatisticsModel : public CListModelBase<BlackMisc::Simulation::CMatchingStatistics, true>
+    class BLACKGUI_EXPORT CMatchingStatisticsModel : public CListModelBase<swift::misc::simulation::CMatchingStatistics, true>
     {
         Q_OBJECT
 

@@ -7,7 +7,7 @@
 #define BLACKGUI_EDITOR_VALIDATIONINDICATOR_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/statusmessagelist.h"
 
 #include <QFrame>
 #include <QObject>
@@ -52,7 +52,7 @@ namespace BlackGui::Editors
         void setState(bool ok);
 
         //! Messages from status messages
-        void setState(const BlackMisc::CStatusMessageList &msgs);
+        void setState(const swift::misc::CStatusMessageList &msgs);
 
     public slots:
         //! Cleared state

@@ -3,15 +3,15 @@
 
 #include "blackcore/context/contextaudioimpl.h"
 #include "blackcore/afv/clients/afvclient.h"
-#include "blackmisc/dbusserver.h"
+#include "misc/dbusserver.h"
 
 #include <QTimer>
 #include <QtGlobal>
 #include <QPointer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Audio;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::audio;
+using namespace swift::misc::aviation;
 using namespace BlackCore::Afv::Clients;
 
 namespace BlackCore::Context

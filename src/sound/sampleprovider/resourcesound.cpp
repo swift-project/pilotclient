@@ -5,11 +5,11 @@
 
 #include "resourcesound.h"
 #include "sound/audioutilities.h"
-#include "blackmisc/fileutils.h"
-#include "blackmisc/stringutils.h"
+#include "misc/fileutils.h"
+#include "misc/stringutils.h"
 #include <QCoreApplication>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace swift::sound::wav;
 
 namespace swift::sound::sample_provider

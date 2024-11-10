@@ -7,8 +7,8 @@
 #define BLACKGUI_VIEWS_AIRCRAFTCATEGORYTREEVIEW_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/aviation/aircraftcategorylist.h"
-#include "blackmisc/digestsignal.h"
+#include "misc/aviation/aircraftcategorylist.h"
+#include "misc/digestsignal.h"
 
 #include <QTreeView>
 #include <QObject>
@@ -36,7 +36,7 @@ namespace BlackGui
             explicit CAircraftCategoryTreeView(QWidget *parent = nullptr);
 
             //! Update container
-            void updateContainer(const BlackMisc::Aviation::CAircraftCategoryList &categories);
+            void updateContainer(const swift::misc::aviation::CAircraftCategoryList &categories);
 
             //! Clear
             void clear();
@@ -61,7 +61,7 @@ namespace BlackGui
             void fullResizeToContentsImpl();
 
             //! The selected object
-            BlackMisc::Aviation::CAircraftCategory selectedObject() const;
+            swift::misc::aviation::CAircraftCategory selectedObject() const;
 
             //! Expanded
             void onExpanded(const QModelIndex &index);
@@ -69,7 +69,7 @@ namespace BlackGui
             //! Custom menu
             void customMenu(const QPoint &point);
 
-            BlackMisc::CDigestSignal m_dsFullResize { this, &CAircraftCategoryTreeView::fullResizeToContentsImpl, 1000, 25 };
+            swift::misc::CDigestSignal m_dsFullResize { this, &CAircraftCategoryTreeView::fullResizeToContentsImpl, 1000, 25 };
         };
     } // ns
 } // ns

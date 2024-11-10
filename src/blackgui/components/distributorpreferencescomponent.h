@@ -7,9 +7,9 @@
 #define BLACKGUI_COMPONENTS_DISTRIBUTORPREFERENCESCOMPONENT_H
 
 #include "blackgui/overlaymessagesframe.h"
-#include "blackmisc/simulation/settings/modelsettings.h"
-#include "blackmisc/simulation/simulatorinfo.h"
-#include "blackmisc/settingscache.h"
+#include "misc/simulation/settings/modelsettings.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/settingscache.h"
 
 #include <QObject>
 #include <QScopedPointer>
@@ -55,17 +55,17 @@ namespace BlackGui
             void save();
 
             //! Simulator has been changed
-            void onSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void onSimulatorChanged(const swift::misc::simulation::CSimulatorInfo &simulator);
 
             // Init
             void triggerDeferredSimulatorChange();
 
         private:
             QScopedPointer<Ui::CDistributorPreferencesComponent> ui;
-            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TDistributorListPreferences> m_distributorPreferences { this, &CDistributorPreferencesComponent::onPreferencesChanged };
+            swift::misc::CSetting<swift::misc::simulation::settings::TDistributorListPreferences> m_distributorPreferences { this, &CDistributorPreferencesComponent::onPreferencesChanged };
 
             //! Update
-            void updateContainerMaybeAsync(const BlackMisc::Simulation::CDistributorList &models, bool sortByOrder = true);
+            void updateContainerMaybeAsync(const swift::misc::simulation::CDistributorList &models, bool sortByOrder = true);
         };
     } // ns
 } // ns

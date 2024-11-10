@@ -2,15 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackcore/fsd/serializer.h"
-#include "blackmisc/verify.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/logcategories.h"
+#include "misc/verify.h"
+#include "misc/logmessage.h"
+#include "misc/logcategories.h"
 #include "config/buildconfig.h"
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
 
 namespace BlackCore::Fsd
 {

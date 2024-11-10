@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackgui/components/statusmessageform.h"
-#include "blackmisc/logpattern.h"
+#include "misc/logpattern.h"
 #include "ui_statusmessageform.h"
 
 #include <QLabel>
@@ -10,7 +10,7 @@
 #include <QPlainTextEdit>
 #include <QString>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Components
 {

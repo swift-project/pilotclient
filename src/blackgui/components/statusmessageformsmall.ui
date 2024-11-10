@@ -88,7 +88,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="../../blackmisc/blackmisc.qrc">:/diagona/icons/diagona/icons/question.png</pixmap>
+      <pixmap resource="../../misc/misc.qrc">:/diagona/icons/diagona/icons/question.png</pixmap>
      </property>
     </widget>
    </item>
@@ -109,7 +109,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
+  <include location="../../misc/misc.qrc"/>
  </resources>
  <connections/>
 </ui>

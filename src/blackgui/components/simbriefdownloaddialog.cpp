@@ -4,7 +4,7 @@
 #include "simbriefdownloaddialog.h"
 #include "ui_simbriefdownloaddialog.h"
 
-using namespace BlackMisc::Aviation;
+using namespace swift::misc::aviation;
 
 namespace BlackGui::Components
 {

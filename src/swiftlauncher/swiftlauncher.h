@@ -12,13 +12,13 @@
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/launchersetup.h"
 #include "blackcore/coremodeenums.h"
-#include "blackmisc/simulation/data/modelcaches.h"
-#include "blackmisc/db/artifact.h"
-#include "blackmisc/identifiable.h"
-#include "blackmisc/loghistory.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/db/artifact.h"
+#include "misc/identifiable.h"
+#include "misc/loghistory.h"
 
 #ifdef Q_OS_MAC
-#    include "blackmisc/macos/microphoneaccess.h"
+#    include "misc/macos/microphoneaccess.h"
 #endif
 
 #include <QMainWindow>
@@ -46,8 +46,8 @@ class CSwiftLauncher :
     public QMainWindow,
     public BlackGui::CEnableForFramelessWindow,
     public BlackGui::IMainWindowAccess,
-    public BlackMisc::Simulation::Data::CCentralMultiSimulatorModelSetCachesAware,
-    public BlackMisc::CIdentifiable
+    public swift::misc::simulation::data::CCentralMultiSimulatorModelSetCachesAware,
+    public swift::misc::CIdentifiable
 {
     Q_OBJECT
     Q_INTERFACES(BlackGui::IMainWindowAccess)
@@ -100,10 +100,10 @@ private:
     QScopedPointer<Ui::CSwiftLauncher> ui;
     QScopedPointer<BlackGui::Components::CConfigurationWizard> m_wizard;
     QScopedPointer<BlackGui::Components::CTextEditDialog> m_textEditDialog;
-    BlackMisc::CData<BlackCore::Data::TLauncherSetup> m_setup { this }; //!< setup, i.e. last user selection
-    BlackMisc::CLogHistoryReplica m_logHistory { this }; //!< for the overlay
+    swift::misc::CData<BlackCore::Data::TLauncherSetup> m_setup { this }; //!< setup, i.e. last user selection
+    swift::misc::CLogHistoryReplica m_logHistory { this }; //!< for the overlay
 #ifdef Q_OS_MAC
-    BlackMisc::CMacOSMicrophoneAccess m_micAccess;
+    swift::misc::CMacOSMicrophoneAccess m_micAccess;
 #endif
 
     QString m_executable;
@@ -129,7 +129,7 @@ private:
     void initLogDisplay();
 
     //! Set header info
-    void setHeaderInfo(const BlackMisc::Db::CArtifact &latestArtifact);
+    void setHeaderInfo(const swift::misc::db::CArtifact &latestArtifact);
 
     //! Executaable for core
     bool setSwiftCoreExecutable();
@@ -165,7 +165,7 @@ private:
     void dbusServerModeSelected(bool selected);
 
     //! Display status message as overlay
-    void showStatusMessage(const BlackMisc::CStatusMessage &msg);
+    void showStatusMessage(const swift::misc::CStatusMessage &msg);
 
     //! Display status message as overlay
     void showStatusMessage(const QString &htmlMsg);

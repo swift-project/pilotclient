@@ -15,13 +15,13 @@
 #include "blackcore/blackcoreexport.h"
 
 #include "sound/sampleprovider/volumesampleprovider.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/audio/audiosettings.h"
-#include "blackmisc/audio/audiodeviceinfo.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/identifiable.h"
-#include "blackmisc/settingscache.h"
-#include "blackmisc/worker.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/audio/audiosettings.h"
+#include "misc/audio/audiodeviceinfo.h"
+#include "misc/logcategories.h"
+#include "misc/identifiable.h"
+#include "misc/settingscache.h"
+#include "misc/worker.h"
 
 #include <QDateTime>
 #include <QAudioInput>
@@ -35,7 +35,7 @@
 namespace BlackCore::Afv::Clients
 {
     //! AFV client
-    class BLACKCORE_EXPORT CAfvClient final : public BlackMisc::CContinuousWorker, public BlackMisc::CIdentifiable
+    class BLACKCORE_EXPORT CAfvClient final : public swift::misc::CContinuousWorker, public swift::misc::CIdentifiable
     {
         Q_OBJECT
 
@@ -117,7 +117,7 @@ namespace BlackCore::Afv::Clients
         //! @{
         //! Start/stop client
         void startAudio();
-        void startAudio(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
+        void startAudio(const swift::misc::audio::CAudioDeviceInfo &inputDevice, const swift::misc::audio::CAudioDeviceInfo &outputDevice);
         Q_INVOKABLE void startAudio(const QString &inputDeviceName, const QString &outputDeviceName);
         void stopAudio();
         void restartAudio();
@@ -145,16 +145,16 @@ namespace BlackCore::Afv::Clients
         //! Enable COM unit/transceiver
         //! \threadsafe
         Q_INVOKABLE void enableTransceiver(quint16 id, bool enable);
-        void enableComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit, bool enable);
+        void enableComUnit(swift::misc::aviation::CComSystem::ComUnit comUnit, bool enable);
         bool isEnabledTransceiver(quint16 id) const;
-        bool isEnabledComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
+        bool isEnabledComUnit(swift::misc::aviation::CComSystem::ComUnit comUnit) const;
         //! @}
 
         //! @{
         //! Set transmitting transceivers
         //! \threadsafe
         void setTransmittingTransceiver(quint16 transceiverID);
-        void setTransmittingComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit);
+        void setTransmittingComUnit(swift::misc::aviation::CComSystem::ComUnit comUnit);
         void setTransmittingTransceivers(const QVector<TxTransceiverDto> &transceivers);
         //! @}
 
@@ -162,7 +162,7 @@ namespace BlackCore::Afv::Clients
         //! Transmitting transceiver/COM unit
         //! \threadsafe
         bool isTransmittingTransceiver(quint16 id) const;
-        bool isTransmittingComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
+        bool isTransmittingComUnit(swift::misc::aviation::CComSystem::ComUnit comUnit) const;
         //! @}
 
         //! @{
@@ -191,8 +191,8 @@ namespace BlackCore::Afv::Clients
         //! Update frequency
         //! \threadsafe
         Q_INVOKABLE void updateComFrequency(quint16 id, quint32 frequencyHz);
-        void updateComFrequency(BlackMisc::Aviation::CComSystem::ComUnit comUnit, const BlackMisc::PhysicalQuantities::CFrequency &comFrequency);
-        void updateComFrequency(BlackMisc::Aviation::CComSystem::ComUnit comUnit, const BlackMisc::Aviation::CComSystem &comSystem);
+        void updateComFrequency(swift::misc::aviation::CComSystem::ComUnit comUnit, const swift::misc::physical_quantities::CFrequency &comFrequency);
+        void updateComFrequency(swift::misc::aviation::CComSystem::ComUnit comUnit, const swift::misc::aviation::CComSystem &comSystem);
         //! @}
 
         //! Update own aircraft position
@@ -202,7 +202,7 @@ namespace BlackCore::Afv::Clients
         //! Update from own aircraft
         //! \remark full update of frequency, position and enabled transceivers in one step
         //! \threadsafe
-        void updateFromOwnAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool withSignals = true);
+        void updateFromOwnAircraft(const swift::misc::simulation::CSimulatedAircraft &aircraft, bool withSignals = true);
 
         //! Push to talk
         //! \threadsafe
@@ -225,22 +225,22 @@ namespace BlackCore::Afv::Clients
         //! @{
         //! Output volume for each COM in dB, [MinDbOut, MaxDbOut]dB
         //! \threadsafe
-        double getComOutputVolumeDb(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
-        Q_INVOKABLE bool setComOutputVolumeDb(BlackMisc::Aviation::CComSystem::ComUnit comUnit, double valueDb);
+        double getComOutputVolumeDb(swift::misc::aviation::CComSystem::ComUnit comUnit) const;
+        Q_INVOKABLE bool setComOutputVolumeDb(swift::misc::aviation::CComSystem::ComUnit comUnit, double valueDb);
         //! @}
 
         //! Gain ratio
         //! \threadsafe
-        double getOutputGainRatio(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
+        double getOutputGainRatio(swift::misc::aviation::CComSystem::ComUnit comUnit) const;
 
         //! @{
         //! Normalized volumes 0..100
         //! \threadsafe
         int getNormalizedInputVolume() const;
-        int getNormalizedComOutputVolume(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
+        int getNormalizedComOutputVolume(swift::misc::aviation::CComSystem::ComUnit comUnit) const;
         int getNormalizedMasterOutputVolume() const;
         bool setNormalizedInputVolume(int volume);
-        bool setNormalizedComOutputVolume(BlackMisc::Aviation::CComSystem::ComUnit comUnit, int volume);
+        bool setNormalizedComOutputVolume(swift::misc::aviation::CComSystem::ComUnit comUnit, int volume);
         bool setNormalizedMasterOutputVolume(int volume);
         //! @}
 
@@ -254,9 +254,9 @@ namespace BlackCore::Afv::Clients
         //! @{
         //! Recently used device
         //! \threadsafe
-        const BlackMisc::Audio::CAudioDeviceInfo &getInputDevice() const;
-        const BlackMisc::Audio::CAudioDeviceInfo &getOutputDevice() const;
-        bool usesSameDevices(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
+        const swift::misc::audio::CAudioDeviceInfo &getInputDevice() const;
+        const swift::misc::audio::CAudioDeviceInfo &getOutputDevice() const;
+        bool usesSameDevices(const swift::misc::audio::CAudioDeviceInfo &inputDevice, const swift::misc::audio::CAudioDeviceInfo &outputDevice);
         //! @}
 
         //! @{
@@ -264,8 +264,8 @@ namespace BlackCore::Afv::Clients
         //! \threadsafe
         QString getReceivingCallsignsStringCom1() const;
         QString getReceivingCallsignsStringCom2() const;
-        BlackMisc::Aviation::CCallsignSet getReceivingCallsignsCom1() const;
-        BlackMisc::Aviation::CCallsignSet getReceivingCallsignsCom2() const;
+        swift::misc::aviation::CCallsignSet getReceivingCallsignsCom1() const;
+        swift::misc::aviation::CCallsignSet getReceivingCallsignsCom2() const;
         QStringList getReceivingCallsignsStringCom1Com2() const;
         //! @}
 
@@ -282,19 +282,19 @@ namespace BlackCore::Afv::Clients
 
         //! Received callsigns have been changed
         //! \remark swift style per com units
-        void receivedCallsignsChanged(const BlackMisc::Aviation::CCallsignSet &com1Callsigns, const BlackMisc::Aviation::CCallsignSet &com2Callsigns);
+        void receivedCallsignsChanged(const swift::misc::aviation::CCallsignSet &com1Callsigns, const swift::misc::aviation::CCallsignSet &com2Callsigns);
 
         //! Connection status has been changed
         void connectionStatusChanged(ConnectionStatus status);
 
         //! Authentication has failed with AFV server
-        void afvConnectionFailure(const BlackMisc::CStatusMessage &msg);
+        void afvConnectionFailure(const swift::misc::CStatusMessage &msg);
 
         //! Client updated from own aicraft data
         void updatedFromOwnAircraftCockpit();
 
         //! PTT status in this particular AFV client
-        void ptt(bool active, const BlackMisc::CIdentifier &identifier);
+        void ptt(bool active, const swift::misc::CIdentifier &identifier);
 
         //! @{
         //! VU levels
@@ -303,7 +303,7 @@ namespace BlackCore::Afv::Clients
         //! @}
 
         //! Started audio with devices
-        void startedAudio(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
+        void startedAudio(const swift::misc::audio::CAudioDeviceInfo &inputDevice, const swift::misc::audio::CAudioDeviceInfo &outputDevice);
 
         //! Audio has been stopped
         void stoppedAudio();
@@ -312,10 +312,10 @@ namespace BlackCore::Afv::Clients
         void changedOutputMute(bool muted);
 
     protected:
-        //! \copydoc BlackMisc::CContinuousWorker::initialize
+        //! \copydoc swift::misc::CContinuousWorker::initialize
         virtual void initialize() override;
 
-        //! \copydoc BlackMisc::CContinuousWorker::cleanup
+        //! \copydoc swift::misc::CContinuousWorker::cleanup
         virtual void cleanup() override;
 
     private:
@@ -329,14 +329,14 @@ namespace BlackCore::Afv::Clients
         void autoLogoffWithoutFsdNetwork();
 
         void updateTransceivers(bool updateFrequencies = true);
-        void onUpdateTransceiversFromContext(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+        void onUpdateTransceiversFromContext(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator);
         void onReceivingCallsignsChanged(const BlackCore::Afv::Audio::TransceiverReceivingCallsignsChangedArgs &args);
 
         //! Re-try connection to server
         void retryConnectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client, const QString &reason);
 
         //! Connect again in given ms
-        void reconnectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client, int delayMs, const BlackMisc::CStatusMessage &msg);
+        void reconnectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client, int delayMs, const swift::misc::CStatusMessage &msg);
 
         //! Toggle (enable/disable) the transmission capability.
         //! This is triggered by the #MU FSD packet to mute the user remotely.
@@ -373,11 +373,11 @@ namespace BlackCore::Afv::Clients
         static constexpr double MaxDbOut = 18.0;
         static constexpr quint32 UniCom = 122800000;
 
-        static quint16 comUnitToTransceiverId(BlackMisc::Aviation::CComSystem::ComUnit comUnit);
-        static BlackMisc::Aviation::CComSystem::ComUnit transceiverIdToComUnit(quint16 id);
+        static quint16 comUnitToTransceiverId(swift::misc::aviation::CComSystem::ComUnit comUnit);
+        static swift::misc::aviation::CComSystem::ComUnit transceiverIdToComUnit(quint16 id);
 
         Connection::CClientConnection *m_connection = nullptr;
-        BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &CAfvClient::onSettingsChanged };
+        swift::misc::CSetting<swift::misc::audio::TSettings> m_audioSettings { this, &CAfvClient::onSettingsChanged };
         QString m_callsign;
 
         Audio::CInput *m_input = nullptr;

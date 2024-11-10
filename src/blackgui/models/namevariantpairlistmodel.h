@@ -8,14 +8,14 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodelbase.h"
-#include "blackmisc/namevariantpairlist.h"
-#include "blackmisc/variant.h"
+#include "misc/namevariantpairlist.h"
+#include "misc/variant.h"
 
 #include <QString>
 
 class QObject;
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CIcon;
     class CNameVariantPair;
@@ -25,7 +25,7 @@ namespace BlackGui::Models
 {
 
     //! Simple model displaying name / variant values
-    class BLACKGUI_EXPORT CNameVariantPairModel : public CListModelBase<BlackMisc::CNameVariantPairList>
+    class BLACKGUI_EXPORT CNameVariantPairModel : public CListModelBase<swift::misc::CNameVariantPairList>
     {
         Q_OBJECT
 
@@ -46,10 +46,10 @@ namespace BlackGui::Models
         bool containsName(const QString &name) const;
 
         //! Contains name / value?
-        bool containsNameValue(const QString &name, const BlackMisc::CVariant &value) const;
+        bool containsNameValue(const QString &name, const swift::misc::CVariant &value) const;
 
         //! Add our update a value
-        bool addOrUpdateByName(const QString &name, const BlackMisc::CVariant &value, const BlackMisc::CIcon &icon, bool skipEqualValues);
+        bool addOrUpdateByName(const QString &name, const swift::misc::CVariant &value, const swift::misc::CIcon &icon, bool skipEqualValues);
 
         //! Current row index of given name
         int getRowIndexForName(const QString &name) const;

@@ -7,7 +7,7 @@
 #define BLACKGUI_INTERNALSCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/aviation/aircraftparts.h"
+#include "misc/aviation/aircraftparts.h"
 
 #include <QObject>
 #include <QScopedPointer>

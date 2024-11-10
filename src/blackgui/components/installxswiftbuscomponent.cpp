@@ -5,11 +5,11 @@
 #include "ui_installxswiftbuscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/overlaymessagesframe.h"
-#include "blackmisc/simulation/xplane/xplaneutil.h"
-#include "blackmisc/compressutils.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/directoryutils.h"
-#include "blackmisc/fileutils.h"
+#include "misc/simulation/xplane/xplaneutil.h"
+#include "misc/compressutils.h"
+#include "misc/logmessage.h"
+#include "misc/directoryutils.h"
+#include "misc/fileutils.h"
 #include "config/buildconfig.h"
 
 #include <QMessageBox>
@@ -22,12 +22,12 @@
 #include <QDesktopServices>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Db;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::Settings;
-using namespace BlackMisc::Simulation::XPlane;
+using namespace swift::misc;
+using namespace swift::misc::db;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::settings;
+using namespace swift::misc::simulation::xplane;
 
 namespace BlackGui::Components
 {

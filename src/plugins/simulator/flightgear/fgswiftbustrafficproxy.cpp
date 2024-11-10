@@ -7,15 +7,15 @@
 
 #define FGSWIFTBUS_SERVICENAME "org.swift-project.fgswiftbus"
 
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc::aviation;
+using namespace swift::misc::geo;
+using namespace swift::misc::physical_quantities;
 
 namespace BlackSimPlugin::Flightgear
 {
     CFGSwiftBusTrafficProxy::CFGSwiftBusTrafficProxy(QDBusConnection &connection, QObject *parent, bool dummy) : QObject(parent)
     {
-        m_dbusInterface = new BlackMisc::CGenericDBusInterface(FGSWIFTBUS_SERVICENAME, ObjectPath(), InterfaceName(), connection, this);
+        m_dbusInterface = new swift::misc::CGenericDBusInterface(FGSWIFTBUS_SERVICENAME, ObjectPath(), InterfaceName(), connection, this);
         if (!dummy)
         {
             bool s;
@@ -39,7 +39,7 @@ namespace BlackSimPlugin::Flightgear
         reply.waitForFinished();
         if (reply.isError())
         {
-            BlackMisc::CLogMessage(this).debug(u"CFGSwiftBusTrafficProxy::acquireMultiplayerPlanes returned: %1") << reply.error().message();
+            swift::misc::CLogMessage(this).debug(u"CFGSwiftBusTrafficProxy::acquireMultiplayerPlanes returned: %1") << reply.error().message();
         }
         MultiplayerAcquireInfo info;
         info.hasAcquired = reply.argumentAt<0>();

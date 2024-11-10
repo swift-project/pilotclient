@@ -8,8 +8,8 @@
 
 #include "sound/swiftsoundexport.h"
 #include "sound/tonepair.h"
-#include "blackmisc/audio/audiodeviceinfo.h"
-#include "blackmisc/worker.h"
+#include "misc/audio/audiodeviceinfo.h"
+#include "misc/worker.h"
 
 #include <QAudioSink>
 #include <QBuffer>
@@ -24,13 +24,13 @@ class QTimer;
 namespace swift::sound
 {
     //! Threaded tone player. Don't use it directly but use \sa CSelcalPlayer instead.
-    class SWIFT_SOUND_EXPORT CThreadedTonePairPlayer : public BlackMisc::CContinuousWorker
+    class SWIFT_SOUND_EXPORT CThreadedTonePairPlayer : public swift::misc::CContinuousWorker
     {
         Q_OBJECT
 
     public:
         //! Constructor
-        CThreadedTonePairPlayer(QObject *owner, const QString &name, const BlackMisc::Audio::CAudioDeviceInfo &device);
+        CThreadedTonePairPlayer(QObject *owner, const QString &name, const swift::misc::audio::CAudioDeviceInfo &device);
 
         //! Destructor
         virtual ~CThreadedTonePairPlayer() override = default;
@@ -40,16 +40,16 @@ namespace swift::sound
         void play(int volume, const QList<swift::sound::CTonePair> &tonePairs);
 
         //! Reinitialize audio
-        bool reinitializeAudio(const BlackMisc::Audio::CAudioDeviceInfo &device);
+        bool reinitializeAudio(const swift::misc::audio::CAudioDeviceInfo &device);
 
         //! Used audio device
-        BlackMisc::Audio::CAudioDeviceInfo getAudioDevice() const;
+        swift::misc::audio::CAudioDeviceInfo getAudioDevice() const;
 
     protected:
-        //! \copydoc BlackMisc::CContinuousWorker::initialize
+        //! \copydoc swift::misc::CContinuousWorker::initialize
         virtual void initialize() override;
 
-        //! \copydoc BlackMisc::CContinuousWorker::beforeQuit
+        //! \copydoc swift::misc::CContinuousWorker::beforeQuit
         virtual void beforeQuit() noexcept override;
 
     private:
@@ -65,7 +65,7 @@ namespace swift::sound
         //! \li sample type == signed int
         void writeAmplitudeToBuffer(double amplitude, unsigned char *bufferPointer);
 
-        BlackMisc::Audio::CAudioDeviceInfo m_deviceInfo;
+        swift::misc::audio::CAudioDeviceInfo m_deviceInfo;
         QAudioSink *m_audioOutput = nullptr;
         QByteArray m_bufferData;
         QBuffer m_buffer;

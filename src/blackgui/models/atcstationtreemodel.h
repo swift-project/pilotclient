@@ -7,7 +7,7 @@
 #define BLACKGUI_MODELS_ATCTREEMODEL_H
 
 #include "blackgui/models/columns.h"
-#include "blackmisc/aviation/atcstationlist.h"
+#include "misc/aviation/atcstationlist.h"
 #include "blackgui/blackguiexport.h"
 
 #include <QStandardItemModel>
@@ -31,22 +31,22 @@ namespace BlackGui::Models
         void setColumns(const CColumns &columns) { m_columns.setColumns(columns); }
 
         //! Update container
-        void updateContainer(const BlackMisc::Aviation::CAtcStationList &stations);
+        void updateContainer(const swift::misc::aviation::CAtcStationList &stations);
 
         //! Clear everything
         //! \remark hiding QStandardItemModel::clear()
         void clear();
 
         //! Get container
-        const BlackMisc::Aviation::CAtcStationList &container() const { return m_stations; }
+        const swift::misc::aviation::CAtcStationList &container() const { return m_stations; }
 
         //! Used to quickly update single station (better response for the user)
-        void changedAtcStationConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
+        void changedAtcStationConnectionStatus(const swift::misc::aviation::CAtcStation &station, bool added);
 
     private:
         CColumns m_columns { "CAtcStationTreeModel" };
-        BlackMisc::Aviation::CAtcStationList m_stations;
-        QHash<QString, BlackMisc::Aviation::CAtcStationList> m_stationsBySuffix;
+        swift::misc::aviation::CAtcStationList m_stations;
+        QHash<QString, swift::misc::aviation::CAtcStationList> m_stationsBySuffix;
         QStringList m_suffixes;
     };
 } // ns

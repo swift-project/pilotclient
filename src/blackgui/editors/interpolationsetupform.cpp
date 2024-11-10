@@ -5,9 +5,9 @@
 #include "ui_interpolationsetupform.h"
 #include "blackgui/guiutility.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::simulation;
 
 namespace BlackGui::Editors
 {

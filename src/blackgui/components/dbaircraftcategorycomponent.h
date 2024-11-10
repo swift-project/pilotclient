@@ -10,7 +10,7 @@
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/network/entityflags.h"
+#include "misc/network/entityflags.h"
 
 #include <QScopedPointer>
 
@@ -39,10 +39,10 @@ namespace BlackGui::Components
 
     private:
         //! ICAO codes have been read
-        void onCategoryRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+        void onCategoryRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState readState, int count);
 
         //! Download progress for an entity
-        void onEntityDownloadProgress(BlackMisc::Network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
+        void onEntityDownloadProgress(swift::misc::network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
 
         //! Reload models
         void onReload();

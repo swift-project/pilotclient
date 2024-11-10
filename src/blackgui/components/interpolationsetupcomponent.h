@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_INTERPOLATIONSETUPCOMPONENT_H
 #define BLACKGUI_COMPONENTS_INTERPOLATIONSETUPCOMPONENT_H
 
-#include "blackmisc/simulation/interpolation/interpolationsetuplist.h"
+#include "misc/simulation/interpolation/interpolationsetuplist.h"
 #include "blackgui/overlaymessagesframe.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -78,15 +78,15 @@ namespace BlackGui::Components
         bool checkPrerequisites(bool checkSim, bool showOverlay);
 
         //! Send to context
-        bool setSetupsToContext(const BlackMisc::Simulation::CInterpolationSetupList &setups, bool force = false);
+        bool setSetupsToContext(const swift::misc::simulation::CInterpolationSetupList &setups, bool force = false);
 
         //! Setup chaged
         void onSetupChanged();
 
         //! Objects have been deleted
-        void onObjectsDeleted(const BlackMisc::CVariant &deletedObjects);
+        void onObjectsDeleted(const swift::misc::CVariant &deletedObjects);
 
-        BlackMisc::Simulation::CInterpolationSetupList m_lastSetSetups; //!< last setups set to context
+        swift::misc::simulation::CInterpolationSetupList m_lastSetSetups; //!< last setups set to context
     };
 } // ns
 

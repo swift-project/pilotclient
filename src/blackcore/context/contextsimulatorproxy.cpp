@@ -2,29 +2,29 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackcore/context/contextsimulatorproxy.h"
-#include "blackmisc/dbus.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/genericdbusinterface.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "misc/dbus.h"
+#include "misc/dbusserver.h"
+#include "misc/genericdbusinterface.h"
+#include "misc/simulation/simulatedaircraft.h"
 
 #include <QDBusConnection>
 #include <QLatin1String>
 #include <QObject>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::Settings;
+using namespace swift::misc;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::geo;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::settings;
 
 namespace BlackCore::Context
 {
     CContextSimulatorProxy::CContextSimulatorProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextSimulator(mode, runtime), m_dBusInterface(nullptr)
     {
-        this->m_dBusInterface = new BlackMisc::CGenericDBusInterface(
+        this->m_dBusInterface = new swift::misc::CGenericDBusInterface(
             serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
             connection, this);
         this->relaySignals(serviceName, connection);
@@ -46,10 +46,10 @@ namespace BlackCore::Context
                                     "simulatorStatusChanged", this, SIGNAL(simulatorStatusChanged(int)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                               "simulatorPluginChanged", this, SIGNAL(simulatorPluginChanged(BlackMisc::Simulation::CSimulatorPluginInfo)));
+                               "simulatorPluginChanged", this, SIGNAL(simulatorPluginChanged(swift::misc::simulation::CSimulatorPluginInfo)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                               "simulatorChanged", this, SIGNAL(simulatorChanged(BlackMisc::Simulation::CSimulatorInfo)));
+                               "simulatorChanged", this, SIGNAL(simulatorChanged(swift::misc::simulation::CSimulatorInfo)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                "simulatorSettingsChanged", this, SIGNAL(simulatorSettingsChanged()));
@@ -58,7 +58,7 @@ namespace BlackCore::Context
                                "vitalityLost", this, SIGNAL(vitalityLost()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                               "renderRestrictionsChanged", this, SIGNAL(renderRestrictionsChanged(bool, bool, int, BlackMisc::PhysicalQuantities::CLength)));
+                               "renderRestrictionsChanged", this, SIGNAL(renderRestrictionsChanged(bool, bool, int, swift::misc::physical_quantities::CLength)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                "interpolationAndRenderingSetupChanged", this, SIGNAL(interpolationAndRenderingSetupChanged()));
@@ -67,29 +67,29 @@ namespace BlackCore::Context
                                "matchingSetupChanged", this, SIGNAL(matchingSetupChanged()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                               "modelSetChanged", this, SIGNAL(modelSetChanged(BlackMisc::Simulation::CSimulatorInfo)));
+                               "modelSetChanged", this, SIGNAL(modelSetChanged(swift::misc::simulation::CSimulatorInfo)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                               "modelMatchingCompleted", this, SIGNAL(modelMatchingCompleted(BlackMisc::Simulation::CSimulatedAircraft)));
+                               "modelMatchingCompleted", this, SIGNAL(modelMatchingCompleted(swift::misc::simulation::CSimulatedAircraft)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                               "addingRemoteModelFailed", this, SIGNAL(addingRemoteModelFailed(BlackMisc::Simulation::CSimulatedAircraft, bool, bool, BlackMisc::CStatusMessage)));
+                               "addingRemoteModelFailed", this, SIGNAL(addingRemoteModelFailed(swift::misc::simulation::CSimulatedAircraft, bool, bool, swift::misc::CStatusMessage)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                               "aircraftRenderingChanged", this, SIGNAL(aircraftRenderingChanged(BlackMisc::Simulation::CSimulatedAircraft)));
+                               "aircraftRenderingChanged", this, SIGNAL(aircraftRenderingChanged(swift::misc::simulation::CSimulatedAircraft)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                               "ownAircraftModelChanged", this, SIGNAL(ownAircraftModelChanged(BlackMisc::Simulation::CAircraftModel)));
+                               "ownAircraftModelChanged", this, SIGNAL(ownAircraftModelChanged(swift::misc::simulation::CAircraftModel)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                "airspaceSnapshotHandled", this, SIGNAL(airspaceSnapshotHandled()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                               "driverMessages", this, SIGNAL(driverMessages(BlackMisc::CStatusMessageList)));
+                               "driverMessages", this, SIGNAL(driverMessages(swift::misc::CStatusMessageList)));
 
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                               "validatedModelSet", this, SIGNAL(validatedModelSet(BlackMisc::Simulation::CSimulatorInfo, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModelList, bool, BlackMisc::CStatusMessageList)));
+                               "validatedModelSet", this, SIGNAL(validatedModelSet(swift::misc::simulation::CSimulatorInfo, swift::misc::simulation::CAircraftModelList, swift::misc::simulation::CAircraftModelList, bool, swift::misc::CStatusMessageList)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                "insufficientFrameRateDetected", this, SIGNAL(insufficientFrameRateDetected(bool)));
@@ -135,7 +135,7 @@ namespace BlackCore::Context
 
     CStatusMessageList CContextSimulatorProxy::verifyPrerequisites() const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1String("verifyPrerequisites"));
+        return m_dBusInterface->callDBusRet<swift::misc::CStatusMessageList>(QLatin1String("verifyPrerequisites"));
     }
 
     CSimulatorInfo CContextSimulatorProxy::getModelSetLoaderSimulator() const
@@ -255,7 +255,7 @@ namespace BlackCore::Context
 
     CTime CContextSimulatorProxy::getTimeSynchronizationOffset() const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::PhysicalQuantities::CTime>(QLatin1String("getTimeSynchronizationOffset"));
+        return m_dBusInterface->callDBusRet<swift::misc::physical_quantities::CTime>(QLatin1String("getTimeSynchronizationOffset"));
     }
 
     bool CContextSimulatorProxy::startSimulatorPlugin(const CSimulatorPluginInfo &simulatorInfo)
@@ -300,12 +300,12 @@ namespace BlackCore::Context
 
     CElevationPlane CContextSimulatorProxy::findClosestElevationWithinRange(const CCoordinateGeodetic &reference, const CLength &range) const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Geo::CElevationPlane>(QLatin1String("findClosestElevationWithinRange"), reference, range);
+        return m_dBusInterface->callDBusRet<swift::misc::geo::CElevationPlane>(QLatin1String("findClosestElevationWithinRange"), reference, range);
     }
 
-    CStatusMessageList CContextSimulatorProxy::getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const
+    CStatusMessageList CContextSimulatorProxy::getMatchingMessages(const swift::misc::aviation::CCallsign &callsign) const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1String("getMatchingMessages"), callsign);
+        return m_dBusInterface->callDBusRet<swift::misc::CStatusMessageList>(QLatin1String("getMatchingMessages"), callsign);
     }
 
     MatchingLog CContextSimulatorProxy::isMatchingMessagesEnabled() const

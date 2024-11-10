@@ -10,13 +10,13 @@
 #include <QScopedPointer>
 
 #include "blackcore/data/networksetup.h"
-#include "blackmisc/network/data/lastserver.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/network/fsdsetup.h"
-#include "blackmisc/settingscache.h"
-#include "blackmisc/datacache.h"
-#include "blackmisc/network/connectionstatus.h"
-#include "blackmisc/network/loginmode.h"
+#include "misc/network/data/lastserver.h"
+#include "misc/network/entityflags.h"
+#include "misc/network/fsdsetup.h"
+#include "misc/settingscache.h"
+#include "misc/datacache.h"
+#include "misc/network/connectionstatus.h"
+#include "misc/network/loginmode.h"
 
 namespace Ui
 {
@@ -44,10 +44,10 @@ namespace BlackGui::Components
         virtual ~CNetworkDetailsComponent() override;
 
         //! Login mode
-        BlackMisc::Network::CLoginMode getLoginMode() const;
+        swift::misc::network::CLoginMode getLoginMode() const;
 
         //! Login mode
-        void setLoginMode(BlackMisc::Network::CLoginMode mode);
+        void setLoginMode(swift::misc::network::CLoginMode mode);
 
         //! @{
         //! Selected server
@@ -56,23 +56,23 @@ namespace BlackGui::Components
         //! @}
 
         //! Selected server (VATSIM)
-        BlackMisc::Network::CServer getCurrentVatsimServer() const;
+        swift::misc::network::CServer getCurrentVatsimServer() const;
 
         //! Selected server (others)
-        BlackMisc::Network::CServer getCurrentOtherServer() const;
+        swift::misc::network::CServer getCurrentOtherServer() const;
 
         //! Current server based on selected tab
-        BlackMisc::Network::CServer getCurrentServer() const;
+        swift::misc::network::CServer getCurrentServer() const;
 
         //! Pilot or Co-pilot callsign?
         bool hasPartnerCallsign() const;
 
         //! Pilot or Co-pilot callsign
-        BlackMisc::Aviation::CCallsign getPartnerCallsign() const;
+        swift::misc::aviation::CCallsign getPartnerCallsign() const;
 
     signals:
         //! Override the pilot
-        void overridePilot(const BlackMisc::Network::CUser &user);
+        void overridePilot(const swift::misc::network::CUser &user);
 
         //! Request network settings
         void requestNetworkSettings();
@@ -85,13 +85,13 @@ namespace BlackGui::Components
         void onServerTabWidgetChanged(int index);
 
         //! Server changed
-        void onSelectedServerChanged(const BlackMisc::Network::CServer &server);
+        void onSelectedServerChanged(const swift::misc::network::CServer &server);
 
         //! Set the server buttons visible
         void setServerButtonsVisible(bool visible);
 
         //! VATSIM data file was loaded
-        void onWebServiceDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        void onWebServiceDataRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
         BlackCore::Data::CNetworkSetup m_networkSetup; //!< servers last used
         bool m_updatePilotOnServerChanges = true;

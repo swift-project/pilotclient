@@ -4,11 +4,11 @@
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/columns.h"
 #include "blackgui/models/identifierlistmodel.h"
-#include "blackmisc/timestampbased.h"
+#include "misc/timestampbased.h"
 
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Models
 {

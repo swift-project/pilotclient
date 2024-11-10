@@ -2,17 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackgui/models/aircraftmodelfilter.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/simulation/aircraftmodel.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/livery.h"
+#include "misc/simulation/aircraftmodel.h"
 
-using namespace BlackMisc::Simulation;
+using namespace swift::misc::simulation;
 
 namespace BlackGui::Models
 {
     CAircraftModelFilter::CAircraftModelFilter(int id, const QString &modelKey, const QString &description,
-                                               CAircraftModel::ModelModeFilter modelMode, BlackMisc::Db::DbKeyStateFilter dbKeyFilter,
+                                               CAircraftModel::ModelModeFilter modelMode, swift::misc::db::DbKeyStateFilter dbKeyFilter,
                                                Qt::CheckState military, Qt::CheckState colorLiveries,
                                                const QString &aircraftIcao, const QString &aircraftManufacturer,
                                                const QString &airlineIcao, const QString &airlineName,
@@ -98,7 +98,7 @@ namespace BlackGui::Models
                 if (!model.matchesMode(m_modelMode)) { continue; }
             }
 
-            if (m_dbKeyFilter != BlackMisc::Db::All && m_dbKeyFilter != BlackMisc::Db::Undefined)
+            if (m_dbKeyFilter != swift::misc::db::All && m_dbKeyFilter != swift::misc::db::Undefined)
             {
                 if (!model.matchesDbKeyState(m_dbKeyFilter)) { continue; }
             }
@@ -159,7 +159,7 @@ namespace BlackGui::Models
         if (!allEmpty) { return true; }
         const bool noSim = m_simulatorInfo.isNoSimulator() || m_simulatorInfo.isAllSimulators();
         const bool noModelMode = (m_modelMode == CAircraftModel::Undefined || m_modelMode == CAircraftModel::All);
-        const bool noDbState = (m_dbKeyFilter == BlackMisc::Db::Undefined || m_dbKeyFilter == BlackMisc::Db::All);
+        const bool noDbState = (m_dbKeyFilter == swift::misc::db::Undefined || m_dbKeyFilter == swift::misc::db::All);
         const bool noKey = !m_distributor.hasValidDbKey();
         const bool noColorRestriction = (m_colorLiveries == Qt::PartiallyChecked);
         const bool noMilitary = (m_military == Qt::PartiallyChecked);

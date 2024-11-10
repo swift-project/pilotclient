@@ -4,16 +4,16 @@
 #include "altitudedialog.h"
 #include "ui_altitudedialog.h"
 
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/aviation/altitude.h"
+#include "misc/statusmessagelist.h"
+#include "misc/aviation/altitude.h"
 
 #include <QValidator>
 #include <QPushButton>
 #include <QStringBuilder>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::physical_quantities;
 
 namespace BlackGui::Components
 {

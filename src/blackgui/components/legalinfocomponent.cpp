@@ -6,15 +6,15 @@
 
 #include "blackgui/guiapplication.h"
 #include "blackcore/data/globalsetup.h"
-#include "blackmisc/network/url.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/network/url.h"
+#include "misc/logmessage.h"
+#include "misc/statusmessage.h"
 #include "config/buildconfig.h"
 
 #include <QPointer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 using namespace BlackCore::Data;
 using namespace swift::config;
 

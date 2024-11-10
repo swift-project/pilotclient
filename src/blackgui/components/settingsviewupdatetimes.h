@@ -41,7 +41,7 @@ namespace BlackGui::Components
 
     private:
         QScopedPointer<Ui::CSettingsViewUpdateTimes> ui;
-        BlackMisc::CSetting<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CSettingsViewUpdateTimes::ps_settingsChanged }; //!< settings changed
+        swift::misc::CSetting<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CSettingsViewUpdateTimes::ps_settingsChanged }; //!< settings changed
     };
 } // ns
 

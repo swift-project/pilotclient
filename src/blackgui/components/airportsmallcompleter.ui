@@ -35,7 +35,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/diagona/icons/diagona/icons/binocular.png</normaloff>:/diagona/icons/diagona/icons/binocular.png</iconset>
      </property>
     </widget>
@@ -47,7 +47,7 @@
   <tabstop>pb_Dialog</tabstop>
  </tabstops>
  <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
+  <include location="../../misc/misc.qrc"/>
  </resources>
  <connections/>
 </ui>

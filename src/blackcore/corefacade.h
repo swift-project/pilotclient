@@ -10,21 +10,21 @@
 #include "blackcore/data/launchersetup.h"
 #include "blackcore/vatsim/vatsimsettings.h"
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/settingscache.h"
+#include "misc/identifier.h"
+#include "misc/settingscache.h"
 
 #include <QDBusConnection>
 #include <QMap>
 #include <QObject>
 #include <QString>
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CDBusServer;
     class CLogHistory;
     class CLogHistorySource;
 
-    namespace SharedState
+    namespace shared_state
     {
         class CDataLinkDBus;
     }
@@ -66,10 +66,10 @@ namespace BlackCore
         virtual ~CCoreFacade() override { this->gracefulShutdown(); }
 
         //! Transport mechanism for sharing state between applications
-        BlackMisc::SharedState::CDataLinkDBus *getDataLinkDBus() { return this->m_dataLinkDBus; }
+        swift::misc::shared_state::CDataLinkDBus *getDataLinkDBus() { return this->m_dataLinkDBus; }
 
         //! In case connection between DBus parties is lost, try to reconnect
-        BlackMisc::CStatusMessage tryToReconnectWithDBus();
+        swift::misc::CStatusMessage tryToReconnectWithDBus();
 
         //! Clean up (will be connected to signal QCoreApplication::aboutToQuit)
         void gracefulShutdown();
@@ -78,7 +78,7 @@ namespace BlackCore
         bool isShuttingDown() const { return m_shuttingDown; }
 
         //! Parse command line in all contexts
-        bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator);
+        bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator);
 
         // ------- Context as interface, normal way to access a context
 
@@ -170,17 +170,17 @@ namespace BlackCore
         bool m_initalized = false; //!< flag if already initialized
         bool m_shuttingDown = false; //!< flag if shutting down
         const CCoreFacadeConfig m_config; //!< used config
-        BlackMisc::CData<Data::TLauncherSetup> m_launcherSetup { this }; //!< updating DBus
+        swift::misc::CData<Data::TLauncherSetup> m_launcherSetup { this }; //!< updating DBus
 
         // DBus
-        BlackMisc::CDBusServer *m_dbusServer = nullptr;
+        swift::misc::CDBusServer *m_dbusServer = nullptr;
         bool m_initDBusConnection = false;
         QDBusConnection m_dbusConnection { "default" };
 
         // shared state infrastructure
-        BlackMisc::SharedState::CDataLinkDBus *m_dataLinkDBus = nullptr;
-        BlackMisc::CLogHistory *m_logHistory = nullptr;
-        BlackMisc::CLogHistorySource *m_logHistorySource = nullptr;
+        swift::misc::shared_state::CDataLinkDBus *m_dataLinkDBus = nullptr;
+        swift::misc::CLogHistory *m_logHistory = nullptr;
+        swift::misc::CLogHistorySource *m_logHistorySource = nullptr;
 
         // contexts:
         // There is a reason why we do not use smart pointers here. When the context is deleted

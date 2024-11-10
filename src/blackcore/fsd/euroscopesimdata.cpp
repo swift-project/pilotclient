@@ -4,10 +4,10 @@
 //! \file
 
 #include "blackcore/fsd/euroscopesimdata.h"
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 
 namespace BlackCore::Fsd
 {
@@ -15,7 +15,7 @@ namespace BlackCore::Fsd
 
     EuroscopeSimData::EuroscopeSimData(const QString &sender, const QString &model, const QString &livery, quint64 timestamp,
                                        double latitude, double longitude, double altitude, double heading, int bank, int pitch,
-                                       int groundSpeed, bool onGround, double gearPercent, double thrustPercent, const BlackMisc::Aviation::CAircraftLights &lights) : MessageBase(sender, {}),
+                                       int groundSpeed, bool onGround, double gearPercent, double thrustPercent, const swift::misc::aviation::CAircraftLights &lights) : MessageBase(sender, {}),
                                                                                                                                                                        m_model(model),
                                                                                                                                                                        m_livery(livery),
                                                                                                                                                                        m_timestamp(timestamp),

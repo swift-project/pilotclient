@@ -8,7 +8,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/dbairlineicaoselectorbase.h"
-#include "blackmisc/aviation/airlineicaocode.h"
+#include "misc/aviation/airlineicaocode.h"
 
 #include <QObject>
 #include <QScopedPointer>
@@ -40,7 +40,7 @@ namespace BlackGui::Components
         //! \name Base class overrides
         //! @{
         virtual void setReadOnly(bool readOnly) override;
-        virtual bool setAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao) override;
+        virtual bool setAirlineIcao(const swift::misc::aviation::CAirlineIcaoCode &icao) override;
         virtual void clear() override;
         //! @}
 

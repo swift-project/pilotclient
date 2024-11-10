@@ -3,15 +3,15 @@
 
 #include "settingsxswiftbuscomponent.h"
 #include "ui_settingsxswiftbuscomponent.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/simulation/xplane/xswiftbusconfigwriter.h"
+#include "misc/dbusserver.h"
+#include "misc/logmessage.h"
+#include "misc/simulation/xplane/xswiftbusconfigwriter.h"
 
 #include <QComboBox>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation::Settings;
-using namespace BlackMisc::Simulation::XPlane;
+using namespace swift::misc;
+using namespace swift::misc::simulation::settings;
+using namespace swift::misc::simulation::xplane;
 
 namespace BlackGui::Components
 {

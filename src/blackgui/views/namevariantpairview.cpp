@@ -6,7 +6,7 @@
 
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui::Models;
 
 namespace BlackGui::Views
@@ -23,7 +23,7 @@ namespace BlackGui::Views
         m_model->setIconMode(withIcon);
     }
 
-    bool CNameVariantPairView::addOrUpdateByName(const QString &name, const BlackMisc::CVariant &value, const CIcon &icon, bool resize, bool skipEqualValues)
+    bool CNameVariantPairView::addOrUpdateByName(const QString &name, const swift::misc::CVariant &value, const CIcon &icon, bool resize, bool skipEqualValues)
     {
         Q_ASSERT(m_model);
         bool changed = m_model->addOrUpdateByName(name, value, icon, skipEqualValues);

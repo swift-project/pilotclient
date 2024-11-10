@@ -6,17 +6,17 @@
 #include "blackgui/editors/validationindicator.h"
 #include "blackgui/labelandicon.h"
 #include "blackgui/dropsite.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/simulation/distributorlist.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/icons.h"
+#include "misc/simulation/distributorlist.h"
 #include "distributorform.h"
 #include "ui_distributorform.h"
 
 #include <QLineEdit>
 #include <QMetaType>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
 using namespace BlackGui::Components;
 
 namespace BlackGui::Editors
@@ -41,7 +41,7 @@ namespace BlackGui::Editors
     CDistributorForm::~CDistributorForm()
     {}
 
-    bool CDistributorForm::setValue(const BlackMisc::Simulation::CDistributor &distributor)
+    bool CDistributorForm::setValue(const swift::misc::simulation::CDistributor &distributor)
     {
         if (m_currentDistributor == distributor) { return false; }
         m_currentDistributor = distributor;
@@ -116,7 +116,7 @@ namespace BlackGui::Editors
         ui->comp_DistributorSelector->setReadOnly(false);
     }
 
-    void CDistributorForm::onDroppedCode(const BlackMisc::CVariant &variantDropped)
+    void CDistributorForm::onDroppedCode(const swift::misc::CVariant &variantDropped)
     {
         CDistributor distributor;
         if (variantDropped.canConvert<CDistributor>())

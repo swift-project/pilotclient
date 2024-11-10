@@ -65,7 +65,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
      </property>
     </widget>
@@ -101,7 +101,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
      </property>
     </widget>
@@ -278,7 +278,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
      </property>
     </widget>
@@ -314,7 +314,7 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
      </property>
     </widget>
@@ -393,7 +393,7 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
      </property>
     </widget>
@@ -413,7 +413,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
      </property>
     </widget>
@@ -455,7 +455,7 @@
          <string> load from shared </string>
         </property>
         <property name="icon">
-         <iconset resource="../../blackmisc/blackmisc.qrc">
+         <iconset resource="../../misc/misc.qrc">
           <normaloff>:/pastel/icons/pastel/16/disk.png</normaloff>:/pastel/icons/pastel/16/disk.png</iconset>
         </property>
        </widget>
@@ -466,7 +466,7 @@
          <string> load from DB </string>
         </property>
         <property name="icon">
-         <iconset resource="../../blackmisc/blackmisc.qrc">
+         <iconset resource="../../misc/misc.qrc">
           <normaloff>:/pastel/icons/pastel/16/database.png</normaloff>:/pastel/icons/pastel/16/database.png</iconset>
         </property>
        </widget>
@@ -477,7 +477,7 @@
          <string> load from disk </string>
         </property>
         <property name="icon">
-         <iconset resource="../../blackmisc/blackmisc.qrc">
+         <iconset resource="../../misc/misc.qrc">
           <normaloff>:/pastel/icons/pastel/16/disk.png</normaloff>:/pastel/icons/pastel/16/disk.png</iconset>
         </property>
        </widget>
@@ -513,7 +513,7 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
      </property>
     </widget>
@@ -566,7 +566,7 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
      </property>
     </widget>
@@ -676,7 +676,7 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
      </property>
     </widget>
@@ -709,7 +709,7 @@
       <string>refresh from database</string>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
      </property>
     </widget>
@@ -788,7 +788,7 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
      </property>
     </widget>
@@ -824,7 +824,7 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
      </property>
     </widget>
@@ -858,7 +858,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
      </property>
     </widget>
@@ -920,7 +920,7 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
      </property>
     </widget>
@@ -950,7 +950,7 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
      </property>
     </widget>
@@ -1168,7 +1168,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
      </property>
     </widget>
@@ -1276,7 +1276,7 @@
   <tabstop>pb_LoadAllFromResources</tabstop>
  </tabstops>
  <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
+  <include location="../../misc/misc.qrc"/>
  </resources>
  <connections/>
 </ui>

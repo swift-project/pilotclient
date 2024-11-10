@@ -3,16 +3,16 @@
 
 #include "blackcore/afv/audio/output.h"
 #include "sound/audioutilities.h"
-#include "blackmisc/metadatautils.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/verify.h"
+#include "misc/metadatautils.h"
+#include "misc/logmessage.h"
+#include "misc/verify.h"
 
 #include <QDebug>
 #include <QStringBuilder>
 #include <cmath>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Audio;
+using namespace swift::misc;
+using namespace swift::misc::audio;
 using namespace swift::sound;
 using namespace swift::sound::sample_provider;
 

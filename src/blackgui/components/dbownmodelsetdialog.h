@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_DBOWNMODELSETDIALOG_H
 #define BLACKGUI_COMPONENTS_DBOWNMODELSETDIALOG_H
 
-#include "blackmisc/simulation/simulatorinfo.h"
+#include "misc/simulation/simulatorinfo.h"
 #include <QDialog>
 #include <QScopedPointer>
 
@@ -31,7 +31,7 @@ namespace BlackGui::Components
         virtual ~CDbOwnModelSetDialog() override;
 
         //! \copydoc CDbOwnModelSetComponent::setSimulator
-        void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void setSimulator(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Direct access to CDbOwnModelSetComponent
         const CDbOwnModelSetComponent *modelSetComponent() const;

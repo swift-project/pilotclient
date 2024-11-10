@@ -3,26 +3,26 @@
 
 #include "blackcore/context/contextownaircraft.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/geo/latitude.h"
-#include "blackmisc/geo/longitude.h"
-#include "blackmisc/pq/length.h"
-#include "blackmisc/pq/units.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/geo/coordinategeodetic.h"
+#include "misc/geo/latitude.h"
+#include "misc/geo/longitude.h"
+#include "misc/pq/length.h"
+#include "misc/pq/units.h"
+#include "misc/simulation/simulatedaircraft.h"
 #include "swiftguistd.h"
 
 #include <QString>
 
 using namespace BlackCore;
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Audio;
+using namespace swift::misc::network;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::geo;
+using namespace swift::misc::audio;
 
 bool SwiftGuiStd::reloadOwnAircraft()
 {

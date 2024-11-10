@@ -5,16 +5,16 @@
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackgui/views/atcstationview.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/icons.h"
+#include "misc/aviation/atcstationlist.h"
+#include "misc/aviation/callsign.h"
+#include "misc/icons.h"
 
 #include <QFlags>
 #include <QtGlobal>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 using namespace BlackGui::Models;
 using namespace BlackGui::Menus;
 

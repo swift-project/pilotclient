@@ -6,12 +6,12 @@
 #include "blackcore/context/contextnetworkimpl.h"
 #include "blackcore/context/contextnetworkproxy.h"
 #include "blackcore/application.h"
-#include "blackmisc/dbusserver.h"
+#include "misc/dbusserver.h"
 #include "config/buildconfig.h"
 
 using namespace swift::config;
 using namespace BlackCore;
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackCore::Context
 {

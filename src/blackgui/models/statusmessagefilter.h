@@ -8,10 +8,10 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/modelfilter.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/statusmessagelist.h"
 #include <QString>
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CLogPattern;
 }
@@ -19,20 +19,20 @@ namespace BlackMisc
 namespace BlackGui::Models
 {
     //! Filter for status messages
-    class BLACKGUI_EXPORT CStatusMessageFilter : public IModelFilter<BlackMisc::CStatusMessageList>
+    class BLACKGUI_EXPORT CStatusMessageFilter : public IModelFilter<swift::misc::CStatusMessageList>
     {
     public:
         //! Constructor
-        CStatusMessageFilter(BlackMisc::CStatusMessage::StatusSeverity severity, const QString &text, const QString &category);
+        CStatusMessageFilter(swift::misc::CStatusMessage::StatusSeverity severity, const QString &text, const QString &category);
 
         //! \copydoc IModelFilter::filter
-        virtual BlackMisc::CStatusMessageList filter(const BlackMisc::CStatusMessageList &inContainer) const override;
+        virtual swift::misc::CStatusMessageList filter(const swift::misc::CStatusMessageList &inContainer) const override;
 
         //! \copydoc IModelFilter::getAsValueObject
-        virtual BlackMisc::CVariant getAsValueObject() const override;
+        virtual swift::misc::CVariant getAsValueObject() const override;
 
     private:
-        BlackMisc::CStatusMessage::StatusSeverity m_severity = BlackMisc::CStatusMessage::SeverityError;
+        swift::misc::CStatusMessage::StatusSeverity m_severity = swift::misc::CStatusMessage::SeverityError;
         QString m_msgText;
         QString m_category;
     };

@@ -11,22 +11,22 @@
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/simulator.h"
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/simulation/settings/simulatorsettings.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/aircraftmatchersetup.h"
-#include "blackmisc/simulation/matchingstatistics.h"
-#include "blackmisc/simulation/matchinglog.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/simulation/simulatorplugininfolist.h"
-#include "blackmisc/simulation/simulatorinternals.h"
-#include "blackmisc/simulation/matchingstatistics.h"
-#include "blackmisc/simulation/interpolation/interpolationrenderingsetup.h"
-#include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/geo/elevationplane.h"
-#include "blackmisc/pq/length.h"
-#include "blackmisc/pq/time.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/pixmap.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/aircraftmatchersetup.h"
+#include "misc/simulation/matchingstatistics.h"
+#include "misc/simulation/matchinglog.h"
+#include "misc/simulation/simulatorplugininfo.h"
+#include "misc/simulation/simulatorplugininfolist.h"
+#include "misc/simulation/simulatorinternals.h"
+#include "misc/simulation/matchingstatistics.h"
+#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
+#include "misc/aviation/airportlist.h"
+#include "misc/geo/elevationplane.h"
+#include "misc/pq/length.h"
+#include "misc/pq/time.h"
+#include "misc/identifier.h"
+#include "misc/pixmap.h"
 #include "config/buildconfig.h"
 
 #include <QObject>
@@ -44,10 +44,10 @@
 
 class QDBusConnection;
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CDBusServer;
-    namespace Simulation
+    namespace simulation
     {
         class CSimulatedAircraft;
     }
@@ -71,7 +71,7 @@ namespace BlackCore::Context
         virtual QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
 
         //! Factory method
-        static IContextSimulator *create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &connection);
+        static IContextSimulator *create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, swift::misc::CDBusServer *server, QDBusConnection &connection);
 
         //! Destructor
         virtual ~IContextSimulator() override {}
@@ -83,7 +83,7 @@ namespace BlackCore::Context
         // ---- some convenienc functions implemented on interface level
 
         //! Current simulator
-        BlackMisc::Simulation::CSimulatorInfo getSimulatorInfo() const;
+        swift::misc::simulation::CSimulatorInfo getSimulatorInfo() const;
 
     signals:
         //! Simulator combined status
@@ -92,10 +92,10 @@ namespace BlackCore::Context
         void simulatorStatusChanged(int status);
 
         //! Simulator plugin loaded / unloaded (default info)
-        void simulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
+        void simulatorPluginChanged(const swift::misc::simulation::CSimulatorPluginInfo &info);
 
         //! Same as simulatorPluginChanged, only with simulator signature
-        void simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void simulatorChanged(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Simulator settings have been changed
         void simulatorSettingsChanged();
@@ -107,7 +107,7 @@ namespace BlackCore::Context
         void insufficientFrameRateDetected(bool fatal);
 
         //! Render restrictions have been changed
-        void renderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance);
+        void renderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const swift::misc::physical_quantities::CLength &maxRenderedDistance);
 
         //! Setup changed
         void interpolationAndRenderingSetupChanged();
@@ -116,88 +116,88 @@ namespace BlackCore::Context
         void matchingSetupChanged();
 
         //! Model set ready or changed
-        void modelSetChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void modelSetChanged(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! A single model has been matched for given aircraft
-        void modelMatchingCompleted(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+        void modelMatchingCompleted(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
         //! Adding a remote aircraft failed
-        void addingRemoteModelFailed(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool disabled, bool failover, const BlackMisc::CStatusMessage &message);
+        void addingRemoteModelFailed(const swift::misc::simulation::CSimulatedAircraft &aircraft, bool disabled, bool failover, const swift::misc::CStatusMessage &message);
 
         //! Aircraft rendering changed
-        void aircraftRenderingChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+        void aircraftRenderingChanged(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
         //! Emitted when own aircraft model changes
-        void ownAircraftModelChanged(const BlackMisc::Simulation::CAircraftModel &model);
+        void ownAircraftModelChanged(const swift::misc::simulation::CAircraftModel &model);
 
         //! An airspace snapshot was handled
         void airspaceSnapshotHandled();
 
         //! Relevant simulator messages to be explicitly displayed
-        void driverMessages(const BlackMisc::CStatusMessageList &messages);
+        void driverMessages(const swift::misc::CStatusMessageList &messages);
 
         //! Validated model set
-        void validatedModelSet(const BlackMisc::Simulation::CSimulatorInfo &simulator,
-                               const BlackMisc::Simulation::CAircraftModelList &valid, const BlackMisc::Simulation::CAircraftModelList &invalid,
-                               bool stopped, const BlackMisc::CStatusMessageList &msgs);
+        void validatedModelSet(const swift::misc::simulation::CSimulatorInfo &simulator,
+                               const swift::misc::simulation::CAircraftModelList &valid, const swift::misc::simulation::CAircraftModelList &invalid,
+                               bool stopped, const swift::misc::CStatusMessageList &msgs);
 
         //! Auto publish data written for simulator
-        void autoPublishDataWritten(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void autoPublishDataWritten(const swift::misc::simulation::CSimulatorInfo &simulator);
 
     public slots:
         //! Simulator info, currently loaded plugin
-        virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const = 0;
+        virtual swift::misc::simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const = 0;
 
         //! Return list of available simulator plugins
-        virtual BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const = 0;
+        virtual swift::misc::simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const = 0;
 
         //! Get the current simulator settings
-        virtual BlackMisc::Simulation::Settings::CSimulatorSettings getSimulatorSettings() const = 0;
+        virtual swift::misc::simulation::settings::CSimulatorSettings getSimulatorSettings() const = 0;
 
         //! Set settings for give simulator
-        virtual bool setSimulatorSettings(const BlackMisc::Simulation::Settings::CSimulatorSettings &settings, const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
+        virtual bool setSimulatorSettings(const swift::misc::simulation::settings::CSimulatorSettings &settings, const swift::misc::simulation::CSimulatorInfo &simulator) = 0;
 
         //! Check all listeners enabled if simulator is connected
         virtual int checkListeners() = 0;
 
         //! Load and start specific simulator plugin
-        virtual bool startSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) = 0;
+        virtual bool startSimulatorPlugin(const swift::misc::simulation::CSimulatorPluginInfo &simulatorInfo) = 0;
 
         //! Stop listener or unload the given plugin (if currently loaded)
-        virtual void stopSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) = 0;
+        virtual void stopSimulatorPlugin(const swift::misc::simulation::CSimulatorPluginInfo &simulatorInfo) = 0;
 
         //! Simulator combined status
         virtual int getSimulatorStatus() const = 0;
 
         //! Simulator setup
-        virtual BlackMisc::Simulation::CSimulatorInternals getSimulatorInternals() const = 0;
+        virtual swift::misc::simulation::CSimulatorInternals getSimulatorInternals() const = 0;
 
         //! Airports in range
-        virtual BlackMisc::Aviation::CAirportList getAirportsInRange(bool recalculateDistance) const = 0;
+        virtual swift::misc::aviation::CAirportList getAirportsInRange(bool recalculateDistance) const = 0;
 
         //! Installed models in simulator eco system
         //! \note might be slow since list can be big
-        virtual BlackMisc::Simulation::CAircraftModelList getModelSet() const = 0;
+        virtual swift::misc::simulation::CAircraftModelList getModelSet() const = 0;
 
         //! Get the model set loader simulator directly
-        virtual BlackMisc::Simulation::CSimulatorInfo getModelSetLoaderSimulator() const = 0;
+        virtual swift::misc::simulation::CSimulatorInfo getModelSetLoaderSimulator() const = 0;
 
         //! Set the model set loader simulator directly
         //! \note for testing purposes and can be used if no simulator is connected
-        virtual void setModelSetLoaderSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
+        virtual void setModelSetLoaderSimulator(const swift::misc::simulation::CSimulatorInfo &simulator) = 0;
 
         //! Simulators which have an initialized model set
-        virtual BlackMisc::Simulation::CSimulatorInfo simulatorsWithInitializedModelSet() const = 0;
+        virtual swift::misc::simulation::CSimulatorInfo simulatorsWithInitializedModelSet() const = 0;
 
         //! Verify prerequisites for simulation like an existing model set
         //! \pre system needs to be initialized to work correctly
-        virtual BlackMisc::CStatusMessageList verifyPrerequisites() const = 0;
+        virtual swift::misc::CStatusMessageList verifyPrerequisites() const = 0;
 
         //! Number of installed models in simulator eco system
         virtual int getModelSetCount() const = 0;
 
         //! Models for model string
-        virtual BlackMisc::Simulation::CAircraftModelList getModelSetModelsStartingWith(const QString &modelString) const = 0;
+        virtual swift::misc::simulation::CAircraftModelList getModelSetModelsStartingWith(const QString &modelString) const = 0;
 
         //! Model strings
         virtual QStringList getModelSetStrings() const = 0;
@@ -206,19 +206,19 @@ namespace BlackCore::Context
         virtual QStringList getModelSetCompleterStrings(bool sorted) const = 0;
 
         //! Remove models from set
-        virtual int removeModelsFromSet(const BlackMisc::Simulation::CAircraftModelList &removeModels) = 0;
+        virtual int removeModelsFromSet(const swift::misc::simulation::CAircraftModelList &removeModels) = 0;
 
         //! \copydoc CAircraftMatcher::disableModelsForMatching
-        virtual void disableModelsForMatching(const BlackMisc::Simulation::CAircraftModelList &removedModels, bool incremental) = 0;
+        virtual void disableModelsForMatching(const swift::misc::simulation::CAircraftModelList &removedModels, bool incremental) = 0;
 
         //! \copydoc CAircraftMatcher::getDisabledModelsForMatching
-        virtual BlackMisc::Simulation::CAircraftModelList getDisabledModelsForMatching() const = 0;
+        virtual swift::misc::simulation::CAircraftModelList getDisabledModelsForMatching() const = 0;
 
-        //! \copydoc BlackMisc::Simulation::CBackgroundValidation::isValidating
+        //! \copydoc swift::misc::simulation::CBackgroundValidation::isValidating
         virtual bool isValidationInProgress() const = 0;
 
         //! Trigger model set validation
-        virtual bool triggerModelSetValidation(const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
+        virtual bool triggerModelSetValidation(const swift::misc::simulation::CSimulatorInfo &simulator) = 0;
 
         //! \copydoc CAircraftMatcher::restoreDisabledModels
         virtual void restoreDisabledModels() = 0;
@@ -228,31 +228,31 @@ namespace BlackCore::Context
 
         //! Set time synchronization between simulator and user's computer time
         //! \remarks not all drivers implement this, e.g. if it is an intrinsic simulator feature
-        virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) = 0;
+        virtual bool setTimeSynchronization(bool enable, const swift::misc::physical_quantities::CTime &offset) = 0;
 
         //! Is time synchronization on?
         virtual bool isTimeSynchronized() const = 0;
 
-        //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::getInterpolationSetupGlobal
-        virtual BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal getInterpolationAndRenderingSetupGlobal() const = 0;
+        //! \copydoc swift::misc::simulation::IInterpolationSetupProvider::getInterpolationSetupGlobal
+        virtual swift::misc::simulation::CInterpolationAndRenderingSetupGlobal getInterpolationAndRenderingSetupGlobal() const = 0;
 
-        //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::getInterpolationSetupsPerCallsign
-        virtual BlackMisc::Simulation::CInterpolationSetupList getInterpolationAndRenderingSetupsPerCallsign() const = 0;
+        //! \copydoc swift::misc::simulation::IInterpolationSetupProvider::getInterpolationSetupsPerCallsign
+        virtual swift::misc::simulation::CInterpolationSetupList getInterpolationAndRenderingSetupsPerCallsign() const = 0;
 
-        //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::getInterpolationSetupPerCallsignOrDefault
-        virtual BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign getInterpolationAndRenderingSetupPerCallsignOrDefault(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+        //! \copydoc swift::misc::simulation::IInterpolationSetupProvider::getInterpolationSetupPerCallsignOrDefault
+        virtual swift::misc::simulation::CInterpolationAndRenderingSetupPerCallsign getInterpolationAndRenderingSetupPerCallsignOrDefault(const swift::misc::aviation::CCallsign &callsign) const = 0;
 
-        //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::setInterpolationSetupGlobal
-        virtual void setInterpolationAndRenderingSetupGlobal(const BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal &setup) = 0;
+        //! \copydoc swift::misc::simulation::IInterpolationSetupProvider::setInterpolationSetupGlobal
+        virtual void setInterpolationAndRenderingSetupGlobal(const swift::misc::simulation::CInterpolationAndRenderingSetupGlobal &setup) = 0;
 
-        //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::setInterpolationSetupsPerCallsign
-        virtual bool setInterpolationAndRenderingSetupsPerCallsign(const BlackMisc::Simulation::CInterpolationSetupList &setups, bool ignoreSameAsGlobal) = 0;
+        //! \copydoc swift::misc::simulation::IInterpolationSetupProvider::setInterpolationSetupsPerCallsign
+        virtual bool setInterpolationAndRenderingSetupsPerCallsign(const swift::misc::simulation::CInterpolationSetupList &setups, bool ignoreSameAsGlobal) = 0;
 
         //! Interpolation messages
-        virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+        virtual swift::misc::CStatusMessageList getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const = 0;
 
         //! Time synchronization offset
-        virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
+        virtual swift::misc::physical_quantities::CTime getTimeSynchronizationOffset() const = 0;
 
         //! Simulator avialable (driver available)?
         bool isSimulatorAvailable() const;
@@ -261,52 +261,52 @@ namespace BlackCore::Context
         bool isSimulatorSimulating() const;
 
         //! Icon representing the model
-        virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const = 0;
+        virtual swift::misc::CPixmap iconForModel(const QString &modelString) const = 0;
 
         //! Get mapping messages
-        virtual BlackMisc::CStatusMessageList getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+        virtual swift::misc::CStatusMessageList getMatchingMessages(const swift::misc::aviation::CCallsign &callsign) const = 0;
 
         //! Enabled mapping logging?
-        virtual BlackMisc::Simulation::MatchingLog isMatchingMessagesEnabled() const = 0;
+        virtual swift::misc::simulation::MatchingLog isMatchingMessagesEnabled() const = 0;
 
         //! Enable mapping logging
-        virtual void enableMatchingMessages(BlackMisc::Simulation::MatchingLog enabled) = 0;
+        virtual void enableMatchingMessages(swift::misc::simulation::MatchingLog enabled) = 0;
 
         //! Follow aircraft im simulator view
-        virtual bool followAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+        virtual bool followAircraft(const swift::misc::aviation::CCallsign &callsign) = 0;
 
         //! Recalculate all aircraft
         virtual void recalculateAllAircraft() = 0;
 
         //! Reset model by matching it again
-        virtual bool resetToModelMatchingAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+        virtual bool resetToModelMatchingAircraft(const swift::misc::aviation::CCallsign &callsign) = 0;
 
-        //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevationBySituation
-        virtual bool requestElevationBySituation(const BlackMisc::Aviation::CAircraftSituation &situation) = 0;
+        //! \copydoc swift::misc::simulation::ISimulationEnvironmentProvider::requestElevationBySituation
+        virtual bool requestElevationBySituation(const swift::misc::aviation::CAircraftSituation &situation) = 0;
 
-        //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::findClosestElevationWithinRange
-        virtual BlackMisc::Geo::CElevationPlane findClosestElevationWithinRange(const BlackMisc::Geo::CCoordinateGeodetic &reference, const BlackMisc::PhysicalQuantities::CLength &range) const = 0;
+        //! \copydoc swift::misc::simulation::ISimulationEnvironmentProvider::findClosestElevationWithinRange
+        virtual swift::misc::geo::CElevationPlane findClosestElevationWithinRange(const swift::misc::geo::CCoordinateGeodetic &reference, const swift::misc::physical_quantities::CLength &range) const = 0;
 
         //! Repeat all matchings
         virtual int doMatchingsAgain() = 0;
 
         //! Repeat the matching callsign
-        virtual bool doMatchingAgain(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+        virtual bool doMatchingAgain(const swift::misc::aviation::CCallsign &callsign) = 0;
 
         //! Current matching statistics
-        virtual BlackMisc::Simulation::CMatchingStatistics getCurrentMatchingStatistics(bool missingOnly) const = 0;
+        virtual swift::misc::simulation::CMatchingStatistics getCurrentMatchingStatistics(bool missingOnly) const = 0;
 
         //! Set matching setup
-        virtual void setMatchingSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup) = 0;
+        virtual void setMatchingSetup(const swift::misc::simulation::CAircraftMatcherSetup &setup) = 0;
 
         //! Test a remote aircraft
-        virtual bool testRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool add) = 0;
+        virtual bool testRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &aircraft, bool add) = 0;
 
         //! Test update remote aircraft
-        virtual bool testUpdateRemoteAircraft(const BlackMisc::Aviation::CCallsign &cs, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) = 0;
+        virtual bool testUpdateRemoteAircraft(const swift::misc::aviation::CCallsign &cs, const swift::misc::aviation::CAircraftSituation &situation, const swift::misc::aviation::CAircraftParts &parts) = 0;
 
         //! Get matching setup
-        virtual BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const = 0;
+        virtual swift::misc::simulation::CAircraftMatcherSetup getMatchingSetup() const = 0;
 
     protected:
         //! Constructor

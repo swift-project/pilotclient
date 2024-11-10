@@ -6,40 +6,40 @@
 #include "fgswiftbusserviceproxy.h"
 #include "fgswiftbustrafficproxy.h"
 #include "blackcore/aircraftmatcher.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/weather/cloudlayer.h"
-#include "blackmisc/weather/cloudlayerlist.h"
-#include "blackmisc/weather/windlayer.h"
-#include "blackmisc/weather/windlayerlist.h"
-#include "blackmisc/aviation/aircraftengine.h"
-#include "blackmisc/aviation/aircraftenginelist.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/aircraftparts.h"
-#include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/altitude.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/aviation/heading.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/aviation/transponder.h"
-#include "blackmisc/network/textmessage.h"
-#include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/geo/latitude.h"
-#include "blackmisc/geo/longitude.h"
-#include "blackmisc/pq/angle.h"
-#include "blackmisc/pq/frequency.h"
-#include "blackmisc/pq/length.h"
-#include "blackmisc/pq/pressure.h"
-#include "blackmisc/pq/speed.h"
-#include "blackmisc/pq/temperature.h"
-#include "blackmisc/verify.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/iterator.h"
-#include "blackmisc/logmessage.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/simulatedaircraftlist.h"
+#include "misc/weather/cloudlayer.h"
+#include "misc/weather/cloudlayerlist.h"
+#include "misc/weather/windlayer.h"
+#include "misc/weather/windlayerlist.h"
+#include "misc/aviation/aircraftengine.h"
+#include "misc/aviation/aircraftenginelist.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/aircraftparts.h"
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/altitude.h"
+#include "misc/aviation/callsign.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/aviation/heading.h"
+#include "misc/aviation/livery.h"
+#include "misc/aviation/transponder.h"
+#include "misc/network/textmessage.h"
+#include "misc/geo/coordinategeodetic.h"
+#include "misc/geo/latitude.h"
+#include "misc/geo/longitude.h"
+#include "misc/pq/angle.h"
+#include "misc/pq/frequency.h"
+#include "misc/pq/length.h"
+#include "misc/pq/pressure.h"
+#include "misc/pq/speed.h"
+#include "misc/pq/temperature.h"
+#include "misc/verify.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/dbusserver.h"
+#include "misc/iterator.h"
+#include "misc/logmessage.h"
 #include "config/buildconfig.h"
 
 #include "dbus/dbus.h"
@@ -53,14 +53,14 @@
 #include <math.h>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Weather;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::simulation;
+using namespace swift::misc::geo;
+using namespace swift::misc::simulation;
+using namespace swift::misc::weather;
 using namespace BlackCore;
 
 namespace
@@ -415,7 +415,7 @@ namespace BlackSimPlugin::Flightgear
         isInFunction = false;
     }
 
-    void CSimulatorFlightgear::displayTextMessage(const Network::CTextMessage &message) const
+    void CSimulatorFlightgear::displayTextMessage(const network::CTextMessage &message) const
     {
         if (this->isShuttingDownOrDisconnected()) { return; }
         m_serviceProxy->addTextMessage(message.getSenderCallsign().toQString() + ": " + message.getMessage());
@@ -444,7 +444,7 @@ namespace BlackSimPlugin::Flightgear
         return airports;
     }
 
-    bool CSimulatorFlightgear::setTimeSynchronization(bool enable, const PhysicalQuantities::CTime &offset)
+    bool CSimulatorFlightgear::setTimeSynchronization(bool enable, const physical_quantities::CTime &offset)
     {
         Q_UNUSED(offset)
         if (enable)
@@ -459,7 +459,7 @@ namespace BlackSimPlugin::Flightgear
         return m_flightgearAircraftObjects.contains(callsign);
     }
 
-    bool CSimulatorFlightgear::updateOwnSimulatorCockpit(const Simulation::CSimulatedAircraft &aircraft, const CIdentifier &originator)
+    bool CSimulatorFlightgear::updateOwnSimulatorCockpit(const simulation::CSimulatedAircraft &aircraft, const CIdentifier &originator)
     {
         if (originator == this->identifier()) { return false; }
         if (this->isShuttingDownOrDisconnected()) { return false; }
@@ -859,7 +859,7 @@ namespace BlackSimPlugin::Flightgear
         emit this->aircraftRenderingChanged(addedRemoteAircraft);
     }
 
-    bool CSimulatorFlightgear::requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign)
+    bool CSimulatorFlightgear::requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference, const swift::misc::aviation::CCallsign &callsign)
     {
         if (this->isShuttingDownOrDisconnected()) { return false; }
         if (reference.isNull()) { return false; }

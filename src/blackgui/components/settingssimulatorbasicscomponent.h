@@ -7,9 +7,9 @@
 #define BLACKGUI_COMPONENTS_SETTINGSSIMULATORBASICSCOMPONENT_H
 
 #include "blackgui/overlaymessagesframe.h"
-#include "blackmisc/simulation/settings/simulatorsettings.h"
-#include "blackmisc/simulation/fscommon/fscommonutil.h"
-#include "blackmisc/logcategories.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/fscommon/fscommonutil.h"
+#include "misc/logcategories.h"
 
 #include <QFrame>
 #include <QFileDialog>
@@ -45,7 +45,7 @@ namespace BlackGui::Components
         bool hasAnyValues() const;
 
         //! Simulator
-        void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void setSimulator(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Save data
         void save();
@@ -57,13 +57,13 @@ namespace BlackGui::Components
         void resetUnsavedChanges() { m_unsavedChanges = false; }
 
         //! Settings for given simulator
-        BlackMisc::Simulation::Settings::CSpecializedSimulatorSettings getSimulatorSettings(const BlackMisc::Simulation::CSimulatorInfo &simulator) const { return m_settings.getSpecializedSettings(simulator); }
+        swift::misc::simulation::settings::CSpecializedSimulatorSettings getSimulatorSettings(const swift::misc::simulation::CSimulatorInfo &simulator) const { return m_settings.getSpecializedSettings(simulator); }
 
     private:
         bool m_unsavedChanges = false;
         QScopedPointer<Ui::CSettingsSimulatorBasicsComponent> ui;
-        BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_settings { this };
-        Qt::CaseSensitivity m_fileCaseSensitivity = BlackMisc::CFileUtils::osFileNameCaseSensitivity();
+        swift::misc::simulation::settings::CMultiSimulatorSettings m_settings { this };
+        Qt::CaseSensitivity m_fileCaseSensitivity = swift::misc::CFileUtils::osFileNameCaseSensitivity();
 
         //! Model file dialog
         void modelFileDialog();
@@ -90,7 +90,7 @@ namespace BlackGui::Components
         void onSimulatorChanged();
 
         //! Simulator settings did change
-        void onSimulatorSettingsChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void onSimulatorSettingsChanged(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Optimize for small layout
         void setSmallLayout(bool small);
@@ -120,13 +120,13 @@ namespace BlackGui::Components
         void displayModelDirectories(const QStringList &dirs);
 
         //! Current settings
-        BlackMisc::Simulation::Settings::CSpecializedSimulatorSettings getSettings(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+        swift::misc::simulation::settings::CSpecializedSimulatorSettings getSettings(const swift::misc::simulation::CSimulatorInfo &simulator) const;
 
         //! Display simulator`s settings
-        void displaySettings(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void displaySettings(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Default values for simulator displayed as placeholder text
-        void displayDefaultValuesAsPlaceholder(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void displayDefaultValuesAsPlaceholder(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Model directory either from input or settings or default
         QString getFileBrowserModelDirectory() const;

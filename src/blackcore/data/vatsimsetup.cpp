@@ -4,8 +4,8 @@
 #include "blackcore/data/vatsimsetup.h"
 #include <QStringList>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackCore::Data, CVatsimSetup)
 
@@ -51,7 +51,7 @@ namespace BlackCore::Data
         return s;
     }
 
-    QVariant CVatsimSetup::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
+    QVariant CVatsimSetup::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }

@@ -181,7 +181,7 @@
                <string>create</string>
               </property>
               <property name="icon">
-               <iconset resource="../../blackmisc/blackmisc.qrc">
+               <iconset resource="../../misc/misc.qrc">
                 <normaloff>:/diagona/icons/diagona/icons/tick-white.png</normaloff>:/diagona/icons/diagona/icons/tick-white.png</iconset>
               </property>
               <property name="flat">
@@ -279,7 +279,7 @@
   <tabstop>pb_CreateModelSet</tabstop>
  </tabstops>
  <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
+  <include location="../../misc/misc.qrc"/>
  </resources>
  <connections/>
 </ui>

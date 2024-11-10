@@ -5,8 +5,8 @@
 
 #include "blackcore/afv/audio/input.h"
 #include "sound/audioutilities.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/verify.h"
+#include "misc/logmessage.h"
+#include "misc/verify.h"
 
 #include <QtGlobal>
 #include <QStringBuilder>
@@ -14,8 +14,8 @@
 #include <QAudioDevice>
 #include <cmath>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Audio;
+using namespace swift::misc;
+using namespace swift::misc::audio;
 using namespace swift::sound;
 
 namespace BlackCore::Afv::Audio

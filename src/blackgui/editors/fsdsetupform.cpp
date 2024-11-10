@@ -3,12 +3,12 @@
 
 #include "fsdsetupform.h"
 #include "ui_fsdsetupform.h"
-#include "blackmisc/stringutils.h"
+#include "misc/stringutils.h"
 #include "blackgui/guiutility.h"
 #include <QCompleter>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 
 namespace BlackGui::Editors
 {

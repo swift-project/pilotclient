@@ -8,8 +8,8 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodelbase.h"
-#include "blackmisc/weather/cloudlayer.h"
-#include "blackmisc/weather/cloudlayerlist.h"
+#include "misc/weather/cloudlayer.h"
+#include "misc/weather/cloudlayerlist.h"
 
 class QObject;
 
@@ -17,7 +17,7 @@ namespace BlackGui::Models
 {
     //! Cloud layer list model
     class BLACKGUI_EXPORT CCloudLayerListModel :
-        public CListModelBase<BlackMisc::Weather::CCloudLayerList, false>
+        public CListModelBase<swift::misc::weather::CCloudLayerList, false>
     {
         Q_OBJECT
 

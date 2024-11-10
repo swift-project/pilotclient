@@ -3,17 +3,17 @@
 
 #include "simulatorfscommon.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/simplecommandparser.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/stringutils.h"
+#include "misc/simplecommandparser.h"
+#include "misc/logmessage.h"
+#include "misc/stringutils.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::FsCommon;
+using namespace swift::misc;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::aviation;
+using namespace swift::misc::geo;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::fscommon;
 using namespace BlackCore;
 using namespace BlackSimPlugin::Common;
 
@@ -65,7 +65,7 @@ namespace BlackSimPlugin::FsCommon
         return m_syncTimeOffset;
     }
 
-    bool CSimulatorFsCommon::setTimeSynchronization(bool enable, const PhysicalQuantities::CTime &offset)
+    bool CSimulatorFsCommon::setTimeSynchronization(bool enable, const physical_quantities::CTime &offset)
     {
         m_simTimeSynced = enable;
         m_syncTimeOffset = offset;

@@ -3,11 +3,11 @@
 
 #include "viewupdatesettings.h"
 #include "blackgui/guiutility.h"
-#include "blackmisc/stringutils.h"
+#include "misc/stringutils.h"
 #include <QStringList>
 
-using namespace BlackMisc;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::physical_quantities;
 using namespace BlackGui;
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackGui::Settings, CViewUpdateSettings)

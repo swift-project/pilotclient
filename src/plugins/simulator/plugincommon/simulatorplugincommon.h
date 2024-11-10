@@ -22,8 +22,8 @@ namespace BlackSimPlugin::Common
     {
         Q_OBJECT
         Q_INTERFACES(BlackCore::ISimulator)
-        Q_INTERFACES(BlackMisc::Simulation::ISimulationEnvironmentProvider)
-        Q_INTERFACES(BlackMisc::Simulation::IInterpolationSetupProvider)
+        Q_INTERFACES(swift::misc::simulation::ISimulationEnvironmentProvider)
+        Q_INTERFACES(swift::misc::simulation::IInterpolationSetupProvider)
 
     public:
         //! Destructor
@@ -35,17 +35,17 @@ namespace BlackSimPlugin::Common
 
     protected:
         //! Constructor
-        CSimulatorPluginCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                               BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                               BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
-                               BlackMisc::Network::IClientProvider *clientProvider,
+        CSimulatorPluginCommon(const swift::misc::simulation::CSimulatorPluginInfo &info,
+                               swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
+                               swift::misc::simulation::IRemoteAircraftProvider *renderedAircraftProvider,
+                               swift::misc::network::IClientProvider *clientProvider,
                                QObject *parent = nullptr);
 
         //! \ingroup swiftdotcommands
         //! <pre>
         //! .drv intdisplay interpolation log display
         //! </pre>
-        virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
+        virtual bool parseDetails(const swift::misc::CSimpleCommandParser &parser) override;
 
         //! Register help
         static void registerHelp();

@@ -7,12 +7,12 @@
 #define BLACKGUI_COMPONENTS_AUDIODEVICEVOLUMESETUPCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/audio/audiosettings.h"
-#include "blackmisc/audio/audiodeviceinfolist.h"
-#include "blackmisc/aviation/callsignset.h"
-#include "blackmisc/connectionguard.h"
-#include "blackmisc/settingscache.h"
-#include "blackmisc/digestsignal.h"
+#include "misc/audio/audiosettings.h"
+#include "misc/audio/audiodeviceinfolist.h"
+#include "misc/aviation/callsignset.h"
+#include "misc/connectionguard.h"
+#include "misc/settingscache.h"
+#include "misc/digestsignal.h"
 
 #include <QFrame>
 #include <QCheckBox>
@@ -43,18 +43,18 @@ namespace BlackGui::Components
 
         //! @{
         //! Get input and output volume values
-        int getInValue(int from = BlackMisc::Audio::CSettings::InMin, int to = BlackMisc::Audio::CSettings::InMax) const;
-        int getOutValue(int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax) const;
-        int getOutValueCom1(int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax) const;
-        int getOutValueCom2(int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax) const;
+        int getInValue(int from = swift::misc::audio::CSettings::InMin, int to = swift::misc::audio::CSettings::InMax) const;
+        int getOutValue(int from = swift::misc::audio::CSettings::OutMin, int to = swift::misc::audio::CSettings::OutMax) const;
+        int getOutValueCom1(int from = swift::misc::audio::CSettings::OutMin, int to = swift::misc::audio::CSettings::OutMax) const;
+        int getOutValueCom2(int from = swift::misc::audio::CSettings::OutMin, int to = swift::misc::audio::CSettings::OutMax) const;
         //! @}
 
         //! @{
         //! Set input and output volume values
-        void setInValue(int value, int from = BlackMisc::Audio::CSettings::InMin, int to = BlackMisc::Audio::CSettings::InMax);
-        void setOutValue(int value, int from = BlackMisc::Audio::CSettings::InMin, int to = BlackMisc::Audio::CSettings::InMax);
-        void setOutValueCom1(int value, int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax);
-        void setOutValueCom2(int value, int from = BlackMisc::Audio::CSettings::OutMin, int to = BlackMisc::Audio::CSettings::OutMax);
+        void setInValue(int value, int from = swift::misc::audio::CSettings::InMin, int to = swift::misc::audio::CSettings::InMax);
+        void setOutValue(int value, int from = swift::misc::audio::CSettings::InMin, int to = swift::misc::audio::CSettings::InMax);
+        void setOutValueCom1(int value, int from = swift::misc::audio::CSettings::OutMin, int to = swift::misc::audio::CSettings::OutMax);
+        void setOutValueCom2(int value, int from = swift::misc::audio::CSettings::OutMin, int to = swift::misc::audio::CSettings::OutMax);
         //! @}
 
         //! @{
@@ -81,13 +81,13 @@ namespace BlackGui::Components
         void onAudioDeviceSelected(int index);
 
         //! Current audio devices changed
-        void onAudioStarted(const BlackMisc::Audio::CAudioDeviceInfo &input, const BlackMisc::Audio::CAudioDeviceInfo &output);
+        void onAudioStarted(const swift::misc::audio::CAudioDeviceInfo &input, const swift::misc::audio::CAudioDeviceInfo &output);
 
         //! Audio has been stopped
         void onAudioStopped();
 
         //! Audio devices changed
-        bool onAudioDevicesChanged(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
+        bool onAudioDevicesChanged(const swift::misc::audio::CAudioDeviceInfoList &devices);
 
         //! Loopback toggled
         void onLoopbackToggled(bool loopback);
@@ -126,12 +126,12 @@ namespace BlackGui::Components
         void onRxTxChanged(bool checked);
         void setRxTxCheckboxes(bool rx1, bool tx1, bool rx2, bool tx2);
 
-        // TODO: Move TransceiverReceivingCallsignsChangedArgs to Blackmisc
-        void onReceivingCallsignsChanged(const BlackMisc::Aviation::CCallsignSet &com1Callsigns, const BlackMisc::Aviation::CCallsignSet &com2Callsigns);
+        // TODO: Move TransceiverReceivingCallsignsChangedArgs to Misc
+        void onReceivingCallsignsChanged(const swift::misc::aviation::CCallsignSet &com1Callsigns, const swift::misc::aviation::CCallsignSet &com2Callsigns);
         void onUpdatedClientWithCockpitData();
 
-        BlackMisc::Audio::CAudioDeviceInfo getSelectedInputDevice() const;
-        BlackMisc::Audio::CAudioDeviceInfo getSelectedOutputDevice() const;
+        swift::misc::audio::CAudioDeviceInfo getSelectedInputDevice() const;
+        swift::misc::audio::CAudioDeviceInfo getSelectedOutputDevice() const;
 
         //! @{
         //! Transmit and receive state
@@ -149,11 +149,11 @@ namespace BlackGui::Components
         static BlackCore::Afv::Clients::CAfvClient *afvClient();
 
         bool m_init = false;
-        BlackMisc::CConnectionGuard m_afvConnections;
+        swift::misc::CConnectionGuard m_afvConnections;
         QScopedPointer<Ui::CAudioDeviceVolumeSetupComponent> ui;
-        BlackMisc::Audio::CAudioDeviceInfoList m_cbDevices; //!< devices to be displayed in the checkbox
-        BlackMisc::CDigestSignal m_volumeSliderChanged { this, &CAudioDeviceVolumeSetupComponent::saveVolumes, 1000, 10 };
-        BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &CAudioDeviceVolumeSetupComponent::reloadSettings };
+        swift::misc::audio::CAudioDeviceInfoList m_cbDevices; //!< devices to be displayed in the checkbox
+        swift::misc::CDigestSignal m_volumeSliderChanged { this, &CAudioDeviceVolumeSetupComponent::saveVolumes, 1000, 10 };
+        swift::misc::CSetting<swift::misc::audio::TSettings> m_audioSettings { this, &CAudioDeviceVolumeSetupComponent::reloadSettings };
 
     private slots:
         void simulatorSettingsChanged();

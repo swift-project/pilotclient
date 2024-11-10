@@ -40,7 +40,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>../blackmisc/icons/own/swift/swift16Database.png</pixmap>
+      <pixmap>../misc/icons/own/swift/swift16Database.png</pixmap>
      </property>
     </widget>
    </item>

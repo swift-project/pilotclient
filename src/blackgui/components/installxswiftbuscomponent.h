@@ -10,9 +10,9 @@
 #include "blackgui/loadindicator.h"
 #include "blackcore/application/applicationsettings.h"
 #include "blackcore/application/updatesettings.h"
-#include "blackmisc/db/updateinfo.h"
-#include "blackmisc/simulation/settings/simulatorsettings.h"
-#include "blackmisc/network/remotefilelist.h"
+#include "misc/db/updateinfo.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/network/remotefilelist.h"
 #include <QNetworkReply>
 #include <QFileDialog>
 #include <QWizard>
@@ -47,14 +47,14 @@ namespace BlackGui::Components
         static constexpr int OverlayMsgTimeoutMs = 5000; //!< how long overlay is displayed
 
         QScopedPointer<Ui::CInstallXSwiftBusComponent> ui;
-        BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for directories of XPlane
-        BlackMisc::CDataReadOnly<BlackMisc::Db::TUpdateInfo> m_updates { this, &CInstallXSwiftBusComponent::updatesChanged };
-        BlackMisc::CSettingReadOnly<BlackCore::Application::TUpdatePreferences> m_updateSettings { this }; //!< channel/platform selected
+        swift::misc::simulation::settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for directories of XPlane
+        swift::misc::CDataReadOnly<swift::misc::db::TUpdateInfo> m_updates { this, &CInstallXSwiftBusComponent::updatesChanged };
+        swift::misc::CSettingReadOnly<BlackCore::Application::TUpdatePreferences> m_updateSettings { this }; //!< channel/platform selected
         const QFileDialog::Options m_fileDialogOptions { QFileDialog::ShowDirsOnly | QFileDialog::ReadOnly | QFileDialog::DontResolveSymlinks };
 
         // the xSwiftBus artifacts
         QString m_defaultDownloadName; //!< default name for download
-        BlackMisc::Db::CArtifactList m_xSwiftBusArtifacts; //!< selectable artifacts
+        swift::misc::db::CArtifactList m_xSwiftBusArtifacts; //!< selectable artifacts
 
         //! Select X-Plane plugin directory
         void selectPluginDirectory();
@@ -69,10 +69,10 @@ namespace BlackGui::Components
         void triggerDownloadingOfXSwiftBusFile();
 
         //! Downloaded xswiftbus file
-        void downloadedXSwiftBusFile(const BlackMisc::CStatusMessage &status);
+        void downloadedXSwiftBusFile(const swift::misc::CStatusMessage &status);
 
         //! Full filename + path for the downloaded xswiftbus file
-        BlackMisc::Network::CRemoteFile getRemoteFileSelected() const;
+        swift::misc::network::CRemoteFile getRemoteFileSelected() const;
 
         //! Download dir from UI
         QString downloadDir() const;

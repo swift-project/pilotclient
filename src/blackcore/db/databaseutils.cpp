@@ -4,15 +4,15 @@
 #include "blackcore/db/databaseutils.h"
 #include "blackcore/application.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/fileutils.h"
-#include "blackmisc/compressutils.h"
+#include "misc/logmessage.h"
+#include "misc/fileutils.h"
+#include "misc/compressutils.h"
 #include <QElapsedTimer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Json;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::json;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
 
 namespace BlackCore::Db
 {
@@ -398,7 +398,7 @@ namespace BlackCore::Db
         static const QString compressed("swift:");
         if (content.isEmpty()) { return QJsonDocument(); }
         QByteArray byteData;
-        if (Json::looksLikeJson(content))
+        if (json::looksLikeJson(content))
         {
             // uncompressed
             byteData = content.toUtf8();
@@ -508,7 +508,7 @@ namespace BlackCore::Db
         return textPartDebug;
     }
 
-    ChangedAutoPublishData CDatabaseUtils::autoPublishDataChanged(const QString &modelString, const PhysicalQuantities::CLength &cg, const CSimulatorInfo &simulator)
+    ChangedAutoPublishData CDatabaseUtils::autoPublishDataChanged(const QString &modelString, const physical_quantities::CLength &cg, const CSimulatorInfo &simulator)
     {
         ChangedAutoPublishData changed;
         if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return changed; }
@@ -516,7 +516,7 @@ namespace BlackCore::Db
         return CDatabaseUtils::autoPublishDataChanged(model, cg, simulator);
     }
 
-    ChangedAutoPublishData CDatabaseUtils::autoPublishDataChanged(const CAircraftModel &model, const PhysicalQuantities::CLength &cg, const CSimulatorInfo &simulator)
+    ChangedAutoPublishData CDatabaseUtils::autoPublishDataChanged(const CAircraftModel &model, const physical_quantities::CLength &cg, const CSimulatorInfo &simulator)
     {
         ChangedAutoPublishData changed;
         changed.modelKnown = model.hasValidDbKey();

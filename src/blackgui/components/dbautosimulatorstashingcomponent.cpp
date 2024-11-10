@@ -9,8 +9,8 @@
 
 using namespace BlackGui;
 using namespace BlackCore::Db;
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
 
 namespace BlackGui::Components
 {

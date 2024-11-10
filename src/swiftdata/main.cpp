@@ -3,15 +3,15 @@
 
 #include "blackcore/webreaderflags.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/crashhandler.h"
+#include "misc/icons.h"
+#include "misc/crashhandler.h"
 #include "swiftdata.h"
 
 #include <cstdlib>
 #include <QApplication>
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackCore;
 using namespace BlackCore::Db;
 using namespace BlackGui;

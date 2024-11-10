@@ -7,13 +7,13 @@
 #include "blackgui/guiutility.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackcore/data/globalsetup.h"
-#include "blackmisc/network/authenticateduser.h"
-#include "blackmisc/network/url.h"
-#include "blackmisc/htmlutils.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/verify.h"
-#include "blackmisc/crashhandler.h"
+#include "misc/network/authenticateduser.h"
+#include "misc/network/url.h"
+#include "misc/htmlutils.h"
+#include "misc/logmessage.h"
+#include "misc/statusmessage.h"
+#include "misc/verify.h"
+#include "misc/crashhandler.h"
 #include "config/buildconfig.h"
 
 #include <QLabel>
@@ -29,8 +29,8 @@ using namespace BlackCore;
 using namespace BlackCore::Db;
 using namespace BlackGui;
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 
 namespace BlackGui::Components
 {

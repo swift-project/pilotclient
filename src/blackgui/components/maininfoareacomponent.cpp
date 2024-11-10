@@ -4,13 +4,13 @@
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/maininfoareacomponent.h"
 #include "blackgui/components/settingscomponent.h"
-#include "blackmisc/icons.h"
+#include "misc/icons.h"
 #include "ui_maininfoareacomponent.h"
 
 #include <QIcon>
 #include <QGuiApplication>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui;
 
 namespace BlackGui::Components

@@ -8,7 +8,7 @@
 
 #include "blackgui/models/listmodeltimestampobjects.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/statusmessagelist.h"
 
 namespace BlackGui::Models
 {
@@ -16,7 +16,7 @@ namespace BlackGui::Models
      * Status message list model
      */
     class BLACKGUI_EXPORT CStatusMessageListModel :
-        public CListModelTimestampObjects<BlackMisc::CStatusMessageList, true>
+        public CListModelTimestampObjects<swift::misc::CStatusMessageList, true>
     {
         Q_OBJECT
 
@@ -40,10 +40,10 @@ namespace BlackGui::Models
         void setMode(Mode mode);
 
         //! Set mode and adjust order/no order
-        void setMode(Mode mode, const BlackMisc::CStatusMessageList &messages);
+        void setMode(Mode mode, const swift::misc::CStatusMessageList &messages);
 
         //! Adjust order column depending on messages
-        void adjustOrderColumn(const BlackMisc::CStatusMessageList &messages);
+        void adjustOrderColumn(const swift::misc::CStatusMessageList &messages);
 
         //! \copydoc QAbstractItemModel::data
         virtual QVariant data(const QModelIndex &index, int role) const override;
@@ -52,7 +52,7 @@ namespace BlackGui::Models
         bool isSortedByTimestampOrOrder() const;
 
         //! Sorted by timestamp or order
-        static bool sortedByTimestampOrOrder(const BlackMisc::CPropertyIndex &p);
+        static bool sortedByTimestampOrOrder(const swift::misc::CPropertyIndex &p);
 
     private:
         Mode m_mode; //!< used mode

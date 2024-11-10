@@ -7,7 +7,7 @@
 #define BLACKGUI_EDITORS_OWNMODELSETFORM_H
 
 #include "blackgui/editors/form.h"
-#include "blackmisc/simulation/settings/modelsettings.h"
+#include "misc/simulation/settings/modelsettings.h"
 #include <QObject>
 #include <QScopedPointer>
 
@@ -35,7 +35,7 @@ namespace BlackGui::Editors
         void reloadData();
 
         //! Current simulator
-        void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void setSimulator(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Selected distributors?
         bool optionUseSelectedDistributors() const;
@@ -59,19 +59,19 @@ namespace BlackGui::Editors
         bool optionConsolidateModelSetWithDbData() const;
 
         //! Get selected distributors
-        BlackMisc::Simulation::CDistributorList getSelectedDistributors() const;
+        swift::misc::simulation::CDistributorList getSelectedDistributors() const;
 
         //! Get shown distributors
-        BlackMisc::Simulation::CDistributorList getShownDistributors() const;
+        swift::misc::simulation::CDistributorList getShownDistributors() const;
 
         //! Distributors from preferences
-        BlackMisc::Simulation::CDistributorList getDistributorsFromPreferences() const;
+        swift::misc::simulation::CDistributorList getDistributorsFromPreferences() const;
 
         //! All distributors
-        BlackMisc::Simulation::CDistributorList getAllDistributors() const;
+        swift::misc::simulation::CDistributorList getAllDistributors() const;
 
         //! Get distributors based on options
-        BlackMisc::Simulation::CDistributorList getDistributorsBasedOnOptions() const;
+        swift::misc::simulation::CDistributorList getDistributorsBasedOnOptions() const;
 
         //! Preferences for given simulator?
         bool hasDistributorPreferences() const;
@@ -83,14 +83,14 @@ namespace BlackGui::Editors
 
     signals:
         //! Simulator changed
-        void simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void simulatorChanged(const swift::misc::simulation::CSimulatorInfo &simulator);
 
     private:
         //! Changed preferences
         void onPreferencesChanged();
 
         //! Simulator changed
-        void onSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void onSimulatorChanged(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Display distributors based on checkboxes
         void changeDistributorDisplay();
@@ -102,8 +102,8 @@ namespace BlackGui::Editors
         void setDistributorView(bool hasPreferences);
 
         QScopedPointer<Ui::COwnModelSetForm> ui;
-        BlackMisc::Simulation::CSimulatorInfo m_simulator;
-        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TDistributorListPreferences> m_distributorPreferences { this, &COwnModelSetForm::onPreferencesChanged };
+        swift::misc::simulation::CSimulatorInfo m_simulator;
+        swift::misc::CSetting<swift::misc::simulation::settings::TDistributorListPreferences> m_distributorPreferences { this, &COwnModelSetForm::onPreferencesChanged };
     };
 } // ns
 

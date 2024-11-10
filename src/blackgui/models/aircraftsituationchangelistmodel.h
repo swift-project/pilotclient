@@ -8,7 +8,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodeltimestampobjects.h"
-#include "blackmisc/aviation/aircraftsituationchangelist.h"
+#include "misc/aviation/aircraftsituationchangelist.h"
 #include <QVariant>
 
 class QModelIndex;
@@ -17,7 +17,7 @@ class QObject;
 namespace BlackGui::Models
 {
     //! Aircraft situation changes list model
-    class BLACKGUI_EXPORT CAircraftSituationChangeListModel : public CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftSituationChangeList, true>
+    class BLACKGUI_EXPORT CAircraftSituationChangeListModel : public CListModelTimestampWithOffsetObjects<swift::misc::aviation::CAircraftSituationChangeList, true>
     {
         Q_OBJECT
 

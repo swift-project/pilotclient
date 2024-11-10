@@ -12,15 +12,15 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/led.h"
 #include "blackgui/stylesheetutility.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/pq/frequency.h"
-#include "blackmisc/pq/units.h"
-#include "blackmisc/sequence.h"
-#include "blackmisc/verify.h"
+#include "misc/aviation/atcstationlist.h"
+#include "misc/aviation/atcstation.h"
+#include "misc/aviation/callsign.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/logmessage.h"
+#include "misc/pq/frequency.h"
+#include "misc/pq/units.h"
+#include "misc/sequence.h"
+#include "misc/verify.h"
 #include "ui_cockpitcomcomponent.h"
 
 #include <QDoubleSpinBox>
@@ -33,11 +33,11 @@ using namespace BlackGui;
 using namespace BlackGui::Editors;
 using namespace BlackCore;
 using namespace BlackCore::Context;
-using namespace BlackMisc;
-using namespace BlackMisc::Audio;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::audio;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
+using namespace swift::misc::physical_quantities;
 
 namespace BlackGui::Components
 {

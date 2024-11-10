@@ -22,7 +22,7 @@
 class QMimeData;
 class QModelIndex;
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CWorker;
 }
@@ -102,7 +102,7 @@ namespace BlackGui::Models
         virtual int update(const ContainerType &container, bool sort = true);
 
         //! Asynchronous update
-        virtual BlackMisc::CWorker *updateAsync(const ContainerType &container, bool sort = true);
+        virtual swift::misc::CWorker *updateAsync(const ContainerType &container, bool sort = true);
 
         //! Update by new container
         virtual void updateContainerMaybeAsync(const ContainerType &container, bool sort = true);
@@ -153,11 +153,11 @@ namespace BlackGui::Models
         //! Remove object
         virtual void remove(const ObjectType &object);
 
-        //! \copydoc BlackMisc::CContainerBase::removeIf
+        //! \copydoc swift::misc::CContainerBase::removeIf
         template <class K0, class V0, class... KeysValues>
         int removeIf(K0 k0, V0 v0, KeysValues... keysValues)
         {
-            int c = m_container.removeIf(BlackMisc::Predicates::MemberEqual(k0, v0, keysValues...));
+            int c = m_container.removeIf(swift::misc::predicates::MemberEqual(k0, v0, keysValues...));
             this->updateFilteredContainer();
             if (c > 0) { this->emitModelDataChanged(); }
             return c;
@@ -211,7 +211,7 @@ namespace BlackGui::Models
     {
         //! Sort with compare function
         template <class ObjectType>
-        bool compareForModelSort(const ObjectType &a, const ObjectType &b, Qt::SortOrder order, const BlackMisc::CPropertyIndex &index, const BlackMisc::CPropertyIndexList &tieBreakers, std::true_type)
+        bool compareForModelSort(const ObjectType &a, const ObjectType &b, Qt::SortOrder order, const swift::misc::CPropertyIndex &index, const swift::misc::CPropertyIndexList &tieBreakers, std::true_type)
         {
             const int c = a.comparePropertyByIndex(index, b);
             if (c == 0)
@@ -227,10 +227,10 @@ namespace BlackGui::Models
 
         //! Sort without compare function
         template <typename ObjectType>
-        bool compareForModelSort(const ObjectType &a, const ObjectType &b, Qt::SortOrder order, const BlackMisc::CPropertyIndex &index, const BlackMisc::CPropertyIndexList &tieBreakers, std::false_type)
+        bool compareForModelSort(const ObjectType &a, const ObjectType &b, Qt::SortOrder order, const swift::misc::CPropertyIndex &index, const swift::misc::CPropertyIndexList &tieBreakers, std::false_type)
         {
-            const BlackMisc::CVariant aQv = a.propertyByIndex(index);
-            const BlackMisc::CVariant bQv = b.propertyByIndex(index);
+            const swift::misc::CVariant aQv = a.propertyByIndex(index);
+            const swift::misc::CVariant bQv = b.propertyByIndex(index);
             if (!tieBreakers.isEmpty() && aQv == bQv)
             {
                 return compareForModelSort<ObjectType>(a, b, order, tieBreakers.front(), tieBreakers.copyFrontRemoved(), std::false_type());

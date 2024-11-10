@@ -4,9 +4,9 @@
 #include "blackcore/application.h"
 #include "blackcore/pluginmanagersimulator.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
-#include "blackmisc/logmessage.h"
+#include "misc/swiftdirectories.h"
+#include "misc/directoryutils.h"
+#include "misc/logmessage.h"
 
 #include <QJsonObject>
 #include <QJsonValue>
@@ -15,8 +15,8 @@
 
 namespace BlackCore
 {
-    using namespace BlackMisc;
-    using namespace BlackMisc::Simulation;
+    using namespace swift::misc;
+    using namespace swift::misc::simulation;
 
     CPluginManagerSimulator::CPluginManagerSimulator(QObject *parent) : IPluginManager(parent)
     {

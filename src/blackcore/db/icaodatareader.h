@@ -9,13 +9,13 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/db/databasereader.h"
 #include "blackcore/data/dbcaches.h"
-#include "blackmisc/aviation/aircrafticaocodelist.h"
-#include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/network/url.h"
-#include "blackmisc/country.h"
-#include "blackmisc/countrylist.h"
-#include "blackmisc/datacache.h"
+#include "misc/aviation/aircrafticaocodelist.h"
+#include "misc/aviation/airlineicaocodelist.h"
+#include "misc/network/entityflags.h"
+#include "misc/network/url.h"
+#include "misc/country.h"
+#include "misc/countrylist.h"
+#include "misc/datacache.h"
 
 #include <QObject>
 #include <QReadWriteLock>
@@ -38,7 +38,7 @@ namespace BlackCore::Db
 
         //! Get aircraft ICAO information
         //! \threadsafe
-        BlackMisc::Aviation::CAircraftIcaoCodeList getAircraftIcaoCodes() const;
+        swift::misc::aviation::CAircraftIcaoCodeList getAircraftIcaoCodes() const;
 
         //! Get aircraft ICAO information count
         //! \threadsafe
@@ -46,31 +46,31 @@ namespace BlackCore::Db
 
         //! Get aircraft ICAO information for designator
         //! \threadsafe
-        BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDesignator(const QString &designator) const;
+        swift::misc::aviation::CAircraftIcaoCode getAircraftIcaoCodeForDesignator(const QString &designator) const;
 
         //! Get aircraft ICAO information for designator
         //! \threadsafe
-        BlackMisc::Aviation::CAircraftIcaoCodeList getAircraftIcaoCodesForDesignator(const QString &designator) const;
+        swift::misc::aviation::CAircraftIcaoCodeList getAircraftIcaoCodesForDesignator(const QString &designator) const;
 
         //! Get aircraft ICAO information for IATA code
         //! \threadsafe
-        BlackMisc::Aviation::CAircraftIcaoCodeList getAircraftIcaoCodesForIataCode(const QString &iataCode) const;
+        swift::misc::aviation::CAircraftIcaoCodeList getAircraftIcaoCodesForIataCode(const QString &iataCode) const;
 
         //! Get aircraft ICAO information for key
         //! \threadsafe
-        BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDbKey(int key) const;
+        swift::misc::aviation::CAircraftIcaoCode getAircraftIcaoCodeForDbKey(int key) const;
 
-        //! \copydoc BlackMisc::Aviation::CAircraftIcaoCodeList::containsDesignator
+        //! \copydoc swift::misc::aviation::CAircraftIcaoCodeList::containsDesignator
         //! \threadsafe
         bool containsAircraftIcaoDesignator(const QString &designator) const;
 
         //! Get best match for incomplete aircraft ICAO code
         //! \threadsafe
-        BlackMisc::Aviation::CAircraftIcaoCode smartAircraftIcaoSelector(const BlackMisc::Aviation::CAircraftIcaoCode &icaoPattern) const;
+        swift::misc::aviation::CAircraftIcaoCode smartAircraftIcaoSelector(const swift::misc::aviation::CAircraftIcaoCode &icaoPattern) const;
 
         //! Get countries
         //! \threadsafe
-        BlackMisc::CCountryList getCountries() const;
+        swift::misc::CCountryList getCountries() const;
 
         //! Get countries count
         //! \threadsafe
@@ -78,51 +78,51 @@ namespace BlackCore::Db
 
         //! Get country for ISO code
         //! \threadsafe
-        BlackMisc::CCountry getCountryForIsoCode(const QString &isoCode) const;
+        swift::misc::CCountry getCountryForIsoCode(const QString &isoCode) const;
 
         //! Get country for ISO name
         //! \threadsafe
-        BlackMisc::CCountry getCountryForName(const QString &name) const;
+        swift::misc::CCountry getCountryForName(const QString &name) const;
 
         //! Get airline ICAO information
         //! \threadsafe
-        BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodes() const;
+        swift::misc::aviation::CAirlineIcaoCodeList getAirlineIcaoCodes() const;
 
         //! Get airline ICAO information count
         //! \threadsafe
         int getAirlineIcaoCodesCount() const;
 
-        //! \copydoc BlackMisc::Aviation::CAirlineIcaoCodeList::findByVDesignator
+        //! \copydoc swift::misc::aviation::CAirlineIcaoCodeList::findByVDesignator
         //! \threadsafe
-        BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodesForDesignator(const QString &designator) const;
+        swift::misc::aviation::CAirlineIcaoCodeList getAirlineIcaoCodesForDesignator(const QString &designator) const;
 
-        //! \copydoc BlackMisc::Aviation::CAirlineIcaoCodeList::containsVDesignator
+        //! \copydoc swift::misc::aviation::CAirlineIcaoCodeList::containsVDesignator
         //! \threadsafe
         bool containsAirlineIcaoDesignator(const QString &designator) const;
 
-        //! \copydoc BlackMisc::Aviation::CAirlineIcaoCodeList::findByUniqueVDesignatorOrDefault
+        //! \copydoc swift::misc::aviation::CAirlineIcaoCodeList::findByUniqueVDesignatorOrDefault
         //! \threadsafe
-        BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForUniqueDesignatorOrDefault(const QString &designator, bool preferOperatingAirlines) const;
+        swift::misc::aviation::CAirlineIcaoCode getAirlineIcaoCodeForUniqueDesignatorOrDefault(const QString &designator, bool preferOperatingAirlines) const;
 
-        //! \copydoc BlackMisc::Aviation::CAirlineIcaoCodeList::findByIataCode
+        //! \copydoc swift::misc::aviation::CAirlineIcaoCodeList::findByIataCode
         //! \threadsafe
-        BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodesForIataCode(const QString &iataCode) const;
+        swift::misc::aviation::CAirlineIcaoCodeList getAirlineIcaoCodesForIataCode(const QString &iataCode) const;
 
-        //! \copydoc BlackMisc::Aviation::CAirlineIcaoCodeList::findByUniqueIataCodeOrDefault
+        //! \copydoc swift::misc::aviation::CAirlineIcaoCodeList::findByUniqueIataCodeOrDefault
         //! \threadsafe
-        BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForUniqueIataCodeOrDefault(const QString &iataCode) const;
+        swift::misc::aviation::CAirlineIcaoCode getAirlineIcaoCodeForUniqueIataCodeOrDefault(const QString &iataCode) const;
 
         //! Get airline ICAO information for key
         //! \threadsafe
-        BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForDbKey(int key) const;
+        swift::misc::aviation::CAirlineIcaoCode getAirlineIcaoCodeForDbKey(int key) const;
 
         //! Get best match for airline ICAO code
         //! \threadsafe
-        BlackMisc::Aviation::CAirlineIcaoCode smartAirlineIcaoSelector(const BlackMisc::Aviation::CAirlineIcaoCode &icaoPattern, const BlackMisc::Aviation::CCallsign &callsign = BlackMisc::Aviation::CCallsign()) const;
+        swift::misc::aviation::CAirlineIcaoCode smartAirlineIcaoSelector(const swift::misc::aviation::CAirlineIcaoCode &icaoPattern, const swift::misc::aviation::CCallsign &callsign = swift::misc::aviation::CCallsign()) const;
 
         //! Get aircraft categories
         //! \threadsafe
-        BlackMisc::Aviation::CAircraftCategoryList getAircraftCategories() const;
+        swift::misc::aviation::CAircraftCategoryList getAircraftCategories() const;
 
         //! Get aircraft category  count
         //! \threadsafe
@@ -136,40 +136,40 @@ namespace BlackCore::Db
         bool writeToJsonFiles(const QString &dir);
 
         // data read from local data
-        virtual BlackMisc::CStatusMessageList readFromJsonFiles(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead, bool overrideNewerOnly) override;
-        virtual bool readFromJsonFilesInBackground(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead, bool overrideNewerOnly) override;
+        virtual swift::misc::CStatusMessageList readFromJsonFiles(const QString &dir, swift::misc::network::CEntityFlags::Entity whatToRead, bool overrideNewerOnly) override;
+        virtual bool readFromJsonFilesInBackground(const QString &dir, swift::misc::network::CEntityFlags::Entity whatToRead, bool overrideNewerOnly) override;
 
         // cache handling for base class
-        virtual BlackMisc::Network::CEntityFlags::Entity getSupportedEntities() const override;
-        virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const override;
-        virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const override;
-        virtual BlackMisc::Network::CEntityFlags::Entity getEntitiesWithCacheCount() const override;
-        virtual BlackMisc::Network::CEntityFlags::Entity getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const override;
-        virtual void synchronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
-        virtual void admitCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
+        virtual swift::misc::network::CEntityFlags::Entity getSupportedEntities() const override;
+        virtual QDateTime getCacheTimestamp(swift::misc::network::CEntityFlags::Entity entity) const override;
+        virtual int getCacheCount(swift::misc::network::CEntityFlags::Entity entity) const override;
+        virtual swift::misc::network::CEntityFlags::Entity getEntitiesWithCacheCount() const override;
+        virtual swift::misc::network::CEntityFlags::Entity getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const override;
+        virtual void synchronizeCaches(swift::misc::network::CEntityFlags::Entity entities) override;
+        virtual void admitCaches(swift::misc::network::CEntityFlags::Entity entities) override;
 
     protected:
         // cache handling for base class
-        virtual void invalidateCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
-        virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CUrl &oldUrlInfo, BlackMisc::Network::CUrl &newUrlInfo) const override;
-        virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const override;
+        virtual void invalidateCaches(swift::misc::network::CEntityFlags::Entity entities) override;
+        virtual bool hasChangedUrl(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CUrl &oldUrlInfo, swift::misc::network::CUrl &newUrlInfo) const override;
+        virtual swift::misc::network::CUrl getDbServiceBaseUrl() const override;
 
     private:
-        BlackMisc::CData<BlackCore::Data::TDbAircraftIcaoCache> m_aircraftIcaoCache { this, &CIcaoDataReader::aircraftIcaoCacheChanged };
-        BlackMisc::CData<BlackCore::Data::TDbAirlineIcaoCache> m_airlineIcaoCache { this, &CIcaoDataReader::airlineIcaoCacheChanged };
-        BlackMisc::CData<BlackCore::Data::TDbCountryCache> m_countryCache { this, &CIcaoDataReader::countryCacheChanged };
-        BlackMisc::CData<BlackCore::Data::TDbAircraftCategoryCache> m_categoryCache { this, &CIcaoDataReader::aircraftCategoryCacheChanged };
+        swift::misc::CData<BlackCore::Data::TDbAircraftIcaoCache> m_aircraftIcaoCache { this, &CIcaoDataReader::aircraftIcaoCacheChanged };
+        swift::misc::CData<BlackCore::Data::TDbAirlineIcaoCache> m_airlineIcaoCache { this, &CIcaoDataReader::airlineIcaoCacheChanged };
+        swift::misc::CData<BlackCore::Data::TDbCountryCache> m_countryCache { this, &CIcaoDataReader::countryCacheChanged };
+        swift::misc::CData<BlackCore::Data::TDbAircraftCategoryCache> m_categoryCache { this, &CIcaoDataReader::aircraftCategoryCacheChanged };
         std::atomic_bool m_syncedAircraftIcaoCache { false }; //!< already synchronized?
         std::atomic_bool m_syncedAirlineIcaoCache { false }; //!< already synchronized?
         std::atomic_bool m_syncedCountryCache { false }; //!< already synchronized?
         std::atomic_bool m_syncedCategories { false }; //!< already synchronized?
 
         //! \copydoc CDatabaseReader::read
-        virtual void read(BlackMisc::Network::CEntityFlags::Entity entities,
-                          BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan) override;
+        virtual void read(swift::misc::network::CEntityFlags::Entity entities,
+                          swift::misc::db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan) override;
 
         //! Reader URL (we read from where?) used to detect changes of location
-        BlackMisc::CData<BlackCore::Data::TDbIcaoReaderBaseUrl> m_readerUrlCache { this, &CIcaoDataReader::baseUrlCacheChanged };
+        swift::misc::CData<BlackCore::Data::TDbIcaoReaderBaseUrl> m_readerUrlCache { this, &CIcaoDataReader::baseUrlCacheChanged };
 
         //! Aircraft have been read
         void parseAircraftIcaoData(QNetworkReply *nwReply);
@@ -199,19 +199,19 @@ namespace BlackCore::Db
         void baseUrlCacheChanged();
 
         //! Update reader URL
-        void updateReaderUrl(const BlackMisc::Network::CUrl &url);
+        void updateReaderUrl(const swift::misc::network::CUrl &url);
 
         //! URL
-        BlackMisc::Network::CUrl getAircraftIcaoUrl(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode) const;
+        swift::misc::network::CUrl getAircraftIcaoUrl(swift::misc::db::CDbFlags::DataRetrievalModeFlag mode) const;
 
         //! URL
-        BlackMisc::Network::CUrl getAirlineIcaoUrl(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode) const;
+        swift::misc::network::CUrl getAirlineIcaoUrl(swift::misc::db::CDbFlags::DataRetrievalModeFlag mode) const;
 
         //! URL
-        BlackMisc::Network::CUrl getCountryUrl(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode) const;
+        swift::misc::network::CUrl getCountryUrl(swift::misc::db::CDbFlags::DataRetrievalModeFlag mode) const;
 
         //! URL
-        BlackMisc::Network::CUrl getAircraftCategoryUrl(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode) const;
+        swift::misc::network::CUrl getAircraftCategoryUrl(swift::misc::db::CDbFlags::DataRetrievalModeFlag mode) const;
     };
 } // ns
 

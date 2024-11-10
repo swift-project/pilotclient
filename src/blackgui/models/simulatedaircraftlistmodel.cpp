@@ -4,24 +4,24 @@
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/columns.h"
 #include "blackgui/models/simulatedaircraftlistmodel.h"
-#include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/aviation/modulator.h"
-#include "blackmisc/aviation/transponder.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/aviation/callsign.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/aviation/modulator.h"
+#include "misc/aviation/transponder.h"
+#include "misc/network/user.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/simulatedaircraft.h"
 
 #include <Qt>
 #include <QtDebug>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::simulation;
 
 namespace BlackGui::Models
 {

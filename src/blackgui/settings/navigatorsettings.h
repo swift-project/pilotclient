@@ -7,9 +7,9 @@
 #define BLACKGUI_SETTINGS_NAVIGATOR_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/settingscache.h"
-#include "blackmisc/propertyindex.h"
-#include "blackmisc/variant.h"
+#include "misc/settingscache.h"
+#include "misc/propertyindex.h"
+#include "misc/variant.h"
 
 #include <QMap>
 #include <QString>
@@ -21,13 +21,13 @@ namespace BlackGui::Settings
 {
     //! Settings for navigator bar
     class BLACKGUI_EXPORT CNavigatorSettings :
-        public BlackMisc::CValueObject<CNavigatorSettings>
+        public swift::misc::CValueObject<CNavigatorSettings>
     {
     public:
         //! Properties by index
         enum ColumnIndex
         {
-            IndexMargins = BlackMisc::CPropertyIndexRef::GlobalIndexCNavigatorSettings,
+            IndexMargins = swift::misc::CPropertyIndexRef::GlobalIndexCNavigatorSettings,
             IndexFrameless,
             IndexColumns
         };
@@ -65,17 +65,17 @@ namespace BlackGui::Settings
         //! Set geometry
         void setGeometry(const QByteArray &ba);
 
-        //! \copydoc BlackMisc::Mixin::String::toQString
+        //! \copydoc swift::misc::mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
         //! To string
         QString convertToQString(const QString &separator, bool i18n = false) const;
 
-        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-        QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
+        //! \copydoc swift::misc::mixin::Index::propertyByIndex
+        QVariant propertyByIndex(swift::misc::CPropertyIndexRef index) const;
 
-        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
+        //! \copydoc swift::misc::mixin::Index::setPropertyByIndex
+        void setPropertyByIndex(swift::misc::CPropertyIndexRef index, const QVariant &variant);
 
     private:
         QString m_margins { "0:0:0:0" }; //!< margins
@@ -93,12 +93,12 @@ namespace BlackGui::Settings
     };
 
     //! Trait for settings for navigator
-    struct TNavigator : public BlackMisc::TSettingTrait<CNavigatorSettings>
+    struct TNavigator : public swift::misc::TSettingTrait<CNavigatorSettings>
     {
-        //! \copydoc BlackMisc::TSettingTrait::key
+        //! \copydoc swift::misc::TSettingTrait::key
         static const char *key() { return "guinavigator"; }
 
-        //! \copydoc BlackMisc::TSettingTrait::humanReadable
+        //! \copydoc swift::misc::TSettingTrait::humanReadable
         static const QString &humanReadable()
         {
             static const QString name("Navigator");
@@ -108,6 +108,6 @@ namespace BlackGui::Settings
 } // ns
 
 Q_DECLARE_METATYPE(BlackGui::Settings::CNavigatorSettings)
-Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackGui::Settings::CNavigatorSettings>)
+Q_DECLARE_METATYPE(swift::misc::CCollection<BlackGui::Settings::CNavigatorSettings>)
 
 #endif // guard

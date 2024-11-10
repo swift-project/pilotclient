@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackcore/data/launchersetup.h"
-#include "blackmisc/stringutils.h"
+#include "misc/stringutils.h"
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackCore::Data, CLauncherSetup)
 
@@ -16,7 +16,7 @@ namespace BlackCore::Data
         return QStringLiteral("DBus: %1 frameless: %2 mode: %3").arg(m_dBusAddress, boolToYesNo(m_windowFrameless)).arg(m_coreMode);
     }
 
-    QVariant CLauncherSetup::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
+    QVariant CLauncherSetup::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();

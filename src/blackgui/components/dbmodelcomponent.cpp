@@ -9,7 +9,7 @@
 #include "blackcore/webdataservices.h"
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackgui/views/viewbase.h"
-#include "blackmisc/simulation/aircraftmodel.h"
+#include "misc/simulation/aircraftmodel.h"
 #include "ui_dbmodelcomponent.h"
 
 #include <QDateTime>
@@ -17,9 +17,9 @@
 #include <QtGlobal>
 #include <QStringBuilder>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
 using namespace BlackCore;
 using namespace BlackGui::Views;
 using namespace BlackGui::Models;

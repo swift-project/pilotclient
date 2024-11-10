@@ -9,11 +9,11 @@
 #include "blackgui/components/textmessagecomponenttab.h"
 #include "blackgui/settings/textmessagesettings.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/pixmap.h"
-#include "blackmisc/variant.h"
+#include "misc/aviation/callsign.h"
+#include "misc/statusmessagelist.h"
+#include "misc/statusmessage.h"
+#include "misc/pixmap.h"
+#include "misc/variant.h"
 
 #include <QFrame>
 #include <QMessageBox>
@@ -31,7 +31,7 @@ namespace Ui
 {
     class COverlayMessages;
 }
-namespace BlackMisc::Network
+namespace swift::misc::network
 {
     class CTextMessage;
 }
@@ -92,7 +92,7 @@ namespace BlackGui
 
         //! Show multiple messages with confirmation bar
         void showOverlayMessagesWithConfirmation(
-            const BlackMisc::CStatusMessageList &messages,
+            const swift::misc::CStatusMessageList &messages,
             bool appendOldMessages,
             const QString &confirmationMessage,
             std::function<void()> okLambda,
@@ -103,43 +103,43 @@ namespace BlackGui
         void clearOverlayMessages();
 
         //! Show multiple messages
-        void showOverlayMessages(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1);
+        void showOverlayMessages(const swift::misc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1);
 
         //! Show multiple messages or a single message
-        void showOverlayMessagesOrSingleMessage(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1);
+        void showOverlayMessagesOrSingleMessage(const swift::misc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1);
 
         //! Show multiple messages or a single message (HTML)
-        void showOverlayMessagesOrHTMLMessage(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1);
+        void showOverlayMessagesOrHTMLMessage(const swift::misc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1);
 
         //! Sort of overlay messages
-        void sortOverlayMessages(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
+        void sortOverlayMessages(const swift::misc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
 
         //! Set sorting of overlay messages
-        void setOverlayMessagesSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
+        void setOverlayMessagesSorting(const swift::misc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
 
         //! Show single message
-        void showOverlayMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1);
+        void showOverlayMessage(const swift::misc::CStatusMessage &message, int timeOutMs = -1);
 
         //! Info message, based on text message
-        void showOverlayTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int timeOutMs = -1);
+        void showOverlayTextMessage(const swift::misc::network::CTextMessage &textMessage, int timeOutMs = -1);
 
         //! Inline text message
         void showOverlayInlineTextMessage(Components::TextMessageTab tab);
 
         //! Inline text message
-        void showOverlayInlineTextMessage(const BlackMisc::Aviation::CCallsign &callsign);
+        void showOverlayInlineTextMessage(const swift::misc::aviation::CCallsign &callsign);
 
         //! Image
-        void showOverlayImage(const BlackMisc::CPixmap &image, int timeOutMs = -1);
+        void showOverlayImage(const swift::misc::CPixmap &image, int timeOutMs = -1);
 
         //! Image
         void showOverlayImage(const QPixmap &image, int timeOutMs = -1);
 
         //! Display one of the supported types
-        void showOverlayVariant(const BlackMisc::CVariant &variant, int timeOutMs = -1);
+        void showOverlayVariant(const swift::misc::CVariant &variant, int timeOutMs = -1);
 
         //! HTML message
-        void showHTMLMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1);
+        void showHTMLMessage(const swift::misc::CStatusMessage &message, int timeOutMs = -1);
 
         //! HTML message
         void showHTMLMessage(const QString &htmlMessage, int timeOutMs = -1);
@@ -181,7 +181,7 @@ namespace BlackGui
 
     private:
         QScopedPointer<Ui::COverlayMessages> ui;
-        BlackMisc::CSettingReadOnly<Settings::TextMessageSettings> m_messageSettings { this };
+        swift::misc::CSettingReadOnly<Settings::TextMessageSettings> m_messageSettings { this };
         QString m_header;
         int m_lastConfirmation = QMessageBox::Cancel;
         bool m_awaitingConfirmation = false;
@@ -217,7 +217,7 @@ namespace BlackGui
         void showKill(bool show);
 
         //! Display this message (use settings to decide)
-        bool displayTextMessage(const BlackMisc::Network::CTextMessage &textMessage) const;
+        bool displayTextMessage(const swift::misc::network::CTextMessage &textMessage) const;
     };
 } // ns
 

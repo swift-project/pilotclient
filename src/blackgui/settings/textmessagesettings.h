@@ -7,18 +7,18 @@
 #define BLACKGUI_SETTINGS_TEXTMESSAGESETTINGS_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/settingscache.h"
+#include "misc/settingscache.h"
 #include <QString>
 
 BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackGui::Settings, CTextMessageSettings)
 
-namespace BlackMisc
+namespace swift::misc
 {
-    namespace Simulation
+    namespace simulation
     {
         class CSimulatedAircraft;
     }
-    namespace Network
+    namespace network
     {
         class CTextMessage;
     }
@@ -27,13 +27,13 @@ namespace BlackGui::Settings
 {
     //! Text message settings
     class BLACKGUI_EXPORT CTextMessageSettings :
-        public BlackMisc::CValueObject<CTextMessageSettings>
+        public swift::misc::CValueObject<CTextMessageSettings>
     {
     public:
         //! Properties by index
         enum ColumnIndex
         {
-            IndexPopupPrivateMessages = BlackMisc::CPropertyIndexRef::GlobalIndexCTextMessageSettings,
+            IndexPopupPrivateMessages = swift::misc::CPropertyIndexRef::GlobalIndexCTextMessageSettings,
             IndexPopupSupervisorMessages,
             IndexPopupFrequencyMessages,
             IndexPopupAllMessages,
@@ -92,10 +92,10 @@ namespace BlackGui::Settings
         void disableAllPopups();
 
         //! Popup the given message? Quick check without frequency checks.
-        bool popup(const BlackMisc::Network::CTextMessage &textMessage) const;
+        bool popup(const swift::misc::network::CTextMessage &textMessage) const;
 
         //! Popup the given message? Complete check including frequencies.
-        bool popup(const BlackMisc::Network::CTextMessage &textMessage, const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft) const;
+        bool popup(const swift::misc::network::CTextMessage &textMessage, const swift::misc::simulation::CSimulatedAircraft &ownAircraft) const;
 
         //! Latest messages 1st?
         bool isLatestFirst() const { return m_latestFirst; }
@@ -118,14 +118,14 @@ namespace BlackGui::Settings
         //! Reset style sheet
         void resetStyleSheet() { m_styleSheet.clear(); }
 
-        //! \copydoc BlackMisc::Mixin::String::toQString
+        //! \copydoc swift::misc::mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
-        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-        QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
+        //! \copydoc swift::misc::mixin::Index::propertyByIndex
+        QVariant propertyByIndex(swift::misc::CPropertyIndexRef index) const;
 
-        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
+        //! \copydoc swift::misc::mixin::Index::setPropertyByIndex
+        void setPropertyByIndex(swift::misc::CPropertyIndexRef index, const QVariant &variant);
 
     private:
         bool m_popupPrivateMessages = true;
@@ -151,12 +151,12 @@ namespace BlackGui::Settings
     };
 
     //! Text message settings
-    struct TextMessageSettings : public BlackMisc::TSettingTrait<CTextMessageSettings>
+    struct TextMessageSettings : public swift::misc::TSettingTrait<CTextMessageSettings>
     {
-        //! \copydoc BlackMisc::TSettingTrait::key
+        //! \copydoc swift::misc::TSettingTrait::key
         static const char *key() { return "textmessages"; }
 
-        //! \copydoc BlackMisc::TSettingTrait::humanReadable
+        //! \copydoc swift::misc::TSettingTrait::humanReadable
         static const QString &humanReadable()
         {
             static const QString name("Text message");
@@ -166,6 +166,6 @@ namespace BlackGui::Settings
 } // ns
 
 Q_DECLARE_METATYPE(BlackGui::Settings::CTextMessageSettings)
-Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackGui::Settings::CTextMessageSettings>)
+Q_DECLARE_METATYPE(swift::misc::CCollection<BlackGui::Settings::CTextMessageSettings>)
 
 #endif // guard

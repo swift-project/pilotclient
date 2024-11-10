@@ -3,12 +3,12 @@
 
 #include "pbhsform.h"
 #include "ui_pbhsform.h"
-#include "blackmisc/stringutils.h"
+#include "misc/stringutils.h"
 #include <QDoubleValidator>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::physical_quantities;
 
 namespace BlackGui::Editors
 {

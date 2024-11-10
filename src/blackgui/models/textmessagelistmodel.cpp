@@ -4,18 +4,18 @@
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/columns.h"
 #include "blackgui/models/textmessagelistmodel.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/network/textmessage.h"
-#include "blackmisc/propertyindexvariantmap.h"
-#include "blackmisc/timestampbased.h"
+#include "misc/aviation/callsign.h"
+#include "misc/network/textmessage.h"
+#include "misc/propertyindexvariantmap.h"
+#include "misc/timestampbased.h"
 
 #include <Qt>
 #include <QtDebug>
 #include <QtGlobal>
 
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::network;
+using namespace swift::misc::aviation;
 
 namespace BlackGui::Models
 {

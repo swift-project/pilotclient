@@ -4,17 +4,17 @@
 //! \file
 
 #include "blackcore/afv/audio/receiversampleprovider.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/metadatautils.h"
+#include "misc/logmessage.h"
+#include "misc/metadatautils.h"
 #include "sound/sampleprovider/resourcesoundsampleprovider.h"
 #include "sound/sampleprovider/samples.h"
 
 #include <QDebug>
 #include <QStringBuilder>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Audio;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::audio;
+using namespace swift::misc::aviation;
 using namespace swift::sound::sample_provider;
 
 namespace BlackCore::Afv::Audio

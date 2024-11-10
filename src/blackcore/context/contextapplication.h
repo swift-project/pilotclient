@@ -9,12 +9,12 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/context.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/dictionary.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/identifierlist.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/valuecache.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/dictionary.h"
+#include "misc/identifier.h"
+#include "misc/identifierlist.h"
+#include "misc/statusmessage.h"
+#include "misc/valuecache.h"
 
 #include <QDBusArgument>
 #include <QHash>
@@ -37,7 +37,7 @@
 #define BLACKCORE_CONTEXTAPPLICATION_OBJECTPATH "/application"
 
 class QDBusConnection;
-namespace BlackMisc
+namespace swift::misc
 {
     class CDBusServer;
 }
@@ -49,7 +49,7 @@ namespace BlackCore
     namespace Context
     {
         //! Value type for settings keys with descriptions
-        using CSettingsDictionary = BlackMisc::CDictionary<QString, QString, QMap>;
+        using CSettingsDictionary = swift::misc::CDictionary<QString, QString, QMap>;
 
         //! Application context interface
         class BLACKCORE_EXPORT IContextApplication : public IContext
@@ -76,7 +76,7 @@ namespace BlackCore
             virtual QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
 
             //! Factory method
-            static IContextApplication *create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &connection);
+            static IContextApplication *create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, swift::misc::CDBusServer *server, QDBusConnection &connection);
 
             //! Destructor
             virtual ~IContextApplication() override {}
@@ -87,24 +87,24 @@ namespace BlackCore
 
             //! One or more settings were changed
             //! \note Used for cache relay, do not use directly
-            void settingsChanged(const BlackMisc::CValueCachePacket &settings, const BlackMisc::CIdentifier &origin);
+            void settingsChanged(const swift::misc::CValueCachePacket &settings, const swift::misc::CIdentifier &origin);
 
             //! New action was registered
             //! \note Used to register hotkey action, do not use directly
-            void hotkeyActionsRegistered(const QStringList &actions, const BlackMisc::CIdentifier &origin);
+            void hotkeyActionsRegistered(const QStringList &actions, const swift::misc::CIdentifier &origin);
 
             //! Call a hotkey action on a remote process
             //! \note Used for hotkey action, do not use directly
-            void remoteHotkeyAction(const QString &action, bool argument, const BlackMisc::CIdentifier &origin);
+            void remoteHotkeyAction(const QString &action, bool argument, const swift::misc::CIdentifier &origin);
 
         public slots:
             //! Ratify some settings changed by another process
             //! \note Not pure because it can be called from the base class constructor.
             //! \note This is the function which relays cache changes via DBus.
-            virtual void changeSettings(const BlackMisc::CValueCachePacket &settings, const BlackMisc::CIdentifier &origin);
+            virtual void changeSettings(const swift::misc::CValueCachePacket &settings, const swift::misc::CIdentifier &origin);
 
             //! Get all settings currently in core settings cache
-            virtual BlackMisc::CValueCachePacket getAllSettings() const = 0;
+            virtual swift::misc::CValueCachePacket getAllSettings() const = 0;
 
             //! Get keys of all unsaved settings currently in core settings cache
             virtual QStringList getUnsavedSettingsKeys() const = 0;
@@ -116,38 +116,38 @@ namespace BlackCore
             virtual void synchronizeLocalSettings() = 0;
 
             //! Save core settings to disk
-            virtual BlackMisc::CStatusMessage saveSettings(const QString &keyPrefix = {}) = 0;
+            virtual swift::misc::CStatusMessage saveSettings(const QString &keyPrefix = {}) = 0;
 
             //! Save core settings to disk
-            virtual BlackMisc::CStatusMessage saveSettingsByKey(const QStringList &keys) = 0;
+            virtual swift::misc::CStatusMessage saveSettingsByKey(const QStringList &keys) = 0;
 
             //! Load core settings from disk
-            virtual BlackMisc::CStatusMessage loadSettings() = 0;
+            virtual swift::misc::CStatusMessage loadSettings() = 0;
 
             //! Register hotkey action implemented by another process
             //! \note Not pure because it can be called from the base class constructor.
             //! \note This is the function which relays action registrations via DBus
-            virtual void registerHotkeyActions(const QStringList &actions, const BlackMisc::CIdentifier &origin);
+            virtual void registerHotkeyActions(const QStringList &actions, const swift::misc::CIdentifier &origin);
 
             //! Call a hotkey action on a remote process
             //! \note Not pure because it can be called from the base class constructor.
             //! \note This is the function which relays action calls via DBus
-            virtual void callHotkeyActionRemotely(const QString &action, bool argument, const BlackMisc::CIdentifier &origin);
+            virtual void callHotkeyActionRemotely(const QString &action, bool argument, const swift::misc::CIdentifier &origin);
 
             //! Register application, can also be used for ping
-            virtual BlackMisc::CIdentifier registerApplication(const BlackMisc::CIdentifier &application) = 0;
+            virtual swift::misc::CIdentifier registerApplication(const swift::misc::CIdentifier &application) = 0;
 
             //! Unregister application
-            virtual void unregisterApplication(const BlackMisc::CIdentifier &application) = 0;
+            virtual void unregisterApplication(const swift::misc::CIdentifier &application) = 0;
 
             //! All registered applications
-            virtual BlackMisc::CIdentifierList getRegisteredApplications() const = 0;
+            virtual swift::misc::CIdentifierList getRegisteredApplications() const = 0;
 
             //! Identifier of application, remote side if distributed
-            virtual BlackMisc::CIdentifier getApplicationIdentifier() const = 0;
+            virtual swift::misc::CIdentifier getApplicationIdentifier() const = 0;
 
             //! Forward to facade
-            virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
+            virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override;
 
         protected:
             static constexpr int PingIdentifiersMs = 20000; //!< how often identifiers are pinged

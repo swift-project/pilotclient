@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackcore/fsd/authresponse.h"
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
 namespace BlackCore::Fsd
 {
@@ -26,7 +26,7 @@ namespace BlackCore::Fsd
     {
         if (tokens.size() < 3)
         {
-            BlackMisc::CLogMessage(static_cast<AuthResponse *>(nullptr)).warning(u"Wrong number of arguments.");
+            swift::misc::CLogMessage(static_cast<AuthResponse *>(nullptr)).warning(u"Wrong number of arguments.");
             return {};
         }
         return AuthResponse(tokens[0], tokens[1], tokens[2]);

@@ -7,9 +7,9 @@
 #define BLACKGUI_AUDIONOTIFICATION_COMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/audio/audiosettings.h"
-#include "blackmisc/audio/audiodeviceinfolist.h"
-#include "blackmisc/settingscache.h"
+#include "misc/audio/audiosettings.h"
+#include "misc/audio/audiodeviceinfolist.h"
+#include "misc/settingscache.h"
 
 #include <QFrame>
 #include <QCheckBox>
@@ -54,10 +54,10 @@ namespace BlackGui::Components
         void onNotificationVolumeChanged(int volume);
 
         //! CheckBox to flag
-        BlackMisc::Audio::CNotificationSounds::NotificationFlag checkBoxToFlag(const QCheckBox *cb) const;
+        swift::misc::audio::CNotificationSounds::NotificationFlag checkBoxToFlag(const QCheckBox *cb) const;
 
         QScopedPointer<Ui::CAudioNotificationComponent> ui;
-        BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &CAudioNotificationComponent::reloadSettings };
+        swift::misc::CSetting<swift::misc::audio::TSettings> m_audioSettings { this, &CAudioNotificationComponent::reloadSettings };
     };
 } // namespace
 

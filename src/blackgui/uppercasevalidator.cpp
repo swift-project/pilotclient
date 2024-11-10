@@ -1,12 +1,12 @@
 // SPDX-FileCopyrightText: Copyright (C) 2014 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackmisc/stringutils.h"
+#include "misc/stringutils.h"
 #include "blackgui/uppercasevalidator.h"
 #include <QString>
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui
 {

@@ -10,13 +10,13 @@
 #include "blackcore/data/globalsetup.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/loadindicator.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/statusmessagelist.h"
 
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
 
-namespace BlackMisc::Network
+namespace swift::misc::network
 {
     class CAuthenticatedUser;
 }
@@ -44,7 +44,7 @@ namespace BlackGui::Components
         virtual ~CDbLoginComponent() override;
 
         //! DB user
-        BlackMisc::Network::CAuthenticatedUser getDbUser() const;
+        swift::misc::network::CAuthenticatedUser getDbUser() const;
 
         //! Is user authenticated?
         bool isUserAuthenticated() const;
@@ -54,13 +54,13 @@ namespace BlackGui::Components
         BlackCore::Db::CDatabaseAuthenticationService m_loginService { this }; //!< login service
 
         //! Overlay messages
-        void displayOverlayMessages(const BlackMisc::CStatusMessageList &msgs);
+        void displayOverlayMessages(const swift::misc::CStatusMessageList &msgs);
 
         //! Mode login
         void setModeLogin(bool modeLogin);
 
         //! Set the user fields
-        void setUserInfo(const BlackMisc::Network::CAuthenticatedUser &user);
+        void setUserInfo(const swift::misc::network::CAuthenticatedUser &user);
 
         //! Login
         void onLoginClicked();
@@ -69,7 +69,7 @@ namespace BlackGui::Components
         void onLogoffClicked();
 
         //! User authentication completed
-        void onAuthenticationFinished(const BlackMisc::Network::CAuthenticatedUser &user, const BlackMisc::CStatusMessageList &statusMsgs);
+        void onAuthenticationFinished(const swift::misc::network::CAuthenticatedUser &user, const swift::misc::CStatusMessageList &statusMsgs);
     };
 } // ns
 

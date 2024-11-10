@@ -43,12 +43,12 @@
 #include <QObject>
 #include <QTest>
 
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
 using namespace swift::config;
 using namespace BlackCore::Fsd;
 
-namespace BlackMiscTest
+namespace MiscTest
 {
     //! Testing FSD Messages
     class CTestFsdMessages : public QObject
@@ -704,7 +704,7 @@ namespace BlackMiscTest
 }
 
 //! main
-BLACKTEST_APPLESS_MAIN(BlackMiscTest::CTestFsdMessages);
+BLACKTEST_APPLESS_MAIN(MiscTest::CTestFsdMessages);
 
 #include "testfsdmessages.moc"
 

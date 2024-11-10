@@ -6,8 +6,8 @@
 #ifndef BLACKGUI_MODELS_AIRCRAFTCATEGORYLISTMODEL_H
 #define BLACKGUI_MODELS_AIRCRAFTCATEGORYLISTMODEL_H
 
-#include "blackmisc/aviation/aircraftcategorylist.h"
-#include "blackmisc/aviation/aircraftcategory.h"
+#include "misc/aviation/aircraftcategorylist.h"
+#include "misc/aviation/aircraftcategory.h"
 #include "blackgui/models/listmodeldbobjects.h"
 #include "blackgui/blackguiexport.h"
 
@@ -15,7 +15,7 @@ namespace BlackGui::Models
 {
     //! Airport list model
     class BLACKGUI_EXPORT CAircraftCategoryListModel :
-        public CListModelDbObjects<BlackMisc::Aviation::CAircraftCategoryList, int, true>
+        public CListModelDbObjects<swift::misc::aviation::CAircraftCategoryList, int, true>
     {
         Q_OBJECT
 

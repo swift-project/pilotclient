@@ -18,7 +18,7 @@ namespace BlackGui::Components
 {
     /*!
      * Dialog to edit fonts
-     * \see BlackMisc::Components::CSettingsFontComponent
+     * \see swift::misc::Components::CSettingsFontComponent
      */
     class CSettingsFontDialog : public QDialog
     {

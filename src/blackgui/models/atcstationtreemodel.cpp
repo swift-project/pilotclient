@@ -4,15 +4,15 @@
 #include "blackgui/models/atcstationtreemodel.h"
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/columns.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/icon.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/pq/frequency.h"
-#include "blackmisc/pq/length.h"
-#include "blackmisc/pq/units.h"
-#include "blackmisc/variant.h"
-#include "blackmisc/propertyindex.h"
+#include "misc/aviation/callsign.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/icon.h"
+#include "misc/network/user.h"
+#include "misc/pq/frequency.h"
+#include "misc/pq/length.h"
+#include "misc/pq/units.h"
+#include "misc/variant.h"
+#include "misc/propertyindex.h"
 
 #include <QDateTime>
 #include <QList>
@@ -25,10 +25,10 @@
 #include <QtDebug>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
 
 namespace BlackGui::Models
 {

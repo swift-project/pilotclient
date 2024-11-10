@@ -8,7 +8,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodelbase.h"
-#include "blackmisc/network/clientlist.h"
+#include "misc/network/clientlist.h"
 
 #include <QVariant>
 
@@ -18,7 +18,7 @@ class QObject;
 namespace BlackGui::Models
 {
     //! Client list model
-    class BLACKGUI_EXPORT CClientListModel : public CListModelBase<BlackMisc::Network::CClientList>
+    class BLACKGUI_EXPORT CClientListModel : public CListModelBase<swift::misc::network::CClientList>
     {
         Q_OBJECT
 

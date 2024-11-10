@@ -12,20 +12,20 @@
 #include "blackcore/application.h"
 #include "blackcore/pluginmanagersimulator.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/xplane/xplaneutil.h"
-#include "blackmisc/simulation/matchingutils.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/pq/units.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/simplecommandparser.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/loghandler.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/threadutils.h"
-#include "blackmisc/verify.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/xplane/xplaneutil.h"
+#include "misc/simulation/matchingutils.h"
+#include "misc/aviation/callsign.h"
+#include "misc/pq/units.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/dbusserver.h"
+#include "misc/simplecommandparser.h"
+#include "misc/logcategories.h"
+#include "misc/loghandler.h"
+#include "misc/logmessage.h"
+#include "misc/statusmessage.h"
+#include "misc/threadutils.h"
+#include "misc/verify.h"
 #include "config/buildconfig.h"
 
 #include <QMetaObject>
@@ -38,17 +38,17 @@
 
 using namespace swift::config;
 using namespace BlackCore::Db;
-using namespace BlackMisc;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::XPlane;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Weather;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::Settings;
-using namespace BlackMisc::Simulation::Data;
+using namespace swift::misc;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::xplane;
+using namespace swift::misc::geo;
+using namespace swift::misc::weather;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::settings;
+using namespace swift::misc::simulation::data;
 
 namespace BlackCore::Context
 {
@@ -766,7 +766,7 @@ namespace BlackCore::Context
         emit this->simulatorStatusChanged(status);
     }
 
-    void CContextSimulator::xCtxTextMessagesReceived(const Network::CTextMessageList &textMessages)
+    void CContextSimulator::xCtxTextMessagesReceived(const network::CTextMessageList &textMessages)
     {
         if (!this->isSimulatorAvailable()) { return; }
         if (!this->getIContextOwnAircraft()) { return; }
@@ -780,7 +780,7 @@ namespace BlackCore::Context
         }
     }
 
-    void CContextSimulator::xCtxChangedRemoteAircraftModel(const CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator)
+    void CContextSimulator::xCtxChangedRemoteAircraftModel(const CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator)
     {
         if (CIdentifiable::isMyIdentifier(originator)) { return; }
         if (!this->isSimulatorAvailable()) { return; }
@@ -882,7 +882,7 @@ namespace BlackCore::Context
         m_aircraftMatcher.evaluateStatisticsEntry(m_networkSessionId, callsign, aircraftIcao, airlineIcao, livery);
     }
 
-    void CContextSimulator::relayStatusMessageToSimulator(const BlackMisc::CStatusMessage &message)
+    void CContextSimulator::relayStatusMessageToSimulator(const swift::misc::CStatusMessage &message)
     {
         if (!this->isSimulatorAvailable()) { return; }
         if (!sApp || sApp->isShuttingDown()) { return; }

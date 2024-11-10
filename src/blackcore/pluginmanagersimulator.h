@@ -8,10 +8,10 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/pluginmanager.h"
-#include "blackmisc/sequence.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/simulation/simulatorplugininfolist.h"
-#include "blackmisc/variant.h"
+#include "misc/sequence.h"
+#include "misc/simulation/simulatorplugininfo.h"
+#include "misc/simulation/simulatorplugininfolist.h"
+#include "misc/variant.h"
 
 #include <QHash>
 #include <QMap>
@@ -47,7 +47,7 @@ namespace BlackCore
         ISimulatorListener *getListener(const QString &pluginId);
 
         //! Get all simulator driver plugins
-        BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const;
+        swift::misc::simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const;
 
         //! Check if simulator is connected
         int checkAvailableListeners();
@@ -57,7 +57,7 @@ namespace BlackCore
 
     protected:
         //! \copydoc BlackCore::IPluginManager::acceptedIids()
-        virtual BlackMisc::CSequence<QString> acceptedIids() const override;
+        virtual swift::misc::CSequence<QString> acceptedIids() const override;
 
         //! \copydoc BlackCore::IPluginManager::pluginDirectory()
         virtual const QString &pluginDirectory() const override;
@@ -68,7 +68,7 @@ namespace BlackCore
          */
         struct PluginExtended
         {
-            BlackMisc::Simulation::CSimulatorPluginInfo info;
+            swift::misc::simulation::CSimulatorPluginInfo info;
             ISimulatorListener *listener = nullptr;
         };
 

@@ -9,8 +9,8 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/filters/filterwidget.h"
 #include "blackgui/models/modelfilter.h"
-#include "blackmisc/simulation/distributor.h"
-#include "blackmisc/simulation/simulatorinfo.h"
+#include "misc/simulation/distributor.h"
+#include "misc/simulation/simulatorinfo.h"
 
 #include <QObject>
 #include <QScopedPointer>
@@ -20,7 +20,7 @@ namespace Ui
 {
     class CAircraftModelFilterBar;
 }
-namespace BlackMisc::Simulation
+namespace swift::misc::simulation
 {
     class CAircraftModelList;
 }
@@ -31,7 +31,7 @@ namespace BlackGui::Filters
      */
     class BLACKGUI_EXPORT CAircraftModelFilterBar :
         public CFilterWidget,
-        public Models::IModelFilterProvider<BlackMisc::Simulation::CAircraftModelList>
+        public Models::IModelFilterProvider<swift::misc::simulation::CAircraftModelList>
     {
         Q_OBJECT
 
@@ -46,7 +46,7 @@ namespace BlackGui::Filters
         void displayCount(bool show);
 
         //! \copydoc Models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<Models::IModelFilter<BlackMisc::Simulation::CAircraftModelList>> createModelFilter() const override;
+        virtual std::unique_ptr<Models::IModelFilter<swift::misc::simulation::CAircraftModelList>> createModelFilter() const override;
 
         //! \copydoc CFilterWidget::onRowCountChanged
         virtual void onRowCountChanged(int count, bool withFilter) override;
@@ -57,10 +57,10 @@ namespace BlackGui::Filters
 
     private:
         //! Simulator selection changed
-        void onSimulatorSelectionChanged(const BlackMisc::Simulation::CSimulatorInfo &info);
+        void onSimulatorSelectionChanged(const swift::misc::simulation::CSimulatorInfo &info);
 
         //! Distributor changed
-        void onDistributorChanged(const BlackMisc::Simulation::CDistributor &distributor);
+        void onDistributorChanged(const swift::misc::simulation::CDistributor &distributor);
 
         //! Combined type changed
         void onCombinedTypeChanged(const QString &combinedType);

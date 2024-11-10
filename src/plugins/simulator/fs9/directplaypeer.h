@@ -7,8 +7,8 @@
 #include "fs9.h"
 #include "hostnode.h"
 #include "callbackwrapper.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/logcategorylist.h"
+#include "misc/aviation/callsign.h"
+#include "misc/logcategorylist.h"
 #include <QObject>
 #include <QList>
 #include <QScopedPointer>
@@ -30,7 +30,7 @@ namespace BlackSimPlugin::Fs9
 
     public:
         //! Constructor
-        CDirectPlayPeer(const BlackMisc::Aviation::CCallsign &callsign, QObject *parent = nullptr);
+        CDirectPlayPeer(const swift::misc::aviation::CCallsign &callsign, QObject *parent = nullptr);
 
         //! Destructor
         virtual ~CDirectPlayPeer() override;
@@ -74,7 +74,7 @@ namespace BlackSimPlugin::Fs9
         //! Creates a new DirectPlay device address
         HRESULT createHostAddress();
 
-        const BlackMisc::Aviation::CCallsign m_callsign; //!< Peer callsign
+        const swift::misc::aviation::CCallsign m_callsign; //!< Peer callsign
 
         IDirectPlay8Peer *m_directPlayPeer = nullptr; //!< DirectPlay peer address
         IDirectPlay8Address *m_deviceAddress = nullptr; //!< DirectPlay device address

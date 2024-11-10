@@ -15,20 +15,20 @@
 #include "blackcore/afv/audio/receiversampleprovider.h"
 #include "sound/selcalplayer.h"
 #include "sound/notificationplayer.h"
-#include "blackmisc/macos/microphoneaccess.h"
-#include "blackmisc/audio/audiodeviceinfolist.h"
-#include "blackmisc/audio/notificationsounds.h"
-#include "blackmisc/audio/audiosettings.h"
-#include "blackmisc/aviation/callsignset.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/aviation/selcal.h"
-#include "blackmisc/network/connectionstatus.h"
-#include "blackmisc/network/userlist.h"
-#include "blackmisc/input/actionhotkeydefs.h"
-#include "blackmisc/genericdbusinterface.h"
-#include "blackmisc/simplecommandparser.h"
-#include "blackmisc/identifiable.h"
-#include "blackmisc/identifier.h"
+#include "misc/macos/microphoneaccess.h"
+#include "misc/audio/audiodeviceinfolist.h"
+#include "misc/audio/notificationsounds.h"
+#include "misc/audio/audiosettings.h"
+#include "misc/aviation/callsignset.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/aviation/selcal.h"
+#include "misc/network/connectionstatus.h"
+#include "misc/network/userlist.h"
+#include "misc/input/actionhotkeydefs.h"
+#include "misc/genericdbusinterface.h"
+#include "misc/simplecommandparser.h"
+#include "misc/identifiable.h"
+#include "misc/identifier.h"
 
 #include <QObject>
 #include <QString>
@@ -46,7 +46,7 @@
 
 class QDBusConnection;
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CDBusServer;
 }
@@ -77,39 +77,39 @@ namespace BlackCore
             virtual QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
 
             //! Factory method
-            static IContextAudio *create(CCoreFacade *runtime, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &connection);
+            static IContextAudio *create(CCoreFacade *runtime, CCoreFacadeConfig::ContextMode mode, swift::misc::CDBusServer *server, QDBusConnection &connection);
 
             // ------------- only use DBus signals here -------------
         signals:
             //! Authentication failed, ....
-            void voiceClientFailure(const BlackMisc::CStatusMessage &msg);
+            void voiceClientFailure(const swift::misc::CStatusMessage &msg);
 
         public slots:
             // ------------- DBus ---------------
 
             //! All registered devices
-            virtual BlackMisc::Audio::CAudioDeviceInfoList getRegisteredDevices() const = 0;
+            virtual swift::misc::audio::CAudioDeviceInfoList getRegisteredDevices() const = 0;
 
             //! Register a device on a machine (for core/GUI it will return all known devices on all machines)
-            virtual void registerDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) = 0;
+            virtual void registerDevices(const swift::misc::audio::CAudioDeviceInfoList &devices) = 0;
 
             //! Unregister devices
-            virtual void unRegisterDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) = 0;
+            virtual void unRegisterDevices(const swift::misc::audio::CAudioDeviceInfoList &devices) = 0;
 
             //! Remove all devices for identifer (i.e. "a machine")
-            virtual void unRegisterDevicesFor(const BlackMisc::CIdentifier &identifier) = 0;
+            virtual void unRegisterDevicesFor(const swift::misc::CIdentifier &identifier) = 0;
 
             //! Register an audio callsign (used with AFV)
             //! \remarks normally called with login
-            virtual void registerAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CIdentifier &identifier) = 0;
+            virtual void registerAudioCallsign(const swift::misc::aviation::CCallsign &callsign, const swift::misc::CIdentifier &identifier) = 0;
 
             //! Un-register an audio callsign (used with AFV)
             //! \remarks normally called with logoff
-            virtual void unRegisterAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CIdentifier &identifier) = 0;
+            virtual void unRegisterAudioCallsign(const swift::misc::aviation::CCallsign &callsign, const swift::misc::CIdentifier &identifier) = 0;
 
             //! Un-register an audio callsign (used with AFV)
             //! \remarks normally called with logoff
-            virtual bool hasRegisteredAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+            virtual bool hasRegisteredAudioCallsign(const swift::misc::aviation::CCallsign &callsign) const = 0;
 
             // ------------- DBus ---------------
 
@@ -118,13 +118,13 @@ namespace BlackCore
             IContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
 
             //! Devices have been changed
-            void onChangedLocalDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
+            void onChangedLocalDevices(const swift::misc::audio::CAudioDeviceInfoList &devices);
         };
 
         //! Audio context interface
         class BLACKCORE_EXPORT CContextAudioBase :
             public IContextAudio,
-            public BlackMisc::CIdentifiable
+            public swift::misc::CIdentifiable
         {
             Q_OBJECT
             friend class BlackCore::CCoreFacade;
@@ -150,36 +150,36 @@ namespace BlackCore
 
             //! @{
             //! Audio devices
-            BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const;
-            BlackMisc::Audio::CAudioDeviceInfoList getAudioInputDevices() const;
-            BlackMisc::Audio::CAudioDeviceInfoList getAudioOutputDevices() const;
-            BlackMisc::Audio::CAudioDeviceInfoList getAudioDevicesPlusDefault() const;
-            BlackMisc::Audio::CAudioDeviceInfoList getAudioInputDevicesPlusDefault() const;
-            BlackMisc::Audio::CAudioDeviceInfoList getAudioOutputDevicesPlusDefault() const;
+            swift::misc::audio::CAudioDeviceInfoList getAudioDevices() const;
+            swift::misc::audio::CAudioDeviceInfoList getAudioInputDevices() const;
+            swift::misc::audio::CAudioDeviceInfoList getAudioOutputDevices() const;
+            swift::misc::audio::CAudioDeviceInfoList getAudioDevicesPlusDefault() const;
+            swift::misc::audio::CAudioDeviceInfoList getAudioInputDevicesPlusDefault() const;
+            swift::misc::audio::CAudioDeviceInfoList getAudioOutputDevicesPlusDefault() const;
             //! @}
 
             //! Get current audio device
             //! \return input and output devices
-            BlackMisc::Audio::CAudioDeviceInfoList getCurrentAudioDevices() const;
+            swift::misc::audio::CAudioDeviceInfoList getCurrentAudioDevices() const;
 
             //! Set current audio devices
-            void setCurrentAudioDevices(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice, const BlackMisc::Audio::CAudioDeviceInfo &outputDevice);
+            void setCurrentAudioDevices(const swift::misc::audio::CAudioDeviceInfo &inputDevice, const swift::misc::audio::CAudioDeviceInfo &outputDevice);
 
             //! @{
             //! Volume
             void setMasterOutputVolume(int volume);
-            void setComOutputVolume(BlackMisc::Aviation::CComSystem::ComUnit comUnit, int volume);
+            void setComOutputVolume(swift::misc::aviation::CComSystem::ComUnit comUnit, int volume);
             int getMasterOutputVolume() const;
-            int getComOutputVolume(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
+            int getComOutputVolume(swift::misc::aviation::CComSystem::ComUnit comUnit) const;
             void setOutputMute(bool muted);
             bool isOutputMuted() const;
             //! @}
 
             //! SELCAL
-            void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal);
+            void playSelcalTone(const swift::misc::aviation::CSelcal &selcal);
 
             //! Notification sounds
-            void playNotification(BlackMisc::Audio::CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume = -1);
+            void playNotification(swift::misc::audio::CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume = -1);
 
             //! @{
             //! Loopback
@@ -191,13 +191,13 @@ namespace BlackCore
             QString audioRunsWhereInfo() const;
 
             //! Audio runs where
-            const BlackMisc::CIdentifier &audioRunsWhere() const;
+            const swift::misc::CIdentifier &audioRunsWhere() const;
 
             //! Is COM unit enabled?
-            bool isEnabledComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
+            bool isEnabledComUnit(swift::misc::aviation::CComSystem::ComUnit comUnit) const;
 
             //! Is COM unit transmitting?
-            bool isTransmittingComUnit(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
+            bool isTransmittingComUnit(swift::misc::aviation::CComSystem::ComUnit comUnit) const;
 
             //! Connect to audio with network credentials
             //! \remark if there is no network connection/credential this just returns
@@ -227,11 +227,11 @@ namespace BlackCore
             //! Register the commands
             static void registerHelp()
             {
-                if (BlackMisc::CSimpleCommandParser::registered("BlackCore::Context::CContextAudioBase")) { return; }
-                BlackMisc::CSimpleCommandParser::registerCommand({ ".mute", "mute audio" });
-                BlackMisc::CSimpleCommandParser::registerCommand({ ".unmute", "unmute audio" });
-                BlackMisc::CSimpleCommandParser::registerCommand({ ".vol volume", "volume 0..100" });
-                BlackMisc::CSimpleCommandParser::registerCommand({ ".aliased on|off", "aliased HF frequencies" });
+                if (swift::misc::CSimpleCommandParser::registered("BlackCore::Context::CContextAudioBase")) { return; }
+                swift::misc::CSimpleCommandParser::registerCommand({ ".mute", "mute audio" });
+                swift::misc::CSimpleCommandParser::registerCommand({ ".unmute", "unmute audio" });
+                swift::misc::CSimpleCommandParser::registerCommand({ ".vol volume", "volume 0..100" });
+                swift::misc::CSimpleCommandParser::registerCommand({ ".aliased on|off", "aliased HF frequencies" });
             }
 
             // -------- parts which can run in core and GUI, referring to local voice client ------------
@@ -248,7 +248,7 @@ namespace BlackCore
             //! .vol .volume   volume 0..100   set volume       BlackCore::Context::CContextAudioBase
             //! .aliased on|off                aliased stations BlackCore::Context::CContextAudioBase
             //! </pre>
-            virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
+            virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override;
             //! \endcond
 
             // ------------- DBus ---------------
@@ -263,16 +263,16 @@ namespace BlackCore
             void changedOutputMute(bool muted);
 
             //! Changed audio devices (e.g. device enabled/disable)
-            void changedLocalAudioDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
+            void changedLocalAudioDevices(const swift::misc::audio::CAudioDeviceInfoList &devices);
 
             //! Audio started with devices
-            void startedAudio(const BlackMisc::Audio::CAudioDeviceInfo &input, const BlackMisc::Audio::CAudioDeviceInfo &output);
+            void startedAudio(const swift::misc::audio::CAudioDeviceInfo &input, const swift::misc::audio::CAudioDeviceInfo &output);
 
             //! Audio stopped
             void stoppedAudio();
 
             //! PTT in voice client received
-            void ptt(bool active, const BlackMisc::CIdentifier &identifier);
+            void ptt(bool active, const swift::misc::CIdentifier &identifier);
 
             /*
              * Workaround those must be invisible for DBus
@@ -321,21 +321,21 @@ namespace BlackCore
             //! @}
 
             //! Network connection status
-            void xCtxNetworkConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+            void xCtxNetworkConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
 
             //! AFV client connection status changed
             void onAfvConnectionStatusChanged(int status);
 
             //! AFV client authentication failed
-            void onAfvConnectionFailure(const BlackMisc::CStatusMessage &msg);
+            void onAfvConnectionFailure(const swift::misc::CStatusMessage &msg);
 
-            CActionBind m_actionPtt { BlackMisc::Input::pttHotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CContextAudioBase::setVoiceTransmission };
-            CActionBind m_actionAudioVolumeIncrease { BlackMisc::Input::audioVolumeIncreaseHotkeyAction(), BlackMisc::Input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudioBase::audioIncreaseVolume };
-            CActionBind m_actionAudioVolumeDecrease { BlackMisc::Input::audioVolumeDecreaseHotkeyAction(), BlackMisc::Input::audioVolumeDecreaseHotkeyIcon(), this, &CContextAudioBase::audioDecreaseVolume };
-            CActionBind m_actionAudioVolumeIncreaseCom1 { BlackMisc::Input::audioVolumeIncreaseCom1HotkeyAction(), BlackMisc::Input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudioBase::audioIncreaseVolumeCom1 };
-            CActionBind m_actionAudioVolumeDecreaseCom1 { BlackMisc::Input::audioVolumeDecreaseCom1HotkeyAction(), BlackMisc::Input::audioVolumeDecreaseHotkeyIcon(), this, &CContextAudioBase::audioDecreaseVolumeCom1 };
-            CActionBind m_actionAudioVolumeIncreaseCom2 { BlackMisc::Input::audioVolumeIncreaseCom2HotkeyAction(), BlackMisc::Input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudioBase::audioIncreaseVolumeCom2 };
-            CActionBind m_actionAudioVolumeDecreaseCom2 { BlackMisc::Input::audioVolumeDecreaseCom2HotkeyAction(), BlackMisc::Input::audioVolumeDecreaseHotkeyIcon(), this, &CContextAudioBase::audioDecreaseVolumeCom2 };
+            CActionBind m_actionPtt { swift::misc::input::pttHotkeyAction(), swift::misc::input::pttHotkeyIcon(), this, &CContextAudioBase::setVoiceTransmission };
+            CActionBind m_actionAudioVolumeIncrease { swift::misc::input::audioVolumeIncreaseHotkeyAction(), swift::misc::input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudioBase::audioIncreaseVolume };
+            CActionBind m_actionAudioVolumeDecrease { swift::misc::input::audioVolumeDecreaseHotkeyAction(), swift::misc::input::audioVolumeDecreaseHotkeyIcon(), this, &CContextAudioBase::audioDecreaseVolume };
+            CActionBind m_actionAudioVolumeIncreaseCom1 { swift::misc::input::audioVolumeIncreaseCom1HotkeyAction(), swift::misc::input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudioBase::audioIncreaseVolumeCom1 };
+            CActionBind m_actionAudioVolumeDecreaseCom1 { swift::misc::input::audioVolumeDecreaseCom1HotkeyAction(), swift::misc::input::audioVolumeDecreaseHotkeyIcon(), this, &CContextAudioBase::audioDecreaseVolumeCom1 };
+            CActionBind m_actionAudioVolumeIncreaseCom2 { swift::misc::input::audioVolumeIncreaseCom2HotkeyAction(), swift::misc::input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudioBase::audioIncreaseVolumeCom2 };
+            CActionBind m_actionAudioVolumeDecreaseCom2 { swift::misc::input::audioVolumeDecreaseCom2HotkeyAction(), swift::misc::input::audioVolumeDecreaseHotkeyIcon(), this, &CContextAudioBase::audioDecreaseVolumeCom2 };
 
             int m_outMasterVolumeBeforeMute = 50;
             static constexpr int MinUnmuteVolume = 20; //!< minimum volume when unmuted
@@ -344,15 +344,15 @@ namespace BlackCore
             static bool isRunningWithLocalCore();
 
             // settings
-            BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &CContextAudioBase::onChangedAudioSettings };
+            swift::misc::CSetting<swift::misc::audio::TSettings> m_audioSettings { this, &CContextAudioBase::onChangedAudioSettings };
 
-            BlackMisc::CSetting<Audio::TInputDevice> m_inputDeviceSetting { this, &CContextAudioBase::changeDeviceSettings };
-            BlackMisc::CSetting<Audio::TOutputDevice> m_outputDeviceSetting { this, &CContextAudioBase::changeDeviceSettings };
+            swift::misc::CSetting<Audio::TInputDevice> m_inputDeviceSetting { this, &CContextAudioBase::changeDeviceSettings };
+            swift::misc::CSetting<Audio::TOutputDevice> m_outputDeviceSetting { this, &CContextAudioBase::changeDeviceSettings };
 
             // AFV
             Afv::Clients::CAfvClient *m_voiceClient = nullptr;
             bool m_winCoInitialized = false;
-            BlackMisc::Audio::CAudioDeviceInfoList m_activeLocalDevices;
+            swift::misc::audio::CAudioDeviceInfoList m_activeLocalDevices;
 
             // Players
             swift::sound::CSelcalPlayer *m_selcalPlayer = nullptr;

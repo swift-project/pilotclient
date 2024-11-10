@@ -9,7 +9,7 @@
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/afv/clients/afvclient.h"
 
-using namespace BlackMisc::Audio;
+using namespace swift::misc::audio;
 using namespace BlackCore::Context;
 
 namespace BlackGui::Components

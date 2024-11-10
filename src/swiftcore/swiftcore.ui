@@ -270,7 +270,7 @@ QTextEdit {
   </widget>
   <action name="menu_SettingsDialog">
    <property name="icon">
-    <iconset resource="../blackmisc/blackmisc.qrc">
+    <iconset resource="../misc/misc.qrc">
      <normaloff>:/pastel/icons/pastel/16/wrench-orange.png</normaloff>:/pastel/icons/pastel/16/wrench-orange.png</iconset>
    </property>
    <property name="text">
@@ -327,7 +327,7 @@ QTextEdit {
   <tabstop>pb_DisconnectNetwork</tabstop>
  </tabstops>
  <resources>
-  <include location="../blackmisc/blackmisc.qrc"/>
+  <include location="../misc/misc.qrc"/>
  </resources>
  <connections/>
 </ui>

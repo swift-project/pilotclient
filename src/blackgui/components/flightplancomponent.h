@@ -8,19 +8,19 @@
 
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/data/lastmodel.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/aviation/flightplan.h"
-#include "blackmisc/aviation/comnavequipment.h"
-#include "blackmisc/aviation/ssrequipment.h"
-#include "blackmisc/network/data/lastserver.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/directories.h"
-#include "blackmisc/settingscache.h"
-#include "blackmisc/datacache.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/logcategories.h"
+#include "misc/simulation/data/lastmodel.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/aviation/flightplan.h"
+#include "misc/aviation/comnavequipment.h"
+#include "misc/aviation/ssrequipment.h"
+#include "misc/network/data/lastserver.h"
+#include "misc/network/user.h"
+#include "misc/directories.h"
+#include "misc/settingscache.h"
+#include "misc/datacache.h"
+#include "misc/identifier.h"
+#include "misc/statusmessagelist.h"
+#include "misc/logcategories.h"
 
 #include <QObject>
 #include <QScopedPointer>
@@ -40,12 +40,12 @@ namespace BlackGui::Components
     namespace FlightPlanSettings
     {
         //! Remarks history
-        struct TRemarksHistory : public BlackMisc::TSettingTrait<QStringList>
+        struct TRemarksHistory : public swift::misc::TSettingTrait<QStringList>
         {
-            //! \copydoc BlackMisc::TSettingTrait::key
+            //! \copydoc swift::misc::TSettingTrait::key
             static const char *key() { return "flightplan/remarkshistory"; }
 
-            //! \copydoc BlackMisc::TSettingTrait::humanReadable
+            //! \copydoc swift::misc::TSettingTrait::humanReadable
             static const QString &humanReadable()
             {
                 static const QString name("FP remarks history");
@@ -54,12 +54,12 @@ namespace BlackGui::Components
         };
 
         //! Additional remarks history
-        struct TRemarksHistoryAdditional : public BlackMisc::TSettingTrait<QStringList>
+        struct TRemarksHistoryAdditional : public swift::misc::TSettingTrait<QStringList>
         {
-            //! \copydoc BlackMisc::TSettingTrait::key
+            //! \copydoc swift::misc::TSettingTrait::key
             static const char *key() { return "flightplan/remarkshistoryadd"; }
 
-            //! \copydoc BlackMisc::TSettingTrait::humanReadable
+            //! \copydoc swift::misc::TSettingTrait::humanReadable
             static const QString &humanReadable()
             {
                 static const QString name("FP remarks history (add)");
@@ -88,10 +88,10 @@ namespace BlackGui::Components
         void loginDataSet();
 
         //! Prefill with aircraft dara
-        void fillWithFlightPlanData(const BlackMisc::Aviation::CFlightPlan &flightPlan);
+        void fillWithFlightPlanData(const swift::misc::aviation::CFlightPlan &flightPlan);
 
         //! Get sent flight plan
-        const BlackMisc::Aviation::CFlightPlan &getSentFlightPlan() const { return m_sentFlightPlan; }
+        const swift::misc::aviation::CFlightPlan &getSentFlightPlan() const { return m_sentFlightPlan; }
 
         //! Log.categories
         static const QStringList &getLogCategories();
@@ -104,32 +104,32 @@ namespace BlackGui::Components
         CSimBriefDownloadDialog *m_simBriefDialog = nullptr;
         QMenu *m_navComEquipmentMenu = nullptr;
         QMenu *m_ssrEquipmentMenu = nullptr;
-        BlackMisc::Aviation::CFlightPlan m_sentFlightPlan; //!< my flight plan
-        BlackMisc::Simulation::CAircraftModel m_model; //!< currently used model
-        BlackMisc::Aviation::CComNavEquipment m_navComEquipment; //!< current NAV/COM equipment
-        BlackMisc::Aviation::CSsrEquipment m_ssrEquipment; //!< current SSR equipment
-        BlackMisc::CIdentifier m_identifier { "FlightPlanComponent", this }; //!< Flightplan identifier
-        BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_directories { this }; //!< the swift directories
-        BlackMisc::CSetting<FlightPlanSettings::TRemarksHistory> m_remarksHistory { this }; //!< remarks history
-        BlackMisc::CSetting<FlightPlanSettings::TRemarksHistoryAdditional> m_remarksHistoryAdditional { this }; //!< remarks history
-        BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
-        BlackMisc::CDataReadOnly<BlackMisc::Network::Data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
+        swift::misc::aviation::CFlightPlan m_sentFlightPlan; //!< my flight plan
+        swift::misc::simulation::CAircraftModel m_model; //!< currently used model
+        swift::misc::aviation::CComNavEquipment m_navComEquipment; //!< current NAV/COM equipment
+        swift::misc::aviation::CSsrEquipment m_ssrEquipment; //!< current SSR equipment
+        swift::misc::CIdentifier m_identifier { "FlightPlanComponent", this }; //!< Flightplan identifier
+        swift::misc::CSetting<swift::misc::settings::TDirectorySettings> m_directories { this }; //!< the swift directories
+        swift::misc::CSetting<FlightPlanSettings::TRemarksHistory> m_remarksHistory { this }; //!< remarks history
+        swift::misc::CSetting<FlightPlanSettings::TRemarksHistoryAdditional> m_remarksHistoryAdditional { this }; //!< remarks history
+        swift::misc::CDataReadOnly<swift::misc::simulation::data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
+        swift::misc::CDataReadOnly<swift::misc::network::data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
 
         struct WakeTurbulenceEntry
         {
             QString m_name; //!< Name displayed to the user
-            BlackMisc::Aviation::CWakeTurbulenceCategory m_wtc; //!< Wake turbulence category
+            swift::misc::aviation::CWakeTurbulenceCategory m_wtc; //!< Wake turbulence category
         };
 
         const QList<WakeTurbulenceEntry> m_wakeTurbulenceCategories = {
-            { "Light", BlackMisc::Aviation::CWakeTurbulenceCategory::LIGHT },
-            { "Medium", BlackMisc::Aviation::CWakeTurbulenceCategory::MEDIUM },
-            { "Heavy", BlackMisc::Aviation::CWakeTurbulenceCategory::HEAVY },
-            { "Super", BlackMisc::Aviation::CWakeTurbulenceCategory::SUPER }
+            { "Light", swift::misc::aviation::CWakeTurbulenceCategory::LIGHT },
+            { "Medium", swift::misc::aviation::CWakeTurbulenceCategory::MEDIUM },
+            { "Heavy", swift::misc::aviation::CWakeTurbulenceCategory::HEAVY },
+            { "Super", swift::misc::aviation::CWakeTurbulenceCategory::SUPER }
         }; //!< Mapping CWakeTurbulenceCategory <=> UI name that is shown to the user
 
         //! Validate, generates status messages
-        BlackMisc::CStatusMessageList validateAndInitializeFlightPlan(BlackMisc::Aviation::CFlightPlan &fligtPlan);
+        swift::misc::CStatusMessageList validateAndInitializeFlightPlan(swift::misc::aviation::CFlightPlan &fligtPlan);
 
         //! Default value for ICAO airports
         static const QString &defaultIcao()
@@ -146,16 +146,16 @@ namespace BlackGui::Components
         }
 
         //! Identifier
-        const BlackMisc::CIdentifier &flightPlanIdentifier() const { return m_identifier; }
+        const swift::misc::CIdentifier &flightPlanIdentifier() const { return m_identifier; }
 
         //! Prefill with own aircraft data
         void prefillWithOwnAircraftData();
 
         //! Prefill with aircraft data
-        void prefillWithAircraftData(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool force = false);
+        void prefillWithAircraftData(const swift::misc::simulation::CSimulatedAircraft &aircraft, bool force = false);
 
         //! Prefill with user data
-        void prefillWithUserData(const BlackMisc::Network::CUser &user);
+        void prefillWithUserData(const swift::misc::network::CUser &user);
 
         //! Set completers
         void initCompleters();
@@ -228,7 +228,7 @@ namespace BlackGui::Components
         void syncWithSimulator();
 
         //! Aircraft type as ICAO code
-        BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCode() const;
+        swift::misc::aviation::CAircraftIcaoCode getAircraftIcaoCode() const;
 
         //! Show tab of equipment codes
         void showEquipmentCodesTab();
@@ -237,7 +237,7 @@ namespace BlackGui::Components
         bool isVfr() const;
 
         //! Get the FP flight rules
-        BlackMisc::Aviation::CFlightPlan::FlightRules getFlightRules() const;
+        swift::misc::aviation::CFlightPlan::FlightRules getFlightRules() const;
 
         //! Override remarks message dialog
         bool overrideRemarks();
@@ -282,10 +282,10 @@ namespace BlackGui::Components
         void updateSsrEquipmentUi();
 
         //! Update the wake turbulence category selector
-        void updateWakeTurbulenceCategorySelector(const BlackMisc::Aviation::CWakeTurbulenceCategory &wtc);
+        void updateWakeTurbulenceCategorySelector(const swift::misc::aviation::CWakeTurbulenceCategory &wtc);
 
         //! Get the selected wake turbulence category
-        BlackMisc::Aviation::CWakeTurbulenceCategory getSelectedWakeTurbulenceCategory() const;
+        swift::misc::aviation::CWakeTurbulenceCategory getSelectedWakeTurbulenceCategory() const;
 
         //! Helper to get the QListWidget from a given NAV/COM or SSR menu
         static QListWidget *getMenuEquipmentList(QMenu *menu);

@@ -8,8 +8,8 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/dropbase.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/network/entityflags.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/network/entityflags.h"
 
 #include <QFrame>
 #include <QObject>
@@ -53,14 +53,14 @@ namespace BlackGui::Components
 
         //! Current aircraft ICAO
         //! \return changed
-        bool setAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+        bool setAircraftIcao(const swift::misc::aviation::CAircraftIcaoCode &icao);
 
         //! Current aircraft ICAO
         //! \return changed
         bool setAircraftIcao(int key);
 
         //! ICAO code
-        BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcao() const;
+        swift::misc::aviation::CAircraftIcaoCode getAircraftIcao() const;
 
         //! Raw designator
         QString getRawDesignator() const;
@@ -82,7 +82,7 @@ namespace BlackGui::Components
 
     signals:
         //! ICAO was changed
-        void changedAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+        void changedAircraftIcao(const swift::misc::aviation::CAircraftIcaoCode &icao);
 
     protected:
         //! \copydoc QWidget::dragEnterEvent
@@ -99,7 +99,7 @@ namespace BlackGui::Components
 
     private:
         //! Distributors have been read
-        void onCodesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+        void onCodesRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState readState, int count);
 
         //! Data have been changed
         void onCompleterActivated(const QString &icaoString);
@@ -113,7 +113,7 @@ namespace BlackGui::Components
 
         QScopedPointer<Ui::CDbAircraftIcaoSelectorComponent> ui;
         QScopedPointer<QCompleter> m_completerIcaoDescription;
-        BlackMisc::Aviation::CAircraftIcaoCode m_currentIcao;
+        swift::misc::aviation::CAircraftIcaoCode m_currentIcao;
         Display m_display = DisplayIcaoAndId;
         QStringList m_completerStrings; //!< the completer strings
     };

@@ -7,8 +7,8 @@
 #define BLACKGUI_COMPONENTS_DBOWNMODELSETFORMDIALOG_H
 
 #include "blackgui/components/dbmappingcomponentaware.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/simulatorinfo.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/simulatorinfo.h"
 
 #include <QDialog>
 #include <QObject>
@@ -18,7 +18,7 @@ namespace Ui
 {
     class CDbOwnModelSetFormDialog;
 }
-namespace BlackMisc
+namespace swift::misc
 {
     class CLogCategoryList;
 }
@@ -44,13 +44,13 @@ namespace BlackGui::Components
         virtual ~CDbOwnModelSetFormDialog() override;
 
         //! Last build set
-        const BlackMisc::Simulation::CAircraftModelList &getModelSet() const { return m_modelSet; }
+        const swift::misc::simulation::CAircraftModelList &getModelSet() const { return m_modelSet; }
 
         //! Init last set
-        void setModelSet(const BlackMisc::Simulation::CAircraftModelList &models) { m_modelSet = models; }
+        void setModelSet(const swift::misc::simulation::CAircraftModelList &models) { m_modelSet = models; }
 
         //! Simulator info
-        const BlackMisc::Simulation::CSimulatorInfo &getSimulatorInfo() const { return m_simulatorInfo; }
+        const swift::misc::simulation::CSimulatorInfo &getSimulatorInfo() const { return m_simulatorInfo; }
 
         //! Reload data e.g. current model set and simulator
         void reloadData();
@@ -64,23 +64,23 @@ namespace BlackGui::Components
 
     private:
         QScopedPointer<Ui::CDbOwnModelSetFormDialog> ui;
-        BlackMisc::Simulation::CAircraftModelList m_modelSet;
-        BlackMisc::Simulation::CSimulatorInfo m_simulatorInfo;
+        swift::misc::simulation::CAircraftModelList m_modelSet;
+        swift::misc::simulation::CSimulatorInfo m_simulatorInfo;
 
         //! Button clicked
         void buttonClicked();
 
         //! Simulator changed
-        void simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void simulatorChanged(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Check data
         bool checkData();
 
         //! Set current simulator
-        void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void setSimulator(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Build the set
-        BlackMisc::Simulation::CAircraftModelList buildSet(const BlackMisc::Simulation::CSimulatorInfo &simulator, const BlackMisc::Simulation::CAircraftModelList &currentSet = {});
+        swift::misc::simulation::CAircraftModelList buildSet(const swift::misc::simulation::CSimulatorInfo &simulator, const swift::misc::simulation::CAircraftModelList &currentSet = {});
     };
 } // ns
 

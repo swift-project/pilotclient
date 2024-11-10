@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "joystickwindows.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/metadatautils.h"
+#include "misc/logmessage.h"
+#include "misc/metadatautils.h"
 
 #include "comdef.h"
 #include "Dbt.h"
@@ -13,8 +13,8 @@
 // using ascii functions of WINAPI. To fix it, introduce #ifdef UNICODE and add char
 // handling in the second branch.
 
-using namespace BlackMisc;
-using namespace BlackMisc::Input;
+using namespace swift::misc;
+using namespace swift::misc::input;
 
 namespace swift::input
 {

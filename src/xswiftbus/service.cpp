@@ -4,7 +4,7 @@
 #include "plugin.h"
 #include "service.h"
 #include "utils.h"
-#include "blackmisc/simulation/xplane/qtfreeutils.h"
+#include "misc/simulation/xplane/qtfreeutils.h"
 
 #include <XPLM/XPLMPlanes.h>
 #include <XPLM/XPLMUtilities.h>
@@ -15,7 +15,7 @@
 
 // clazy:excludeall=reserve-candidates
 
-using namespace BlackMisc::Simulation::XPlane::QtFreeUtils;
+using namespace swift::misc::simulation::xplane::qtfreeutils;
 
 namespace XSwiftBus
 {

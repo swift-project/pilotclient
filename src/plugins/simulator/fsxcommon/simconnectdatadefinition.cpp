@@ -4,15 +4,15 @@
 #include "simconnectdatadefinition.h"
 #include "simconnectsymbols.h"
 #include "../fscommon/simulatorfscommonfunctions.h"
-#include "blackmisc/aviation/aircraftparts.h"
-#include "blackmisc/aviation/aircraftenginelist.h"
-#include "blackmisc/logmessage.h"
+#include "misc/aviation/aircraftparts.h"
+#include "misc/aviation/aircraftenginelist.h"
+#include "misc/logmessage.h"
 
 #include <QStringBuilder>
 #include <tuple>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 using namespace BlackSimPlugin::FsCommon;
 
 namespace BlackSimPlugin::FsxCommon

@@ -13,16 +13,16 @@
 #include "blackgui/guiutility.h"
 #include "blackgui/labelandicon.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/icons.h"
+#include "misc/aviation/liverylist.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/icons.h"
 
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QMetaType>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 
@@ -127,7 +127,7 @@ namespace BlackGui::Editors
         try
         {
             CVariant jsonVariant;
-            jsonVariant.convertFromJson(Json::jsonObjectFromString(json));
+            jsonVariant.convertFromJson(json::jsonObjectFromString(json));
             if (!jsonVariant.canConvert<CLiveryList>()) { return; }
             const CLiveryList liveries = jsonVariant.value<CLiveryList>();
             if (!liveries.isEmpty())
@@ -217,7 +217,7 @@ namespace BlackGui::Editors
         this->setValue(m_originalLivery);
     }
 
-    void CLiveryForm::onDroppedLivery(const BlackMisc::CVariant &variantDropped)
+    void CLiveryForm::onDroppedLivery(const swift::misc::CVariant &variantDropped)
     {
         CLivery livery;
         if (variantDropped.canConvert<CLivery>())

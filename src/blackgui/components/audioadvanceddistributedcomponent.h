@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_AUDIOADVANCEDDISTRIBUTEDCOMPONENT_H
 #define BLACKGUI_COMPONENTS_AUDIOADVANCEDDISTRIBUTEDCOMPONENT_H
 
-#include "blackmisc/audio/audiodeviceinfo.h"
+#include "misc/audio/audiodeviceinfo.h"
 
 #include <QFrame>
 #include <QScopedPointer>

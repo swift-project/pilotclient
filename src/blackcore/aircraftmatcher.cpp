@@ -4,19 +4,19 @@
 #include "blackcore/aircraftmatcher.h"
 #include "blackcore/application.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/matchingscript.h"
-#include "blackmisc/simulation/matchingutils.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/fileutils.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/matchingscript.h"
+#include "misc/simulation/matchingutils.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/callsign.h"
+#include "misc/aviation/livery.h"
+#include "misc/fileutils.h"
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
+#include "misc/statusmessagelist.h"
+#include "misc/swiftdirectories.h"
+#include "misc/directoryutils.h"
 
 #include <QList>
 #include <QStringList>
@@ -25,10 +25,10 @@
 #include <QStringBuilder>
 #include <QJSEngine>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
 
 namespace BlackCore
 {

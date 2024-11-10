@@ -10,7 +10,7 @@
 #include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/network/entityflags.h"
+#include "misc/network/entityflags.h"
 
 #include <QObject>
 #include <QScopedPointer>
@@ -19,7 +19,7 @@ namespace Ui
 {
     class CDbAircraftIcaoComponent;
 }
-namespace BlackMisc::Aviation
+namespace swift::misc::aviation
 {
     class CAircraftIcaoCode;
 }
@@ -52,17 +52,17 @@ namespace BlackGui
             BlackGui::Views::CAircraftIcaoCodeView *view() const;
 
             //! Filter by ICAO as default
-            void filter(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+            void filter(const swift::misc::aviation::CAircraftIcaoCode &icao);
 
             //! Select aircraft ICAO object
-            bool selectAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+            bool selectAircraftIcao(const swift::misc::aviation::CAircraftIcaoCode &icao);
 
         private:
             //! ICAO codes have been read
-            void onIcaoRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+            void onIcaoRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState readState, int count);
 
             //! Download progress for an entity
-            void onEntityDownloadProgress(BlackMisc::Network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
+            void onEntityDownloadProgress(swift::misc::network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
 
             //! Reload models
             void onReload();

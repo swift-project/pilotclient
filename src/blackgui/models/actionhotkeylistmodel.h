@@ -7,7 +7,7 @@
 #define BLACKGUI_MODELS_ACTIONHOTKEYLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/input/actionhotkeylist.h"
+#include "misc/input/actionhotkeylist.h"
 
 #include <QAbstractTableModel>
 #include <QModelIndex>
@@ -62,7 +62,7 @@ namespace BlackGui::Models
         void clear();
 
     private:
-        BlackMisc::Input::CActionHotkeyList m_actionHotkeys;
+        swift::misc::input::CActionHotkeyList m_actionHotkeys;
     };
 } // ns
 

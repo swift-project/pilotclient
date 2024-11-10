@@ -10,9 +10,9 @@
 #include "blackgui/mainwindowaccess.h"
 #include "blackgui/managedstatusbar.h"
 #include "blackcore/db/backgrounddataupdater.h"
-#include "blackmisc/loghistory.h"
-#include "blackmisc/identifiable.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/loghistory.h"
+#include "misc/identifiable.h"
+#include "misc/statusmessage.h"
 
 #include <QMainWindow>
 #include <QObject>
@@ -36,7 +36,7 @@ namespace BlackGui::Components
  */
 class CSwiftData :
     public QMainWindow,
-    public BlackMisc::CIdentifiable,
+    public swift::misc::CIdentifiable,
     public BlackGui::IMainWindowAccess
 {
     Q_OBJECT
@@ -87,8 +87,8 @@ private:
     QScopedPointer<Ui::CSwiftData> ui;
     BlackGui::CManagedStatusBar m_statusBar;
     BlackCore::Db::CBackgroundDataUpdater *m_updater = nullptr; //!< consolidate with DB data
-    BlackMisc::CSettingReadOnly<BlackGui::Settings::TBackgroundConsolidation> m_consolidationSettings { this, &CSwiftData::consolidationSettingChanged }; //!< consolidation time
-    BlackMisc::CLogHistoryReplica m_logHistory { this };
+    swift::misc::CSettingReadOnly<BlackGui::Settings::TBackgroundConsolidation> m_consolidationSettings { this, &CSwiftData::consolidationSettingChanged }; //!< consolidation time
+    swift::misc::CLogHistoryReplica m_logHistory { this };
 
     // auto update
     BlackGui::Components::CAutoPublishDialog *m_autoPublishDialog = nullptr; //!< auto publishing dialog

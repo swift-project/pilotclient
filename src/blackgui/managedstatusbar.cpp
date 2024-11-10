@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackgui/managedstatusbar.h"
-#include "blackmisc/iterator.h"
-#include "blackmisc/sequence.h"
+#include "misc/iterator.h"
+#include "misc/sequence.h"
 
 #include <QLabel>
 #include <QFontMetrics>
@@ -15,7 +15,7 @@
 #include <QWidget>
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui
 {

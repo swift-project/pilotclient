@@ -8,14 +8,14 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodelbase.h"
-#include "blackmisc/network/serverlist.h"
+#include "misc/network/serverlist.h"
 
 class QObject;
 
 namespace BlackGui::Models
 {
     //! Server list model
-    class BLACKGUI_EXPORT CServerListModel : public CListModelBase<BlackMisc::Network::CServerList, true>
+    class BLACKGUI_EXPORT CServerListModel : public CListModelBase<swift::misc::network::CServerList, true>
     {
         Q_OBJECT
 

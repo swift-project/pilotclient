@@ -6,8 +6,8 @@
 #ifndef BLACKGUI_ALTITUDEEDIT_H
 #define BLACKGUI_ALTITUDEEDIT_H
 
-#include "blackmisc/aviation/altitude.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/aviation/altitude.h"
+#include "misc/statusmessagelist.h"
 #include "blackgui/blackguiexport.h"
 #include <QLineEdit>
 #include <QRegularExpression>
@@ -26,13 +26,13 @@ namespace BlackGui
         CAltitudeEdit(QWidget *parent = nullptr);
 
         //! Get altitude
-        BlackMisc::Aviation::CAltitude getAltitude() const;
+        swift::misc::aviation::CAltitude getAltitude() const;
 
         //! Set altitude
-        void setAltitude(const BlackMisc::Aviation::CAltitude &altitude);
+        void setAltitude(const swift::misc::aviation::CAltitude &altitude);
 
         //! Valid altitude
-        bool isValid(BlackMisc::CStatusMessageList *msgs = nullptr) const;
+        bool isValid(swift::misc::CStatusMessageList *msgs = nullptr) const;
     };
 } // ns
 

@@ -7,9 +7,9 @@
 #include "blackgui/guiutility.h"
 #include "blackgui/infoarea.h"
 #include "blackgui/stylesheetutility.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/verify.h"
+#include "misc/icons.h"
+#include "misc/logmessage.h"
+#include "misc/verify.h"
 
 #include <QAction>
 #include <QCloseEvent>
@@ -30,7 +30,7 @@
 #include <QWidget>
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui
 {

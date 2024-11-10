@@ -8,9 +8,9 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/sharedstringlistcompleter.h"
-#include "blackmisc/digestsignal.h"
-#include "blackmisc/aviation/callsignset.h"
-#include "blackmisc/network/connectionstatus.h"
+#include "misc/digestsignal.h"
+#include "misc/aviation/callsignset.h"
+#include "misc/network/connectionstatus.h"
 #include <QFrame>
 #include <QScopedPointer>
 #include <QTimer>
@@ -37,10 +37,10 @@ namespace BlackGui::Components
         virtual ~CCallsignCompleter() override;
 
         //! Get the entered callsign
-        BlackMisc::Aviation::CCallsign getCallsign(bool onlyKnownCallsign = true) const;
+        swift::misc::aviation::CCallsign getCallsign(bool onlyKnownCallsign = true) const;
 
         //! Prefill wit callsign
-        void setCallsign(const BlackMisc::Aviation::CCallsign &cs);
+        void setCallsign(const swift::misc::aviation::CCallsign &cs);
 
         //! String as entered
         QString getRawCallsignString() const;
@@ -71,16 +71,16 @@ namespace BlackGui::Components
         void updateCallsignsFromContext();
         void onEditingFinished();
         void onChangedAircraftInRange();
-        void onChangedConnectionStatus(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+        void onChangedConnectionStatus(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
         bool isValidKnownCallsign(const QString &callsignString) const;
 
         //! Shared completer data
         static CSharedStringListCompleter *completer();
 
         QScopedPointer<Ui::CCallsignCompleter> ui;
-        BlackMisc::CDigestSignal m_dsAircraftsInRangeChanged { this, &CCallsignCompleter::onChangedAircraftInRange, 5000, 5 };
-        BlackMisc::CDigestSignal m_dsEditingFinished { this, &CCallsignCompleter::editingFinishedDigest, 500, 3 };
-        BlackMisc::CDigestSignal m_dsValidCallsignEntered { this, &CCallsignCompleter::validCallsignEnteredDigest, 500, 3 };
+        swift::misc::CDigestSignal m_dsAircraftsInRangeChanged { this, &CCallsignCompleter::onChangedAircraftInRange, 5000, 5 };
+        swift::misc::CDigestSignal m_dsEditingFinished { this, &CCallsignCompleter::editingFinishedDigest, 500, 3 };
+        swift::misc::CDigestSignal m_dsValidCallsignEntered { this, &CCallsignCompleter::validCallsignEnteredDigest, 500, 3 };
         QString m_lastValue;
 
         bool m_addOwnCallsign = false;

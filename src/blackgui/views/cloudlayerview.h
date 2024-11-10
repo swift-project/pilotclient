@@ -12,7 +12,7 @@
 
 class QWidget;
 
-namespace BlackMisc::Weather
+namespace swift::misc::weather
 {
     class CCloudLayer;
 }

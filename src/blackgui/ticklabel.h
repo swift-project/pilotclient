@@ -7,7 +7,7 @@
 #define BLACKGUI_TICKLABEL_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/icons.h"
+#include "misc/icons.h"
 
 #include <QLabel>
 #include <QObject>
@@ -45,8 +45,8 @@ namespace BlackGui
         bool m_isPixmapTicked = false; //!< ticked state
         QString m_toolTipTicked = "on";
         QString m_toolTipUnticked = "off";
-        QPixmap m_pixmapTicked = BlackMisc::CIcons::tick16();
-        QPixmap m_pixmapUnticked = BlackMisc::CIcons::cross16();
+        QPixmap m_pixmapTicked = swift::misc::CIcons::tick16();
+        QPixmap m_pixmapUnticked = swift::misc::CIcons::cross16();
 
         //! Set the label
         void setLabel();

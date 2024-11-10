@@ -3,7 +3,7 @@
 
 #include "keyboardwindows.h"
 
-using namespace BlackMisc::Input;
+using namespace swift::misc::input;
 
 namespace swift::input
 {

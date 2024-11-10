@@ -27,21 +27,21 @@ extern "C"
 }
 #    endif
 
-#    include "blackmisc/simulation/fscommon/bcdconversions.h"
-#    include "blackmisc/threadutils.h"
-#    include "blackmisc/logmessage.h"
+#    include "misc/simulation/fscommon/bcdconversions.h"
+#    include "misc/threadutils.h"
+#    include "misc/logmessage.h"
 
 #    include <QDebug>
 #    include <QLatin1Char>
 #    include <QDateTime>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation::FsCommon;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::simulation::fscommon;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::geo;
+using namespace swift::misc::simulation;
+using namespace swift::misc::physical_quantities;
 
 namespace BlackSimPlugin::FsCommon
 {

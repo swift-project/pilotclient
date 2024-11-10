@@ -13,10 +13,10 @@
 #include "blackgui/guiutility.h"
 #include "blackgui/labelandicon.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/aviation/aircrafticaocodelist.h"
-#include "blackmisc/db/datastore.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/icons.h"
+#include "misc/aviation/aircrafticaocodelist.h"
+#include "misc/db/datastore.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/icons.h"
 
 #include <QCheckBox>
 #include <QComboBox>
@@ -24,9 +24,9 @@
 #include <QMetaType>
 #include <QString>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Db;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::db;
 using namespace BlackGui::Components;
 
 namespace BlackGui::Editors
@@ -55,7 +55,7 @@ namespace BlackGui::Editors
     CAircraftIcaoForm::~CAircraftIcaoForm()
     {}
 
-    bool CAircraftIcaoForm::setValue(const BlackMisc::Aviation::CAircraftIcaoCode &icao)
+    bool CAircraftIcaoForm::setValue(const swift::misc::aviation::CAircraftIcaoCode &icao)
     {
         if (icao == m_originalCode) { return false; }
         m_originalCode = icao;
@@ -87,7 +87,7 @@ namespace BlackGui::Editors
         try
         {
             CVariant jsonVariant;
-            jsonVariant.convertFromJson(Json::jsonObjectFromString(json));
+            jsonVariant.convertFromJson(json::jsonObjectFromString(json));
             if (!jsonVariant.canConvert<CAircraftIcaoCodeList>()) { return; }
             const CAircraftIcaoCodeList icaos = jsonVariant.value<CAircraftIcaoCodeList>();
             if (!icaos.isEmpty())
@@ -204,7 +204,7 @@ namespace BlackGui::Editors
         this->setValue(m_originalCode);
     }
 
-    void CAircraftIcaoForm::droppedCode(const BlackMisc::CVariant &variantDropped)
+    void CAircraftIcaoForm::droppedCode(const swift::misc::CVariant &variantDropped)
     {
         CAircraftIcaoCode icao;
         if (variantDropped.canConvert<CAircraftIcaoCode>())

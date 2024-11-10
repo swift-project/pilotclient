@@ -17,19 +17,19 @@
 #include "blackcore/webdataservices.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/airporticaocode.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/network/connectionstatus.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/network/serverlist.h"
-#include "blackmisc/simulation/simulatorinternals.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/crashhandler.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/airporticaocode.h"
+#include "misc/icons.h"
+#include "misc/logmessage.h"
+#include "misc/network/connectionstatus.h"
+#include "misc/network/entityflags.h"
+#include "misc/network/serverlist.h"
+#include "misc/simulation/simulatorinternals.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/statusmessage.h"
+#include "misc/crashhandler.h"
 #include "config/buildconfig.h"
 
 #include <QDialogButtonBox>
@@ -47,11 +47,11 @@
 #include <QPointer>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Audio;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::audio;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
 using namespace BlackCore;
 using namespace BlackCore::Data;
 using namespace BlackCore::Context;

@@ -11,8 +11,8 @@
 #include "blackgui/managedstatusbar.h"
 #include "blackgui/settings/dockwidgetsettings.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/statusmessagelist.h"
+#include "misc/statusmessage.h"
 
 #include <QDockWidget>
 #include <QMargins>
@@ -137,10 +137,10 @@ namespace BlackGui
         void setWindowTitle(const QString &title);
 
         //! Display status message
-        void displayStatusMessage(const BlackMisc::CStatusMessage &statusMessage);
+        void displayStatusMessage(const swift::misc::CStatusMessage &statusMessage);
 
         //! Display status messages
-        void displayStatusMessages(const BlackMisc::CStatusMessageList &statusMessages);
+        void displayStatusMessages(const swift::misc::CStatusMessageList &statusMessages);
 
         //! Value for dynamic property "dockwidget"
         static const QString &propertyOuterWidget();
@@ -246,7 +246,7 @@ namespace BlackGui
         QPoint m_lastFloatingPosition; //!< last floating position
         Qt::DockWidgetAreas m_originalAreas; //!< areas before floating
 
-        BlackMisc::CSetting<BlackGui::Settings::TDockWidget> m_settings { this, &CDockWidget::settingsChanged };
+        swift::misc::CSetting<BlackGui::Settings::TDockWidget> m_settings { this, &CDockWidget::settingsChanged };
 
         //! Top level has been chaged
         void onTopLevelChanged(bool topLevel);

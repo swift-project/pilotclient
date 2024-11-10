@@ -4,12 +4,12 @@
 #include "blackgui/dockwidgetinfobar.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
-#include "blackmisc/icons.h"
+#include "misc/icons.h"
 
 #include <QIcon>
 #include <QString>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui::Components;
 
 namespace BlackGui

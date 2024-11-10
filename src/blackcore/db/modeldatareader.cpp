@@ -6,10 +6,10 @@
 #include "blackcore/db/databaseutils.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/application.h"
-#include "blackmisc/fileutils.h"
-#include "blackmisc/json.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/fileutils.h"
+#include "misc/json.h"
+#include "misc/logmessage.h"
+#include "misc/statusmessage.h"
 
 #include <QDir>
 #include <QFlags>
@@ -27,11 +27,11 @@
 #include <Qt>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Db;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::db;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
+using namespace swift::misc::network;
 using namespace BlackCore::Data;
 using namespace BlackCore::Db;
 

@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackgui/models/distributorfilter.h"
-#include "blackmisc/simulation/distributor.h"
+#include "misc/simulation/distributor.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
 
 namespace BlackGui::Models
 {

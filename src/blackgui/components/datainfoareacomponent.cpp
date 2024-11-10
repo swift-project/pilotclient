@@ -11,13 +11,13 @@
 #include "blackgui/components/dbmodelcomponent.h"
 #include "blackgui/components/dbaircraftcategorycomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
-#include "blackmisc/verify.h"
+#include "misc/icons.h"
+#include "misc/logmessage.h"
+#include "misc/network/entityflags.h"
+#include "misc/statusmessage.h"
+#include "misc/swiftdirectories.h"
+#include "misc/directoryutils.h"
+#include "misc/verify.h"
 #include "ui_datainfoareacomponent.h"
 
 #include <QDateTime>
@@ -25,8 +25,8 @@
 #include <QTabWidget>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 

@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_AIRPORTCOMPLETER_H
 #define BLACKGUI_COMPONENTS_AIRPORTCOMPLETER_H
 
-#include "blackmisc/aviation/airport.h"
+#include "misc/aviation/airport.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -29,10 +29,10 @@ namespace BlackGui::Components
         virtual ~CAirportCompleter();
 
         //! Set airport
-        void setAirport(const BlackMisc::Aviation::CAirport &airport);
+        void setAirport(const swift::misc::aviation::CAirport &airport);
 
         //! Get airport
-        const BlackMisc::Aviation::CAirport &getAirport() const { return m_current; }
+        const swift::misc::aviation::CAirport &getAirport() const { return m_current; }
 
         //! The raw ICAO code text
         QString getIcaoText() const;
@@ -45,7 +45,7 @@ namespace BlackGui::Components
 
     signals:
         //! Airport has been changed
-        void changedAirport(const BlackMisc::Aviation::CAirport &airport);
+        void changedAirport(const swift::misc::aviation::CAirport &airport);
 
     private:
         //! ICAO code has been changed in UI
@@ -61,7 +61,7 @@ namespace BlackGui::Components
         void onAirportsChanged();
 
         QScopedPointer<Ui::CAirportCompleter> ui;
-        BlackMisc::Aviation::CAirport m_current; //!< current airport
+        swift::misc::aviation::CAirport m_current; //!< current airport
     };
 } // ns
 

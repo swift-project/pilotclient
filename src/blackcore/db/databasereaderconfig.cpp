@@ -7,10 +7,10 @@
 #include "blackcore/db/databasereaderconfig.h"
 #include <QStringBuilder>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Db;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::db;
+using namespace swift::misc::network;
+using namespace swift::misc::physical_quantities;
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackCore::Db, CDatabaseReaderConfig)
 BLACK_DEFINE_SEQUENCE_MIXINS(BlackCore::Db, CDatabaseReaderConfig, CDatabaseReaderConfigList)

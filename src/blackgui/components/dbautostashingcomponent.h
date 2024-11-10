@@ -9,18 +9,18 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/dbmappingcomponentaware.h"
 #include "blackcore/progress.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/network/entityflags.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/statusmessage.h"
 
 #include <QDialog>
 #include <QObject>
 #include <QScopedPointer>
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CLogCategoryList;
-    namespace Simulation
+    namespace simulation
     {
         class CAircraftModel;
     }
@@ -98,10 +98,10 @@ namespace BlackGui
             BlackGui::Views::CAircraftModelView *currentModelView() const;
 
             //! Add a status message
-            void addStatusMessage(const BlackMisc::CStatusMessage &msg);
+            void addStatusMessage(const swift::misc::CStatusMessage &msg);
 
             //! Add a status message for a given model (prefixed)
-            void addStatusMessage(const BlackMisc::CStatusMessage &msg, const BlackMisc::Simulation::CAircraftModel &model);
+            void addStatusMessage(const swift::misc::CStatusMessage &msg, const swift::misc::simulation::CAircraftModel &model);
 
             //! Try stashing selected or all models
             void tryToStashModels();
@@ -109,19 +109,19 @@ namespace BlackGui
             //! Try stashing a model
             //! \param model this model can be updated with consolidated data
             //! \return true means stashing is possible
-            bool tryToStashModel(BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::Aviation::CLivery &tempLivery);
+            bool tryToStashModel(swift::misc::simulation::CAircraftModel &model, const swift::misc::aviation::CLivery &tempLivery);
 
             //! Set the model description
-            void setModelDescription(BlackMisc::Simulation::CAircraftModel &model, const QString &description) const;
+            void setModelDescription(swift::misc::simulation::CAircraftModel &model, const QString &description) const;
 
             //! Get the temp.livery if available
-            static BlackMisc::Aviation::CLivery getTempLivery();
+            static swift::misc::aviation::CLivery getTempLivery();
 
             int m_noStashed = 0; //!< stashed models
             int m_noData = 0; //!< not stashed because no data
             int m_noValidationFailed = 0; //!< not stashed because validation failed
             State m_state = Idle; //!< modus
-            BlackMisc::Simulation::CAircraftModelList m_modelsToStash; //!< Models about to be stashed
+            swift::misc::simulation::CAircraftModelList m_modelsToStash; //!< Models about to be stashed
         };
     } // ns
 } // ns

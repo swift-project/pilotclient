@@ -8,8 +8,8 @@
 
 #include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 #include "plugins/simulator/fsxcommon/simconnectdatadefinition.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/interpolation/interpolatormulti.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/interpolation/interpolatormulti.h"
 #include <QSharedPointer>
 #include <QStringList>
 #include <QByteArray>
@@ -36,14 +36,14 @@ namespace BlackSimPlugin::FsxCommon
         CSimConnectObject(SimObjectType type);
 
         //! Constructor providing initial situation/parts
-        CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft,
+        CSimConnectObject(const swift::misc::simulation::CSimulatedAircraft &aircraft,
                           DWORD requestId,
-                          BlackMisc::Simulation::ISimulationEnvironmentProvider *simEnvProvider, BlackMisc::Simulation::IInterpolationSetupProvider *setupProvider,
-                          BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                          BlackMisc::Simulation::CInterpolationLogger *logger);
+                          swift::misc::simulation::ISimulationEnvironmentProvider *simEnvProvider, swift::misc::simulation::IInterpolationSetupProvider *setupProvider,
+                          swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                          swift::misc::simulation::CInterpolationLogger *logger);
 
         //! Get callsign
-        const BlackMisc::Aviation::CCallsign &getCallsign() const { return m_aircraft.getCallsign(); }
+        const swift::misc::aviation::CCallsign &getCallsign() const { return m_aircraft.getCallsign(); }
 
         //! Get callsign
         const QString &getCallsignAsString() const { return m_aircraft.getCallsign().asString(); }
@@ -52,10 +52,10 @@ namespace BlackSimPlugin::FsxCommon
         bool hasCallsign() const { return !this->getCallsign().isEmpty(); }
 
         //! Simulated aircraft (as added)
-        const BlackMisc::Simulation::CSimulatedAircraft &getAircraft() const { return m_aircraft; }
+        const swift::misc::simulation::CSimulatedAircraft &getAircraft() const { return m_aircraft; }
 
         //! Simulated aircraft model
-        const BlackMisc::Simulation::CAircraftModel &getAircraftModel() const { return m_aircraft.getModel(); }
+        const swift::misc::simulation::CAircraftModel &getAircraftModel() const { return m_aircraft.getModel(); }
 
         //! Simulated aircraft model string
         const QString &getAircraftModelString() const { return m_aircraft.getModelString(); }
@@ -82,31 +82,31 @@ namespace BlackSimPlugin::FsxCommon
         void setType(SimObjectType type) { m_type = type; }
 
         //! Set the aircraft
-        void setAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+        void setAircraft(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
         //! Set model string
         void setAircraftModelString(const QString &modelString);
 
         //! Set CG
-        void setAircraftCG(const BlackMisc::PhysicalQuantities::CLength &cg);
+        void setAircraftCG(const swift::misc::physical_quantities::CLength &cg);
 
         //! Get current lights (requested from simulator)
-        const BlackMisc::Aviation::CAircraftLights &getCurrentLightsInSimulator() const { return m_currentLightsInSim; }
+        const swift::misc::aviation::CAircraftLights &getCurrentLightsInSimulator() const { return m_currentLightsInSim; }
 
         //! Received lights in simulator
         bool hasCurrentLightsInSimulator() const { return !m_currentLightsInSim.isNull(); }
 
         //! Set current lights when received from simulator
-        void setCurrentLightsInSimulator(const BlackMisc::Aviation::CAircraftLights &lights) { m_currentLightsInSim = lights; }
+        void setCurrentLightsInSimulator(const swift::misc::aviation::CAircraftLights &lights) { m_currentLightsInSim = lights; }
 
         //! Pretend to have received lights from simulator
         void fakeCurrentLightsInSimulator() { m_currentLightsInSim.setNull(false); }
 
         //! Lights as sent to simulator
-        const BlackMisc::Aviation::CAircraftLights &getLightsAsSent() const { return m_lightsAsSent; }
+        const swift::misc::aviation::CAircraftLights &getLightsAsSent() const { return m_lightsAsSent; }
 
         //! Lights as sent to simulator
-        void setLightsAsSent(const BlackMisc::Aviation::CAircraftLights &lights) { m_lightsAsSent = lights; }
+        void setLightsAsSent(const swift::misc::aviation::CAircraftLights &lights) { m_lightsAsSent = lights; }
 
         //! How often do we request data from simulator for this remote aircraft
         SIMCONNECT_PERIOD getSimDataPeriod() const { return m_requestSimDataPeriod; }
@@ -268,23 +268,23 @@ namespace BlackSimPlugin::FsxCommon
         //! Callsign as LATIN1
         const QByteArray &getCallsignByteArray() const { return m_callsignByteArray; }
 
-        //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolatorInfo
-        QString getInterpolatorInfo(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
+        //! \copydoc swift::misc::simulation::CInterpolator::getInterpolatorInfo
+        QString getInterpolatorInfo(swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
-        //! \copydoc BlackMisc::Simulation::CInterpolator::attachLogger
-        void attachInterpolatorLogger(BlackMisc::Simulation::CInterpolationLogger *logger) const;
+        //! \copydoc swift::misc::simulation::CInterpolator::attachLogger
+        void attachInterpolatorLogger(swift::misc::simulation::CInterpolationLogger *logger) const;
 
-        //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolation
-        BlackMisc::Simulation::CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoch, const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber) const;
+        //! \copydoc swift::misc::simulation::CInterpolator::getInterpolation
+        swift::misc::simulation::CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoch, const swift::misc::simulation::CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber) const;
 
-        //! \copydoc BlackMisc::Simulation::CInterpolator::getLastInterpolatedSituation
-        const BlackMisc::Aviation::CAircraftSituation &getLastInterpolatedSituation(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
+        //! \copydoc swift::misc::simulation::CInterpolator::getLastInterpolatedSituation
+        const swift::misc::aviation::CAircraftSituation &getLastInterpolatedSituation(swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
-        //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolationMessages
-        const BlackMisc::CStatusMessageList &getInterpolationMessages(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
+        //! \copydoc swift::misc::simulation::CInterpolator::getInterpolationMessages
+        const swift::misc::CStatusMessageList &getInterpolationMessages(swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
         //! Interpolator
-        BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() const { return m_interpolator.data(); }
+        swift::misc::simulation::CInterpolatorMulti *getInterpolator() const { return m_interpolator.data(); }
 
         //! SimObject as string
         QString toQString() const;
@@ -302,7 +302,7 @@ namespace BlackSimPlugin::FsxCommon
         static bool isAircraft(SimObjectType type);
 
     private:
-        BlackMisc::Simulation::CSimulatedAircraft m_aircraft; //!< corresponding aircraft
+        swift::misc::simulation::CSimulatedAircraft m_aircraft; //!< corresponding aircraft
         SimObjectType m_type = AircraftNonAtc;
         DWORD m_requestId = 0;
         DWORD m_objectId = 0;
@@ -321,14 +321,14 @@ namespace BlackSimPlugin::FsxCommon
         SIMCONNECT_DATA_PBH m_cameraRotation;
         QByteArray m_callsignByteArray;
         QString m_observerName;
-        BlackMisc::Aviation::CAircraftLights m_currentLightsInSim { nullptr }; //!< current lights to know state for toggling
-        BlackMisc::Aviation::CAircraftLights m_lightsAsSent { nullptr }; //!< lights as sent to simulator
+        swift::misc::aviation::CAircraftLights m_currentLightsInSim { nullptr }; //!< current lights to know state for toggling
+        swift::misc::aviation::CAircraftLights m_lightsAsSent { nullptr }; //!< lights as sent to simulator
         SIMCONNECT_PERIOD m_requestSimDataPeriod = SIMCONNECT_PERIOD_NEVER; //!< how often do we query ground elevation
-        QSharedPointer<BlackMisc::Simulation::CInterpolatorMulti> m_interpolator; //!< shared pointer because CSimConnectObject can be copied
+        QSharedPointer<swift::misc::simulation::CInterpolatorMulti> m_interpolator; //!< shared pointer because CSimConnectObject can be copied
     };
 
     //! Simulator objects (aka AI aircraft)
-    class CSimConnectObjects : public QHash<BlackMisc::Aviation::CCallsign, CSimConnectObject>
+    class CSimConnectObjects : public QHash<swift::misc::aviation::CCallsign, CSimConnectObject>
     {
     public:
         //! Insert
@@ -338,7 +338,7 @@ namespace BlackSimPlugin::FsxCommon
         bool setSimConnectObjectIdForRequestId(DWORD requestId, DWORD objectId);
 
         //! Find which callsign belongs to the object id
-        BlackMisc::Aviation::CCallsign getCallsignForObjectId(DWORD objectId) const;
+        swift::misc::aviation::CCallsign getCallsignForObjectId(DWORD objectId) const;
 
         //! Get object per object id
         CSimConnectObject getSimObjectForObjectId(DWORD objectId) const;
@@ -365,7 +365,7 @@ namespace BlackSimPlugin::FsxCommon
         int removeAllProbes();
 
         //! Remove callsigns
-        int removeCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns);
+        int removeCallsigns(const swift::misc::aviation::CCallsignSet &callsigns);
 
         //! Remove all pending added objects
         CSimConnectObjects removeOutdatedPendingAdded(CSimConnectObject::SimObjectType type);
@@ -386,7 +386,7 @@ namespace BlackSimPlugin::FsxCommon
         int countConfirmedAdded();
 
         //! Get all callsigns
-        BlackMisc::Aviation::CCallsignSet getAllCallsigns(bool withoutProbes = true) const;
+        swift::misc::aviation::CCallsignSet getAllCallsigns(bool withoutProbes = true) const;
 
         //! Get all callsign strings
         QStringList getAllCallsignStrings(bool sorted = false, bool withoutProbes = true) const;
@@ -395,10 +395,10 @@ namespace BlackSimPlugin::FsxCommon
         QString getAllCallsignStringsAsString(bool sorted = false, const QString &separator = ", ") const;
 
         //! Callsigns of pending added callsigns
-        BlackMisc::Aviation::CCallsignSet getPendingAddedCallsigns() const;
+        swift::misc::aviation::CCallsignSet getPendingAddedCallsigns() const;
 
         //! Callsigns of pending removed callsigns
-        BlackMisc::Aviation::CCallsignSet getPendingRemovedCallsigns() const;
+        swift::misc::aviation::CCallsignSet getPendingRemovedCallsigns() const;
 
         //! Get by type
         QList<CSimConnectObject> getByType(CSimConnectObject::SimObjectType type) const;

@@ -7,9 +7,9 @@ namespace BlackGui::Models
 {
     // see here for the reason of thess forward instantiations
     // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
-    template class CListModelBase<BlackMisc::Network::CServerList, true>;
-    template class CListModelBase<BlackMisc::Network::CUserList, true>;
-    template class CListModelBase<BlackMisc::Network::CTextMessageList, true>;
-    template class CListModelBase<BlackMisc::Network::CClientList, false>;
+    template class CListModelBase<swift::misc::network::CServerList, true>;
+    template class CListModelBase<swift::misc::network::CUserList, true>;
+    template class CListModelBase<swift::misc::network::CTextMessageList, true>;
+    template class CListModelBase<swift::misc::network::CClientList, false>;
 
 } // namespace

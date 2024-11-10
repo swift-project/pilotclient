@@ -8,8 +8,8 @@
 
 #include "blackgui/editors/form.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/network/entityflags.h"
+#include "misc/network/user.h"
+#include "misc/network/entityflags.h"
 #include <QFrame>
 #include <QScopedPointer>
 #include <QIntValidator>
@@ -36,10 +36,10 @@ namespace BlackGui::Editors
         void setVatsimValidation(bool vatsim);
 
         //! Values as user
-        BlackMisc::Network::CUser getUser() const;
+        swift::misc::network::CUser getUser() const;
 
         //! Set user values
-        bool setUser(const BlackMisc::Network::CUser &user, bool ignoreEmptyUser = false);
+        bool setUser(const swift::misc::network::CUser &user, bool ignoreEmptyUser = false);
 
         //! Clear values
         void clear();
@@ -47,7 +47,7 @@ namespace BlackGui::Editors
         //! \name Form class implementations
         //! @{
         virtual void setReadOnly(bool readonly) override;
-        virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+        virtual swift::misc::CStatusMessageList validate(bool nested = false) const override;
         //! @}
 
     private:

@@ -8,43 +8,43 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/modelfilter.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/distributor.h"
-#include "blackmisc/simulation/simulatorinfo.h"
-#include "blackmisc/db/datastore.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/distributor.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/db/datastore.h"
 
 #include <QString>
 
 namespace BlackGui::Models
 {
     //! Filter for aircraft models
-    class BLACKGUI_EXPORT CAircraftModelFilter : public IModelFilter<BlackMisc::Simulation::CAircraftModelList>
+    class BLACKGUI_EXPORT CAircraftModelFilter : public IModelFilter<swift::misc::simulation::CAircraftModelList>
     {
     public:
         //! Constructor
         CAircraftModelFilter(int id,
                              const QString &modelKey, const QString &description,
-                             BlackMisc::Simulation::CAircraftModel::ModelModeFilter modelMode,
-                             BlackMisc::Db::DbKeyStateFilter dbKeyFilter,
+                             swift::misc::simulation::CAircraftModel::ModelModeFilter modelMode,
+                             swift::misc::db::DbKeyStateFilter dbKeyFilter,
                              Qt::CheckState military, Qt::CheckState colorLiveries,
                              const QString &aircraftIcao, const QString &aircraftManufacturer,
                              const QString &airlineIcao, const QString &airlineName,
                              const QString &liveryCode,
                              const QString &fileName,
                              const QString &combinedType,
-                             const BlackMisc::Simulation::CSimulatorInfo &simInfo = BlackMisc::Simulation::CSimulatorInfo::allSimulators(),
-                             const BlackMisc::Simulation::CDistributor &distributor = BlackMisc::Simulation::CDistributor());
+                             const swift::misc::simulation::CSimulatorInfo &simInfo = swift::misc::simulation::CSimulatorInfo::allSimulators(),
+                             const swift::misc::simulation::CDistributor &distributor = swift::misc::simulation::CDistributor());
 
         //! \copydoc IModelFilter::filter
-        virtual BlackMisc::Simulation::CAircraftModelList filter(const BlackMisc::Simulation::CAircraftModelList &inContainer) const override;
+        virtual swift::misc::simulation::CAircraftModelList filter(const swift::misc::simulation::CAircraftModelList &inContainer) const override;
 
     private:
         int m_id = -1;
         QString m_modelKey;
         QString m_description;
-        BlackMisc::Simulation::CAircraftModel::ModelModeFilter m_modelMode;
-        BlackMisc::Db::DbKeyStateFilter m_dbKeyFilter;
+        swift::misc::simulation::CAircraftModel::ModelModeFilter m_modelMode;
+        swift::misc::db::DbKeyStateFilter m_dbKeyFilter;
         Qt::CheckState m_military;
         Qt::CheckState m_colorLiveries;
         QString m_aircraftIcao;
@@ -54,8 +54,8 @@ namespace BlackGui::Models
         QString m_liveryCode;
         QString m_fileName;
         QString m_combinedType;
-        BlackMisc::Simulation::CSimulatorInfo m_simulatorInfo;
-        BlackMisc::Simulation::CDistributor m_distributor;
+        swift::misc::simulation::CSimulatorInfo m_simulatorInfo;
+        swift::misc::simulation::CDistributor m_distributor;
         bool valid() const;
     };
 } // namespace

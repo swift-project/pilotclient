@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_AIRCRAFTPARTSCOMPONENT_H
 #define BLACKGUI_COMPONENTS_AIRCRAFTPARTSCOMPONENT_H
 
-#include "blackmisc/aviation/callsign.h"
+#include "misc/aviation/callsign.h"
 
 #include <QFrame>
 #include <QScopedPointer>
@@ -30,11 +30,11 @@ namespace BlackGui::Components
         virtual ~CAircraftPartsComponent() override;
 
         //! Set selected callsign
-        void setCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+        void setCallsign(const swift::misc::aviation::CCallsign &callsign);
 
     signals:
         //! Currently used callsign
-        void callsignChanged(const BlackMisc::Aviation::CCallsign &callsign);
+        void callsignChanged(const swift::misc::aviation::CCallsign &callsign);
 
     private:
         //! Send aircraft parts

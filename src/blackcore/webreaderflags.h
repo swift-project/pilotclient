@@ -7,7 +7,7 @@
 #define BLACKCORE_CWEBREADERFLAGS_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/network/entityflags.h"
+#include "misc/network/entityflags.h"
 
 #include <QFlags>
 #include <QMetaType>
@@ -39,16 +39,16 @@ namespace BlackCore
         Q_DECLARE_FLAGS(WebReader, WebReaderFlag)
 
         //! Relationship between readers and entities
-        static WebReader entitiesToReaders(BlackMisc::Network::CEntityFlags::Entity entities);
+        static WebReader entitiesToReaders(swift::misc::network::CEntityFlags::Entity entities);
 
         //! Cast
         static WebReader webReaderFlagToWebReader(WebReaderFlag flag);
 
         //! All entities readers can read
-        static BlackMisc::Network::CEntityFlags::Entity allEntitiesForReaders(WebReader readers);
+        static swift::misc::network::CEntityFlags::Entity allEntitiesForReaders(WebReader readers);
 
         //! Reads from swift DB?
-        static bool isFromSwiftDb(BlackMisc::Network::CEntityFlags::Entity entity);
+        static bool isFromSwiftDb(swift::misc::network::CEntityFlags::Entity entity);
 
         //! Reader for swift DB?
         static bool isFromSwiftDb(WebReader reader);

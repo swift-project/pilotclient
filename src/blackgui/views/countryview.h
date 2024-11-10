@@ -9,7 +9,7 @@
 #include "blackgui/views/viewbase.h"
 #include "blackgui/models/countrylistmodel.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/countrylist.h"
+#include "misc/countrylist.h"
 
 namespace BlackGui::Views
 {

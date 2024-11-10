@@ -6,15 +6,15 @@
 
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackmisc/aviation/atcstationlist.h"
+#include "misc/aviation/atcstationlist.h"
 
 #include <math.h>
 #include <QGridLayout>
 #include <QPushButton>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 

@@ -4,7 +4,7 @@
 #include "dbownmodelsetdialog.h"
 #include "ui_dbownmodelsetdialog.h"
 
-using namespace BlackMisc::Simulation;
+using namespace swift::misc::simulation;
 
 namespace BlackGui::Components
 {

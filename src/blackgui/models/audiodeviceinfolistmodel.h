@@ -8,13 +8,13 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodelbase.h"
-#include "blackmisc/audio/audiodeviceinfolist.h"
+#include "misc/audio/audiodeviceinfolist.h"
 
 namespace BlackGui::Models
 {
     //! Audio device list model
     class BLACKGUI_EXPORT CAudioDeviceInfoListModel :
-        public CListModelBase<BlackMisc::Audio::CAudioDeviceInfoList, true>
+        public CListModelBase<swift::misc::audio::CAudioDeviceInfoList, true>
     {
         Q_OBJECT
 

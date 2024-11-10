@@ -7,7 +7,7 @@
 #define BLACKSOUND_NOTIFICATIONPLAYER_H
 
 #include "sound/swiftsoundexport.h"
-#include "blackmisc/audio/notificationsounds.h"
+#include "misc/audio/notificationsounds.h"
 
 #include <QObject>
 #include <QHash>
@@ -29,13 +29,13 @@ namespace swift::sound
         virtual ~CNotificationPlayer() override {}
 
         //! Play notification sound
-        void play(BlackMisc::Audio::CNotificationSounds::NotificationFlag notification, int volume = 100);
+        void play(swift::misc::audio::CNotificationSounds::NotificationFlag notification, int volume = 100);
 
         //! Update the directory
         void updateDirectory(const QString &directory);
 
     private:
-        QHash<BlackMisc::Audio::CNotificationSounds::NotificationFlag, QSoundEffect *> m_effects;
+        QHash<swift::misc::audio::CNotificationSounds::NotificationFlag, QSoundEffect *> m_effects;
         QString m_directory;
         QPointer<QSoundEffect> m_playingEffect;
         int m_playingEffectCounter = 0;
@@ -44,7 +44,7 @@ namespace swift::sound
         void onPlayingChanged();
 
         //! Update an effect
-        void updateEffect(BlackMisc::Audio::CNotificationSounds::NotificationFlag f, const QString &directory, const QString &name);
+        void updateEffect(swift::misc::audio::CNotificationSounds::NotificationFlag f, const QString &directory, const QString &name);
     };
 } // ns
 

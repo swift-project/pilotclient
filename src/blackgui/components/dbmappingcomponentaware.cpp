@@ -6,7 +6,7 @@
 
 #include <QObject>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Components
 {

@@ -14,7 +14,7 @@
 #include <QTimer>
 #include <QPointer>
 
-using namespace BlackMisc::Aviation;
+using namespace swift::misc::aviation;
 using namespace BlackGui;
 
 namespace BlackGui

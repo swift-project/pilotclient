@@ -6,8 +6,8 @@
 #include "blackgui/filters/liveryfilterbar.h"
 #include "blackgui/models/liveryfilter.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/aviation/liverylist.h"
+#include "misc/aviation/livery.h"
+#include "misc/aviation/liverylist.h"
 #include "ui_liveryfilterbar.h"
 
 #include <QCheckBox>
@@ -15,7 +15,7 @@
 #include <QSlider>
 #include <QtGlobal>
 
-using namespace BlackMisc::Aviation;
+using namespace swift::misc::aviation;
 using namespace BlackGui::Models;
 using namespace BlackGui::Components;
 
@@ -118,7 +118,7 @@ namespace BlackGui::Filters
         ui->cb_Colors->setChecked(true);
     }
 
-    void CLiveryFilterBar::onColorChanged(const BlackMisc::CRgbColor &color)
+    void CLiveryFilterBar::onColorChanged(const swift::misc::CRgbColor &color)
     {
         this->triggerFilter();
         Q_UNUSED(color);

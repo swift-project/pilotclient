@@ -4,7 +4,7 @@
 #include "airportdialog.h"
 #include "ui_airportdialog.h"
 
-using namespace BlackMisc::Aviation;
+using namespace swift::misc::aviation;
 
 namespace BlackGui::Components
 {

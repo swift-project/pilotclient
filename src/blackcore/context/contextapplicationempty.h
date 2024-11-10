@@ -9,7 +9,7 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/corefacade.h"
-#include "blackmisc/identifierlist.h"
+#include "misc/identifierlist.h"
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -29,7 +29,7 @@ namespace BlackCore
 
         public slots:
             //! \copydoc IContextApplication::changeSettings
-            virtual void changeSettings(const BlackMisc::CValueCachePacket &settings, const BlackMisc::CIdentifier &origin) override
+            virtual void changeSettings(const swift::misc::CValueCachePacket &settings, const swift::misc::CIdentifier &origin) override
             {
                 Q_UNUSED(settings);
                 Q_UNUSED(origin);
@@ -37,10 +37,10 @@ namespace BlackCore
             }
 
             //! \copydoc IContextApplication::getAllSettings
-            virtual BlackMisc::CValueCachePacket getAllSettings() const override
+            virtual swift::misc::CValueCachePacket getAllSettings() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return BlackMisc::CValueCachePacket();
+                return swift::misc::CValueCachePacket();
             }
 
             //! \copydoc IContextApplication::getUnsavedSettingsKeys
@@ -64,30 +64,30 @@ namespace BlackCore
             }
 
             //! \copydoc IContextApplication::saveSettings
-            virtual BlackMisc::CStatusMessage saveSettings(const QString &keyPrefix = {}) override
+            virtual swift::misc::CStatusMessage saveSettings(const QString &keyPrefix = {}) override
             {
                 Q_UNUSED(keyPrefix);
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return BlackMisc::CStatusMessage();
+                return swift::misc::CStatusMessage();
             }
 
             //! \copydoc IContextApplication::saveSettingsByKey
-            virtual BlackMisc::CStatusMessage saveSettingsByKey(const QStringList &keys) override
+            virtual swift::misc::CStatusMessage saveSettingsByKey(const QStringList &keys) override
             {
                 Q_UNUSED(keys);
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return BlackMisc::CStatusMessage();
+                return swift::misc::CStatusMessage();
             }
 
             //! \copydoc IContextApplication::loadSettings
-            virtual BlackMisc::CStatusMessage loadSettings() override
+            virtual swift::misc::CStatusMessage loadSettings() override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return BlackMisc::CStatusMessage();
+                return swift::misc::CStatusMessage();
             }
 
             //! \copydoc IContextApplication::registerHotkeyActions
-            virtual void registerHotkeyActions(const QStringList &actions, const BlackMisc::CIdentifier &origin) override
+            virtual void registerHotkeyActions(const QStringList &actions, const swift::misc::CIdentifier &origin) override
             {
                 Q_UNUSED(actions);
                 Q_UNUSED(origin);
@@ -95,7 +95,7 @@ namespace BlackCore
             }
 
             //! \copydoc IContextApplication::callHotkeyActionRemotely
-            virtual void callHotkeyActionRemotely(const QString &action, bool argument, const BlackMisc::CIdentifier &origin) override
+            virtual void callHotkeyActionRemotely(const QString &action, bool argument, const swift::misc::CIdentifier &origin) override
             {
                 Q_UNUSED(action);
                 Q_UNUSED(argument);
@@ -104,32 +104,32 @@ namespace BlackCore
             }
 
             //! \copydoc IContextApplication::registerApplication
-            virtual BlackMisc::CIdentifier registerApplication(const BlackMisc::CIdentifier &application) override
+            virtual swift::misc::CIdentifier registerApplication(const swift::misc::CIdentifier &application) override
             {
                 Q_UNUSED(application);
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return BlackMisc::CIdentifier();
+                return swift::misc::CIdentifier();
             }
 
             //! \copydoc IContextApplication::unregisterApplication
-            virtual void unregisterApplication(const BlackMisc::CIdentifier &application) override
+            virtual void unregisterApplication(const swift::misc::CIdentifier &application) override
             {
                 Q_UNUSED(application);
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc IContextApplication::getRegisteredApplications
-            virtual BlackMisc::CIdentifierList getRegisteredApplications() const override
+            virtual swift::misc::CIdentifierList getRegisteredApplications() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return BlackMisc::CIdentifierList();
+                return swift::misc::CIdentifierList();
             }
 
             //! \copydoc IContextApplication::getApplicationIdentifier
-            virtual BlackMisc::CIdentifier getApplicationIdentifier() const override
+            virtual swift::misc::CIdentifier getApplicationIdentifier() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return BlackMisc::CIdentifier();
+                return swift::misc::CIdentifier();
             }
         };
     } // namespace

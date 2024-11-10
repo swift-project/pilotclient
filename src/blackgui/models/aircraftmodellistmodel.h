@@ -8,7 +8,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodeldbobjects.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
+#include "misc/simulation/aircraftmodellist.h"
 
 #include <QBrush>
 #include <QStringList>
@@ -17,7 +17,7 @@
 
 class QModelIndex;
 
-namespace BlackMisc::Simulation
+namespace swift::misc::simulation
 {
     class CAircraftModel;
 }
@@ -25,13 +25,13 @@ namespace BlackGui::Models
 {
     //! Aircraft model list model
     class BLACKGUI_EXPORT CAircraftModelListModel :
-        public COrderableListModelDbObjects<BlackMisc::Simulation::CAircraftModelList, int, true>
+        public COrderableListModelDbObjects<swift::misc::simulation::CAircraftModelList, int, true>
     {
         Q_OBJECT
 
     public:
         //! How to display
-        //! \sa BlackMisc::Simulation::CAircraftModel::ModelType
+        //! \sa swift::misc::simulation::CAircraftModel::ModelType
         enum AircraftModelMode
         {
             NotSet,
@@ -59,7 +59,7 @@ namespace BlackGui::Models
         void setHighlightModelStrings(const QStringList &modelStrings = QStringList());
 
         //! Highlight models
-        void setHighlightModels(const BlackMisc::Simulation::CAircraftModelList &highlightModels);
+        void setHighlightModels(const swift::misc::simulation::CAircraftModelList &highlightModels);
 
         //! Highlight models
         bool highlightModels() const { return m_highlightModels; }
@@ -80,7 +80,7 @@ namespace BlackGui::Models
         QStringList getModelStrings(bool sort) const;
 
         //! Replace models with same model string, or just add
-        void replaceOrAddByModelString(const BlackMisc::Simulation::CAircraftModelList &models);
+        void replaceOrAddByModelString(const swift::misc::simulation::CAircraftModelList &models);
 
         //! \copydoc QAbstractItemModel::data
         virtual QVariant data(const QModelIndex &index, int role) const override;

@@ -2,13 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "notificationplayer.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/swiftdirectories.h"
+#include "misc/logmessage.h"
+#include "misc/swiftdirectories.h"
 #include "sound/sampleprovider/samples.h"
 #include <QTimer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Audio;
+using namespace swift::misc;
+using namespace swift::misc::audio;
 using namespace swift::sound::sample_provider;
 
 namespace swift::sound

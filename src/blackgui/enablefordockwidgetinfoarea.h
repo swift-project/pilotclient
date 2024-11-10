@@ -7,7 +7,7 @@
 #define BLACKGUI_ENABLEFORDOCKWIDGETINFOAREA_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/connectionguard.h"
+#include "misc/connectionguard.h"
 
 class QWidget;
 
@@ -59,7 +59,7 @@ namespace BlackGui
         virtual ~CEnableForDockWidgetInfoArea() {}
 
         CDockWidgetInfoArea *m_parentDockableInfoArea = nullptr; //!< my parent dockable widget
-        BlackMisc::CConnectionGuard m_connections; //!< connections
+        swift::misc::CConnectionGuard m_connections; //!< connections
     };
 } // namespace
 

@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_DBLIVERYCOLORSEARCH_H
 #define BLACKGUI_COMPONENTS_DBLIVERYCOLORSEARCH_H
 
-#include "blackmisc/aviation/livery.h"
+#include "misc/aviation/livery.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -31,10 +31,10 @@ namespace BlackGui::Components
         ~CDbLiveryColorSearch();
 
         //! Found livery if any, otherwise default
-        BlackMisc::Aviation::CLivery getLivery() const;
+        swift::misc::aviation::CLivery getLivery() const;
 
         //! Preset colors
-        void presetColorLivery(const BlackMisc::Aviation::CLivery &livery);
+        void presetColorLivery(const swift::misc::aviation::CLivery &livery);
 
     private:
         QScopedPointer<Ui::CDbLiveryColorSearch> ui;

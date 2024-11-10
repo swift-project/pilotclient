@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackgui/guiapplication.h"
-#include "blackmisc/fileutils.h"
-#include "blackmisc/directoryutils.h"
+#include "misc/fileutils.h"
+#include "misc/directoryutils.h"
 #include "abouthtmlcomponent.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
-#include "blackmisc/fileutils.h"
+#include "misc/swiftdirectories.h"
+#include "misc/directoryutils.h"
+#include "misc/fileutils.h"
 #include "ui_abouthtmlcomponent.h"
 
 #include <QFile>
@@ -15,7 +15,7 @@
 #include <QPointer>
 #include <QDesktopServices>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Components
 {

@@ -8,9 +8,9 @@
 
 #include "blackgui/editors/form.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/variant.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/statusmessagelist.h"
+#include "misc/variant.h"
 
 #include <QObject>
 #include <QScopedPointer>
@@ -36,7 +36,7 @@ namespace BlackGui::Editors
         virtual ~CAircraftIcaoForm() override;
 
         //! Get value
-        BlackMisc::Aviation::CAircraftIcaoCode getValue() const;
+        swift::misc::aviation::CAircraftIcaoCode getValue() const;
 
         //! Allow to drop
         void allowDrop(bool allowDrop);
@@ -48,7 +48,7 @@ namespace BlackGui::Editors
         //! @{
         virtual void setReadOnly(bool readonly) override;
         virtual void setSelectOnly() override;
-        virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+        virtual swift::misc::CStatusMessageList validate(bool nested = false) const override;
         //! @}
 
         //! Clear
@@ -59,7 +59,7 @@ namespace BlackGui::Editors
 
     public slots:
         //! Set value
-        bool setValue(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+        bool setValue(const swift::misc::aviation::CAircraftIcaoCode &icao);
 
     protected:
         //! \copydoc CForm::jsonPasted
@@ -67,10 +67,10 @@ namespace BlackGui::Editors
 
     private:
         QScopedPointer<Ui::CAircraftIcaoForm> ui;
-        BlackMisc::Aviation::CAircraftIcaoCode m_originalCode;
+        swift::misc::aviation::CAircraftIcaoCode m_originalCode;
 
         //! Variant has been dropped
-        void droppedCode(const BlackMisc::CVariant &variantDropped);
+        void droppedCode(const swift::misc::CVariant &variantDropped);
 
         //! Id has been entered
         void idEntered();

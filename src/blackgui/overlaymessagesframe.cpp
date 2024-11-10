@@ -6,8 +6,8 @@
 #include "blackgui/dockwidgetinfoarea.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/guiutility.h"
-#include "blackmisc/network/textmessage.h"
-#include "blackmisc/verify.h"
+#include "misc/network/textmessage.h"
+#include "misc/verify.h"
 
 #include <QKeyEvent>
 #include <QPoint>
@@ -16,8 +16,8 @@
 #include <Qt>
 #include <algorithm>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 
 namespace BlackGui
 {

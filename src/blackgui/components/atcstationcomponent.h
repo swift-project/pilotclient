@@ -9,11 +9,11 @@
 #include "blackgui/settings/viewupdatesettings.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/pq/frequency.h"
-#include "blackmisc/identifiable.h"
-#include "blackmisc/network/connectionstatus.h"
+#include "misc/aviation/atcstation.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/pq/frequency.h"
+#include "misc/identifiable.h"
+#include "misc/network/connectionstatus.h"
 
 #include <QDateTime>
 #include <QModelIndex>
@@ -31,7 +31,7 @@ namespace Ui
 {
     class CAtcStationComponent;
 }
-namespace BlackMisc::Aviation
+namespace swift::misc::aviation
 {
     class CCallsign;
 }
@@ -44,7 +44,7 @@ namespace BlackGui
         //! ATC stations component
         class BLACKGUI_EXPORT CAtcStationComponent :
             public COverlayMessagesFrameEnableForDockWidgetInfoArea,
-            public BlackMisc::CIdentifiable
+            public swift::misc::CIdentifiable
         {
             Q_OBJECT
 
@@ -84,7 +84,7 @@ namespace BlackGui
 
         private:
             //! ATC station disconnected
-            void atcStationDisconnected(const BlackMisc::Aviation::CAtcStation &station);
+            void atcStationDisconnected(const swift::misc::aviation::CAtcStation &station);
 
             //! Get all METARs
             void getMetarAsEntered();
@@ -93,19 +93,19 @@ namespace BlackGui
             void requestAtisUpdates();
 
             //! A station has been selected
-            void onOnlineAtcStationSelected(const BlackMisc::Aviation::CAtcStation &station);
+            void onOnlineAtcStationSelected(const swift::misc::aviation::CAtcStation &station);
 
             //! Online ATC station selected
-            void onOnlineAtcStationVariantSelected(const BlackMisc::CVariant &object);
+            void onOnlineAtcStationVariantSelected(const swift::misc::CVariant &object);
 
             //! Trigger a selection of an onlie station (async)
-            void triggerOnlineAtcStationSelected(const BlackMisc::Aviation::CAtcStation &station);
+            void triggerOnlineAtcStationSelected(const swift::misc::aviation::CAtcStation &station);
 
             //! Online stations changed
             void changedAtcStationsOnline();
 
             //! Connection status has been changed
-            void connectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+            void connectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
 
             //! Request dummy ATC online stations
             void testCreateDummyOnlineAtcStations(int number);
@@ -120,7 +120,7 @@ namespace BlackGui
             void setOnlineTabs(int count, int filtered);
 
             //! Set COM frequency
-            void setComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit unit);
+            void setComFrequency(const swift::misc::physical_quantities::CFrequency &frequency, swift::misc::aviation::CComSystem::ComUnit unit);
 
             //! Airports read from web readers
             void airportsRead();
@@ -152,10 +152,10 @@ namespace BlackGui
             QScopedPointer<Ui::CAtcStationComponent> ui;
             QTimer m_updateTimer;
             QList<int> m_splitterSizes;
-            BlackMisc::Aviation::CCallsign m_selectedCallsign;
+            swift::misc::aviation::CCallsign m_selectedCallsign;
             QDateTime m_timestampLastReadOnlineStations; //!< stations read
             QDateTime m_timestampOnlineStationsChanged; //!< stations marked as changed
-            BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settingsView { this, &CAtcStationComponent::settingsChanged };
+            swift::misc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settingsView { this, &CAtcStationComponent::settingsChanged };
         };
     } // namespace
 } // namespace

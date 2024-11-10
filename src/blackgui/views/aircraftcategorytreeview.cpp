@@ -4,7 +4,7 @@
 #include "blackgui/views/aircraftcategorytreeview.h"
 #include "blackgui/models/aircraftcategorytreemodel.h"
 #include "blackgui/menus/menuaction.h"
-#include "blackmisc/icons.h"
+#include "misc/icons.h"
 #include "config/buildconfig.h"
 
 #include <QFlags>
@@ -13,8 +13,8 @@
 #include <QAction>
 #include <QModelIndex>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 using namespace BlackGui::Models;
 
 namespace BlackGui::Views

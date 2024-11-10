@@ -6,16 +6,16 @@
 #include "blackcore/db/airportdatareader.h"
 #include "blackcore/webdataservices.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/aviation/airport.h"
+#include "misc/aviation/airport.h"
 #include "ui_coordinateform.h"
 
 #include <QIntValidator>
 
 using namespace BlackGui;
-using namespace BlackMisc;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::geo;
+using namespace swift::misc::aviation;
+using namespace swift::misc::physical_quantities;
 
 namespace BlackGui::Editors
 {

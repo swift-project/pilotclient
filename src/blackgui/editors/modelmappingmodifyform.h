@@ -8,7 +8,7 @@
 
 #include "blackgui/editors/form.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/propertyindexvariantmap.h"
+#include "misc/propertyindexvariantmap.h"
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
@@ -19,7 +19,7 @@ namespace Ui
 {
     class CModelMappingModifyForm;
 }
-namespace BlackMisc::Simulation
+namespace swift::misc::simulation
 {
     class CAircraftModel;
 }
@@ -40,10 +40,10 @@ namespace BlackGui::Editors
         virtual ~CModelMappingModifyForm() override;
 
         //! Get the values
-        BlackMisc::CPropertyIndexVariantMap getValues() const;
+        swift::misc::CPropertyIndexVariantMap getValues() const;
 
         //! Set value
-        void setValue(const BlackMisc::Simulation::CAircraftModel &model);
+        void setValue(const swift::misc::simulation::CAircraftModel &model);
 
         //! \copydoc CForm::setReadOnly
         virtual void setReadOnly(bool readOnly) override;

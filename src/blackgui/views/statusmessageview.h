@@ -8,8 +8,8 @@
 
 #include "blackgui/views/viewbase.h"
 #include "blackgui/models/statusmessagelistmodel.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/statusmessagelist.h"
+#include "misc/statusmessage.h"
 #include "blackgui/blackguiexport.h"
 
 #include <QObject>
@@ -35,15 +35,15 @@ namespace BlackGui
             void setMode(Models::CStatusMessageListModel::Mode mode);
 
             //! Set mode and adjust order/no order
-            void setMode(Models::CStatusMessageListModel::Mode mode, const BlackMisc::CStatusMessageList &messages);
+            void setMode(Models::CStatusMessageListModel::Mode mode, const swift::misc::CStatusMessageList &messages);
 
             //! \copydoc BlackGui::Models::CStatusMessageListModel::adjustOrderColumn
-            void adjustOrderColumn(const BlackMisc::CStatusMessageList &messages);
+            void adjustOrderColumn(const swift::misc::CStatusMessageList &messages);
 
             //! \copydoc BlackGui::Models::CStatusMessageListModel::isSortedByTimestampOrOrder
             bool isSortedByTimestampOrOrder() const;
 
-            //! \copydoc BlackMisc::CStatusMessageList::keepLatest
+            //! \copydoc swift::misc::CStatusMessageList::keepLatest
             void keepLatest(int desiredSize);
 
             //! Add my own filter dialog

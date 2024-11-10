@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_SIMBRIEFDOWNLOADDIALOG_H
 #define BLACKGUI_COMPONENTS_SIMBRIEFDOWNLOADDIALOG_H
 
-#include "blackmisc/aviation/simbriefdata.h"
+#include "misc/aviation/simbriefdata.h"
 #include <QDialog>
 #include <QScopedPointer>
 
@@ -29,17 +29,17 @@ namespace BlackGui::Components
         virtual ~CSimBriefDownloadDialog() override;
 
         //! SimBrief data
-        BlackMisc::Aviation::CSimBriefData getSimBriefData() const;
+        swift::misc::aviation::CSimBriefData getSimBriefData() const;
 
         //! Set UI values from data
-        void setSimBriefData(const BlackMisc::Aviation::CSimBriefData &data);
+        void setSimBriefData(const swift::misc::aviation::CSimBriefData &data);
 
         //! \copydoc QDialog::exec
         virtual int exec() override;
 
     private:
         QScopedPointer<Ui::CSimBriefDownloadDialog> ui;
-        BlackMisc::CData<BlackMisc::Aviation::Data::TSimBriefData> m_simBrief { this };
+        swift::misc::CData<swift::misc::aviation::Data::TSimBriefData> m_simBrief { this };
     };
 } // ns
 

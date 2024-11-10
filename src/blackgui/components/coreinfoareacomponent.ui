@@ -14,7 +14,7 @@
    <string>Main info area</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../blackmisc/blackmisc.qrc">
+   <iconset resource="../../misc/misc.qrc">
     <normaloff>:/own/icons/own/swift/swift24.png</normaloff>:/own/icons/own/swift/swift24.png</iconset>
   </property>
   <property name="styleSheet">
@@ -214,7 +214,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
+  <include location="../../misc/misc.qrc"/>
  </resources>
  <connections/>
 </ui>

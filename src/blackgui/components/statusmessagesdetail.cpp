@@ -6,7 +6,7 @@
 #include "blackgui/filters/statusmessagefilterbar.h"
 #include "blackgui/filters/statusmessagefilterdialog.h"
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui::Menus;
 using namespace BlackGui::Views;
 using namespace BlackGui::Filters;

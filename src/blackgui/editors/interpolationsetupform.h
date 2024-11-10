@@ -7,9 +7,9 @@
 #define BLACKGUI_EDITORS_INTERPOLATIONSETUPFORM_H
 
 #include "blackgui/editors/form.h"
-#include "blackmisc/simulation/interpolation/interpolationrenderingsetup.h"
-#include "blackmisc/pq/angle.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
+#include "misc/pq/angle.h"
+#include "misc/statusmessagelist.h"
 
 #include <QScopedPointer>
 #include <QCheckBox>
@@ -33,15 +33,15 @@ namespace BlackGui::Editors
         virtual ~CInterpolationSetupForm() override;
 
         //! Set value
-        void setValue(const BlackMisc::Simulation::CInterpolationAndRenderingSetupBase &setup);
+        void setValue(const swift::misc::simulation::CInterpolationAndRenderingSetupBase &setup);
 
         //! Get value
-        BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign getValue() const;
+        swift::misc::simulation::CInterpolationAndRenderingSetupPerCallsign getValue() const;
 
         //! \name Form class implementations
         //! @{
         virtual void setReadOnly(bool readonly) override;
-        virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+        virtual swift::misc::CStatusMessageList validate(bool nested = false) const override;
         //! @}
 
     signals:
@@ -62,16 +62,16 @@ namespace BlackGui::Editors
         void onPitchChanged();
 
         //! Pitch on ground
-        BlackMisc::PhysicalQuantities::CAngle getPitchOnGround() const;
+        swift::misc::physical_quantities::CAngle getPitchOnGround() const;
 
         //! Display pitch on ground
-        void displayPitchOnGround(const BlackMisc::PhysicalQuantities::CAngle &pitchOnGround);
+        void displayPitchOnGround(const swift::misc::physical_quantities::CAngle &pitchOnGround);
 
         //! Mode from UI
-        BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode getInterpolatorMode() const;
+        swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode getInterpolatorMode() const;
 
         //! Set mode
-        void setInterpolatorMode(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode);
+        void setInterpolatorMode(swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode);
     };
 } // ns
 #endif // guard

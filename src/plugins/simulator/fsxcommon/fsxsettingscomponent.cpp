@@ -15,8 +15,8 @@
 using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackGui;
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
 using namespace swift::config;
 
 namespace BlackSimPlugin::FsxCommon

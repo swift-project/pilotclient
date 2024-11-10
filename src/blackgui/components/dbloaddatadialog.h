@@ -7,8 +7,8 @@
 #define BLACKGUI_COMPONENTS_DBLOADDATADIALOG_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/simulation/data/modelcaches.h"
+#include "misc/network/entityflags.h"
+#include "misc/simulation/data/modelcaches.h"
 #include <QDialog>
 #include <QScopedPointer>
 #include <QStringListModel>
@@ -36,7 +36,7 @@ namespace BlackGui::Components
         virtual ~CDbLoadDataDialog();
 
         //! Newer or empty entities detected
-        bool newerOrEmptyEntitiesDetected(BlackMisc::Network::CEntityFlags::Entity loadEntities);
+        bool newerOrEmptyEntitiesDetected(swift::misc::network::CEntityFlags::Entity loadEntities);
 
     private:
         //! The string list model
@@ -49,10 +49,10 @@ namespace BlackGui::Components
         void onButtonClicked(QAbstractButton *button);
 
         //! Data are/have been read
-        void onDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        void onDataRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
         //! Download progress
-        void onEntityDownloadProgress(BlackMisc::Network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
+        void onEntityDownloadProgress(swift::misc::network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
 
         //! Dialog rejected
         void onRejected();
@@ -61,9 +61,9 @@ namespace BlackGui::Components
         void consolidate();
 
         QScopedPointer<Ui::CDbLoadDataDialog> ui;
-        BlackMisc::Network::CEntityFlags::Entity m_pendingEntities = BlackMisc::Network::CEntityFlags::NoEntity;
-        BlackMisc::Simulation::Data::CModelSetCaches m_sets { true, this }; //!< caches
-        BlackMisc::Simulation::Data::CModelCaches m_models { true, this }; //!< models
+        swift::misc::network::CEntityFlags::Entity m_pendingEntities = swift::misc::network::CEntityFlags::NoEntity;
+        swift::misc::simulation::data::CModelSetCaches m_sets { true, this }; //!< caches
+        swift::misc::simulation::data::CModelCaches m_models { true, this }; //!< models
         int m_pendingEntitiesCount = -1;
         bool m_consolidating = false; //! currently consolidating
         bool m_autoConsolidate = false;

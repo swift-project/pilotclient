@@ -7,8 +7,8 @@
 #define BLACKCORE_FSD_SERIALIZER_H
 
 #include "enums.h"
-#include "blackmisc/aviation/transponder.h"
-#include "blackmisc/network/facilitytype.h"
+#include "misc/aviation/transponder.h"
+#include "misc/network/facilitytype.h"
 
 #include <QtGlobal>
 #include <QString>
@@ -41,10 +41,10 @@ namespace BlackCore::Fsd
     SimType fromQString(const QString &str);
 
     template <>
-    QString toQString(const BlackMisc::Network::CFacilityType &value);
+    QString toQString(const swift::misc::network::CFacilityType &value);
 
     template <>
-    BlackMisc::Network::CFacilityType fromQString(const QString &str);
+    swift::misc::network::CFacilityType fromQString(const QString &str);
 
     template <>
     QString toQString(const ClientQueryType &value);
@@ -59,10 +59,10 @@ namespace BlackCore::Fsd
     FlightType fromQString(const QString &str);
 
     template <>
-    QString toQString(const BlackMisc::Aviation::CTransponder::TransponderMode &value);
+    QString toQString(const swift::misc::aviation::CTransponder::TransponderMode &value);
 
     template <>
-    BlackMisc::Aviation::CTransponder::TransponderMode fromQString(const QString &str);
+    swift::misc::aviation::CTransponder::TransponderMode fromQString(const QString &str);
 
     template <>
     QString toQString(const Capabilities &value);

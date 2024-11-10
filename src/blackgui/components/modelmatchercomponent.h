@@ -8,12 +8,12 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackcore/aircraftmatcher.h"
-#include "blackmisc/simulation/settings/modelmatchersettings.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/simulatorinfo.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/settingscache.h"
+#include "misc/simulation/settings/modelmatchersettings.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/network/entityflags.h"
+#include "misc/settingscache.h"
 
 #include <QFrame>
 #include <QObject>
@@ -56,16 +56,16 @@ namespace BlackGui
 
         private:
             //! Simulator switched
-            void onSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void onSimulatorChanged(const swift::misc::simulation::CSimulatorInfo &simulator);
 
             //! Workbench toggled
             void onWorkbenchToggled(bool checked);
 
             //! Cache changed
-            void onCacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void onCacheChanged(const swift::misc::simulation::CSimulatorInfo &simulator);
 
             //! Web data have been read
-            void onWebDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
+            void onWebDataRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
             //! Display settings dialog
             void displaySettingsDialog();
@@ -81,7 +81,7 @@ namespace BlackGui
             void redisplay();
 
             //! The current model set models
-            BlackMisc::Simulation::CAircraftModelList getModelSetModels() const;
+            swift::misc::simulation::CAircraftModelList getModelSetModels() const;
 
             //! The current model set models size
             int getMatcherModelsCount() const;
@@ -90,19 +90,19 @@ namespace BlackGui
             bool useWorkbench() const;
 
             //! Pseudo aircraft created from entries
-            BlackMisc::Simulation::CSimulatedAircraft createAircraft() const;
+            swift::misc::simulation::CSimulatedAircraft createAircraft() const;
 
             //! Pseudo default aircraft
-            BlackMisc::Simulation::CAircraftModel defaultModel() const;
+            swift::misc::simulation::CAircraftModel defaultModel() const;
 
             //! Run matching script
-            static BlackMisc::Simulation::MatchingScriptReturnValues matchingScript(const BlackMisc::Simulation::CAircraftModel &inModel, const BlackMisc::Simulation::CAircraftMatcherSetup &setup, const BlackMisc::Simulation::CAircraftModelList &modelSet, BlackMisc::CStatusMessageList &msgs);
+            static swift::misc::simulation::MatchingScriptReturnValues matchingScript(const swift::misc::simulation::CAircraftModel &inModel, const swift::misc::simulation::CAircraftMatcherSetup &setup, const swift::misc::simulation::CAircraftModelList &modelSet, swift::misc::CStatusMessageList &msgs);
 
             QScopedPointer<Ui::CModelMatcherComponent> ui;
             QPointer<Views::CAircraftModelView> m_workbenchView; //!< an external workbenc
             CSettingsMatchingDialog *m_settingsDialog = nullptr; //!< matching settings as dialog
             BlackCore::CAircraftMatcher m_matcher { this }; //!< used matcher
-            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings { this }; //!< settings
+            swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TModelMatching> m_matchingSettings { this }; //!< settings
         };
     } // ns
 } // ns

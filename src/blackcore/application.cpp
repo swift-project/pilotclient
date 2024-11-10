@@ -13,22 +13,22 @@
 #include "blackcore/setupreader.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/inputmanager.h"
-#include "blackmisc/applicationinfo.h"
-#include "blackmisc/crashhandler.h"
-#include "blackmisc/datacache.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/eventloop.h"
-#include "blackmisc/filelogger.h"
-#include "blackmisc/loghandler.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/logpattern.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/registermetadata.h"
-#include "blackmisc/settingscache.h"
-#include "blackmisc/stringutils.h"
-#include "blackmisc/threadutils.h"
-#include "blackmisc/verify.h"
+#include "misc/applicationinfo.h"
+#include "misc/crashhandler.h"
+#include "misc/datacache.h"
+#include "misc/dbusserver.h"
+#include "misc/swiftdirectories.h"
+#include "misc/eventloop.h"
+#include "misc/filelogger.h"
+#include "misc/loghandler.h"
+#include "misc/logmessage.h"
+#include "misc/logpattern.h"
+#include "misc/network/networkutils.h"
+#include "misc/registermetadata.h"
+#include "misc/settingscache.h"
+#include "misc/stringutils.h"
+#include "misc/threadutils.h"
+#include "misc/verify.h"
 
 #include <cstdio>
 #include <QCoreApplication>
@@ -54,12 +54,12 @@
 #include <cstdlib>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Db;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Weather;
+using namespace swift::misc;
+using namespace swift::misc::db;
+using namespace swift::misc::network;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
+using namespace swift::misc::weather;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackCore::Vatsim;
@@ -115,7 +115,7 @@ namespace BlackCore
             if (this->getApplicationInfo().getApplication() == CApplicationInfo::UnitTest)
             {
                 const QString tempPath(CApplication::getTemporaryDirectory());
-                BlackMisc::setMockCacheRootDirectory(tempPath);
+                swift::misc::setMockCacheRootDirectory(tempPath);
             }
             m_alreadyRunning = CApplication::getRunningApplications().containsApplication(CApplication::getApplicationInfo().getApplication());
             this->initParser();
@@ -866,7 +866,7 @@ namespace BlackCore
 
     void CApplication::registerMetadata()
     {
-        BlackMisc::registerMetadata();
+        swift::misc::registerMetadata();
         BlackCore::registerMetadata();
     }
 
@@ -1123,7 +1123,7 @@ namespace BlackCore
         return msgs.isSuccess();
     }
 
-    void CApplication::displaySetupLoadFailure(BlackMisc::CStatusMessageList)
+    void CApplication::displaySetupLoadFailure(swift::misc::CStatusMessageList)
     {
         // Ignore for CLI application
         // Already logged to console
@@ -1204,7 +1204,7 @@ namespace BlackCore
     // Contexts
     // ---------------------------------------------------------------------------------
 
-    SharedState::CDataLinkDBus *CApplication::getDataLinkDBus()
+    shared_state::CDataLinkDBus *CApplication::getDataLinkDBus()
     {
         return getCoreFacade()->getDataLinkDBus();
     }

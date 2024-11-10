@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackgui/models/modelfilter.h"
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Models
 {
@@ -66,24 +66,24 @@ namespace BlackGui::Models
     }
 
     // Forward instantiations
-    template class IModelFilter<BlackMisc::CStatusMessageList>;
-    template class IModelFilter<BlackMisc::CNameVariantPairList>;
-    template class IModelFilter<BlackMisc::CIdentifierList>;
+    template class IModelFilter<swift::misc::CStatusMessageList>;
+    template class IModelFilter<swift::misc::CNameVariantPairList>;
+    template class IModelFilter<swift::misc::CIdentifierList>;
 
-    template class IModelFilter<BlackMisc::Aviation::CAtcStationList>;
-    template class IModelFilter<BlackMisc::Aviation::CAirportList>;
-    template class IModelFilter<BlackMisc::Aviation::CLiveryList>;
-    template class IModelFilter<BlackMisc::Aviation::CAircraftIcaoCodeList>;
-    template class IModelFilter<BlackMisc::Aviation::CAirlineIcaoCodeList>;
-    template class IModelFilter<BlackMisc::CCountryList>;
+    template class IModelFilter<swift::misc::aviation::CAtcStationList>;
+    template class IModelFilter<swift::misc::aviation::CAirportList>;
+    template class IModelFilter<swift::misc::aviation::CLiveryList>;
+    template class IModelFilter<swift::misc::aviation::CAircraftIcaoCodeList>;
+    template class IModelFilter<swift::misc::aviation::CAirlineIcaoCodeList>;
+    template class IModelFilter<swift::misc::CCountryList>;
 
-    template class IModelFilter<BlackMisc::Network::CServerList>;
-    template class IModelFilter<BlackMisc::Network::CUserList>;
-    template class IModelFilter<BlackMisc::Network::CClientList>;
-    template class IModelFilter<BlackMisc::Network::CTextMessageList>;
+    template class IModelFilter<swift::misc::network::CServerList>;
+    template class IModelFilter<swift::misc::network::CUserList>;
+    template class IModelFilter<swift::misc::network::CClientList>;
+    template class IModelFilter<swift::misc::network::CTextMessageList>;
 
-    template class IModelFilter<BlackMisc::Simulation::CSimulatedAircraftList>;
-    template class IModelFilter<BlackMisc::Simulation::CAircraftModelList>;
-    template class IModelFilter<BlackMisc::Simulation::CDistributorList>;
+    template class IModelFilter<swift::misc::simulation::CSimulatedAircraftList>;
+    template class IModelFilter<swift::misc::simulation::CAircraftModelList>;
+    template class IModelFilter<swift::misc::simulation::CDistributorList>;
 
 } // namespace

@@ -8,8 +8,8 @@
 
 #include "blackgui/editors/form.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/statusmessagelist.h"
 
 #include <QObject>
 #include <QScopedPointer>
@@ -35,7 +35,7 @@ namespace BlackGui::Editors
         virtual ~CModelMappingForm() override;
 
         //! Value
-        BlackMisc::Simulation::CAircraftModel getValue() const;
+        swift::misc::simulation::CAircraftModel getValue() const;
 
         //! Validate
 
@@ -43,11 +43,11 @@ namespace BlackGui::Editors
         //! @{
         virtual void setReadOnly(bool readonly) override;
         virtual void setSelectOnly() override;
-        virtual BlackMisc::CStatusMessageList validate(bool withNestedObjects) const override;
+        virtual swift::misc::CStatusMessageList validate(bool withNestedObjects) const override;
         //! @}
 
         //! Set model
-        void setValue(BlackMisc::Simulation::CAircraftModel &model);
+        void setValue(swift::misc::simulation::CAircraftModel &model);
 
     signals:
         //! Request stashing for model
@@ -59,16 +59,16 @@ namespace BlackGui::Editors
 
     private:
         //! CG (aka vertical offset) from UI
-        BlackMisc::PhysicalQuantities::CLength getCGFromUI() const;
+        swift::misc::physical_quantities::CLength getCGFromUI() const;
 
         //! Set CG value properly formatted
-        void setCGtoUI(const BlackMisc::PhysicalQuantities::CLength &cg);
+        void setCGtoUI(const swift::misc::physical_quantities::CLength &cg);
 
         //! CG edited
         void onCgEditFinished();
 
         QScopedPointer<Ui::CModelMappingForm> ui;
-        BlackMisc::Simulation::CAircraftModel m_originalModel;
+        swift::misc::simulation::CAircraftModel m_originalModel;
     };
 } // ns
 

@@ -5,7 +5,7 @@
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackgui/models/interpolationsetupmodel.h"
 #include "blackgui/models/simulatedaircraftlistmodel.h"
-#include "blackmisc/icons.h"
+#include "misc/icons.h"
 
 #include <QAction>
 #include <QIntValidator>
@@ -14,8 +14,8 @@
 #include <QLabel>
 #include <QWidgetAction>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 using namespace BlackGui;
 using namespace BlackGui::Models;
 

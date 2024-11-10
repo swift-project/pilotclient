@@ -8,8 +8,8 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/dropbase.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/network/entityflags.h"
+#include "misc/aviation/livery.h"
+#include "misc/network/entityflags.h"
 
 #include <QFrame>
 #include <QMetaObject>
@@ -48,13 +48,13 @@ namespace BlackGui::Components
         virtual ~CDbLiverySelectorComponent();
 
         //! Current livery
-        void setLivery(const BlackMisc::Aviation::CLivery &livery);
+        void setLivery(const swift::misc::aviation::CLivery &livery);
 
         //! Current livery
         void setLivery(const QString &code);
 
         //! Livery
-        BlackMisc::Aviation::CLivery getLivery() const;
+        swift::misc::aviation::CLivery getLivery() const;
 
         //! Livery combined code
         QString getRawCombinedCode() const;
@@ -73,7 +73,7 @@ namespace BlackGui::Components
 
     signals:
         //! Distributor was changed
-        void changedLivery(const BlackMisc::Aviation::CLivery &livery);
+        void changedLivery(const swift::misc::aviation::CLivery &livery);
 
     protected:
         //! \copydoc QWidget::dragEnterEvent
@@ -96,14 +96,14 @@ namespace BlackGui::Components
         void onCompleterActivated(const QString &liveryCode);
 
         //! Distributors have been read
-        void onLiveriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count, const QUrl &url);
+        void onLiveriesRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState readState, int count, const QUrl &url);
 
         //! Strip extra info from livery code
         QString stripExtraInfo(const QString &liveryCode) const;
 
         QScopedPointer<Ui::CDbLiverySelectorComponent> ui;
         QScopedPointer<QCompleter> m_completerLiveries;
-        BlackMisc::Aviation::CLivery m_currentLivery;
+        swift::misc::aviation::CLivery m_currentLivery;
     };
 } // ns
 

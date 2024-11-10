@@ -6,8 +6,8 @@
 #include "blackgui/components/dbownmodelsetformdialog.h"
 #include "blackgui/editors/ownmodelsetform.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/simulation/distributorlist.h"
+#include "misc/logcategories.h"
+#include "misc/simulation/distributorlist.h"
 #include "ui_dbownmodelsetformdialog.h"
 
 #include <QPushButton>
@@ -15,8 +15,8 @@
 #include <QWidget>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
 using namespace BlackCore;
 using namespace BlackGui::Editors;
 

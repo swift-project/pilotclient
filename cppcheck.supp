@@ -9,13 +9,13 @@
 // [error id]
 
 // Issues introduced by refactoring - expected to be fixed
-knownConditionTrueFalse:src/blackmisc/simulation/interpolation/interpolator.cpp
-knownConditionTrueFalse:src/blackmisc/aviation/aircraftsituationchange.cpp
+knownConditionTrueFalse:src/misc/simulation/interpolation/interpolator.cpp
+knownConditionTrueFalse:src/misc/aviation/aircraftsituationchange.cpp
 
 // Ignore noExplicitConstructor for now.
 noExplicitConstructor
 
-// Ignore useStlAlgorithm for now (consider designing our own useBlackMiscAlgorithm checks)
+// Ignore useStlAlgorithm for now (consider designing our own useMiscAlgorithm checks)
 useStlAlgorithm
 
 // Internal errors
@@ -28,17 +28,17 @@ unusedFunction
 redundantInitialization
 
 // Perf samples
-redundantAssignment:samples/blackmisc/samplesperformance.*
-unreadVariable:samples/blackmisc/samplesperformance.*
+redundantAssignment:samples/misc/samplesperformance.*
+unreadVariable:samples/misc/samplesperformance.*
 
 // False positives
-returnDanglingLifetime:src/blackmisc/iterator.h
+returnDanglingLifetime:src/misc/iterator.h
 unreadVariable:tests/blackcore/testreaders/testreaders.cpp
-unknownMacro:src/blackmisc/aviation/altitude.h
-unknownMacro:src/blackmisc/geo/coordinategeodetic.cpp
-unknownMacro:src/blackmisc/geo/elevationplane.h
-unknownMacro:src/blackmisc/identifier.cpp
-unknownMacro:tests/blackmisc/testsharedstate/testsharedstate.h
+unknownMacro:src/misc/aviation/altitude.h
+unknownMacro:src/misc/geo/coordinategeodetic.cpp
+unknownMacro:src/misc/geo/elevationplane.h
+unknownMacro:src/misc/identifier.cpp
+unknownMacro:tests/misc/testsharedstate/testsharedstate.h
 
 // False positive memory leaks due to Qt parent/child relationship
 unsafeClassCanLeak

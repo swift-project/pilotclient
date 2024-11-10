@@ -9,28 +9,28 @@
 #include "blackcore/webdataservices.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/fsd/fsdclient.h"
-#include "blackmisc/aviation/aircraftparts.h"
-#include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/aviation/modulator.h"
-#include "blackmisc/aviation/transponder.h"
-#include "blackmisc/geo/elevationplane.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/network/voicecapabilities.h"
-#include "blackmisc/pq/units.h"
-#include "blackmisc/test/testing.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/iterator.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/propertyindexvariantmap.h"
-#include "blackmisc/range.h"
-#include "blackmisc/sequence.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/threadutils.h"
-#include "blackmisc/eventloop.h"
-#include "blackmisc/variant.h"
-#include "blackmisc/verify.h"
-#include "blackmisc/worker.h"
+#include "misc/aviation/aircraftparts.h"
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/aviation/modulator.h"
+#include "misc/aviation/transponder.h"
+#include "misc/geo/elevationplane.h"
+#include "misc/network/user.h"
+#include "misc/network/voicecapabilities.h"
+#include "misc/pq/units.h"
+#include "misc/test/testing.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/iterator.h"
+#include "misc/logmessage.h"
+#include "misc/propertyindexvariantmap.h"
+#include "misc/range.h"
+#include "misc/sequence.h"
+#include "misc/statusmessagelist.h"
+#include "misc/threadutils.h"
+#include "misc/eventloop.h"
+#include "misc/variant.h"
+#include "misc/verify.h"
+#include "misc/worker.h"
 #include "config/buildconfig.h"
 
 #include <QCoreApplication>
@@ -44,15 +44,15 @@
 #include <Qt>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Test;
-using namespace BlackMisc::Json;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Weather;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::geo;
+using namespace swift::misc::simulation;
+using namespace swift::misc::test;
+using namespace swift::misc::json;
+using namespace swift::misc::network;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::weather;
 using namespace BlackCore::Fsd;
 using namespace BlackCore::Vatsim;
 
@@ -664,7 +664,7 @@ namespace BlackCore
         this->sendReadyForModelMatching(callsign, Verified);
     }
 
-    void CAirspaceMonitor::onAtcPositionUpdate(const CCallsign &callsign, const CFrequency &frequency, const CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range)
+    void CAirspaceMonitor::onAtcPositionUpdate(const CCallsign &callsign, const CFrequency &frequency, const CCoordinateGeodetic &position, const swift::misc::physical_quantities::CLength &range)
     {
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "wrong thread");
         if (!this->isConnectedAndNotShuttingDown()) { return; }
@@ -1261,7 +1261,7 @@ namespace BlackCore
             this->calculateBearingToOwnAircraft(interimSituation));
     }
 
-    void CAirspaceMonitor::onAircraftVisualUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation)
+    void CAirspaceMonitor::onAircraftVisualUpdateReceived(const swift::misc::aviation::CAircraftSituation &situation)
     {
         //! \fixme This method is almost identical to onAircraftInterimUpdateReceived. Refactor common parts?
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Called in different thread");
@@ -1731,7 +1731,7 @@ namespace BlackCore
         if (!sApp || sApp->isShuttingDown() || !sApp->getIContextNetwork()) { return false; }
 
         // It is only relevant if we are logged in as observer
-        if (sApp->getIContextNetwork()->getLoginMode() != BlackMisc::Network::CLoginMode::Observer) { return false; }
+        if (sApp->getIContextNetwork()->getLoginMode() != swift::misc::network::CLoginMode::Observer) { return false; }
 
         const CCallsign ownCallsign = this->getOwnAircraft().getCallsign();
         return ownCallsign.isMaybeCopilotCallsign(callsign);

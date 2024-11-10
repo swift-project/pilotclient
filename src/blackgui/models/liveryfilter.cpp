@@ -2,16 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackgui/models/liveryfilter.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/livery.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/livery.h"
 
-using namespace BlackMisc::Aviation;
+using namespace swift::misc::aviation;
 
 namespace BlackGui::Models
 {
     CLiveryFilter::CLiveryFilter(int id, const QString &combinedCode, const QString &descriptiom,
                                  const QString &airlineDesignator,
-                                 const BlackMisc::CRgbColor &fuselageColor, const BlackMisc::CRgbColor &tailColor, double maxColorDistance, bool colorLiveries, bool airlineLiveries) : m_id(id),
+                                 const swift::misc::CRgbColor &fuselageColor, const swift::misc::CRgbColor &tailColor, double maxColorDistance, bool colorLiveries, bool airlineLiveries) : m_id(id),
                                                                                                                                                                                         m_combinedCode(combinedCode.trimmed().toUpper()), m_description(descriptiom),
                                                                                                                                                                                         m_airlineIcaoDesignator(airlineDesignator.trimmed().toUpper()),
                                                                                                                                                                                         m_fuselageColor(fuselageColor), m_tailColor(tailColor), m_maxColorDistance(maxColorDistance),

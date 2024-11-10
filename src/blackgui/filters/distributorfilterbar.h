@@ -18,7 +18,7 @@ namespace Ui
 {
     class CDistributorFilterBar;
 }
-namespace BlackMisc::Simulation
+namespace swift::misc::simulation
 {
     class CDistributorList;
     class CSimulatorInfo;
@@ -30,7 +30,7 @@ namespace BlackGui::Filters
      */
     class BLACKGUI_EXPORT CDistributorFilterBar :
         public CFilterWidget,
-        public Models::IModelFilterProvider<BlackMisc::Simulation::CDistributorList>
+        public Models::IModelFilterProvider<swift::misc::simulation::CDistributorList>
     {
         Q_OBJECT
 
@@ -42,10 +42,10 @@ namespace BlackGui::Filters
         virtual ~CDistributorFilterBar() override;
 
         //! Set simulator
-        void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void setSimulator(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! \copydoc Models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<Models::IModelFilter<BlackMisc::Simulation::CDistributorList>> createModelFilter() const override;
+        virtual std::unique_ptr<Models::IModelFilter<swift::misc::simulation::CDistributorList>> createModelFilter() const override;
 
         //! \copydoc CFilterWidget::onRowCountChanged
         virtual void onRowCountChanged(int count, bool withFilter) override;

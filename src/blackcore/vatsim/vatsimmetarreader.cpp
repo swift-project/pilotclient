@@ -3,10 +3,10 @@
 
 #include "blackcore/vatsim/vatsimmetarreader.h"
 #include "blackcore/application.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/network/url.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/logmessage.h"
+#include "misc/network/entityflags.h"
+#include "misc/network/url.h"
 
 #include <QByteArray>
 #include <QMetaObject>
@@ -21,10 +21,10 @@
 #include <QWriteLocker>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Weather;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::weather;
 using namespace BlackCore::Data;
 
 namespace BlackCore::Vatsim

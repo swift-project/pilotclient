@@ -3,10 +3,10 @@
 
 #include "simulatormsfsfactory.h"
 #include "simulatormsfs.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
+#include "misc/simulation/simulatorplugininfo.h"
 
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
 using namespace BlackCore;
 
 namespace BlackSimPlugin::Msfs

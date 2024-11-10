@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackmisc/logmessage.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/logmessage.h"
+#include "misc/statusmessage.h"
 #include "settingstextmessageinlinecomponent.h"
 #include "ui_settingstextmessageinlinecomponent.h"
 
@@ -12,7 +12,7 @@
 #include <QPointer>
 
 using namespace BlackGui::Settings;
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Components
 {

@@ -14,16 +14,16 @@
 #include "blackcore/db/infodatareader.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/setupreader.h"
-#include "blackmisc/slot.h"
-#include "blackmisc/stringutils.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/datacache.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/loghandler.h"
-#include "blackmisc/metadatautils.h"
-#include "blackmisc/settingscache.h"
-#include "blackmisc/verify.h"
+#include "misc/slot.h"
+#include "misc/stringutils.h"
+#include "misc/swiftdirectories.h"
+#include "misc/datacache.h"
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
+#include "misc/loghandler.h"
+#include "misc/metadatautils.h"
+#include "misc/settingscache.h"
+#include "misc/verify.h"
 #include "config/buildconfig.h"
 
 #include <QAction>
@@ -53,9 +53,9 @@
 #include <Qt>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Db;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::db;
+using namespace swift::misc::network;
 using namespace BlackGui::Components;
 using namespace BlackCore;
 using namespace BlackCore::Data;
@@ -961,7 +961,7 @@ namespace BlackGui
         m_minHeightChars = heightChars;
     }
 
-    void CGuiApplication::displaySetupLoadFailure(BlackMisc::CStatusMessageList msgs)
+    void CGuiApplication::displaySetupLoadFailure(swift::misc::CStatusMessageList msgs)
     {
         if (msgs.hasErrorMessages())
         {

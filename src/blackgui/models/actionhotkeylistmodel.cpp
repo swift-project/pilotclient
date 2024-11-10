@@ -2,16 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackgui/models/actionhotkeylistmodel.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/input/actionhotkey.h"
-#include "blackmisc/input/hotkeycombination.h"
-#include "blackmisc/sequence.h"
+#include "misc/identifier.h"
+#include "misc/input/actionhotkey.h"
+#include "misc/input/hotkeycombination.h"
+#include "misc/sequence.h"
 
 #include <QString>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Input;
+using namespace swift::misc;
+using namespace swift::misc::input;
 
 namespace BlackGui::Models
 {
@@ -84,7 +84,7 @@ namespace BlackGui::Models
 
         for (int row = 0; row < rows; ++row)
         {
-            m_actionHotkeys.push_back(BlackMisc::Input::CActionHotkey());
+            m_actionHotkeys.push_back(swift::misc::input::CActionHotkey());
         }
 
         endInsertRows();
@@ -112,7 +112,7 @@ namespace BlackGui::Models
     {
         if (index.isValid() && role == ActionHotkeyRole)
         {
-            m_actionHotkeys[index.row()] = var.value<BlackMisc::Input::CActionHotkey>();
+            m_actionHotkeys[index.row()] = var.value<swift::misc::input::CActionHotkey>();
             emit dataChanged(index, index);
             return true;
         }

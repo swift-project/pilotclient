@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "audioutilities.h"
-#include "blackmisc/audio/audiodeviceinfolist.h"
+#include "misc/audio/audiodeviceinfolist.h"
 #include "config/buildconfig.h"
 
 #include <QStringBuilder>
@@ -12,7 +12,7 @@
 #include <QMediaDevices>
 
 using namespace swift::config;
-using namespace BlackMisc::Audio;
+using namespace swift::misc::audio;
 
 namespace swift::sound
 {

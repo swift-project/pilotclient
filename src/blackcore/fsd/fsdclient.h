@@ -11,24 +11,24 @@
 #include "blackcore/fsd/enums.h"
 #include "blackcore/fsd/messagebase.h"
 
-#include "blackmisc/simulation/ownaircraftprovider.h"
-#include "blackmisc/simulation/remoteaircraftprovider.h"
-#include "blackmisc/simulation/simulationenvironmentprovider.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/aviation/flightplan.h"
-#include "blackmisc/aviation/informationmessage.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/network/rawfsdmessage.h"
-#include "blackmisc/network/connectionstatus.h"
-#include "blackmisc/network/loginmode.h"
-#include "blackmisc/network/server.h"
-#include "blackmisc/network/ecosystemprovider.h"
-#include "blackmisc/network/clientprovider.h"
-#include "blackmisc/network/textmessagelist.h"
-#include "blackmisc/worker.h"
-#include "blackmisc/digestsignal.h"
-#include "blackmisc/tokenbucket.h"
+#include "misc/simulation/ownaircraftprovider.h"
+#include "misc/simulation/remoteaircraftprovider.h"
+#include "misc/simulation/simulationenvironmentprovider.h"
+#include "misc/aviation/atcstationlist.h"
+#include "misc/aviation/callsign.h"
+#include "misc/aviation/flightplan.h"
+#include "misc/aviation/informationmessage.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/network/rawfsdmessage.h"
+#include "misc/network/connectionstatus.h"
+#include "misc/network/loginmode.h"
+#include "misc/network/server.h"
+#include "misc/network/ecosystemprovider.h"
+#include "misc/network/clientprovider.h"
+#include "misc/network/textmessagelist.h"
+#include "misc/worker.h"
+#include "misc/digestsignal.h"
+#include "misc/tokenbucket.h"
 
 #ifdef SWIFT_VATSIM_SUPPORT
 #    include "vatsim/vatsimauth.h"
@@ -76,24 +76,24 @@ namespace BlackCore::Fsd
     //! Todo: Send (interim) data updates automatically
     //! Todo Check ':' in FSD messages. Disconnect if there is a wrong one
     class BLACKCORE_EXPORT CFSDClient :
-        public BlackMisc::CContinuousWorker,
-        public BlackMisc::Network::IEcosystemProvider, // provide info about used ecosystem
-        public BlackMisc::Network::CClientAware, // network can set client information
-        public BlackMisc::Simulation::COwnAircraftAware, // network vatlib consumes own aircraft data and sets ICAO/callsign data
-        public BlackMisc::Simulation::CRemoteAircraftAware, // check if we really need to process network packets (e.g. parts)
-        public BlackMisc::Simulation::CSimulationEnvironmentAware // allows to consume ground elevations
+        public swift::misc::CContinuousWorker,
+        public swift::misc::network::IEcosystemProvider, // provide info about used ecosystem
+        public swift::misc::network::CClientAware, // network can set client information
+        public swift::misc::simulation::COwnAircraftAware, // network vatlib consumes own aircraft data and sets ICAO/callsign data
+        public swift::misc::simulation::CRemoteAircraftAware, // check if we really need to process network packets (e.g. parts)
+        public swift::misc::simulation::CSimulationEnvironmentAware // allows to consume ground elevations
     {
         Q_OBJECT
-        Q_INTERFACES(BlackMisc::Network::IEcosystemProvider)
+        Q_INTERFACES(swift::misc::network::IEcosystemProvider)
 
     public:
         //! Categories
         static const QStringList &getLogCategories();
 
         //! Ctor
-        CFSDClient(BlackMisc::Network::IClientProvider *clientProvider,
-                   BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                   BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+        CFSDClient(swift::misc::network::IClientProvider *clientProvider,
+                   swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
+                   swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                    QObject *owner = nullptr);
 
         //! @{
@@ -126,22 +126,22 @@ namespace BlackCore::Fsd
             QWriteLocker l(&m_lockUserClientBuffered);
             m_capabilities = capabilities;
         }
-        void setServer(const BlackMisc::Network::CServer &server);
-        void setLoginMode(const BlackMisc::Network::CLoginMode &mode)
+        void setServer(const swift::misc::network::CServer &server);
+        void setLoginMode(const swift::misc::network::CLoginMode &mode)
         {
             QWriteLocker l(&m_lockUserClientBuffered);
             m_loginMode = mode;
         }
-        void setCallsign(const BlackMisc::Aviation::CCallsign &callsign);
-        void setPartnerCallsign(const BlackMisc::Aviation::CCallsign &callsign)
+        void setCallsign(const swift::misc::aviation::CCallsign &callsign);
+        void setPartnerCallsign(const swift::misc::aviation::CCallsign &callsign)
         {
             QWriteLocker l(&m_lockUserClientBuffered);
             m_partnerCallsign = callsign;
         }
-        void setIcaoCodes(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
+        void setIcaoCodes(const swift::misc::simulation::CSimulatedAircraft &ownAircraft);
         void setLiveryAndModelString(const QString &livery, bool sendLiveryString, const QString &modelString, bool sendModelString);
-        void setSimType(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
-        void setSimType(BlackMisc::Simulation::CSimulatorInfo::Simulator simulator);
+        void setSimType(const swift::misc::simulation::CSimulatorInfo &simInfo);
+        void setSimType(swift::misc::simulation::CSimulatorInfo::Simulator simulator);
         void setPilotRating(PilotRating rating)
         {
             QWriteLocker l(&m_lockUserClientBuffered);
@@ -158,7 +158,7 @@ namespace BlackCore::Fsd
 
         //! Get the server
         //! \threadsafe
-        const BlackMisc::Network::CServer &getServer() const
+        const swift::misc::network::CServer &getServer() const
         {
             QReadLocker l(&m_lockUserClientBuffered);
             return m_server;
@@ -170,7 +170,7 @@ namespace BlackCore::Fsd
 
         //! Callsign if any
         //! \threadsafe
-        BlackMisc::Aviation::CCallsign getPresetCallsign() const
+        swift::misc::aviation::CCallsign getPresetCallsign() const
         {
             QReadLocker l(&m_lockUserClientBuffered);
             return m_ownCallsign;
@@ -178,7 +178,7 @@ namespace BlackCore::Fsd
 
         //! Partner callsign if any
         //! \threadsafe
-        BlackMisc::Aviation::CCallsign getPresetPartnerCallsign() const
+        swift::misc::aviation::CCallsign getPresetPartnerCallsign() const
         {
             QReadLocker l(&m_lockUserClientBuffered);
             return m_partnerCallsign;
@@ -186,7 +186,7 @@ namespace BlackCore::Fsd
 
         //! Mode
         //! \threadsafe
-        BlackMisc::Network::CLoginMode getLoginMode() const
+        swift::misc::network::CLoginMode getLoginMode() const
         {
             QReadLocker l(&m_lockUserClientBuffered);
             return m_loginMode;
@@ -208,39 +208,39 @@ namespace BlackCore::Fsd
 
         //! @{
         //! Interim positions
-        void addInterimPositionReceiver(const BlackMisc::Aviation::CCallsign &receiver) { m_interimPositionReceivers.push_back(receiver); }
-        void removeInterimPositionReceiver(const BlackMisc::Aviation::CCallsign &receiver) { m_interimPositionReceivers.remove(receiver); }
+        void addInterimPositionReceiver(const swift::misc::aviation::CCallsign &receiver) { m_interimPositionReceivers.push_back(receiver); }
+        void removeInterimPositionReceiver(const swift::misc::aviation::CCallsign &receiver) { m_interimPositionReceivers.remove(receiver); }
         //! @}
 
         //! @{
         //! Convenience functions for sendClientQuery
         //! \remark pseudo private, used in CAirspaceMonitor and network context
         //! \private
-        void sendClientQueryCapabilities(const BlackMisc::Aviation::CCallsign &callsign);
-        void sendClientQueryCom1Freq(const BlackMisc::Aviation::CCallsign &callsign);
-        void sendClientQueryRealName(const BlackMisc::Aviation::CCallsign &callsign);
-        void sendClientQueryServer(const BlackMisc::Aviation::CCallsign &callsign);
-        void sendClientQueryAtis(const BlackMisc::Aviation::CCallsign &callsign);
-        void sendClientQueryFlightPlan(const BlackMisc::Aviation::CCallsign &callsign);
-        void sendClientQueryAircraftConfig(const BlackMisc::Aviation::CCallsign &callsign);
-        void sendTextMessages(const BlackMisc::Network::CTextMessageList &messages);
-        void sendTextMessage(const BlackMisc::Network::CTextMessage &message);
+        void sendClientQueryCapabilities(const swift::misc::aviation::CCallsign &callsign);
+        void sendClientQueryCom1Freq(const swift::misc::aviation::CCallsign &callsign);
+        void sendClientQueryRealName(const swift::misc::aviation::CCallsign &callsign);
+        void sendClientQueryServer(const swift::misc::aviation::CCallsign &callsign);
+        void sendClientQueryAtis(const swift::misc::aviation::CCallsign &callsign);
+        void sendClientQueryFlightPlan(const swift::misc::aviation::CCallsign &callsign);
+        void sendClientQueryAircraftConfig(const swift::misc::aviation::CCallsign &callsign);
+        void sendTextMessages(const swift::misc::network::CTextMessageList &messages);
+        void sendTextMessage(const swift::misc::network::CTextMessage &message);
         void sendTextMessage(TextMessageGroups receiverGroup, const QString &message);
         void sendRadioMessage(const QVector<int> &frequencieskHz, const QString &message);
-        void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan);
-        void sendPlaneInfoRequest(const BlackMisc::Aviation::CCallsign &receiver);
-        void sendPlaneInfoRequestFsinn(const BlackMisc::Aviation::CCallsign &callsign);
+        void sendFlightPlan(const swift::misc::aviation::CFlightPlan &flightPlan);
+        void sendPlaneInfoRequest(const swift::misc::aviation::CCallsign &receiver);
+        void sendPlaneInfoRequestFsinn(const swift::misc::aviation::CCallsign &callsign);
         //! @}
 
         //! @{
         //! Interim pos.receivers
-        BlackMisc::Aviation::CCallsignSet getInterimPositionReceivers() const;
-        void setInterimPositionReceivers(const BlackMisc::Aviation::CCallsignSet &interimPositionReceivers);
+        swift::misc::aviation::CCallsignSet getInterimPositionReceivers() const;
+        void setInterimPositionReceivers(const swift::misc::aviation::CCallsignSet &interimPositionReceivers);
         //! @}
 
         //! @{
         //! Connection status
-        BlackMisc::Network::CConnectionStatus getConnectionStatus() const
+        swift::misc::network::CConnectionStatus getConnectionStatus() const
         {
             QReadLocker l(&m_lockConnectionStatus);
             return m_connectionStatus;
@@ -275,43 +275,43 @@ namespace BlackCore::Fsd
     signals:
         //! @{
         //! Client responses received
-        void atcDataUpdateReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq,
-                                   const BlackMisc::Geo::CCoordinateGeodetic &pos, const BlackMisc::PhysicalQuantities::CLength &range);
+        void atcDataUpdateReceived(const swift::misc::aviation::CCallsign &callsign, const swift::misc::physical_quantities::CFrequency &freq,
+                                   const swift::misc::geo::CCoordinateGeodetic &pos, const swift::misc::physical_quantities::CLength &range);
         void deleteAtcReceived(const QString &cid);
         void deletePilotReceived(const QString &cid);
-        void pilotDataUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
+        void pilotDataUpdateReceived(const swift::misc::aviation::CAircraftSituation &situation, const swift::misc::aviation::CTransponder &transponder);
         void pongReceived(const QString &sender, double elapsedTimeMs);
-        void flightPlanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);
-        void textMessagesReceived(const BlackMisc::Network::CTextMessageList &messages);
+        void flightPlanReceived(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CFlightPlan &flightPlan);
+        void textMessagesReceived(const swift::misc::network::CTextMessageList &messages);
         void aircraftConfigReceived(const QString &sender, const QJsonObject &config, qint64 currentOffsetTimeMs);
         void validAtcResponseReceived(const QString &callsign, bool isValidAtc);
-        void capabilityResponseReceived(const BlackMisc::Aviation::CCallsign &sender, BlackMisc::Network::CClient::Capabilities capabilities);
-        void com1FrequencyResponseReceived(const QString &sender, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
+        void capabilityResponseReceived(const swift::misc::aviation::CCallsign &sender, swift::misc::network::CClient::Capabilities capabilities);
+        void com1FrequencyResponseReceived(const QString &sender, const swift::misc::physical_quantities::CFrequency &frequency);
         void realNameResponseReceived(const QString &sender, const QString &realName);
         void serverResponseReceived(const QString &sender, const QString &hostName);
         void planeInformationReceived(const QString &sender, const QString &aircraft, const QString &airline, const QString &livery);
         void customPilotPacketReceived(const QString &sender, const QStringList &data);
-        void interimPilotDataUpdatedReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
-        void visualPilotDataUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
-        void euroscopeSimDataUpdatedReceived(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts, qint64 currentOffsetTimeMs, const QString &model, const QString &livery);
-        void rawFsdMessage(const BlackMisc::Network::CRawFsdMessage &rawFsdMessage);
-        void planeInformationFsinnReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &modelString);
+        void interimPilotDataUpdatedReceived(const swift::misc::aviation::CAircraftSituation &situation);
+        void visualPilotDataUpdateReceived(const swift::misc::aviation::CAircraftSituation &situation);
+        void euroscopeSimDataUpdatedReceived(const swift::misc::aviation::CAircraftSituation &situation, const swift::misc::aviation::CAircraftParts &parts, qint64 currentOffsetTimeMs, const QString &model, const QString &livery);
+        void rawFsdMessage(const swift::misc::network::CRawFsdMessage &rawFsdMessage);
+        void planeInformationFsinnReceived(const swift::misc::aviation::CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &modelString);
         void revbAircraftConfigReceived(const QString &sender, const QString &config, qint64 currentOffsetTimeMs);
         void muteRequestReceived(bool mute);
 
         //! @}
 
         //! We received a reply to one of our ATIS queries.
-        void atisReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atis);
+        void atisReplyReceived(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CInformationMessage &atis);
 
         //! We received a reply to one of our ATIS queries, containing the controller's planned logoff time.
-        void atisLogoffTimeReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
+        void atisLogoffTimeReplyReceived(const swift::misc::aviation::CCallsign &callsign, const QString &zuluTime);
 
         //! We have sent a text message.
-        void textMessageSent(const BlackMisc::Network::CTextMessage &sentMessage);
+        void textMessageSent(const swift::misc::network::CTextMessage &sentMessage);
 
         //! Connection status has been changed
-        void connectionStatusChanged(BlackMisc::Network::CConnectionStatus oldStatus, BlackMisc::Network::CConnectionStatus newStatus);
+        void connectionStatusChanged(swift::misc::network::CConnectionStatus oldStatus, swift::misc::network::CConnectionStatus newStatus);
 
         //! Network error
         void severeNetworkError(const QString &errorMessage);
@@ -336,11 +336,11 @@ namespace BlackCore::Fsd
         void sendAtcDataUpdate(double latitude, double longitude);
         void sendPing(const QString &receiver);
         //
-        void sendClientQueryIsValidAtc(const BlackMisc::Aviation::CCallsign &callsign);
-        void sendClientQuery(ClientQueryType queryType, const BlackMisc::Aviation::CCallsign &receiver, const QStringList &queryData = {});
+        void sendClientQueryIsValidAtc(const swift::misc::aviation::CCallsign &callsign);
+        void sendClientQuery(ClientQueryType queryType, const swift::misc::aviation::CCallsign &receiver, const QStringList &queryData = {});
         void sendTextMessage(const QString &receiver, const QString &message);
         void sendPlaneInformation(const QString &receiver, const QString &aircraft, const QString &airline = {}, const QString &livery = {});
-        void sendPlaneInformationFsinn(const BlackMisc::Aviation::CCallsign &callsign);
+        void sendPlaneInformationFsinn(const swift::misc::aviation::CCallsign &callsign);
         void sendAircraftConfiguration(const QString &receiver, const QString &aircraftConfigJson);
         //
         void sendMessageString(const QString &message);
@@ -395,10 +395,10 @@ namespace BlackCore::Fsd
         }
 
         //! Model string as configured, also dependent from simulator
-        QString getConfiguredModelString(const BlackMisc::Simulation::CSimulatedAircraft &myAircraft) const;
+        QString getConfiguredModelString(const swift::misc::simulation::CSimulatedAircraft &myAircraft) const;
 
         //! Livery string, also dependent from simulator
-        QString getConfiguredLiveryString(const BlackMisc::Simulation::CSimulatedAircraft &myAircraft) const;
+        QString getConfiguredLiveryString(const swift::misc::simulation::CSimulatedAircraft &myAircraft) const;
 
         //! JSON packets
         struct JsonPackets
@@ -466,44 +466,44 @@ namespace BlackCore::Fsd
         void handleSocketError(QAbstractSocket::SocketError socketError);
         void handleSocketConnected();
 
-        void updateConnectionStatus(BlackMisc::Network::CConnectionStatus newStatus);
+        void updateConnectionStatus(swift::misc::network::CConnectionStatus newStatus);
 
         //! Consolidate text messages if we receive multiple messages which belong together
         //! \remark causes a slight delay
-        void consolidateTextMessage(const BlackMisc::Network::CTextMessage &textMessage);
+        void consolidateTextMessage(const swift::misc::network::CTextMessage &textMessage);
 
         //! Send the consolidatedTextMessages
         void emitConsolidatedTextMessages();
 
         //! Remember when last position was received
-        qint64 receivedPositionFixTsAndGetOffsetTime(const BlackMisc::Aviation::CCallsign &callsign, qint64 markerTs = -1);
+        qint64 receivedPositionFixTsAndGetOffsetTime(const swift::misc::aviation::CCallsign &callsign, qint64 markerTs = -1);
 
         //! Current offset time
-        qint64 currentOffsetTime(const BlackMisc::Aviation::CCallsign &callsign) const;
+        qint64 currentOffsetTime(const swift::misc::aviation::CCallsign &callsign) const;
 
         //! Clear state when connection is terminated
         void clearState();
 
         //! Clear state for callsign
-        void clearState(const BlackMisc::Aviation::CCallsign &callsign);
+        void clearState(const swift::misc::aviation::CCallsign &callsign);
 
         //! Insert as first value
-        void insertLatestOffsetTime(const BlackMisc::Aviation::CCallsign &callsign, qint64 offsetMs);
+        void insertLatestOffsetTime(const swift::misc::aviation::CCallsign &callsign, qint64 offsetMs);
 
         //! Average offset time in ms
-        qint64 averageOffsetTimeMs(const BlackMisc::Aviation::CCallsign &callsign, int &count, int maxLastValues = c_maxOffsetTimes) const;
+        qint64 averageOffsetTimeMs(const swift::misc::aviation::CCallsign &callsign, int &count, int maxLastValues = c_maxOffsetTimes) const;
 
         //! Average offset time in ms
-        qint64 averageOffsetTimeMs(const BlackMisc::Aviation::CCallsign &callsign, int maxLastValues = c_maxOffsetTimes) const;
+        qint64 averageOffsetTimeMs(const swift::misc::aviation::CCallsign &callsign, int maxLastValues = c_maxOffsetTimes) const;
 
         bool isInterimPositionSendingEnabledForServer() const;
         bool isInterimPositionReceivingEnabledForServer() const;
         bool isVisualPositionSendingEnabledForServer() const;
-        const BlackMisc::Network::CFsdSetup &getSetupForServer() const;
+        const swift::misc::network::CFsdSetup &getSetupForServer() const;
 
         //! Handles ATIS replies from non-VATSIM servers. If the conditions are not met,
         //! the message is released as normal text message.
-        void maybeHandleAtisReply(const BlackMisc::Aviation::CCallsign &sender, const BlackMisc::Aviation::CCallsign &receiver, const QString &message);
+        void maybeHandleAtisReply(const swift::misc::aviation::CCallsign &sender, const swift::misc::aviation::CCallsign &receiver, const QString &message);
 
         //! Settings have been changed
         void fsdMessageSettingsChanged();
@@ -527,19 +527,19 @@ namespace BlackCore::Fsd
         void pendingTimeoutCheck();
 
         //! Fix ATC station range
-        static const BlackMisc::PhysicalQuantities::CLength &fixAtcRange(const BlackMisc::PhysicalQuantities::CLength &networkRange, const BlackMisc::Aviation::CCallsign &cs);
+        static const swift::misc::physical_quantities::CLength &fixAtcRange(const swift::misc::physical_quantities::CLength &networkRange, const swift::misc::aviation::CCallsign &cs);
 
         //! Max or 1st non-null value
-        static const BlackMisc::PhysicalQuantities::CLength &maxOrNotNull(const BlackMisc::PhysicalQuantities::CLength &l1, const BlackMisc::PhysicalQuantities::CLength &l2);
+        static const swift::misc::physical_quantities::CLength &maxOrNotNull(const swift::misc::physical_quantities::CLength &l1, const swift::misc::physical_quantities::CLength &l2);
 
         //! String without colons
         static QString noColons(const QString &input);
 
         //! Get a short-lived, one-time-use token from Vatsim web service, to avoid sending plaintext password to FSD
-        void getVatsimAuthToken(const QString &cid, const QString &password, const BlackMisc::CSlot<void(const QString &)> &callback);
+        void getVatsimAuthToken(const QString &cid, const QString &password, const swift::misc::CSlot<void(const QString &)> &callback);
 
         //! Convert FlightRules to FlightType
-        static FlightType getFlightType(BlackMisc::Aviation::CFlightPlan::FlightRules flightRule);
+        static FlightType getFlightType(swift::misc::aviation::CFlightPlan::FlightRules flightRule);
 
 #ifdef SWIFT_VATSIM_SUPPORT
         vatsim_auth *m_clientAuth = nullptr;
@@ -561,14 +561,14 @@ namespace BlackCore::Fsd
         std::atomic_bool m_unitTestMode { false };
         std::atomic_bool m_printToConsole { false };
 
-        BlackMisc::Network::CConnectionStatus m_connectionStatus;
+        swift::misc::network::CConnectionStatus m_connectionStatus;
         mutable QReadWriteLock m_lockConnectionStatus { QReadWriteLock::Recursive };
 
-        BlackMisc::Aviation::CAircraftParts m_sentAircraftConfig; //!< aircraft parts sent
-        BlackMisc::CTokenBucket m_tokenBucket; //!< used with aircraft parts messages
-        BlackMisc::Aviation::CCallsignSet m_interimPositionReceivers; //!< all aircraft receiving interim positions
-        BlackMisc::Network::CTextMessageList m_textMessagesToConsolidate; //!< waiting for new messages
-        BlackMisc::CDigestSignal m_dsSendTextMessage { this, &CFSDClient::emitConsolidatedTextMessages, 250, 10 };
+        swift::misc::aviation::CAircraftParts m_sentAircraftConfig; //!< aircraft parts sent
+        swift::misc::CTokenBucket m_tokenBucket; //!< used with aircraft parts messages
+        swift::misc::aviation::CCallsignSet m_interimPositionReceivers; //!< all aircraft receiving interim positions
+        swift::misc::network::CTextMessageList m_textMessagesToConsolidate; //!< waiting for new messages
+        swift::misc::CDigestSignal m_dsSendTextMessage { this, &CFSDClient::emitConsolidatedTextMessages, 250, 10 };
 
         //! ATIS message
         struct AtisMessage
@@ -588,13 +588,13 @@ namespace BlackCore::Fsd
             QStringList m_atisMessage;
         };
 
-        QHash<BlackMisc::Aviation::CCallsign, PendingAtisQuery> m_pendingAtisQueries;
-        QHash<BlackMisc::Aviation::CCallsign, qint64> m_lastPositionUpdate;
-        QHash<BlackMisc::Aviation::CCallsign, QList<qint64>> m_lastOffsetTimes; //!< latest offset first
+        QHash<swift::misc::aviation::CCallsign, PendingAtisQuery> m_pendingAtisQueries;
+        QHash<swift::misc::aviation::CCallsign, qint64> m_lastPositionUpdate;
+        QHash<swift::misc::aviation::CCallsign, QList<qint64>> m_lastOffsetTimes; //!< latest offset first
 
-        BlackMisc::Aviation::CAtcStationList m_atcStations;
+        swift::misc::aviation::CAtcStationList m_atcStations;
 
-        BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TRawFsdMessageSetting> m_fsdMessageSetting { this, &CFSDClient::fsdMessageSettingsChanged };
+        swift::misc::CSettingReadOnly<BlackCore::Vatsim::TRawFsdMessageSetting> m_fsdMessageSetting { this, &CFSDClient::fsdMessageSettingsChanged };
         QFile m_rawFsdMessageLogFile;
         std::atomic_bool m_rawFsdMessagesEnabled { false };
         std::atomic_bool m_filterPasswordFromLogin { false };
@@ -614,13 +614,13 @@ namespace BlackCore::Fsd
         mutable QReadWriteLock m_lockStatistics { QReadWriteLock::Recursive }; //!< for user, client and buffered data
 
         // User data
-        BlackMisc::Network::CServer m_server;
-        BlackMisc::Network::CLoginMode m_loginMode;
+        swift::misc::network::CServer m_server;
+        swift::misc::network::CLoginMode m_loginMode;
         QTextCodec *m_fsdTextCodec = nullptr;
         SimType m_simType = SimType::Unknown;
         PilotRating m_pilotRating = PilotRating::Unknown;
         AtcRating m_atcRating = AtcRating::Unknown;
-        BlackMisc::Simulation::CSimulatorInfo m_simTypeInfo; // same as m_simType
+        swift::misc::simulation::CSimulatorInfo m_simTypeInfo; // same as m_simType
 
         // Client data
         QString m_clientName;
@@ -632,10 +632,10 @@ namespace BlackCore::Fsd
         Capabilities m_capabilities = Capabilities::None;
 
         // buffered data for FSD
-        BlackMisc::Aviation::CCallsign m_ownCallsign; //!< "buffered callsign", as this must not change when connected
-        BlackMisc::Aviation::CCallsign m_partnerCallsign; //!< "buffered"callsign", of partner flying in shared cockpit
-        BlackMisc::Aviation::CAircraftIcaoCode m_ownAircraftIcaoCode; //!< "buffered icao", as this must not change when connected
-        BlackMisc::Aviation::CAirlineIcaoCode m_ownAirlineIcaoCode; //!< "buffered icao", as this must not change when connected
+        swift::misc::aviation::CCallsign m_ownCallsign; //!< "buffered callsign", as this must not change when connected
+        swift::misc::aviation::CCallsign m_partnerCallsign; //!< "buffered"callsign", of partner flying in shared cockpit
+        swift::misc::aviation::CAircraftIcaoCode m_ownAircraftIcaoCode; //!< "buffered icao", as this must not change when connected
+        swift::misc::aviation::CAirlineIcaoCode m_ownAirlineIcaoCode; //!< "buffered icao", as this must not change when connected
         QString m_ownLivery; //!< "buffered livery", as this must not change when connected
         QString m_ownModelString; //!< "buffered model string", as this must not change when connected
         std::atomic_bool m_sendLiveryString { true };

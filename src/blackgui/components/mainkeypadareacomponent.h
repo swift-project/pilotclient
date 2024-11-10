@@ -8,8 +8,8 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/maininfoareacomponent.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/network/connectionstatus.h"
+#include "misc/identifier.h"
+#include "misc/network/connectionstatus.h"
 
 #include <QFrame>
 #include <QList>
@@ -19,7 +19,7 @@
 
 class QPushButton;
 
-namespace BlackMisc::Simulation
+namespace swift::misc::simulation
 {
     class CSimulatedAircraft;
 }
@@ -57,10 +57,10 @@ namespace BlackGui::Components
         void changedOpacity(int opacity);
 
         //! \copydoc CCommandInput::commandEntered
-        void commandEntered(const QString &commandLine, const BlackMisc::CIdentifier &originator);
+        void commandEntered(const QString &commandLine, const swift::misc::CIdentifier &originator);
 
         //! \copydoc CCommandInput::commandEntered
-        void textEntered(const QString &commandLine, const BlackMisc::CIdentifier &originator);
+        void textEntered(const QString &commandLine, const swift::misc::CIdentifier &originator);
 
         //! Connect was pressed
         void connectPressed();
@@ -76,10 +76,10 @@ namespace BlackGui::Components
         void buttonSelected();
 
         //! \copydoc BlackCore::Context::IContextNetwork::connectionStatusChanged
-        void connectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+        void connectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
 
         //! \copydoc BlackCore::Context::IContextOwnAircraft::changedAircraftCockpit
-        void ownAircraftCockpitChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+        void ownAircraftCockpitChanged(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator);
 
         //! \copydoc BlackCore::Context::IContextAudio::changedOutputMute
         void outputMuteChanged(bool muted);
@@ -100,7 +100,7 @@ namespace BlackGui::Components
         void updateConnectionStatus();
 
         QScopedPointer<Ui::CMainKeypadAreaComponent> ui;
-        BlackMisc::CIdentifier m_identifier { "MainKeypadAreaComponent", this };
+        swift::misc::CIdentifier m_identifier { "MainKeypadAreaComponent", this };
     };
 } // namespace
 

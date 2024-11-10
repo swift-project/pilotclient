@@ -5,13 +5,13 @@
 #include "blackcore/simulator.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/application.h"
-#include "blackmisc/simulation/data/modelcaches.h"
-#include "blackmisc/math/mathutils.h"
-#include "blackmisc/crashhandler.h"
-#include "blackmisc/directoryutils.h"
-#include "blackmisc/threadutils.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/verify.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/math/mathutils.h"
+#include "misc/crashhandler.h"
+#include "misc/directoryutils.h"
+#include "misc/threadutils.h"
+#include "misc/logmessage.h"
+#include "misc/verify.h"
 
 #include <QFlag>
 #include <Qt>
@@ -27,16 +27,16 @@
 #include <functional>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Math;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::Data;
-using namespace BlackMisc::Simulation::Settings;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Weather;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::geo;
+using namespace swift::misc::math;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::data;
+using namespace swift::misc::simulation::settings;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::network;
+using namespace swift::misc::weather;
 using namespace BlackCore::Db;
 
 namespace BlackCore
@@ -625,7 +625,7 @@ namespace BlackCore
                 this, // receiver must match object in bind
                 nullptr,
                 nullptr,
-                [](const Aviation::CCallsign &) { /* currently not used, the calls are handled by context call logicallyRemoveRemoteAircraft*/ },
+                [](const aviation::CCallsign &) { /* currently not used, the calls are handled by context call logicallyRemoveRemoteAircraft*/ },
                 [this](const CAirspaceAircraftSnapshot &snapshot) { this->rapOnRecalculatedRenderedAircraft(snapshot); }));
 
         // swift data

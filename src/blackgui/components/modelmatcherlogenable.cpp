@@ -12,8 +12,8 @@
 
 using namespace BlackCore;
 using namespace BlackCore::Context;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
 
 namespace BlackGui::Components
 {

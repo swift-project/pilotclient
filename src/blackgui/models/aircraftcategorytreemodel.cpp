@@ -4,11 +4,11 @@
 #include "blackgui/models/aircraftcategorytreemodel.h"
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/columns.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/icon.h"
-#include "blackmisc/threadutils.h"
-#include "blackmisc/variant.h"
-#include "blackmisc/propertyindex.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/icon.h"
+#include "misc/threadutils.h"
+#include "misc/variant.h"
+#include "misc/propertyindex.h"
 
 #include <QList>
 #include <QMap>
@@ -19,9 +19,9 @@
 #include <QtDebug>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::aviation;
 
 namespace BlackGui::Models
 {

@@ -12,26 +12,26 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextaudio.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackmisc/audio/audiodeviceinfolist.h"
-#include "blackmisc/audio/notificationsounds.h"
-#include "blackmisc/aviation/callsignset.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/aviation/selcal.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/network/userlist.h"
+#include "misc/audio/audiodeviceinfolist.h"
+#include "misc/audio/notificationsounds.h"
+#include "misc/aviation/callsignset.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/aviation/selcal.h"
+#include "misc/identifier.h"
+#include "misc/network/userlist.h"
 
 // clazy:excludeall=const-signal-or-slot
 
 class QDBusConnection;
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CGenericDBusInterface;
     namespace Audio
     {
         class CAudioDeviceInfo;
     }
-    namespace Aviation
+    namespace aviation
     {
         class CCallsign;
     }
@@ -60,28 +60,28 @@ namespace BlackCore
 
         public slots:
             //! \copydoc BlackCore::Context::CContextAudioBase::getRegisteredDevices
-            virtual BlackMisc::Audio::CAudioDeviceInfoList getRegisteredDevices() const override;
+            virtual swift::misc::audio::CAudioDeviceInfoList getRegisteredDevices() const override;
 
             //! \copydoc BlackCore::Context::CContextAudioBase::registerDevices
-            virtual void registerDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) override;
+            virtual void registerDevices(const swift::misc::audio::CAudioDeviceInfoList &devices) override;
 
             //! \copydoc BlackCore::Context::CContextAudioBase::unRegisterDevices
-            virtual void unRegisterDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) override;
+            virtual void unRegisterDevices(const swift::misc::audio::CAudioDeviceInfoList &devices) override;
 
             //! \copydoc BlackCore::Context::CContextAudioBase::unRegisterDevicesFor
-            virtual void unRegisterDevicesFor(const BlackMisc::CIdentifier &identifier) override;
+            virtual void unRegisterDevicesFor(const swift::misc::CIdentifier &identifier) override;
 
             //! \copydoc BlackCore::Context::CContextAudioBase::registerAudioCallsign
-            virtual void registerAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CIdentifier &identifier) override;
+            virtual void registerAudioCallsign(const swift::misc::aviation::CCallsign &callsign, const swift::misc::CIdentifier &identifier) override;
 
             //! \copydoc BlackCore::Context::CContextAudioBase::unRegisterAudioCallsign
-            virtual void unRegisterAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CIdentifier &identifier) override;
+            virtual void unRegisterAudioCallsign(const swift::misc::aviation::CCallsign &callsign, const swift::misc::CIdentifier &identifier) override;
 
             //! \copydoc BlackCore::Context::CContextAudioBase::hasRegisteredAudioCallsign
-            virtual bool hasRegisteredAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual bool hasRegisteredAudioCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
 
         private:
-            BlackMisc::CGenericDBusInterface *m_dBusInterface;
+            swift::misc::CGenericDBusInterface *m_dBusInterface;
 
             //! Relay connection signals to local signals
             //! No idea why this has to be wired and is not done automatically

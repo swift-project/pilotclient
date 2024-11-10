@@ -6,7 +6,7 @@
 
 #include <QRadioButton>
 
-using namespace BlackMisc::Simulation;
+using namespace swift::misc::simulation;
 
 namespace BlackGui::Components
 {
@@ -22,7 +22,7 @@ namespace BlackGui::Components
         // void
     }
 
-    BlackMisc::Simulation::CAircraftModel::ModelMode CModelModeSelector::getMode() const
+    swift::misc::simulation::CAircraftModel::ModelMode CModelModeSelector::getMode() const
     {
         if (ui->rb_Include->isChecked())
         {

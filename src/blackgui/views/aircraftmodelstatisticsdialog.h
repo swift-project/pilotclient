@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_VIEW_AIRCRAFTMODELSTATISTICSDIALOG_H
 #define BLACKGUI_VIEW_AIRCRAFTMODELSTATISTICSDIALOG_H
 
-#include "blackmisc/simulation/aircraftmodellist.h"
+#include "misc/simulation/aircraftmodellist.h"
 #include <QDialog>
 #include <QScopedPointer>
 
@@ -29,14 +29,14 @@ namespace BlackGui::Views
         virtual ~CAircraftModelStatisticsDialog();
 
         //! Set and analyze the models
-        void analyzeModels(const BlackMisc::Simulation::CAircraftModelList &models);
+        void analyzeModels(const swift::misc::simulation::CAircraftModelList &models);
 
     private:
         //! Display the HTML matrix
         void displayHTMLMatrix();
 
         QScopedPointer<Ui::CAircraftModelStatisticsDialog> ui;
-        BlackMisc::Simulation::CAircraftModelList m_models;
+        swift::misc::simulation::CAircraftModelList m_models;
     };
 } // ns
 

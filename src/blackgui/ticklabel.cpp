@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackgui/ticklabel.h"
-#include "blackmisc/icons.h"
+#include "misc/icons.h"
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui
 {

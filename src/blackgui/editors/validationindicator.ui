@@ -47,7 +47,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="../../blackmisc/blackmisc.qrc">:/diagona/icons/diagona/icons/tick.png</pixmap>
+      <pixmap resource="../../misc/misc.qrc">:/diagona/icons/diagona/icons/tick.png</pixmap>
      </property>
      <property name="alignment">
       <set>Qt::AlignJustify|Qt::AlignVCenter</set>
@@ -57,7 +57,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
+  <include location="../../misc/misc.qrc"/>
  </resources>
  <connections/>
 </ui>

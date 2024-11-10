@@ -3,17 +3,17 @@
 
 #include "blackgui/models/columns.h"
 #include "blackgui/models/distributorlistmodel.h"
-#include "blackmisc/db/datastore.h"
-#include "blackmisc/propertyindexvariantmap.h"
-#include "blackmisc/simulation/distributor.h"
-#include "blackmisc/simulation/simulatorinfo.h"
-#include "blackmisc/timestampbased.h"
+#include "misc/db/datastore.h"
+#include "misc/propertyindexvariantmap.h"
+#include "misc/simulation/distributor.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/timestampbased.h"
 
 #include <Qt>
 #include <QtDebug>
 #include <QtGlobal>
 
-using namespace BlackMisc::Simulation;
+using namespace swift::misc::simulation;
 
 namespace BlackGui::Models
 {

@@ -7,8 +7,8 @@
 #define BLACKGUI_SETTINGS_GUI_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/settingscache.h"
-#include "blackmisc/simulation/aircraftmodel.h"
+#include "misc/settingscache.h"
+#include "misc/simulation/aircraftmodel.h"
 
 #include <QString>
 #include <QAbstractItemView>
@@ -19,13 +19,13 @@ namespace BlackGui::Settings
 {
     //! General GUI settings
     class BLACKGUI_EXPORT CGeneralGuiSettings :
-        public BlackMisc::CValueObject<CGeneralGuiSettings>
+        public swift::misc::CValueObject<CGeneralGuiSettings>
     {
     public:
         //! Properties by index
         enum ColumnIndex
         {
-            IndexWidgetStyle = BlackMisc::CPropertyIndexRef::GlobalIndexCGeneralGuiSettings,
+            IndexWidgetStyle = swift::misc::CPropertyIndexRef::GlobalIndexCGeneralGuiSettings,
             IndexPreferredSelection
         };
 
@@ -47,14 +47,14 @@ namespace BlackGui::Settings
         //! Preferred selection
         void setPreferredSelection(QAbstractItemView::SelectionMode selection);
 
-        //! \copydoc BlackMisc::Mixin::String::toQString
+        //! \copydoc swift::misc::mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
-        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-        QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
+        //! \copydoc swift::misc::mixin::Index::propertyByIndex
+        QVariant propertyByIndex(swift::misc::CPropertyIndexRef index) const;
 
-        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
+        //! \copydoc swift::misc::mixin::Index::setPropertyByIndex
+        void setPropertyByIndex(swift::misc::CPropertyIndexRef index, const QVariant &variant);
 
     private:
         QString m_widgetStyle { "Fusion" };
@@ -68,12 +68,12 @@ namespace BlackGui::Settings
     };
 
     //! General GUI settings
-    struct TGeneralGui : public BlackMisc::TSettingTrait<CGeneralGuiSettings>
+    struct TGeneralGui : public swift::misc::TSettingTrait<CGeneralGuiSettings>
     {
-        //! \copydoc BlackMisc::TSettingTrait::key
+        //! \copydoc swift::misc::TSettingTrait::key
         static const char *key() { return "guigeneral"; }
 
-        //! \copydoc BlackMisc::TSettingTrait::humanReadable
+        //! \copydoc swift::misc::TSettingTrait::humanReadable
         static const QString &humanReadable()
         {
             static const QString name("General GUI");
@@ -82,22 +82,22 @@ namespace BlackGui::Settings
     };
 
     //! Settings for last manual entries of own aircraft mode
-    struct TBackgroundConsolidation : public BlackMisc::TSettingTrait<int>
+    struct TBackgroundConsolidation : public swift::misc::TSettingTrait<int>
     {
-        //! \copydoc BlackMisc::TSettingTrait::key
+        //! \copydoc swift::misc::TSettingTrait::key
         static const char *key() { return "backgroundconsolidation"; }
 
-        //! \copydoc BlackMisc::TSettingTrait::humanReadable
+        //! \copydoc swift::misc::TSettingTrait::humanReadable
         static const QString &humanReadable()
         {
             static const QString name("Background consolidation");
             return name;
         }
 
-        //! \copydoc BlackMisc::TSettingTrait::isValid
+        //! \copydoc swift::misc::TSettingTrait::isValid
         static bool isValid(const int &valueInSeconds, QString &) { return valueInSeconds == -1 || (valueInSeconds >= minSecs() && valueInSeconds <= maxSecs()); }
 
-        //! \copydoc BlackMisc::TSettingTrait::defaultValue
+        //! \copydoc swift::misc::TSettingTrait::defaultValue
         static const int &defaultValue()
         {
             static const int i = 60;
@@ -113,6 +113,6 @@ namespace BlackGui::Settings
 } // ns
 
 Q_DECLARE_METATYPE(BlackGui::Settings::CGeneralGuiSettings)
-Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackGui::Settings::CGeneralGuiSettings>)
+Q_DECLARE_METATYPE(swift::misc::CCollection<BlackGui::Settings::CGeneralGuiSettings>)
 
 #endif // guard

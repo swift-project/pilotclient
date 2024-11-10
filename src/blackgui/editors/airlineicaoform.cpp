@@ -11,9 +11,9 @@
 #include "blackgui/labelandicon.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/icons.h"
+#include "misc/aviation/airlineicaocodelist.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/icons.h"
 #include "ui_airlineicaoform.h"
 
 #include <QCheckBox>
@@ -21,8 +21,8 @@
 #include <QLineEdit>
 #include <QMetaType>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 using namespace BlackGui::Components;
 
 namespace BlackGui::Editors
@@ -177,7 +177,7 @@ namespace BlackGui::Editors
         try
         {
             CVariant jsonVariant;
-            jsonVariant.convertFromJson(Json::jsonObjectFromString(json));
+            jsonVariant.convertFromJson(json::jsonObjectFromString(json));
             if (!jsonVariant.canConvert<CAirlineIcaoCodeList>()) { return; }
             const CAirlineIcaoCodeList icaos = jsonVariant.value<CAirlineIcaoCodeList>();
             if (!icaos.isEmpty())
@@ -191,7 +191,7 @@ namespace BlackGui::Editors
         }
     }
 
-    void CAirlineIcaoForm::onDroppedCode(const BlackMisc::CVariant &variantDropped)
+    void CAirlineIcaoForm::onDroppedCode(const swift::misc::CVariant &variantDropped)
     {
         CAirlineIcaoCode icao;
         if (variantDropped.canConvert<CAirlineIcaoCode>())

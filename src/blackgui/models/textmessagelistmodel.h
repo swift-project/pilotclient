@@ -8,11 +8,11 @@
 
 #include "blackgui/models/listmodeltimestampobjects.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/network/textmessagelist.h"
+#include "misc/network/textmessagelist.h"
 
 class QObject;
 
-namespace BlackMisc::Network
+namespace swift::misc::network
 {
     class CTextMessage;
 }
@@ -20,7 +20,7 @@ namespace BlackGui::Models
 {
     //! Text message list model
     class BLACKGUI_EXPORT CTextMessageListModel :
-        public CListModelTimestampObjects<BlackMisc::Network::CTextMessageList, true>
+        public CListModelTimestampObjects<swift::misc::network::CTextMessageList, true>
     {
         Q_OBJECT
 

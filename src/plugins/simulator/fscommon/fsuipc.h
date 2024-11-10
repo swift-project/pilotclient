@@ -7,7 +7,7 @@
 #define BLACKSIMPLUGIN_FSUIPC_H
 
 #include "plugins/simulator/fscommon/fscommonexport.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "misc/simulation/simulatedaircraft.h"
 #include <QStringList>
 
 namespace BlackSimPlugin::FsCommon
@@ -37,7 +37,7 @@ namespace BlackSimPlugin::FsCommon
         bool isOpen() const;
 
         //! Write variables
-        bool write(const BlackMisc::Aviation::CTransponder &xpdr);
+        bool write(const swift::misc::aviation::CTransponder &xpdr);
 
         //! Set simulator time
         bool setSimulatorTime(int hour, int minute);
@@ -51,7 +51,7 @@ namespace BlackSimPlugin::FsCommon
         //! \param situation      update situation data
         //! \param aircraftParts  update parts
         //! \return read
-        bool read(BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool cockpit, bool situation, bool aircraftParts);
+        bool read(swift::misc::simulation::CSimulatedAircraft &aircraft, bool cockpit, bool situation, bool aircraftParts);
 
         //! Error messages
         static const QStringList &errorMessages()

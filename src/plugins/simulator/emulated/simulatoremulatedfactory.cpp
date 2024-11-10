@@ -3,18 +3,18 @@
 
 #include "simulatoremulatedfactory.h"
 #include "simulatoremulated.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
+#include "misc/simulation/simulatorplugininfo.h"
 #include <QTimer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
 
 namespace BlackSimPlugin::Emulated
 {
     BlackCore::ISimulator *CSimulatorEmulatedFactory::create(const CSimulatorPluginInfo &info,
                                                              IOwnAircraftProvider *ownAircraftProvider,
                                                              IRemoteAircraftProvider *remoteAircraftProvider,
-                                                             Network::IClientProvider *clientProvider)
+                                                             network::IClientProvider *clientProvider)
     {
         Q_ASSERT(ownAircraftProvider);
         return new CSimulatorEmulated(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, this);

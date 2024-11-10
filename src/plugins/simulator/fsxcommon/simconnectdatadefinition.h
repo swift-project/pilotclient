@@ -8,13 +8,13 @@
 
 #include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 #include "plugins/simulator/fsxcommon/simconnectwindows.h"
-#include "blackmisc/aviation/aircraftlights.h"
+#include "misc/aviation/aircraftlights.h"
 
 #include <algorithm>
 #include <QtGlobal>
 #include <QString>
 
-namespace BlackMisc::Aviation
+namespace swift::misc::aviation
 {
     class CAircraftParts;
 }
@@ -151,7 +151,7 @@ namespace BlackSimPlugin::FsxCommon
         DataDefinitionRemoteAircraftPartsWithoutLights();
 
         //! Ctor
-        DataDefinitionRemoteAircraftPartsWithoutLights(const BlackMisc::Aviation::CAircraftParts &parts);
+        DataDefinitionRemoteAircraftPartsWithoutLights(const swift::misc::aviation::CAircraftParts &parts);
 
         //! Equal to other parts
         bool operator==(const DataDefinitionRemoteAircraftPartsWithoutLights &rhs) const;
@@ -172,7 +172,7 @@ namespace BlackSimPlugin::FsxCommon
         void resetToInvalid();
 
         //! Init from parts
-        void initFromParts(const BlackMisc::Aviation::CAircraftParts &parts);
+        void initFromParts(const swift::misc::aviation::CAircraftParts &parts);
     };
 
     //! Data for aircraft lighs
@@ -188,7 +188,7 @@ namespace BlackSimPlugin::FsxCommon
         double lightCabin; //!< Is cabin light on
 
         //! Convert to lights
-        BlackMisc::Aviation::CAircraftLights toLights() const;
+        swift::misc::aviation::CAircraftLights toLights() const;
     };
 
     //! Data for AI object and probe sent back from simulator

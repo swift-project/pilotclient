@@ -6,7 +6,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextsimulator.h"
 
-using namespace BlackMisc::Simulation;
+using namespace swift::misc::simulation;
 using namespace BlackCore::Context;
 using namespace BlackGui::Views;
 

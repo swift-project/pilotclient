@@ -8,8 +8,8 @@
 
 #include "blackgui/editors/form.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/geo/coordinategeodetic.h"
+#include "misc/statusmessagelist.h"
 
 namespace Ui
 {
@@ -32,15 +32,15 @@ namespace BlackGui::Editors
         virtual ~CCoordinateForm() override;
 
         //! Get the coordinate
-        BlackMisc::Geo::CCoordinateGeodetic getCoordinate() const { return m_coordinate; }
+        swift::misc::geo::CCoordinateGeodetic getCoordinate() const { return m_coordinate; }
 
         //! Set the coordinate
-        bool setCoordinate(const BlackMisc::Geo::ICoordinateGeodetic &coordinate);
+        bool setCoordinate(const swift::misc::geo::ICoordinateGeodetic &coordinate);
 
         //! \name Form class implementations
         //! @{
         virtual void setReadOnly(bool readonly) override;
-        virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+        virtual swift::misc::CStatusMessageList validate(bool nested = false) const override;
         //! @}
 
         //! Set button visible
@@ -64,7 +64,7 @@ namespace BlackGui::Editors
         void elvEntered();
         void presetOwnAircraftPosition();
 
-        BlackMisc::Geo::CCoordinateGeodetic m_coordinate;
+        swift::misc::geo::CCoordinateGeodetic m_coordinate;
     };
 } // ns
 #endif // guard

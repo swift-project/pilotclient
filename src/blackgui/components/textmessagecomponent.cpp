@@ -12,20 +12,20 @@
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/application.h"
 #include "blackcore/corefacade.h"
-#include "blackmisc/audio/notificationsounds.h"
-#include "blackmisc/network/textmessage.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/pq/constants.h"
-#include "blackmisc/pq/frequency.h"
-#include "blackmisc/pq/units.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/iterator.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/sequence.h"
-#include "blackmisc/verify.h"
+#include "misc/audio/notificationsounds.h"
+#include "misc/network/textmessage.h"
+#include "misc/network/user.h"
+#include "misc/aviation/atcstation.h"
+#include "misc/aviation/callsign.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/pq/constants.h"
+#include "misc/pq/frequency.h"
+#include "misc/pq/units.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/iterator.h"
+#include "misc/logmessage.h"
+#include "misc/sequence.h"
+#include "misc/verify.h"
 
 #include <QApplication>
 #include <QLayout>
@@ -41,15 +41,15 @@
 
 using namespace BlackCore;
 using namespace BlackCore::Context;
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui;
 using namespace BlackGui::Settings;
 using namespace BlackGui::Views;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Audio;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc::network;
+using namespace swift::misc::audio;
+using namespace swift::misc::aviation;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::simulation;
 
 namespace BlackGui::Components
 {

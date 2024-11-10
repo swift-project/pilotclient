@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_SPLASHSCREEN_H
 #define BLACKGUI_SPLASHSCREEN_H
 
-#include "blackmisc/statusmessage.h"
+#include "misc/statusmessage.h"
 #include <QSplashScreen>
 #include <QPainter>
 #include <QPixmap>
@@ -29,7 +29,7 @@ namespace BlackGui
         void showStatusMessage(const QString &html);
 
         //! Show status message
-        void showStatusMessage(const BlackMisc::CStatusMessage &message);
+        void showStatusMessage(const swift::misc::CStatusMessage &message);
 
         //! Set the font for the splash screen
         void setSplashFont(const QFont &font);

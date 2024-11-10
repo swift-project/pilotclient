@@ -5,14 +5,14 @@
 #include "copyxswiftbusdialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackmisc/simulation/xplane/xplaneutil.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
+#include "misc/simulation/xplane/xplaneutil.h"
+#include "misc/swiftdirectories.h"
+#include "misc/directoryutils.h"
 #include "config/buildconfig.h"
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation::XPlane;
+using namespace swift::misc;
+using namespace swift::misc::simulation::xplane;
 using namespace BlackCore::Context;
 
 namespace BlackGui

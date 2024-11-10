@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simconnectsymbols.h"
-#include "blackmisc/stringutils.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/logcategories.h"
+#include "misc/stringutils.h"
+#include "misc/logmessage.h"
+#include "misc/logcategories.h"
 #include <QLibrary>
 #include <Windows.h>
 #include <SimConnect.h>
@@ -12,7 +12,7 @@
 
 // clazy:excludeall=function-args-by-ref
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 bool loadAndResolveSimConnect(bool manifestProbing)
 {

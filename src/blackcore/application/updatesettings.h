@@ -8,29 +8,29 @@
 
 #include "blackcore/application.h"
 #include "config/buildconfig.h"
-#include "blackmisc/platform.h"
-#include "blackmisc/settingscache.h"
+#include "misc/platform.h"
+#include "misc/settingscache.h"
 #include <QStringList>
 
 namespace BlackCore::Application
 {
     //! Update info settings, QStringList with 2 values: channel/platform
-    struct TUpdatePreferences : public BlackMisc::TSettingTrait<QStringList>
+    struct TUpdatePreferences : public swift::misc::TSettingTrait<QStringList>
     {
-        //! \copydoc BlackMisc::TSettingTrait::key
+        //! \copydoc swift::misc::TSettingTrait::key
         static const char *key() { return "updatepreferences"; }
 
-        //! \copydoc BlackMisc::TSettingTrait::defaultValue
+        //! \copydoc swift::misc::TSettingTrait::defaultValue
         static const QStringList &defaultValue()
         {
             // guessing / preset-ing some default values
             static const QStringList d = (sApp && !sApp->getUpdateInfo().isEmpty()) ?
                                              sApp->getUpdateInfo().anticipateMyDefaultChannelAndPlatform() : // from cached or loaded update info
-                                             QStringList({ "STABLE", BlackMisc::CPlatform::currentPlatform().getPlatformName() });
+                                             QStringList({ "STABLE", swift::misc::CPlatform::currentPlatform().getPlatformName() });
             return d;
         }
 
-        //! \copydoc BlackMisc::TSettingTrait::humanReadable
+        //! \copydoc swift::misc::TSettingTrait::humanReadable
         static const QString &humanReadable()
         {
             static const QString name("Updates channel/platform");

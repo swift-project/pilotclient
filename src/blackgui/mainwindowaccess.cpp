@@ -6,7 +6,7 @@
 #include "blackgui/managedstatusbar.h"
 #include "blackgui/overlaymessagesframe.h"
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui
 {

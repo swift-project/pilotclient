@@ -7,7 +7,7 @@
 #define BLACKGUI_COMPONENTS_ATCBUTTONCOMPONENT_H
 
 #include "blackcore/context/contextnetwork.h"
-#include "blackmisc/network/connectionstatus.h"
+#include "misc/network/connectionstatus.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -52,14 +52,14 @@ namespace BlackGui::Components
 
     signals:
         //! ATC station clicked
-        void requestAtcStation(const BlackMisc::Aviation::CAtcStation &station);
+        void requestAtcStation(const swift::misc::aviation::CAtcStation &station);
 
     private:
         //! Changed ATC stations
         void onChangedAtcStations();
 
         //! Connection status did change
-        void onConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+        void onConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
 
         //! Button has been clicked
         void onButtonClicked();

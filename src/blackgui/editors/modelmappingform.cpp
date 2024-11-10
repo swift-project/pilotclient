@@ -7,18 +7,18 @@
 #include "blackgui/editors/validationindicator.h"
 #include "blackgui/labelandicon.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/network/authenticateduser.h"
-#include "blackmisc/stringutils.h"
+#include "misc/icons.h"
+#include "misc/network/authenticateduser.h"
+#include "misc/stringutils.h"
 #include "ui_modelmappingform.h"
 
 #include <QLineEdit>
 #include <QPushButton>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::network;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::simulation;
 using namespace BlackGui::Components;
 
 namespace BlackGui::Editors
@@ -45,7 +45,7 @@ namespace BlackGui::Editors
     CModelMappingForm::~CModelMappingForm()
     {}
 
-    BlackMisc::Simulation::CAircraftModel CModelMappingForm::getValue() const
+    swift::misc::simulation::CAircraftModel CModelMappingForm::getValue() const
     {
         CAircraftModel model(m_originalModel);
         model.setSimulator(ui->selector_Simulator->getValue());
@@ -79,7 +79,7 @@ namespace BlackGui::Editors
         this->setReadOnly(true);
     }
 
-    void CModelMappingForm::setValue(BlackMisc::Simulation::CAircraftModel &model)
+    void CModelMappingForm::setValue(swift::misc::simulation::CAircraftModel &model)
     {
         ui->le_ModelKey->setText(model.getModelString());
         ui->le_LastUpdated->setText(model.getFormattedUtcTimestampYmdhms());

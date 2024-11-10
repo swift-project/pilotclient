@@ -9,9 +9,9 @@
 #include "blackcore/actionbind.h"
 #include "blackgui/blackguiexport.h"
 
-#include "blackmisc/audio/audiodeviceinfo.h"
-#include "blackmisc/input/actionhotkeydefs.h"
-#include "blackmisc/network/connectionstatus.h"
+#include "misc/audio/audiodeviceinfo.h"
+#include "misc/input/actionhotkeydefs.h"
+#include "misc/network/connectionstatus.h"
 
 #include <QFrame>
 #include <QObject>
@@ -57,9 +57,9 @@ namespace BlackGui::Components
 
     private:
         QScopedPointer<Ui::CInfoBarStatusComponent> ui;
-        BlackCore::CActionBind m_actionPtt { BlackMisc::Input::pttHotkeyAction(), BlackMisc::Input::pttHotkeyIcon(), this, &CInfoBarStatusComponent::onPttChanged };
+        BlackCore::CActionBind m_actionPtt { swift::misc::input::pttHotkeyAction(), swift::misc::input::pttHotkeyIcon(), this, &CInfoBarStatusComponent::onPttChanged };
 
-        BlackMisc::CDigestSignal m_dsResize { this, &CInfoBarStatusComponent::adjustTextSize, 1000, 50 };
+        swift::misc::CDigestSignal m_dsResize { this, &CInfoBarStatusComponent::adjustTextSize, 1000, 50 };
 
         //! Audio available and NOT muted
         static bool isAudioAvailableAndNotMuted();
@@ -74,7 +74,7 @@ namespace BlackGui::Components
         void onSimulatorStatusChanged(int status);
 
         //! Network connection has been changed
-        void onNetworkConnectionChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+        void onNetworkConnectionChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
 
         //! Context menu requested
         void onCustomAudioContextMenuRequested(const QPoint &position);
@@ -83,7 +83,7 @@ namespace BlackGui::Components
         void onOutputMuteChanged(bool muted);
 
         //! Audio started
-        void onAudioStarted(const BlackMisc::Audio::CAudioDeviceInfo &input, const BlackMisc::Audio::CAudioDeviceInfo &output);
+        void onAudioStarted(const swift::misc::audio::CAudioDeviceInfo &input, const swift::misc::audio::CAudioDeviceInfo &output);
 
         //! Audio stopped
         void onAudioStopped();

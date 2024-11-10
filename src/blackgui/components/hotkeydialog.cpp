@@ -6,12 +6,12 @@
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/inputmanager.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/input/hotkeycombination.h"
-#include "blackmisc/input/keyboardkeylist.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/icons.h"
+#include "misc/identifier.h"
+#include "misc/input/hotkeycombination.h"
+#include "misc/input/keyboardkeylist.h"
+#include "misc/logmessage.h"
+#include "misc/statusmessage.h"
 #include "ui_hotkeydialog.h"
 
 #include <QFrame>
@@ -32,8 +32,8 @@
 #include <Qt>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Input;
+using namespace swift::misc;
+using namespace swift::misc::input;
 using namespace BlackCore;
 using namespace BlackGui::Models;
 

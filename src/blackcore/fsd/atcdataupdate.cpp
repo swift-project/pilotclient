@@ -4,10 +4,10 @@
 #include "blackcore/fsd/atcdataupdate.h"
 #include "blackcore/fsd/serializer.h"
 
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 
 namespace BlackCore::Fsd
 {

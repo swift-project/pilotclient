@@ -8,8 +8,8 @@
 
 #include "blackgui/loadindicator.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/digestsignal.h"
-#include "blackmisc/network/entityflags.h"
+#include "misc/digestsignal.h"
+#include "misc/network/entityflags.h"
 
 #include <QFrame>
 #include <QScopedPointer>
@@ -66,17 +66,17 @@ namespace BlackGui::Components
 
     private:
         QScopedPointer<Ui::CDbLoadOverviewComponent> ui;
-        BlackMisc::CDigestSignal m_dsTriggerGuiUpdate { this, &CDbLoadOverviewComponent::setGuiValues, 2500, 5 };
+        swift::misc::CDigestSignal m_dsTriggerGuiUpdate { this, &CDbLoadOverviewComponent::setGuiValues, 2500, 5 };
         qint64 m_sharedLastCheck = -1; //!< when shared URLs were last checked
         bool m_sharedValueCheckInProgress = false; //!< setting values in progress, needed because of CNetworkUtils::canConnect check (processing events)
         const QString m_imgOk = ":/diagona/icons/diagona/icons/tick.png";
         const QString m_imgFailed = ":/diagona/icons/diagona/icons/cross-script.png";
 
         //! Trigger loading from DB
-        void triggerLoadingFromDb(BlackMisc::Network::CEntityFlags::Entity entities);
+        void triggerLoadingFromDb(swift::misc::network::CEntityFlags::Entity entities);
 
         //! Trigger loading from shared files
-        void triggerLoadingFromSharedFiles(BlackMisc::Network::CEntityFlags::Entity entities);
+        void triggerLoadingFromSharedFiles(swift::misc::network::CEntityFlags::Entity entities);
 
         //! Values at least set once
         bool isInitialized() const;
@@ -94,7 +94,7 @@ namespace BlackGui::Components
         void setSharedUrlValues();
 
         //! Data have been loaded
-        void dataLoaded(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        void dataLoaded(swift::misc::network::CEntityFlags::Entity entities, swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
         //! Load info objects if not already loaded
         void loadInfoObjects();
@@ -106,22 +106,22 @@ namespace BlackGui::Components
         static QString formattedTimestamp(const QDateTime &dateTime);
 
         //! Formatted ts for entity (cache)
-        static QString cacheTimestampForEntity(BlackMisc::Network::CEntityFlags::Entity entity);
+        static QString cacheTimestampForEntity(swift::misc::network::CEntityFlags::Entity entity);
 
         //! Formatted count for entity (cache)
-        static QString cacheCountForEntity(BlackMisc::Network::CEntityFlags::Entity entity);
+        static QString cacheCountForEntity(swift::misc::network::CEntityFlags::Entity entity);
 
         //! Formatted ts for entity (DB)
-        static QString dbTimestampForEntity(BlackMisc::Network::CEntityFlags::Entity entity);
+        static QString dbTimestampForEntity(swift::misc::network::CEntityFlags::Entity entity);
 
         //! Formatted count for entity (DB)
-        static QString dbCountForEntity(BlackMisc::Network::CEntityFlags::Entity entity);
+        static QString dbCountForEntity(swift::misc::network::CEntityFlags::Entity entity);
 
         //! Formatted ts for entity (shared)
-        static QString sharedFileTimestampForEntity(BlackMisc::Network::CEntityFlags::Entity entity);
+        static QString sharedFileTimestampForEntity(swift::misc::network::CEntityFlags::Entity entity);
 
         //! Formatted count for entity (shared)
-        static QString sharedCountForEntity(BlackMisc::Network::CEntityFlags::Entity entity);
+        static QString sharedCountForEntity(swift::misc::network::CEntityFlags::Entity entity);
 
         //! Admit caches
         static void admitCaches();

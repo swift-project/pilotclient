@@ -9,7 +9,7 @@
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/network/entityflags.h"
+#include "misc/network/entityflags.h"
 
 #include <QFrame>
 #include <QObject>
@@ -42,7 +42,7 @@ namespace BlackGui::Components
 
     private:
         //! Countries have been read
-        void onCountriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count, const QUrl &url);
+        void onCountriesRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState readState, int count, const QUrl &url);
 
         //! Reload models
         void onReload();

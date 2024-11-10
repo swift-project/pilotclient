@@ -6,7 +6,7 @@
 
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui;
 using namespace BlackGui::Views;
 

@@ -8,8 +8,8 @@
 #include "blackgui/views/statusmessageview.h"
 #include "blackcore/context/contextsimulator.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 using namespace BlackGui::Views;
 
 namespace BlackGui::Components

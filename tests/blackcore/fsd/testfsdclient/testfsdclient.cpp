@@ -10,26 +10,26 @@
 
 #include "config/buildconfig.h"
 #include "blackcore/fsd/fsdclient.h"
-#include "blackmisc/aviation/flightplan.h"
-#include "blackmisc/network/clientprovider.h"
-#include "blackmisc/network/rawfsdmessage.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/simulation/ownaircraftproviderdummy.h"
-#include "blackmisc/simulation/remoteaircraftproviderdummy.h"
-#include "blackmisc/registermetadata.h"
-#include "blackmisc/network/user.h"
+#include "misc/aviation/flightplan.h"
+#include "misc/network/clientprovider.h"
+#include "misc/network/rawfsdmessage.h"
+#include "misc/network/networkutils.h"
+#include "misc/simulation/ownaircraftproviderdummy.h"
+#include "misc/simulation/remoteaircraftproviderdummy.h"
+#include "misc/registermetadata.h"
+#include "misc/network/user.h"
 #include "test.h"
 
 #include <QObject>
 #include <QSignalSpy>
 #include <QTest>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::geo;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
 using namespace swift::config;
 using namespace BlackCore::Fsd;
 
@@ -110,7 +110,7 @@ namespace BlackFsdTest
 
     void CTestFSDClient::initTestCase()
     {
-        BlackMisc::registerMetadata();
+        swift::misc::registerMetadata();
     }
 
     const CServer &CTestFSDClient::localTestServer()
@@ -147,7 +147,7 @@ namespace BlackFsdTest
         m_client->setClientName("Test Client");
         m_client->setVersion(0, 8);
         m_client->setClientCapabilities(Capabilities::AtcInfo | Capabilities::AircraftInfo | Capabilities::AircraftConfig);
-        m_client->setLoginMode(BlackMisc::Network::CLoginMode::Pilot);
+        m_client->setLoginMode(swift::misc::network::CLoginMode::Pilot);
         m_client->setServer(server);
         m_client->setPilotRating(PilotRating::Student);
         m_client->setSimType(CSimulatorInfo::xplane());
@@ -272,7 +272,7 @@ namespace BlackFsdTest
         QCOMPARE(spyLogoff.count(), 1);
         QList<QVariant> arguments = spyLogoff.takeFirst();
         QCOMPARE(arguments.size(), 2);
-        auto receivedCallsign = arguments.at(0).value<BlackMisc::Aviation::CCallsign>();
+        auto receivedCallsign = arguments.at(0).value<swift::misc::aviation::CCallsign>();
         auto receivedLogoffTime = arguments.at(1).value<QString>();
         QCOMPARE(callsign, receivedCallsign);
         QCOMPARE(receivedLogoffTime, "2000z");
@@ -281,8 +281,8 @@ namespace BlackFsdTest
         QCOMPARE(spyAtis.count(), 1);
         arguments = spyAtis.takeFirst();
         QCOMPARE(arguments.size(), 2);
-        receivedCallsign = arguments.at(0).value<BlackMisc::Aviation::CCallsign>();
-        auto atisMessage = arguments.at(1).value<BlackMisc::Aviation::CInformationMessage>();
+        receivedCallsign = arguments.at(0).value<swift::misc::aviation::CCallsign>();
+        auto atisMessage = arguments.at(1).value<swift::misc::aviation::CInformationMessage>();
         QCOMPARE(callsign, receivedCallsign);
         QCOMPARE(atisMessage.toQString(), "Dortmund Tower\nUseful information\nMore useful information");
     }
@@ -394,7 +394,7 @@ namespace BlackFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 2);
-        CClient::Capabilities caps = arguments.at(1).value<BlackMisc::Network::CClient::Capabilities>();
+        CClient::Capabilities caps = arguments.at(1).value<swift::misc::network::CClient::Capabilities>();
         QVERIFY(caps.testFlag(CClient::FsdWithAircraftConfig));
     }
 
@@ -483,7 +483,7 @@ namespace BlackFsdTest
     {
         QSignalSpy spy(m_client, &CFSDClient::rawFsdMessage);
 
-        const Geo::CCoordinateGeodetic ownPosition(48.353855, 11.786155);
+        const geo::CCoordinateGeodetic ownPosition(48.353855, 11.786155);
         const CHeading heading(25.0, CAngleUnit::deg());
         const CAngle pitch(1.0, CAngleUnit::deg());
         const CAngle bank(1.0, CAngleUnit::deg());
@@ -515,7 +515,7 @@ namespace BlackFsdTest
     {
         QSignalSpy spy(m_client, &CFSDClient::rawFsdMessage);
 
-        const Geo::CCoordinateGeodetic ownPosition(48.353855, 11.786155);
+        const geo::CCoordinateGeodetic ownPosition(48.353855, 11.786155);
         const CHeading heading(25.0, CAngleUnit::deg());
         const CAngle pitch(0.0, CAngleUnit::deg());
         const CAngle bank(0.0, CAngleUnit::deg());
@@ -548,7 +548,7 @@ namespace BlackFsdTest
     {
         QSignalSpy spy(m_client, &CFSDClient::rawFsdMessage);
 
-        const Geo::CCoordinateGeodetic ownPosition(48.353855, 11.786155);
+        const geo::CCoordinateGeodetic ownPosition(48.353855, 11.786155);
         const CHeading heading(25.0, CAngleUnit::deg());
         const CAngle pitch(-1.0, CAngleUnit::deg());
         const CAngle bank(-1.0, CAngleUnit::deg());

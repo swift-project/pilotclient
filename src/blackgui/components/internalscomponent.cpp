@@ -10,15 +10,15 @@
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackmisc/simulation/interpolation/interpolationlogger.h"
-#include "blackmisc/simulation/interpolation/interpolationrenderingsetup.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/network/client.h"
-#include "blackmisc/network/textmessage.h"
-#include "blackmisc/math/mathutils.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/crashhandler.h"
+#include "misc/simulation/interpolation/interpolationlogger.h"
+#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
+#include "misc/aviation/callsign.h"
+#include "misc/network/client.h"
+#include "misc/network/textmessage.h"
+#include "misc/math/mathutils.h"
+#include "misc/logmessage.h"
+#include "misc/statusmessage.h"
+#include "misc/crashhandler.h"
 #include "config/buildconfig.h"
 
 #include "ui_internalscomponent.h"
@@ -35,12 +35,12 @@
 #include <QMessageBox>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Math;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::math;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::simulation;
 
 namespace BlackGui::Components
 {

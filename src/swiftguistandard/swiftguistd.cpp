@@ -19,11 +19,11 @@
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackmisc/audio/notificationsounds.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/threadutils.h"
+#include "misc/audio/notificationsounds.h"
+#include "misc/icons.h"
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
+#include "misc/threadutils.h"
 #include "config/buildconfig.h"
 
 #if defined(Q_OS_MACOS)
@@ -53,7 +53,7 @@ namespace BlackGui
     class CEnableForFramelessWindow;
     class IMainWindowAccess;
 }
-namespace BlackMisc
+namespace swift::misc
 {
     class CIdentifiable;
 }
@@ -62,14 +62,14 @@ using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackGui;
 using namespace BlackGui::Components;
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Audio;
-using namespace BlackMisc::Input;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::network;
+using namespace swift::misc::aviation;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::geo;
+using namespace swift::misc::audio;
+using namespace swift::misc::input;
+using namespace swift::misc::simulation;
 using namespace swift::config;
 
 // Constructor

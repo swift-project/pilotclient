@@ -7,7 +7,7 @@
 //! \file
 
 #include "input/joystick.h"
-#include "blackmisc/input/joystickbutton.h"
+#include "misc/input/joystickbutton.h"
 
 #include <QHash>
 #include <IOKit/hid/IOHIDManager.h>
@@ -31,14 +31,14 @@ namespace swift::input
         bool init(const IOHIDDeviceRef device);
 
         //! Get all available device buttons
-        BlackMisc::Input::CJoystickButtonList getDeviceButtons() const;
+        swift::misc::input::CJoystickButtonList getDeviceButtons() const;
 
         //! Return the native IOHIDDeviceRef
         IOHIDDeviceRef getNativeDevice() const { return m_deviceRef; }
 
     signals:
         //! Joystick button changed
-        void buttonChanged(const BlackMisc::Input::CJoystickButton &joystickButton, bool isPressed);
+        void buttonChanged(const swift::misc::input::CJoystickButton &joystickButton, bool isPressed);
 
     private:
         void processButtonEvent(IOHIDValueRef value);
@@ -48,7 +48,7 @@ namespace swift::input
         QString m_deviceName = "unknown"; //!< Device name
         // IOHIDDeviceRef is owned by IOHIDManager. Do not release it.
         IOHIDDeviceRef m_deviceRef = nullptr;
-        QHash<IOHIDElementRef, BlackMisc::Input::CJoystickButton> m_joystickDeviceInputs;
+        QHash<IOHIDElementRef, swift::misc::input::CJoystickButton> m_joystickDeviceInputs;
     };
 
     //! MacOS implemenation of IJoystick
@@ -67,7 +67,7 @@ namespace swift::input
         virtual ~CJoystickMacOS() override;
 
         //! \copydoc swift::input::IJoystick::getAllAvailableJoystickButtons()
-        virtual BlackMisc::Input::CJoystickButtonList getAllAvailableJoystickButtons() const override;
+        virtual swift::misc::input::CJoystickButtonList getAllAvailableJoystickButtons() const override;
 
     protected:
         virtual bool init() override;
@@ -84,7 +84,7 @@ namespace swift::input
         //! Remove joystick device
         void removeJoystickDevice(const IOHIDDeviceRef device);
 
-        void joystickButtonChanged(const BlackMisc::Input::CJoystickButton &joystickButton, bool isPressed);
+        void joystickButtonChanged(const swift::misc::input::CJoystickButton &joystickButton, bool isPressed);
 
         static void matchCallback(void *context, IOReturn result, void *sender, IOHIDDeviceRef device);
         static void removeCallback(void *context, IOReturn result, void *sender, IOHIDDeviceRef device);
@@ -92,7 +92,7 @@ namespace swift::input
         IOHIDManagerRef m_hidManager = nullptr;
         QVector<CJoystickDevice *> m_joystickDevices; //!< Joystick devices
 
-        BlackMisc::Input::CHotkeyCombination m_buttonCombination;
+        swift::misc::input::CHotkeyCombination m_buttonCombination;
     };
 
 } // namespace swift::input

@@ -7,8 +7,8 @@
 #define BLACKGUI_COMPLETER_AIRCRAFTMODELSTRINGCOMPLETER_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/data/modelcaches.h"
-#include "blackmisc/simulation/aircraftmodel.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/simulation/aircraftmodel.h"
 
 #include <QFrame>
 #include <QScopedPointer>
@@ -55,7 +55,7 @@ namespace BlackGui::Components
         void setText(const QString &completersString);
 
         //! Set model
-        void setModel(const BlackMisc::Simulation::CAircraftModel &model);
+        void setModel(const swift::misc::simulation::CAircraftModel &model);
 
         //! Show/hide radio buttons
         void setSourceVisible(CompleterSource source, bool visible);
@@ -64,10 +64,10 @@ namespace BlackGui::Components
         void selectSource(CompleterSourceFlag source);
 
         //! Change the simulator
-        bool setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        bool setSimulator(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Get current simulator
-        BlackMisc::Simulation::CSimulatorInfo getSimulator() const;
+        swift::misc::simulation::CSimulatorInfo getSimulator() const;
 
         //! Clear
         void clear();
@@ -95,8 +95,8 @@ namespace BlackGui::Components
     private:
         QScopedPointer<Ui::CAircraftModelStringCompleter> ui;
         // model set completer data are fetched from context
-        BlackMisc::Simulation::Data::CModelCaches m_modelCaches { false, this }; //!< all models, works locally only
-        BlackMisc::Simulation::CSimulatorInfo m_currentSimulator;
+        swift::misc::simulation::data::CModelCaches m_modelCaches { false, this }; //!< all models, works locally only
+        swift::misc::simulation::CSimulatorInfo m_currentSimulator;
         CompleterSourceFlag m_currentDataSource = None;
     };
 } // ns

@@ -9,16 +9,16 @@
 #include "blackgui/components/simulatorselector.h"
 #include "blackgui/menus/menudelegate.h"
 #include "blackgui/overlaymessagesframe.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/aircraftmodelloader.h"
-#include "blackmisc/simulation/aircraftmodelinterfaces.h"
-#include "blackmisc/simulation/data/modelcaches.h"
-#include "blackmisc/simulation/settings/modelsettings.h"
-#include "blackmisc/simulation/simulatorinfo.h"
-#include "blackmisc/datacache.h"
-#include "blackmisc/directories.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/connectionguard.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/aircraftmodelloader.h"
+#include "misc/simulation/aircraftmodelinterfaces.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/simulation/settings/modelsettings.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/datacache.h"
+#include "misc/directories.h"
+#include "misc/statusmessage.h"
+#include "misc/connectionguard.h"
 
 #include <QFrame>
 #include <QList>
@@ -54,16 +54,16 @@ namespace BlackGui
          */
         class CDbOwnModelsComponent :
             public COverlayMessagesFrame,
-            public BlackMisc::Simulation::IModelsSetable,
-            public BlackMisc::Simulation::IModelsUpdatable,
-            public BlackMisc::Simulation::IModelsForSimulatorSetable,
-            public BlackMisc::Simulation::IModelsForSimulatorUpdatable
+            public swift::misc::simulation::IModelsSetable,
+            public swift::misc::simulation::IModelsUpdatable,
+            public swift::misc::simulation::IModelsForSimulatorSetable,
+            public swift::misc::simulation::IModelsForSimulatorUpdatable
         {
             Q_OBJECT
-            Q_INTERFACES(BlackMisc::Simulation::IModelsSetable)
-            Q_INTERFACES(BlackMisc::Simulation::IModelsUpdatable)
-            Q_INTERFACES(BlackMisc::Simulation::IModelsForSimulatorSetable)
-            Q_INTERFACES(BlackMisc::Simulation::IModelsForSimulatorUpdatable)
+            Q_INTERFACES(swift::misc::simulation::IModelsSetable)
+            Q_INTERFACES(swift::misc::simulation::IModelsUpdatable)
+            Q_INTERFACES(swift::misc::simulation::IModelsForSimulatorSetable)
+            Q_INTERFACES(swift::misc::simulation::IModelsForSimulatorUpdatable)
 
         public:
             //! Constructor
@@ -76,22 +76,22 @@ namespace BlackGui
             static const QStringList &getLogCategories();
 
             //! Own (installed) model for given model string
-            BlackMisc::Simulation::CAircraftModel getOwnModelForModelString(const QString &modelString) const;
+            swift::misc::simulation::CAircraftModel getOwnModelForModelString(const QString &modelString) const;
 
             //! Own models
-            BlackMisc::Simulation::CAircraftModelList getOwnModels() const;
+            swift::misc::simulation::CAircraftModelList getOwnModels() const;
 
             //! Own cached models from loader
-            BlackMisc::Simulation::CAircraftModelList getOwnCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+            swift::misc::simulation::CAircraftModelList getOwnCachedModels(const swift::misc::simulation::CSimulatorInfo &simulator) const;
 
             //! Own models selected in view
-            BlackMisc::Simulation::CAircraftModelList getOwnSelectedModels() const;
+            swift::misc::simulation::CAircraftModelList getOwnSelectedModels() const;
 
             //! Own models for simulator
-            BlackMisc::Simulation::CSimulatorInfo getOwnModelsSimulator() const;
+            swift::misc::simulation::CSimulatorInfo getOwnModelsSimulator() const;
 
             //! Change current simulator for own models
-            bool setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator, bool forced = false);
+            bool setSimulator(const swift::misc::simulation::CSimulatorInfo &simulator, bool forced = false);
 
             //! \copydoc BlackGui::Components::CSimulatorSelector::setMode
             void setSimulatorSelectorMode(CSimulatorSelector::Mode mode);
@@ -99,14 +99,14 @@ namespace BlackGui
             //! Number of own models
             int getOwnModelsCount() const;
 
-            //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getInfoString
+            //! \copydoc swift::misc::simulation::data::CModelCaches::getInfoString
             QString getInfoString() const;
 
-            //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getInfoStringFsFamily
+            //! \copydoc swift::misc::simulation::data::CModelCaches::getInfoStringFsFamily
             QString getInfoStringFsFamily() const;
 
             //! Update view and cache
-            BlackMisc::CStatusMessage updateViewAndCache(const BlackMisc::Simulation::CAircraftModelList &models);
+            swift::misc::CStatusMessage updateViewAndCache(const swift::misc::simulation::CAircraftModelList &models);
 
             //! Clear the view
             void clearView();
@@ -118,86 +118,86 @@ namespace BlackGui
             Models::CAircraftModelListModel *model() const;
 
             //! Access to model loader
-            BlackMisc::Simulation::IAircraftModelLoader *modelLoader() const { return m_modelLoader; }
+            swift::misc::simulation::IAircraftModelLoader *modelLoader() const { return m_modelLoader; }
 
             //! Forced read for given simulator
-            bool requestModelsInBackground(const BlackMisc::Simulation::CSimulatorInfo &simulator, bool onlyIfNotEmpty);
+            bool requestModelsInBackground(const swift::misc::simulation::CSimulatorInfo &simulator, bool onlyIfNotEmpty);
 
             //! Graceful shutdown
             void gracefulShutdown();
 
             //! \name Implementations of the models interfaces
             //! @{
-            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models) override { this->setModelsForSimulator(models, this->getOwnModelsSimulator()); }
-            virtual void setModelsForSimulator(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
-            virtual int updateModels(const BlackMisc::Simulation::CAircraftModelList &models) override { return this->updateModelsForSimulator(models, this->getOwnModelsSimulator()); }
-            virtual int updateModelsForSimulator(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
+            virtual void setModels(const swift::misc::simulation::CAircraftModelList &models) override { this->setModelsForSimulator(models, this->getOwnModelsSimulator()); }
+            virtual void setModelsForSimulator(const swift::misc::simulation::CAircraftModelList &models, const swift::misc::simulation::CSimulatorInfo &simulator) override;
+            virtual int updateModels(const swift::misc::simulation::CAircraftModelList &models) override { return this->updateModelsForSimulator(models, this->getOwnModelsSimulator()); }
+            virtual int updateModelsForSimulator(const swift::misc::simulation::CAircraftModelList &models, const swift::misc::simulation::CSimulatorInfo &simulator) override;
             //! @}
 
         signals:
             //! Models have been successfully loaded
-            void successfullyLoadedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, int count);
+            void successfullyLoadedModels(const swift::misc::simulation::CSimulatorInfo &simulator, int count);
 
             //! Own models simulator has changed
-            void ownModelsSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void ownModelsSimulatorChanged(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         private:
             QScopedPointer<Ui::CDbOwnModelsComponent> ui;
-            BlackMisc::Simulation::IAircraftModelLoader *m_modelLoader = nullptr; //!< read own aircraft models, aka models on disk
-            BlackMisc::Simulation::CSimulatorInfo m_simulator; //!< currently init to simulator
-            BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_directorySettings { this }; //!< the swift directories
-            BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for directories
+            swift::misc::simulation::IAircraftModelLoader *m_modelLoader = nullptr; //!< read own aircraft models, aka models on disk
+            swift::misc::simulation::CSimulatorInfo m_simulator; //!< currently init to simulator
+            swift::misc::CSetting<swift::misc::settings::TDirectorySettings> m_directorySettings { this }; //!< the swift directories
+            swift::misc::simulation::settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for directories
 
             //! Request own models
             void requestOwnModelsUpdate();
 
             //! Load the models
-            void loadInstalledModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories = {});
+            void loadInstalledModels(const swift::misc::simulation::CSimulatorInfo &simulator, swift::misc::simulation::IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories = {});
 
             //! On disk loading started
-            void onModelLoaderDiskLoadingStarted(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode);
+            void onModelLoaderDiskLoadingStarted(const swift::misc::simulation::CSimulatorInfo &simulator, swift::misc::simulation::IAircraftModelLoader::LoadMode mode);
 
             //! Loading in progress
-            void onModelLoadingProgress(const BlackMisc::Simulation::CSimulatorInfo &simulator, const QString &message, int progress);
+            void onModelLoadingProgress(const swift::misc::simulation::CSimulatorInfo &simulator, const QString &message, int progress);
 
             //! Model loading finished
-            void onModelLoaderLoadingFinished(const BlackMisc::CStatusMessageList &statusMessages, const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadFinishedInfo info);
+            void onModelLoaderLoadingFinished(const swift::misc::CStatusMessageList &statusMessages, const swift::misc::simulation::CSimulatorInfo &simulator, swift::misc::simulation::IAircraftModelLoader::LoadFinishedInfo info);
 
             //! Loading from disk (via view context menu)
-            void onViewDiskLoadingFinished(const BlackMisc::CStatusMessage &status);
+            void onViewDiskLoadingFinished(const swift::misc::CStatusMessage &status);
 
             //! Cache has been changed
-            void onCacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void onCacheChanged(const swift::misc::simulation::CSimulatorInfo &simulator);
 
             //! Request simulator models
-            void requestSimulatorModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories = {});
+            void requestSimulatorModels(const swift::misc::simulation::CSimulatorInfo &simulator, swift::misc::simulation::IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories = {});
 
             //! Request simulator models from cache
-            void requestSimulatorModelsWithCacheInBackground(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void requestSimulatorModelsWithCacheInBackground(const swift::misc::simulation::CSimulatorInfo &simulator);
 
             //! Request simulator models from cache
-            void clearSimulatorCache(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void clearSimulatorCache(const swift::misc::simulation::CSimulatorInfo &simulator);
 
             //! Own simulator changed
             void onSimulatorSelectorChanged();
 
             //! Init or change model loader
-            bool initModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode load = BlackMisc::Simulation::IAircraftModelLoader::NotSet);
+            bool initModelLoader(const swift::misc::simulation::CSimulatorInfo &simulator, swift::misc::simulation::IAircraftModelLoader::LoadMode load = swift::misc::simulation::IAircraftModelLoader::NotSet);
 
             //! File name for saving as file
-            void setSaveFileName(const BlackMisc::Simulation::CSimulatorInfo &sim);
+            void setSaveFileName(const swift::misc::simulation::CSimulatorInfo &sim);
 
             //! Directory selector for given simulator
-            QString directorySelector(const BlackMisc::Simulation::CSimulatorInfo &simulatorInfo);
+            QString directorySelector(const swift::misc::simulation::CSimulatorInfo &simulatorInfo);
 
             //! Simulator string
-            void setUiSimulatorString(const BlackMisc::Simulation::CSimulatorInfo &simulatorInfo);
+            void setUiSimulatorString(const swift::misc::simulation::CSimulatorInfo &simulatorInfo);
 
             //! Confirmed forced reload
             void confirmedForcedReloadCurrentSimulator();
 
             //! Confirmed forced reload
-            void confirmedForcedReload(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void confirmedForcedReload(const swift::misc::simulation::CSimulatorInfo &simulator);
 
             //! Run CSL2XSB script
             void runScriptCSL2XSB();

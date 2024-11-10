@@ -15,18 +15,18 @@
 #include "blackgui/managedstatusbar.h"
 #include "blackgui/guiactionbind.h"
 #include "blackcore/actionbind.h"
-#include "blackmisc/network/connectionstatus.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/autopublishdata.h"
-#include "blackmisc/audio/notificationsounds.h"
-#include "blackmisc/audio/audiosettings.h"
-#include "blackmisc/input/actionhotkeydefs.h"
-#include "blackmisc/identifiable.h"
-#include "blackmisc/variant.h"
-#include "blackmisc/loghandler.h"
-#include "blackmisc/loghistory.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/icons.h"
+#include "misc/network/connectionstatus.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/autopublishdata.h"
+#include "misc/audio/notificationsounds.h"
+#include "misc/audio/audiosettings.h"
+#include "misc/input/actionhotkeydefs.h"
+#include "misc/identifiable.h"
+#include "misc/variant.h"
+#include "misc/loghandler.h"
+#include "misc/loghistory.h"
+#include "misc/statusmessage.h"
+#include "misc/icons.h"
 
 #include <QMainWindow>
 #include <QObject>
@@ -39,7 +39,7 @@ class QEvent;
 class QMouseEvent;
 class QTimer;
 
-namespace BlackMisc::Aviation
+namespace swift::misc::aviation
 {
     class CAltitude;
 }
@@ -57,7 +57,7 @@ namespace Ui
 //! swift GUI
 class SwiftGuiStd :
     public QMainWindow,
-    public BlackMisc::CIdentifiable,
+    public swift::misc::CIdentifiable,
     public BlackGui::CEnableForFramelessWindow,
     public BlackGui::IMainWindowAccess
 {
@@ -123,13 +123,13 @@ private:
     QScopedPointer<BlackGui::Components::CAutoPublishDialog> m_autoPublishDialog; //!< auto publish dialog
     QScopedPointer<BlackGui::Components::CModelBrowserDialog> m_modelBrower; //!< model browser
     QScopedPointer<BlackGui::Components::CAircraftModelSetValidationDialog> m_validationDialog; //!< aircraft model validation dialog
-    BlackMisc::CData<BlackMisc::Simulation::Data::TLastAutoPublish> m_lastAutoPublish { this };
-    BlackCore::CActionBind m_actionPtt { BlackMisc::Input::pttHotkeyAction(), BlackMisc::CIcons::StandardIconRadio16, this, &SwiftGuiStd::onPttChanged };
+    swift::misc::CData<swift::misc::simulation::data::TLastAutoPublish> m_lastAutoPublish { this };
+    BlackCore::CActionBind m_actionPtt { swift::misc::input::pttHotkeyAction(), swift::misc::CIcons::StandardIconRadio16, this, &SwiftGuiStd::onPttChanged };
     BlackCore::CActionBindings m_menuHotkeyHandlers;
     BlackGui::CManagedStatusBar m_statusBar;
-    BlackMisc::CLogHistoryReplica m_logHistoryForLogButtons { this };
-    BlackMisc::CLogHistoryReplica m_logHistoryForOverlay { this };
-    BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this };
+    swift::misc::CLogHistoryReplica m_logHistoryForLogButtons { this };
+    swift::misc::CLogHistoryReplica m_logHistoryForOverlay { this };
+    swift::misc::CSetting<swift::misc::audio::TSettings> m_audioSettings { this };
 
     // contexts
     static constexpr int MaxCoreFailures = 5; //!< Failures counted before reconnecting
@@ -141,7 +141,7 @@ private:
     bool m_displayingDBusReconnect = false; //!< currently displaying reconnect dialog
     bool m_dbDataLoading = false; //!< DB or shared data loading in progress
     QTimer m_timerContextWatchdog; //!< core available?
-    BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< own aircraft's state
+    swift::misc::simulation::CSimulatedAircraft m_ownAircraft; //!< own aircraft's state
 
     //! GUI status update
     void updateGuiStatusInformation();
@@ -174,7 +174,7 @@ private:
     //! \param wgsLatitude  WGS latitude
     //! \param wgsLongitude WGS longitude
     //! \param altitude
-    void setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const BlackMisc::Aviation::CAltitude &altitude, const BlackMisc::Aviation::CAltitude &pressureAltitude);
+    void setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const swift::misc::aviation::CAltitude &altitude, const swift::misc::aviation::CAltitude &pressureAltitude);
 
     //! Is given main page selected?
     //! \param mainPage index to be checked
@@ -185,7 +185,7 @@ private:
     void stopAllTimers(bool disconnectSignalSlots);
 
     //! Play notifcation sound
-    void playNotifcationSound(BlackMisc::Audio::CNotificationSounds::NotificationFlag notification) const;
+    void playNotifcationSound(swift::misc::audio::CNotificationSounds::NotificationFlag notification) const;
 
     //! Display log
     void displayLog();
@@ -209,7 +209,7 @@ private:
     //! Connection status changed
     //! \param from old status
     //! \param to   new status
-    void onConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+    void onConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
 
     //
     // GUI related functions
@@ -275,7 +275,7 @@ private:
     void onChangedMainInfoAreaFloating(bool floating);
 
     //! Reported issue with the client
-    void onAudioClientFailure(const BlackMisc::CStatusMessage &msg);
+    void onAudioClientFailure(const swift::misc::CStatusMessage &msg);
 
     //! Focus in main entry window
     void focusInMainEntryField();
@@ -296,7 +296,7 @@ private:
     void verifyPrerequisites();
 
     //! Model set haas been verfied
-    void onValidatedModelSet(const BlackMisc::Simulation::CSimulatorInfo &simulator, const BlackMisc::Simulation::CAircraftModelList &valid, const BlackMisc::Simulation::CAircraftModelList &invalid, bool stopped, const BlackMisc::CStatusMessageList &msgs);
+    void onValidatedModelSet(const swift::misc::simulation::CSimulatorInfo &simulator, const swift::misc::simulation::CAircraftModelList &valid, const swift::misc::simulation::CAircraftModelList &invalid, bool stopped, const swift::misc::CStatusMessageList &msgs);
 
     //! Display validation dialog
     void displayValidationDialog();
@@ -321,9 +321,9 @@ private:
 
     //! @{
     //! Request overlay inline text message
-    void onShowOverlayVariant(const BlackMisc::CVariant &variant, int durationMs);
+    void onShowOverlayVariant(const swift::misc::CVariant &variant, int durationMs);
     void onShowOverlayInlineTextMessageTab(BlackGui::Components::TextMessageTab tab);
-    void onShowOverlayInlineTextMessageCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+    void onShowOverlayInlineTextMessageCallsign(const swift::misc::aviation::CCallsign &callsign);
     //! @}
 };
 

@@ -3,10 +3,10 @@
 
 #include "config/buildconfig.h"
 #include "blackgui/stylesheetutility.h"
-#include "blackmisc/fileutils.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
+#include "misc/fileutils.h"
+#include "misc/logmessage.h"
+#include "misc/swiftdirectories.h"
+#include "misc/directoryutils.h"
 
 #include <QAbstractScrollArea>
 #include <QCoreApplication>
@@ -26,7 +26,7 @@
 #include <QStringBuilder>
 
 using namespace swift::config;
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui
 {

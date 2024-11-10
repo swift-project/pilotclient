@@ -5,10 +5,10 @@
 #include "blackcore/fsd/pbh.h"
 #include "blackcore/fsd/serializer.h"
 
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 
 namespace BlackCore::Fsd
 {

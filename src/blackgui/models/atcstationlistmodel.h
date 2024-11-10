@@ -7,8 +7,8 @@
 #define BLACKGUI_MODELS_ATCLISTMODEL_H
 
 #include "blackgui/models/listmodelcallsignobjects.h"
-#include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/aviation/atcstationlist.h"
+#include "misc/aviation/atcstation.h"
+#include "misc/aviation/atcstationlist.h"
 #include "blackgui/blackguiexport.h"
 
 #include <QObject>
@@ -18,7 +18,7 @@ namespace BlackGui::Models
     class CAtcStationTreeModel;
 
     //! ATC list model
-    class BLACKGUI_EXPORT CAtcStationListModel : public CListModelCallsignObjects<BlackMisc::Aviation::CAtcStationList, true>
+    class BLACKGUI_EXPORT CAtcStationListModel : public CListModelCallsignObjects<swift::misc::aviation::CAtcStationList, true>
     {
         Q_OBJECT
 
@@ -47,7 +47,7 @@ namespace BlackGui::Models
 
     public slots:
         //! Used to quickly update single station (better response for the user)
-        void changedAtcStationConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
+        void changedAtcStationConnectionStatus(const swift::misc::aviation::CAtcStation &station, bool added);
 
     private:
         AtcStationMode m_stationMode = NotSet;

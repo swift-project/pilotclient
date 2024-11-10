@@ -10,9 +10,9 @@
 
 #include <QToolButton>
 
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Audio;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::audio;
+using namespace swift::misc::aviation;
 using namespace BlackCore;
 using namespace BlackCore::Data;
 

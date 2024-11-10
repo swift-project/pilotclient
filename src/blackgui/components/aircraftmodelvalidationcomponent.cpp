@@ -8,8 +8,8 @@
 
 #include <QPointer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
 using namespace BlackCore::Context;
 
 namespace BlackGui::Components
@@ -53,7 +53,7 @@ namespace BlackGui::Components
 
     void CAircraftModelValidationComponent::validatedModelSet(const CSimulatorInfo &simulator, const CAircraftModelList &valid, const CAircraftModelList &invalid, bool stopped, const CStatusMessageList &msgs)
     {
-        // BlackMisc::Simulation::CBackgroundValidation
+        // swift::misc::simulation::CBackgroundValidation
         Q_UNUSED(simulator)
         Q_UNUSED(valid)
 

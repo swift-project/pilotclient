@@ -7,8 +7,8 @@
 #define BLACKSIMPLUGIN_FSXCOMMON_FSXSETTINGSCOMPONENT_H
 
 #include "plugins/simulator/fsxcommon/fsxcommonexport.h"
-#include "blackmisc/simulation/simulatorinfo.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/simulation/simulatorplugininfo.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -37,10 +37,10 @@ namespace BlackSimPlugin::FsxCommon
         virtual ~CFsxSettingsComponent() override;
 
         //! Simulator, P3D/FSX
-        void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) { m_simulator = simulator; }
+        void setSimulator(const swift::misc::simulation::CSimulatorInfo &simulator) { m_simulator = simulator; }
 
         //! Represented simulator
-        BlackMisc::Simulation::CSimulatorInfo getSimulator() const;
+        swift::misc::simulation::CSimulatorInfo getSimulator() const;
 
         //! Update the values
         void refresh();
@@ -62,12 +62,12 @@ namespace BlackSimPlugin::FsxCommon
         void onSimulatorStatusChanged(int status);
 
         //! Plugin changed
-        void onSimulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
+        void onSimulatorPluginChanged(const swift::misc::simulation::CSimulatorPluginInfo &info);
 
         //! Access the concrete implementation
         CSimulatorFsxCommon *getFsxOrP3DSimulator() const;
 
-        BlackMisc::Simulation::CSimulatorInfo m_simulator { "FSX" };
+        swift::misc::simulation::CSimulatorInfo m_simulator { "FSX" };
         BlackGui::COverlayMessagesFrame *m_mf = nullptr;
         QScopedPointer<Ui::CFsxSettingsComponent> ui;
     };

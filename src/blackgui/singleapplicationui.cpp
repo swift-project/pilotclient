@@ -5,7 +5,7 @@
 #include "blackgui/guiapplication.h"
 #include <QWidget>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui
 {

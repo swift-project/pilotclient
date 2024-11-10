@@ -7,14 +7,14 @@
 #include "blackgui/views/clientview.h"
 #include "blackgui/views/userview.h"
 #include "blackcore/context/contextnetwork.h"
-#include "blackmisc/network/connectionstatus.h"
-#include "blackmisc/network/userlist.h"
+#include "misc/network/connectionstatus.h"
+#include "misc/network/userlist.h"
 #include "ui_usercomponent.h"
 
 #include <QString>
 #include <QTabBar>
 
-using namespace BlackMisc::Network;
+using namespace swift::misc::network;
 using namespace BlackGui;
 using namespace BlackGui::Views;
 using namespace BlackGui::Settings;

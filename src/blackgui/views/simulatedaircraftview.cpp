@@ -8,9 +8,9 @@
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/context/contextnetwork.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/icons.h"
+#include "misc/simulation/simulatedaircraftlist.h"
+#include "misc/aviation/callsign.h"
+#include "misc/icons.h"
 #include "config/buildconfig.h"
 
 #include <QStringBuilder>
@@ -18,10 +18,10 @@
 #include <QtGlobal>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
 using namespace BlackCore::Context;
 using namespace BlackGui::Models;
 using namespace BlackGui::Menus;
@@ -278,7 +278,7 @@ namespace BlackGui::Views
         simContext->setInterpolationAndRenderingSetupsPerCallsign(setup, true);
     }
 
-    void CSimulatedAircraftView::setPitchOnGround(const CSimulatedAircraft &aircraft, const PhysicalQuantities::CAngle &pitch)
+    void CSimulatedAircraftView::setPitchOnGround(const CSimulatedAircraft &aircraft, const physical_quantities::CAngle &pitch)
     {
         IContextSimulator *simContext = simulatorContext();
         if (!simContext || !aircraft.hasCallsign()) { return; }

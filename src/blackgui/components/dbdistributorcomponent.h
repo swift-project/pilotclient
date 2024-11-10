@@ -9,8 +9,8 @@
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/network/entityflags.h"
+#include "misc/simulation/distributorlist.h"
+#include "misc/network/entityflags.h"
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
@@ -19,7 +19,7 @@ namespace Ui
 {
     class CDbDistributorComponent;
 }
-namespace BlackMisc::Simulation
+namespace swift::misc::simulation
 {
     class CSimulatorInfo;
 }
@@ -52,13 +52,13 @@ namespace BlackGui
             BlackGui::Views::CDistributorView *view() const;
 
             //! Filter by simulator
-            void filterBySimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void filterBySimulator(const swift::misc::simulation::CSimulatorInfo &simulator);
 
             //! The selected distributors
-            BlackMisc::Simulation::CDistributorList getSelectedDistributors() const;
+            swift::misc::simulation::CDistributorList getSelectedDistributors() const;
 
             //! Select the given distributor
-            bool selectDistributor(const BlackMisc::Simulation::CDistributor &distributor);
+            bool selectDistributor(const swift::misc::simulation::CDistributor &distributor);
 
             //! Having selected distributors
             bool hasSelectedDistributors() const;
@@ -67,7 +67,7 @@ namespace BlackGui
             QScopedPointer<Ui::CDbDistributorComponent> ui;
 
             //! Distributors have been read
-            void onDistributorsRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+            void onDistributorsRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState readState, int count);
 
             //! Select all FSX standard models
             void selectStandardModels();

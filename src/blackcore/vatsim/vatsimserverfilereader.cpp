@@ -3,11 +3,11 @@
 
 #include "blackcore/vatsim/vatsimserverfilereader.h"
 #include "blackcore/application.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/network/server.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/pq/units.h"
-#include "blackmisc/logmessage.h"
+#include "misc/network/entityflags.h"
+#include "misc/network/server.h"
+#include "misc/network/user.h"
+#include "misc/pq/units.h"
+#include "misc/logmessage.h"
 
 #include <QStringBuilder>
 #include <QMetaObject>
@@ -18,12 +18,12 @@
 #include <QtGlobal>
 #include <QPointer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::geo;
+using namespace swift::misc::simulation;
+using namespace swift::misc::physical_quantities;
 using namespace BlackCore::Data;
 
 namespace BlackCore::Vatsim

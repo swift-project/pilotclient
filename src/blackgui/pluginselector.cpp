@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackgui/pluginselector.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/verify.h"
+#include "misc/icons.h"
+#include "misc/verify.h"
 
 #include <QCheckBox>
 #include <QHBoxLayout>
@@ -55,7 +55,7 @@ namespace BlackGui
 
         if (hasConfig)
         {
-            QPushButton *config = new QPushButton(BlackMisc::CIcons::wrench16(), "");
+            QPushButton *config = new QPushButton(swift::misc::CIcons::wrench16(), "");
             config->setToolTip("Plugin configuration");
             m_configButtonMapper->setMapping(config, identifier);
             connect(config, &QPushButton::clicked, m_configButtonMapper, qOverload<>(&QSignalMapper::map));

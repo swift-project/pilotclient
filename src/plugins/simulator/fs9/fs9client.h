@@ -5,10 +5,10 @@
 #define DIRECTPLAY_CLIENT_H
 
 #include "directplaypeer.h"
-#include "blackmisc/simulation/interpolation/interpolatormulti.h"
-#include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/pq/time.h"
+#include "misc/simulation/interpolation/interpolatormulti.h"
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/aviation/callsign.h"
+#include "misc/pq/time.h"
 #include <QScopedPointer>
 #include <QReadWriteLock>
 
@@ -34,9 +34,9 @@ namespace BlackSimPlugin::Fs9
         };
 
         //! Constructor
-        CFs9Client(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft,
-                   const BlackMisc::PhysicalQuantities::CTime &updateInterval,
-                   BlackMisc::Simulation::CInterpolationLogger *logger,
+        CFs9Client(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft,
+                   const swift::misc::physical_quantities::CTime &updateInterval,
+                   swift::misc::simulation::CInterpolationLogger *logger,
                    BlackCore::ISimulator *simulator);
 
         //! Destructor
@@ -50,25 +50,25 @@ namespace BlackSimPlugin::Fs9
 
         //! Get interpolator
         //! @{
-        BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() { return &m_interpolator; }
-        const BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() const { return &m_interpolator; }
+        swift::misc::simulation::CInterpolatorMulti *getInterpolator() { return &m_interpolator; }
+        const swift::misc::simulation::CInterpolatorMulti *getInterpolator() const { return &m_interpolator; }
         //! @}
 
-        //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolationMessages
-        BlackMisc::CStatusMessageList getInterpolationMessages(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
+        //! \copydoc swift::misc::simulation::CInterpolator::getInterpolationMessages
+        swift::misc::CStatusMessageList getInterpolationMessages(swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
         //! Send a situation (position)
-        void sendMultiplayerPosition(const BlackMisc::Aviation::CAircraftSituation &situation);
+        void sendMultiplayerPosition(const swift::misc::aviation::CAircraftSituation &situation);
 
         //! Send parts (lights, gear ...)
-        void sendMultiplayerParts(const BlackMisc::Aviation::CAircraftParts &parts);
+        void sendMultiplayerParts(const swift::misc::aviation::CAircraftParts &parts);
 
         //! Send new text message
         void sendTextMessage(const QString &textMessage);
 
     signals:
         //! Client status changed
-        void statusChanged(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, BlackSimPlugin::Fs9::CFs9Client::ClientStatus);
+        void statusChanged(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft, BlackSimPlugin::Fs9::CFs9Client::ClientStatus);
 
     protected:
         //! \copydoc QObject::timerEvent
@@ -82,7 +82,7 @@ namespace BlackSimPlugin::Fs9
         HRESULT createHostAddress();
 
         //! Start hosting session
-        HRESULT connectToSession(const BlackMisc::Aviation::CCallsign &callsign);
+        HRESULT connectToSession(const swift::misc::aviation::CCallsign &callsign);
 
         //! Close the connection
         HRESULT closeConnection();
@@ -98,9 +98,9 @@ namespace BlackSimPlugin::Fs9
         //! Simulator interface
         const BlackCore::ISimulator *simulator() const;
 
-        BlackMisc::Simulation::CSimulatedAircraft m_remoteAircraft;
-        BlackMisc::PhysicalQuantities::CTime m_updateInterval;
-        BlackMisc::Simulation::CInterpolatorMulti m_interpolator;
+        swift::misc::simulation::CSimulatedAircraft m_remoteAircraft;
+        swift::misc::physical_quantities::CTime m_updateInterval;
+        swift::misc::simulation::CInterpolatorMulti m_interpolator;
         QString m_modelName;
         int m_timerId = 0;
 

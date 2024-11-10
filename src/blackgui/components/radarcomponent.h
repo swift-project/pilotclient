@@ -9,7 +9,7 @@
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
 #include "blackcore/actionbind.h"
-#include "blackmisc/input/actionhotkeydefs.h"
+#include "misc/input/actionhotkeydefs.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsItemGroup>
@@ -77,8 +77,8 @@ namespace BlackGui::Components
 
         QFont m_tagFont;
 
-        BlackCore::CActionBind m_actionZoomIn { BlackMisc::Input::radarZoomInHotkeyAction(), BlackMisc::Input::radarZoomInHotkeyIcon(), this, &CRadarComponent::rangeZoomIn };
-        BlackCore::CActionBind m_actionZoomOut { BlackMisc::Input::radarZoomOutHotkeyAction(), BlackMisc::Input::radarZoomOutHotkeyIcon(), this, &CRadarComponent::rangeZoomOut };
+        BlackCore::CActionBind m_actionZoomIn { swift::misc::input::radarZoomInHotkeyAction(), swift::misc::input::radarZoomInHotkeyIcon(), this, &CRadarComponent::rangeZoomIn };
+        BlackCore::CActionBind m_actionZoomOut { swift::misc::input::radarZoomOutHotkeyAction(), swift::misc::input::radarZoomOutHotkeyIcon(), this, &CRadarComponent::rangeZoomOut };
         void rangeZoomIn(bool keydown)
         {
             if (keydown) { changeRangeInSteps(true); }

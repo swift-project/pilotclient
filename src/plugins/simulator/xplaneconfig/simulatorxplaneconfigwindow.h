@@ -7,7 +7,7 @@
 #define BLACKSIMPLUGIN_SIMULATOR_XPLANE_CONFIG_WINDOW_H
 
 #include "blackgui/pluginconfigwindow.h"
-#include "blackmisc/simulation/settings/xswiftbussettings.h"
+#include "misc/simulation/settings/xswiftbussettings.h"
 #include "simulatorxplaneconfig.h"
 #include <QObject>
 #include <QScopedPointer>
@@ -34,10 +34,10 @@ namespace BlackSimPlugin::XPlane
 
     private:
         //! Settings from UI
-        BlackMisc::Simulation::Settings::CXSwiftBusSettings getSettingsFromUI() const;
+        swift::misc::simulation::settings::CXSwiftBusSettings getSettingsFromUI() const;
 
         //! Set settings
-        void setUiValues(const BlackMisc::Simulation::Settings::CXSwiftBusSettings &settings);
+        void setUiValues(const swift::misc::simulation::settings::CXSwiftBusSettings &settings);
 
         //! Settings have been accepted
         void onSettingsAccepted();
@@ -49,7 +49,7 @@ namespace BlackSimPlugin::XPlane
         static int marginToInt(const QString &text, int defaultValue);
 
         QScopedPointer<Ui::CSimulatorXPlaneConfigWindow> ui;
-        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusSettings> m_xSwiftBusServerSettings { this, &CSimulatorXPlaneConfigWindow::onSettingsChanged };
+        swift::misc::CSetting<swift::misc::simulation::settings::TXSwiftBusSettings> m_xSwiftBusServerSettings { this, &CSimulatorXPlaneConfigWindow::onSettingsChanged };
     };
 } // ns
 

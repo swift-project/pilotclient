@@ -3,7 +3,7 @@
 
 #include "blackcore/fsd/pong.h"
 
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
 namespace BlackCore::Fsd
 {
@@ -28,7 +28,7 @@ namespace BlackCore::Fsd
     {
         if (tokens.size() < 3)
         {
-            BlackMisc::CLogMessage(static_cast<Pong *>(nullptr)).debug(u"Wrong number of arguments.");
+            swift::misc::CLogMessage(static_cast<Pong *>(nullptr)).debug(u"Wrong number of arguments.");
             return {};
         };
         return Pong(tokens[0], tokens[1], tokens[2]);

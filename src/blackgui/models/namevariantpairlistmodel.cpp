@@ -4,15 +4,15 @@
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/columns.h"
 #include "blackgui/models/namevariantpairlistmodel.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/namevariantpair.h"
-#include "blackmisc/propertyindexvariantmap.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/namevariantpair.h"
+#include "misc/propertyindexvariantmap.h"
 
 #include <QModelIndex>
 #include <Qt>
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Models
 {
@@ -40,7 +40,7 @@ namespace BlackGui::Models
         this->m_sortOrder = Qt::AscendingOrder;
     }
 
-    bool CNameVariantPairModel::addOrUpdateByName(const QString &name, const BlackMisc::CVariant &value, const CIcon &icon, bool skipEqualValues)
+    bool CNameVariantPairModel::addOrUpdateByName(const QString &name, const swift::misc::CVariant &value, const CIcon &icon, bool skipEqualValues)
     {
         int index = this->getRowIndexForName(name);
         CNameVariantPair pair(name, value, icon);
@@ -79,7 +79,7 @@ namespace BlackGui::Models
         return this->m_container.containsName(name);
     }
 
-    bool CNameVariantPairModel::containsNameValue(const QString &name, const BlackMisc::CVariant &value) const
+    bool CNameVariantPairModel::containsNameValue(const QString &name, const swift::misc::CVariant &value) const
     {
         int rowIndex = this->getRowIndexForName(name);
         if (rowIndex < 0) { return false; }

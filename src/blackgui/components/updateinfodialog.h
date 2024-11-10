@@ -42,7 +42,7 @@ namespace BlackGui::Components
 
     private:
         QScopedPointer<Ui::CUpdateInfoDialog> ui;
-        BlackMisc::CSetting<BlackGui::Settings::TUpdateNotificationSettings> m_setting { this }; //!< show again?
+        swift::misc::CSetting<BlackGui::Settings::TUpdateNotificationSettings> m_setting { this }; //!< show again?
 
         //! Toggled checkbox
         void onDontShowAgain(bool dontShowAgain);

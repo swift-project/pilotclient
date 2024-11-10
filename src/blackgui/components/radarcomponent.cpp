@@ -7,16 +7,16 @@
 #include "blackgui/components/radarcomponent.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextownaircraft.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "misc/simulation/simulatedaircraft.h"
 
 #include <QtMath>
 #include <QStringBuilder>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
+using namespace swift::misc::geo;
+using namespace swift::misc::physical_quantities;
 using namespace BlackGui::Views;
 
 namespace BlackGui::Components

@@ -6,7 +6,7 @@
 #ifndef BLACKSIMPLUGIN_XSWIFTBUS_SERVICE_PROXY_H
 #define BLACKSIMPLUGIN_XSWIFTBUS_SERVICE_PROXY_H
 
-#include "blackmisc/genericdbusinterface.h"
+#include "misc/genericdbusinterface.h"
 
 #include <QDBusError>
 #include <QDBusPendingReply>
@@ -62,7 +62,7 @@ namespace BlackSimPlugin::XPlane
         void cancelAllPendingAsyncCalls() { m_dbusInterface->cancelAllPendingAsyncCalls(); }
 
     private:
-        BlackMisc::CGenericDBusInterface *m_dbusInterface = nullptr;
+        swift::misc::CGenericDBusInterface *m_dbusInterface = nullptr;
 
         // Returns a function object which can be passed to CGenericDBusInterface::callDBusAsync.
         template <typename T>

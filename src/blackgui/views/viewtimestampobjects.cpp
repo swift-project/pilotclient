@@ -7,8 +7,8 @@
 #include "blackgui/models/aircraftsituationchangelistmodel.h"
 #include <QAction>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 using namespace BlackGui;
 using namespace BlackGui::Models;
 

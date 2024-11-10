@@ -8,8 +8,8 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/columnformatters.h"
-#include "blackmisc/propertyindex.h"
-#include "blackmisc/variant.h"
+#include "misc/propertyindex.h"
+#include "misc/variant.h"
 
 #include <QList>
 #include <QObject>
@@ -26,17 +26,17 @@ namespace BlackGui::Models
     {
     public:
         //! Constructor
-        CColumn(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, CDefaultFormatter *formatter, bool editable = false) : CColumn(headerName, "", propertyIndex, formatter, editable)
+        CColumn(const QString &headerName, const swift::misc::CPropertyIndex &propertyIndex, CDefaultFormatter *formatter, bool editable = false) : CColumn(headerName, "", propertyIndex, formatter, editable)
         {}
 
         //! Constructor
-        CColumn(const QString &headerName, const QString &toolTip, const BlackMisc::CPropertyIndex &propertyIndex, CDefaultFormatter *formatter, bool editable = false);
+        CColumn(const QString &headerName, const QString &toolTip, const swift::misc::CPropertyIndex &propertyIndex, CDefaultFormatter *formatter, bool editable = false);
 
         //! Constructor, icon with tool tip
-        CColumn(const QString &toolTip, const BlackMisc::CPropertyIndex &propertyIndex);
+        CColumn(const QString &toolTip, const swift::misc::CPropertyIndex &propertyIndex);
 
         //! Constructor used for icons
-        CColumn(const BlackMisc::CPropertyIndex &propertyIndex);
+        CColumn(const swift::misc::CPropertyIndex &propertyIndex);
 
         //! Alignment for this column?
         bool hasAlignment() const { return (!m_formatter.isNull() && m_formatter->hasAlignment()); }
@@ -54,13 +54,13 @@ namespace BlackGui::Models
         void setSortable(bool sortable) { m_sortable = sortable; }
 
         //! Property index used when sorting, option alternative
-        BlackMisc::CPropertyIndex getSortPropertyIndex() const { return m_sortPropertyIndex; }
+        swift::misc::CPropertyIndex getSortPropertyIndex() const { return m_sortPropertyIndex; }
 
         //! Sort index available
         bool hasSortPropertyIndex() const;
 
         //! Property index used when sorting, option alternative
-        void setSortPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex);
+        void setSortPropertyIndex(const swift::misc::CPropertyIndex &propertyIndex);
 
         //! Formatter
         void setFormatter(CDefaultFormatter *formatter)
@@ -73,7 +73,7 @@ namespace BlackGui::Models
         const CDefaultFormatter *getFormatter() const;
 
         //! Aligment as CVariant
-        BlackMisc::CVariant getAlignment() const;
+        swift::misc::CVariant getAlignment() const;
 
         //! Column name
         const QString &getColumnName() const { return m_columnName; }
@@ -82,7 +82,7 @@ namespace BlackGui::Models
         const QString &getColumnToolTip() const { return m_columnToolTip; }
 
         //! Property index
-        const BlackMisc::CPropertyIndex &getPropertyIndex() const { return m_propertyIndex; }
+        const swift::misc::CPropertyIndex &getPropertyIndex() const { return m_propertyIndex; }
 
         //! Translation context
         void setTranslationContext(const QString &translationContext) { m_translationContext = translationContext; }
@@ -103,22 +103,22 @@ namespace BlackGui::Models
         void setIncognito(bool incognito) { m_incognito = incognito; }
 
         //! Get a standard value object formatted column
-        static CColumn standardValueObject(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
+        static CColumn standardValueObject(const QString &headerName, const swift::misc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
 
         //! Get a standard value object formatted column
-        static CColumn standardValueObject(const QString &headerName, const QString &toolTip, const BlackMisc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
+        static CColumn standardValueObject(const QString &headerName, const QString &toolTip, const swift::misc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
 
         //! Get a standard string object formatted column
-        static CColumn standardString(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
+        static CColumn standardString(const QString &headerName, const swift::misc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
 
         //! Get a standard string object formatted column
-        static CColumn standardString(const QString &headerName, const QString &toolTip, const BlackMisc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
+        static CColumn standardString(const QString &headerName, const QString &toolTip, const swift::misc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
 
         //! Get a standard string object formatted column
-        static CColumn orderColumn(const BlackMisc::CPropertyIndex &propertyIndex = BlackMisc::CPropertyIndexRef::GlobalIndexIOrderable, int alignment = CDefaultFormatter::alignRightVCenter());
+        static CColumn orderColumn(const swift::misc::CPropertyIndex &propertyIndex = swift::misc::CPropertyIndexRef::GlobalIndexIOrderable, int alignment = CDefaultFormatter::alignRightVCenter());
 
         //! Get a standard integer value formatted column
-        static CColumn standardInteger(const QString &headerName, const QString &toolTip, const BlackMisc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignRightVCenter());
+        static CColumn standardInteger(const QString &headerName, const QString &toolTip, const swift::misc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignRightVCenter());
 
         //! An empty column
         static CColumn emptyColumn();
@@ -129,8 +129,8 @@ namespace BlackGui::Models
         QString m_columnToolTip;
         int m_widthPercentage = -1;
         QSharedPointer<CDefaultFormatter> m_formatter; //!< Used formatter
-        BlackMisc::CPropertyIndex m_propertyIndex; //!< Property index for column
-        BlackMisc::CPropertyIndex m_sortPropertyIndex; //!< Property index used when sorted (optional alternative)
+        swift::misc::CPropertyIndex m_propertyIndex; //!< Property index for column
+        swift::misc::CPropertyIndex m_sortPropertyIndex; //!< Property index used when sorted (optional alternative)
 
         //! Incognito formatter
         static const CIncognitoFormatter *incongitoFormatter();
@@ -162,19 +162,19 @@ namespace BlackGui::Models
         void addColumnIncognito(const CColumn &column);
 
         //! Property index to name
-        QString propertyIndexToColumnName(const BlackMisc::CPropertyIndex &propertyIndex, bool i18n = false) const;
+        QString propertyIndexToColumnName(const swift::misc::CPropertyIndex &propertyIndex, bool i18n = false) const;
 
         //! Column index to name
         QString columnToName(int column, bool i18n = false) const;
 
         //! Column to property index
-        BlackMisc::CPropertyIndex columnToPropertyIndex(int column) const;
+        swift::misc::CPropertyIndex columnToPropertyIndex(int column) const;
 
         //! Column to property index for sort, considers \sa CColumn::getSo
-        BlackMisc::CPropertyIndex columnToSortPropertyIndex(int column) const;
+        swift::misc::CPropertyIndex columnToSortPropertyIndex(int column) const;
 
         //! Property index to column
-        int propertyIndexToColumn(const BlackMisc::CPropertyIndex &propertyIndex) const;
+        int propertyIndexToColumn(const swift::misc::CPropertyIndex &propertyIndex) const;
 
         //! Column index to name
         int nameToPropertyIndex(const QString &name) const;
@@ -204,7 +204,7 @@ namespace BlackGui::Models
         bool isValidColumn(int column) const;
 
         //! Aligment as CVariant
-        BlackMisc::CVariant getAlignment(const QModelIndex &index) const;
+        swift::misc::CVariant getAlignment(const QModelIndex &index) const;
 
         //! Formatter
         const CDefaultFormatter *getFormatter(const QModelIndex &index) const;

@@ -8,8 +8,8 @@
 
 #include "input/swiftinputexport.h"
 #include "input/keyboard.h"
-#include "blackmisc/input/keyboardkey.h"
-#include "blackmisc/input/keyboardkeylist.h"
+#include "misc/input/keyboardkey.h"
+#include "misc/input/keyboardkeylist.h"
 #include <QHash>
 #include <QTimer>
 #ifndef NOMINMAX
@@ -54,7 +54,7 @@ namespace swift::input
         //! Keyboard hook procedure
         static LRESULT CALLBACK keyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
 
-        BlackMisc::Input::CHotkeyCombination m_keyCombination; //!< Set of virtual keys pressed in the last cycle
+        swift::misc::input::CHotkeyCombination m_keyCombination; //!< Set of virtual keys pressed in the last cycle
         HHOOK m_keyboardHook; //!< Keyboard hook handle
         QTimer m_pollTimer;
         QVector<int> m_pressedKeys;

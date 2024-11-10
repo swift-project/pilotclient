@@ -7,15 +7,15 @@
 #include "blackgui/views/distributorview.h"
 #include "blackgui/views/viewbase.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/simulation/simulatorinfo.h"
+#include "misc/simulation/simulatorinfo.h"
 
 #include <QFrame>
 #include <QPointer>
 #include <QtGlobal>
 
 using namespace BlackCore;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
 using namespace BlackGui::Views;
 
 namespace BlackGui::Components

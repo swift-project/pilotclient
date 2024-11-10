@@ -54,7 +54,7 @@ namespace BlackGui::Components
         void widgetStyleChanged(int index);
 
         QScopedPointer<Ui::CSettingsGuiComponent> ui;
-        BlackMisc::CSetting<Settings::TGeneralGui> m_guiSettings { this, &CSettingsGuiComponent::guiSettingsChanged };
+        swift::misc::CSetting<Settings::TGeneralGui> m_guiSettings { this, &CSettingsGuiComponent::guiSettingsChanged };
     };
 } // ns
 #endif // guard

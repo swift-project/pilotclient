@@ -11,11 +11,11 @@
 #include "blackgui/overlaymessages.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/network/textmessage.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/pixmap.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/variant.h"
+#include "misc/network/textmessage.h"
+#include "misc/statusmessagelist.h"
+#include "misc/pixmap.h"
+#include "misc/logmessage.h"
+#include "misc/variant.h"
 
 #include <QKeyEvent>
 #include <QFrame>
@@ -115,7 +115,7 @@ namespace BlackGui
 
         //! \copydoc BlackGui::COverlayMessages::showOverlayMessagesWithConfirmation
         void showOverlayMessagesWithConfirmation(
-            const BlackMisc::CStatusMessageList &messages,
+            const swift::misc::CStatusMessageList &messages,
             bool appendOldMessages,
             const QString &confirmationMessage,
             std::function<void()> okLambda,
@@ -144,7 +144,7 @@ namespace BlackGui
         }
 
         //! \copydoc BlackGui::COverlayMessages::showOverlayMessages
-        void showOverlayMessages(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1)
+        void showOverlayMessages(const swift::misc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1)
         {
             if (messages.isEmpty()) { return; }
             this->initInnerFrame();
@@ -153,7 +153,7 @@ namespace BlackGui
         }
 
         //! \copydoc BlackGui::COverlayMessages::showOverlayMessagesOrSingleMessage
-        void showOverlayMessagesOrSingleMessage(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1)
+        void showOverlayMessagesOrSingleMessage(const swift::misc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1)
         {
             if (messages.isEmpty()) { return; }
             this->initInnerFrame();
@@ -162,7 +162,7 @@ namespace BlackGui
         }
 
         //! \copydoc BlackGui::COverlayMessages::showOverlayMessagesOrHTMLMessage
-        void showOverlayMessagesOrHTMLMessage(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1)
+        void showOverlayMessagesOrHTMLMessage(const swift::misc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1)
         {
             if (messages.isEmpty()) { return; }
             this->initInnerFrame();
@@ -171,19 +171,19 @@ namespace BlackGui
         }
 
         //! \copydoc BlackGui::COverlayMessages::sortOverlayMessages
-        void sortOverlayMessages(const BlackMisc::CPropertyIndex &property, Qt::SortOrder order)
+        void sortOverlayMessages(const swift::misc::CPropertyIndex &property, Qt::SortOrder order)
         {
             m_overlayMessages->sortOverlayMessages(property, order);
         }
 
         //! \copydoc BlackGui::COverlayMessages::setOverlayMessagesSorting
-        void setOverlayMessagesSorting(const BlackMisc::CPropertyIndex &property, Qt::SortOrder order)
+        void setOverlayMessagesSorting(const swift::misc::CPropertyIndex &property, Qt::SortOrder order)
         {
             m_overlayMessages->setOverlayMessagesSorting(property, order);
         }
 
         //! \copydoc BlackGui::COverlayMessages::showOverlayMessage
-        bool showOverlayMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1)
+        bool showOverlayMessage(const swift::misc::CStatusMessage &message, int timeOutMs = -1)
         {
             if (message.isEmpty()) { return false; }
             this->initInnerFrame();
@@ -193,7 +193,7 @@ namespace BlackGui
         }
 
         //! \copydoc BlackGui::COverlayMessages::showOverlayTextMessage
-        bool showOverlayTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int timeOutMs = -1)
+        bool showOverlayTextMessage(const swift::misc::network::CTextMessage &textMessage, int timeOutMs = -1)
         {
             if (textMessage.isEmpty()) { return false; }
             this->initInnerFrame();
@@ -203,9 +203,9 @@ namespace BlackGui
         }
 
         //! \copydoc BlackGui::COverlayMessages::showOverlayVariant
-        void showOverlayVariant(const BlackMisc::CVariant &variant, int timeOutMs = -1)
+        void showOverlayVariant(const swift::misc::CVariant &variant, int timeOutMs = -1)
         {
-            if (m_overlayMessages->isTextMessagesActivated() && variant.canConvert<BlackMisc::Network::CTextMessage>())
+            if (m_overlayMessages->isTextMessagesActivated() && variant.canConvert<swift::misc::network::CTextMessage>())
             {
                 this->initInnerFrame(0.75, 0.75);
                 if (!this->hasMinimumSize(150, 150)) { return; }
@@ -220,7 +220,7 @@ namespace BlackGui
         }
 
         //! \copydoc BlackGui::COverlayMessages::showOverlayImage
-        void showOverlayImage(const BlackMisc::CPixmap &pixmap, int timeOutMs = -1)
+        void showOverlayImage(const swift::misc::CPixmap &pixmap, int timeOutMs = -1)
         {
             this->initInnerFrame();
             m_overlayMessages->showOverlayImage(pixmap, timeOutMs);
@@ -237,7 +237,7 @@ namespace BlackGui
         }
 
         //! \copydoc BlackGui::COverlayMessages::showHTMLMessage
-        bool showOverlayHTMLMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1)
+        bool showOverlayHTMLMessage(const swift::misc::CStatusMessage &message, int timeOutMs = -1)
         {
             this->initMinimalFrame();
             m_overlayMessages->showHTMLMessage(message, timeOutMs);
@@ -263,7 +263,7 @@ namespace BlackGui
         }
 
         //! \copydoc BlackGui::COverlayMessages::showOverlayImage
-        void showOverlayInlineTextMessage(const BlackMisc::Aviation::CCallsign &callsign)
+        void showOverlayInlineTextMessage(const swift::misc::aviation::CCallsign &callsign)
         {
             this->initInnerFrame(0.75, 0.75);
             if (!this->hasMinimumSize(150, 150)) { return; }
@@ -328,13 +328,13 @@ namespace BlackGui
         {
             if (w > 0 && m_overlayMessages->width() < w)
             {
-                BlackMisc::CLogMessage(this).info(u"Overlay widget too small (w)");
+                swift::misc::CLogMessage(this).info(u"Overlay widget too small (w)");
                 return false;
             }
 
             if (h > 0 && m_overlayMessages->height() < h)
             {
-                BlackMisc::CLogMessage(this).info(u"Overlay widget too small (h)");
+                swift::misc::CLogMessage(this).info(u"Overlay widget too small (h)");
                 return false;
             }
             return true;
@@ -406,10 +406,10 @@ namespace BlackGui
         void requestTextMessageEntryTab(Components::TextMessageTab tab);
 
         //! Request an text message entry
-        void requestTextMessageEntryCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+        void requestTextMessageEntryCallsign(const swift::misc::aviation::CCallsign &callsign);
 
         //! Request a text message widget
-        void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
+        void requestTextMessageWidget(const swift::misc::aviation::CCallsign &callsign);
     };
 
     /*!

@@ -8,14 +8,14 @@
 #include "blackgui/uppercasevalidator.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextownaircraft.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "misc/simulation/simulatedaircraftlist.h"
 
 #include <QStringListModel>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 

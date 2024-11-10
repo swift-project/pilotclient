@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_AIRPORTSMALLCOMPLETER_H
 #define BLACKGUI_COMPONENTS_AIRPORTSMALLCOMPLETER_H
 
-#include "blackmisc/aviation/airport.h"
+#include "misc/aviation/airport.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -31,16 +31,16 @@ namespace BlackGui::Components
         virtual ~CAirportSmallCompleter();
 
         //! Set airport
-        void setAirport(const BlackMisc::Aviation::CAirport &airport);
+        void setAirport(const swift::misc::aviation::CAirport &airport);
 
         //! Set airport
-        void setAirportIcaoCode(const BlackMisc::Aviation::CAirportIcaoCode &airportCode);
+        void setAirportIcaoCode(const swift::misc::aviation::CAirportIcaoCode &airportCode);
 
         //! Get airport
-        const BlackMisc::Aviation::CAirport &getAirport() const { return m_current; }
+        const swift::misc::aviation::CAirport &getAirport() const { return m_current; }
 
         //! Get airport ICAO code
-        BlackMisc::Aviation::CAirportIcaoCode getAirportIcaoCode() const;
+        swift::misc::aviation::CAirportIcaoCode getAirportIcaoCode() const;
 
         //! The raw ICAO code text
         QString getIcaoText() const;
@@ -59,7 +59,7 @@ namespace BlackGui::Components
 
     signals:
         //! Airport has been changed
-        void changedAirport(const BlackMisc::Aviation::CAirport &airport);
+        void changedAirport(const swift::misc::aviation::CAirport &airport);
 
         //! \copydoc QLineEdit::editingFinished
         void editingFinished();
@@ -76,7 +76,7 @@ namespace BlackGui::Components
 
         QScopedPointer<Ui::CAirportSmallCompleter> ui;
         QScopedPointer<CAirportDialog> m_airportsDialog; //!< UI completer
-        BlackMisc::Aviation::CAirport m_current; //!< this airport
+        swift::misc::aviation::CAirport m_current; //!< this airport
     };
 } // ns
 

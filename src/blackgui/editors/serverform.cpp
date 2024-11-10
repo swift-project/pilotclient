@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackgui/editors/serverform.h"
-#include "blackmisc/network/user.h"
+#include "misc/network/user.h"
 #include "ui_serverform.h"
 
 #include <QIntValidator>
@@ -10,9 +10,9 @@
 #include <QLineEdit>
 #include <QToolButton>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Audio;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::audio;
+using namespace swift::misc::network;
 
 namespace BlackGui::Editors
 {

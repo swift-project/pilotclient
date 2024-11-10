@@ -10,9 +10,9 @@
 #include "blackgui/models/actionhotkeylistmodel.h"
 #include "blackcore/actionbind.h"
 #include "blackcore/application/applicationsettings.h"
-#include "blackmisc/identifierlist.h"
-#include "blackmisc/settingscache.h"
-#include "blackmisc/icons.h"
+#include "misc/identifierlist.h"
+#include "misc/settingscache.h"
+#include "misc/icons.h"
 
 #include <QFrame>
 #include <QObject>
@@ -51,17 +51,17 @@ namespace BlackGui::Components
         void editEntry();
         void removeEntry();
         void hotkeySlot(bool keyDown);
-        void addHotkeyToSettings(const BlackMisc::Input::CActionHotkey &actionHotkey);
-        void updateHotkeyInSettings(const BlackMisc::Input::CActionHotkey &oldValue, const BlackMisc::Input::CActionHotkey &newValue);
-        void removeHotkeyFromSettings(const BlackMisc::Input::CActionHotkey &actionHotkey);
-        bool checkAndConfirmConflicts(const BlackMisc::Input::CActionHotkey &actionHotkey, const BlackMisc::Input::CActionHotkeyList &ignore = {});
-        BlackMisc::CIdentifierList getAllIdentifiers() const;
+        void addHotkeyToSettings(const swift::misc::input::CActionHotkey &actionHotkey);
+        void updateHotkeyInSettings(const swift::misc::input::CActionHotkey &oldValue, const swift::misc::input::CActionHotkey &newValue);
+        void removeHotkeyFromSettings(const swift::misc::input::CActionHotkey &actionHotkey);
+        bool checkAndConfirmConflicts(const swift::misc::input::CActionHotkey &actionHotkey, const swift::misc::input::CActionHotkeyList &ignore = {});
+        swift::misc::CIdentifierList getAllIdentifiers() const;
         void resizeView();
 
         QScopedPointer<Ui::CSettingsHotkeyComponent> ui;
         Models::CActionHotkeyListModel m_model; //!< hotkeys model
-        BlackMisc::CSetting<BlackCore::Application::TActionHotkeys> m_actionHotkeys { this, &CSettingsHotkeyComponent::reloadHotkeysFromSettings };
-        BlackCore::CActionBind m_action { "/Test/Message", BlackMisc::CIcons::StandardIconWrench16, this, &CSettingsHotkeyComponent::hotkeySlot };
+        swift::misc::CSetting<BlackCore::Application::TActionHotkeys> m_actionHotkeys { this, &CSettingsHotkeyComponent::reloadHotkeysFromSettings };
+        BlackCore::CActionBind m_action { "/Test/Message", swift::misc::CIcons::StandardIconWrench16, this, &CSettingsHotkeyComponent::hotkeySlot };
     };
 
     /*!

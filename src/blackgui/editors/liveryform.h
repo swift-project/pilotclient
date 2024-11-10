@@ -9,10 +9,10 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/editors/form.h"
 #include "blackgui/components/dbliverycolorsearchdialog.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/variant.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/livery.h"
+#include "misc/statusmessagelist.h"
+#include "misc/variant.h"
 
 #include <QObject>
 #include <QScopedPointer>
@@ -40,13 +40,13 @@ namespace BlackGui::Editors
         virtual ~CLiveryForm() override;
 
         //! Value
-        BlackMisc::Aviation::CLivery getValue() const;
+        swift::misc::aviation::CLivery getValue() const;
 
         //! Embedded ariline
-        BlackMisc::Aviation::CAirlineIcaoCode getValueAirlineIcao() const;
+        swift::misc::aviation::CAirlineIcaoCode getValueAirlineIcao() const;
 
         //! Validate airline ICAO code only
-        BlackMisc::CStatusMessageList validateAirlineIcao() const;
+        swift::misc::CStatusMessageList validateAirlineIcao() const;
 
         //! Allow to drop
         void allowDrop(bool allowDrop);
@@ -58,14 +58,14 @@ namespace BlackGui::Editors
         //! @{
         virtual void setReadOnly(bool readonly) override;
         virtual void setSelectOnly() override;
-        virtual BlackMisc::CStatusMessageList validate(bool withNestedForms) const override;
+        virtual swift::misc::CStatusMessageList validate(bool withNestedForms) const override;
         //! @}
 
         //! Clear data
         void clear();
 
         //! Value
-        bool setValue(const BlackMisc::Aviation::CLivery &livery);
+        bool setValue(const swift::misc::aviation::CLivery &livery);
 
         //! Reset value to current value
         void resetValue();
@@ -76,10 +76,10 @@ namespace BlackGui::Editors
 
     private:
         //! Livery dropped
-        void onDroppedLivery(const BlackMisc::CVariant &variantDropped);
+        void onDroppedLivery(const swift::misc::CVariant &variantDropped);
 
         //! Airline of embedded form has changed
-        void onAirlineChanged(const BlackMisc::Aviation::CAirlineIcaoCode &code);
+        void onAirlineChanged(const swift::misc::aviation::CAirlineIcaoCode &code);
 
         //! Id entered
         void onIdEntered();
@@ -91,7 +91,7 @@ namespace BlackGui::Editors
         void searchForColor();
 
         QScopedPointer<Ui::CLiveryForm> ui;
-        BlackMisc::Aviation::CLivery m_originalLivery; //!< object allowing to override values
+        swift::misc::aviation::CLivery m_originalLivery; //!< object allowing to override values
         BlackGui::Components::CDbLiveryColorSearchDialog *m_colorSearch = nullptr; //!< search for color
     };
 } // ns

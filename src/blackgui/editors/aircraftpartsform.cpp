@@ -4,17 +4,17 @@
 #include "aircraftpartsform.h"
 #include "ui_aircraftpartsform.h"
 #include "blackgui/guiutility.h"
-#include "blackmisc/aviation/aircraftenginelist.h"
-#include "blackmisc/aviation/aircraftlights.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/aviation/aircraftenginelist.h"
+#include "misc/aviation/aircraftlights.h"
+#include "misc/logmessage.h"
+#include "misc/statusmessage.h"
 
 #include <QPushButton>
 #include <QJsonDocument>
 #include <QJsonParseError>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 
 namespace BlackGui::Editors
 {
@@ -124,7 +124,7 @@ namespace BlackGui::Editors
         ui->cb_AircraftPartsEngine6->setChecked(on);
     }
 
-    Aviation::CAircraftParts CAircraftPartsForm::guiToAircraftParts() const
+    aviation::CAircraftParts CAircraftPartsForm::guiToAircraftParts() const
     {
         const CAircraftLights lights(
             ui->cb_AircraftPartsLightsStrobe->isChecked(),

@@ -131,7 +131,7 @@ elseif(UNIX)
 endif()
 
 if(UNIX AND NOT APPLE AND ${CMAKE_BUILD_TYPE} STREQUAL Debug)
-    # For BlackMisc::getStackTrace
+    # For swift::misc::getStackTrace
     add_link_options(-rdynamic)
 endif()
 

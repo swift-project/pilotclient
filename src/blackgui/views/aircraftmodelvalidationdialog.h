@@ -8,7 +8,7 @@
 
 #include <QDialog>
 #include <QScopedPointer>
-#include "blackmisc/simulation/aircraftmodellist.h"
+#include "misc/simulation/aircraftmodellist.h"
 
 namespace Ui
 {
@@ -33,8 +33,8 @@ namespace BlackGui::Views
 
         //! Models
         void setModels(
-            const BlackMisc::Simulation::CAircraftModelList &models,
-            const BlackMisc::Simulation::CSimulatorInfo &simulator,
+            const swift::misc::simulation::CAircraftModelList &models,
+            const swift::misc::simulation::CSimulatorInfo &simulator,
             const QString &simulatorDir);
 
         //! Trigger a validation
@@ -45,8 +45,8 @@ namespace BlackGui::Views
         void validate();
 
         QScopedPointer<Ui::CAircraftModelValidationDialog> ui;
-        BlackMisc::Simulation::CAircraftModelList m_models;
-        BlackMisc::Simulation::CSimulatorInfo m_simulator { BlackMisc::Simulation::CSimulatorInfo::None };
+        swift::misc::simulation::CAircraftModelList m_models;
+        swift::misc::simulation::CSimulatorInfo m_simulator { swift::misc::simulation::CSimulatorInfo::None };
         QString m_simulatorDir;
     };
 } // ns

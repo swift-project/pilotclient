@@ -7,16 +7,16 @@
 #include "blackgui/models/listmodelbase.h"
 #include "blackgui/models/allmodelcontainers.h"
 #include "blackgui/guiutility.h"
-#include "blackmisc/variant.h"
-#include "blackmisc/worker.h"
+#include "misc/variant.h"
+#include "misc/worker.h"
 
 #include <QFlags>
 #include <QJsonDocument>
 #include <QList>
 #include <QMimeData>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 
 namespace BlackGui::Models
 {

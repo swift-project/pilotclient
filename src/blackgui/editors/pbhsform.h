@@ -7,10 +7,10 @@
 #define BLACKGUI_EDITORS_PBHSFORM_H
 
 #include "blackgui/editors/form.h"
-#include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/aviation/heading.h"
-#include "blackmisc/pq/angle.h"
-#include "blackmisc/pq/speed.h"
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/aviation/heading.h"
+#include "misc/pq/angle.h"
+#include "misc/pq/speed.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -33,34 +33,34 @@ namespace BlackGui::Editors
         virtual ~CPbhsForm() override;
 
         //! Get bank angle
-        BlackMisc::PhysicalQuantities::CAngle getBankAngle() const;
+        swift::misc::physical_quantities::CAngle getBankAngle() const;
 
         //! Set bank angle
-        void setBankAngle(const BlackMisc::PhysicalQuantities::CAngle &angle);
+        void setBankAngle(const swift::misc::physical_quantities::CAngle &angle);
 
         //! Get pitch angle
-        BlackMisc::PhysicalQuantities::CAngle getPitchAngle() const;
+        swift::misc::physical_quantities::CAngle getPitchAngle() const;
 
         //! Set pitch angle
-        void setPitchAngle(const BlackMisc::PhysicalQuantities::CAngle &angle);
+        void setPitchAngle(const swift::misc::physical_quantities::CAngle &angle);
 
         //! Get heading angle
-        BlackMisc::PhysicalQuantities::CAngle getHeadingAngle() const;
+        swift::misc::physical_quantities::CAngle getHeadingAngle() const;
 
         //! Get heading
-        BlackMisc::Aviation::CHeading getHeading() const;
+        swift::misc::aviation::CHeading getHeading() const;
 
         //! Set heading angle
-        void setHeadingAngle(const BlackMisc::PhysicalQuantities::CAngle &angle);
+        void setHeadingAngle(const swift::misc::physical_quantities::CAngle &angle);
 
         //! Get ground speed
-        BlackMisc::PhysicalQuantities::CSpeed getGroundSpeed() const;
+        swift::misc::physical_quantities::CSpeed getGroundSpeed() const;
 
         //! Set situation
-        void setSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
+        void setSituation(const swift::misc::aviation::CAircraftSituation &situation);
 
         //! Update PBHs in situation
-        void updateSituation(BlackMisc::Aviation::CAircraftSituation &situation);
+        void updateSituation(swift::misc::aviation::CAircraftSituation &situation);
 
         //! \copydoc CForm::setReadOnly
         virtual void setReadOnly(bool readOnly) override;

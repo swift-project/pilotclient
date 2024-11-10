@@ -6,7 +6,7 @@
 
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackmisc/fileutils.h"
+#include "misc/fileutils.h"
 
 namespace BlackGui::Components
 {
@@ -44,13 +44,13 @@ namespace BlackGui::Components
 
     void CAboutDialog::loadSwiftLicense()
     {
-        const QString html = BlackMisc::CFileUtils::readFileToString(BlackMisc::CSwiftDirectories::legalDirectory() + "/LicenseRef-swift-pilot-client-1.html");
+        const QString html = swift::misc::CFileUtils::readFileToString(swift::misc::CSwiftDirectories::legalDirectory() + "/LicenseRef-swift-pilot-client-1.html");
         ui->tbr_swiftLicense->setHtml(html);
     }
 
     void CAboutDialog::loadThirdPartyLicenses()
     {
-        const QString html = BlackMisc::CFileUtils::readFileToString(BlackMisc::CSwiftDirectories::legalDirectory() + "/3rdparty.html");
+        const QString html = swift::misc::CFileUtils::readFileToString(swift::misc::CSwiftDirectories::legalDirectory() + "/3rdparty.html");
         ui->tbr_ThirdPartyLicenses->setHtml(html);
     }
 } // ns

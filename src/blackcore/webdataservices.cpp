@@ -15,12 +15,12 @@
 #include "blackcore/webdataservices.h"
 #include "blackcore/setupreader.h"
 #include "blackcore/application.h"
-#include "blackmisc/fileutils.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/worker.h"
-#include "blackmisc/threadutils.h"
+#include "misc/fileutils.h"
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
+#include "misc/statusmessage.h"
+#include "misc/worker.h"
+#include "misc/threadutils.h"
 #include "config/buildconfig.h"
 
 #include <QDir>
@@ -37,12 +37,12 @@ using namespace BlackCore::Data;
 using namespace BlackCore::Vatsim;
 using namespace BlackCore::Context;
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Db;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Weather;
+using namespace swift::misc;
+using namespace swift::misc::db;
+using namespace swift::misc::simulation;
+using namespace swift::misc::network;
+using namespace swift::misc::aviation;
+using namespace swift::misc::weather;
 
 namespace BlackCore
 {

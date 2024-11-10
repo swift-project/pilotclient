@@ -8,7 +8,7 @@
 #include "blackgui/menus/menudelegate.h"
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackgui/overlaymessagesframe.h"
-#include "blackmisc/simulation/aircraftmodelinterfaces.h"
+#include "misc/simulation/aircraftmodelinterfaces.h"
 
 #include <QObject>
 

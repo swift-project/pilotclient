@@ -8,9 +8,9 @@
 
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/simulatorinfo.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/icons.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/logcategories.h"
+#include "misc/icons.h"
 
 #include <QObject>
 #include <QTimer>
@@ -23,11 +23,11 @@ namespace Ui
 {
     class CSimulatorComponent;
 }
-namespace BlackMisc
+namespace swift::misc
 {
     class CIcon;
     class CStatusMessageList;
-    namespace Simulation
+    namespace simulation
     {
         class CSimulatedAircraft;
     }
@@ -65,10 +65,10 @@ namespace BlackGui::Components
         void onSimulatorStatusChanged(int status);
 
         //! \copydoc ISimulator::addingRemoteModelFailed
-        void onAddingRemoteModelFailed(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool disabled, bool failover, const BlackMisc::CStatusMessage &message);
+        void onAddingRemoteModelFailed(const swift::misc::simulation::CSimulatedAircraft &aircraft, bool disabled, bool failover, const swift::misc::CStatusMessage &message);
 
         //! \copydoc ISimulator::onSimulatorMessages
-        void onSimulatorMessages(const BlackMisc::CStatusMessageList &messages);
+        void onSimulatorMessages(const swift::misc::CStatusMessageList &messages);
 
         //! Refresh the internals
         void refreshInternals();
@@ -77,17 +77,17 @@ namespace BlackGui::Components
         int getUpdateIntervalMs() const;
 
         //! Simple add or update name / value pair
-        void addOrUpdateLiveDataByName(const QString &name, const QString &value, const BlackMisc::CIcon &icon);
+        void addOrUpdateLiveDataByName(const QString &name, const QString &value, const swift::misc::CIcon &icon);
 
         //! Simple add or update name / value pair
-        void addOrUpdateLiveDataByName(const QString &name, const QString &value, BlackMisc::CIcons::IconIndex iconIndex);
+        void addOrUpdateLiveDataByName(const QString &name, const QString &value, swift::misc::CIcons::IconIndex iconIndex);
 
         //! Remove name
         void removeLiveDataByName(const QString &name);
 
         QScopedPointer<Ui::CSimulatorComponent> ui;
         QTimer m_updateTimer;
-        BlackMisc::Simulation::CSimulatorInfo m_simulator;
+        swift::misc::simulation::CSimulatorInfo m_simulator;
     };
 } // ns
 

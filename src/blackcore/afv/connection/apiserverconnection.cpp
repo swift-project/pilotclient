@@ -3,10 +3,10 @@
 
 #include "blackcore/afv/connection/apiserverconnection.h"
 
-#include "blackmisc/network/networkutils.h"
+#include "misc/network/networkutils.h"
 #include "qjsonwebtoken/qjsonwebtoken.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/stringutils.h"
+#include "misc/logmessage.h"
+#include "misc/stringutils.h"
 #include "config/buildconfig.h"
 
 #include <QJsonObject>
@@ -17,8 +17,8 @@
 #include <QMetaEnum>
 #include <QPointer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 using namespace swift::config;
 
 namespace BlackCore::Afv::Connection

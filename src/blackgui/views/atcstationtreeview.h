@@ -8,10 +8,10 @@
 
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/pq/frequency.h"
-#include "blackmisc/digestsignal.h"
+#include "misc/aviation/atcstationlist.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/pq/frequency.h"
+#include "misc/digestsignal.h"
 
 #include <QTreeView>
 #include <QList>
@@ -40,10 +40,10 @@ namespace BlackGui
             explicit CAtcStationTreeView(QWidget *parent = nullptr);
 
             //! \copydoc Models::CAtcStationListModel::changedAtcStationConnectionStatus
-            void changedAtcStationConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
+            void changedAtcStationConnectionStatus(const swift::misc::aviation::CAtcStation &station, bool added);
 
             //! Update container
-            void updateContainer(const BlackMisc::Aviation::CAtcStationList &stations);
+            void updateContainer(const swift::misc::aviation::CAtcStationList &stations);
 
             //! Clear
             void clear();
@@ -62,13 +62,13 @@ namespace BlackGui
             void testRequestDummyAtcOnlineStations(int number);
 
             //! Request COM frequency
-            void requestComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit unit);
+            void requestComFrequency(const swift::misc::physical_quantities::CFrequency &frequency, swift::misc::aviation::CComSystem::ComUnit unit);
 
             //! Request a text message to
-            void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
+            void requestTextMessageWidget(const swift::misc::aviation::CCallsign &callsign);
 
             //! This object has been selected
-            void objectSelected(const BlackMisc::Aviation::CAtcStation &station);
+            void objectSelected(const swift::misc::aviation::CAtcStation &station);
 
         private:
             //! Used model
@@ -81,10 +81,10 @@ namespace BlackGui
             void fullResizeToContentsImpl();
 
             //! The selected object
-            BlackMisc::Aviation::CAtcStation selectedObject() const;
+            swift::misc::aviation::CAtcStation selectedObject() const;
 
             //! The selected object
-            BlackMisc::Aviation::CAtcStation selectedObject(const QModelIndex &index) const;
+            swift::misc::aviation::CAtcStation selectedObject(const QModelIndex &index) const;
 
             //! Suffix for index
             QString suffixForIndex(const QModelIndex &index);
@@ -111,7 +111,7 @@ namespace BlackGui
             void requestTextMessage();
             //! @}
 
-            BlackMisc::CDigestSignal m_dsFullResize { this, &CAtcStationTreeView::fullResizeToContentsImpl, 1000, 25 };
+            swift::misc::CDigestSignal m_dsFullResize { this, &CAtcStationTreeView::fullResizeToContentsImpl, 1000, 25 };
             QMap<QString, bool> m_expanded; //!< suffix/expanded
         };
     } // ns

@@ -7,7 +7,7 @@
 #define BLACKSIMPLUGIN_SIMULATOR_P3DFACTORY_H
 
 #include "blackcore/simulator.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
+#include "misc/simulation/simulatorplugininfo.h"
 
 #include <QObject>
 #include <QtPlugin>
@@ -25,13 +25,13 @@ namespace BlackSimPlugin::P3D
 
     public:
         //! \copydoc BlackCore::ISimulatorFactory::create
-        virtual BlackCore::ISimulator *create(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                                              BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                                              BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                                              BlackMisc::Network::IClientProvider *clientProvider) override;
+        virtual BlackCore::ISimulator *create(const swift::misc::simulation::CSimulatorPluginInfo &info,
+                                              swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
+                                              swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                                              swift::misc::network::IClientProvider *clientProvider) override;
 
         //! \copydoc BlackCore::ISimulatorFactory::createListener
-        virtual BlackCore::ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) override;
+        virtual BlackCore::ISimulatorListener *createListener(const swift::misc::simulation::CSimulatorPluginInfo &info) override;
     };
 } // namespace
 

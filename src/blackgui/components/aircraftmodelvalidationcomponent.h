@@ -6,8 +6,8 @@
 #ifndef BLACKGUI_COMPONENTS_AIRCRAFTMODELVALIDATIONCOMPONENT_H
 #define BLACKGUI_COMPONENTS_AIRCRAFTMODELVALIDATIONCOMPONENT_H
 
-#include "blackmisc/simulation/settings/modelmatchersettings.h"
-#include "blackmisc/settingscache.h"
+#include "misc/simulation/settings/modelmatchersettings.h"
+#include "misc/settingscache.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
 
@@ -18,10 +18,10 @@ namespace Ui
 {
     class CAircraftModelValidationComponent;
 }
-namespace BlackMisc
+namespace swift::misc
 {
     class CStatusMessageList;
-    namespace Simulation
+    namespace simulation
     {
         class CSimulatorInfo;
         class CAircraftModelList;
@@ -44,16 +44,16 @@ namespace BlackGui::Components
         virtual ~CAircraftModelValidationComponent() override;
 
         //! Validated a model set
-        //! \remark coming from BlackMisc::Simulation::CBackgroundValidation
-        void validatedModelSet(const BlackMisc::Simulation::CSimulatorInfo &simulator, const BlackMisc::Simulation::CAircraftModelList &valid, const BlackMisc::Simulation::CAircraftModelList &invalid, bool stopped, const BlackMisc::CStatusMessageList &msgs);
+        //! \remark coming from swift::misc::simulation::CBackgroundValidation
+        void validatedModelSet(const swift::misc::simulation::CSimulatorInfo &simulator, const swift::misc::simulation::CAircraftModelList &valid, const swift::misc::simulation::CAircraftModelList &invalid, bool stopped, const swift::misc::CStatusMessageList &msgs);
 
     private:
         QScopedPointer<Ui::CAircraftModelValidationComponent> ui;
-        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings { this }; //!< settings
+        swift::misc::CSetting<swift::misc::simulation::settings::TModelMatching> m_matchingSettings { this }; //!< settings
         qint64 m_lastResults = -1; //!< when received last results
 
         //! Invalid models
-        void tempDisableModels(const BlackMisc::Simulation::CAircraftModelList &models);
+        void tempDisableModels(const swift::misc::simulation::CAircraftModelList &models);
 
         //! Enable/disable startup check
         void onCheckAtStartupChanged(bool checked);
@@ -77,7 +77,7 @@ namespace BlackGui::Components
         void showHelp();
 
         //! Save invalid models
-        void saveInvalidModels(const BlackMisc::Simulation::CAircraftModelList &models) const;
+        void saveInvalidModels(const swift::misc::simulation::CAircraftModelList &models) const;
     };
 } // ns
 #endif // guard

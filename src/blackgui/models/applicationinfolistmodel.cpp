@@ -13,7 +13,7 @@
 #include <QtDebug>
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Models
 {

@@ -59,7 +59,7 @@
       <string>select folder</string>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/diagona/icons/diagona/icons/folder--pencil.png</normaloff>:/diagona/icons/diagona/icons/folder--pencil.png</iconset>
      </property>
     </widget>
@@ -145,7 +145,7 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/diagona/icons/diagona/icons/cross-circle.png</normaloff>:/diagona/icons/diagona/icons/cross-circle.png</iconset>
      </property>
     </widget>
@@ -199,7 +199,7 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/diagona/icons/diagona/icons/arrow-circle-225-left.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-225-left.png</iconset>
      </property>
     </widget>
@@ -344,7 +344,7 @@
   <tabstop>cb_Shutdown</tabstop>
  </tabstops>
  <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
+  <include location="../../misc/misc.qrc"/>
  </resources>
  <connections/>
 </ui>

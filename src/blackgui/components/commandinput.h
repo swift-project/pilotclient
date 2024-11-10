@@ -8,21 +8,21 @@
 
 #include "blackgui/lineedithistory.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/digestsignal.h"
-#include "blackmisc/identifiable.h"
-#include "blackmisc/identifier.h"
+#include "misc/digestsignal.h"
+#include "misc/identifiable.h"
+#include "misc/identifier.h"
 
 #include <QLineEdit>
 #include <QObject>
 #include <QString>
 
-namespace BlackMisc
+namespace swift::misc
 {
-    namespace Network
+    namespace network
     {
         class CServer;
     }
-    namespace Simulation
+    namespace simulation
     {
         class CSimulatorPluginInfo;
     }
@@ -32,7 +32,7 @@ namespace BlackGui::Components
     //! Specialized line edit for command inputs
     class BLACKGUI_EXPORT CCommandInput :
         public CLineEditHistory,
-        public BlackMisc::CIdentifiable
+        public swift::misc::CIdentifiable
     {
         Q_OBJECT
 
@@ -45,10 +45,10 @@ namespace BlackGui::Components
 
     signals:
         //! Command was entered
-        void commandEntered(const QString &command, const BlackMisc::CIdentifier &originator);
+        void commandEntered(const QString &command, const swift::misc::CIdentifier &originator);
 
         //! Text entered (which is not a command)
-        void textEntered(const QString &command, const BlackMisc::CIdentifier &originator);
+        void textEntered(const QString &command, const swift::misc::CIdentifier &originator);
 
     private:
         //! Basic command validation
@@ -58,13 +58,13 @@ namespace BlackGui::Components
         void setCommandToolTip();
 
         //! Simulator plugin loaded / unloaded (default info)
-        void onSimulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
+        void onSimulatorPluginChanged(const swift::misc::simulation::CSimulatorPluginInfo &info);
 
         //! Connected network server has been changed
-        void onConnectedServerChanged(const BlackMisc::Network::CServer &server);
+        void onConnectedServerChanged(const swift::misc::network::CServer &server);
 
         bool m_showToolTip = true;
-        BlackMisc::CDigestSignal m_dsCommandTooltip { this, &CCommandInput::setCommandToolTip, 5000, 2 };
+        swift::misc::CDigestSignal m_dsCommandTooltip { this, &CCommandInput::setCommandToolTip, 5000, 2 };
     };
 } // ns
 #endif // guard

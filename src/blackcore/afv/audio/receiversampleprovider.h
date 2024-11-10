@@ -12,9 +12,9 @@
 #include "sound/sampleprovider/sinusgenerator.h"
 #include "sound/sampleprovider/volumesampleprovider.h"
 
-#include "blackmisc/logcategories.h"
-#include "blackmisc/aviation/callsignset.h"
-#include "blackmisc/audio/audiosettings.h"
+#include "misc/logcategories.h"
+#include "misc/aviation/callsignset.h"
+#include "misc/audio/audiosettings.h"
 
 #include <QtGlobal>
 
@@ -75,7 +75,7 @@ namespace BlackCore::Afv::Audio
 
         //! Receiving callsigns
         //! \remark those callsigns are transmitting and "I do receive them"
-        const BlackMisc::Aviation::CCallsignSet &getReceivingCallsigns() { return m_receivingCallsigns; }
+        const swift::misc::aviation::CCallsignSet &getReceivingCallsigns() { return m_receivingCallsigns; }
 
         //! Get frequency in Hz
         uint getFrequencyHz() const;
@@ -98,7 +98,7 @@ namespace BlackCore::Afv::Audio
         const double m_blockToneGain = 0.10;
 
         quint16 m_id;
-        BlackMisc::CSettingReadOnly<BlackMisc::Audio::TSettings> m_audioSettings { this };
+        swift::misc::CSettingReadOnly<swift::misc::audio::TSettings> m_audioSettings { this };
 
         swift::sound::sample_provider::CVolumeSampleProvider *m_volume = nullptr;
         swift::sound::sample_provider::CMixingSampleProvider *m_mixer = nullptr;
@@ -107,7 +107,7 @@ namespace BlackCore::Afv::Audio
         qint64 m_lastLogMessage = -1;
 
         QString m_receivingCallsignsString;
-        BlackMisc::Aviation::CCallsignSet m_receivingCallsigns;
+        swift::misc::aviation::CCallsignSet m_receivingCallsigns;
 
         bool m_doClickWhenAppropriate = false;
         bool m_doBlockWhenAppropriate = false;

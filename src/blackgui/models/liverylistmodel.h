@@ -11,7 +11,7 @@
 
 class QObject;
 
-namespace BlackMisc::Aviation
+namespace swift::misc::aviation
 {
     class CLivery;
     class CLiveryList;
@@ -21,7 +21,7 @@ namespace BlackGui::Models
 {
     //! Distributor list model
     class BLACKGUI_EXPORT CLiveryListModel :
-        public CListModelDbObjects<BlackMisc::Aviation::CLiveryList, int, true>
+        public CListModelDbObjects<swift::misc::aviation::CLiveryList, int, true>
     {
         Q_OBJECT
 

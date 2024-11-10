@@ -4,8 +4,8 @@
 #include "cockpitcomtransmissioncomponent.h"
 #include "ui_cockpitcomtransmissioncomponent.h"
 
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
 
 namespace BlackGui::Components
 {

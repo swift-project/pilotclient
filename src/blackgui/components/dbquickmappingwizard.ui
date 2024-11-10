@@ -45,7 +45,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="../../blackmisc/blackmisc.qrc">:/own/icons/own/swift3D/sw3DGreen-48.png</pixmap>
+          <pixmap resource="../../misc/misc.qrc">:/own/icons/own/swift3D/sw3DGreen-48.png</pixmap>
          </property>
         </widget>
        </item>
@@ -129,7 +129,7 @@
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="../../blackmisc/blackmisc.qrc">:/pastel/icons/pastel/16/infomation.png</pixmap>
+               <pixmap resource="../../misc/misc.qrc">:/pastel/icons/pastel/16/infomation.png</pixmap>
               </property>
              </widget>
             </item>
@@ -215,7 +215,7 @@
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="../../blackmisc/blackmisc.qrc">:/pastel/icons/pastel/16/infomation.png</pixmap>
+               <pixmap resource="../../misc/misc.qrc">:/pastel/icons/pastel/16/infomation.png</pixmap>
               </property>
              </widget>
             </item>
@@ -695,7 +695,7 @@
   <tabstop>cb_Military</tabstop>
  </tabstops>
  <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
+  <include location="../../misc/misc.qrc"/>
  </resources>
  <connections/>
 </ui>

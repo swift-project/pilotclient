@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackcore/afv/connection/clientconnectiondata.h"
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 #include <QDebug>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackCore::Afv::Crypto;
 
 namespace BlackCore::Afv::Connection

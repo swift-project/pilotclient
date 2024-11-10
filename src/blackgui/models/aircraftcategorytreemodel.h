@@ -7,7 +7,7 @@
 #define BLACKGUI_MODELS_AIRCRAFTCATEGORYTREEMODEL_H
 
 #include "blackgui/models/columns.h"
-#include "blackmisc/aviation/aircraftcategorylist.h"
+#include "misc/aviation/aircraftcategorylist.h"
 #include "blackgui/blackguiexport.h"
 
 #include <QStandardItemModel>
@@ -30,18 +30,18 @@ namespace BlackGui::Models
         void setColumns(const CColumns &columns) { m_columns.setColumns(columns); }
 
         //! Update container
-        void updateContainer(const BlackMisc::Aviation::CAircraftCategoryList &categories);
+        void updateContainer(const swift::misc::aviation::CAircraftCategoryList &categories);
 
         //! Clear everything
         //! \remark hiding QStandardItemModel::clear()
         void clear();
 
         //! Get container
-        const BlackMisc::Aviation::CAircraftCategoryList &container() const { return m_categories; }
+        const swift::misc::aviation::CAircraftCategoryList &container() const { return m_categories; }
 
     private:
         CColumns m_columns { "CAircraftCategoryTreeModel" };
-        BlackMisc::Aviation::CAircraftCategoryList m_categories;
+        swift::misc::aviation::CAircraftCategoryList m_categories;
     };
 } // ns
 

@@ -3,11 +3,11 @@
 
 #include "settingssimulatormessagescomponent.h"
 #include "ui_settingssimulatormessagescomponent.h"
-#include "blackmisc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/settings/simulatorsettings.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::Settings;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::settings;
 
 namespace BlackGui::Components
 {

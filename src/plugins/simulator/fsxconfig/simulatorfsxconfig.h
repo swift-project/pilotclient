@@ -7,7 +7,7 @@
 #define BLACKSIMPLUGIN_SIMULATOR_FSX_CONFIG_H
 
 #include "blackgui/pluginconfig.h"
-#include "blackmisc/settingscache.h"
+#include "misc/settingscache.h"
 
 namespace BlackSimPlugin::Fsx
 {

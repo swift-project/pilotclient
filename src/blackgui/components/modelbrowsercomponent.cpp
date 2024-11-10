@@ -6,15 +6,15 @@
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackmisc/aviation/heading.h"
-#include "blackmisc/pq/angle.h"
-#include "blackmisc/pq/speed.h"
+#include "misc/aviation/heading.h"
+#include "misc/pq/angle.h"
+#include "misc/pq/speed.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Geo;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::geo;
 using namespace BlackGui::Editors;
 using namespace BlackGui::Views;
 using namespace BlackCore;

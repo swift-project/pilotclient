@@ -3,10 +3,10 @@
 
 #include "simulatorp3dfactory.h"
 #include "simulatorp3d.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
+#include "misc/simulation/simulatorplugininfo.h"
 
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Network;
+using namespace swift::misc::simulation;
+using namespace swift::misc::network;
 
 namespace BlackSimPlugin::P3D
 {

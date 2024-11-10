@@ -11,25 +11,25 @@
 #include "blackcore/corefacade.h"
 #include "blackcore/fsd/fsdclient.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/aircraftparts.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/network/textmessage.h"
-#include "blackmisc/pq/constants.h"
-#include "blackmisc/pq/frequency.h"
-#include "blackmisc/pq/time.h"
-#include "blackmisc/pq/units.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/sequence.h"
-#include "blackmisc/simplecommandparser.h"
-#include "blackmisc/stringutils.h"
+#include "misc/simulation/simulatorplugininfo.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/aircraftparts.h"
+#include "misc/aviation/atcstationlist.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/aviation/callsign.h"
+#include "misc/network/entityflags.h"
+#include "misc/network/networkutils.h"
+#include "misc/network/textmessage.h"
+#include "misc/pq/constants.h"
+#include "misc/pq/frequency.h"
+#include "misc/pq/time.h"
+#include "misc/pq/units.h"
+#include "misc/dbusserver.h"
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
+#include "misc/sequence.h"
+#include "misc/simplecommandparser.h"
+#include "misc/stringutils.h"
 #include "config/buildconfig.h"
 
 #include <stdbool.h>
@@ -37,13 +37,13 @@
 #include <QTimer>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Weather;
+using namespace swift::misc;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::geo;
+using namespace swift::misc::simulation;
+using namespace swift::misc::weather;
 using namespace BlackCore::Fsd;
 using namespace BlackCore::Vatsim;
 
@@ -106,7 +106,7 @@ namespace BlackCore::Context
         connect(m_airspace, &CAirspaceMonitor::changedAtisReceived, this, &CContextNetwork::onChangedAtisReceived, Qt::QueuedConnection);
     }
 
-    CContextNetwork *CContextNetwork::registerWithDBus(BlackMisc::CDBusServer *server)
+    CContextNetwork *CContextNetwork::registerWithDBus(swift::misc::CDBusServer *server)
     {
         if (!server || getMode() != CCoreFacadeConfig::LocalInDBusServer) return this;
         server->addObject(IContextNetwork::ObjectPath(), this);
@@ -130,7 +130,7 @@ namespace BlackCore::Context
         return m_airspace->remoteAircraftSituations(callsign);
     }
 
-    CAircraftSituation CContextNetwork::remoteAircraftSituation(const Aviation::CCallsign &callsign, int index) const
+    CAircraftSituation CContextNetwork::remoteAircraftSituation(const aviation::CCallsign &callsign, int index) const
     {
         if (!this->canUseAirspaceMonitor()) { return {}; }
         return m_airspace->remoteAircraftSituation(callsign, index);
@@ -612,13 +612,13 @@ namespace BlackCore::Context
         return m_airspace->setOtherClient(client);
     }
 
-    int CContextNetwork::removeClient(const Aviation::CCallsign &callsign)
+    int CContextNetwork::removeClient(const aviation::CCallsign &callsign)
     {
         if (!this->canUseAirspaceMonitor()) { return 0; }
         return m_airspace->removeClient(callsign);
     }
 
-    bool CContextNetwork::autoAdjustCientGndCapability(const Aviation::CAircraftSituation &situation)
+    bool CContextNetwork::autoAdjustCientGndCapability(const aviation::CAircraftSituation &situation)
     {
         if (!this->canUseAirspaceMonitor()) { return false; }
         return m_airspace->autoAdjustCientGndCapability(situation);
@@ -630,7 +630,7 @@ namespace BlackCore::Context
         return m_airspace->addClientGndCapability(callsign);
     }
 
-    bool CContextNetwork::setClientGndCapability(const Aviation::CCallsign &callsign, bool supportGndFlag)
+    bool CContextNetwork::setClientGndCapability(const aviation::CCallsign &callsign, bool supportGndFlag)
     {
         if (!this->canUseAirspaceMonitor()) { return false; }
         return m_airspace->setClientGndCapability(callsign, supportGndFlag);
@@ -1115,7 +1115,7 @@ namespace BlackCore::Context
         if (c)
         {
             const CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
-            CLogMessage(this).info(u"Callsign '%1' fast positions '%2'") << aircraft.getCallsign() << BlackMisc::boolToOnOff(aircraft.fastPositionUpdates());
+            CLogMessage(this).info(u"Callsign '%1' fast positions '%2'") << aircraft.getCallsign() << swift::misc::boolToOnOff(aircraft.fastPositionUpdates());
             emit this->changedFastPositionUpdates(aircraft);
         }
         return c;
@@ -1134,7 +1134,7 @@ namespace BlackCore::Context
         return c;
     }
 
-    bool CContextNetwork::updateCG(const Aviation::CCallsign &callsign, const CLength &cg)
+    bool CContextNetwork::updateCG(const aviation::CCallsign &callsign, const CLength &cg)
     {
         if (!canUseAirspaceMonitor()) { return false; }
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign << cg.valueRoundedWithUnit(1); }
@@ -1244,13 +1244,13 @@ namespace BlackCore::Context
         m_airspace->clearClients();
     }
 
-    CClient CContextNetwork::getClientOrDefaultForCallsign(const Aviation::CCallsign &callsign) const
+    CClient CContextNetwork::getClientOrDefaultForCallsign(const aviation::CCallsign &callsign) const
     {
         if (!canUseAirspaceMonitor()) { return {}; }
         return m_airspace->getClientOrDefaultForCallsign(callsign);
     }
 
-    bool CContextNetwork::hasClientInfo(const Aviation::CCallsign &callsign) const
+    bool CContextNetwork::hasClientInfo(const aviation::CCallsign &callsign) const
     {
         if (!canUseAirspaceMonitor()) { return false; }
         return m_airspace->hasClientInfo(callsign);
@@ -1262,7 +1262,7 @@ namespace BlackCore::Context
         return m_airspace->addNewClient(client);
     }
 
-    int CContextNetwork::updateOrAddClient(const Aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues)
+    int CContextNetwork::updateOrAddClient(const aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues)
     {
         if (!canUseAirspaceMonitor()) { return 0; }
         return m_airspace->updateOrAddClient(callsign, vm, skipEqualValues);

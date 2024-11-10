@@ -8,7 +8,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/dropbase.h"
-#include "blackmisc/variant.h"
+#include "misc/variant.h"
 
 #include <QLabel>
 #include <QList>
@@ -46,7 +46,7 @@ namespace BlackGui
 
     signals:
         //! Dropped value object
-        void droppedValueObject(const BlackMisc::CVariant &droppedObject);
+        void droppedValueObject(const swift::misc::CVariant &droppedObject);
 
     protected:
         //! \copydoc QWidget::dragEnterEvent

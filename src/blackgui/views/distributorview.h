@@ -13,7 +13,7 @@
 class QString;
 class QWidget;
 
-namespace BlackMisc::Simulation
+namespace swift::misc::simulation
 {
     class CDistributor;
     class CDistributorList;

@@ -4,7 +4,7 @@
 #include "blackcore/fsd/servererror.h"
 #include <QVector>
 
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
 namespace BlackCore::Fsd
 {
@@ -53,7 +53,7 @@ namespace BlackCore::Fsd
     {
         if (tokens.size() < 5)
         {
-            BlackMisc::CLogMessage(static_cast<ServerError *>(nullptr)).debug(u"Wrong number of arguments.");
+            swift::misc::CLogMessage(static_cast<ServerError *>(nullptr)).debug(u"Wrong number of arguments.");
             return {};
         }
         return ServerError(tokens[0], tokens[1], static_cast<ServerErrorCode>(tokens[2].toInt()), tokens[3], tokens[4]);

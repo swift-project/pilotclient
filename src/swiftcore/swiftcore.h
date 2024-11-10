@@ -9,8 +9,8 @@
 #include "blackcore/coremodeenums.h"
 #include "blackgui/mainwindowaccess.h"
 #include "blackgui/systemtraywindow.h"
-#include "blackmisc/identifiable.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/identifiable.h"
+#include "misc/statusmessage.h"
 
 #include <QObject>
 #include <QScopedPointer>
@@ -35,7 +35,7 @@ namespace Ui
 class CSwiftCore :
     public BlackGui::CSystemTrayWindow,
     public BlackGui::IMainWindowAccess,
-    public BlackMisc::CIdentifiable
+    public swift::misc::CIdentifiable
 {
     Q_OBJECT
     Q_INTERFACES(BlackGui::IMainWindowAccess)

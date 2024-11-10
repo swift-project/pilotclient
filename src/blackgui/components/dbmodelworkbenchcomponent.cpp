@@ -10,9 +10,9 @@
 #include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/db/databaseutils.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/icons.h"
+#include "misc/logmessage.h"
+#include "misc/statusmessage.h"
 #include "dbmodelworkbenchcomponent.h"
 #include "ui_dbmodelworkbenchcomponent.h"
 
@@ -23,8 +23,8 @@
 #include <QPointer>
 #include <QFileDialog>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
 using namespace BlackCore::Db;
 using namespace BlackGui::Menus;
 using namespace BlackGui::Views;

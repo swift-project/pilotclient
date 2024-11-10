@@ -17,15 +17,15 @@
 #include "blackcore/audio/audiosettings.h"
 #include "blackcore/application/applicationsettings.h"
 #include "blackcore/application/updatesettings.h"
-#include "blackmisc/simulation/data/modelcaches.h"
-#include "blackmisc/simulation/data/lastmodel.h"
-#include "blackmisc/simulation/settings/simulatorsettings.h"
-#include "blackmisc/simulation/settings/modelsettings.h"
-#include "blackmisc/network/data/lastserver.h"
-#include "blackmisc/network/settings/serversettings.h"
-#include "blackmisc/audio/audiosettings.h"
-#include "blackmisc/directories.h"
-#include "blackmisc/applicationinfo.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/simulation/data/lastmodel.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/settings/modelsettings.h"
+#include "misc/network/data/lastserver.h"
+#include "misc/network/settings/serversettings.h"
+#include "misc/audio/audiosettings.h"
+#include "misc/directories.h"
+#include "misc/applicationinfo.h"
 
 #include <QWizardPage>
 #include <QScopedPointer>
@@ -57,7 +57,7 @@ namespace BlackGui::Components
 
     private:
         //! Other version has been changed
-        void onOtherVersionChanged(const BlackMisc::CApplicationInfo &info);
+        void onOtherVersionChanged(const swift::misc::CApplicationInfo &info);
 
         //! Init UI
         void initAll();
@@ -96,7 +96,7 @@ namespace BlackGui::Components
         bool parsingMessage(bool success, const QString &msg, const QString &value);
 
         //! Display status message
-        void displayStatusMessage(const BlackMisc::CStatusMessage &msg, const QString &value);
+        void displayStatusMessage(const swift::misc::CStatusMessage &msg, const QString &value);
 
         //! All check boxes read only
         void allCheckBoxesReadOnly();
@@ -109,31 +109,31 @@ namespace BlackGui::Components
 
         QScopedPointer<Ui::CCopySettingsAndCachesComponent> ui;
 
-        BlackMisc::CSetting<BlackCore::Audio::TInputDevice> m_settingsAudioInputDevice { this };
-        BlackMisc::CSetting<BlackCore::Audio::TOutputDevice> m_settingsAudioOutputDevice { this };
-        BlackMisc::CSetting<Settings::TGeneralGui> m_settingsGuiGeneral { this };
-        BlackMisc::CSetting<Settings::TDockWidget> m_settingsDockWidget { this };
-        BlackMisc::CSetting<Settings::TViewUpdateSettings> m_settingsViewUpdate { this };
-        BlackMisc::CSetting<Settings::TBackgroundConsolidation> m_settingsConsolidation { this }; //!< consolidation time
-        BlackMisc::CSetting<Settings::TextMessageSettings> m_settingsTextMessage { this };
-        BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_settingsEnabledSimulators { this };
-        BlackMisc::CSetting<BlackCore::Application::TActionHotkeys> m_settingsActionHotkeys { this };
-        BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_settingsAudio { this };
-        BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_settingsDirectories { this };
-        BlackMisc::CSetting<BlackMisc::Network::Settings::TTrafficServers> m_settingsNetworkServers { this };
-        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSimulatorFsx> m_settingsSimulatorFsx { this }; //!< FSX settings
-        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSimulatorFs9> m_settingsSimulatorFs9 { this }; //!< FS9 settings
-        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSimulatorP3D> m_settingsSimulatorP3D { this }; //!< P3D settings
-        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSimulatorXP> m_settingsSimulatorXPlane { this }; //!< XP settings
-        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TModel> m_settingsModel { this }; //!< model setting
+        swift::misc::CSetting<BlackCore::Audio::TInputDevice> m_settingsAudioInputDevice { this };
+        swift::misc::CSetting<BlackCore::Audio::TOutputDevice> m_settingsAudioOutputDevice { this };
+        swift::misc::CSetting<Settings::TGeneralGui> m_settingsGuiGeneral { this };
+        swift::misc::CSetting<Settings::TDockWidget> m_settingsDockWidget { this };
+        swift::misc::CSetting<Settings::TViewUpdateSettings> m_settingsViewUpdate { this };
+        swift::misc::CSetting<Settings::TBackgroundConsolidation> m_settingsConsolidation { this }; //!< consolidation time
+        swift::misc::CSetting<Settings::TextMessageSettings> m_settingsTextMessage { this };
+        swift::misc::CSetting<BlackCore::Application::TEnabledSimulators> m_settingsEnabledSimulators { this };
+        swift::misc::CSetting<BlackCore::Application::TActionHotkeys> m_settingsActionHotkeys { this };
+        swift::misc::CSetting<swift::misc::audio::TSettings> m_settingsAudio { this };
+        swift::misc::CSetting<swift::misc::settings::TDirectorySettings> m_settingsDirectories { this };
+        swift::misc::CSetting<swift::misc::network::settings::TTrafficServers> m_settingsNetworkServers { this };
+        swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorFsx> m_settingsSimulatorFsx { this }; //!< FSX settings
+        swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorFs9> m_settingsSimulatorFs9 { this }; //!< FS9 settings
+        swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorP3D> m_settingsSimulatorP3D { this }; //!< P3D settings
+        swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorXP> m_settingsSimulatorXPlane { this }; //!< XP settings
+        swift::misc::CSetting<swift::misc::simulation::settings::TModel> m_settingsModel { this }; //!< model setting
 
-        BlackMisc::CData<BlackCore::Data::TVatsimLastServer> m_cacheLastVatsimServer { this }; //!< recently used VATSIM server
-        BlackMisc::CData<BlackCore::Data::TLauncherSetup> m_cacheLauncherSetup { this };
-        BlackMisc::CData<BlackCore::Data::TVatsimSetup> m_cacheVatsimSetup { this };
-        BlackMisc::CData<BlackMisc::Network::Data::TLastServer> m_cacheLastNetworkServer { this }; //!< recently used server (VATSIM, other)
-        BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelection> m_cacheModelSetCurrentSimulator { this };
-        BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_cacheModelsCurrentSimulator { this };
-        BlackMisc::CData<BlackMisc::Simulation::Data::TLastModel> m_cacheLastAircraftModel { this }; //!< recently used aircraft model
+        swift::misc::CData<BlackCore::Data::TVatsimLastServer> m_cacheLastVatsimServer { this }; //!< recently used VATSIM server
+        swift::misc::CData<BlackCore::Data::TLauncherSetup> m_cacheLauncherSetup { this };
+        swift::misc::CData<BlackCore::Data::TVatsimSetup> m_cacheVatsimSetup { this };
+        swift::misc::CData<swift::misc::network::data::TLastServer> m_cacheLastNetworkServer { this }; //!< recently used server (VATSIM, other)
+        swift::misc::CData<swift::misc::simulation::data::TSimulatorLastSelection> m_cacheModelSetCurrentSimulator { this };
+        swift::misc::CData<swift::misc::simulation::data::TModelCacheLastSelection> m_cacheModelsCurrentSimulator { this };
+        swift::misc::CData<swift::misc::simulation::data::TLastModel> m_cacheLastAircraftModel { this }; //!< recently used aircraft model
     };
 
     /*!

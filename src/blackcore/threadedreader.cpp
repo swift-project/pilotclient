@@ -3,10 +3,10 @@
 
 #include "blackcore/threadedreader.h"
 #include "blackcore/application.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/threadutils.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/verify.h"
+#include "misc/network/networkutils.h"
+#include "misc/threadutils.h"
+#include "misc/logmessage.h"
+#include "misc/verify.h"
 
 #include <QCoreApplication>
 #include <QMetaObject>
@@ -15,15 +15,15 @@
 #include <QTimer>
 #include <QWriteLocker>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 using namespace BlackCore::Vatsim;
 
 namespace BlackCore
 {
     const QStringList &CThreadedReader::getLogCategories()
     {
-        static const QStringList cats { BlackMisc::CLogCategories::worker() };
+        static const QStringList cats { swift::misc::CLogCategories::worker() };
         return cats;
     }
 

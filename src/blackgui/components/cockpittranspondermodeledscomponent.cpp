@@ -11,9 +11,9 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 
@@ -31,7 +31,7 @@ namespace BlackGui::Components
         connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CCockpitTransponderModeLedsComponent::onAircraftCockpitChanged);
     }
 
-    void CCockpitTransponderModeLedsComponent::onAircraftCockpitChanged(const CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator)
+    void CCockpitTransponderModeLedsComponent::onAircraftCockpitChanged(const CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator)
     {
         if (isMyIdentifier(originator)) { return; }
         this->setMode(aircraft.getTransponderMode(), true);

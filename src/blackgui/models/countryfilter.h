@@ -8,21 +8,21 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/modelfilter.h"
-#include "blackmisc/countrylist.h"
+#include "misc/countrylist.h"
 
 #include <QString>
 
 namespace BlackGui::Models
 {
     //! Country filter
-    class BLACKGUI_EXPORT CCountryFilter : public IModelFilter<BlackMisc::CCountryList>
+    class BLACKGUI_EXPORT CCountryFilter : public IModelFilter<swift::misc::CCountryList>
     {
     public:
         //! Constructor
         CCountryFilter(const QString &isoCode, const QString &name);
 
         //! \copydoc IModelFilter::filter
-        virtual BlackMisc::CCountryList filter(const BlackMisc::CCountryList &inContainer) const override;
+        virtual swift::misc::CCountryList filter(const swift::misc::CCountryList &inContainer) const override;
 
     private:
         QString m_isoCode;

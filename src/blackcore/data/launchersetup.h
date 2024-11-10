@@ -7,23 +7,23 @@
 #define BLACKCORE_DATA_LAUNCHERSETUP
 
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/propertyindex.h"
-#include "blackmisc/datacache.h"
-#include "blackmisc/valueobject.h"
-#include "blackmisc/variant.h"
+#include "misc/propertyindex.h"
+#include "misc/datacache.h"
+#include "misc/valueobject.h"
+#include "misc/variant.h"
 
 BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackCore::Data, CLauncherSetup)
 
 namespace BlackCore::Data
 {
     //! Launcher setup
-    class BLACKCORE_EXPORT CLauncherSetup : public BlackMisc::CValueObject<CLauncherSetup>
+    class BLACKCORE_EXPORT CLauncherSetup : public swift::misc::CValueObject<CLauncherSetup>
     {
     public:
         //! Properties by index
         enum ColumnIndex
         {
-            IndexDBusAddress = BlackMisc::CPropertyIndexRef::GlobalIndexCLauncherSetup,
+            IndexDBusAddress = swift::misc::CPropertyIndexRef::GlobalIndexCLauncherSetup,
             IndexFramelessWindow,
             IndexCoreMode,
             IndexAudioMode
@@ -76,14 +76,14 @@ namespace BlackCore::Data
         //! Frameless window?
         void setFramelessWindow(bool frameless) { m_windowFrameless = frameless; }
 
-        //! \copydoc BlackMisc::Mixin::String::toQString
+        //! \copydoc swift::misc::mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
-        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-        QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
+        //! \copydoc swift::misc::mixin::Index::propertyByIndex
+        QVariant propertyByIndex(swift::misc::CPropertyIndexRef index) const;
 
-        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
+        //! \copydoc swift::misc::mixin::Index::setPropertyByIndex
+        void setPropertyByIndex(swift::misc::CPropertyIndexRef index, const QVariant &variant);
 
     private:
         QString m_dBusAddress { "tcp:host=127.0.0.1,port=45000" }; //!< DBus address
@@ -101,7 +101,7 @@ namespace BlackCore::Data
     };
 
     //! Trait for global setup data
-    struct TLauncherSetup : public BlackMisc::TDataTrait<CLauncherSetup>
+    struct TLauncherSetup : public swift::misc::TDataTrait<CLauncherSetup>
     {
         //! Key in data cache
         static const char *key() { return "swiftlaunchersetup"; }

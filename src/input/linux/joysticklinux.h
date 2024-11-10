@@ -7,8 +7,8 @@
 //! \file
 
 #include "input/joystick.h"
-#include "blackmisc/input/joystickbutton.h"
-#include "blackmisc/collection.h"
+#include "misc/input/joystickbutton.h"
+#include "misc/collection.h"
 #include <QMap>
 #include <QString>
 
@@ -67,7 +67,7 @@ namespace swift::input
         virtual ~CJoystickLinux() = default;
 
         //! \copydoc swift::input::IJoystick::getAllAvailableJoystickButtons()
-        virtual BlackMisc::Input::CJoystickButtonList getAllAvailableJoystickButtons() const override;
+        virtual swift::misc::input::CJoystickButtonList getAllAvailableJoystickButtons() const override;
 
     private:
         friend class IJoystick;
@@ -88,7 +88,7 @@ namespace swift::input
         void reloadDevices(QString path);
 
     private:
-        BlackMisc::Input::CHotkeyCombination m_buttonCombination;
+        swift::misc::input::CHotkeyCombination m_buttonCombination;
         QVector<CJoystickDevice *> m_joystickDevices; //!< All joystick devices
         QFileSystemWatcher *m_inputWatcher = nullptr;
     };

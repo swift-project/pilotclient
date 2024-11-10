@@ -3,13 +3,13 @@
 
 #include "blackgui/models/columns.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/mixin/mixincompare.h"
+#include "misc/mixin/mixincompare.h"
 
 #include <QByteArray>
 #include <QCoreApplication>
 #include <QModelIndex>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Models
 {

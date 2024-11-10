@@ -106,7 +106,7 @@ signals:
     void updatedFromOwnAircraftCockpit();
 
     //! PTT status in this particular AFV client
-    void ptt(bool active, const BlackMisc::CIdentifier &identifier);
+    void ptt(bool active, const swift::misc::CIdentifier &identifier);
 
     //! VU levels
     //! @{

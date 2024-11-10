@@ -38,8 +38,8 @@ namespace BlackGui::Components
         void initValues();
 
         QScopedPointer<Ui::CSettingsVatsimReadersComponent> ui;
-        BlackMisc::CSetting<BlackCore::Vatsim::TVatsimDataFile> m_settingsDataFile { this, &CSettingsVatsimReadersComponent::onSettingsChanged };
-        BlackMisc::CSetting<BlackCore::Vatsim::TVatsimMetars> m_settingsMetars { this, &CSettingsVatsimReadersComponent::onSettingsChanged };
+        swift::misc::CSetting<BlackCore::Vatsim::TVatsimDataFile> m_settingsDataFile { this, &CSettingsVatsimReadersComponent::onSettingsChanged };
+        swift::misc::CSetting<BlackCore::Vatsim::TVatsimMetars> m_settingsMetars { this, &CSettingsVatsimReadersComponent::onSettingsChanged };
     };
 } // ns
 

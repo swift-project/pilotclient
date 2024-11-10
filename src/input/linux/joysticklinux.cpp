@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2014 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 #include "joysticklinux.h"
 #include <QFile>
 #include <QFileSystemWatcher>
@@ -12,8 +12,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Input;
+using namespace swift::misc;
+using namespace swift::misc::input;
 
 namespace
 {
@@ -114,7 +114,7 @@ namespace swift::input
         }
         else
         {
-            BlackMisc::CLogMessage(this).error(u"Failed to open joystick device %1: %2") << fd->fileName() << fd->errorString();
+            swift::misc::CLogMessage(this).error(u"Failed to open joystick device %1: %2") << fd->fileName() << fd->errorString();
             fd->close();
             fd->deleteLater();
         }
@@ -122,7 +122,7 @@ namespace swift::input
 
     void CJoystickLinux::joystickButtonChanged(const QString &name, int index, bool isPressed)
     {
-        BlackMisc::Input::CHotkeyCombination oldCombination(m_buttonCombination);
+        swift::misc::input::CHotkeyCombination oldCombination(m_buttonCombination);
         if (isPressed)
         {
             m_buttonCombination.addJoystickButton({ name, index });

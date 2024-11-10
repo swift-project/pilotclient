@@ -5,23 +5,23 @@
 #include "simconnectsymbols.h"
 #include "../fscommon/simulatorfscommonfunctions.h"
 #include "blackcore/application.h"
-#include "blackmisc/network/textmessage.h"
-#include "blackmisc/simulation/fsx/simconnectutilities.h"
-#include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
-#include "blackmisc/simulation/fscommon/bcdconversions.h"
-#include "blackmisc/simulation/fscommon/fscommonutil.h"
-#include "blackmisc/simulation/settings/simulatorsettings.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/interpolation/interpolatormulti.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/geo/elevationplane.h"
-#include "blackmisc/math/mathutils.h"
-#include "blackmisc/country.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/threadutils.h"
-#include "blackmisc/verify.h"
+#include "misc/network/textmessage.h"
+#include "misc/simulation/fsx/simconnectutilities.h"
+#include "misc/simulation/fscommon/aircraftcfgparser.h"
+#include "misc/simulation/fscommon/bcdconversions.h"
+#include "misc/simulation/fscommon/fscommonutil.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/interpolation/interpolatormulti.h"
+#include "misc/simulation/simulatorplugininfo.h"
+#include "misc/aviation/airportlist.h"
+#include "misc/geo/elevationplane.h"
+#include "misc/math/mathutils.h"
+#include "misc/country.h"
+#include "misc/logmessage.h"
+#include "misc/statusmessagelist.h"
+#include "misc/threadutils.h"
+#include "misc/verify.h"
 #include "config/buildconfig.h"
 
 #include <QTimer>
@@ -31,16 +31,16 @@
 #include <QElapsedTimer>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Math;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::FsCommon;
-using namespace BlackMisc::Simulation::Fsx;
-using namespace BlackMisc::Simulation::Settings;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::geo;
+using namespace swift::misc::network;
+using namespace swift::misc::math;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::fscommon;
+using namespace swift::misc::simulation::Fsx;
+using namespace swift::misc::simulation::settings;
 using namespace BlackCore;
 using namespace BlackSimPlugin::FsCommon;
 

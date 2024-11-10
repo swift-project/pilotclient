@@ -14,10 +14,10 @@
 #include "blackcore/context/contextaudio.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/corefacade.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/loghandler.h"
-#include "blackmisc/logpattern.h"
+#include "misc/dbusserver.h"
+#include "misc/icons.h"
+#include "misc/loghandler.h"
+#include "misc/logpattern.h"
 #include "ui_swiftcore.h"
 
 #include <QDialog>
@@ -31,7 +31,7 @@
 #include <QVBoxLayout>
 #include <QMessageBox>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackCore;
 using namespace BlackGui;
 using namespace BlackGui::Components;

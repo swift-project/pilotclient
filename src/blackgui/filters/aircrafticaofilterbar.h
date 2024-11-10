@@ -18,7 +18,7 @@ namespace Ui
 {
     class CAircraftIcaoFilterBar;
 }
-namespace BlackMisc::Aviation
+namespace swift::misc::aviation
 {
     class CAircraftIcaoCode;
     class CAircraftIcaoCodeList;
@@ -30,7 +30,7 @@ namespace BlackGui::Filters
      */
     class BLACKGUI_EXPORT CAircraftIcaoFilterBar :
         public CFilterWidget,
-        public Models::IModelFilterProvider<BlackMisc::Aviation::CAircraftIcaoCodeList>
+        public Models::IModelFilterProvider<swift::misc::aviation::CAircraftIcaoCodeList>
     {
         Q_OBJECT
 
@@ -42,10 +42,10 @@ namespace BlackGui::Filters
         virtual ~CAircraftIcaoFilterBar() override;
 
         //! \copydoc Models::IModelFilterProvider::createModelFilter
-        std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Aviation::CAircraftIcaoCodeList>> createModelFilter() const override;
+        std::unique_ptr<BlackGui::Models::IModelFilter<swift::misc::aviation::CAircraftIcaoCodeList>> createModelFilter() const override;
 
         //! Filter by ICAO object as default values
-        void filter(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+        void filter(const swift::misc::aviation::CAircraftIcaoCode &icao);
 
         //! Hide the description
         void hideDescriptionField(bool hide);

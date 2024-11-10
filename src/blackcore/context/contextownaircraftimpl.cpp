@@ -11,37 +11,37 @@
 
 #include "blackcore/application.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/network/server.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/aviation/altitude.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/aviation/transponder.h"
-#include "blackmisc/audio/notificationsounds.h"
+#include "misc/network/server.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/aviation/altitude.h"
+#include "misc/aviation/callsign.h"
+#include "misc/aviation/transponder.h"
+#include "misc/audio/notificationsounds.h"
 #include "blackcore/db/databaseutils.h"
-#include "blackmisc/geo/latitude.h"
-#include "blackmisc/geo/longitude.h"
-#include "blackmisc/pq/physicalquantity.h"
-#include "blackmisc/pq/units.h"
-#include "blackmisc/simplecommandparser.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/sequence.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/geo/latitude.h"
+#include "misc/geo/longitude.h"
+#include "misc/pq/physicalquantity.h"
+#include "misc/pq/units.h"
+#include "misc/simplecommandparser.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/dbusserver.h"
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
+#include "misc/sequence.h"
+#include "misc/statusmessage.h"
 
 #include <QReadLocker>
 #include <QWriteLocker>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Audio;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::geo;
+using namespace swift::misc::audio;
+using namespace swift::misc::simulation;
 using namespace BlackCore;
 using namespace BlackCore::Db;
 
@@ -273,7 +273,7 @@ namespace BlackCore::Context
         return true;
     }
 
-    bool CContextOwnAircraft::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const CAltitude &pressureAltitude)
+    bool CContextOwnAircraft::updateOwnPosition(const swift::misc::geo::CCoordinateGeodetic &position, const swift::misc::aviation::CAltitude &altitude, const CAltitude &pressureAltitude)
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << position << altitude; }
         QWriteLocker l(&m_lockAircraft);
@@ -392,7 +392,7 @@ namespace BlackCore::Context
         return true;
     }
 
-    bool CContextOwnAircraft::updateOwnIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode, const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcaoCode)
+    bool CContextOwnAircraft::updateOwnIcaoCodes(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcaoCode, const swift::misc::aviation::CAirlineIcaoCode &airlineIcaoCode)
     {
         {
             QWriteLocker l(&m_lockAircraft);

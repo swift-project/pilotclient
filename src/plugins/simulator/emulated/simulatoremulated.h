@@ -7,14 +7,14 @@
 #define BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATED_H
 
 #include "../plugincommon/simulatorplugincommon.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/simulation/interpolation/interpolatormulti.h"
-#include "blackmisc/simulation/interpolation/interpolationrenderingsetup.h"
-#include "blackmisc/simulation/interpolation/interpolationlogger.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/simulation/settings/swiftpluginsettings.h"
-#include "blackmisc/pq/time.h"
-#include "blackmisc/connectionguard.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/simulation/interpolation/interpolatormulti.h"
+#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
+#include "misc/simulation/interpolation/interpolationlogger.h"
+#include "misc/simulation/simulatorplugininfo.h"
+#include "misc/simulation/settings/swiftpluginsettings.h"
+#include "misc/pq/time.h"
+#include "misc/connectionguard.h"
 #include "simulatoremulatedmonitordialog.h"
 
 #include <QMap>
@@ -28,18 +28,18 @@ namespace BlackSimPlugin::Emulated
     {
         Q_OBJECT
         Q_INTERFACES(BlackCore::ISimulator)
-        Q_INTERFACES(BlackMisc::Simulation::ISimulationEnvironmentProvider)
-        Q_INTERFACES(BlackMisc::Simulation::IInterpolationSetupProvider)
+        Q_INTERFACES(swift::misc::simulation::ISimulationEnvironmentProvider)
+        Q_INTERFACES(swift::misc::simulation::IInterpolationSetupProvider)
 
         friend class CSimulatorEmulatedMonitorDialog; //!< the monitor widget represents the simulator and needs access to internals (i.e. private/protected)
 
     public:
         //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
         CSimulatorEmulated(
-            const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-            BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-            BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-            BlackMisc::Network::IClientProvider *clientProvider,
+            const swift::misc::simulation::CSimulatorPluginInfo &info,
+            swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
+            swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+            swift::misc::network::IClientProvider *clientProvider,
             QObject *parent = nullptr);
 
         //! Destructor
@@ -53,24 +53,24 @@ namespace BlackSimPlugin::Emulated
         virtual bool isConnected() const override;
         virtual bool isPaused() const override;
         virtual bool isSimulating() const override;
-        virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
-        virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
-        virtual bool updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) override;
-        virtual bool updateOwnSimulatorSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator) override;
-        virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const override;
-        virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
-        virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
-        virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
-        virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
-        virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
-        virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
-        virtual bool testSendSituationAndParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) override;
-        virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
+        virtual bool changeRemoteAircraftModel(const swift::misc::simulation::CSimulatedAircraft &aircraft) override;
+        virtual bool changeRemoteAircraftEnabled(const swift::misc::simulation::CSimulatedAircraft &aircraft) override;
+        virtual bool updateOwnSimulatorCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator) override;
+        virtual bool updateOwnSimulatorSelcal(const swift::misc::aviation::CSelcal &selcal, const swift::misc::CIdentifier &originator) override;
+        virtual void displayStatusMessage(const swift::misc::CStatusMessage &message) const override;
+        virtual void displayTextMessage(const swift::misc::network::CTextMessage &message) const override;
+        virtual bool setTimeSynchronization(bool enable, const swift::misc::physical_quantities::CTime &offset) override;
+        virtual swift::misc::physical_quantities::CTime getTimeSynchronizationOffset() const override;
+        virtual bool isPhysicallyRenderedAircraft(const swift::misc::aviation::CCallsign &callsign) const override;
+        virtual swift::misc::aviation::CCallsignSet physicallyRenderedAircraft() const override;
+        virtual swift::misc::CStatusMessageList getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const override;
+        virtual bool testSendSituationAndParts(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CAircraftSituation &situation, const swift::misc::aviation::CAircraftParts &parts) override;
+        virtual bool requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference, const swift::misc::aviation::CCallsign &callsign) override;
 
         // ----- functions just logged -------
-        virtual bool logicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
-        virtual bool logicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
-        virtual int physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) override;
+        virtual bool logicallyAddRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft) override;
+        virtual bool logicallyRemoveRemoteAircraft(const swift::misc::aviation::CCallsign &callsign) override;
+        virtual int physicallyRemoveMultipleRemoteAircraft(const swift::misc::aviation::CCallsignSet &callsigns) override;
 
         // functions logged and used
         //! \ingroup swiftdotcommands
@@ -79,37 +79,37 @@ namespace BlackSimPlugin::Emulated
         //! .drv hide   hide emulated driver window     BlackSimPlugin::Swift::CSimulatorEmulated
         //! </pre>
         //! \copydoc BlackCore::ISimulator::parseCommandLine
-        virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
+        virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override;
 
         //! UI setter
         void setCombinedStatus(bool connected, bool simulating, bool paused);
 
         //! The emulated simulated simulator
-        BlackMisc::Simulation::CSimulatorInfo getEmulatedSimulator() const;
+        swift::misc::simulation::CSimulatorInfo getEmulatedSimulator() const;
 
         //! Internal own aircraft
         //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
-        const BlackMisc::Simulation::CSimulatedAircraft &getInternalOwnAircraft() const { return m_myAircraft; }
+        const swift::misc::simulation::CSimulatedAircraft &getInternalOwnAircraft() const { return m_myAircraft; }
 
         //! Simulator internal change of COM values
         //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
-        bool changeInternalCom(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+        bool changeInternalCom(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
         //! Simulator internal change of COM values
         //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
-        bool changeInternalCom(const BlackMisc::Aviation::CComSystem &comSystem, BlackMisc::Aviation::CComSystem::ComUnit unit);
+        bool changeInternalCom(const swift::misc::aviation::CComSystem &comSystem, swift::misc::aviation::CComSystem::ComUnit unit);
 
         //! Simulator internal change of SELCAL
         //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
-        bool changeInternalSelcal(const BlackMisc::Aviation::CSelcal &selcal);
+        bool changeInternalSelcal(const swift::misc::aviation::CSelcal &selcal);
 
         //! Simulator internal change of situation
         //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
-        bool changeInternalSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
+        bool changeInternalSituation(const swift::misc::aviation::CAircraftSituation &situation);
 
         //! Simulator internal change of parts
         //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
-        bool changeInternalParts(const BlackMisc::Aviation::CAircraftParts &parts);
+        bool changeInternalParts(const swift::misc::aviation::CAircraftParts &parts);
 
         //! Interpolator fetch time, <=0 stops
         bool setInterpolatorFetchTime(int timeMs);
@@ -125,16 +125,16 @@ namespace BlackSimPlugin::Emulated
         void internalAircraftChanged();
 
     protected:
-        virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
-        virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+        virtual bool physicallyAddRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft) override;
+        virtual bool physicallyRemoveRemoteAircraft(const swift::misc::aviation::CCallsign &callsign) override;
         virtual int physicallyRemoveAllRemoteAircraft() override;
 
         //! \copydoc BlackCore::ISimulator::parseDetails
-        virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
+        virtual bool parseDetails(const swift::misc::CSimpleCommandParser &parser) override;
 
     private:
         //! Set object name
-        void setObjectName(const BlackMisc::Simulation::CSimulatorInfo &info);
+        void setObjectName(const swift::misc::simulation::CSimulatorInfo &info);
 
         //! Can append log messages?
         bool canLog() const;
@@ -166,13 +166,13 @@ namespace BlackSimPlugin::Emulated
         int m_countInterpolatedSituations = 0;
         int m_countInterpolatedParts = 0;
         QTimer m_interpolatorFetchTimer; //!< fetch data from interpolator
-        BlackMisc::PhysicalQuantities::CTime m_offsetTime;
-        BlackMisc::Simulation::CSimulatedAircraft m_myAircraft; //!< represents own aircraft of simulator
-        BlackMisc::Simulation::CSimulatedAircraftList m_renderedAircraft; //!< represents remote aircraft in simulator
+        swift::misc::physical_quantities::CTime m_offsetTime;
+        swift::misc::simulation::CSimulatedAircraft m_myAircraft; //!< represents own aircraft of simulator
+        swift::misc::simulation::CSimulatedAircraftList m_renderedAircraft; //!< represents remote aircraft in simulator
         QPointer<CSimulatorEmulatedMonitorDialog> m_monitorWidget; //!< parent will be main window, so we need to destroy widget when destroyed
-        BlackMisc::CConnectionGuard m_connectionGuard; //!< connected with provider
-        BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSwiftPlugin> m_pluginSettings { this, &CSimulatorEmulated::onSettingsChanged };
-        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CInterpolatorMultiWrapper> m_interpolators; //!< interpolators per callsign
+        swift::misc::CConnectionGuard m_connectionGuard; //!< connected with provider
+        swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TSwiftPlugin> m_pluginSettings { this, &CSimulatorEmulated::onSettingsChanged };
+        QMap<swift::misc::aviation::CCallsign, swift::misc::simulation::CInterpolatorMultiWrapper> m_interpolators; //!< interpolators per callsign
     };
 
     //! Listener for swift
@@ -182,7 +182,7 @@ namespace BlackSimPlugin::Emulated
 
     public:
         //! Constructor
-        CSimulatorEmulatedListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
+        CSimulatorEmulatedListener(const swift::misc::simulation::CSimulatorPluginInfo &info);
 
     protected:
         //! \copydoc BlackCore::ISimulatorListener::startImpl

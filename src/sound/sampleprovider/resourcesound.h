@@ -8,7 +8,7 @@
 
 #include "sound/swiftsoundexport.h"
 #include "sound/wav/wavfile.h"
-#include "blackmisc/worker.h"
+#include "misc/worker.h"
 
 #include <QString>
 #include <QVector>

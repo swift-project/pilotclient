@@ -4,8 +4,8 @@
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/overlaymessagesframe.h"
-#include "blackmisc/icon.h"
-#include "blackmisc/verify.h"
+#include "misc/icon.h"
+#include "misc/verify.h"
 
 #include <QApplication>
 #include <QCheckBox>
@@ -44,7 +44,7 @@
 #    include <iostream>
 #endif
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui
 {

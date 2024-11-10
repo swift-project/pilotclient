@@ -13,21 +13,21 @@
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/aviation/altitude.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/pq/pqstring.h"
-#include "blackmisc/pq/speed.h"
-#include "blackmisc/pq/units.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/stringutils.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/airportlist.h"
+#include "misc/aviation/altitude.h"
+#include "misc/aviation/callsign.h"
+#include "misc/pq/pqstring.h"
+#include "misc/pq/speed.h"
+#include "misc/pq/units.h"
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
+#include "misc/network/user.h"
+#include "misc/swiftdirectories.h"
+#include "misc/directoryutils.h"
+#include "misc/statusmessage.h"
+#include "misc/stringutils.h"
 #include "config/buildconfig.h"
 
 #include "ui_flightplancomponent.h"
@@ -51,11 +51,11 @@
 #include <Qt>
 #include <QWidgetAction>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
+using namespace swift::misc::physical_quantities;
 using namespace BlackGui;
 using namespace BlackCore;
 using namespace swift::config;
@@ -949,7 +949,7 @@ namespace BlackGui::Components
         m_navComEquipmentMenu = new QMenu(ui->tb_EditNavComEquipment);
         auto list = new QListWidget(m_navComEquipmentMenu);
         list->setSelectionMode(QAbstractItemView::MultiSelection);
-        list->addItems(BlackMisc::Aviation::CComNavEquipment::allEquipmentLetters());
+        list->addItems(swift::misc::aviation::CComNavEquipment::allEquipmentLetters());
 
         connect(list, &QListWidget::itemSelectionChanged, this, &CFlightPlanComponent::updateNavComEquipmentFromSelection);
 
@@ -965,7 +965,7 @@ namespace BlackGui::Components
         m_ssrEquipmentMenu = new QMenu(ui->tb_EditSsrEquipment);
         auto list = new QListWidget(m_ssrEquipmentMenu);
         list->setSelectionMode(QAbstractItemView::MultiSelection);
-        list->addItems(BlackMisc::Aviation::CSsrEquipment::allEquipmentLetters());
+        list->addItems(swift::misc::aviation::CSsrEquipment::allEquipmentLetters());
 
         connect(list, &QListWidget::itemSelectionChanged, this, &CFlightPlanComponent::updateSsrEquipmentFromSelection);
 
@@ -1042,7 +1042,7 @@ namespace BlackGui::Components
         list->blockSignals(false);
     }
 
-    void CFlightPlanComponent::updateWakeTurbulenceCategorySelector(const BlackMisc::Aviation::CWakeTurbulenceCategory &wtc)
+    void CFlightPlanComponent::updateWakeTurbulenceCategorySelector(const swift::misc::aviation::CWakeTurbulenceCategory &wtc)
     {
         if (wtc.isUnknown()) return; // Unknown should not be shown to the user
         const auto it = std::find_if(m_wakeTurbulenceCategories.cbegin(), m_wakeTurbulenceCategories.cend(), [&wtc](const WakeTurbulenceEntry &item) { return item.m_wtc == wtc; });

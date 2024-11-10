@@ -21,7 +21,7 @@
 /*!
  * \namespace BlackCore::Db
  * Classes interacting with the swift database (aka "datastore"). This includes the readers and related classes.
- * Related model classes can be found in BlackMisc::Db
+ * Related model classes can be found in swift::misc::db
  */
 
 /*!

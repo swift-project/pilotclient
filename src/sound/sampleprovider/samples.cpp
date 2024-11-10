@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "samples.h"
-#include "blackmisc/directoryutils.h"
-#include "blackmisc/fileutils.h"
+#include "misc/directoryutils.h"
+#include "misc/fileutils.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::Audio;
+using namespace swift::misc;
+using namespace swift::misc::audio;
 
 namespace swift::sound::sample_provider
 {

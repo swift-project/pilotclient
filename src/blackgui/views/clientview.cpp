@@ -4,7 +4,7 @@
 #include "blackgui/models/clientlistmodel.h"
 #include "blackgui/views/clientview.h"
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui::Models;
 
 namespace BlackGui::Views

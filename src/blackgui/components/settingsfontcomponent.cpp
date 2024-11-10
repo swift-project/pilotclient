@@ -3,7 +3,7 @@
 
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 #include "settingsfontcomponent.h"
 #include "ui_settingsfontcomponent.h"
 
@@ -11,7 +11,7 @@
 #include <QPushButton>
 #include <QStringBuilder>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Components
 {

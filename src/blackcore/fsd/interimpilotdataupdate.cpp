@@ -4,7 +4,7 @@
 #include "blackcore/fsd/interimpilotdataupdate.h"
 #include "blackcore/fsd/pbh.h"
 
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
 namespace BlackCore::Fsd
 {
@@ -49,7 +49,7 @@ namespace BlackCore::Fsd
     {
         if (tokens.size() < 8)
         {
-            BlackMisc::CLogMessage(static_cast<InterimPilotDataUpdate *>(nullptr)).debug(u"Wrong number of arguments.");
+            swift::misc::CLogMessage(static_cast<InterimPilotDataUpdate *>(nullptr)).debug(u"Wrong number of arguments.");
             return {};
         };
 

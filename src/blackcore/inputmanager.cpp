@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackcore/inputmanager.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/dictionary.h"
-#include "blackmisc/input/actionhotkey.h"
-#include "blackmisc/range.h"
-#include "blackmisc/sequence.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/dictionary.h"
+#include "misc/input/actionhotkey.h"
+#include "misc/range.h"
+#include "misc/sequence.h"
 
 #include <limits.h>
 #include <QtGlobal>
@@ -14,8 +14,8 @@
 // clazy:excludeall=detaching-member
 
 using namespace swift::input;
-using namespace BlackMisc;
-using namespace BlackMisc::Input;
+using namespace swift::misc;
+using namespace swift::misc::input;
 
 namespace BlackCore
 {
@@ -24,7 +24,7 @@ namespace BlackCore
         reloadHotkeySettings();
     }
 
-    void CInputManager::registerAction(const QString &action, BlackMisc::CIcons::IconIndex icon)
+    void CInputManager::registerAction(const QString &action, swift::misc::CIcons::IconIndex icon)
     {
         if (!m_availableActions.contains(action))
         {

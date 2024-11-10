@@ -8,10 +8,10 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/editors/form.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/digestsignal.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/variant.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/digestsignal.h"
+#include "misc/statusmessagelist.h"
+#include "misc/variant.h"
 
 #include <QObject>
 #include <QScopedPointer>
@@ -37,10 +37,10 @@ namespace BlackGui::Editors
         virtual ~CAirlineIcaoForm() override;
 
         //! Set value
-        void setValue(const BlackMisc::Aviation::CAirlineIcaoCode &icao = BlackMisc::Aviation::CAirlineIcaoCode());
+        void setValue(const swift::misc::aviation::CAirlineIcaoCode &icao = swift::misc::aviation::CAirlineIcaoCode());
 
         //! Get value
-        BlackMisc::Aviation::CAirlineIcaoCode getValue() const;
+        swift::misc::aviation::CAirlineIcaoCode getValue() const;
 
         //! Allow to drop
         void allowDrop(bool allowDrop);
@@ -52,7 +52,7 @@ namespace BlackGui::Editors
         //! @{
         virtual void setReadOnly(bool readonly) override;
         virtual void setSelectOnly() override;
-        virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+        virtual swift::misc::CStatusMessageList validate(bool nested = false) const override;
         //! @}
 
         //! Clear
@@ -63,17 +63,17 @@ namespace BlackGui::Editors
 
     signals:
         //! Airline has been changed
-        void airlineChanged(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao);
+        void airlineChanged(const swift::misc::aviation::CAirlineIcaoCode &airlineIcao);
 
         //! Airline has been changed
-        void airlineChangedDigest(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao);
+        void airlineChangedDigest(const swift::misc::aviation::CAirlineIcaoCode &airlineIcao);
 
     protected:
         //! \copydoc CForm::jsonPasted
         virtual void jsonPasted(const QString &json) override;
 
         //! Variant has been dropped
-        void onDroppedCode(const BlackMisc::CVariant &variantDropped);
+        void onDroppedCode(const swift::misc::CVariant &variantDropped);
 
         //! Id entered
         void onIdEntered();
@@ -83,8 +83,8 @@ namespace BlackGui::Editors
 
     private:
         QScopedPointer<Ui::CAirlineIcaoForm> ui;
-        BlackMisc::CDigestSignal m_digestChanges { this, &CAirlineIcaoForm::airlineChanged, &CAirlineIcaoForm::emitAirlineChangedDigest, 500, 3 };
-        BlackMisc::Aviation::CAirlineIcaoCode m_currentCode; //!< object allowing to override values
+        swift::misc::CDigestSignal m_digestChanges { this, &CAirlineIcaoForm::airlineChanged, &CAirlineIcaoForm::emitAirlineChangedDigest, 500, 3 };
+        swift::misc::aviation::CAirlineIcaoCode m_currentCode; //!< object allowing to override values
     };
 } // ns
 

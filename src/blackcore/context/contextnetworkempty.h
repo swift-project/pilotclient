@@ -8,7 +8,7 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextnetwork.h"
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -25,49 +25,49 @@ namespace BlackCore::Context
 
     public slots:
         //! \copydoc IContextNetwork::getAtcStationsOnline()
-        virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline(bool recalculateDistance) const override
+        virtual swift::misc::aviation::CAtcStationList getAtcStationsOnline(bool recalculateDistance) const override
         {
             Q_UNUSED(recalculateDistance)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Aviation::CAtcStationList();
+            return swift::misc::aviation::CAtcStationList();
         }
 
         //! \copydoc IContextNetwork::getClosestAtcStationsOnline()
-        virtual BlackMisc::Aviation::CAtcStationList getClosestAtcStationsOnline(int number) const override
+        virtual swift::misc::aviation::CAtcStationList getClosestAtcStationsOnline(int number) const override
         {
             Q_UNUSED(number)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Aviation::CAtcStationList();
+            return swift::misc::aviation::CAtcStationList();
         }
 
         //! \copydoc IContextNetwork::getAircraftInRange()
-        virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override
+        virtual swift::misc::simulation::CSimulatedAircraftList getAircraftInRange() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Simulation::CSimulatedAircraftList();
+            return swift::misc::simulation::CSimulatedAircraftList();
         }
 
         //! \copydoc IContextNetwork::getAircraftInRangeForCallsign
-        virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override
+        virtual swift::misc::simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const swift::misc::aviation::CCallsign &callsign) const override
         {
             Q_UNUSED(callsign)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Simulation::CSimulatedAircraft();
+            return swift::misc::simulation::CSimulatedAircraft();
         }
 
         //! \copydoc IContextNetwork::getOnlineStationsForFrequency
-        virtual BlackMisc::Aviation::CAtcStationList getOnlineStationsForFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency) const override
+        virtual swift::misc::aviation::CAtcStationList getOnlineStationsForFrequency(const swift::misc::physical_quantities::CFrequency &frequency) const override
         {
             Q_UNUSED(frequency)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Aviation::CAtcStationList();
+            return swift::misc::aviation::CAtcStationList();
         }
 
         //! \copydoc IContextNetwork::getAircraftInRangeCallsigns()
-        virtual BlackMisc::Aviation::CCallsignSet getAircraftInRangeCallsigns() const override
+        virtual swift::misc::aviation::CCallsignSet getAircraftInRangeCallsigns() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Aviation::CCallsignSet();
+            return swift::misc::aviation::CCallsignSet();
         }
 
         //! \copydoc IContextNetwork::getAircraftInRangeCount
@@ -78,7 +78,7 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextNetwork::isAircraftInRange
-        virtual bool isAircraftInRange(const BlackMisc::Aviation::CCallsign &callsign) const override
+        virtual bool isAircraftInRange(const swift::misc::aviation::CCallsign &callsign) const override
         {
             Q_UNUSED(callsign)
             logEmptyContextWarning(Q_FUNC_INFO);
@@ -86,15 +86,15 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextNetwork::getOnlineStationForCallsign
-        virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override
+        virtual swift::misc::aviation::CAtcStation getOnlineStationForCallsign(const swift::misc::aviation::CCallsign &callsign) const override
         {
             Q_UNUSED(callsign)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Aviation::CAtcStation();
+            return swift::misc::aviation::CAtcStation();
         }
 
         //! \copydoc IContextNetwork::isOnlineStation
-        virtual bool isOnlineStation(const BlackMisc::Aviation::CCallsign &callsign) const override
+        virtual bool isOnlineStation(const swift::misc::aviation::CCallsign &callsign) const override
         {
             Q_UNUSED(callsign)
             logEmptyContextWarning(Q_FUNC_INFO);
@@ -102,7 +102,7 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextNetwork::connectToNetwork
-        virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, const QString &extraLiveryString, bool sendLivery, const QString &extraModelString, bool sendModelString, const BlackMisc::Aviation::CCallsign &partnerCallsign, BlackMisc::Network::CLoginMode mode) override
+        virtual swift::misc::CStatusMessage connectToNetwork(const swift::misc::network::CServer &server, const QString &extraLiveryString, bool sendLivery, const QString &extraModelString, bool sendModelString, const swift::misc::aviation::CCallsign &partnerCallsign, swift::misc::network::CLoginMode mode) override
         {
             Q_UNUSED(mode)
             Q_UNUSED(server)
@@ -123,14 +123,14 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextNetwork::getPartnerCallsign
-        virtual BlackMisc::Aviation::CCallsign getPartnerCallsign() const override
+        virtual swift::misc::aviation::CCallsign getPartnerCallsign() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             return {};
         }
 
         //! \copydoc IContextNetwork::disconnectFromNetwork()
-        virtual BlackMisc::CStatusMessage disconnectFromNetwork() override
+        virtual swift::misc::CStatusMessage disconnectFromNetwork() override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             return statusMessageEmptyContext();
@@ -144,43 +144,43 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextNetwork::getConnectedServer
-        virtual BlackMisc::Network::CServer getConnectedServer() const override
+        virtual swift::misc::network::CServer getConnectedServer() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Network::CServer();
+            return swift::misc::network::CServer();
         }
 
         //! \copydoc IContextNetwork::getLoginMode
-        virtual BlackMisc::Network::CLoginMode getLoginMode() const override
+        virtual swift::misc::network::CLoginMode getLoginMode() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Network::CLoginMode::Pilot;
+            return swift::misc::network::CLoginMode::Pilot;
         }
 
         //! \copydoc IContextNetwork::sendTextMessages()
-        virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override
+        virtual void sendTextMessages(const swift::misc::network::CTextMessageList &textMessages) override
         {
             Q_UNUSED(textMessages)
             logEmptyContextWarning(Q_FUNC_INFO);
         }
 
         //! \copydoc IContextNetwork::sendFlightPlan()
-        virtual void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan) override
+        virtual void sendFlightPlan(const swift::misc::aviation::CFlightPlan &flightPlan) override
         {
             Q_UNUSED(flightPlan)
             logEmptyContextWarning(Q_FUNC_INFO);
         }
 
         //! \copydoc IContextNetwork::loadFlightPlanFromNetwork()
-        virtual BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const override
+        virtual swift::misc::aviation::CFlightPlan loadFlightPlanFromNetwork(const swift::misc::aviation::CCallsign &callsign) const override
         {
             Q_UNUSED(callsign)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Aviation::CFlightPlan();
+            return swift::misc::aviation::CFlightPlan();
         }
 
         //! \copydoc IContextNetwork::getMetarForAirport
-        BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) const override
+        swift::misc::weather::CMetar getMetarForAirport(const swift::misc::aviation::CAirportIcaoCode &airportIcaoCode) const override
         {
             Q_UNUSED(airportIcaoCode)
             logEmptyContextWarning(Q_FUNC_INFO);
@@ -188,45 +188,45 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextNetwork::getUsers()
-        virtual BlackMisc::Network::CUserList getUsers() const override
+        virtual swift::misc::network::CUserList getUsers() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Network::CUserList();
+            return swift::misc::network::CUserList();
         }
 
         //! \copydoc IContextNetwork::getUsersForCallsigns
-        virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override
+        virtual swift::misc::network::CUserList getUsersForCallsigns(const swift::misc::aviation::CCallsignSet &callsigns) const override
         {
             Q_UNUSED(callsigns)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Network::CUserList();
+            return swift::misc::network::CUserList();
         }
 
         //! \copydoc IContextNetwork::getUserForCallsign
-        virtual BlackMisc::Network::CUser getUserForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override
+        virtual swift::misc::network::CUser getUserForCallsign(const swift::misc::aviation::CCallsign &callsign) const override
         {
             Q_UNUSED(callsign)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Network::CUser();
+            return swift::misc::network::CUser();
         }
 
         //! \copydoc IContextNetwork::getClients
-        virtual BlackMisc::Network::CClientList getClients() const override
+        virtual swift::misc::network::CClientList getClients() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Network::CClientList();
+            return swift::misc::network::CClientList();
         }
 
         //! \copydoc IContextNetwork::getClientsForCallsigns
-        virtual BlackMisc::Network::CClientList getClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override
+        virtual swift::misc::network::CClientList getClientsForCallsigns(const swift::misc::aviation::CCallsignSet &callsigns) const override
         {
             Q_UNUSED(callsigns)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Network::CClientList();
+            return swift::misc::network::CClientList();
         }
 
         //! \copydoc IContextNetwork::setOtherClient
-        virtual bool setOtherClient(const BlackMisc::Network::CClient &client) override
+        virtual bool setOtherClient(const swift::misc::network::CClient &client) override
         {
             Q_UNUSED(client)
             logEmptyContextWarning(Q_FUNC_INFO);
@@ -261,7 +261,7 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextNetwork::testAddAircraftParts
-        virtual void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) override
+        virtual void testAddAircraftParts(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CAircraftParts &parts, bool incremental) override
         {
             Q_UNUSED(callsign)
             Q_UNUSED(parts)
@@ -270,21 +270,21 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextNetwork::testReceivedTextMessages
-        virtual void testReceivedTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override
+        virtual void testReceivedTextMessages(const swift::misc::network::CTextMessageList &textMessages) override
         {
             Q_UNUSED(textMessages)
             logEmptyContextWarning(Q_FUNC_INFO);
         }
 
         //! \copydoc IContextNetwork::testRequestAircraftConfig
-        virtual void testRequestAircraftConfig(const BlackMisc::Aviation::CCallsign &callsign) override
+        virtual void testRequestAircraftConfig(const swift::misc::aviation::CCallsign &callsign) override
         {
             Q_UNUSED(callsign)
             logEmptyContextWarning(Q_FUNC_INFO);
         }
 
         //! \copydoc IContextNetwork::testAddAltitudeOffset
-        virtual bool testAddAltitudeOffset(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CLength &offset = BlackMisc::PhysicalQuantities::CLength::null()) override
+        virtual bool testAddAltitudeOffset(const swift::misc::aviation::CCallsign &callsign, const swift::misc::physical_quantities::CLength &offset = swift::misc::physical_quantities::CLength::null()) override
         {
             Q_UNUSED(callsign)
             Q_UNUSED(offset)
@@ -293,7 +293,7 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextNetwork::testReceivedAtisMessage
-        virtual void testReceivedAtisMessage(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &msg) override
+        virtual void testReceivedAtisMessage(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CInformationMessage &msg) override
         {
             Q_UNUSED(callsign)
             Q_UNUSED(msg)
@@ -301,7 +301,7 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextNetwork::parseCommandLine
-        virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override
+        virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override
         {
             Q_UNUSED(commandLine)
             Q_UNUSED(originator)
@@ -310,14 +310,14 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextNetwork::getVatsimFsdServers
-        virtual BlackMisc::Network::CServerList getVatsimFsdServers() const override
+        virtual swift::misc::network::CServerList getVatsimFsdServers() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Network::CServerList();
+            return swift::misc::network::CServerList();
         }
 
         //! \copydoc IContextNetwork::updateAircraftEnabled
-        virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override
+        virtual bool updateAircraftEnabled(const swift::misc::aviation::CCallsign &callsign, bool enabledForRendering) override
         {
             Q_UNUSED(callsign)
             Q_UNUSED(enabledForRendering)
@@ -326,7 +326,7 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextNetwork::updateAircraftSupportingGndFLag
-        virtual bool updateAircraftSupportingGndFLag(const BlackMisc::Aviation::CCallsign &callsign, bool supportGndFlag) override
+        virtual bool updateAircraftSupportingGndFLag(const swift::misc::aviation::CCallsign &callsign, bool supportGndFlag) override
         {
             Q_UNUSED(callsign)
             Q_UNUSED(supportGndFlag)
@@ -335,7 +335,7 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextNetwork::updateAircraftModel
-        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override
+        virtual bool updateAircraftModel(const swift::misc::aviation::CCallsign &callsign, const swift::misc::simulation::CAircraftModel &model, const swift::misc::CIdentifier &originator) override
         {
             Q_UNUSED(callsign)
             Q_UNUSED(model)
@@ -345,7 +345,7 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextNetwork::updateAircraftNetworkModel
-        virtual bool updateAircraftNetworkModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override
+        virtual bool updateAircraftNetworkModel(const swift::misc::aviation::CCallsign &callsign, const swift::misc::simulation::CAircraftModel &model, const swift::misc::CIdentifier &originator) override
         {
             Q_UNUSED(callsign)
             Q_UNUSED(model)
@@ -355,7 +355,7 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextNetwork::updateFastPositionEnabled
-        virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending) override
+        virtual bool updateFastPositionEnabled(const swift::misc::aviation::CCallsign &callsign, bool enableFastPositionSending) override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             Q_UNUSED(callsign)
@@ -364,7 +364,7 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextNetwork::setAircraftEnabledFlag
-        virtual bool setAircraftEnabledFlag(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override
+        virtual bool setAircraftEnabledFlag(const swift::misc::aviation::CCallsign &callsign, bool enabledForRendering) override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             Q_UNUSED(callsign)
@@ -379,55 +379,55 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextNetwork::setFastPositionEnabledCallsigns
-        virtual void setFastPositionEnabledCallsigns(BlackMisc::Aviation::CCallsignSet &callsigns) override
+        virtual void setFastPositionEnabledCallsigns(swift::misc::aviation::CCallsignSet &callsigns) override
         {
             Q_UNUSED(callsigns)
             logEmptyContextWarning(Q_FUNC_INFO);
         }
 
         //! \copydoc IContextNetwork::getFastPositionEnabledCallsigns
-        virtual BlackMisc::Aviation::CCallsignSet getFastPositionEnabledCallsigns() const override
+        virtual swift::misc::aviation::CCallsignSet getFastPositionEnabledCallsigns() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Aviation::CCallsignSet();
+            return swift::misc::aviation::CCallsignSet();
         }
 
         //! \copydoc IContextNetwork::getReverseLookupMessages
-        virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override
+        virtual swift::misc::CStatusMessageList getReverseLookupMessages(const swift::misc::aviation::CCallsign &callsign) const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             Q_UNUSED(callsign)
-            return BlackMisc::CStatusMessageList();
+            return swift::misc::CStatusMessageList();
         }
 
         //! \copydoc IContextNetwork::isReverseLookupMessagesEnabled
-        virtual BlackMisc::Simulation::ReverseLookupLogging isReverseLookupMessagesEnabled() const override
+        virtual swift::misc::simulation::ReverseLookupLogging isReverseLookupMessagesEnabled() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Simulation::RevLogDisabled;
+            return swift::misc::simulation::RevLogDisabled;
         }
 
         //! \copydoc IContextNetwork::enableReverseLookupMessages
-        virtual void enableReverseLookupMessages(BlackMisc::Simulation::ReverseLookupLogging enable) override
+        virtual void enableReverseLookupMessages(swift::misc::simulation::ReverseLookupLogging enable) override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             Q_UNUSED(enable)
         }
 
         //! \copydoc IContextNetwork::getAircraftPartsHistory
-        virtual BlackMisc::CStatusMessageList getAircraftPartsHistory(const BlackMisc::Aviation::CCallsign &callsign) const override
+        virtual swift::misc::CStatusMessageList getAircraftPartsHistory(const swift::misc::aviation::CCallsign &callsign) const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             Q_UNUSED(callsign)
-            return BlackMisc::CStatusMessageList();
+            return swift::misc::CStatusMessageList();
         }
 
         //! \copydoc IContextNetwork::getRemoteAircraftParts
-        virtual BlackMisc::Aviation::CAircraftPartsList getRemoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign) const override
+        virtual swift::misc::aviation::CAircraftPartsList getRemoteAircraftParts(const swift::misc::aviation::CCallsign &callsign) const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             Q_UNUSED(callsign)
-            return BlackMisc::Aviation::CAircraftPartsList();
+            return swift::misc::aviation::CAircraftPartsList();
         }
 
         //! \copydoc IContextNetwork::isAircraftPartsHistoryEnabled
@@ -438,7 +438,7 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextNetwork::isRemoteAircraftSupportingParts
-        virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const override
+        virtual bool isRemoteAircraftSupportingParts(const swift::misc::aviation::CCallsign &callsign) const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             Q_UNUSED(callsign)

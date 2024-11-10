@@ -9,9 +9,9 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/identifierlistmodel.h"
 #include "blackgui/views/viewbase.h"
-#include "blackmisc/identifierlist.h"
+#include "misc/identifierlist.h"
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CIdentifier;
 }

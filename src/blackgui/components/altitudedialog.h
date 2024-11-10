@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_ALTITUDEDIALOG_H
 #define BLACKGUI_COMPONENTS_ALTITUDEDIALOG_H
 
-#include "blackmisc/aviation/altitude.h"
+#include "misc/aviation/altitude.h"
 
 #include <QDialog>
 #include <QScopedPointer>
@@ -56,14 +56,14 @@ namespace BlackGui::Components
         bool isStringOnly() const;
 
         //! Altitude string
-        const BlackMisc::Aviation::CAltitude &getAltitude() const { return m_altitude; }
+        const swift::misc::aviation::CAltitude &getAltitude() const { return m_altitude; }
 
         //! Altitude string
         const QString &getAltitudeString() const { return m_altitudeStr; }
 
     private:
         QScopedPointer<Ui::CAltitudeDialog> ui;
-        BlackMisc::Aviation::CAltitude m_altitude;
+        swift::misc::aviation::CAltitude m_altitude;
         QString m_altitudeStr;
 
         //! Edit finished

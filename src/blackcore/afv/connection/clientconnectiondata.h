@@ -8,7 +8,7 @@
 
 #include "blackcore/afv/dto.h"
 #include "blackcore/afv/connection/apiserverconnection.h"
-#include "blackmisc/logcategories.h"
+#include "misc/logcategories.h"
 #include "blackcore/afv/crypto/cryptodtochannel.h"
 
 #include <QDateTime>

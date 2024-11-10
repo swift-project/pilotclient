@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_OTHERSWIFTVERSIONS_H
 #define BLACKGUI_COMPONENTS_OTHERSWIFTVERSIONS_H
 
-#include "blackmisc/applicationinfo.h"
+#include "misc/applicationinfo.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -34,7 +34,7 @@ namespace BlackGui::Components
         bool hasSelection() const;
 
         //! Get the selected other version
-        BlackMisc::CApplicationInfo selectedOtherVersion() const;
+        swift::misc::CApplicationInfo selectedOtherVersion() const;
 
         //! Reload other versions
         void reloadOtherVersions() { this->reloadOtherVersionsDeferred(0); }
@@ -44,7 +44,7 @@ namespace BlackGui::Components
 
     signals:
         //! Selection changed
-        void versionChanged(const BlackMisc::CApplicationInfo &info);
+        void versionChanged(const swift::misc::CApplicationInfo &info);
 
     private:
         QScopedPointer<Ui::COtherSwiftVersionsComponent> ui;
@@ -53,7 +53,7 @@ namespace BlackGui::Components
         void openDataDirectory();
 
         //! Object has been selected
-        void onObjectSelected(const BlackMisc::CVariant &object);
+        void onObjectSelected(const swift::misc::CVariant &object);
     };
 } // ns
 

@@ -616,7 +616,7 @@
                <string>swift GUI</string>
               </property>
               <property name="icon">
-               <iconset resource="../blackmisc/blackmisc.qrc">
+               <iconset resource="../misc/misc.qrc">
                 <normaloff>:/own/icons/own/swift3D/sw3DBlue-256.png</normaloff>:/own/icons/own/swift3D/sw3DBlue-256.png</iconset>
               </property>
               <property name="iconSize">
@@ -636,7 +636,7 @@
                <string>swift core</string>
               </property>
               <property name="icon">
-               <iconset resource="../blackmisc/blackmisc.qrc">
+               <iconset resource="../misc/misc.qrc">
                 <normaloff>:/own/icons/own/swift3D/sw3DOrange-256.png</normaloff>:/own/icons/own/swift3D/sw3DOrange-256.png</iconset>
               </property>
               <property name="iconSize">
@@ -656,7 +656,7 @@
                <string>mapping tool</string>
               </property>
               <property name="icon">
-               <iconset resource="../blackmisc/blackmisc.qrc">
+               <iconset resource="../misc/misc.qrc">
                 <normaloff>:/own/icons/own/swift3D/sw3DGreen-256.png</normaloff>:/own/icons/own/swift3D/sw3DGreen-256.png</iconset>
               </property>
               <property name="iconSize">
@@ -673,7 +673,7 @@
                <string>...</string>
               </property>
               <property name="icon">
-               <iconset resource="../blackmisc/blackmisc.qrc">
+               <iconset resource="../misc/misc.qrc">
                 <normaloff>:/misc/icons/misc/toolWizard128.png</normaloff>:/misc/icons/misc/toolWizard128.png</iconset>
               </property>
               <property name="iconSize">
@@ -693,7 +693,7 @@
                <string>goto swift database</string>
               </property>
               <property name="icon">
-               <iconset resource="../blackmisc/blackmisc.qrc">
+               <iconset resource="../misc/misc.qrc">
                 <normaloff>:/own/icons/own/swift3D/sw3DGreen-256.png</normaloff>:/own/icons/own/swift3D/sw3DGreen-256.png</iconset>
               </property>
               <property name="iconSize">
@@ -795,7 +795,7 @@
         <string>back to main</string>
        </property>
        <property name="icon">
-        <iconset resource="../blackmisc/blackmisc.qrc">
+        <iconset resource="../misc/misc.qrc">
          <normaloff>:/diagona/icons/diagona/icons/arrow-180.png</normaloff>:/diagona/icons/diagona/icons/arrow-180.png</iconset>
        </property>
        <property name="shortcut">
@@ -877,7 +877,7 @@
   <tabstop>rb_WindowFrameless</tabstop>
  </tabstops>
  <resources>
-  <include location="../blackmisc/blackmisc.qrc"/>
+  <include location="../misc/misc.qrc"/>
   <include location="swiftlauncher.qrc"/>
  </resources>
  <connections/>

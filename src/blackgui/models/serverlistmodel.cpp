@@ -3,12 +3,12 @@
 
 #include "blackgui/models/columns.h"
 #include "blackgui/models/serverlistmodel.h"
-#include "blackmisc/network/server.h"
-#include "blackmisc/network/user.h"
+#include "misc/network/server.h"
+#include "misc/network/user.h"
 
 #include <QtGlobal>
 
-using namespace BlackMisc::Network;
+using namespace swift::misc::network;
 
 namespace BlackGui::Models
 {

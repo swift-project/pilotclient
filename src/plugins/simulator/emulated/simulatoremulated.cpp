@@ -4,23 +4,23 @@
 #include "simulatoremulated.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/aviation/altitude.h"
-#include "blackmisc/math/mathutils.h"
+#include "misc/simulation/simulatorplugininfo.h"
+#include "misc/aviation/altitude.h"
+#include "misc/math/mathutils.h"
 
 #include <QPointer>
 #include <QTimer>
 #include <QApplication>
 
 using namespace BlackGui;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Math;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::Settings;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::geo;
+using namespace swift::misc::network;
+using namespace swift::misc::math;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::settings;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 

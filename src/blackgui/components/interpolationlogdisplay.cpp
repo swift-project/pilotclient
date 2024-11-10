@@ -8,8 +8,8 @@
 #include "blackcore/context/contextnetworkimpl.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/airspacemonitor.h"
-#include "blackmisc/timestampobjectlist.h"
-#include "blackmisc/stringutils.h"
+#include "misc/timestampobjectlist.h"
+#include "misc/stringutils.h"
 
 #include <QStringLiteral>
 
@@ -17,12 +17,12 @@ using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackGui::Views;
 using namespace BlackGui::Editors;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::geo;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
+using namespace swift::misc::physical_quantities;
 
 namespace BlackGui::Components
 {

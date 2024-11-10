@@ -9,18 +9,18 @@
 #include "blackgui/views/viewcallsignobjects.h"
 #include "blackgui/models/simulatedaircraftlistmodel.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/pq/angle.h"
+#include "misc/simulation/simulatedaircraftlist.h"
+#include "misc/pq/angle.h"
 
 #include <QObject>
 
-namespace BlackMisc
+namespace swift::misc
 {
-    namespace Aviation
+    namespace aviation
     {
         class CCallsign;
     }
-    namespace Simulation
+    namespace simulation
     {
         class CSimulatedAircraft;
     }
@@ -62,10 +62,10 @@ namespace BlackGui
 
         signals:
             //! Request a text message
-            void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
+            void requestTextMessageWidget(const swift::misc::aviation::CCallsign &callsign);
 
             //! Disable for matching
-            void requestTempDisableModelsForMatching(const BlackMisc::Simulation::CAircraftModelList &models);
+            void requestTempDisableModelsForMatching(const swift::misc::simulation::CAircraftModelList &models);
 
         protected:
             //! \copydoc CViewBase::customMenu
@@ -115,19 +115,19 @@ namespace BlackGui
             void reEnableAllUnrenderedAircraft();
 
             //! Enable or disable aircraft
-            void enableOrDisableAircraft(const BlackMisc::Simulation::CSimulatedAircraftList &aircraft, bool newEnabled);
+            void enableOrDisableAircraft(const swift::misc::simulation::CSimulatedAircraftList &aircraft, bool newEnabled);
 
             //! Follow aircraft in simulator
-            void followAircraftInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            void followAircraftInSimulator(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
             //! Enable aircraft parts
-            void enableParts(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool enabled);
+            void enableParts(const swift::misc::simulation::CSimulatedAircraft &aircraft, bool enabled);
 
             //! Set pitch
-            void setPitchOnGround(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::PhysicalQuantities::CAngle &pitch);
+            void setPitchOnGround(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::physical_quantities::CAngle &pitch);
 
             //! Aircraft supporting parts?
-            bool isSupportingAircraftParts(const BlackMisc::Aviation::CCallsign &cs) const;
+            bool isSupportingAircraftParts(const swift::misc::aviation::CCallsign &cs) const;
 
             //! Fully recalculate all aircraft
             void recalculateAllAircraft();
@@ -139,13 +139,13 @@ namespace BlackGui
             void doMatchingsAgainForSelected();
 
             //! Enable fast position updates
-            void enableFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            void enableFastPositionUpdates(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
             //! Update if aircraft is enabled
-            void updateAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            void updateAircraftEnabled(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
             //! Update the gnd.flag support
-            void updateAircraftSupportingGndFLag(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            void updateAircraftSupportingGndFLag(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
             //! FP dialog
             void showFlightPlanDialog();

@@ -8,7 +8,7 @@
 
 #include "blackcore/webdataservices.h"
 #include "blackcore/db/databasewriter.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
+#include "misc/simulation/aircraftmodellist.h"
 
 #include <QDateTime>
 #include <QPushButton>
@@ -16,8 +16,8 @@
 #include <QTimer>
 #include <QDialog>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
 using namespace BlackCore::Db;
 
 namespace BlackGui::Components

@@ -6,8 +6,8 @@
 #ifndef BLACKGUI_COMPONENTS_TRANSPONDERMODECOMPONENT_H
 #define BLACKGUI_COMPONENTS_TRANSPONDERMODECOMPONENT_H
 
-#include "blackmisc/aviation/transponder.h"
-#include "blackmisc/identifiable.h"
+#include "misc/aviation/transponder.h"
+#include "misc/identifiable.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -15,10 +15,10 @@ namespace Ui
 {
     class CTransponderModeComponent;
 }
-namespace BlackMisc
+namespace swift::misc
 {
     class CIdentifier;
-    namespace Simulation
+    namespace simulation
     {
         class CSimulatedAircraft;
     }
@@ -28,7 +28,7 @@ namespace BlackGui::Components
     /*!
      * Small component to display XPDR mode
      */
-    class CTransponderModeComponent : public QFrame, BlackMisc::CIdentifiable
+    class CTransponderModeComponent : public QFrame, swift::misc::CIdentifiable
     {
         Q_OBJECT
 
@@ -45,7 +45,7 @@ namespace BlackGui::Components
 
     private:
         QScopedPointer<Ui::CTransponderModeComponent> ui;
-        BlackMisc::Aviation::CTransponder m_transponder;
+        swift::misc::aviation::CTransponder m_transponder;
 
         //! Init
         void init();
@@ -54,7 +54,7 @@ namespace BlackGui::Components
         void onClicked();
 
         //! Changed cockpit data
-        void onChangedAircraftCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+        void onChangedAircraftCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator);
     };
 } // ns
 

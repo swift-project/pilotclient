@@ -9,7 +9,7 @@
 #include "blackcore/context/contextaudio.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/network/userlist.h"
+#include "misc/network/userlist.h"
 
 #include <QHash>
 #include <QMap>
@@ -38,36 +38,36 @@ namespace BlackCore
 
         public slots:
             //! \copydoc BlackCore::Context::CContextAudioBase::getRegisteredDevices
-            virtual BlackMisc::Audio::CAudioDeviceInfoList getRegisteredDevices() const override;
+            virtual swift::misc::audio::CAudioDeviceInfoList getRegisteredDevices() const override;
 
             //! \copydoc BlackCore::Context::CContextAudioBase::registerDevices
-            virtual void registerDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) override;
+            virtual void registerDevices(const swift::misc::audio::CAudioDeviceInfoList &devices) override;
 
             //! \copydoc BlackCore::Context::CContextAudioBase::unRegisterDevices
-            virtual void unRegisterDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices) override;
+            virtual void unRegisterDevices(const swift::misc::audio::CAudioDeviceInfoList &devices) override;
 
             //! \copydoc BlackCore::Context::CContextAudioBase::unRegisterDevicesFor
-            virtual void unRegisterDevicesFor(const BlackMisc::CIdentifier &identifier) override;
+            virtual void unRegisterDevicesFor(const swift::misc::CIdentifier &identifier) override;
 
             //! \copydoc BlackCore::Context::CContextAudioBase::registerAudioCallsign
-            virtual void registerAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CIdentifier &identifier) override;
+            virtual void registerAudioCallsign(const swift::misc::aviation::CCallsign &callsign, const swift::misc::CIdentifier &identifier) override;
 
             //! \copydoc BlackCore::Context::CContextAudioBase::unRegisterAudioCallsign
-            virtual void unRegisterAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CIdentifier &identifier) override;
+            virtual void unRegisterAudioCallsign(const swift::misc::aviation::CCallsign &callsign, const swift::misc::CIdentifier &identifier) override;
 
             //! \copydoc BlackCore::Context::CContextAudioBase::hasRegisteredAudioCallsign
-            virtual bool hasRegisteredAudioCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual bool hasRegisteredAudioCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
 
         protected:
             //! Constructor
             CContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
 
             //! Register myself in DBus
-            CContextAudio *registerWithDBus(BlackMisc::CDBusServer *server);
+            CContextAudio *registerWithDBus(swift::misc::CDBusServer *server);
 
         private:
-            BlackMisc::Audio::CAudioDeviceInfoList m_registeredDevices;
-            QMap<BlackMisc::CIdentifier, BlackMisc::Aviation::CCallsign> m_registeredCallsigns;
+            swift::misc::audio::CAudioDeviceInfoList m_registeredDevices;
+            QMap<swift::misc::CIdentifier, swift::misc::aviation::CCallsign> m_registeredCallsigns;
         };
     } // namespace
 } // namespace

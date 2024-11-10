@@ -8,9 +8,9 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/data/vatsimsetup.h"
-#include "blackmisc/datacache.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/network/url.h"
+#include "misc/datacache.h"
+#include "misc/network/entityflags.h"
+#include "misc/network/url.h"
 #include "blackcore/threadedreader.h"
 
 #include <QObject>
@@ -31,11 +31,11 @@ namespace BlackCore::Vatsim
 
         //! METAR URL
         //! \threadsafe
-        BlackMisc::Network::CUrl getMetarFileUrl() const;
+        swift::misc::network::CUrl getMetarFileUrl() const;
 
         //! Data file URL
         //! \threadsafe
-        BlackMisc::Network::CUrl getDataFileUrl() const;
+        swift::misc::network::CUrl getDataFileUrl() const;
 
         //! Start reading in own thread
         void readInBackgroundThread();
@@ -45,7 +45,7 @@ namespace BlackCore::Vatsim
         void statusFileRead(int bytes);
 
         //! Data have been read
-        void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int bytes);
+        void dataRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState state, int bytes);
 
     private:
         //! Read / re-read data file
@@ -54,7 +54,7 @@ namespace BlackCore::Vatsim
         //! Data have been read, parse VATSIM file
         void parseVatsimFile(QNetworkReply *nwReply);
 
-        BlackMisc::CData<BlackCore::Data::TVatsimSetup> m_lastGoodSetup { this };
+        swift::misc::CData<BlackCore::Data::TVatsimSetup> m_lastGoodSetup { this };
     };
 } // ns
 

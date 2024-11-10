@@ -8,24 +8,24 @@
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/aviation/altitude.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/aviation/heading.h"
-#include "blackmisc/geo/latitude.h"
-#include "blackmisc/geo/longitude.h"
-#include "blackmisc/pq/angle.h"
-#include "blackmisc/pq/frequency.h"
-#include "blackmisc/pq/speed.h"
-#include "blackmisc/stringutils.h"
-#include "blackmisc/iconlist.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/simulatorplugininfo.h"
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/aviation/altitude.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/aviation/heading.h"
+#include "misc/geo/latitude.h"
+#include "misc/geo/longitude.h"
+#include "misc/pq/angle.h"
+#include "misc/pq/frequency.h"
+#include "misc/pq/speed.h"
+#include "misc/stringutils.h"
+#include "misc/iconlist.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::simulation;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 

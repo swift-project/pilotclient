@@ -15,7 +15,7 @@ namespace BlackSimPlugin::Flightgear
 {
     CFGSwiftBusServiceProxy::CFGSwiftBusServiceProxy(QDBusConnection &connection, QObject *parent, bool dummy) : QObject(parent)
     {
-        m_dbusInterface = new BlackMisc::CGenericDBusInterface(FGSWIFTBUS_SERVICE_SERVICENAME, ObjectPath(), InterfaceName(), connection, this);
+        m_dbusInterface = new swift::misc::CGenericDBusInterface(FGSWIFTBUS_SERVICE_SERVICENAME, ObjectPath(), InterfaceName(), connection, this);
         if (!dummy)
         {
             bool s;

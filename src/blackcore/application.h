@@ -14,15 +14,15 @@
 #include "blackcore/application/applicationsettings.h"
 #include "blackcore/inputmanager.h"
 #include "blackcore/webreaderflags.h"
-#include "blackmisc/db/updateinfo.h"
-#include "blackmisc/network/url.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/identifiable.h"
-#include "blackmisc/slot.h"
-#include "blackmisc/digestsignal.h"
-#include "blackmisc/applicationinfolist.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/crashinfo.h"
+#include "misc/db/updateinfo.h"
+#include "misc/network/url.h"
+#include "misc/network/networkutils.h"
+#include "misc/identifiable.h"
+#include "misc/slot.h"
+#include "misc/digestsignal.h"
+#include "misc/applicationinfolist.h"
+#include "misc/statusmessagelist.h"
+#include "misc/crashinfo.h"
 
 #include <QByteArray>
 #include <QCommandLineOption>
@@ -42,11 +42,11 @@ class QHttpMultiPart;
 class QNetworkReply;
 class QNetworkRequest;
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CFileLogger;
     class CLogCategoryList;
-    namespace SharedState
+    namespace shared_state
     {
         class CDataLinkDBus;
     }
@@ -87,7 +87,7 @@ namespace BlackCore
      */
     class BLACKCORE_EXPORT CApplication :
         public QObject,
-        public BlackMisc::CIdentifiable
+        public swift::misc::CIdentifiable
     {
         Q_OBJECT
 
@@ -99,19 +99,19 @@ namespace BlackCore
         static const QStringList &getLogCategories();
 
         //! Constructor
-        explicit CApplication(BlackMisc::CApplicationInfo::Application application, bool init = true);
+        explicit CApplication(swift::misc::CApplicationInfo::Application application, bool init = true);
 
         //! Constructor
-        explicit CApplication(const QString &applicationName = executable(), BlackMisc::CApplicationInfo::Application application = BlackMisc::CApplicationInfo::Unknown, bool init = true);
+        explicit CApplication(const QString &applicationName = executable(), swift::misc::CApplicationInfo::Application application = swift::misc::CApplicationInfo::Unknown, bool init = true);
 
         //! Destructor
         ~CApplication() override;
 
         //! Information about all running apps (including this one only if exec() has already been called)
-        static BlackMisc::CApplicationInfoList getRunningApplications();
+        static swift::misc::CApplicationInfoList getRunningApplications();
 
         //! Is application running?
-        static bool isApplicationRunning(BlackMisc::CApplicationInfo::Application application);
+        static bool isApplicationRunning(swift::misc::CApplicationInfo::Application application);
 
         //! True if this swift application is already running (including different versions)
         bool isAlreadyRunning() const;
@@ -136,7 +136,7 @@ namespace BlackCore
         void toggleIncognito();
 
         //! swift application running
-        const BlackMisc::CApplicationInfo &getApplicationInfo() const { return m_applicationInfo; }
+        const swift::misc::CApplicationInfo &getApplicationInfo() const { return m_applicationInfo; }
 
         //! Application name and version
         const QString &getApplicationName() const { return m_applicationName; }
@@ -148,7 +148,7 @@ namespace BlackCore
         const QString &getApplicationNameVersionDetailed() const;
 
         //! Executable names for the given applications
-        QString getExecutableForApplication(BlackMisc::CApplicationInfo::Application application) const;
+        QString getExecutableForApplication(swift::misc::CApplicationInfo::Application application) const;
 
         //! Start the launcher
         bool startLauncher();
@@ -161,14 +161,14 @@ namespace BlackCore
         Data::CGlobalSetup getGlobalSetup() const;
 
         //! Update info
-        BlackMisc::Db::CUpdateInfo getUpdateInfo() const;
+        swift::misc::db::CUpdateInfo getUpdateInfo() const;
 
         //! Reload update info
         void reloadUpdateInfo();
 
         //! Own distribution
         //! \threadsafe
-        BlackMisc::Db::CDistribution getOwnDistribution() const;
+        swift::misc::db::CDistribution getOwnDistribution() const;
 
         //! String with beta, dev. and version
         const QString &versionStringDetailed() const;
@@ -208,7 +208,7 @@ namespace BlackCore
         //! Process all events for some time
         //! \remark unlike QCoreApplication::processEvents this will spend at least the given time in the function, using QThread::msleep
         //! \remark using processEventsFor can lead to undesired behaviour: A function may be called again before it is finished, even with only one thread
-        //! \sa BlackMisc::CEventLoop
+        //! \sa swift::misc::CEventLoop
         static void processEventsFor(int milliseconds);
 
         //! Clear the caches
@@ -227,7 +227,7 @@ namespace BlackCore
         QStringList getUnsavedSettingsKeys() const;
 
         //! Save all settings
-        BlackMisc::CStatusMessage saveSettingsByKey(const QStringList &keys);
+        swift::misc::CStatusMessage saveSettingsByKey(const QStringList &keys);
 
         // ----------------------- cmd line args / parsing ----------------------------------------
 
@@ -285,7 +285,7 @@ namespace BlackCore
         virtual void cmdLineErrorMessage(const QString &text, const QString &informativeText) const;
 
         //! Display error message
-        virtual void cmdLineErrorMessage(const BlackMisc::CStatusMessageList &msgs) const;
+        virtual void cmdLineErrorMessage(const swift::misc::CStatusMessageList &msgs) const;
 
         //! @}
 
@@ -320,7 +320,7 @@ namespace BlackCore
         // ----------------------- contexts ----------------------------------------
 
         //! Transport mechanism for sharing state between applications
-        BlackMisc::SharedState::CDataLinkDBus *getDataLinkDBus();
+        swift::misc::shared_state::CDataLinkDBus *getDataLinkDBus();
 
         //! \name Context / core facade related
         //! @{
@@ -336,17 +336,17 @@ namespace BlackCore
         //! Init the contexts part and start core facade
         //! \sa coreFacadeStarted
         //! \remark requires setup loaded
-        BlackMisc::CStatusMessageList initContextsAndStartCoreFacade(const CCoreFacadeConfig &coreConfig);
+        swift::misc::CStatusMessageList initContextsAndStartCoreFacade(const CCoreFacadeConfig &coreConfig);
 
         //! Starts the core facade without any contexts
         //! \sa coreFacadeStarted
         //! \remark requires setup loaded
-        BlackMisc::CStatusMessageList startCoreFacadeWithoutContexts();
+        swift::misc::CStatusMessageList startCoreFacadeWithoutContexts();
 
         //! Init web data services and start them
         //! \sa webDataServicesStarted
         //! \remark requires setup loaded
-        BlackMisc::CStatusMessageList initAndStartWebDataServices(CWebReaderFlags::WebReader webReader, const Db::CDatabaseReaderConfigList &dbReaderConfig);
+        swift::misc::CStatusMessageList initAndStartWebDataServices(CWebReaderFlags::WebReader webReader, const Db::CDatabaseReaderConfigList &dbReaderConfig);
 
         //! Get the facade
         CCoreFacade *getCoreFacade() { return m_coreFacade.data(); }
@@ -395,17 +395,17 @@ namespace BlackCore
 
         //! Consolidated version of METAR URLs, either from CGlobalSetup or CVatsimSetup
         //! \threadsafe
-        BlackMisc::Network::CUrl getVatsimMetarUrl() const;
+        swift::misc::network::CUrl getVatsimMetarUrl() const;
 
         //! Consolidated version of data file URL, either from CGlobalSetup or CVatsimSetup
         //! \threadsafe
-        BlackMisc::Network::CUrl getVatsimDataFileUrl() const;
+        swift::misc::network::CUrl getVatsimDataFileUrl() const;
 
         //! Get URL to file which contains the list of VATSIM servers
-        BlackMisc::Network::CUrl getVatsimServerFileUrl() const;
+        swift::misc::network::CUrl getVatsimServerFileUrl() const;
 
         //! Get VATSIM FSD HTTP URL
-        BlackMisc::Network::CUrl getVatsimFsdHttpUrl() const;
+        swift::misc::network::CUrl getVatsimFsdHttpUrl() const;
 
         //! Start services, if not yet parsed call CApplication::parse
         virtual bool start();
@@ -420,10 +420,10 @@ namespace BlackCore
         static constexpr int DefaultMaxRedirects = 2; //!< network request, default for max.redirects
 
         //! The network reply callback when request is completed
-        using CallbackSlot = BlackMisc::CSlot<void(QNetworkReply *)>;
+        using CallbackSlot = swift::misc::CSlot<void(QNetworkReply *)>;
 
         //! The progress slot
-        using ProgressSlot = BlackMisc::CSlot<void(int, qint64, qint64, const QUrl &)>;
+        using ProgressSlot = swift::misc::CSlot<void(int, qint64, qint64, const QUrl &)>;
 
         //! Delete all cookies from cookie manager
         void deleteAllCookies();
@@ -446,17 +446,17 @@ namespace BlackCore
 
         //! Request to get network reply
         //! \threadsafe
-        QNetworkReply *getFromNetwork(const BlackMisc::Network::CUrl &url,
+        QNetworkReply *getFromNetwork(const swift::misc::network::CUrl &url,
                                       const CallbackSlot &callback, int maxRedirects = DefaultMaxRedirects);
 
         //! Request to get network reply
         //! \threadsafe
-        QNetworkReply *getFromNetwork(const BlackMisc::Network::CUrl &url,
+        QNetworkReply *getFromNetwork(const swift::misc::network::CUrl &url,
                                       const CallbackSlot &callback, const ProgressSlot &progress, int maxRedirects = DefaultMaxRedirects);
 
-        //! Request to get network reply, supporting BlackMisc::Network::CUrlLog
+        //! Request to get network reply, supporting swift::misc::network::CUrlLog
         //! \threadsafe
-        QNetworkReply *getFromNetwork(const BlackMisc::Network::CUrl &url, int logId,
+        QNetworkReply *getFromNetwork(const swift::misc::network::CUrl &url, int logId,
                                       const CallbackSlot &callback, const ProgressSlot &progress, int maxRedirects = DefaultMaxRedirects);
 
         //! Request to get network reply
@@ -468,12 +468,12 @@ namespace BlackCore
         QNetworkReply *getFromNetwork(const QNetworkRequest &request,
                                       const CallbackSlot &callback, const ProgressSlot &progress, int maxRedirects = DefaultMaxRedirects);
 
-        //! Request to get network reply, supporting BlackMisc::Network::CUrlLog
+        //! Request to get network reply, supporting swift::misc::network::CUrlLog
         //! \threadsafe
         QNetworkReply *getFromNetwork(const QNetworkRequest &request, int logId,
                                       const CallbackSlot &callback, const ProgressSlot &progress, int maxRedirects = DefaultMaxRedirects);
 
-        //! Request to delete a network resource from network, supporting BlackMisc::Network::CUrlLog
+        //! Request to delete a network resource from network, supporting swift::misc::network::CUrlLog
         //! \threadsafe
         QNetworkReply *deleteResourceFromNetwork(const QNetworkRequest &request, int logId,
                                                  const CallbackSlot &callback,
@@ -490,7 +490,7 @@ namespace BlackCore
 
         //! Request to get network repy using HTTP's HEADER method
         //! \threadsafe
-        QNetworkReply *headerFromNetwork(const BlackMisc::Network::CUrl &url, const CallbackSlot &callback, int maxRedirects = NoRedirects);
+        QNetworkReply *headerFromNetwork(const swift::misc::network::CUrl &url, const CallbackSlot &callback, int maxRedirects = NoRedirects);
 
         //! Request to get network repy using HTTP's HEADER method
         //! \threadsafe
@@ -498,8 +498,8 @@ namespace BlackCore
 
         //! Download file from network and store it as passed
         //! \threadsafe
-        QNetworkReply *downloadFromNetwork(const BlackMisc::Network::CUrl &url, const QString &saveAsFileName,
-                                           const BlackMisc::CSlot<void(const BlackMisc::CStatusMessage &)> &callback, int maxRedirects = DefaultMaxRedirects);
+        QNetworkReply *downloadFromNetwork(const swift::misc::network::CUrl &url, const QString &saveAsFileName,
+                                           const swift::misc::CSlot<void(const swift::misc::CStatusMessage &)> &callback, int maxRedirects = DefaultMaxRedirects);
         //! @}
 
     signals:
@@ -521,7 +521,7 @@ namespace BlackCore
 
     protected:
         //! Display the failures caused by loading the setup file
-        virtual void displaySetupLoadFailure(BlackMisc::CStatusMessageList msgs);
+        virtual void displaySetupLoadFailure(swift::misc::CStatusMessageList msgs);
 
         //! Startup completed
         virtual void onStartUpCompleted();
@@ -542,18 +542,18 @@ namespace BlackCore
         virtual void onCoreFacadeStarted();
 
         //! Can be used to start special services
-        virtual BlackMisc::CStatusMessageList startHookIn() { return BlackMisc::CStatusMessageList(); }
+        virtual swift::misc::CStatusMessageList startHookIn() { return swift::misc::CStatusMessageList(); }
 
         //! Flag set or explicitly set to true
         bool isSet(const QCommandLineOption &option) const;
 
         //! Start the core facade
         //! \note does nothing when setup is not yet loaded
-        BlackMisc::CStatusMessageList startCoreFacade();
+        swift::misc::CStatusMessageList startCoreFacade();
 
         //! Start the web data services
         //! \note does nothing when setup is not yet loaded
-        BlackMisc::CStatusMessageList startWebDataServices(CWebReaderFlags::WebReader webReader, const Db::CDatabaseReaderConfigList &dbReaderConfig);
+        swift::misc::CStatusMessageList startWebDataServices(CWebReaderFlags::WebReader webReader, const Db::CDatabaseReaderConfigList &dbReaderConfig);
 
         //! executable name
         static const QString &executable();
@@ -580,7 +580,7 @@ namespace BlackCore
 
     private:
         //! Read the setup
-        BlackMisc::CStatusMessageList loadSetup();
+        swift::misc::CStatusMessageList loadSetup();
 
         //! Display help message
         void cmdLineHelpMessage();
@@ -601,7 +601,7 @@ namespace BlackCore
         bool initIsRunningInDeveloperEnvironment() const;
 
         //! Init the local settings
-        BlackMisc::CStatusMessage initLocalSettings();
+        swift::misc::CStatusMessage initLocalSettings();
 
         using NetworkRequestOrPostFunction = std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)>;
 
@@ -641,12 +641,12 @@ namespace BlackCore
 
         CInputManager *m_inputManager = nullptr; //!< Input devices and hotkeys
         QNetworkAccessManager *m_accessManager = nullptr; //!< single network access manager
-        BlackMisc::CApplicationInfo m_applicationInfo; //!< Application if specified
+        swift::misc::CApplicationInfo m_applicationInfo; //!< Application if specified
         QScopedPointer<CCoreFacade> m_coreFacade; //!< core facade if any
         QScopedPointer<CSetupReader> m_setupReader; //!< setup reader
         QScopedPointer<CGitHubPackagesReader> m_gitHubPackagesReader; //!< github packages reader
         QScopedPointer<CWebDataServices> m_webDataServices; //!< web data services
-        QScopedPointer<BlackMisc::CFileLogger> m_fileLogger; //!< file logger
+        QScopedPointer<swift::misc::CFileLogger> m_fileLogger; //!< file logger
         QPointer<CCookieManager> m_cookieManager; //!< single cookie manager for our access manager
         const QString m_applicationName; //!< application name
         QReadWriteLock m_accessManagerLock; //!< lock to make access manager access threadsafe
@@ -657,7 +657,7 @@ namespace BlackCore
         bool m_localSettingsLoaded = false; //!< local settings loaded?
 
         // -------------- crashpad -----------------
-        BlackMisc::CSettingReadOnly<Application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this, &CApplication::onCrashDumpUploadEnabledChanged };
+        swift::misc::CSettingReadOnly<Application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this, &CApplication::onCrashDumpUploadEnabledChanged };
 
         //! Upload settings changed
         void onCrashDumpUploadEnabledChanged();

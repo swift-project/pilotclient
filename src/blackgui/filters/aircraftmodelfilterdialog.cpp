@@ -3,13 +3,13 @@
 
 #include "blackgui/filters/aircraftmodelfilterbar.h"
 #include "blackgui/filters/aircraftmodelfilterdialog.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
+#include "misc/simulation/aircraftmodellist.h"
 #include "ui_aircraftmodelfilterdialog.h"
 
 using namespace BlackGui::Models;
 using namespace BlackGui::Filters;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Network;
+using namespace swift::misc::simulation;
+using namespace swift::misc::network;
 
 namespace BlackGui::Filters
 {

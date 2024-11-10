@@ -7,17 +7,17 @@
 #include "blackgui/components/dbmappingcomponentaware.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/db/databaseutils.h"
-#include "blackmisc/verify.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/simulation/aircraftmodelutils.h"
-#include "blackmisc/simulation/modelconverterx.h"
+#include "misc/verify.h"
+#include "misc/icons.h"
+#include "misc/logmessage.h"
+#include "misc/simulation/aircraftmodelutils.h"
+#include "misc/simulation/modelconverterx.h"
 #include "config/buildconfig.h"
 #include <QDesktopServices>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
 using namespace BlackGui;
 using namespace BlackGui::Views;
 using namespace BlackGui::Models;

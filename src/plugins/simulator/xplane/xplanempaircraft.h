@@ -6,8 +6,8 @@
 #ifndef BLACKSIMPLUGIN_XPLANE_XPLANEMPAIRCRAFT_H
 #define BLACKSIMPLUGIN_XPLANE_XPLANEMPAIRCRAFT_H
 
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/interpolation/interpolatormulti.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/interpolation/interpolatormulti.h"
 #include <QSharedPointer>
 #include <QStringList>
 
@@ -25,57 +25,57 @@ namespace BlackSimPlugin::XPlane
         CXPlaneMPAircraft();
 
         //! Constructor providing initial situation/parts
-        CXPlaneMPAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft,
+        CXPlaneMPAircraft(const swift::misc::simulation::CSimulatedAircraft &aircraft,
                           BlackCore::ISimulator *simulator,
-                          BlackMisc::Simulation::CInterpolationLogger *logger);
+                          swift::misc::simulation::CInterpolationLogger *logger);
 
         //! Destructor
         ~CXPlaneMPAircraft() {}
 
         //! Set simulated aircraft
-        void setSimulatedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &simulatedAircraft);
+        void setSimulatedAircraft(const swift::misc::simulation::CSimulatedAircraft &simulatedAircraft);
 
         //! Get callsign
-        const BlackMisc::Aviation::CCallsign &getCallsign() const { return m_aircraft.getCallsign(); }
+        const swift::misc::aviation::CCallsign &getCallsign() const { return m_aircraft.getCallsign(); }
 
         //! Has callsign
         bool hasCallsign() const { return m_aircraft.hasCallsign(); }
 
         //! Simulated aircraft (as added)
-        const BlackMisc::Simulation::CSimulatedAircraft &getAircraft() const { return m_aircraft; }
+        const swift::misc::simulation::CSimulatedAircraft &getAircraft() const { return m_aircraft; }
 
         //! Simulated aircraft model
-        const BlackMisc::Simulation::CAircraftModel &getAircraftModel() const { return m_aircraft.getModel(); }
+        const swift::misc::simulation::CAircraftModel &getAircraftModel() const { return m_aircraft.getModel(); }
 
         //! Simulated aircraft model string
         const QString &getAircraftModelString() const { return m_aircraft.getModelString(); }
 
-        //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolatorInfo
-        QString getInterpolatorInfo(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
+        //! \copydoc swift::misc::simulation::CInterpolator::getInterpolatorInfo
+        QString getInterpolatorInfo(swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
-        //! \copydoc BlackMisc::Simulation::CInterpolator::attachLogger
-        void attachInterpolatorLogger(BlackMisc::Simulation::CInterpolationLogger *logger) const;
+        //! \copydoc swift::misc::simulation::CInterpolator::attachLogger
+        void attachInterpolatorLogger(swift::misc::simulation::CInterpolationLogger *logger) const;
 
-        //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolation
-        BlackMisc::Simulation::CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoch, const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber) const;
+        //! \copydoc swift::misc::simulation::CInterpolator::getInterpolation
+        swift::misc::simulation::CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoch, const swift::misc::simulation::CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber) const;
 
-        //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolationMessages
-        BlackMisc::CStatusMessageList getInterpolationMessages(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
+        //! \copydoc swift::misc::simulation::CInterpolator::getInterpolationMessages
+        swift::misc::CStatusMessageList getInterpolationMessages(swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
         //! Interpolator
-        BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() const { return m_interpolator.data(); }
+        swift::misc::simulation::CInterpolatorMulti *getInterpolator() const { return m_interpolator.data(); }
 
     private:
-        BlackMisc::Simulation::CSimulatedAircraft m_aircraft; //!< corresponding aircraft
-        QSharedPointer<BlackMisc::Simulation::CInterpolatorMulti> m_interpolator; //!< shared pointer because CSimConnectObject can be copied
+        swift::misc::simulation::CSimulatedAircraft m_aircraft; //!< corresponding aircraft
+        QSharedPointer<swift::misc::simulation::CInterpolatorMulti> m_interpolator; //!< shared pointer because CSimConnectObject can be copied
     };
 
     //! Simulator objects (aka AI aircraft)
-    class CXPlaneMPAircraftObjects : public QHash<BlackMisc::Aviation::CCallsign, CXPlaneMPAircraft>
+    class CXPlaneMPAircraftObjects : public QHash<swift::misc::aviation::CCallsign, CXPlaneMPAircraft>
     {
     public:
         //! Get all callsigns
-        BlackMisc::Aviation::CCallsignSet getAllCallsigns() const;
+        swift::misc::aviation::CCallsignSet getAllCallsigns() const;
 
         //! Get all callsign strings
         QStringList getAllCallsignStrings(bool sorted = false) const;
@@ -87,7 +87,7 @@ namespace BlackSimPlugin::XPlane
         void toggleInterpolatorModes();
 
         //! Toggle interpolator modes
-        void toggleInterpolatorMode(const BlackMisc::Aviation::CCallsign &callsign);
+        void toggleInterpolatorMode(const swift::misc::aviation::CCallsign &callsign);
     };
 } // namespace
 

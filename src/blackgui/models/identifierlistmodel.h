@@ -8,13 +8,13 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodelbase.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/identifierlist.h"
+#include "misc/identifier.h"
+#include "misc/identifierlist.h"
 
 namespace BlackGui::Models
 {
     //! Originator list model
-    class BLACKGUI_EXPORT CIdentifierListModel : public CListModelBase<BlackMisc::CIdentifierList>
+    class BLACKGUI_EXPORT CIdentifierListModel : public CListModelBase<swift::misc::CIdentifierList>
     {
         Q_OBJECT
 

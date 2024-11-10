@@ -7,7 +7,7 @@
 #define BLACKGUI_COMPONENTS_SETTINGSSWIFTPLUGIN_H
 
 #include <QFrame>
-#include "blackmisc/simulation/settings/swiftpluginsettings.h"
+#include "misc/simulation/settings/swiftpluginsettings.h"
 #include "blackgui/blackguiexport.h"
 
 namespace Ui
@@ -31,7 +31,7 @@ namespace BlackGui::Components
         virtual ~CSettingsSwiftPlugin();
 
         //! Get the plugin settings
-        BlackMisc::Simulation::Settings::CSwiftPluginSettings getPluginSettings() const;
+        swift::misc::simulation::settings::CSwiftPluginSettings getPluginSettings() const;
 
     private:
         //! Settings changed
@@ -41,10 +41,10 @@ namespace BlackGui::Components
         void save();
 
         //! Get settings
-        BlackMisc::Simulation::Settings::CSwiftPluginSettings getSettings() const;
+        swift::misc::simulation::settings::CSwiftPluginSettings getSettings() const;
 
         QScopedPointer<Ui::CSettingsSwiftPlugin> ui;
-        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSwiftPlugin> m_settings { this, &CSettingsSwiftPlugin::onSettingsChanged };
+        swift::misc::CSetting<swift::misc::simulation::settings::TSwiftPlugin> m_settings { this, &CSettingsSwiftPlugin::onSettingsChanged };
     };
 } // ns
 

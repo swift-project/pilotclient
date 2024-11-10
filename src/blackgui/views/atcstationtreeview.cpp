@@ -4,9 +4,9 @@
 #include "blackgui/views/atcstationtreeview.h"
 #include "blackgui/models/atcstationtreemodel.h"
 #include "blackgui/menus/menuaction.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/icons.h"
+#include "misc/aviation/atcstationlist.h"
+#include "misc/aviation/callsign.h"
+#include "misc/icons.h"
 #include "config/buildconfig.h"
 
 #include <QFlags>
@@ -15,8 +15,8 @@
 #include <QAction>
 #include <QModelIndex>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 using namespace BlackGui::Models;
 
 namespace BlackGui::Views

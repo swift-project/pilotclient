@@ -4,9 +4,9 @@
 #include "blackcore/webdataservicesms.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/application.h"
-#include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "misc/aviation/aircrafticaocodelist.h"
 
-using namespace BlackMisc::Aviation;
+using namespace swift::misc::aviation;
 
 namespace BlackCore
 {

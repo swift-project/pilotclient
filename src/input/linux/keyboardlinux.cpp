@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "keyboardlinux.h"
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 #include <QDebug>
 #include <QHash>
 #include <QSocketNotifier>
@@ -11,13 +11,13 @@
 #include <X11/keysym.h>
 #include <X11/XKBlib.h>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Input;
+using namespace swift::misc;
+using namespace swift::misc::input;
 
 namespace swift::input
 {
     // https://www.cl.cam.ac.uk/~mgk25/ucs/keysymdef.h
-    static QHash<int, Input::KeyCode> keyMapping {
+    static QHash<int, misc::input::KeyCode> keyMapping {
         { XK_0, Key_0 },
         { XK_1, Key_1 },
         { XK_2, Key_2 },
@@ -231,7 +231,7 @@ namespace swift::input
             // Is it grabbed by someone else?
             if ((ioctl(fd, EVIOCGRAB, 1) < 0))
             {
-                BlackMisc::CLogMessage(this).warning(u"Device exclusively grabbed by someone else (X11 using exclusive-mode evdev?)") << deviceName;
+                swift::misc::CLogMessage(this).warning(u"Device exclusively grabbed by someone else (X11 using exclusive-mode evdev?)") << deviceName;
             }
             else
             {
@@ -239,7 +239,7 @@ namespace swift::input
                 uint8_t keys[KEY_MAX / 8 + 1];
                 if ((ioctl(fd, EVIOCGBIT(EV_KEY, sizeof(keys)), &keys) >= 0) && (keys[KEY_SPACE / 8] & (1 << (KEY_SPACE % 8))))
                 {
-                    BlackMisc::CLogMessage(this).info(u"Found keyboard: %1") << deviceName;
+                    swift::misc::CLogMessage(this).info(u"Found keyboard: %1") << deviceName;
 
                     fcntl(inputFile->handle(), F_SETFL, O_NONBLOCK);
                     connect(new QSocketNotifier(inputFile->handle(), QSocketNotifier::Read, inputFile.data()), &QSocketNotifier::activated, this, &CKeyboardLinux::inputReadyRead);
@@ -250,7 +250,7 @@ namespace swift::input
         }
         else
         {
-            BlackMisc::CLogMessage(this).error(u"Failed to open keyboard device %1: %2") << inputFile->fileName() << inputFile->errorString();
+            swift::misc::CLogMessage(this).error(u"Failed to open keyboard device %1: %2") << inputFile->fileName() << inputFile->errorString();
         }
     }
 
@@ -258,7 +258,7 @@ namespace swift::input
     {
         if (isMouseButton(keyCode)) { return; }
 
-        BlackMisc::Input::CHotkeyCombination oldCombination(m_keyCombination);
+        swift::misc::input::CHotkeyCombination oldCombination(m_keyCombination);
         if (isPressed)
         {
             auto key = convertToKey(keyCode);
@@ -280,7 +280,7 @@ namespace swift::input
         }
     }
 
-    BlackMisc::Input::KeyCode CKeyboardLinux::convertToKey(int keyCode)
+    swift::misc::input::KeyCode CKeyboardLinux::convertToKey(int keyCode)
     {
         // The keycode received from kernel does not take keyboard layouts into account.
         // It always defaults to US keyboards. In contrast to kernel devices, X11 is aware

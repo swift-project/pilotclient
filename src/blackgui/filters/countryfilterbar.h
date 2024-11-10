@@ -16,7 +16,7 @@
 
 class QWidget;
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CCountryList;
 }
@@ -31,7 +31,7 @@ namespace BlackGui::Filters
      */
     class BLACKGUI_EXPORT CCountryFilterBar :
         public CFilterWidget,
-        public Models::IModelFilterProvider<BlackMisc::CCountryList>
+        public Models::IModelFilterProvider<swift::misc::CCountryList>
     {
         Q_OBJECT
 
@@ -43,7 +43,7 @@ namespace BlackGui::Filters
         virtual ~CCountryFilterBar() override;
 
         //! \copydoc Models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::CCountryList>> createModelFilter() const override;
+        virtual std::unique_ptr<BlackGui::Models::IModelFilter<swift::misc::CCountryList>> createModelFilter() const override;
 
     public slots:
         //! \copydoc CFilterWidget::onRowCountChanged

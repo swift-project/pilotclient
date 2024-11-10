@@ -3,16 +3,16 @@
 
 #include "blackgui/models/columns.h"
 #include "blackgui/models/userlistmodel.h"
-#include "blackmisc/aviation/airporticaocode.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/propertyindexvariantmap.h"
+#include "misc/aviation/airporticaocode.h"
+#include "misc/aviation/callsign.h"
+#include "misc/propertyindexvariantmap.h"
 
 #include <Qt>
 #include <QtDebug>
 #include <QtGlobal>
 
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::aviation;
 
 namespace BlackGui::Models
 {

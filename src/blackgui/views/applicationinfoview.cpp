@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "applicationinfoview.h"
-#include "blackmisc/fileutils.h"
+#include "misc/fileutils.h"
 
 #include <QMessageBox>
 #include <QDir>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui::Models;
 using namespace BlackGui::Menus;
 

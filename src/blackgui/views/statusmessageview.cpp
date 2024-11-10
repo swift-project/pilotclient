@@ -6,7 +6,7 @@
 #include "blackgui/filters/statusmessagefilterdialog.h"
 #include <QFlags>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui::Models;
 using namespace BlackGui::Filters;
 

@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "settingsswiftplugin.h"
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 #include "ui_settingsswiftplugin.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::Settings;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::settings;
 
 namespace BlackGui::Components
 {
@@ -24,7 +24,7 @@ namespace BlackGui::Components
     CSettingsSwiftPlugin::~CSettingsSwiftPlugin()
     {}
 
-    BlackMisc::Simulation::Settings::CSwiftPluginSettings CSettingsSwiftPlugin::getPluginSettings() const
+    swift::misc::simulation::settings::CSwiftPluginSettings CSettingsSwiftPlugin::getPluginSettings() const
     {
         return m_settings.get();
     }

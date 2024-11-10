@@ -13,12 +13,12 @@
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/namevariantpairlist.h"
-#include "blackmisc/directories.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/variant.h"
-#include "blackmisc/propertyindexvariantmap.h"
-#include "blackmisc/propertyindex.h"
+#include "misc/namevariantpairlist.h"
+#include "misc/directories.h"
+#include "misc/statusmessage.h"
+#include "misc/variant.h"
+#include "misc/propertyindexvariantmap.h"
+#include "misc/propertyindex.h"
 
 #include <QAbstractItemView>
 #include <QFlags>
@@ -46,7 +46,7 @@ class QPoint;
 class QShowEvent;
 class QTabWidget;
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CWorker;
 }
@@ -126,7 +126,7 @@ namespace BlackGui
                 MenuSave = 1 << 7, //!< save as JSON
                 MenuLoad = 1 << 8, //!< load from JSON
                 MenuToggleSelectionMode = 1 << 9, //!< allow to toggle selection mode
-                MenuOrderable = 1 << 10, //!< items can be ordered (if container is BlackMisc::IOrderableList
+                MenuOrderable = 1 << 10, //!< items can be ordered (if container is swift::misc::IOrderableList
                 MenuCopy = 1 << 11, //!< copy (for copy/paste)
                 MenuPaste = 1 << 12, //!< paste (for copy/paste)
                 MenuCut = 1 << 13, //!< cut (for copy/paste)
@@ -163,20 +163,20 @@ namespace BlackGui
             //! Elements in container
             virtual int rowCount() const = 0;
 
-            //! Is the corresponding model orderable, BlackMisc::Models::CListModelBaseNonTemplate::isOrderable
+            //! Is the corresponding model orderable, swift::misc::Models::CListModelBaseNonTemplate::isOrderable
             virtual bool isOrderable() const = 0;
 
             //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::setSorting
-            virtual bool setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) = 0;
+            virtual bool setSorting(const swift::misc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) = 0;
 
             //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::sortByPropertyIndex
-            virtual void sortByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) = 0;
+            virtual void sortByPropertyIndex(const swift::misc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) = 0;
 
             //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::setNoSorting
             virtual void setNoSorting() = 0;
 
             //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::getSortProperty
-            virtual BlackMisc::CPropertyIndex getSortProperty() const = 0;
+            virtual swift::misc::CPropertyIndex getSortProperty() const = 0;
 
             //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::getSortColumn
             virtual int getSortColumn() const = 0;
@@ -303,10 +303,10 @@ namespace BlackGui
             QWidget *mainApplicationWindowWidget() const;
 
             //! Show file load dialog
-            BlackMisc::CStatusMessage showFileLoadDialog(const QString &directory = {});
+            swift::misc::CStatusMessage showFileLoadDialog(const QString &directory = {});
 
             //! Show file save dialog
-            BlackMisc::CStatusMessage showFileSaveDialog(bool selectedOnly, const QString &directory = {});
+            swift::misc::CStatusMessage showFileSaveDialog(bool selectedOnly, const QString &directory = {});
 
             //! Save file name (optional)
             void setSaveFileName(const QString &saveName) { m_saveFileName = saveName; }
@@ -329,7 +329,7 @@ namespace BlackGui
             void setHorizontalHeaderSectionResizeMode(QHeaderView::ResizeMode mode);
 
             //! Index of the directory we "remember"
-            void setSettingsDirectoryIndex(BlackMisc::CDirectories::ColumnIndex directoryIndex) { m_dirSettingsIndex = directoryIndex; }
+            void setSettingsDirectoryIndex(swift::misc::CDirectories::ColumnIndex directoryIndex) { m_dirSettingsIndex = directoryIndex; }
 
         signals:
             //! Ask for new data from currently loaded data
@@ -354,22 +354,22 @@ namespace BlackGui
             void modelChanged();
 
             //! Single object was changed in model
-            void objectChanged(const BlackMisc::CVariant &object, const BlackMisc::CPropertyIndex &changedIndex);
+            void objectChanged(const swift::misc::CVariant &object, const swift::misc::CPropertyIndex &changedIndex);
 
             //! Object has been clicked
-            void objectClicked(const BlackMisc::CVariant &object);
+            void objectClicked(const swift::misc::CVariant &object);
 
             //! Object has been double clicked
-            void objectDoubleClicked(const BlackMisc::CVariant &object);
+            void objectDoubleClicked(const swift::misc::CVariant &object);
 
             //! Object has been selected
-            void objectSelected(const BlackMisc::CVariant &object);
+            void objectSelected(const swift::misc::CVariant &object);
 
             //! Objects deleted from model
-            void objectsDeleted(const BlackMisc::CVariant &objectContainer);
+            void objectsDeleted(const swift::misc::CVariant &objectContainer);
 
-            //! JSON data load from disk completed, the BlackMisc::CStatusMessage represents the success
-            void jsonLoadCompleted(const BlackMisc::CStatusMessage &msg);
+            //! JSON data load from disk completed, the swift::misc::CStatusMessage represents the success
+            void jsonLoadCompleted(const swift::misc::CStatusMessage &msg);
 
         public slots:
             //! Resize to contents, strategy depends on container size
@@ -459,7 +459,7 @@ namespace BlackGui
             //! \param variant contains the container
             //! \param sort
             //! \param resize
-            virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize) = 0;
+            virtual int performUpdateContainer(const swift::misc::CVariant &variant, bool sort, bool resize) = 0;
 
             //! Skip resizing because of size?
             virtual bool reachedResizeThreshold(int containerSize = -1) const = 0;
@@ -507,7 +507,7 @@ namespace BlackGui
             void loadJsonAction();
 
             //! Load JSON file
-            virtual BlackMisc::CStatusMessage loadJsonFile(const QString &filePath) = 0;
+            virtual swift::misc::CStatusMessage loadJsonFile(const QString &filePath) = 0;
 
             //! Display the filter dialog
             void displayFilterDialog();
@@ -547,10 +547,10 @@ namespace BlackGui
             virtual void onRowSelected(const QModelIndex &index) = 0;
 
             //! Load JSON
-            virtual BlackMisc::CStatusMessage loadJson(const QString &directory = {}) = 0;
+            virtual swift::misc::CStatusMessage loadJson(const QString &directory = {}) = 0;
 
             //! Save JSON
-            virtual BlackMisc::CStatusMessage saveJson(bool selectedOnly = false, const QString &directory = {}) = 0;
+            virtual swift::misc::CStatusMessage saveJson(bool selectedOnly = false, const QString &directory = {}) = 0;
 
             //! Trigger reload from backend by signal requestUpdate();
             void triggerReload();
@@ -599,9 +599,9 @@ namespace BlackGui
             Components::CTextEditDialog *m_textEditDialog = nullptr; //!< text edit dialog
             QMap<MenuFlag, Menus::CMenuActions> m_menuFlagActions; //!< initialized actions for menu flag (enum)
             QString m_saveFileName; //!< save file name (JSON)
-            BlackMisc::CDirectories::ColumnIndex m_dirSettingsIndex = BlackMisc::CDirectories::IndexDirLastViewJsonOrDefault; //!< allows to set more specialized directories                             //!< remember last JSON directory, having this member allows to have specific dir
-            BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_dirSettings { this }; //!< directory for load/save
-            BlackMisc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings { this, &CViewBaseNonTemplate::settingsChanged }; //!< general GUI settings
+            swift::misc::CDirectories::ColumnIndex m_dirSettingsIndex = swift::misc::CDirectories::IndexDirLastViewJsonOrDefault; //!< allows to set more specialized directories                             //!< remember last JSON directory, having this member allows to have specific dir
+            swift::misc::CSetting<swift::misc::settings::TDirectorySettings> m_dirSettings { this }; //!< directory for load/save
+            swift::misc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings { this, &CViewBaseNonTemplate::settingsChanged }; //!< general GUI settings
 
         private:
             //! Remove selected rows if enabled
@@ -667,7 +667,7 @@ namespace BlackGui
             int updateContainer(const ContainerType &container, bool sort = true, bool resize = true);
 
             //! Update whole container in background
-            BlackMisc::CWorker *updateContainerAsync(const ContainerType &container, bool sort = true, bool resize = true);
+            swift::misc::CWorker *updateContainerAsync(const ContainerType &container, bool sort = true, bool resize = true);
 
             //! Based on size call sync / async update
             void updateContainerMaybeAsync(const ContainerType &container, bool sort = true, bool resize = true);
@@ -716,15 +716,15 @@ namespace BlackGui
             ObjectType firstSelectedOrDefaultObject() const;
 
             //! Update selected objects
-            int updateSelected(const BlackMisc::CVariant &variant, const BlackMisc::CPropertyIndex &index);
+            int updateSelected(const swift::misc::CVariant &variant, const swift::misc::CPropertyIndex &index);
 
             //! Update selected objects
-            int updateSelected(const BlackMisc::CPropertyIndexVariantMap &vm);
+            int updateSelected(const swift::misc::CPropertyIndexVariantMap &vm);
 
             //! Selected object (or default)
             ObjectType selectedObject() const;
 
-            //! \copydoc BlackMisc::CContainerBase::removeIf
+            //! \copydoc swift::misc::CContainerBase::removeIf
             template <class K0, class V0, class... KeysValues>
             int removeIf(K0 k0, V0 v0, KeysValues... keysValues)
             {
@@ -736,7 +736,7 @@ namespace BlackGui
                 return r;
             }
 
-            //! \copydoc BlackMisc::CSequence::replaceOrAdd
+            //! \copydoc swift::misc::CSequence::replaceOrAdd
             template <class K1, class V1>
             void replaceOrAdd(K1 key1, V1 value1, const ObjectType &replacement)
             {
@@ -789,16 +789,16 @@ namespace BlackGui
             virtual bool acceptDrop(const QMimeData *mimeData) const override;
 
             //!\copydoc BlackGui::Views::CViewBaseNonTemplate::setSorting
-            virtual bool setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
+            virtual bool setSorting(const swift::misc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
 
             //!\copydoc BlackGui::Views::CViewBaseNonTemplate::sortByPropertyIndex
-            virtual void sortByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
+            virtual void sortByPropertyIndex(const swift::misc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
 
             //!\copydoc BlackGui::Views::CViewBaseNonTemplate::setNoSorting
             virtual void setNoSorting() override { m_model->setNoSorting(); }
 
             //!\copydoc BlackGui::Views::CViewBaseNonTemplate::getSortProperty
-            virtual BlackMisc::CPropertyIndex getSortProperty() const override { return m_model->getSortProperty(); }
+            virtual swift::misc::CPropertyIndex getSortProperty() const override { return m_model->getSortProperty(); }
 
             //!\copydoc BlackGui::Views::CViewBaseNonTemplate::getSortColumn
             virtual int getSortColumn() const override { return m_model->getSortColumn(); }
@@ -879,7 +879,7 @@ namespace BlackGui
             virtual void performModeBasedResizeToContent() override;
 
             //!\copydoc BlackGui::Views::CViewBaseNonTemplate::performUpdateContainer
-            virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize) override;
+            virtual int performUpdateContainer(const swift::misc::CVariant &variant, bool sort, bool resize) override;
 
             //!\copydoc BlackGui::Views::CViewBaseNonTemplate::updateSortIndicator
             virtual void updateSortIndicator() override;
@@ -916,10 +916,10 @@ namespace BlackGui
             //! @}
 
             //! Modify JSON data loaded in BlackGui::Views::CViewBaseNonTemplate::loadJson
-            virtual BlackMisc::CStatusMessage modifyLoadedJsonData(ContainerType &data) const;
+            virtual swift::misc::CStatusMessage modifyLoadedJsonData(ContainerType &data) const;
 
             //! Verify JSON data loaded in BlackGui::Views::CViewBaseNonTemplate::loadJson
-            virtual BlackMisc::CStatusMessage validateLoadedJsonData(const ContainerType &data) const;
+            virtual swift::misc::CStatusMessage validateLoadedJsonData(const ContainerType &data) const;
 
             //! In BlackGui::Views::CViewBaseNonTemplate::loadJson the view has been updated because of loaded JSON data
             //! \remark I cannot use a signal with a template parameter, so this functions serves as callback
@@ -929,7 +929,7 @@ namespace BlackGui
             virtual void customMenu(Menus::CMenuActions &menuActions) override;
 
             //! \copydoc BlackGui::Views::CViewBaseNonTemplate::customMenu
-            virtual BlackMisc::CStatusMessage loadJsonFile(const QString &fileName) override;
+            virtual swift::misc::CStatusMessage loadJsonFile(const QString &fileName) override;
 
             //! Display the container as JSON popup
             virtual void displayContainerAsJsonPopup(bool selectedOnly);
@@ -947,10 +947,10 @@ namespace BlackGui
             virtual void onRowSelected(const QModelIndex &index) override;
 
             //!\copydoc BlackGui::Views::CViewBaseNonTemplate::loadJson
-            virtual BlackMisc::CStatusMessage loadJson(const QString &directory = {}) override;
+            virtual swift::misc::CStatusMessage loadJson(const QString &directory = {}) override;
 
             //!\copydoc BlackGui::Views::CViewBaseNonTemplate::saveJson
-            virtual BlackMisc::CStatusMessage saveJson(bool selectedOnly = false, const QString &directory = {}) override;
+            virtual swift::misc::CStatusMessage saveJson(bool selectedOnly = false, const QString &directory = {}) override;
             //! @}
         };
     } // namespace

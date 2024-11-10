@@ -6,8 +6,8 @@
 #include "config/buildconfig.h"
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 
 namespace BlackCore::Data
 {

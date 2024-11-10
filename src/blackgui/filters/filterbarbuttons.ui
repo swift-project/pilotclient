@@ -66,7 +66,7 @@
       <string>filter</string>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/diagona/icons/diagona/icons/application-search-result.png</normaloff>:/diagona/icons/diagona/icons/application-search-result.png</iconset>
      </property>
     </widget>
@@ -80,7 +80,7 @@
       <string>remove filter</string>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/diagona/icons/diagona/icons/cross-circle.png</normaloff>:/diagona/icons/diagona/icons/cross-circle.png</iconset>
      </property>
     </widget>
@@ -94,7 +94,7 @@
       <string>clear form</string>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/diagona/icons/diagona/icons/cross-white.png</normaloff>:/diagona/icons/diagona/icons/cross-white.png</iconset>
      </property>
      <property name="shortcut">
@@ -111,7 +111,7 @@
       <string>new</string>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
        <normaloff>:/diagona/icons/diagona/icons/cross-button.png</normaloff>:/diagona/icons/diagona/icons/cross-button.png</iconset>
      </property>
     </widget>
@@ -132,7 +132,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
+  <include location="../../misc/misc.qrc"/>
  </resources>
  <connections/>
 </ui>

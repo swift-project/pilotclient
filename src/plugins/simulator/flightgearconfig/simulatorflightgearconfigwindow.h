@@ -7,7 +7,7 @@
 #define BLACKSIMPLUGIN_SIMULATOR_FLIGHTGEAR_CONFIG_WINDOW_H
 
 #include "blackgui/pluginconfigwindow.h"
-#include "blackmisc/simulation/settings/fgswiftbussettings.h"
+#include "misc/simulation/settings/fgswiftbussettings.h"
 #include "simulatorflightgearconfig.h"
 #include <QObject>
 #include <QScopedPointer>
@@ -40,10 +40,10 @@ namespace BlackSimPlugin::Flightgear
         void onSettingsChanged();
 
         //! Get settings object with values from UI
-        BlackMisc::Simulation::Settings::CFGSwiftBusSettings getSettingsFromUI() const;
+        swift::misc::simulation::settings::CFGSwiftBusSettings getSettingsFromUI() const;
 
         QScopedPointer<Ui::CSimulatorFlightgearConfigWindow> ui;
-        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TFGSwiftBusServer> m_fgswiftbusServerSetting { this, &CSimulatorFlightgearConfigWindow::onSettingsChanged };
+        swift::misc::CSetting<swift::misc::simulation::settings::TFGSwiftBusServer> m_fgswiftbusServerSetting { this, &CSimulatorFlightgearConfigWindow::onSettingsChanged };
     };
 } // ns
 

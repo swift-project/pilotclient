@@ -8,7 +8,7 @@
 
 #include "blackcore/fsd/messagebase.h"
 #include "blackcore/fsd/enums.h"
-#include "blackmisc/aviation/aircraftlights.h"
+#include "misc/aviation/aircraftlights.h"
 
 namespace BlackCore::Fsd
 {
@@ -19,7 +19,7 @@ namespace BlackCore::Fsd
         //! Constructor
         EuroscopeSimData(const QString &sender, const QString &model, const QString &livery, quint64 timestamp,
                          double latitude, double longitude, double altitude, double heading, int bank, int pitch,
-                         int groundSpeed, bool onGround, double gearPercent, double thrustPercent, const BlackMisc::Aviation::CAircraftLights &lights);
+                         int groundSpeed, bool onGround, double gearPercent, double thrustPercent, const swift::misc::aviation::CAircraftLights &lights);
 
         //! Message converted to tokens
         QStringList toTokens() const;
@@ -45,7 +45,7 @@ namespace BlackCore::Fsd
         bool m_onGround = false;
         int m_gearPercent = 0;
         int m_thrustPercent = 0;
-        BlackMisc::Aviation::CAircraftLights m_lights;
+        swift::misc::aviation::CAircraftLights m_lights;
         //! @}
 
     private:

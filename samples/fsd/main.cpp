@@ -5,14 +5,14 @@
 //! \ingroup samplefsd
 
 #include "blackcore/fsd/fsdclient.h"
-#include "blackmisc/network/clientprovider.h"
-#include "blackmisc/simulation/ownaircraftproviderdummy.h"
-#include "blackmisc/simulation/remoteaircraftproviderdummy.h"
+#include "misc/network/clientprovider.h"
+#include "misc/simulation/ownaircraftproviderdummy.h"
+#include "misc/simulation/remoteaircraftproviderdummy.h"
 #include <QCoreApplication>
 #include <QThread>
 
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
 using namespace BlackCore::Fsd;
 
 //! main

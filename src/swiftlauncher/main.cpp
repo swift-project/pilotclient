@@ -4,8 +4,8 @@
 #include "swiftlauncher.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/db/databasereaderconfig.h"
-#include "blackmisc/directoryutils.h"
-#include "blackmisc/icons.h"
+#include "misc/directoryutils.h"
+#include "misc/icons.h"
 #include "blackcore/webdataservices.h"
 
 #include <QtGlobal>
@@ -14,7 +14,7 @@
 #include <QCommandLineParser>
 
 using namespace BlackGui;
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackCore;
 using namespace BlackCore::Db;
 

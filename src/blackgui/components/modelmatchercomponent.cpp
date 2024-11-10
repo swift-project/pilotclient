@@ -15,14 +15,14 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/simulation/data/modelcaches.h"
-#include "blackmisc/simulation/matchingutils.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/simulation/matchingutils.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/callsign.h"
+#include "misc/aviation/livery.h"
+#include "misc/network/user.h"
+#include "misc/statusmessagelist.h"
 #include "ui_modelmatchercomponent.h"
 
 #include <QCheckBox>
@@ -35,11 +35,11 @@
 #include <QTextEdit>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::Data;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::data;
+using namespace swift::misc::network;
 using namespace BlackGui::Models;
 using namespace BlackGui::Views;
 using namespace BlackCore;

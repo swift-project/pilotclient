@@ -7,9 +7,9 @@
 #define BLACKGUI_EDITORS_AIRCRAFTMODELFORM_H
 
 #include "blackgui/editors/form.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/simulation/distributor.h"
+#include "misc/aviation/livery.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/simulation/distributor.h"
 
 namespace Ui
 {
@@ -41,34 +41,34 @@ namespace BlackGui::Editors
         virtual void setSelectOnly() override;
 
         //! \copydoc BlackGui::Editors::CForm::validate
-        virtual BlackMisc::CStatusMessageList validate(bool withNestedForms = true) const override;
+        virtual swift::misc::CStatusMessageList validate(bool withNestedForms = true) const override;
 
         //! \copydoc BlackGui::Editors::CForm::validate
-        virtual BlackMisc::CStatusMessageList validateLivery(bool withNestedForms = true) const;
+        virtual swift::misc::CStatusMessageList validateLivery(bool withNestedForms = true) const;
 
         //! \copydoc BlackGui::Editors::CForm::validate
-        virtual BlackMisc::CStatusMessageList validateAircraftIcao(bool withNestedForms = true) const;
+        virtual swift::misc::CStatusMessageList validateAircraftIcao(bool withNestedForms = true) const;
 
         //! \copydoc BlackGui::Editors::CForm::validate
-        virtual BlackMisc::CStatusMessageList validateDistributor(bool withNestedForms = true) const;
+        virtual swift::misc::CStatusMessageList validateDistributor(bool withNestedForms = true) const;
 
         //! Livery
-        BlackMisc::Aviation::CLivery getLivery() const;
+        swift::misc::aviation::CLivery getLivery() const;
 
         //! Aircraft ICAO
-        BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcao() const;
+        swift::misc::aviation::CAircraftIcaoCode getAircraftIcao() const;
 
         //! Distributor
-        BlackMisc::Simulation::CDistributor getDistributor() const;
+        swift::misc::simulation::CDistributor getDistributor() const;
 
         //! Livery
-        bool setLivery(const BlackMisc::Aviation::CLivery &livery);
+        bool setLivery(const swift::misc::aviation::CLivery &livery);
 
         //! Aircraft
-        bool setAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+        bool setAircraftIcao(const swift::misc::aviation::CAircraftIcaoCode &icao);
 
         //! Distributor
-        bool setDistributor(const BlackMisc::Simulation::CDistributor &distributor);
+        bool setDistributor(const swift::misc::simulation::CDistributor &distributor);
 
         //! Clear entire form
         void clear();

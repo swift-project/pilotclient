@@ -5,20 +5,20 @@
 #include "ui_installfsxterrainprobecomponent.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/guiutility.h"
-#include "blackmisc/simulation/fscommon/fscommonutil.h"
-#include "blackmisc/simulation/simulatorinfo.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
-#include "blackmisc/fileutils.h"
+#include "misc/simulation/fscommon/fscommonutil.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/swiftdirectories.h"
+#include "misc/directoryutils.h"
+#include "misc/fileutils.h"
 
 #include <QPushButton>
 #include <QFileDialog>
 #include <QPointer>
 #include <QTimer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::FsCommon;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::fscommon;
 
 namespace BlackGui::Components
 {

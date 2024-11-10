@@ -8,8 +8,8 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/led.h"
-#include "blackmisc/network/url.h"
-#include "blackmisc/network/entityflags.h"
+#include "misc/network/url.h"
+#include "misc/network/entityflags.h"
 
 #include <QFrame>
 #include <QList>
@@ -49,13 +49,13 @@ namespace BlackGui
             void init();
 
             //! Set LED states
-            void setLedReadStates(const QList<CLedWidget *> &leds, BlackMisc::Network::CEntityFlags::ReadState readState);
+            void setLedReadStates(const QList<CLedWidget *> &leds, swift::misc::network::CEntityFlags::ReadState readState);
 
             //! Set the LED read state
-            void setLedReadState(CLedWidget *led, BlackMisc::Network::CEntityFlags::ReadState readState);
+            void setLedReadState(CLedWidget *led, swift::misc::network::CEntityFlags::ReadState readState);
 
             //! Maps entity to its id
-            QList<CLedWidget *> entitiesToLeds(BlackMisc::Network::CEntityFlags::Entity entities) const;
+            QList<CLedWidget *> entitiesToLeds(swift::misc::network::CEntityFlags::Entity entities) const;
 
             //! All data read
             bool hasAllData() const;
@@ -66,7 +66,7 @@ namespace BlackGui
                          BlackGui::CLedWidget *ledDistributors, BlackGui::CLedWidget *ledLiveries, BlackGui::CLedWidget *ledModels);
 
             //! Data have been read
-            void dataRead(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+            void dataRead(swift::misc::network::CEntityFlags::Entity entities, swift::misc::network::CEntityFlags::ReadState readState, int count);
 
             //! Check data status
             void checkData();

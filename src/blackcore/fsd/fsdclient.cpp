@@ -37,13 +37,13 @@
 #include "blackcore/fsd/rehost.h"
 #include "blackcore/fsd/mute.h"
 
-#include "blackmisc/aviation/flightplan.h"
-#include "blackmisc/network/rawfsdmessage.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/threadutils.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/range.h"
-#include "blackmisc/verify.h"
+#include "misc/aviation/flightplan.h"
+#include "misc/network/rawfsdmessage.h"
+#include "misc/swiftdirectories.h"
+#include "misc/threadutils.h"
+#include "misc/logmessage.h"
+#include "misc/range.h"
+#include "misc/verify.h"
 
 #include "config/buildconfig.h"
 
@@ -54,13 +54,13 @@
 
 using namespace swift::config;
 using namespace BlackCore::Vatsim;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Json;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::geo;
+using namespace swift::misc::json;
+using namespace swift::misc::network;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::simulation;
 
 namespace BlackCore::Fsd
 {
@@ -203,7 +203,7 @@ namespace BlackCore::Fsd
         this->setSimType(simInfo.getSimulator());
     }
 
-    void CFSDClient::setSimType(BlackMisc::Simulation::CSimulatorInfo::Simulator simulator)
+    void CFSDClient::setSimType(swift::misc::simulation::CSimulatorInfo::Simulator simulator)
     {
         QWriteLocker l(&m_lockUserClientBuffered);
         switch (simulator)
@@ -1020,7 +1020,7 @@ namespace BlackCore::Fsd
     }
 #endif
 
-    void CFSDClient::getVatsimAuthToken(const QString &cid, const QString &password, const BlackMisc::CSlot<void(const QString &)> &callback)
+    void CFSDClient::getVatsimAuthToken(const QString &cid, const QString &password, const swift::misc::CSlot<void(const QString &)> &callback)
     {
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need app");
         QNetworkRequest nwRequest(sApp->getGlobalSetup().getVatsimAuthUrl());
@@ -2111,12 +2111,12 @@ namespace BlackCore::Fsd
         }
     }
 
-    BlackMisc::Aviation::CCallsignSet CFSDClient::getInterimPositionReceivers() const
+    swift::misc::aviation::CCallsignSet CFSDClient::getInterimPositionReceivers() const
     {
         return m_interimPositionReceivers;
     }
 
-    void CFSDClient::setInterimPositionReceivers(const BlackMisc::Aviation::CCallsignSet &interimPositionReceivers)
+    void CFSDClient::setInterimPositionReceivers(const swift::misc::aviation::CCallsignSet &interimPositionReceivers)
     {
         m_interimPositionReceivers = interimPositionReceivers;
     }

@@ -5,8 +5,8 @@
 
 #    include "fsuipc.h"
 
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc::simulation;
+using namespace swift::misc::aviation;
 
 namespace BlackSimPlugin
 {

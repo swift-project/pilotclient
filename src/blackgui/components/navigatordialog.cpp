@@ -6,8 +6,8 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/stylesheetutility.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/icons.h"
+#include "misc/logmessage.h"
+#include "misc/icons.h"
 #include "ui_navigatordialog.h"
 
 #include <QAction>
@@ -32,7 +32,7 @@
 
 using namespace BlackGui;
 using namespace BlackGui::Settings;
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Components
 {

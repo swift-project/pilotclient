@@ -8,8 +8,8 @@
 
 #include "input/swiftinputexport.h"
 #include "input/joystick.h"
-#include "blackmisc/input/joystickbutton.h"
-#include "blackmisc/collection.h"
+#include "misc/input/joystickbutton.h"
+#include "misc/collection.h"
 #include <QVector>
 #include <memory>
 
@@ -28,7 +28,7 @@ namespace swift::input
     struct CJoystickDeviceInput
     {
         int m_offset; //!< Input offset
-        BlackMisc::Input::CJoystickButton m_button; //!< Joystick button
+        swift::misc::input::CJoystickButton m_button; //!< Joystick button
     };
 
     //! Joystick device
@@ -44,14 +44,14 @@ namespace swift::input
         bool init(HWND helperWindow);
 
         //! Get all available device buttons
-        BlackMisc::Input::CJoystickButtonList getDeviceButtons() const;
+        swift::misc::input::CJoystickButtonList getDeviceButtons() const;
 
         //! Get device GUID
         GUID getDeviceGuid() const { return m_guidDevice; }
 
     signals:
         //! Joystick button changed
-        void buttonChanged(const BlackMisc::Input::CJoystickButton &joystickButton, bool isPressed);
+        void buttonChanged(const swift::misc::input::CJoystickButton &joystickButton, bool isPressed);
 
         //! Connection to joystick lost. Probably unplugged.
         void connectionLost(const GUID &guid);
@@ -114,7 +114,7 @@ namespace swift::input
         virtual ~CJoystickWindows() override;
 
         //! \copydoc swift::input::IJoystick::getAllAvailableJoystickButtons()
-        virtual BlackMisc::Input::CJoystickButtonList getAllAvailableJoystickButtons() const override;
+        virtual swift::misc::input::CJoystickButtonList getAllAvailableJoystickButtons() const override;
 
     private:
         friend class IJoystick;
@@ -147,7 +147,7 @@ namespace swift::input
         //! Is joystick instance already added?
         bool isJoystickAlreadyAdded(const DIDEVICEINSTANCE *pdidInstance) const;
 
-        void joystickButtonChanged(const BlackMisc::Input::CJoystickButton &joystickButton, bool isPressed);
+        void joystickButtonChanged(const swift::misc::input::CJoystickButton &joystickButton, bool isPressed);
 
         static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -164,7 +164,7 @@ namespace swift::input
         DirectInput8Ptr m_directInput; //!< DirectInput object
         QVector<CJoystickDevice *> m_joystickDevices; //!< Joystick devices
 
-        BlackMisc::Input::CHotkeyCombination m_buttonCombination;
+        swift::misc::input::CHotkeyCombination m_buttonCombination;
     };
 } // ns
 

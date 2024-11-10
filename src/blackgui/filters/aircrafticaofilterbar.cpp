@@ -8,15 +8,15 @@
 #include "blackgui/uppercasevalidator.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/aircrafticaocodelist.h"
 #include "ui_aircrafticaofilterbar.h"
 
 #include <QLineEdit>
 #include <QString>
 #include <QCompleter>
 
-using namespace BlackMisc::Aviation;
+using namespace swift::misc::aviation;
 using namespace BlackGui;
 using namespace BlackGui::Models;
 using namespace BlackCore;

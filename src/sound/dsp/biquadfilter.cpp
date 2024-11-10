@@ -2,13 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "biquadfilter.h"
-#include "blackmisc/verify.h"
+#include "misc/verify.h"
 #include "config/buildconfig.h"
 
 #include <QtMath>
 #include <algorithm>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace swift::config;
 
 namespace swift::sound::dsp

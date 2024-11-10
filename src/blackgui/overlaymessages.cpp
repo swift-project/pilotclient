@@ -9,9 +9,9 @@
 #include "blackgui/overlaymessages.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/network/textmessage.h"
+#include "misc/aviation/callsign.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/network/textmessage.h"
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/application.h"
 #include "ui_overlaymessages.h"
@@ -31,10 +31,10 @@
 #include <QtGlobal>
 #include <QPointer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackGui::Models;

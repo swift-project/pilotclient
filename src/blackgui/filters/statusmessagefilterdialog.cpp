@@ -3,12 +3,12 @@
 
 #include "blackgui/filters/statusmessagefilterdialog.h"
 #include "blackgui/filters/statusmessagefilterbar.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/statusmessagelist.h"
 #include "ui_statusmessagefilterdialog.h"
 
 using namespace BlackGui::Models;
 using namespace BlackGui::Filters;
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Filters
 {

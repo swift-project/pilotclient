@@ -5,9 +5,9 @@
 #include "blackgui/components/datamaininfoareacomponent.h"
 #include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
+#include "misc/icons.h"
+#include "misc/swiftdirectories.h"
+#include "misc/directoryutils.h"
 #include "swiftdata.h"
 #include "ui_swiftdata.h"
 
@@ -22,7 +22,7 @@
 using namespace BlackGui;
 using namespace BlackCore;
 using namespace BlackGui::Components;
-using namespace BlackMisc;
+using namespace swift::misc;
 
 void CSwiftData::onMenuClicked()
 {

@@ -3,8 +3,8 @@
 
 #include "blackcore/corefacadeconfig.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/crashhandler.h"
+#include "misc/icons.h"
+#include "misc/crashhandler.h"
 #include "swiftcore.h"
 
 #include <cstdlib>
@@ -13,7 +13,7 @@
 #include <QSystemTrayIcon>
 #include <Qt>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackCore;
 using namespace BlackGui;
 

@@ -4,10 +4,10 @@
 #include "selcalplayer.h"
 #include <QTimer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Audio;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::audio;
+using namespace swift::misc::aviation;
+using namespace swift::misc::physical_quantities;
 
 namespace swift::sound
 {

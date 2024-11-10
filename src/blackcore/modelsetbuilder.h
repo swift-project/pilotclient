@@ -7,9 +7,9 @@
 #define BLACKCORE_CMODELSETBUILDER_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/simulation/simulatorinfo.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/distributorlist.h"
+#include "misc/simulation/simulatorinfo.h"
 
 #include <QFlags>
 #include <QMetaType>
@@ -42,11 +42,11 @@ namespace BlackCore
         CModelSetBuilder(QObject *parent = nullptr);
 
         //! Build a model set
-        BlackMisc::Simulation::CAircraftModelList buildModelSet(
-            const BlackMisc::Simulation::CSimulatorInfo &simulator,
-            const BlackMisc::Simulation::CAircraftModelList &models,
-            const BlackMisc::Simulation::CAircraftModelList &currentSet, Builder options,
-            const BlackMisc::Simulation::CDistributorList &distributors = {}) const;
+        swift::misc::simulation::CAircraftModelList buildModelSet(
+            const swift::misc::simulation::CSimulatorInfo &simulator,
+            const swift::misc::simulation::CAircraftModelList &models,
+            const swift::misc::simulation::CAircraftModelList &currentSet, Builder options,
+            const swift::misc::simulation::CDistributorList &distributors = {}) const;
     };
 } // ns
 

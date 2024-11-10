@@ -16,7 +16,7 @@
 
 class QWidget;
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CStatusMessageList;
 }
@@ -30,7 +30,7 @@ namespace BlackGui::Filters
     //! Form for a status message filter
     class BLACKGUI_EXPORT CStatusMessageFilterDialog :
         public CFilterDialog,
-        public BlackGui::Models::IModelFilterProvider<BlackMisc::CStatusMessageList>
+        public BlackGui::Models::IModelFilterProvider<swift::misc::CStatusMessageList>
     {
         Q_OBJECT
 
@@ -42,7 +42,7 @@ namespace BlackGui::Filters
         virtual ~CStatusMessageFilterDialog() override;
 
         //! \copydoc Models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::CStatusMessageList>> createModelFilter() const override;
+        virtual std::unique_ptr<BlackGui::Models::IModelFilter<swift::misc::CStatusMessageList>> createModelFilter() const override;
 
     private:
         QScopedPointer<Ui::CStatusMessageFilterDialog> ui;

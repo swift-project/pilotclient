@@ -8,10 +8,10 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/led.h"
-#include "blackmisc/aviation/transponder.h"
-#include "blackmisc/identifiable.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "misc/aviation/transponder.h"
+#include "misc/identifiable.h"
+#include "misc/identifier.h"
+#include "misc/simulation/simulatedaircraft.h"
 
 #include <QFrame>
 #include <QObject>
@@ -22,7 +22,7 @@ namespace BlackGui::Components
     //! LEDs representing transponder mode state
     class BLACKGUI_EXPORT CCockpitTransponderModeLedsComponent :
         public QFrame,
-        public BlackMisc::CIdentifiable
+        public swift::misc::CIdentifiable
     {
         Q_OBJECT
 
@@ -31,13 +31,13 @@ namespace BlackGui::Components
         explicit CCockpitTransponderModeLedsComponent(QWidget *parent = nullptr);
 
         //! Set the mode
-        void setMode(BlackMisc::Aviation::CTransponder::TransponderMode mode, bool force = false);
+        void setMode(swift::misc::aviation::CTransponder::TransponderMode mode, bool force = false);
 
     private:
         static constexpr int LedWidth = 14; //!< LED width
 
         //! \copydoc IContextOwnAircraft::changedAircraftCockpit
-        void onAircraftCockpitChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+        void onAircraftCockpitChanged(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator);
 
         //! LED clicked
         void onLedClicked();
@@ -46,12 +46,12 @@ namespace BlackGui::Components
         void init(bool horizontal);
 
         //! Own Transponder
-        BlackMisc::Aviation::CTransponder getOwnTransponder() const;
+        swift::misc::aviation::CTransponder getOwnTransponder() const;
 
         //! Own Aircraft
-        BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const;
+        swift::misc::simulation::CSimulatedAircraft getOwnAircraft() const;
 
-        BlackMisc::Aviation::CTransponder::TransponderMode m_mode = BlackMisc::Aviation::CTransponder::StateStandby;
+        swift::misc::aviation::CTransponder::TransponderMode m_mode = swift::misc::aviation::CTransponder::StateStandby;
         QScopedPointer<BlackGui::CLedWidget> m_ledStandby;
         QScopedPointer<BlackGui::CLedWidget> m_ledModes;
         QScopedPointer<BlackGui::CLedWidget> m_ledIdent;

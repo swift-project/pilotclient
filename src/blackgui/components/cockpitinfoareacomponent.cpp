@@ -3,13 +3,13 @@
 
 #include "blackgui/components/cockpitinfoareacomponent.h"
 #include "blackgui/infoarea.h"
-#include "blackmisc/icons.h"
+#include "misc/icons.h"
 #include "ui_cockpitinfoareacomponent.h"
 
 #include <QTabWidget>
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Components
 {

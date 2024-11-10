@@ -3,10 +3,10 @@
 
 #include "blackgui/components/colorselector.h"
 #include "blackgui/guiutility.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/rgbcolor.h"
-#include "blackmisc/variant.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/icons.h"
+#include "misc/rgbcolor.h"
+#include "misc/variant.h"
 #include "ui_colorselector.h"
 
 #include <QColor>
@@ -28,7 +28,7 @@
 #include <Qt>
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Components
 {
@@ -52,7 +52,7 @@ namespace BlackGui::Components
 
     CColorSelector::~CColorSelector() {}
 
-    void CColorSelector::setColor(const BlackMisc::CRgbColor &color)
+    void CColorSelector::setColor(const swift::misc::CRgbColor &color)
     {
         if (color == m_lastColor) { return; }
         if (!color.isValid())
@@ -74,7 +74,7 @@ namespace BlackGui::Components
         this->setColor(CRgbColor(color));
     }
 
-    BlackMisc::CRgbColor CColorSelector::getColor() const
+    swift::misc::CRgbColor CColorSelector::getColor() const
     {
         CRgbColor q(ui->le_Color->text());
         return q;

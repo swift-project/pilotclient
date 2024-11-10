@@ -4,14 +4,14 @@
 #include "blackgui/models/aircraftpartslistmodel.h"
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/columns.h"
-#include "blackmisc/aviation/aircraftpartslist.h"
-#include "blackmisc/propertyindex.h"
+#include "misc/aviation/aircraftpartslist.h"
+#include "misc/propertyindex.h"
 
 #include <Qt>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 
 namespace BlackGui::Models
 {

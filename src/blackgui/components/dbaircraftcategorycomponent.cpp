@@ -9,8 +9,8 @@
 #include <QStringBuilder>
 
 using namespace BlackCore;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::aviation;
 using namespace BlackGui::Views;
 
 namespace BlackGui::Components

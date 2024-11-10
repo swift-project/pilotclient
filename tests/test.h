@@ -6,7 +6,7 @@
 
 //! \cond PRIVATE_TESTS
 //! \file
-//! \ingroup testblackmisc
+//! \ingroup testmisc
 
 #include <QTest>
 #include <QStringList>

@@ -4,15 +4,15 @@
 #include "blackcore/webdataservices.h"
 #include "blackgui/components/infobarwebreadersstatuscomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/verify.h"
+#include "misc/verify.h"
 #include "ui_infobarwebreadersstatuscomponent.h"
 
 #include <QtGlobal>
 
 using namespace BlackGui;
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackCore;
-using namespace BlackMisc::Network;
+using namespace swift::misc::network;
 
 namespace BlackGui::Components
 {

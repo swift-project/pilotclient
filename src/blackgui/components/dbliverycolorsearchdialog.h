@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_DBLIVERYCOLORSEARCHDIALOG_H
 #define BLACKGUI_COMPONENTS_DBLIVERYCOLORSEARCHDIALOG_H
 
-#include "blackmisc/aviation/livery.h"
+#include "misc/aviation/livery.h"
 #include <QDialog>
 #include <QScopedPointer>
 
@@ -31,13 +31,13 @@ namespace BlackGui::Components
         virtual ~CDbLiveryColorSearchDialog();
 
         //! Found livery if any, otherwise default
-        const BlackMisc::Aviation::CLivery &getLivery() const;
+        const swift::misc::aviation::CLivery &getLivery() const;
 
     private:
         //! Dialog has been accepted
         void onAccepted();
 
-        BlackMisc::Aviation::CLivery m_foundLivery; //!< last livery found
+        swift::misc::aviation::CLivery m_foundLivery; //!< last livery found
 
     private:
         QScopedPointer<Ui::CDbLiveryColorSearchDialog> ui;

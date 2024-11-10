@@ -4,8 +4,8 @@
 #include "relativeaircraftposition.h"
 #include "ui_relativeaircraftposition.h"
 
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc::geo;
+using namespace swift::misc::physical_quantities;
 
 namespace BlackGui::Editors
 {

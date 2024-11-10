@@ -7,7 +7,7 @@
 #define BLACKGUI_SELCALCODESELECTOR_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/aviation/selcal.h"
+#include "misc/aviation/selcal.h"
 
 #include <QFrame>
 #include <QObject>
@@ -38,7 +38,7 @@ namespace BlackGui::Components
         QString getSelcalCode() const;
 
         //! SELCAL
-        BlackMisc::Aviation::CSelcal getSelcal() const;
+        swift::misc::aviation::CSelcal getSelcal() const;
 
         //! Reset the SELCAL code
         void resetSelcalCodes(bool allowEmptyValue = false);
@@ -47,7 +47,7 @@ namespace BlackGui::Components
         void setSelcalCode(const QString &selcal);
 
         //! Set the SELCAL code
-        void setSelcal(const BlackMisc::Aviation::CSelcal &selcal);
+        void setSelcal(const swift::misc::aviation::CSelcal &selcal);
 
         //! Valid code?
         bool hasValidCode() const;

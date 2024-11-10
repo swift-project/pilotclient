@@ -7,16 +7,16 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
 #include "blackgui/guiutility.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/network/user.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/network/user.h"
 #include "config/buildconfig.h"
 #include <QCompleter>
 #include <QStyledItemDelegate>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
 using namespace BlackGui::Components;
 
 namespace BlackGui::Editors

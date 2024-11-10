@@ -8,14 +8,14 @@
 #include "blackgui/uppercasevalidator.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackmisc/propertyindexlist.h"
-#include "blackmisc/htmlutils.h"
+#include "misc/propertyindexlist.h"
+#include "misc/htmlutils.h"
 
 #include <QCompleter>
 #include <QStringListModel>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 

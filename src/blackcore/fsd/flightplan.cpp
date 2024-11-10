@@ -4,7 +4,7 @@
 #include "blackcore/fsd/flightplan.h"
 #include "blackcore/fsd/serializer.h"
 
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
 namespace BlackCore::Fsd
 {
@@ -61,7 +61,7 @@ namespace BlackCore::Fsd
     {
         if (tokens.size() < 17)
         {
-            BlackMisc::CLogMessage(static_cast<FlightPlan *>(nullptr)).debug(u"Wrong number of arguments.");
+            swift::misc::CLogMessage(static_cast<FlightPlan *>(nullptr)).debug(u"Wrong number of arguments.");
             return {};
         };
         return FlightPlan(tokens[0], tokens[1], fromQString<FlightType>(tokens[2]), tokens[3], tokens[4].toInt(), tokens[5],

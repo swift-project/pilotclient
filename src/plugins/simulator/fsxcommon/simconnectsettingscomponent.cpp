@@ -6,9 +6,9 @@
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackmisc/simulation/fsx/simconnectutilities.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/logmessage.h"
+#include "misc/simulation/fsx/simconnectutilities.h"
+#include "misc/network/networkutils.h"
+#include "misc/logmessage.h"
 #include "config/buildconfig.h"
 #include <QFileInfo>
 #include <QFileDialog>
@@ -18,10 +18,10 @@
 #include <QDir>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::Fsx;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::Fsx;
+using namespace swift::misc::network;
 using namespace BlackGui;
 
 namespace BlackSimPlugin::FsxCommon
@@ -157,7 +157,7 @@ namespace BlackSimPlugin::FsxCommon
 
         if (sGui->getIContextSimulator())
         {
-            const BlackMisc::Simulation::CSimulatorInternals internals(sGui->getIContextSimulator()->getSimulatorInternals());
+            const swift::misc::simulation::CSimulatorInternals internals(sGui->getIContextSimulator()->getSimulatorInternals());
             fileName = internals.getStringValue("fsx/SimConnectCfgFilename");
         }
 

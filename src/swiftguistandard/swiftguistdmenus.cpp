@@ -8,9 +8,9 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/foreignwindows.h"
 #include "blackgui/copyxswiftbusdialog.h"
-#include "blackmisc/aviation/altitude.h"
-#include "blackmisc/pq/units.h"
-#include "blackmisc/logmessage.h"
+#include "misc/aviation/altitude.h"
+#include "misc/pq/units.h"
+#include "misc/logmessage.h"
 #include "config/buildconfig.h"
 #include "swiftguistd.h"
 #include "ui_swiftguistd.h"
@@ -28,11 +28,11 @@ using namespace swift::config;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 using namespace BlackCore;
-using namespace BlackMisc;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
 
 void SwiftGuiStd::onMenuClicked()
 {

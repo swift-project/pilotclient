@@ -3,10 +3,10 @@
 
 #include "blackcore/pluginmanager.h"
 #include "blackcore/application.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/swiftdirectories.h"
+#include "misc/directoryutils.h"
+#include "misc/logmessage.h"
+#include "misc/statusmessage.h"
 
 #include <QDir>
 #include <QDirIterator>
@@ -17,7 +17,7 @@
 #include <QStringBuilder>
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackCore
 {

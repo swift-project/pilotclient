@@ -5,12 +5,12 @@
 #include "ui_settingsmatchingcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackmisc/simulation/aircraftmatchersetup.h"
-#include "blackmisc/logmessage.h"
+#include "misc/simulation/aircraftmatchersetup.h"
+#include "misc/logmessage.h"
 #include <QPointer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
 using namespace BlackCore::Context;
 
 namespace BlackGui::Components

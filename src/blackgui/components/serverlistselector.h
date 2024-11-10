@@ -7,9 +7,9 @@
 #define BLACKGUI_COMPONENTS_SERVERLISTSELECTOR_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/network/data/lastserver.h"
-#include "blackmisc/network/serverlist.h"
-#include "blackmisc/datacache.h"
+#include "misc/network/data/lastserver.h"
+#include "misc/network/serverlist.h"
+#include "misc/datacache.h"
 
 #include <QComboBox>
 #include <QObject>
@@ -27,29 +27,29 @@ namespace BlackGui::Components
         explicit CServerListSelector(QWidget *parent = nullptr);
 
         //! Set the servers
-        void setServers(const BlackMisc::Network::CServerList &servers);
+        void setServers(const swift::misc::network::CServerList &servers);
 
         //! Get the current server
-        BlackMisc::Network::CServer currentServer() const;
+        swift::misc::network::CServer currentServer() const;
 
         //! Preselect
         bool preSelect(const QString &name);
 
     signals:
         //! Server has been changed
-        void serverChanged(const BlackMisc::Network::CServer &server);
+        void serverChanged(const swift::misc::network::CServer &server);
 
     private:
         //! Build the item string descriptions
-        void setServerItems(const BlackMisc::Network::CServerList &servers);
+        void setServerItems(const swift::misc::network::CServerList &servers);
 
         //! Server index has been changed
         void onServerTextChanged(const QString &text);
 
-        BlackMisc::Network::CServerList m_servers; //!< corresponding servers
+        swift::misc::network::CServerList m_servers; //!< corresponding servers
         QStringList m_items; //!< items strings
         QString m_pendingPreselect; //!< pending preselect value
-        BlackMisc::CData<BlackMisc::Network::Data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
+        swift::misc::CData<swift::misc::network::data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
     };
 } // ns
 

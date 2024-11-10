@@ -10,15 +10,15 @@
 #include "blackcore/db/airportdatareader.h"
 #include "blackcore/db/icaodatareader.h"
 #include "blackcore/db/modeldatareader.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/aircrafticaocodelist.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/aircrafticaocodelist.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/airlineicaocodelist.h"
+#include "misc/aviation/livery.h"
+#include "misc/network/entityflags.h"
+#include "misc/network/networkutils.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/aircraftmodellist.h"
 #include "test.h"
 
 #include <QDateTime>
@@ -27,11 +27,11 @@
 #include <QString>
 #include <QtDebug>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Db;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::db;
+using namespace swift::misc::simulation;
+using namespace swift::misc::network;
 using namespace BlackCore;
 using namespace BlackCore::Db;
 
@@ -62,7 +62,7 @@ namespace BlackCoreTest
         BlackCore::Db::CModelDataReader *m_modelReader = nullptr;
 
         //! Test if server is available
-        static bool connectServer(const BlackMisc::Network::CUrl &url);
+        static bool connectServer(const swift::misc::network::CUrl &url);
     };
 
     void CTestReaders::initTestCase()
@@ -159,8 +159,8 @@ namespace BlackCoreTest
 
     void CTestReaders::readAirportData()
     {
-        using namespace BlackMisc::Geo;
-        using namespace BlackMisc::PhysicalQuantities;
+        using namespace swift::misc::geo;
+        using namespace swift::misc::physical_quantities;
 
         const CUrl url(sApp->getGlobalSetup().getDbAirportReaderUrl());
         qDebug() << "Reader URL" << url.toQString();

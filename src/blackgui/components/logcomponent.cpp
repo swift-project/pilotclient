@@ -8,9 +8,9 @@
 #include "blackgui/views/viewbase.h"
 #include "blackgui/guiutility.h"
 #include "blackcore/application.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/logpattern.h"
-#include "blackmisc/sharedstate/datalinkdbus.h"
+#include "misc/icons.h"
+#include "misc/logpattern.h"
+#include "misc/sharedstate/datalinkdbus.h"
 #include "ui_logcomponent.h"
 
 #include <QAction>
@@ -19,7 +19,7 @@
 #include <Qt>
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackCore;
 using namespace BlackGui;
 using namespace BlackGui::Views;

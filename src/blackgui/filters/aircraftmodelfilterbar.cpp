@@ -7,9 +7,9 @@
 #include "blackgui/filters/filterbarbuttons.h"
 #include "blackgui/models/aircraftmodelfilter.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/db/datastore.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/db/datastore.h"
 #include "ui_aircraftmodelfilterbar.h"
 
 #include <QCheckBox>
@@ -18,8 +18,8 @@
 #include <QPointer>
 #include <QTimer>
 
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Db;
+using namespace swift::misc::simulation;
+using namespace swift::misc::db;
 using namespace BlackGui;
 using namespace BlackGui::Models;
 using namespace BlackGui::Components;
@@ -78,14 +78,14 @@ namespace BlackGui::Filters
             mf = CAircraftModel::Exclude;
         }
 
-        DbKeyStateFilter dbf = BlackMisc::Db::All;
+        DbKeyStateFilter dbf = swift::misc::db::All;
         if (ui->cbt_Db->checkState() == Qt::Checked)
         {
-            dbf = BlackMisc::Db::Valid;
+            dbf = swift::misc::db::Valid;
         }
         else if (ui->cbt_Db->checkState() == Qt::Unchecked)
         {
-            dbf = BlackMisc::Db::Invalid;
+            dbf = swift::misc::db::Invalid;
         }
 
         return std::make_unique<CAircraftModelFilter>(

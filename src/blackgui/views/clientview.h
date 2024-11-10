@@ -9,9 +9,9 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/clientlistmodel.h"
 #include "blackgui/views/viewbase.h"
-#include "blackmisc/network/clientlist.h"
+#include "misc/network/clientlist.h"
 
-namespace BlackMisc::Network
+namespace swift::misc::network
 {
     class CClient;
 }

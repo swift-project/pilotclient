@@ -3,8 +3,8 @@
 
 #include "blackgui/guiapplication.h"
 #include "blackgui/textmessagetextedit.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/network/textmessage.h"
+#include "misc/aviation/callsign.h"
+#include "misc/network/textmessage.h"
 
 #include <QAction>
 #include <QMenu>
@@ -15,8 +15,8 @@
 #include <QtGlobal>
 #include <QStringBuilder>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 
 namespace BlackGui
 {

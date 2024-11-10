@@ -12,16 +12,16 @@
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
 #include "blackcore/data/authenticateduser.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/distributor.h"
-#include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
-#include "blackmisc/simulation/simulatorinfo.h"
-#include "blackmisc/datacache.h"
-#include "blackmisc/digestsignal.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/network/entityflags.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/distributor.h"
+#include "misc/simulation/fscommon/vpilotrulesreader.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/datacache.h"
+#include "misc/digestsignal.h"
+#include "misc/statusmessage.h"
+#include "misc/statusmessagelist.h"
 
 #include <QList>
 #include <QObject>
@@ -33,7 +33,7 @@ class QAction;
 class QModelIndex;
 class QPoint;
 
-namespace BlackMisc::Aviation
+namespace swift::misc::aviation
 {
     class CAircraftIcaoCode;
     class CLivery;
@@ -99,7 +99,7 @@ namespace BlackGui
             bool hasSelectedModelsToStash() const;
 
             //! Models to be stashed from currently activated tab (table view)
-            BlackMisc::Simulation::CAircraftModelList getSelectedModelsToStash() const;
+            swift::misc::simulation::CAircraftModelList getSelectedModelsToStash() const;
 
             //! Current tab index
             TabIndex currentTabIndex() const;
@@ -121,14 +121,14 @@ namespace BlackGui
 
             //! Unvalidated consolidated aircraft model from the editor subparts (icao, distributor)
             //! \note not guaranteed to be valid, just a snapshot of its current editor state
-            BlackMisc::Simulation::CAircraftModel getEditorAircraftModel() const;
+            swift::misc::simulation::CAircraftModel getEditorAircraftModel() const;
 
             // ---------------- stash -----------------
 
             //! \name Models from BlackGui::Components::CDbStashComponent
             //! @{
             //! Stashed models
-            const BlackMisc::Simulation::CAircraftModelList &getStashedModels() const;
+            const swift::misc::simulation::CAircraftModelList &getStashedModels() const;
 
             //! Any stashed models?
             bool hasStashedModels() const;
@@ -142,59 +142,59 @@ namespace BlackGui
             //! \name Own models from BlackGui::Components::CDbOwnModelsComponent
             //! @{
             //! Own models
-            BlackMisc::Simulation::CAircraftModelList getOwnModels() const;
+            swift::misc::simulation::CAircraftModelList getOwnModels() const;
 
             //! Own cached models
-            BlackMisc::Simulation::CAircraftModelList getOwnCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+            swift::misc::simulation::CAircraftModelList getOwnCachedModels(const swift::misc::simulation::CSimulatorInfo &simulator) const;
 
             //! Own selected models
-            BlackMisc::Simulation::CAircraftModelList getOwnSelectedModels() const;
+            swift::misc::simulation::CAircraftModelList getOwnSelectedModels() const;
 
             //! Own (installed) model for given model string
-            BlackMisc::Simulation::CAircraftModel getOwnModelForModelString(const QString &modelString) const;
+            swift::misc::simulation::CAircraftModel getOwnModelForModelString(const QString &modelString) const;
 
             //! Own models for simulator
-            BlackMisc::Simulation::CSimulatorInfo getOwnModelsSimulator() const;
+            swift::misc::simulation::CSimulatorInfo getOwnModelsSimulator() const;
 
             //! Set simulator for own models
-            void setOwnModelsSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void setOwnModelsSimulator(const swift::misc::simulation::CSimulatorInfo &simulator);
 
             //! Number of own models
             int getOwnModelsCount() const;
 
-            //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getInfoString
+            //! \copydoc swift::misc::simulation::data::CModelCaches::getInfoString
             QString getOwnModelsInfoString() const;
 
-            //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getInfoStringFsFamily
+            //! \copydoc swift::misc::simulation::data::CModelCaches::getInfoStringFsFamily
             QString getOwnModelsInfoStringFsFamily() const;
             //! @}
 
             // ---------------- own model set -----------------
 
             //! Set simulator for own models
-            void setOwnModelSetSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void setOwnModelSetSimulator(const swift::misc::simulation::CSimulatorInfo &simulator);
 
             //! Own model set
-            BlackMisc::Simulation::CAircraftModelList getOwnModelSet() const;
+            swift::misc::simulation::CAircraftModelList getOwnModelSet() const;
 
         public slots:
             //! \copydoc CDbStashComponent::stashModel
-            BlackMisc::CStatusMessage stashModel(const BlackMisc::Simulation::CAircraftModel &model, bool replace = false);
+            swift::misc::CStatusMessage stashModel(const swift::misc::simulation::CAircraftModel &model, bool replace = false);
 
             //! \copydoc CDbStashComponent::stashModels
-            BlackMisc::CStatusMessageList stashModels(const BlackMisc::Simulation::CAircraftModelList &models);
+            swift::misc::CStatusMessageList stashModels(const swift::misc::simulation::CAircraftModelList &models);
 
             //! \copydoc CDbOwnModelSetComponent::addToModelSet
-            BlackMisc::CStatusMessage addToOwnModelSet(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            swift::misc::CStatusMessage addToOwnModelSet(const swift::misc::simulation::CAircraftModelList &models, const swift::misc::simulation::CSimulatorInfo &simulator);
 
             //! \copydoc CDbStashComponent::consolidateModel
-            BlackMisc::Simulation::CAircraftModel consolidateModel(const BlackMisc::Simulation::CAircraftModel &model) const;
+            swift::misc::simulation::CAircraftModel consolidateModel(const swift::misc::simulation::CAircraftModel &model) const;
 
             //! \copydoc CDbStashComponent::replaceModelsUnvalidated
-            void replaceStashedModelsUnvalidated(const BlackMisc::Simulation::CAircraftModelList &models) const;
+            void replaceStashedModelsUnvalidated(const swift::misc::simulation::CAircraftModelList &models) const;
 
             //! Validate, empty list means OK
-            BlackMisc::CStatusMessageList validateCurrentModel(bool withNestedForms) const;
+            swift::misc::CStatusMessageList validateCurrentModel(bool withNestedForms) const;
 
             //! Resize so that selection is easy (larger table view)
             void resizeForSelect();
@@ -213,16 +213,16 @@ namespace BlackGui
 
         signals:
             //! Request to filter by livery
-            void filterByLivery(const BlackMisc::Aviation::CLivery &livery);
+            void filterByLivery(const swift::misc::aviation::CLivery &livery);
 
             //! Request to filter by aircraft ICAO
-            void filterByAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+            void filterByAircraftIcao(const swift::misc::aviation::CAircraftIcaoCode &icao);
 
             //! Request to filter by distributor
-            void filterByDistributor(const BlackMisc::Simulation::CDistributor &distributor);
+            void filterByDistributor(const swift::misc::simulation::CDistributor &distributor);
 
             //! Request latest (incremental) data from backend
-            void requestUpdatedData(BlackMisc::Network::CEntityFlags::Entity entities);
+            void requestUpdatedData(swift::misc::network::CEntityFlags::Entity entities);
 
             //! Tab index has been changed
             void tabIndexChanged(int index);
@@ -272,10 +272,10 @@ namespace BlackGui
             void onStashedModelsDataChangedDigest(int count, bool withFilter);
 
             //! Models have been published successfully
-            void onModelsSuccessfullyPublished(const BlackMisc::Simulation::CAircraftModelList &models, bool directWrite);
+            void onModelsSuccessfullyPublished(const swift::misc::simulation::CAircraftModelList &models, bool directWrite);
 
             //! Stash drop request
-            void handleStashDropRequest(const BlackMisc::Aviation::CAirlineIcaoCode &code) const;
+            void handleStashDropRequest(const swift::misc::aviation::CAirlineIcaoCode &code) const;
 
             //! Model set has been changed
             void onModelSetChangedDigest(int count, bool withFilter);
@@ -287,7 +287,7 @@ namespace BlackGui
             void onModelRowSelected(const QModelIndex &index);
 
             //! Simulator for own model has changed
-            void onOwnModelsSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo simulator);
+            void onOwnModelsSimulatorChanged(const swift::misc::simulation::CSimulatorInfo simulator);
 
             //! User object changed
             void onUserChanged();
@@ -327,9 +327,9 @@ namespace BlackGui
             QScopedPointer<CDbAutoStashingComponent> m_autoStashDialog; //!< dialog auto stashing
             QScopedPointer<CDbAutoSimulatorStashingComponent> m_autoSimulatorDialog; //!< dialog auto simulator update
             QScopedPointer<CDbModelMappingModifyDialog> m_modelModifyDialog; //!< dialog when modifying models
-            BlackMisc::Simulation::FsCommon::CVPilotRulesReader m_vPilotReader; //!< read vPilot rules
-            BlackMisc::CDigestSignal m_dsStashedModelsChanged { this, &CDbMappingComponent::onStashedModelsChangedDigest, 750, 25 };
-            BlackMisc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this, &CDbMappingComponent::onUserChanged };
+            swift::misc::simulation::fscommon::CVPilotRulesReader m_vPilotReader; //!< read vPilot rules
+            swift::misc::CDigestSignal m_dsStashedModelsChanged { this, &CDbMappingComponent::onStashedModelsChangedDigest, 750, 25 };
+            swift::misc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this, &CDbMappingComponent::onUserChanged };
             const bool vPilotSupport = true; //!< vPilot support (will be removed in future)
             bool m_vPilot1stInit = true; //!< vPilot extensions initalized?
             bool m_vPilotEnabled = false; //!< use vPilot extensions
@@ -345,7 +345,7 @@ namespace BlackGui
             void formatVPilotView();
 
             //! Model for given index from sender/current view
-            BlackMisc::Simulation::CAircraftModel getModelFromView(const QModelIndex &index) const;
+            swift::misc::simulation::CAircraftModel getModelFromView(const QModelIndex &index) const;
 
             //! Current tab text
             QString currentTabText() const;

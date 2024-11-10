@@ -13,9 +13,9 @@
 #include "blackcore/simulator.h"
 #include "blackcore/webreaderflags.h"
 #include "blackcore/aircraftmatcher.h"
-#include "blackmisc/network/loginmode.h"
-#include "blackmisc/dbus.h"
-#include "blackmisc/valueobject.h"
+#include "misc/network/loginmode.h"
+#include "misc/dbus.h"
+#include "misc/valueobject.h"
 
 #include <QDBusMetaType>
 #include <QMetaType>
@@ -36,7 +36,7 @@ namespace BlackCore
         qRegisterMetaType<BlackCore::Afv::Audio::TransceiverReceivingCallsignsChangedArgs>("TransceiverReceivingCallsignsChangedArgs");
 
         qDBusRegisterMetaType<Context::CSettingsDictionary>();
-        qDBusRegisterMetaType<BlackMisc::Network::CLoginMode>();
+        qDBusRegisterMetaType<swift::misc::network::CLoginMode>();
         qDBusRegisterMetaType<BlackCore::ISimulator::SimulatorStatusFlag>();
         qDBusRegisterMetaType<BlackCore::ISimulator::SimulatorStatus>();
 

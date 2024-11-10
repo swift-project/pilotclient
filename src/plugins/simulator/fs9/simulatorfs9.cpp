@@ -9,26 +9,26 @@
 #include "multiplayerpacketparser.h"
 #include "registermetadata.h"
 #include "../fscommon/simulatorfscommonfunctions.h"
-#include "blackmisc/network/textmessage.h"
-#include "blackmisc/simulation/fscommon/fscommonutil.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/propertyindexallclasses.h"
-#include "blackmisc/verify.h"
+#include "misc/network/textmessage.h"
+#include "misc/simulation/fscommon/fscommonutil.h"
+#include "misc/simulation/simulatorplugininfo.h"
+#include "misc/logmessage.h"
+#include "misc/propertyindexallclasses.h"
+#include "misc/verify.h"
 #include "config/buildconfig.h"
 
 #include <QTimer>
 #include <QPointer>
 #include <algorithm>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::FsCommon;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::geo;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::fscommon;
 using namespace BlackCore;
 using namespace BlackSimPlugin::FsCommon;
 using namespace swift::config;

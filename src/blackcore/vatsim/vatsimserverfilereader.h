@@ -8,17 +8,17 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/data/vatsimsetup.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/callsignset.h"
-#include "blackmisc/aviation/flightplan.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/network/serverlist.h"
-#include "blackmisc/network/userlist.h"
-#include "blackmisc/network/voicecapabilities.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/datacache.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/atcstationlist.h"
+#include "misc/aviation/callsignset.h"
+#include "misc/aviation/flightplan.h"
+#include "misc/network/entityflags.h"
+#include "misc/network/serverlist.h"
+#include "misc/network/userlist.h"
+#include "misc/network/voicecapabilities.h"
+#include "misc/simulation/simulatedaircraftlist.h"
+#include "misc/datacache.h"
 #include "blackcore/threadedreader.h"
 
 #include <QMap>
@@ -43,7 +43,7 @@ namespace BlackCore::Vatsim
 
         //! Get all VATSIM FSD servers
         //! \threadsafe
-        BlackMisc::Network::CServerList getFsdServers() const;
+        swift::misc::network::CServerList getFsdServers() const;
 
         //! Start reading in own thread
         void readInBackgroundThread();
@@ -53,7 +53,7 @@ namespace BlackCore::Vatsim
         void dataFileRead(int bytes);
 
         //! Data have been read
-        void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        void dataRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
     protected:
         //! \name BlackCore::CThreadedReader overrides
@@ -62,12 +62,12 @@ namespace BlackCore::Vatsim
         //! @}
 
     private:
-        BlackMisc::CData<BlackCore::Data::TVatsimSetup> m_lastGoodSetup { this };
+        swift::misc::CData<BlackCore::Data::TVatsimSetup> m_lastGoodSetup { this };
 
         //! Data have been read, parse VATSIM server file
         void parseVatsimFile(QNetworkReply *nwReply);
 
-        BlackMisc::Network::CServer parseServer(const QJsonObject &) const;
+        swift::misc::network::CServer parseServer(const QJsonObject &) const;
 
         //! Read / re-read data file
         void read();

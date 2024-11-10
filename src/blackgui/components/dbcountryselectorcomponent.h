@@ -8,8 +8,8 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/dropbase.h"
-#include "blackmisc/country.h"
-#include "blackmisc/network/entityflags.h"
+#include "misc/country.h"
+#include "misc/network/entityflags.h"
 
 #include <QFrame>
 #include <QObject>
@@ -46,13 +46,13 @@ namespace BlackGui::Components
         ~CDbCountrySelectorComponent() override;
 
         //! Current country
-        void setCountry(const BlackMisc::CCountry &country);
+        void setCountry(const swift::misc::CCountry &country);
 
         //! Current country
         void setCountry(const QString &isoCode);
 
         //! Country
-        BlackMisc::CCountry getCountry() const;
+        swift::misc::CCountry getCountry() const;
 
         //! Read only
         void setReadOnly(bool readOnly);
@@ -65,7 +65,7 @@ namespace BlackGui::Components
 
     signals:
         //! Country has been changed
-        void countryChanged(const BlackMisc::CCountry &country);
+        void countryChanged(const swift::misc::CCountry &country);
 
     protected:
         //! \copydoc QWidget::dragEnterEvent
@@ -82,7 +82,7 @@ namespace BlackGui::Components
 
     private:
         //! Countries have been read
-        void onCountriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+        void onCountriesRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState readState, int count);
 
         //! Data have been changed
         void onDataChanged();
@@ -92,7 +92,7 @@ namespace BlackGui::Components
 
         QScopedPointer<Ui::CDbCountrySelectorComponent> ui;
         QScopedPointer<QCompleter> m_completerCountryNames;
-        BlackMisc::CCountry m_currentCountry;
+        swift::misc::CCountry m_currentCountry;
     };
 }
 #endif // guard

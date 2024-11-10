@@ -149,7 +149,7 @@
             <string>reset description</string>
            </property>
            <property name="icon">
-            <iconset resource="../../blackmisc/blackmisc.qrc">
+            <iconset resource="../../misc/misc.qrc">
              <normaloff>:/diagona/icons/diagona/icons/cross-white.png</normaloff>:/diagona/icons/diagona/icons/cross-white.png</iconset>
            </property>
           </widget>
@@ -314,7 +314,7 @@
   <tabstop>cb_RemovedChecked</tabstop>
  </tabstops>
  <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
+  <include location="../../misc/misc.qrc"/>
  </resources>
  <connections>
   <connection>

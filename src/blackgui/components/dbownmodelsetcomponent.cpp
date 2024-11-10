@@ -15,14 +15,14 @@
 #include "blackgui/views/aircraftmodelstatisticsdialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackmisc/simulation/aircraftmodelutils.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/simulation/distributorlistpreferences.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/orderable.h"
+#include "misc/simulation/aircraftmodelutils.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/distributorlist.h"
+#include "misc/simulation/distributorlistpreferences.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/icons.h"
+#include "misc/logmessage.h"
+#include "misc/orderable.h"
 #include "ui_dbownmodelsetcomponent.h"
 
 #include <QAction>
@@ -39,8 +39,8 @@
 #include <QPointer>
 #include <QDesktopServices>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
 using namespace BlackGui::Models;
 using namespace BlackGui::Menus;
 using namespace BlackGui::Views;

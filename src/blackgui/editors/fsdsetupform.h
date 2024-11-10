@@ -9,7 +9,7 @@
 #include "blackgui/editors/form.h"
 #include <QFrame>
 #include <QScopedPointer>
-#include "blackmisc/network/fsdsetup.h"
+#include "misc/network/fsdsetup.h"
 
 namespace Ui
 {
@@ -32,13 +32,13 @@ namespace BlackGui::Editors
         virtual ~CFsdSetupForm() override;
 
         //! FSD setup from GUI
-        BlackMisc::Network::CFsdSetup getValue() const;
+        swift::misc::network::CFsdSetup getValue() const;
 
         //! FSD setup when disabled
-        const BlackMisc::Network::CFsdSetup &getDisabledValue() const;
+        const swift::misc::network::CFsdSetup &getDisabledValue() const;
 
         //! Set to GUI
-        void setValue(const BlackMisc::Network::CFsdSetup &setup);
+        void setValue(const swift::misc::network::CFsdSetup &setup);
 
         //! Allow override even in read only mode
         void setAlwaysAllowOverride(bool allow);
@@ -58,7 +58,7 @@ namespace BlackGui::Editors
         //! \name Form class implementations
         //! @{
         virtual void setReadOnly(bool readonly) override;
-        virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+        virtual swift::misc::CStatusMessageList validate(bool nested = false) const override;
         //! @}
 
     private:

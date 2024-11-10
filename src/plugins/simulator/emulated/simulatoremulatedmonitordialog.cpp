@@ -7,14 +7,14 @@
 #include "blackcore/context/contextsimulator.h"
 #include "blackgui/components/cockpitcomtransmissioncomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
 #include <QIntValidator>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 using namespace BlackGui::Editors;
@@ -83,12 +83,12 @@ namespace BlackSimPlugin::Emulated
     CSimulatorEmulatedMonitorDialog::~CSimulatorEmulatedMonitorDialog()
     {}
 
-    void CSimulatorEmulatedMonitorDialog::appendStatusMessageToList(const BlackMisc::CStatusMessage &statusMessage)
+    void CSimulatorEmulatedMonitorDialog::appendStatusMessageToList(const swift::misc::CStatusMessage &statusMessage)
     {
         ui->comp_LogComponent->appendStatusMessagesToList(statusMessage);
     }
 
-    void CSimulatorEmulatedMonitorDialog::appendStatusMessagesToList(const BlackMisc::CStatusMessageList &statusMessages)
+    void CSimulatorEmulatedMonitorDialog::appendStatusMessagesToList(const swift::misc::CStatusMessageList &statusMessages)
     {
         ui->comp_LogComponent->appendStatusMessagesToList(statusMessages);
     }
@@ -136,7 +136,7 @@ namespace BlackSimPlugin::Emulated
         ui->pte_StatusMessages->setPlainText(message.toQString(true));
     }
 
-    void CSimulatorEmulatedMonitorDialog::displayTextMessage(const Network::CTextMessage &message)
+    void CSimulatorEmulatedMonitorDialog::displayTextMessage(const network::CTextMessage &message)
     {
         ui->pte_TextMessages->setPlainText(message.toQString(true));
     }

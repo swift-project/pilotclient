@@ -8,7 +8,7 @@
 #include <QtGlobal>
 #include <QUrl>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui
 {

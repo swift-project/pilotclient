@@ -8,10 +8,10 @@
 
 #include "blackgui/views/viewbase.h"
 #include "blackgui/models/textmessagelistmodel.h"
-#include "blackmisc/network/textmessagelist.h"
+#include "misc/network/textmessagelist.h"
 #include "blackgui/blackguiexport.h"
 
-namespace BlackMisc::Network
+namespace swift::misc::network
 {
     class CTextMessage;
 }

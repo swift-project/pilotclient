@@ -4,7 +4,7 @@
 #ifndef BLACKMISC_XSWIFTBUS_CSETTINGS_H
 #define BLACKMISC_XSWIFTBUS_CSETTINGS_H
 
-#include "blackmisc/simulation/settings/xswiftbussettingsqtfree.h"
+#include "misc/simulation/settings/xswiftbussettingsqtfree.h"
 #include "config.h"
 #include <string>
 #include <mutex>
@@ -14,14 +14,14 @@ namespace XSwiftBus
     /*!
      * xswiftbus/swift side settings class, JSON capable, shared among all services
      */
-    class CSettings final : public BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree
+    class CSettings final : public swift::misc::simulation::settings::CXSwiftBusSettingsQtFree
     {
     public:
         //! Constructor.
         CSettings();
 
     protected:
-        //! \copydoc BlackMisc::Simulation::Settings::CXSwiftBusSettingsQtFree::objectUpdated
+        //! \copydoc swift::misc::simulation::settings::CXSwiftBusSettingsQtFree::objectUpdated
         virtual void objectUpdated() override final {}
     };
 

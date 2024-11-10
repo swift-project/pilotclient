@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_SETTINGSMATCHINGDIALOG_H
 #define BLACKGUI_COMPONENTS_SETTINGSMATCHINGDIALOG_H
 
-#include "blackmisc/simulation/aircraftmatchersetup.h"
+#include "misc/simulation/aircraftmatchersetup.h"
 #include <QDialog>
 #include <QScopedPointer>
 
@@ -29,10 +29,10 @@ namespace BlackGui::Components
         virtual ~CSettingsMatchingDialog();
 
         //! Get setup
-        BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const;
+        swift::misc::simulation::CAircraftMatcherSetup getMatchingSetup() const;
 
         //! Set the setup
-        void setMatchingSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
+        void setMatchingSetup(const swift::misc::simulation::CAircraftMatcherSetup &setup);
 
     private:
         QScopedPointer<Ui::CSettingsMatchingDialog> ui;

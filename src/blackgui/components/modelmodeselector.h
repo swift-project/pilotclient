@@ -7,7 +7,7 @@
 #define BLACKGUI_COMPONENTS_MODELMODESELECTOR_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/aircraftmodel.h"
+#include "misc/simulation/aircraftmodel.h"
 
 #include <QFrame>
 #include <QObject>
@@ -37,13 +37,13 @@ namespace BlackGui::Components
         ~CModelModeSelector();
 
         //! Get mode
-        BlackMisc::Simulation::CAircraftModel::ModelMode getMode() const;
+        swift::misc::simulation::CAircraftModel::ModelMode getMode() const;
 
         //! Set mode
-        void setValue(BlackMisc::Simulation::CAircraftModel::ModelMode mode);
+        void setValue(swift::misc::simulation::CAircraftModel::ModelMode mode);
 
         //! Set mode
-        void setValue(const BlackMisc::Simulation::CAircraftModel &model);
+        void setValue(const swift::misc::simulation::CAircraftModel &model);
 
         //! Read only
         void setReadOnly(bool readOnly);

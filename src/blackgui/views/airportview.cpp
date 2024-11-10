@@ -4,7 +4,7 @@
 #include "blackgui/models/airportlistmodel.h"
 #include "blackgui/views/airportview.h"
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui::Models;
 
 namespace BlackGui::Views

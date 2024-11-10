@@ -7,24 +7,24 @@
 #define BLACKGUI_SETTINGS_UPDATENOTIFICATIONSETTINGS_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/settingscache.h"
+#include "misc/settingscache.h"
 
 namespace BlackGui::Settings
 {
     //! Trait for directory settings
-    struct TUpdateNotificationSettings : public BlackMisc::TSettingTrait<bool>
+    struct TUpdateNotificationSettings : public swift::misc::TSettingTrait<bool>
     {
-        //! \copydoc BlackMisc::TSettingTrait::key
+        //! \copydoc swift::misc::TSettingTrait::key
         static const char *key() { return "guiupdatenotification/%Application%"; }
 
-        //! \copydoc BlackMisc::TSettingTrait::defaultValue
+        //! \copydoc swift::misc::TSettingTrait::defaultValue
         static const bool &defaultValue()
         {
             static const bool d = true;
             return d;
         }
 
-        //! \copydoc BlackMisc::TSettingTrait::humanReadable
+        //! \copydoc swift::misc::TSettingTrait::humanReadable
         static const QString &humanReadable()
         {
             static const QString name("Update notification");

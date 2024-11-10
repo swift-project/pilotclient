@@ -8,8 +8,8 @@
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextaudio.h"
 #include "blackcore/inputmanager.h"
-#include "blackmisc/input/actionhotkeydefs.h"
-#include "blackmisc/metadatautils.h"
+#include "misc/input/actionhotkeydefs.h"
+#include "misc/metadatautils.h"
 #include "ui_settingshotkeycomponent.h"
 
 #include <QAbstractItemModel>
@@ -25,8 +25,8 @@
 #include <QVariant>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Input;
+using namespace swift::misc;
+using namespace swift::misc::input;
 using namespace BlackGui::Models;
 using namespace BlackCore;
 using namespace BlackCore::Context;

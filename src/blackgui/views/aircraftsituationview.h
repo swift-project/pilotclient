@@ -26,7 +26,7 @@ namespace BlackGui::Views
 
     signals:
         //! Request elevation
-        void requestElevation(const BlackMisc::Aviation::CAircraftSituation &situation);
+        void requestElevation(const swift::misc::aviation::CAircraftSituation &situation);
 
     protected:
         //! \copydoc CViewBase::customMenu

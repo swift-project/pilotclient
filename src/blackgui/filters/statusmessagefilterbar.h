@@ -8,7 +8,7 @@
 
 #include "blackgui/filters/filterwidget.h"
 #include "blackgui/models/modelfilter.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/statusmessagelist.h"
 #include <QFrame>
 
 namespace Ui
@@ -22,7 +22,7 @@ namespace BlackGui::Filters
      */
     class CStatusMessageFilterBar :
         public CFilterWidget,
-        public BlackGui::Models::IModelFilterProvider<BlackMisc::CStatusMessageList>
+        public BlackGui::Models::IModelFilterProvider<swift::misc::CStatusMessageList>
     {
         Q_OBJECT
 
@@ -40,7 +40,7 @@ namespace BlackGui::Filters
         void useRadioButtonDescriptiveIcons(bool oneCharacterText);
 
         //! \copydoc Models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::CStatusMessageList>> createModelFilter() const override;
+        virtual std::unique_ptr<BlackGui::Models::IModelFilter<swift::misc::CStatusMessageList>> createModelFilter() const override;
 
     public slots:
         //! \copydoc CFilterWidget::onRowCountChanged
@@ -57,7 +57,7 @@ namespace BlackGui::Filters
         void radioButtonChanged();
 
         //! Get the selected severity
-        BlackMisc::CStatusMessage::StatusSeverity getSelectedSeverity() const;
+        swift::misc::CStatusMessage::StatusSeverity getSelectedSeverity() const;
     };
 } // ns
 #endif // guard

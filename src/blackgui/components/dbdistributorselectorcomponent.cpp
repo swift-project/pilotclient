@@ -6,9 +6,9 @@
 #include "blackgui/components/dbdistributorselectorcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/variant.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/simulation/distributorlist.h"
+#include "misc/variant.h"
 #include "ui_dbdistributorselectorcomponent.h"
 
 #include <QCompleter>
@@ -26,9 +26,9 @@
 
 using namespace BlackGui;
 using namespace BlackCore;
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
+using namespace swift::misc::network;
 
 namespace BlackGui::Components
 {

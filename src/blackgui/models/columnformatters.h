@@ -8,14 +8,14 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/led.h"
-#include "blackmisc/icon.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/pq/angle.h"
-#include "blackmisc/pq/frequency.h"
-#include "blackmisc/pq/length.h"
-#include "blackmisc/pq/speed.h"
-#include "blackmisc/pq/units.h"
-#include "blackmisc/variant.h"
+#include "misc/icon.h"
+#include "misc/icons.h"
+#include "misc/pq/angle.h"
+#include "misc/pq/frequency.h"
+#include "misc/pq/length.h"
+#include "misc/pq/speed.h"
+#include "misc/pq/units.h"
+#include "misc/variant.h"
 
 #include <QFlags>
 #include <QList>
@@ -48,25 +48,25 @@ namespace BlackGui::Models
 
         //! Value provided as CVariant, formatter converts to standard types or string.
         //! Used with Qt::DisplayRole displaying a text.
-        virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const;
+        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const;
 
         //! Value provided as CVariant, formatter converts to standard types or string.
         //! Used with Qt::DisplayRole displaying a text.
-        virtual BlackMisc::CVariant editRole(const BlackMisc::CVariant &dataCVariant) const;
+        virtual swift::misc::CVariant editRole(const swift::misc::CVariant &dataCVariant) const;
 
         //! Value provided as CVariant, formatter converts to QString.
         //! Used with Qt::ToolTipRole displaying a text.
-        virtual BlackMisc::CVariant tooltipRole(const BlackMisc::CVariant &value) const;
+        virtual swift::misc::CVariant tooltipRole(const swift::misc::CVariant &value) const;
 
         //! Value provided as CVariant, formatted as icon (Qt docu: "The data to be rendered as a decoration in the form of an icon").
         //! Used with Qt::DecorationRole displaying an icon, method returns pixmap, icon, or color (see docu)
-        virtual BlackMisc::CVariant decorationRole(const BlackMisc::CVariant &dataCVariant) const;
+        virtual swift::misc::CVariant decorationRole(const swift::misc::CVariant &dataCVariant) const;
 
         //! Qt::Alignment (as CVariant)
-        virtual BlackMisc::CVariant alignmentRole() const;
+        virtual swift::misc::CVariant alignmentRole() const;
 
         //! Value provided as CVariant (expecting a bool), returning as Qt::CheckStae
-        virtual BlackMisc::CVariant checkStateRole(const BlackMisc::CVariant &value) const;
+        virtual swift::misc::CVariant checkStateRole(const swift::misc::CVariant &value) const;
 
         //! Alignment available?
         virtual bool hasAlignment() const { return m_alignment >= 0; }
@@ -75,7 +75,7 @@ namespace BlackGui::Models
         bool supportsRole(int role) const;
 
         //! Receives CVariant of column data, and returns CVariant wrapping string, pixmap, or other values depending on role
-        virtual BlackMisc::CVariant data(int role, const BlackMisc::CVariant &inputData) const;
+        virtual swift::misc::CVariant data(int role, const swift::misc::CVariant &inputData) const;
 
         //! Default value
         static int alignDefault();
@@ -129,13 +129,13 @@ namespace BlackGui::Models
 
     protected:
         //! Standard conversion
-        virtual BlackMisc::CVariant keepStandardTypesConvertToStringOtherwise(const BlackMisc::CVariant &inputData) const;
+        virtual swift::misc::CVariant keepStandardTypesConvertToStringOtherwise(const swift::misc::CVariant &inputData) const;
 
         //! Empty string CVariant
-        static const BlackMisc::CVariant &emptyStringVariant();
+        static const swift::misc::CVariant &emptyStringVariant();
 
         //! Empty pixmap CVariant
-        static const BlackMisc::CVariant &emptyPixmapVariant();
+        static const swift::misc::CVariant &emptyPixmapVariant();
 
         QList<int> m_supportedRoles = roleDisplay(); //!< supports decoration roles
         int m_alignment = -1; //!< alignment horizontal/vertically / Qt::Alignment
@@ -150,13 +150,13 @@ namespace BlackGui::Models
         CPixmapFormatter(int alignment = alignDefault(), const QList<int> &supportedRoles = rolesDecorationAndToolTip()) : CDefaultFormatter(alignment, false, supportedRoles) {}
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
+        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
 
         //! \copydoc CDefaultFormatter::tooltipRole
-        virtual BlackMisc::CVariant tooltipRole(const BlackMisc::CVariant &dataCVariant) const override;
+        virtual swift::misc::CVariant tooltipRole(const swift::misc::CVariant &dataCVariant) const override;
 
         //! \copydoc CDefaultFormatter::decorationRole
-        virtual BlackMisc::CVariant decorationRole(const BlackMisc::CVariant &dataCVariant) const override;
+        virtual swift::misc::CVariant decorationRole(const swift::misc::CVariant &dataCVariant) const override;
 
         //! @{
         //! Width/height
@@ -179,7 +179,7 @@ namespace BlackGui::Models
         CStringFormatter(int alignment = alignDefault()) : CDefaultFormatter(alignment, false, roleDisplay()) {}
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
+        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
     };
 
     //! Just returns a empty "" value
@@ -190,7 +190,7 @@ namespace BlackGui::Models
         CEmptyFormatter(int alignment = alignDefault()) : CDefaultFormatter(alignment, false, roleDisplay()) {}
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
+        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
     };
 
     //! Just returns a empty "" value
@@ -201,7 +201,7 @@ namespace BlackGui::Models
         CIncognitoFormatter(int alignment = alignDefault()) : CDefaultFormatter(alignment, false, roleDisplay()) {}
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
+        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
     };
 
     //! Layout will be defined by a delegate
@@ -221,18 +221,18 @@ namespace BlackGui::Models
     public:
         //! Constructor
         CBoolTextFormatter(int alignment = alignDefault(), const QString &trueName = "true", const QString &falseName = "false", const QList<int> &supportedRoles = roleDisplay()) : CDefaultFormatter(alignment, false, supportedRoles),
-                                                                                                                                                                                     m_trueNameVariant(BlackMisc::CVariant::from(trueName)),
-                                                                                                                                                                                     m_falseNameVariant(BlackMisc::CVariant::from(falseName)) {}
+                                                                                                                                                                                     m_trueNameVariant(swift::misc::CVariant::from(trueName)),
+                                                                                                                                                                                     m_falseNameVariant(swift::misc::CVariant::from(falseName)) {}
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
+        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
 
         //! \copydoc CDefaultFormatter::flags
         virtual Qt::ItemFlags flags(Qt::ItemFlags flags, bool editable) const override;
 
     protected:
-        const BlackMisc::CVariant m_trueNameVariant = "true"; //!< displayed when true
-        const BlackMisc::CVariant m_falseNameVariant = "false"; //!< displayed when false
+        const swift::misc::CVariant m_trueNameVariant = "true"; //!< displayed when true
+        const swift::misc::CVariant m_falseNameVariant = "false"; //!< displayed when false
     };
 
     //! Format as bool LED value
@@ -246,20 +246,20 @@ namespace BlackGui::Models
         CBoolLedFormatter(const QString &onName, const QString &offName, int alignment = alignDefault());
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
+        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
 
         //! Display the LED
-        virtual BlackMisc::CVariant decorationRole(const BlackMisc::CVariant &dataCVariant) const override;
+        virtual swift::misc::CVariant decorationRole(const swift::misc::CVariant &dataCVariant) const override;
 
         //! \copydoc CDefaultFormatter::tooltipRole
-        virtual BlackMisc::CVariant tooltipRole(const BlackMisc::CVariant &dataCVariant) const override
+        virtual swift::misc::CVariant tooltipRole(const swift::misc::CVariant &dataCVariant) const override
         {
             return CBoolTextFormatter::displayRole(dataCVariant);
         }
 
     protected:
-        BlackMisc::CVariant m_pixmapOnLedVariant; //!< Pixmap used when on
-        BlackMisc::CVariant m_pixmapOffLedVariant; //!< Pixmap used when off
+        swift::misc::CVariant m_pixmapOnLedVariant; //!< Pixmap used when on
+        swift::misc::CVariant m_pixmapOffLedVariant; //!< Pixmap used when off
 
     private:
         //! Default LED
@@ -280,23 +280,23 @@ namespace BlackGui::Models
         CBoolIconFormatter(const QString &onName, const QString &offName, int alignment = alignCentered());
 
         //! Constructor
-        CBoolIconFormatter(const BlackMisc::CIcon &onIcon, const BlackMisc::CIcon &offIcon, const QString &onName, const QString &offName, int alignment = alignCentered());
+        CBoolIconFormatter(const swift::misc::CIcon &onIcon, const swift::misc::CIcon &offIcon, const QString &onName, const QString &offName, int alignment = alignCentered());
 
         //! Constructor
-        CBoolIconFormatter(BlackMisc::CIcons::IconIndex onIcon, BlackMisc::CIcons::IconIndex offIcon, const QString &onName, const QString &offName, int alignment = alignCentered());
+        CBoolIconFormatter(swift::misc::CIcons::IconIndex onIcon, swift::misc::CIcons::IconIndex offIcon, const QString &onName, const QString &offName, int alignment = alignCentered());
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
+        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
 
         //! Display the icon
-        virtual BlackMisc::CVariant decorationRole(const BlackMisc::CVariant &dataCVariant) const override;
+        virtual swift::misc::CVariant decorationRole(const swift::misc::CVariant &dataCVariant) const override;
 
         //! \copydoc CDefaultFormatter::tooltipRole
-        virtual BlackMisc::CVariant tooltipRole(const BlackMisc::CVariant &dataCVariant) const override;
+        virtual swift::misc::CVariant tooltipRole(const swift::misc::CVariant &dataCVariant) const override;
 
     protected:
-        const BlackMisc::CVariant m_iconOnVariant; //!< Used when on
-        const BlackMisc::CVariant m_iconOffVariant; //!< Used when off
+        const swift::misc::CVariant m_iconOnVariant; //!< Used when on
+        const swift::misc::CVariant m_iconOffVariant; //!< Used when off
     };
 
     //! Default formatter when column contains CValueObject
@@ -307,10 +307,10 @@ namespace BlackGui::Models
         CValueObjectFormatter(int alignment = alignDefault(), bool i18n = true, const QList<int> &supportedRoles = roleDisplay()) : CDefaultFormatter(alignment, i18n, supportedRoles) {}
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &valueObject) const override;
+        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &valueObject) const override;
 
         //! \copydoc CDefaultFormatter::decorationRole
-        virtual BlackMisc::CVariant decorationRole(const BlackMisc::CVariant &valueObject) const override;
+        virtual swift::misc::CVariant decorationRole(const swift::misc::CVariant &valueObject) const override;
     };
 
     //! Formatter when column contains QDateTime, QDate or QTime
@@ -321,7 +321,7 @@ namespace BlackGui::Models
         CDateTimeFormatter(const QString &formatString = formatYmd(), int alignment = alignDefault(), bool i18n = true);
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dateTime) const override;
+        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dateTime) const override;
 
         //! Year month day
         static const QString &formatYmd()
@@ -370,7 +370,7 @@ namespace BlackGui::Models
         CIntegerFormatter(int alignment = alignRightVCenter()) : CDefaultFormatter(alignment, false) {}
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &expectedInteger) const override;
+        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &expectedInteger) const override;
     };
 
     //! Formatter when column contains an altitude
@@ -381,16 +381,16 @@ namespace BlackGui::Models
         CAltitudeFormatter(bool flightlevel = false, int alignment = alignRightVCenter(), bool i18n = true) : CDefaultFormatter(alignment, i18n), m_flightLevel(flightlevel) {}
 
         //! Constructor
-        CAltitudeFormatter(const BlackMisc::PhysicalQuantities::CLengthUnit &unit, bool flightlevel = false, int alignment = alignRightVCenter(), bool i18n = true) : CDefaultFormatter(alignment, i18n), m_unit(unit), m_flightLevel(flightlevel) {}
+        CAltitudeFormatter(const swift::misc::physical_quantities::CLengthUnit &unit, bool flightlevel = false, int alignment = alignRightVCenter(), bool i18n = true) : CDefaultFormatter(alignment, i18n), m_unit(unit), m_flightLevel(flightlevel) {}
 
         //! Set the unit, normally ft/m
-        void setUnit(const BlackMisc::PhysicalQuantities::CLengthUnit &unit);
+        void setUnit(const swift::misc::physical_quantities::CLengthUnit &unit);
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &altitude) const override;
+        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &altitude) const override;
 
     private:
-        BlackMisc::PhysicalQuantities::CLengthUnit m_unit = BlackMisc::PhysicalQuantities::CLengthUnit::ft();
+        swift::misc::physical_quantities::CLengthUnit m_unit = swift::misc::physical_quantities::CLengthUnit::ft();
         const bool m_flightLevel = false;
     };
 
@@ -402,13 +402,13 @@ namespace BlackGui::Models
         CColorFormatter(int alignment = alignCentered(), bool i18n = true);
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
+        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
 
         //! \copydoc CDefaultFormatter::tooltipRole
-        virtual BlackMisc::CVariant tooltipRole(const BlackMisc::CVariant &dataCVariant) const override;
+        virtual swift::misc::CVariant tooltipRole(const swift::misc::CVariant &dataCVariant) const override;
 
         //! Display the icon
-        virtual BlackMisc::CVariant decorationRole(const BlackMisc::CVariant &dataCVariant) const override;
+        virtual swift::misc::CVariant decorationRole(const swift::misc::CVariant &dataCVariant) const override;
     };
 
     //! Formatter for physical quantities
@@ -420,7 +420,7 @@ namespace BlackGui::Models
         CPhysiqalQuantiyFormatter(MU unit = MU::defaultUnit(), int digits = 2, int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true, const QList<int> &supportedRoles = roleDisplay()) : CValueObjectFormatter(alignment, i18n, supportedRoles), m_unit(unit), m_digits(digits), m_withUnit(withUnit) {}
 
         //! \copydoc BlackGui::Models::CDefaultFormatter::displayRole
-        virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &physicalQuantity) const override
+        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &physicalQuantity) const override
         {
             if (physicalQuantity.canConvert<PQ>())
             {
@@ -435,11 +435,11 @@ namespace BlackGui::Models
         }
 
         //! Version if value is already available as PQ
-        BlackMisc::CVariant displayRole(const PQ &pq) const
+        swift::misc::CVariant displayRole(const PQ &pq) const
         {
             if (pq.isNull())
             {
-                static const BlackMisc::CVariant null("null");
+                static const swift::misc::CVariant null("null");
                 return null;
             }
             return pq.valueRoundedWithUnit(m_unit, m_digits, m_useI18n);
@@ -461,22 +461,22 @@ namespace BlackGui::Models
     };
 
     //! COM frequencies
-    class CComFrequencyFormatter : public CPhysiqalQuantiyFormatter<BlackMisc::PhysicalQuantities::CFrequencyUnit, BlackMisc::PhysicalQuantities::CFrequency>
+    class CComFrequencyFormatter : public CPhysiqalQuantiyFormatter<swift::misc::physical_quantities::CFrequencyUnit, swift::misc::physical_quantities::CFrequency>
     {
     public:
         //! Constructor
-        CComFrequencyFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true) : CPhysiqalQuantiyFormatter(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3, alignment, withUnit, i18n) {}
+        CComFrequencyFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true) : CPhysiqalQuantiyFormatter(swift::misc::physical_quantities::CFrequencyUnit::MHz(), 3, alignment, withUnit, i18n) {}
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
+        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
     };
 
     //! Angle in degrees
-    class CAngleDegreeFormatter : public CPhysiqalQuantiyFormatter<BlackMisc::PhysicalQuantities::CAngleUnit, BlackMisc::PhysicalQuantities::CAngle>
+    class CAngleDegreeFormatter : public CPhysiqalQuantiyFormatter<swift::misc::physical_quantities::CAngleUnit, swift::misc::physical_quantities::CAngle>
     {
     public:
         //! Constructor
-        CAngleDegreeFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true) : CPhysiqalQuantiyFormatter(BlackMisc::PhysicalQuantities::CAngleUnit::deg(), 0, alignment, withUnit, i18n) {}
+        CAngleDegreeFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true) : CPhysiqalQuantiyFormatter(swift::misc::physical_quantities::CAngleUnit::deg(), 0, alignment, withUnit, i18n) {}
     };
 
     //! Latitude or Longitude formatter
@@ -488,25 +488,25 @@ namespace BlackGui::Models
     };
 
     //! Airspace distance displayed in NM
-    class CAirspaceDistanceFormatter : public CPhysiqalQuantiyFormatter<BlackMisc::PhysicalQuantities::CLengthUnit, BlackMisc::PhysicalQuantities::CLength>
+    class CAirspaceDistanceFormatter : public CPhysiqalQuantiyFormatter<swift::misc::physical_quantities::CLengthUnit, swift::misc::physical_quantities::CLength>
     {
     public:
         //! Constructor
-        CAirspaceDistanceFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true) : CPhysiqalQuantiyFormatter(BlackMisc::PhysicalQuantities::CLengthUnit::NM(), 1, alignment, withUnit, i18n) {}
+        CAirspaceDistanceFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true) : CPhysiqalQuantiyFormatter(swift::misc::physical_quantities::CLengthUnit::NM(), 1, alignment, withUnit, i18n) {}
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
+        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
     };
 
     //! Speed displayed in kts
-    class CSpeedKtsFormatter : public CPhysiqalQuantiyFormatter<BlackMisc::PhysicalQuantities::CSpeedUnit, BlackMisc::PhysicalQuantities::CSpeed>
+    class CSpeedKtsFormatter : public CPhysiqalQuantiyFormatter<swift::misc::physical_quantities::CSpeedUnit, swift::misc::physical_quantities::CSpeed>
     {
     public:
         //! Constructor
-        CSpeedKtsFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true) : CPhysiqalQuantiyFormatter(BlackMisc::PhysicalQuantities::CSpeedUnit::kts(), 0, alignment, withUnit, i18n) {}
+        CSpeedKtsFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true) : CPhysiqalQuantiyFormatter(swift::misc::physical_quantities::CSpeedUnit::kts(), 0, alignment, withUnit, i18n) {}
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
+        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
     };
 } // namespace
 

@@ -8,8 +8,8 @@
 #include <Qt>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Audio;
+using namespace swift::misc;
+using namespace swift::misc::audio;
 
 namespace BlackGui::Models
 {

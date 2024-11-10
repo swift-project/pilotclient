@@ -106,7 +106,7 @@ namespace BlackGui::Models
         virtual void moveItems(const ContainerType &items, int position) override;
         //! @}
 
-        //! Sort order to order property BlackMisc::IOrderable::IndexOrder
+        //! Sort order to order property swift::misc::IOrderable::IndexOrder
         bool setSortColumnToOrder();
 
     protected:

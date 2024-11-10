@@ -7,7 +7,7 @@
 #define SWIFT_INPUT_JOYSTICK_H
 
 #include "input/swiftinputexport.h"
-#include "blackmisc/input/hotkeycombination.h"
+#include "misc/input/hotkeycombination.h"
 #include <QObject>
 #include <memory>
 
@@ -31,11 +31,11 @@ namespace swift::input
         static std::unique_ptr<IJoystick> create(QObject *parent = nullptr);
 
         //! Get all available joystick buttons
-        virtual BlackMisc::Input::CJoystickButtonList getAllAvailableJoystickButtons() const { return {}; }
+        virtual swift::misc::input::CJoystickButtonList getAllAvailableJoystickButtons() const { return {}; }
 
     signals:
         //! Joystick button combination has changed
-        void buttonCombinationChanged(const BlackMisc::Input::CHotkeyCombination &);
+        void buttonCombinationChanged(const swift::misc::input::CHotkeyCombination &);
 
     protected:
         //! Initializes the platform joystick devices

@@ -10,7 +10,7 @@
 #include "blackcore/afv/connection/clientconnectiondata.h"
 #include "blackcore/afv/connection/apiserverconnection.h"
 #include "blackcore/afv/dto.h"
-#include "blackmisc/verify.h"
+#include "misc/verify.h"
 
 #include <QObject>
 #include <QString>

@@ -7,14 +7,14 @@
 #include "blackgui/loginmodebuttons.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackmisc/verify.h"
+#include "misc/verify.h"
 
 #include <QRadioButton>
 
 using namespace swift::config;
 using namespace BlackCore;
 using namespace BlackCore::Context;
-using namespace BlackMisc::Network;
+using namespace swift::misc::network;
 
 namespace BlackGui
 {

@@ -9,7 +9,7 @@
 #include "blackgui/settings/viewupdatesettings.h"
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/network/connectionstatus.h"
+#include "misc/network/connectionstatus.h"
 
 #include <QObject>
 #include <QScopedPointer>
@@ -21,13 +21,13 @@ namespace Ui
 {
     class CAircraftComponent;
 }
-namespace BlackMisc
+namespace swift::misc
 {
-    namespace Aviation
+    namespace aviation
     {
         class CCallsign;
     }
-    namespace Simulation
+    namespace simulation
     {
         class CSimulatedAircraft;
     }
@@ -77,7 +77,7 @@ namespace BlackGui
 
         signals:
             //! Request a text message
-            void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
+            void requestTextMessageWidget(const swift::misc::aviation::CCallsign &callsign);
 
         private:
             //! Update the views
@@ -90,16 +90,16 @@ namespace BlackGui
             void onRowCountChanged(int count, bool withFilter);
 
             //! Connection status has been changed
-            void onConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+            void onConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
 
             //! Settings have been changed
             void onSettingsChanged();
 
             //! Own aircraft has been moved
-            void onOwnAircraftMoved(const BlackMisc::PhysicalQuantities::CLength &distance);
+            void onOwnAircraftMoved(const swift::misc::physical_quantities::CLength &distance);
 
             QScopedPointer<Ui::CAircraftComponent> ui;
-            BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CAircraftComponent::onSettingsChanged }; //!< settings changed
+            swift::misc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CAircraftComponent::onSettingsChanged }; //!< settings changed
             QTimer m_updateTimer;
             int m_updateCounter = 0;
         };

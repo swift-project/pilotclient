@@ -7,7 +7,7 @@
 #define BLACKGUI_COMPONENTS_COLORSELECTOR_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/rgbcolor.h"
+#include "misc/rgbcolor.h"
 
 #include <QColor>
 #include <QFrame>
@@ -44,13 +44,13 @@ namespace BlackGui::Components
         ~CColorSelector() override;
 
         //! Color
-        void setColor(const BlackMisc::CRgbColor &color);
+        void setColor(const swift::misc::CRgbColor &color);
 
         //! Color
         void setColor(const QColor &color);
 
         //! Selected color
-        BlackMisc::CRgbColor getColor() const;
+        swift::misc::CRgbColor getColor() const;
 
         //! Read only
         void setReadOnly(bool readOnly);
@@ -60,7 +60,7 @@ namespace BlackGui::Components
 
     signals:
         //! Color has been changed
-        void colorChanged(const BlackMisc::CRgbColor &color);
+        void colorChanged(const swift::misc::CRgbColor &color);
 
     protected:
         //! \copydoc QWidget::dragEnterEvent
@@ -92,7 +92,7 @@ namespace BlackGui::Components
         void resetToLastValidColor();
 
         QScopedPointer<Ui::CColorSelector> ui;
-        BlackMisc::CRgbColor m_lastColor;
+        swift::misc::CRgbColor m_lastColor;
     };
 } // ns
 

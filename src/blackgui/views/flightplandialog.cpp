@@ -6,9 +6,9 @@
 
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextnetwork.h"
-#include "blackmisc/aviation/flightplan.h"
+#include "misc/aviation/flightplan.h"
 
-using namespace BlackMisc::Aviation;
+using namespace swift::misc::aviation;
 using namespace BlackCore::Context;
 using namespace BlackGui::Components;
 

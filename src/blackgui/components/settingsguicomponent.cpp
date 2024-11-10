@@ -4,7 +4,7 @@
 #include "settingsguicomponent.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 #include "ui_settingsguicomponent.h"
 #include <QColorDialog>
 #include <QFont>
@@ -12,7 +12,7 @@
 #include <QStyleFactory>
 #include <QMessageBox>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui::Settings;
 using namespace BlackCore::Context;
 

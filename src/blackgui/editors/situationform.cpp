@@ -5,16 +5,16 @@
 #include "ui_situationform.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextownaircraft.h"
-#include "blackmisc/pq/pressure.h"
-#include "blackmisc/pq/angle.h"
-#include "blackmisc/stringutils.h"
-#include "blackmisc/logmessage.h"
+#include "misc/pq/pressure.h"
+#include "misc/pq/angle.h"
+#include "misc/stringutils.h"
+#include "misc/logmessage.h"
 #include <QDoubleValidator>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::geo;
+using namespace swift::misc::physical_quantities;
 
 namespace BlackGui::Editors
 {
@@ -49,7 +49,7 @@ namespace BlackGui::Editors
     CSituationForm::~CSituationForm()
     {}
 
-    void CSituationForm::setSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
+    void CSituationForm::setSituation(const swift::misc::aviation::CAircraftSituation &situation)
     {
         ui->comp_Coordinate->setCoordinate(situation);
         this->bankSliderChanged(situation.getBank().valueInteger(CAngleUnit::deg()));

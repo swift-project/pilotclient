@@ -7,9 +7,9 @@
 #define BLACKGUI_COMPONENTS_DBREDUCEMODELDUPLICATES_H
 
 #include "blackcore/progress.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/settings/modelsettings.h"
-#include "blackmisc/settingscache.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/settings/modelsettings.h"
+#include "misc/settingscache.h"
 
 #include <QDialog>
 #include <QScopedPointer>
@@ -35,7 +35,7 @@ namespace BlackGui::Components
         virtual ~CDbReduceModelDuplicates() override;
 
         //! Set the models
-        void setModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void setModels(const swift::misc::simulation::CAircraftModelList &models, const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Process models
         void process();
@@ -44,10 +44,10 @@ namespace BlackGui::Components
         virtual void updateProgressIndicator(int percentage) override;
 
         //! The models to be removed
-        const BlackMisc::Simulation::CAircraftModelList &getRemoveCandidates() const { return m_removeCandidates; }
+        const swift::misc::simulation::CAircraftModelList &getRemoveCandidates() const { return m_removeCandidates; }
 
         //! Simulator
-        const BlackMisc::Simulation::CSimulatorInfo &getSimulator() const { return m_simulator; }
+        const swift::misc::simulation::CSimulatorInfo &getSimulator() const { return m_simulator; }
 
     private:
         //! Clear progress bar
@@ -58,10 +58,10 @@ namespace BlackGui::Components
 
         QScopedPointer<Ui::CDbReduceModelDuplicates> ui;
         bool m_stop = false;
-        BlackMisc::Simulation::CSimulatorInfo m_simulator;
-        BlackMisc::Simulation::CAircraftModelList m_models;
-        BlackMisc::Simulation::CAircraftModelList m_removeCandidates;
-        BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TDistributorListPreferences> m_distributorPreferences { this }; //!< distributor preferences
+        swift::misc::simulation::CSimulatorInfo m_simulator;
+        swift::misc::simulation::CAircraftModelList m_models;
+        swift::misc::simulation::CAircraftModelList m_removeCandidates;
+        swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TDistributorListPreferences> m_distributorPreferences { this }; //!< distributor preferences
     };
 } // ns
 

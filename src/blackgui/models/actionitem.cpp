@@ -4,7 +4,7 @@
 #include "blackgui/models/actionitem.h"
 #include <QtAlgorithms>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Models
 {

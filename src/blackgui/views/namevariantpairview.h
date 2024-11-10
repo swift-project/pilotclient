@@ -9,13 +9,13 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/namevariantpairlistmodel.h"
 #include "blackgui/views/viewbase.h"
-#include "blackmisc/icon.h"
-#include "blackmisc/namevariantpairlist.h"
-#include "blackmisc/variant.h"
+#include "misc/icon.h"
+#include "misc/namevariantpairlist.h"
+#include "misc/variant.h"
 
 #include <QString>
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CNameVariantPair;
 }
@@ -34,7 +34,7 @@ namespace BlackGui::Views
         void setIconMode(bool withIcon);
 
         //! Update or add value, QVariant version
-        bool addOrUpdateByName(const QString &name, const BlackMisc::CVariant &value, const BlackMisc::CIcon &icon = BlackMisc::CIcon(), bool isResizeConditionMet = true, bool skipEqualValues = true);
+        bool addOrUpdateByName(const QString &name, const swift::misc::CVariant &value, const swift::misc::CIcon &icon = swift::misc::CIcon(), bool isResizeConditionMet = true, bool skipEqualValues = true);
 
         //! Remove by name
         void removeByName(const QString &name, bool isResizeConditionMet = true);

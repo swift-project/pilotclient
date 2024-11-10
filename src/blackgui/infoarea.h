@@ -8,8 +8,8 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/enableforframelesswindow.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/statusmessage.h"
+#include "misc/statusmessagelist.h"
 
 #include <QDockWidget>
 #include <QList>
@@ -145,10 +145,10 @@ namespace BlackGui
         void selectRightTab();
 
         //! Display status message in all info areas (according their state)
-        void displayStatusMessage(const BlackMisc::CStatusMessage &statusMessage);
+        void displayStatusMessage(const swift::misc::CStatusMessage &statusMessage);
 
         //! Display status messages in all info areas (according their state)
-        void displayStatusMessages(const BlackMisc::CStatusMessageList &statusMessages);
+        void displayStatusMessages(const swift::misc::CStatusMessageList &statusMessages);
 
     signals:
         //! Tab bar changed

@@ -6,11 +6,11 @@
 #include "blackgui/components/dbliveryselectorcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/db/datastoreutility.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/stringutils.h"
-#include "blackmisc/variant.h"
+#include "misc/aviation/liverylist.h"
+#include "misc/db/datastoreutility.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/stringutils.h"
+#include "misc/variant.h"
 #include "ui_dbliveryselectorcomponent.h"
 
 #include <QCompleter>
@@ -28,10 +28,10 @@
 
 using namespace BlackGui;
 using namespace BlackCore;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Db;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::db;
+using namespace swift::misc::network;
 
 namespace BlackGui::Components
 {

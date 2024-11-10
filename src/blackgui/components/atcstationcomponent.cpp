@@ -14,12 +14,12 @@
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/informationmessage.h"
-#include "blackmisc/weather/metar.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/logmessage.h"
+#include "misc/aviation/atcstationlist.h"
+#include "misc/aviation/informationmessage.h"
+#include "misc/weather/metar.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/icons.h"
+#include "misc/logmessage.h"
 #include "ui_atcstationcomponent.h"
 
 #include <QAbstractItemModel>
@@ -40,11 +40,11 @@
 using namespace BlackGui::Models;
 using namespace BlackGui::Views;
 using namespace BlackGui::Settings;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Weather;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::weather;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 
@@ -321,7 +321,7 @@ namespace BlackGui::Components
         ui->tw_Atc->tabBar()->setTabText(it, t % filteredInfo);
     }
 
-    void CAtcStationComponent::setComFrequency(const PhysicalQuantities::CFrequency &frequency, CComSystem::ComUnit unit)
+    void CAtcStationComponent::setComFrequency(const physical_quantities::CFrequency &frequency, CComSystem::ComUnit unit)
     {
         if (unit != CComSystem::Com1 && unit != CComSystem::Com2) { return; }
         if (!CComSystem::isValidComFrequency(frequency)) { return; }

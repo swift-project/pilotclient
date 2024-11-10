@@ -7,32 +7,32 @@
 #define BLACKCORE_AIRSPACE_MONITOR_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/simulation/settings/modelmatchersettings.h"
-#include "blackmisc/simulation/aircraftmodelsetprovider.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/airspaceaircraftsnapshot.h"
-#include "blackmisc/simulation/matchinglog.h"
-#include "blackmisc/simulation/ownaircraftprovider.h"
-#include "blackmisc/simulation/remoteaircraftprovider.h"
-#include "blackmisc/simulation/simulationenvironmentprovider.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/network/server.h"
-#include "blackmisc/network/ecosystem.h"
-#include "blackmisc/network/connectionstatus.h"
-#include "blackmisc/network/clientprovider.h"
-#include "blackmisc/network/userlist.h"
-#include "blackmisc/aviation/aircraftpartslist.h"
-#include "blackmisc/aviation/aircraftsituationlist.h"
-#include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/callsignset.h"
-#include "blackmisc/aviation/flightplan.h"
-#include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/pq/frequency.h"
-#include "blackmisc/pq/length.h"
-#include "blackmisc/pq/angle.h"
-#include "blackmisc/simplecommandparser.h"
-#include "blackmisc/identifier.h"
+#include "misc/simulation/settings/modelmatchersettings.h"
+#include "misc/simulation/aircraftmodelsetprovider.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/airspaceaircraftsnapshot.h"
+#include "misc/simulation/matchinglog.h"
+#include "misc/simulation/ownaircraftprovider.h"
+#include "misc/simulation/remoteaircraftprovider.h"
+#include "misc/simulation/simulationenvironmentprovider.h"
+#include "misc/simulation/simulatedaircraftlist.h"
+#include "misc/network/server.h"
+#include "misc/network/ecosystem.h"
+#include "misc/network/connectionstatus.h"
+#include "misc/network/clientprovider.h"
+#include "misc/network/userlist.h"
+#include "misc/aviation/aircraftpartslist.h"
+#include "misc/aviation/aircraftsituationlist.h"
+#include "misc/aviation/atcstation.h"
+#include "misc/aviation/atcstationlist.h"
+#include "misc/aviation/callsignset.h"
+#include "misc/aviation/flightplan.h"
+#include "misc/geo/coordinategeodetic.h"
+#include "misc/pq/frequency.h"
+#include "misc/pq/length.h"
+#include "misc/pq/angle.h"
+#include "misc/simplecommandparser.h"
+#include "misc/identifier.h"
 
 #include <QJsonObject>
 #include <QList>
@@ -57,24 +57,24 @@ namespace BlackCore
     //! Keeps track of other entities in the airspace: aircraft, ATC stations, etc.
     //! Central instance of data for \sa IRemoteAircraftProvider.
     class BLACKCORE_EXPORT CAirspaceMonitor :
-        public BlackMisc::Simulation::CRemoteAircraftProvider, // those data will be provided from the class CAirspaceMonitor
-        public BlackMisc::Network::CClientProvider, // those data will be provided from the class CAirspaceMonitor
-        public BlackMisc::Simulation::COwnAircraftAware, // used to obtain in memory information about own aircraft
-        public BlackMisc::Simulation::CSimulationEnvironmentAware, // elevation info etc. from simulator
-        public BlackMisc::Simulation::CAircraftModelSetAware // model set for reverse lookup
+        public swift::misc::simulation::CRemoteAircraftProvider, // those data will be provided from the class CAirspaceMonitor
+        public swift::misc::network::CClientProvider, // those data will be provided from the class CAirspaceMonitor
+        public swift::misc::simulation::COwnAircraftAware, // used to obtain in memory information about own aircraft
+        public swift::misc::simulation::CSimulationEnvironmentAware, // elevation info etc. from simulator
+        public swift::misc::simulation::CAircraftModelSetAware // model set for reverse lookup
     {
         // CRemoteAircraftProvider is QObject
         Q_OBJECT
-        Q_INTERFACES(BlackMisc::Network::IClientProvider)
-        Q_INTERFACES(BlackMisc::Simulation::IRemoteAircraftProvider)
+        Q_INTERFACES(swift::misc::network::IClientProvider)
+        Q_INTERFACES(swift::misc::simulation::IRemoteAircraftProvider)
 
     public:
         //! Log categories
         static const QStringList &getLogCategories();
 
         //! Constructor
-        CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft,
-                         BlackMisc::Simulation::IAircraftModelSetProvider *modelSetProvider,
+        CAirspaceMonitor(swift::misc::simulation::IOwnAircraftProvider *ownAircraft,
+                         swift::misc::simulation::IAircraftModelSetProvider *modelSetProvider,
                          Fsd::CFSDClient *fsdClient,
                          QObject *parent);
 
@@ -82,34 +82,34 @@ namespace BlackCore
         //! Members not implenented or fully implenented by CRemoteAircraftProvider
         //! \ingroup remoteaircraftprovider
         virtual QObject *asQObject() override { return this; }
-        virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
-        virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;
+        virtual swift::misc::simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
+        virtual bool updateFastPositionEnabled(const swift::misc::aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;
         //! @}
 
         //! Returns the list of users we know about
-        BlackMisc::Network::CUserList getUsers() const;
+        swift::misc::network::CUserList getUsers() const;
 
         //! Returns a list of the users corresponding to the given callsigns
-        BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const;
+        swift::misc::network::CUserList getUsersForCallsigns(const swift::misc::aviation::CCallsignSet &callsigns) const;
 
         //! Returns the loaded flight plan for the given callsign
         //! \remarks only use this if a network loaded flight plan is directly needed
         //! \remarks pseudo synchronous, call the async functions and waits for result
-        BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign);
+        swift::misc::aviation::CFlightPlan loadFlightPlanFromNetwork(const swift::misc::aviation::CCallsign &callsign);
 
         //! Try to get flight plan remarks
         //! \remarks returns a value only if the flight plan is already cached or can be obtained from VATSIM reader
         //! \threadsafe
-        BlackMisc::Aviation::CFlightPlanRemarks tryToGetFlightPlanRemarks(const BlackMisc::Aviation::CCallsign &callsign) const;
+        swift::misc::aviation::CFlightPlanRemarks tryToGetFlightPlanRemarks(const swift::misc::aviation::CCallsign &callsign) const;
 
         //! Returns the current online ATC stations
-        BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const { return m_atcStationsOnline; }
+        swift::misc::aviation::CAtcStationList getAtcStationsOnline() const { return m_atcStationsOnline; }
 
         //! Recalculate distance to own aircraft
-        BlackMisc::Aviation::CAtcStationList getAtcStationsOnlineRecalculated();
+        swift::misc::aviation::CAtcStationList getAtcStationsOnlineRecalculated();
 
         //! Returns the closest ATC station operating on the given frequency, if any
-        BlackMisc::Aviation::CAtcStation getAtcStationForComUnit(const BlackMisc::Aviation::CComSystem &comSystem) const;
+        swift::misc::aviation::CAtcStation getAtcStationForComUnit(const swift::misc::aviation::CComSystem &comSystem) const;
 
         //! Clear the contents
         void clear();
@@ -133,7 +133,7 @@ namespace BlackCore
         int reInitializeAllAircraft();
 
         //! Max (FSD) range
-        void setMaxRange(const BlackMisc::PhysicalQuantities::CLength &range);
+        void setMaxRange(const swift::misc::physical_quantities::CLength &range);
 
         //! Create dummy entries for performance tests
         //! \private for testing purposes
@@ -141,7 +141,7 @@ namespace BlackCore
 
         //! Test injected aircraft parts
         //! \private for testing purposes
-        void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental);
+        void testAddAircraftParts(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CAircraftParts &parts, bool incremental);
 
         //! Matching readiness
         enum MatchingReadinessFlag
@@ -167,13 +167,13 @@ namespace BlackCore
         //! .fsd range distance        max.range e.g. ".fsd range 100NM"
         //! </pre>
         //! \copydoc BlackCore::Context::IContextNetwork::parseCommandLine
-        bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator);
+        bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator);
 
         //! Register help
         static void registerHelp()
         {
-            if (BlackMisc::CSimpleCommandParser::registered("BlackCore::Fsd::CFSDClient")) { return; }
-            BlackMisc::CSimpleCommandParser::registerCommand({ ".fsd range distance", "FSD max. range" });
+            if (swift::misc::CSimpleCommandParser::registered("BlackCore::Fsd::CFSDClient")) { return; }
+            swift::misc::CSimpleCommandParser::registerCommand({ ".fsd range distance", "FSD max. range" });
         }
 
     signals:
@@ -181,18 +181,18 @@ namespace BlackCore
         void changedAtcStationsOnline();
 
         //! ATC station disconnected
-        void atcStationDisconnected(const BlackMisc::Aviation::CAtcStation &station);
+        void atcStationDisconnected(const swift::misc::aviation::CAtcStation &station);
 
         //! Raw data as received from network
         //! \remark used for statistics
         //! \private
-        void requestedNewAircraft(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftDesignator, const QString &airlineDesignator, const QString &livery);
+        void requestedNewAircraft(const swift::misc::aviation::CCallsign &callsign, const QString &aircraftDesignator, const QString &airlineDesignator, const QString &livery);
 
         //! Ready for model matching
-        void readyForModelMatching(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
+        void readyForModelMatching(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft);
 
         //! An ATIS has been received
-        void changedAtisReceived(const BlackMisc::Aviation::CCallsign &callsign);
+        void changedAtisReceived(const swift::misc::aviation::CCallsign &callsign);
 
     private:
         //! Used to temporary store FsInn data
@@ -265,13 +265,13 @@ namespace BlackCore
             }
         };
 
-        BlackMisc::Aviation::CAtcStationList m_atcStationsOnline; //!< online ATC stations
-        QHash<BlackMisc::Aviation::CCallsign, FsInnPacket> m_tempFsInnPackets; //!< unhandled FsInn packets
-        QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache; //!< flight plan information retrieved from network and cached
-        QHash<BlackMisc::Aviation::CCallsign, Readiness> m_readiness; //!< readiness
-        BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModelMatching> m_matchingSettings { this }; //!< settings
-        QQueue<BlackMisc::Aviation::CCallsign> m_queryAtis; //!< query the ATIS
-        QQueue<BlackMisc::Aviation::CCallsign> m_queryPilot; //!< query the pilot data
+        swift::misc::aviation::CAtcStationList m_atcStationsOnline; //!< online ATC stations
+        QHash<swift::misc::aviation::CCallsign, FsInnPacket> m_tempFsInnPackets; //!< unhandled FsInn packets
+        QHash<swift::misc::aviation::CCallsign, swift::misc::aviation::CFlightPlan> m_flightPlanCache; //!< flight plan information retrieved from network and cached
+        QHash<swift::misc::aviation::CCallsign, Readiness> m_readiness; //!< readiness
+        swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TModelMatching> m_matchingSettings { this }; //!< settings
+        QQueue<swift::misc::aviation::CCallsign> m_queryAtis; //!< query the ATIS
+        QQueue<swift::misc::aviation::CCallsign> m_queryPilot; //!< query the pilot data
         Fsd::CFSDClient *m_fsdClient = nullptr; //!< corresponding network interface
         CAirspaceAnalyzer *m_analyzer = nullptr; //!< owned analyzer
         int m_maxDistanceNM = 125; //!< position range / FSD range
@@ -308,10 +308,10 @@ namespace BlackCore
 
         //! Remove data from caches and logs
         //! \threadsafe
-        void removeFromAircraftCachesAndLogs(const BlackMisc::Aviation::CCallsign &callsign);
+        void removeFromAircraftCachesAndLogs(const swift::misc::aviation::CCallsign &callsign);
 
         //! Network queries for ATC
-        void sendInitialAtcQueries(const BlackMisc::Aviation::CCallsign &callsign);
+        void sendInitialAtcQueries(const swift::misc::aviation::CCallsign &callsign);
 
         //! Query all online ATC stations
         void queryAllOnlineAtcStations();
@@ -320,7 +320,7 @@ namespace BlackCore
         bool sendNextStaggeredAtisQuery();
 
         //! Network queries for pilots
-        void sendInitialPilotQueries(const BlackMisc::Aviation::CCallsign &callsign, bool withIcaoQuery, bool withFsInn);
+        void sendInitialPilotQueries(const swift::misc::aviation::CCallsign &callsign, bool withIcaoQuery, bool withFsInn);
 
         //! Network queries for pilot
         bool sendNextStaggeredPilotDataQuery();
@@ -332,109 +332,109 @@ namespace BlackCore
         bool isConnectedAndNotShuttingDown() const;
 
         //! Get the currently connected server
-        const BlackMisc::Network::CServer &getConnectedServer() const;
+        const swift::misc::network::CServer &getConnectedServer() const;
 
         //! Current ECO system of connected server
-        const BlackMisc::Network::CEcosystem &getCurrentEcosystem() const;
+        const swift::misc::network::CEcosystem &getCurrentEcosystem() const;
 
         //! Supports VATSIM data file
         //! \remark depends on currently connected Ecosystem
         bool supportsVatsimDataFile() const;
 
         //! Distance calculation
-        BlackMisc::PhysicalQuantities::CLength calculateDistanceToOwnAircraft(const BlackMisc::Aviation::CAircraftSituation &situation) const;
+        swift::misc::physical_quantities::CLength calculateDistanceToOwnAircraft(const swift::misc::aviation::CAircraftSituation &situation) const;
 
         //! Angle calculation
-        BlackMisc::PhysicalQuantities::CAngle calculateBearingToOwnAircraft(const BlackMisc::Aviation::CAircraftSituation &situation) const;
+        swift::misc::physical_quantities::CAngle calculateBearingToOwnAircraft(const swift::misc::aviation::CAircraftSituation &situation) const;
 
         //! Store an aircraft situation under consideration of gnd.flags/CG and elevation
         //! \threadsafe
         //! \remark sets gnd.flag from parts if parts are available
         //! \remark uses gnd.elevation if found
-        virtual BlackMisc::Aviation::CAircraftSituation storeAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation, bool allowTestOffset = true) override;
+        virtual swift::misc::aviation::CAircraftSituation storeAircraftSituation(const swift::misc::aviation::CAircraftSituation &situation, bool allowTestOffset = true) override;
 
         //! Add or update aircraft
-        BlackMisc::Simulation::CSimulatedAircraft addOrUpdateAircraftInRange(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery, const QString &modelString, BlackMisc::Simulation::CAircraftModel::ModelType modelType, BlackMisc::CStatusMessageList *log);
+        swift::misc::simulation::CSimulatedAircraft addOrUpdateAircraftInRange(const swift::misc::aviation::CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery, const QString &modelString, swift::misc::simulation::CAircraftModel::ModelType modelType, swift::misc::CStatusMessageList *log);
 
         //! Add new aircraft, ignored if aircraft already exists
         //! \remark position to own aircraft set, VATSIM data file data considered
         //! \threadsafe
-        bool addNewAircraftInRange(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+        bool addNewAircraftInRange(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
         //! Asynchronously add aircraft
         //! \threadsafe
         //! \sa addNewAircraftInRange
-        void asyncReInitializeAllAircraft(const BlackMisc::Simulation::CSimulatedAircraftList &aircraft, bool readyForModelMatching);
+        void asyncReInitializeAllAircraft(const swift::misc::simulation::CSimulatedAircraftList &aircraft, bool readyForModelMatching);
 
         //! Update online stations by callsign
-        int updateOnlineStation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true, bool sendSignal = true);
+        int updateOnlineStation(const swift::misc::aviation::CCallsign &callsign, const swift::misc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true, bool sendSignal = true);
 
         //! Handle max.range
-        bool handleMaxRange(const BlackMisc::Aviation::CAircraftSituation &situation);
+        bool handleMaxRange(const swift::misc::aviation::CAircraftSituation &situation);
 
         //! Call CAirspaceMonitor::onCustomFSInnPacketReceived with stored packet
-        bool recallFsInnPacket(const BlackMisc::Aviation::CCallsign &callsign);
+        bool recallFsInnPacket(const swift::misc::aviation::CCallsign &callsign);
 
         //! Send the information if aircraft and(!) client are available
         //! \note it can take some time to obtain all data for model matching, so function recursively calls itself if something is still missing (trial)
         //! \sa reverseLookupModelWithFlightplanData
-        void sendReadyForModelMatching(const BlackMisc::Aviation::CCallsign &callsign, MatchingReadinessFlag rf);
+        void sendReadyForModelMatching(const swift::misc::aviation::CCallsign &callsign, MatchingReadinessFlag rf);
 
         //! Make sure we got ICAO data
         //! \remark did we get any responses for ICAO data (standard, FsInn)
-        void verifyReceivedIcaoData(const BlackMisc::Aviation::CCallsign &callsign);
+        void verifyReceivedIcaoData(const swift::misc::aviation::CCallsign &callsign);
 
         //! Reverse lookup, if available flight plan data are considered
         //! \remark this is where a model is created based on network data
         //! \ingroup reverselookup
-        BlackMisc::Simulation::CAircraftModel reverseLookupModelWithFlightplanData(
-            const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcao,
+        swift::misc::simulation::CAircraftModel reverseLookupModelWithFlightplanData(
+            const swift::misc::aviation::CCallsign &callsign, const QString &aircraftIcao,
             const QString &airlineIcao, const QString &liveryString, const QString &modelString,
-            BlackMisc::Simulation::CAircraftModel::ModelType type, BlackMisc::CStatusMessageList *log, bool runMatchinScript = true);
+            swift::misc::simulation::CAircraftModel::ModelType type, swift::misc::CStatusMessageList *log, bool runMatchinScript = true);
 
         //! Does this look like a co-pilot callsign
-        bool isCopilotAircraft(const BlackMisc::Aviation::CCallsign &callsign) const;
+        bool isCopilotAircraft(const swift::misc::aviation::CCallsign &callsign) const;
 
         //! Set matching readiness flag
-        Readiness &addMatchingReadinessFlag(const BlackMisc::Aviation::CCallsign &callsign, MatchingReadinessFlag mrf);
+        Readiness &addMatchingReadinessFlag(const swift::misc::aviation::CCallsign &callsign, MatchingReadinessFlag mrf);
 
         //! Extrapolates elevation into front (first) element from 2nd and 3rd element
         //! \pre the list must be sorted latest first and containt at least 3 elements
-        static bool extrapolateElevation(BlackMisc::Aviation::CAircraftSituationList &situations, const BlackMisc::Aviation::CAircraftSituationChange &change);
+        static bool extrapolateElevation(swift::misc::aviation::CAircraftSituationList &situations, const swift::misc::aviation::CAircraftSituationChange &change);
 
         //! Extrapolated between the 2 situations for situation
         //! \remark normally used if situationToBeUpdated is not between oldSituation and olderSituation (that would be interpolation)
         //! \return false if there are no two elevations, there is already an elevation, or no extrapolation is possible (too much deviation)
-        static bool extrapolateElevation(BlackMisc::Aviation::CAircraftSituation &situationToBeUpdated, const BlackMisc::Aviation::CAircraftSituation &oldSituation,
-                                         const BlackMisc::Aviation::CAircraftSituation &olderSituation, const BlackMisc::Aviation::CAircraftSituationChange &oldChange);
+        static bool extrapolateElevation(swift::misc::aviation::CAircraftSituation &situationToBeUpdated, const swift::misc::aviation::CAircraftSituation &oldSituation,
+                                         const swift::misc::aviation::CAircraftSituation &olderSituation, const swift::misc::aviation::CAircraftSituationChange &oldChange);
 
         //! Create aircraft in range, this is the only place where a new aircraft should be added
-        void onAircraftUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
+        void onAircraftUpdateReceived(const swift::misc::aviation::CAircraftSituation &situation, const swift::misc::aviation::CTransponder &transponder);
 
         //! Create ATC station, this is the only place where an online ATC station should be added
-        void onAtcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range);
+        void onAtcPositionUpdate(const swift::misc::aviation::CCallsign &callsign, const swift::misc::physical_quantities::CFrequency &frequency, const swift::misc::geo::CCoordinateGeodetic &position, const swift::misc::physical_quantities::CLength &range);
 
         //! Receive FSInn packet
         //! \remark This can happen even without a query before
-        void onCustomFSInnPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &modelString);
+        void onCustomFSInnPacketReceived(const swift::misc::aviation::CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &modelString);
 
-        void onRealNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
-        void onCapabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, BlackMisc::Network::CClient::Capabilities clientCaps);
-        void onServerReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server);
-        void onFlightPlanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);
-        void onAtcControllerDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
-        void onAtisReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atisMessage);
-        void onAtisLogoffTimeReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
-        void onIcaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery);
-        void onPilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
-        void onFrequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
+        void onRealNameReplyReceived(const swift::misc::aviation::CCallsign &callsign, const QString &realname);
+        void onCapabilitiesReplyReceived(const swift::misc::aviation::CCallsign &callsign, swift::misc::network::CClient::Capabilities clientCaps);
+        void onServerReplyReceived(const swift::misc::aviation::CCallsign &callsign, const QString &server);
+        void onFlightPlanReceived(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CFlightPlan &flightPlan);
+        void onAtcControllerDisconnected(const swift::misc::aviation::CCallsign &callsign);
+        void onAtisReceived(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CInformationMessage &atisMessage);
+        void onAtisLogoffTimeReceived(const swift::misc::aviation::CCallsign &callsign, const QString &zuluTime);
+        void onIcaoCodesReceived(const swift::misc::aviation::CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery);
+        void onPilotDisconnected(const swift::misc::aviation::CCallsign &callsign);
+        void onFrequencyReceived(const swift::misc::aviation::CCallsign &callsign, const swift::misc::physical_quantities::CFrequency &frequency);
         void onReceivedVatsimDataFile();
-        void onAircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, qint64 currentOffsetMs);
-        void onAircraftInterimUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
-        void onAircraftVisualUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
-        void onAircraftSimDataUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts, qint64 currentOffsetMs, const QString &aircraftIcao, const QString &airlineIcao);
-        void onConnectionStatusChanged(BlackMisc::Network::CConnectionStatus oldStatus, BlackMisc::Network::CConnectionStatus newStatus);
-        void onRevBAircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &config, qint64 currentOffsetMs);
+        void onAircraftConfigReceived(const swift::misc::aviation::CCallsign &callsign, const QJsonObject &jsonObject, qint64 currentOffsetMs);
+        void onAircraftInterimUpdateReceived(const swift::misc::aviation::CAircraftSituation &situation);
+        void onAircraftVisualUpdateReceived(const swift::misc::aviation::CAircraftSituation &situation);
+        void onAircraftSimDataUpdateReceived(const swift::misc::aviation::CAircraftSituation &situation, const swift::misc::aviation::CAircraftParts &parts, qint64 currentOffsetMs, const QString &aircraftIcao, const QString &airlineIcao);
+        void onConnectionStatusChanged(swift::misc::network::CConnectionStatus oldStatus, swift::misc::network::CConnectionStatus newStatus);
+        void onRevBAircraftConfigReceived(const swift::misc::aviation::CCallsign &callsign, const QString &config, qint64 currentOffsetMs);
     };
 } // namespace
 

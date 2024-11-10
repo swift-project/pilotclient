@@ -8,8 +8,8 @@
 
 #include "blackgui/editors/form.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/aviation/atcstationlist.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/aviation/atcstationlist.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -34,33 +34,33 @@ namespace BlackGui::Editors
         virtual ~CCockpitComForm() override;
 
         //! COM frequencies displayed
-        void setFrequencies(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
+        void setFrequencies(const swift::misc::aviation::CComSystem &com1, const swift::misc::aviation::CComSystem &com2);
 
         //! Set the XPDR values
-        void setTransponder(const BlackMisc::Aviation::CTransponder &transponder);
+        void setTransponder(const swift::misc::aviation::CTransponder &transponder);
 
-        //! Set to BlackMisc::Aviation::CTransponder::StateIdent
+        //! Set to swift::misc::aviation::CTransponder::StateIdent
         void setTransponderModeStateIdent();
 
         //! Set all values
-        void setValue(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+        void setValue(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
         //! Get SELCAL
-        BlackMisc::Aviation::CSelcal getSelcal() const;
+        swift::misc::aviation::CSelcal getSelcal() const;
 
         //! Set SELCAL
-        void setSelcal(const BlackMisc::Aviation::CSelcal &selcal);
+        void setSelcal(const swift::misc::aviation::CSelcal &selcal);
 
         //! \name Form class implementations
         //! @{
         virtual void setReadOnly(bool readonly) override;
         virtual void setSelectOnly() override;
-        virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+        virtual swift::misc::CStatusMessageList validate(bool nested = false) const override;
         //! @}
 
     signals:
         //! \copydoc BlackGui::Components::CTransponderModeSelector::transponderModeChanged
-        void transponderModeChanged(BlackMisc::Aviation::CTransponder::TransponderMode newMode);
+        void transponderModeChanged(swift::misc::aviation::CTransponder::TransponderMode newMode);
 
         //! \copydoc BlackGui::Components::CTransponderModeSelector::transponderStateIdentEnded
         void transponderStateIdentEnded();
@@ -69,10 +69,10 @@ namespace BlackGui::Editors
         void testSelcal();
 
         //! SELCAL value changed
-        void changedSelcal(const BlackMisc::Aviation::CSelcal &selcal);
+        void changedSelcal(const swift::misc::aviation::CSelcal &selcal);
 
         //! GUI values changed
-        void changedCockpitValues(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+        void changedCockpitValues(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
         //! @{
         //! Request COM text messages
@@ -87,7 +87,7 @@ namespace BlackGui::Editors
         void initLeds();
 
         //! Cockpit values to aircraft
-        BlackMisc::Simulation::CSimulatedAircraft cockpitValuesToAircraftObject();
+        swift::misc::simulation::CSimulatedAircraft cockpitValuesToAircraftObject();
 
         //! GUI values have been changed, will trigger CCockpitComForm::guiChangedCockpitValues
         void onGuiChangedCockpitValues();

@@ -7,13 +7,13 @@
 #define BLACKCORE_VATSIM_SETTINGS_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/settingscache.h"
-#include "blackmisc/valueobject.h"
-#include "blackmisc/pq/time.h"
-#include "blackmisc/network/serverlist.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
-#include "blackmisc/fileutils.h"
+#include "misc/settingscache.h"
+#include "misc/valueobject.h"
+#include "misc/pq/time.h"
+#include "misc/network/serverlist.h"
+#include "misc/swiftdirectories.h"
+#include "misc/directoryutils.h"
+#include "misc/fileutils.h"
 
 BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackCore::Vatsim, CReaderSettings)
 BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackCore::Vatsim, CRawFsdMessageSettings)
@@ -23,13 +23,13 @@ namespace BlackCore::Vatsim
     /*!
      * Settings used with readers
      */
-    class BLACKCORE_EXPORT CReaderSettings : public BlackMisc::CValueObject<BlackCore::Vatsim::CReaderSettings>
+    class BLACKCORE_EXPORT CReaderSettings : public swift::misc::CValueObject<BlackCore::Vatsim::CReaderSettings>
     {
     public:
         //! Properties by index
         enum ColumnIndex
         {
-            IndexInitialTime = BlackMisc::CPropertyIndexRef::GlobalIndexCSettingsReaders,
+            IndexInitialTime = swift::misc::CPropertyIndexRef::GlobalIndexCSettingsReaders,
             IndexPeriodicTime,
             IndexNeverUpdate
         };
@@ -38,38 +38,38 @@ namespace BlackCore::Vatsim
         CReaderSettings();
 
         //! Simplified constructor
-        CReaderSettings(const BlackMisc::PhysicalQuantities::CTime &initialTime, const BlackMisc::PhysicalQuantities::CTime &periodicTime, bool neverUpdate = false);
+        CReaderSettings(const swift::misc::physical_quantities::CTime &initialTime, const swift::misc::physical_quantities::CTime &periodicTime, bool neverUpdate = false);
 
         //! Get time
-        const BlackMisc::PhysicalQuantities::CTime &getInitialTime() const { return m_initialTime; }
+        const swift::misc::physical_quantities::CTime &getInitialTime() const { return m_initialTime; }
 
         //! Set time
-        void setInitialTime(const BlackMisc::PhysicalQuantities::CTime &time) { m_initialTime = time; }
+        void setInitialTime(const swift::misc::physical_quantities::CTime &time) { m_initialTime = time; }
 
         //! Get time
-        const BlackMisc::PhysicalQuantities::CTime &getPeriodicTime() const { return m_periodicTime; }
+        const swift::misc::physical_quantities::CTime &getPeriodicTime() const { return m_periodicTime; }
 
         //! Set time
-        void setPeriodicTime(const BlackMisc::PhysicalQuantities::CTime &time) { m_periodicTime = time; }
+        void setPeriodicTime(const swift::misc::physical_quantities::CTime &time) { m_periodicTime = time; }
 
         //! Never ever update?
         bool isNeverUpdate() const { return m_neverUpdate; }
 
-        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-        QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
+        //! \copydoc swift::misc::mixin::Index::propertyByIndex
+        QVariant propertyByIndex(swift::misc::CPropertyIndexRef index) const;
 
-        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
+        //! \copydoc swift::misc::mixin::Index::setPropertyByIndex
+        void setPropertyByIndex(swift::misc::CPropertyIndexRef index, const QVariant &variant);
 
-        //! \copydoc BlackMisc::Mixin::String::toQString
+        //! \copydoc swift::misc::mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
         //! Settings used when a reader is manually triggered and never updates
         static const CReaderSettings &neverUpdateSettings();
 
     private:
-        BlackMisc::PhysicalQuantities::CTime m_initialTime { 30.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() };
-        BlackMisc::PhysicalQuantities::CTime m_periodicTime { 30.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() };
+        swift::misc::physical_quantities::CTime m_initialTime { 30.0, swift::misc::physical_quantities::CTimeUnit::s() };
+        swift::misc::physical_quantities::CTime m_periodicTime { 30.0, swift::misc::physical_quantities::CTimeUnit::s() };
         bool m_neverUpdate = false;
 
         BLACK_METACLASS(
@@ -81,49 +81,49 @@ namespace BlackCore::Vatsim
     };
 
     //! Reader settings
-    struct TVatsimDataFile : public BlackMisc::TSettingTrait<CReaderSettings>
+    struct TVatsimDataFile : public swift::misc::TSettingTrait<CReaderSettings>
     {
-        //! \copydoc BlackMisc::TSettingTrait::key
+        //! \copydoc swift::misc::TSettingTrait::key
         static const char *key() { return "vatsimreaders/datafile"; }
 
-        //! \copydoc BlackMisc::TSettingTrait::humanReadable
+        //! \copydoc swift::misc::TSettingTrait::humanReadable
         static const QString &humanReadable()
         {
             static const QString name("VATSIM data file");
             return name;
         }
 
-        //! \copydoc BlackMisc::TSettingTrait::defaultValue
+        //! \copydoc swift::misc::TSettingTrait::defaultValue
         static const BlackCore::Vatsim::CReaderSettings &defaultValue()
         {
-            static const BlackCore::Vatsim::CReaderSettings reader { { 25.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() }, { 120.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() } };
+            static const BlackCore::Vatsim::CReaderSettings reader { { 25.0, swift::misc::physical_quantities::CTimeUnit::s() }, { 120.0, swift::misc::physical_quantities::CTimeUnit::s() } };
             return reader;
         }
     };
 
     //! Reader settings
-    struct TVatsimMetars : public BlackMisc::TSettingTrait<CReaderSettings>
+    struct TVatsimMetars : public swift::misc::TSettingTrait<CReaderSettings>
     {
-        //! \copydoc BlackMisc::TSettingTrait::key
+        //! \copydoc swift::misc::TSettingTrait::key
         static const char *key() { return "vatsimreaders/metars"; }
 
-        //! \copydoc BlackMisc::TSettingTrait::humanReadable
+        //! \copydoc swift::misc::TSettingTrait::humanReadable
         static const QString &humanReadable()
         {
             static const QString name("VATSIM METARs");
             return name;
         }
 
-        //! \copydoc BlackMisc::TSettingTrait::defaultValue
+        //! \copydoc swift::misc::TSettingTrait::defaultValue
         static const BlackCore::Vatsim::CReaderSettings &defaultValue()
         {
-            static const BlackCore::Vatsim::CReaderSettings reader { { 35.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() }, { 300.0, BlackMisc::PhysicalQuantities::CTimeUnit::s() } };
+            static const BlackCore::Vatsim::CReaderSettings reader { { 35.0, swift::misc::physical_quantities::CTimeUnit::s() }, { 300.0, swift::misc::physical_quantities::CTimeUnit::s() } };
             return reader;
         }
     };
 
     //! FSD Message settings
-    class BLACKCORE_EXPORT CRawFsdMessageSettings : public BlackMisc::CValueObject<BlackCore::Vatsim::CRawFsdMessageSettings>
+    class BLACKCORE_EXPORT CRawFsdMessageSettings : public swift::misc::CValueObject<BlackCore::Vatsim::CRawFsdMessageSettings>
     {
     public:
         //! File writing mode
@@ -138,7 +138,7 @@ namespace BlackCore::Vatsim
         //! Properties by index
         enum ColumnIndex
         {
-            IndexRawFsdMessagesEnabled = BlackMisc::CPropertyIndexRef::GlobalIndexRawFsdMessageSettings,
+            IndexRawFsdMessagesEnabled = swift::misc::CPropertyIndexRef::GlobalIndexRawFsdMessageSettings,
             IndexFileDir,
             IndexFileWriteMode
         };
@@ -158,13 +158,13 @@ namespace BlackCore::Vatsim
         //! Get file write mode
         FileWriteMode getFileWriteMode() const { return m_fileWriteMode; }
 
-        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-        QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
+        //! \copydoc swift::misc::mixin::Index::propertyByIndex
+        QVariant propertyByIndex(swift::misc::CPropertyIndexRef index) const;
 
-        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
+        //! \copydoc swift::misc::mixin::Index::setPropertyByIndex
+        void setPropertyByIndex(swift::misc::CPropertyIndexRef index, const QVariant &variant);
 
-        //! \copydoc BlackMisc::Mixin::String::toQString
+        //! \copydoc swift::misc::mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
     private:
@@ -181,36 +181,36 @@ namespace BlackCore::Vatsim
     };
 
     //! Raw FSD message settings
-    struct TRawFsdMessageSetting : public BlackMisc::TSettingTrait<CRawFsdMessageSettings>
+    struct TRawFsdMessageSetting : public swift::misc::TSettingTrait<CRawFsdMessageSettings>
     {
-        //! \copydoc BlackMisc::TSettingTrait::key
+        //! \copydoc swift::misc::TSettingTrait::key
         static const char *key() { return "network/rawfsdmessagelog"; }
 
-        //! \copydoc BlackMisc::TSettingTrait::humanReadable
+        //! \copydoc swift::misc::TSettingTrait::humanReadable
         static const QString &humanReadable()
         {
             static const QString name("FSD message Logging");
             return name;
         }
 
-        /* //! \copydoc BlackMisc::TSettingTrait::isValid
+        /* //! \copydoc swift::misc::TSettingTrait::isValid
         static bool isValid(const CRawFsdMessageSettings &setting, QString &)
         {
             if (setting.areRawFsdMessagesEnabled()) { return !setting.getFileDir().isEmpty(); }
             return true;
         }*/
 
-        //! \copydoc BlackMisc::TSettingTrait::defaultValue
+        //! \copydoc swift::misc::TSettingTrait::defaultValue
         static const CRawFsdMessageSettings &defaultValue()
         {
-            static const CRawFsdMessageSettings setting { false, BlackMisc::CSwiftDirectories::logDirectory() };
+            static const CRawFsdMessageSettings setting { false, swift::misc::CSwiftDirectories::logDirectory() };
             return setting;
         }
     };
 } // ns
 
 Q_DECLARE_METATYPE(BlackCore::Vatsim::CReaderSettings)
-Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackCore::Vatsim::CReaderSettings>)
+Q_DECLARE_METATYPE(swift::misc::CCollection<BlackCore::Vatsim::CReaderSettings>)
 Q_DECLARE_METATYPE(BlackCore::Vatsim::CRawFsdMessageSettings)
 Q_DECLARE_METATYPE(BlackCore::Vatsim::CRawFsdMessageSettings::FileWriteMode)
 

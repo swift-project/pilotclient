@@ -8,7 +8,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/modelfilter.h"
-#include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "misc/aviation/aircrafticaocodelist.h"
 
 #include <QString>
 
@@ -16,7 +16,7 @@ namespace BlackGui::Models
 {
     //! Filter for aircraft ICAO data
     class BLACKGUI_EXPORT CAircraftIcaoFilter :
-        public IModelFilter<BlackMisc::Aviation::CAircraftIcaoCodeList>
+        public IModelFilter<swift::misc::aviation::CAircraftIcaoCodeList>
     {
     public:
         //! Constructor
@@ -28,7 +28,7 @@ namespace BlackGui::Models
                             const QString &combinedType);
 
         //! \copydoc IModelFilter::filter
-        virtual BlackMisc::Aviation::CAircraftIcaoCodeList filter(const BlackMisc::Aviation::CAircraftIcaoCodeList &inContainer) const override;
+        virtual swift::misc::aviation::CAircraftIcaoCodeList filter(const swift::misc::aviation::CAircraftIcaoCodeList &inContainer) const override;
 
     private:
         int m_id = -1;

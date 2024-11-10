@@ -4,7 +4,7 @@
 #include "blackcore/fsd/clientquery.h"
 #include "blackcore/fsd/serializer.h"
 
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
 namespace BlackCore::Fsd
 {
@@ -31,7 +31,7 @@ namespace BlackCore::Fsd
     {
         if (tokens.size() < 3)
         {
-            BlackMisc::CLogMessage(static_cast<ClientQuery *>(nullptr)).debug(u"Wrong number of arguments.");
+            swift::misc::CLogMessage(static_cast<ClientQuery *>(nullptr)).debug(u"Wrong number of arguments.");
             return {};
         }
 

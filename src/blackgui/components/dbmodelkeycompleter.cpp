@@ -8,7 +8,7 @@
 #include <QCompleter>
 
 using namespace BlackCore;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc::simulation;
 
 namespace BlackGui::Components
 {
@@ -22,7 +22,7 @@ namespace BlackGui::Components
         connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbModelsRead, this, &CDbModelKeyCompleter::onModelsRead);
     }
 
-    void CDbModelKeyCompleter::setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator)
+    void CDbModelKeyCompleter::setSimulator(const swift::misc::simulation::CSimulatorInfo &simulator)
     {
         if (m_simulator == simulator) { return; }
         m_simulator = simulator;

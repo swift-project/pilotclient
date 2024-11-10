@@ -7,16 +7,16 @@
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackmisc/audio/audioutils.h"
-#include "blackmisc/crashhandler.h"
+#include "misc/audio/audioutils.h"
+#include "misc/crashhandler.h"
 
 #include <cstdlib>
 
 #include <QApplication>
 
 using namespace BlackGui;
-using namespace BlackMisc;
-using namespace BlackMisc::Audio;
+using namespace swift::misc;
+using namespace swift::misc::audio;
 using namespace BlackCore;
 
 int main(int argc, char *argv[])

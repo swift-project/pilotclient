@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_MODELMATCHERLOGENABLE_H
 #define BLACKGUI_COMPONENTS_MODELMATCHERLOGENABLE_H
 
-#include "blackmisc/network/connectionstatus.h"
+#include "misc/network/connectionstatus.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -50,7 +50,7 @@ namespace BlackGui::Components
         void valuesChanged();
 
         //! Connection status has been changed
-        void connectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+        void connectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
     };
 } // ns
 

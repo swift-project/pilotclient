@@ -3,7 +3,7 @@
 
 #include "blackcore/fsd/killrequest.h"
 
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
 namespace BlackCore::Fsd
 {
@@ -28,7 +28,7 @@ namespace BlackCore::Fsd
     {
         if (tokens.size() < 2)
         {
-            BlackMisc::CLogMessage(static_cast<KillRequest *>(nullptr)).debug(u"Wrong number of arguments.");
+            swift::misc::CLogMessage(static_cast<KillRequest *>(nullptr)).debug(u"Wrong number of arguments.");
             return {};
         };
         return KillRequest(tokens[0], tokens[1], tokens.size() > 2 ? tokens[2] : QString());

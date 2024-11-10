@@ -3,14 +3,14 @@
 
 #include "blackgui/components/serverlistselector.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/sequence.h"
+#include "misc/sequence.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/db/icaodatareader.h"
 
 #include <QString>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 using namespace BlackGui;
 using namespace BlackCore;
 using namespace BlackCore::Db;

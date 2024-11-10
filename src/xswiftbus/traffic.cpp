@@ -15,7 +15,7 @@
 #include <XPLM/XPLMUtilities.h>
 #include <XPLM/XPLMPlanes.h>
 #include <XPLM/XPLMPlugin.h>
-#include "blackmisc/simulation/xplane/qtfreeutils.h"
+#include "misc/simulation/xplane/qtfreeutils.h"
 #include <cassert>
 #include <cstring>
 #include <cmath>
@@ -27,7 +27,7 @@
 
 float XPMP_PrepListHook(float, float, int, void *); // defined in xplanemp2/src/Renderer.cpp
 
-using namespace BlackMisc::Simulation::XPlane::QtFreeUtils;
+using namespace swift::misc::simulation::xplane::qtfreeutils;
 using namespace std::chrono_literals;
 
 namespace XSwiftBus

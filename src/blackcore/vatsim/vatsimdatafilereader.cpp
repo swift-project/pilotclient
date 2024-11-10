@@ -3,25 +3,25 @@
 
 #include "blackcore/vatsim/vatsimdatafilereader.h"
 #include "blackcore/application.h"
-#include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/aviation/altitude.h"
-#include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/network/server.h"
-#include "blackmisc/network/url.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/pq/frequency.h"
-#include "blackmisc/pq/length.h"
-#include "blackmisc/pq/speed.h"
-#include "blackmisc/pq/units.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/predicates.h"
-#include "blackmisc/range.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/verify.h"
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/aviation/altitude.h"
+#include "misc/aviation/atcstation.h"
+#include "misc/geo/coordinategeodetic.h"
+#include "misc/network/entityflags.h"
+#include "misc/network/server.h"
+#include "misc/network/url.h"
+#include "misc/network/user.h"
+#include "misc/pq/frequency.h"
+#include "misc/pq/length.h"
+#include "misc/pq/speed.h"
+#include "misc/pq/units.h"
+#include "misc/logmessage.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/predicates.h"
+#include "misc/range.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/statusmessage.h"
+#include "misc/verify.h"
 
 #include <QStringBuilder>
 #include <QByteArray>
@@ -39,12 +39,12 @@
 #include <QtGlobal>
 #include <QPointer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::geo;
+using namespace swift::misc::simulation;
+using namespace swift::misc::physical_quantities;
 using namespace BlackCore::Data;
 
 namespace BlackCore::Vatsim
@@ -79,7 +79,7 @@ namespace BlackCore::Vatsim
 
     CUserList CVatsimDataFileReader::getPilotsForCallsigns(const CCallsignSet &callsigns) const
     {
-        return this->getAircraft().findByCallsigns(callsigns).transform(Predicates::MemberTransform(&CSimulatedAircraft::getPilot));
+        return this->getAircraft().findByCallsigns(callsigns).transform(predicates::MemberTransform(&CSimulatedAircraft::getPilot));
     }
 
     CUserList CVatsimDataFileReader::getPilotsForCallsign(const CCallsign &callsign) const
@@ -127,7 +127,7 @@ namespace BlackCore::Vatsim
 
     CUserList CVatsimDataFileReader::getControllersForCallsigns(const CCallsignSet &callsigns) const
     {
-        return this->getAtcStations().findByCallsigns(callsigns).transform(Predicates::MemberTransform(&CAtcStation::getController));
+        return this->getAtcStations().findByCallsigns(callsigns).transform(predicates::MemberTransform(&CAtcStation::getController));
     }
 
     CUserList CVatsimDataFileReader::getUsersForCallsign(const CCallsign &callsign) const

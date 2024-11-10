@@ -9,7 +9,7 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/filters/filterwidget.h"
 #include "blackgui/models/modelfilter.h"
-#include "blackmisc/rgbcolor.h"
+#include "misc/rgbcolor.h"
 
 #include <QObject>
 #include <QScopedPointer>
@@ -19,7 +19,7 @@ namespace Ui
 {
     class CLiveryFilterBar;
 }
-namespace BlackMisc::Aviation
+namespace swift::misc::aviation
 {
     class CLivery;
     class CLiveryList;
@@ -31,7 +31,7 @@ namespace BlackGui::Filters
      */
     class BLACKGUI_EXPORT CLiveryFilterBar :
         public CFilterWidget,
-        public Models::IModelFilterProvider<BlackMisc::Aviation::CLiveryList>
+        public Models::IModelFilterProvider<swift::misc::aviation::CLiveryList>
     {
         Q_OBJECT
 
@@ -43,13 +43,13 @@ namespace BlackGui::Filters
         virtual ~CLiveryFilterBar() override;
 
         //! \copydoc Models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Aviation::CLiveryList>> createModelFilter() const override;
+        virtual std::unique_ptr<BlackGui::Models::IModelFilter<swift::misc::aviation::CLiveryList>> createModelFilter() const override;
 
         //! Filter by livery values
-        void filter(const BlackMisc::Aviation::CLivery &livery);
+        void filter(const swift::misc::aviation::CLivery &livery);
 
         //! Filter by airline values
-        void filter(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao);
+        void filter(const swift::misc::aviation::CAirlineIcaoCode &airlineIcao);
 
     public slots:
         //! \copydoc CFilterWidget::onRowCountChanged
@@ -61,7 +61,7 @@ namespace BlackGui::Filters
 
     private:
         //! Color changed
-        void onColorChanged(const BlackMisc::CRgbColor &color);
+        void onColorChanged(const swift::misc::CRgbColor &color);
 
         //! Color distance changed
         void onColorDistanceChanged(int distance);

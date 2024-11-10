@@ -6,8 +6,8 @@
 #include "blackgui/filters/filterbarbuttons.h"
 #include "blackgui/models/airlineicaofilter.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/country.h"
+#include "misc/aviation/airlineicaocodelist.h"
+#include "misc/country.h"
 #include "ui_airlineicaofilterbar.h"
 
 #include <QCheckBox>
@@ -15,8 +15,8 @@
 #include <QString>
 #include <QIntValidator>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 using namespace BlackGui::Models;
 using namespace BlackGui::Components;
 

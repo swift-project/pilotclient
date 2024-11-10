@@ -4,9 +4,9 @@
 //! \file
 
 #include "volumesampleprovider.h"
-#include "blackmisc/metadatautils.h"
+#include "misc/metadatautils.h"
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace swift::sound::sample_provider
 {

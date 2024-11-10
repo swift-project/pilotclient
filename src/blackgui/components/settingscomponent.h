@@ -7,7 +7,7 @@
 #define BLACKGUI_COMPONENTS_SETTINGSCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/settings/simulatorsettings.h"
 #include <QColor>
 #include <QObject>
 #include <QScopedPointer>
@@ -52,7 +52,7 @@ namespace BlackGui::Components
         ~CSettingsComponent() override;
 
         //! Settings for given simulator
-        BlackMisc::Simulation::Settings::CSpecializedSimulatorSettings getSimulatorSettings(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+        swift::misc::simulation::settings::CSpecializedSimulatorSettings getSimulatorSettings(const swift::misc::simulation::CSimulatorInfo &simulator) const;
 
         //! Set the tab
         void setTab(SettingTab tab);

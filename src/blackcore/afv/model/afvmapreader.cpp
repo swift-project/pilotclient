@@ -4,14 +4,14 @@
 #include "blackcore/afv/model/afvmapreader.h"
 #include "blackcore/application.h"
 #include "blackcore/afv/dto.h"
-#include "blackmisc/aviation/callsign.h"
+#include "misc/aviation/callsign.h"
 #include <QEventLoop>
 #include <QNetworkReply>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
 
-using namespace BlackMisc::Aviation;
+using namespace swift::misc::aviation;
 
 namespace BlackCore::Afv::Model
 {

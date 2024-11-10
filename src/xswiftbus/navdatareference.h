@@ -8,7 +8,7 @@
 
 namespace XSwiftBus
 {
-    //! Simplified version of CNavDataReference of \sa BlackMisc::Simulation::XPlane::CNavDataReference
+    //! Simplified version of CNavDataReference of \sa swift::misc::simulation::XPlane::CNavDataReference
     class CNavDataReference
     {
     public:
@@ -20,13 +20,13 @@ namespace XSwiftBus
             : m_id(id), m_latitudeDegrees(latitudeDegrees), m_longitudeDegrees(longitudeDegrees)
         {}
 
-        //! \copydoc BlackMisc::Simulation::XPlane::CNavDataReference::id
+        //! \copydoc swift::misc::simulation::XPlane::CNavDataReference::id
         int id() const { return m_id; }
 
-        //! \copydoc BlackMisc::Simulation::XPlane::CNavDataReference::latitude
+        //! \copydoc swift::misc::simulation::XPlane::CNavDataReference::latitude
         double latitude() const { return m_latitudeDegrees; }
 
-        //! \copydoc BlackMisc::Simulation::XPlane::CNavDataReference::longitude
+        //! \copydoc swift::misc::simulation::XPlane::CNavDataReference::longitude
         double longitude() const { return m_longitudeDegrees; }
 
     private:

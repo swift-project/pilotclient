@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackgui/models/airlineicaofilter.h"
-#include "blackmisc/aviation/airlineicaocode.h"
+#include "misc/aviation/airlineicaocode.h"
 
-using namespace BlackMisc::Aviation;
+using namespace swift::misc::aviation;
 
 namespace BlackGui::Models
 {

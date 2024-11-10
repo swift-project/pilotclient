@@ -3,7 +3,7 @@
 
 #include "blackcore/fsd/deleteatc.h"
 
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
 namespace BlackCore::Fsd
 {
@@ -27,7 +27,7 @@ namespace BlackCore::Fsd
     {
         if (tokens.isEmpty())
         {
-            BlackMisc::CLogMessage(static_cast<DeleteAtc *>(nullptr)).debug(u"Wrong number of arguments.");
+            swift::misc::CLogMessage(static_cast<DeleteAtc *>(nullptr)).debug(u"Wrong number of arguments.");
             return {};
         };
         return DeleteAtc(tokens[0], (tokens.size() >= 2) ? tokens[1] : QString());

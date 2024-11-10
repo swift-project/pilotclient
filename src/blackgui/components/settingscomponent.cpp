@@ -14,14 +14,14 @@
 #include <QToolButton>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Audio;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Input;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::Settings;
+using namespace swift::misc;
+using namespace swift::misc::network;
+using namespace swift::misc::aviation;
+using namespace swift::misc::audio;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::input;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::settings;
 using namespace BlackCore;
 using namespace BlackGui;
 using namespace swift::config;

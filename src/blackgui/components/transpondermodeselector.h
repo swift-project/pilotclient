@@ -7,7 +7,7 @@
 #define BLACKGUI_COMPONENTS_TRANSPONDERMODESELECTOR_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/aviation/transponder.h"
+#include "misc/aviation/transponder.h"
 
 #include <QComboBox>
 #include <QObject>
@@ -39,7 +39,7 @@ namespace BlackGui::Components
         static const QStringList &modes();
 
         //! Selected transponder mode
-        BlackMisc::Aviation::CTransponder::TransponderMode getSelectedTransponderMode() const;
+        swift::misc::aviation::CTransponder::TransponderMode getSelectedTransponderMode() const;
 
         //! Ident selected
         bool isIdentSelected() const;
@@ -51,21 +51,21 @@ namespace BlackGui::Components
         void setSelectedTransponderModeAsString(const QString &mode);
 
         //! Selected transponder mode
-        void setSelectedTransponderMode(BlackMisc::Aviation::CTransponder::TransponderMode mode);
+        void setSelectedTransponderMode(swift::misc::aviation::CTransponder::TransponderMode mode);
 
         //! Set to ident (transponder state)
         void setSelectedTransponderModeStateIdent();
 
     signals:
         //! Mode / state has been changed
-        void transponderModeChanged(BlackMisc::Aviation::CTransponder::TransponderMode newMode);
+        void transponderModeChanged(swift::misc::aviation::CTransponder::TransponderMode newMode);
 
         //! Ident phase ended
         void transponderStateIdentEnded();
 
     private:
-        BlackMisc::Aviation::CTransponder::TransponderMode m_currentMode = BlackMisc::Aviation::CTransponder::StateStandby;
-        BlackMisc::Aviation::CTransponder::TransponderMode m_resetMode = BlackMisc::Aviation::CTransponder::StateStandby;
+        swift::misc::aviation::CTransponder::TransponderMode m_currentMode = swift::misc::aviation::CTransponder::StateStandby;
+        swift::misc::aviation::CTransponder::TransponderMode m_resetMode = swift::misc::aviation::CTransponder::StateStandby;
         QTimer m_resetTimer;
     };
 } // ns

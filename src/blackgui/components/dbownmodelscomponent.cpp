@@ -10,12 +10,12 @@
 #include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/db/databaseutils.h"
-#include "blackmisc/simulation/aircraftmodelloaderprovider.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/processctrl.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/simulation/aircraftmodelloaderprovider.h"
+#include "misc/icons.h"
+#include "misc/swiftdirectories.h"
+#include "misc/logmessage.h"
+#include "misc/processctrl.h"
+#include "misc/statusmessage.h"
 #include "config/buildconfig.h"
 #include "ui_dbownmodelscomponent.h"
 
@@ -28,8 +28,8 @@
 #include <QMessageBox>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
 using namespace BlackCore::Db;
 using namespace BlackGui::Menus;
 using namespace BlackGui::Views;

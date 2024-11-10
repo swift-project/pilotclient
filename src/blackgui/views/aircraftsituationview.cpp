@@ -3,8 +3,8 @@
 
 #include "blackgui/views/aircraftsituationview.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 using namespace BlackGui::Models;
 using namespace BlackGui::Menus;
 

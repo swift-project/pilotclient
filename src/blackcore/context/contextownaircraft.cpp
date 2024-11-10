@@ -7,14 +7,14 @@
 #include "blackcore/context/contextownaircraftempty.h"
 #include "blackcore/context/contextownaircraftimpl.h"
 #include "blackcore/context/contextownaircraftproxy.h"
-#include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/dbusserver.h"
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/dbusserver.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::geo;
+using namespace swift::misc::simulation;
 
 namespace BlackCore::Context
 {

@@ -6,8 +6,8 @@
 #ifndef BLACKGUI_MODELS_AIRCRAFTICAOLISTMODEL_H
 #define BLACKGUI_MODELS_AIRCRAFTICAOLISTMODEL_H
 
-#include "blackmisc/aviation/aircrafticaocodelist.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
+#include "misc/aviation/aircrafticaocodelist.h"
+#include "misc/aviation/aircrafticaocode.h"
 #include "blackgui/models/listmodeldbobjects.h"
 #include "blackgui/blackguiexport.h"
 
@@ -15,7 +15,7 @@ namespace BlackGui::Models
 {
     //! Airport list model
     class BLACKGUI_EXPORT CAircraftIcaoCodeListModel :
-        public CListModelDbObjects<BlackMisc::Aviation::CAircraftIcaoCodeList, int, true>
+        public CListModelDbObjects<swift::misc::aviation::CAircraftIcaoCodeList, int, true>
     {
         Q_OBJECT
 

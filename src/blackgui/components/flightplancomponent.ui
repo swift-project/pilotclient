@@ -119,7 +119,7 @@
                <string>...</string>
               </property>
               <property name="icon">
-               <iconset resource="../../blackmisc/blackmisc.qrc">
+               <iconset resource="../../misc/misc.qrc">
                 <normaloff>:/pastel/icons/pastel/16/pencil.png</normaloff>:/pastel/icons/pastel/16/pencil.png</iconset>
               </property>
              </widget>
@@ -244,7 +244,7 @@
                <string>...</string>
               </property>
               <property name="icon">
-               <iconset resource="../../blackmisc/blackmisc.qrc">
+               <iconset resource="../../misc/misc.qrc">
                 <normaloff>:/pastel/icons/pastel/16/help.png</normaloff>:/pastel/icons/pastel/16/help.png</iconset>
               </property>
              </widget>
@@ -324,7 +324,7 @@
                 <string>Synchronize with simulator</string>
                </property>
                <property name="icon">
-                <iconset resource="../../blackmisc/blackmisc.qrc">
+                <iconset resource="../../misc/misc.qrc">
                  <normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</iconset>
                </property>
               </widget>
@@ -580,7 +580,7 @@
                <string>...</string>
               </property>
               <property name="icon">
-               <iconset resource="../../blackmisc/blackmisc.qrc">
+               <iconset resource="../../misc/misc.qrc">
                 <normaloff>:/pastel/icons/pastel/16/pencil.png</normaloff>:/pastel/icons/pastel/16/pencil.png</iconset>
               </property>
              </widget>
@@ -608,7 +608,7 @@
                <string>...</string>
               </property>
               <property name="icon">
-               <iconset resource="../../blackmisc/blackmisc.qrc">
+               <iconset resource="../../misc/misc.qrc">
                 <normaloff>:/pastel/icons/pastel/16/help.png</normaloff>:/pastel/icons/pastel/16/help.png</iconset>
               </property>
              </widget>
@@ -636,7 +636,7 @@
                <string>...</string>
               </property>
               <property name="icon">
-               <iconset resource="../../blackmisc/blackmisc.qrc">
+               <iconset resource="../../misc/misc.qrc">
                 <normaloff>:/pastel/icons/pastel/16/help.png</normaloff>:/pastel/icons/pastel/16/help.png</iconset>
               </property>
              </widget>
@@ -678,7 +678,7 @@
               <string>Save</string>
              </property>
              <property name="icon">
-              <iconset resource="../../blackmisc/blackmisc.qrc">
+              <iconset resource="../../misc/misc.qrc">
                <normaloff>:/pastel/icons/pastel/16/disk.png</normaloff>:/pastel/icons/pastel/16/disk.png</iconset>
              </property>
             </widget>
@@ -689,7 +689,7 @@
               <string>&amp;Reset</string>
              </property>
              <property name="icon">
-              <iconset resource="../../blackmisc/blackmisc.qrc">
+              <iconset resource="../../misc/misc.qrc">
                <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
              </property>
             </widget>
@@ -703,7 +703,7 @@
               <string>Download</string>
              </property>
              <property name="icon">
-              <iconset resource="../../blackmisc/blackmisc.qrc">
+              <iconset resource="../../misc/misc.qrc">
                <normaloff>:/diagona/icons/diagona/icons/network-cloud.png</normaloff>:/diagona/icons/diagona/icons/network-cloud.png</iconset>
              </property>
             </widget>
@@ -717,7 +717,7 @@
               <string>Load</string>
              </property>
              <property name="icon">
-              <iconset resource="../../blackmisc/blackmisc.qrc">
+              <iconset resource="../../misc/misc.qrc">
                <normaloff>:/pastel/icons/pastel/16/disk.png</normaloff>:/pastel/icons/pastel/16/disk.png</iconset>
              </property>
             </widget>
@@ -738,7 +738,7 @@
               <string>Send</string>
              </property>
              <property name="icon">
-              <iconset resource="../../blackmisc/blackmisc.qrc">
+              <iconset resource="../../misc/misc.qrc">
                <normaloff>:/diagona/icons/diagona/icons/network-cloud.png</normaloff>:/diagona/icons/diagona/icons/network-cloud.png</iconset>
              </property>
             </widget>
@@ -1174,7 +1174,7 @@
   <tabstop>tb_SsrHelp</tabstop>
  </tabstops>
  <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
+  <include location="../../misc/misc.qrc"/>
  </resources>
  <connections/>
 </ui>

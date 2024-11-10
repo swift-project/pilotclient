@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "guiactionbind.h"
-#include "blackmisc/fileutils.h"
-#include "blackmisc/imageutils.h"
+#include "misc/fileutils.h"
+#include "misc/imageutils.h"
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackCore;
 
 namespace BlackGui

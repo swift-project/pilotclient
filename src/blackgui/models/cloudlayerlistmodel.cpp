@@ -7,9 +7,9 @@
 #include <Qt>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Weather;
+using namespace swift::misc;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::weather;
 
 namespace BlackGui::Models
 {

@@ -15,7 +15,7 @@
 #include <Qt>
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui
 {

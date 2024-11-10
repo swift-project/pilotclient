@@ -13,7 +13,7 @@
 #include <QtGlobal>
 
 using namespace BlackCore;
-using namespace BlackMisc::Network;
+using namespace swift::misc::network;
 using namespace BlackGui::Views;
 
 namespace BlackGui::Components

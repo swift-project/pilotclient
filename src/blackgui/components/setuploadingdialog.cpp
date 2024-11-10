@@ -6,13 +6,13 @@
 #include "ui_setuploadingdialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/setupreader.h"
-#include "blackmisc/swiftdirectories.h"
+#include "misc/swiftdirectories.h"
 
 #include <QPushButton>
 #include <QDesktopServices>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 using namespace BlackCore;
 using namespace BlackCore::Data;
 

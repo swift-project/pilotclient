@@ -3,15 +3,15 @@
 
 #include "joystickmacos.h"
 #include "macosinpututils.h"
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
 #include <CoreFoundation/CoreFoundation.h>
 #include <IOKit/hid/IOHIDUsageTables.h>
 
 #include <array>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Input;
+using namespace swift::misc;
+using namespace swift::misc::input;
 
 namespace swift::input
 {

@@ -4,9 +4,9 @@
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/slot.h"
-#include "blackmisc/verify.h"
+#include "misc/icons.h"
+#include "misc/slot.h"
+#include "misc/verify.h"
 
 #include <QAction>
 #include <QMap>
@@ -15,7 +15,7 @@
 #include <QtGlobal>
 #include <algorithm>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Menus
 {

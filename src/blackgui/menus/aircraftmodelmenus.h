@@ -7,7 +7,7 @@
 #include "blackgui/menus/menudelegate.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/views/aircraftmodelview.h"
-#include "blackmisc/simulation/aircraftmodelinterfaces.h"
+#include "misc/simulation/aircraftmodelinterfaces.h"
 
 #include <QMenu>
 #include <QObject>
@@ -42,13 +42,13 @@ namespace BlackGui
             BlackGui::Views::CAircraftModelView *modelView() const;
 
             //! Get aircraft models
-            const BlackMisc::Simulation::CAircraftModelList &getAircraftModels() const;
+            const swift::misc::simulation::CAircraftModelList &getAircraftModels() const;
 
             //! Get aircraft models (all, or all filtered)
-            const BlackMisc::Simulation::CAircraftModelList &getAllOrAllFilteredAircraftModels(bool *filtered = nullptr) const;
+            const swift::misc::simulation::CAircraftModelList &getAllOrAllFilteredAircraftModels(bool *filtered = nullptr) const;
 
             //! Selected aircraft models
-            BlackMisc::Simulation::CAircraftModelList getSelectedAircraftModels() const;
+            swift::misc::simulation::CAircraftModelList getSelectedAircraftModels() const;
         };
 
         //! Open the simulator file (e.g. aircraft.cfg) in the standard text editor
@@ -102,8 +102,8 @@ namespace BlackGui
             void consolidateData();
             void consolidateSelectedData();
 
-            BlackMisc::Simulation::IModelsSetable *modelsTargetSetable() const;
-            BlackMisc::Simulation::IModelsUpdatable *modelsTargetUpdatable() const;
+            swift::misc::simulation::IModelsSetable *modelsTargetSetable() const;
+            swift::misc::simulation::IModelsUpdatable *modelsTargetUpdatable() const;
             QObject *m_modelsTarget = nullptr; //!< optional target for setting/updating the models
             QAction *m_consolidateAll = nullptr; //!< consolidate data with DB (all)
             QAction *m_consolidateSelected = nullptr; //!< consolidate data with DB (selected)
@@ -137,14 +137,14 @@ namespace BlackGui
             void updateDirectorySelectedData();
 
             //! Get models
-            BlackMisc::Simulation::CAircraftModelList getSimulatorModels() const;
+            swift::misc::simulation::CAircraftModelList getSimulatorModels() const;
 
             //! Simulator
-            BlackMisc::Simulation::CSimulatorInfo getSimulator() const;
+            swift::misc::simulation::CSimulatorInfo getSimulator() const;
 
-            BlackMisc::Simulation::IModelsForSimulatorSetable *modelsTargetSetable() const;
-            BlackMisc::Simulation::IModelsForSimulatorUpdatable *modelsTargetUpdatable() const;
-            BlackMisc::Simulation::ISimulatorSelectable *simulatorSelectable() const;
+            swift::misc::simulation::IModelsForSimulatorSetable *modelsTargetSetable() const;
+            swift::misc::simulation::IModelsForSimulatorUpdatable *modelsTargetUpdatable() const;
+            swift::misc::simulation::ISimulatorSelectable *simulatorSelectable() const;
             BlackGui::Components::CDbMappingComponent *getMappingComponent() const;
 
             QObject *m_modelsTarget = nullptr; //!< optional target for setting/updating the models

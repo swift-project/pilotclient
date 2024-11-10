@@ -4,9 +4,9 @@
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/foreignwindows.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/stringutils.h"
-#include "blackmisc/worker.h"
+#include "misc/icons.h"
+#include "misc/stringutils.h"
+#include "misc/worker.h"
 
 #include <QEvent>
 #include <QFlags>
@@ -26,7 +26,7 @@
 #include <QPointer>
 #include <QTimer>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui
 {
@@ -168,7 +168,7 @@ namespace BlackGui
         Q_ASSERT_X(!m_framelessPropertyName.isEmpty(), "CEnableForFramelessWindow::setDynamicProperties", "Missing property name");
 
         // property selector will check on string, so I directly provide a string
-        const QString f(BlackMisc::boolToTrueFalse(frameless));
+        const QString f(swift::misc::boolToTrueFalse(frameless));
         m_widget->setProperty(m_framelessPropertyName.constData(), f);
         for (QObject *w : m_widget->children())
         {

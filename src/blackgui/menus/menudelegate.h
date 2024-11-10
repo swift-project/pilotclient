@@ -4,7 +4,7 @@
 #ifndef BLACKGUI_MENUS_MENUDELEGATE_H
 #define BLACKGUI_MENUS_MENUDELEGATE_H
 
-#include "blackmisc/logcategories.h"
+#include "misc/logcategories.h"
 #include "blackgui/menus/menuaction.h"
 
 #include <QMenu>
@@ -37,7 +37,7 @@ namespace BlackGui::Menus
         //! Log categories
         const QStringList &getLogCategories()
         {
-            static const QStringList cats({ BlackMisc::CLogCategories::guiComponent() });
+            static const QStringList cats({ swift::misc::CLogCategories::guiComponent() });
             return cats;
         }
 

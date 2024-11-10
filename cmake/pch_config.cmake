@@ -7,18 +7,18 @@
 
 set(SWIFT_MISC_PCH
     <QAudioDevice>
-    [["blackmisc/collection.h"]]
-    [["blackmisc/containerbase.h"]]
-    [["blackmisc/dbus.h"]]
-    [["blackmisc/dictionary.h"]]
-    [["blackmisc/iterator.h"]]
-    [["blackmisc/json.h"]]
-    [["blackmisc/metaclass.h"]]
-    [["blackmisc/range.h"]]
-    [["blackmisc/sequence.h"]]
-    [["blackmisc/valueobject.h"]]
-    [["blackmisc/verify.h"]]
-    [["blackmisc/worker.h"]]
+    [["misc/collection.h"]]
+    [["misc/containerbase.h"]]
+    [["misc/dbus.h"]]
+    [["misc/dictionary.h"]]
+    [["misc/iterator.h"]]
+    [["misc/json.h"]]
+    [["misc/metaclass.h"]]
+    [["misc/range.h"]]
+    [["misc/sequence.h"]]
+    [["misc/valueobject.h"]]
+    [["misc/verify.h"]]
+    [["misc/worker.h"]]
 
     <QByteArray>
     <QChar>

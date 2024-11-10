@@ -4,10 +4,10 @@
 #include "blackgui/components/dbairlineicaoselectorbase.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/db/datastoreutility.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/variant.h"
+#include "misc/aviation/airlineicaocodelist.h"
+#include "misc/db/datastoreutility.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/variant.h"
 
 #include <QCompleter>
 #include <QDragEnterEvent>
@@ -21,11 +21,11 @@
 
 using namespace BlackGui;
 using namespace BlackCore;
-using namespace BlackMisc;
-using namespace BlackMisc::Db;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::db;
+using namespace swift::misc::network;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
 
 namespace BlackGui::Components
 {

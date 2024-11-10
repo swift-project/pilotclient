@@ -9,12 +9,12 @@
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackgui/views/statusmessageview.h"
 #include "blackgui/views/viewbase.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/sequence.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/aviation/livery.h"
+#include "misc/logcategories.h"
+#include "misc/sequence.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/statusmessagelist.h"
 #include "ui_dbautostashingcomponent.h"
 
 #include <QCheckBox>
@@ -31,10 +31,10 @@
 #include <QtGlobal>
 
 using namespace BlackCore;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
 using namespace BlackGui::Views;
 
 namespace BlackGui::Components
@@ -359,7 +359,7 @@ namespace BlackGui::Components
         }
     }
 
-    BlackMisc::Aviation::CLivery CDbAutoStashingComponent::getTempLivery()
+    swift::misc::aviation::CLivery CDbAutoStashingComponent::getTempLivery()
     {
         if (!sGui || !sGui->hasWebDataServices()) { return CLivery(); }
         return sGui->getWebDataServices()->getTempLiveryOrDefault();

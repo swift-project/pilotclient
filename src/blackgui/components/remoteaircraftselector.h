@@ -7,9 +7,9 @@
 #define BLACKGUI_REMOTEAIRCRAFTSELECTOR_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/digestsignal.h"
+#include "misc/simulation/simulatedaircraftlist.h"
+#include "misc/aviation/callsign.h"
+#include "misc/digestsignal.h"
 
 #include <QFrame>
 #include <QObject>
@@ -18,7 +18,7 @@
 class QShowEvent;
 class QWidget;
 
-namespace BlackMisc::Simulation
+namespace swift::misc::simulation
 {
     class CSimulatedAircraft;
 }
@@ -43,7 +43,7 @@ namespace BlackGui::Components
         virtual ~CRemoteAircraftSelector() override;
 
         //! Selected callsign
-        BlackMisc::Aviation::CCallsign getSelectedCallsign() const;
+        swift::misc::aviation::CCallsign getSelectedCallsign() const;
 
         //! Indicate if aircraft parts enabled aircraft
         void indicatePartsEnabled(bool indicate);
@@ -58,10 +58,10 @@ namespace BlackGui::Components
 
     private:
         //! Added aircraft, change content of combobox
-        void onAddedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+        void onAddedAircraft(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
         //! Removed aircraft, change content of combobox
-        void onRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
+        void onRemovedAircraft(const swift::misc::aviation::CCallsign &callsign);
 
         //! Combo box has been changed
         void comboBoxChanged(const QString &text);
@@ -72,8 +72,8 @@ namespace BlackGui::Components
         QScopedPointer<Ui::CRemoteAircraftSelector> ui;
         QString m_currentText;
         bool m_showPartsEnabled = false;
-        BlackMisc::Simulation::CSimulatedAircraftList m_aircraft;
-        BlackMisc::CDigestSignal m_dsFillComboBox { this, &CRemoteAircraftSelector::fillComboBox, 3000, 5 };
+        swift::misc::simulation::CSimulatedAircraftList m_aircraft;
+        swift::misc::CDigestSignal m_dsFillComboBox { this, &CRemoteAircraftSelector::fillComboBox, 3000, 5 };
     };
 } // namespace
 

@@ -7,7 +7,7 @@
 #define BLACKGUI_COMPONENTS_CDBOWNMODELSDIALOG_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/simulatorinfo.h"
+#include "misc/simulation/simulatorinfo.h"
 #include <QDialog>
 #include <QScopedPointer>
 
@@ -32,10 +32,10 @@ namespace BlackGui::Components
         virtual ~CDbOwnModelsDialog() override;
 
         //! \copydoc CDbOwnModelsComponent::setSimulator
-        void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void setSimulator(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! \copydoc CDbOwnModelsComponent::requestModelsInBackground
-        bool requestModelsInBackground(const BlackMisc::Simulation::CSimulatorInfo &simulator, bool onlyIfNotEmpty);
+        bool requestModelsInBackground(const swift::misc::simulation::CSimulatorInfo &simulator, bool onlyIfNotEmpty);
 
         //! \copydoc CDbOwnModelsComponent::getOwnModelsCount
         int getOwnModelsCount() const;
@@ -46,7 +46,7 @@ namespace BlackGui::Components
 
     signals:
         //! \copydoc CDbOwnModelsComponent::successfullyLoadedModels
-        void successfullyLoadedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, int count);
+        void successfullyLoadedModels(const swift::misc::simulation::CSimulatorInfo &simulator, int count);
 
     private:
         QScopedPointer<Ui::CDbOwnModelsDialog> ui;

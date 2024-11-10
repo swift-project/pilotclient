@@ -91,7 +91,7 @@
             <string>kill application</string>
            </property>
            <property name="icon">
-            <iconset resource="../blackmisc/blackmisc.qrc">
+            <iconset resource="../misc/misc.qrc">
              <normaloff>:/misc/icons/misc/skull64.png</normaloff>:/misc/icons/misc/skull64.png</iconset>
            </property>
           </widget>
@@ -102,7 +102,7 @@
             <string>close</string>
            </property>
            <property name="icon">
-            <iconset resource="../blackmisc/blackmisc.qrc">
+            <iconset resource="../misc/misc.qrc">
              <normaloff>:/diagona/icons/diagona/icons/cross-button.png</normaloff>:/diagona/icons/diagona/icons/cross-button.png</iconset>
            </property>
           </widget>
@@ -468,7 +468,7 @@
   <tabstop>te_TmText</tabstop>
  </tabstops>
  <resources>
-  <include location="../blackmisc/blackmisc.qrc"/>
+  <include location="../misc/misc.qrc"/>
  </resources>
  <connections/>
 </ui>

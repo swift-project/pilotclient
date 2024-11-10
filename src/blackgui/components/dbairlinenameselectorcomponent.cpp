@@ -5,8 +5,8 @@
 #include "blackgui/components/dbairlinenameselectorcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/db/datastoreutility.h"
+#include "misc/aviation/airlineicaocodelist.h"
+#include "misc/db/datastoreutility.h"
 
 #include <QCompleter>
 #include <QLineEdit>
@@ -15,9 +15,9 @@
 
 using namespace BlackCore;
 using namespace BlackGui;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Db;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::db;
 
 namespace BlackGui::Components
 {

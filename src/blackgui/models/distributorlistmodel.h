@@ -8,11 +8,11 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodeldbobjects.h"
-#include "blackmisc/simulation/distributorlist.h"
+#include "misc/simulation/distributorlist.h"
 
 #include <QString>
 
-namespace BlackMisc::Simulation
+namespace swift::misc::simulation
 {
     class CDistributor;
 }
@@ -20,7 +20,7 @@ namespace BlackGui::Models
 {
     //! Distributor list model
     class BLACKGUI_EXPORT CDistributorListModel :
-        public COrderableListModelDbObjects<BlackMisc::Simulation::CDistributorList, QString, true>
+        public COrderableListModelDbObjects<swift::misc::simulation::CDistributorList, QString, true>
     {
         Q_OBJECT
 

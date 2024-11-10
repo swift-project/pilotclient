@@ -4,23 +4,23 @@
 #include "blackgui/models/aircraftmodellistmodel.h"
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/columns.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/db/datastore.h"
-#include "blackmisc/orderable.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/distributor.h"
-#include "blackmisc/timestampbased.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/livery.h"
+#include "misc/db/datastore.h"
+#include "misc/orderable.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/distributor.h"
+#include "misc/timestampbased.h"
 
 #include <QtDebug>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::physical_quantities;
 
 namespace BlackGui::Models
 {

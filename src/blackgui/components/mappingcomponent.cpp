@@ -12,16 +12,16 @@
 #include "blackgui/views/viewbase.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackmisc/network/connectionstatus.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/network/server.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/pixmap.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/network/connectionstatus.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/simulatedaircraftlist.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/aviation/callsign.h"
+#include "misc/network/server.h"
+#include "misc/icons.h"
+#include "misc/logmessage.h"
+#include "misc/pixmap.h"
+#include "misc/statusmessage.h"
 #include "mappingcomponent.h"
 #include "ui_mappingcomponent.h"
 
@@ -35,11 +35,11 @@
 #include <QtGlobal>
 #include <QPointer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
+using namespace swift::misc::network;
+using namespace swift::misc::aviation;
+using namespace swift::misc::physical_quantities;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackGui::Views;

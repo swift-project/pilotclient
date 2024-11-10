@@ -2,17 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simconnectobject.h"
-#include "blackmisc/stringutils.h"
+#include "misc/stringutils.h"
 #include "simulatorfsxcommon.h"
 #include "blackcore/simulator.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/simulation/interpolation/interpolatormulti.h"
+#include "misc/simulation/interpolation/interpolatormulti.h"
 #include "config/buildconfig.h"
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
 using namespace BlackCore;
 
 namespace BlackSimPlugin::FsxCommon
@@ -52,7 +52,7 @@ namespace BlackSimPlugin::FsxCommon
         m_aircraft.setModelString(modelString);
     }
 
-    void CSimConnectObject::setAircraftCG(const PhysicalQuantities::CLength &cg)
+    void CSimConnectObject::setAircraftCG(const physical_quantities::CLength &cg)
     {
         if (cg.isNull()) { return; }
         m_aircraft.setCG(cg);

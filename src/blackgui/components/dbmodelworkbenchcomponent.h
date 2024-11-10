@@ -7,10 +7,10 @@
 #define BLACKGUI_COMPONENTS_DBMODELSWORKBENCHCOMPONENT_H
 
 #include "blackgui/overlaymessagesframe.h"
-#include "blackmisc/simulation/aircraftmodelinterfaces.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/directories.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/simulation/aircraftmodelinterfaces.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/directories.h"
+#include "misc/statusmessage.h"
 
 #include <QFrame>
 #include <QList>
@@ -43,16 +43,16 @@ namespace BlackGui
          */
         class CDbModelWorkbenchComponent :
             public COverlayMessagesFrame,
-            public BlackMisc::Simulation::IModelsSetable,
-            public BlackMisc::Simulation::IModelsUpdatable,
-            public BlackMisc::Simulation::IModelsForSimulatorSetable,
-            public BlackMisc::Simulation::IModelsForSimulatorUpdatable
+            public swift::misc::simulation::IModelsSetable,
+            public swift::misc::simulation::IModelsUpdatable,
+            public swift::misc::simulation::IModelsForSimulatorSetable,
+            public swift::misc::simulation::IModelsForSimulatorUpdatable
         {
             Q_OBJECT
-            Q_INTERFACES(BlackMisc::Simulation::IModelsSetable)
-            Q_INTERFACES(BlackMisc::Simulation::IModelsUpdatable)
-            Q_INTERFACES(BlackMisc::Simulation::IModelsForSimulatorSetable)
-            Q_INTERFACES(BlackMisc::Simulation::IModelsForSimulatorUpdatable)
+            Q_INTERFACES(swift::misc::simulation::IModelsSetable)
+            Q_INTERFACES(swift::misc::simulation::IModelsUpdatable)
+            Q_INTERFACES(swift::misc::simulation::IModelsForSimulatorSetable)
+            Q_INTERFACES(swift::misc::simulation::IModelsForSimulatorUpdatable)
 
         public:
             //! Constructor
@@ -65,13 +65,13 @@ namespace BlackGui
             static const QStringList &getLogCategories();
 
             //! Own (installed) model for given model string
-            BlackMisc::Simulation::CAircraftModel getOwnModelForModelString(const QString &modelString) const;
+            swift::misc::simulation::CAircraftModel getOwnModelForModelString(const QString &modelString) const;
 
             //! Own models selected in view
-            BlackMisc::Simulation::CAircraftModelList getSelectedModels() const;
+            swift::misc::simulation::CAircraftModelList getSelectedModels() const;
 
             //! Models
-            BlackMisc::Simulation::CAircraftModelList getModels() const;
+            swift::misc::simulation::CAircraftModelList getModels() const;
 
             //! Number of own models
             int getModelsCount() const;
@@ -84,15 +84,15 @@ namespace BlackGui
 
             //! \name Implementations of the models interfaces
             //! @{
-            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models) override { this->setModelsForSimulator(models, BlackMisc::Simulation::CSimulatorInfo()); }
-            virtual void setModelsForSimulator(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
-            virtual int updateModels(const BlackMisc::Simulation::CAircraftModelList &models) override { return this->updateModelsForSimulator(models, BlackMisc::Simulation::CSimulatorInfo()); }
-            virtual int updateModelsForSimulator(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
+            virtual void setModels(const swift::misc::simulation::CAircraftModelList &models) override { this->setModelsForSimulator(models, swift::misc::simulation::CSimulatorInfo()); }
+            virtual void setModelsForSimulator(const swift::misc::simulation::CAircraftModelList &models, const swift::misc::simulation::CSimulatorInfo &simulator) override;
+            virtual int updateModels(const swift::misc::simulation::CAircraftModelList &models) override { return this->updateModelsForSimulator(models, swift::misc::simulation::CSimulatorInfo()); }
+            virtual int updateModelsForSimulator(const swift::misc::simulation::CAircraftModelList &models, const swift::misc::simulation::CSimulatorInfo &simulator) override;
             //! @}
 
         private:
             QScopedPointer<Ui::CDbModelWorkbenchComponent> ui;
-            BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_directorySettings { this }; //!< the swift directories
+            swift::misc::CSetting<swift::misc::settings::TDirectorySettings> m_directorySettings { this }; //!< the swift directories
         };
     } // ns
 } // ns

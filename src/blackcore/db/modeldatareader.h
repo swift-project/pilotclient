@@ -9,13 +9,13 @@
 #include "blackcore/data/dbcaches.h"
 #include "blackcore/db/databasereader.h"
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/aviation/aircraftcategorylist.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/network/url.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/distributorlist.h"
+#include "misc/aviation/aircraftcategorylist.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/liverylist.h"
+#include "misc/network/entityflags.h"
+#include "misc/network/url.h"
 
 #include <QDateTime>
 #include <QList>
@@ -40,39 +40,39 @@ namespace BlackCore::Db
 
         //! Get aircraft liveries
         //! \threadsafe
-        BlackMisc::Aviation::CLiveryList getLiveries() const;
+        swift::misc::aviation::CLiveryList getLiveries() const;
 
         //! Get aircraft livery for code
         //! \threadsafe
-        BlackMisc::Aviation::CLivery getLiveryForCombinedCode(const QString &combinedCode) const;
+        swift::misc::aviation::CLivery getLiveryForCombinedCode(const QString &combinedCode) const;
 
         //! Get aircraft livery for ICAO code
         //! \threadsafe
-        BlackMisc::Aviation::CLivery getStdLiveryForAirlineVDesignator(const BlackMisc::Aviation::CAirlineIcaoCode &icao) const;
+        swift::misc::aviation::CLivery getStdLiveryForAirlineVDesignator(const swift::misc::aviation::CAirlineIcaoCode &icao) const;
 
         //! Get aircraft livery for id
         //! \threadsafe
-        BlackMisc::Aviation::CLivery getLiveryForDbKey(int id) const;
+        swift::misc::aviation::CLivery getLiveryForDbKey(int id) const;
 
         //! Best match specified by livery
         //! \threadsafe
-        BlackMisc::Aviation::CLivery smartLiverySelector(const BlackMisc::Aviation::CLivery &livery) const;
+        swift::misc::aviation::CLivery smartLiverySelector(const swift::misc::aviation::CLivery &livery) const;
 
         //! Get distributors (of models)
         //! \threadsafe
-        BlackMisc::Simulation::CDistributorList getDistributors() const;
+        swift::misc::simulation::CDistributorList getDistributors() const;
 
         //! Get distributor for id
         //! \threadsafe
-        BlackMisc::Simulation::CDistributor getDistributorForDbKey(const QString &dbKey) const;
+        swift::misc::simulation::CDistributor getDistributorForDbKey(const QString &dbKey) const;
 
         //! Get models
         //! \threadsafe
-        BlackMisc::Simulation::CAircraftModelList getModels() const;
+        swift::misc::simulation::CAircraftModelList getModels() const;
 
         //! Get model for string
         //! \threadsafe
-        BlackMisc::Simulation::CAircraftModel getModelForModelString(const QString &modelString) const;
+        swift::misc::simulation::CAircraftModel getModelForModelString(const QString &modelString) const;
 
         //! Contains modelstring?
         //! \threadsafe
@@ -80,19 +80,19 @@ namespace BlackCore::Db
 
         //! Get model for DB key
         //! \threadsafe
-        BlackMisc::Simulation::CAircraftModel getModelForDbKey(int dbKey) const;
+        swift::misc::simulation::CAircraftModel getModelForDbKey(int dbKey) const;
 
         //! Get aircraft ICAO designators (e.g. B737, ..) for given airline
         //! \threadsafe
-        QSet<QString> getAircraftDesignatorsForAirline(const BlackMisc::Aviation::CAirlineIcaoCode &code) const;
+        QSet<QString> getAircraftDesignatorsForAirline(const swift::misc::aviation::CAirlineIcaoCode &code) const;
 
         //! Get aircraft ICAO designators (e.g. B737, ..) for given airline
         //! \threadsafe
-        BlackMisc::Aviation::CAircraftIcaoCodeList getAicraftIcaoCodesForAirline(const BlackMisc::Aviation::CAirlineIcaoCode &code) const;
+        swift::misc::aviation::CAircraftIcaoCodeList getAicraftIcaoCodesForAirline(const swift::misc::aviation::CAirlineIcaoCode &code) const;
 
         //! Get model for designator/combined code
         //! \threadsafe
-        BlackMisc::Simulation::CAircraftModelList getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode);
+        swift::misc::simulation::CAircraftModelList getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode);
 
         //! Get aircraft liveries count
         //! \threadsafe
@@ -104,11 +104,11 @@ namespace BlackCore::Db
 
         //! Best match specified by distributor
         //! \threadsafe
-        BlackMisc::Simulation::CDistributor smartDistributorSelector(const BlackMisc::Simulation::CDistributor &distributorPattern) const;
+        swift::misc::simulation::CDistributor smartDistributorSelector(const swift::misc::simulation::CDistributor &distributorPattern) const;
 
         //! Best match specified by distributor
         //! \threadsafe
-        BlackMisc::Simulation::CDistributor smartDistributorSelector(const BlackMisc::Simulation::CDistributor &distributorPattern, const BlackMisc::Simulation::CAircraftModel &model) const;
+        swift::misc::simulation::CDistributor smartDistributorSelector(const swift::misc::simulation::CDistributor &distributorPattern, const swift::misc::simulation::CAircraftModel &model) const;
 
         //! Get models count
         //! \threadsafe
@@ -130,38 +130,38 @@ namespace BlackCore::Db
         bool writeToJsonFiles(const QString &dir);
 
         // Data read from local data
-        virtual BlackMisc::CStatusMessageList readFromJsonFiles(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead, bool overrideNewerOnly) override;
-        virtual bool readFromJsonFilesInBackground(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead, bool overrideNewerOnly) override;
+        virtual swift::misc::CStatusMessageList readFromJsonFiles(const QString &dir, swift::misc::network::CEntityFlags::Entity whatToRead, bool overrideNewerOnly) override;
+        virtual bool readFromJsonFilesInBackground(const QString &dir, swift::misc::network::CEntityFlags::Entity whatToRead, bool overrideNewerOnly) override;
 
         // cache handling for base class
-        virtual BlackMisc::Network::CEntityFlags::Entity getSupportedEntities() const override;
-        virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const override;
-        virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const override;
-        virtual BlackMisc::Network::CEntityFlags::Entity getEntitiesWithCacheCount() const override;
-        virtual BlackMisc::Network::CEntityFlags::Entity getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const override;
-        virtual void synchronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
-        virtual void admitCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
+        virtual swift::misc::network::CEntityFlags::Entity getSupportedEntities() const override;
+        virtual QDateTime getCacheTimestamp(swift::misc::network::CEntityFlags::Entity entity) const override;
+        virtual int getCacheCount(swift::misc::network::CEntityFlags::Entity entity) const override;
+        virtual swift::misc::network::CEntityFlags::Entity getEntitiesWithCacheCount() const override;
+        virtual swift::misc::network::CEntityFlags::Entity getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const override;
+        virtual void synchronizeCaches(swift::misc::network::CEntityFlags::Entity entities) override;
+        virtual void admitCaches(swift::misc::network::CEntityFlags::Entity entities) override;
 
     protected:
         // cache handling for base class
-        virtual void invalidateCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
-        virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CUrl &oldUrlInfo, BlackMisc::Network::CUrl &newUrlInfo) const override;
-        virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const override;
+        virtual void invalidateCaches(swift::misc::network::CEntityFlags::Entity entities) override;
+        virtual bool hasChangedUrl(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CUrl &oldUrlInfo, swift::misc::network::CUrl &newUrlInfo) const override;
+        virtual swift::misc::network::CUrl getDbServiceBaseUrl() const override;
 
     private:
-        BlackMisc::CData<BlackCore::Data::TDbLiveryCache> m_liveryCache { this, &CModelDataReader::liveryCacheChanged };
-        BlackMisc::CData<BlackCore::Data::TDbModelCache> m_modelCache { this, &CModelDataReader::modelCacheChanged };
-        BlackMisc::CData<BlackCore::Data::TDbDistributorCache> m_distributorCache { this, &CModelDataReader::distributorCacheChanged };
+        swift::misc::CData<BlackCore::Data::TDbLiveryCache> m_liveryCache { this, &CModelDataReader::liveryCacheChanged };
+        swift::misc::CData<BlackCore::Data::TDbModelCache> m_modelCache { this, &CModelDataReader::modelCacheChanged };
+        swift::misc::CData<BlackCore::Data::TDbDistributorCache> m_distributorCache { this, &CModelDataReader::distributorCacheChanged };
         std::atomic_bool m_syncedLiveryCache { false }; //!< already synchronized?
         std::atomic_bool m_syncedModelCache { false }; //!< already synchronized?
         std::atomic_bool m_syncedDistributorCache { false }; //!< already synchronized?
 
         //! \copydoc CDatabaseReader::read
-        virtual void read(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::DistributorLiveryModel,
-                          BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode = BlackMisc::Db::CDbFlags::DbReading, const QDateTime &newerThan = QDateTime()) override;
+        virtual void read(swift::misc::network::CEntityFlags::Entity entities = swift::misc::network::CEntityFlags::DistributorLiveryModel,
+                          swift::misc::db::CDbFlags::DataRetrievalModeFlag mode = swift::misc::db::CDbFlags::DbReading, const QDateTime &newerThan = QDateTime()) override;
 
         //! Reader URL (we read from where?) used to detect changes of location
-        BlackMisc::CData<BlackCore::Data::TDbModelReaderBaseUrl> m_readerUrlCache { this, &CModelDataReader::baseUrlCacheChanged };
+        swift::misc::CData<BlackCore::Data::TDbModelReaderBaseUrl> m_readerUrlCache { this, &CModelDataReader::baseUrlCacheChanged };
 
         //! Liveries have been read
         void parseLiveryData(QNetworkReply *nwReply);
@@ -185,24 +185,24 @@ namespace BlackCore::Db
         void baseUrlCacheChanged();
 
         //! Update reader URL
-        void updateReaderUrl(const BlackMisc::Network::CUrl &url);
+        void updateReaderUrl(const swift::misc::network::CUrl &url);
 
         //! Get ICAO codes
         //! \remark cross reader access
-        BlackMisc::Aviation::CAircraftIcaoCodeList getAircraftAircraftIcaos() const;
+        swift::misc::aviation::CAircraftIcaoCodeList getAircraftAircraftIcaos() const;
 
         //! Get categories
         //! \remark cross reader access
-        BlackMisc::Aviation::CAircraftCategoryList getAircraftCategories() const;
+        swift::misc::aviation::CAircraftCategoryList getAircraftCategories() const;
 
         //! URL livery web service
-        BlackMisc::Network::CUrl getLiveryUrl(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode) const;
+        swift::misc::network::CUrl getLiveryUrl(swift::misc::db::CDbFlags::DataRetrievalModeFlag mode) const;
 
         //! URL distributor web service
-        BlackMisc::Network::CUrl getDistributorUrl(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode) const;
+        swift::misc::network::CUrl getDistributorUrl(swift::misc::db::CDbFlags::DataRetrievalModeFlag mode) const;
 
         //! URL model web service
-        BlackMisc::Network::CUrl getModelUrl(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode) const;
+        swift::misc::network::CUrl getModelUrl(swift::misc::db::CDbFlags::DataRetrievalModeFlag mode) const;
     };
 } // ns
 

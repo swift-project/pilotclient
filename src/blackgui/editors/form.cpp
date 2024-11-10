@@ -7,8 +7,8 @@
 #include <QClipboard>
 #include <QShortcut>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 
 namespace BlackGui::Editors
 {
@@ -44,7 +44,7 @@ namespace BlackGui::Editors
     {
         if (!QApplication::clipboard()) { return; }
         const QString data = QApplication::clipboard()->text();
-        if (!Json::looksLikeSwiftJson(data)) { return; }
+        if (!json::looksLikeSwiftJson(data)) { return; }
         this->jsonPasted(data);
     }
 

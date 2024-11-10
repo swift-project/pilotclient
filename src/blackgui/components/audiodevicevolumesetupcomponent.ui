@@ -32,7 +32,7 @@
       <string>...</string>
      </property>
       <property name="icon">
-        <iconset resource="../../blackmisc/blackmisc.qrc">
+        <iconset resource="../../misc/misc.qrc">
           <normaloff>:/pastel/icons/pastel/16/undo.png</normaloff>:/pastel/icons/pastel/16/undo.png</iconset>
       </property>
     </widget>
@@ -109,7 +109,7 @@
          <string>...</string>
         </property>
         <property name="icon">
-         <iconset resource="../../blackmisc/blackmisc.qrc">
+         <iconset resource="../../misc/misc.qrc">
           <normaloff>:/diagona/icons/diagona/icons/arrow-circle-135.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-135.png</iconset>
         </property>
        </widget>
@@ -130,7 +130,7 @@
       <string>...</string>
      </property>
       <property name="icon">
-        <iconset resource="../../blackmisc/blackmisc.qrc">
+        <iconset resource="../../misc/misc.qrc">
           <normaloff>:/pastel/icons/pastel/16/undo.png</normaloff>:/pastel/icons/pastel/16/undo.png</iconset>
       </property>
     </widget>
@@ -141,7 +141,7 @@
       <string>...</string>
      </property>
       <property name="icon">
-        <iconset resource="../../blackmisc/blackmisc.qrc">
+        <iconset resource="../../misc/misc.qrc">
           <normaloff>:/pastel/icons/pastel/16/undo.png</normaloff>:/pastel/icons/pastel/16/undo.png</iconset>
       </property>
     </widget>
@@ -152,7 +152,7 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
+      <iconset resource="../../misc/misc.qrc">
         <normaloff>:/pastel/icons/pastel/16/undo.png</normaloff>:/pastel/icons/pastel/16/undo.png</iconset>
       </property>
     </widget>
@@ -277,7 +277,7 @@
          <string>...</string>
         </property>
         <property name="icon">
-         <iconset resource="../../blackmisc/blackmisc.qrc">
+         <iconset resource="../../misc/misc.qrc">
           <normaloff>:/diagona/icons/diagona/icons/arrow-circle-135.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-135.png</iconset>
         </property>
        </widget>
@@ -417,7 +417,7 @@
   <tabstop>tb_ResetOutVolumeCom2</tabstop>
  </tabstops>
  <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
+  <include location="../../misc/misc.qrc"/>
  </resources>
  <connections/>
 </ui>

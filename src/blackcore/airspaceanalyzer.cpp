@@ -3,13 +3,13 @@
 
 #include "blackcore/airspaceanalyzer.h"
 #include "blackcore/airspacemonitor.h"
-#include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/aviation/transponder.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/threadutils.h"
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/aviation/callsign.h"
+#include "misc/aviation/transponder.h"
+#include "misc/logmessage.h"
+#include "misc/simulation/simulatedaircraftlist.h"
+#include "misc/statusmessage.h"
+#include "misc/threadutils.h"
 
 #include <QDateTime>
 #include <QMetaObject>
@@ -18,12 +18,12 @@
 #include <QThread>
 #include <QWriteLocker>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::geo;
+using namespace swift::misc::network;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::simulation;
 using namespace BlackCore::Fsd;
 
 namespace BlackCore

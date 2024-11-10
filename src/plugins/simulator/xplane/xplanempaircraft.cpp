@@ -3,12 +3,12 @@
 
 #include "xplanempaircraft.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/simulation/interpolation/interpolatormulti.h"
+#include "misc/simulation/interpolation/interpolatormulti.h"
 
 using namespace BlackCore;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
 
 namespace BlackSimPlugin::XPlane
 {

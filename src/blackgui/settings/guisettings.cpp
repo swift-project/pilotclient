@@ -4,7 +4,7 @@
 #include "guisettings.h"
 #include <QStyleFactory>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackGui::Settings, CGeneralGuiSettings)
 
@@ -45,7 +45,7 @@ namespace BlackGui::Settings
         return QStringLiteral("Widget style: %1").arg(this->m_widgetStyle);
     }
 
-    QVariant CGeneralGuiSettings::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
+    QVariant CGeneralGuiSettings::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -60,7 +60,7 @@ namespace BlackGui::Settings
         }
     }
 
-    void CGeneralGuiSettings::setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant)
+    void CGeneralGuiSettings::setPropertyByIndex(swift::misc::CPropertyIndexRef index, const QVariant &variant)
     {
         if (index.isMyself())
         {

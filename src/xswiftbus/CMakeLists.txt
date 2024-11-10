@@ -186,7 +186,7 @@ configure_file(readme.txt.in readme.txt)
 if(WIN32)
     set(DBUS_SESSION_BUS_LISTEN_ADDRESS "autolaunch:")
     set(DBUS_SESSION_CONF_MAYBE_AUTH_EXTERNAL "<!--<auth>EXTERNAL</auth>-->")
-    configure_file(${swift_SOURCE_DIR}/src/blackmisc/share/dbus-1/session.conf.in ${CMAKE_CURRENT_BINARY_DIR}/session.conf)
+    configure_file(${swift_SOURCE_DIR}/src/misc/share/dbus-1/session.conf.in ${CMAKE_CURRENT_BINARY_DIR}/session.conf)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/session.conf DESTINATION xswiftbus/64/share/dbus-1/)
 
     install(FILES ${swift_SOURCE_DIR}/third_party/externals/win32-msvc/64/bin/dbus-daemon.exe DESTINATION xswiftbus/64/)

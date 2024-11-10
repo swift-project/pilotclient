@@ -9,9 +9,9 @@
 #include "blackcore/corefacade.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
+#include "misc/statusmessage.h"
 
 #include <QDateTime>
 #include <QObject>
@@ -19,7 +19,7 @@
 #include <QtGlobal>
 #include <QStringBuilder>
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CLogCategoryList;
 }
@@ -129,7 +129,7 @@ namespace BlackCore::Context
         virtual QString getPathAndContextId() const = 0;
 
         //! Parse a given command line
-        virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) = 0;
+        virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) = 0;
 
     signals:
         //! Log or debug values changed
@@ -151,14 +151,14 @@ namespace BlackCore::Context
         //! Empty context called
         void logEmptyContextWarning(const QString &functionName) const
         {
-            BlackMisc::CLogMessage(this, BlackMisc::CLogCategories::contextSlot()).warning(u"Empty context called, details: %1") << functionName;
+            swift::misc::CLogMessage(this, swift::misc::CLogCategories::contextSlot()).warning(u"Empty context called, details: %1") << functionName;
         }
 
         //! Called when shutdown is about to be called
         virtual void onAboutToShutdown() {}
 
         //! Standard message when status message is returned in empty context
-        static const BlackMisc::CStatusMessage &statusMessageEmptyContext();
+        static const swift::misc::CStatusMessage &statusMessageEmptyContext();
 
     private:
         CCoreFacadeConfig::ContextMode m_mode; //!< How context is used

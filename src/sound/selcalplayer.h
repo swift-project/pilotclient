@@ -9,9 +9,9 @@
 #include "sound/threadedtonepairplayer.h"
 #include "sound/tonepair.h"
 #include "sound/swiftsoundexport.h"
-#include "blackmisc/audio/audiodeviceinfo.h"
-#include "blackmisc/aviation/selcal.h"
-#include "blackmisc/worker.h"
+#include "misc/audio/audiodeviceinfo.h"
+#include "misc/aviation/selcal.h"
+#include "misc/worker.h"
 
 namespace swift::sound
 {
@@ -22,7 +22,7 @@ namespace swift::sound
 
     public:
         //! Constructor
-        CSelcalPlayer(const BlackMisc::Audio::CAudioDeviceInfo &device, QObject *parent = nullptr);
+        CSelcalPlayer(const swift::misc::audio::CAudioDeviceInfo &device, QObject *parent = nullptr);
 
         //! Destructor
         virtual ~CSelcalPlayer() override;
@@ -32,7 +32,7 @@ namespace swift::sound
 
         //! Play SELCAL
         //! \return Time of the played tone
-        BlackMisc::PhysicalQuantities::CTime play(int volume, const BlackMisc::Aviation::CSelcal &selcal);
+        swift::misc::physical_quantities::CTime play(int volume, const swift::misc::aviation::CSelcal &selcal);
 
     private:
         CThreadedTonePairPlayer *m_threadedPlayer = nullptr;

@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_VIEWS_FLIGHTPLANDIALOG_H
 #define BLACKGUI_VIEWS_FLIGHTPLANDIALOG_H
 
-#include "blackmisc/aviation/callsign.h"
+#include "misc/aviation/callsign.h"
 
 #include <QDialog>
 #include <QScopedPointer>
@@ -30,11 +30,11 @@ namespace BlackGui::Views
         virtual ~CFlightPlanDialog() override;
 
         //! Show a particular callsign flight plan
-        void showFlightPlan(const BlackMisc::Aviation::CCallsign &callsign);
+        void showFlightPlan(const swift::misc::aviation::CCallsign &callsign);
 
     private:
         //! Title
-        void setDialogTitle(const BlackMisc::Aviation::CCallsign &callsign);
+        void setDialogTitle(const swift::misc::aviation::CCallsign &callsign);
 
         //! Load FP
         void loadFp();

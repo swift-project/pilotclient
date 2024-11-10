@@ -11,7 +11,7 @@
 
 class QObject;
 
-namespace BlackMisc::Aviation
+namespace swift::misc::aviation
 {
     class CAirlineIcaoCode;
     class CAirlineIcaoCodeList;
@@ -21,7 +21,7 @@ namespace BlackGui::Models
 {
     //! Airport list model
     class BLACKGUI_EXPORT CAirlineIcaoCodeListModel :
-        public CListModelDbObjects<BlackMisc::Aviation::CAirlineIcaoCodeList, int, true>
+        public CListModelDbObjects<swift::misc::aviation::CAirlineIcaoCodeList, int, true>
     {
         Q_OBJECT
 

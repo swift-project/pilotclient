@@ -8,23 +8,23 @@
 #include "blackcore/context/contextaudioimpl.h"
 #include "blackcore/context/contextaudioproxy.h"
 #include "blackcore/afv/clients/afvclient.h"
-#include "blackmisc/simplecommandparser.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/stringutils.h"
-#include "blackmisc/verify.h"
-#include "blackmisc/icons.h"
+#include "misc/simplecommandparser.h"
+#include "misc/dbusserver.h"
+#include "misc/stringutils.h"
+#include "misc/verify.h"
+#include "misc/icons.h"
 #include "config/buildconfig.h"
 
 #ifdef Q_OS_WIN
 #    include "comdef.h"
 #endif
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Audio;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::audio;
+using namespace swift::misc::network;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::simulation;
 using namespace swift::sound;
 using namespace BlackCore::Afv::Clients;
 

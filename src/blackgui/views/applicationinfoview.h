@@ -24,7 +24,7 @@ namespace BlackGui::Views
         //! Constructor
         explicit CApplicationInfoView(QWidget *parent = nullptr);
 
-        //! BlackMisc::CApplicationInfoList::otherSwiftVersionsFromDataDirectories
+        //! swift::misc::CApplicationInfoList::otherSwiftVersionsFromDataDirectories
         int otherSwiftVersionsFromDataDirectories(bool reinitOtherVersions = false);
 
         //! Display versions and resize

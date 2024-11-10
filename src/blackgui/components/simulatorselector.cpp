@@ -5,8 +5,8 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/mixin/mixincompare.h"
+#include "misc/icons.h"
+#include "misc/mixin/mixincompare.h"
 #include "config/buildconfig.h"
 #include "ui_simulatorselector.h"
 
@@ -17,8 +17,8 @@
 #include <QPointer>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
 using namespace BlackCore::Context;
 
 namespace BlackGui::Components

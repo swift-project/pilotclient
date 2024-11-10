@@ -12,7 +12,7 @@
 
 class QWidget;
 
-namespace BlackMisc::Aviation
+namespace swift::misc::aviation
 {
     class CAirlineIcaoCode;
     class CAirlineIcaoCodeList;

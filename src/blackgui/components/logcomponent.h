@@ -7,8 +7,8 @@
 #define BLACKGUI_LOGCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/loghistory.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/loghistory.h"
+#include "misc/statusmessagelist.h"
 
 #include <QFrame>
 #include <QObject>
@@ -77,7 +77,7 @@ namespace BlackGui::Components
         void setNoSorting();
 
         //! \copydoc BlackGui::Components::CStatusMessagesDetail::setSorting
-        void setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order);
+        void setSorting(const swift::misc::CPropertyIndex &propertyIndex, Qt::SortOrder order);
 
         //! Clear
         void clear();
@@ -91,7 +91,7 @@ namespace BlackGui::Components
 
     private:
         QScopedPointer<Ui::CLogComponent> ui;
-        BlackMisc::CLogHistoryReplica m_history;
+        swift::misc::CLogHistoryReplica m_history;
     };
 } // ns
 #endif // guard

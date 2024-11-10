@@ -13,7 +13,7 @@
 #include "blackgui/menus/menudelegate.h"
 #include "blackgui/views/viewbase.h"
 #include "blackgui/shortcut.h"
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
 #include <QApplication>
 #include <QAction>
@@ -23,7 +23,7 @@
 #include <algorithm>
 
 using namespace swift::config;
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui;
 using namespace BlackGui::Menus;
 using namespace BlackGui::Models;

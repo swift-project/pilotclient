@@ -1,0 +1,56 @@
+// SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
+// SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
+
+//! \file
+
+/*!
+ * \namespace swift::misc
+ * \brief Base and utility classes available in all other projects.
+ */
+
+/*!
+ * \namespace swift::misc::GeoPosition
+ * \brief Position handling as geo locations and coordinates systems.
+ */
+
+/*!
+ * \namespace swift::misc::settings
+ * \brief Classes related to configuration settings.
+ */
+
+/*!
+ * \namespace swift::misc::shared_state
+ * \brief Utilities for sharing state between multiple objects.
+ * \ingroup shared_state
+ */
+
+/*!
+ * \namespace swift::misc::shared_state::DBus
+ * \brief Implementation detail classes used by shared_state::CDataLinkDBus.
+ * \ingroup shared_state
+ */
+
+/*!
+ * \namespace swift::misc::predicates
+ * \brief Functor classes for evaluating predicate calculus expressions.
+ */
+
+/*!
+ * \namespace swift::misc::predicates::Private
+ * \private
+ */
+
+/*!
+ * \namespace swift::misc::private_ns
+ * \private
+ */
+
+/*!
+ * \namespace swift::misc::Iterators
+ * \brief Iterator classes for the containers.
+ */
+
+/*!
+ * \namespace swift::misc::mixin
+ * \brief Mixin classes which implement common operations for value classes.
+ */

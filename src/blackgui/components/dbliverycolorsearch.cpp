@@ -4,11 +4,11 @@
 #include "blackgui/components/dbliverycolorsearch.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/aviation/liverylist.h"
+#include "misc/aviation/liverylist.h"
 #include "ui_dbliverycolorsearch.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 
 namespace BlackGui::Components
 {

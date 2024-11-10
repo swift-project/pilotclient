@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "directplayerror.h"
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
 namespace BlackSimPlugin::Fs9
 {
@@ -50,7 +50,7 @@ namespace BlackSimPlugin::Fs9
         }
 
         errorMessage = "DirectPlay: " + errorMessage;
-        BlackMisc::CLogMessage("swift.fs9.freefunctions").error(errorMessage);
+        swift::misc::CLogMessage("swift.fs9.freefunctions").error(errorMessage);
         return error;
     }
 }

@@ -8,7 +8,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/infoarea.h"
-#include "blackmisc/network/entityflags.h"
+#include "misc/network/entityflags.h"
 
 #include <QObject>
 #include <QScopedPointer>
@@ -92,7 +92,7 @@ namespace BlackGui::Components
         void requestUpdateOfAllDbData();
 
         //! Load new data (based on timestamp, incremental)
-        void requestUpdatedData(BlackMisc::Network::CEntityFlags::Entity entity);
+        void requestUpdatedData(swift::misc::network::CEntityFlags::Entity entity);
 
     protected:
         //! \copydoc CInfoArea::getPreferredSizeWhenFloating

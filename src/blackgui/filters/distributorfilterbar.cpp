@@ -5,15 +5,15 @@
 #include "blackgui/filters/filterbarbuttons.h"
 #include "blackgui/models/distributorfilter.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackmisc/simulation/distributorlist.h"
+#include "misc/simulation/distributorlist.h"
 #include "ui_distributorfilterbar.h"
 
 #include <QLineEdit>
 
 using namespace BlackGui::Models;
 using namespace BlackGui::Components;
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
 
 namespace BlackGui::Filters
 {

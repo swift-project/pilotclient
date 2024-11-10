@@ -15,10 +15,10 @@ namespace Ui
 {
     class CAircraftModelSetValidationDialog;
 }
-namespace BlackMisc
+namespace swift::misc
 {
     class CStatusMessageList;
-    namespace Simulation
+    namespace simulation
     {
         class CSimulatorInfo;
         class CAircraftModelList;
@@ -42,7 +42,7 @@ namespace BlackGui::Components
         virtual ~CAircraftModelSetValidationDialog() override;
 
         //! \copydoc CAircraftModelValidationComponent::validatedModelSet
-        void validatedModelSet(const BlackMisc::Simulation::CSimulatorInfo &simulator, const BlackMisc::Simulation::CAircraftModelList &valid, const BlackMisc::Simulation::CAircraftModelList &invalid, bool stopped, const BlackMisc::CStatusMessageList &msgs);
+        void validatedModelSet(const swift::misc::simulation::CSimulatorInfo &simulator, const swift::misc::simulation::CAircraftModelList &valid, const swift::misc::simulation::CAircraftModelList &invalid, bool stopped, const swift::misc::CStatusMessageList &msgs);
 
     protected:
         //! \copydoc QObject::event

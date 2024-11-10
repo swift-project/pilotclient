@@ -8,8 +8,8 @@
 
 #include "../fsxcommon/simulatorfsxcommon.h"
 #include "../fsxcommon/simconnectobject.h"
-#include "blackmisc/simulation/settings/simulatorsettings.h"
-#include "blackmisc/settingscache.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/settingscache.h"
 
 namespace BlackSimPlugin::P3D
 {
@@ -24,15 +24,15 @@ namespace BlackSimPlugin::P3D
     {
         Q_OBJECT
         Q_INTERFACES(BlackCore::ISimulator)
-        Q_INTERFACES(BlackMisc::Simulation::ISimulationEnvironmentProvider)
-        Q_INTERFACES(BlackMisc::Simulation::IInterpolationSetupProvider)
+        Q_INTERFACES(swift::misc::simulation::ISimulationEnvironmentProvider)
+        Q_INTERFACES(swift::misc::simulation::IInterpolationSetupProvider)
 
     public:
         //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
-        CSimulatorP3D(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                      BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                      BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                      BlackMisc::Network::IClientProvider *clientProvider,
+        CSimulatorP3D(const swift::misc::simulation::CSimulatorPluginInfo &info,
+                      swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
+                      swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                      swift::misc::network::IClientProvider *clientProvider,
                       QObject *parent = nullptr);
 
         //! \name ISimulator implementations
@@ -41,11 +41,11 @@ namespace BlackSimPlugin::P3D
         //! @}
 
 #ifdef Q_OS_WIN64
-        //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
-        virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
+        //! \copydoc swift::misc::simulation::ISimulationEnvironmentProvider::requestElevation
+        virtual bool requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference, const swift::misc::aviation::CCallsign &callsign) override;
 
         //! \copydoc BlackCore::ISimulator::followAircraft
-        virtual bool followAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+        virtual bool followAircraft(const swift::misc::aviation::CCallsign &callsign) override;
 #endif // guard
 
     protected:
@@ -67,7 +67,7 @@ namespace BlackSimPlugin::P3D
         static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
 
     private:
-        BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TP3DVersion> m_p3dVersion { this };
+        swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TP3DVersion> m_p3dVersion { this };
     };
 
     //! Listener for P3D
@@ -79,13 +79,13 @@ namespace BlackSimPlugin::P3D
         //! Constructor
         // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67054 - Constructor inheritance with non-default constructible members
         // using CSimulatorFsxCommonListener::CSimulatorFsxCommonListener;
-        CSimulatorP3DListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) : FsxCommon::CSimulatorFsxCommonListener(info) {}
+        CSimulatorP3DListener(const swift::misc::simulation::CSimulatorPluginInfo &info) : FsxCommon::CSimulatorFsxCommonListener(info) {}
 
     protected:
         virtual void startImpl() override;
 
     private:
-        BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TP3DVersion> m_p3dVersion { this };
+        swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TP3DVersion> m_p3dVersion { this };
     };
 } // ns
 

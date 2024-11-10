@@ -7,14 +7,14 @@
 #define BLACKCORE_DATA_GLOBALSETUP_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/network/serverlist.h"
-#include "blackmisc/network/url.h"
-#include "blackmisc/identifiable.h"
-#include "blackmisc/datacache.h"
-#include "blackmisc/metaclass.h"
-#include "blackmisc/propertyindex.h"
-#include "blackmisc/valueobject.h"
-#include "blackmisc/variant.h"
+#include "misc/network/serverlist.h"
+#include "misc/network/url.h"
+#include "misc/identifiable.h"
+#include "misc/datacache.h"
+#include "misc/metaclass.h"
+#include "misc/propertyindex.h"
+#include "misc/valueobject.h"
+#include "misc/variant.h"
 
 #include <QMetaType>
 #include <QString>
@@ -26,14 +26,14 @@ namespace BlackCore::Data
     //! Global settings for readers, debug flags, etc.
     //! \note also called the bootstrap file as it is required once to get information where all the data are located
     class BLACKCORE_EXPORT CGlobalSetup :
-        public BlackMisc::CValueObject<CGlobalSetup>,
-        public BlackMisc::CIdentifiable
+        public swift::misc::CValueObject<CGlobalSetup>,
+        public swift::misc::CIdentifiable
     {
     public:
         //! Properties by index
         enum ColumnIndex
         {
-            IndexDbRootDirectory = BlackMisc::CPropertyIndexRef::GlobalIndexCGlobalSetup,
+            IndexDbRootDirectory = swift::misc::CPropertyIndexRef::GlobalIndexCGlobalSetup,
             IndexDbHttpsPort,
             IndexDbLoginService,
             IndexVatsimStatus,
@@ -62,62 +62,62 @@ namespace BlackCore::Data
         void setServerDebugFlag(bool debug);
 
         //! Root directory of DB
-        const BlackMisc::Network::CUrl &getDbRootDirectoryUrl() const { return m_dbRootDirectoryUrl; }
+        const swift::misc::network::CUrl &getDbRootDirectoryUrl() const { return m_dbRootDirectoryUrl; }
 
         //! ICAO reader URL
         //! \remark based on getDbRootDirectoryUrl
-        BlackMisc::Network::CUrl getDbIcaoReaderUrl() const;
+        swift::misc::network::CUrl getDbIcaoReaderUrl() const;
 
         //! Model reader URL
         //! \remark based on getDbRootDirectoryUrl
-        BlackMisc::Network::CUrl getDbModelReaderUrl() const;
+        swift::misc::network::CUrl getDbModelReaderUrl() const;
 
         //! Airport reader URL
         //! \remark based on getDbRootDirectoryUrl
-        BlackMisc::Network::CUrl getDbAirportReaderUrl() const;
+        swift::misc::network::CUrl getDbAirportReaderUrl() const;
 
         //! Info data reader URL
         //! \remark based on getDbRootDirectoryUrl
-        BlackMisc::Network::CUrl getDbInfoReaderUrl() const;
+        swift::misc::network::CUrl getDbInfoReaderUrl() const;
 
         //! Home page url
         //! \remark based on getDbRootDirectoryUrl
-        BlackMisc::Network::CUrl getDbHomePageUrl() const;
+        swift::misc::network::CUrl getDbHomePageUrl() const;
 
         //! Legal directory URL
         //! \remark based on getDbRootDirectoryUrl
-        BlackMisc::Network::CUrl getLegalDirectoryUrl() const;
+        swift::misc::network::CUrl getLegalDirectoryUrl() const;
 
         //! Login service
         //! \remark based on getDbRootDirectoryUrl
-        BlackMisc::Network::CUrl getDbLoginServiceUrl() const;
+        swift::misc::network::CUrl getDbLoginServiceUrl() const;
 
         //! Shared URL
-        const BlackMisc::Network::CUrl &getSwiftSharedUrl() const;
+        const swift::misc::network::CUrl &getSwiftSharedUrl() const;
 
         //! VATSIM METAR URL
-        const BlackMisc::Network::CUrl &getVatsimMetarsUrl() const { return m_vatsimMetarsUrl; }
+        const swift::misc::network::CUrl &getVatsimMetarsUrl() const { return m_vatsimMetarsUrl; }
 
         //! VATSIM status file URL
-        const BlackMisc::Network::CUrl &getVatsimStatusFileUrl() const { return m_vatsimStatusFileUrl; }
+        const swift::misc::network::CUrl &getVatsimStatusFileUrl() const { return m_vatsimStatusFileUrl; }
 
         //! VATSIM data file URL
-        const BlackMisc::Network::CUrl &getVatsimDataFileUrl() const { return m_vatsimDataFileUrl; }
+        const swift::misc::network::CUrl &getVatsimDataFileUrl() const { return m_vatsimDataFileUrl; }
 
         //! VATSIM server file URL
-        BlackMisc::Network::CUrl getVatsimServerFileUrl() const { return m_vatsimServerFileUrl; }
+        swift::misc::network::CUrl getVatsimServerFileUrl() const { return m_vatsimServerFileUrl; }
 
         //! VATSIM server file URL
-        BlackMisc::Network::CUrl getVatsimFsdHttpUrl() const { return m_vatsimFsdHttpUrl; }
+        swift::misc::network::CUrl getVatsimFsdHttpUrl() const { return m_vatsimFsdHttpUrl; }
 
         //! Help page URL
-        BlackMisc::Network::CUrl getHelpPageUrl(const QString &context = {}) const;
+        swift::misc::network::CUrl getHelpPageUrl(const QString &context = {}) const;
 
         //! Predefined servers
-        const BlackMisc::Network::CServerList &getPredefinedServers() const { return m_predefinedServers; }
+        const swift::misc::network::CServerList &getPredefinedServers() const { return m_predefinedServers; }
 
         //! Predefined plus hardcoded
-        BlackMisc::Network::CServerList getPredefinedServersPlusHardcodedServers() const;
+        swift::misc::network::CServerList getPredefinedServersPlusHardcodedServers() const;
 
         //! Creating mappings requires at least this version or higher
         //! \remark only valid if wasLoaded() is \c true
@@ -128,34 +128,34 @@ namespace BlackCore::Data
         bool isSwiftVersionMinimumMappingVersion() const;
 
         //! COM/NAV equipment code help URL
-        BlackMisc::Network::CUrl getComNavEquipmentHelpUrl() const { return m_comNavEquipmentHelpUrl; }
+        swift::misc::network::CUrl getComNavEquipmentHelpUrl() const { return m_comNavEquipmentHelpUrl; }
 
         //! SSR equipment code help URL
-        BlackMisc::Network::CUrl getSsrEquipmentHelpUrl() const { return m_ssrEquipmentHelpUrl; }
+        swift::misc::network::CUrl getSsrEquipmentHelpUrl() const { return m_ssrEquipmentHelpUrl; }
 
         //! AFV voice server URL
-        BlackMisc::Network::CUrl getAfvApiServerUrl() const { return m_afvApiServerUrl; }
+        swift::misc::network::CUrl getAfvApiServerUrl() const { return m_afvApiServerUrl; }
 
         //! AFV map URL
-        BlackMisc::Network::CUrl getAfvMapUrl() const { return m_afvMapUrl; }
+        swift::misc::network::CUrl getAfvMapUrl() const { return m_afvMapUrl; }
 
         //! VATSIM auth URL
-        BlackMisc::Network::CUrl getVatsimAuthUrl() const { return m_vatsimAuthUrl; }
+        swift::misc::network::CUrl getVatsimAuthUrl() const { return m_vatsimAuthUrl; }
 
-        //! \copydoc BlackMisc::Mixin::String::toQString
+        //! \copydoc swift::misc::mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
         //! To string with separator
         QString convertToQString(const QString &separator, bool i18n = false) const;
 
         //! Get shared DB data directory URL
-        BlackMisc::Network::CUrl getSharedDbDataDirectoryUrl();
+        swift::misc::network::CUrl getSharedDbDataDirectoryUrl();
 
-        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-        QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
+        //! \copydoc swift::misc::mixin::Index::propertyByIndex
+        QVariant propertyByIndex(swift::misc::CPropertyIndexRef index) const;
 
-        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
+        //! \copydoc swift::misc::mixin::Index::setPropertyByIndex
+        void setPropertyByIndex(swift::misc::CPropertyIndexRef index, const QVariant &variant);
 
         //! Schema version (shared files, bootstrap file)
         static const QString &schemaVersionString();
@@ -163,20 +163,20 @@ namespace BlackCore::Data
     private:
         int m_dbHttpsPort = 443; //!< SSL port
         QString m_mappingMinimumVersion; //!< minimum version
-        BlackMisc::Network::CUrl m_dbRootDirectoryUrl; //!< Root directory of DB
-        BlackMisc::Network::CUrl m_vatsimMetarsUrl; //!< METAR data
-        BlackMisc::Network::CUrl m_vatsimStatusFileUrl; //!< Status file, where to find the VATSIM files (METAR, data, ATIS, other status files)
-        BlackMisc::Network::CUrl m_vatsimDataFileUrl; //!< Overall VATSIM data file / merely for bootstrapping the first time
-        BlackMisc::Network::CUrl m_vatsimServerFileUrl; //!< URL to list of VATSIM servers
-        BlackMisc::Network::CUrl m_vatsimFsdHttpUrl; //!< URL to HTTP FSD server (for load-balancing and automatic server selection)
-        BlackMisc::Network::CUrl m_sharedUrl; //!< where we can obtain shared info files such as bootstrap, ..
-        BlackMisc::Network::CUrl m_onlineHelpUrl; //!< online help URL
-        BlackMisc::Network::CServerList m_predefinedServers; //!< Predefined servers loaded from setup file
-        BlackMisc::Network::CUrl m_comNavEquipmentHelpUrl; //!< Help URL for COM/NAV equipment codes
-        BlackMisc::Network::CUrl m_ssrEquipmentHelpUrl; //!< Help URL for SSR equipment codes
-        BlackMisc::Network::CUrl m_afvApiServerUrl; //!< AFV API server URL
-        BlackMisc::Network::CUrl m_afvMapUrl; //!< AFV map URL
-        BlackMisc::Network::CUrl m_vatsimAuthUrl; //!< VATSIM Auth URL
+        swift::misc::network::CUrl m_dbRootDirectoryUrl; //!< Root directory of DB
+        swift::misc::network::CUrl m_vatsimMetarsUrl; //!< METAR data
+        swift::misc::network::CUrl m_vatsimStatusFileUrl; //!< Status file, where to find the VATSIM files (METAR, data, ATIS, other status files)
+        swift::misc::network::CUrl m_vatsimDataFileUrl; //!< Overall VATSIM data file / merely for bootstrapping the first time
+        swift::misc::network::CUrl m_vatsimServerFileUrl; //!< URL to list of VATSIM servers
+        swift::misc::network::CUrl m_vatsimFsdHttpUrl; //!< URL to HTTP FSD server (for load-balancing and automatic server selection)
+        swift::misc::network::CUrl m_sharedUrl; //!< where we can obtain shared info files such as bootstrap, ..
+        swift::misc::network::CUrl m_onlineHelpUrl; //!< online help URL
+        swift::misc::network::CServerList m_predefinedServers; //!< Predefined servers loaded from setup file
+        swift::misc::network::CUrl m_comNavEquipmentHelpUrl; //!< Help URL for COM/NAV equipment codes
+        swift::misc::network::CUrl m_ssrEquipmentHelpUrl; //!< Help URL for SSR equipment codes
+        swift::misc::network::CUrl m_afvApiServerUrl; //!< AFV API server URL
+        swift::misc::network::CUrl m_afvMapUrl; //!< AFV map URL
+        swift::misc::network::CUrl m_vatsimAuthUrl; //!< VATSIM Auth URL
         bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know what you are doing. Only works with CBuildConfig::isLocalDeveloperDebugBuild
 
         BLACK_METACLASS(

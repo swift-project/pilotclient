@@ -12,8 +12,8 @@
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/context/contextownaircraft.h"
-#include "blackmisc/network/server.h"
-#include "blackmisc/network/fsdsetup.h"
+#include "misc/network/server.h"
+#include "misc/network/fsdsetup.h"
 #include "ui_aircraftcomponent.h"
 
 #include <QString>
@@ -27,9 +27,9 @@ using namespace BlackGui::Models;
 using namespace BlackGui::Settings;
 using namespace BlackCore;
 using namespace BlackCore::Context;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
+using namespace swift::misc::physical_quantities;
 
 namespace BlackGui::Components
 {

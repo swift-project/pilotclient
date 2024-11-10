@@ -3,7 +3,7 @@
 
 #include "blackcore/fsd/authchallenge.h"
 
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
 namespace BlackCore::Fsd
 {
@@ -27,7 +27,7 @@ namespace BlackCore::Fsd
     {
         if (tokens.size() < 3)
         {
-            BlackMisc::CLogMessage(static_cast<AuthChallenge *>(nullptr)).warning(u"Wrong number of arguments.");
+            swift::misc::CLogMessage(static_cast<AuthChallenge *>(nullptr)).warning(u"Wrong number of arguments.");
             return {};
         }
         return AuthChallenge(tokens[0], tokens[1], tokens[2]);

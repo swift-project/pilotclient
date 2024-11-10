@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_MODELS_INTERPOLATIONSETUPMODEL_H
 #define BLACKGUI_MODELS_INTERPOLATIONSETUPMODEL_H
 
-#include "blackmisc/simulation/interpolation/interpolationsetuplist.h"
+#include "misc/simulation/interpolation/interpolationsetuplist.h"
 #include "blackgui/models/listmodelcallsignobjects.h"
 #include "blackgui/blackguiexport.h"
 #include <QString>
@@ -15,7 +15,7 @@ namespace BlackGui::Models
 {
     //! Country list model
     class BLACKGUI_EXPORT CInterpolationSetupListModel :
-        public CListModelCallsignObjects<BlackMisc::Simulation::CInterpolationSetupList, false>
+        public CListModelCallsignObjects<swift::misc::simulation::CInterpolationSetupList, false>
     {
         Q_OBJECT
 

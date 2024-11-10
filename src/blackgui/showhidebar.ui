@@ -74,7 +74,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../blackmisc/blackmisc.qrc">
+      <iconset resource="../misc/misc.qrc">
        <normaloff>:/own/icons/own/gripdown42x15.png</normaloff>
        <normalon>:/own/icons/own/gripup42x15.png</normalon>:/own/icons/own/gripdown42x15.png</iconset>
      </property>
@@ -95,7 +95,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../blackmisc/blackmisc.qrc"/>
+  <include location="../misc/misc.qrc"/>
  </resources>
  <connections/>
 </ui>

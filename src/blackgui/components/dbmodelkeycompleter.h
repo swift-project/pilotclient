@@ -6,8 +6,8 @@
 #ifndef BLACKGUI_COMPONENTS_DBMODELKEYCOMPLETER_H
 #define BLACKGUI_COMPONENTS_DBMODELKEYCOMPLETER_H
 
-#include "blackmisc/simulation/simulatorinfo.h"
-#include "blackmisc/simulation/aircraftmodel.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/simulation/aircraftmodel.h"
 #include <QLineEdit>
 
 namespace BlackGui::Components
@@ -24,10 +24,10 @@ namespace BlackGui::Components
         CDbModelKeyCompleter(QWidget *parent = nullptr);
 
         //! Limit models to simulator, or add unspecified
-        void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void setSimulator(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Aircraft model for current string (searched in DB data)
-        BlackMisc::Simulation::CAircraftModel getAircraftModel() const;
+        swift::misc::simulation::CAircraftModel getAircraftModel() const;
 
     private:
         //! Models have been read
@@ -36,7 +36,7 @@ namespace BlackGui::Components
         //! Init completer
         void initCompleter();
 
-        BlackMisc::Simulation::CSimulatorInfo m_simulator { BlackMisc::Simulation::CSimulatorInfo::All };
+        swift::misc::simulation::CSimulatorInfo m_simulator { swift::misc::simulation::CSimulatorInfo::All };
     };
 } // ns
 

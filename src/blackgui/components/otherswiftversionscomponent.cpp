@@ -3,13 +3,13 @@
 
 #include "otherswiftversionscomponent.h"
 #include "ui_otherswiftversionscomponent.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
+#include "misc/swiftdirectories.h"
+#include "misc/directoryutils.h"
 #include "blackgui/guiapplication.h"
 #include <QUrl>
 #include <QDesktopServices>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui::Views;
 
 namespace BlackGui::Components

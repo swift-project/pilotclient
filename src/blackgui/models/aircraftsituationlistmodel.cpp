@@ -4,16 +4,16 @@
 #include "blackgui/models/aircraftsituationlistmodel.h"
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/columns.h"
-#include "blackmisc/aviation/aircraftsituationlist.h"
-#include "blackmisc/propertyindex.h"
+#include "misc/aviation/aircraftsituationlist.h"
+#include "misc/propertyindex.h"
 
 #include <Qt>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::geo;
+using namespace swift::misc::physical_quantities;
 
 namespace BlackGui::Models
 {

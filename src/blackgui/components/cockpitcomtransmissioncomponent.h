@@ -6,8 +6,8 @@
 #ifndef BLACKGUI_COMPONENTS_COCKPITCOMPONENTTRANSMISSION_H
 #define BLACKGUI_COMPONENTS_COCKPITCOMPONENTTRANSMISSION_H
 
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/aviation/comsystem.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/aviation/comsystem.h"
 #include "blackgui/blackguiexport.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -31,17 +31,17 @@ namespace BlackGui::Components
         virtual ~CCockpitComTransmissionComponent() override;
 
         //! Update given COM system
-        void updateComSystem(BlackMisc::Aviation::CComSystem &comSystem, BlackMisc::Aviation::CComSystem::ComUnit comUnit) const;
+        void updateComSystem(swift::misc::aviation::CComSystem &comSystem, swift::misc::aviation::CComSystem::ComUnit comUnit) const;
 
         //! Set values of given COM system
-        void setComSystem(const BlackMisc::Aviation::CComSystem &comSystem, BlackMisc::Aviation::CComSystem::ComUnit comUnit);
+        void setComSystem(const swift::misc::aviation::CComSystem &comSystem, swift::misc::aviation::CComSystem::ComUnit comUnit);
 
         //! Set botb systems
-        void setComSystems(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+        void setComSystems(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
     signals:
         //! Values changed for unit
-        void changedValues(BlackMisc::Aviation::CComSystem::ComUnit unit);
+        void changedValues(swift::misc::aviation::CComSystem::ComUnit unit);
 
     private:
         //! Save clicked

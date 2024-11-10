@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 macro(get_xswiftbus_commit_id)
-    set(XSWIFTBUS_DEPENDENTS  src/xswiftbus src/blackmisc/simulation/xplane/qtfreeutils.* src/blackmisc/simulation/settings/xswiftbussettingsqtfree.*)
+    set(XSWIFTBUS_DEPENDENTS  src/xswiftbus src/misc/simulation/xplane/qtfreeutils.* src/misc/simulation/settings/xswiftbussettingsqtfree.*)
 
     execute_process(COMMAND git log -n 1 --format=%h -- ${XSWIFTBUS_DEPENDENTS} WORKING_DIRECTORY ${PROJECT_SOURCE_DIR} OUTPUT_VARIABLE XSWIFTBUS_COMMIT_ID)
 

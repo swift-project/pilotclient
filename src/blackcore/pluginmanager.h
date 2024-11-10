@@ -7,7 +7,7 @@
 #define BLACKCORE_PLUGIN_MANAGER_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/sequence.h"
+#include "misc/sequence.h"
 
 #include <QJsonObject>
 #include <QMap>
@@ -46,7 +46,7 @@ namespace BlackCore
 
     protected:
         //! Returns the list of valid IIDs for the implementation
-        virtual BlackMisc::CSequence<QString> acceptedIids() const = 0;
+        virtual swift::misc::CSequence<QString> acceptedIids() const = 0;
 
         //! Where to look for plugins, absolute path.
         //! Default implementation returns `plugins` in the application dir.
@@ -66,7 +66,7 @@ namespace BlackCore
         QString getIdByPlugin(const QObject *instance) const;
 
         //! Gets direct access to all plugins' metadata
-        const BlackMisc::CSequence<QJsonObject> &getPlugins() const
+        const swift::misc::CSequence<QJsonObject> &getPlugins() const
         {
             return m_metadata;
         }
@@ -79,7 +79,7 @@ namespace BlackCore
         //! Returns `nullptr` on failure.
         QObject *getPluginByIdImpl(const QString &identifier);
 
-        BlackMisc::CSequence<QJsonObject> m_metadata; //!< plugin metadata
+        swift::misc::CSequence<QJsonObject> m_metadata; //!< plugin metadata
         QMap<QString, QString> m_paths; //!< identifier <-> file path pairs
         QMap<QString, QObject *> m_instances; //!< identifier <-> instance pairs
         QMap<QString, QString> m_configs; //!< identifier <-> identifier pairs

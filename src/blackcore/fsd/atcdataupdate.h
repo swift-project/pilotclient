@@ -8,7 +8,7 @@
 
 #include "blackcore/fsd/messagebase.h"
 #include "blackcore/fsd/enums.h"
-#include "blackmisc/network/facilitytype.h"
+#include "misc/network/facilitytype.h"
 
 #include <QtGlobal>
 
@@ -21,7 +21,7 @@ namespace BlackCore::Fsd
 
     public:
         //! Constructor
-        AtcDataUpdate(const QString &sender, int frequencykHz, BlackMisc::Network::CFacilityType facility, int visibleRange, AtcRating rating,
+        AtcDataUpdate(const QString &sender, int frequencykHz, swift::misc::network::CFacilityType facility, int visibleRange, AtcRating rating,
                       double latitude, double longitude, int elevation);
 
         //! Message converted to tokens
@@ -33,7 +33,7 @@ namespace BlackCore::Fsd
         //! @{
         //! Properties
         int m_frequencykHz = 0.0;
-        BlackMisc::Network::CFacilityType m_facility;
+        swift::misc::network::CFacilityType m_facility;
         int m_visibleRange = 0.0;
         AtcRating m_rating = AtcRating::Unknown;
         double m_latitude = 0.0;

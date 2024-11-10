@@ -7,8 +7,8 @@
 #include "blackcore/afv/audio/receiversampleprovider.h"
 #include "sound/sampleprovider/samples.h"
 #include "sound/audioutilities.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/metadatautils.h"
+#include "misc/logmessage.h"
+#include "misc/metadatautils.h"
 #include "config/buildconfig.h"
 
 #include <QtMath>
@@ -16,7 +16,7 @@
 #include <QStringLiteral>
 #include <QStringBuilder>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace swift::sound::sample_provider;
 using namespace swift::config;
 

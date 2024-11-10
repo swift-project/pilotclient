@@ -81,7 +81,7 @@
          <string>...</string>
         </property>
         <property name="icon">
-         <iconset resource="../../blackmisc/blackmisc.qrc">
+         <iconset resource="../../misc/misc.qrc">
           <normaloff>:/pastel/icons/pastel/16/arrow-refresh-small.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh-small.png</iconset>
         </property>
        </widget>
@@ -207,7 +207,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
+  <include location="../../misc/misc.qrc"/>
  </resources>
  <connections/>
 </ui>

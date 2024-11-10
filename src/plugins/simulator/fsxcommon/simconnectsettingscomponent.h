@@ -8,9 +8,9 @@
 
 #include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 #include "blackgui/overlaymessagesframe.h"
-#include "blackmisc/settingscache.h"
-#include "blackmisc/simulation/settings/simulatorsettings.h"
-#include "blackmisc/simulation/simulatorinfo.h"
+#include "misc/settingscache.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/simulatorinfo.h"
 
 #include <QScopedPointer>
 
@@ -65,8 +65,8 @@ namespace BlackSimPlugin::FsxCommon
         //! The P3D version has been changed
         void onP3DVersionChanged(const QString &version);
 
-        BlackMisc::Simulation::CSimulatorInfo m_simulator { BlackMisc::Simulation::CSimulatorInfo::FSX };
-        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TP3DVersion> m_p3dVersion { this };
+        swift::misc::simulation::CSimulatorInfo m_simulator { swift::misc::simulation::CSimulatorInfo::FSX };
+        swift::misc::CSetting<swift::misc::simulation::settings::TP3DVersion> m_p3dVersion { this };
         QScopedPointer<Ui::CSimConnectSettingsComponent> ui;
         bool m_p3d64bit = false;
     };

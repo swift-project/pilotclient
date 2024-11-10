@@ -9,7 +9,7 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-#include "blackmisc/geo/coordinategeodetic.h"
+#include "misc/geo/coordinategeodetic.h"
 #include "blackgui/editors/form.h"
 
 namespace Ui
@@ -34,20 +34,20 @@ namespace BlackGui::Editors
         virtual void setReadOnly(bool readOnly) override;
 
         //! Set origin coordinate
-        void setOriginCoordinate(const BlackMisc::Geo::CCoordinateGeodetic &originCoordinate) { m_originCoordinate = originCoordinate; }
+        void setOriginCoordinate(const swift::misc::geo::CCoordinateGeodetic &originCoordinate) { m_originCoordinate = originCoordinate; }
 
         //! Set the distance
-        void setDistance(const BlackMisc::PhysicalQuantities::CLength &distance);
+        void setDistance(const swift::misc::physical_quantities::CLength &distance);
 
         //! Relative coordinate based on entered data
-        BlackMisc::Geo::CCoordinateGeodetic getRelativeCoordinate(const BlackMisc::PhysicalQuantities::CAngle &bearingOffset = BlackMisc::PhysicalQuantities::CAngle::null()) const;
+        swift::misc::geo::CCoordinateGeodetic getRelativeCoordinate(const swift::misc::physical_quantities::CAngle &bearingOffset = swift::misc::physical_quantities::CAngle::null()) const;
 
         //! Display coordinate info
-        void displayInfo(const BlackMisc::Geo::CCoordinateGeodetic &relPos = BlackMisc::Geo::CCoordinateGeodetic::null());
+        void displayInfo(const swift::misc::geo::CCoordinateGeodetic &relPos = swift::misc::geo::CCoordinateGeodetic::null());
 
     private:
         QScopedPointer<Ui::CRelativeAircraftPosition> ui;
-        BlackMisc::Geo::CCoordinateGeodetic m_originCoordinate;
+        swift::misc::geo::CCoordinateGeodetic m_originCoordinate;
     };
 } // ns
 

@@ -6,9 +6,9 @@
 #include "blackgui/components/dbairlineicaoselectorcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackmisc/db/datastoreutility.h"
-#include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/stringutils.h"
+#include "misc/db/datastoreutility.h"
+#include "misc/aviation/airlineicaocodelist.h"
+#include "misc/stringutils.h"
 
 #include <QCompleter>
 #include <QLabel>
@@ -17,10 +17,10 @@
 
 using namespace BlackCore;
 using namespace BlackGui;
-using namespace BlackMisc;
-using namespace BlackMisc::Db;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::db;
+using namespace swift::misc::network;
+using namespace swift::misc::aviation;
 
 namespace BlackGui::Components
 {

@@ -12,20 +12,20 @@
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/context/contextownaircraftimpl.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackmisc/sharedstate/datalinkdbus.h"
-#include "blackmisc/loghistory.h"
+#include "misc/sharedstate/datalinkdbus.h"
+#include "misc/loghistory.h"
 #include "blackcore/context/contextsimulatorimpl.h"
 #include "blackcore/data/launchersetup.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/registermetadata.h"
 #include "blackcore/airspacemonitor.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/registermetadata.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/stringutils.h"
-#include "blackmisc/verify.h"
+#include "misc/dbusserver.h"
+#include "misc/identifier.h"
+#include "misc/logmessage.h"
+#include "misc/registermetadata.h"
+#include "misc/statusmessage.h"
+#include "misc/stringutils.h"
+#include "misc/verify.h"
 
 #include <QDBusConnection>
 #include <QMap>
@@ -35,9 +35,9 @@
 #include <QElapsedTimer>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
 using namespace BlackCore::Data;
 using namespace BlackCore::Context;
 
@@ -98,7 +98,7 @@ namespace BlackCore
         times.insert("DBus", time.restart());
 
         // shared state infrastructure
-        m_dataLinkDBus = new SharedState::CDataLinkDBus(this);
+        m_dataLinkDBus = new shared_state::CDataLinkDBus(this);
         switch (m_config.getModeApplication())
         {
         case CCoreFacadeConfig::NotUsed:
@@ -171,7 +171,7 @@ namespace BlackCore
 
     void CCoreFacade::registerMetadata()
     {
-        BlackMisc::registerMetadata();
+        swift::misc::registerMetadata();
         BlackCore::registerMetadata();
     }
 

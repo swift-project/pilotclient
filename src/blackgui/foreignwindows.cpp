@@ -8,7 +8,7 @@
 #include <QWindow>
 #include <QtGlobal>
 
-using namespace BlackMisc::Simulation;
+using namespace swift::misc::simulation;
 
 namespace BlackGui
 {

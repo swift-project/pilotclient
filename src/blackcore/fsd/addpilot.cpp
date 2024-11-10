@@ -4,9 +4,9 @@
 #include "blackcore/fsd/addpilot.h"
 #include "blackcore/fsd/serializer.h"
 
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackCore::Fsd
 {

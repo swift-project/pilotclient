@@ -7,10 +7,10 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/countrylist.h"
+#include "misc/countrylist.h"
 #include <QCompleter>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackCore;
 
 namespace BlackGui::Components

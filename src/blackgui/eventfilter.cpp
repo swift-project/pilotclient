@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "eventfilter.h"
-#include "blackmisc/stringutils.h"
+#include "misc/stringutils.h"
 
 #include <QKeyEvent>
 #include <QPlainTextEdit>

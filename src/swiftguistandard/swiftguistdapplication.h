@@ -33,7 +33,7 @@ protected:
     virtual bool parsingHookIn() override;
 
     //! Start facade by cmd arguments
-    virtual BlackMisc::CStatusMessageList startHookIn() override;
+    virtual swift::misc::CStatusMessageList startHookIn() override;
 
 private:
     QCommandLineOption m_cmdFacadeMode {

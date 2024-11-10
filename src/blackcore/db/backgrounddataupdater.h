@@ -8,10 +8,10 @@
 
 #include "blackcore/data/dbcaches.h"
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/simulation/data/modelcaches.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/worker.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/network/entityflags.h"
+#include "misc/statusmessagelist.h"
+#include "misc/worker.h"
 
 #include <QMap>
 #include <QReadWriteLock>
@@ -20,7 +20,7 @@
 namespace BlackCore::Db
 {
     //! Update and consolidation of DB data
-    class BLACKCORE_EXPORT CBackgroundDataUpdater : public BlackMisc::CContinuousWorker
+    class BLACKCORE_EXPORT CBackgroundDataUpdater : public swift::misc::CContinuousWorker
     {
         Q_OBJECT
 
@@ -33,7 +33,7 @@ namespace BlackCore::Db
 
         //! The message history
         //! \threadsafe
-        BlackMisc::CStatusMessageList getMessageHistory() const;
+        swift::misc::CStatusMessageList getMessageHistory() const;
 
     signals:
         //! Consolidation
@@ -45,11 +45,11 @@ namespace BlackCore::Db
         std::atomic_bool m_inWork { false }; //!< indicates a running update
         std::atomic_bool m_updatePublishedModels { true }; //!< update when models have been updated
         QMap<QString, QDateTime> m_syncedModelsLatestChange; //! timestamp per cache when last synced
-        BlackMisc::CStatusMessageList m_messageHistory;
+        swift::misc::CStatusMessageList m_messageHistory;
 
         // set/caches as member as we are in own thread, central instance will not work
-        BlackMisc::Simulation::Data::CModelCaches m_modelCaches { false, this };
-        BlackMisc::Simulation::Data::CModelSetCaches m_modelSets { false, this };
+        swift::misc::simulation::data::CModelCaches m_modelCaches { false, this };
+        swift::misc::simulation::data::CModelSetCaches m_modelSets { false, this };
 
         //! Do the update checks
         void doWork();
@@ -60,23 +60,23 @@ namespace BlackCore::Db
         //! Sync the model cache, normally model set or simulator models cache
         //! \param modelSetFlag true means model set, false means model cach
         //! \param dbModelsConsidered if no DB models are passed all DB models are used
-        void syncModelOrModelSetCacheWithDbData(bool modelSetFlag, const BlackMisc::Simulation::CAircraftModelList &dbModelsConsidered = {});
+        void syncModelOrModelSetCacheWithDbData(bool modelSetFlag, const swift::misc::simulation::CAircraftModelList &dbModelsConsidered = {});
 
         //! Sync DB entity
-        void syncDbEntity(BlackMisc::Network::CEntityFlags::Entity entity);
+        void syncDbEntity(swift::misc::network::CEntityFlags::Entity entity);
 
         //! Still enabled etc.
         bool doWorkCheck() const;
 
         //! Models have been published
-        void onModelsPublished(const BlackMisc::Simulation::CAircraftModelList &modelsPublished, bool directWrite);
+        void onModelsPublished(const swift::misc::simulation::CAircraftModelList &modelsPublished, bool directWrite);
 
         //! Model or model set instance
-        BlackMisc::Simulation::Data::IMultiSimulatorModelCaches &modelCaches(bool modelSetFlag);
+        swift::misc::simulation::data::IMultiSimulatorModelCaches &modelCaches(bool modelSetFlag);
 
         //! Add history message
         //! \threadsafe
-        void addHistory(const BlackMisc::CStatusMessage &msg);
+        void addHistory(const swift::misc::CStatusMessage &msg);
     };
 } // ns
 #endif // guard

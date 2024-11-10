@@ -3,15 +3,15 @@
 
 #include "aircraftmodelvalidationdialog.h"
 #include "ui_aircraftmodelvalidationdialog.h"
-#include "blackmisc/simulation/aircraftmodelutils.h"
+#include "misc/simulation/aircraftmodelutils.h"
 
 #include <QPushButton>
 #include <QDialogButtonBox>
 #include <QPointer>
 #include <atomic>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
 
 namespace BlackGui::Views
 {

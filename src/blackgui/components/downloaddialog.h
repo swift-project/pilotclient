@@ -16,7 +16,7 @@ namespace Ui
 {
     class CDownloadDialog;
 }
-namespace BlackMisc::Network
+namespace swift::misc::network
 {
     class CRemoteFile;
     class CRemoteFileList;
@@ -38,10 +38,10 @@ namespace BlackGui::Components
         virtual ~CDownloadDialog() override;
 
         //! \copydoc CDownloadComponent::setDownloadFile
-        void setDownloadFile(const BlackMisc::Network::CRemoteFile &remoteFile);
+        void setDownloadFile(const swift::misc::network::CRemoteFile &remoteFile);
 
         //! \copydoc CDownloadComponent::setDownloadFiles
-        void setDownloadFiles(const BlackMisc::Network::CRemoteFileList &remoteFiles);
+        void setDownloadFiles(const swift::misc::network::CRemoteFileList &remoteFiles);
 
         //! \copydoc CDownloadComponent::triggerDownloadingOfFiles
         void triggerDownloadingOfFiles(int delayMs);

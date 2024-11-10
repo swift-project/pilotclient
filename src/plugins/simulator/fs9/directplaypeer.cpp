@@ -5,15 +5,15 @@
 #include "directplayutils.h"
 #include "multiplayerpacketparser.h"
 #include "directplayerror.h"
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 #include <QDebug>
 #include <QTimer>
 #include <QFile>
 #include <QStringList>
 #include <QScopedPointer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 
 namespace BlackSimPlugin::Fs9
 {

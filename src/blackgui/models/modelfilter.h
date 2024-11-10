@@ -6,23 +6,23 @@
 #ifndef BLACKGUI_MODELS_LISTMODELFILTER_H
 #define BLACKGUI_MODELS_LISTMODELFILTER_H
 
-#include "blackmisc/aviation/aircrafticaocodelist.h"
-#include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/countrylist.h"
-#include "blackmisc/identifierlist.h"
-#include "blackmisc/namevariantpairlist.h"
-#include "blackmisc/network/clientlist.h"
-#include "blackmisc/network/serverlist.h"
-#include "blackmisc/network/textmessagelist.h"
-#include "blackmisc/network/userlist.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/variant.h"
+#include "misc/aviation/aircrafticaocodelist.h"
+#include "misc/aviation/airlineicaocodelist.h"
+#include "misc/aviation/airportlist.h"
+#include "misc/aviation/atcstationlist.h"
+#include "misc/aviation/liverylist.h"
+#include "misc/countrylist.h"
+#include "misc/identifierlist.h"
+#include "misc/namevariantpairlist.h"
+#include "misc/network/clientlist.h"
+#include "misc/network/serverlist.h"
+#include "misc/network/textmessagelist.h"
+#include "misc/network/userlist.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/distributorlist.h"
+#include "misc/simulation/simulatedaircraftlist.h"
+#include "misc/statusmessagelist.h"
+#include "misc/variant.h"
 
 #include <QString>
 #include <Qt>
@@ -54,7 +54,7 @@ namespace BlackGui::Models
         void setEnabled(bool enable);
 
         //! Return an implementation-specific value object representing the filter
-        virtual BlackMisc::CVariant getAsValueObject() const { return {}; }
+        virtual swift::misc::CVariant getAsValueObject() const { return {}; }
 
     protected:
         //! Standard string search supporting wildcard at begin and end: "*xyz", "abc*"

@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackgui/models/columnformatters.h"
-#include "blackmisc/aviation/altitude.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/iconlist.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/rgbcolor.h"
-#include "blackmisc/variant.h"
+#include "misc/aviation/altitude.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/iconlist.h"
+#include "misc/icons.h"
+#include "misc/rgbcolor.h"
+#include "misc/variant.h"
 
 #include <QDate>
 #include <QDateTime>
@@ -17,9 +17,9 @@
 #include <QVariant>
 #include <QScopedPointer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::physical_quantities;
 
 namespace BlackGui::Models
 {

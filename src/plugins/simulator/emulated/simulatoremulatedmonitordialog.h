@@ -6,11 +6,11 @@
 #ifndef BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDMONITORDIALOG_H
 #define BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDMONITORDIALOG_H
 
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/network/textmessage.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/identifiable.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/network/textmessage.h"
+#include "misc/statusmessagelist.h"
+#include "misc/logcategories.h"
+#include "misc/identifiable.h"
 
 #include <QDialog>
 #include <QScopedPointer>
@@ -27,7 +27,7 @@ namespace BlackSimPlugin::Emulated
     /*!
      * Monitor widget for the pseudo driver
      */
-    class CSimulatorEmulatedMonitorDialog : public QDialog, public BlackMisc::CIdentifiable
+    class CSimulatorEmulatedMonitorDialog : public QDialog, public swift::misc::CIdentifiable
     {
         Q_OBJECT
 
@@ -42,10 +42,10 @@ namespace BlackSimPlugin::Emulated
         virtual ~CSimulatorEmulatedMonitorDialog() override;
 
         //! Append status message
-        void appendStatusMessageToList(const BlackMisc::CStatusMessage &statusMessage);
+        void appendStatusMessageToList(const swift::misc::CStatusMessage &statusMessage);
 
         //! Append status messages
-        void appendStatusMessagesToList(const BlackMisc::CStatusMessageList &statusMessages);
+        void appendStatusMessagesToList(const swift::misc::CStatusMessageList &statusMessages);
 
         //! Receiving call to be written in log widget
         void appendReceivingCall(const QString &function, const QString &p1 = {}, const QString &p2 = {}, const QString &p3 = {});
@@ -54,13 +54,13 @@ namespace BlackSimPlugin::Emulated
         void appendSendingCall(const QString &function, const QString &p1 = {}, const QString &p2 = {}, const QString &p3 = {});
 
         //! Display status message
-        void displayStatusMessage(const BlackMisc::CStatusMessage &message);
+        void displayStatusMessage(const swift::misc::CStatusMessage &message);
 
         //! Display text message
-        void displayTextMessage(const BlackMisc::Network::CTextMessage &message);
+        void displayTextMessage(const swift::misc::network::CTextMessage &message);
 
         //! The title
-        void updateWindowTitleAndUiValues(const BlackMisc::Simulation::CSimulatorInfo &info);
+        void updateWindowTitleAndUiValues(const swift::misc::simulation::CSimulatorInfo &info);
 
     private:
         static int constexpr MaxLogMessages = 500; //!< desired log message number
@@ -72,13 +72,13 @@ namespace BlackSimPlugin::Emulated
         void onSimulatorValuesChanged();
 
         //! Transmission values (COM unit volume etc.)
-        void onSavedComTransmissionValues(BlackMisc::Aviation::CComSystem::ComUnit unit);
+        void onSavedComTransmissionValues(swift::misc::aviation::CComSystem::ComUnit unit);
 
         //! Cockpit COM values changed
-        void changeComFromUi(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+        void changeComFromUi(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
         //! SELCAL values changed
-        void changeSelcalFromUi(const BlackMisc::Aviation::CSelcal &selcal);
+        void changeSelcalFromUi(const swift::misc::aviation::CSelcal &selcal);
 
         //! Update aircraft situation
         void changeSituationFromUi();

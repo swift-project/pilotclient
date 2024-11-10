@@ -9,7 +9,7 @@
 #include "sound/sampleprovider/sampleprovider.h"
 #include "sound/sampleprovider/mixingsampleprovider.h"
 #include "blackcore/afv/audio/receiversampleprovider.h"
-#include "blackmisc/aviation/callsignset.h"
+#include "misc/aviation/callsignset.h"
 
 #include <QAudioFormat>
 #include <QObject>
@@ -47,7 +47,7 @@ namespace BlackCore::Afv::Audio
         QString getReceivingCallsignsString(quint16 transceiverID) const;
 
         //! Receiving callsign as single string
-        BlackMisc::Aviation::CCallsignSet getReceivingCallsigns(quint16 transceiverID) const;
+        swift::misc::aviation::CCallsignSet getReceivingCallsigns(quint16 transceiverID) const;
 
         //! Setting gain for specified receiver
         bool setGainRatioForTransceiver(quint16 transceiverID, double gainRatio);

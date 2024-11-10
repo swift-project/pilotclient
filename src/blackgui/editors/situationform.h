@@ -8,8 +8,8 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/editors/form.h"
-#include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/statusmessagelist.h"
 #include <QScopedPointer>
 
 namespace Ui
@@ -33,16 +33,16 @@ namespace BlackGui::Editors
         virtual ~CSituationForm() override;
 
         //! Set the situation
-        void setSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
+        void setSituation(const swift::misc::aviation::CAircraftSituation &situation);
 
         //! Get the situation
-        BlackMisc::Aviation::CAircraftSituation getSituation() const;
+        swift::misc::aviation::CAircraftSituation getSituation() const;
 
         //! \name Form class implementations
         //! @{
         virtual void setReadOnly(bool readonly) override;
         virtual void setSelectOnly() override;
-        virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+        virtual swift::misc::CStatusMessageList validate(bool nested = false) const override;
         //! @}
 
         //! Set button visible
@@ -56,28 +56,28 @@ namespace BlackGui::Editors
         static constexpr int RoundDigits = 6;
 
         //! Get bank angle
-        BlackMisc::PhysicalQuantities::CAngle getBankAngle() const;
+        swift::misc::physical_quantities::CAngle getBankAngle() const;
 
         //! Get bank angle
         double getBankAngleDegrees() const;
 
         //! Get pitch angle
-        BlackMisc::PhysicalQuantities::CAngle getPitchAngle() const;
+        swift::misc::physical_quantities::CAngle getPitchAngle() const;
 
         //! Get pitch angle
         double getPitchAngleDegrees() const;
 
         //! Get heading angle
-        BlackMisc::PhysicalQuantities::CAngle getHeadingAngle() const;
+        swift::misc::physical_quantities::CAngle getHeadingAngle() const;
 
         //! Get heading angle
         double getHeadingAngleDegrees() const;
 
         //! Get barometric pressure at MSL (mean sea level)
-        BlackMisc::PhysicalQuantities::CPressure getBarometricPressureMsl() const;
+        swift::misc::physical_quantities::CPressure getBarometricPressureMsl() const;
 
         //! Get ground speed
-        BlackMisc::PhysicalQuantities::CSpeed getGroundSpeed() const;
+        swift::misc::physical_quantities::CSpeed getGroundSpeed() const;
 
         //! Get pressure at mean sea level
         double getBarometricPressureMslMillibar() const;

@@ -8,8 +8,8 @@
 
 #include "blackgui/editors/form.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/aviation/aircraftparts.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/aviation/aircraftparts.h"
+#include "misc/statusmessagelist.h"
 
 class QWidget;
 
@@ -37,17 +37,17 @@ namespace BlackGui::Editors
         //! @{
         virtual void setReadOnly(bool readonly) override;
         virtual void setSelectOnly() override;
-        virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+        virtual swift::misc::CStatusMessageList validate(bool nested = false) const override;
         //! @}
 
         //! Get the parts
-        BlackMisc::Aviation::CAircraftParts getAircraftPartsFromGui() const;
+        swift::misc::aviation::CAircraftParts getAircraftPartsFromGui() const;
 
         //! Get the parts from JSON
-        BlackMisc::Aviation::CAircraftParts getAircraftPartsFromJson() const;
+        swift::misc::aviation::CAircraftParts getAircraftPartsFromJson() const;
 
         //! Set the parts
-        void setAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
+        void setAircraftParts(const swift::misc::aviation::CAircraftParts &parts);
 
         //! Set button visible
         void showSetButton(bool visible);
@@ -63,10 +63,10 @@ namespace BlackGui::Editors
         QScopedPointer<Ui::CAircraftPartsForm> ui;
 
         //! Get parts object
-        BlackMisc::Aviation::CAircraftParts guiToAircraftParts() const;
+        swift::misc::aviation::CAircraftParts guiToAircraftParts() const;
 
         //! GUI set by parts
-        void partsToGui(const BlackMisc::Aviation::CAircraftParts &parts);
+        void partsToGui(const swift::misc::aviation::CAircraftParts &parts);
 
         //! GUI values to JSON
         void guiToJson();

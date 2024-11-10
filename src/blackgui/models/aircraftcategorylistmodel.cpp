@@ -4,13 +4,13 @@
 #include "blackgui/models/aircraftcategorylistmodel.h"
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/columns.h"
-#include "blackmisc/db/datastore.h"
-#include "blackmisc/timestampbased.h"
+#include "misc/db/datastore.h"
+#include "misc/timestampbased.h"
 
 #include <Qt>
 #include <QtGlobal>
 
-using namespace BlackMisc::Aviation;
+using namespace swift::misc::aviation;
 
 namespace BlackGui::Models
 {

@@ -7,8 +7,8 @@
 #define BLACKGUI_COMPONENTS_STATUSMESSAGEFORMSMALL_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/variant.h"
+#include "misc/statusmessage.h"
+#include "misc/variant.h"
 
 #include <QFrame>
 #include <QObject>
@@ -35,10 +35,10 @@ namespace BlackGui::Components
         virtual ~CStatusMessageFormSmall();
 
         //! Set message
-        void setVariant(const BlackMisc::CVariant &messageVariant);
+        void setVariant(const swift::misc::CVariant &messageVariant);
 
         //! Set message
-        void setValue(const BlackMisc::CStatusMessage &message);
+        void setValue(const swift::misc::CStatusMessage &message);
 
         //! Toggle visibility
         void toggleVisibility();

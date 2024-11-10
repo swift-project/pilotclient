@@ -6,14 +6,14 @@
 #include "blackcore/db/databaseutils.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/application.h"
-#include "blackmisc/db/datastoreutility.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/verify.h"
+#include "misc/db/datastoreutility.h"
+#include "misc/network/networkutils.h"
+#include "misc/network/entityflags.h"
+#include "misc/swiftdirectories.h"
+#include "misc/directoryutils.h"
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
+#include "misc/verify.h"
 
 #include <QStringBuilder>
 #include <QByteArray>
@@ -29,9 +29,9 @@
 #include <QStringBuilder>
 #include <QWriteLocker>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Db;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::db;
+using namespace swift::misc::network;
 using namespace BlackCore;
 using namespace BlackCore::Data;
 using namespace BlackCore::Db;

@@ -3,8 +3,8 @@
 
 #include "blackcore/vatsim/vatsimsettings.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::physical_quantities;
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackCore::Vatsim, CReaderSettings)
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackCore::Vatsim, CRawFsdMessageSettings)
@@ -31,7 +31,7 @@ namespace BlackCore::Vatsim
         return s;
     }
 
-    QVariant CReaderSettings::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
+    QVariant CReaderSettings::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -88,7 +88,7 @@ namespace BlackCore::Vatsim
         return s;
     }
 
-    QVariant CRawFsdMessageSettings::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
+    QVariant CRawFsdMessageSettings::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
         ColumnIndex i = index.frontCasted<ColumnIndex>();

@@ -7,8 +7,8 @@
 #define BLACKSIMPLUGIN_FSCOMMON_SIMULATORFSCOMMON_H
 
 #include "plugins/simulator/plugincommon/simulatorplugincommon.h"
-#include "blackmisc/simulation/interpolation/interpolator.h"
-#include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
+#include "misc/simulation/interpolation/interpolator.h"
+#include "misc/simulation/fscommon/aircraftcfgparser.h"
 #include "plugins/simulator/fscommon/fscommonexport.h"
 
 #include <QObject>
@@ -21,8 +21,8 @@ namespace BlackSimPlugin::FsCommon
     {
         Q_OBJECT
         Q_INTERFACES(BlackCore::ISimulator)
-        Q_INTERFACES(BlackMisc::Simulation::ISimulationEnvironmentProvider)
-        Q_INTERFACES(BlackMisc::Simulation::IInterpolationSetupProvider)
+        Q_INTERFACES(swift::misc::simulation::ISimulationEnvironmentProvider)
+        Q_INTERFACES(swift::misc::simulation::IInterpolationSetupProvider)
 
     public:
         //! Destructor
@@ -32,17 +32,17 @@ namespace BlackSimPlugin::FsCommon
         virtual bool disconnectFrom() override;
         virtual bool isPaused() const override { return m_simPaused; }
         virtual bool isTimeSynchronized() const override { return m_simTimeSynced; }
-        virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
-        virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
-        virtual BlackMisc::Aviation::CAirportList getAirportsInRange(bool recalculateDistance) const override;
+        virtual swift::misc::physical_quantities::CTime getTimeSynchronizationOffset() const override;
+        virtual bool setTimeSynchronization(bool enable, const swift::misc::physical_quantities::CTime &offset) override;
+        virtual swift::misc::aviation::CAirportList getAirportsInRange(bool recalculateDistance) const override;
         // ---------------------- ISimulator ------------------
 
     protected:
         //! Constructor
-        CSimulatorFsCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                           BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                           BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
-                           BlackMisc::Network::IClientProvider *clientProvider,
+        CSimulatorFsCommon(const swift::misc::simulation::CSimulatorPluginInfo &info,
+                           swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
+                           swift::misc::simulation::IRemoteAircraftProvider *renderedAircraftProvider,
+                           swift::misc::network::IClientProvider *clientProvider,
                            QObject *parent = nullptr);
 
         //! Init the internal objects
@@ -61,14 +61,14 @@ namespace BlackSimPlugin::FsCommon
         int m_skipCockpitUpdateCycles = 0; //!< skip some update cycles to allow changes in simulator cockpit to be set
         bool m_simPaused = false; //!< simulator paused?
         bool m_simTimeSynced = false; //!< time synchronized?
-        BlackMisc::PhysicalQuantities::CTime m_syncTimeOffset; //!< time offset
-        BlackMisc::Aviation::CAirportList m_airportsInRangeFromSimulator; //!< airports in range of own aircraft
+        swift::misc::physical_quantities::CTime m_syncTimeOffset; //!< time offset
+        swift::misc::aviation::CAirportList m_airportsInRangeFromSimulator; //!< airports in range of own aircraft
 
         // cockpit as set in SIM
-        BlackMisc::Aviation::CComSystem m_simCom1; //!< cockpit COM1 state in simulator
-        BlackMisc::Aviation::CComSystem m_simCom2; //!< cockpit COM2 state in simulator
-        BlackMisc::Aviation::CTransponder m_simTransponder; //!< cockpit xpdr state in simulator
-        BlackMisc::Aviation::CSelcal m_selcal; //!< SELCAL as in cockpit
+        swift::misc::aviation::CComSystem m_simCom1; //!< cockpit COM1 state in simulator
+        swift::misc::aviation::CComSystem m_simCom2; //!< cockpit COM2 state in simulator
+        swift::misc::aviation::CTransponder m_simTransponder; //!< cockpit xpdr state in simulator
+        swift::misc::aviation::CSelcal m_selcal; //!< SELCAL as in cockpit
     };
 } // namespace
 

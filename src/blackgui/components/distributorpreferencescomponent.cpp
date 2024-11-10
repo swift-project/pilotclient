@@ -10,13 +10,13 @@
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackmisc/simulation/data/modelcaches.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/distributor.h"
-#include "blackmisc/simulation/distributorlistpreferences.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/orderable.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/distributor.h"
+#include "misc/simulation/distributorlistpreferences.h"
+#include "misc/logmessage.h"
+#include "misc/orderable.h"
+#include "misc/statusmessage.h"
 #include "ui_distributorpreferencescomponent.h"
 
 #include <QFlags>
@@ -26,10 +26,10 @@
 #include <QtGlobal>
 #include <QPointer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::Data;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::data;
+using namespace swift::misc::network;
 using namespace BlackGui::Views;
 using namespace BlackGui::Models;
 

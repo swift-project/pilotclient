@@ -7,9 +7,9 @@
 
 #include "blackcore/application.h"
 #include "blackcore/setupreader.h"
-#include "blackmisc/applicationinfo.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/applicationinfo.h"
+#include "misc/network/networkutils.h"
+#include "misc/statusmessagelist.h"
 #include "test.h"
 #include <QObject>
 #include <QDateTime>
@@ -20,8 +20,8 @@
 
 using namespace BlackCore;
 using namespace BlackCore::Db;
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 
 namespace BlackCoreTest
 {

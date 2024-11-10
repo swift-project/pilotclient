@@ -10,9 +10,9 @@
 #include <QDialogButtonBox>
 
 using namespace BlackGui;
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation::Settings;
-// using namespace BlackMisc::Simulation::Flightgear;
+using namespace swift::misc;
+using namespace swift::misc::simulation::settings;
+// using namespace swift::misc::simulation::Flightgear;
 
 namespace BlackSimPlugin::Flightgear
 {

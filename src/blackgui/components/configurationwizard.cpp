@@ -5,12 +5,12 @@
 #include "ui_configurationwizard.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackmisc/math/mathutils.h"
-#include "blackmisc/directoryutils.h"
+#include "misc/math/mathutils.h"
+#include "misc/directoryutils.h"
 #include <QPointer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Math;
+using namespace swift::misc;
+using namespace swift::misc::math;
 
 namespace BlackGui::Components
 {

@@ -8,17 +8,17 @@
 #include "blackgui/uppercasevalidator.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackmisc/propertyindexlist.h"
-#include "blackmisc/htmlutils.h"
+#include "misc/propertyindexlist.h"
+#include "misc/htmlutils.h"
 
 #include <QCompleter>
 #include <QStringBuilder>
 #include <QStringListModel>
 #include <QHash>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 
@@ -98,13 +98,13 @@ namespace BlackGui::Components
                 currentAircraftParts.getLights().toQString() %
                 u"<br>"
                 u"gear down: " %
-                BlackMisc::boolToYesNo(currentAircraftParts.isGearDown()) %
+                swift::misc::boolToYesNo(currentAircraftParts.isGearDown()) %
                 u"<br>"
                 u"flaps pct: " %
                 QString::number(currentAircraftParts.getFlapsPercent()) %
                 u"<br>"
                 u"spoilers out: " %
-                BlackMisc::boolToYesNo(currentAircraftParts.isSpoilersOut()) %
+                swift::misc::boolToYesNo(currentAircraftParts.isSpoilersOut()) %
                 u"<br>"
                 u"engines on: "
                 u"<br>"
@@ -112,7 +112,7 @@ namespace BlackGui::Components
                 currentAircraftParts.getEngines().toQString() %
                 u"<br>"
                 u" on ground: " %
-                BlackMisc::boolToYesNo(currentAircraftParts.isOnGround());
+                swift::misc::boolToYesNo(currentAircraftParts.isOnGround());
             html += s;
             if (ui->cb_PartsHistoryEnabled->isChecked())
             {

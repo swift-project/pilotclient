@@ -10,14 +10,14 @@
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/tokenbucket.h"
-#include "blackmisc/identifiable.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/propertyindex.h"
-#include "blackmisc/network/connectionstatus.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/variant.h"
+#include "misc/tokenbucket.h"
+#include "misc/identifiable.h"
+#include "misc/identifier.h"
+#include "misc/propertyindex.h"
+#include "misc/network/connectionstatus.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/simulatorplugininfo.h"
+#include "misc/variant.h"
 
 #include <QFrame>
 #include <QObject>
@@ -32,13 +32,13 @@ namespace Ui
 {
     class CMappingComponent;
 }
-namespace BlackMisc
+namespace swift::misc
 {
-    namespace Aviation
+    namespace aviation
     {
         class CCallsign;
     }
-    namespace Simulation
+    namespace simulation
     {
         class CSimulatedAircraft;
     }
@@ -55,7 +55,7 @@ namespace BlackGui
         class BLACKGUI_EXPORT CMappingComponent :
             public COverlayMessagesFrame,
             public CEnableForDockWidgetInfoArea,
-            public BlackMisc::CIdentifiable
+            public swift::misc::CIdentifiable
         {
             Q_OBJECT
 
@@ -91,7 +91,7 @@ namespace BlackGui
             void setTab(TabWidget tab);
 
             //! Find models starting with
-            BlackMisc::Simulation::CAircraftModelList findModelsStartingWith(const QString &modelName, Qt::CaseSensitivity cs);
+            swift::misc::simulation::CAircraftModelList findModelsStartingWith(const QString &modelName, Qt::CaseSensitivity cs);
 
         signals:
             //! Request the validation dialog
@@ -99,14 +99,14 @@ namespace BlackGui
 
         private:
             //! Aircraft models available
-            void onModelSetChanged(const BlackMisc::Simulation::CSimulatorInfo &dummy);
+            void onModelSetChanged(const swift::misc::simulation::CSimulatorInfo &dummy);
 
             //! Changed count of rendered or aircraft model count
             void onRowCountChanged(int count, bool withFilter);
 
             //! Simulated aircraft did change in view
             //! \sa CViewBaseNonTemplate::objectChanged
-            void onChangedSimulatedAircraftInView(const BlackMisc::CVariant &simulatedAircraft, const BlackMisc::CPropertyIndex &index);
+            void onChangedSimulatedAircraftInView(const swift::misc::CVariant &simulatedAircraft, const swift::misc::CPropertyIndex &index);
 
             //! Aircraft selected (in view)
             void onAircraftSelectedInView(const QModelIndex &index);
@@ -127,19 +127,19 @@ namespace BlackGui
             void onModelsUpdateRequested();
 
             //! Request temp.disablng of models (for matching)
-            void onTempDisableModelsForMatchingRequested(const BlackMisc::Simulation::CAircraftModelList &models);
+            void onTempDisableModelsForMatchingRequested(const swift::misc::simulation::CAircraftModelList &models);
 
             //! Rendered aircraft changed in backend
-            void onRemoteAircraftModelChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+            void onRemoteAircraftModelChanged(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator);
 
             //! Connection status has been changed
-            void onConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+            void onConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
 
             //! Widget changed
             void onTabWidgetChanged(int index);
 
             //! Selected or connected simulator
-            BlackMisc::Simulation::CSimulatorInfo getConnectedOrSelectedSimulator() const;
+            swift::misc::simulation::CSimulatorInfo getConnectedOrSelectedSimulator() const;
 
             //! Is simulator avialable?
             bool isSimulatorAvailable() const;
@@ -148,7 +148,7 @@ namespace BlackGui
             void showAircraftModelDetails(bool show);
 
             //! Adding a remote aircraft failed
-            void onAddingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool disabled, bool failover, const BlackMisc::CStatusMessage &message);
+            void onAddingRemoteAircraftFailed(const swift::misc::simulation::CSimulatedAircraft &aircraft, bool disabled, bool failover, const swift::misc::CStatusMessage &message);
 
             //! Timer update
             void timerUpdate();
@@ -157,25 +157,25 @@ namespace BlackGui
             void tokenBucketUpdate();
 
             //! Token bucket based update
-            void tokenBucketUpdateAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            void tokenBucketUpdateAircraft(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
             //! Settings have been changed
             void settingsChanged();
 
             //! Connection status has been changed
-            void onNetworkConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+            void onNetworkConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
 
             //! Update simulated aircraft view
             void updateRenderedAircraftView(bool forceUpdate = false);
 
             //! Check callsign entered
-            BlackMisc::Aviation::CCallsign validateRenderedCallsign();
+            swift::misc::aviation::CCallsign validateRenderedCallsign();
 
             //! Changed selector
-            void onModelSetSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void onModelSetSimulatorChanged(const swift::misc::simulation::CSimulatorInfo &simulator);
 
             //! Plugin info has been changed
-            void onSimulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &pluginInfo);
+            void onSimulatorPluginChanged(const swift::misc::simulation::CSimulatorPluginInfo &pluginInfo);
 
             //! Simulator connected
             void onSimulatorStatusChanged(int status);
@@ -187,8 +187,8 @@ namespace BlackGui
             QScopedPointer<Ui::CMappingComponent> ui;
             QTimer m_updateTimer;
             bool m_missedRenderedAircraftUpdate = true; //! Rendered aircraft need update
-            BlackMisc::CTokenBucket m_bucket { 3, 5000, 1 };
-            BlackMisc::CSettingReadOnly<Settings::TViewUpdateSettings> m_settings { this, &CMappingComponent::settingsChanged }; //!< settings changed
+            swift::misc::CTokenBucket m_bucket { 3, 5000, 1 };
+            swift::misc::CSettingReadOnly<Settings::TViewUpdateSettings> m_settings { this, &CMappingComponent::settingsChanged }; //!< settings changed
             Views::CCheckBoxDelegate *m_currentMappingsViewDelegate = nullptr; //! checkbox in view
         };
     } // namespace

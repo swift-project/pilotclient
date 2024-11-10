@@ -4,14 +4,14 @@
 #include "simulatorplugincommon.h"
 #include "blackgui/components/interpolationlogdisplaydialog.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/simplecommandparser.h"
+#include "misc/simplecommandparser.h"
 
 using namespace BlackGui;
 using namespace BlackGui::Components;
 using namespace BlackCore;
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
 
 namespace BlackSimPlugin::Common
 {

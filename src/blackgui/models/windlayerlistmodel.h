@@ -8,8 +8,8 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodelbase.h"
-#include "blackmisc/weather/windlayer.h"
-#include "blackmisc/weather/windlayerlist.h"
+#include "misc/weather/windlayer.h"
+#include "misc/weather/windlayerlist.h"
 
 class QObject;
 
@@ -17,7 +17,7 @@ namespace BlackGui::Models
 {
     //! Wind layer list model
     class BLACKGUI_EXPORT CWindLayerListModel :
-        public CListModelBase<BlackMisc::Weather::CWindLayerList, false>
+        public CListModelBase<swift::misc::weather::CWindLayerList, false>
     {
         Q_OBJECT
 

@@ -7,11 +7,11 @@
 #define BLACKCORE_DB_DATABASE_READERCONFIG_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/pq/time.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/db/dbflags.h"
-#include "blackmisc/sequence.h"
-#include "blackmisc/valueobject.h"
+#include "misc/pq/time.h"
+#include "misc/network/entityflags.h"
+#include "misc/db/dbflags.h"
+#include "misc/sequence.h"
+#include "misc/valueobject.h"
 
 #include <QDateTime>
 #include <QJsonArray>
@@ -26,34 +26,34 @@ BLACK_DECLARE_VALUEOBJECT_MIXINS(BlackCore::Db, CDatabaseReaderConfig)
 namespace BlackCore::Db
 {
     //! Details how to read a certain entity
-    class BLACKCORE_EXPORT CDatabaseReaderConfig : public BlackMisc::CValueObject<CDatabaseReaderConfig>
+    class BLACKCORE_EXPORT CDatabaseReaderConfig : public swift::misc::CValueObject<CDatabaseReaderConfig>
     {
     public:
         //! Default constructor.
         CDatabaseReaderConfig() = default;
 
         //! Constructor for one or multiple entities
-        CDatabaseReaderConfig(BlackMisc::Network::CEntityFlags::Entity entities,
-                              BlackMisc::Db::CDbFlags::DataRetrievalMode retrievalFlags,
-                              const BlackMisc::PhysicalQuantities::CTime &cacheLifetime = BlackMisc::PhysicalQuantities::CTime());
+        CDatabaseReaderConfig(swift::misc::network::CEntityFlags::Entity entities,
+                              swift::misc::db::CDbFlags::DataRetrievalMode retrievalFlags,
+                              const swift::misc::physical_quantities::CTime &cacheLifetime = swift::misc::physical_quantities::CTime());
 
-        //! \copydoc BlackMisc::Mixin::String::toQString
+        //! \copydoc swift::misc::mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
         //! Supported entities
-        BlackMisc::Network::CEntityFlags::Entity getEntities() const;
+        swift::misc::network::CEntityFlags::Entity getEntities() const;
 
         //! Supports given entites?
-        bool supportsEntities(BlackMisc::Network::CEntityFlags::Entity entities) const;
+        bool supportsEntities(swift::misc::network::CEntityFlags::Entity entities) const;
 
         //! Supported modes
-        BlackMisc::Db::CDbFlags::DataRetrievalMode getRetrievalMode() const;
+        swift::misc::db::CDbFlags::DataRetrievalMode getRetrievalMode() const;
 
         //! DB is down
         void markAsDbDown();
 
         //! Timeout
-        void setCacheLifetime(const BlackMisc::PhysicalQuantities::CTime &time);
+        void setCacheLifetime(const swift::misc::physical_quantities::CTime &time);
 
         //! Will read from swift DB
         bool possiblyReadsFromSwiftDb() const;
@@ -72,9 +72,9 @@ namespace BlackCore::Db
         bool isValid() const;
 
     private:
-        int m_entities = BlackMisc::Network::CEntityFlags::NoEntity; //!< BlackMisc::Network::CEntityFlags::Entity
-        int m_retrievalMode = BlackMisc::Db::CDbFlags::DbReading; //!< BlackMisc::Db::CDbFlags::DataRetrievalMode
-        BlackMisc::PhysicalQuantities::CTime m_cacheLifetime;
+        int m_entities = swift::misc::network::CEntityFlags::NoEntity; //!< swift::misc::network::CEntityFlags::Entity
+        int m_retrievalMode = swift::misc::db::CDbFlags::DbReading; //!< swift::misc::db::CDbFlags::DataRetrievalMode
+        swift::misc::physical_quantities::CTime m_cacheLifetime;
 
         BLACK_METACLASS(
             CDatabaseReaderConfig,
@@ -90,11 +90,11 @@ namespace BlackCore::Db
 {
     //! Value object encapsulating a list of reader configs.
     class BLACKCORE_EXPORT CDatabaseReaderConfigList :
-        public BlackMisc::CSequence<CDatabaseReaderConfig>,
-        public BlackMisc::Mixin::MetaType<CDatabaseReaderConfigList>
+        public swift::misc::CSequence<CDatabaseReaderConfig>,
+        public swift::misc::mixin::MetaType<CDatabaseReaderConfigList>
     {
     public:
-        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CDatabaseReaderConfigList)
+        SWIFT_MISC_DECLARE_USING_MIXIN_METATYPE(CDatabaseReaderConfigList)
         using CSequence::CSequence;
 
         //! Default constructor.
@@ -105,13 +105,13 @@ namespace BlackCore::Db
 
         //! Find first one matching given
         //! \remark works for single and multiple entities
-        CDatabaseReaderConfig findFirstOrDefaultForEntity(const BlackMisc::Network::CEntityFlags::Entity entities) const;
+        CDatabaseReaderConfig findFirstOrDefaultForEntity(const swift::misc::network::CEntityFlags::Entity entities) const;
 
         //! DB is down
         void markAsDbDown();
 
         //! Update lifetimes
-        void setCacheLifetimes(const BlackMisc::PhysicalQuantities::CTime &time);
+        void setCacheLifetimes(const swift::misc::physical_quantities::CTime &time);
 
         //! Will read from swift DB
         bool possiblyReadsFromSwiftDb() const;
@@ -120,19 +120,19 @@ namespace BlackCore::Db
         bool possiblyWritesToSwiftDb() const;
 
         //! Needs any shared info object
-        bool needsSharedInfoObjects(BlackMisc::Network::CEntityFlags::Entity entities) const;
+        bool needsSharedInfoObjects(swift::misc::network::CEntityFlags::Entity entities) const;
 
         //! Needs any shared info object, but only if the cache is empty
         //! \remark needs readers initialized
         bool needsSharedInfoObjectsIfCachesEmpty(
-            BlackMisc::Network::CEntityFlags::Entity entities,
-            BlackMisc::Network::CEntityFlags::Entity cachedEntities) const;
+            swift::misc::network::CEntityFlags::Entity entities,
+            swift::misc::network::CEntityFlags::Entity cachedEntities) const;
 
         //! Needs any shared header loaded before continued
-        bool needsSharedInfoFile(BlackMisc::Network::CEntityFlags::Entity entities) const;
+        bool needsSharedInfoFile(swift::misc::network::CEntityFlags::Entity entities) const;
 
         //! Entities which will use cache or DB, so no canceled or ignored ones
-        BlackMisc::Network::CEntityFlags::Entity getEntitesCachedOrReadFromDB() const;
+        swift::misc::network::CEntityFlags::Entity getEntitesCachedOrReadFromDB() const;
 
         //! Init for mapping tool
         static CDatabaseReaderConfigList forMappingTool();
@@ -150,6 +150,6 @@ namespace BlackCore::Db
 
 Q_DECLARE_METATYPE(BlackCore::Db::CDatabaseReaderConfig)
 Q_DECLARE_METATYPE(BlackCore::Db::CDatabaseReaderConfigList)
-Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackCore::Db::CDatabaseReaderConfig>)
+Q_DECLARE_METATYPE(swift::misc::CCollection<BlackCore::Db::CDatabaseReaderConfig>)
 
 #endif // guard

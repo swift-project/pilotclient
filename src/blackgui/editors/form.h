@@ -9,13 +9,13 @@
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
 #include "blackcore/data/authenticateduser.h"
-#include "blackmisc/datacache.h"
+#include "misc/datacache.h"
 #include <QFrame>
 #include <QObject>
 
 class QWidget;
 
-namespace BlackMisc::Network
+namespace swift::misc::network
 {
     class CAuthenticatedUser;
 }
@@ -41,11 +41,11 @@ namespace BlackGui::Editors
         virtual void setSelectOnly();
 
         //! Validate, empty list means OK
-        virtual BlackMisc::CStatusMessageList validate(bool withNestedObjects = true) const;
+        virtual swift::misc::CStatusMessageList validate(bool withNestedObjects = true) const;
 
         //! Validate as overlay message
         //! \note uses CForm::validate and displays the messages as overlay messages
-        BlackMisc::CStatusMessageList validateAsOverlayMessage(bool withNestedObjects = true, bool appendOldMessages = false, int timeOutMs = -1);
+        swift::misc::CStatusMessageList validateAsOverlayMessage(bool withNestedObjects = true, bool appendOldMessages = false, int timeOutMs = -1);
 
         //! Is read only?
         bool isReadOnly() const { return m_readOnly; }
@@ -77,13 +77,13 @@ namespace BlackGui::Editors
         virtual ~CFormDbUser() override;
 
         //! Authenticated DB user
-        BlackMisc::Network::CAuthenticatedUser getSwiftDbUser() const;
+        swift::misc::network::CAuthenticatedUser getSwiftDbUser() const;
 
     protected:
         //! User has been changed
         virtual void userChanged();
 
-        BlackMisc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this, &CFormDbUser::userChanged }; //!< authenticated user
+        swift::misc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this, &CFormDbUser::userChanged }; //!< authenticated user
     };
 } // ns
 

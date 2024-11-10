@@ -5,7 +5,7 @@
 #define BLACKGUI_MAINWINDOWACCESS_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/statusmessagelist.h"
 
 #include <QObject>
 #include <QString>
@@ -38,13 +38,13 @@ namespace BlackGui
         IMainWindowAccess &operator=(const IMainWindowAccess &) = delete;
 
         //! Display in status bar
-        virtual bool displayInStatusBar(const BlackMisc::CStatusMessage &message);
+        virtual bool displayInStatusBar(const swift::misc::CStatusMessage &message);
 
         //! Display in overlay window
-        virtual bool displayInOverlayWindow(const BlackMisc::CStatusMessage &message, int timeOutMs = -1);
+        virtual bool displayInOverlayWindow(const swift::misc::CStatusMessage &message, int timeOutMs = -1);
 
         //! Display in overlay window
-        virtual bool displayInOverlayWindow(const BlackMisc::CStatusMessageList &messages, int timeOutMs = -1);
+        virtual bool displayInOverlayWindow(const swift::misc::CStatusMessageList &messages, int timeOutMs = -1);
 
         //! Display in overlay window
         virtual bool displayInOverlayWindow(const QString &html, int timeOutMs = -1);

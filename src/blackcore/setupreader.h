@@ -8,9 +8,9 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/data/globalsetup.h"
-#include "blackmisc/db/updateinfo.h"
-#include "blackmisc/datacache.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/db/updateinfo.h"
+#include "misc/datacache.h"
+#include "misc/statusmessagelist.h"
 
 #include <QCommandLineOption>
 #include <QCoreApplication>
@@ -35,7 +35,7 @@ namespace BlackCore
     //!       and reading setup data is fast. The read file is also called "bootstrap" file as it tells
     //!       swift which data and versions are located where. Without that file we cannot start.
     //!
-    //! \sa BlackMisc::Db::TUpdateInfo
+    //! \sa swift::misc::db::TUpdateInfo
     class BLACKCORE_EXPORT CSetupReader : public QObject
     {
         Q_OBJECT
@@ -49,7 +49,7 @@ namespace BlackCore
         explicit CSetupReader(QObject *parent);
 
         //! Load the setup. If the setup is already loaded, the setup is reloaded
-        BlackMisc::CStatusMessageList loadSetup();
+        swift::misc::CStatusMessageList loadSetup();
 
         //! Setup available?
         //! \threadsafe
@@ -65,7 +65,7 @@ namespace BlackCore
         Data::CGlobalSetup m_setup {}; //!< data setup
 
         //! Read by local file
-        BlackMisc::CStatusMessageList readLocalBootstrapFile();
+        swift::misc::CStatusMessageList readLocalBootstrapFile();
     };
 } // ns
 

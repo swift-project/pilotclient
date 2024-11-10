@@ -14,9 +14,9 @@
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/blackguiexport.h"
 #include "blackcore/application.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/network/networkutils.h"
+#include "misc/icons.h"
+#include "misc/statusmessage.h"
 
 #include <QCommandLineOption>
 #include <QDialog>
@@ -32,7 +32,7 @@ class QMenu;
 class QWidget;
 class QMainWindow;
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CLogCategoryList;
 }
@@ -76,7 +76,7 @@ namespace BlackGui
         static bool removeAllWindowsSwiftRegistryEntries();
 
         //! Constructor
-        explicit CGuiApplication(const QString &applicationName = executable(), BlackMisc::CApplicationInfo::Application application = BlackMisc::CApplicationInfo::Unknown, const QPixmap &icon = BlackMisc::CIcons::swift64());
+        explicit CGuiApplication(const QString &applicationName = executable(), swift::misc::CApplicationInfo::Application application = swift::misc::CApplicationInfo::Unknown, const QPixmap &icon = swift::misc::CIcons::swift64());
 
         //! Destructor
         ~CGuiApplication() override;
@@ -115,7 +115,7 @@ namespace BlackGui
         //! @{
         //! print messages generated during parsing / cmd handling
         void cmdLineErrorMessage(const QString &text, const QString &informativeText) const override;
-        void cmdLineErrorMessage(const BlackMisc::CStatusMessageList &msgs) const override;
+        void cmdLineErrorMessage(const swift::misc::CStatusMessageList &msgs) const override;
         //! @}
 
         //! Window size reset mode set
@@ -123,9 +123,9 @@ namespace BlackGui
 
         //! @{
         //! direct access to main application window
-        bool displayInStatusBar(const BlackMisc::CStatusMessage &message) override;
-        bool displayInOverlayWindow(const BlackMisc::CStatusMessage &message, int timeOutMs = -1) override;
-        bool displayInOverlayWindow(const BlackMisc::CStatusMessageList &messages, int timeOutMs = -1) override;
+        bool displayInStatusBar(const swift::misc::CStatusMessage &message) override;
+        bool displayInOverlayWindow(const swift::misc::CStatusMessage &message, int timeOutMs = -1) override;
+        bool displayInOverlayWindow(const swift::misc::CStatusMessageList &messages, int timeOutMs = -1) override;
         bool displayInOverlayWindow(const QString &html, int timeOutMs = -1) override;
         //! @}
 
@@ -151,7 +151,7 @@ namespace BlackGui
         void addMenuWindow(QMenu &menu);
 
         //! Open a given URL
-        void openUrl(const BlackMisc::Network::CUrl &url);
+        void openUrl(const swift::misc::network::CUrl &url);
 
         //! Help operations
         void addMenuHelp(QMenu &menu);
@@ -197,7 +197,7 @@ namespace BlackGui
         void setMinimumSizeInCharacters(int widthChars, int heightChars);
 
         //! \copydoc BlackCore::CApplication::displaySetupLoadFailure
-        void displaySetupLoadFailure(BlackMisc::CStatusMessageList msgs) override;
+        void displaySetupLoadFailure(swift::misc::CStatusMessageList msgs) override;
 
         //! Show close dialog
         //! \remark will modify CApplication::saveSettingsOnShutdown
@@ -333,8 +333,8 @@ namespace BlackGui
         QScopedPointer<CSplashScreen> m_splashScreen; //!< splash screen
         Components::CUpdateInfoDialog *m_updateDialog = nullptr; //!< software installation dialog
         Components::CApplicationCloseDialog *m_closeDialog = nullptr; //!< close dialog (no QScopedPointer because I need to set parent)
-        BlackMisc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings { this, &CGuiApplication::settingsChanged };
-        BlackMisc::CSettingReadOnly<Settings::TUpdateNotificationSettings> m_updateSetting { this }; //!< update notification settings
+        swift::misc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings { this, &CGuiApplication::settingsChanged };
+        swift::misc::CSettingReadOnly<Settings::TUpdateNotificationSettings> m_updateSetting { this }; //!< update notification settings
 
         //! Reload widget style from settings
         void settingsChanged();

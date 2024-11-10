@@ -14,8 +14,8 @@
 
 using namespace BlackCore;
 using namespace BlackCore::Context;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::Data;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::data;
 
 namespace BlackGui::Components
 {
@@ -72,7 +72,7 @@ namespace BlackGui::Components
         ui->le_modelString->setText(completersString);
     }
 
-    void CAircraftModelStringCompleter::setModel(const BlackMisc::Simulation::CAircraftModel &model)
+    void CAircraftModelStringCompleter::setModel(const swift::misc::simulation::CAircraftModel &model)
     {
         this->setText(model.getModelString());
     }

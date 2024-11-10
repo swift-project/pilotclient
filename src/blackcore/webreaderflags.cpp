@@ -3,7 +3,7 @@
 
 #include "blackcore/webreaderflags.h"
 
-using namespace BlackMisc::Network;
+using namespace swift::misc::network;
 
 namespace BlackCore
 {

@@ -8,9 +8,9 @@
 
 #include "blackcore/application/applicationsettings.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/settings/simulatorsettings.h"
-#include "blackmisc/simulation/simulatorplugininfolist.h"
-#include "blackmisc/settingscache.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/simulatorplugininfolist.h"
+#include "misc/settingscache.h"
 
 #include <QFrame>
 #include <QObject>
@@ -25,7 +25,7 @@ namespace BlackCore
 {
     class CPluginManagerSimulator;
 }
-namespace BlackMisc::Simulation
+namespace swift::misc::simulation
 {
     class CSimulatorPluginInfo;
 }
@@ -78,7 +78,7 @@ namespace BlackGui::Components
         void clearRestricedRendering();
 
         //! Simulator plugin changed
-        void simulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
+        void simulatorPluginChanged(const swift::misc::simulation::CSimulatorPluginInfo &info);
 
         //! Open plugin details window
         void showPluginDetails(const QString &identifier);
@@ -87,7 +87,7 @@ namespace BlackGui::Components
         void showPluginConfig(const QString &identifier);
 
         //! Select/deselect enabled/disabled plugins
-        void reloadPluginConfig(const BlackMisc::Simulation::CSimulatorPluginInfoList &plugins);
+        void reloadPluginConfig(const swift::misc::simulation::CSimulatorPluginInfoList &plugins);
 
         //! Check plugins again
         void checkSimulatorPlugins();
@@ -96,18 +96,18 @@ namespace BlackGui::Components
         void setGuiValues();
 
         //! Available plugins, auto pseudo plugin added
-        static BlackMisc::Simulation::CSimulatorPluginInfoList getAvailablePlugins();
+        static swift::misc::simulation::CSimulatorPluginInfoList getAvailablePlugins();
 
         //! Get the simulator settings
-        static BlackMisc::Simulation::Settings::CSimulatorSettings getSimulatorSettings(bool &ok);
+        static swift::misc::simulation::settings::CSimulatorSettings getSimulatorSettings(bool &ok);
 
         //! Set the simulator settings
-        static void setSimulatorSettings(BlackMisc::Simulation::Settings::CSimulatorSettings &settings);
+        static void setSimulatorSettings(swift::misc::simulation::settings::CSimulatorSettings &settings);
 
         QScopedPointer<Ui::CSettingsSimulatorComponent> ui; //!< UI
         bool m_pluginLoaded = false; //!< plugin loaded?
         BlackCore::CPluginManagerSimulator *m_plugins = nullptr;
-        BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CSettingsSimulatorComponent::onEnabledSimulatorsChanged };
+        swift::misc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CSettingsSimulatorComponent::onEnabledSimulatorsChanged };
     };
 } // namespace
 

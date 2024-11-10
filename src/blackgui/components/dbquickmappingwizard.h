@@ -6,8 +6,8 @@
 #ifndef BLACKGUI_COMPONENTS_DBQUICKMAPPINGWIZARD_H
 #define BLACKGUI_COMPONENTS_DBQUICKMAPPINGWIZARD_H
 
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/aviation/aircrafticaocode.h"
 #include <QWizard>
 #include <QScopedPointer>
 
@@ -46,10 +46,10 @@ namespace BlackGui::Components
         virtual ~CDbQuickMappingWizard() override;
 
         //! Preset values
-        void presetAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcao);
+        void presetAircraftIcao(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcao);
 
         //! Preset a model
-        void presetModel(const BlackMisc::Simulation::CAircraftModel &model);
+        void presetModel(const swift::misc::simulation::CAircraftModel &model);
 
         //! Clear wizard
         void clear();
@@ -67,7 +67,7 @@ namespace BlackGui::Components
     private:
         QScopedPointer<Ui::CDbQuickMappingWizard> ui;
         int m_lastId = 0;
-        BlackMisc::Simulation::CAircraftModel m_model; // model to be mapped
+        swift::misc::simulation::CAircraftModel m_model; // model to be mapped
 
         //! Set the filter
         void setAircraftIcaoFilter();
@@ -82,30 +82,30 @@ namespace BlackGui::Components
         void setDistributorFilter();
 
         //! Livery assigned
-        BlackMisc::Aviation::CLivery getFirstSelectedOrDefaultLivery() const;
+        swift::misc::aviation::CLivery getFirstSelectedOrDefaultLivery() const;
 
         //! Aircraft ICAO assigned
-        BlackMisc::Aviation::CAircraftIcaoCode getFirstSelectedOrDefaultAircraftIcao() const;
+        swift::misc::aviation::CAircraftIcaoCode getFirstSelectedOrDefaultAircraftIcao() const;
 
         //! Distributor assigned
-        BlackMisc::Simulation::CDistributor getFirstSelectedOrDefaultDistributor() const;
+        swift::misc::simulation::CDistributor getFirstSelectedOrDefaultDistributor() const;
 
         //! Validate the data
-        BlackMisc::CStatusMessageList validateData() const;
+        swift::misc::CStatusMessageList validateData() const;
 
         //! Consolidate model data
         void consolidateModelWithUIData();
 
         //! Guess simulator
-        BlackMisc::Simulation::CSimulatorInfo guessSimulator() const;
+        swift::misc::simulation::CSimulatorInfo guessSimulator() const;
 
         //! Write the model to DB
         void writeModelToDb();
 
         //! Models published
-        void onPublishedModels(const BlackMisc::Simulation::CAircraftModelList &modelsPublished,
-                               const BlackMisc::Simulation::CAircraftModelList &modelsSkipped,
-                               const BlackMisc::CStatusMessageList &messages,
+        void onPublishedModels(const swift::misc::simulation::CAircraftModelList &modelsPublished,
+                               const swift::misc::simulation::CAircraftModelList &modelsSkipped,
+                               const swift::misc::CStatusMessageList &messages,
                                bool requestSuccessful, bool directWrite);
 
         //! Web data have been read
@@ -115,10 +115,10 @@ namespace BlackGui::Components
         void currentWizardPageChanged(int id);
 
         //! Airline selected
-        void onAirlineSelected(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
+        void onAirlineSelected(const swift::misc::aviation::CAirlineIcaoCode &icao);
 
         //! Aircraft selected
-        void onAircraftSelected(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+        void onAircraftSelected(const swift::misc::aviation::CAircraftIcaoCode &icao);
     };
 } // ns
 #endif // guard

@@ -8,13 +8,13 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/db/databasereaderconfig.h"
-#include "blackmisc/db/dbinfolist.h"
-#include "blackmisc/pq/time.h"
-#include "blackmisc/network/url.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/db/dbinfolist.h"
+#include "misc/pq/time.h"
+#include "misc/network/url.h"
+#include "misc/statusmessage.h"
 #include "blackcore/threadedreader.h"
-#include "blackmisc/sequence.h"
-#include "blackmisc/valueobject.h"
+#include "misc/sequence.h"
+#include "misc/valueobject.h"
 
 #include <QDateTime>
 #include <QJsonArray>
@@ -28,7 +28,7 @@
 class QNetworkReply;
 class QFileInfo;
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CLogCategoryList;
 }
@@ -50,8 +50,8 @@ namespace BlackCore::Db
             qint64 m_requestStarted = -1; //!< when was request started
             qint64 m_responseReceived = -1; //!< response received
             qint64 m_loadTimeMs = -1; //!< how long did it take to load
-            BlackMisc::CStatusMessage m_message; //!< last error or warning
-            BlackMisc::Network::CUrl m_url; //!< loaded URL
+            swift::misc::CStatusMessage m_message; //!< last error or warning
+            swift::misc::network::CUrl m_url; //!< loaded URL
 
         public:
             //! Any timestamp?
@@ -76,25 +76,25 @@ namespace BlackCore::Db
             void setContentLengthHeader(qulonglong size) { m_contentLengthHeader = size; }
 
             //! Error message?
-            bool hasErrorMessage() const { return m_message.getSeverity() == BlackMisc::CStatusMessage::SeverityError; }
+            bool hasErrorMessage() const { return m_message.getSeverity() == swift::misc::CStatusMessage::SeverityError; }
 
             //! Warning or error message?
             bool hasWarningOrAboveMessage() const { return m_message.isWarningOrAbove(); }
 
             //! Last error or warning
-            const BlackMisc::CStatusMessage &lastWarningOrAbove() const { return m_message; }
+            const swift::misc::CStatusMessage &lastWarningOrAbove() const { return m_message; }
 
             //! Set the error/warning message
-            void setMessage(const BlackMisc::CStatusMessage &lastErrorOrWarning) { m_message = lastErrorOrWarning; }
+            void setMessage(const swift::misc::CStatusMessage &lastErrorOrWarning) { m_message = lastErrorOrWarning; }
 
             //! URL loaded
-            const BlackMisc::Network::CUrl &getUrl() const { return m_url; }
+            const swift::misc::network::CUrl &getUrl() const { return m_url; }
 
             //! URL loaded as string
             QString getUrlString() const { return m_url.toQString(); }
 
             //! Set the loaded URL
-            void setUrl(const BlackMisc::Network::CUrl &url) { m_url = url; }
+            void setUrl(const swift::misc::network::CUrl &url) { m_url = url; }
 
             //! Is a shared file?
             bool isSharedFile() const;
@@ -164,15 +164,15 @@ namespace BlackCore::Db
 
         //! Start reading in own thread
         //! \remark uses caches, info objects
-        void readInBackgroundThread(BlackMisc::Network::CEntityFlags::Entity entities, const QDateTime &newerThan);
+        void readInBackgroundThread(swift::misc::network::CEntityFlags::Entity entities, const QDateTime &newerThan);
 
         //! Start loading from DB in own thread
         //! \remark bypass caches/config
-        BlackMisc::Network::CEntityFlags::Entity triggerLoadingDirectlyFromDb(BlackMisc::Network::CEntityFlags::Entity entities, const QDateTime &newerThan);
+        swift::misc::network::CEntityFlags::Entity triggerLoadingDirectlyFromDb(swift::misc::network::CEntityFlags::Entity entities, const QDateTime &newerThan);
 
         //! Start loading from shared files in own thread
         //! \remark bypass caches/config
-        BlackMisc::Network::CEntityFlags::Entity triggerLoadingDirectlyFromSharedFiles(BlackMisc::Network::CEntityFlags::Entity entities, bool checkCacheTsUpfront);
+        swift::misc::network::CEntityFlags::Entity triggerLoadingDirectlyFromSharedFiles(swift::misc::network::CEntityFlags::Entity entities, bool checkCacheTsUpfront);
 
         //! Has received Ok response from server at least once?
         //! \threadsafe
@@ -188,34 +188,34 @@ namespace BlackCore::Db
         bool hasReceivedFirstReply() const;
 
         //! Supported entities by this reader
-        virtual BlackMisc::Network::CEntityFlags::Entity getSupportedEntities() const = 0;
+        virtual swift::misc::network::CEntityFlags::Entity getSupportedEntities() const = 0;
 
         //! Supported entities as string
         QString getSupportedEntitiesAsString() const;
 
         //! Mask by supported entities
-        BlackMisc::Network::CEntityFlags::Entity maskBySupportedEntities(BlackMisc::Network::CEntityFlags::Entity entities) const;
+        swift::misc::network::CEntityFlags::Entity maskBySupportedEntities(swift::misc::network::CEntityFlags::Entity entities) const;
 
         //! Is any of the given entities supported here by this reader
-        bool supportsAnyOfEntities(BlackMisc::Network::CEntityFlags::Entity entities) const;
+        bool supportsAnyOfEntities(swift::misc::network::CEntityFlags::Entity entities) const;
 
         //! Get cache timestamp
-        virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const = 0;
+        virtual QDateTime getCacheTimestamp(swift::misc::network::CEntityFlags::Entity entity) const = 0;
 
         //! Has entity a valid and newer timestamp
-        bool hasCacheTimestampNewerThan(BlackMisc::Network::CEntityFlags::Entity entity, const QDateTime &threshold) const;
+        bool hasCacheTimestampNewerThan(swift::misc::network::CEntityFlags::Entity entity, const QDateTime &threshold) const;
 
         //! Cache`s number of entities
         //! \remark this only works if the cache is admitted, DB caches are read deferred
-        virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const = 0;
+        virtual int getCacheCount(swift::misc::network::CEntityFlags::Entity entity) const = 0;
 
         //! Entities already having data in cache
         //! \remark this only works if the cache is admitted, DB caches are read deferred
-        virtual BlackMisc::Network::CEntityFlags::Entity getEntitiesWithCacheCount() const = 0;
+        virtual swift::misc::network::CEntityFlags::Entity getEntitiesWithCacheCount() const = 0;
 
         //! Entities already having data in cache (based on timestamp assumption)
         //! \remark unlike getEntitiesWithCacheCount() this even works when the cache is not yet admitted
-        virtual BlackMisc::Network::CEntityFlags::Entity getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const = 0;
+        virtual swift::misc::network::CEntityFlags::Entity getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const = 0;
 
         //! DB info objects available?
         bool hasDbInfoObjects() const;
@@ -224,55 +224,55 @@ namespace BlackCore::Db
         bool hasSharedInfoObjects() const;
 
         //! Header of shared file read (for single entity)?
-        bool hasSharedFileHeader(const BlackMisc::Network::CEntityFlags::Entity entity) const;
+        bool hasSharedFileHeader(const swift::misc::network::CEntityFlags::Entity entity) const;
 
         //! Headers of shared file read (for single entity)?
-        bool hasSharedFileHeaders(const BlackMisc::Network::CEntityFlags::Entity entities) const;
+        bool hasSharedFileHeaders(const swift::misc::network::CEntityFlags::Entity entities) const;
 
         //! Obtain latest object timestamp from DB info objects
         //! \sa BlackCore::Db::CInfoDataReader
-        QDateTime getLatestEntityTimestampFromDbInfoObjects(BlackMisc::Network::CEntityFlags::Entity entity) const;
+        QDateTime getLatestEntityTimestampFromDbInfoObjects(swift::misc::network::CEntityFlags::Entity entity) const;
 
         //! Obtain latest object timestamp from shared info objects
         //! \sa BlackCore::Db::CInfoDataReader
-        QDateTime getLatestEntityTimestampFromSharedInfoObjects(BlackMisc::Network::CEntityFlags::Entity entity) const;
+        QDateTime getLatestEntityTimestampFromSharedInfoObjects(swift::misc::network::CEntityFlags::Entity entity) const;
 
         //! Header timestamp (last-modified) for shared file
         //! \deprecated use getLatestEntityTimestampFromSharedInfoObjects
-        QDateTime getLatestSharedFileHeaderTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
+        QDateTime getLatestSharedFileHeaderTimestamp(swift::misc::network::CEntityFlags::Entity entity) const;
 
         //! Is the file timestamp newer than cache timestamp?
         //! \deprecated use isSharedInfoNewerThanCacheTimestamp
-        bool isSharedHeaderNewerThanCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
+        bool isSharedHeaderNewerThanCacheTimestamp(swift::misc::network::CEntityFlags::Entity entity) const;
 
         //! Is the shared info timestamp newer than cache timestamp?
-        bool isSharedInfoObjectNewerThanCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
+        bool isSharedInfoObjectNewerThanCacheTimestamp(swift::misc::network::CEntityFlags::Entity entity) const;
 
         //! Those entities where the timestamp of the header is newer than the cache timestamp
-        BlackMisc::Network::CEntityFlags::Entity getEntitesWithNewerHeaderTimestamp(BlackMisc::Network::CEntityFlags::Entity entities) const;
+        swift::misc::network::CEntityFlags::Entity getEntitesWithNewerHeaderTimestamp(swift::misc::network::CEntityFlags::Entity entities) const;
 
         //! Those entities where the timestamp of a shared info object is newer than the cache timestamp
-        BlackMisc::Network::CEntityFlags::Entity getEntitesWithNewerSharedInfoObject(BlackMisc::Network::CEntityFlags::Entity entities) const;
+        swift::misc::network::CEntityFlags::Entity getEntitesWithNewerSharedInfoObject(swift::misc::network::CEntityFlags::Entity entities) const;
 
         //! Status message (error message)
         const QString &getStatusMessage() const;
 
         //! Severity used for log messages in case of no URLs
-        void setSeverityNoWorkingUrl(BlackMisc::CStatusMessage::StatusSeverity s) { m_severityNoWorkingUrl = s; }
+        void setSeverityNoWorkingUrl(swift::misc::CStatusMessage::StatusSeverity s) { m_severityNoWorkingUrl = s; }
 
         //! Init from local resource file
         //! \remark normally used after installation for a 1st time init
-        BlackMisc::CStatusMessageList initFromLocalResourceFiles(bool inBackground);
+        swift::misc::CStatusMessageList initFromLocalResourceFiles(bool inBackground);
 
         //! Init from local resource file
         //! \remark normally used after installation for a 1st time init
-        BlackMisc::CStatusMessageList initFromLocalResourceFiles(BlackMisc::Network::CEntityFlags::Entity entities, bool inBackground);
+        swift::misc::CStatusMessageList initFromLocalResourceFiles(swift::misc::network::CEntityFlags::Entity entities, bool inBackground);
 
         //! Data read from local data
-        virtual BlackMisc::CStatusMessageList readFromJsonFiles(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead, bool overrideNewer) = 0;
+        virtual swift::misc::CStatusMessageList readFromJsonFiles(const QString &dir, swift::misc::network::CEntityFlags::Entity whatToRead, bool overrideNewer) = 0;
 
         //! Data read from local data
-        virtual bool readFromJsonFilesInBackground(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead, bool overrideNewer) = 0;
+        virtual bool readFromJsonFilesInBackground(const QString &dir, swift::misc::network::CEntityFlags::Entity whatToRead, bool overrideNewer) = 0;
 
         //! Log categories
         static const QStringList &getLogCategories();
@@ -287,17 +287,17 @@ namespace BlackCore::Db
 
         //! Combined read signal
         //! \remark normally in success case state for a single case, skipped cases can be reported for 1..n enities
-        void dataRead(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        void dataRead(swift::misc::network::CEntityFlags::Entity entities, swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
         //! Header of shared file read
-        void sharedFileHeaderRead(BlackMisc::Network::CEntityFlags::Entity entity, const QString &fileName, bool success);
+        void sharedFileHeaderRead(swift::misc::network::CEntityFlags::Entity entity, const QString &fileName, bool success);
 
         //! Database reader messages
         //! \remark used with splash screen
-        void databaseReaderMessages(const BlackMisc::CStatusMessageList &messages);
+        void databaseReaderMessages(const swift::misc::CStatusMessageList &messages);
 
         //! Download progress for an entity
-        void entityDownloadProgress(BlackMisc::Network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
+        void entityDownloadProgress(swift::misc::network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
 
     protected:
         CDatabaseReaderConfigList m_config; //!< DB reder configuration
@@ -305,8 +305,8 @@ namespace BlackCore::Db
         bool m_1stReplyReceived = false; //!< Successful connection? Does not mean data / authorizations are correct
         mutable QReadWriteLock m_statusLock; //!< Lock
         QNetworkReply::NetworkError m_1stReplyStatus = QNetworkReply::UnknownServerError; //!< Successful connection?
-        QMap<BlackMisc::Network::CEntityFlags::Entity, HeaderResponse> m_sharedFileResponses; //!< file responses of the shared files
-        BlackMisc::CStatusMessage::StatusSeverity m_severityNoWorkingUrl = BlackMisc::CStatusMessage::SeverityWarning; //!< severity of message if there is no working URL
+        QMap<swift::misc::network::CEntityFlags::Entity, HeaderResponse> m_sharedFileResponses; //!< file responses of the shared files
+        swift::misc::CStatusMessage::StatusSeverity m_severityNoWorkingUrl = swift::misc::CStatusMessage::SeverityWarning; //!< severity of message if there is no working URL
 
         //! Constructor
         CDatabaseReader(QObject *owner, const CDatabaseReaderConfigList &config, const QString &name);
@@ -316,35 +316,35 @@ namespace BlackCore::Db
 
         //! DB Info list (latest data timestamps from DB web service)
         //! \sa BlackCore::Db::CInfoDataReader
-        BlackMisc::Db::CDbInfoList getDbInfoObjects() const;
+        swift::misc::db::CDbInfoList getDbInfoObjects() const;
 
         //! Shared info list (latest data timestamps from DB web service)
         //! \sa BlackCore::Db::CInfoDataReader
-        BlackMisc::Db::CDbInfoList getSharedInfoObjects() const;
+        swift::misc::db::CDbInfoList getSharedInfoObjects() const;
 
         //! Config for given entity
-        CDatabaseReaderConfig getConfigForEntity(BlackMisc::Network::CEntityFlags::Entity entity) const;
+        CDatabaseReaderConfig getConfigForEntity(swift::misc::network::CEntityFlags::Entity entity) const;
 
         //! Split into single entity and send dataRead signal
-        BlackMisc::Network::CEntityFlags::Entity emitReadSignalPerSingleCachedEntity(BlackMisc::Network::CEntityFlags::Entity cachedEntities, bool onlyIfHasData);
+        swift::misc::network::CEntityFlags::Entity emitReadSignalPerSingleCachedEntity(swift::misc::network::CEntityFlags::Entity cachedEntities, bool onlyIfHasData);
 
         //! Emit signal and log when data have been read
-        void emitAndLogDataRead(BlackMisc::Network::CEntityFlags::Entity entity, int number, const JsonDatastoreResponse &res);
+        void emitAndLogDataRead(swift::misc::network::CEntityFlags::Entity entity, int number, const JsonDatastoreResponse &res);
 
         //! Get the service URL, individual for each reader
-        virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const = 0;
+        virtual swift::misc::network::CUrl getDbServiceBaseUrl() const = 0;
 
         //! Log if no working URL exists, using m_noWorkingUrlSeverity
-        void logNoWorkingUrl(BlackMisc::Network::CEntityFlags::Entity entity);
+        void logNoWorkingUrl(swift::misc::network::CEntityFlags::Entity entity);
 
         //! Base URL for mode (either a shared or DB URL)
-        BlackMisc::Network::CUrl getBaseUrl(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode) const;
+        swift::misc::network::CUrl getBaseUrl(swift::misc::db::CDbFlags::DataRetrievalModeFlag mode) const;
 
         //! DB base URL
-        static const BlackMisc::Network::CUrl &getDbUrl();
+        static const swift::misc::network::CUrl &getDbUrl();
 
         //! File name for given mode, either php service or shared file name
-        static QString fileNameForMode(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode);
+        static QString fileNameForMode(swift::misc::network::CEntityFlags::Entity entity, swift::misc::db::CDbFlags::DataRetrievalModeFlag mode);
 
         //! Name of latest timestamp
         static const QString &parameterLatestTimestamp();
@@ -359,30 +359,30 @@ namespace BlackCore::Db
         //! \name Cache access
         //! @{
         //! Synchronize caches for given entities
-        virtual void synchronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) = 0;
+        virtual void synchronizeCaches(swift::misc::network::CEntityFlags::Entity entities) = 0;
 
         //! Admit caches for given entities
-        virtual void admitCaches(BlackMisc::Network::CEntityFlags::Entity entities) = 0;
+        virtual void admitCaches(swift::misc::network::CEntityFlags::Entity entities) = 0;
 
         //! Invalidate the caches for given entities
-        virtual void invalidateCaches(BlackMisc::Network::CEntityFlags::Entity entities) = 0;
+        virtual void invalidateCaches(swift::misc::network::CEntityFlags::Entity entities) = 0;
 
         //! Changed URL, means the cache values have been read from elsewhere
-        //! \remark testing based on BlackMisc::Db::CDbFlags::DbReading
-        virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity,
-                                   BlackMisc::Network::CUrl &oldUrlInfo,
-                                   BlackMisc::Network::CUrl &newUrlInfo) const = 0;
+        //! \remark testing based on swift::misc::db::CDbFlags::DbReading
+        virtual bool hasChangedUrl(swift::misc::network::CEntityFlags::Entity entity,
+                                   swift::misc::network::CUrl &oldUrlInfo,
+                                   swift::misc::network::CUrl &newUrlInfo) const = 0;
 
         //! Cache for given entity has changed
-        virtual void cacheHasChanged(BlackMisc::Network::CEntityFlags::Entity entities);
+        virtual void cacheHasChanged(swift::misc::network::CEntityFlags::Entity entities);
 
         //! Has URL been changed? Means we load from a different server
-        static bool isChangedUrl(const BlackMisc::Network::CUrl &oldUrl, const BlackMisc::Network::CUrl &currentUrl);
+        static bool isChangedUrl(const swift::misc::network::CUrl &oldUrl, const swift::misc::network::CUrl &currentUrl);
         //! @}
 
         //! Start reading in own thread (without config/caching)
         //! \remarks can handle DB or shared file reads
-        void startReadFromBackendInBackgroundThread(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan = QDateTime());
+        void startReadFromBackendInBackgroundThread(swift::misc::network::CEntityFlags::Entity entities, swift::misc::db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan = QDateTime());
 
         //! Received a reply of a header for a shared file
         void receivedSharedFileHeader(QNetworkReply *nwReplyPtr);
@@ -409,7 +409,7 @@ namespace BlackCore::Db
 
         //! Override cache from file
         //! \threadsafe
-        bool overrideCacheFromFile(bool overrideNewerOnly, const QFileInfo &fileInfo, BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::CStatusMessageList &msgs) const;
+        bool overrideCacheFromFile(bool overrideNewerOnly, const QFileInfo &fileInfo, swift::misc::network::CEntityFlags::Entity entity, swift::misc::CStatusMessageList &msgs) const;
 
         //! Parsing info message
         void logParseMessage(const QString &entity, int size, int msElapsed, const JsonDatastoreResponse &response) const;
@@ -419,7 +419,7 @@ namespace BlackCore::Db
 
     private:
         //! Read / re-read data file
-        virtual void read(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan) = 0;
+        virtual void read(swift::misc::network::CEntityFlags::Entity entities, swift::misc::db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan) = 0;
     };
 } // ns
 

@@ -3,15 +3,15 @@
 
 #include "blackgui/components/selcalcodeselector.h"
 #include "blackgui/ticklabel.h"
-#include "blackmisc/aviation/selcal.h"
+#include "misc/aviation/selcal.h"
 #include "ui_selcalcodeselector.h"
 
 #include <QComboBox>
 #include <QStringList>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 
 namespace BlackGui::Components
 {
@@ -50,10 +50,10 @@ namespace BlackGui::Components
     {
         ui->cb_SelcalPairs1->clear();
         if (allowEmptyValue) ui->cb_SelcalPairs1->addItem("  ");
-        ui->cb_SelcalPairs1->addItems(BlackMisc::Aviation::CSelcal::codePairs());
+        ui->cb_SelcalPairs1->addItems(swift::misc::aviation::CSelcal::codePairs());
         ui->cb_SelcalPairs2->clear();
         if (allowEmptyValue) ui->cb_SelcalPairs2->addItem("  ");
-        ui->cb_SelcalPairs2->addItems(BlackMisc::Aviation::CSelcal::codePairs());
+        ui->cb_SelcalPairs2->addItems(swift::misc::aviation::CSelcal::codePairs());
     }
 
     void CSelcalCodeSelector::setSelcalCode(const QString &selcal)
@@ -63,17 +63,17 @@ namespace BlackGui::Components
         if (this->getSelcalCode() == s) { return; } // avoid unintended signals
         const QString s1 = s.left(2);
         const QString s2 = s.right(2);
-        if (BlackMisc::Aviation::CSelcal::codePairs().contains(s1))
+        if (swift::misc::aviation::CSelcal::codePairs().contains(s1))
         {
             ui->cb_SelcalPairs1->setCurrentText(s1);
         }
-        if (BlackMisc::Aviation::CSelcal::codePairs().contains(s2))
+        if (swift::misc::aviation::CSelcal::codePairs().contains(s2))
         {
             ui->cb_SelcalPairs2->setCurrentText(s2);
         }
     }
 
-    void CSelcalCodeSelector::setSelcal(const BlackMisc::Aviation::CSelcal &selcal)
+    void CSelcalCodeSelector::setSelcal(const swift::misc::aviation::CSelcal &selcal)
     {
         this->setSelcalCode(selcal.getCode());
     }
@@ -82,7 +82,7 @@ namespace BlackGui::Components
     {
         const QString s = this->getSelcalCode();
         if (s.length() != 4) return false;
-        return BlackMisc::Aviation::CSelcal::isValidCode(s);
+        return swift::misc::aviation::CSelcal::isValidCode(s);
     }
 
     void CSelcalCodeSelector::clear()

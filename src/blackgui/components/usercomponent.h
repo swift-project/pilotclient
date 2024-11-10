@@ -9,8 +9,8 @@
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/settings/viewupdatesettings.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/network/connectionstatus.h"
+#include "misc/aviation/callsign.h"
+#include "misc/network/connectionstatus.h"
 
 #include <QObject>
 #include <QScopedPointer>
@@ -49,21 +49,21 @@ namespace BlackGui::Components
 
     signals:
         //! Request a text message
-        void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
+        void requestTextMessageWidget(const swift::misc::aviation::CCallsign &callsign);
 
     private:
         //! Number of elements changed
         void onCountChanged(int count, bool withFilter);
 
         //! Connection status
-        void onConnectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+        void onConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
 
         //! Settings have been changed
         void onSettingsChanged();
 
         QScopedPointer<Ui::CUserComponent> ui;
         QTimer m_updateTimer;
-        BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CUserComponent::onSettingsChanged };
+        swift::misc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CUserComponent::onSettingsChanged };
     };
 } // ns
 #endif // guard

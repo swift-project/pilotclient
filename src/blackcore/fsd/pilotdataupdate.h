@@ -8,7 +8,7 @@
 
 #include "blackcore/fsd/messagebase.h"
 #include "blackcore/fsd/enums.h"
-#include "blackmisc/aviation/transponder.h"
+#include "misc/aviation/transponder.h"
 
 namespace BlackCore::Fsd
 {
@@ -17,7 +17,7 @@ namespace BlackCore::Fsd
     {
     public:
         //! Constructor
-        PilotDataUpdate(BlackMisc::Aviation::CTransponder::TransponderMode transponderMode, const QString &sender, int transponderCode, PilotRating rating,
+        PilotDataUpdate(swift::misc::aviation::CTransponder::TransponderMode transponderMode, const QString &sender, int transponderCode, PilotRating rating,
                         double latitude, double longitude, int altitudeTrue, int altitudePressure, int groundSpeed,
                         double pitch, double bank, double heading, bool onGround);
 
@@ -32,7 +32,7 @@ namespace BlackCore::Fsd
 
         //! @{
         //! Properties
-        BlackMisc::Aviation::CTransponder::TransponderMode m_transponderMode = BlackMisc::Aviation::CTransponder::StateStandby;
+        swift::misc::aviation::CTransponder::TransponderMode m_transponderMode = swift::misc::aviation::CTransponder::StateStandby;
         int m_transponderCode = 0;
         PilotRating m_rating = PilotRating::Unknown;
         double m_latitude = 0.0;

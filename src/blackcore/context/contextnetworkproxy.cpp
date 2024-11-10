@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackcore/context/contextnetworkproxy.h"
-#include "blackmisc/dbus.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/genericdbusinterface.h"
+#include "misc/dbus.h"
+#include "misc/dbusserver.h"
+#include "misc/genericdbusinterface.h"
 
 #include <QDBusConnection>
 #include <QLatin1String>
@@ -12,12 +12,12 @@
 #include <QtGlobal>
 #include <QMetaObject>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Weather;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::network;
+using namespace swift::misc::aviation;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::weather;
+using namespace swift::misc::simulation;
 
 namespace BlackCore::Context
 {
@@ -40,7 +40,7 @@ namespace BlackCore::Context
     void CContextNetworkProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
         bool s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                                    "connectionStatusChanged", this, SIGNAL(connectionStatusChanged(BlackMisc::Network::CConnectionStatus, BlackMisc::Network::CConnectionStatus)));
+                                    "connectionStatusChanged", this, SIGNAL(connectionStatusChanged(swift::misc::network::CConnectionStatus, swift::misc::network::CConnectionStatus)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "changedAtcStationsOnline", this, SIGNAL(changedAtcStationsOnline()));
@@ -52,7 +52,7 @@ namespace BlackCore::Context
                                "changedAircraftInRange", this, SIGNAL(changedAircraftInRange()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "atcStationDisconnected", this, SIGNAL(atcStationDisconnected(BlackMisc::Aviation::CAtcStation)));
+                               "atcStationDisconnected", this, SIGNAL(atcStationDisconnected(swift::misc::aviation::CAtcStation)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "changedAircraftInRangeDigest", this, SIGNAL(changedAircraftInRangeDigest()));
@@ -61,28 +61,28 @@ namespace BlackCore::Context
                                "kicked", this, SIGNAL(kicked(QString)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "textMessagesReceived", this, SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)));
+                               "textMessagesReceived", this, SIGNAL(textMessagesReceived(swift::misc::network::CTextMessageList)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "textMessageSent", this, SIGNAL(textMessageSent(BlackMisc::Network::CTextMessage)));
+                               "textMessageSent", this, SIGNAL(textMessageSent(swift::misc::network::CTextMessage)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "changedRemoteAircraftEnabled", this, SIGNAL(changedRemoteAircraftEnabled(BlackMisc::Simulation::CSimulatedAircraft)));
+                               "changedRemoteAircraftEnabled", this, SIGNAL(changedRemoteAircraftEnabled(swift::misc::simulation::CSimulatedAircraft)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "changedFastPositionUpdates", this, SIGNAL(changedFastPositionUpdates(BlackMisc::Simulation::CSimulatedAircraft)));
+                               "changedFastPositionUpdates", this, SIGNAL(changedFastPositionUpdates(swift::misc::simulation::CSimulatedAircraft)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "changedGndFlagCapability", this, SIGNAL(changedGndFlagCapability(BlackMisc::Simulation::CSimulatedAircraft)));
+                               "changedGndFlagCapability", this, SIGNAL(changedGndFlagCapability(swift::misc::simulation::CSimulatedAircraft)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "addedAircraft", this, SIGNAL(addedAircraft(BlackMisc::Simulation::CSimulatedAircraft)));
+                               "addedAircraft", this, SIGNAL(addedAircraft(swift::misc::simulation::CSimulatedAircraft)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "removedAircraft", this, SIGNAL(removedAircraft(BlackMisc::Aviation::CCallsign)));
+                               "removedAircraft", this, SIGNAL(removedAircraft(swift::misc::aviation::CCallsign)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "connectedServerChanged", this, SIGNAL(connectedServerChanged(BlackMisc::Network::CServer)));
+                               "connectedServerChanged", this, SIGNAL(connectedServerChanged(swift::misc::network::CServer)));
         Q_ASSERT(s);
         Q_UNUSED(s);
         this->relayBaseClassSignals(serviceName, connection, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName());
@@ -90,22 +90,22 @@ namespace BlackCore::Context
 
     CAtcStationList CContextNetworkProxy::getAtcStationsOnline(bool recalculateDistance) const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1String("getAtcStationsOnline"), recalculateDistance);
+        return m_dBusInterface->callDBusRet<swift::misc::aviation::CAtcStationList>(QLatin1String("getAtcStationsOnline"), recalculateDistance);
     }
 
     CAtcStationList CContextNetworkProxy::getClosestAtcStationsOnline(int number) const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1String("getClosestAtcStationsOnline"), number);
+        return m_dBusInterface->callDBusRet<swift::misc::aviation::CAtcStationList>(QLatin1String("getClosestAtcStationsOnline"), number);
     }
 
     CSimulatedAircraftList CContextNetworkProxy::getAircraftInRange() const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraftList>(QLatin1String("getAircraftInRange"));
+        return m_dBusInterface->callDBusRet<swift::misc::simulation::CSimulatedAircraftList>(QLatin1String("getAircraftInRange"));
     }
 
     CCallsignSet CContextNetworkProxy::getAircraftInRangeCallsigns() const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CCallsignSet>(QLatin1String("getAircraftInRangeCallsigns"));
+        return m_dBusInterface->callDBusRet<swift::misc::aviation::CCallsignSet>(QLatin1String("getAircraftInRangeCallsigns"));
     }
 
     int CContextNetworkProxy::getAircraftInRangeCount() const
@@ -120,17 +120,17 @@ namespace BlackCore::Context
 
     CSimulatedAircraft CContextNetworkProxy::getAircraftInRangeForCallsign(const CCallsign &callsign) const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraft>(QLatin1String("getAircraftInRangeForCallsign"), callsign);
+        return m_dBusInterface->callDBusRet<swift::misc::simulation::CSimulatedAircraft>(QLatin1String("getAircraftInRangeForCallsign"), callsign);
     }
 
     CAtcStationList CContextNetworkProxy::getOnlineStationsForFrequency(const CFrequency &frequency) const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1String("getOnlineStationsForFrequency"), frequency);
+        return m_dBusInterface->callDBusRet<swift::misc::aviation::CAtcStationList>(QLatin1String("getOnlineStationsForFrequency"), frequency);
     }
 
     CAtcStation CContextNetworkProxy::getOnlineStationForCallsign(const CCallsign &callsign) const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStation>(QLatin1String("getOnlineStationForCallsign"), callsign);
+        return m_dBusInterface->callDBusRet<swift::misc::aviation::CAtcStation>(QLatin1String("getOnlineStationForCallsign"), callsign);
     }
 
     bool CContextNetworkProxy::isOnlineStation(const CCallsign &callsign) const
@@ -140,32 +140,32 @@ namespace BlackCore::Context
 
     CUserList CContextNetworkProxy::getUsers() const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1String("getUsers"));
+        return m_dBusInterface->callDBusRet<swift::misc::network::CUserList>(QLatin1String("getUsers"));
     }
 
-    CUserList CContextNetworkProxy::getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const
+    CUserList CContextNetworkProxy::getUsersForCallsigns(const swift::misc::aviation::CCallsignSet &callsigns) const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1String("getUsersForCallsigns"), callsigns);
+        return m_dBusInterface->callDBusRet<swift::misc::network::CUserList>(QLatin1String("getUsersForCallsigns"), callsigns);
     }
 
-    CUser CContextNetworkProxy::getUserForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const
+    CUser CContextNetworkProxy::getUserForCallsign(const swift::misc::aviation::CCallsign &callsign) const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Network::CUser>(QLatin1String("getUserForCallsign"), callsign);
+        return m_dBusInterface->callDBusRet<swift::misc::network::CUser>(QLatin1String("getUserForCallsign"), callsign);
     }
 
     CClientList CContextNetworkProxy::getClients() const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Network::CClientList>(QLatin1String("getClients"));
+        return m_dBusInterface->callDBusRet<swift::misc::network::CClientList>(QLatin1String("getClients"));
     }
 
     CServerList CContextNetworkProxy::getVatsimFsdServers() const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Network::CServerList>(QLatin1String("getVatsimFsdServers"));
+        return m_dBusInterface->callDBusRet<swift::misc::network::CServerList>(QLatin1String("getVatsimFsdServers"));
     }
 
-    CClientList CContextNetworkProxy::getClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const
+    CClientList CContextNetworkProxy::getClientsForCallsigns(const swift::misc::aviation::CCallsignSet &callsigns) const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Network::CClientList>(QLatin1String("getClientsForCallsigns"), callsigns);
+        return m_dBusInterface->callDBusRet<swift::misc::network::CClientList>(QLatin1String("getClientsForCallsigns"), callsigns);
     }
 
     bool CContextNetworkProxy::setOtherClient(const CClient &client)
@@ -248,7 +248,7 @@ namespace BlackCore::Context
         return m_dBusInterface->callDBusRet<CStatusMessageList>(QLatin1String("getAircraftPartsHistory"), callsign);
     }
 
-    CAircraftPartsList CContextNetworkProxy::getRemoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign) const
+    CAircraftPartsList CContextNetworkProxy::getRemoteAircraftParts(const swift::misc::aviation::CCallsign &callsign) const
     {
         return m_dBusInterface->callDBusRet<CAircraftPartsList>(QLatin1String("getRemoteAircraftParts"), callsign);
     }
@@ -298,7 +298,7 @@ namespace BlackCore::Context
         m_dBusInterface->callDBus(QLatin1String("testCreateDummyOnlineAtcStations"), number);
     }
 
-    void CContextNetworkProxy::testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftParts &parts, bool incremental)
+    void CContextNetworkProxy::testAddAircraftParts(const swift::misc::aviation::CCallsign &callsign, const CAircraftParts &parts, bool incremental)
     {
         m_dBusInterface->callDBus(QLatin1String("testAddAircraftParts"), callsign, parts, incremental);
     }
@@ -318,19 +318,19 @@ namespace BlackCore::Context
         m_dBusInterface->callDBus(QLatin1String("testRequestAircraftConfig"), callsign);
     }
 
-    bool CContextNetworkProxy::testAddAltitudeOffset(const CCallsign &callsign, const PhysicalQuantities::CLength &offset)
+    bool CContextNetworkProxy::testAddAltitudeOffset(const CCallsign &callsign, const physical_quantities::CLength &offset)
     {
         return m_dBusInterface->callDBusRet<bool>(QLatin1String("testAddAltitudeOffset"), callsign, offset);
     }
 
     CStatusMessage CContextNetworkProxy::connectToNetwork(const CServer &server, const QString &extraLiveryString, bool sendLiveryString, const QString &extraModelString, bool sendModelString, const CCallsign &partnerCallsign, CLoginMode loginMode)
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1String("connectToNetwork"), server, extraLiveryString, sendLiveryString, extraModelString, sendModelString, partnerCallsign, loginMode);
+        return m_dBusInterface->callDBusRet<swift::misc::CStatusMessage>(QLatin1String("connectToNetwork"), server, extraLiveryString, sendLiveryString, extraModelString, sendModelString, partnerCallsign, loginMode);
     }
 
     CStatusMessage CContextNetworkProxy::disconnectFromNetwork()
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1String("disconnectFromNetwork"));
+        return m_dBusInterface->callDBusRet<swift::misc::CStatusMessage>(QLatin1String("disconnectFromNetwork"));
     }
 
     bool CContextNetworkProxy::isConnected() const
@@ -340,7 +340,7 @@ namespace BlackCore::Context
 
     CServer CContextNetworkProxy::getConnectedServer() const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Network::CServer>(QLatin1String("getConnectedServer"));
+        return m_dBusInterface->callDBusRet<swift::misc::network::CServer>(QLatin1String("getConnectedServer"));
     }
 
     CLoginMode CContextNetworkProxy::getLoginMode() const
@@ -358,19 +358,19 @@ namespace BlackCore::Context
         m_dBusInterface->callDBus(QLatin1String("sendTextMessages"), textMessages);
     }
 
-    void CContextNetworkProxy::sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan)
+    void CContextNetworkProxy::sendFlightPlan(const swift::misc::aviation::CFlightPlan &flightPlan)
     {
         m_dBusInterface->callDBus(QLatin1String("sendFlightPlan"), flightPlan);
     }
 
     CFlightPlan CContextNetworkProxy::loadFlightPlanFromNetwork(const CCallsign &callsign) const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CFlightPlan>(QLatin1String("loadFlightPlanFromNetwork"), callsign);
+        return m_dBusInterface->callDBusRet<swift::misc::aviation::CFlightPlan>(QLatin1String("loadFlightPlanFromNetwork"), callsign);
     }
 
     CMetar CContextNetworkProxy::getMetarForAirport(const CAirportIcaoCode &airportIcaoCode) const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Weather::CMetar>(QLatin1String("getMetarForAirport"), airportIcaoCode);
+        return m_dBusInterface->callDBusRet<swift::misc::weather::CMetar>(QLatin1String("getMetarForAirport"), airportIcaoCode);
     }
 
     QMetaObject::Connection CContextNetworkProxy::connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot)

@@ -3,18 +3,18 @@
 
 #include "blackcore/application.h"
 #include "blackcore/context/contextapplicationproxy.h"
-#include "blackmisc/dbus.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/genericdbusinterface.h"
-#include "blackmisc/identifierlist.h"
-#include "blackmisc/loghandler.h"
+#include "misc/dbus.h"
+#include "misc/dbusserver.h"
+#include "misc/genericdbusinterface.h"
+#include "misc/identifierlist.h"
+#include "misc/loghandler.h"
 
 #include <QDBusConnection>
 #include <QLatin1String>
 #include <QObject>
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackCore::Context
 {
@@ -34,16 +34,16 @@ namespace BlackCore::Context
     {
         // signals originating from impl side
         bool s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                                    "settingsChanged", this, SIGNAL(settingsChanged(BlackMisc::CValueCachePacket, BlackMisc::CIdentifier)));
+                                    "settingsChanged", this, SIGNAL(settingsChanged(swift::misc::CValueCachePacket, swift::misc::CIdentifier)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
                                "registrationChanged", this, SIGNAL(registrationChanged()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                               "hotkeyActionsRegistered", this, SIGNAL(hotkeyActionsRegistered(QStringList, BlackMisc::CIdentifier)));
+                               "hotkeyActionsRegistered", this, SIGNAL(hotkeyActionsRegistered(QStringList, swift::misc::CIdentifier)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                               "remoteHotkeyAction", this, SIGNAL(remoteHotkeyAction(QString, bool, BlackMisc::CIdentifier)));
+                               "remoteHotkeyAction", this, SIGNAL(remoteHotkeyAction(QString, bool, swift::misc::CIdentifier)));
         Q_ASSERT(s);
         Q_UNUSED(s);
         this->relayBaseClassSignals(serviceName, connection, IContextApplication::ObjectPath(), IContextApplication::InterfaceName());
@@ -54,9 +54,9 @@ namespace BlackCore::Context
         m_dBusInterface->callDBus(QLatin1String("changeSettings"), settings, origin);
     }
 
-    BlackMisc::CValueCachePacket CContextApplicationProxy::getAllSettings() const
+    swift::misc::CValueCachePacket CContextApplicationProxy::getAllSettings() const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::CValueCachePacket>(QLatin1String("getAllSettings"));
+        return m_dBusInterface->callDBusRet<swift::misc::CValueCachePacket>(QLatin1String("getAllSettings"));
     }
 
     QStringList CContextApplicationProxy::getUnsavedSettingsKeys() const
@@ -81,19 +81,19 @@ namespace BlackCore::Context
         CSettingsCache::instance()->changeValuesFromRemote(this->getAllSettings(), CIdentifier::null());
     }
 
-    BlackMisc::CStatusMessage CContextApplicationProxy::saveSettings(const QString &keyPrefix)
+    swift::misc::CStatusMessage CContextApplicationProxy::saveSettings(const QString &keyPrefix)
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1String("saveSettings"), keyPrefix);
+        return m_dBusInterface->callDBusRet<swift::misc::CStatusMessage>(QLatin1String("saveSettings"), keyPrefix);
     }
 
-    BlackMisc::CStatusMessage CContextApplicationProxy::saveSettingsByKey(const QStringList &keys)
+    swift::misc::CStatusMessage CContextApplicationProxy::saveSettingsByKey(const QStringList &keys)
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1String("saveSettingsByKey"), keys);
+        return m_dBusInterface->callDBusRet<swift::misc::CStatusMessage>(QLatin1String("saveSettingsByKey"), keys);
     }
 
-    BlackMisc::CStatusMessage CContextApplicationProxy::loadSettings()
+    swift::misc::CStatusMessage CContextApplicationProxy::loadSettings()
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1String("loadSettings"));
+        return m_dBusInterface->callDBusRet<swift::misc::CStatusMessage>(QLatin1String("loadSettings"));
     }
 
     void CContextApplicationProxy::registerHotkeyActions(const QStringList &actions, const CIdentifier &origin)
@@ -110,7 +110,7 @@ namespace BlackCore::Context
     {
         m_proxyPingIdentifiers.insert(application);
         if (m_pingTimer.isActive()) { m_pingTimer.start(); } // restart, no need to ping again
-        return m_dBusInterface->callDBusRet<BlackMisc::CIdentifier>(QLatin1String("registerApplication"), application);
+        return m_dBusInterface->callDBusRet<swift::misc::CIdentifier>(QLatin1String("registerApplication"), application);
     }
 
     void CContextApplicationProxy::unregisterApplication(const CIdentifier &application)
@@ -119,21 +119,21 @@ namespace BlackCore::Context
         m_dBusInterface->callDBus(QLatin1String("unregisterApplication"), application);
     }
 
-    BlackMisc::CIdentifierList CContextApplicationProxy::getRegisteredApplications() const
+    swift::misc::CIdentifierList CContextApplicationProxy::getRegisteredApplications() const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::CIdentifierList>(QLatin1String("getRegisteredApplications"));
+        return m_dBusInterface->callDBusRet<swift::misc::CIdentifierList>(QLatin1String("getRegisteredApplications"));
     }
 
     CIdentifier CContextApplicationProxy::getApplicationIdentifier() const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::CIdentifier>(QLatin1String("getApplicationIdentifier"));
+        return m_dBusInterface->callDBusRet<swift::misc::CIdentifier>(QLatin1String("getApplicationIdentifier"));
     }
 
     void CContextApplicationProxy::reRegisterApplications()
     {
         if (!m_dBusInterface) { return; }
         if (m_proxyPingIdentifiers.isEmpty()) { return; }
-        const QSet<BlackMisc::CIdentifier> identifiers = m_proxyPingIdentifiers; // copy so member can be modified
+        const QSet<swift::misc::CIdentifier> identifiers = m_proxyPingIdentifiers; // copy so member can be modified
         for (const CIdentifier &identifier : identifiers)
         {
             this->registerApplication(identifier);
@@ -147,7 +147,7 @@ namespace BlackCore::Context
 
         static const QString dBusName("contexttest");
         QDBusConnection connection = CDBusServer::connectToDBus(dBusAddress, dBusName);
-        CContextApplicationProxy proxy(BlackMisc::CDBusServer::coreServiceName(), connection, CCoreFacadeConfig::Remote, nullptr);
+        CContextApplicationProxy proxy(swift::misc::CDBusServer::coreServiceName(), connection, CCoreFacadeConfig::Remote, nullptr);
         const CIdentifier id("swift proxy test");
         const CIdentifier pingId = proxy.registerApplication(id);
         const bool ok = (id == pingId);

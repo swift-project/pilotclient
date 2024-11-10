@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "statusmessagefilterbar.h"
-#include "blackmisc/logpattern.h"
+#include "misc/logpattern.h"
 #include "ui_statusmessagefilterbar.h"
 #include "blackgui/models/statusmessagefilter.h"
 #include <QCompleter>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui::Models;
 
 namespace BlackGui::Filters
@@ -57,7 +57,7 @@ namespace BlackGui::Filters
         ui->rb_Info->setText(oneCharacterText ? msg.getSeverityAsString().left(1) : "");
     }
 
-    std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::CStatusMessageList>> CStatusMessageFilterBar::createModelFilter() const
+    std::unique_ptr<BlackGui::Models::IModelFilter<swift::misc::CStatusMessageList>> CStatusMessageFilterBar::createModelFilter() const
     {
         return std::make_unique<CStatusMessageFilter>(
             this->getSelectedSeverity(),

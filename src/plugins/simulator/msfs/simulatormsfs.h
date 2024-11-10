@@ -17,10 +17,10 @@ namespace BlackSimPlugin::Msfs
 
     public:
         //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
-        CSimulatorMsFs(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                       BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                       BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                       BlackMisc::Network::IClientProvider *clientProvider,
+        CSimulatorMsFs(const swift::misc::simulation::CSimulatorPluginInfo &info,
+                       swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
+                       swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                       swift::misc::network::IClientProvider *clientProvider,
                        QObject *parent = nullptr);
 
         //! \name ISimulator implementations
@@ -28,7 +28,7 @@ namespace BlackSimPlugin::Msfs
         virtual bool connectTo() override;
         //! @}
 
-        virtual void setTrueAltitude(BlackMisc::Aviation::CAircraftSituation &aircraftSituation, const BlackSimPlugin::FsxCommon::DataDefinitionOwnAircraft &simulatorOwnAircraft) override;
+        virtual void setTrueAltitude(swift::misc::aviation::CAircraftSituation &aircraftSituation, const BlackSimPlugin::FsxCommon::DataDefinitionOwnAircraft &simulatorOwnAircraft) override;
     };
 
     //! Listener for MSFS

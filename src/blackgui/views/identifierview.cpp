@@ -4,7 +4,7 @@
 #include "blackgui/models/identifierlistmodel.h"
 #include "blackgui/views/identifierview.h"
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui::Models;
 
 namespace BlackGui::Views

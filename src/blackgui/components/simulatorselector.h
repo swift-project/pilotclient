@@ -7,9 +7,9 @@
 #define BLACKGUI_COMPONENTS_SIMULATORSELECTOR_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/simulatorinfo.h"
-#include "blackmisc/simulation/data/modelcaches.h"
-#include "blackmisc/digestsignal.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/digestsignal.h"
 
 #include <QFrame>
 #include <QObject>
@@ -53,10 +53,10 @@ namespace BlackGui::Components
         void setNoSelectionMeansAll(bool v) { m_noSelectionMeansAll = v; }
 
         //! Get the value
-        BlackMisc::Simulation::CSimulatorInfo getValue() const;
+        swift::misc::simulation::CSimulatorInfo getValue() const;
 
         //! Set the value
-        void setValue(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void setValue(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Set to last selection
         void setToLastSelection();
@@ -108,7 +108,7 @@ namespace BlackGui::Components
 
     signals:
         //! Value has been changed
-        void changed(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void changed(const swift::misc::simulation::CSimulatorInfo &simulator);
 
     private:
         //! Radio button changed
@@ -145,9 +145,9 @@ namespace BlackGui::Components
         Mode m_mode = CheckBoxes;
         bool m_noSelectionMeansAll = false; //!< for filters, no selection means all
         bool m_rememberSelection = false; //!< remember last selection
-        BlackMisc::CDigestSignal m_digestButtonsChanged { this, &CSimulatorSelector::emitChangedSignal, 250, 3 };
-        BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelection> m_currentSimulator { this, &CSimulatorSelector::changedLastSelectionRb }; //!< current simulator (used with radio buttons)
-        BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelections> m_currentSimulators { this, &CSimulatorSelector::changedLastSelectionCb }; //!< current simulators (used with multiple checkboxes)
+        swift::misc::CDigestSignal m_digestButtonsChanged { this, &CSimulatorSelector::emitChangedSignal, 250, 3 };
+        swift::misc::CData<swift::misc::simulation::data::TSimulatorLastSelection> m_currentSimulator { this, &CSimulatorSelector::changedLastSelectionRb }; //!< current simulator (used with radio buttons)
+        swift::misc::CData<swift::misc::simulation::data::TSimulatorLastSelections> m_currentSimulators { this, &CSimulatorSelector::changedLastSelectionCb }; //!< current simulators (used with multiple checkboxes)
     };
 } // ns
 

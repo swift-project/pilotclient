@@ -318,7 +318,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../../blackmisc/blackmisc.qrc">
+         <iconset resource="../../misc/misc.qrc">
           <normaloff>:/diagona/icons/diagona/icons/arrow-circle-double-135.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-double-135.png</iconset>
         </property>
        </widget>
@@ -373,7 +373,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../../blackmisc/blackmisc.qrc">
+         <iconset resource="../../misc/misc.qrc">
           <normaloff>:/diagona/icons/diagona/icons/arrow-circle-double-135.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-double-135.png</iconset>
         </property>
        </widget>
@@ -434,7 +434,7 @@
          <string>test SELCAL</string>
         </property>
         <property name="icon">
-         <iconset resource="../../blackmisc/blackmisc.qrc">
+         <iconset resource="../../misc/misc.qrc">
           <normaloff>:/diagona/icons/diagona/icons/speaker-volume.png</normaloff>:/diagona/icons/diagona/icons/speaker-volume.png</iconset>
         </property>
        </widget>
@@ -488,7 +488,7 @@
   <tabstop>tb_ComPanelSelcalTest</tabstop>
  </tabstops>
  <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
+  <include location="../../misc/misc.qrc"/>
  </resources>
  <connections/>
 </ui>

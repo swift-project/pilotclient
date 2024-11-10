@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_MODELCONVERTERXSETUPCOMPONENT_H
 #define BLACKGUI_COMPONENTS_MODELCONVERTERXSETUPCOMPONENT_H
 
-#include "blackmisc/simulation/modelconverterx.h"
+#include "misc/simulation/modelconverterx.h"
 #include <QFrame>
 
 namespace Ui
@@ -37,7 +37,7 @@ namespace BlackGui::Components
         void saveSettings();
 
         QScopedPointer<Ui::CModelConverterXSetupComponent> ui;
-        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TModelConverterXBinary> m_setting { this };
+        swift::misc::CSetting<swift::misc::simulation::settings::TModelConverterXBinary> m_setting { this };
     };
 } // ns
 

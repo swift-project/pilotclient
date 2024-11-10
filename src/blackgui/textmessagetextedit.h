@@ -7,7 +7,7 @@
 #define BLACKGUI_TEXTMESSAGETEXTEDIT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/network/textmessagelist.h"
+#include "misc/network/textmessagelist.h"
 
 #include <QObject>
 #include <QString>
@@ -17,7 +17,7 @@
 class QAction;
 class QPoint;
 
-namespace BlackMisc::Network
+namespace swift::misc::network
 {
     class CTextMessage;
 }
@@ -36,10 +36,10 @@ namespace BlackGui
         virtual ~CTextMessageTextEdit() override;
 
         //! Insert a message
-        void insertTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int maxMessages = -1);
+        void insertTextMessage(const swift::misc::network::CTextMessage &textMessage, int maxMessages = -1);
 
         //! The displayed text messaged
-        const BlackMisc::Network::CTextMessageList &getDisplayedTextMessages() const;
+        const swift::misc::network::CTextMessageList &getDisplayedTextMessages() const;
 
         //! Number of displayed messages
         int count() const;
@@ -70,15 +70,15 @@ namespace BlackGui
         void setVisibleFields();
 
         //! Convert to HTML
-        static QString toHtml(const BlackMisc::Network::CTextMessageList &messages, bool withFrom, bool withTo);
+        static QString toHtml(const swift::misc::network::CTextMessageList &messages, bool withFrom, bool withTo);
 
         //! Convert to HTML
-        static QString toHtml(const BlackMisc::Network::CTextMessage &message, bool withFrom, bool withTo);
+        static QString toHtml(const swift::misc::network::CTextMessage &message, bool withFrom, bool withTo);
 
         //! Word wrap
         void setWordWrap(bool wordWrap);
 
-        BlackMisc::Network::CTextMessageList m_messages;
+        swift::misc::network::CTextMessageList m_messages;
         QTextDocument m_textDocument;
         int m_keepMaxMessages = -1; //!< max number of messages to keep, or -1 to keep all messages
         bool m_latestFirst = false;

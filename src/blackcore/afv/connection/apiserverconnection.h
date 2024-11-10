@@ -8,9 +8,9 @@
 
 #include "blackcore/afv/dto.h"
 #include "blackcore/application.h"
-#include "blackmisc/slot.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/logcategories.h"
+#include "misc/slot.h"
+#include "misc/logmessage.h"
+#include "misc/logcategories.h"
 
 #include <QString>
 #include <QNetworkAccessManager>
@@ -26,7 +26,7 @@
 namespace BlackCore::Afv::Connection
 {
     //! Callback for
-    using ConnectionCallback = BlackMisc::CSlot<void(bool)>;
+    using ConnectionCallback = swift::misc::CSlot<void(bool)>;
 
     //! A server connection
     class CApiServerConnection : public QObject
@@ -89,7 +89,7 @@ namespace BlackCore::Afv::Connection
         {
             if (!this->sendToNetworkIfAuthenticated())
             {
-                // BlackMisc::CLogMessage(this).debug(u"AFV not authenticated");
+                // swift::misc::CLogMessage(this).debug(u"AFV not authenticated");
                 return {};
             }
 
@@ -112,7 +112,7 @@ namespace BlackCore::Afv::Connection
         {
             if (!this->sendToNetworkIfAuthenticated())
             {
-                // BlackMisc::CLogMessage(this).debug(u"AFV not authenticated");
+                // swift::misc::CLogMessage(this).debug(u"AFV not authenticated");
                 return {};
             }
 

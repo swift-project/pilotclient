@@ -6,8 +6,8 @@
 #ifndef BLACKSOUND_SAMPLEPROVIDER_SAMPLES_H
 #define BLACKSOUND_SAMPLEPROVIDER_SAMPLES_H
 
-#include "blackmisc/audio/audiosettings.h"
-#include "blackmisc/settingscache.h"
+#include "misc/audio/audiosettings.h"
+#include "misc/settingscache.h"
 #include "sound/swiftsoundexport.h"
 #include "sound/sampleprovider/resourcesound.h"
 
@@ -69,7 +69,7 @@ namespace swift::sound::sample_provider
         CResourceSound m_whiteNoise;
         CResourceSound m_hfWhiteNoise;
 
-        BlackMisc::CSetting<BlackMisc::Audio::TSettings> m_audioSettings { this, &Samples::onSettingsChanged };
+        swift::misc::CSetting<swift::misc::audio::TSettings> m_audioSettings { this, &Samples::onSettingsChanged };
 
         //! Init sounds
         void initSounds();

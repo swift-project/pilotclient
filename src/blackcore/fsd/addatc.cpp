@@ -3,7 +3,7 @@
 
 #include "blackcore/fsd/addatc.h"
 #include "blackcore/fsd/serializer.h"
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
 namespace BlackCore::Fsd
 {
@@ -37,7 +37,7 @@ namespace BlackCore::Fsd
     {
         if (tokens.size() < 7)
         {
-            BlackMisc::CLogMessage(static_cast<AddAtc *>(nullptr)).warning(u"Wrong number of arguments.");
+            swift::misc::CLogMessage(static_cast<AddAtc *>(nullptr)).warning(u"Wrong number of arguments.");
             return {};
         }
 

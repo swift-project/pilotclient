@@ -6,8 +6,8 @@
 
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 using namespace BlackGui::Models;
 using namespace BlackGui::Menus;
 

@@ -3,15 +3,15 @@
 
 #include "blackcore/context/context.h"
 #include "blackcore/application.h"
-#include "blackmisc/logcategories.h"
+#include "misc/logcategories.h"
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackCore::Context
 {
     const QStringList &IContext::getLogCategories()
     {
-        static const QStringList cats { BlackMisc::CLogCategories::context() };
+        static const QStringList cats { swift::misc::CLogCategories::context() };
         return cats;
     }
 

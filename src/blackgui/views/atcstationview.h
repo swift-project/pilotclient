@@ -9,17 +9,17 @@
 #include "blackgui/views/viewcallsignobjects.h"
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/pq/frequency.h"
+#include "misc/aviation/atcstation.h"
+#include "misc/aviation/atcstationlist.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/pq/frequency.h"
 
 #include <QList>
 #include <QObject>
 
 class QAction;
 
-namespace BlackMisc::Aviation
+namespace swift::misc::aviation
 {
     class CCallsign;
 }
@@ -44,17 +44,17 @@ namespace BlackGui
             void setStationMode(BlackGui::Models::CAtcStationListModel::AtcStationMode stationMode);
 
             //! \copydoc Models::CAtcStationListModel::changedAtcStationConnectionStatus
-            void changedAtcStationConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
+            void changedAtcStationConnectionStatus(const swift::misc::aviation::CAtcStation &station, bool added);
 
         signals:
             //! Request some dummy ATC stations
             void testRequestDummyAtcOnlineStations(int number);
 
             //! Request COM frequency
-            void requestComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit unit);
+            void requestComFrequency(const swift::misc::physical_quantities::CFrequency &frequency, swift::misc::aviation::CComSystem::ComUnit unit);
 
             //! Request a text message to
-            void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
+            void requestTextMessageWidget(const swift::misc::aviation::CCallsign &callsign);
 
         protected:
             //! \copydoc CViewBase::customMenu

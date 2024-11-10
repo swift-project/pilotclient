@@ -3,16 +3,16 @@
 
 #include "blackcore/application.h"
 #include "blackcore/setupreader.h"
-#include "blackmisc/verify.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/fileutils.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/network/url.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/verify.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/fileutils.h"
+#include "misc/swiftdirectories.h"
+#include "misc/directoryutils.h"
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
+#include "misc/network/networkutils.h"
+#include "misc/network/url.h"
+#include "misc/statusmessage.h"
 #include "config/buildconfig.h"
 
 #include <QStringBuilder>
@@ -26,9 +26,9 @@
 #include <QtGlobal>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Db;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::db;
+using namespace swift::misc::network;
 using namespace BlackCore;
 using namespace BlackCore::Data;
 

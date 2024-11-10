@@ -4,8 +4,8 @@
 #include "blackcore/db/airportdatareader.h"
 #include "blackcore/db/databaseutils.h"
 #include "blackcore/application.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/logmessage.h"
+#include "misc/network/networkutils.h"
+#include "misc/logmessage.h"
 
 #include <QStringBuilder>
 #include <QNetworkReply>
@@ -13,10 +13,10 @@
 #include <QFileInfo>
 #include <QPointer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Db;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::db;
 
 namespace BlackCore::Db
 {
@@ -25,7 +25,7 @@ namespace BlackCore::Db
         // void
     }
 
-    BlackMisc::Aviation::CAirportList CAirportDataReader::getAirports() const
+    swift::misc::aviation::CAirportList CAirportDataReader::getAirports() const
     {
         return m_airportCache.get();
     }

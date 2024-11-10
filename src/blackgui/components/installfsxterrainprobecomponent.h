@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_INSTALLFSXTERRAINPROBECOMPONENT_H
 #define BLACKGUI_COMPONENTS_INSTALLFSXTERRAINPROBECOMPONENT_H
 
-#include "blackmisc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/settings/simulatorsettings.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -38,9 +38,9 @@ namespace BlackGui::Components
         void copyProbe();
 
         //! Simulator has been changed
-        void onSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void onSimulatorChanged(const swift::misc::simulation::CSimulatorInfo &simulator);
 
-        BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for SimObjects directories
+        swift::misc::simulation::settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for SimObjects directories
     };
 } // ns
 

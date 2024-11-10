@@ -6,11 +6,11 @@
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/context/contextnetwork.h"
-#include "blackmisc/simplecommandparser.h"
+#include "misc/simplecommandparser.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
 using namespace BlackCore::Context;
 
 namespace BlackGui::Components
@@ -99,7 +99,7 @@ namespace BlackGui::Components
         m_dsCommandTooltip.inputSignal();
     }
 
-    void CCommandInput::onConnectedServerChanged(const Network::CServer &server)
+    void CCommandInput::onConnectedServerChanged(const network::CServer &server)
     {
         Q_UNUSED(server)
 

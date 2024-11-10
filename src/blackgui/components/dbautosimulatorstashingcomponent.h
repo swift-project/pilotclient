@@ -10,8 +10,8 @@
 #include "blackgui/components/dbmappingcomponentaware.h"
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackcore/progress.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/statusmessage.h"
 #include <QDialog>
 #include <QScopedPointer>
 
@@ -69,20 +69,20 @@ namespace BlackGui::Components
         BlackGui::Views::CAircraftModelView *currentModelView() const;
 
         //! Add a status message
-        void addStatusMessage(const BlackMisc::CStatusMessage &msg);
+        void addStatusMessage(const swift::misc::CStatusMessage &msg);
 
         //! Add a status messages
-        void addStatusMessages(const BlackMisc::CStatusMessageList &msgs);
+        void addStatusMessages(const swift::misc::CStatusMessageList &msgs);
 
         //! Add a status message for a given model (prefixed)
-        void addStatusMessage(const BlackMisc::CStatusMessage &msg, const BlackMisc::Simulation::CAircraftModel &model);
+        void addStatusMessage(const swift::misc::CStatusMessage &msg, const swift::misc::simulation::CAircraftModel &model);
 
         //! Try to stash updated models
         void tryToStash();
 
         QScopedPointer<Ui::CDbAutoSimulatorStashingComponent> ui;
         State m_state = Idle; //!< modus
-        BlackMisc::Simulation::CAircraftModelList m_modelsToStash; //!< Models about to be stashed
+        swift::misc::simulation::CAircraftModelList m_modelsToStash; //!< Models about to be stashed
     };
 } // ns
 

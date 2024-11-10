@@ -7,7 +7,7 @@
 #define BLACKGUI_MODELS_LISTMODELCALLSIGNOBJECTS_H
 
 #include "blackgui/models/listmodelbase.h"
-#include "blackmisc/aviation/callsignset.h"
+#include "misc/aviation/callsignset.h"
 
 #include <QColor>
 #include <QList>
@@ -36,7 +36,7 @@ namespace BlackGui::Models
         virtual ~CListModelCallsignObjects() {}
 
         //! Keys to be highlighted
-        void setHighlightedCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) { m_highlightCallsigns = callsigns; }
+        void setHighlightedCallsigns(const swift::misc::aviation::CCallsignSet &callsigns) { m_highlightCallsigns = callsigns; }
 
         //! Clear the highlighted callsign
         void clearHighlightedCallsigns() { m_highlightCallsigns.clear(); }
@@ -55,7 +55,7 @@ namespace BlackGui::Models
         virtual QVariant data(const QModelIndex &index, int role) const override;
 
         //! Callsign for given index
-        BlackMisc::Aviation::CCallsign callsignForIndex(const QModelIndex &index) const;
+        swift::misc::aviation::CCallsign callsignForIndex(const QModelIndex &index) const;
 
         //! Highlight index?
         bool isHighlightedIndex(const QModelIndex &index) const;
@@ -65,7 +65,7 @@ namespace BlackGui::Models
         CListModelCallsignObjects(const QString &translationContext, QObject *parent = nullptr);
 
     private:
-        BlackMisc::Aviation::CCallsignSet m_highlightCallsigns; //!< callsigns to be highlighted
+        swift::misc::aviation::CCallsignSet m_highlightCallsigns; //!< callsigns to be highlighted
         QColor m_highlightColor = Qt::green;
     };
 } // namespace

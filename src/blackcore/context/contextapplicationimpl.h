@@ -13,14 +13,14 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackmisc/identifiable.h"
-#include "blackmisc/identifierlist.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/valuecache.h"
+#include "misc/identifiable.h"
+#include "misc/identifierlist.h"
+#include "misc/statusmessage.h"
+#include "misc/valuecache.h"
 
 // clazy:excludeall=const-signal-or-slot
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CDBusServer;
 }
@@ -33,7 +33,7 @@ namespace BlackCore
         //! Application context
         class BLACKCORE_EXPORT CContextApplication :
             public IContextApplication,
-            public BlackMisc::CIdentifiable
+            public swift::misc::CIdentifiable
         {
             Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME)
             Q_OBJECT
@@ -42,10 +42,10 @@ namespace BlackCore
 
         public slots:
             //! \copydoc BlackCore::Context::IContextApplication::changeSettings
-            virtual void changeSettings(const BlackMisc::CValueCachePacket &settings, const BlackMisc::CIdentifier &origin) override;
+            virtual void changeSettings(const swift::misc::CValueCachePacket &settings, const swift::misc::CIdentifier &origin) override;
 
             //! \copydoc BlackCore::Context::IContextApplication::getAllSettings
-            virtual BlackMisc::CValueCachePacket getAllSettings() const override;
+            virtual swift::misc::CValueCachePacket getAllSettings() const override;
 
             //! \copydoc BlackCore::Context::IContextApplication::getUnsavedSettingsKeys
             virtual QStringList getUnsavedSettingsKeys() const override;
@@ -57,41 +57,41 @@ namespace BlackCore
             virtual void synchronizeLocalSettings() override;
 
             //! \copydoc BlackCore::Context::IContextApplication::saveSettings
-            virtual BlackMisc::CStatusMessage saveSettings(const QString &keyPrefix = {}) override;
+            virtual swift::misc::CStatusMessage saveSettings(const QString &keyPrefix = {}) override;
 
             //! \copydoc BlackCore::Context::IContextApplication::saveSettingsByKey
-            virtual BlackMisc::CStatusMessage saveSettingsByKey(const QStringList &keys) override;
+            virtual swift::misc::CStatusMessage saveSettingsByKey(const QStringList &keys) override;
 
             //! \copydoc BlackCore::Context::IContextApplication::loadSettings
-            virtual BlackMisc::CStatusMessage loadSettings() override;
+            virtual swift::misc::CStatusMessage loadSettings() override;
 
             //! \copydoc BlackCore::Context::IContextApplication::registerHotkeyActions
-            virtual void registerHotkeyActions(const QStringList &actions, const BlackMisc::CIdentifier &origin) override;
+            virtual void registerHotkeyActions(const QStringList &actions, const swift::misc::CIdentifier &origin) override;
 
             //! \copydoc BlackCore::Context::IContextApplication::callHotkeyActionRemotely
-            virtual void callHotkeyActionRemotely(const QString &action, bool argument, const BlackMisc::CIdentifier &origin) override;
+            virtual void callHotkeyActionRemotely(const QString &action, bool argument, const swift::misc::CIdentifier &origin) override;
 
             //! \copydoc BlackCore::Context::IContextApplication::registerApplication
-            virtual BlackMisc::CIdentifier registerApplication(const BlackMisc::CIdentifier &application) override;
+            virtual swift::misc::CIdentifier registerApplication(const swift::misc::CIdentifier &application) override;
 
             //! \copydoc BlackCore::Context::IContextApplication::unregisterApplication
-            virtual void unregisterApplication(const BlackMisc::CIdentifier &application) override;
+            virtual void unregisterApplication(const swift::misc::CIdentifier &application) override;
 
             //! \copydoc BlackCore::Context::IContextApplication::getRegisteredApplications
-            virtual BlackMisc::CIdentifierList getRegisteredApplications() const override;
+            virtual swift::misc::CIdentifierList getRegisteredApplications() const override;
 
             //! \copydoc BlackCore::Context::IContextApplication::getApplicationIdentifier
-            virtual BlackMisc::CIdentifier getApplicationIdentifier() const override;
+            virtual swift::misc::CIdentifier getApplicationIdentifier() const override;
 
         protected:
             //! Constructor
             CContextApplication(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
 
             //! Register myself in DBus, fail safe
-            CContextApplication *registerWithDBus(BlackMisc::CDBusServer *server);
+            CContextApplication *registerWithDBus(swift::misc::CDBusServer *server);
 
         private:
-            BlackMisc::CIdentifierList m_registeredApplications;
+            swift::misc::CIdentifierList m_registeredApplications;
 
             //! Housekeeping
             void cleanupRegisteredApplications();

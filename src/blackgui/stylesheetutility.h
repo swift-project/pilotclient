@@ -7,8 +7,8 @@
 #define BLACKGUI_STYLESHEETUTILITY_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/digestsignal.h"
+#include "misc/logcategories.h"
+#include "misc/digestsignal.h"
 
 #include <QFileSystemWatcher>
 #include <QMap>

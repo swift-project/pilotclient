@@ -8,7 +8,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodeltimestampobjects.h"
-#include "blackmisc/aviation/aircraftpartslist.h"
+#include "misc/aviation/aircraftpartslist.h"
 
 #include <QVariant>
 
@@ -18,7 +18,7 @@ class QObject;
 namespace BlackGui::Models
 {
     //! Aircraft parts list model
-    class BLACKGUI_EXPORT CAircraftPartsListModel : public CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftPartsList, true>
+    class BLACKGUI_EXPORT CAircraftPartsListModel : public CListModelTimestampWithOffsetObjects<swift::misc::aviation::CAircraftPartsList, true>
     {
         Q_OBJECT
 

@@ -7,8 +7,8 @@
 #define SWIFT_INPUT_KEYBOARDMACOS_H
 
 #include "input/keyboard.h"
-#include "blackmisc/input/hotkeycombination.h"
-#include "blackmisc/input/keycodes.h"
+#include "misc/input/hotkeycombination.h"
+#include "misc/input/keycodes.h"
 
 #include <IOKit/hid/IOHIDManager.h>
 
@@ -44,11 +44,11 @@ namespace swift::input
 
         void processKeyEvent(IOHIDValueRef value);
 
-        static BlackMisc::Input::KeyCode convertToKey(quint32 keyCode);
+        static swift::misc::input::KeyCode convertToKey(quint32 keyCode);
         static void valueCallback(void *context, IOReturn result, void *sender, IOHIDValueRef value);
 
         IOHIDManagerRef m_hidManager = nullptr;
-        BlackMisc::Input::CHotkeyCombination m_keyCombination; //!< Current status of pressed keys;
+        swift::misc::input::CHotkeyCombination m_keyCombination; //!< Current status of pressed keys;
     };
 } // ns
 

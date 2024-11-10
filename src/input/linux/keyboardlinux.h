@@ -7,7 +7,7 @@
 #define SWIFT_INPUT_KEYBOARD_LINUX_H
 
 #include "input/keyboard.h"
-#include "blackmisc/input/hotkeycombination.h"
+#include "misc/input/hotkeycombination.h"
 #include <QHash>
 #include <QDir>
 #include <QFileSystemWatcher>
@@ -51,11 +51,11 @@ namespace swift::input
 
         void addRawInputDevice(const QString &filePath);
         void keyEvent(int keyCode, bool isPressed);
-        BlackMisc::Input::KeyCode convertToKey(int keyCode);
+        swift::misc::input::KeyCode convertToKey(int keyCode);
         bool isModifier(int keyCode);
         bool isMouseButton(int keyCode);
 
-        BlackMisc::Input::CHotkeyCombination m_keyCombination; //!< Current status of pressed keys;
+        swift::misc::input::CHotkeyCombination m_keyCombination; //!< Current status of pressed keys;
 
         QFileSystemWatcher *m_devInputWatcher; //!< Watches the device file system for input devices
         QHash<QString, QSharedPointer<QFile>> m_keyboardDevices; //!< All known input devices

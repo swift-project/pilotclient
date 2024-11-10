@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_AIRPORTDIALOG_H
 #define BLACKGUI_COMPONENTS_AIRPORTDIALOG_H
 
-#include "blackmisc/aviation/airport.h"
+#include "misc/aviation/airport.h"
 #include <QDialog>
 #include <QScopedPointer>
 
@@ -29,10 +29,10 @@ namespace BlackGui::Components
         virtual ~CAirportDialog();
 
         //! Set airport
-        void setAirport(const BlackMisc::Aviation::CAirport &airport);
+        void setAirport(const swift::misc::aviation::CAirport &airport);
 
         //! Get airport
-        BlackMisc::Aviation::CAirport getAirport() const;
+        swift::misc::aviation::CAirport getAirport() const;
 
         //! Clear the form
         void clear();

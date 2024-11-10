@@ -32,10 +32,10 @@ namespace BlackGui::Components
         virtual ~CCoordinateDialog();
 
         //! \copydoc BlackGui::Editors::CCoordinateForm::getCoordinate
-        BlackMisc::Geo::CCoordinateGeodetic getCoordinate() const;
+        swift::misc::geo::CCoordinateGeodetic getCoordinate() const;
 
         //! \copydoc BlackGui::Editors::CCoordinateForm::setCoordinate
-        void setCoordinate(const BlackMisc::Geo::ICoordinateGeodetic &coordinate);
+        void setCoordinate(const swift::misc::geo::ICoordinateGeodetic &coordinate);
 
         //! \copydoc BlackGui::Editors::CCoordinateForm::setReadOnly
         void setReadOnly(bool readonly);
@@ -47,7 +47,7 @@ namespace BlackGui::Components
         void showElevation(bool show);
 
         //! \copydoc BlackGui::Editors::CCoordinateForm::validate
-        BlackMisc::CStatusMessageList validate(bool nested = false) const;
+        swift::misc::CStatusMessageList validate(bool nested = false) const;
 
     signals:
         //! \copydoc BlackGui::Editors::CCoordinateForm::changedCoordinate

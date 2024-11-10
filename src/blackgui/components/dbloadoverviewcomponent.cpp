@@ -8,16 +8,16 @@
 #include "blackgui/guiutility.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/db/infodatareader.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/htmlutils.h"
+#include "misc/network/networkutils.h"
+#include "misc/htmlutils.h"
 
 #include <QPointer>
 #include <QMessageBox>
 
 using namespace BlackGui;
 using namespace BlackCore;
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 
 namespace BlackGui::Components
 {

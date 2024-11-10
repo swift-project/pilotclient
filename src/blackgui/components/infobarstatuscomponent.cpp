@@ -11,9 +11,9 @@
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/network/server.h"
-#include "blackmisc/audio/audioutils.h"
+#include "misc/simulation/simulatorplugininfo.h"
+#include "misc/network/server.h"
+#include "misc/audio/audioutils.h"
 #include "config/buildconfig.h"
 #include "ui_infobarstatuscomponent.h"
 
@@ -32,9 +32,9 @@ using namespace swift::config;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackGui;
-using namespace BlackMisc;
-using namespace BlackMisc::Audio;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::audio;
+using namespace swift::misc::network;
 
 namespace BlackGui::Components
 {

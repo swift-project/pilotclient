@@ -11,17 +11,17 @@
 #include "blackgui/settings/guisettings.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/data/lastmodel.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/network/connectionstatus.h"
-#include "blackmisc/network/data/lastserver.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/network/server.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/digestsignal.h"
-#include "blackmisc/settingscache.h"
-#include "blackmisc/datacache.h"
+#include "misc/simulation/data/lastmodel.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/aviation/callsign.h"
+#include "misc/network/connectionstatus.h"
+#include "misc/network/data/lastserver.h"
+#include "misc/network/entityflags.h"
+#include "misc/network/server.h"
+#include "misc/network/user.h"
+#include "misc/digestsignal.h"
+#include "misc/settingscache.h"
+#include "misc/datacache.h"
 
 #include <QFrame>
 #include <QIcon>
@@ -34,7 +34,7 @@ namespace Ui
 {
     class CLoginComponent;
 }
-namespace BlackMisc::Simulation
+namespace swift::misc::simulation
 {
     class CAircraftModel;
     class CSimulatedAircraft;
@@ -97,7 +97,7 @@ namespace BlackGui::Components
         // -------------- values from GUI -----------------
 
         //! User from VATSIM data
-        BlackMisc::Network::CUser getUserFromPilotGuiValues() const;
+        swift::misc::network::CUser getUserFromPilotGuiValues() const;
 
         //! Update own callsign (own aircraft from what is set in the GUI)
         //! \return changed?
@@ -109,21 +109,21 @@ namespace BlackGui::Components
         void updateGui();
 
         //! Set the "login as" values
-        void setGuiLoginAsValues(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
+        void setGuiLoginAsValues(const swift::misc::simulation::CSimulatedAircraft &ownAircraft);
 
         // -------------- others -----------------
 
         //! Selected server (VATSIM)
-        BlackMisc::Network::CServer getCurrentVatsimServer() const;
+        swift::misc::network::CServer getCurrentVatsimServer() const;
 
         //! Selected server (others)
-        BlackMisc::Network::CServer getCurrentOtherServer() const;
+        swift::misc::network::CServer getCurrentOtherServer() const;
 
         //! Current server based on selected tab
-        BlackMisc::Network::CServer getCurrentServer() const;
+        swift::misc::network::CServer getCurrentServer() const;
 
         //! Get a prefill model
-        BlackMisc::Simulation::CAircraftModel getPrefillModel() const;
+        swift::misc::simulation::CAircraftModel getPrefillModel() const;
 
         //! Login cancelled
         void loginCancelled();
@@ -138,7 +138,7 @@ namespace BlackGui::Components
         void autoLogoffFrameRate(bool fatal);
 
         //! Simulator model has been changed
-        void onSimulatorModelChanged(const BlackMisc::Simulation::CAircraftModel &model);
+        void onSimulatorModelChanged(const swift::misc::simulation::CAircraftModel &model);
 
         //! Pause/Continue timeout
         void toggleTimeout();
@@ -162,13 +162,13 @@ namespace BlackGui::Components
         void loadRememberedUserData();
 
         //! Server changed
-        void onSelectedServerChanged(const BlackMisc::Network::CServer &server);
+        void onSelectedServerChanged(const swift::misc::network::CServer &server);
 
         //! Simulator status changed
         void onSimulatorStatusChanged(int status);
 
         //! Network status has changed
-        void onNetworkStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+        void onNetworkStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
 
         //! Tab widget (server) changed
         void onServerTabWidgetChanged(int index);
@@ -180,7 +180,7 @@ namespace BlackGui::Components
         static constexpr int LogoffIntervalSeconds = 20; //!< time before logoff
 
         QScopedPointer<Ui::CLoginComponent> ui;
-        BlackMisc::CDigestSignal m_changedLoginDataDigestSignal { this, &CLoginComponent::loginDataChangedDigest, 1500, 10 };
+        swift::misc::CDigestSignal m_changedLoginDataDigestSignal { this, &CLoginComponent::loginDataChangedDigest, 1500, 10 };
         bool m_updatePilotOnServerChanges = true;
         bool m_networkConnected = false;
         bool m_simulatorConnected = false;
@@ -189,7 +189,7 @@ namespace BlackGui::Components
         int m_logoffIntervalSeconds = LogoffIntervalSeconds;
         QTimer m_logoffCountdownTimer; //!< timer for logoff countdown
 
-        BlackMisc::CData<BlackMisc::Simulation::Data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
+        swift::misc::CData<swift::misc::simulation::data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
         BlackCore::Data::CNetworkSetup m_networkSetup; //!< servers last used
     };
 } // namespace

@@ -5,9 +5,9 @@
 // http://doc.qt.io/qt-5/model-view-programming.html#using-drag-and-drop-with-item-views
 
 #include "blackgui/models/listmodelbasenontemplate.h"
-#include "blackmisc/verify.h"
+#include "misc/verify.h"
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Models
 {

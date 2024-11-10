@@ -8,13 +8,13 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/dbmappingcomponentaware.h"
-#include "blackmisc/propertyindexvariantmap.h"
+#include "misc/propertyindexvariantmap.h"
 
 #include <QDialog>
 #include <QObject>
 #include <QScopedPointer>
 
-namespace BlackMisc::Simulation
+namespace swift::misc::simulation
 {
     class CAircraftModel;
 }
@@ -41,10 +41,10 @@ namespace BlackGui::Components
         virtual ~CDbModelMappingModifyDialog();
 
         //! Get the values
-        BlackMisc::CPropertyIndexVariantMap getValues() const;
+        swift::misc::CPropertyIndexVariantMap getValues() const;
 
         //! Set default values
-        void setValue(const BlackMisc::Simulation::CAircraftModel &model);
+        void setValue(const swift::misc::simulation::CAircraftModel &model);
 
     private:
         QScopedPointer<Ui::CDbModelMappingModifyDialog> ui;

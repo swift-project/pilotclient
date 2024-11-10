@@ -3,7 +3,7 @@
 
 #include "blackcore/fsd/planeinforequestfsinn.h"
 
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
 namespace BlackCore::Fsd
 {
@@ -45,7 +45,7 @@ namespace BlackCore::Fsd
     {
         if (tokens.size() != 12)
         {
-            BlackMisc::CLogMessage(static_cast<PlaneInfoRequestFsinn *>(nullptr)).debug(u"Wrong number of arguments.");
+            swift::misc::CLogMessage(static_cast<PlaneInfoRequestFsinn *>(nullptr)).debug(u"Wrong number of arguments.");
             return {};
         };
         return PlaneInfoRequestFsinn(tokens[0], tokens[1], tokens[4], tokens[5], tokens[10], tokens[11]);

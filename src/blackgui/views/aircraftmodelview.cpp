@@ -10,18 +10,18 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/shortcut.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/simulation/simulatorinfolist.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/aircrafticaocodelist.h"
-#include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/directories.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/variant.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/distributorlist.h"
+#include "misc/simulation/simulatorinfolist.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/aircrafticaocodelist.h"
+#include "misc/aviation/airlineicaocodelist.h"
+#include "misc/aviation/livery.h"
+#include "misc/aviation/liverylist.h"
+#include "misc/directories.h"
+#include "misc/statusmessagelist.h"
+#include "misc/icons.h"
+#include "misc/variant.h"
 
 #include <QAction>
 #include <QDropEvent>
@@ -33,9 +33,9 @@
 #include <QtGlobal>
 #include <QStringBuilder>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
+using namespace swift::misc::aviation;
 using namespace BlackGui::Models;
 using namespace BlackGui::Filters;
 using namespace BlackGui::Menus;

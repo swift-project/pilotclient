@@ -10,10 +10,10 @@
 #include "blackcore/application/applicationsettings.h"
 #include "input/joystick.h"
 #include "input/keyboard.h"
-#include "blackmisc/input/hotkeycombination.h"
-#include "blackmisc/input/joystickbuttonlist.h"
-#include "blackmisc/settingscache.h"
-#include "blackmisc/icons.h"
+#include "misc/input/hotkeycombination.h"
+#include "misc/input/joystickbuttonlist.h"
+#include "misc/settingscache.h"
+#include "misc/icons.h"
 
 #include <QHash>
 #include <QObject>
@@ -37,7 +37,7 @@ namespace BlackCore
         CInputManager(QObject *parent = nullptr);
 
         //! Register new action
-        void registerAction(const QString &action, BlackMisc::CIcons::IconIndex icon = BlackMisc::CIcons::StandardIconEmpty16);
+        void registerAction(const QString &action, swift::misc::CIcons::IconIndex icon = swift::misc::CIcons::StandardIconEmpty16);
 
         //! Register remote actions
         void registerRemoteActions(const QStringList &actions);
@@ -74,7 +74,7 @@ namespace BlackCore
         QStringList allAvailableActions() const { return m_availableActions.keys(); }
 
         //! All actions and their icons (if any)
-        QMap<QString, BlackMisc::CIcons::IconIndex> allAvailableActionsAndIcons() const { return m_availableActions; }
+        QMap<QString, swift::misc::CIcons::IconIndex> allAvailableActionsAndIcons() const { return m_availableActions; }
 
         //! Enable event forwarding to core
         void setForwarding(bool enabled) { m_actionRelayingEnabled = enabled; }
@@ -83,7 +83,7 @@ namespace BlackCore
         void callFunctionsBy(const QString &action, bool isKeyDown, bool shouldEmit = true);
 
         //! Triggers a key event manually and calls the registered functions.
-        void triggerKey(const BlackMisc::Input::CHotkeyCombination &combination, bool isPressed);
+        void triggerKey(const swift::misc::input::CHotkeyCombination &combination, bool isPressed);
 
         //! Creates low level input devices. Once completed, hotkeys start to be processed.
         void createDevices();
@@ -92,17 +92,17 @@ namespace BlackCore
         void releaseDevices();
 
         //! \copydoc swift::input::IJoystick::getAllAvailableJoystickButtons()
-        BlackMisc::Input::CJoystickButtonList getAllAvailableJoystickButtons() const;
+        swift::misc::input::CJoystickButtonList getAllAvailableJoystickButtons() const;
 
     signals:
         //! Event hotkeyfunction occured
         void remoteActionFromLocal(const QString &action, bool argument);
 
         //! Selected combination has changed
-        void combinationSelectionChanged(const BlackMisc::Input::CHotkeyCombination &combination);
+        void combinationSelectionChanged(const swift::misc::input::CHotkeyCombination &combination);
 
         //! Combination selection has finished
-        void combinationSelectionFinished(const BlackMisc::Input::CHotkeyCombination &combination);
+        void combinationSelectionFinished(const swift::misc::input::CHotkeyCombination &combination);
 
         //! New hotkey action is registered
         void hotkeyActionRegistered(const QStringList &actions);
@@ -121,30 +121,30 @@ namespace BlackCore
         //! Reload hotkey settings
         void reloadHotkeySettings();
 
-        void processKeyCombinationChanged(const BlackMisc::Input::CHotkeyCombination &combination);
-        void processButtonCombinationChanged(const BlackMisc::Input::CHotkeyCombination &combination);
+        void processKeyCombinationChanged(const swift::misc::input::CHotkeyCombination &combination);
+        void processButtonCombinationChanged(const swift::misc::input::CHotkeyCombination &combination);
 
         //! Bind action
         int bindImpl(const QString &action, QObject *receiver, std::function<void(bool)> function);
 
         //! Process the hotkey combination
-        void processCombination(const BlackMisc::Input::CHotkeyCombination &combination);
+        void processCombination(const swift::misc::input::CHotkeyCombination &combination);
 
         std::unique_ptr<swift::input::IKeyboard> m_keyboard; //!< keyboard
         std::unique_ptr<swift::input::IJoystick> m_joystick; //!< joystick
 
-        QMap<QString, BlackMisc::CIcons::IconIndex> m_availableActions;
-        QHash<BlackMisc::Input::CHotkeyCombination, QString> m_configuredActions;
+        QMap<QString, swift::misc::CIcons::IconIndex> m_availableActions;
+        QHash<swift::misc::input::CHotkeyCombination, QString> m_configuredActions;
         QSet<QString> m_activeActions;
         QVector<BindInfo> m_boundActions;
 
         bool m_actionRelayingEnabled = false;
         bool m_captureActive = false;
-        BlackMisc::Input::CHotkeyCombination m_lastCombination;
-        BlackMisc::Input::CHotkeyCombination m_capturedCombination;
-        BlackMisc::Input::CHotkeyCombination m_combinationBeforeCapture;
+        swift::misc::input::CHotkeyCombination m_lastCombination;
+        swift::misc::input::CHotkeyCombination m_capturedCombination;
+        swift::misc::input::CHotkeyCombination m_combinationBeforeCapture;
 
-        BlackMisc::CSetting<Application::TActionHotkeys> m_actionHotkeys { this, &CInputManager::reloadHotkeySettings };
+        swift::misc::CSetting<Application::TActionHotkeys> m_actionHotkeys { this, &CInputManager::reloadHotkeySettings };
     };
 } // ns
 

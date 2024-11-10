@@ -9,7 +9,7 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/loadindicator.h"
-#include "blackmisc/network/remotefilelist.h"
+#include "misc/network/remotefilelist.h"
 
 #include <QNetworkReply>
 #include <QFileDialog>
@@ -50,10 +50,10 @@ namespace BlackGui::Components
         virtual ~CDownloadComponent();
 
         //! Set file to be downloaded
-        bool setDownloadFile(const BlackMisc::Network::CRemoteFile &remoteFile);
+        bool setDownloadFile(const swift::misc::network::CRemoteFile &remoteFile);
 
         //! Set files to be downloaded
-        bool setDownloadFiles(const BlackMisc::Network::CRemoteFileList &remoteFiles);
+        bool setDownloadFiles(const swift::misc::network::CRemoteFileList &remoteFiles);
 
         //! Set donwload directory
         bool setDownloadDirectory(const QString &path);
@@ -87,9 +87,9 @@ namespace BlackGui::Components
         static constexpr int OverlayMsgTimeoutMs = 5000; //!< how long overlay is displayed
         QScopedPointer<Ui::CDownloadComponent> ui;
         const QFileDialog::Options m_fileDialogOptions { QFileDialog::ShowDirsOnly | QFileDialog::ReadOnly | QFileDialog::DontResolveSymlinks };
-        BlackMisc::Network::CRemoteFile m_fileInProgress; //!< file currently downloading
-        BlackMisc::Network::CRemoteFileList m_remoteFiles; //!< files for download
-        BlackMisc::Network::CRemoteFileList m_waitingForDownload; //!< files currently waiting for download
+        swift::misc::network::CRemoteFile m_fileInProgress; //!< file currently downloading
+        swift::misc::network::CRemoteFileList m_remoteFiles; //!< files for download
+        swift::misc::network::CRemoteFileList m_waitingForDownload; //!< files currently waiting for download
         QNetworkReply *m_reply = nullptr;
 
         //! Select download directory
@@ -99,10 +99,10 @@ namespace BlackGui::Components
         bool triggerDownloadingOfNextFile();
 
         //! Trigger downloading of the file
-        bool triggerDownloadingOfFile(const BlackMisc::Network::CRemoteFile &remoteFile);
+        bool triggerDownloadingOfFile(const swift::misc::network::CRemoteFile &remoteFile);
 
         //! Downloaded file
-        void downloadedFile(const BlackMisc::CStatusMessage &status);
+        void downloadedFile(const swift::misc::CStatusMessage &status);
 
         //! Last file was downloaded
         void lastFileDownloaded();
@@ -120,10 +120,10 @@ namespace BlackGui::Components
         void resetDownloadDir();
 
         //! Show started file download
-        void showStartedFileMessage(const BlackMisc::Network::CRemoteFile &rf);
+        void showStartedFileMessage(const swift::misc::network::CRemoteFile &rf);
 
         //! Show completed file download
-        void showCompletedFileMessage(const BlackMisc::Network::CRemoteFile &rf);
+        void showCompletedFileMessage(const swift::misc::network::CRemoteFile &rf);
 
         //! Download progress
         void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);

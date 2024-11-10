@@ -9,7 +9,7 @@
 #include "blackgui/views/viewtimestampobjects.h"
 #include "blackgui/models/aircraftsituationchangelistmodel.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/aviation/aircraftsituationchangelist.h"
+#include "misc/aviation/aircraftsituationchangelist.h"
 
 class QWidget;
 

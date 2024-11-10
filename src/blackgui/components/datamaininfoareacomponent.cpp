@@ -8,12 +8,12 @@
 #include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/components/dbmodelcomponent.h"
 #include "blackgui/components/logcomponent.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/verify.h"
+#include "misc/icons.h"
+#include "misc/verify.h"
 #include "ui_datamaininfoareacomponent.h"
 #include <QIcon>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 

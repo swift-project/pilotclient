@@ -5,7 +5,7 @@
 
 #include <QtMath>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui
 {
@@ -37,7 +37,7 @@ namespace BlackGui
         m_clearTextTimer.start(2000);
     }
 
-    void CSplashScreen::showStatusMessage(const BlackMisc::CStatusMessage &message)
+    void CSplashScreen::showStatusMessage(const swift::misc::CStatusMessage &message)
     {
         this->showStatusMessage(message.toHtml(true, true));
     }

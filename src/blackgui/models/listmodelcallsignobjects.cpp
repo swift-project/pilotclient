@@ -3,14 +3,14 @@
 
 #include "listmodelcallsignobjects.h"
 #include "blackgui/models/allmodelcontainers.h"
-#include "blackmisc/orderable.h"
+#include "misc/orderable.h"
 
 #include <QBrush>
 #include <QModelIndex>
 #include <type_traits>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 
 namespace BlackGui::Models
 {
@@ -27,7 +27,7 @@ namespace BlackGui::Models
     }
 
     template <typename T, bool UseCompare>
-    BlackMisc::Aviation::CCallsign CListModelCallsignObjects<T, UseCompare>::callsignForIndex(const QModelIndex &index) const
+    swift::misc::aviation::CCallsign CListModelCallsignObjects<T, UseCompare>::callsignForIndex(const QModelIndex &index) const
     {
         if (!index.isValid()) { return CCallsign(); }
         return this->at(index).getCallsign();
@@ -43,7 +43,7 @@ namespace BlackGui::Models
 
     // see here for the reason of thess forward instantiations
     // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
-    template class CListModelCallsignObjects<BlackMisc::Aviation::CAtcStationList, true>;
-    template class CListModelCallsignObjects<BlackMisc::Simulation::CSimulatedAircraftList, true>;
-    template class CListModelCallsignObjects<BlackMisc::Simulation::CInterpolationSetupList, false>;
+    template class CListModelCallsignObjects<swift::misc::aviation::CAtcStationList, true>;
+    template class CListModelCallsignObjects<swift::misc::simulation::CSimulatedAircraftList, true>;
+    template class CListModelCallsignObjects<swift::misc::simulation::CInterpolationSetupList, false>;
 } // namespace

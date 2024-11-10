@@ -4,9 +4,9 @@
 #include "blackcore/vatsim/vatsimstatusfilereader.h"
 #include "blackcore/application.h"
 #include "blackcore/data/globalsetup.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/network/url.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/logmessage.h"
+#include "misc/network/url.h"
+#include "misc/statusmessage.h"
 
 #include <QByteArray>
 #include <QDateTime>
@@ -21,11 +21,11 @@
 #include <QUrl>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
+using namespace swift::misc::physical_quantities;
 using namespace BlackCore::Data;
 
 namespace BlackCore::Vatsim

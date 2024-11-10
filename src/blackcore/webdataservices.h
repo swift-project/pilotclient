@@ -9,25 +9,25 @@
 #include "blackcore/db/databasereader.h"
 #include "blackcore/webreaderflags.h"
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/simulation/distributor.h"
-#include "blackmisc/aviation/aircrafticaocodelist.h"
-#include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/aviation/airporticaocode.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/network/serverlist.h"
-#include "blackmisc/network/url.h"
-#include "blackmisc/network/userlist.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/network/voicecapabilities.h"
-#include "blackmisc/weather/metarlist.h"
-#include "blackmisc/weather/metar.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/countrylist.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/distributorlist.h"
+#include "misc/simulation/distributor.h"
+#include "misc/aviation/aircrafticaocodelist.h"
+#include "misc/aviation/airlineicaocodelist.h"
+#include "misc/aviation/airportlist.h"
+#include "misc/aviation/airporticaocode.h"
+#include "misc/aviation/atcstationlist.h"
+#include "misc/aviation/liverylist.h"
+#include "misc/network/serverlist.h"
+#include "misc/network/url.h"
+#include "misc/network/userlist.h"
+#include "misc/network/entityflags.h"
+#include "misc/network/voicecapabilities.h"
+#include "misc/weather/metarlist.h"
+#include "misc/weather/metar.h"
+#include "misc/statusmessagelist.h"
+#include "misc/countrylist.h"
 
 #include <QDateTime>
 #include <QList>
@@ -37,15 +37,15 @@
 #include <QStringList>
 #include <atomic>
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CLogCategoryList;
 
-    namespace Aviation
+    namespace aviation
     {
         class CCallsign;
     }
-    namespace Simulation
+    namespace simulation
     {
         class CSimulatedAircraft;
         class CAutoPublishData;
@@ -109,39 +109,39 @@ namespace BlackCore
         Db::CDatabaseWriter *getDatabaseWriter() const { return m_databaseWriter; }
 
         //! All DB entities for those readers used and not ignored
-        BlackMisc::Network::CEntityFlags::Entity allDbEntitiesForUsedReaders() const;
+        swift::misc::network::CEntityFlags::Entity allDbEntitiesForUsedReaders() const;
 
         //! FSD servers
         //! \threadsafe
-        BlackMisc::Network::CServerList getVatsimFsdServers() const;
+        swift::misc::network::CServerList getVatsimFsdServers() const;
 
         //! METAR URL (from status file)
         //! \threadsafe
-        BlackMisc::Network::CUrl getVatsimMetarUrl() const;
+        swift::misc::network::CUrl getVatsimMetarUrl() const;
 
         //! Data file location (from status file)
         //! \threadsafe
-        BlackMisc::Network::CUrl getVatsimDataFileUrl() const;
+        swift::misc::network::CUrl getVatsimDataFileUrl() const;
 
         //! Users by callsign
         //! \threadsafe
-        BlackMisc::Network::CUserList getUsersForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+        swift::misc::network::CUserList getUsersForCallsign(const swift::misc::aviation::CCallsign &callsign) const;
 
         //! ATC stations by callsign
         //! \threadsafe
-        BlackMisc::Aviation::CAtcStationList getAtcStationsForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+        swift::misc::aviation::CAtcStationList getAtcStationsForCallsign(const swift::misc::aviation::CCallsign &callsign) const;
 
         //! Voice capabilities for given callsign
         //! \threadsafe
-        BlackMisc::Network::CVoiceCapabilities getVoiceCapabilityForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+        swift::misc::network::CVoiceCapabilities getVoiceCapabilityForCallsign(const swift::misc::aviation::CCallsign &callsign) const;
 
         //! Update with web data
         //! \threadsafe
-        void updateWithVatsimDataFileData(BlackMisc::Simulation::CSimulatedAircraft &aircraftToBeUdpated) const;
+        void updateWithVatsimDataFileData(swift::misc::simulation::CSimulatedAircraft &aircraftToBeUdpated) const;
 
         //! Distributors
         //! \threadsafe
-        BlackMisc::Simulation::CDistributorList getDistributors() const;
+        swift::misc::simulation::CDistributorList getDistributors() const;
 
         //! Distributors count
         //! \threadsafe
@@ -149,23 +149,23 @@ namespace BlackCore
 
         //! Distributor for key
         //! \threadsafe
-        BlackMisc::Simulation::CDistributor getDistributorForDbKey(const QString &key) const;
+        swift::misc::simulation::CDistributor getDistributorForDbKey(const QString &key) const;
 
         //! Use distributor object to select the best complete distributor from DB
         //! \threadsafe
-        BlackMisc::Simulation::CDistributor smartDistributorSelector(const BlackMisc::Simulation::CDistributor &distributor) const;
+        swift::misc::simulation::CDistributor smartDistributorSelector(const swift::misc::simulation::CDistributor &distributor) const;
 
         //! Use distributor object to select the best complete distributor from DB
         //! \threadsafe
-        BlackMisc::Simulation::CDistributor smartDistributorSelector() const;
+        swift::misc::simulation::CDistributor smartDistributorSelector() const;
 
         //! Best match specified by distributor / model
         //! \threadsafe
-        BlackMisc::Simulation::CDistributor smartDistributorSelector(const BlackMisc::Simulation::CDistributor &distributor, const BlackMisc::Simulation::CAircraftModel &model) const;
+        swift::misc::simulation::CDistributor smartDistributorSelector(const swift::misc::simulation::CDistributor &distributor, const swift::misc::simulation::CAircraftModel &model) const;
 
         //! Liveries
         //! \threadsafe
-        BlackMisc::Aviation::CLiveryList getLiveries() const;
+        swift::misc::aviation::CLiveryList getLiveries() const;
 
         //! Liveries count
         //! \threadsafe
@@ -173,27 +173,27 @@ namespace BlackCore
 
         //! Livery for its combined code
         //! \threadsafe
-        BlackMisc::Aviation::CLivery getLiveryForCombinedCode(const QString &combinedCode) const;
+        swift::misc::aviation::CLivery getLiveryForCombinedCode(const QString &combinedCode) const;
 
         //! The temp. livery if available
         //! \threadsafe
-        BlackMisc::Aviation::CLivery getTempLiveryOrDefault() const;
+        swift::misc::aviation::CLivery getTempLiveryOrDefault() const;
 
         //! Standard livery for airline code
         //! \threadsafe
-        BlackMisc::Aviation::CLivery getStdLiveryForAirlineCode(const BlackMisc::Aviation::CAirlineIcaoCode &icao) const;
+        swift::misc::aviation::CLivery getStdLiveryForAirlineCode(const swift::misc::aviation::CAirlineIcaoCode &icao) const;
 
         //! Livery for id
         //! \threadsafe
-        BlackMisc::Aviation::CLivery getLiveryForDbKey(int id) const;
+        swift::misc::aviation::CLivery getLiveryForDbKey(int id) const;
 
         //! Use a livery as template and select the best complete livery from DB for it
         //! \threadsafe
-        BlackMisc::Aviation::CLivery smartLiverySelector(const BlackMisc::Aviation::CLivery &livery) const;
+        swift::misc::aviation::CLivery smartLiverySelector(const swift::misc::aviation::CLivery &livery) const;
 
         //! Models
         //! \threadsafe
-        BlackMisc::Simulation::CAircraftModelList getModels() const;
+        swift::misc::simulation::CAircraftModelList getModels() const;
 
         //! Models count
         //! \threadsafe
@@ -209,15 +209,15 @@ namespace BlackCore
 
         //! Model completer string
         //! \threadsafe
-        QStringList getModelCompleterStrings(bool sorted = true, const BlackMisc::Simulation::CSimulatorInfo &simulator = { BlackMisc::Simulation::CSimulatorInfo::All }) const;
+        QStringList getModelCompleterStrings(bool sorted = true, const swift::misc::simulation::CSimulatorInfo &simulator = { swift::misc::simulation::CSimulatorInfo::All }) const;
 
         //! Models for combined code and aircraft designator
         //! \threadsafe
-        BlackMisc::Simulation::CAircraftModelList getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const;
+        swift::misc::simulation::CAircraftModelList getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const;
 
         //! Model for model string if any
         //! \threadsafe
-        BlackMisc::Simulation::CAircraftModel getModelForModelString(const QString &modelString) const;
+        swift::misc::simulation::CAircraftModel getModelForModelString(const QString &modelString) const;
 
         //! Existing modelstring?
         //! \threadsafe
@@ -225,11 +225,11 @@ namespace BlackCore
 
         //! Model for key if any
         //! \threadsafe
-        BlackMisc::Simulation::CAircraftModel getModelForDbKey(int dbKey) const;
+        swift::misc::simulation::CAircraftModel getModelForDbKey(int dbKey) const;
 
         //! Aircraft ICAO codes
         //! \threadsafe
-        BlackMisc::Aviation::CAircraftIcaoCodeList getAircraftIcaoCodes() const;
+        swift::misc::aviation::CAircraftIcaoCodeList getAircraftIcaoCodes() const;
 
         //! Aircraft ICAO codes count
         //! \threadsafe
@@ -237,7 +237,7 @@ namespace BlackCore
 
         //! ICAO code for designator
         //! \threadsafe
-        BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDesignator(const QString &designator) const;
+        swift::misc::aviation::CAircraftIcaoCode getAircraftIcaoCodeForDesignator(const QString &designator) const;
 
         //! ICAO code for designator count
         //! \threadsafe
@@ -245,15 +245,15 @@ namespace BlackCore
 
         //! Aircraft ICAO designators for airline
         //! \threadsafe
-        QSet<QString> getAircraftDesignatorsForAirline(const BlackMisc::Aviation::CAirlineIcaoCode &airline) const;
+        QSet<QString> getAircraftDesignatorsForAirline(const swift::misc::aviation::CAirlineIcaoCode &airline) const;
 
         //! Aircraft ICAO codes for airline
         //! \threadsafe
-        BlackMisc::Aviation::CAircraftIcaoCodeList getAircraftIcaoCodesForAirline(const BlackMisc::Aviation::CAirlineIcaoCode &airline) const;
+        swift::misc::aviation::CAircraftIcaoCodeList getAircraftIcaoCodesForAirline(const swift::misc::aviation::CAirlineIcaoCode &airline) const;
 
         //! Aircraft categories
         //! \threadsafe
-        BlackMisc::Aviation::CAircraftCategoryList getAircraftCategories() const;
+        swift::misc::aviation::CAircraftCategoryList getAircraftCategories() const;
 
         //! Aircraft categories count
         //! \threadsafe
@@ -265,19 +265,19 @@ namespace BlackCore
 
         //! ICAO codes for designator
         //! \threadsafe
-        BlackMisc::Aviation::CAircraftIcaoCodeList getAircraftIcaoCodesForDesignator(const QString &designator) const;
+        swift::misc::aviation::CAircraftIcaoCodeList getAircraftIcaoCodesForDesignator(const QString &designator) const;
 
         //! ICAO code for id
         //! \threadsafe
-        BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDbKey(int id) const;
+        swift::misc::aviation::CAircraftIcaoCode getAircraftIcaoCodeForDbKey(int id) const;
 
         //! Use an ICAO object to select the best complete ICAO object from DB for it
         //! \threadsafe
-        BlackMisc::Aviation::CAircraftIcaoCode smartAircraftIcaoSelector(const BlackMisc::Aviation::CAircraftIcaoCode &icao) const;
+        swift::misc::aviation::CAircraftIcaoCode smartAircraftIcaoSelector(const swift::misc::aviation::CAircraftIcaoCode &icao) const;
 
         //! Airline ICAO codes
         //! \threadsafe
-        BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodes() const;
+        swift::misc::aviation::CAirlineIcaoCodeList getAirlineIcaoCodes() const;
 
         //! Contains the given designator?
         //! \threadsafe
@@ -285,11 +285,11 @@ namespace BlackCore
 
         //! ICAO code if unique, otherwise default
         //! \threadsafe
-        BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForUniqueDesignatorOrDefault(const QString &designator, bool preferOperatingAirlines) const;
+        swift::misc::aviation::CAirlineIcaoCode getAirlineIcaoCodeForUniqueDesignatorOrDefault(const QString &designator, bool preferOperatingAirlines) const;
 
         //! ICAO code if unique, otherwise default
         //! \threadsafe
-        BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForUniqueIataCodeOrDefault(const QString &iataCode) const;
+        swift::misc::aviation::CAirlineIcaoCode getAirlineIcaoCodeForUniqueIataCodeOrDefault(const QString &iataCode) const;
 
         //! Airline names
         //! \threadsafe
@@ -305,7 +305,7 @@ namespace BlackCore
 
         //! Airline ICAO codes for designator
         //! \threadsafe
-        BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodesForDesignator(const QString &designator) const;
+        swift::misc::aviation::CAirlineIcaoCodeList getAirlineIcaoCodesForDesignator(const QString &designator) const;
 
         //! Airline ICAO codes for designator count
         //! \threadsafe
@@ -313,19 +313,19 @@ namespace BlackCore
 
         //! ICAO code for id
         //! \threadsafe
-        BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForDbKey(int id) const;
+        swift::misc::aviation::CAirlineIcaoCode getAirlineIcaoCodeForDbKey(int id) const;
 
         //! Smart airline selector
         //! \threadsafe
-        BlackMisc::Aviation::CAirlineIcaoCode smartAirlineIcaoSelector(const BlackMisc::Aviation::CAirlineIcaoCode &code, const BlackMisc::Aviation::CCallsign &callsign = BlackMisc::Aviation::CCallsign()) const;
+        swift::misc::aviation::CAirlineIcaoCode smartAirlineIcaoSelector(const swift::misc::aviation::CAirlineIcaoCode &code, const swift::misc::aviation::CCallsign &callsign = swift::misc::aviation::CCallsign()) const;
 
         //! ICAO code for callsign (e.g. DLH123 -> DLH)
         //! \threadsafe
-        BlackMisc::Aviation::CAirlineIcaoCode findBestMatchByCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+        swift::misc::aviation::CAirlineIcaoCode findBestMatchByCallsign(const swift::misc::aviation::CCallsign &callsign) const;
 
         //! Countries
         //! \threadsafe
-        BlackMisc::CCountryList getCountries() const;
+        swift::misc::CCountryList getCountries() const;
 
         //! Country count
         //! \threadsafe
@@ -333,15 +333,15 @@ namespace BlackCore
 
         //! Country by ISO code (GB, US...)
         //! \threadsafe
-        BlackMisc::CCountry getCountryForIsoCode(const QString &iso) const;
+        swift::misc::CCountry getCountryForIsoCode(const QString &iso) const;
 
         //! Country by name (France, China ..)
         //! \threadsafe
-        BlackMisc::CCountry getCountryForName(const QString &name) const;
+        swift::misc::CCountry getCountryForName(const QString &name) const;
 
         //! Get airports
         //! \threadsafe
-        BlackMisc::Aviation::CAirportList getAirports() const;
+        swift::misc::aviation::CAirportList getAirports() const;
 
         //! Get airports count
         //! \threadsafe
@@ -349,36 +349,36 @@ namespace BlackCore
 
         //! Get airport for ICAO designator
         //! \threadsafe
-        BlackMisc::Aviation::CAirport getAirportForIcaoDesignator(const QString &icao) const;
+        swift::misc::aviation::CAirport getAirportForIcaoDesignator(const QString &icao) const;
 
         //! Get airport for name of location
         //! \threadsafe
-        BlackMisc::Aviation::CAirport getAirportForNameOrLocation(const QString &nameOrLocation) const;
+        swift::misc::aviation::CAirport getAirportForNameOrLocation(const QString &nameOrLocation) const;
 
         //! Get METARs
         //! \threadsafe
-        BlackMisc::Weather::CMetarList getMetars() const;
+        swift::misc::weather::CMetarList getMetars() const;
 
         //! Get METAR for airport
         //! \threadsafe
-        BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &icao) const;
+        swift::misc::weather::CMetar getMetarForAirport(const swift::misc::aviation::CAirportIcaoCode &icao) const;
 
         //! Validate for publishing
-        //! \remark More detailed check than BlackMisc::Simulation::CAircraftModelList::validateForPublishing
-        BlackMisc::CStatusMessageList validateForPublishing(
-            const BlackMisc::Simulation::CAircraftModelList &modelsToBePublished,
+        //! \remark More detailed check than swift::misc::simulation::CAircraftModelList::validateForPublishing
+        swift::misc::CStatusMessageList validateForPublishing(
+            const swift::misc::simulation::CAircraftModelList &modelsToBePublished,
             bool ignoreEqual,
-            BlackMisc::Simulation::CAircraftModelList &validModels,
-            BlackMisc::Simulation::CAircraftModelList &invalidModels) const;
+            swift::misc::simulation::CAircraftModelList &validModels,
+            swift::misc::simulation::CAircraftModelList &invalidModels) const;
 
-        //! \copydoc BlackMisc::Simulation::CAircraftModel::isEqualForPublishing
-        bool isDbModelEqualForPublishing(const BlackMisc::Simulation::CAircraftModel &modelToBeChecked, BlackMisc::CStatusMessageList *details = nullptr) const;
+        //! \copydoc swift::misc::simulation::CAircraftModel::isEqualForPublishing
+        bool isDbModelEqualForPublishing(const swift::misc::simulation::CAircraftModel &modelToBeChecked, swift::misc::CStatusMessageList *details = nullptr) const;
 
         //! Publish models to database
-        BlackMisc::CStatusMessageList asyncPublishModels(const BlackMisc::Simulation::CAircraftModelList &modelsToBePublished) const;
+        swift::misc::CStatusMessageList asyncPublishModels(const swift::misc::simulation::CAircraftModelList &modelsToBePublished) const;
 
         //! Auto publish to database
-        BlackMisc::CStatusMessageList asyncAutoPublish(const BlackMisc::Simulation::CAutoPublishData &data) const;
+        swift::misc::CStatusMessageList asyncAutoPublish(const swift::misc::simulation::CAutoPublishData &data) const;
 
         //! Trigger read of DB info objects
         void triggerReadOfDbInfoObjects();
@@ -388,17 +388,17 @@ namespace BlackCore
 
         //! Trigger read of new data
         //! \note requires info objects loaded upfront and uses the full cache logic
-        BlackMisc::Network::CEntityFlags::Entity triggerRead(BlackMisc::Network::CEntityFlags::Entity whatToRead, const QDateTime &newerThan = QDateTime());
+        swift::misc::network::CEntityFlags::Entity triggerRead(swift::misc::network::CEntityFlags::Entity whatToRead, const QDateTime &newerThan = QDateTime());
 
         //! Trigger reload from DB, loads the DB data and bypasses the caches checks and info objects
-        BlackMisc::Network::CEntityFlags::Entity triggerLoadingDirectlyFromDb(BlackMisc::Network::CEntityFlags::Entity whatToRead, const QDateTime &newerThan = QDateTime());
+        swift::misc::network::CEntityFlags::Entity triggerLoadingDirectlyFromDb(swift::misc::network::CEntityFlags::Entity whatToRead, const QDateTime &newerThan = QDateTime());
 
         //! Trigger reload from shared files, loads the data and bypasses caches
-        BlackMisc::Network::CEntityFlags::Entity triggerLoadingDirectlyFromSharedFiles(BlackMisc::Network::CEntityFlags::Entity whatToRead, bool checkCacheTsUpfront);
+        swift::misc::network::CEntityFlags::Entity triggerLoadingDirectlyFromSharedFiles(swift::misc::network::CEntityFlags::Entity whatToRead, bool checkCacheTsUpfront);
 
         //! Corresponding cache timestamp if applicable
         //! \threadsafe
-        QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
+        QDateTime getCacheTimestamp(swift::misc::network::CEntityFlags::Entity entity) const;
 
         //! Latest DB object timestamp, or null if there is no such timestamp
         //! \threadsafe
@@ -407,42 +407,42 @@ namespace BlackCore
         //! Corresponding DB timestamp if applicable
         //! \remark from Db::CInfoDataReader
         //! \threadsafe
-        QDateTime getLatestDbEntityTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
+        QDateTime getLatestDbEntityTimestamp(swift::misc::network::CEntityFlags::Entity entity) const;
 
         //! Shared info object timestamp
         //! \remark from Db::CInfoDataReader
         //! \threadsafe
-        QDateTime getLatestSharedInfoObjectTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
+        QDateTime getLatestSharedInfoObjectTimestamp(swift::misc::network::CEntityFlags::Entity entity) const;
 
         //! Entities with newer shared file (from DB Info object)
         //! \threadsafe
-        BlackMisc::Network::CEntityFlags::Entity getEntitiesWithNewerSharedFile(BlackMisc::Network::CEntityFlags::Entity entities) const;
+        swift::misc::network::CEntityFlags::Entity getEntitiesWithNewerSharedFile(swift::misc::network::CEntityFlags::Entity entities) const;
 
         //! Empty entities in cache
         //! \remark can also be empty because cache is not yet synchronized
         //! \threadsafe
-        BlackMisc::Network::CEntityFlags::Entity getEmptyEntities(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::AllDbEntities) const;
+        swift::misc::network::CEntityFlags::Entity getEmptyEntities(swift::misc::network::CEntityFlags::Entity entities = swift::misc::network::CEntityFlags::AllDbEntities) const;
 
         //! Synchronized entities either empty or with newer shared file
         //! \remark will synchronize entities
         //! \threadsafe
-        BlackMisc::Network::CEntityFlags::Entity getSynchronizedEntitiesWithNewerSharedFileOrEmpty(bool syncData = true, BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::AllDbEntities);
+        swift::misc::network::CEntityFlags::Entity getSynchronizedEntitiesWithNewerSharedFileOrEmpty(bool syncData = true, swift::misc::network::CEntityFlags::Entity entities = swift::misc::network::CEntityFlags::AllDbEntities);
 
         //! Cache count for entity
         //! \threadsafe
-        int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const;
+        int getCacheCount(swift::misc::network::CEntityFlags::Entity entity) const;
 
         //! Count for entity from DB entity objects
         //! \threadsafe
-        int getDbInfoObjectCount(BlackMisc::Network::CEntityFlags::Entity entity) const;
+        int getDbInfoObjectCount(swift::misc::network::CEntityFlags::Entity entity) const;
 
         //! Count for 1-n entities from DB entity objects
         //! \threadsafe
-        int getDbInfoObjectsCount(BlackMisc::Network::CEntityFlags::Entity entities, bool stopIfNotFound = true) const;
+        int getDbInfoObjectsCount(swift::misc::network::CEntityFlags::Entity entities, bool stopIfNotFound = true) const;
 
         //! Count for entity from shared entity objects
         //! \threadsafe
-        int getSharedInfoObjectCount(BlackMisc::Network::CEntityFlags::Entity entity) const;
+        int getSharedInfoObjectCount(swift::misc::network::CEntityFlags::Entity entity) const;
 
         //! For all available DB readers the log info is generated
         QString getDbReadersLog(const QString &separator = "\n") const;
@@ -463,11 +463,11 @@ namespace BlackCore
         bool hasDbIcaoData() const;
 
         //! Admit all DB caches specified
-        void admitDbCaches(BlackMisc::Network::CEntityFlags::Entity entities);
+        void admitDbCaches(swift::misc::network::CEntityFlags::Entity entities);
 
         //! Synchronize all DB caches specified
         //! \remark can be slow if all data are forced to be loaded
-        void synchronizeDbCaches(BlackMisc::Network::CEntityFlags::Entity entities);
+        void synchronizeDbCaches(swift::misc::network::CEntityFlags::Entity entities);
 
         //! Write data to disk (mainly for testing scenarios)
         bool writeDbDataToDisk(const QString &dir);
@@ -479,22 +479,22 @@ namespace BlackCore
 
         //! Init caches from local DB files
         //! \remark the shared files coming with the installer
-        BlackMisc::CStatusMessageList initDbCachesFromLocalResourceFiles(bool inBackground);
+        swift::misc::CStatusMessageList initDbCachesFromLocalResourceFiles(bool inBackground);
 
         //! Init caches from local DB files per given entities
         //! \remark the shared files coming with the installer
-        BlackMisc::CStatusMessageList initDbCachesFromLocalResourceFiles(BlackMisc::Network::CEntityFlags::Entity entities, bool inBackground);
+        swift::misc::CStatusMessageList initDbCachesFromLocalResourceFiles(swift::misc::network::CEntityFlags::Entity entities, bool inBackground);
 
     signals:
         //! Combined read signal
-        void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        void dataRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
         //! Download progress for an entity
-        void entityDownloadProgress(BlackMisc::Network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
+        void entityDownloadProgress(swift::misc::network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
 
         //! Database reader messages
         //! \remark used with splash screen
-        void databaseReaderMessages(const BlackMisc::CStatusMessageList &messages);
+        void databaseReaderMessages(const swift::misc::CStatusMessageList &messages);
 
         //! DB data read
         void swiftDbDataRead(bool success);
@@ -533,15 +533,15 @@ namespace BlackCore
 
     public slots:
         //! Call CWebDataServices::readInBackground by single shot
-        void readDeferredInBackground(BlackMisc::Network::CEntityFlags::Entity entities, int delayMs);
+        void readDeferredInBackground(swift::misc::network::CEntityFlags::Entity entities, int delayMs);
 
         //! First read (allows to immediately read in background)
         //! \remark ensures info objects (if and only if needed) are read upfront
-        void readInBackground(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::AllEntities);
+        void readInBackground(swift::misc::network::CEntityFlags::Entity entities = swift::misc::network::CEntityFlags::AllEntities);
 
     private:
         //! Received METAR data
-        void receivedMetars(const BlackMisc::Weather::CMetarList &metars);
+        void receivedMetars(const swift::misc::weather::CMetarList &metars);
 
         //! VATSIM data file has been read
         void vatsimDataFileRead(int kB);
@@ -556,10 +556,10 @@ namespace BlackCore
         void startVatsimServerFileReader();
 
         //! Read finished from reader
-        void readFromSwiftReader(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        void readFromSwiftReader(swift::misc::network::CEntityFlags::Entity entities, swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
         //! Init the readers
-        void initReaders(CWebReaderFlags::WebReader readersNeeded, BlackMisc::Network::CEntityFlags::Entity entities);
+        void initReaders(CWebReaderFlags::WebReader readersNeeded, swift::misc::network::CEntityFlags::Entity entities);
 
         //! Init the info objects reader (DB web service)
         void initDbInfoObjectReaderAndTriggerRead();
@@ -568,43 +568,43 @@ namespace BlackCore
         void initSharedInfoObjectReaderAndTriggerRead();
 
         //! DB reader for given entity
-        Db::CDatabaseReader *getDbReader(BlackMisc::Network::CEntityFlags::Entity entity) const;
+        Db::CDatabaseReader *getDbReader(swift::misc::network::CEntityFlags::Entity entity) const;
 
         //! Init the writers
         void initWriters();
 
         //! Remember this entity/those enties already have been signaled
-        bool signalEntitiesAlreadyRead(BlackMisc::Network::CEntityFlags::Entity entities);
+        bool signalEntitiesAlreadyRead(swift::misc::network::CEntityFlags::Entity entities);
 
         //! Info object count from shared/DB info objects
-        int getInfoObjectCount(BlackMisc::Network::CEntityFlags::Entity entity, BlackCore::Db::CInfoDataReader *reader) const;
+        int getInfoObjectCount(swift::misc::network::CEntityFlags::Entity entity, BlackCore::Db::CInfoDataReader *reader) const;
 
         //! Entities from DB with cached data (i.e. count > 0)
         //! \remark requires the caches already read
-        BlackMisc::Network::CEntityFlags::Entity getDbEntitiesWithCachedData() const;
+        swift::misc::network::CEntityFlags::Entity getDbEntitiesWithCachedData() const;
 
         //! Entities from DB with cache timestamp newer than given threshold
         //! \remark unlike getDbEntitiesWithCachedData() this does not need the caches already being read
-        BlackMisc::Network::CEntityFlags::Entity getDbEntitiesWithTimestampNewerThan(const QDateTime &threshold) const;
+        swift::misc::network::CEntityFlags::Entity getDbEntitiesWithTimestampNewerThan(const QDateTime &threshold) const;
 
         //! Wait for DB info objects to be read
-        bool waitForDbInfoObjectsThenRead(BlackMisc::Network::CEntityFlags::Entity entities);
+        bool waitForDbInfoObjectsThenRead(swift::misc::network::CEntityFlags::Entity entities);
 
         //! Wait for shared info objects to be read
         //! \return true means info objects available
-        bool waitForSharedInfoObjectsThenRead(BlackMisc::Network::CEntityFlags::Entity entities);
+        bool waitForSharedInfoObjectsThenRead(swift::misc::network::CEntityFlags::Entity entities);
 
         //! Wait for info objects to be read
         //! \return true means info objects available
-        bool waitForInfoObjectsThenRead(BlackMisc::Network::CEntityFlags::Entity entities, const QString &info, BlackCore::Db::CInfoDataReader *infoReader, QDateTime &timeOut);
+        bool waitForInfoObjectsThenRead(swift::misc::network::CEntityFlags::Entity entities, const QString &info, BlackCore::Db::CInfoDataReader *infoReader, QDateTime &timeOut);
 
-        BlackMisc::Network::CEntityFlags::Entity m_entitiesPeriodicallyRead = BlackMisc::Network::CEntityFlags::NoEntity; //!< entities permanently updated by timers
-        BlackMisc::Network::CEntityFlags::Entity m_swiftDbEntitiesRead = BlackMisc::Network::CEntityFlags::NoEntity; //!< entities read
+        swift::misc::network::CEntityFlags::Entity m_entitiesPeriodicallyRead = swift::misc::network::CEntityFlags::NoEntity; //!< entities permanently updated by timers
+        swift::misc::network::CEntityFlags::Entity m_swiftDbEntitiesRead = swift::misc::network::CEntityFlags::NoEntity; //!< entities read
         BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig; //!< how to read DB data
         std::atomic_bool m_shuttingDown { false }; //!< shutting down?
         QDateTime m_dbInfoObjectTimeout; //!< started reading DB info objects
         QDateTime m_sharedInfoObjectsTimeout; //!< started reading shared info objects
-        QSet<BlackMisc::Network::CEntityFlags::Entity> m_signalledEntities; //!< remember signalled entites
+        QSet<swift::misc::network::CEntityFlags::Entity> m_signalledEntities; //!< remember signalled entites
 
         // for reading XML and VATSIM data files
         Vatsim::CVatsimStatusFileReader *m_vatsimStatusReader = nullptr;

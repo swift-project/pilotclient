@@ -21,9 +21,9 @@
 using namespace BlackCore;
 using namespace BlackCore::Db;
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
 
 namespace BlackGui::Components
 {
@@ -183,7 +183,7 @@ namespace BlackGui::Components
         return icao;
     }
 
-    BlackMisc::Simulation::CDistributor CDbQuickMappingWizard::getFirstSelectedOrDefaultDistributor() const
+    swift::misc::simulation::CDistributor CDbQuickMappingWizard::getFirstSelectedOrDefaultDistributor() const
     {
         const CDistributor dist = ui->comp_Distributor->view()->firstSelectedOrDefaultObject();
         if (dist.isLoadedFromDb()) { return dist; }

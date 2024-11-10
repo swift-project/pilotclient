@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackcore/afv/crypto/cryptodtochannel.h"
-#include "blackmisc/verify.h"
+#include "misc/verify.h"
 #include "sodium/crypto_aead_chacha20poly1305.h"
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackCore::Afv::Crypto
 {

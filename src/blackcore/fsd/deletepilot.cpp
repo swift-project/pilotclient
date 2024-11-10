@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackcore/fsd/deletepilot.h"
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackCore::Fsd
 {

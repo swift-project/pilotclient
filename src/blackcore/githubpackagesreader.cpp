@@ -12,7 +12,7 @@
 #include <QStringBuilder>
 #include <QUrl>
 
-using namespace BlackMisc::Db;
+using namespace swift::misc::db;
 using namespace swift::config;
 
 namespace BlackCore

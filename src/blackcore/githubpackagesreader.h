@@ -6,7 +6,7 @@
 #ifndef BLACKCORE_GITHUBPACKAGESREADER_H
 #define BLACKCORE_GITHUBPACKAGESREADER_H
 
-#include "blackmisc/db/updateinfo.h"
+#include "misc/db/updateinfo.h"
 #include <QObject>
 
 namespace BlackCore
@@ -26,14 +26,14 @@ namespace BlackCore
         void readUpdateInfo();
 
         //! Get updates cached from previous read.
-        BlackMisc::Db::CUpdateInfo getUpdateInfo() const;
+        swift::misc::db::CUpdateInfo getUpdateInfo() const;
 
     signals:
         //! Updates have been received from GitHub Packages.
         void updateInfoAvailable(bool available);
 
     private:
-        BlackMisc::CData<BlackMisc::Db::TUpdateInfo> m_updateInfo { this };
+        swift::misc::CData<swift::misc::db::TUpdateInfo> m_updateInfo { this };
     };
 }
 

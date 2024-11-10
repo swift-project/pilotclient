@@ -5,23 +5,23 @@
 #include "ui_copysettingsandcachescomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackmisc/cachesettingsutils.h"
-#include "blackmisc/json.h"
-#include "blackmisc/fileutils.h"
-#include "blackmisc/icons.h"
+#include "misc/cachesettingsutils.h"
+#include "misc/json.h"
+#include "misc/fileutils.h"
+#include "misc/icons.h"
 
 #include <QRegularExpression>
 #include <QFileInfo>
 #include <QStringBuilder>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Audio;
-using namespace BlackMisc::Input;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Network::Data;
-using namespace BlackMisc::Network::Settings;
-using namespace BlackMisc::Settings;
-using namespace BlackMisc::Simulation::Settings;
+using namespace swift::misc;
+using namespace swift::misc::audio;
+using namespace swift::misc::input;
+using namespace swift::misc::network;
+using namespace swift::misc::network::data;
+using namespace swift::misc::network::settings;
+using namespace swift::misc::settings;
+using namespace swift::misc::simulation::settings;
 using namespace BlackCore::Audio;
 using namespace BlackCore::Application;
 using namespace BlackCore::Data;
@@ -146,7 +146,7 @@ namespace BlackGui::Components
             const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsAudio.getFilename());
             if (!joStr.isEmpty())
             {
-                const Audio::CSettings audioSettings = Audio::CSettings::fromJsonNoThrow(joStr, true, success, errMsg);
+                const audio::CSettings audioSettings = audio::CSettings::fromJsonNoThrow(joStr, true, success, errMsg);
                 if (this->parsingMessage(success, errMsg, m_settingsAudio.getKey()))
                 {
                     this->displayStatusMessage(m_settingsAudio.setAndSave(audioSettings), audioSettings.toQString(true));
@@ -158,7 +158,7 @@ namespace BlackGui::Components
         if (ui->cb_SettingsAudioInputDevice->isChecked())
         {
             const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsAudioInputDevice.getFilename());
-            const QString audioInputSettings = Json::firstJsonValueAsString(joStr);
+            const QString audioInputSettings = json::firstJsonValueAsString(joStr);
             if (!audioInputSettings.isEmpty())
             {
                 this->displayStatusMessage(m_settingsAudioInputDevice.setAndSave(audioInputSettings), audioInputSettings);
@@ -169,7 +169,7 @@ namespace BlackGui::Components
         if (ui->cb_SettingsAudioOutputDevice->isChecked())
         {
             const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsAudioOutputDevice.getFilename());
-            const QString audioOutputSettings = Json::firstJsonValueAsString(joStr);
+            const QString audioOutputSettings = json::firstJsonValueAsString(joStr);
             if (!audioOutputSettings.isEmpty())
             {
                 this->displayStatusMessage(m_settingsAudioOutputDevice.setAndSave(audioOutputSettings), audioOutputSettings);
@@ -272,7 +272,7 @@ namespace BlackGui::Components
             const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsEnabledSimulators.getFilename());
             if (!joStr.isEmpty())
             {
-                const QStringList enabledSims = Json::firstJsonValueAsStringList(joStr);
+                const QStringList enabledSims = json::firstJsonValueAsStringList(joStr);
                 if (!enabledSims.isEmpty())
                 {
                     this->displayStatusMessage(m_settingsEnabledSimulators.setAndSave(enabledSims), enabledSims.join(", "));
@@ -335,7 +335,7 @@ namespace BlackGui::Components
             if (!joStr.isEmpty())
             {
                 bool ok = false;
-                const int consolidation = Json::firstJsonValueAsInt(joStr, -1, &ok);
+                const int consolidation = json::firstJsonValueAsInt(joStr, -1, &ok);
                 if (ok)
                 {
                     this->displayStatusMessage(m_settingsConsolidation.setAndSave(consolidation), QString::number(consolidation));

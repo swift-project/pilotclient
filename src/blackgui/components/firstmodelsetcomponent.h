@@ -9,10 +9,10 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackcore/application/applicationsettings.h"
-#include "blackmisc/simulation/settings/simulatorsettings.h"
-#include "blackmisc/simulation/aircraftmodelloader.h"
-#include "blackmisc/simulation/simulatorinfo.h"
-#include "blackmisc/logcategories.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/aircraftmodelloader.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/logcategories.h"
 #include <QFrame>
 #include <QWizardPage>
 
@@ -46,19 +46,19 @@ namespace BlackGui::Components
         QScopedPointer<Ui::CFirstModelSetComponent> ui;
         QScopedPointer<CDbOwnModelsDialog> m_modelsDialog;
         QScopedPointer<CDbOwnModelSetDialog> m_modelSetDialog;
-        BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings { this };
+        swift::misc::simulation::settings::CMultiSimulatorSettings m_simulatorSettings { this };
 
         //! Simulator has been changed
-        void onSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void onSimulatorChanged(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Simulator settings changed
-        void onSettingsChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void onSettingsChanged(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Models have been loaded
-        void onModelsLoaded(const BlackMisc::Simulation::CSimulatorInfo &simulator, int count);
+        void onModelsLoaded(const swift::misc::simulation::CSimulatorInfo &simulator, int count);
 
         //! Asynchronously call onSettingsChanged
-        void triggerSettingsChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        void triggerSettingsChanged(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Direct access to component
         const CDbOwnModelsComponent *modelsComponent() const;
@@ -67,7 +67,7 @@ namespace BlackGui::Components
         const CDbOwnModelSetComponent *modelSetComponent() const;
 
         //! Direct access to component's loader
-        BlackMisc::Simulation::IAircraftModelLoader *modelLoader() const;
+        swift::misc::simulation::IAircraftModelLoader *modelLoader() const;
 
         //! Open own models dialog
         void openOwnModelsDialog();

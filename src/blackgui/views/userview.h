@@ -9,9 +9,9 @@
 #include "blackgui/views/viewbase.h"
 #include "blackgui/models/userlistmodel.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/network/userlist.h"
+#include "misc/network/userlist.h"
 
-namespace BlackMisc::Network
+namespace swift::misc::network
 {
     class CUser;
 }
@@ -31,7 +31,7 @@ namespace BlackGui::Views
 
     signals:
         //! Request a text message
-        void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
+        void requestTextMessageWidget(const swift::misc::aviation::CCallsign &callsign);
 
     protected:
         //! \copydoc CViewBase::customMenu

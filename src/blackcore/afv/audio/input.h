@@ -8,10 +8,10 @@
 
 #include "sound/sampleprovider/bufferedwaveprovider.h"
 #include "sound/codecs/opusencoder.h"
-#include "blackmisc/audio/audiodeviceinfo.h"
+#include "misc/audio/audiodeviceinfo.h"
 
 #ifdef Q_OS_MAC
-#    include "blackmisc/macos/microphoneaccess.h"
+#    include "misc/macos/microphoneaccess.h"
 #endif
 
 #include <QAudioSource>
@@ -116,13 +116,13 @@ namespace BlackCore::Afv::Audio
         bool started() const { return m_started; }
 
         //! Start
-        void start(const BlackMisc::Audio::CAudioDeviceInfo &inputDevice);
+        void start(const swift::misc::audio::CAudioDeviceInfo &inputDevice);
 
         //! Stop
         void stop();
 
         //! Corresponding device
-        const BlackMisc::Audio::CAudioDeviceInfo &device() const { return m_device; }
+        const swift::misc::audio::CAudioDeviceInfo &device() const { return m_device; }
 
     signals:
         //! Volume stream data
@@ -139,7 +139,7 @@ namespace BlackCore::Afv::Audio
 
         swift::sound::codecs::COpusEncoder m_encoder;
         QScopedPointer<QAudioSource> m_audioInput;
-        BlackMisc::Audio::CAudioDeviceInfo m_device;
+        swift::misc::audio::CAudioDeviceInfo m_device;
         QAudioFormat m_inputFormat;
 
         bool m_started = false;
@@ -156,7 +156,7 @@ namespace BlackCore::Afv::Audio
         CAudioInputBuffer *m_audioInputBuffer = nullptr;
 
 #ifdef Q_OS_MAC
-        BlackMisc::CMacOSMicrophoneAccess m_micAccess;
+        swift::misc::CMacOSMicrophoneAccess m_micAccess;
         void delayedInitMicrophone();
 #endif
     };

@@ -5,12 +5,12 @@
 #include "blackcore/application.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/coremodeenums.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/icons.h"
+#include "misc/dbusserver.h"
+#include "misc/icons.h"
 
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackCore;
 
 CSwiftGuiStdApplication::CSwiftGuiStdApplication() : CGuiApplication(CApplicationInfo::swiftPilotClientGui(), CApplicationInfo::PilotClientGui, CIcons::swift1024())

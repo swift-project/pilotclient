@@ -7,8 +7,8 @@
 #define BLACKGUI_COMPONENTS_COPYMODELSFROMOTHERSWIFTVERSIONS_H
 
 #include "blackgui/overlaymessagesframe.h"
-#include "blackmisc/simulation/data/modelcaches.h"
-#include "blackmisc/applicationinfo.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/applicationinfo.h"
 #include <QFrame>
 #include <QWizardPage>
 #include <QScopedPointer>
@@ -41,19 +41,19 @@ namespace BlackGui::Components
         void copy();
 
         //! Read data file
-        bool readDataFile(const QString &modelFile, BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::CApplicationInfo &otherVersion, const BlackMisc::Simulation::CSimulatorInfo &sim);
+        bool readDataFile(const QString &modelFile, swift::misc::simulation::CAircraftModelList &models, const swift::misc::CApplicationInfo &otherVersion, const swift::misc::simulation::CSimulatorInfo &sim);
 
         //! Confirm override
         bool confirmOverride(const QString &msg);
 
         //! Init the simulators which can be copied
-        void onVersionChanged(const BlackMisc::CApplicationInfo &otherVersion);
+        void onVersionChanged(const swift::misc::CApplicationInfo &otherVersion);
 
         QScopedPointer<Ui::CCopyModelsFromOtherSwiftVersionsComponent> ui;
 
         // caches will be explicitly initialized in copy
-        BlackMisc::Simulation::Data::CModelCaches m_modelCaches { false, this };
-        BlackMisc::Simulation::Data::CModelSetCaches m_modelSetCaches { false, this };
+        swift::misc::simulation::data::CModelCaches m_modelCaches { false, this };
+        swift::misc::simulation::data::CModelSetCaches m_modelSetCaches { false, this };
     };
 
     /*!

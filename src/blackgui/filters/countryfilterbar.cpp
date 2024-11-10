@@ -5,15 +5,15 @@
 #include "blackgui/filters/filterbarbuttons.h"
 #include "blackgui/models/countryfilter.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackmisc/countrylist.h"
+#include "misc/countrylist.h"
 #include "ui_countryfilterbar.h"
 
 #include <QLineEdit>
 
 using namespace BlackGui;
 using namespace BlackGui::Models;
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 
 namespace BlackGui::Filters
 {

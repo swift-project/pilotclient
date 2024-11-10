@@ -3,30 +3,30 @@
 
 #include "listmodeldbobjects.h"
 #include "blackgui/models/allmodelcontainers.h"
-#include "blackmisc/db/datastoreobjectlist.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/simulation/distributor.h"
-#include "blackmisc/aviation/aircrafticaocodelist.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/aircraftcategorylist.h"
-#include "blackmisc/aviation/aircraftcategory.h"
-#include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/countrylist.h"
-#include "blackmisc/country.h"
-#include "blackmisc/orderable.h"
+#include "misc/db/datastoreobjectlist.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/distributorlist.h"
+#include "misc/simulation/distributor.h"
+#include "misc/aviation/aircrafticaocodelist.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/aircraftcategorylist.h"
+#include "misc/aviation/aircraftcategory.h"
+#include "misc/aviation/airlineicaocodelist.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/liverylist.h"
+#include "misc/aviation/livery.h"
+#include "misc/countrylist.h"
+#include "misc/country.h"
+#include "misc/orderable.h"
 
 #include <QBrush>
 #include <QModelIndex>
 #include <type_traits>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Db;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::db;
 
 namespace BlackGui::Models
 {
@@ -104,14 +104,14 @@ namespace BlackGui::Models
         return CListModelDbObjects<ContainerType, KeyType, UseCompare>::update(container, sort);
     }
 
-    template class CListModelDbObjects<BlackMisc::Aviation::CLiveryList, int, true>;
-    template class CListModelDbObjects<BlackMisc::CCountryList, QString, true>;
-    template class CListModelDbObjects<BlackMisc::Aviation::CAircraftIcaoCodeList, int, true>;
-    template class CListModelDbObjects<BlackMisc::Aviation::CAircraftCategoryList, int, true>;
-    template class CListModelDbObjects<BlackMisc::Aviation::CAirlineIcaoCodeList, int, true>;
-    template class CListModelDbObjects<BlackMisc::Simulation::CAircraftModelList, int, true>;
-    template class CListModelDbObjects<BlackMisc::Simulation::CDistributorList, QString, true>;
-    template class COrderableListModelDbObjects<BlackMisc::Simulation::CAircraftModelList, int, true>;
-    template class COrderableListModelDbObjects<BlackMisc::Simulation::CDistributorList, QString, true>;
+    template class CListModelDbObjects<swift::misc::aviation::CLiveryList, int, true>;
+    template class CListModelDbObjects<swift::misc::CCountryList, QString, true>;
+    template class CListModelDbObjects<swift::misc::aviation::CAircraftIcaoCodeList, int, true>;
+    template class CListModelDbObjects<swift::misc::aviation::CAircraftCategoryList, int, true>;
+    template class CListModelDbObjects<swift::misc::aviation::CAirlineIcaoCodeList, int, true>;
+    template class CListModelDbObjects<swift::misc::simulation::CAircraftModelList, int, true>;
+    template class CListModelDbObjects<swift::misc::simulation::CDistributorList, QString, true>;
+    template class COrderableListModelDbObjects<swift::misc::simulation::CAircraftModelList, int, true>;
+    template class COrderableListModelDbObjects<swift::misc::simulation::CDistributorList, QString, true>;
 
 } // namespace

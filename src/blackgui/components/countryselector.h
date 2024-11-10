@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_COUNTRYSELECTOR_H
 #define BLACKGUI_COMPONENTS_COUNTRYSELECTOR_H
 
-#include "blackmisc/country.h"
+#include "misc/country.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -31,14 +31,14 @@ namespace BlackGui::Components
         virtual ~CCountrySelector();
 
         //! Set country
-        void setCountry(const BlackMisc::CCountry &country);
+        void setCountry(const swift::misc::CCountry &country);
 
         //! Get country
-        const BlackMisc::CCountry &getCountry() const { return m_current; }
+        const swift::misc::CCountry &getCountry() const { return m_current; }
 
     signals:
         //! Changed country
-        void countryChanged(const BlackMisc::CCountry &country);
+        void countryChanged(const swift::misc::CCountry &country);
 
     private:
         //! Countries loaded
@@ -50,7 +50,7 @@ namespace BlackGui::Components
         //! Country name has been changed
         void onCountryNameChanged(const QString &name);
 
-        BlackMisc::CCountry m_current;
+        swift::misc::CCountry m_current;
         QScopedPointer<Ui::CCountrySelector> ui;
     };
 } // ns

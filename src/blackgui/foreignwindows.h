@@ -7,7 +7,7 @@
 #define BLACKGUI_FOREIGNWINDOWS_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/simulatorinfo.h"
+#include "misc/simulation/simulatorinfo.h"
 #include <QScopedPointer>
 
 class QWidget;
@@ -37,7 +37,7 @@ namespace BlackGui
         static QWindow *getFirstFoundSimulatorWindow();
 
         //! Simulator window
-        static QWindow *getSimulatorWindow(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        static QWindow *getSimulatorWindow(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Set simulator as transient parent for child widget
         static bool setSimulatorAsParent(QWindow *simulatorWindow, QWidget *child);

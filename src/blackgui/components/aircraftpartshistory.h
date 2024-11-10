@@ -10,7 +10,7 @@
 #include <QTabWidget>
 #include <QTimer>
 #include <QTextDocument>
-#include "blackmisc/network/connectionstatus.h"
+#include "misc/network/connectionstatus.h"
 
 namespace Ui
 {
@@ -61,7 +61,7 @@ namespace BlackGui::Components
         void toggleHistoryEnabled(bool enabled);
 
         //! Connection status changed
-        void connectionStatusChanged(const BlackMisc::Network::CConnectionStatus &from, const BlackMisc::Network::CConnectionStatus &to);
+        void connectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
     };
 } // ns
 

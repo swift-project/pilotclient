@@ -4,18 +4,18 @@
 #include "blackgui/models/clientlistmodel.h"
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/columns.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/propertyindex.h"
-#include "blackmisc/propertyindexvariantmap.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/network/user.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/propertyindex.h"
+#include "misc/propertyindexvariantmap.h"
 
 #include <Qt>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
+using namespace swift::misc::network;
 
 namespace BlackGui::Models
 {

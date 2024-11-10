@@ -7,15 +7,15 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/views/distributorview.h"
-#include "blackmisc/simulation/distributorlist.h"
+#include "misc/simulation/distributorlist.h"
 #include "ui_ownmodelsetform.h"
 
 #include <QRadioButton>
 #include <QtGlobal>
 #include <QPointer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
 using namespace BlackGui::Models;
 using namespace BlackGui::Components;
 

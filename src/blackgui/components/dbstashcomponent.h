@@ -10,14 +10,14 @@
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
 #include "blackcore/data/authenticateduser.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/propertyindexvariantmap.h"
-#include "blackmisc/network/authenticateduser.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/distributor.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/propertyindexvariantmap.h"
+#include "misc/network/authenticateduser.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/distributor.h"
+#include "misc/statusmessage.h"
+#include "misc/statusmessagelist.h"
 
 #include <QFrame>
 #include <QList>
@@ -29,10 +29,10 @@
 
 class QWidget;
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CLogCategoryList;
-    namespace Aviation
+    namespace aviation
     {
         class CAircraftIcaoCode;
         class CLivery;
@@ -71,7 +71,7 @@ namespace BlackGui
             virtual ~CDbStashComponent();
 
             //! Test the given model if it can be stashed
-            BlackMisc::CStatusMessage validateStashModel(const BlackMisc::Simulation::CAircraftModel &model, bool allowReplace) const;
+            swift::misc::CStatusMessage validateStashModel(const swift::misc::simulation::CAircraftModel &model, bool allowReplace) const;
 
             //! Unstash given models with keys
             int unstashModels(const QSet<int> &keys);
@@ -80,7 +80,7 @@ namespace BlackGui
             int unstashModels(const QStringList &modelStrings);
 
             //! Unstash given models
-            int unstashModels(const BlackMisc::Simulation::CAircraftModelList &models);
+            int unstashModels(const swift::misc::simulation::CAircraftModelList &models);
 
             //! The embedded view
             BlackGui::Views::CAircraftModelView *view() const;
@@ -95,28 +95,28 @@ namespace BlackGui
             QStringList getStashedModelStrings() const;
 
             //! The stashed models
-            const BlackMisc::Simulation::CAircraftModelList &getStashedModels() const;
+            const swift::misc::simulation::CAircraftModelList &getStashedModels() const;
 
             //! Model for model string
-            BlackMisc::Simulation::CAircraftModel getStashedModel(const QString &modelString) const;
+            swift::misc::simulation::CAircraftModel getStashedModel(const QString &modelString) const;
 
             //! Apply livery to selected objects
-            void applyToSelected(const BlackMisc::Aviation::CLivery &livery, bool acceptWarnings = true);
+            void applyToSelected(const swift::misc::aviation::CLivery &livery, bool acceptWarnings = true);
 
             //! Apply airline ICAO code to selected objects
-            void applyToSelected(const BlackMisc::Aviation::CAircraftIcaoCode &icao, bool acceptWarnings = true);
+            void applyToSelected(const swift::misc::aviation::CAircraftIcaoCode &icao, bool acceptWarnings = true);
 
             //! Apply aircraft ICAO code to selected objects
-            void applyToSelected(const BlackMisc::Aviation::CAirlineIcaoCode &icao, bool acceptWarnings = true);
+            void applyToSelected(const swift::misc::aviation::CAirlineIcaoCode &icao, bool acceptWarnings = true);
 
             //! Apply distributor to selected objects
-            void applyToSelected(const BlackMisc::Simulation::CDistributor &distributor, bool acceptWarnings = true);
+            void applyToSelected(const swift::misc::simulation::CDistributor &distributor, bool acceptWarnings = true);
 
             //! Apply set of properties to selected objects
-            void applyToSelected(const BlackMisc::CPropertyIndexVariantMap &vm);
+            void applyToSelected(const swift::misc::CPropertyIndexVariantMap &vm);
 
             //! Consolidate with other available data
-            BlackMisc::Simulation::CAircraftModel consolidateModel(const BlackMisc::Simulation::CAircraftModel &model) const;
+            swift::misc::simulation::CAircraftModel consolidateModel(const swift::misc::simulation::CAircraftModel &model) const;
 
             //! Show changed attributes of selected models
             void showChangedAttributes();
@@ -126,24 +126,24 @@ namespace BlackGui
 
         public slots:
             //! Stash given model (includes validation and consolidation with DB data)
-            BlackMisc::CStatusMessage stashModel(const BlackMisc::Simulation::CAircraftModel &model, bool replace = false, bool consolidateWithDbData = true, bool clearHighlighting = true);
+            swift::misc::CStatusMessage stashModel(const swift::misc::simulation::CAircraftModel &model, bool replace = false, bool consolidateWithDbData = true, bool clearHighlighting = true);
 
             //! Stash given models (includes validation and consolidation with DB data)
-            BlackMisc::CStatusMessageList stashModels(const BlackMisc::Simulation::CAircraftModelList &models, bool replace = false, bool consolidateWithDbData = true, bool clearHighlighting = true);
+            swift::misc::CStatusMessageList stashModels(const swift::misc::simulation::CAircraftModelList &models, bool replace = false, bool consolidateWithDbData = true, bool clearHighlighting = true);
 
             //! Replace models, no validation
-            void replaceModelsUnvalidated(const BlackMisc::Simulation::CAircraftModelList &models);
+            void replaceModelsUnvalidated(const swift::misc::simulation::CAircraftModelList &models);
 
         signals:
             //! Stashed models have been changed
             void stashedModelsChanged();
 
             //! Models succesfully published
-            void modelsSuccessfullyPublished(const BlackMisc::Simulation::CAircraftModelList &publishedModels, bool directWrite);
+            void modelsSuccessfullyPublished(const swift::misc::simulation::CAircraftModelList &publishedModels, bool directWrite);
 
         private:
             QScopedPointer<Ui::CDbStashComponent> ui;
-            BlackMisc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this, &CDbStashComponent::onUserChanged }; //!< authenticated user
+            swift::misc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this, &CDbStashComponent::onUserChanged }; //!< authenticated user
 
             //! Unstash pressed
             void onUnstashPressed();
@@ -158,9 +158,9 @@ namespace BlackGui
             void onPublishPressed();
 
             //! Publish response received
-            void onPublishedModelsResponse(const BlackMisc::Simulation::CAircraftModelList &publishedModels,
-                                           const BlackMisc::Simulation::CAircraftModelList &skippedModels,
-                                           const BlackMisc::CStatusMessageList &msgs, bool sendingSuccesful, bool directWrite);
+            void onPublishedModelsResponse(const swift::misc::simulation::CAircraftModelList &publishedModels,
+                                           const swift::misc::simulation::CAircraftModelList &skippedModels,
+                                           const swift::misc::CStatusMessageList &msgs, bool sendingSuccesful, bool directWrite);
 
             //! Copy over values
             void copyOverValuesToSelectedModels();
@@ -175,43 +175,43 @@ namespace BlackGui
             void onUserChanged();
 
             //! Display messages
-            bool showOverlayMessages(const BlackMisc::CStatusMessageList &msgs, bool onlyErrors = false, bool appendOldMessages = false, int timeoutMs = -1);
+            bool showOverlayMessages(const swift::misc::CStatusMessageList &msgs, bool onlyErrors = false, bool appendOldMessages = false, int timeoutMs = -1);
 
             //! Display messages with confirmation
             bool showOverlayMessagesWithConfirmation(
-                const BlackMisc::CStatusMessageList &msgs, bool appendOldMessages,
+                const swift::misc::CStatusMessageList &msgs, bool appendOldMessages,
                 const QString &confirmation, std::function<void()> okLambda,
                 QMessageBox::StandardButton defaultButton, bool onlyErrors = false, int timeoutMs = -1);
 
             //! Display message
-            bool showOverlayMessage(const BlackMisc::CStatusMessage &msg, int timeoutMs = -1);
+            bool showOverlayMessage(const swift::misc::CStatusMessage &msg, int timeoutMs = -1);
 
             //! Clear messages
             void clearOverlayMessages();
 
             //! Validate
-            BlackMisc::CStatusMessageList validate(BlackMisc::Simulation::CAircraftModelList &validModels, BlackMisc::Simulation::CAircraftModelList &invalidModels) const;
+            swift::misc::CStatusMessageList validate(swift::misc::simulation::CAircraftModelList &validModels, swift::misc::simulation::CAircraftModelList &invalidModels) const;
 
             //! Validate and display info messages
-            bool validateAndDisplay(BlackMisc::Simulation::CAircraftModelList &validModels, BlackMisc::Simulation::CAircraftModelList &invalidModels, bool displayInfo = false);
+            bool validateAndDisplay(swift::misc::simulation::CAircraftModelList &validModels, swift::misc::simulation::CAircraftModelList &invalidModels, bool displayInfo = false);
 
             //! Set the button row
             void enableButtonRow();
 
             //! Validation categories
-            const BlackMisc::CLogCategoryList &validationCategories() const;
+            const swift::misc::CLogCategoryList &validationCategories() const;
 
             //! Get the selected only models or all models depending on checkbox
-            BlackMisc::Simulation::CAircraftModelList getSelectedOrAllModels() const;
+            swift::misc::simulation::CAircraftModelList getSelectedOrAllModels() const;
 
             //! Consolidate with any DB data (if available).
-            BlackMisc::Simulation::CAircraftModel consolidateWithDbData(const BlackMisc::Simulation::CAircraftModel &model, bool forced) const;
+            swift::misc::simulation::CAircraftModel consolidateWithDbData(const swift::misc::simulation::CAircraftModel &model, bool forced) const;
 
             //! Consolidate with own models (if available). This updates mostly with model description, path etc.
-            BlackMisc::Simulation::CAircraftModel consolidateWithOwnModels(const BlackMisc::Simulation::CAircraftModel &model) const;
+            swift::misc::simulation::CAircraftModel consolidateWithOwnModels(const swift::misc::simulation::CAircraftModel &model) const;
 
             //! Authenticated DB user
-            BlackMisc::Network::CAuthenticatedUser getSwiftDbUser() const;
+            swift::misc::network::CAuthenticatedUser getSwiftDbUser() const;
         };
     } // ns
 } // ns

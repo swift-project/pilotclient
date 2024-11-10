@@ -7,9 +7,9 @@
 #define BLACKGUI_COMPONENTS_SETTINGSXSWIFTBUSCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/settings/xswiftbussettings.h"
-#include "blackmisc/settingscache.h"
-#include "blackmisc/logcategories.h"
+#include "misc/simulation/settings/xswiftbussettings.h"
+#include "misc/settingscache.h"
+#include "misc/logcategories.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -38,7 +38,7 @@ namespace BlackGui::Components
 
     private:
         QScopedPointer<Ui::CSettingsXSwiftBusComponent> ui;
-        BlackMisc::CSetting<BlackMisc::Simulation::Settings::TXSwiftBusSettings> m_xSwiftBusSettings { this };
+        swift::misc::CSetting<swift::misc::simulation::settings::TXSwiftBusSettings> m_xSwiftBusSettings { this };
 
         void resetServer();
         void saveServer();

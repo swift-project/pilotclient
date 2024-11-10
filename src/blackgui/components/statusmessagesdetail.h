@@ -8,9 +8,9 @@
 
 #include "blackgui/menus/menudelegate.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/digestsignal.h"
-#include "blackmisc/variant.h"
+#include "misc/statusmessagelist.h"
+#include "misc/digestsignal.h"
+#include "misc/variant.h"
 
 #include <QFrame>
 #include <QObject>
@@ -35,10 +35,10 @@ namespace BlackGui::Components
         virtual ~CStatusMessagesDetail() override;
 
         //! Add message
-        void appendStatusMessageToList(const BlackMisc::CStatusMessage &message);
+        void appendStatusMessageToList(const swift::misc::CStatusMessage &message);
 
         //! Add messages
-        void appendStatusMessagesToList(const BlackMisc::CStatusMessageList &messages);
+        void appendStatusMessagesToList(const swift::misc::CStatusMessageList &messages);
 
         //! Show log details
         void showDetails(bool details);
@@ -65,7 +65,7 @@ namespace BlackGui::Components
         void filterUseRadioButtonDescriptiveIcons(bool oneCharacterText);
 
         //! Sorting for view
-        void setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
+        void setSorting(const swift::misc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
 
         //! Disable sorting
         void setNoSorting();
@@ -75,13 +75,13 @@ namespace BlackGui::Components
         void modelDataChangedDigest(int count, bool withFilter);
 
         //! The user changed their message filter
-        void filterChanged(const BlackMisc::CVariant &filter);
+        void filterChanged(const swift::misc::CVariant &filter);
 
     private:
         QScopedPointer<Ui::CStatusMessagesDetail> ui;
         int m_maxLogMessages = -1;
-        BlackMisc::CStatusMessageList m_pending; //!< pending messages which will be added with next CStatusMessagesDetail::deferredUpdate
-        BlackMisc::CDigestSignal m_dsDeferredUpdate { this, &CStatusMessagesDetail::deferredUpdate, 2000, 25 };
+        swift::misc::CStatusMessageList m_pending; //!< pending messages which will be added with next CStatusMessagesDetail::deferredUpdate
+        swift::misc::CDigestSignal m_dsDeferredUpdate { this, &CStatusMessagesDetail::deferredUpdate, 2000, 25 };
 
         //! Do not update each message, but deferred
         void deferredUpdate();

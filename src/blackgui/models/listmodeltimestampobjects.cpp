@@ -7,8 +7,8 @@
 #include <QModelIndex>
 #include <type_traits>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 
 namespace BlackGui::Models
 {
@@ -30,11 +30,11 @@ namespace BlackGui::Models
         CListModelBaseNonTemplate::m_columns.addColumn(CColumn("timestamp ms", "milliseconds since epoch", ObjectType::IndexMSecsSinceEpoch, new CIntegerFormatter()));
     }
 
-    template class CListModelTimestampObjects<BlackMisc::CStatusMessageList, true>;
-    template class CListModelTimestampObjects<BlackMisc::Network::CTextMessageList, true>;
-    template class CListModelTimestampObjects<BlackMisc::Aviation::CAircraftPartsList, true>;
-    template class CListModelTimestampObjects<BlackMisc::Aviation::CAircraftSituationList, true>;
-    template class CListModelTimestampObjects<BlackMisc::Aviation::CAircraftSituationChangeList, true>;
+    template class CListModelTimestampObjects<swift::misc::CStatusMessageList, true>;
+    template class CListModelTimestampObjects<swift::misc::network::CTextMessageList, true>;
+    template class CListModelTimestampObjects<swift::misc::aviation::CAircraftPartsList, true>;
+    template class CListModelTimestampObjects<swift::misc::aviation::CAircraftSituationList, true>;
+    template class CListModelTimestampObjects<swift::misc::aviation::CAircraftSituationChangeList, true>;
 
     template <typename T, bool UseCompare>
     CListModelTimestampWithOffsetObjects<T, UseCompare>::CListModelTimestampWithOffsetObjects(const QString &translationContext, QObject *parent) : CListModelTimestampObjects<ContainerType, UseCompare>(translationContext, parent)
@@ -56,7 +56,7 @@ namespace BlackGui::Models
         CListModelBaseNonTemplate::m_columns.addColumn(CColumn("t.os.", "time offset", ObjectType::IndexOffsetMs, new CIntegerFormatter()));
     }
 
-    template class CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftPartsList, true>;
-    template class CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftSituationList, true>;
-    template class CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftSituationChangeList, true>;
+    template class CListModelTimestampWithOffsetObjects<swift::misc::aviation::CAircraftPartsList, true>;
+    template class CListModelTimestampWithOffsetObjects<swift::misc::aviation::CAircraftSituationList, true>;
+    template class CListModelTimestampWithOffsetObjects<swift::misc::aviation::CAircraftSituationChangeList, true>;
 } // namespace

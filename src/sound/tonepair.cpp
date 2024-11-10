@@ -5,11 +5,11 @@
 
 namespace swift::sound
 {
-    CTonePair::CTonePair(const BlackMisc::PhysicalQuantities::CFrequency &frequency,
-                         const BlackMisc::PhysicalQuantities::CFrequency &secondaryFrequency,
-                         const BlackMisc::PhysicalQuantities::CTime &duration) : m_firstFrequencyHz(static_cast<int>(frequency.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::Hz()))),
-                                                                                 m_secondFrequencyHz(static_cast<int>(secondaryFrequency.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::Hz()))),
-                                                                                 m_durationMs(static_cast<qint64>(duration.valueRounded(BlackMisc::PhysicalQuantities::CTimeUnit::ms())))
+    CTonePair::CTonePair(const swift::misc::physical_quantities::CFrequency &frequency,
+                         const swift::misc::physical_quantities::CFrequency &secondaryFrequency,
+                         const swift::misc::physical_quantities::CTime &duration) : m_firstFrequencyHz(static_cast<int>(frequency.valueRounded(swift::misc::physical_quantities::CFrequencyUnit::Hz()))),
+                                                                                 m_secondFrequencyHz(static_cast<int>(secondaryFrequency.valueRounded(swift::misc::physical_quantities::CFrequencyUnit::Hz()))),
+                                                                                 m_durationMs(static_cast<qint64>(duration.valueRounded(swift::misc::physical_quantities::CTimeUnit::ms())))
     {}
 
 }

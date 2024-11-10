@@ -7,15 +7,15 @@
 #define BLACKCORE_DATA_VATSIMDATA_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/datacache.h"
-#include "blackmisc/metaclass.h"
-#include "blackmisc/network/serverlist.h"
-#include "blackmisc/network/url.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/propertyindex.h"
-#include "blackmisc/timestampbased.h"
-#include "blackmisc/valueobject.h"
-#include "blackmisc/variant.h"
+#include "misc/datacache.h"
+#include "misc/metaclass.h"
+#include "misc/network/serverlist.h"
+#include "misc/network/url.h"
+#include "misc/network/user.h"
+#include "misc/propertyindex.h"
+#include "misc/timestampbased.h"
+#include "misc/valueobject.h"
+#include "misc/variant.h"
 
 #include <QMetaType>
 #include <QString>
@@ -26,14 +26,14 @@ namespace BlackCore::Data
 {
     //! VATSIM data (servers, URLs) cached as last known good setup.
     class BLACKCORE_EXPORT CVatsimSetup :
-        public BlackMisc::CValueObject<CVatsimSetup>,
-        public BlackMisc::ITimestampBased
+        public swift::misc::CValueObject<CVatsimSetup>,
+        public swift::misc::ITimestampBased
     {
     public:
         //! Properties by index
         enum ColumnIndex
         {
-            IndexServerFiles = BlackMisc::CPropertyIndexRef::GlobalIndexCVatsimSetup,
+            IndexServerFiles = swift::misc::CPropertyIndexRef::GlobalIndexCVatsimSetup,
             IndexDataFiles,
             IndexMetarFiles,
             IndexFsdServers,
@@ -44,59 +44,59 @@ namespace BlackCore::Data
         CVatsimSetup();
 
         //! VATSIM data file URL
-        const BlackMisc::Network::CUrl &getDataFileUrl() const { return m_dataFileUrl; }
+        const swift::misc::network::CUrl &getDataFileUrl() const { return m_dataFileUrl; }
 
         //! Set VATSIM data file URL
-        void setDataFileUrl(const BlackMisc::Network::CUrl &url) { m_dataFileUrl = url; }
+        void setDataFileUrl(const swift::misc::network::CUrl &url) { m_dataFileUrl = url; }
 
         //! Server file URL
-        const BlackMisc::Network::CUrl &getServerFileUrl() const { return m_serverFileUrl; }
+        const swift::misc::network::CUrl &getServerFileUrl() const { return m_serverFileUrl; }
 
         //! Set server file URL
-        void setServerFileUrl(const BlackMisc::Network::CUrl &url) { m_serverFileUrl = url; }
+        void setServerFileUrl(const swift::misc::network::CUrl &url) { m_serverFileUrl = url; }
 
         //! METAR file URL
-        const BlackMisc::Network::CUrl &getMetarFileUrl() const { return m_metarFileUrl; }
+        const swift::misc::network::CUrl &getMetarFileUrl() const { return m_metarFileUrl; }
 
         //! METAR file URL
-        void setMetarFileUrl(const BlackMisc::Network::CUrl &url) { m_metarFileUrl = url; }
+        void setMetarFileUrl(const swift::misc::network::CUrl &url) { m_metarFileUrl = url; }
 
         //! Set all URLs and indicate if something has changed
-        bool setUrls(const BlackMisc::Network::CUrl &dataFileUrl, const BlackMisc::Network::CUrl &serverFileUrl, const BlackMisc::Network::CUrl &metarFileUrl);
+        bool setUrls(const swift::misc::network::CUrl &dataFileUrl, const swift::misc::network::CUrl &serverFileUrl, const swift::misc::network::CUrl &metarFileUrl);
 
         //! FSD servers
-        const BlackMisc::Network::CServerList &getFsdServers() const { return m_fsdServers; }
+        const swift::misc::network::CServerList &getFsdServers() const { return m_fsdServers; }
 
         //! Set FSD servers
-        void setFsdServers(const BlackMisc::Network::CServerList &servers) { m_fsdServers = servers; }
+        void setFsdServers(const swift::misc::network::CServerList &servers) { m_fsdServers = servers; }
 
         //! Voice servers
-        const BlackMisc::Network::CServerList &getVoiceServers() const { return m_voiceServers; }
+        const swift::misc::network::CServerList &getVoiceServers() const { return m_voiceServers; }
 
         //! Set voice servers
-        void setVoiceServers(const BlackMisc::Network::CServerList &servers) { m_voiceServers = servers; }
+        void setVoiceServers(const swift::misc::network::CServerList &servers) { m_voiceServers = servers; }
 
         //! Set servers
-        bool setServers(const BlackMisc::Network::CServerList &fsdServers, const BlackMisc::Network::CServerList &voiceServers);
+        bool setServers(const swift::misc::network::CServerList &fsdServers, const swift::misc::network::CServerList &voiceServers);
 
-        //! \copydoc BlackMisc::Mixin::String::toQString
+        //! \copydoc swift::misc::mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
         //! To string
         QString convertToQString(const QString &separator, bool i18n = false) const;
 
-        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-        QVariant propertyByIndex(BlackMisc::CPropertyIndexRef index) const;
+        //! \copydoc swift::misc::mixin::Index::propertyByIndex
+        QVariant propertyByIndex(swift::misc::CPropertyIndexRef index) const;
 
-        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(BlackMisc::CPropertyIndexRef index, const QVariant &variant);
+        //! \copydoc swift::misc::mixin::Index::setPropertyByIndex
+        void setPropertyByIndex(swift::misc::CPropertyIndexRef index, const QVariant &variant);
 
     private:
-        BlackMisc::Network::CUrl m_serverFileUrl; //!< only the FSD servers
-        BlackMisc::Network::CUrl m_dataFileUrl; //!< Full VATSIM file
-        BlackMisc::Network::CUrl m_metarFileUrl; //!< METAR file
-        BlackMisc::Network::CServerList m_fsdServers; //!< FSD test servers
-        BlackMisc::Network::CServerList m_voiceServers; //!< voice servers
+        swift::misc::network::CUrl m_serverFileUrl; //!< only the FSD servers
+        swift::misc::network::CUrl m_dataFileUrl; //!< Full VATSIM file
+        swift::misc::network::CUrl m_metarFileUrl; //!< METAR file
+        swift::misc::network::CServerList m_fsdServers; //!< FSD test servers
+        swift::misc::network::CServerList m_voiceServers; //!< voice servers
 
         BLACK_METACLASS(
             CVatsimSetup,
@@ -110,15 +110,15 @@ namespace BlackCore::Data
     };
 
     //! Trait for global setup data
-    struct TVatsimSetup : public BlackMisc::TDataTrait<CVatsimSetup>
+    struct TVatsimSetup : public swift::misc::TDataTrait<CVatsimSetup>
     {
-        //! \copydoc BlackMisc::TDataTrait::key
+        //! \copydoc swift::misc::TDataTrait::key
         static const char *key() { return "vatsimsetup"; }
 
-        //! \copydoc BlackMisc::TDataTrait::isPinned
+        //! \copydoc swift::misc::TDataTrait::isPinned
         static constexpr bool isPinned() { return true; }
 
-        //! \copydoc BlackMisc::TDataTrait::humanReadable
+        //! \copydoc swift::misc::TDataTrait::humanReadable
         static const QString &humanReadable()
         {
             static const QString name("VATSIM setup");
@@ -127,15 +127,15 @@ namespace BlackCore::Data
     };
 
     //! Trait for last (most recently) used VATSIM server and user
-    struct TVatsimLastServer : public BlackMisc::TDataTrait<BlackMisc::Network::CServer>
+    struct TVatsimLastServer : public swift::misc::TDataTrait<swift::misc::network::CServer>
     {
-        //! \copydoc BlackMisc::TDataTrait::isPinned
+        //! \copydoc swift::misc::TDataTrait::isPinned
         static const char *key() { return "vatsimserver"; }
 
-        //! \copydoc BlackMisc::TDataTrait::isPinned
+        //! \copydoc swift::misc::TDataTrait::isPinned
         static constexpr bool isPinned() { return true; }
 
-        //! \copydoc BlackMisc::TDataTrait::humanReadable
+        //! \copydoc swift::misc::TDataTrait::humanReadable
         static const QString &humanReadable()
         {
             static const QString name("Last VATSIM server");

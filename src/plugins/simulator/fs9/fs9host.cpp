@@ -4,7 +4,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "blackcore/application.h"
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 #include "directplayerror.h"
 #include "directplayutils.h"
 #include "fs9host.h"
@@ -13,7 +13,7 @@
 #include <QScopedArrayPointer>
 #include <QVector>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackSimPlugin::Fs9
 {

@@ -5,15 +5,15 @@
 #include "blackcore/context/contextsimulatorempty.h"
 #include "blackcore/context/contextsimulatorimpl.h"
 #include "blackcore/context/contextsimulatorproxy.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/pq/units.h"
+#include "misc/dbusserver.h"
+#include "misc/pq/units.h"
 
 #include <QFlag>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
+using namespace swift::misc::physical_quantities;
 
 namespace BlackCore::Context
 {

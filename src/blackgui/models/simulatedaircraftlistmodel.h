@@ -8,9 +8,9 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodelcallsignobjects.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "misc/simulation/simulatedaircraftlist.h"
 
-namespace BlackMisc::Simulation
+namespace swift::misc::simulation
 {
     class CSimulatedAircraft;
 }
@@ -18,7 +18,7 @@ namespace BlackGui::Models
 {
     //! Aircraft list model
     class BLACKGUI_EXPORT CSimulatedAircraftListModel :
-        public CListModelCallsignObjects<BlackMisc::Simulation::CSimulatedAircraftList, true>
+        public CListModelCallsignObjects<swift::misc::simulation::CSimulatedAircraftList, true>
     {
         Q_OBJECT
 

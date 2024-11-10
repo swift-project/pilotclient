@@ -12,23 +12,23 @@
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/aviation/selcal.h"
-#include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/pq/frequency.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/aviation/selcal.h"
+#include "misc/geo/coordinategeodetic.h"
+#include "misc/identifier.h"
+#include "misc/network/user.h"
+#include "misc/pq/frequency.h"
 
 // clazy:excludeall=const-signal-or-slot
 
 class QDBusConnection;
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CGenericDBusInterface;
-    namespace Aviation
+    namespace aviation
     {
         class CAircraftIcaoCode;
         class CAltitude;
@@ -58,49 +58,49 @@ namespace BlackCore
 
         public slots:
             //! \copydoc BlackCore::Context::IContextOwnAircraft::getOwnAircraft
-            virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const override;
+            virtual swift::misc::simulation::CSimulatedAircraft getOwnAircraft() const override;
 
             //! \copydoc BlackCore::Context::IContextOwnAircraft::getOwnComSystem
-            virtual BlackMisc::Aviation::CComSystem getOwnComSystem(BlackMisc::Aviation::CComSystem::ComUnit unit) const override;
+            virtual swift::misc::aviation::CComSystem getOwnComSystem(swift::misc::aviation::CComSystem::ComUnit unit) const override;
 
             //! \copydoc BlackCore::Context::IContextOwnAircraft::getOwnTransponder
-            virtual BlackMisc::Aviation::CTransponder getOwnTransponder() const override;
+            virtual swift::misc::aviation::CTransponder getOwnTransponder() const override;
 
             //! \copydoc BlackCore::Context::IContextOwnAircraft::getOwnAircraftSituation
-            virtual BlackMisc::Aviation::CAircraftSituation getOwnAircraftSituation() const override;
+            virtual swift::misc::aviation::CAircraftSituation getOwnAircraftSituation() const override;
 
             //! \copydoc BlackCore::Context::IContextOwnAircraft::updateOwnPosition
-            virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const BlackMisc::Aviation::CAltitude &pressureAltitude) override;
+            virtual bool updateOwnPosition(const swift::misc::geo::CCoordinateGeodetic &position, const swift::misc::aviation::CAltitude &altitude, const swift::misc::aviation::CAltitude &pressureAltitude) override;
 
             //! \copydoc BlackCore::Context::IContextOwnAircraft::updateCockpit
-            virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateCockpit(const swift::misc::aviation::CComSystem &com1, const swift::misc::aviation::CComSystem &com2, const swift::misc::aviation::CTransponder &transponder, const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc BlackCore::Context::IContextOwnAircraft::updateTransponderMode
-            virtual bool updateTransponderMode(const BlackMisc::Aviation::CTransponder::TransponderMode &transponderMode, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateTransponderMode(const swift::misc::aviation::CTransponder::TransponderMode &transponderMode, const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc BlackCore::Context::IContextOwnAircraft::updateActiveComFrequency
-            virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit comUnit, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateActiveComFrequency(const swift::misc::physical_quantities::CFrequency &frequency, swift::misc::aviation::CComSystem::ComUnit comUnit, const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc BlackCore::Context::IContextOwnAircraft::updateOwnAircraftPilot
-            virtual bool updateOwnAircraftPilot(const BlackMisc::Network::CUser &pilot) override;
+            virtual bool updateOwnAircraftPilot(const swift::misc::network::CUser &pilot) override;
 
             //! \copydoc BlackCore::Context::IContextOwnAircraft::updateSelcal
-            virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateSelcal(const swift::misc::aviation::CSelcal &selcal, const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc BlackCore::Context::IContextOwnAircraft::updateOwnCallsign
-            virtual bool updateOwnCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual bool updateOwnCallsign(const swift::misc::aviation::CCallsign &callsign) override;
 
             //! \copydoc BlackCore::Context::IContextOwnAircraft::updateOwnIcaoCodes
-            virtual bool updateOwnIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode, const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcaoCode) override;
+            virtual bool updateOwnIcaoCodes(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcaoCode, const swift::misc::aviation::CAirlineIcaoCode &airlineIcaoCode) override;
 
             //! \copydoc BlackCore::Context::IContextOwnAircraft::toggleTransponderMode
             virtual void toggleTransponderMode() override;
 
             //! \copydoc BlackCore::Context::IContextOwnAircraft::setTransponderMode
-            virtual bool setTransponderMode(BlackMisc::Aviation::CTransponder::TransponderMode mode) override;
+            virtual bool setTransponderMode(swift::misc::aviation::CTransponder::TransponderMode mode) override;
 
             //! \copydoc BlackCore::Context::IContextOwnAircraft::parseCommandLine
-            virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
+            virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override;
 
         protected:
             //! \brief Constructor
@@ -110,7 +110,7 @@ namespace BlackCore
             CContextOwnAircraftProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
 
         private:
-            BlackMisc::CGenericDBusInterface *m_dBusInterface; //!< DBus interface */
+            swift::misc::CGenericDBusInterface *m_dBusInterface; //!< DBus interface */
 
             //! \brief Relay connection signals to local signals.
             void relaySignals(const QString &serviceName, QDBusConnection &connection);

@@ -5,15 +5,15 @@
 #include "blackgui/components/rawfsdmessagescomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextnetwork.h"
-#include "blackmisc/directoryutils.h"
+#include "misc/directoryutils.h"
 
 #include <QFileDialog>
 #include <QDir>
 #include <QStringList>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 using namespace BlackCore;
 using namespace BlackCore::Vatsim;
 

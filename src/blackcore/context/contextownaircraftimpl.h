@@ -11,26 +11,26 @@
 #include "blackcore/vatsim/vatsimsettings.h"
 #include "blackcore/actionbind.h"
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/ownaircraftprovider.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/network/settings/serversettings.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/aviation/aircraftsituationlist.h"
-#include "blackmisc/aviation/aircraftparts.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/aviation/selcal.h"
-#include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/pq/frequency.h"
-#include "blackmisc/pq/length.h"
-#include "blackmisc/input/actionhotkeydefs.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/settingscache.h"
-#include "blackmisc/identifiable.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/simplecommandparser.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/ownaircraftprovider.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/network/settings/serversettings.h"
+#include "misc/network/user.h"
+#include "misc/aviation/aircraftsituationlist.h"
+#include "misc/aviation/aircraftparts.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/atcstation.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/aviation/selcal.h"
+#include "misc/geo/coordinategeodetic.h"
+#include "misc/pq/frequency.h"
+#include "misc/pq/length.h"
+#include "misc/input/actionhotkeydefs.h"
+#include "misc/icons.h"
+#include "misc/settingscache.h"
+#include "misc/identifiable.h"
+#include "misc/identifier.h"
+#include "misc/simplecommandparser.h"
 
 #include <QObject>
 #include <QReadWriteLock>
@@ -40,10 +40,10 @@
 
 // clazy:excludeall=const-signal-or-slot
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CDBusServer;
-    namespace Aviation
+    namespace aviation
     {
         class CAircraftIcaoCode;
         class CAircraftSituation;
@@ -61,13 +61,13 @@ namespace BlackCore
         //! Central instance of data for \sa IOwnAircraftProvider .
         class BLACKCORE_EXPORT CContextOwnAircraft :
             public IContextOwnAircraft,
-            public BlackMisc::Simulation::IOwnAircraftProvider,
-            public BlackMisc::CIdentifiable
+            public swift::misc::simulation::IOwnAircraftProvider,
+            public swift::misc::CIdentifiable
         {
             Q_OBJECT
             Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTOWNAIRCRAFT_INTERFACENAME)
-            Q_INTERFACES(BlackMisc::Simulation::IOwnAircraftProvider)
-            Q_INTERFACES(BlackMisc::IProvider)
+            Q_INTERFACES(swift::misc::simulation::IOwnAircraftProvider)
+            Q_INTERFACES(swift::misc::IProvider)
             friend class BlackCore::CCoreFacade;
             friend class IContextOwnAircraft;
 
@@ -76,100 +76,100 @@ namespace BlackCore
             virtual ~CContextOwnAircraft() override;
 
             // IOwnAircraftProvider overrides
-            //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::getOwnCallsign
+            //! \copydoc swift::misc::simulation::IOwnAircraftProvider::getOwnCallsign
             //! \ingroup ownaircraftprovider
-            virtual BlackMisc::Aviation::CCallsign getOwnCallsign() const override;
+            virtual swift::misc::aviation::CCallsign getOwnCallsign() const override;
 
-            //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::getOwnAircraftPosition
+            //! \copydoc swift::misc::simulation::IOwnAircraftProvider::getOwnAircraftPosition
             //! \ingroup ownaircraftprovider
-            virtual BlackMisc::Geo::CCoordinateGeodetic getOwnAircraftPosition() const override;
+            virtual swift::misc::geo::CCoordinateGeodetic getOwnAircraftPosition() const override;
 
-            //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::getOwnAircraftParts
+            //! \copydoc swift::misc::simulation::IOwnAircraftProvider::getOwnAircraftParts
             //! \ingroup ownaircraftprovider
-            virtual BlackMisc::Aviation::CAircraftParts getOwnAircraftParts() const override;
+            virtual swift::misc::aviation::CAircraftParts getOwnAircraftParts() const override;
 
-            //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::getOwnAircraftModel
+            //! \copydoc swift::misc::simulation::IOwnAircraftProvider::getOwnAircraftModel
             //! \ingroup ownaircraftprovider
-            virtual BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const override;
+            virtual swift::misc::simulation::CAircraftModel getOwnAircraftModel() const override;
 
-            //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::getDistanceToOwnAircraft
+            //! \copydoc swift::misc::simulation::IOwnAircraftProvider::getDistanceToOwnAircraft
             //! \ingroup ownaircraftprovider
-            virtual BlackMisc::PhysicalQuantities::CLength getDistanceToOwnAircraft(const BlackMisc::Geo::ICoordinateGeodetic &position) const override;
+            virtual swift::misc::physical_quantities::CLength getDistanceToOwnAircraft(const swift::misc::geo::ICoordinateGeodetic &position) const override;
 
-            //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::updateOwnModel
+            //! \copydoc swift::misc::simulation::IOwnAircraftProvider::updateOwnModel
             //! \ingroup ownaircraftprovider
             //! \remark perform reverse lookup if possible
-            virtual bool updateOwnModel(const BlackMisc::Simulation::CAircraftModel &model) override;
+            virtual bool updateOwnModel(const swift::misc::simulation::CAircraftModel &model) override;
 
-            //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::updateOwnSituation
+            //! \copydoc swift::misc::simulation::IOwnAircraftProvider::updateOwnSituation
             //! \ingroup ownaircraftprovider
-            virtual bool updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
+            virtual bool updateOwnSituation(const swift::misc::aviation::CAircraftSituation &situation) override;
 
-            //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::updateOwnParts
+            //! \copydoc swift::misc::simulation::IOwnAircraftProvider::updateOwnParts
             //! \ingroup ownaircraftprovider
-            virtual bool updateOwnParts(const BlackMisc::Aviation::CAircraftParts &parts) override;
+            virtual bool updateOwnParts(const swift::misc::aviation::CAircraftParts &parts) override;
 
-            //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::updateOwnParts
+            //! \copydoc swift::misc::simulation::IOwnAircraftProvider::updateOwnParts
             //! \ingroup ownaircraftprovider
-            virtual bool updateOwnCG(const BlackMisc::PhysicalQuantities::CLength &cg) override;
+            virtual bool updateOwnCG(const swift::misc::physical_quantities::CLength &cg) override;
 
-            //! \copydoc BlackMisc::IProvider::asQObject
+            //! \copydoc swift::misc::IProvider::asQObject
             virtual QObject *asQObject() override { return this; }
 
         signals:
             //! Changed aircraft model
             //! \private Use ISimulatorContext::ownAircraftModelChanged
             //! \remark used for cross context updates
-            void ps_changedModel(const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &identifier);
+            void ps_changedModel(const swift::misc::simulation::CAircraftModel &model, const swift::misc::CIdentifier &identifier);
 
         public slots:
             //! \copydoc IContextOwnAircraft::getOwnAircraft()
             //! \ingroup ownaircraftprovider
-            virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const override;
+            virtual swift::misc::simulation::CSimulatedAircraft getOwnAircraft() const override;
 
             //! \copydoc IContextOwnAircraft::getOwnComSystem
             //! \ingroup ownaircraftprovider
-            virtual BlackMisc::Aviation::CComSystem getOwnComSystem(BlackMisc::Aviation::CComSystem::ComUnit unit) const override;
+            virtual swift::misc::aviation::CComSystem getOwnComSystem(swift::misc::aviation::CComSystem::ComUnit unit) const override;
 
             //! \copydoc IContextOwnAircraft::getOwnTransponder()
             //! \ingroup ownaircraftprovider
-            virtual BlackMisc::Aviation::CTransponder getOwnTransponder() const override;
+            virtual swift::misc::aviation::CTransponder getOwnTransponder() const override;
 
             //! \copydoc IContextOwnAircraft::getOwnAircraftSituation()
             //! \ingroup ownaircraftprovider
-            virtual BlackMisc::Aviation::CAircraftSituation getOwnAircraftSituation() const override;
+            virtual swift::misc::aviation::CAircraftSituation getOwnAircraftSituation() const override;
 
             //! \copydoc IContextOwnAircraft::updateOwnCallsign
             //! \ingroup ownaircraftprovider
-            virtual bool updateOwnCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual bool updateOwnCallsign(const swift::misc::aviation::CCallsign &callsign) override;
 
             //! \copydoc IContextOwnAircraft::updateOwnIcaoCodes
             //! \ingroup ownaircraftprovider
-            virtual bool updateOwnIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode, const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcaoCode) override;
+            virtual bool updateOwnIcaoCodes(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcaoCode, const swift::misc::aviation::CAirlineIcaoCode &airlineIcaoCode) override;
 
             //! \copydoc IContextOwnAircraft::updateOwnPosition
-            virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const BlackMisc::Aviation::CAltitude &pressureAltitude) override;
+            virtual bool updateOwnPosition(const swift::misc::geo::CCoordinateGeodetic &position, const swift::misc::aviation::CAltitude &altitude, const swift::misc::aviation::CAltitude &pressureAltitude) override;
 
             //! \copydoc IContextOwnAircraft::updateCockpit
-            virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateCockpit(const swift::misc::aviation::CComSystem &com1, const swift::misc::aviation::CComSystem &com2, const swift::misc::aviation::CTransponder &transponder, const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc IContextOwnAircraft::updateTransponderMode
-            virtual bool updateTransponderMode(const BlackMisc::Aviation::CTransponder::TransponderMode &transponderMode, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateTransponderMode(const swift::misc::aviation::CTransponder::TransponderMode &transponderMode, const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc IContextOwnAircraft::updateSelcal
-            virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateSelcal(const swift::misc::aviation::CSelcal &selcal, const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc IContextOwnAircraft::updateActiveComFrequency
-            virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit comUnit, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateActiveComFrequency(const swift::misc::physical_quantities::CFrequency &frequency, swift::misc::aviation::CComSystem::ComUnit comUnit, const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc IContextOwnAircraft::updateOwnAircraftPilot
-            virtual bool updateOwnAircraftPilot(const BlackMisc::Network::CUser &pilot) override;
+            virtual bool updateOwnAircraftPilot(const swift::misc::network::CUser &pilot) override;
 
             //! \copydoc IContextOwnAircraft::toggleTransponderMode
             virtual void toggleTransponderMode() override;
 
             //! \copydoc IContextOwnAircraft::setTransponderMode
-            virtual bool setTransponderMode(BlackMisc::Aviation::CTransponder::TransponderMode mode) override;
+            virtual bool setTransponderMode(swift::misc::aviation::CTransponder::TransponderMode mode) override;
 
             //! \ingroup swiftdotcommands
             //! <pre>
@@ -179,18 +179,18 @@ namespace BlackCore
             //! .selcal      code       set SELCAL code         BlackCore::Context::CContextOwnAircraft
             //! </pre>
             //! \copydoc IContextOwnAircraft::parseCommandLine
-            virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
+            virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override;
 
             //! Register help
             static void registerHelp()
             {
-                if (BlackMisc::CSimpleCommandParser::registered("BlackCore::Context::CContextOwnAircraft")) { return; }
-                BlackMisc::CSimpleCommandParser::registerCommand({ ".x", "alias: .xpdr" });
-                BlackMisc::CSimpleCommandParser::registerCommand({ ".x code|mode", "set XPDR code or mode" });
-                BlackMisc::CSimpleCommandParser::registerCommand({ ".selcal code", "set SELCAL code" });
-                BlackMisc::CSimpleCommandParser::registerCommand({ ".com1", "alias .c1" });
-                BlackMisc::CSimpleCommandParser::registerCommand({ ".com1 frequency", "set COM1 frequency" });
-                BlackMisc::CSimpleCommandParser::registerCommand({ ".com2 frequency", "set COM2 frequency" });
+                if (swift::misc::CSimpleCommandParser::registered("BlackCore::Context::CContextOwnAircraft")) { return; }
+                swift::misc::CSimpleCommandParser::registerCommand({ ".x", "alias: .xpdr" });
+                swift::misc::CSimpleCommandParser::registerCommand({ ".x code|mode", "set XPDR code or mode" });
+                swift::misc::CSimpleCommandParser::registerCommand({ ".selcal code", "set SELCAL code" });
+                swift::misc::CSimpleCommandParser::registerCommand({ ".com1", "alias .c1" });
+                swift::misc::CSimpleCommandParser::registerCommand({ ".com1 frequency", "set COM1 frequency" });
+                swift::misc::CSimpleCommandParser::registerCommand({ ".com2 frequency", "set COM2 frequency" });
             }
 
         protected:
@@ -198,26 +198,26 @@ namespace BlackCore
             CContextOwnAircraft(CCoreFacadeConfig::ContextMode, CCoreFacade *runtime);
 
             //! Register myself in DBus
-            CContextOwnAircraft *registerWithDBus(BlackMisc::CDBusServer *server);
+            CContextOwnAircraft *registerWithDBus(swift::misc::CDBusServer *server);
 
         private:
-            BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< my aircraft
+            swift::misc::simulation::CSimulatedAircraft m_ownAircraft; //!< my aircraft
             mutable QReadWriteLock m_lockAircraft; //!< lock aircraft
 
-            CActionBind m_actionToggleXpdr { BlackMisc::Input::toggleXPDRStateHotkeyAction(), BlackMisc::Input::toggleXPDRStateHotkeyIcon(), this, &CContextOwnAircraft::actionToggleTransponder };
-            CActionBind m_actionIdent { BlackMisc::Input::toggleXPDRIdentHotkeyAction(), BlackMisc::Input::toggleXPDRIdentHotkeyIcon(), this, &CContextOwnAircraft::actionIdent };
+            CActionBind m_actionToggleXpdr { swift::misc::input::toggleXPDRStateHotkeyAction(), swift::misc::input::toggleXPDRStateHotkeyIcon(), this, &CContextOwnAircraft::actionToggleTransponder };
+            CActionBind m_actionIdent { swift::misc::input::toggleXPDRIdentHotkeyAction(), swift::misc::input::toggleXPDRIdentHotkeyIcon(), this, &CContextOwnAircraft::actionIdent };
 
             static constexpr qint64 MinHistoryDeltaMs = 1000;
             static constexpr int MaxHistoryElements = 20;
             QTimer m_historyTimer; //!< history timer
             std::atomic_bool m_history { true }; //!< enable history
-            BlackMisc::Aviation::CAircraftSituationList m_situationHistory; //!< history, latest situation first
+            swift::misc::aviation::CAircraftSituationList m_situationHistory; //!< history, latest situation first
 
-            BlackMisc::CSetting<BlackMisc::Network::Settings::TCurrentTrafficServer> m_currentNetworkServer { this };
+            swift::misc::CSetting<swift::misc::network::settings::TCurrentTrafficServer> m_currentNetworkServer { this };
 
             //! Simulator model has been changed
             //! \ingroup crosscontextfunction
-            void xCtxChangedSimulatorModel(const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &identifier);
+            void xCtxChangedSimulatorModel(const swift::misc::simulation::CAircraftModel &model, const swift::misc::CIdentifier &identifier);
 
             //! Simulator status changed
             //! \ingroup crosscontextfunction
@@ -239,10 +239,10 @@ namespace BlackCore
             void evaluateUpdateHistory();
 
             //! Update own model and emit signal with identifier
-            bool updateOwnModel(const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &identifier);
+            bool updateOwnModel(const swift::misc::simulation::CAircraftModel &model, const swift::misc::CIdentifier &identifier);
 
             //! Reverse lookup of the model against DB data
-            static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
+            static swift::misc::simulation::CAircraftModel reverseLookupModel(const swift::misc::simulation::CAircraftModel &model);
         };
     } // ns
 } // ns

@@ -8,9 +8,9 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/editors/form.h"
-#include "blackmisc/simulation/distributor.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/variant.h"
+#include "misc/simulation/distributor.h"
+#include "misc/statusmessagelist.h"
+#include "misc/variant.h"
 
 #include <QObject>
 #include <QScopedPointer>
@@ -36,7 +36,7 @@ namespace BlackGui::Editors
         virtual ~CDistributorForm() override;
 
         //! Get value
-        BlackMisc::Simulation::CDistributor getValue() const;
+        swift::misc::simulation::CDistributor getValue() const;
 
         //! Allow to drop
         void allowDrop(bool allowDrop);
@@ -48,14 +48,14 @@ namespace BlackGui::Editors
         //! @{
         virtual void setReadOnly(bool readonly) override;
         virtual void setSelectOnly() override;
-        virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+        virtual swift::misc::CStatusMessageList validate(bool nested = false) const override;
         //! @}
 
         //! Clear
         void clear();
 
         //! Set value
-        bool setValue(const BlackMisc::Simulation::CDistributor &distributor = BlackMisc::Simulation::CDistributor());
+        bool setValue(const swift::misc::simulation::CDistributor &distributor = swift::misc::simulation::CDistributor());
 
     protected:
         //! \copydoc CForm::jsonPasted
@@ -63,13 +63,13 @@ namespace BlackGui::Editors
 
     private:
         //! Variant has been dropped
-        void onDroppedCode(const BlackMisc::CVariant &variantDropped);
+        void onDroppedCode(const swift::misc::CVariant &variantDropped);
 
         //! Any UI values in the details fields
         bool hasAnyUiDetailsValues() const;
 
         QScopedPointer<Ui::CDistributorForm> ui;
-        BlackMisc::Simulation::CDistributor m_currentDistributor;
+        swift::misc::simulation::CDistributor m_currentDistributor;
     };
 } // ns
 

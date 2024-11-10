@@ -11,18 +11,18 @@
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/crashhandler.h"
-#include "blackmisc/logmessage.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/crashhandler.h"
+#include "misc/logmessage.h"
 #include "config/buildconfig.h"
 
 #include <QPushButton>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
+using namespace swift::misc::network;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 

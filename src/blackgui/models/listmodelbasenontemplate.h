@@ -9,9 +9,9 @@
 #include "blackgui/models/columns.h"
 #include "blackgui/dropbase.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/propertyindexlist.h"
-#include "blackmisc/digestsignal.h"
-#include "blackmisc/variant.h"
+#include "misc/propertyindexlist.h"
+#include "misc/digestsignal.h"
+#include "misc/variant.h"
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -26,7 +26,7 @@
 class QMimeData;
 class QModelIndex;
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CWorker;
 }
@@ -74,13 +74,13 @@ namespace BlackGui::Models
         //! @}
 
         //! Column to property index
-        virtual BlackMisc::CPropertyIndex columnToPropertyIndex(int column) const;
+        virtual swift::misc::CPropertyIndex columnToPropertyIndex(int column) const;
 
         //! Property index to column number
-        virtual int propertyIndexToColumn(const BlackMisc::CPropertyIndex &propertyIndex) const;
+        virtual int propertyIndexToColumn(const swift::misc::CPropertyIndex &propertyIndex) const;
 
         //! Index to property index
-        virtual BlackMisc::CPropertyIndex modelIndexToPropertyIndex(const QModelIndex &index) const;
+        virtual swift::misc::CPropertyIndex modelIndexToPropertyIndex(const QModelIndex &index) const;
 
         //! Set sort column
         virtual void setSortColumn(int column) { m_sortColumn = column; }
@@ -89,20 +89,20 @@ namespace BlackGui::Models
         void setNoSorting() { this->setSortColumn(-1); }
 
         //! Sort by index
-        void sortByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
+        void sortByPropertyIndex(const swift::misc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
 
         //! Set column for sorting
         //! \param propertyIndex index of column to be sorted
-        virtual bool setSortColumnByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex);
+        virtual bool setSortColumnByPropertyIndex(const swift::misc::CPropertyIndex &propertyIndex);
 
         //! Sorting
-        virtual bool setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
+        virtual bool setSorting(const swift::misc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
 
         //! Get sort column property index
         virtual int getSortColumn() const { return m_sortColumn; }
 
         //! Sorted by property
-        BlackMisc::CPropertyIndex getSortProperty() const;
+        swift::misc::CPropertyIndex getSortProperty() const;
 
         //! Has valid sort column?
         virtual bool hasValidSortColumn() const;
@@ -110,7 +110,7 @@ namespace BlackGui::Models
         //! Get sort order
         virtual Qt::SortOrder getSortOrder() const { return m_sortOrder; }
 
-        //! Orderable, normally use a container BlackMisc::IOrderableList
+        //! Orderable, normally use a container swift::misc::IOrderableList
         virtual bool isOrderable() const = 0;
 
         //! Mark as about to be destroyed, normally marked from view
@@ -164,7 +164,7 @@ namespace BlackGui::Models
         void changedDigest();
 
         //! Template free information, that object changed
-        void objectChanged(const BlackMisc::CVariant &object, const BlackMisc::CPropertyIndex &changedIndex);
+        void objectChanged(const swift::misc::CVariant &object, const swift::misc::CPropertyIndex &changedIndex);
 
     protected:
         //! Feedback when QStandardItemModel::dataChanged was called
@@ -183,10 +183,10 @@ namespace BlackGui::Models
         bool m_modelDestroyed = false; //!< \todo rudimentary workaround for T579, can be removed
         Qt::SortOrder m_sortOrder; //!< sort order (asc/desc)
         Qt::DropActions m_dropActions = Qt::IgnoreAction; //!< drop actions
-        BlackMisc::CPropertyIndexList m_sortTieBreakers; //!< how column values are sorted if equal, if no value is given this is random
+        swift::misc::CPropertyIndexList m_sortTieBreakers; //!< how column values are sorted if equal, if no value is given this is random
 
     private:
-        BlackMisc::CDigestSignal m_dsModelsChanged { this, &CListModelBaseNonTemplate::changed, &CListModelBaseNonTemplate::onChangedDigest, 500, 10 };
+        swift::misc::CDigestSignal m_dsModelsChanged { this, &CListModelBaseNonTemplate::changed, &CListModelBaseNonTemplate::onChangedDigest, 500, 10 };
     };
 
 } // namespace

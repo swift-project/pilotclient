@@ -5,7 +5,7 @@
 #define BLACKGUI_DROPBASE_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/variant.h"
+#include "misc/variant.h"
 #include <QList>
 #include <QFileInfo>
 #include <QMimeData>
@@ -43,7 +43,7 @@ namespace BlackGui
         bool acceptDrop(const QMimeData *mime) const;
 
         //! Mime data to CVariant (normally encapsulating a value object)
-        BlackMisc::CVariant toCVariant(const QMimeData *mime) const;
+        swift::misc::CVariant toCVariant(const QMimeData *mime) const;
 
     protected:
         //! Ctor

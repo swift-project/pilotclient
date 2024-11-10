@@ -4,15 +4,15 @@
 #include "dbusserveraddressselector.h"
 #include "ui_dbusserveraddressselector.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/dbusserver.h"
+#include "misc/network/networkutils.h"
+#include "misc/dbusserver.h"
 #include "config/buildconfig.h"
 
 #include <QIntValidator>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 
 namespace BlackGui::Components
 {

@@ -3,15 +3,15 @@
 
 #include "blackgui/editors/validationindicator.h"
 #include "blackgui/stylesheetutility.h"
-#include "blackmisc/icon.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/icon.h"
+#include "misc/icons.h"
+#include "misc/statusmessage.h"
 #include "ui_validationindicator.h"
 
 #include <QLabel>
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Editors
 {
@@ -72,7 +72,7 @@ namespace BlackGui::Editors
         }
     }
 
-    void CValidationIndicator::setState(const BlackMisc::CStatusMessageList &msgs)
+    void CValidationIndicator::setState(const swift::misc::CStatusMessageList &msgs)
     {
         if (msgs.hasErrorMessages())
         {

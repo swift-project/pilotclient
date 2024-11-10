@@ -6,10 +6,10 @@
 #include "blackgui/components/installxswiftbusdialog.h"
 #include "blackgui/components/downloaddialog.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/db/distributionlist.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/stringutils.h"
+#include "misc/network/networkutils.h"
+#include "misc/db/distributionlist.h"
+#include "misc/logmessage.h"
+#include "misc/stringutils.h"
 #include "config/buildconfig.h"
 
 #include <QDesktopServices>
@@ -17,9 +17,9 @@
 
 using namespace swift::config;
 using namespace BlackCore::Application;
-using namespace BlackMisc;
-using namespace BlackMisc::Db;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::db;
+using namespace swift::misc::network;
 
 namespace BlackGui::Components
 {

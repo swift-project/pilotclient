@@ -8,15 +8,15 @@
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/context/contextownaircraft.h"
-#include "blackmisc/aviation/aircraftenginelist.h"
-#include "blackmisc/aviation/aircraftlights.h"
+#include "misc/aviation/aircraftenginelist.h"
+#include "misc/aviation/aircraftlights.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Math;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::math;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::simulation;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 

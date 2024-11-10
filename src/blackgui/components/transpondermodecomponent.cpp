@@ -5,14 +5,14 @@
 #include "ui_transpondermodecomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextownaircraft.h"
-#include "blackmisc/aviation/transponder.h"
+#include "misc/aviation/transponder.h"
 
 #include <QTimer>
 #include <QPointer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
 using namespace BlackCore::Context;
 
 namespace BlackGui::Components

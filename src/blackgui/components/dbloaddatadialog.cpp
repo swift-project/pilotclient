@@ -6,18 +6,18 @@
 #include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/db/databaseutils.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/logmessage.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/logmessage.h"
 
 #include <QDialogButtonBox>
 #include <QModelIndexList>
 #include <QPointer>
 #include <QStringBuilder>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::Data;
+using namespace swift::misc;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::data;
 using namespace BlackCore;
 using namespace BlackCore::Db;
 

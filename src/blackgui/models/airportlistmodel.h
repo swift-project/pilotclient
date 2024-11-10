@@ -8,8 +8,8 @@
 
 #include "blackgui/models/listmodelbase.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/aviation/airport.h"
+#include "misc/aviation/airportlist.h"
+#include "misc/aviation/airport.h"
 
 class QObject;
 
@@ -17,7 +17,7 @@ namespace BlackGui::Models
 {
     //! Airport list model
     class BLACKGUI_EXPORT CAirportListModel :
-        public CListModelBase<BlackMisc::Aviation::CAirportList, true>
+        public CListModelBase<swift::misc::aviation::CAirportList, true>
     {
         Q_OBJECT
 

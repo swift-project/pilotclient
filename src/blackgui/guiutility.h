@@ -7,7 +7,7 @@
 #define BLACKGUI_GUIUTILITY_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/variant.h"
+#include "misc/variant.h"
 
 #include <QByteArray>
 #include <QSize>
@@ -34,7 +34,7 @@ class QWizard;
 class QGraphicsOpacityEffect;
 class QAbstractItemModel;
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CIcon;
 }
@@ -112,10 +112,10 @@ namespace BlackGui
         static bool hasSwiftVariantMimeType(const QMimeData *mime);
 
         //! From text dropped
-        static BlackMisc::CVariant fromSwiftDragAndDropData(const QMimeData *mime);
+        static swift::misc::CVariant fromSwiftDragAndDropData(const QMimeData *mime);
 
         //! From text dropped
-        static BlackMisc::CVariant fromSwiftDragAndDropData(const QByteArray &utf8Data);
+        static swift::misc::CVariant fromSwiftDragAndDropData(const QByteArray &utf8Data);
 
         //! Meta type id from dropped data
         static int metaTypeIdFromSwiftDragAndDropData(const QMimeData *mime);
@@ -263,10 +263,10 @@ namespace BlackGui
         static void superviseMainWindowMinSizes(qreal wRatio = 0.85, qreal hRatio = 0.85);
 
         //! CIcon as simple HTML image code segment
-        static QString asSimpleHtmlImageWidth(const BlackMisc::CIcon &icon, int width = -1);
+        static QString asSimpleHtmlImageWidth(const swift::misc::CIcon &icon, int width = -1);
 
         //! CIcon as simple HTML image code segment
-        static QString asSimpleHtmlImageHeight(const BlackMisc::CIcon &icon, int height = -1);
+        static QString asSimpleHtmlImageHeight(const swift::misc::CIcon &icon, int height = -1);
 
         //! Find parent dialog if there is any, otherwise null
         static QDialog *findParentDialog(QWidget *widget);

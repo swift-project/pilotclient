@@ -11,15 +11,15 @@
 #include "blackgui/pluginconfigwindow.h"
 #include "blackgui/plugindetailswindow.h"
 #include "blackgui/pluginselector.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/simulation/simulatorplugininfolist.h"
-#include "blackmisc/pq/length.h"
-#include "blackmisc/pq/time.h"
-#include "blackmisc/pq/units.h"
-#include "blackmisc/iterator.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/verify.h"
+#include "misc/simulation/simulatorplugininfo.h"
+#include "misc/simulation/simulatorplugininfolist.h"
+#include "misc/pq/length.h"
+#include "misc/pq/time.h"
+#include "misc/pq/units.h"
+#include "misc/iterator.h"
+#include "misc/logmessage.h"
+#include "misc/statusmessage.h"
+#include "misc/verify.h"
 #include "ui_settingssimulatorcomponent.h"
 
 #include <QApplication>
@@ -33,11 +33,11 @@
 #include <QtGlobal>
 #include <algorithm>
 
-using namespace BlackMisc;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::Settings;
+using namespace swift::misc;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::settings;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 

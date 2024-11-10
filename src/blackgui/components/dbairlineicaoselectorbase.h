@@ -8,8 +8,8 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/dropbase.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/network/entityflags.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/network/entityflags.h"
 
 #include <QFrame>
 #include <QObject>
@@ -39,13 +39,13 @@ namespace BlackGui::Components
         virtual ~CDbAirlineIcaoSelectorBase() override;
 
         //! Current airline ICAO
-        virtual bool setAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
+        virtual bool setAirlineIcao(const swift::misc::aviation::CAirlineIcaoCode &icao);
 
         //! Current airline ICAO by key
         bool setAirlineIcao(int key);
 
         //! Airline ICAO
-        const BlackMisc::Aviation::CAirlineIcaoCode &getAirlineIcao() const { return m_currentIcao; }
+        const swift::misc::aviation::CAirlineIcaoCode &getAirlineIcao() const { return m_currentIcao; }
 
         //! Read only
         virtual void setReadOnly(bool readOnly) = 0;
@@ -58,7 +58,7 @@ namespace BlackGui::Components
 
     signals:
         //! ICAO was changed
-        void changedAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
+        void changedAirlineIcao(const swift::misc::aviation::CAirlineIcaoCode &icao);
 
     protected:
         //! Constructor
@@ -80,11 +80,11 @@ namespace BlackGui::Components
         virtual void dropEvent(QDropEvent *event) override;
 
         QScopedPointer<QCompleter> m_completer; //!< completer used
-        BlackMisc::Aviation::CAirlineIcaoCode m_currentIcao; //!< current ICAO object
+        swift::misc::aviation::CAirlineIcaoCode m_currentIcao; //!< current ICAO object
 
     private:
         //! Airlines have been read
-        void onCodesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count, const QUrl &url);
+        void onCodesRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState readState, int count, const QUrl &url);
 
         //! Data have been changed
         void onCompleterActivated(const QString &icaoString);

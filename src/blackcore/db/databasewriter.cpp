@@ -5,11 +5,11 @@
 #include "blackcore/db/databasewriter.h"
 #include "blackcore/db/databaseutils.h"
 #include "blackcore/application.h"
-#include "blackmisc/simulation/autopublishdata.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/db/datastoreutility.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/simulation/autopublishdata.h"
+#include "misc/network/networkutils.h"
+#include "misc/db/datastoreutility.h"
+#include "misc/logcategories.h"
+#include "misc/statusmessage.h"
 
 #include <QStringBuilder>
 #include <QHttpMultiPart>
@@ -22,15 +22,15 @@
 #include <QByteArray>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Db;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::db;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
 using namespace BlackCore::Db;
 
 namespace BlackCore::Db
 {
-    CDatabaseWriter::CDatabaseWriter(const Network::CUrl &baseUrl, QObject *parent) : QObject(parent),
+    CDatabaseWriter::CDatabaseWriter(const network::CUrl &baseUrl, QObject *parent) : QObject(parent),
                                                                                       m_modelPublishUrl(CDatabaseWriter::getModelPublishUrl(baseUrl)),
                                                                                       m_autoPublishUrl(CDatabaseWriter::getAutoPublishUrl(baseUrl))
     {
@@ -242,7 +242,7 @@ namespace BlackCore::Db
         return ms > 7500;
     }
 
-    CUrl CDatabaseWriter::getModelPublishUrl(const Network::CUrl &baseUrl)
+    CUrl CDatabaseWriter::getModelPublishUrl(const network::CUrl &baseUrl)
     {
         return baseUrl.withAppendedPath("service/publishmodels.php");
     }

@@ -4,7 +4,7 @@
 #include "cgsourceselector.h"
 #include "ui_cgsourceselector.h"
 
-using namespace BlackMisc::Simulation::Settings;
+using namespace swift::misc::simulation::settings;
 
 namespace BlackGui::Components
 {

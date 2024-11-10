@@ -27,13 +27,13 @@
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/context/contextaudio.h"
 #include "sound/audioutilities.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/sharedstate/datalinkdbus.h"
-#include "blackmisc/loghandler.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/logpattern.h"
-#include "blackmisc/slot.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/network/networkutils.h"
+#include "misc/sharedstate/datalinkdbus.h"
+#include "misc/loghandler.h"
+#include "misc/logmessage.h"
+#include "misc/logpattern.h"
+#include "misc/slot.h"
+#include "misc/statusmessage.h"
 #include "config/buildconfig.h"
 
 #include <QAction>
@@ -50,10 +50,10 @@
 using namespace swift::config;
 using namespace BlackCore;
 using namespace BlackCore::Context;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Input;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::input;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 

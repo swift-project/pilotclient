@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "xswiftbustrafficproxy.h"
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
 #include <QLatin1String>
 #include <QDBusConnection>
@@ -10,10 +10,10 @@
 
 #define XSWIFTBUS_SERVICENAME "org.swift-project.xswiftbus"
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::geo;
+using namespace swift::misc::physical_quantities;
 
 namespace BlackSimPlugin::XPlane
 {
@@ -25,7 +25,7 @@ namespace BlackSimPlugin::XPlane
 
     CXSwiftBusTrafficProxy::CXSwiftBusTrafficProxy(QDBusConnection &connection, QObject *parent, bool dummy) : QObject(parent)
     {
-        m_dbusInterface = new BlackMisc::CGenericDBusInterface(XSWIFTBUS_SERVICENAME, ObjectPath(), InterfaceName(), connection, this);
+        m_dbusInterface = new swift::misc::CGenericDBusInterface(XSWIFTBUS_SERVICENAME, ObjectPath(), InterfaceName(), connection, this);
         if (!dummy)
         {
             bool s;

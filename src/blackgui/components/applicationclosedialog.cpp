@@ -6,14 +6,14 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackcore/context/contextapplication.h"
-#include "blackmisc/settingscache.h"
-#include "blackmisc/logmessage.h"
+#include "misc/settingscache.h"
+#include "misc/logmessage.h"
 #include <QStringListModel>
 #include <QModelIndexList>
 #include <QDialogButtonBox>
 #include <QPushButton>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui;
 using namespace BlackCore::Context;
 

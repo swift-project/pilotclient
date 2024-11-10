@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "textmessagesettings.h"
-#include "blackmisc/network/textmessage.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "misc/network/textmessage.h"
+#include "misc/simulation/simulatedaircraft.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackGui::Settings, CTextMessageSettings)
 

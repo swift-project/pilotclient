@@ -3,7 +3,7 @@
 
 #include "config.h"
 #include "utils.h"
-#include "blackmisc/simulation/xplane/qtfreeutils.h"
+#include "misc/simulation/xplane/qtfreeutils.h"
 
 #include <fstream>
 #include <string>
@@ -12,7 +12,7 @@
 #include <chrono>
 #include <iomanip>
 
-using namespace BlackMisc::Simulation::XPlane::QtFreeUtils;
+using namespace swift::misc::simulation::xplane::qtfreeutils;
 
 namespace XSwiftBus
 {

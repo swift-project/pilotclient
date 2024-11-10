@@ -4,7 +4,7 @@
 #include "settingsmatchingdialog.h"
 #include "ui_settingsmatchingdialog.h"
 
-using namespace BlackMisc::Simulation;
+using namespace swift::misc::simulation;
 
 namespace BlackGui::Components
 {

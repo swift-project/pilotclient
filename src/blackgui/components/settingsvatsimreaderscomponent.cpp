@@ -4,8 +4,8 @@
 #include "settingsvatsimreaderscomponent.h"
 #include "ui_settingsvatsimreaderscomponent.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::physical_quantities;
 using namespace BlackCore;
 using namespace BlackCore::Vatsim;
 

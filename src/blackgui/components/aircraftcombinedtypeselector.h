@@ -7,7 +7,7 @@
 #define BLACKGUI_AIRCRAFTCOMBINEDTYPESELECTOR_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
+#include "misc/aviation/aircrafticaocode.h"
 
 #include <QFrame>
 #include <QObject>
@@ -18,7 +18,7 @@ namespace Ui
 {
     class CAircraftCombinedTypeSelector;
 }
-namespace BlackMisc::Aviation
+namespace swift::misc::aviation
 {
     class CAircraftIcaoCode;
 }
@@ -42,7 +42,7 @@ namespace BlackGui::Components
         void setCombinedType(const QString &combinedCode);
 
         //! Combined code from aircraft ICAO
-        void setCombinedType(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+        void setCombinedType(const swift::misc::aviation::CAircraftIcaoCode &icao);
 
         //! Clear
         void clear();

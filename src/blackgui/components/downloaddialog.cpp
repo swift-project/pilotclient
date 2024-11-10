@@ -5,7 +5,7 @@
 #include "ui_downloaddialog.h"
 #include <QTimer>
 
-using namespace BlackMisc::Network;
+using namespace swift::misc::network;
 
 namespace BlackGui::Components
 {

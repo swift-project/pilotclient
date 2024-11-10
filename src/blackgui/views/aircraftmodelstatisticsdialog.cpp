@@ -4,8 +4,8 @@
 #include "aircraftmodelstatisticsdialog.h"
 #include "ui_aircraftmodelstatisticsdialog.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/aviation/aircrafticaocodelist.h"
-#include "blackmisc/simulation/aircraftmodelutils.h"
+#include "misc/aviation/aircrafticaocodelist.h"
+#include "misc/simulation/aircraftmodelutils.h"
 
 #include <QPushButton>
 #include <QDesktopServices>
@@ -13,8 +13,8 @@
 #include <QStringBuilder>
 #include <QStringList>
 
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
 
 namespace BlackGui::Views
 {

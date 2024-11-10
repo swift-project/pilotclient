@@ -10,14 +10,14 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/data/globalsetup.h"
-#include "blackmisc/simulation/autopublishdata.h"
-#include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/sharedstate/datalinkdbus.h"
-#include "blackmisc/loghandler.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/logpattern.h"
-#include "blackmisc/network/url.h"
+#include "misc/simulation/autopublishdata.h"
+#include "misc/simulation/distributorlist.h"
+#include "misc/sharedstate/datalinkdbus.h"
+#include "misc/loghandler.h"
+#include "misc/statusmessage.h"
+#include "misc/logmessage.h"
+#include "misc/logpattern.h"
+#include "misc/network/url.h"
 #include "config/buildconfig.h"
 #include "ui_swiftdata.h"
 
@@ -28,9 +28,9 @@
 #include <QVersionNumber>
 #include <QPointer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
 using namespace BlackCore;
 using namespace BlackCore::Data;
 using namespace BlackCore::Db;

@@ -6,12 +6,12 @@
 #ifndef BLACKGUI_COMPONENTS_OWNAIRCRAFTCOMPONENT_H
 #define BLACKGUI_COMPONENTS_OWNAIRCRAFTCOMPONENT_H
 
-#include "blackmisc/simulation/data/lastmodel.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/callsign.h"
+#include "misc/simulation/data/lastmodel.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/network/user.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/callsign.h"
 
 #include <QFrame>
 #include <QScopedPointer>
@@ -31,9 +31,9 @@ namespace BlackGui::Components
         //! GUI aircraft values, formatted
         struct CGuiAircraftValues
         {
-            BlackMisc::Aviation::CCallsign ownCallsign; //!< own aircraft callsign
-            BlackMisc::Aviation::CAircraftIcaoCode ownAircraftIcao; //!< ICAO aircraft
-            BlackMisc::Aviation::CAirlineIcaoCode ownAirlineIcao; //!< ICAO airline
+            swift::misc::aviation::CCallsign ownCallsign; //!< own aircraft callsign
+            swift::misc::aviation::CAircraftIcaoCode ownAircraftIcao; //!< ICAO aircraft
+            swift::misc::aviation::CAirlineIcaoCode ownAirlineIcao; //!< ICAO airline
             QString ownAircraftCombinedType; //!< own aircraft combined type
             QString ownAircraftSimulatorModelString; //!< own aircraft model string
             QString ownAircraftModelStringSend; //!< send model string
@@ -49,16 +49,16 @@ namespace BlackGui::Components
         virtual ~COwnAircraftComponent() override;
 
         //! Validate aircaft
-        BlackMisc::CStatusMessageList validate() const;
+        swift::misc::CStatusMessageList validate() const;
 
         //! Set a user
-        void setUser(const BlackMisc::Network::CUser &user);
+        void setUser(const swift::misc::network::CUser &user);
 
         //! Values from GUI
-        BlackMisc::Aviation::CCallsign getCallsignFromGui() const;
+        swift::misc::aviation::CCallsign getCallsignFromGui() const;
 
         //! Own model and ICAO data for GUI and own aircraft
-        void setOwnModelAndIcaoValues(const BlackMisc::Simulation::CAircraftModel &ownModel = {});
+        void setOwnModelAndIcaoValues(const swift::misc::simulation::CAircraftModel &ownModel = {});
 
         //! Update own ICAO values (own aircraft from what is set in the GUI)
         //! \return changed?
@@ -73,7 +73,7 @@ namespace BlackGui::Components
 
     private:
         //! Simulator model has been changed
-        void onSimulatorModelChanged(const BlackMisc::Simulation::CAircraftModel &model);
+        void onSimulatorModelChanged(const swift::misc::simulation::CAircraftModel &model);
 
         //! Model string send
         void onModelStringSendChanged();
@@ -83,16 +83,16 @@ namespace BlackGui::Components
 
         //! Set ICAO values
         //! \return changed values?
-        bool setGuiIcaoValues(const BlackMisc::Simulation::CAircraftModel &model, bool onlyIfEmpty);
+        bool setGuiIcaoValues(const swift::misc::simulation::CAircraftModel &model, bool onlyIfEmpty);
 
         //! Aircraft ICAO code has been changed
-        void changedAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+        void changedAircraftIcao(const swift::misc::aviation::CAircraftIcaoCode &icao);
 
         //! Airline ICAO code has been changed
-        void changedAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
+        void changedAirlineIcao(const swift::misc::aviation::CAirlineIcaoCode &icao);
 
         //! Highlight model field according to model data
-        void highlightModelField(const BlackMisc::Simulation::CAircraftModel &model = {});
+        void highlightModelField(const swift::misc::simulation::CAircraftModel &model = {});
 
         //! Has contexts?
         bool hasValidContexts() const;
@@ -101,9 +101,9 @@ namespace BlackGui::Components
         void clearLivery();
 
         //! Get a prefill model
-        BlackMisc::Simulation::CAircraftModel getPrefillModel() const;
+        swift::misc::simulation::CAircraftModel getPrefillModel() const;
 
-        BlackMisc::CData<BlackMisc::Simulation::Data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
+        swift::misc::CData<swift::misc::simulation::data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
         QScopedPointer<Ui::COwnAircraftComponent> ui;
     };
 } // ns

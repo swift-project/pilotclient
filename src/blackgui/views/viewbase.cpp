@@ -7,7 +7,7 @@
 #include "blackgui/views/viewbaseitemdelegate.h"
 #include "blackgui/models/allmodels.h"
 #include "blackgui/components/texteditdialog.h"
-#include "blackmisc/worker.h"
+#include "misc/worker.h"
 #include "config/buildconfig.h"
 
 #include <QApplication>
@@ -16,7 +16,7 @@
 #include <QTextEdit>
 #include <QStringBuilder>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui;
 using namespace BlackGui::Menus;
 using namespace BlackGui::Models;
@@ -654,7 +654,7 @@ namespace BlackGui::Views
     }
 
     template <class T>
-    int CViewBase<T>::performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize)
+    int CViewBase<T>::performUpdateContainer(const swift::misc::CVariant &variant, bool sort, bool resize)
     {
         ContainerType c(variant.to<ContainerType>());
         return this->updateContainer(c, sort, resize);
@@ -743,7 +743,7 @@ namespace BlackGui::Views
                 m = CStatusMessage(this).warning(u"Reading '%1' yields no data") << fileName;
                 break;
             }
-            if (!Json::looksLikeSwiftJson(json))
+            if (!json::looksLikeSwiftJson(json))
             {
                 m = CStatusMessage(this).warning(u"No swift JSON '%1'") << fileName;
                 break;
@@ -752,7 +752,7 @@ namespace BlackGui::Views
             try
             {
                 const bool allowCacheFormat = this->allowCacheFileFormatJson();
-                const QJsonObject jsonObject = Json::jsonObjectFromString(json, allowCacheFormat);
+                const QJsonObject jsonObject = json::jsonObjectFromString(json, allowCacheFormat);
                 if (jsonObject.isEmpty())
                 {
                     m = CStatusMessage(this).warning(u"No valid swift JSON '%1'") << fileName;
@@ -867,7 +867,7 @@ namespace BlackGui::Views
         if (!clipboard) { return; }
         const QString json = clipboard->text();
         if (json.isEmpty()) { return; }
-        if (!Json::looksLikeSwiftJson(json)) { return; } // no JSON
+        if (!json::looksLikeSwiftJson(json)) { return; } // no JSON
         try
         {
             ContainerType objects;

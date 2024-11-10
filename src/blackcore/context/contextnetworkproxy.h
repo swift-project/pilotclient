@@ -9,23 +9,23 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackmisc/aviation/airporticaocode.h"
-#include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/callsignset.h"
-#include "blackmisc/aviation/flightplan.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/network/clientlist.h"
-#include "blackmisc/network/loginmode.h"
-#include "blackmisc/network/server.h"
-#include "blackmisc/network/serverlist.h"
-#include "blackmisc/network/textmessagelist.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/network/userlist.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/weather/metar.h"
+#include "misc/aviation/airporticaocode.h"
+#include "misc/aviation/atcstation.h"
+#include "misc/aviation/atcstationlist.h"
+#include "misc/aviation/callsignset.h"
+#include "misc/aviation/flightplan.h"
+#include "misc/identifier.h"
+#include "misc/network/clientlist.h"
+#include "misc/network/loginmode.h"
+#include "misc/network/server.h"
+#include "misc/network/serverlist.h"
+#include "misc/network/textmessagelist.h"
+#include "misc/network/user.h"
+#include "misc/network/userlist.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/simulatedaircraftlist.h"
+#include "misc/statusmessage.h"
+#include "misc/weather/metar.h"
 
 #include <stdbool.h>
 #include <QObject>
@@ -35,15 +35,15 @@
 
 class QDBusConnection;
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CGenericDBusInterface;
-    namespace Aviation
+    namespace aviation
     {
         class CAircraftParts;
         class CCallsign;
     }
-    namespace Simulation
+    namespace simulation
     {
         class CAircraftModel;
     }
@@ -74,85 +74,85 @@ namespace BlackCore
             //! @{
 
             //! \copydoc BlackCore::Context::IContextNetwork::getAtcStationsOnline
-            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline(bool recalculateDistance) const override;
+            virtual swift::misc::aviation::CAtcStationList getAtcStationsOnline(bool recalculateDistance) const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getClosestAtcStationsOnline
-            virtual BlackMisc::Aviation::CAtcStationList getClosestAtcStationsOnline(int number) const override;
+            virtual swift::misc::aviation::CAtcStationList getClosestAtcStationsOnline(int number) const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getAircraftInRange
-            virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;
+            virtual swift::misc::simulation::CSimulatedAircraftList getAircraftInRange() const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getAircraftInRangeCallsigns
-            virtual BlackMisc::Aviation::CCallsignSet getAircraftInRangeCallsigns() const override;
+            virtual swift::misc::aviation::CCallsignSet getAircraftInRangeCallsigns() const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getAircraftInRangeCount
             virtual int getAircraftInRangeCount() const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::isAircraftInRange
-            virtual bool isAircraftInRange(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual bool isAircraftInRange(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getAircraftInRangeForCallsign
-            virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual swift::misc::simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getOnlineStationsForFrequency
-            virtual BlackMisc::Aviation::CAtcStationList getOnlineStationsForFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency) const override;
+            virtual swift::misc::aviation::CAtcStationList getOnlineStationsForFrequency(const swift::misc::physical_quantities::CFrequency &frequency) const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getOnlineStationForCallsign
-            virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual swift::misc::aviation::CAtcStation getOnlineStationForCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::isOnlineStation
-            virtual bool isOnlineStation(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual bool isOnlineStation(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::connectToNetwork
-            virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, const QString &extraLiveryString, bool sendLivery, const QString &extraModelString, bool sendModelString, const BlackMisc::Aviation::CCallsign &partnerCallsign, BlackMisc::Network::CLoginMode mode) override;
+            virtual swift::misc::CStatusMessage connectToNetwork(const swift::misc::network::CServer &server, const QString &extraLiveryString, bool sendLivery, const QString &extraModelString, bool sendModelString, const swift::misc::aviation::CCallsign &partnerCallsign, swift::misc::network::CLoginMode mode) override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::disconnectFromNetwork
-            virtual BlackMisc::CStatusMessage disconnectFromNetwork() override;
+            virtual swift::misc::CStatusMessage disconnectFromNetwork() override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::isConnected
             virtual bool isConnected() const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getConnectedServer
-            virtual BlackMisc::Network::CServer getConnectedServer() const override;
+            virtual swift::misc::network::CServer getConnectedServer() const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getLoginMode
-            virtual BlackMisc::Network::CLoginMode getLoginMode() const override;
+            virtual swift::misc::network::CLoginMode getLoginMode() const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::parseCommandLine
-            virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
+            virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::sendTextMessages
-            virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;
+            virtual void sendTextMessages(const swift::misc::network::CTextMessageList &textMessages) override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::sendFlightPlan
-            virtual void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan) override;
+            virtual void sendFlightPlan(const swift::misc::aviation::CFlightPlan &flightPlan) override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::loadFlightPlanFromNetwork
-            virtual BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual swift::misc::aviation::CFlightPlan loadFlightPlanFromNetwork(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getMetarForAirport
-            BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) const override;
+            swift::misc::weather::CMetar getMetarForAirport(const swift::misc::aviation::CAirportIcaoCode &airportIcaoCode) const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getUsers
-            virtual BlackMisc::Network::CUserList getUsers() const override;
+            virtual swift::misc::network::CUserList getUsers() const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getUsersForCallsigns
-            virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override;
+            virtual swift::misc::network::CUserList getUsersForCallsigns(const swift::misc::aviation::CCallsignSet &callsigns) const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getUserForCallsign
-            virtual BlackMisc::Network::CUser getUserForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual swift::misc::network::CUser getUserForCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getClients
-            virtual BlackMisc::Network::CClientList getClients() const override;
+            virtual swift::misc::network::CClientList getClients() const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getVatsimFsdServers
-            virtual BlackMisc::Network::CServerList getVatsimFsdServers() const override;
+            virtual swift::misc::network::CServerList getVatsimFsdServers() const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getClientsForCallsigns
-            virtual BlackMisc::Network::CClientList getClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override;
+            virtual swift::misc::network::CClientList getClientsForCallsigns(const swift::misc::aviation::CCallsignSet &callsigns) const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::setOtherClient
-            virtual bool setOtherClient(const BlackMisc::Network::CClient &client) override;
+            virtual bool setOtherClient(const swift::misc::network::CClient &client) override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::requestAircraftDataUpdates
             virtual void requestAircraftDataUpdates() override;
@@ -161,46 +161,46 @@ namespace BlackCore
             virtual void requestAtisUpdates() override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::updateAircraftEnabled
-            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override;
+            virtual bool updateAircraftEnabled(const swift::misc::aviation::CCallsign &callsign, bool enabledForRendering) override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::setAircraftEnabledFlag
-            virtual bool setAircraftEnabledFlag(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override;
+            virtual bool setAircraftEnabledFlag(const swift::misc::aviation::CCallsign &callsign, bool enabledForRendering) override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::updateAircraftModel
-            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateAircraftModel(const swift::misc::aviation::CCallsign &callsign, const swift::misc::simulation::CAircraftModel &model, const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::updateAircraftNetworkModel
-            virtual bool updateAircraftNetworkModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateAircraftNetworkModel(const swift::misc::aviation::CCallsign &callsign, const swift::misc::simulation::CAircraftModel &model, const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::updateFastPositionEnabled
-            virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending) override;
+            virtual bool updateFastPositionEnabled(const swift::misc::aviation::CCallsign &callsign, bool enableFastPositionSending) override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::updateAircraftSupportingGndFLag
-            virtual bool updateAircraftSupportingGndFLag(const BlackMisc::Aviation::CCallsign &callsign, bool supportGndFlag) override;
+            virtual bool updateAircraftSupportingGndFLag(const swift::misc::aviation::CCallsign &callsign, bool supportGndFlag) override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::reInitializeAllAircraft
             virtual int reInitializeAllAircraft() override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::setFastPositionEnabledCallsigns
-            virtual void setFastPositionEnabledCallsigns(BlackMisc::Aviation::CCallsignSet &callsigns) override;
+            virtual void setFastPositionEnabledCallsigns(swift::misc::aviation::CCallsignSet &callsigns) override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getFastPositionEnabledCallsigns
-            virtual BlackMisc::Aviation::CCallsignSet getFastPositionEnabledCallsigns() const override;
+            virtual swift::misc::aviation::CCallsignSet getFastPositionEnabledCallsigns() const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getReverseLookupMessages
-            virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual swift::misc::CStatusMessageList getReverseLookupMessages(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::isReverseLookupMessagesEnabled
-            virtual BlackMisc::Simulation::ReverseLookupLogging isReverseLookupMessagesEnabled() const override;
+            virtual swift::misc::simulation::ReverseLookupLogging isReverseLookupMessagesEnabled() const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::enableReverseLookupMessages
-            virtual void enableReverseLookupMessages(BlackMisc::Simulation::ReverseLookupLogging enable) override;
+            virtual void enableReverseLookupMessages(swift::misc::simulation::ReverseLookupLogging enable) override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getAircraftPartsHistory
-            virtual BlackMisc::CStatusMessageList getAircraftPartsHistory(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual swift::misc::CStatusMessageList getAircraftPartsHistory(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getRemoteAircraftParts
-            virtual BlackMisc::Aviation::CAircraftPartsList getRemoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual swift::misc::aviation::CAircraftPartsList getRemoteAircraftParts(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getLibraryInfo
             virtual QString getLibraryInfo(bool detailed) const override;
@@ -209,7 +209,7 @@ namespace BlackCore
             virtual bool isAircraftPartsHistoryEnabled() const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::isRemoteAircraftSupportingParts
-            virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual bool isRemoteAircraftSupportingParts(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::enableAircraftPartsHistory
             virtual void enableAircraftPartsHistory(bool enabled) override;
@@ -224,25 +224,25 @@ namespace BlackCore
             virtual QStringList getNetworkPresetValues() const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::getPartnerCallsign
-            virtual BlackMisc::Aviation::CCallsign getPartnerCallsign() const override;
+            virtual swift::misc::aviation::CCallsign getPartnerCallsign() const override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::testCreateDummyOnlineAtcStations
             virtual void testCreateDummyOnlineAtcStations(int number) override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::testAddAircraftParts
-            virtual void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) override;
+            virtual void testAddAircraftParts(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CAircraftParts &parts, bool incremental) override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::testReceivedTextMessages
-            virtual void testReceivedTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;
+            virtual void testReceivedTextMessages(const swift::misc::network::CTextMessageList &textMessages) override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::testReceivedAtisMessage
-            virtual void testReceivedAtisMessage(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &msg) override;
+            virtual void testReceivedAtisMessage(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CInformationMessage &msg) override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::testRequestAircraftConfig
-            virtual void testRequestAircraftConfig(const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual void testRequestAircraftConfig(const swift::misc::aviation::CCallsign &callsign) override;
 
             //! \copydoc BlackCore::Context::IContextNetwork::testAddAltitudeOffset
-            virtual bool testAddAltitudeOffset(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CLength &offset = BlackMisc::PhysicalQuantities::CLength::null()) override;
+            virtual bool testAddAltitudeOffset(const swift::misc::aviation::CCallsign &callsign, const swift::misc::physical_quantities::CLength &offset = swift::misc::physical_quantities::CLength::null()) override;
             //! @}
 
         public:
@@ -250,7 +250,7 @@ namespace BlackCore
             virtual QMetaObject::Connection connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot) override;
 
         private:
-            BlackMisc::CGenericDBusInterface *m_dBusInterface; /*!< DBus interface */
+            swift::misc::CGenericDBusInterface *m_dBusInterface; /*!< DBus interface */
 
             //! Relay connection signals to local signals.
             void relaySignals(const QString &serviceName, QDBusConnection &connection);

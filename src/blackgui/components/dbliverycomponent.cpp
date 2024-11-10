@@ -13,8 +13,8 @@
 
 using namespace BlackCore;
 using namespace BlackGui::Views;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
 
 namespace BlackGui::Components
 {
@@ -43,7 +43,7 @@ namespace BlackGui::Components
         return ui->tvp_Liveries;
     }
 
-    void CDbLiveryComponent::filter(const BlackMisc::Aviation::CLivery &livery)
+    void CDbLiveryComponent::filter(const swift::misc::aviation::CLivery &livery)
     {
         ui->filter_Livery->filter(livery);
     }

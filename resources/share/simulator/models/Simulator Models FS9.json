@@ -1,5 +1,5 @@
 {
-    "type": "BlackMisc::Simulation::CAircraftModelList",
+    "type": "swift::misc::simulation::CAircraftModelList",
     "value": {
         "containerbase": [
             {
@@ -260,7 +260,7 @@
                         "isMilitary": false,
                         "isOperating": true,
                         "isVa": false,
-                        "name": "White Airways (Yes - Linhas Aéreas Charter)",
+                        "name": "White Airways (Yes - Linhas Aï¿½reas Charter)",
                         "telephonyDesignator": "WHITEJET",
                         "timestampMSecsSinceEpoch": 1533141751000
                     },
@@ -276,7 +276,7 @@
                     },
                     "combinedCode": "WHT._STD",
                     "dbKey": 6188,
-                    "description": "Standard White Airways (Yes - Linhas Aéreas Charter)",
+                    "description": "Standard White Airways (Yes - Linhas Aï¿½reas Charter)",
                     "military": false,
                     "timestampMSecsSinceEpoch": 1533837526000
                 },
@@ -2527,7 +2527,7 @@
                     "value": 0
                 },
                 "dbKey": 14171,
-                "description": "Cessna C182S Skylane Weiß mit Grün",
+                "description": "Cessna C182S Skylane Weiï¿½ mit Grï¿½n",
                 "distributor": {
                     "alias1": "FLIGHT SIMULATOR 9",
                     "alias2": "MS FS9",

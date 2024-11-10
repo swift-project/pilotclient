@@ -3,14 +3,14 @@
 
 #include "configsimulatorcomponent.h"
 #include "blackgui/guiutility.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/simulation/fscommon/fsdirectories.h"
+#include "misc/logmessage.h"
+#include "misc/simulation/fscommon/fsdirectories.h"
 #include "config/buildconfig.h"
 #include "ui_configsimulatorcomponent.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::FsCommon;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::fscommon;
 using namespace swift::config;
 
 namespace BlackGui::Components

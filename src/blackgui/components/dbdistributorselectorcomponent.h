@@ -8,8 +8,8 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/dropbase.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/simulation/distributor.h"
+#include "misc/network/entityflags.h"
+#include "misc/simulation/distributor.h"
 
 #include <QFrame>
 #include <QMetaObject>
@@ -47,13 +47,13 @@ namespace BlackGui::Components
         virtual ~CDbDistributorSelectorComponent() override;
 
         //! Current distributor
-        void setDistributor(const BlackMisc::Simulation::CDistributor &distributor);
+        void setDistributor(const swift::misc::simulation::CDistributor &distributor);
 
         //! Current Distributor
         void setDistributor(const QString &distributorKeyOrAlias);
 
         //! Distributor
-        BlackMisc::Simulation::CDistributor getDistributor() const;
+        swift::misc::simulation::CDistributor getDistributor() const;
 
         //! Read only
         void setReadOnly(bool readOnly);
@@ -69,7 +69,7 @@ namespace BlackGui::Components
 
     signals:
         //! Distributor was changed
-        void changedDistributor(const BlackMisc::Simulation::CDistributor &distributor);
+        void changedDistributor(const swift::misc::simulation::CDistributor &distributor);
 
     protected:
         //! \copydoc QWidget::dragEnterEvent
@@ -86,7 +86,7 @@ namespace BlackGui::Components
 
     private:
         //! Distributors have been read
-        void onDistributorsRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+        void onDistributorsRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState readState, int count);
 
         //! Data have been changed
         void onDataChanged();
@@ -97,7 +97,7 @@ namespace BlackGui::Components
         QScopedPointer<Ui::CDbDistributorSelectorComponent> ui;
         QScopedPointer<QCompleter> m_completerDistributors;
         QMetaObject::Connection m_signalConnection;
-        BlackMisc::Simulation::CDistributor m_currentDistributor;
+        swift::misc::simulation::CDistributor m_currentDistributor;
     };
 } // ns
 #endif // guard

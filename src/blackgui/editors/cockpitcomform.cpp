@@ -5,18 +5,18 @@
 #include "ui_cockpitcomform.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackmisc/math/mathutils.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/icons.h"
+#include "misc/math/mathutils.h"
+#include "misc/logmessage.h"
+#include "misc/icons.h"
 
 #include <QPushButton>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Audio;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Math;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::audio;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::math;
+using namespace swift::misc::simulation;
 using namespace BlackCore::Context;
 using namespace BlackGui::Components;
 

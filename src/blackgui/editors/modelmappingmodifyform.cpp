@@ -5,20 +5,20 @@
 #include "blackgui/components/simulatorselector.h"
 #include "blackgui/editors/modelmappingmodifyform.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/simulatorinfo.h"
-#include "blackmisc/network/authenticateduser.h"
-#include "blackmisc/stringutils.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/network/authenticateduser.h"
+#include "misc/stringutils.h"
 #include "ui_modelmappingmodifyform.h"
 
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QString>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::network;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::simulation;
 using namespace BlackGui::Components;
 
 namespace BlackGui::Editors

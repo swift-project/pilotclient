@@ -11,8 +11,8 @@
 #include "blackgui/views/distributorview.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/directoryutils.h"
-#include "blackmisc/verify.h"
+#include "misc/directoryutils.h"
+#include "misc/verify.h"
 #include "config/buildconfig.h"
 
 #include <QStringList>
@@ -21,9 +21,9 @@
 #include <QMessageBox>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::Settings;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::settings;
 
 namespace BlackGui::Components
 {

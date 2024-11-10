@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "ecosystemcombobox.h"
-#include "blackmisc/network/ecosystemlist.h"
+#include "misc/network/ecosystemlist.h"
 
-using namespace BlackMisc::Network;
+using namespace swift::misc::network;
 
 namespace BlackGui
 {

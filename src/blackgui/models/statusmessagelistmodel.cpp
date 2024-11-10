@@ -4,13 +4,13 @@
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/columns.h"
 #include "blackgui/models/statusmessagelistmodel.h"
-#include "blackmisc/propertyindexvariantmap.h"
-#include "blackmisc/timestampbased.h"
+#include "misc/propertyindexvariantmap.h"
+#include "misc/timestampbased.h"
 
 #include <Qt>
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Models
 {

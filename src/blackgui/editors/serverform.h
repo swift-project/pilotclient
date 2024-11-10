@@ -8,8 +8,8 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/editors/form.h"
-#include "blackmisc/network/server.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/network/server.h"
+#include "misc/statusmessagelist.h"
 
 #include <QFrame>
 #include <QObject>
@@ -35,13 +35,13 @@ namespace BlackGui::Editors
         virtual ~CServerForm() override;
 
         //! Set server
-        void setServer(const BlackMisc::Network::CServer &server);
+        void setServer(const swift::misc::network::CServer &server);
 
         //! Get server
-        BlackMisc::Network::CServer getServer() const;
+        swift::misc::network::CServer getServer() const;
 
         //! Get currently selected server type
-        BlackMisc::Network::CServer::ServerType getServerType() const;
+        swift::misc::network::CServer::ServerType getServerType() const;
 
         //! Reset to 1st tab
         void resetToFirstTab();
@@ -49,7 +49,7 @@ namespace BlackGui::Editors
         //! \name Form class implementations
         //! @{
         virtual void setReadOnly(bool readonly) override;
-        virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+        virtual swift::misc::CStatusMessageList validate(bool nested = false) const override;
         //! @}
 
         //! Show the password field

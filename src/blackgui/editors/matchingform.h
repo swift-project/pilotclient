@@ -7,8 +7,8 @@
 #define BLACKGUI_EDITORS_MATCHINGFORM_H
 
 #include "blackgui/editors/form.h"
-#include "blackmisc/simulation/aircraftmatchersetup.h"
-#include "blackmisc/directories.h"
+#include "misc/simulation/aircraftmatchersetup.h"
+#include "misc/directories.h"
 
 #include <QScopedPointer>
 
@@ -33,33 +33,33 @@ namespace BlackGui::Editors
         //! \name Form class implementations
         //! @{
         virtual void setReadOnly(bool readonly) override;
-        virtual BlackMisc::CStatusMessageList validate(bool withNestedForms) const override;
+        virtual swift::misc::CStatusMessageList validate(bool withNestedForms) const override;
         //! @}
 
         //! Set valued
-        void setValue(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
+        void setValue(const swift::misc::simulation::CAircraftMatcherSetup &setup);
 
         //! Value
-        BlackMisc::Simulation::CAircraftMatcherSetup value() const;
+        swift::misc::simulation::CAircraftMatcherSetup value() const;
 
         //! Clear data
         void clear();
 
     private:
         //! Algorithm
-        BlackMisc::Simulation::CAircraftMatcherSetup::MatchingAlgorithm algorithm() const;
+        swift::misc::simulation::CAircraftMatcherSetup::MatchingAlgorithm algorithm() const;
 
         //! Mode
-        BlackMisc::Simulation::CAircraftMatcherSetup::MatchingMode matchingMode() const;
+        swift::misc::simulation::CAircraftMatcherSetup::MatchingMode matchingMode() const;
 
         //! Stragey
-        BlackMisc::Simulation::CAircraftMatcherSetup::PickSimilarStrategy pickStrategy() const;
+        swift::misc::simulation::CAircraftMatcherSetup::PickSimilarStrategy pickStrategy() const;
 
         //! Set the pick strategy
-        void setPickStrategy(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
+        void setPickStrategy(const swift::misc::simulation::CAircraftMatcherSetup &setup);
 
         //! Set the matching mode
-        void setMatchingAlgorithm(const BlackMisc::Simulation::CAircraftMatcherSetup &setup);
+        void setMatchingAlgorithm(const swift::misc::simulation::CAircraftMatcherSetup &setup);
 
         //! Algorithm has been toggled
         void onAlgorithmChanged();
@@ -76,7 +76,7 @@ namespace BlackGui::Editors
         //! Directory browser
         void fileDialog();
 
-        BlackMisc::CSetting<BlackMisc::Settings::TDirectorySettings> m_directories { this }; //!< the swift directories
+        swift::misc::CSetting<swift::misc::settings::TDirectorySettings> m_directories { this }; //!< the swift directories
         QScopedPointer<Ui::CMatchingForm> ui;
     };
 } // ns

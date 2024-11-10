@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_DBMAPPINGCOMPONENTAWARE_H
 #define BLACKGUI_COMPONENTS_DBMAPPINGCOMPONENTAWARE_H
 
-#include "blackmisc/statusmessage.h"
+#include "misc/statusmessage.h"
 #include "blackgui/blackguiexport.h"
 #include <QObject>
 
@@ -39,8 +39,8 @@ namespace BlackGui::Components
 
         //! @{
         //! Overlay messages
-        bool showMappingComponentOverlayMessage(const BlackMisc::CStatusMessage &message, int timeoutMs = -1);
-        bool showMappingComponentOverlayHtmlMessage(const BlackMisc::CStatusMessage &message, int timeoutMs = -1);
+        bool showMappingComponentOverlayMessage(const swift::misc::CStatusMessage &message, int timeoutMs = -1);
+        bool showMappingComponentOverlayHtmlMessage(const swift::misc::CStatusMessage &message, int timeoutMs = -1);
         //! @}
 
     private:

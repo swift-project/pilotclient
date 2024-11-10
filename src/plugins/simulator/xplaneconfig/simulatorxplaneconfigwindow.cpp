@@ -5,7 +5,7 @@
 #include "simulatorxplaneconfigwindow.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/simulation/xplane/xswiftbusconfigwriter.h"
+#include "misc/simulation/xplane/xswiftbusconfigwriter.h"
 
 #include <QComboBox>
 #include <QDialogButtonBox>
@@ -13,9 +13,9 @@
 
 using namespace BlackGui;
 using namespace BlackCore::Context;
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation::Settings;
-using namespace BlackMisc::Simulation::XPlane;
+using namespace swift::misc;
+using namespace swift::misc::simulation::settings;
+using namespace swift::misc::simulation::xplane;
 
 namespace BlackSimPlugin::XPlane
 {

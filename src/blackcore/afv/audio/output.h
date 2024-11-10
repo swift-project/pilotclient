@@ -7,7 +7,7 @@
 #define BLACKCORE_AFV_AUDIO_OUTPUT_H
 
 #include "sound/sampleprovider/sampleprovider.h"
-#include "blackmisc/audio/audiodeviceinfo.h"
+#include "misc/audio/audiodeviceinfo.h"
 
 #include <QObject>
 #include <QAudioSink>
@@ -77,13 +77,13 @@ namespace BlackCore::Afv::Audio
         }
 
         //! Start output
-        void start(const BlackMisc::Audio::CAudioDeviceInfo &outputDevice, swift::sound::sample_provider::ISampleProvider *sampleProvider);
+        void start(const swift::misc::audio::CAudioDeviceInfo &outputDevice, swift::sound::sample_provider::ISampleProvider *sampleProvider);
 
         //! Stop output
         void stop();
 
         //! Corresponding device
-        const BlackMisc::Audio::CAudioDeviceInfo &device() const { return m_device; }
+        const swift::misc::audio::CAudioDeviceInfo &device() const { return m_device; }
 
         /* disabled as not used
         //! @{
@@ -99,7 +99,7 @@ namespace BlackCore::Afv::Audio
 
     private:
         bool m_started = false;
-        BlackMisc::Audio::CAudioDeviceInfo m_device;
+        swift::misc::audio::CAudioDeviceInfo m_device;
         QScopedPointer<QAudioSink> m_audioOutput;
         CAudioOutputBuffer *m_audioOutputBuffer = nullptr;
     };

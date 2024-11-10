@@ -12,7 +12,7 @@
 
 class QObject;
 
-namespace BlackMisc
+namespace swift::misc
 {
     class CCountry;
     class CCountryList;
@@ -22,7 +22,7 @@ namespace BlackGui::Models
 {
     //! Country list model
     class BLACKGUI_EXPORT CCountryListModel :
-        public CListModelDbObjects<BlackMisc::CCountryList, QString, true>
+        public CListModelDbObjects<swift::misc::CCountryList, QString, true>
     {
         Q_OBJECT
 

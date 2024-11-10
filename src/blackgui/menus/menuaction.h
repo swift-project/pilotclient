@@ -4,7 +4,7 @@
 #ifndef BLACKGUI_MENUS_MENUACTION_H
 #define BLACKGUI_MENUS_MENUACTION_H
 
-#include "blackmisc/slot.h"
+#include "misc/slot.h"
 
 #include <QIcon>
 #include <QKeySequence>
@@ -432,16 +432,16 @@ namespace BlackGui::Menus
         CMenuActions addActions(const QList<QAction *> &actions, const QString &path);
 
         //! Convenience function if method is also kept elsewhere
-        CMenuAction addAction(QAction *action, const QString &text, const QString &path, const BlackMisc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+        CMenuAction addAction(QAction *action, const QString &text, const QString &path, const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
 
         //! Convenience function if method is also kept elsewhere
-        CMenuAction addAction(QAction *action, const QString &text, const QString &path, QObject *actionOwner, const BlackMisc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+        CMenuAction addAction(QAction *action, const QString &text, const QString &path, QObject *actionOwner, const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
 
         //! Convenience function if method is also kept elsewhere
-        CMenuAction addAction(QAction *action, const QIcon &icon, const QString &text, const QString &path, const BlackMisc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+        CMenuAction addAction(QAction *action, const QIcon &icon, const QString &text, const QString &path, const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
 
         //! Convenience function if method is also kept elsewhere
-        CMenuAction addAction(QAction *action, const QIcon &icon, const QString &text, const QString &path, QObject *actionOwner, const BlackMisc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+        CMenuAction addAction(QAction *action, const QIcon &icon, const QString &text, const QString &path, QObject *actionOwner, const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
 
         //! Add action which still needs to be connected
         CMenuAction addAction(const QString &text, const QString &path, QObject *actionOwner, const QKeySequence &shortcut = 0);
@@ -450,19 +450,19 @@ namespace BlackGui::Menus
         CMenuAction addAction(const QIcon &actionIcon, const QString &text, const QString &path, QObject *actionOwner, const QKeySequence &shortcut = 0);
 
         //! Add action
-        CMenuAction addAction(const QIcon &actionIcon, const QString &text, const QString &path, QObject *actionOwner, const BlackMisc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+        CMenuAction addAction(const QIcon &actionIcon, const QString &text, const QString &path, QObject *actionOwner, const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
 
         //! Add action without slot
         CMenuAction addAction(const QIcon &actionIcon, const QString &text, const QString &path);
 
         //! Add action
-        CMenuAction addAction(const QIcon &actionIcon, const QString &text, const QString &path, const BlackMisc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+        CMenuAction addAction(const QIcon &actionIcon, const QString &text, const QString &path, const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
 
         //! Add menu action
-        CMenuAction addAction(const QString &text, const QString &path, const BlackMisc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+        CMenuAction addAction(const QString &text, const QString &path, const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
 
         //! Add menu action
-        CMenuAction addAction(const QString &text, const QString &path, QObject *actionOwner, const BlackMisc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+        CMenuAction addAction(const QString &text, const QString &path, QObject *actionOwner, const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
 
         //! Insert the sorted actions to the menu
         void toQMenu(QMenu &menu, bool separateGroups) const;

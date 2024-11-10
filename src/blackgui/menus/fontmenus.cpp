@@ -4,10 +4,10 @@
 #include "fontmenus.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/shortcut.h"
-#include "blackmisc/verify.h"
+#include "misc/verify.h"
 #include <QShortcut>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui::Components;
 
 namespace BlackGui::Menus

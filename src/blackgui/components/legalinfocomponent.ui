@@ -23,7 +23,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="../../blackmisc/blackmisc.qrc">:/pastel/icons/pastel/32/exclamation.png</pixmap>
+         <pixmap resource="../../misc/misc.qrc">:/pastel/icons/pastel/32/exclamation.png</pixmap>
         </property>
        </widget>
       </item>
@@ -78,7 +78,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
+  <include location="../../misc/misc.qrc"/>
  </resources>
  <connections/>
 </ui>

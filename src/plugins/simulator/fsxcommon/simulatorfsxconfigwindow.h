@@ -8,7 +8,7 @@
 
 #include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 #include "blackgui/pluginconfigwindow.h"
-#include "blackmisc/simulation/simulatorinfo.h"
+#include "misc/simulation/simulatorinfo.h"
 #include <QScopedPointer>
 
 namespace Ui
@@ -32,10 +32,10 @@ namespace BlackSimPlugin::FsxCommon
         virtual ~CSimulatorFsxConfigWindow();
 
         //! Related simulator, i.e. "P3D" or "FSX"
-        const BlackMisc::Simulation::CSimulatorInfo &getSimulator() const { return m_simulator; }
+        const swift::misc::simulation::CSimulatorInfo &getSimulator() const { return m_simulator; }
 
     private:
-        const BlackMisc::Simulation::CSimulatorInfo m_simulator { "FSX" };
+        const swift::misc::simulation::CSimulatorInfo m_simulator { "FSX" };
         QScopedPointer<Ui::CSimulatorFsxConfigWindow> ui;
     };
 } // ns

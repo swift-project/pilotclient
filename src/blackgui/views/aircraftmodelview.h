@@ -9,12 +9,12 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/aircraftmodellistmodel.h"
 #include "blackgui/views/viewdbobjects.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/propertyindexvariantmap.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/distributor.h"
-#include "blackmisc/simulation/simulatorinfo.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/propertyindexvariantmap.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/distributor.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/statusmessage.h"
 
 #include <QBrush>
 #include <QFlags>
@@ -25,12 +25,12 @@
 
 class QDropEvent;
 
-namespace BlackMisc::Aviation
+namespace swift::misc::aviation
 {
     class CAircraftIcaoCode;
     class CLivery;
 }
-namespace BlackMisc::Simulation
+namespace swift::misc::simulation
 {
     class CAircraftModel;
 }
@@ -63,16 +63,16 @@ namespace BlackGui
             void setAircraftModelMode(Models::CAircraftModelListModel::AircraftModelMode mode);
 
             //! Apply to selected objects
-            int applyToSelected(const BlackMisc::Aviation::CLivery &livery);
+            int applyToSelected(const swift::misc::aviation::CLivery &livery);
 
             //! Apply to selected objects
-            int applyToSelected(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+            int applyToSelected(const swift::misc::aviation::CAircraftIcaoCode &icao);
 
             //! Apply to selected objects
-            int applyToSelected(const BlackMisc::Simulation::CDistributor &distributor);
+            int applyToSelected(const swift::misc::simulation::CDistributor &distributor);
 
             //! Apply to selected objects
-            int applyToSelected(const BlackMisc::CPropertyIndexVariantMap &vm);
+            int applyToSelected(const swift::misc::CPropertyIndexVariantMap &vm);
 
             //! Has any models to stash and it is allowed to stash
             bool hasSelectedModelsToStash() const;
@@ -90,13 +90,13 @@ namespace BlackGui
             int removeModelsWithModelString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive);
 
             //! Remove models with model strings
-            int removeModelsWithModelString(const BlackMisc::Simulation::CAircraftModelList &models, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive);
+            int removeModelsWithModelString(const swift::misc::simulation::CAircraftModelList &models, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive);
 
             //! Replace models with sme model string, otherwise add
-            int replaceOrAddModelsWithString(const BlackMisc::Simulation::CAircraftModelList &models, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive);
+            int replaceOrAddModelsWithString(const swift::misc::simulation::CAircraftModelList &models, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive);
 
             //! \copydoc BlackGui::Models::CAircraftModelListModel::setHighlightModels
-            void setHighlightModels(const BlackMisc::Simulation::CAircraftModelList &highlightModels);
+            void setHighlightModels(const swift::misc::simulation::CAircraftModelList &highlightModels);
 
             //! \copydoc BlackGui::Models::CAircraftModelListModel::setHighlightModelStrings(const QStringList &)
             void setHighlightModelStrings(const QStringList &highlightModels);
@@ -115,26 +115,26 @@ namespace BlackGui
 
             //! Corresponding simulator
             //! \remark used for validation or loading data will be restricted to simulator
-            void setCorrespondingSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator, const QString &simDir);
+            void setCorrespondingSimulator(const swift::misc::simulation::CSimulatorInfo &simulator, const QString &simDir);
 
             //! Enable the validation context menu
             void setValidationContextMenu(const bool enabled) { m_withValidationContextMenu = enabled; }
 
         signals:
             //! Request to stash if applicable
-            void requestStash(const BlackMisc::Simulation::CAircraftModelList &models);
+            void requestStash(const swift::misc::simulation::CAircraftModelList &models);
 
             //! Request further handling of drops I cannot handle on my own
-            void requestHandlingOfStashDrop(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao);
+            void requestHandlingOfStashDrop(const swift::misc::aviation::CAirlineIcaoCode &airlineIcao);
 
             //! Temp.disable model
-            void requestTempDisableModelsForMatching(const BlackMisc::Simulation::CAircraftModelList &models);
+            void requestTempDisableModelsForMatching(const swift::misc::simulation::CAircraftModelList &models);
 
             //! Highlight stashed models has been toggled
             void toggledHighlightStashedModels();
 
             //! Models for simulator loaded (JSON)
-            void jsonModelsForSimulatorLoaded(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void jsonModelsForSimulatorLoaded(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         protected:
             //! \copydoc QTableView::dropEvent
@@ -148,13 +148,13 @@ namespace BlackGui
             virtual void customMenu(Menus::CMenuActions &menuActions) override;
 
             //! \copydoc BlackGui::Views::COrderableViewWithDbObjects::modifyLoadedJsonData
-            virtual BlackMisc::CStatusMessage modifyLoadedJsonData(BlackMisc::Simulation::CAircraftModelList &models) const override;
+            virtual swift::misc::CStatusMessage modifyLoadedJsonData(swift::misc::simulation::CAircraftModelList &models) const override;
 
             //! \copydoc BlackGui::Views::COrderableViewWithDbObjects::validateLoadedJsonData
-            virtual BlackMisc::CStatusMessage validateLoadedJsonData(const BlackMisc::Simulation::CAircraftModelList &models) const override;
+            virtual swift::misc::CStatusMessage validateLoadedJsonData(const swift::misc::simulation::CAircraftModelList &models) const override;
 
             //! \copydoc BlackGui::Views::COrderableViewWithDbObjects::jsonLoadedAndModelUpdated
-            virtual void jsonLoadedAndModelUpdated(const BlackMisc::Simulation::CAircraftModelList &models) override;
+            virtual void jsonLoadedAndModelUpdated(const swift::misc::simulation::CAircraftModelList &models) override;
             //! @}
 
         private:
@@ -183,7 +183,7 @@ namespace BlackGui
             bool m_withValidationContextMenu = true; //!< validation didalog context menu
             CAircraftModelStatisticsDialog *m_statisticsDialog = nullptr;
             CAircraftModelValidationDialog *m_fileValidationDialog = nullptr;
-            BlackMisc::Simulation::CSimulatorInfo m_correspondingSimulator; //!< validation, simulator required when loading
+            swift::misc::simulation::CSimulatorInfo m_correspondingSimulator; //!< validation, simulator required when loading
             QString m_correspondingSimulatorDir;
         };
     } // ns

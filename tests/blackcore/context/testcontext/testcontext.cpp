@@ -11,8 +11,8 @@
 #include "blackcore/context/contextownaircraftproxy.h"
 #include "blackcore/context/contextsimulatorproxy.h"
 #include "blackcore/application.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/dbusutils.h"
+#include "misc/simulation/simulatedaircraftlist.h"
+#include "misc/dbusutils.h"
 #include "test.h"
 #include <QTest>
 
@@ -20,9 +20,9 @@
 #    include "comdef.h"
 #endif
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 

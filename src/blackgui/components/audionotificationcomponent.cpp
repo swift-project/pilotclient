@@ -4,9 +4,9 @@
 #include "blackgui/components/audionotificationcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextaudio.h"
-#include "blackmisc/audio/notificationsounds.h"
-#include "blackmisc/audio/audiosettings.h"
-#include "blackmisc/sequence.h"
+#include "misc/audio/notificationsounds.h"
+#include "misc/audio/audiosettings.h"
+#include "misc/sequence.h"
 #include "ui_audionotificationcomponent.h"
 
 #include <QCheckBox>
@@ -18,10 +18,10 @@
 
 using namespace BlackCore;
 using namespace BlackCore::Context;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Audio;
-using namespace BlackMisc::PhysicalQuantities;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::audio;
+using namespace swift::misc::physical_quantities;
 
 namespace BlackGui::Components
 {

@@ -5,9 +5,9 @@
 #include "blackgui/components/dbcountryselectorcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackmisc/mixin/mixincompare.h"
-#include "blackmisc/countrylist.h"
-#include "blackmisc/variant.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/countrylist.h"
+#include "misc/variant.h"
 #include "ui_dbcountryselectorcomponent.h"
 
 #include <QCompleter>
@@ -24,8 +24,8 @@
 
 using namespace BlackGui;
 using namespace BlackCore;
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 
 namespace BlackGui::Components
 {
@@ -50,7 +50,7 @@ namespace BlackGui::Components
     CDbCountrySelectorComponent::~CDbCountrySelectorComponent()
     {}
 
-    void CDbCountrySelectorComponent::setCountry(const BlackMisc::CCountry &country)
+    void CDbCountrySelectorComponent::setCountry(const swift::misc::CCountry &country)
     {
         ui->le_CountryIso->setText(country.getIsoCode());
         ui->le_CountryName->setText(country.getName());
@@ -68,7 +68,7 @@ namespace BlackGui::Components
         this->setCountry(c);
     }
 
-    BlackMisc::CCountry CDbCountrySelectorComponent::getCountry() const
+    swift::misc::CCountry CDbCountrySelectorComponent::getCountry() const
     {
         if (!sGui) { return CCountry(); }
         const QString iso(ui->le_CountryIso->text().trimmed().toUpper());

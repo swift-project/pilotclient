@@ -9,9 +9,9 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/variant.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/variant.h"
 
 namespace Ui
 {
@@ -39,9 +39,9 @@ namespace BlackGui::Components
         void onSetAbsolutePosition();
         void onSetPBH();
         void onSetParts();
-        void onModelDblClicked(const BlackMisc::CVariant &object);
+        void onModelDblClicked(const swift::misc::CVariant &object);
 
-        BlackMisc::Aviation::CAircraftParts getParts() const;
+        swift::misc::aviation::CAircraftParts getParts() const;
 
         void display();
         void remove();
@@ -52,8 +52,8 @@ namespace BlackGui::Components
         void fetchSimulatorValues();
 
         QScopedPointer<Ui::CModelBrowserComponent> ui;
-        BlackMisc::Aviation::CAircraftSituation m_situation;
-        BlackMisc::Simulation::CSimulatedAircraft m_aircraft;
+        swift::misc::aviation::CAircraftSituation m_situation;
+        swift::misc::simulation::CSimulatedAircraft m_aircraft;
     };
 } // ns
 

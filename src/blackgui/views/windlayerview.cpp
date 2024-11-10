@@ -4,7 +4,7 @@
 #include "blackgui/models/windlayerlistmodel.h"
 #include "blackgui/views/windlayerview.h"
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui::Models;
 
 namespace BlackGui::Views

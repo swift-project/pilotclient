@@ -11,13 +11,13 @@
 #include "blackcore/db/databaseutils.h"
 #include "blackcore/application.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/sequence.h"
-#include "blackmisc/verify.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/distributorlist.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/livery.h"
+#include "misc/logcategories.h"
+#include "misc/sequence.h"
+#include "misc/verify.h"
 #include "ui_dbstashcomponent.h"
 
 #include <QCheckBox>
@@ -31,10 +31,10 @@
 
 using namespace BlackCore;
 using namespace BlackCore::Db;
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
 using namespace BlackGui;
 using namespace BlackGui::Models;
 using namespace BlackGui::Views;

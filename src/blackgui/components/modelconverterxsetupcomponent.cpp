@@ -3,11 +3,11 @@
 
 #include "modelconverterxsetupcomponent.h"
 #include "ui_modelconverterxsetupcomponent.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/logmessage.h"
+#include "misc/statusmessage.h"
+#include "misc/logmessage.h"
 #include <QFileDialog>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Components
 {

@@ -9,7 +9,7 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/filters/filterwidget.h"
 #include "blackgui/models/modelfilter.h"
-#include "blackmisc/aviation/airlineicaocode.h"
+#include "misc/aviation/airlineicaocode.h"
 
 #include <QObject>
 #include <QScopedPointer>
@@ -19,10 +19,10 @@ namespace Ui
 {
     class CAirlineIcaoFilterBar;
 }
-namespace BlackMisc
+namespace swift::misc
 {
     class CCountry;
-    namespace Aviation
+    namespace aviation
     {
         class CAirlineIcaoCodeList;
     }
@@ -34,7 +34,7 @@ namespace BlackGui::Filters
      */
     class BLACKGUI_EXPORT CAirlineIcaoFilterBar :
         public CFilterWidget,
-        public Models::IModelFilterProvider<BlackMisc::Aviation::CAirlineIcaoCodeList>
+        public Models::IModelFilterProvider<swift::misc::aviation::CAirlineIcaoCodeList>
     {
         Q_OBJECT
 
@@ -46,10 +46,10 @@ namespace BlackGui::Filters
         virtual ~CAirlineIcaoFilterBar() override;
 
         //! \copydoc Models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Aviation::CAirlineIcaoCodeList>> createModelFilter() const override;
+        virtual std::unique_ptr<BlackGui::Models::IModelFilter<swift::misc::aviation::CAirlineIcaoCodeList>> createModelFilter() const override;
 
         //! Filter default values by ICAO code
-        void filter(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
+        void filter(const swift::misc::aviation::CAirlineIcaoCode &icao);
 
     public slots:
         //! \copydoc CFilterWidget::onRowCountChanged
@@ -57,7 +57,7 @@ namespace BlackGui::Filters
 
     private slots:
         //! Country has been changed
-        void ps_CountryChanged(const BlackMisc::CCountry &country);
+        void ps_CountryChanged(const swift::misc::CCountry &country);
 
     protected:
         //! Clear form

@@ -8,11 +8,11 @@
 #include "blackgui/guiutility.h"
 #include "blackgui/uppercasevalidator.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/aviation/airportlist.h"
+#include "misc/aviation/airportlist.h"
 #include <QCompleter>
 
 using namespace BlackCore;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc::aviation;
 
 namespace BlackGui::Components
 {

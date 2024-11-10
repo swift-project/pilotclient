@@ -7,7 +7,7 @@
 #include <QPushButton>
 #include <QDesktopServices>
 
-using namespace BlackMisc::Db;
+using namespace swift::misc::db;
 
 namespace BlackGui::Components
 {

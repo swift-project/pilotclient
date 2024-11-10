@@ -8,7 +8,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/network/settings/serversettings.h"
+#include "misc/network/settings/serversettings.h"
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
@@ -42,7 +42,7 @@ namespace BlackGui::Components
         void alterTrafficServer();
 
         QScopedPointer<Ui::CSettingsNetworkServersComponent> ui;
-        BlackMisc::CSetting<BlackMisc::Network::Settings::TTrafficServers> m_trafficNetworkServers { this, &CSettingsNetworkServersComponent::reloadSettings };
+        swift::misc::CSetting<swift::misc::network::settings::TTrafficServers> m_trafficNetworkServers { this, &CSettingsNetworkServersComponent::reloadSettings };
     };
 } // ns
 

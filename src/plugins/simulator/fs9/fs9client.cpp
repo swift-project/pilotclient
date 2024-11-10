@@ -10,16 +10,16 @@
 #include "directplayutils.h"
 #include "../fscommon/simulatorfscommonfunctions.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/logmessage.h"
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/geo/coordinategeodetic.h"
+#include "misc/logmessage.h"
 #include <QScopedArrayPointer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Geo;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::geo;
 using namespace BlackCore;
 using namespace BlackSimPlugin::FsCommon;
 

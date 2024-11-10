@@ -41,19 +41,19 @@ namespace BlackGui
             using ObjectType = typename T::ObjectType;
 
             //! Select callsign
-            void selectCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+            void selectCallsign(const swift::misc::aviation::CCallsign &callsign);
 
             //! Select given callsigns
-            void selectCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns);
+            void selectCallsigns(const swift::misc::aviation::CCallsignSet &callsigns);
 
             //! Get selected callsigns
-            BlackMisc::Aviation::CCallsignSet selectedCallsigns() const;
+            swift::misc::aviation::CCallsignSet selectedCallsigns() const;
 
             //! Remove callsigns
-            int removeCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns);
+            int removeCallsigns(const swift::misc::aviation::CCallsignSet &callsigns);
 
             //! Remove callsign
-            int removeCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+            int removeCallsign(const swift::misc::aviation::CCallsign &callsign);
 
             //! Update or insert data (based on callsign)
             int replaceOrAddObjectsByCallsign(const ContainerType &container);

@@ -4,7 +4,7 @@
 #include "blackcore/fsd/revbclientparts.h"
 #include "blackcore/fsd/serializer.h"
 
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
 namespace BlackCore::Fsd
 {
@@ -33,7 +33,7 @@ namespace BlackCore::Fsd
     {
         if (tokens.size() < 4)
         {
-            BlackMisc::CLogMessage(static_cast<RevBClientParts *>(nullptr)).debug(u"Wrong number of arguments.");
+            swift::misc::CLogMessage(static_cast<RevBClientParts *>(nullptr)).debug(u"Wrong number of arguments.");
             return {};
         }
         return RevBClientParts(tokens[0], tokens[1], tokens[2], tokens[3]);

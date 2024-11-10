@@ -22,14 +22,14 @@
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackgui/views/viewbase.h"
 #include "blackgui/shortcut.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/network/authenticateduser.h"
-#include "blackmisc/propertyindexvariantmap.h"
-#include "blackmisc/simulation/aircraftmodelutils.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/livery.h"
+#include "misc/icons.h"
+#include "misc/swiftdirectories.h"
+#include "misc/logmessage.h"
+#include "misc/network/authenticateduser.h"
+#include "misc/propertyindexvariantmap.h"
+#include "misc/simulation/aircraftmodelutils.h"
 #include "ui_dbmappingcomponent.h"
 
 #include <QAction>
@@ -48,11 +48,11 @@
 #include <QtGlobal>
 
 using namespace BlackCore;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::FsCommon;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::fscommon;
 using namespace BlackGui;
 using namespace BlackGui::Editors;
 using namespace BlackGui::Views;

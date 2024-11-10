@@ -7,13 +7,13 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/statusmessage.h"
 
 #include <QCompleter>
 #include <QPushButton>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
 using namespace BlackGui::Models;
 using namespace BlackGui::Views;
 

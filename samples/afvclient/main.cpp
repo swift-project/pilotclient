@@ -8,8 +8,8 @@
 #include "blackcore/registermetadata.h"
 
 #include "blackcore/application.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/obfuscation.h"
+#include "misc/network/user.h"
+#include "misc/obfuscation.h"
 #include "config/buildconfig.h"
 
 #include <QGuiApplication>
@@ -20,8 +20,8 @@
 #include <QTimer>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 using namespace BlackCore;
 using namespace BlackCore::Afv::Clients;
 using namespace BlackCore::Afv::Model;

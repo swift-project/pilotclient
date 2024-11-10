@@ -5,8 +5,8 @@
 #include "ui_coordinatedialog.h"
 #include <QPushButton>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Geo;
+using namespace swift::misc;
+using namespace swift::misc::geo;
 using namespace BlackGui::Editors;
 
 namespace BlackGui::Components

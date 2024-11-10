@@ -4,7 +4,7 @@
 #include "aircraftmodelform.h"
 #include "ui_aircraftmodelform.h"
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Editors
 {
@@ -57,17 +57,17 @@ namespace BlackGui::Editors
         return ui->editor_Distributor->validate(withNestedForms);
     }
 
-    Aviation::CLivery CAircraftModelForm::getLivery() const
+    aviation::CLivery CAircraftModelForm::getLivery() const
     {
         return ui->editor_Livery->getValue();
     }
 
-    Aviation::CAircraftIcaoCode CAircraftModelForm::getAircraftIcao() const
+    aviation::CAircraftIcaoCode CAircraftModelForm::getAircraftIcao() const
     {
         return ui->editor_AircraftIcao->getValue();
     }
 
-    Simulation::CDistributor CAircraftModelForm::getDistributor() const
+    simulation::CDistributor CAircraftModelForm::getDistributor() const
     {
         return ui->editor_Distributor->getValue();
     }
@@ -79,17 +79,17 @@ namespace BlackGui::Editors
         ui->editor_Livery->allowDrop(allowDrop);
     }
 
-    bool CAircraftModelForm::setLivery(const BlackMisc::Aviation::CLivery &livery)
+    bool CAircraftModelForm::setLivery(const swift::misc::aviation::CLivery &livery)
     {
         return ui->editor_Livery->setValue(livery);
     }
 
-    bool CAircraftModelForm::setAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao)
+    bool CAircraftModelForm::setAircraftIcao(const swift::misc::aviation::CAircraftIcaoCode &icao)
     {
         return ui->editor_AircraftIcao->setValue(icao);
     }
 
-    bool CAircraftModelForm::setDistributor(const BlackMisc::Simulation::CDistributor &distributor)
+    bool CAircraftModelForm::setDistributor(const swift::misc::simulation::CDistributor &distributor)
     {
         return ui->editor_Distributor->setValue(distributor);
     }

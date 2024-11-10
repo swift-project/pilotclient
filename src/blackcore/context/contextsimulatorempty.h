@@ -8,7 +8,7 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -25,28 +25,28 @@ namespace BlackCore::Context
 
     public slots:
         //! \copydoc IContextSimulator::getSimulatorPluginInfo
-        virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const override
+        virtual swift::misc::simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Simulation::CSimulatorPluginInfo();
+            return swift::misc::simulation::CSimulatorPluginInfo();
         }
 
         //! \copydoc IContextSimulator::getAvailableSimulatorPlugins
-        virtual BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const override
+        virtual swift::misc::simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Simulation::CSimulatorPluginInfoList();
+            return swift::misc::simulation::CSimulatorPluginInfoList();
         }
 
         //! \copydoc IContextSimulator::getSimulatorSettings
-        virtual BlackMisc::Simulation::Settings::CSimulatorSettings getSimulatorSettings() const override
+        virtual swift::misc::simulation::settings::CSimulatorSettings getSimulatorSettings() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Simulation::Settings::CSimulatorSettings();
+            return swift::misc::simulation::settings::CSimulatorSettings();
         }
 
         //! \copydoc IContextSimulator::setSimulatorSettings
-        virtual bool setSimulatorSettings(const BlackMisc::Simulation::Settings::CSimulatorSettings &settings, const BlackMisc::Simulation::CSimulatorInfo &simulatorInfo) override
+        virtual bool setSimulatorSettings(const swift::misc::simulation::settings::CSimulatorSettings &settings, const swift::misc::simulation::CSimulatorInfo &simulatorInfo) override
         {
             Q_UNUSED(settings)
             Q_UNUSED(simulatorInfo)
@@ -55,7 +55,7 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextSimulator::startSimulatorPlugin
-        virtual bool startSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override
+        virtual bool startSimulatorPlugin(const swift::misc::simulation::CSimulatorPluginInfo &simulatorInfo) override
         {
             Q_UNUSED(simulatorInfo)
             logEmptyContextWarning(Q_FUNC_INFO);
@@ -76,50 +76,50 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextSimulator::stopSimulatorPlugin
-        virtual void stopSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override
+        virtual void stopSimulatorPlugin(const swift::misc::simulation::CSimulatorPluginInfo &simulatorInfo) override
         {
             Q_UNUSED(simulatorInfo)
             logEmptyContextWarning(Q_FUNC_INFO);
         }
 
         //! \copydoc IContextSimulator::getAirportsInRange
-        virtual BlackMisc::Aviation::CAirportList getAirportsInRange(bool recalculatePosition) const override
+        virtual swift::misc::aviation::CAirportList getAirportsInRange(bool recalculatePosition) const override
         {
             Q_UNUSED(recalculatePosition)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Aviation::CAirportList();
+            return swift::misc::aviation::CAirportList();
         }
 
         //! \copydoc IContextSimulator::getModelSet
-        virtual BlackMisc::Simulation::CAircraftModelList getModelSet() const override
+        virtual swift::misc::simulation::CAircraftModelList getModelSet() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Simulation::CAircraftModelList();
+            return swift::misc::simulation::CAircraftModelList();
         }
 
         //! \copydoc IContextSimulator::simulatorsWithInitializedModelSet
-        virtual BlackMisc::Simulation::CSimulatorInfo simulatorsWithInitializedModelSet() const override
+        virtual swift::misc::simulation::CSimulatorInfo simulatorsWithInitializedModelSet() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Simulation::CSimulatorInfo();
+            return swift::misc::simulation::CSimulatorInfo();
         }
 
         //! \copydoc IContextSimulator::verifyPrerequisites
-        virtual BlackMisc::CStatusMessageList verifyPrerequisites() const override
+        virtual swift::misc::CStatusMessageList verifyPrerequisites() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::CStatusMessageList();
+            return swift::misc::CStatusMessageList();
         }
 
         //! \copydoc IContextSimulator::getModelSetLoaderSimulator
-        virtual BlackMisc::Simulation::CSimulatorInfo getModelSetLoaderSimulator() const override
+        virtual swift::misc::simulation::CSimulatorInfo getModelSetLoaderSimulator() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Simulation::CSimulatorInfo();
+            return swift::misc::simulation::CSimulatorInfo();
         }
 
         //! \copydoc IContextSimulator::setModelSetLoaderSimulator
-        virtual void setModelSetLoaderSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override
+        virtual void setModelSetLoaderSimulator(const swift::misc::simulation::CSimulatorInfo &simulator) override
         {
             Q_UNUSED(simulator);
             logEmptyContextWarning(Q_FUNC_INFO);
@@ -141,7 +141,7 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextSimulator::removeModelsFromSet
-        virtual int removeModelsFromSet(const BlackMisc::Simulation::CAircraftModelList &removeModels) override
+        virtual int removeModelsFromSet(const swift::misc::simulation::CAircraftModelList &removeModels) override
         {
             Q_UNUSED(removeModels);
             logEmptyContextWarning(Q_FUNC_INFO);
@@ -149,7 +149,7 @@ namespace BlackCore::Context
         }
 
         //! \copydoc CAircraftMatcher::disableModelsForMatching
-        virtual void disableModelsForMatching(const BlackMisc::Simulation::CAircraftModelList &removedModels, bool incremental) override
+        virtual void disableModelsForMatching(const swift::misc::simulation::CAircraftModelList &removedModels, bool incremental) override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             Q_UNUSED(removedModels);
@@ -157,10 +157,10 @@ namespace BlackCore::Context
         }
 
         //! \copydoc CAircraftMatcher::getDisabledModelsForMatching
-        virtual BlackMisc::Simulation::CAircraftModelList getDisabledModelsForMatching() const override
+        virtual swift::misc::simulation::CAircraftModelList getDisabledModelsForMatching() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Simulation::CAircraftModelList();
+            return swift::misc::simulation::CAircraftModelList();
         }
 
         //! \copydoc CAircraftMatcher::restoreDisabledModels
@@ -169,15 +169,15 @@ namespace BlackCore::Context
             logEmptyContextWarning(Q_FUNC_INFO);
         }
 
-        //! \copydoc BlackMisc::Simulation::CBackgroundValidation::triggerValidation
-        virtual bool triggerModelSetValidation(const BlackMisc::Simulation::CSimulatorInfo &simulator) override
+        //! \copydoc swift::misc::simulation::CBackgroundValidation::triggerValidation
+        virtual bool triggerModelSetValidation(const swift::misc::simulation::CSimulatorInfo &simulator) override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             Q_UNUSED(simulator);
             return false;
         }
 
-        //! \copydoc BlackMisc::Simulation::CBackgroundValidation::isValidating
+        //! \copydoc swift::misc::simulation::CBackgroundValidation::isValidating
         virtual bool isValidationInProgress() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
@@ -193,11 +193,11 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextSimulator::getModelSetModelsStartingWith
-        virtual BlackMisc::Simulation::CAircraftModelList getModelSetModelsStartingWith(const QString &modelString) const override
+        virtual swift::misc::simulation::CAircraftModelList getModelSetModelsStartingWith(const QString &modelString) const override
         {
             Q_UNUSED(modelString);
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Simulation::CAircraftModelList();
+            return swift::misc::simulation::CAircraftModelList();
         }
 
         //! \copydoc IContextSimulator::getModelSetCount
@@ -208,14 +208,14 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextSimulator::getSimulatorInternals
-        virtual BlackMisc::Simulation::CSimulatorInternals getSimulatorInternals() const override
+        virtual swift::misc::simulation::CSimulatorInternals getSimulatorInternals() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Simulation::CSimulatorInternals();
+            return swift::misc::simulation::CSimulatorInternals();
         }
 
         //! \copydoc IContextSimulator::setTimeSynchronization
-        virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override
+        virtual bool setTimeSynchronization(bool enable, const swift::misc::physical_quantities::CTime &offset) override
         {
             Q_UNUSED(enable)
             Q_UNUSED(offset)
@@ -231,36 +231,36 @@ namespace BlackCore::Context
         }
 
         //! \copydoc ISimulator::getInterpolationSetupGlobal
-        virtual BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal getInterpolationAndRenderingSetupGlobal() const override
+        virtual swift::misc::simulation::CInterpolationAndRenderingSetupGlobal getInterpolationAndRenderingSetupGlobal() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal();
+            return swift::misc::simulation::CInterpolationAndRenderingSetupGlobal();
         }
 
         //! \copydoc ISimulator::getInterpolationSetupsPerCallsign
-        virtual BlackMisc::Simulation::CInterpolationSetupList getInterpolationAndRenderingSetupsPerCallsign() const override
+        virtual swift::misc::simulation::CInterpolationSetupList getInterpolationAndRenderingSetupsPerCallsign() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Simulation::CInterpolationSetupList();
+            return swift::misc::simulation::CInterpolationSetupList();
         }
 
         //! \copydoc ISimulator::getInterpolationSetupPerCallsignOrDefault
-        virtual BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign getInterpolationAndRenderingSetupPerCallsignOrDefault(const BlackMisc::Aviation::CCallsign &callsign) const override
+        virtual swift::misc::simulation::CInterpolationAndRenderingSetupPerCallsign getInterpolationAndRenderingSetupPerCallsignOrDefault(const swift::misc::aviation::CCallsign &callsign) const override
         {
             Q_UNUSED(callsign)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign();
+            return swift::misc::simulation::CInterpolationAndRenderingSetupPerCallsign();
         }
 
-        //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::setInterpolationSetupGlobal
-        virtual void setInterpolationAndRenderingSetupGlobal(const BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal &setup) override
+        //! \copydoc swift::misc::simulation::IInterpolationSetupProvider::setInterpolationSetupGlobal
+        virtual void setInterpolationAndRenderingSetupGlobal(const swift::misc::simulation::CInterpolationAndRenderingSetupGlobal &setup) override
         {
             Q_UNUSED(setup)
             logEmptyContextWarning(Q_FUNC_INFO);
         }
 
-        //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::setInterpolationSetupsPerCallsign
-        virtual bool setInterpolationAndRenderingSetupsPerCallsign(const BlackMisc::Simulation::CInterpolationSetupList &setups, bool ignoreSameAsGlobal) override
+        //! \copydoc swift::misc::simulation::IInterpolationSetupProvider::setInterpolationSetupsPerCallsign
+        virtual bool setInterpolationAndRenderingSetupsPerCallsign(const swift::misc::simulation::CInterpolationSetupList &setups, bool ignoreSameAsGlobal) override
         {
             Q_UNUSED(setups)
             Q_UNUSED(ignoreSameAsGlobal)
@@ -269,30 +269,30 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextSimulator::getInterpolationMessages
-        virtual BlackMisc::CStatusMessageList getInterpolationMessages(const BlackMisc::Aviation::CCallsign &callsign) const override
+        virtual swift::misc::CStatusMessageList getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const override
         {
             Q_UNUSED(callsign)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::CStatusMessageList();
+            return swift::misc::CStatusMessageList();
         }
 
         //! \copydoc IContextSimulator::getTimeSynchronizationOffset
-        virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override
+        virtual swift::misc::physical_quantities::CTime getTimeSynchronizationOffset() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::PhysicalQuantities::CTime();
+            return swift::misc::physical_quantities::CTime();
         }
 
         //! \copydoc IContextSimulator::iconForModel
-        virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override
+        virtual swift::misc::CPixmap iconForModel(const QString &modelString) const override
         {
             Q_UNUSED(modelString)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::CPixmap();
+            return swift::misc::CPixmap();
         }
 
         //! \copydoc IContextSimulator::followAircraft
-        virtual bool followAircraft(const BlackMisc::Aviation::CCallsign &callsign) override
+        virtual bool followAircraft(const swift::misc::aviation::CCallsign &callsign) override
         {
             Q_UNUSED(callsign)
             logEmptyContextWarning(Q_FUNC_INFO);
@@ -306,7 +306,7 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextSimulator::resetToModelMatchingAircraft
-        virtual bool resetToModelMatchingAircraft(const BlackMisc::Aviation::CCallsign &callsign) override
+        virtual bool resetToModelMatchingAircraft(const swift::misc::aviation::CCallsign &callsign) override
         {
             Q_UNUSED(callsign)
             return false;
@@ -319,14 +319,14 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextSimulator::doMatchingAgain
-        virtual bool doMatchingAgain(const BlackMisc::Aviation::CCallsign &callsign) override
+        virtual bool doMatchingAgain(const swift::misc::aviation::CCallsign &callsign) override
         {
             Q_UNUSED(callsign)
             return false;
         }
 
         //! \copydoc IContextSimulator::requestElevationBySituation
-        virtual bool requestElevationBySituation(const BlackMisc::Aviation::CAircraftSituation &situation) override
+        virtual bool requestElevationBySituation(const swift::misc::aviation::CAircraftSituation &situation) override
         {
             Q_UNUSED(situation)
             logEmptyContextWarning(Q_FUNC_INFO);
@@ -334,38 +334,38 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextSimulator::findClosestElevationWithinRange
-        virtual BlackMisc::Geo::CElevationPlane findClosestElevationWithinRange(const BlackMisc::Geo::CCoordinateGeodetic &reference, const BlackMisc::PhysicalQuantities::CLength &range) const override
+        virtual swift::misc::geo::CElevationPlane findClosestElevationWithinRange(const swift::misc::geo::CCoordinateGeodetic &reference, const swift::misc::physical_quantities::CLength &range) const override
         {
             Q_UNUSED(reference)
             Q_UNUSED(range)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Geo::CElevationPlane::null();
+            return swift::misc::geo::CElevationPlane::null();
         }
 
         //! \copydoc IContextSimulator::getMatchingMessages
-        virtual BlackMisc::CStatusMessageList getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const override
+        virtual swift::misc::CStatusMessageList getMatchingMessages(const swift::misc::aviation::CCallsign &callsign) const override
         {
             Q_UNUSED(callsign);
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::CStatusMessageList();
+            return swift::misc::CStatusMessageList();
         }
 
         //! \copydoc IContextSimulator::enableMatchingMessages
-        virtual void enableMatchingMessages(BlackMisc::Simulation::MatchingLog enable) override
+        virtual void enableMatchingMessages(swift::misc::simulation::MatchingLog enable) override
         {
             Q_UNUSED(enable)
             logEmptyContextWarning(Q_FUNC_INFO);
         }
 
         //! \copydoc IContextSimulator::isMatchingMessagesEnabled
-        virtual BlackMisc::Simulation::MatchingLog isMatchingMessagesEnabled() const override
+        virtual swift::misc::simulation::MatchingLog isMatchingMessagesEnabled() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Simulation::MatchingLogNothing;
+            return swift::misc::simulation::MatchingLogNothing;
         }
 
         //! \copydoc IContextSimulator::parseCommandLine
-        virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override
+        virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override
         {
             Q_UNUSED(commandLine)
             Q_UNUSED(originator)
@@ -374,22 +374,22 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextSimulator::getCurrentMatchingStatistics
-        virtual BlackMisc::Simulation::CMatchingStatistics getCurrentMatchingStatistics(bool missingOnly) const override
+        virtual swift::misc::simulation::CMatchingStatistics getCurrentMatchingStatistics(bool missingOnly) const override
         {
             Q_UNUSED(missingOnly)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Simulation::CMatchingStatistics();
+            return swift::misc::simulation::CMatchingStatistics();
         }
 
         //! \copydoc IContextSimulator::setMatchingSetup
-        virtual void setMatchingSetup(const BlackMisc::Simulation::CAircraftMatcherSetup &setup) override
+        virtual void setMatchingSetup(const swift::misc::simulation::CAircraftMatcherSetup &setup) override
         {
             Q_UNUSED(setup)
             logEmptyContextWarning(Q_FUNC_INFO);
         }
 
         //! \copydoc IContextSimulator::testRemoteAircraft
-        virtual bool testRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool add) override
+        virtual bool testRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &aircraft, bool add) override
         {
             Q_UNUSED(aircraft)
             Q_UNUSED(add)
@@ -398,7 +398,7 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextSimulator::testUpdateRemoteAircraft
-        virtual bool testUpdateRemoteAircraft(const BlackMisc::Aviation::CCallsign &cs, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CAircraftParts &parts) override
+        virtual bool testUpdateRemoteAircraft(const swift::misc::aviation::CCallsign &cs, const swift::misc::aviation::CAircraftSituation &situation, const swift::misc::aviation::CAircraftParts &parts) override
         {
             Q_UNUSED(cs)
             Q_UNUSED(situation)
@@ -408,10 +408,10 @@ namespace BlackCore::Context
         }
 
         //! \copydoc IContextSimulator::setMatchingSetup
-        virtual BlackMisc::Simulation::CAircraftMatcherSetup getMatchingSetup() const override
+        virtual swift::misc::simulation::CAircraftMatcherSetup getMatchingSetup() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Simulation::CAircraftMatcherSetup();
+            return swift::misc::simulation::CAircraftMatcherSetup();
         }
     };
 } // namespace

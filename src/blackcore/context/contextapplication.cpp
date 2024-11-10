@@ -8,19 +8,19 @@
 #include "blackcore/context/contextapplicationproxy.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/inputmanager.h"
-#include "blackmisc/dbus.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/settingscache.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/dbus.h"
+#include "misc/dbusserver.h"
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
+#include "misc/settingscache.h"
+#include "misc/statusmessage.h"
 
 #include <QtDebug>
 #include <algorithm>
 
 using namespace BlackCore;
 using namespace BlackCore::Context;
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackCore::Context
 {

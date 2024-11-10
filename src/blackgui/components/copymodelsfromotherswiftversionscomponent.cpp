@@ -5,10 +5,10 @@
 #include "ui_copymodelsfromotherswiftversionscomponent.h"
 #include "blackgui/models/aircraftmodellistmodel.h"
 #include "blackcore/application.h"
-#include "blackmisc/stringutils.h"
-#include "blackmisc/fileutils.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
+#include "misc/stringutils.h"
+#include "misc/fileutils.h"
+#include "misc/swiftdirectories.h"
+#include "misc/directoryutils.h"
 
 #include <QSet>
 #include <QPointer>
@@ -16,8 +16,8 @@
 #include <QMessageBox>
 
 using namespace BlackCore;
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
 using namespace BlackGui::Models;
 
 namespace BlackGui::Components

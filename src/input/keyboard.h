@@ -7,8 +7,8 @@
 #define SWIFT_INPUT_KEYBOARD_H
 
 #include "input/swiftinputexport.h"
-#include "blackmisc/input/keyboardkeylist.h"
-#include "blackmisc/input/hotkeycombination.h"
+#include "misc/input/keyboardkeylist.h"
+#include "misc/input/hotkeycombination.h"
 #include <QObject>
 #include <memory>
 
@@ -33,7 +33,7 @@ namespace swift::input
 
     signals:
         //! Key combination changed
-        void keyCombinationChanged(const BlackMisc::Input::CHotkeyCombination &);
+        void keyCombinationChanged(const swift::misc::input::CHotkeyCombination &);
 
     protected:
         //! Initializes the platform keyboard device

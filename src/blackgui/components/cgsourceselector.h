@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_CGSOURCESELECTOR_H
 #define BLACKGUI_COMPONENTS_CGSOURCESELECTOR_H
 
-#include "blackmisc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/settings/simulatorsettings.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -30,9 +30,9 @@ namespace BlackGui::Components
 
         //! @{
         //! Get/set value
-        BlackMisc::Simulation::Settings::CSimulatorSettings::CGSource getValue() const;
-        void setValue(const BlackMisc::Simulation::Settings::CSimulatorSettings &settings);
-        void setValue(BlackMisc::Simulation::Settings::CSimulatorSettings::CGSource source);
+        swift::misc::simulation::settings::CSimulatorSettings::CGSource getValue() const;
+        void setValue(const swift::misc::simulation::settings::CSimulatorSettings &settings);
+        void setValue(swift::misc::simulation::settings::CSimulatorSettings::CGSource source);
         //! @}
 
     private:

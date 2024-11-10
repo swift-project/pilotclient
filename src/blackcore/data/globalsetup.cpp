@@ -4,13 +4,13 @@
 #include "config/buildconfig.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/application.h"
-#include "blackmisc/json.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
-#include "blackmisc/network/server.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/stringutils.h"
-#include "blackmisc/crashhandler.h"
+#include "misc/json.h"
+#include "misc/swiftdirectories.h"
+#include "misc/directoryutils.h"
+#include "misc/network/server.h"
+#include "misc/network/user.h"
+#include "misc/stringutils.h"
+#include "misc/crashhandler.h"
 
 #include <QVersionNumber>
 #include <QJsonObject>
@@ -19,9 +19,9 @@
 #include <QStringBuilder>
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Json;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::json;
+using namespace swift::misc::network;
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackCore::Data, CGlobalSetup)
 
@@ -144,7 +144,7 @@ namespace BlackCore::Data
         return s;
     }
 
-    QVariant CGlobalSetup::propertyByIndex(BlackMisc::CPropertyIndexRef index) const
+    QVariant CGlobalSetup::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return CVariant::fromValue(*this); }
 

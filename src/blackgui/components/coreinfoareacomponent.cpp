@@ -3,10 +3,10 @@
 
 #include "blackgui/components/coreinfoareacomponent.h"
 #include "blackgui/infoarea.h"
-#include "blackmisc/icons.h"
+#include "misc/icons.h"
 #include "ui_coreinfoareacomponent.h"
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui;
 
 namespace BlackGui::Components

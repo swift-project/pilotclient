@@ -9,11 +9,11 @@
 #include "blackgui/enablefordockwidgetinfoarea.h"
 #include "blackgui/blackguiexport.h"
 
-#include "blackmisc/aviation/selcal.h"
-#include "blackmisc/aviation/transponder.h"
-#include "blackmisc/identifiable.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "misc/aviation/selcal.h"
+#include "misc/aviation/transponder.h"
+#include "misc/identifiable.h"
+#include "misc/identifier.h"
+#include "misc/simulation/simulatedaircraft.h"
 
 #include <QFrame>
 #include <QObject>
@@ -25,7 +25,7 @@ namespace Ui
 {
     class CCockpitComComponent;
 }
-namespace BlackMisc::Aviation
+namespace swift::misc::aviation
 {
     class CComSystem;
 }
@@ -34,7 +34,7 @@ namespace BlackGui::Components
     //! The main cockpit area
     class BLACKGUI_EXPORT CCockpitComComponent :
         public QFrame,
-        public BlackMisc::CIdentifiable,
+        public swift::misc::CIdentifiable,
         public CEnableForDockWidgetInfoArea
     {
         Q_OBJECT
@@ -46,12 +46,12 @@ namespace BlackGui::Components
         //! Destructor
         virtual ~CCockpitComComponent() override;
 
-        //! Set to BlackMisc::Aviation::CTransponder::StateIdent
+        //! Set to swift::misc::aviation::CTransponder::StateIdent
         void setTransponderModeStateIdent();
 
     signals:
         //! \copydoc BlackGui::Components::CTransponderModeSelector::transponderModeChanged
-        void transponderModeChanged(BlackMisc::Aviation::CTransponder::TransponderMode newMode);
+        void transponderModeChanged(swift::misc::aviation::CTransponder::TransponderMode newMode);
 
         //! \copydoc BlackGui::Components::CTransponderModeSelector::transponderStateIdentEnded
         void transponderStateIdentEnded();
@@ -71,19 +71,19 @@ namespace BlackGui::Components
         void testSelcal();
 
         //! Get own aircraft
-        BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const;
+        swift::misc::simulation::CSimulatedAircraft getOwnAircraft() const;
 
         //! Cockpit updates
-        bool updateOwnCockpitInContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
+        bool updateOwnCockpitInContext(const swift::misc::simulation::CSimulatedAircraft &ownAircraft);
 
         //! SELCAL changed in GUI
-        void updateSelcalInContext(const BlackMisc::Aviation::CSelcal &selcal);
+        void updateSelcalInContext(const swift::misc::aviation::CSelcal &selcal);
 
         //! SELCAL was changed
-        void updateSelcalFromContext(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator);
+        void updateSelcalFromContext(const swift::misc::aviation::CSelcal &selcal, const swift::misc::CIdentifier &originator);
 
         //! Update cockpit from context
-        void updateCockpitFromContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
+        void updateCockpitFromContext(const swift::misc::simulation::CSimulatedAircraft &ownAircraft, const swift::misc::CIdentifier &originator);
 
         //! Update the cockpit from aircraft context
         void forceCockpitUpdateFromOwnAircraftContext();

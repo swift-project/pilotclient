@@ -6,14 +6,14 @@
 #include "blackgui/views/interpolationsetupview.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackmisc/simulation/interpolation/interpolationsetuplist.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/simulation/interpolation/interpolationsetuplist.h"
+#include "misc/statusmessage.h"
 #include <QPointer>
 
 using namespace BlackGui::Views;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
 using namespace BlackCore::Context;
 
 namespace BlackGui::Components

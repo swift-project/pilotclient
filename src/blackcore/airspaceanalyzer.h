@@ -8,17 +8,17 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/fsd/fsdclient.h"
-#include "blackmisc/network/connectionstatus.h"
-#include "blackmisc/simulation/airspaceaircraftsnapshot.h"
-#include "blackmisc/simulation/ownaircraftprovider.h"
-#include "blackmisc/simulation/remoteaircraftprovider.h"
-#include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/pq/frequency.h"
-#include "blackmisc/pq/length.h"
-#include "blackmisc/pq/time.h"
-#include "blackmisc/pq/units.h"
-#include "blackmisc/worker.h"
+#include "misc/network/connectionstatus.h"
+#include "misc/simulation/airspaceaircraftsnapshot.h"
+#include "misc/simulation/ownaircraftprovider.h"
+#include "misc/simulation/remoteaircraftprovider.h"
+#include "misc/aviation/atcstation.h"
+#include "misc/geo/coordinategeodetic.h"
+#include "misc/pq/frequency.h"
+#include "misc/pq/length.h"
+#include "misc/pq/time.h"
+#include "misc/pq/units.h"
+#include "misc/worker.h"
 
 #include <QHash>
 #include <QObject>
@@ -27,7 +27,7 @@
 #include <QtGlobal>
 #include <atomic>
 
-namespace BlackMisc::Aviation
+namespace swift::misc::aviation
 {
     class CAircraftSituation;
     class CCallsign;
@@ -46,18 +46,18 @@ namespace BlackCore
     //!          wasn't resetted during the specified timeout value.
     //!
     class BLACKCORE_EXPORT CAirspaceAnalyzer :
-        public BlackMisc::CContinuousWorker,
-        public BlackMisc::Simulation::COwnAircraftAware,
-        public BlackMisc::Simulation::CRemoteAircraftAware
+        public swift::misc::CContinuousWorker,
+        public swift::misc::simulation::COwnAircraftAware,
+        public swift::misc::simulation::CRemoteAircraftAware
     {
         Q_OBJECT
 
     public:
         //! List of callsigns and their last activity
-        using CCallsignTimestampSet = QHash<BlackMisc::Aviation::CCallsign, qint64>;
+        using CCallsignTimestampSet = QHash<swift::misc::aviation::CCallsign, qint64>;
 
         //! Constructor
-        CAirspaceAnalyzer(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+        CAirspaceAnalyzer(swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
                           Fsd::CFSDClient *fsdClient,
                           CAirspaceMonitor *airspaceMonitorParent);
 
@@ -66,10 +66,10 @@ namespace BlackCore
 
         //! Get the latest snapshot
         //! \threadsafe
-        BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const;
+        swift::misc::simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const;
 
         //! Render restrictions in simulator
-        void setSimulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance);
+        void setSimulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const swift::misc::physical_quantities::CLength &maxRenderedDistance);
 
         //! Enable/disable watchdog
         //! \remark primarily for debugging, where stopping at a breakpoint can cause multiple timeouts
@@ -80,36 +80,36 @@ namespace BlackCore
 
     signals:
         //! Callsign has timed out
-        void timeoutAircraft(const BlackMisc::Aviation::CCallsign &callsign);
+        void timeoutAircraft(const swift::misc::aviation::CCallsign &callsign);
 
         //! Callsign has timed out
-        void timeoutAtc(const BlackMisc::Aviation::CCallsign &callsign);
+        void timeoutAtc(const swift::misc::aviation::CCallsign &callsign);
 
         //! New aircraft snapshot
-        void airspaceAircraftSnapshot(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
+        void airspaceAircraftSnapshot(const swift::misc::simulation::CAirspaceAircraftSnapshot &snapshot);
 
     private:
         //! Remove callsign from watch list
-        void watchdogRemoveAircraftCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+        void watchdogRemoveAircraftCallsign(const swift::misc::aviation::CCallsign &callsign);
 
         //! Remove callsign from watch list
-        void watchdogRemoveAtcCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+        void watchdogRemoveAtcCallsign(const swift::misc::aviation::CCallsign &callsign);
 
         //! Reset timestamp for callsign
-        void watchdogTouchAircraftCallsign(const BlackMisc::Aviation::CAircraftSituation &situation);
+        void watchdogTouchAircraftCallsign(const swift::misc::aviation::CAircraftSituation &situation);
 
         //! Reset timestamp for callsign
-        void watchdogTouchAtcCallsign(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency,
-                                      const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range);
+        void watchdogTouchAtcCallsign(const swift::misc::aviation::CCallsign &callsign, const swift::misc::physical_quantities::CFrequency &frequency,
+                                      const swift::misc::geo::CCoordinateGeodetic &position, const swift::misc::physical_quantities::CLength &range);
 
         //! Connection status of network changed
-        void onConnectionStatusChanged(BlackMisc::Network::CConnectionStatus oldStatus, BlackMisc::Network::CConnectionStatus newStatus);
+        void onConnectionStatusChanged(swift::misc::network::CConnectionStatus oldStatus, swift::misc::network::CConnectionStatus newStatus);
 
         //! Network position update
-        void onNetworkPositionUpdate(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
+        void onNetworkPositionUpdate(const swift::misc::aviation::CAircraftSituation &situation, const swift::misc::aviation::CTransponder &transponder);
 
         //! ATC station disconnected
-        void onAtcStationDisconnected(const BlackMisc::Aviation::CAtcStation &station);
+        void onAtcStationDisconnected(const swift::misc::aviation::CAtcStation &station);
 
         //! Run a check
         void onTimeout();
@@ -123,18 +123,18 @@ namespace BlackCore
         // watchdog
         CCallsignTimestampSet m_aircraftCallsignTimestamps; //!< for watchdog (pilots)
         CCallsignTimestampSet m_atcCallsignTimestamps; //!< for watchdog (ATC)
-        BlackMisc::PhysicalQuantities::CTime m_timeoutAircraft = { 15, BlackMisc::PhysicalQuantities::CTimeUnit::s() }; //!< Timeout value for watchdog functionality
-        BlackMisc::PhysicalQuantities::CTime m_timeoutAtc = { 50, BlackMisc::PhysicalQuantities::CTimeUnit::s() }; //!< Timeout value for watchdog functionality
+        swift::misc::physical_quantities::CTime m_timeoutAircraft = { 15, swift::misc::physical_quantities::CTimeUnit::s() }; //!< Timeout value for watchdog functionality
+        swift::misc::physical_quantities::CTime m_timeoutAtc = { 50, swift::misc::physical_quantities::CTimeUnit::s() }; //!< Timeout value for watchdog functionality
         qint64 m_lastWatchdogCallMsSinceEpoch; //!< when last called
         qint64 m_doNotRunAgainBefore = -1; //!< do not run again before, also used to detect debugging
         std::atomic_bool m_enabledWatchdog { true }; //!< watchdog enabled
 
         // snapshot
-        BlackMisc::Simulation::CAirspaceAircraftSnapshot m_latestAircraftSnapshot;
+        swift::misc::simulation::CAirspaceAircraftSnapshot m_latestAircraftSnapshot;
         bool m_simulatorRenderedAircraftRestricted = false;
         bool m_simulatorRenderingEnabled = true;
         int m_simulatorMaxRenderedAircraft = -1;
-        BlackMisc::PhysicalQuantities::CLength m_simulatorMaxRenderedDistance { 0.0, nullptr };
+        swift::misc::physical_quantities::CLength m_simulatorMaxRenderedDistance { 0.0, nullptr };
         mutable QReadWriteLock m_lockSnapshot; //!< lock snapshot
         mutable QReadWriteLock m_lockRestrictions; //!< lock simulator restrictions
     };

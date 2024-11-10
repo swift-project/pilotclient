@@ -4,14 +4,14 @@
 #include "blackcore/application.h"
 #include "blackgui/models/actionitem.h"
 #include "blackgui/models/actionmodel.h"
-#include "blackmisc/icons.h"
+#include "misc/icons.h"
 
 #include <QString>
 #include <QStringList>
 #include <QStringBuilder>
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackCore;
 
 namespace BlackGui::Models
@@ -95,7 +95,7 @@ namespace BlackGui::Models
         m_rootItem.reset(new CActionItem(QString(), QString()));
 
         Q_ASSERT_X(sApp && sApp->getInputManager(), Q_FUNC_INFO, "Missing input manager");
-        const QMap<QString, BlackMisc::CIcons::IconIndex> availableActionsAndIcons = sApp->getInputManager()->allAvailableActionsAndIcons();
+        const QMap<QString, swift::misc::CIcons::IconIndex> availableActionsAndIcons = sApp->getInputManager()->allAvailableActionsAndIcons();
         QStringList keys = availableActionsAndIcons.keys();
         keys.sort();
         for (const QString &actionPath : std::as_const(keys))
@@ -110,7 +110,7 @@ namespace BlackGui::Models
                 if (child == nullptr)
                 {
                     const bool isAction = currentPath == actionPath; // action istelf, or just a node?
-                    const BlackMisc::CIcons::IconIndex icon = isAction ? availableActionsAndIcons[actionPath] : CIcons::StandardIconEmpty16;
+                    const swift::misc::CIcons::IconIndex icon = isAction ? availableActionsAndIcons[actionPath] : CIcons::StandardIconEmpty16;
                     child = new CActionItem(isAction ? actionPath : "", token, icon, parentItem);
                     parentItem->appendChild(child);
                 }

@@ -8,9 +8,9 @@
 
 #include "blackcore/vatsim/vatsimsettings.h"
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/network/urlloglist.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/worker.h"
+#include "misc/network/urlloglist.h"
+#include "misc/logcategories.h"
+#include "misc/worker.h"
 
 #include <QDateTime>
 #include <QObject>
@@ -27,7 +27,7 @@ namespace BlackCore
 {
     //! Support for threaded based reading and parsing tasks such
     //! as data files via http, or file system and parsing (such as FSX models)
-    class BLACKCORE_EXPORT CThreadedReader : public BlackMisc::CContinuousWorker
+    class BLACKCORE_EXPORT CThreadedReader : public swift::misc::CContinuousWorker
     {
         Q_OBJECT
 
@@ -62,7 +62,7 @@ namespace BlackCore
 
         //! Get the read log
         //! \threadsafe
-        BlackMisc::Network::CUrlLogList getReadLog() const;
+        swift::misc::network::CUrlLogList getReadLog() const;
 
         //! Starts the reader
         //! \threadsafe
@@ -82,7 +82,7 @@ namespace BlackCore
 
         //! Get the URL log list
         //! \threadsafe
-        BlackMisc::Network::CUrlLogList getUrlLogList() const;
+        swift::misc::network::CUrlLogList getUrlLogList() const;
 
         //! Progress 0..100
         //! \threadsafe
@@ -122,7 +122,7 @@ namespace BlackCore
 
         //! Get request from network, and log with m_urlReadLog
         //! \threadsafe read log access is thread safe
-        QNetworkReply *getFromNetworkAndLog(const BlackMisc::Network::CUrl &url, const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
+        QNetworkReply *getFromNetworkAndLog(const swift::misc::network::CUrl &url, const swift::misc::CSlot<void(QNetworkReply *)> &callback);
 
         //! Network request progress
         virtual void networkReplyProgress(int logId, qint64 current, qint64 max, const QUrl &url);
@@ -133,7 +133,7 @@ namespace BlackCore
 
         //! Use this to log inconsistent data
         //! \remark here in a single function severity / format can be adjusted
-        static void logInconsistentData(const BlackMisc::CStatusMessage &msg, const char *funcInfo = nullptr);
+        static void logInconsistentData(const swift::misc::CStatusMessage &msg, const char *funcInfo = nullptr);
 
     private:
         //! Trigger doWorkImpl
@@ -147,7 +147,7 @@ namespace BlackCore
         size_t m_contentHash = 0; //!< has of the content given
         std::atomic_bool m_markedAsFailed { false }; //!< marker if reading failed
         bool m_unitTest { false }; //!< mark as unit test
-        BlackMisc::Network::CUrlLogList m_urlReadLog; //!< URL based reading can be logged
+        swift::misc::network::CUrlLogList m_urlReadLog; //!< URL based reading can be logged
     };
 } // namespace
 

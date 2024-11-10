@@ -5,11 +5,11 @@
 #include "blackcore/db/icaodatareader.h"
 #include "blackcore/db/databaseutils.h"
 #include "blackcore/application.h"
-#include "blackmisc/aviation/aircraftcategorylist.h"
-#include "blackmisc/fileutils.h"
-#include "blackmisc/json.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/aviation/aircraftcategorylist.h"
+#include "misc/fileutils.h"
+#include "misc/json.h"
+#include "misc/logmessage.h"
+#include "misc/statusmessage.h"
 
 #include <QStringBuilder>
 #include <QElapsedTimer>
@@ -29,10 +29,10 @@
 #include <Qt>
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Db;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::db;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
 using namespace BlackCore::Data;
 
 namespace BlackCore::Db

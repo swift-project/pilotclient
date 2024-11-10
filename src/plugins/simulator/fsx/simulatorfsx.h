@@ -17,10 +17,10 @@ namespace BlackSimPlugin::Fsx
 
     public:
         //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
-        CSimulatorFsx(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                      BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                      BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                      BlackMisc::Network::IClientProvider *clientProvider,
+        CSimulatorFsx(const swift::misc::simulation::CSimulatorPluginInfo &info,
+                      swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
+                      swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                      swift::misc::network::IClientProvider *clientProvider,
                       QObject *parent = nullptr);
 
         //! \name ISimulator implementations

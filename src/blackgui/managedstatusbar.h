@@ -7,8 +7,8 @@
 #define BLACKGUI_MANAGEDSTATUSBAR_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/statusmessage.h"
+#include "misc/statusmessagelist.h"
 #include <QObject>
 #include <QPushButton>
 #include <QTimer>
@@ -52,10 +52,10 @@ namespace BlackGui
         void setElideMode(Qt::TextElideMode mode) { m_elideMode = mode; }
 
         //! Display status message
-        void displayStatusMessage(const BlackMisc::CStatusMessage &statusMessage);
+        void displayStatusMessage(const swift::misc::CStatusMessage &statusMessage);
 
         //! Display status messages
-        void displayStatusMessages(const BlackMisc::CStatusMessageList &statusMessages);
+        void displayStatusMessages(const swift::misc::CStatusMessageList &statusMessages);
 
         //! Enabled size grip
         void setSizeGripEnabled(bool enabled);
@@ -84,7 +84,7 @@ namespace BlackGui
         bool m_showWarnButtonInitially = false; //!< should the button be shown initially? Might be set before the button is initialized
         bool m_showErrorButtonInitially = false; //!< should the button be shown initially? Might be set before the button is initialized
         Qt::TextElideMode m_elideMode = Qt::ElideMiddle; //!< label text elide
-        BlackMisc::StatusSeverity m_currentSeverity = BlackMisc::StatusSeverity::SeverityDebug; //!< severity currently displayed
+        swift::misc::StatusSeverity m_currentSeverity = swift::misc::StatusSeverity::SeverityDebug; //!< severity currently displayed
     };
 } // namespace
 

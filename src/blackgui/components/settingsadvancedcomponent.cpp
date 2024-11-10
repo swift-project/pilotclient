@@ -4,7 +4,7 @@
 #include "ui_settingsadvancedcomponent.h"
 #include "blackgui/components/settingsadvancedcomponent.h"
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui::Components
 {

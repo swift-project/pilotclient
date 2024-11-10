@@ -8,7 +8,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodelbase.h"
-#include "blackmisc/applicationinfolist.h"
+#include "misc/applicationinfolist.h"
 #include <QObject>
 
 class QStandardItemModel;
@@ -16,7 +16,7 @@ class QStandardItemModel;
 namespace BlackGui::Models
 {
     //! Application info list model
-    class BLACKGUI_EXPORT CApplicationInfoListModel : public CListModelBase<BlackMisc::CApplicationInfoList, true>
+    class BLACKGUI_EXPORT CApplicationInfoListModel : public CListModelBase<swift::misc::CApplicationInfoList, true>
     {
         Q_OBJECT
 
@@ -27,7 +27,7 @@ namespace BlackGui::Models
         //! Destructor
         virtual ~CApplicationInfoListModel() {}
 
-        //! \copydoc BlackMisc::CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories
+        //! \copydoc swift::misc::CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories
         void otherSwiftVersionsFromDataDirectories(bool reinit);
     };
 } // ns

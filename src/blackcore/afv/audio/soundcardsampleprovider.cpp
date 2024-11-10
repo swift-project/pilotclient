@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackcore/afv/audio/soundcardsampleprovider.h"
-#include "blackmisc/metadatautils.h"
+#include "misc/metadatautils.h"
 #include "config/buildconfig.h"
 
 using namespace swift::config;
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace swift::sound::sample_provider;
 
 namespace BlackCore::Afv::Audio
@@ -178,7 +178,7 @@ namespace BlackCore::Afv::Audio
         return (*receiverInput)->setGainRatio(gainRatio);
     }
 
-    BlackMisc::Aviation::CCallsignSet CSoundcardSampleProvider::getReceivingCallsigns(quint16 transceiverID) const
+    swift::misc::aviation::CCallsignSet CSoundcardSampleProvider::getReceivingCallsigns(quint16 transceiverID) const
     {
         return m_receiverInputs.at(transceiverID)->getReceivingCallsigns();
     }

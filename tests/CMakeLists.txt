@@ -7,7 +7,7 @@ target_include_directories(tests_test INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_subdirectory(blackcore)
 add_subdirectory(blackgui)
-add_subdirectory(blackmisc)
+add_subdirectory(misc)
 
 if(SWIFT_BUILD_FSX_PLUGIN)
     add_subdirectory(blacksimpluginfsxp3d)

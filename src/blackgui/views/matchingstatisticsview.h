@@ -9,7 +9,7 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/matchingstatisticsmodel.h"
 #include "blackgui/views/viewbase.h"
-#include "blackmisc/network/serverlist.h"
+#include "misc/network/serverlist.h"
 
 class QWidget;
 

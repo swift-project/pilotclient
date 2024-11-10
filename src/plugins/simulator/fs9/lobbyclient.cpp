@@ -10,7 +10,7 @@
 #include "fs9.h"
 #include "lobbyclient.h"
 
-#include "blackmisc/logmessage.h"
+#include "misc/logmessage.h"
 
 #include <QDebug>
 #include <QTimer>
@@ -19,7 +19,7 @@
 #include <QScopedPointer>
 #include <QMutexLocker>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackSimPlugin::Fs9
 {

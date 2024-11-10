@@ -4,18 +4,18 @@
 #include "blackcore/db/infodatareader.h"
 #include "blackcore/application.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/sequence.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/verify.h"
+#include "misc/sequence.h"
+#include "misc/logmessage.h"
+#include "misc/network/networkutils.h"
+#include "misc/verify.h"
 
 #include <QTimer>
 #include <QJsonDocument>
 #include <QJsonObject>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Db;
+using namespace swift::misc;
+using namespace swift::misc::network;
+using namespace swift::misc::db;
 using namespace BlackCore::Data;
 
 namespace BlackCore::Db

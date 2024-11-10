@@ -5,14 +5,14 @@
 #include "blackcore/modelsetbuilder.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/db/databaseutils.h"
-#include "blackmisc/aviation/aircrafticaocodelist.h"
-#include "blackmisc/simulation/aircraftmodel.h"
+#include "misc/aviation/aircrafticaocodelist.h"
+#include "misc/simulation/aircraftmodel.h"
 
 #include <QStringList>
 #include <Qt>
 #include <QtGlobal>
 
-using namespace BlackMisc::Simulation;
+using namespace swift::misc::simulation;
 using namespace BlackCore::Db;
 
 namespace BlackCore

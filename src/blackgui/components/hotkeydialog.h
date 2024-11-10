@@ -9,8 +9,8 @@
 #include "blackgui/models/actionmodel.h"
 #include "blackgui/horizontalcombobox.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/input/actionhotkey.h"
-#include "blackmisc/identifierlist.h"
+#include "misc/input/actionhotkey.h"
+#include "misc/identifierlist.h"
 
 #include <QDialog>
 #include <QObject>
@@ -26,7 +26,7 @@ namespace BlackCore
 {
     class CInputManager;
 }
-namespace BlackMisc::Input
+namespace swift::misc::input
 {
     class CHotkeyCombination;
     class CKeyboardKeyList;
@@ -67,15 +67,15 @@ namespace BlackGui::Components
     public:
         //! Constructor
         CHotkeyDialog(
-            const BlackMisc::Input::CActionHotkey &actionHotkey,
-            const BlackMisc::CIdentifierList &identifiers,
+            const swift::misc::input::CActionHotkey &actionHotkey,
+            const swift::misc::CIdentifierList &identifiers,
             QWidget *parent = nullptr);
 
         //! Destructor
         virtual ~CHotkeyDialog() override;
 
         //! Get hotkey selected by user
-        BlackMisc::Input::CActionHotkey getSelectedActionHotkey() const { return m_actionHotkey; }
+        swift::misc::input::CActionHotkey getSelectedActionHotkey() const { return m_actionHotkey; }
 
         //! Init style sheet
         void initStyleSheet();
@@ -84,19 +84,19 @@ namespace BlackGui::Components
         virtual void accept() override;
 
         //! Runs the hotkey dialog and returns the result
-        static BlackMisc::Input::CActionHotkey getActionHotkey(
-            const BlackMisc::Input::CActionHotkey &initial,
-            const BlackMisc::CIdentifierList &identifiers,
+        static swift::misc::input::CActionHotkey getActionHotkey(
+            const swift::misc::input::CActionHotkey &initial,
+            const swift::misc::CIdentifierList &identifiers,
             QWidget *parent = nullptr);
 
     private:
         void advancedModeChanged();
         void captureHotkey();
-        void combinationSelectionChanged(const BlackMisc::Input::CHotkeyCombination &combination);
-        void combinationSelectionFinished(const BlackMisc::Input::CHotkeyCombination &combination);
+        void combinationSelectionChanged(const swift::misc::input::CHotkeyCombination &combination);
+        void combinationSelectionFinished(const swift::misc::input::CHotkeyCombination &combination);
         void changeSelectedAction(const QItemSelection &selected, const QItemSelection &deselected);
-        CKeySelectionBox *addSelectionBox(const BlackMisc::Input::CKeyboardKeyList &allSupportedKeys, const BlackMisc::Input::CKeyboardKey &keyboardKey = {});
-        CKeySelectionBox *addSelectionBox(const BlackMisc::Input::CJoystickButtonList &allAvailableButtons, const BlackMisc::Input::CJoystickButton &joystickButton = {});
+        CKeySelectionBox *addSelectionBox(const swift::misc::input::CKeyboardKeyList &allSupportedKeys, const swift::misc::input::CKeyboardKey &keyboardKey = {});
+        CKeySelectionBox *addSelectionBox(const swift::misc::input::CJoystickButtonList &allAvailableButtons, const swift::misc::input::CJoystickButton &joystickButton = {});
 
         void changeApplicableMachine(int index);
         void synchronize();
@@ -108,7 +108,7 @@ namespace BlackGui::Components
         void selectAction();
 
         QScopedPointer<Ui::CHotkeyDialog> ui;
-        BlackMisc::Input::CActionHotkey m_actionHotkey;
+        swift::misc::input::CActionHotkey m_actionHotkey;
         BlackGui::Models::CActionModel m_actionModel;
 
         //! "No key/button"

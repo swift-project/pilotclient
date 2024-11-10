@@ -4,8 +4,8 @@
 
 #include "loadindicator.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/verify.h"
-#include "blackmisc/threadutils.h"
+#include "misc/verify.h"
+#include "misc/threadutils.h"
 
 #include <QColor>
 #include <QPainter>
@@ -14,7 +14,7 @@
 #include <QSizePolicy>
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 
 namespace BlackGui
 {

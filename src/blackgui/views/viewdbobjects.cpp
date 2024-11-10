@@ -10,14 +10,14 @@
 #include "blackgui/models/countrylistmodel.h"
 #include "blackgui/models/distributorlistmodel.h"
 #include "blackgui/models/liverylistmodel.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/distributor.h"
-#include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/aviation/aircrafticaocodelist.h"
-#include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/countrylist.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/distributor.h"
+#include "misc/simulation/distributorlist.h"
+#include "misc/aviation/aircrafticaocodelist.h"
+#include "misc/aviation/airlineicaocodelist.h"
+#include "misc/aviation/liverylist.h"
+#include "misc/icons.h"
+#include "misc/countrylist.h"
 
 #include <QAction>
 #include <QIntValidator>
@@ -26,7 +26,7 @@
 #include <QLabel>
 #include <QWidgetAction>
 
-using namespace BlackMisc;
+using namespace swift::misc;
 using namespace BlackGui;
 using namespace BlackGui::Models;
 using namespace BlackGui::Menus;

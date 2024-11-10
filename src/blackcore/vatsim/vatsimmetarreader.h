@@ -7,11 +7,11 @@
 #define BLACKCORE_VATSIM_VATSIMMETARREADER_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/weather/metar.h"
-#include "blackmisc/weather/metardecoder.h"
-#include "blackmisc/weather/metarlist.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/aviation/airporticaocode.h"
+#include "misc/weather/metar.h"
+#include "misc/weather/metardecoder.h"
+#include "misc/weather/metarlist.h"
+#include "misc/network/entityflags.h"
+#include "misc/aviation/airporticaocode.h"
 #include "blackcore/threadedreader.h"
 
 #include <QObject>
@@ -35,18 +35,18 @@ namespace BlackCore::Vatsim
 
         //! Get METARs
         //! \threadsafe
-        virtual BlackMisc::Weather::CMetarList getMetars() const;
+        virtual swift::misc::weather::CMetarList getMetars() const;
 
         //! Get METAR for airport
         //! \threadsafe
-        virtual BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &icao) const;
+        virtual swift::misc::weather::CMetar getMetarForAirport(const swift::misc::aviation::CAirportIcaoCode &icao) const;
 
     signals:
-        //! METARs have been read and converted to BlackMisc::Weather::CMetarList
-        void metarsRead(const BlackMisc::Weather::CMetarList &metars);
+        //! METARs have been read and converted to swift::misc::weather::CMetarList
+        void metarsRead(const swift::misc::weather::CMetarList &metars);
 
         //! Data have been read
-        void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        void dataRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
     protected:
         // CThreadedReader overrides
@@ -64,9 +64,9 @@ namespace BlackCore::Vatsim
         void reloadSettings();
 
     private:
-        BlackMisc::Weather::CMetarDecoder m_metarDecoder;
-        BlackMisc::Weather::CMetarList m_metars;
-        BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TVatsimMetars> m_settings { this, &CVatsimMetarReader::reloadSettings };
+        swift::misc::weather::CMetarDecoder m_metarDecoder;
+        swift::misc::weather::CMetarList m_metars;
+        swift::misc::CSettingReadOnly<BlackCore::Vatsim::TVatsimMetars> m_settings { this, &CVatsimMetarReader::reloadSettings };
     };
 } // ns
 #endif // guard

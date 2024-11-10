@@ -4,14 +4,14 @@
 #include "blackcore/application.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/db/databaseauthentication.h"
-#include "blackmisc/json.h"
-#include "blackmisc/logcategories.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/network/authenticateduser.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/network/rolelist.h"
-#include "blackmisc/network/url.h"
-#include "blackmisc/statusmessage.h"
+#include "misc/json.h"
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
+#include "misc/network/authenticateduser.h"
+#include "misc/network/networkutils.h"
+#include "misc/network/rolelist.h"
+#include "misc/network/url.h"
+#include "misc/statusmessage.h"
 
 #include <QByteArray>
 #include <QJsonObject>
@@ -23,8 +23,8 @@
 #include <QUrl>
 #include <QUrlQuery>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace swift::misc;
+using namespace swift::misc::network;
 
 namespace BlackCore::Db
 {
@@ -127,14 +127,14 @@ namespace BlackCore::Db
                 CLogMessage(this).error(u"Authentication failed, no response from '%1'") << urlString;
                 return;
             }
-            if (!Json::looksLikeJson(json))
+            if (!json::looksLikeJson(json))
             {
                 CLogMessage(this).error(u"Illegal JSON object: %1") << CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(json);
                 return;
             }
 
             static const CLogCategoryList cats(CLogCategoryList(this).withValidation());
-            const QJsonObject jsonObj(Json::jsonObjectFromString(json));
+            const QJsonObject jsonObj(json::jsonObjectFromString(json));
             CAuthenticatedUser user = CAuthenticatedUser::fromDatabaseJson(jsonObj.contains("user") ? jsonObj["user"].toObject() : jsonObj);
             CStatusMessageList msgs;
             if (jsonObj.contains("messages"))

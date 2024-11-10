@@ -3,11 +3,11 @@
 
 #include "aircraftmodelsetvalidationdialog.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/simulation/simulatorinfo.h"
+#include "misc/simulation/simulatorinfo.h"
 #include "ui_aircraftmodelsetvalidationdialog.h"
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
 
 namespace BlackGui::Components
 {

@@ -4,26 +4,26 @@
 #include "simulatorfsxcommon.h"
 #include "simconnectdatadefinition.h"
 #include "blackcore/application.h"
-#include "blackmisc/simulation/fscommon/bcdconversions.h"
-#include "blackmisc/simulation/fsx/simconnectutilities.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/logmessage.h"
+#include "misc/simulation/fscommon/bcdconversions.h"
+#include "misc/simulation/fsx/simconnectutilities.h"
+#include "misc/simulation/simulatorplugininfo.h"
+#include "misc/aviation/airportlist.h"
+#include "misc/logmessage.h"
 #include "config/buildconfig.h"
 
 #include <cstring>
 
 using namespace BlackCore;
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::FsCommon;
-using namespace BlackMisc::Simulation::Fsx;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
+using namespace swift::misc::aviation;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::geo;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::fscommon;
+using namespace swift::misc::simulation::Fsx;
 
 namespace BlackSimPlugin::FsxCommon
 {

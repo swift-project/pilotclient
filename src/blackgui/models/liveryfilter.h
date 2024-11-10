@@ -8,15 +8,15 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/modelfilter.h"
-#include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/rgbcolor.h"
+#include "misc/aviation/liverylist.h"
+#include "misc/rgbcolor.h"
 
 #include <QString>
 
 namespace BlackGui::Models
 {
     //! Filter for aircraft liveries
-    class BLACKGUI_EXPORT CLiveryFilter : public IModelFilter<BlackMisc::Aviation::CLiveryList>
+    class BLACKGUI_EXPORT CLiveryFilter : public IModelFilter<swift::misc::aviation::CLiveryList>
     {
     public:
         //! Constructor
@@ -25,22 +25,22 @@ namespace BlackGui::Models
             const QString &combinedCode,
             const QString &descriptiom,
             const QString &airlineDesignator,
-            const BlackMisc::CRgbColor &fuselageColor,
-            const BlackMisc::CRgbColor &tailColor,
+            const swift::misc::CRgbColor &fuselageColor,
+            const swift::misc::CRgbColor &tailColor,
             double maxColorDistance,
             bool colorLiveries,
             bool airlineLiveries);
 
         //! \copydoc IModelFilter::filter
-        virtual BlackMisc::Aviation::CLiveryList filter(const BlackMisc::Aviation::CLiveryList &inContainer) const override;
+        virtual swift::misc::aviation::CLiveryList filter(const swift::misc::aviation::CLiveryList &inContainer) const override;
 
     private:
         int m_id = -1;
         QString m_combinedCode;
         QString m_description;
         QString m_airlineIcaoDesignator;
-        BlackMisc::CRgbColor m_fuselageColor;
-        BlackMisc::CRgbColor m_tailColor;
+        swift::misc::CRgbColor m_fuselageColor;
+        swift::misc::CRgbColor m_tailColor;
         double m_maxColorDistance = 0.5;
         bool m_colorLiveries = true;
         bool m_airlineLiveries = true;

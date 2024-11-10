@@ -8,11 +8,11 @@
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/context/contextaudioimpl.h"
 
-#include "blackmisc/simulation/settings/simulatorsettings.h"
-#include "blackmisc/audio/audiodeviceinfo.h"
-#include "blackmisc/audio/notificationsounds.h"
-#include "blackmisc/audio/audiosettings.h"
-#include "blackmisc/sequence.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/audio/audiodeviceinfo.h"
+#include "misc/audio/notificationsounds.h"
+#include "misc/audio/audiosettings.h"
+#include "misc/sequence.h"
 #include "ui_audiodevicevolumesetupcomponent.h"
 
 #include <QCheckBox>
@@ -27,11 +27,11 @@ using namespace BlackCore;
 using namespace BlackCore::Afv::Audio;
 using namespace BlackCore::Afv::Clients;
 using namespace BlackCore::Context;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Audio;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::audio;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::simulation;
 
 namespace BlackGui::Components
 {
@@ -450,7 +450,7 @@ namespace BlackGui::Components
     bool CAudioDeviceVolumeSetupComponent::isComIntegrated() const
     {
         if (!this->hasSimulator()) { return false; }
-        const Simulation::Settings::CSimulatorSettings settings = sGui->getIContextSimulator()->getSimulatorSettings();
+        const simulation::settings::CSimulatorSettings settings = sGui->getIContextSimulator()->getSimulatorSettings();
         const bool integrate = settings.isComIntegrated();
         return integrate;
     }

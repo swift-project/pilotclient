@@ -7,10 +7,10 @@ namespace BlackGui::Models
 {
     // see here for the reason of thess forward instantiations
     // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
-    template class CListModelBase<BlackMisc::Simulation::CAircraftModelList, true>;
-    template class CListModelBase<BlackMisc::Simulation::CSimulatedAircraftList, true>;
-    template class CListModelBase<BlackMisc::Simulation::CDistributorList, true>;
-    template class CListModelBase<BlackMisc::Simulation::CInterpolationSetupList, false>;
-    template class CListModelBase<BlackMisc::Simulation::CMatchingStatistics, true>;
+    template class CListModelBase<swift::misc::simulation::CAircraftModelList, true>;
+    template class CListModelBase<swift::misc::simulation::CSimulatedAircraftList, true>;
+    template class CListModelBase<swift::misc::simulation::CDistributorList, true>;
+    template class CListModelBase<swift::misc::simulation::CInterpolationSetupList, false>;
+    template class CListModelBase<swift::misc::simulation::CMatchingStatistics, true>;
 
 } // namespace

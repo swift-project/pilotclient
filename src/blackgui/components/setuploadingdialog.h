@@ -6,7 +6,7 @@
 #ifndef BLACKGUI_COMPONENTS_SETUPLOADINGDIALOG_H
 #define BLACKGUI_COMPONENTS_SETUPLOADINGDIALOG_H
 
-#include "blackmisc/statusmessagelist.h"
+#include "misc/statusmessagelist.h"
 #include <QDialog>
 
 namespace Ui
@@ -24,7 +24,7 @@ namespace BlackGui::Components
 
     public:
         //! Ctor with messages
-        CSetupLoadingDialog(const BlackMisc::CStatusMessageList &msgs, QWidget *parent = nullptr);
+        CSetupLoadingDialog(const swift::misc::CStatusMessageList &msgs, QWidget *parent = nullptr);
 
         //! Dtor
         virtual ~CSetupLoadingDialog();

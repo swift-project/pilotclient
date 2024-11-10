@@ -4,17 +4,17 @@
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/columns.h"
 #include "blackgui/models/liverylistmodel.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/country.h"
-#include "blackmisc/db/datastore.h"
-#include "blackmisc/propertyindexvariantmap.h"
-#include "blackmisc/timestampbased.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/livery.h"
+#include "misc/country.h"
+#include "misc/db/datastore.h"
+#include "misc/propertyindexvariantmap.h"
+#include "misc/timestampbased.h"
 
 #include <QtGlobal>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
 
 namespace BlackGui::Models
 {

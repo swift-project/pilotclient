@@ -8,8 +8,8 @@
 #include "blackcore/corefacade.h"
 #include "blackgui/components/mainkeypadareacomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/aviation/transponder.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "misc/aviation/transponder.h"
+#include "misc/simulation/simulatedaircraft.h"
 #include "ui_mainkeypadareacomponent.h"
 
 #include <QLineEdit>
@@ -17,10 +17,10 @@
 #include <QtGlobal>
 #include <QPointer>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 

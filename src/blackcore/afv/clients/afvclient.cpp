@@ -7,11 +7,11 @@
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/application.h"
 #include "sound/audioutilities.h"
-#include "blackmisc/audio/audiodeviceinfolist.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/threadutils.h"
-#include "blackmisc/stringutils.h"
-#include "blackmisc/verify.h"
+#include "misc/audio/audiodeviceinfolist.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/threadutils.h"
+#include "misc/stringutils.h"
+#include "misc/verify.h"
 
 #ifdef Q_OS_WIN
 #    include "comdef.h"
@@ -22,11 +22,11 @@
 using namespace BlackCore::Context;
 using namespace BlackCore::Afv::Audio;
 using namespace BlackCore::Afv::Connection;
-using namespace BlackMisc;
-using namespace BlackMisc::Audio;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Aviation;
+using namespace swift::misc;
+using namespace swift::misc::audio;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::simulation;
+using namespace swift::misc::aviation;
 using namespace swift::sound;
 using namespace swift::sound::sample_provider;
 
@@ -66,8 +66,8 @@ namespace BlackCore::Afv::Clients
 
         m_updateTimer.stop(); // not used
 
-        // deferred init - use BlackMisc:: singleShot to call in correct thread, "myself" NOT needed
-        BlackMisc::singleShot(1000, this, [=] {
+        // deferred init - use swift::misc:: singleShot to call in correct thread, "myself" NOT needed
+        swift::misc::singleShot(1000, this, [=] {
             this->deferredInit();
         });
     }

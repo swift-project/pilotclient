@@ -59,7 +59,7 @@
          <string>...</string>
         </property>
         <property name="icon">
-         <iconset resource="../../blackmisc/blackmisc.qrc">
+         <iconset resource="../../misc/misc.qrc">
           <normaloff>:/diagona/icons/diagona/icons/folder--plus.png</normaloff>:/diagona/icons/diagona/icons/folder--plus.png</iconset>
         </property>
        </widget>
@@ -108,7 +108,7 @@
   <tabstop>tvp_ApplicationInfo</tabstop>
  </tabstops>
  <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
+  <include location="../../misc/misc.qrc"/>
  </resources>
  <connections/>
 </ui>

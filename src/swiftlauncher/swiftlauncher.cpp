@@ -11,16 +11,16 @@
 #include "blackcore/context/contextapplicationproxy.h"
 #include "blackcore/setupreader.h"
 #include "sound/audioutilities.h"
-#include "blackmisc/simulation/fscommon/fsdirectories.h"
+#include "misc/simulation/fscommon/fsdirectories.h"
 #include "blackcore/context/contextnetwork.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/swiftdirectories.h"
-#include "blackmisc/directoryutils.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/loghandler.h"
-#include "blackmisc/sharedstate/datalinkdbus.h"
+#include "misc/network/networkutils.h"
+#include "misc/dbusserver.h"
+#include "misc/swiftdirectories.h"
+#include "misc/directoryutils.h"
+#include "misc/icons.h"
+#include "misc/logmessage.h"
+#include "misc/loghandler.h"
+#include "misc/sharedstate/datalinkdbus.h"
 #include "config/buildconfig.h"
 
 #include <QMessageBox>
@@ -43,12 +43,12 @@ using namespace BlackCore::Context;
 using namespace BlackCore::Data;
 using namespace BlackCore::Vatsim;
 using namespace swift::sound;
-using namespace BlackMisc;
-using namespace BlackMisc::Db;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::Data;
-using namespace BlackMisc::Simulation::FsCommon;
+using namespace swift::misc;
+using namespace swift::misc::db;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::data;
+using namespace swift::misc::simulation::fscommon;
 
 CSwiftLauncher::CSwiftLauncher(bool installerMode, QWidget *parent) : QMainWindow(parent, CEnableForFramelessWindow::modeToWindowFlags(CEnableForFramelessWindow::WindowNormal)),
                                                                       CEnableForFramelessWindow(CEnableForFramelessWindow::WindowFrameless, true, "framelessMainWindow", this),

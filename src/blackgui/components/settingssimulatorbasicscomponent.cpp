@@ -4,20 +4,20 @@
 #include "settingssimulatorbasicscomponent.h"
 #include "ui_settingssimulatorbasicscomponent.h"
 
-#include "blackmisc/simulation/xplane/xplaneutil.h"
-#include "blackmisc/fileutils.h"
-#include "blackmisc/htmlutils.h"
-#include "blackmisc/logmessage.h"
+#include "misc/simulation/xplane/xplaneutil.h"
+#include "misc/fileutils.h"
+#include "misc/htmlutils.h"
+#include "misc/logmessage.h"
 #include "config/buildconfig.h"
 
 #include <QMessageBox>
 #include <QRegularExpression>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::FsCommon;
-using namespace BlackMisc::Simulation::Settings;
-using namespace BlackMisc::Simulation::XPlane;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::fscommon;
+using namespace swift::misc::simulation::settings;
+using namespace swift::misc::simulation::xplane;
 using namespace swift::config;
 
 namespace BlackGui::Components

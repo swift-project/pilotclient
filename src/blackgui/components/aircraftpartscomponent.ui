@@ -122,7 +122,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../../blackmisc/blackmisc.qrc">
+            <iconset resource="../../misc/misc.qrc">
              <normaloff>:/diagona/icons/diagona/icons/table-sheet.png</normaloff>:/diagona/icons/diagona/icons/table-sheet.png</iconset>
            </property>
           </widget>
@@ -283,7 +283,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
+  <include location="../../misc/misc.qrc"/>
  </resources>
  <connections/>
 </ui>

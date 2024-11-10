@@ -8,7 +8,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodelbase.h"
-#include "blackmisc/network/userlist.h"
+#include "misc/network/userlist.h"
 
 namespace BlackGui::Models
 {
@@ -16,7 +16,7 @@ namespace BlackGui::Models
      * User list model
      */
     class BLACKGUI_EXPORT CUserListModel :
-        public CListModelBase<BlackMisc::Network::CUserList, true>
+        public CListModelBase<swift::misc::network::CUserList, true>
     {
         Q_OBJECT
 

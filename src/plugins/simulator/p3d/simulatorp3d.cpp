@@ -4,18 +4,18 @@
 #include "simulatorp3d.h"
 #include "../fsxcommon/simconnectsymbols.h"
 #include "../fscommon/simulatorfscommonfunctions.h"
-#include "blackmisc/threadutils.h"
-#include "blackmisc/logmessage.h"
+#include "misc/threadutils.h"
+#include "misc/logmessage.h"
 #include "config/buildconfig.h"
 
 using namespace swift::config;
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::FsCommon;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::physical_quantities;
+using namespace swift::misc::geo;
+using namespace swift::misc::network;
+using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::fscommon;
 using namespace BlackSimPlugin::FsxCommon;
 using namespace BlackCore;
 using namespace BlackSimPlugin::FsCommon;

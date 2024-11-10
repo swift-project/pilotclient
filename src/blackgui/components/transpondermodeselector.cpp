@@ -5,7 +5,7 @@
 
 #include <QStringList>
 
-using namespace BlackMisc::Aviation;
+using namespace swift::misc::aviation;
 
 namespace BlackGui::Components
 {
@@ -45,7 +45,7 @@ namespace BlackGui::Components
         return modes;
     }
 
-    BlackMisc::Aviation::CTransponder::TransponderMode CTransponderModeSelector::getSelectedTransponderMode() const
+    swift::misc::aviation::CTransponder::TransponderMode CTransponderModeSelector::getSelectedTransponderMode() const
     {
         return m_currentMode;
     }
@@ -76,7 +76,7 @@ namespace BlackGui::Components
 
     void CTransponderModeSelector::setSelectedTransponderModeStateIdent()
     {
-        this->setSelectedTransponderMode(BlackMisc::Aviation::CTransponder::StateIdent);
+        this->setSelectedTransponderMode(swift::misc::aviation::CTransponder::StateIdent);
     }
 
     void CTransponderModeSelector::setSelectedTransponderModeAsString(const QString &mode)

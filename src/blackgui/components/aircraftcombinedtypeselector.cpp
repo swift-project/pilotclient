@@ -4,7 +4,7 @@
 #include "blackgui/components/aircraftcombinedtypeselector.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
+#include "misc/aviation/aircrafticaocode.h"
 #include "ui_aircraftcombinedtypeselector.h"
 
 #include <QComboBox>
@@ -12,7 +12,7 @@
 #include <QStringBuilder>
 #include <QtGlobal>
 
-using namespace BlackMisc::Aviation;
+using namespace swift::misc::aviation;
 
 namespace BlackGui::Components
 {

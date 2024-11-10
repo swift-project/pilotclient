@@ -7,7 +7,7 @@
 #define BLACKGUI_COMPONENTS_AUTOPUBLISHCOMPONENT_H
 
 #include "blackgui/overlaymessagesframe.h"
-#include "blackmisc/simulation/autopublishdata.h"
+#include "misc/simulation/autopublishdata.h"
 
 #include <QFrame>
 #include <QScopedPointer>
@@ -38,8 +38,8 @@ namespace BlackGui::Components
 
     private:
         QScopedPointer<Ui::CAutoPublishComponent> ui;
-        BlackMisc::Simulation::CAutoPublishData m_data;
-        BlackMisc::CData<BlackMisc::Simulation::Data::TLastAutoPublish> m_lastAutoPublish { this };
+        swift::misc::simulation::CAutoPublishData m_data;
+        swift::misc::CData<swift::misc::simulation::data::TLastAutoPublish> m_lastAutoPublish { this };
 
         //! Analyze against DB data
         void analyzeAgainstDBData();
@@ -54,7 +54,7 @@ namespace BlackGui::Components
         void deleteAllFiles();
 
         //! Auto publishing completed
-        void onAutoPublished(bool success, const QString &url, const BlackMisc::CStatusMessageList &msgs);
+        void onAutoPublished(bool success, const QString &url, const swift::misc::CStatusMessageList &msgs);
 
         //! Close parent dialog (if any)
         void closeParentDialog();

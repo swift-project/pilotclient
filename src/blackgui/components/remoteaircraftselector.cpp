@@ -4,9 +4,9 @@
 #include "blackcore/context/contextnetwork.h"
 #include "blackgui/components/remoteaircraftselector.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/sequence.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/sequence.h"
+#include "misc/simulation/simulatedaircraft.h"
 #include "ui_remoteaircraftselector.h"
 
 #include <QComboBox>
@@ -16,9 +16,9 @@
 #include <QtGlobal>
 #include <QStringBuilder>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::aviation;
+using namespace swift::misc::simulation;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 
@@ -38,7 +38,7 @@ namespace BlackGui::Components
 
     CRemoteAircraftSelector::~CRemoteAircraftSelector() {}
 
-    BlackMisc::Aviation::CCallsign CRemoteAircraftSelector::getSelectedCallsign() const
+    swift::misc::aviation::CCallsign CRemoteAircraftSelector::getSelectedCallsign() const
     {
         static const CCallsign empty {};
         const int index = ui->cb_RemoteAircraftSelector->currentIndex();

@@ -76,7 +76,7 @@ namespace BlackGui
             virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
         };
 
-        //! Base class for views with DB objects also orderable (based on BlackMisc::IOrderableList )
+        //! Base class for views with DB objects also orderable (based on swift::misc::IOrderableList )
         template <class T>
         class COrderableViewWithDbObjects :
             public CViewWithDbObjects<T>

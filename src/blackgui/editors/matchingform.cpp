@@ -8,8 +8,8 @@
 #include <QPushButton>
 #include <QFileDialog>
 
-using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
+using namespace swift::misc;
+using namespace swift::misc::simulation;
 using namespace BlackCore;
 
 namespace BlackGui::Editors

@@ -16,7 +16,7 @@
 
 class QWidget;
 
-namespace BlackMisc::Simulation
+namespace swift::misc::simulation
 {
     class CAircraftModelList;
 }
@@ -30,7 +30,7 @@ namespace BlackGui::Filters
     //! Form for a aircraft model filter
     class BLACKGUI_EXPORT CAircraftModelFilterDialog :
         public CFilterDialog,
-        public Models::IModelFilterProvider<BlackMisc::Simulation::CAircraftModelList>
+        public Models::IModelFilterProvider<swift::misc::simulation::CAircraftModelList>
     {
         Q_OBJECT
 
@@ -42,7 +42,7 @@ namespace BlackGui::Filters
         virtual ~CAircraftModelFilterDialog() override;
 
         //! \copydoc Models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Simulation::CAircraftModelList>> createModelFilter() const override;
+        virtual std::unique_ptr<BlackGui::Models::IModelFilter<swift::misc::simulation::CAircraftModelList>> createModelFilter() const override;
 
     private:
         QScopedPointer<Ui::CAircraftModelFilterDialog> ui;

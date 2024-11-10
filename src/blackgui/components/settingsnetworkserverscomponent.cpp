@@ -8,11 +8,11 @@
 #include "blackgui/components/settingsnetworkserverscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/views/serverview.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/network/server.h"
-#include "blackmisc/network/serverlist.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/statusmessagelist.h"
+#include "misc/logmessage.h"
+#include "misc/network/server.h"
+#include "misc/network/serverlist.h"
+#include "misc/statusmessage.h"
+#include "misc/statusmessagelist.h"
 #include "ui_settingsnetworkserverscomponent.h"
 
 #include <QPushButton>
@@ -23,10 +23,10 @@ using namespace swift::config;
 using namespace BlackCore;
 using namespace BlackCore::Data;
 using namespace BlackGui;
-using namespace BlackMisc;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Audio;
+using namespace swift::misc;
+using namespace swift::misc::network;
+using namespace swift::misc::aviation;
+using namespace swift::misc::audio;
 
 namespace BlackGui::Components
 {

@@ -7,8 +7,8 @@
 #define BLACKSOUND_TONEPAIR_H
 
 #include "sound/swiftsoundexport.h"
-#include "blackmisc/pq/frequency.h"
-#include "blackmisc/pq/time.h"
+#include "misc/pq/frequency.h"
+#include "misc/pq/time.h"
 
 #include <tuple>
 
@@ -19,9 +19,9 @@ namespace swift::sound
     {
     public:
         //! Play two tones with frequencies f for t milliseconds
-        CTonePair(const BlackMisc::PhysicalQuantities::CFrequency &frequency,
-                  const BlackMisc::PhysicalQuantities::CFrequency &secondaryFrequency,
-                  const BlackMisc::PhysicalQuantities::CTime &duration);
+        CTonePair(const swift::misc::physical_quantities::CFrequency &frequency,
+                  const swift::misc::physical_quantities::CFrequency &secondaryFrequency,
+                  const swift::misc::physical_quantities::CTime &duration);
 
         //! Get frequency of the first tone
         int getFirstFrequencyHz() const { return m_firstFrequencyHz; }
