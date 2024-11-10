@@ -5,7 +5,7 @@
 #include "misc/containerbase.h"
 #include <QDBusMetaType>
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc, CIcon, CIconList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CIcon, CIconList)
 
 namespace swift::misc
 {

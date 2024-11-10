@@ -153,10 +153,9 @@ namespace swift::misc::aviation
         //! \remarks Just a helper method, that is why no CFrequency is returned
         static double channelSpacingToFrequencyKHz(ChannelSpacing channelSpacing);
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CComSystem,
-            BLACK_METAMEMBER(channelSpacing)
-        );
+            SWIFT_METAMEMBER(channelSpacing));
     };
 } // namespace
 

@@ -417,7 +417,7 @@ namespace MiscTest
 } // namespace
 
 //! main
-BLACKTEST_APPLESS_MAIN(MiscTest::CTestContainers);
+SWIFTTEST_APPLESS_MAIN(MiscTest::CTestContainers);
 
 #include "testcontainers.moc"
 

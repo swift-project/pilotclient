@@ -19,7 +19,7 @@ using namespace swift::gui;
 using namespace swift::gui::components;
 using namespace swift::gui::editors;
 
-namespace BlackSimPlugin::Emulated
+namespace swift::simplugin::emulated
 {
     const QStringList &CSimulatorEmulatedMonitorDialog::getLogCategories()
     {

@@ -15,7 +15,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::weather, CCloudLayer)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::weather, CCloudLayer)
 
 namespace swift::misc::weather
 {
@@ -142,15 +142,14 @@ namespace swift::misc::weather
         Clouds m_clouds = NoClouds;
         int m_coveragePercent;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CCloudLayer,
-            BLACK_METAMEMBER(base),
-            BLACK_METAMEMBER(top),
-            BLACK_METAMEMBER(precipitationRate),
-            BLACK_METAMEMBER(precipitation),
-            BLACK_METAMEMBER(clouds),
-            BLACK_METAMEMBER(coveragePercent)
-        );
+            SWIFT_METAMEMBER(base),
+            SWIFT_METAMEMBER(top),
+            SWIFT_METAMEMBER(precipitationRate),
+            SWIFT_METAMEMBER(precipitation),
+            SWIFT_METAMEMBER(clouds),
+            SWIFT_METAMEMBER(coveragePercent));
     };
 } // namespace
 

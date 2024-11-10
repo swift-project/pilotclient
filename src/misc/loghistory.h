@@ -22,7 +22,7 @@ namespace swift::misc
     class SWIFT_MISC_EXPORT CLogHistory : public shared_state::CListJournal<CStatusMessageList>
     {
         Q_OBJECT
-        BLACK_SHARED_STATE_CHANNEL("swift.log.history")
+        SWIFT_SHARED_STATE_CHANNEL("swift.log.history")
 
     public:
         //! Constructor.
@@ -35,7 +35,7 @@ namespace swift::misc
     class SWIFT_MISC_EXPORT CLogHistorySource : public shared_state::CListMutator<CStatusMessageList>
     {
         Q_OBJECT
-        BLACK_SHARED_STATE_CHANNEL("swift.log.history")
+        SWIFT_SHARED_STATE_CHANNEL("swift.log.history")
 
     public:
         //! Constructor.
@@ -48,7 +48,7 @@ namespace swift::misc
     class SWIFT_MISC_EXPORT CLogHistoryReplica : public shared_state::CListObserver<CStatusMessageList, CLogPattern>
     {
         Q_OBJECT
-        BLACK_SHARED_STATE_CHANNEL("swift.log.history")
+        SWIFT_SHARED_STATE_CHANNEL("swift.log.history")
 
     public:
         //! Constructor.

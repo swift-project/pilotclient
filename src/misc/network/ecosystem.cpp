@@ -6,7 +6,7 @@
 #include "misc/verify.h"
 #include "misc/comparefunctions.h"
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CEcosystem)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CEcosystem)
 
 namespace swift::misc::network
 {

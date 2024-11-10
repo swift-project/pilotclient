@@ -3,7 +3,7 @@
 
 #include "waketurbulencecategory.h"
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CWakeTurbulenceCategory)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CWakeTurbulenceCategory)
 
 namespace swift::misc::aviation
 {

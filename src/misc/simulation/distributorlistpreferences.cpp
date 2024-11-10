@@ -5,7 +5,7 @@
 
 #include <QtGlobal>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CDistributorListPreferences)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CDistributorListPreferences)
 
 namespace swift::misc::simulation
 {

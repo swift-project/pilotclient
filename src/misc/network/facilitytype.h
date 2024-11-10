@@ -9,7 +9,7 @@
 #include "misc/swiftmiscexport.h"
 #include "misc/valueobject.h"
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CFacilityType)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CFacilityType)
 
 namespace swift::misc::network
 {
@@ -48,10 +48,9 @@ namespace swift::misc::network
     private:
         FacilityType m_facilityType = Unknown;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CFacilityType,
-            BLACK_METAMEMBER(facilityType)
-        );
+            SWIFT_METAMEMBER(facilityType));
     };
 } // namespace
 

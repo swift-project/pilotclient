@@ -14,7 +14,7 @@
 
 #include <QMetaType>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CUser, CUserList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CUser, CUserList)
 
 namespace swift::misc::network
 {

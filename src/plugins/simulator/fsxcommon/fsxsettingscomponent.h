@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_FSXCOMMON_FSXSETTINGSCOMPONENT_H
-#define BLACKSIMPLUGIN_FSXCOMMON_FSXSETTINGSCOMPONENT_H
+#ifndef SWIFT_SIMPLUGIN_FSXCOMMON_FSXSETTINGSCOMPONENT_H
+#define SWIFT_SIMPLUGIN_FSXCOMMON_FSXSETTINGSCOMPONENT_H
 
 #include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 #include "misc/simulation/simulatorinfo.h"
@@ -20,7 +20,7 @@ namespace swift::gui
 {
     class COverlayMessagesFrame;
 }
-namespace BlackSimPlugin::FsxCommon
+namespace swift::simplugin::fsxcommon
 {
     class CSimulatorFsxCommon;
 

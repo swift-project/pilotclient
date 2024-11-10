@@ -12,7 +12,7 @@
 #include <QFileInfo>
 #include <QStringBuilder>
 
-#ifdef BLACK_USE_CRASHPAD
+#ifdef SWIFT_USE_CRASHPAD
 #    if defined(Q_OS_WIN) && !defined(NOMINMAX)
 #        define NOMINMAX
 #    endif
@@ -37,7 +37,7 @@ namespace swift::misc
     CCrashHandler::~CCrashHandler()
     {}
 
-#ifdef BLACK_USE_CRASHPAD
+#ifdef SWIFT_USE_CRASHPAD
     //! Convert to file path
     base::FilePath qstringToFilePath(const QString &str)
     {
@@ -51,7 +51,7 @@ namespace swift::misc
 
     void CCrashHandler::init()
     {
-#ifdef BLACK_USE_CRASHPAD
+#ifdef SWIFT_USE_CRASHPAD
         static const QString crashpadHandler(CBuildConfig::isRunningOnWindowsNtPlatform() ? "swift_crashpad_handler.exe" : "swift_crashpad_handler");
         static const QString handler = CFileUtils::appendFilePaths(CSwiftDirectories::binDirectory(), crashpadHandler);
         const QString database = CSwiftDirectories::crashpadDatabaseDirectory();
@@ -108,7 +108,7 @@ namespace swift::misc
 
     void CCrashHandler::setUploadsEnabled(bool enable)
     {
-#ifdef BLACK_USE_CRASHPAD
+#ifdef SWIFT_USE_CRASHPAD
         if (!m_crashReportDatabase)
         {
             return;
@@ -122,7 +122,7 @@ namespace swift::misc
 
     bool CCrashHandler::isCrashDumpUploadEnabled() const
     {
-#ifdef BLACK_USE_CRASHPAD
+#ifdef SWIFT_USE_CRASHPAD
         if (!m_crashReportDatabase)
         {
             return false;
@@ -173,7 +173,7 @@ namespace swift::misc
 
     void CCrashHandler::simulateCrash()
     {
-#ifdef BLACK_USE_CRASHPAD
+#ifdef SWIFT_USE_CRASHPAD
         CLogMessage(this).info(u"Simulated crash dump!");
         m_crashAndLogInfo.appendInfo("Simulated crash dump!");
         m_crashAndLogInfo.writeToFile();
@@ -187,7 +187,7 @@ namespace swift::misc
 
     void CCrashHandler::simulateAssert()
     {
-#ifdef BLACK_USE_CRASHPAD
+#ifdef SWIFT_USE_CRASHPAD
         CLogMessage(this).info(u"Simulated ASSERT!");
         m_crashAndLogInfo.appendInfo("Simulated ASSERT!");
         m_crashAndLogInfo.writeToFile();

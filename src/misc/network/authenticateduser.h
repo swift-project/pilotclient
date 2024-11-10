@@ -20,7 +20,7 @@
 #include <QString>
 #include <QStringList>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CAuthenticatedUser)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CAuthenticatedUser)
 
 namespace swift::misc::network
 {
@@ -173,19 +173,18 @@ namespace swift::misc::network
         bool m_authenticated = false;
         CRoleList m_roles;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CAuthenticatedUser,
-            BLACK_METAMEMBER(dbKey),
-            BLACK_METAMEMBER(vatsimId),
-            BLACK_METAMEMBER(realname),
-            BLACK_METAMEMBER(username),
-            BLACK_METAMEMBER(email),
-            BLACK_METAMEMBER(password),
-            BLACK_METAMEMBER(country),
-            BLACK_METAMEMBER(enabled),
-            BLACK_METAMEMBER(authenticated),
-            BLACK_METAMEMBER(roles)
-        );
+            SWIFT_METAMEMBER(dbKey),
+            SWIFT_METAMEMBER(vatsimId),
+            SWIFT_METAMEMBER(realname),
+            SWIFT_METAMEMBER(username),
+            SWIFT_METAMEMBER(email),
+            SWIFT_METAMEMBER(password),
+            SWIFT_METAMEMBER(country),
+            SWIFT_METAMEMBER(enabled),
+            SWIFT_METAMEMBER(authenticated),
+            SWIFT_METAMEMBER(roles));
     };
 } // namespace
 

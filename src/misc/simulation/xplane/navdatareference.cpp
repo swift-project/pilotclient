@@ -7,8 +7,8 @@
 
 #include <QtGlobal>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::xplane, CNavDataReference)
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation::xplane, CNavDataReference, CNavDataReferenceList)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::xplane, CNavDataReference)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation::xplane, CNavDataReference, CNavDataReferenceList)
 
 namespace swift::misc::simulation::xplane
 {

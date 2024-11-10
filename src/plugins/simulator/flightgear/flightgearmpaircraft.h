@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_FLIGHTGEAR_FGPLANEMPAIRCRAFT_H
-#define BLACKSIMPLUGIN_FLIGHTGEAR_FGPLANEMPAIRCRAFT_H
+#ifndef SWIFT_SIMPLUGIN_FLIGHTGEAR_FGPLANEMPAIRCRAFT_H
+#define SWIFT_SIMPLUGIN_FLIGHTGEAR_FGPLANEMPAIRCRAFT_H
 
 #include "misc/simulation/simulatedaircraft.h"
 #include "misc/simulation/interpolation/interpolatormulti.h"
@@ -15,7 +15,7 @@ namespace swift::core
 {
     class ISimulator;
 }
-namespace BlackSimPlugin::Flightgear
+namespace swift::simplugin::flightgear
 {
     //! Class representing a Flightgear multiplayer aircraft
     class CFlightgearMPAircraft

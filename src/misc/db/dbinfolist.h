@@ -15,7 +15,7 @@
 
 #include <initializer_list>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::db, CDbInfo, CDbInfoList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::db, CDbInfo, CDbInfoList)
 
 namespace swift::misc::db
 {

@@ -3,12 +3,12 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_P3D_SIMULATORP3DCONFIG_H
-#define BLACKSIMPLUGIN_P3D_SIMULATORP3DCONFIG_H
+#ifndef SWIFT_SIMPLUGIN_P3D_SIMULATORP3DCONFIG_H
+#define SWIFT_SIMPLUGIN_P3D_SIMULATORP3DCONFIG_H
 
 #include "gui/pluginconfig.h"
 
-namespace BlackSimPlugin::P3D
+namespace swift::simplugin::p3d
 {
     /*!
      * Window for setting up the P3D plugin.

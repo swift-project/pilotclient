@@ -99,10 +99,9 @@ namespace swift::misc::aviation
     private:
         ReferenceNorth m_north; //!< magnetic or true?
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CHeading,
-            BLACK_METAMEMBER(north)
-        );
+            SWIFT_METAMEMBER(north));
     };
 } // ns
 

@@ -11,7 +11,7 @@ using namespace swift::misc::aviation;
 using namespace swift::misc::geo;
 using namespace swift::misc::physical_quantities;
 
-namespace BlackSimPlugin::Flightgear
+namespace swift::simplugin::flightgear
 {
     CFGSwiftBusTrafficProxy::CFGSwiftBusTrafficProxy(QDBusConnection &connection, QObject *parent, bool dummy) : QObject(parent)
     {

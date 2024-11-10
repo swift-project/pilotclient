@@ -7,7 +7,7 @@
 using namespace swift::misc;
 using namespace swift::misc::network;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::core::data, CVatsimSetup)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::core::data, CVatsimSetup)
 
 namespace swift::core::data
 {

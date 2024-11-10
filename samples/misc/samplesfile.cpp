@@ -10,7 +10,7 @@
 
 using namespace swift::misc;
 
-namespace BlackSample
+namespace swift::sample
 {
     int CSamplesFile::samples(QTextStream &out)
     {

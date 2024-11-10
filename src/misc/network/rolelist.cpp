@@ -6,7 +6,7 @@
 
 #include <QJsonValue>
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CRole, CRoleList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CRole, CRoleList)
 
 namespace swift::misc::network
 {

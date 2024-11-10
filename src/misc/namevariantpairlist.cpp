@@ -4,7 +4,7 @@
 #include "misc/namevariantpairlist.h"
 #include "misc/range.h"
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc, CNameVariantPair, CNameVariantPairList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CNameVariantPair, CNameVariantPairList)
 
 namespace swift::misc
 {

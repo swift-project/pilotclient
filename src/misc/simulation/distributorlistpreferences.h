@@ -19,7 +19,7 @@
 #include <QString>
 #include <tuple>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CDistributorListPreferences)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CDistributorListPreferences)
 
 namespace swift::misc::simulation
 {
@@ -54,15 +54,14 @@ namespace swift::misc::simulation
         CDistributorList m_distributorsFG;
         CSimulatorInfo m_lastUpdatedSimulator;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CDistributorListPreferences,
-            BLACK_METAMEMBER(distributorsFsx),
-            BLACK_METAMEMBER(distributorsP3d),
-            BLACK_METAMEMBER(distributorsFs9),
-            BLACK_METAMEMBER(distributorsXPlane),
-            BLACK_METAMEMBER(distributorsFG),
-            BLACK_METAMEMBER(lastUpdatedSimulator)
-        );
+            SWIFT_METAMEMBER(distributorsFsx),
+            SWIFT_METAMEMBER(distributorsP3d),
+            SWIFT_METAMEMBER(distributorsFs9),
+            SWIFT_METAMEMBER(distributorsXPlane),
+            SWIFT_METAMEMBER(distributorsFG),
+            SWIFT_METAMEMBER(lastUpdatedSimulator));
     };
 } // namespace
 

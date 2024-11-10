@@ -3,14 +3,14 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_FSUIPC_H
-#define BLACKSIMPLUGIN_FSUIPC_H
+#ifndef SWIFT_SIMPLUGIN_FSUIPC_H
+#define SWIFT_SIMPLUGIN_FSUIPC_H
 
 #include "plugins/simulator/fscommon/fscommonexport.h"
 #include "misc/simulation/simulatedaircraft.h"
 #include <QStringList>
 
-namespace BlackSimPlugin::FsCommon
+namespace swift::simplugin::fscommon
 {
     //! Class representing a FSUIPC "interface"
     class FSCOMMON_EXPORT CFsuipc : public QObject

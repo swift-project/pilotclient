@@ -13,7 +13,7 @@
 
 #include <QMetaType>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::Simulation, CSimulatorInfo, CSimulatorPluginInfoList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::Simulation, CSimulatorInfo, CSimulatorPluginInfoList)
 
 namespace swift::misc::simulation
 {

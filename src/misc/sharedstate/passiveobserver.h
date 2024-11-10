@@ -13,7 +13,7 @@
 #include <QSharedPointer>
 #include <QMutex>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::shared_state, CAnyMatch)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::shared_state, CAnyMatch)
 
 namespace swift::misc::shared_state
 {
@@ -81,7 +81,7 @@ namespace swift::misc::shared_state
     private:
         int m_dummy = 0;
 
-        BLACK_METACLASS(CAnyMatch, BLACK_METAMEMBER(dummy));
+        SWIFT_METACLASS(CAnyMatch, SWIFT_METAMEMBER(dummy));
     };
 }
 

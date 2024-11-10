@@ -17,7 +17,7 @@
 #include <QStringList>
 #include <tuple>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftIcaoCode, CAircraftIcaoCodeList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftIcaoCode, CAircraftIcaoCodeList)
 
 namespace swift::misc::aviation
 {

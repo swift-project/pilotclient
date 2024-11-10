@@ -7,7 +7,7 @@
 
 using namespace swift::misc::physical_quantities;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftVelocity)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftVelocity)
 
 namespace swift::misc::aviation
 {

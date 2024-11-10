@@ -4,12 +4,12 @@
 //! \file
 //! \ingroup samplemiscsim
 
-#ifndef BLACKSAMPLE_SAMPLESMODELMAPPING_H
-#define BLACKSAMPLE_SAMPLESMODELMAPPING_H
+#ifndef SWIFT_SAMPLE_SAMPLESMODELMAPPING_H
+#define SWIFT_SAMPLE_SAMPLESMODELMAPPING_H
 
 class QTextStream;
 
-namespace BlackSample
+namespace swift::sample
 {
     //! Samples for model mapping classes
     class CSamplesModelMapping

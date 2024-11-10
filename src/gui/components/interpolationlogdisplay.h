@@ -137,7 +137,7 @@ namespace swift::gui::components
         //! \copydoc swift::core::ISimulator::resetAircraftStatistics
         void resetStatistics();
 
-        //! \copydoc Blackswift::coreCore::ISimulator::resetLastSentValues
+        //! \copydoc swift::core::ISimulator::resetLastSentValues
         void resetLastSentValues();
 
         //! Clear

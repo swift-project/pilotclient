@@ -25,18 +25,18 @@
 #include <cstddef>
 
 //! \cond
-#define BLACK_TEMPLATE_UNIT_MIXINS(MU, Extern, Export)                              \
+#define SWIFT_TEMPLATE_UNIT_MIXINS(MU, Extern, Export)                               \
     namespace swift::misc::physical_quantities                                       \
-    {                                                                               \
-        class MU;                                                                   \
-    }                                                                               \
-    namespace swift::misc::private_ns                                               \
-    {                                                                               \
+    {                                                                                \
+        class MU;                                                                    \
+    }                                                                                \
+    namespace swift::misc::private_ns                                                \
+    {                                                                                \
         Extern template struct Export CValueObjectMetaInfo<physical_quantities::MU>; \
         Extern template struct Export MetaTypeHelper<physical_quantities::MU>;       \
-    }                                                                               \
-    namespace swift::misc::mixin                                                    \
-    {                                                                               \
+    }                                                                                \
+    namespace swift::misc::mixin                                                     \
+    {                                                                                \
         Extern template class Export MetaType<physical_quantities::MU>;              \
         Extern template class Export DBusOperators<physical_quantities::MU>;         \
         Extern template class Export DataStreamOperators<physical_quantities::MU>;   \
@@ -45,35 +45,35 @@
 //! \endcond
 
 /*!
- * \def BLACK_DECLARE_UNIT_MIXINS
+ * \def SWIFT_DECLARE_UNIT_MIXINS
  * Explicit template declaration of mixins for a CMeasurementUnit subclass
  * to be placed near the top of the header that defines the class
  */
 
 /*!
- * \def BLACK_DEFINE_UNIT_MIXINS
+ * \def SWIFT_DEFINE_UNIT_MIXINS
  * Explicit template definition of mixins for a CMeasurementUnit subclass
  */
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)
-#    define BLACK_DECLARE_UNIT_MIXINS(MU)
-#    define BLACK_DEFINE_UNIT_MIXINS(MU)
+#    define SWIFT_DECLARE_UNIT_MIXINS(MU)
+#    define SWIFT_DEFINE_UNIT_MIXINS(MU)
 #elif defined(Q_OS_WIN) && defined(Q_CC_CLANG)
-#    define BLACK_DECLARE_UNIT_MIXINS(MU) BLACK_TEMPLATE_UNIT_MIXINS(MU, extern, )
-#    define BLACK_DEFINE_UNIT_MIXINS(MU) BLACK_TEMPLATE_UNIT_MIXINS(MU, , SWIFT_MISC_EXPORT)
+#    define SWIFT_DECLARE_UNIT_MIXINS(MU) SWIFT_TEMPLATE_UNIT_MIXINS(MU, extern, )
+#    define SWIFT_DEFINE_UNIT_MIXINS(MU) SWIFT_TEMPLATE_UNIT_MIXINS(MU, , SWIFT_MISC_EXPORT)
 #else
-#    define BLACK_DECLARE_UNIT_MIXINS(MU) BLACK_TEMPLATE_UNIT_MIXINS(MU, extern, )
-#    define BLACK_DEFINE_UNIT_MIXINS(MU) BLACK_TEMPLATE_UNIT_MIXINS(MU, , )
+#    define SWIFT_DECLARE_UNIT_MIXINS(MU) SWIFT_TEMPLATE_UNIT_MIXINS(MU, extern, )
+#    define SWIFT_DEFINE_UNIT_MIXINS(MU) SWIFT_TEMPLATE_UNIT_MIXINS(MU, , )
 #endif
 
-BLACK_DECLARE_UNIT_MIXINS(CAngleUnit)
-BLACK_DECLARE_UNIT_MIXINS(CLengthUnit)
-BLACK_DECLARE_UNIT_MIXINS(CPressureUnit)
-BLACK_DECLARE_UNIT_MIXINS(CFrequencyUnit)
-BLACK_DECLARE_UNIT_MIXINS(CMassUnit)
-BLACK_DECLARE_UNIT_MIXINS(CTemperatureUnit)
-BLACK_DECLARE_UNIT_MIXINS(CSpeedUnit)
-BLACK_DECLARE_UNIT_MIXINS(CTimeUnit)
-BLACK_DECLARE_UNIT_MIXINS(CAccelerationUnit)
+SWIFT_DECLARE_UNIT_MIXINS(CAngleUnit)
+SWIFT_DECLARE_UNIT_MIXINS(CLengthUnit)
+SWIFT_DECLARE_UNIT_MIXINS(CPressureUnit)
+SWIFT_DECLARE_UNIT_MIXINS(CFrequencyUnit)
+SWIFT_DECLARE_UNIT_MIXINS(CMassUnit)
+SWIFT_DECLARE_UNIT_MIXINS(CTemperatureUnit)
+SWIFT_DECLARE_UNIT_MIXINS(CSpeedUnit)
+SWIFT_DECLARE_UNIT_MIXINS(CTimeUnit)
+SWIFT_DECLARE_UNIT_MIXINS(CAccelerationUnit)
 
 //
 // Used with the template for quantities. This is the reason for

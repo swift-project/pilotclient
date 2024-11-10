@@ -3,7 +3,7 @@
 
 #include "misc/network/serverlist.h"
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CServer, CServerList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CServer, CServerList)
 
 namespace swift::misc::network
 {

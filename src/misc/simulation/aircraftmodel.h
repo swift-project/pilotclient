@@ -36,7 +36,7 @@
 #include <QDir>
 #include <tuple>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Simulation, CAircraftModel)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Simulation, CAircraftModel)
 
 namespace swift::misc
 {
@@ -570,28 +570,27 @@ namespace swift::misc
             ModelMode m_modelMode = Include; //!< model mode (include / exclude)
             physical_quantities::CLength m_cg = physical_quantities::CLength::null(); //!< center of gravity
 
-            BLACK_METACLASS(
+            SWIFT_METACLASS(
                 CAircraftModel,
-                BLACK_METAMEMBER(dbKey),
-                BLACK_METAMEMBER(timestampMSecsSinceEpoch),
-                BLACK_METAMEMBER(order),
-                BLACK_METAMEMBER(callsign),
-                BLACK_METAMEMBER(aircraftIcao),
-                BLACK_METAMEMBER(livery),
-                BLACK_METAMEMBER(simulator),
-                BLACK_METAMEMBER(distributor),
-                BLACK_METAMEMBER(cg),
-                BLACK_METAMEMBER(supportedParts),
-                BLACK_METAMEMBER(modelString, 0, CaseInsensitiveComparison),
-                BLACK_METAMEMBER(modelStringAlias, 0, CaseInsensitiveComparison),
-                BLACK_METAMEMBER(name),
-                BLACK_METAMEMBER(description, 0, DisabledForComparison),
-                BLACK_METAMEMBER(fileName, 0, DisabledForComparison),
-                BLACK_METAMEMBER(iconFile, 0, DisabledForComparison),
-                BLACK_METAMEMBER(fileTimestamp, 0, DisabledForComparison),
-                BLACK_METAMEMBER(modelType),
-                BLACK_METAMEMBER(modelMode)
-            );
+                SWIFT_METAMEMBER(dbKey),
+                SWIFT_METAMEMBER(timestampMSecsSinceEpoch),
+                SWIFT_METAMEMBER(order),
+                SWIFT_METAMEMBER(callsign),
+                SWIFT_METAMEMBER(aircraftIcao),
+                SWIFT_METAMEMBER(livery),
+                SWIFT_METAMEMBER(simulator),
+                SWIFT_METAMEMBER(distributor),
+                SWIFT_METAMEMBER(cg),
+                SWIFT_METAMEMBER(supportedParts),
+                SWIFT_METAMEMBER(modelString, 0, CaseInsensitiveComparison),
+                SWIFT_METAMEMBER(modelStringAlias, 0, CaseInsensitiveComparison),
+                SWIFT_METAMEMBER(name),
+                SWIFT_METAMEMBER(description, 0, DisabledForComparison),
+                SWIFT_METAMEMBER(fileName, 0, DisabledForComparison),
+                SWIFT_METAMEMBER(iconFile, 0, DisabledForComparison),
+                SWIFT_METAMEMBER(fileTimestamp, 0, DisabledForComparison),
+                SWIFT_METAMEMBER(modelType),
+                SWIFT_METAMEMBER(modelMode));
         };
     } // namespace
 } // namespace

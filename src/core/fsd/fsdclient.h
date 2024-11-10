@@ -57,7 +57,7 @@
 
 class QNetworkReply;
 
-namespace BlackFsdTest
+namespace SwiftFsdTest
 {
     class CTestFSDClient;
 }
@@ -321,7 +321,7 @@ namespace swift::core::fsd
 
     private:
         //! \cond
-        friend BlackFsdTest::CTestFSDClient;
+        friend SwiftFsdTest::CTestFSDClient;
         //! \endcond
 
         //! @{

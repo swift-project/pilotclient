@@ -3,15 +3,15 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_MSFS_SIMULATORMSFS_H
-#define BLACKSIMPLUGIN_MSFS_SIMULATORMSFS_H
+#ifndef SWIFT_SIMPLUGIN_MSFS_SIMULATORMSFS_H
+#define SWIFT_SIMPLUGIN_MSFS_SIMULATORMSFS_H
 
 #include "../fsxcommon/simulatorfsxcommon.h"
 
-namespace BlackSimPlugin::Msfs
+namespace swift::simplugin::msfs
 {
     //! FSX simulator implementation
-    class CSimulatorMsFs : public BlackSimPlugin::FsxCommon::CSimulatorFsxCommon
+    class CSimulatorMsFs : public swift::simplugin::fsxcommon::CSimulatorFsxCommon
     {
         Q_OBJECT
 
@@ -28,11 +28,11 @@ namespace BlackSimPlugin::Msfs
         virtual bool connectTo() override;
         //! @}
 
-        virtual void setTrueAltitude(swift::misc::aviation::CAircraftSituation &aircraftSituation, const BlackSimPlugin::FsxCommon::DataDefinitionOwnAircraft &simulatorOwnAircraft) override;
+        virtual void setTrueAltitude(swift::misc::aviation::CAircraftSituation &aircraftSituation, const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft) override;
     };
 
     //! Listener for MSFS
-    class CSimulatorMsFsListener : public FsxCommon::CSimulatorFsxCommonListener
+    class CSimulatorMsFsListener : public fsxcommon::CSimulatorFsxCommonListener
     {
         Q_OBJECT
 

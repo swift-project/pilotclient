@@ -39,7 +39,7 @@ namespace swift::misc
         /*!
          * CRTP class template from which a derived class can inherit common methods dealing with hashing instances by metaclass.
          *
-         * \tparam Derived Must be registered with BLACK_DECLARE_TUPLE_CONVERSION.
+         * \tparam Derived Must be registered with SWIFT_DECLARE_TUPLE_CONVERSION.
          */
         template <class Derived>
         class HashByMetaClass

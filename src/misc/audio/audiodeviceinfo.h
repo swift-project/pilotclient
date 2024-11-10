@@ -14,7 +14,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::audio, CAudioDeviceInfo)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::audio, CAudioDeviceInfo)
 
 namespace swift::misc::audio
 {
@@ -108,12 +108,11 @@ namespace swift::misc::audio
         QString m_deviceName; //!< Device name
         CIdentifier m_identifier; //!< We use a DBus based system. Hence an audio device can reside on a different computers, this here is its name
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CAudioDeviceInfo,
-            BLACK_METAMEMBER(type),
-            BLACK_METAMEMBER(deviceName),
-            BLACK_METAMEMBER(identifier)
-        );
+            SWIFT_METAMEMBER(type),
+            SWIFT_METAMEMBER(deviceName),
+            SWIFT_METAMEMBER(identifier));
     };
 } // namespace
 

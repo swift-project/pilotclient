@@ -12,8 +12,8 @@ qdbuscpp2xml datacontext.h -x misc_cpp2xml.dll -o MiscTest.Datacontext.xml
 Set search path for plugins: env.var. QT_PLUGIN_PATH
 
 Done automatically (qmake), but if required manually
-Interface: qdbusxml2cpp blackbus.testservice.xml -p itestservice
-Adaptor: qdbusxml2cpp blackbus.testservice.xml -a atestservice
+Interface: qdbusxml2cpp swiftbus.testservice.xml -p itestservice
+Adaptor: qdbusxml2cpp swiftbus.testservice.xml -a atestservice
 
 -- Removed after changing to "handwritten" interface
 

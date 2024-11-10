@@ -176,7 +176,7 @@ namespace MiscTest
 }
 
 //! main
-BLACKTEST_MAIN(MiscTest::CTestXPlane);
+SWIFTTEST_MAIN(MiscTest::CTestXPlane);
 
 #include "testxplane.moc"
 

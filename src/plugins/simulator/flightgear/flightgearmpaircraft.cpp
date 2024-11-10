@@ -10,7 +10,7 @@ using namespace swift::misc;
 using namespace swift::misc::aviation;
 using namespace swift::misc::simulation;
 
-namespace BlackSimPlugin::Flightgear
+namespace swift::simplugin::flightgear
 {
     CFlightgearMPAircraft::CFlightgearMPAircraft()
     {}

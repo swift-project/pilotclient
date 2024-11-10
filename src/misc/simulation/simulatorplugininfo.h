@@ -15,7 +15,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatorPluginInfo)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatorPluginInfo)
 
 namespace swift::misc::simulation
 {
@@ -103,15 +103,14 @@ namespace swift::misc::simulation
         CSimulatorInfo m_info;
         bool m_valid { false };
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CSimulatorPluginInfo,
-            BLACK_METAMEMBER(identifier, 0, CaseInsensitiveComparison),
-            BLACK_METAMEMBER(name, 0, DisabledForComparison | DisabledForHashing),
-            BLACK_METAMEMBER(simulator, 0, DisabledForComparison | DisabledForHashing),
-            BLACK_METAMEMBER(description, 0, DisabledForComparison | DisabledForHashing),
-            BLACK_METAMEMBER(info, 0, DisabledForComparison | DisabledForHashing),
-            BLACK_METAMEMBER(valid, 0, DisabledForComparison | DisabledForHashing)
-        );
+            SWIFT_METAMEMBER(identifier, 0, CaseInsensitiveComparison),
+            SWIFT_METAMEMBER(name, 0, DisabledForComparison | DisabledForHashing),
+            SWIFT_METAMEMBER(simulator, 0, DisabledForComparison | DisabledForHashing),
+            SWIFT_METAMEMBER(description, 0, DisabledForComparison | DisabledForHashing),
+            SWIFT_METAMEMBER(info, 0, DisabledForComparison | DisabledForHashing),
+            SWIFT_METAMEMBER(valid, 0, DisabledForComparison | DisabledForHashing));
     };
 } // ns
 

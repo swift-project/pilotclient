@@ -1,15 +1,15 @@
 // SPDX-FileCopyrightText: Copyright (C) 2014 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#ifndef BLACKSIMPLUGIN_FS9_HOST_NODE_H
-#define BLACKSIMPLUGIN_FS9_HOST_NODE_H
+#ifndef SWIFT_SIMPLUGIN_FS9_HOST_NODE_H
+#define SWIFT_SIMPLUGIN_FS9_HOST_NODE_H
 
 #include <QString>
 #include <dplay8.h>
 
 //! \file
 
-namespace BlackSimPlugin::Fs9
+namespace swift::simplugin::fs9
 {
     //! Class representing a enumerated host node
     struct CHostNode

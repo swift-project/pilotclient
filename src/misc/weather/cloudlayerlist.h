@@ -14,7 +14,7 @@
 #include <initializer_list>
 #include <tuple>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::weather, CCloudLayer, CCloudLayerList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::weather, CCloudLayer, CCloudLayerList)
 
 namespace swift::misc
 {

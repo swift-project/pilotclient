@@ -13,7 +13,7 @@ using namespace swift::misc;
 using namespace swift::misc::network;
 using namespace swift::misc::simulation;
 
-namespace BlackSimPlugin::Common
+namespace swift::simplugin::common
 {
     CSimulatorPluginCommon::CSimulatorPluginCommon(
         const CSimulatorPluginInfo &info,
@@ -81,7 +81,7 @@ namespace BlackSimPlugin::Common
 
     void CSimulatorPluginCommon::registerHelp()
     {
-        if (CSimpleCommandParser::registered("BlackSimPlugin::Common::CSimulatorPluginCommon")) { return; }
+        if (CSimpleCommandParser::registered("swift::simplugin::common::CSimulatorPluginCommon")) { return; }
         CSimpleCommandParser::registerCommand({ ".drv intdisplay", "interpolation display" });
     }
 } // namespace

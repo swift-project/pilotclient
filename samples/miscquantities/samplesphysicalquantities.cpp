@@ -26,7 +26,7 @@ using namespace swift::misc;
 using namespace swift::misc::aviation;
 using namespace swift::misc::physical_quantities;
 
-namespace BlackSample
+namespace swift::sample
 {
     int CSamplesPhysicalQuantities::samples(QTextStream &out)
     {

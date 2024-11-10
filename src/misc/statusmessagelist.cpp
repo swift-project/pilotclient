@@ -11,7 +11,7 @@
 #include <QStringBuilder>
 #include <QStringList>
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc, CStatusMessage, CStatusMessageList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CStatusMessage, CStatusMessageList)
 
 namespace swift::misc
 {

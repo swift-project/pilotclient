@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
         // run tests
         if (cmdlineArgs.contains("testservice", Qt::CaseInsensitive))
         {
-            BlackSample::ServiceTool::dataTransferTestClient(address);
+            swift::sample::ServiceTool::dataTransferTestClient(address);
         }
 
         // loop
@@ -175,14 +175,14 @@ int main(int argc, char *argv[])
         // run tests
         if (mode == "testservice")
         {
-            BlackSample::ServiceTool::dataTransferTestServer(dBusServer, verbose);
+            swift::sample::ServiceTool::dataTransferTestServer(dBusServer, verbose);
         }
 
         // testing in new process
         CProcessCtrl::startDetached(executable, args, true);
 
         // testing in same process
-        // BlackSample::ServiceTool::dataTransferTestClient(address);
+        // swift::sample::ServiceTool::dataTransferTestClient(address);
 
         // loop
         return a.exec();

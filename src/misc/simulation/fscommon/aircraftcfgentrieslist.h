@@ -20,7 +20,7 @@
 #include <Qt>
 #include <tuple>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::simulation::fscommon, CAircraftCfgEntries, CAircraftCfgEntriesList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::simulation::fscommon, CAircraftCfgEntries, CAircraftCfgEntriesList)
 
 namespace swift::misc::simulation::fscommon
 {

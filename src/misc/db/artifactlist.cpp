@@ -6,7 +6,7 @@
 
 using namespace swift::misc::network;
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::db, CArtifact, CArtifactList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::db, CArtifact, CArtifactList)
 
 namespace swift::misc::db
 {

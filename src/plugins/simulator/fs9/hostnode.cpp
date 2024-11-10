@@ -4,7 +4,7 @@
 #include "hostnode.h"
 #include "directplayutils.h"
 
-namespace BlackSimPlugin::Fs9
+namespace swift::simplugin::fs9
 {
     CHostNode::CHostNode()
     {

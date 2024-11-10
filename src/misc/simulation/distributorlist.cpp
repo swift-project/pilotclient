@@ -7,7 +7,7 @@
 
 #include <tuple>
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CDistributor, CDistributorList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CDistributor, CDistributorList)
 
 namespace swift::misc::simulation
 {

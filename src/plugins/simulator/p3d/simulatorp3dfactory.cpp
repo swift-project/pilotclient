@@ -8,7 +8,7 @@
 using namespace swift::misc::simulation;
 using namespace swift::misc::network;
 
-namespace BlackSimPlugin::P3D
+namespace swift::simplugin::p3d
 {
     swift::core::ISimulator *CSimulatorP3DFactory::create(const CSimulatorPluginInfo &info,
                                                           IOwnAircraftProvider *ownAircraftProvider,

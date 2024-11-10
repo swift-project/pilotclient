@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDMONITORDIALOG_H
-#define BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDMONITORDIALOG_H
+#ifndef SWIFT_SIMPLUGIN_EMULATED_SIMULATOREMULATEDMONITORDIALOG_H
+#define SWIFT_SIMPLUGIN_EMULATED_SIMULATOREMULATEDMONITORDIALOG_H
 
 #include "misc/simulation/simulatedaircraft.h"
 #include "misc/network/textmessage.h"
@@ -20,7 +20,7 @@ namespace Ui
 {
     class CSimulatorEmulatedMonitorDialog;
 }
-namespace BlackSimPlugin::Emulated
+namespace swift::simplugin::emulated
 {
     class CSimulatorEmulated;
 

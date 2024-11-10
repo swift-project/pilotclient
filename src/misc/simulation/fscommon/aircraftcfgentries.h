@@ -16,7 +16,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::fscommon, CAircraftCfgEntries)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::fscommon, CAircraftCfgEntries)
 
 namespace swift::misc::simulation::fscommon
 {
@@ -197,25 +197,24 @@ namespace swift::misc::simulation::fscommon
         QString m_createdBy; //!< created by, "distributor"
         bool m_rotorcraft = false; //!< hint if rotorcraft
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CAircraftCfgEntries,
-            BLACK_METAMEMBER(index),
-            BLACK_METAMEMBER(fileName),
-            BLACK_METAMEMBER(title),
-            BLACK_METAMEMBER(atcType),
-            BLACK_METAMEMBER(atcModel),
-            BLACK_METAMEMBER(atcParkingCode),
-            BLACK_METAMEMBER(atcIdColor),
-            BLACK_METAMEMBER(description),
-            BLACK_METAMEMBER(uiType),
-            BLACK_METAMEMBER(uiManufacturer),
-            BLACK_METAMEMBER(uiVariation),
-            BLACK_METAMEMBER(texture),
-            BLACK_METAMEMBER(simName),
-            BLACK_METAMEMBER(createdBy),
-            BLACK_METAMEMBER(rotorcraft),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch)
-        );
+            SWIFT_METAMEMBER(index),
+            SWIFT_METAMEMBER(fileName),
+            SWIFT_METAMEMBER(title),
+            SWIFT_METAMEMBER(atcType),
+            SWIFT_METAMEMBER(atcModel),
+            SWIFT_METAMEMBER(atcParkingCode),
+            SWIFT_METAMEMBER(atcIdColor),
+            SWIFT_METAMEMBER(description),
+            SWIFT_METAMEMBER(uiType),
+            SWIFT_METAMEMBER(uiManufacturer),
+            SWIFT_METAMEMBER(uiVariation),
+            SWIFT_METAMEMBER(texture),
+            SWIFT_METAMEMBER(simName),
+            SWIFT_METAMEMBER(createdBy),
+            SWIFT_METAMEMBER(rotorcraft),
+            SWIFT_METAMEMBER(timestampMSecsSinceEpoch));
     };
 } // ns
 

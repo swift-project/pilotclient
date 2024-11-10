@@ -43,7 +43,7 @@ using namespace swift::misc::geo;
 using namespace swift::misc::simulation;
 using namespace swift::misc::physical_quantities;
 
-namespace BlackSimPlugin::FsCommon
+namespace swift::simplugin::fscommon
 {
     CFsuipc::CFsuipc(QObject *parent) : QObject(parent)
     {

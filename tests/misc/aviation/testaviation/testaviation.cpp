@@ -440,7 +440,7 @@ namespace MiscTest
 } // namespace
 
 //! main
-BLACKTEST_APPLESS_MAIN(MiscTest::CTestAviation);
+SWIFTTEST_APPLESS_MAIN(MiscTest::CTestAviation);
 
 #include "testaviation.moc"
 

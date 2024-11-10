@@ -13,7 +13,7 @@
 #include <QStringList>
 #include <QMetaType>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CEcosystem, CEcosystemList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CEcosystem, CEcosystemList)
 
 namespace swift::misc::network
 {

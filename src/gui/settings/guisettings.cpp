@@ -6,7 +6,7 @@
 
 using namespace swift::misc;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CGeneralGuiSettings)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CGeneralGuiSettings)
 
 namespace swift::gui::settings
 {

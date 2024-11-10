@@ -20,7 +20,7 @@
 #include <QString>
 #include <QtGlobal>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CAirspaceAircraftSnapshot)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CAirspaceAircraftSnapshot)
 
 namespace swift::misc::simulation
 {
@@ -102,15 +102,14 @@ namespace swift::misc::simulation
         swift::misc::aviation::CCallsignSet m_vtolAircraftCallsignsByDistance;
         swift::misc::aviation::CCallsignSet m_enabledVtolAircraftCallsignsByDistance;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CAirspaceAircraftSnapshot,
-            BLACK_METAMEMBER(timestampMsSinceEpoch),
-            BLACK_METAMEMBER(aircraftCallsignsByDistance, 0, DisabledForComparison),
-            BLACK_METAMEMBER(enabledAircraftCallsignsByDistance, 0, DisabledForComparison),
-            BLACK_METAMEMBER(disabledAircraftCallsignsByDistance, 0, DisabledForComparison),
-            BLACK_METAMEMBER(vtolAircraftCallsignsByDistance, 0, DisabledForComparison),
-            BLACK_METAMEMBER(enabledVtolAircraftCallsignsByDistance, 0, DisabledForComparison)
-        );
+            SWIFT_METAMEMBER(timestampMsSinceEpoch),
+            SWIFT_METAMEMBER(aircraftCallsignsByDistance, 0, DisabledForComparison),
+            SWIFT_METAMEMBER(enabledAircraftCallsignsByDistance, 0, DisabledForComparison),
+            SWIFT_METAMEMBER(disabledAircraftCallsignsByDistance, 0, DisabledForComparison),
+            SWIFT_METAMEMBER(vtolAircraftCallsignsByDistance, 0, DisabledForComparison),
+            SWIFT_METAMEMBER(enabledVtolAircraftCallsignsByDistance, 0, DisabledForComparison));
     };
 } // namespace
 

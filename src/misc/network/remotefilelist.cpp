@@ -7,7 +7,7 @@
 
 #include <QJsonValue>
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CRemoteFile, CRemoteFileList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CRemoteFile, CRemoteFileList)
 
 namespace swift::misc::network
 {

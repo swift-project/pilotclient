@@ -6,7 +6,7 @@
 
 #include <QStringList>
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc, CIdentifier, CIdentifierList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CIdentifier, CIdentifierList)
 
 namespace swift::misc
 {

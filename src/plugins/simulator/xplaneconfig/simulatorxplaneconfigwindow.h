@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_SIMULATOR_XPLANE_CONFIG_WINDOW_H
-#define BLACKSIMPLUGIN_SIMULATOR_XPLANE_CONFIG_WINDOW_H
+#ifndef SWIFT_SIMPLUGIN_SIMULATOR_XPLANE_CONFIG_WINDOW_H
+#define SWIFT_SIMPLUGIN_SIMULATOR_XPLANE_CONFIG_WINDOW_H
 
 #include "gui/pluginconfigwindow.h"
 #include "misc/simulation/settings/xswiftbussettings.h"
@@ -16,7 +16,7 @@ namespace Ui
 {
     class CSimulatorXPlaneConfigWindow;
 }
-namespace BlackSimPlugin::XPlane
+namespace swift::simplugin::xplane
 {
     /*!
      * A window that shows all the X-Plane plugin options.

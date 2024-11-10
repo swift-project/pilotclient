@@ -4,10 +4,10 @@
 //! \file
 //! \ingroup samplemisc
 
-#ifndef BLACKSAMPLE_SAMPLESJSON_H
-#define BLACKSAMPLE_SAMPLESJSON_H
+#ifndef SWIFT_SAMPLE_SAMPLESJSON_H
+#define SWIFT_SAMPLE_SAMPLESJSON_H
 
-namespace BlackSample
+namespace swift::sample
 {
 
     //! Samples for metadata

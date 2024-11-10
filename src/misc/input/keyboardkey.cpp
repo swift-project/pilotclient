@@ -10,7 +10,7 @@
 
 #include "misc/propertyindexref.h"
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::input, CKeyboardKey)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::input, CKeyboardKey)
 
 namespace swift::misc::input
 {

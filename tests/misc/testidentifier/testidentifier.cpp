@@ -80,7 +80,7 @@ namespace MiscTest
 } // namespace
 
 //! main
-BLACKTEST_APPLESS_MAIN(MiscTest::CTestIdentifier);
+SWIFTTEST_APPLESS_MAIN(MiscTest::CTestIdentifier);
 
 #include "testidentifier.moc"
 

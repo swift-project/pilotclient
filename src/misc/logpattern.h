@@ -168,12 +168,11 @@ namespace swift::misc
 
         static const QHash<QString, CLogPattern> &allHumanReadablePatterns();
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CLogPattern,
-            BLACK_METAMEMBER(severities),
-            BLACK_METAMEMBER(strategy),
-            BLACK_METAMEMBER(strings)
-        );
+            SWIFT_METAMEMBER(severities),
+            SWIFT_METAMEMBER(strategy),
+            SWIFT_METAMEMBER(strings));
     };
 }
 

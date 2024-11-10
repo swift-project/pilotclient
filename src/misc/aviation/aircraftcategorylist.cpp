@@ -8,7 +8,7 @@
 #include <Qt>
 #include <QMap>
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftCategory, CAircraftCategoryList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftCategory, CAircraftCategoryList)
 
 namespace swift::misc::aviation
 {

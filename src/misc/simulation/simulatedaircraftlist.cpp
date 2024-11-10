@@ -19,7 +19,7 @@ using namespace swift::misc::geo;
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::network;
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CSimulatedAircraft, CSimulatedAircraftList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CSimulatedAircraft, CSimulatedAircraftList)
 
 namespace swift::misc::simulation
 {

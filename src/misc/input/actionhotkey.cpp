@@ -4,7 +4,7 @@
 #include "misc/input/actionhotkey.h"
 #include <QStringBuilder>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::input, CActionHotkey)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::input, CActionHotkey)
 
 namespace swift::misc::input
 {

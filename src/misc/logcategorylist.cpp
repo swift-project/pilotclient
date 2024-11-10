@@ -12,7 +12,7 @@
 
 struct QMetaObject;
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc, CLogCategory, CLogCategoryList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CLogCategory, CLogCategoryList)
 
 namespace swift::misc
 {

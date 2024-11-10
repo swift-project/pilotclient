@@ -15,7 +15,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CFsdSetup)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CFsdSetup)
 
 namespace swift::misc::network
 {
@@ -138,11 +138,10 @@ namespace swift::misc::network
         QString m_textCodec = "latin1";
         int m_sendReceive = static_cast<int>(All);
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CFsdSetup,
-            BLACK_METAMEMBER(textCodec),
-            BLACK_METAMEMBER(sendReceive)
-        );
+            SWIFT_METAMEMBER(textCodec),
+            SWIFT_METAMEMBER(sendReceive));
     };
 } // namespace
 

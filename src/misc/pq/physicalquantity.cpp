@@ -28,15 +28,15 @@
 #include <limits>
 #include <cmath>
 
-BLACK_DEFINE_PQ_MIXINS(CAngleUnit, CAngle)
-BLACK_DEFINE_PQ_MIXINS(CLengthUnit, CLength)
-BLACK_DEFINE_PQ_MIXINS(CPressureUnit, CPressure)
-BLACK_DEFINE_PQ_MIXINS(CFrequencyUnit, CFrequency)
-BLACK_DEFINE_PQ_MIXINS(CMassUnit, CMass)
-BLACK_DEFINE_PQ_MIXINS(CTemperatureUnit, CTemperature)
-BLACK_DEFINE_PQ_MIXINS(CSpeedUnit, CSpeed)
-BLACK_DEFINE_PQ_MIXINS(CTimeUnit, CTime)
-BLACK_DEFINE_PQ_MIXINS(CAccelerationUnit, CAcceleration)
+SWIFT_DEFINE_PQ_MIXINS(CAngleUnit, CAngle)
+SWIFT_DEFINE_PQ_MIXINS(CLengthUnit, CLength)
+SWIFT_DEFINE_PQ_MIXINS(CPressureUnit, CPressure)
+SWIFT_DEFINE_PQ_MIXINS(CFrequencyUnit, CFrequency)
+SWIFT_DEFINE_PQ_MIXINS(CMassUnit, CMass)
+SWIFT_DEFINE_PQ_MIXINS(CTemperatureUnit, CTemperature)
+SWIFT_DEFINE_PQ_MIXINS(CSpeedUnit, CSpeed)
+SWIFT_DEFINE_PQ_MIXINS(CTimeUnit, CTime)
+SWIFT_DEFINE_PQ_MIXINS(CAccelerationUnit, CAcceleration)
 
 namespace swift::misc::physical_quantities
 {

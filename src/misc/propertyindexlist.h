@@ -13,7 +13,7 @@
 
 #include <QMetaType>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc, CPropertyIndex, CPropertyIndexList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc, CPropertyIndex, CPropertyIndexList)
 
 namespace swift::misc
 {

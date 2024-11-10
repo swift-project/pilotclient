@@ -21,7 +21,7 @@ using namespace swift::misc;
 using namespace swift::misc::db;
 using namespace swift::misc::physical_quantities;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftIcaoCode)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftIcaoCode)
 
 namespace swift::misc::aviation
 {

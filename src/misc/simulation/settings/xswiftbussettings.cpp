@@ -4,7 +4,7 @@
 #include "misc/simulation/settings/xswiftbussettings.h"
 #include "misc/simulation/settings/xswiftbussettingsqtfree.inc"
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CXSwiftBusSettings)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CXSwiftBusSettings)
 
 namespace swift::misc::simulation::settings
 {

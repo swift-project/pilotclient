@@ -8,7 +8,7 @@
 
 //! \file
 
-namespace BlackSimPlugin::Fs9
+namespace swift::simplugin::fs9
 {
     //! Class encapsulating a FS9 host
     class CFs9Host : public CDirectPlayPeer
@@ -41,7 +41,7 @@ namespace BlackSimPlugin::Fs9
 
     signals:
         //! Hosting status changed
-        void statusChanged(BlackSimPlugin::Fs9::CFs9Host::HostStatus);
+        void statusChanged(swift::simplugin::fs9::CFs9Host::HostStatus);
 
     private:
         //! Start host session
@@ -54,6 +54,6 @@ namespace BlackSimPlugin::Fs9
     };
 } // ns
 
-Q_DECLARE_METATYPE(BlackSimPlugin::Fs9::CFs9Host::HostStatus)
+Q_DECLARE_METATYPE(swift::simplugin::fs9::CFs9Host::HostStatus)
 
 #endif // guard

@@ -158,10 +158,9 @@ namespace swift::misc
     private:
         QList<int> m_indexes;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CPropertyIndex,
-            BLACK_METAMEMBER(indexes)
-        );
+            SWIFT_METAMEMBER(indexes));
     };
 } // namespace
 

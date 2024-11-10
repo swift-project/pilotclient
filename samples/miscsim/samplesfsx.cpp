@@ -12,7 +12,7 @@
 
 using namespace swift::misc::simulation::fsx;
 
-namespace BlackSample
+namespace swift::sample
 {
     void CSamplesFsx::samplesMisc(QTextStream &streamOut)
     {

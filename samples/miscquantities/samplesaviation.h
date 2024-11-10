@@ -4,12 +4,12 @@
 //! \file
 //! \ingroup samplemiscquantities
 
-#ifndef BLACKSAMPLE_SAMPLESAVIATION_H
-#define BLACKSAMPLE_SAMPLESAVIATION_H
+#ifndef SWIFT_SAMPLE_SAMPLESAVIATION_H
+#define SWIFT_SAMPLE_SAMPLESAVIATION_H
 
 class QTextStream;
 
-namespace BlackSample
+namespace swift::sample
 {
 
     //! Samples for aviation

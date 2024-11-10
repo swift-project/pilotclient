@@ -80,7 +80,7 @@ namespace
     }
 }
 
-namespace BlackSimPlugin::XPlane
+namespace swift::simplugin::xplane
 {
     CSimulatorXPlane::CSimulatorXPlane(const CSimulatorPluginInfo &info,
                                        IOwnAircraftProvider *ownAircraftProvider,

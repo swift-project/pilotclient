@@ -14,8 +14,8 @@ using namespace swift::misc::aviation;
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::network;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CInterpolationAndRenderingSetupGlobal)
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CInterpolationAndRenderingSetupPerCallsign)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CInterpolationAndRenderingSetupGlobal)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CInterpolationAndRenderingSetupPerCallsign)
 
 namespace swift::misc::simulation
 {

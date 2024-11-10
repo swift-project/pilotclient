@@ -3,7 +3,7 @@
 
 #include "misc/simulation/settings/fgswiftbussettings.h"
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CFGSwiftBusSettings)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CFGSwiftBusSettings)
 
 namespace swift::misc::simulation::settings
 {

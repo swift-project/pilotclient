@@ -4,7 +4,7 @@
 #include "misc/input/actionhotkeylist.h"
 #include "misc/input/hotkeycombination.h"
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::input, CActionHotkey, CActionHotkeyList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::input, CActionHotkey, CActionHotkeyList)
 
 namespace swift::misc::input
 {

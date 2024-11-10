@@ -39,12 +39,12 @@ using namespace swift::misc::network;
 using namespace swift::misc::math;
 using namespace swift::misc::simulation;
 using namespace swift::misc::simulation::fscommon;
-using namespace swift::misc::simulation::Fsx;
+using namespace swift::misc::simulation::fsx;
 using namespace swift::misc::simulation::settings;
 using namespace swift::core;
-using namespace BlackSimPlugin::FsCommon;
+using namespace swift::simplugin::fscommon;
 
-namespace BlackSimPlugin::FsxCommon
+namespace swift::simplugin::fsxcommon
 {
     CSimulatorFsxCommon::CSimulatorFsxCommon(const CSimulatorPluginInfo &info,
                                              IOwnAircraftProvider *ownAircraftProvider,
@@ -1393,7 +1393,7 @@ namespace BlackSimPlugin::FsxCommon
 
     void CSimulatorFsxCommon::registerHelp()
     {
-        if (CSimpleCommandParser::registered("BlackSimPlugin::CSimulatorFsxCommon::CSimulatorFsxCommon")) { return; }
+        if (CSimpleCommandParser::registered("swift::simplugin::fsxcommon::CSimulatorFsxCommon::CSimulatorFsxCommon")) { return; }
         CSimpleCommandParser::registerCommand({ ".drv", "alias: .driver .plugin" });
         CSimpleCommandParser::registerCommand({ ".drv sendid on|off", "Trace simConnect sendId on|off" });
         CSimpleCommandParser::registerCommand({ ".drv sboffsets on|off", "SB offsets via simConnect on|off" });

@@ -8,9 +8,9 @@
 using namespace swift::misc::simulation;
 using namespace swift::misc::aviation;
 
-namespace BlackSimPlugin
+namespace swift::simplugin
 {
-    namespace FsCommon
+    namespace fscommon
     {
         CFsuipc::CFsuipc(QObject *parent)
             : QObject(parent)

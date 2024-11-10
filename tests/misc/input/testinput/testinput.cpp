@@ -189,7 +189,7 @@ namespace MiscTest
 } // namespace
 
 //! main
-BLACKTEST_APPLESS_MAIN(MiscTest::CTestInput);
+SWIFTTEST_APPLESS_MAIN(MiscTest::CTestInput);
 
 #include "testinput.moc"
 

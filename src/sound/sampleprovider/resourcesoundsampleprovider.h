@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright (C) 2019 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#ifndef BLACKSOUND_SAMPLEPROVIDER_RESOURCESOUNDSAMPLEPROVIDER_H
-#define BLACKSOUND_SAMPLEPROVIDER_RESOURCESOUNDSAMPLEPROVIDER_H
+#ifndef SWIFT_SOUND_SAMPLEPROVIDER_RESOURCESOUNDSAMPLEPROVIDER_H
+#define SWIFT_SOUND_SAMPLEPROVIDER_RESOURCESOUNDSAMPLEPROVIDER_H
 
 #include "sound/swiftsoundexport.h"
 #include "sound/sampleprovider/sampleprovider.h"

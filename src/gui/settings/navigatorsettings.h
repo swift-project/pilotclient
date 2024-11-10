@@ -15,7 +15,7 @@
 #include <QString>
 #include <QMetaType>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::gui::settings, CNavigatorSettings)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::gui::settings, CNavigatorSettings)
 
 namespace swift::gui::settings
 {
@@ -83,13 +83,12 @@ namespace swift::gui::settings
         bool m_frameless = false; //!< frameless
         int m_columns = 1; //!< number of columns
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CNavigatorSettings,
-            BLACK_METAMEMBER(margins),
-            BLACK_METAMEMBER(frameless),
-            BLACK_METAMEMBER(columns),
-            BLACK_METAMEMBER(geometry)
-        );
+            SWIFT_METAMEMBER(margins),
+            SWIFT_METAMEMBER(frameless),
+            SWIFT_METAMEMBER(columns),
+            SWIFT_METAMEMBER(geometry));
     };
 
     //! Trait for settings for navigator

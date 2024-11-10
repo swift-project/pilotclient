@@ -9,7 +9,7 @@ using namespace swift::misc;
 using namespace swift::misc::network;
 using namespace swift::misc::simulation;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CTextMessageSettings)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CTextMessageSettings)
 
 namespace swift::gui::settings
 {

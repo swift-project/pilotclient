@@ -48,7 +48,7 @@ namespace MiscTest
 } // namespace
 
 //! main
-BLACKTEST_APPLESS_MAIN(MiscTest::CTestMath);
+SWIFTTEST_APPLESS_MAIN(MiscTest::CTestMath);
 
 #include "testmath.moc"
 

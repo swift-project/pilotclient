@@ -19,7 +19,7 @@
 #include <QString>
 #include <QMetaType>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftCategory)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftCategory)
 
 namespace swift::misc::aviation
 {
@@ -160,18 +160,17 @@ namespace swift::misc::aviation
         int m_l1 = 0;
         int m_l2 = 0;
         int m_l3 = 0;
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CAircraftCategory,
-            BLACK_METAMEMBER(dbKey),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch),
-            BLACK_METAMEMBER(name),
-            BLACK_METAMEMBER(l1),
-            BLACK_METAMEMBER(l2),
-            BLACK_METAMEMBER(l3),
-            BLACK_METAMEMBER(description),
-            BLACK_METAMEMBER(path),
-            BLACK_METAMEMBER(assignable)
-        );
+            SWIFT_METAMEMBER(dbKey),
+            SWIFT_METAMEMBER(timestampMSecsSinceEpoch),
+            SWIFT_METAMEMBER(name),
+            SWIFT_METAMEMBER(l1),
+            SWIFT_METAMEMBER(l2),
+            SWIFT_METAMEMBER(l3),
+            SWIFT_METAMEMBER(description),
+            SWIFT_METAMEMBER(path),
+            SWIFT_METAMEMBER(assignable));
     };
 
     //! Category/id map

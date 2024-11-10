@@ -20,7 +20,7 @@
 #include <QMap>
 #include <QSet>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAirlineIcaoCode)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAirlineIcaoCode)
 
 namespace swift::misc::aviation
 {
@@ -284,21 +284,20 @@ namespace swift::misc::aviation
         bool m_isOperating = true; //!< still operating?
         bool m_isMilitary = false; //!< Air Force or such
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CAirlineIcaoCode,
-            BLACK_METAMEMBER(dbKey),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch),
-            BLACK_METAMEMBER(designator),
-            BLACK_METAMEMBER(name),
-            BLACK_METAMEMBER(country),
-            BLACK_METAMEMBER(telephonyDesignator),
-            BLACK_METAMEMBER(groupDesignator),
-            BLACK_METAMEMBER(groupName),
-            BLACK_METAMEMBER(groupId),
-            BLACK_METAMEMBER(isVa),
-            BLACK_METAMEMBER(isOperating),
-            BLACK_METAMEMBER(isMilitary)
-        );
+            SWIFT_METAMEMBER(dbKey),
+            SWIFT_METAMEMBER(timestampMSecsSinceEpoch),
+            SWIFT_METAMEMBER(designator),
+            SWIFT_METAMEMBER(name),
+            SWIFT_METAMEMBER(country),
+            SWIFT_METAMEMBER(telephonyDesignator),
+            SWIFT_METAMEMBER(groupDesignator),
+            SWIFT_METAMEMBER(groupName),
+            SWIFT_METAMEMBER(groupId),
+            SWIFT_METAMEMBER(isVa),
+            SWIFT_METAMEMBER(isOperating),
+            SWIFT_METAMEMBER(isMilitary));
     };
 
     //! Airline ICAO/id list

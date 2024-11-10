@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_SIMULATOR_FLIGHTGEAR_CONFIG_WINDOW_H
-#define BLACKSIMPLUGIN_SIMULATOR_FLIGHTGEAR_CONFIG_WINDOW_H
+#ifndef SWIFT_SIMPLUGIN_SIMULATOR_FLIGHTGEAR_CONFIG_WINDOW_H
+#define SWIFT_SIMPLUGIN_SIMULATOR_FLIGHTGEAR_CONFIG_WINDOW_H
 
 #include "gui/pluginconfigwindow.h"
 #include "misc/simulation/settings/fgswiftbussettings.h"
@@ -16,7 +16,7 @@ namespace Ui
 {
     class CSimulatorFlightgearConfigWindow;
 }
-namespace BlackSimPlugin::Flightgear
+namespace swift::simplugin::flightgear
 {
     /*!
      * A window that shows all the Flightgear plugin options.

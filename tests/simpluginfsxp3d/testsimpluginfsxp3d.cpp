@@ -5,19 +5,19 @@
 
 /*!
  * \file
- * \ingroup testblacksimplugin
+ * \ingroup testsimplugin
  */
 
-#include "testblacksimpluginfsxp3d.h"
+#include "testsimpluginfsxp3d.h"
 #include "plugins/simulator/fsxcommon/simconnectdatadefinition.h"
 #include "plugins/simulator/fsxcommon/simconnectsymbols.h"
 #include "plugins/simulator/fsxcommon/simulatorfsxcommon.h"
 
 #include <QTest>
 
-using namespace BlackSimPlugin::FsxCommon;
+using namespace swift::simplugin::fsxcommon;
 
-namespace BlackSimPluginFsxP3D
+namespace swift::simplugin::fsxp3d
 {
     void CSimPluginFsxP3d::resolveSymbols()
     {
@@ -70,6 +70,6 @@ namespace BlackSimPluginFsxP3D
 } // ns
 
 //! main
-BLACKTEST_MAIN(BlackSimPluginFsxP3D::CSimPluginFsxP3d);
+SWIFTTEST_MAIN(SwiftSimPluginFsxP3D::CSimPluginFsxP3d);
 
 //! \endcond

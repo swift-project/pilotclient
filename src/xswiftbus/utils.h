@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIM_XSWIFTBUS_UTILS_H
-#define BLACKSIM_XSWIFTBUS_UTILS_H
+#ifndef SWIFT_SIM_XSWIFTBUS_UTILS_H
+#define SWIFT_SIM_XSWIFTBUS_UTILS_H
 
 #include <vector>
 #include <string>

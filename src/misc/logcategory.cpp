@@ -5,7 +5,7 @@
 
 #include <QtGlobal>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CLogCategory)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CLogCategory)
 
 namespace swift::misc
 {

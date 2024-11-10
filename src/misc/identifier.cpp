@@ -11,7 +11,7 @@
 #include <QSysInfo>
 #include <QStringBuilder>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CIdentifier)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CIdentifier)
 
 //! \private Escape characters not allowed in dbus paths
 QString toDBusPath(const QString &s)

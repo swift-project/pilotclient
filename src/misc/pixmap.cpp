@@ -10,7 +10,7 @@
 #include <QtGlobal>
 #include <tuple>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CPixmap)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CPixmap)
 
 namespace swift::misc
 {

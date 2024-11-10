@@ -101,7 +101,7 @@ namespace MiscTest
 } // ns
 
 //! main
-BLACKTEST_APPLESS_MAIN(MiscTest::CTestFlightPlan);
+SWIFTTEST_APPLESS_MAIN(MiscTest::CTestFlightPlan);
 
 #include "testflightplan.moc"
 

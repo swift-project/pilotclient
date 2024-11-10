@@ -9,7 +9,7 @@
 #include "misc/threadutils.h"
 #include "config/buildconfig.h"
 
-#ifdef BLACK_USE_CRASHPAD
+#ifdef SWIFT_USE_CRASHPAD
 #    include "crashpad/client/simulate_crash.h"
 #endif
 
@@ -65,7 +65,7 @@ namespace swift::misc
             qApp->installNativeEventFilter(&ef);
             MessageBoxW(nullptr, message.toStdWString().c_str(), nullptr, MB_OK); // display assert dialog in release build
             qApp->removeNativeEventFilter(&ef);
-#    if defined(BLACK_USE_CRASHPAD)
+#    if defined(SWIFT_USE_CRASHPAD)
             CRASHPAD_SIMULATE_CRASH(); // workaround inability to catch __fastfail
 #    endif
         }

@@ -55,7 +55,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="BlackSimPlugin::FsxCommon::CSimConnectSettingsComponent" name="comp_SimConnectSettings"/>
+        <widget class="swift::simplugin::fsxcommon::CSimConnectSettingsComponent" name="comp_SimConnectSettings"/>
        </item>
       </layout>
      </widget>
@@ -77,7 +77,7 @@
         <number>0</number>
        </property>
        <item alignment="Qt::AlignTop">
-        <widget class="BlackSimPlugin::FsxCommon::CFsxSettingsComponent" name="comp_FsxSettings">
+        <widget class="swift::simplugin::fsxcommon::CFsxSettingsComponent" name="comp_FsxSettings">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -101,13 +101,13 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackSimPlugin::FsxCommon::CSimConnectSettingsComponent</class>
+   <class>swift::simplugin::fsxcommon::CSimConnectSettingsComponent</class>
    <extends>QFrame</extends>
    <header>simconnectsettingscomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackSimPlugin::FsxCommon::CFsxSettingsComponent</class>
+   <class>swift::simplugin::fsxcommon::CFsxSettingsComponent</class>
    <extends>QFrame</extends>
    <header>fsxsettingscomponent.h</header>
    <container>1</container>

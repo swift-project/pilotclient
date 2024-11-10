@@ -5,7 +5,7 @@
 
 /*!
  * \file
- * \ingroup testblackfsd
+ * \ingroup testswiftfsd
  */
 
 #include "config/buildconfig.h"
@@ -33,7 +33,7 @@ using namespace swift::misc::simulation;
 using namespace swift::config;
 using namespace swift::core::fsd;
 
-namespace BlackFsdTest
+namespace SwiftFsdTest
 {
     //! Testing FSD Client
     class CTestFSDClient : public QObject
@@ -976,7 +976,7 @@ namespace BlackFsdTest
 }
 
 //! main
-BLACKTEST_MAIN(BlackFsdTest::CTestFSDClient);
+SWIFTTEST_MAIN(SwiftFsdTest::CTestFSDClient);
 
 #include "testfsdclient.moc"
 

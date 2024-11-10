@@ -10,7 +10,7 @@
 #include <Qt>
 #include <QtGlobal>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAirportIcaoCode)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAirportIcaoCode)
 
 namespace swift::misc::aviation
 {

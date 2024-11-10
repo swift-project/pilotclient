@@ -4,7 +4,7 @@
 #include "misc/namevariantpair.h"
 #include "misc/propertyindexvariantmap.h"
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CNameVariantPair)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CNameVariantPair)
 
 namespace swift::misc
 {

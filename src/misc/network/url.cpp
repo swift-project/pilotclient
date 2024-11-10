@@ -9,7 +9,7 @@
 #include <QPair>
 #include <QtGlobal>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CUrl)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CUrl)
 
 namespace swift::misc::network
 {

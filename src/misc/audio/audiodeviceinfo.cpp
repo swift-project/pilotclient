@@ -12,7 +12,7 @@
 #include <QAudioDevice>
 #include <QMediaDevices>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::audio, CAudioDeviceInfo)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::audio, CAudioDeviceInfo)
 
 namespace swift::misc::audio
 {

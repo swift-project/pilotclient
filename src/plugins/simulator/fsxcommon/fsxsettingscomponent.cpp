@@ -19,7 +19,7 @@ using namespace swift::misc;
 using namespace swift::misc::simulation;
 using namespace swift::config;
 
-namespace BlackSimPlugin::FsxCommon
+namespace swift::simplugin::fsxcommon
 {
     CFsxSettingsComponent::CFsxSettingsComponent(QWidget *parent) : QFrame(parent),
                                                                     ui(new Ui::CFsxSettingsComponent)

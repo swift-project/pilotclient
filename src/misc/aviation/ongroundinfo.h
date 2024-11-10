@@ -10,7 +10,7 @@
 #include "misc/valueobject.h"
 #include "misc/pq/length.h"
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Aviation, COnGroundInfo)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Aviation, COnGroundInfo)
 
 namespace swift::misc::aviation
 {
@@ -115,10 +115,10 @@ namespace swift::misc::aviation
 
         static constexpr double m_groundFactorThreshold = 0.95; //!< With m_onGroundDetails == "OnGroundByInterpolation", this is the threshold used to decide if the ground factor is OnGround or NotOnGround
 
-        BLACK_METACLASS(
-        COnGroundInfo,
-        BLACK_METAMEMBER(onGroundDetails),
-        BLACK_METAMEMBER(onGroundFactor));
+        SWIFT_METACLASS(
+            COnGroundInfo,
+            SWIFT_METAMEMBER(onGroundDetails),
+            SWIFT_METAMEMBER(onGroundFactor));
     };
 
 }

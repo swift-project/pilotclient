@@ -13,9 +13,9 @@
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
-using namespace BlackSimPlugin::FsCommon;
+using namespace swift::simplugin::fscommon;
 
-namespace BlackSimPlugin::FsxCommon
+namespace swift::simplugin::fsxcommon
 {
     const QString &CSimConnectDefinitions::requestToString(Request request)
     {

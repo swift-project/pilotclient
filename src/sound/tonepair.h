@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSOUND_TONEPAIR_H
-#define BLACKSOUND_TONEPAIR_H
+#ifndef SWIFT_SOUND_TONEPAIR_H
+#define SWIFT_SOUND_TONEPAIR_H
 
 #include "sound/swiftsoundexport.h"
 #include "misc/pq/frequency.h"

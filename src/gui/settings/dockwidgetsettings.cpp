@@ -9,7 +9,7 @@
 using namespace swift::misc;
 using namespace swift::gui;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CDockWidgetSettings)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CDockWidgetSettings)
 
 namespace swift::gui::settings
 {

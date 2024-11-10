@@ -14,7 +14,7 @@
 #include <QMetaEnum>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CPlatform)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CPlatform)
 
 namespace swift::misc
 {
@@ -145,10 +145,9 @@ namespace swift::misc
     private:
         int m_platform = static_cast<int>(UnknownOs); //!< platform
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CPlatform,
-            BLACK_METAMEMBER(platform)
-        );
+            SWIFT_METAMEMBER(platform));
     };
 } // namespace
 

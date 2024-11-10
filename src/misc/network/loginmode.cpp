@@ -3,7 +3,7 @@
 
 #include "misc/network/loginmode.h"
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CLoginMode)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CLoginMode)
 
 namespace swift::misc::network
 {

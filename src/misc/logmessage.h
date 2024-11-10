@@ -62,6 +62,6 @@ namespace swift::misc
  * Convenience macro to construct a CLogMessage with the filename, line number, and function name,
  * for verbose debug messages.
  */
-#define BLACK_LOG (swift::misc::CLogMessage { __FILE__, __LINE__, Q_FUNC_INFO })
+#define SWIFT_LOG (swift::misc::CLogMessage { __FILE__, __LINE__, Q_FUNC_INFO })
 
 #endif

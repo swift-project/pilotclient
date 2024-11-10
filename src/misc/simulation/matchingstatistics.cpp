@@ -3,7 +3,7 @@
 
 #include "misc/simulation/matchingstatistics.h"
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CMatchingStatisticsEntry, CMatchingStatistics)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CMatchingStatisticsEntry, CMatchingStatistics)
 
 namespace swift::misc::simulation
 {

@@ -20,7 +20,7 @@
 #include <QtGlobal>
 #include <QMap>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc, CStatusMessage, CStatusMessageList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc, CStatusMessage, CStatusMessageList)
 
 namespace swift::misc
 {

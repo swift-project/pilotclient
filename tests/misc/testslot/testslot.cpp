@@ -41,7 +41,7 @@ namespace MiscTest
 } // namespace
 
 //! main
-BLACKTEST_APPLESS_MAIN(MiscTest::CTestSlot);
+SWIFTTEST_APPLESS_MAIN(MiscTest::CTestSlot);
 
 #include "testslot.moc"
 

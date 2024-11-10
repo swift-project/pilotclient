@@ -9,7 +9,7 @@ using namespace swift::config;
 using namespace swift::misc;
 using namespace swift::misc::network;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::db, CDistribution)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::db, CDistribution)
 
 namespace swift::misc::db
 {

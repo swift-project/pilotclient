@@ -23,9 +23,9 @@ using namespace swift::misc::geo;
 using namespace swift::misc::network;
 using namespace swift::misc::simulation;
 using namespace swift::misc::simulation::fscommon;
-using namespace swift::misc::simulation::Fsx;
+using namespace swift::misc::simulation::fsx;
 
-namespace BlackSimPlugin::FsxCommon
+namespace swift::simplugin::fsxcommon
 {
     void CALLBACK CSimulatorFsxCommon::SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext)
     {

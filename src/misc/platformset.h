@@ -14,7 +14,7 @@
 #include <QMetaType>
 #include <tuple>
 
-BLACK_DECLARE_COLLECTION_MIXINS(swift::misc, CPlatform, CPlatformSet)
+SWIFT_DECLARE_COLLECTION_MIXINS(swift::misc, CPlatform, CPlatformSet)
 
 namespace swift::misc
 {

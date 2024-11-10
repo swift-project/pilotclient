@@ -10,7 +10,7 @@ using namespace swift::misc;
 using namespace swift::misc::aviation;
 using namespace swift::misc::simulation;
 
-namespace BlackSimPlugin::XPlane
+namespace swift::simplugin::xplane
 {
     CXPlaneMPAircraft::CXPlaneMPAircraft()
     {}

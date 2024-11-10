@@ -5,7 +5,7 @@
 
 using namespace swift::misc::network;
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::db, CDbInfo, CDbInfoList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::db, CDbInfo, CDbInfoList)
 
 namespace swift::misc::db
 {

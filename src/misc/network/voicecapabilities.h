@@ -9,7 +9,7 @@
 #include "misc/swiftmiscexport.h"
 #include "misc/valueobject.h"
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CVoiceCapabilities)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CVoiceCapabilities)
 
 namespace swift::misc::network
 {
@@ -71,10 +71,9 @@ namespace swift::misc::network
         //! Capabilites from flight plans remarks such as "/V/"
         void setFromFlightPlanRemarks(const QString &flightPlanRemarks);
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CVoiceCapabilities,
-            BLACK_METAMEMBER(voiceCapabilities)
-        );
+            SWIFT_METAMEMBER(voiceCapabilities));
     };
 } // namespace
 

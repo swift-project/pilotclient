@@ -173,9 +173,9 @@ namespace swift::misc
          * When a derived class and a base class both inherit from mixin::DBusByTuple,
          * the derived class uses this macro to disambiguate the inherited members.
          */
-#define SWIFT_MISC_DECLARE_USING_MIXIN_DBUS(DERIVED, ...)                                                    \
-    using ::swift::misc::mixin::DBusByMetaClass<DERIVED BLACK_TRAILING_VA_ARGS(__VA_ARGS__)>::marshallToDbus; \
-    using ::swift::misc::mixin::DBusByMetaClass<DERIVED BLACK_TRAILING_VA_ARGS(__VA_ARGS__)>::unmarshallFromDbus;
+#define SWIFT_MISC_DECLARE_USING_MIXIN_DBUS(DERIVED, ...)                                                     \
+    using ::swift::misc::mixin::DBusByMetaClass<DERIVED SWIFT_TRAILING_VA_ARGS(__VA_ARGS__)>::marshallToDbus; \
+    using ::swift::misc::mixin::DBusByMetaClass<DERIVED SWIFT_TRAILING_VA_ARGS(__VA_ARGS__)>::unmarshallFromDbus;
         // *INDENT-ON*
 
     } // Mixin

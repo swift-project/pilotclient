@@ -16,11 +16,11 @@ using namespace swift::misc::geo;
 using namespace swift::misc::network;
 using namespace swift::misc::simulation;
 using namespace swift::misc::simulation::fscommon;
-using namespace BlackSimPlugin::FsxCommon;
+using namespace swift::simplugin::fsxcommon;
 using namespace swift::core;
-using namespace BlackSimPlugin::FsCommon;
+using namespace swift::simplugin::fscommon;
 
-namespace BlackSimPlugin::P3D
+namespace swift::simplugin::p3d
 {
     CSimulatorP3D::CSimulatorP3D(const CSimulatorPluginInfo &info,
                                  IOwnAircraftProvider *ownAircraftProvider,
@@ -238,7 +238,7 @@ namespace BlackSimPlugin::P3D
         return hr;
     }
 
-    void CSimulatorP3D::removeCamera(FsxCommon::CSimConnectObject &simObject)
+    void CSimulatorP3D::removeCamera(fsxcommon::CSimConnectObject &simObject)
     {
         if (!simObject.hasCamera()) { return; }
         simObject.removeCamera();

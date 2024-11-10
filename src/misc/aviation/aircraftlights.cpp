@@ -6,7 +6,7 @@
 #include "misc/comparefunctions.h"
 #include <QStringBuilder>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftLights)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftLights)
 
 namespace swift::misc::aviation
 {

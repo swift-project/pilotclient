@@ -15,8 +15,8 @@
 #include "misc/directoryutils.h"
 #include "misc/fileutils.h"
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::core::vatsim, CReaderSettings)
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::core::vatsim, CRawFsdMessageSettings)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::core::vatsim, CReaderSettings)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::core::vatsim, CRawFsdMessageSettings)
 
 namespace swift::core::vatsim
 {
@@ -72,12 +72,11 @@ namespace swift::core::vatsim
         swift::misc::physical_quantities::CTime m_periodicTime { 30.0, swift::misc::physical_quantities::CTimeUnit::s() };
         bool m_neverUpdate = false;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CReaderSettings,
-            BLACK_METAMEMBER(initialTime),
-            BLACK_METAMEMBER(periodicTime),
-            BLACK_METAMEMBER(neverUpdate)
-        );
+            SWIFT_METAMEMBER(initialTime),
+            SWIFT_METAMEMBER(periodicTime),
+            SWIFT_METAMEMBER(neverUpdate));
     };
 
     //! Reader settings
@@ -172,12 +171,11 @@ namespace swift::core::vatsim
         QString m_FileDir;
         FileWriteMode m_fileWriteMode = None;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CRawFsdMessageSettings,
-            BLACK_METAMEMBER(rawFsdMessagesEnabled),
-            BLACK_METAMEMBER(FileDir),
-            BLACK_METAMEMBER(fileWriteMode)
-        );
+            SWIFT_METAMEMBER(rawFsdMessagesEnabled),
+            SWIFT_METAMEMBER(FileDir),
+            SWIFT_METAMEMBER(fileWriteMode));
     };
 
     //! Raw FSD message settings

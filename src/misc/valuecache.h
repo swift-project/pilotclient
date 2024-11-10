@@ -140,11 +140,10 @@ namespace swift::misc
         bool m_saved = false;
         bool m_valuesChanged = true;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CValueCachePacket,
-            BLACK_METAMEMBER(saved),
-            BLACK_METAMEMBER(valuesChanged)
-        );
+            SWIFT_METAMEMBER(saved),
+            SWIFT_METAMEMBER(valuesChanged));
     };
 
     /*!

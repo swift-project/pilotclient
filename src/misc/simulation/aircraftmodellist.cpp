@@ -30,7 +30,7 @@ using namespace swift::misc::math;
 using namespace swift::misc::aviation;
 using namespace swift::misc::physical_quantities;
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CAircraftModel, CAircraftModelList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CAircraftModel, CAircraftModelList)
 
 namespace swift::misc::simulation
 {

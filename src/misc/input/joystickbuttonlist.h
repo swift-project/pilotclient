@@ -15,7 +15,7 @@
 #include <initializer_list>
 #include <tuple>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::input, CJoystickButton, CJoystickButtonList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::input, CJoystickButton, CJoystickButtonList)
 
 namespace swift::misc::input
 {

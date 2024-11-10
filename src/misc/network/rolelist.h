@@ -16,7 +16,7 @@
 #include <QString>
 #include <QStringList>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CRole, CRoleList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CRole, CRoleList)
 
 namespace swift::misc::network
 {

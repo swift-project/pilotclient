@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_XPLANE_XPLANEMPAIRCRAFT_H
-#define BLACKSIMPLUGIN_XPLANE_XPLANEMPAIRCRAFT_H
+#ifndef SWIFT_SIMPLUGIN_XPLANE_XPLANEMPAIRCRAFT_H
+#define SWIFT_SIMPLUGIN_XPLANE_XPLANEMPAIRCRAFT_H
 
 #include "misc/simulation/simulatedaircraft.h"
 #include "misc/simulation/interpolation/interpolatormulti.h"
@@ -15,7 +15,7 @@ namespace swift::core
 {
     class ISimulator;
 }
-namespace BlackSimPlugin::XPlane
+namespace swift::simplugin::xplane
 {
     //! Class representing a X-Plane multiplayer aircraft
     class CXPlaneMPAircraft

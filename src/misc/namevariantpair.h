@@ -15,7 +15,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CNameVariantPair)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CNameVariantPair)
 
 namespace swift::misc
 {
@@ -71,12 +71,11 @@ namespace swift::misc
         CVariant m_variant;
         CIcon m_icon; //!< optional icon
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CNameVariantPair,
-            BLACK_METAMEMBER(name),
-            BLACK_METAMEMBER(variant),
-            BLACK_METAMEMBER(icon)
-        );
+            SWIFT_METAMEMBER(name),
+            SWIFT_METAMEMBER(variant),
+            SWIFT_METAMEMBER(icon));
     };
 } // namespace
 

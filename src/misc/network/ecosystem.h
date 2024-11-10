@@ -12,7 +12,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CEcosystem)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CEcosystem)
 
 namespace swift::misc::network
 {
@@ -89,10 +89,9 @@ namespace swift::misc::network
     private:
         int m_system = static_cast<int>(Unspecified);
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CEcosystem,
-            BLACK_METAMEMBER(system)
-        );
+            SWIFT_METAMEMBER(system));
     };
 } // namespace
 

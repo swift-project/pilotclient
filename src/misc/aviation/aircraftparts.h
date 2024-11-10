@@ -17,7 +17,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftParts)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftParts)
 
 namespace swift::misc::aviation
 {
@@ -188,18 +188,17 @@ namespace swift::misc::aviation
         bool m_isOnGround = false;
         QString m_guessingDetails; //!< just for debugging, not via DBus ...
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CAircraftParts,
-            BLACK_METAMEMBER_NAMED(lights, "lights"),
-            BLACK_METAMEMBER_NAMED(gearDown, "gear_down"),
-            BLACK_METAMEMBER_NAMED(flapsPercentage, "flaps_pct"),
-            BLACK_METAMEMBER_NAMED(spoilersOut, "spoilers_out"),
-            BLACK_METAMEMBER_NAMED(engines, "engines"),
-            BLACK_METAMEMBER_NAMED(isOnGround, "on_ground"),
-            BLACK_METAMEMBER(partsDetails, 0, DisabledForJson | DisabledForComparison),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForJson | DisabledForComparison),
-            BLACK_METAMEMBER(timeOffsetMs, 0, DisabledForJson | DisabledForComparison)
-        );
+            SWIFT_METAMEMBER_NAMED(lights, "lights"),
+            SWIFT_METAMEMBER_NAMED(gearDown, "gear_down"),
+            SWIFT_METAMEMBER_NAMED(flapsPercentage, "flaps_pct"),
+            SWIFT_METAMEMBER_NAMED(spoilersOut, "spoilers_out"),
+            SWIFT_METAMEMBER_NAMED(engines, "engines"),
+            SWIFT_METAMEMBER_NAMED(isOnGround, "on_ground"),
+            SWIFT_METAMEMBER(partsDetails, 0, DisabledForJson | DisabledForComparison),
+            SWIFT_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForJson | DisabledForComparison),
+            SWIFT_METAMEMBER(timeOffsetMs, 0, DisabledForJson | DisabledForComparison));
     };
 } // namespace
 

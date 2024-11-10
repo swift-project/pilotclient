@@ -8,7 +8,7 @@
 #include <QJsonValue>
 #include <Qt>
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftIcaoCode, CAircraftIcaoCodeList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftIcaoCode, CAircraftIcaoCodeList)
 
 namespace swift::misc::aviation
 {

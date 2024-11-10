@@ -12,7 +12,7 @@ using namespace swift::misc::geo;
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::math;
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftSituation, CAircraftSituationList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftSituation, CAircraftSituationList)
 
 namespace swift::misc::aviation
 {

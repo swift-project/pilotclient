@@ -9,7 +9,7 @@
 #include <QtGlobal>
 #include <QStringBuilder>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CCountry)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CCountry)
 
 namespace swift::misc
 {

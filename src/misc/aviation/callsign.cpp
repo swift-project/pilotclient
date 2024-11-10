@@ -12,7 +12,7 @@
 #include <Qt>
 #include <QtGlobal>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CCallsign)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CCallsign)
 
 namespace swift::misc::aviation
 {

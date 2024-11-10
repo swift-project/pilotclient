@@ -8,7 +8,7 @@
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::aviation;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::weather, CWindLayer)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::weather, CWindLayer)
 
 namespace swift::misc::weather
 {

@@ -16,7 +16,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::input, CActionHotkey)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::input, CActionHotkey)
 
 namespace swift::misc::input
 {
@@ -98,12 +98,11 @@ namespace swift::misc::input
         CHotkeyCombination m_combination; //!< hotkey combination
         QString m_action; //!< hotkey action
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CActionHotkey,
-            BLACK_METAMEMBER(identifier),
-            BLACK_METAMEMBER(combination),
-            BLACK_METAMEMBER(action)
-        );
+            SWIFT_METAMEMBER(identifier),
+            SWIFT_METAMEMBER(combination),
+            SWIFT_METAMEMBER(action));
     };
 } // ns
 

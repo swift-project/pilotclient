@@ -16,7 +16,7 @@
 #include "misc/sequence.h"
 #include <QMetaType>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::simulation, CSimulatedAircraft, CSimulatedAircraftList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::simulation, CSimulatedAircraft, CSimulatedAircraftList)
 
 namespace swift::misc
 {

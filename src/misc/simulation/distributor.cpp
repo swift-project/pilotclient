@@ -11,7 +11,7 @@
 #include <QStringBuilder>
 #include <QtGlobal>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CDistributor)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CDistributor)
 
 namespace swift::misc::simulation
 {

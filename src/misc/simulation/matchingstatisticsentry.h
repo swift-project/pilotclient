@@ -10,7 +10,7 @@
 #include "misc/valueobject.h"
 #include "misc/timestampbased.h"
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Simulation, CMatchingStatisticsEntry)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Simulation, CMatchingStatisticsEntry)
 
 namespace swift::misc::simulation
 {
@@ -126,16 +126,15 @@ namespace swift::misc::simulation
         int m_entryType = Missing; //!< type
         int m_count = 1; //!< quantity
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CMatchingStatisticsEntry,
-            BLACK_METAMEMBER(sessionId),
-            BLACK_METAMEMBER(modelSetId),
-            BLACK_METAMEMBER(aircraftDesignator),
-            BLACK_METAMEMBER(airlineDesignator),
-            BLACK_METAMEMBER(description),
-            BLACK_METAMEMBER(entryType),
-            BLACK_METAMEMBER(count)
-        );
+            SWIFT_METAMEMBER(sessionId),
+            SWIFT_METAMEMBER(modelSetId),
+            SWIFT_METAMEMBER(aircraftDesignator),
+            SWIFT_METAMEMBER(airlineDesignator),
+            SWIFT_METAMEMBER(description),
+            SWIFT_METAMEMBER(entryType),
+            SWIFT_METAMEMBER(count));
     };
 } // namespace
 

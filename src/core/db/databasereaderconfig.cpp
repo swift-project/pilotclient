@@ -12,8 +12,8 @@ using namespace swift::misc::db;
 using namespace swift::misc::network;
 using namespace swift::misc::physical_quantities;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::core::db, CDatabaseReaderConfig)
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::core::db, CDatabaseReaderConfig, CDatabaseReaderConfigList)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::core::db, CDatabaseReaderConfig)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::core::db, CDatabaseReaderConfig, CDatabaseReaderConfigList)
 
 namespace swift::core::db
 {

@@ -5,7 +5,7 @@
 #include "fs9host.h"
 #include "fs9client.h"
 
-namespace BlackSimPlugin::Fs9
+namespace swift::simplugin::fs9
 {
     void registerMetadata()
     {

@@ -104,7 +104,7 @@ namespace swift::misc
          * When a derived class and a base class both inherit from mixin::MetaType,
          * the derived class uses this macro to disambiguate the inherited members.
          */
-#define SWIFT_MISC_DECLARE_USING_MIXIN_METATYPE(DERIVED)            \
+#define SWIFT_MISC_DECLARE_USING_MIXIN_METATYPE(DERIVED)             \
     using ::swift::misc::mixin::MetaType<DERIVED>::registerMetadata; \
     using ::swift::misc::mixin::MetaType<DERIVED>::getMetaTypeId;    \
     using ::swift::misc::mixin::MetaType<DERIVED>::getClassName;     \

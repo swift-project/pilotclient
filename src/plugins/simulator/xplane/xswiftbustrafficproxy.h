@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_XSWIFTBUS_TRAFFIC_PROXY_H
-#define BLACKSIMPLUGIN_XSWIFTBUS_TRAFFIC_PROXY_H
+#ifndef SWIFT_SIMPLUGIN_XSWIFTBUS_TRAFFIC_PROXY_H
+#define SWIFT_SIMPLUGIN_XSWIFTBUS_TRAFFIC_PROXY_H
 
 #include "misc/genericdbusinterface.h"
 #include "misc/aviation/aircraftsituation.h"
@@ -26,7 +26,7 @@ class QDBusConnection;
 #define XSWIFTBUS_TRAFFIC_OBJECTPATH "/xswiftbus/traffic"
 //! \endcond
 
-namespace BlackSimPlugin::XPlane
+namespace swift::simplugin::xplane
 {
     //! List of doubles
     using QDoubleList = QList<double>;
@@ -222,13 +222,13 @@ namespace BlackSimPlugin::XPlane
         void removeAllPlanes();
 
         //! \copydoc XSwiftBus::CTraffic::setPlanesPositions
-        void setPlanesPositions(const BlackSimPlugin::XPlane::PlanesPositions &planesPositions);
+        void setPlanesPositions(const swift::simplugin::xplane::PlanesPositions &planesPositions);
 
         //! \copydoc XSwiftBus::CTraffic::setPlanesSurfaces
-        void setPlanesSurfaces(const BlackSimPlugin::XPlane::PlanesSurfaces &planesSurfaces);
+        void setPlanesSurfaces(const swift::simplugin::xplane::PlanesSurfaces &planesSurfaces);
 
         //! \copydoc XSwiftBus::CTraffic::setPlanesTransponders
-        void setPlanesTransponders(const BlackSimPlugin::XPlane::PlanesTransponders &planesTransponders);
+        void setPlanesTransponders(const swift::simplugin::xplane::PlanesTransponders &planesTransponders);
 
         //! \deprecated XSwiftBus::CTraffic::setInterpolatorMode
         void setInterpolatorMode(const QString &callsign, bool spline);

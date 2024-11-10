@@ -30,7 +30,7 @@ namespace swift::misc::physical_quantities
 }
 
 //! \cond
-#define BLACK_TEMPLATE_PQ_MIXINS(MU, PQ, Extern, Export)                                                                                            \
+#define SWIFT_TEMPLATE_PQ_MIXINS(MU, PQ, Extern, Export)                                                                                            \
     namespace swift::misc::physical_quantities                                                                                                      \
     {                                                                                                                                               \
         class PQ;                                                                                                                                   \
@@ -42,7 +42,7 @@ namespace swift::misc::physical_quantities
     }                                                                                                                                               \
     namespace swift::misc::mixin                                                                                                                    \
     {                                                                                                                                               \
-        Extern template class Export DBusOperators<physical_quantities::CPhysicalQuantity<physical_quantities::MU, physical_quantities::PQ>>;        \
+        Extern template class Export DBusOperators<physical_quantities::CPhysicalQuantity<physical_quantities::MU, physical_quantities::PQ>>;       \
         Extern template class Export DataStreamOperators<physical_quantities::CPhysicalQuantity<physical_quantities::MU, physical_quantities::PQ>>; \
         Extern template class Export JsonOperators<physical_quantities::CPhysicalQuantity<physical_quantities::MU, physical_quantities::PQ>>;       \
         Extern template class Export Index<physical_quantities::PQ>;                                                                                \
@@ -53,35 +53,35 @@ namespace swift::misc::physical_quantities
 //! \endcond
 
 /*!
- * \def BLACK_DECLARE_PQ_MIXINS
+ * \def SWIFT_DECLARE_PQ_MIXINS
  * Explicit template declaration of mixins for a CPhysicalQuantity subclass
  * to be placed near the top of the header that defines the class
  */
 
 /*!
- * \def BLACK_DEFINE_PQ_MIXINS
+ * \def SWIFT_DEFINE_PQ_MIXINS
  * Explicit template definition of mixins for a CPhysicalQuantity subclass
  */
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)
-#    define BLACK_DECLARE_PQ_MIXINS(MU, PQ)
-#    define BLACK_DEFINE_PQ_MIXINS(MU, PQ)
+#    define SWIFT_DECLARE_PQ_MIXINS(MU, PQ)
+#    define SWIFT_DEFINE_PQ_MIXINS(MU, PQ)
 #elif defined(Q_OS_WIN) && defined(Q_CC_CLANG)
-#    define BLACK_DECLARE_PQ_MIXINS(MU, PQ) BLACK_TEMPLATE_PQ_MIXINS(MU, PQ, extern, )
-#    define BLACK_DEFINE_PQ_MIXINS(MU, PQ) BLACK_TEMPLATE_PQ_MIXINS(MU, PQ, , SWIFT_MISC_EXPORT)
+#    define SWIFT_DECLARE_PQ_MIXINS(MU, PQ) SWIFT_TEMPLATE_PQ_MIXINS(MU, PQ, extern, )
+#    define SWIFT_DEFINE_PQ_MIXINS(MU, PQ) SWIFT_TEMPLATE_PQ_MIXINS(MU, PQ, , SWIFT_MISC_EXPORT)
 #else
-#    define BLACK_DECLARE_PQ_MIXINS(MU, PQ) BLACK_TEMPLATE_PQ_MIXINS(MU, PQ, extern, )
-#    define BLACK_DEFINE_PQ_MIXINS(MU, PQ) BLACK_TEMPLATE_PQ_MIXINS(MU, PQ, , )
+#    define SWIFT_DECLARE_PQ_MIXINS(MU, PQ) SWIFT_TEMPLATE_PQ_MIXINS(MU, PQ, extern, )
+#    define SWIFT_DEFINE_PQ_MIXINS(MU, PQ) SWIFT_TEMPLATE_PQ_MIXINS(MU, PQ, , )
 #endif
 
-BLACK_DECLARE_PQ_MIXINS(CAngleUnit, CAngle)
-BLACK_DECLARE_PQ_MIXINS(CLengthUnit, CLength)
-BLACK_DECLARE_PQ_MIXINS(CPressureUnit, CPressure)
-BLACK_DECLARE_PQ_MIXINS(CFrequencyUnit, CFrequency)
-BLACK_DECLARE_PQ_MIXINS(CMassUnit, CMass)
-BLACK_DECLARE_PQ_MIXINS(CTemperatureUnit, CTemperature)
-BLACK_DECLARE_PQ_MIXINS(CSpeedUnit, CSpeed)
-BLACK_DECLARE_PQ_MIXINS(CTimeUnit, CTime)
-BLACK_DECLARE_PQ_MIXINS(CAccelerationUnit, CAcceleration)
+SWIFT_DECLARE_PQ_MIXINS(CAngleUnit, CAngle)
+SWIFT_DECLARE_PQ_MIXINS(CLengthUnit, CLength)
+SWIFT_DECLARE_PQ_MIXINS(CPressureUnit, CPressure)
+SWIFT_DECLARE_PQ_MIXINS(CFrequencyUnit, CFrequency)
+SWIFT_DECLARE_PQ_MIXINS(CMassUnit, CMass)
+SWIFT_DECLARE_PQ_MIXINS(CTemperatureUnit, CTemperature)
+SWIFT_DECLARE_PQ_MIXINS(CSpeedUnit, CSpeed)
+SWIFT_DECLARE_PQ_MIXINS(CTimeUnit, CTime)
+SWIFT_DECLARE_PQ_MIXINS(CAccelerationUnit, CAcceleration)
 
 namespace swift::misc::physical_quantities
 {

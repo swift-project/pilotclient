@@ -20,7 +20,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CLivery)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CLivery)
 
 namespace swift::misc::aviation
 {
@@ -234,17 +234,16 @@ namespace swift::misc::aviation
         CRgbColor m_colorTail; //!< color of tail
         bool m_military = false; //!< military livery?
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CLivery,
-            BLACK_METAMEMBER(dbKey),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch),
-            BLACK_METAMEMBER(airline),
-            BLACK_METAMEMBER(combinedCode, 0, CaseInsensitiveComparison),
-            BLACK_METAMEMBER(description),
-            BLACK_METAMEMBER(colorFuselage),
-            BLACK_METAMEMBER(colorTail),
-            BLACK_METAMEMBER(military)
-        );
+            SWIFT_METAMEMBER(dbKey),
+            SWIFT_METAMEMBER(timestampMSecsSinceEpoch),
+            SWIFT_METAMEMBER(airline),
+            SWIFT_METAMEMBER(combinedCode, 0, CaseInsensitiveComparison),
+            SWIFT_METAMEMBER(description),
+            SWIFT_METAMEMBER(colorFuselage),
+            SWIFT_METAMEMBER(colorTail),
+            SWIFT_METAMEMBER(military));
     };
 
     //! Id/CLivery map

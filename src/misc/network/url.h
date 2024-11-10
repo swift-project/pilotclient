@@ -17,7 +17,7 @@
 #include <QString>
 #include <QUrl>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CUrl)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CUrl)
 
 namespace swift::misc::network
 {
@@ -204,15 +204,14 @@ namespace swift::misc::network
 
         static QString stripQueryString(const QString &query);
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CUrl,
-            BLACK_METAMEMBER(scheme),
-            BLACK_METAMEMBER(host),
-            BLACK_METAMEMBER(port),
-            BLACK_METAMEMBER(path),
-            BLACK_METAMEMBER(query),
-            BLACK_METAMEMBER(fragment)
-        );
+            SWIFT_METAMEMBER(scheme),
+            SWIFT_METAMEMBER(host),
+            SWIFT_METAMEMBER(port),
+            SWIFT_METAMEMBER(path),
+            SWIFT_METAMEMBER(query),
+            SWIFT_METAMEMBER(fragment));
     };
 } // namespace
 

@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDCONFIGWIDGET_H
-#define BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDCONFIGWIDGET_H
+#ifndef SWIFT_SIMPLUGIN_EMULATED_SIMULATOREMULATEDCONFIGWIDGET_H
+#define SWIFT_SIMPLUGIN_EMULATED_SIMULATOREMULATEDCONFIGWIDGET_H
 
 #include "gui/pluginconfigwindow.h"
 #include <QScopedPointer>
@@ -13,7 +13,7 @@ namespace Ui
 {
     class CSimulatorEmulatedConfigWidget;
 }
-namespace BlackSimPlugin::Emulated
+namespace swift::simplugin::emulated
 {
     /*!
      * Configuration window for CSimulatorEmulatedConfig

@@ -17,7 +17,7 @@
 #include <QString>
 #include <tuple>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CRgbColor)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CRgbColor)
 
 namespace swift::misc
 {
@@ -134,12 +134,11 @@ namespace swift::misc
 
         static QString intToHex(int h, int digits = 2);
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CRgbColor,
-            BLACK_METAMEMBER(r),
-            BLACK_METAMEMBER(g),
-            BLACK_METAMEMBER(b)
-        );
+            SWIFT_METAMEMBER(r),
+            SWIFT_METAMEMBER(g),
+            SWIFT_METAMEMBER(b));
     };
 } // namespace
 

@@ -1,15 +1,15 @@
 // SPDX-FileCopyrightText: Copyright (C) 2014 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#ifndef BLACKSIMPLUGIN_FS9_LOBBYCLIENT_H
-#define BLACKSIMPLUGIN_FS9_LOBBYCLIENT_H
+#ifndef SWIFT_SIMPLUGIN_FS9_LOBBYCLIENT_H
+#define SWIFT_SIMPLUGIN_FS9_LOBBYCLIENT_H
 
 #include "callbackwrapper.h"
 #include <QDebug>
 #include <dplay8.h>
 #include <dplobby8.h>
 
-namespace BlackSimPlugin::Fs9
+namespace swift::simplugin::fs9
 {
     //! Lobby client launching and connecting FS9
     class CLobbyClient : public QObject

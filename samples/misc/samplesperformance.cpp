@@ -50,7 +50,7 @@ using namespace swift::misc::simulation;
 using namespace swift::misc::test;
 using namespace swift::core::db;
 
-namespace BlackSample
+namespace swift::sample
 {
     int CSamplesPerformance::samplesMisc(QTextStream &out)
     {

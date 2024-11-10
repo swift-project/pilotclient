@@ -21,7 +21,7 @@
 #include <QString>
 #include <QStringList>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftIcaoCode)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftIcaoCode)
 
 namespace swift::misc::aviation
 {
@@ -390,25 +390,24 @@ namespace swift::misc::aviation
         //! Create a combined string like L2J
         static QString createdCombinedString(const QString &type, int engineCount, const QString &engine);
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CAircraftIcaoCode,
-            BLACK_METAMEMBER(dbKey),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch),
-            BLACK_METAMEMBER(designator),
-            BLACK_METAMEMBER(iataCode),
-            BLACK_METAMEMBER(family),
-            BLACK_METAMEMBER(combinedType),
-            BLACK_METAMEMBER(manufacturer),
-            BLACK_METAMEMBER(modelDescription),
-            BLACK_METAMEMBER(modelIataDescription),
-            BLACK_METAMEMBER(modelSwiftDescription),
-            BLACK_METAMEMBER(category),
-            BLACK_METAMEMBER(wtc),
-            BLACK_METAMEMBER(military),
-            BLACK_METAMEMBER(realWorld),
-            BLACK_METAMEMBER(legacy),
-            BLACK_METAMEMBER(rank)
-        );
+            SWIFT_METAMEMBER(dbKey),
+            SWIFT_METAMEMBER(timestampMSecsSinceEpoch),
+            SWIFT_METAMEMBER(designator),
+            SWIFT_METAMEMBER(iataCode),
+            SWIFT_METAMEMBER(family),
+            SWIFT_METAMEMBER(combinedType),
+            SWIFT_METAMEMBER(manufacturer),
+            SWIFT_METAMEMBER(modelDescription),
+            SWIFT_METAMEMBER(modelIataDescription),
+            SWIFT_METAMEMBER(modelSwiftDescription),
+            SWIFT_METAMEMBER(category),
+            SWIFT_METAMEMBER(wtc),
+            SWIFT_METAMEMBER(military),
+            SWIFT_METAMEMBER(realWorld),
+            SWIFT_METAMEMBER(legacy),
+            SWIFT_METAMEMBER(rank));
     };
 
     //! Id/CAircraftIcaoCode map

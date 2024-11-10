@@ -7,7 +7,7 @@
 #include <QDBusMetaType>
 #include <QJsonObject>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatorInternals)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatorInternals)
 
 namespace swift::misc::simulation
 {

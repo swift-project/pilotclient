@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSOUND_BUFFEREDWAVEPROVIDER_H
-#define BLACKSOUND_BUFFEREDWAVEPROVIDER_H
+#ifndef SWIFT_SOUND_BUFFEREDWAVEPROVIDER_H
+#define SWIFT_SOUND_BUFFEREDWAVEPROVIDER_H
 
 #include "sound/swiftsoundexport.h"
 #include "sound/sampleprovider/sampleprovider.h"

@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_FLIGHTGEAR_TRAFFIC_PROXY_H
-#define BLACKSIMPLUGIN_FLIGHTGEAR_TRAFFIC_PROXY_H
+#ifndef SWIFT_SIMPLUGIN_FLIGHTGEAR_TRAFFIC_PROXY_H
+#define SWIFT_SIMPLUGIN_FLIGHTGEAR_TRAFFIC_PROXY_H
 
 #include "misc/genericdbusinterface.h"
 #include "misc/aviation/aircraftsituation.h"
@@ -25,7 +25,7 @@ class QDBusConnection;
 #define FGSWIFTBUS_TRAFFIC_OBJECTPATH "/fgswiftbus/traffic"
 //! \endcond
 
-namespace BlackSimPlugin::Flightgear
+namespace swift::simplugin::flightgear
 {
     //! List of doubles
     using QDoubleList = QList<double>;
@@ -205,13 +205,13 @@ namespace BlackSimPlugin::Flightgear
         void removeAllPlanes();
 
         //! Set the position of multiple traffic aircrafts
-        void setPlanesPositions(const BlackSimPlugin::Flightgear::PlanesPositions &planesPositions);
+        void setPlanesPositions(const swift::simplugin::flightgear::PlanesPositions &planesPositions);
 
         //! Set the surfaces of multiple traffic aircrafts
-        void setPlanesSurfaces(const BlackSimPlugin::Flightgear::PlanesSurfaces &planesSurfaces);
+        void setPlanesSurfaces(const swift::simplugin::flightgear::PlanesSurfaces &planesSurfaces);
 
         //! Set the transponders of multiple traffic aircrafts
-        void setPlanesTransponders(const BlackSimPlugin::Flightgear::PlanesTransponders &planesTransponders);
+        void setPlanesTransponders(const swift::simplugin::flightgear::PlanesTransponders &planesTransponders);
 
         //! Get remote aircrafts data (lat, lon, elevation and CG)
         void getRemoteAircraftData(const QStringList &callsigns, const RemoteAircraftDataCallback &setter) const;

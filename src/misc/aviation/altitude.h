@@ -227,11 +227,10 @@ namespace swift::misc::aviation
         //! The metric tuples m/ft/FL
         static const QVector<MetricTuple> &metricTuples();
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CAltitude,
-            BLACK_METAMEMBER(datum),
-            BLACK_METAMEMBER(altitudeType)
-        );
+            SWIFT_METAMEMBER(datum),
+            SWIFT_METAMEMBER(altitudeType));
     };
 
     using CAltitudePair = QPair<CAltitude, CAltitude>; //!< Pair of altitude

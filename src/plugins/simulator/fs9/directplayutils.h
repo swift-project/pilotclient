@@ -3,10 +3,10 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_FS9_DIRECTPLAYUTILS_H
-#define BLACKSIMPLUGIN_FS9_DIRECTPLAYUTILS_H
+#ifndef SWIFT_SIMPLUGIN_FS9_DIRECTPLAYUTILS_H
+#define SWIFT_SIMPLUGIN_FS9_DIRECTPLAYUTILS_H
 
-namespace BlackSimPlugin::Fs9
+namespace swift::simplugin::fs9
 {
     //! Safely release a COM allocated object
     template <class T>

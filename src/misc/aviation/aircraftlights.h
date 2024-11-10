@@ -14,7 +14,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftLights)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftLights)
 
 namespace swift::misc::aviation
 {
@@ -137,17 +137,17 @@ namespace swift::misc::aviation
         bool m_recognition = false; //!< not supported by aircraft config (VATSIM)
         bool m_cabin = false; //!< not supported by aircraft config (VATSIM)
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CAircraftLights,
-            BLACK_METAMEMBER(isNull, 0, DisabledForJson), // disable since JSON is used for network
-            BLACK_METAMEMBER_NAMED(strobeOn, "strobe_on"),
-            BLACK_METAMEMBER_NAMED(landingOn, "landing_on"),
-            BLACK_METAMEMBER_NAMED(taxiOn, "taxi_on"),
-            BLACK_METAMEMBER_NAMED(beaconOn, "beacon_on"),
-            BLACK_METAMEMBER_NAMED(navOn, "nav_on"),
-            BLACK_METAMEMBER_NAMED(logoOn, "logo_on"),
-            BLACK_METAMEMBER(recognition, 0, DisabledForJson), // disable since JSON is used for network
-            BLACK_METAMEMBER(cabin, 0, DisabledForJson) // disable since JSON is used for network
+            SWIFT_METAMEMBER(isNull, 0, DisabledForJson), // disable since JSON is used for network
+            SWIFT_METAMEMBER_NAMED(strobeOn, "strobe_on"),
+            SWIFT_METAMEMBER_NAMED(landingOn, "landing_on"),
+            SWIFT_METAMEMBER_NAMED(taxiOn, "taxi_on"),
+            SWIFT_METAMEMBER_NAMED(beaconOn, "beacon_on"),
+            SWIFT_METAMEMBER_NAMED(navOn, "nav_on"),
+            SWIFT_METAMEMBER_NAMED(logoOn, "logo_on"),
+            SWIFT_METAMEMBER(recognition, 0, DisabledForJson), // disable since JSON is used for network
+            SWIFT_METAMEMBER(cabin, 0, DisabledForJson) // disable since JSON is used for network
         );
     };
 } // namespace

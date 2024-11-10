@@ -16,7 +16,7 @@
 #include <initializer_list>
 #include <tuple>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::input, CKeyboardKey, CKeyboardKeyList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::input, CKeyboardKey, CKeyboardKeyList)
 
 namespace swift::misc::input
 {

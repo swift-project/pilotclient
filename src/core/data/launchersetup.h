@@ -12,7 +12,7 @@
 #include "misc/valueobject.h"
 #include "misc/variant.h"
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::core::data, CLauncherSetup)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::core::data, CLauncherSetup)
 
 namespace swift::core::data
 {
@@ -91,13 +91,12 @@ namespace swift::core::data
         int m_coreMode = static_cast<int>(Standalone); //!< core
         int m_audioMode = static_cast<int>(AudioNothingDisabled);
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CLauncherSetup,
-            BLACK_METAMEMBER(dBusAddress),
-            BLACK_METAMEMBER(windowFrameless),
-            BLACK_METAMEMBER(coreMode),
-            BLACK_METAMEMBER(audioMode)
-        );
+            SWIFT_METAMEMBER(dBusAddress),
+            SWIFT_METAMEMBER(windowFrameless),
+            SWIFT_METAMEMBER(coreMode),
+            SWIFT_METAMEMBER(audioMode));
     };
 
     //! Trait for global setup data

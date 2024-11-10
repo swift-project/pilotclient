@@ -4,7 +4,7 @@
 #include "misc/weather/presentweather.h"
 #include "misc/propertyindexref.h"
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::weather, CPresentWeather)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::weather, CPresentWeather)
 
 namespace swift::misc::weather
 {

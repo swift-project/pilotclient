@@ -3,7 +3,7 @@
 
 #include "misc/propertyindexlist.h"
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc, CPropertyIndex, CPropertyIndexList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CPropertyIndex, CPropertyIndexList)
 
 namespace swift::misc
 {

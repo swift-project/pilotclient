@@ -17,7 +17,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CClient)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CClient)
 
 namespace swift::misc::network
 {
@@ -158,15 +158,14 @@ namespace swift::misc::network
         QString m_server;
         CVoiceCapabilities m_voiceCapabilities;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CClient,
-            BLACK_METAMEMBER(user),
-            BLACK_METAMEMBER(swift),
-            BLACK_METAMEMBER(modelString),
-            BLACK_METAMEMBER(capabilities),
-            BLACK_METAMEMBER(server),
-            BLACK_METAMEMBER(voiceCapabilities)
-        );
+            SWIFT_METAMEMBER(user),
+            SWIFT_METAMEMBER(swift),
+            SWIFT_METAMEMBER(modelString),
+            SWIFT_METAMEMBER(capabilities),
+            SWIFT_METAMEMBER(server),
+            SWIFT_METAMEMBER(voiceCapabilities));
     };
 } // namespace
 

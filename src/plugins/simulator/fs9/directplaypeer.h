@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright (C) 2014 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#ifndef BLACKSIMPLUGIN_FS9_DIRECTPLAY_PEER_H
-#define BLACKSIMPLUGIN_FS9_DIRECTPLAY_PEER_H
+#ifndef SWIFT_SIMPLUGIN_FS9_DIRECTPLAY_PEER_H
+#define SWIFT_SIMPLUGIN_FS9_DIRECTPLAY_PEER_H
 
 #include "fs9.h"
 #include "hostnode.h"
@@ -16,7 +16,7 @@
 #include <functional>
 #include <atomic>
 
-namespace BlackSimPlugin::Fs9
+namespace swift::simplugin::fs9
 {
     HRESULT inline s_success_pending() { return DPNSUCCESS_PENDING; }
     bool inline isPending(HRESULT hr) { return hr == s_success_pending(); }

@@ -3,7 +3,7 @@
 
 #include "misc/aviation/aircraftsituationchangelist.h"
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftSituationChange, CAircraftSituationChangeList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftSituationChange, CAircraftSituationChangeList)
 
 namespace swift::misc::aviation
 {

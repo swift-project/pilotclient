@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECTSETTINGSCOMPONENT_H
-#define BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECTSETTINGSCOMPONENT_H
+#ifndef SWIFT_SIMPLUGIN_FSXCOMMON_SIMCONNECTSETTINGSCOMPONENT_H
+#define SWIFT_SIMPLUGIN_FSXCOMMON_SIMCONNECTSETTINGSCOMPONENT_H
 
 #include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 #include "gui/overlaymessagesframe.h"
@@ -18,7 +18,7 @@ namespace Ui
 {
     class CSimConnectSettingsComponent;
 }
-namespace BlackSimPlugin::FsxCommon
+namespace swift::simplugin::fsxcommon
 {
     /*!
      * A component that gathers all SimConnect related settings.

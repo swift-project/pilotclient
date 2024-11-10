@@ -3,7 +3,7 @@
 
 #include "misc/weather/presentweatherlist.h"
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::weather, CPresentWeather, CPresentWeatherList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::weather, CPresentWeather, CPresentWeatherList)
 
 namespace swift::misc::weather
 {

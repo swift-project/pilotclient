@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright (C) 2018 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#ifndef BLACKSIM_XSWIFTBUS_CONFIG_H
-#define BLACKSIM_XSWIFTBUS_CONFIG_H
+#ifndef SWIFT_SIM_XSWIFTBUS_CONFIG_H
+#define SWIFT_SIM_XSWIFTBUS_CONFIG_H
 
 #include <string>
 

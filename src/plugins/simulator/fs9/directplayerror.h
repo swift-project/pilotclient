@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_FS9_DIRECTPLAYERROR_H
-#define BLACKSIMPLUGIN_FS9_DIRECTPLAYERROR_H
+#ifndef SWIFT_SIMPLUGIN_FS9_DIRECTPLAYERROR_H
+#define SWIFT_SIMPLUGIN_FS9_DIRECTPLAYERROR_H
 
 #ifndef NOMINMAX
 #    define NOMINMAX
@@ -12,7 +12,7 @@
 
 #include <dplay8.h>
 
-namespace BlackSimPlugin::Fs9
+namespace swift::simplugin::fs9
 {
     //! Print the direct play error
     HRESULT logDirectPlayError(HRESULT error);

@@ -5,7 +5,7 @@
 
 #include "misc/sharedstate/passiveobserver.h"
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::shared_state, CAnyMatch)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::shared_state, CAnyMatch)
 
 namespace swift::misc::shared_state
 {

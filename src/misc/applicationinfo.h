@@ -11,7 +11,7 @@
 #include <QMetaType>
 #include <QFlags>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CApplicationInfo)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CApplicationInfo)
 
 namespace swift::misc
 {
@@ -176,17 +176,16 @@ namespace swift::misc
         //! Guess Application
         static Application guessApplication();
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CApplicationInfo,
-            BLACK_METAMEMBER(app),
-            BLACK_METAMEMBER(wordSize),
-            BLACK_METAMEMBER(exePath),
-            BLACK_METAMEMBER(applicationDataDir),
-            BLACK_METAMEMBER(version),
-            BLACK_METAMEMBER(compileInfo),
-            BLACK_METAMEMBER(platform),
-            BLACK_METAMEMBER(process)
-        );
+            SWIFT_METAMEMBER(app),
+            SWIFT_METAMEMBER(wordSize),
+            SWIFT_METAMEMBER(exePath),
+            SWIFT_METAMEMBER(applicationDataDir),
+            SWIFT_METAMEMBER(version),
+            SWIFT_METAMEMBER(compileInfo),
+            SWIFT_METAMEMBER(platform),
+            SWIFT_METAMEMBER(process));
     };
 } // ns
 

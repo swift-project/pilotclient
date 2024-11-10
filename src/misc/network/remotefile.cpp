@@ -6,7 +6,7 @@
 #include <QJsonValue>
 #include <QtGlobal>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CRemoteFile)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CRemoteFile)
 
 namespace swift::misc::network
 {

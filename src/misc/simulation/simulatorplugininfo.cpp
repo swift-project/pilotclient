@@ -9,7 +9,7 @@
 using namespace swift::config;
 using namespace swift::misc;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatorPluginInfo)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatorPluginInfo)
 
 namespace swift::misc::simulation
 {

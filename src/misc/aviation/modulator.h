@@ -133,16 +133,15 @@ namespace swift::misc::aviation
             return static_cast<AVIO *>(this);
         }
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CModulator,
-            BLACK_METAMEMBER(name),
-            BLACK_METAMEMBER(frequencyActive),
-            BLACK_METAMEMBER(frequencyStandby),
-            BLACK_METAMEMBER(volumeTransmit),
-            BLACK_METAMEMBER(volumeReceive),
-            BLACK_METAMEMBER(transmitEnabled),
-            BLACK_METAMEMBER(receiveEnabled)
-        );
+            SWIFT_METAMEMBER(name),
+            SWIFT_METAMEMBER(frequencyActive),
+            SWIFT_METAMEMBER(frequencyStandby),
+            SWIFT_METAMEMBER(volumeTransmit),
+            SWIFT_METAMEMBER(volumeReceive),
+            SWIFT_METAMEMBER(transmitEnabled),
+            SWIFT_METAMEMBER(receiveEnabled));
     };
 
     //! \cond PRIVATE

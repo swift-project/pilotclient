@@ -13,7 +13,7 @@
 
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CFlightPlanAircraftInfo)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CFlightPlanAircraftInfo)
 
 namespace swift::misc::aviation
 {
@@ -68,13 +68,12 @@ namespace swift::misc::aviation
         void parseFaaEquipmentCode(const QString &equipment); //!< Initialize members from FAA format equipment codes
         void parseUnknownEquipmentCode(const QString &equipment); //!< Initialize members from unknown format equipment strings (best guesses)
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CFlightPlanAircraftInfo,
-            BLACK_METAMEMBER(aircraftIcao),
-            BLACK_METAMEMBER(comNavEquipment),
-            BLACK_METAMEMBER(ssrEquipment),
-            BLACK_METAMEMBER(wtc)
-        );
+            SWIFT_METAMEMBER(aircraftIcao),
+            SWIFT_METAMEMBER(comNavEquipment),
+            SWIFT_METAMEMBER(ssrEquipment),
+            SWIFT_METAMEMBER(wtc));
     };
 
 }

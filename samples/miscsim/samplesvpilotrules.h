@@ -4,12 +4,12 @@
 //! \file
 //! \ingroup samplemiscsim
 
-#ifndef BLACKSAMPLE_SAMPLESVPILOTRULES_H
-#define BLACKSAMPLE_SAMPLESVPILOTRULES_H
+#ifndef SWIFT_SAMPLE_SAMPLESVPILOTRULES_H
+#define SWIFT_SAMPLE_SAMPLESVPILOTRULES_H
 
 class QTextStream;
 
-namespace BlackSample
+namespace swift::sample
 {
     //! Samples for vPilot rules
     class CSamplesVPilotRules

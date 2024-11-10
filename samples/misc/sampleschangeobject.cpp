@@ -26,7 +26,7 @@ using namespace swift::misc::physical_quantities;
 using namespace swift::misc::geo;
 using namespace swift::misc::network;
 
-namespace BlackSample
+namespace swift::sample
 {
     int CSamplesChangeObject::samples()
     {

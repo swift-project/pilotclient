@@ -3,7 +3,7 @@
 
 #include "comnavequipment.h"
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CComNavEquipment)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CComNavEquipment)
 
 namespace swift::misc::aviation
 {

@@ -16,7 +16,7 @@
 #include <initializer_list>
 #include <tuple>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::input, CActionHotkey, CActionHotkeyList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::input, CActionHotkey, CActionHotkeyList)
 
 namespace swift::misc::input
 {

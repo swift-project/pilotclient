@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSOUND_SAMPLEPROVIDER_SAMPLES_H
-#define BLACKSOUND_SAMPLEPROVIDER_SAMPLES_H
+#ifndef SWIFT_SOUND_SAMPLEPROVIDER_SAMPLES_H
+#define SWIFT_SOUND_SAMPLEPROVIDER_SAMPLES_H
 
 #include "misc/audio/audiosettings.h"
 #include "misc/settingscache.h"

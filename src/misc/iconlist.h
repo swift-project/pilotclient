@@ -19,7 +19,7 @@
 #include <QtGlobal>
 #include <tuple>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc, CIcon, CIconList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc, CIcon, CIconList)
 
 namespace swift::misc
 {

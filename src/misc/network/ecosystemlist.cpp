@@ -3,7 +3,7 @@
 
 #include "misc/network/ecosystemlist.h"
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CEcosystem, CEcosystemList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CEcosystem, CEcosystemList)
 
 namespace swift::misc::network
 {

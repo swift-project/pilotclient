@@ -21,7 +21,7 @@
 
 #include <QMetaType>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::geo, CCoordinateGeodetic, CCoordinateGeodeticList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::geo, CCoordinateGeodetic, CCoordinateGeodeticList)
 
 namespace swift::misc::geo
 {

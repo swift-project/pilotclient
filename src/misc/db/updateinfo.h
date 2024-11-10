@@ -12,7 +12,7 @@
 #include "misc/valueobject.h"
 #include <QStringList>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::db, CUpdateInfo)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::db, CUpdateInfo)
 
 namespace swift::misc::db
 {
@@ -100,12 +100,11 @@ namespace swift::misc::db
         CArtifactList m_artifactsXSwiftBus; //!< artifacts xswiftbus
         CDistributionList m_distributions; //!< all distributions (for any artifacts)
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CUpdateInfo,
-            BLACK_METAMEMBER(artifactsPilotClient),
-            BLACK_METAMEMBER(artifactsXSwiftBus),
-            BLACK_METAMEMBER(distributions)
-        );
+            SWIFT_METAMEMBER(artifactsPilotClient),
+            SWIFT_METAMEMBER(artifactsXSwiftBus),
+            SWIFT_METAMEMBER(distributions));
     };
 
     //! Trait for update info, i.e. distributions and artifacts

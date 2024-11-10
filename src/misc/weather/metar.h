@@ -21,7 +21,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::weather, CMetar)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::weather, CMetar)
 
 namespace swift::misc::weather
 {
@@ -155,22 +155,21 @@ namespace swift::misc::weather
         physical_quantities::CTemperature m_dewPoint;
         physical_quantities::CPressure m_altimeter;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CMetar,
-            BLACK_METAMEMBER(metarMessage),
-            BLACK_METAMEMBER(reportType),
-            BLACK_METAMEMBER(airport),
-            BLACK_METAMEMBER(reportDay),
-            BLACK_METAMEMBER(reportTime),
-            BLACK_METAMEMBER(isAutomated),
-            BLACK_METAMEMBER(windLayer),
-            BLACK_METAMEMBER(visibility),
-            BLACK_METAMEMBER(presentWeathers),
-            BLACK_METAMEMBER(cloudLayers),
-            BLACK_METAMEMBER(temperature),
-            BLACK_METAMEMBER(dewPoint),
-            BLACK_METAMEMBER(altimeter)
-        );
+            SWIFT_METAMEMBER(metarMessage),
+            SWIFT_METAMEMBER(reportType),
+            SWIFT_METAMEMBER(airport),
+            SWIFT_METAMEMBER(reportDay),
+            SWIFT_METAMEMBER(reportTime),
+            SWIFT_METAMEMBER(isAutomated),
+            SWIFT_METAMEMBER(windLayer),
+            SWIFT_METAMEMBER(visibility),
+            SWIFT_METAMEMBER(presentWeathers),
+            SWIFT_METAMEMBER(cloudLayers),
+            SWIFT_METAMEMBER(temperature),
+            SWIFT_METAMEMBER(dewPoint),
+            SWIFT_METAMEMBER(altimeter));
     };
 } // namespace
 

@@ -14,7 +14,7 @@ using namespace swift::misc;
 using namespace swift::misc::simulation::settings;
 // using namespace swift::misc::simulation::Flightgear;
 
-namespace BlackSimPlugin::Flightgear
+namespace swift::simplugin::flightgear
 {
     CSimulatorFlightgearConfigWindow::CSimulatorFlightgearConfigWindow(QWidget *parent) : CPluginConfigWindow(parent),
                                                                                           ui(new Ui::CSimulatorFlightgearConfigWindow)

@@ -15,7 +15,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CSelcal)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CSelcal)
 namespace swift::misc::physical_quantities
 {
     class CFrequency;
@@ -79,10 +79,9 @@ namespace swift::misc::aviation
 
         QString m_code;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CSelcal,
-            BLACK_METAMEMBER(code)
-        );
+            SWIFT_METAMEMBER(code));
     };
 } // namespace
 

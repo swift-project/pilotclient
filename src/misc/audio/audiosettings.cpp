@@ -10,7 +10,7 @@
 
 using namespace swift::misc::audio;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::audio, CSettings)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::audio, CSettings)
 
 namespace swift::misc::audio
 {

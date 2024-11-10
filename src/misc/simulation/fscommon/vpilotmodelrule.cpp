@@ -13,7 +13,7 @@
 using namespace swift::misc::aviation;
 using namespace swift::misc::simulation;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::fscommon, CVPilotModelRule)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::fscommon, CVPilotModelRule)
 
 namespace swift::misc::simulation::fscommon
 {

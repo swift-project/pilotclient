@@ -11,7 +11,7 @@ class QDBusConnection;
 
 #define XSWIFTBUS_SERVICE_SERVICENAME "org.swift-project.xswiftbus"
 
-namespace BlackSimPlugin::XPlane
+namespace swift::simplugin::xplane
 {
     CXSwiftBusServiceProxy::CXSwiftBusServiceProxy(QDBusConnection &connection, QObject *parent, bool dummy) : QObject(parent)
     {

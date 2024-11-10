@@ -4,7 +4,7 @@
 #include "misc/aviation/aircraftparts.h"
 #include "misc/aviation/aircraftpartslist.h"
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftParts, CAircraftPartsList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftParts, CAircraftPartsList)
 
 namespace swift::misc::aviation
 {

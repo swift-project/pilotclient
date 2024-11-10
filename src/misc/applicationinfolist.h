@@ -10,7 +10,7 @@
 #include "misc/sequence.h"
 #include "misc/collection.h"
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc, CApplicationInfo, CApplicationInfoList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc, CApplicationInfo, CApplicationInfoList)
 
 namespace swift::misc
 {

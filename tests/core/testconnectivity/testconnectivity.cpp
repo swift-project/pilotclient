@@ -94,7 +94,7 @@ namespace swiftcoretest
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
-    BLACKTEST_INIT(swiftcoretest::CTestConnectivity)
+    SWIFTTEST_INIT(swiftcoretest::CTestConnectivity)
     CApplication a(CApplicationInfo::UnitTest);
     a.addNetworkOptions();
     const bool setup = a.parseCommandLineArgsAndLoadSetup();

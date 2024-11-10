@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_FSXCOMMON_SIMULATORFSXCONFIGWINDOW_H
-#define BLACKSIMPLUGIN_FSXCOMMON_SIMULATORFSXCONFIGWINDOW_H
+#ifndef SWIFT_SIMPLUGIN_FSXCOMMON_SIMULATORFSXCONFIGWINDOW_H
+#define SWIFT_SIMPLUGIN_FSXCOMMON_SIMULATORFSXCONFIGWINDOW_H
 
 #include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 #include "gui/pluginconfigwindow.h"
@@ -15,7 +15,7 @@ namespace Ui
 {
     class CSimulatorFsxConfigWindow;
 }
-namespace BlackSimPlugin::FsxCommon
+namespace swift::simplugin::fsxcommon
 {
     /*!
      * A window that lets user set up the FSX plugin.

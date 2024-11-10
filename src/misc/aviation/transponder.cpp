@@ -7,7 +7,7 @@
 #include <QRegularExpression>
 #include <Qt>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CTransponder)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CTransponder)
 
 namespace swift::misc::aviation
 {

@@ -15,7 +15,7 @@
 #include <QJsonObject>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CUrlLog)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CUrlLog)
 
 namespace swift::misc::network
 {
@@ -88,14 +88,13 @@ namespace swift::misc::network
         //! \threadsafe
         static int uniqueId();
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CUrlLog,
-            BLACK_METAMEMBER(id),
-            BLACK_METAMEMBER(url),
-            BLACK_METAMEMBER(success),
-            BLACK_METAMEMBER(responseTimeMSecsSinceEpoch),
-            BLACK_METAMEMBER(responseTimeMs)
-        );
+            SWIFT_METAMEMBER(id),
+            SWIFT_METAMEMBER(url),
+            SWIFT_METAMEMBER(success),
+            SWIFT_METAMEMBER(responseTimeMSecsSinceEpoch),
+            SWIFT_METAMEMBER(responseTimeMs));
     };
 } // namespace
 

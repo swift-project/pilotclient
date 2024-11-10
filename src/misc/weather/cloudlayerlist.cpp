@@ -7,7 +7,7 @@
 
 using namespace swift::misc::aviation;
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::weather, CCloudLayer, CCloudLayerList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::weather, CCloudLayer, CCloudLayerList)
 
 namespace swift::misc::weather
 {

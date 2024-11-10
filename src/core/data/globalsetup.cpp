@@ -23,7 +23,7 @@ using namespace swift::misc;
 using namespace swift::misc::json;
 using namespace swift::misc::network;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::core::data, CGlobalSetup)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::core::data, CGlobalSetup)
 
 namespace swift::core::data
 {

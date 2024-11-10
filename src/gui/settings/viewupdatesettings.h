@@ -16,7 +16,7 @@
 #include <QString>
 #include <QMetaType>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::gui::settings, CViewUpdateSettings)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::gui::settings, CViewUpdateSettings)
 
 namespace swift::gui::settings
 {
@@ -82,13 +82,12 @@ namespace swift::gui::settings
         swift::misc::physical_quantities::CTime m_updateRendering { 10.0, swift::misc::physical_quantities::CTimeUnit::s() };
         swift::misc::physical_quantities::CTime m_updateUser { 10.0, swift::misc::physical_quantities::CTimeUnit::s() };
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CViewUpdateSettings,
-            BLACK_METAMEMBER(updateAtc),
-            BLACK_METAMEMBER(updateAircraft),
-            BLACK_METAMEMBER(updateRendering),
-            BLACK_METAMEMBER(updateUser)
-        );
+            SWIFT_METAMEMBER(updateAtc),
+            SWIFT_METAMEMBER(updateAircraft),
+            SWIFT_METAMEMBER(updateRendering),
+            SWIFT_METAMEMBER(updateUser));
     };
 
     //! Trait for settings about update rates

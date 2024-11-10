@@ -4,10 +4,10 @@
 //! \file
 //! \ingroup samplemisc
 
-#ifndef BLACKSAMPLE_SAMPLESCHANGEDATA_H
-#define BLACKSAMPLE_SAMPLESCHANGEDATA_H
+#ifndef SWIFT_SAMPLE_SAMPLESCHANGEDATA_H
+#define SWIFT_SAMPLE_SAMPLESCHANGEDATA_H
 
-namespace BlackSample
+namespace swift::sample
 {
     //! Samples for metadata
     class CSamplesChangeObject

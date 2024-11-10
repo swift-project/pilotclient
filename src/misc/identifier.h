@@ -17,7 +17,7 @@
 #include <QUuid>
 #include <QtGlobal>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CIdentifier)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CIdentifier)
 
 namespace swift::misc
 {
@@ -158,14 +158,13 @@ namespace swift::misc
         QString m_processName; //!< process name
         qint64 m_processId; //!< PID
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CIdentifier,
-            BLACK_METAMEMBER(name),
-            BLACK_METAMEMBER(machineIdBase64),
-            BLACK_METAMEMBER(machineName, 0, DisabledForComparison | DisabledForHashing),
-            BLACK_METAMEMBER(processName),
-            BLACK_METAMEMBER(processId)
-        );
+            SWIFT_METAMEMBER(name),
+            SWIFT_METAMEMBER(machineIdBase64),
+            SWIFT_METAMEMBER(machineName, 0, DisabledForComparison | DisabledForHashing),
+            SWIFT_METAMEMBER(processName),
+            SWIFT_METAMEMBER(processId));
     };
 } // namespace
 

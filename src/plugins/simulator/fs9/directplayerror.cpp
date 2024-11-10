@@ -4,7 +4,7 @@
 #include "directplayerror.h"
 #include "misc/logmessage.h"
 
-namespace BlackSimPlugin::Fs9
+namespace swift::simplugin::fs9
 {
     HRESULT logDirectPlayError(HRESULT error)
     {

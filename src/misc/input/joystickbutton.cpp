@@ -3,7 +3,7 @@
 
 #include "misc/input/joystickbutton.h"
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::input, CJoystickButton)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::input, CJoystickButton)
 
 namespace swift::misc::input
 {

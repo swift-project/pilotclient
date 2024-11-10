@@ -1,17 +1,17 @@
 // SPDX-FileCopyrightText: Copyright (C) 2018 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#ifndef BLACKSIMPLUGINFSXP3D_TESTFSXP3DCOMMON_H
-#define BLACKSIMPLUGINFSXP3D_TESTFSXP3DCOMMON_H
+#ifndef SWIFT_SIMPLUGINFSXP3D_TESTFSXP3DCOMMON_H
+#define SWIFT_SIMPLUGINFSXP3D_TESTFSXP3DCOMMON_H
 
 //! \cond PRIVATE_TESTS
 //! \file
-//! \ingroup testblacksimplugin
+//! \ingroup testsimplugin
 
 #include "test.h"
 #include <QObject>
 
-namespace BlackSimPluginFsxP3D
+namespace SwiftSimPluginFsxP3D
 {
     //! FSX/P3D common tests
     class CSimPluginFsxP3d : public QObject

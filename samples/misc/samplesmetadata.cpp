@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <QTextStream>
 
-namespace BlackSample
+namespace swift::sample
 {
     int CSamplesMetadata::samples()
     {

@@ -11,7 +11,7 @@
 #include "misc/settingscache.h"
 #include "misc/valueobject.h"
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::Settings, CFGSwiftBusSettings)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::Settings, CFGSwiftBusSettings)
 
 namespace swift::misc::simulation::settings
 {
@@ -47,10 +47,9 @@ namespace swift::misc::simulation::settings
     private:
         QString m_dBusServerAddress { "tcp:host=127.0.0.1,port=45003" }; //!< DBus server
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CFGSwiftBusSettings,
-            BLACK_METAMEMBER(dBusServerAddress)
-        );
+            SWIFT_METAMEMBER(dBusServerAddress));
     };
 
     /*!

@@ -14,8 +14,8 @@
 #include "misc/valueobject.h"
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CInterpolationAndRenderingSetupGlobal)
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CInterpolationAndRenderingSetupPerCallsign)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CInterpolationAndRenderingSetupGlobal)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CInterpolationAndRenderingSetupPerCallsign)
 
 namespace swift::misc
 {
@@ -210,19 +210,18 @@ namespace swift::misc
             int m_maxRenderedAircraft = InfiniteAircraft(); //!< max.rendered aircraft
             physical_quantities::CLength m_maxRenderedDistance { 0, nullptr }; //!< max.distance for rendering
 
-            BLACK_METACLASS(
+            SWIFT_METACLASS(
                 CInterpolationAndRenderingSetupGlobal,
-                BLACK_METAMEMBER(logInterpolation),
-                BLACK_METAMEMBER(simulatorDebugMessages),
-                BLACK_METAMEMBER(forceFullInterpolation),
-                BLACK_METAMEMBER(sendGndToSim),
-                BLACK_METAMEMBER(enabledAircraftParts),
-                BLACK_METAMEMBER(fixSceneryOffset),
-                BLACK_METAMEMBER(interpolatorMode),
-                BLACK_METAMEMBER(pitchOnGround),
-                BLACK_METAMEMBER(maxRenderedAircraft),
-                BLACK_METAMEMBER(maxRenderedDistance)
-            );
+                SWIFT_METAMEMBER(logInterpolation),
+                SWIFT_METAMEMBER(simulatorDebugMessages),
+                SWIFT_METAMEMBER(forceFullInterpolation),
+                SWIFT_METAMEMBER(sendGndToSim),
+                SWIFT_METAMEMBER(enabledAircraftParts),
+                SWIFT_METAMEMBER(fixSceneryOffset),
+                SWIFT_METAMEMBER(interpolatorMode),
+                SWIFT_METAMEMBER(pitchOnGround),
+                SWIFT_METAMEMBER(maxRenderedAircraft),
+                SWIFT_METAMEMBER(maxRenderedDistance));
         };
 
         //! Value object for interpolator and rendering per callsign
@@ -270,17 +269,16 @@ namespace swift::misc
         private:
             aviation::CCallsign m_callsign;
 
-            BLACK_METACLASS(
+            SWIFT_METACLASS(
                 CInterpolationAndRenderingSetupPerCallsign,
-                BLACK_METAMEMBER(logInterpolation),
-                BLACK_METAMEMBER(simulatorDebugMessages),
-                BLACK_METAMEMBER(forceFullInterpolation),
-                BLACK_METAMEMBER(sendGndToSim),
-                BLACK_METAMEMBER(enabledAircraftParts),
-                BLACK_METAMEMBER(fixSceneryOffset),
-                BLACK_METAMEMBER(interpolatorMode),
-                BLACK_METAMEMBER(pitchOnGround)
-            );
+                SWIFT_METAMEMBER(logInterpolation),
+                SWIFT_METAMEMBER(simulatorDebugMessages),
+                SWIFT_METAMEMBER(forceFullInterpolation),
+                SWIFT_METAMEMBER(sendGndToSim),
+                SWIFT_METAMEMBER(enabledAircraftParts),
+                SWIFT_METAMEMBER(fixSceneryOffset),
+                SWIFT_METAMEMBER(interpolatorMode),
+                SWIFT_METAMEMBER(pitchOnGround));
         };
     } // namespace
 } // namespace

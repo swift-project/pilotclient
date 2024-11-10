@@ -11,7 +11,7 @@
 
 using namespace swift::config;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::db, CUpdateInfo)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::db, CUpdateInfo)
 
 namespace swift::misc::db
 {

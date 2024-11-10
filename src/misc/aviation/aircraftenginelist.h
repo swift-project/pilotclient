@@ -18,7 +18,7 @@
 #include <initializer_list>
 #include <tuple>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftEngine, CAircraftEngineList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftEngine, CAircraftEngineList)
 
 namespace swift::misc::aviation
 {

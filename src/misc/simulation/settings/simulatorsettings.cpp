@@ -17,9 +17,9 @@ using namespace swift::misc::simulation::fscommon;
 using namespace swift::misc::simulation::xplane;
 using namespace swift::misc::simulation::flightgear;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CSimulatorSettings)
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CFsxP3DSettings)
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CSimulatorMessagesSettings)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CSimulatorSettings)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CFsxP3DSettings)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CSimulatorMessagesSettings)
 
 namespace swift::misc::simulation::settings
 {

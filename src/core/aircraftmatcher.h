@@ -109,11 +109,11 @@ namespace swift::core
         //! \remarks model list could be the model set
         //! \threadsafe
         static swift::misc::aviation::CAirlineIcaoCode failoverValidAirlineIcaoDesignatorModelsFirst(const swift::misc::aviation::CCallsign &callsign,
-                                                                                                   const QString &primaryIcao, const QString &secondaryIcao,
-                                                                                                   bool airlineFromCallsign,
-                                                                                                   const QString &airlineName, const QString &airlineTelephony,
-                                                                                                   const swift::misc::simulation::CAircraftModelList &models,
-                                                                                                   swift::misc::CStatusMessageList *log = nullptr);
+                                                                                                     const QString &primaryIcao, const QString &secondaryIcao,
+                                                                                                     bool airlineFromCallsign,
+                                                                                                     const QString &airlineName, const QString &airlineTelephony,
+                                                                                                     const swift::misc::simulation::CAircraftModelList &models,
+                                                                                                     swift::misc::CStatusMessageList *log = nullptr);
 
         //! Run the network reverse lookup script
         //! \threadsafe
@@ -127,21 +127,21 @@ namespace swift::core
         //! Run the matching script
         //! \threadsafe
         static swift::misc::simulation::MatchingScriptReturnValues matchingScript(const QString &js,
-                                                                                const swift::misc::simulation::CAircraftModel &inModel, const swift::misc::simulation::CAircraftModel &matchedModel, const swift::misc::simulation::CAircraftMatcherSetup &setup,
-                                                                                const swift::misc::simulation::CAircraftModelList &modelSet, swift::misc::simulation::MatchingScript ms,
-                                                                                swift::misc::CStatusMessageList *log);
+                                                                                  const swift::misc::simulation::CAircraftModel &inModel, const swift::misc::simulation::CAircraftModel &matchedModel, const swift::misc::simulation::CAircraftMatcherSetup &setup,
+                                                                                  const swift::misc::simulation::CAircraftModelList &modelSet, swift::misc::simulation::MatchingScript ms,
+                                                                                  swift::misc::CStatusMessageList *log);
 
         //! Try to find the corresponding data in DB and get best information for given data
         //! \threadsafe
         //! \ingroup reverselookup
         //! \remark NOT running matching script
         static swift::misc::simulation::CAircraftModel reverseLookupModel(const swift::misc::aviation::CCallsign &callsign,
-                                                                        const swift::misc::aviation::CAircraftIcaoCode &networkAircraftIcao,
-                                                                        const swift::misc::aviation::CAirlineIcaoCode &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString,
-                                                                        const swift::misc::simulation::CAircraftMatcherSetup &setup,
-                                                                        const swift::misc::simulation::CAircraftModelList &modelSet,
-                                                                        swift::misc::simulation::CAircraftModel::ModelType type,
-                                                                        swift::misc::CStatusMessageList *log);
+                                                                          const swift::misc::aviation::CAircraftIcaoCode &networkAircraftIcao,
+                                                                          const swift::misc::aviation::CAirlineIcaoCode &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString,
+                                                                          const swift::misc::simulation::CAircraftMatcherSetup &setup,
+                                                                          const swift::misc::simulation::CAircraftModelList &modelSet,
+                                                                          swift::misc::simulation::CAircraftModel::ModelType type,
+                                                                          swift::misc::CStatusMessageList *log);
 
         //! Try to find the corresponding data in DB and get best information for following matching
         //! \threadsafe

@@ -3,10 +3,10 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_REGISTERMETADATA_H
-#define BLACKSIMPLUGIN_REGISTERMETADATA_H
+#ifndef SWIFT_SIMPLUGIN_REGISTERMETADATA_H
+#define SWIFT_SIMPLUGIN_REGISTERMETADATA_H
 
-namespace BlackSimPlugin::Fs9
+namespace swift::simplugin::fs9
 {
     //! Register all relevant metadata in plugin
     void registerMetadata();

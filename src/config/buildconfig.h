@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKCONFIG_BUILDCONFIG_H
-#define BLACKCONFIG_BUILDCONFIG_H
+#ifndef SWIFT_CONFIG_BUILDCONFIG_H
+#define SWIFT_CONFIG_BUILDCONFIG_H
 
 #include <QList>
 #include <QStringList>

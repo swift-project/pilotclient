@@ -18,7 +18,7 @@ namespace swift::core
 {
     class ISimulator;
 }
-namespace BlackSimPlugin::Fs9
+namespace swift::simplugin::fs9
 {
     //! Class faking a FS9 multiplayer client connection
     class CFs9Client : public CDirectPlayPeer
@@ -68,7 +68,7 @@ namespace BlackSimPlugin::Fs9
 
     signals:
         //! Client status changed
-        void statusChanged(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft, BlackSimPlugin::Fs9::CFs9Client::ClientStatus);
+        void statusChanged(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft, swift::simplugin::fs9::CFs9Client::ClientStatus);
 
     protected:
         //! \copydoc QObject::timerEvent
@@ -112,6 +112,6 @@ namespace BlackSimPlugin::Fs9
     };
 } // ns
 
-Q_DECLARE_METATYPE(BlackSimPlugin::Fs9::CFs9Client::ClientStatus)
+Q_DECLARE_METATYPE(swift::simplugin::fs9::CFs9Client::ClientStatus)
 
 #endif // guard

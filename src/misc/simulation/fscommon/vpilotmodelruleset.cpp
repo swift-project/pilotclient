@@ -11,7 +11,7 @@
 #include <Qt>
 #include <tuple>
 
-BLACK_DEFINE_COLLECTION_MIXINS(swift::misc::simulation::fscommon, CVPilotModelRule, CVPilotModelRuleSet)
+SWIFT_DEFINE_COLLECTION_MIXINS(swift::misc::simulation::fscommon, CVPilotModelRule, CVPilotModelRuleSet)
 
 namespace swift::misc::simulation::fscommon
 {

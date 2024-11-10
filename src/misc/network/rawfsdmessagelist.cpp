@@ -3,7 +3,7 @@
 
 #include "misc/network/rawfsdmessagelist.h"
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CRawFsdMessage, CRawFsdMessageList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CRawFsdMessage, CRawFsdMessageList)
 
 namespace swift::misc::network
 {

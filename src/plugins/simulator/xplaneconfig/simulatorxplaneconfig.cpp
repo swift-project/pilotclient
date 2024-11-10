@@ -6,7 +6,7 @@
 
 class QWidget;
 
-namespace BlackSimPlugin::XPlane
+namespace swift::simplugin::xplane
 {
     CSimulatorXPlaneConfig::CSimulatorXPlaneConfig(QObject *parent) : QObject(parent)
     {

@@ -4,12 +4,12 @@
 //! \file
 //! \ingroup samplemiscsim
 
-#ifndef BLACKSAMPLE_SAMPLESP3D_H
-#define BLACKSAMPLE_SAMPLESP3D_H
+#ifndef SWIFT_SAMPLE_SAMPLESP3D_H
+#define SWIFT_SAMPLE_SAMPLESP3D_H
 
 class QTextStream;
 
-namespace BlackSample
+namespace swift::sample
 {
     //! Samples for P3D classes
     class CSamplesP3D

@@ -10,7 +10,7 @@ using namespace swift::misc;
 using namespace swift::misc::physical_quantities;
 using namespace swift::gui;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CViewUpdateSettings)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CViewUpdateSettings)
 
 namespace swift::gui::settings
 {

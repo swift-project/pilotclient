@@ -13,7 +13,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftEngine)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftEngine)
 
 namespace swift::misc::aviation
 {
@@ -49,11 +49,10 @@ namespace swift::misc::aviation
         int m_number = 1;
         bool m_on = true;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CAircraftEngine,
-            BLACK_METAMEMBER(number, 0, DisabledForJson),
-            BLACK_METAMEMBER(on)
-        );
+            SWIFT_METAMEMBER(number, 0, DisabledForJson),
+            SWIFT_METAMEMBER(on));
     };
 } // namespace
 

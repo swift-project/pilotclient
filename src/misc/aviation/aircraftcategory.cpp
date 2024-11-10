@@ -17,7 +17,7 @@
 using namespace swift::misc;
 using namespace swift::misc::db;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftCategory)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftCategory)
 
 namespace swift::misc::aviation
 {

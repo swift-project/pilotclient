@@ -16,7 +16,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CRawFsdMessage)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CRawFsdMessage)
 
 namespace swift::misc::network
 {
@@ -65,11 +65,10 @@ namespace swift::misc::network
     private:
         QString m_rawMessage;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CRawFsdMessage,
-            BLACK_METAMEMBER(rawMessage),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch)
-        );
+            SWIFT_METAMEMBER(rawMessage),
+            SWIFT_METAMEMBER(timestampMSecsSinceEpoch));
     };
 } // namespace
 

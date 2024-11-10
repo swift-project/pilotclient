@@ -16,7 +16,7 @@
 #include <QAudioDevice>
 #include <QStringList>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::audio, CAudioDeviceInfo, CAudioDeviceInfoList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::audio, CAudioDeviceInfo, CAudioDeviceInfoList)
 
 namespace swift::misc::audio
 {

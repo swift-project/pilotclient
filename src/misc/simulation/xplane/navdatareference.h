@@ -24,8 +24,8 @@
 #include <array>
 #include <tuple>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::XPlane, CNavDataReference)
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::simulation::XPlane, CNavDataReference, CNavDataReferenceList)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::XPlane, CNavDataReference)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::simulation::XPlane, CNavDataReference, CNavDataReferenceList)
 
 namespace swift::misc::simulation::xplane
 {
@@ -66,11 +66,10 @@ namespace swift::misc::simulation::xplane
         int m_id = 0;
         geo::CCoordinateGeodetic m_position;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CNavDataReference,
-            BLACK_METAMEMBER(id),
-            BLACK_METAMEMBER(position)
-        );
+            SWIFT_METAMEMBER(id),
+            SWIFT_METAMEMBER(position));
     };
 
     /*!

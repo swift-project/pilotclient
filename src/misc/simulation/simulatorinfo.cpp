@@ -21,7 +21,7 @@ using namespace swift::misc::db;
 using namespace swift::misc::simulation::fscommon;
 using namespace swift::misc::simulation::xplane;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatorInfo)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatorInfo)
 
 namespace swift::misc::simulation
 {

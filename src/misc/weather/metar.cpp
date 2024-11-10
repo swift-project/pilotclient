@@ -12,7 +12,7 @@
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::aviation;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::weather, CMetar)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::weather, CMetar)
 
 namespace swift::misc::weather
 {

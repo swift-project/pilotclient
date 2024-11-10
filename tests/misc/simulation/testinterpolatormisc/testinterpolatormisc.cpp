@@ -121,7 +121,7 @@ namespace MiscTest
 } // namespace
 
 //! main
-BLACKTEST_MAIN(MiscTest::CTestInterpolatorMisc);
+SWIFTTEST_MAIN(MiscTest::CTestInterpolatorMisc);
 
 #include "testinterpolatormisc.moc"
 

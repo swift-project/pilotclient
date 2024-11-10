@@ -31,8 +31,8 @@
 #include <QTime>
 #include <QtGlobal>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Aviation, CFlightPlanRemarks)
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Aviation, CFlightPlan)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Aviation, CFlightPlanRemarks)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Aviation, CFlightPlan)
 
 namespace swift::misc::aviation
 {
@@ -124,17 +124,16 @@ namespace swift::misc::aviation
         network::CVoiceCapabilities m_voiceCapabilities; //!< voice capabilities
         bool m_isParsed = false; //!< marked as parsed
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CFlightPlanRemarks,
-            BLACK_METAMEMBER(remarks, 0, DisabledForComparison),
-            BLACK_METAMEMBER(radioTelephony),
-            BLACK_METAMEMBER(flightOperator),
-            BLACK_METAMEMBER(airlineIcao),
-            BLACK_METAMEMBER(selcalCode),
-            BLACK_METAMEMBER(registration),
-            BLACK_METAMEMBER(isParsed),
-            BLACK_METAMEMBER(voiceCapabilities)
-        );
+            SWIFT_METAMEMBER(remarks, 0, DisabledForComparison),
+            SWIFT_METAMEMBER(radioTelephony),
+            SWIFT_METAMEMBER(flightOperator),
+            SWIFT_METAMEMBER(airlineIcao),
+            SWIFT_METAMEMBER(selcalCode),
+            SWIFT_METAMEMBER(registration),
+            SWIFT_METAMEMBER(isParsed),
+            SWIFT_METAMEMBER(voiceCapabilities));
 
         //! Cut the remarks part
         static QString getRemark(const QString &remarks, const QString &marker);
@@ -425,25 +424,24 @@ namespace swift::misc::aviation
         //! As string
         QString buildString(bool i18n = false, const QString &separator = " ") const;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CFlightPlan,
             // callsign will be current flight
-            BLACK_METAMEMBER(aircraftInfo),
-            BLACK_METAMEMBER(originAirportIcao),
-            BLACK_METAMEMBER(destinationAirportIcao),
-            BLACK_METAMEMBER(alternateAirportIcao),
-            BLACK_METAMEMBER(takeoffTimePlanned),
-            BLACK_METAMEMBER(takeoffTimeActual),
-            BLACK_METAMEMBER(enrouteTime, 0, LosslessMarshalling),
-            BLACK_METAMEMBER(fuelTime, 0, LosslessMarshalling),
-            BLACK_METAMEMBER(cruiseAltitude, 0, LosslessMarshalling),
-            BLACK_METAMEMBER(cruiseAltitudeString),
-            BLACK_METAMEMBER(cruiseTrueAirspeed, 0, LosslessMarshalling),
-            BLACK_METAMEMBER(flightRules),
-            BLACK_METAMEMBER(route),
-            BLACK_METAMEMBER(remarks),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch)
-        );
+            SWIFT_METAMEMBER(aircraftInfo),
+            SWIFT_METAMEMBER(originAirportIcao),
+            SWIFT_METAMEMBER(destinationAirportIcao),
+            SWIFT_METAMEMBER(alternateAirportIcao),
+            SWIFT_METAMEMBER(takeoffTimePlanned),
+            SWIFT_METAMEMBER(takeoffTimeActual),
+            SWIFT_METAMEMBER(enrouteTime, 0, LosslessMarshalling),
+            SWIFT_METAMEMBER(fuelTime, 0, LosslessMarshalling),
+            SWIFT_METAMEMBER(cruiseAltitude, 0, LosslessMarshalling),
+            SWIFT_METAMEMBER(cruiseAltitudeString),
+            SWIFT_METAMEMBER(cruiseTrueAirspeed, 0, LosslessMarshalling),
+            SWIFT_METAMEMBER(flightRules),
+            SWIFT_METAMEMBER(route),
+            SWIFT_METAMEMBER(remarks),
+            SWIFT_METAMEMBER(timestampMSecsSinceEpoch));
     };
 } // namespace
 

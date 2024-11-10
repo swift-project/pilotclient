@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_SIMULATOR_FSXFACTORY_H
-#define BLACKSIMPLUGIN_SIMULATOR_FSXFACTORY_H
+#ifndef SWIFT_SIMPLUGIN_SIMULATOR_FSXFACTORY_H
+#define SWIFT_SIMPLUGIN_SIMULATOR_FSXFACTORY_H
 
 #include "core/simulator.h"
 #include "misc/simulation/simulatorplugininfo.h"
@@ -12,7 +12,7 @@
 #include <QObject>
 #include <QtPlugin>
 
-namespace BlackSimPlugin::Fsx
+namespace swift::simplugin::fsx
 {
     //! Factory implementation to create CSimulatorFsx instances
     class CSimulatorFsxFactory :
@@ -26,9 +26,9 @@ namespace BlackSimPlugin::Fsx
     public:
         //! \copydoc swift::core::ISimulatorFactory::create
         virtual swift::core::ISimulator *create(const swift::misc::simulation::CSimulatorPluginInfo &info,
-                                              swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
-                                              swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                                              swift::misc::network::IClientProvider *clientProvider) override;
+                                                swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
+                                                swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                                                swift::misc::network::IClientProvider *clientProvider) override;
 
         //! \copydoc swift::core::ISimulatorFactory::createListener
         virtual swift::core::ISimulatorListener *createListener(const swift::misc::simulation::CSimulatorPluginInfo &info) override;

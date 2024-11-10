@@ -15,7 +15,7 @@
 #include <QString>
 #include <tuple>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CCallsign)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CCallsign)
 
 namespace swift::misc
 {
@@ -224,13 +224,12 @@ namespace swift::misc
             QString m_telephonyDesignator;
             TypeHint m_typeHint = NoHint;
 
-            BLACK_METACLASS(
+            SWIFT_METACLASS(
                 CCallsign,
-                BLACK_METAMEMBER(callsign, 0, CaseInsensitiveComparison),
-                BLACK_METAMEMBER(callsignAsSet, 0, DisabledForComparison | DisabledForHashing),
-                BLACK_METAMEMBER(telephonyDesignator, 0, DisabledForComparison | DisabledForHashing),
-                BLACK_METAMEMBER(typeHint, 0, DisabledForComparison | DisabledForHashing)
-            );
+                SWIFT_METAMEMBER(callsign, 0, CaseInsensitiveComparison),
+                SWIFT_METAMEMBER(callsignAsSet, 0, DisabledForComparison | DisabledForHashing),
+                SWIFT_METAMEMBER(telephonyDesignator, 0, DisabledForComparison | DisabledForHashing),
+                SWIFT_METAMEMBER(typeHint, 0, DisabledForComparison | DisabledForHashing));
         };
     } // namespace
 } // namespace

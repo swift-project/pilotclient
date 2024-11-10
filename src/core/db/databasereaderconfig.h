@@ -21,7 +21,7 @@
 #include <QTimer>
 #include <QtGlobal>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::core::db, CDatabaseReaderConfig)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::core::db, CDatabaseReaderConfig)
 
 namespace swift::core::db
 {
@@ -76,15 +76,15 @@ namespace swift::core::db
         int m_retrievalMode = swift::misc::db::CDbFlags::DbReading; //!< swift::misc::db::CDbFlags::DataRetrievalMode
         swift::misc::physical_quantities::CTime m_cacheLifetime;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CDatabaseReaderConfig,
-            BLACK_METAMEMBER(entities),
-            BLACK_METAMEMBER(retrievalMode),
-            BLACK_METAMEMBER(cacheLifetime));
+            SWIFT_METAMEMBER(entities),
+            SWIFT_METAMEMBER(retrievalMode),
+            SWIFT_METAMEMBER(cacheLifetime));
     };
 }
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::core::db, CDatabaseReaderConfig, CDatabaseReaderConfigList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::core::db, CDatabaseReaderConfig, CDatabaseReaderConfigList)
 
 namespace swift::core::db
 {

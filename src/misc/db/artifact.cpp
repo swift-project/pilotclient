@@ -10,7 +10,7 @@
 using namespace swift::config;
 using namespace swift::misc::network;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::db, CArtifact)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::db, CArtifact)
 
 namespace swift::misc::db
 {

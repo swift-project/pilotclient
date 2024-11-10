@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSOUND_SAMPLEPROVIDER_H
-#define BLACKSOUND_SAMPLEPROVIDER_H
+#ifndef SWIFT_SOUND_SAMPLEPROVIDER_H
+#define SWIFT_SOUND_SAMPLEPROVIDER_H
 
 #include "config/buildconfig.h"
 #include "sound/swiftsoundexport.h"

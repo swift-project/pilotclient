@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_XSWIFTBUS_SERVICE_PROXY_H
-#define BLACKSIMPLUGIN_XSWIFTBUS_SERVICE_PROXY_H
+#ifndef SWIFT_SIMPLUGIN_XSWIFTBUS_SERVICE_PROXY_H
+#define SWIFT_SIMPLUGIN_XSWIFTBUS_SERVICE_PROXY_H
 
 #include "misc/genericdbusinterface.h"
 
@@ -26,7 +26,7 @@ class QDBusPendingCallWatcher;
 #define XSWIFTBUS_SERVICE_OBJECTPATH "/xswiftbus/service"
 //! \endcond
 
-namespace BlackSimPlugin::XPlane
+namespace swift::simplugin::xplane
 {
     struct XPlaneData;
 
@@ -78,7 +78,7 @@ namespace BlackSimPlugin::XPlane
 
     signals:
         //! Emitted if an asynchronous method call caused a DBus error
-        BLACK_NO_RELAY void asyncMethodError(QDBusError error);
+        SWIFT_NO_RELAY void asyncMethodError(QDBusError error);
 
         //! Own aircraft model changed
         void aircraftModelChanged(
@@ -99,28 +99,28 @@ namespace BlackSimPlugin::XPlane
         QString getCommitHash();
 
         //! Get own aircraft situation data
-        void getOwnAircraftSituationDataAsync(BlackSimPlugin::XPlane::XPlaneData *o_xplaneData);
+        void getOwnAircraftSituationDataAsync(swift::simplugin::xplane::XPlaneData *o_xplaneData);
 
         //! Get own aircraft velocity data
-        void getOwnAircraftVelocityDataAsync(BlackSimPlugin::XPlane::XPlaneData *o_xplaneData);
+        void getOwnAircraftVelocityDataAsync(swift::simplugin::xplane::XPlaneData *o_xplaneData);
 
         //! Get own aircraft COM1 data
-        void getOwnAircraftCom1DataAsync(BlackSimPlugin::XPlane::XPlaneData *o_xplaneData);
+        void getOwnAircraftCom1DataAsync(swift::simplugin::xplane::XPlaneData *o_xplaneData);
 
         //! Get own aircraft COM2 data
-        void getOwnAircraftCom2DataAsync(BlackSimPlugin::XPlane::XPlaneData *o_xplaneData);
+        void getOwnAircraftCom2DataAsync(swift::simplugin::xplane::XPlaneData *o_xplaneData);
 
         //! Get own XPDR data
-        void getOwnAircraftXpdrAsync(BlackSimPlugin::XPlane::XPlaneData *o_xplaneData);
+        void getOwnAircraftXpdrAsync(swift::simplugin::xplane::XPlaneData *o_xplaneData);
 
         //! Get own lights data
-        void getOwnAircraftLightsAsync(BlackSimPlugin::XPlane::XPlaneData *o_xplaneData);
+        void getOwnAircraftLightsAsync(swift::simplugin::xplane::XPlaneData *o_xplaneData);
 
         //! Get own parts such as gear, flaps
-        void getOwnAircraftPartsAsync(BlackSimPlugin::XPlane::XPlaneData *o_xplaneData);
+        void getOwnAircraftPartsAsync(swift::simplugin::xplane::XPlaneData *o_xplaneData);
 
         //! Get own model data
-        void getOwnAircraftModelDataAsync(BlackSimPlugin::XPlane::XPlaneData *o_xplaneData);
+        void getOwnAircraftModelDataAsync(swift::simplugin::xplane::XPlaneData *o_xplaneData);
 
         //! \copydoc XSwiftBus::CService::addTextMessage
         void addTextMessage(const QString &text, double red, double green, double blue);

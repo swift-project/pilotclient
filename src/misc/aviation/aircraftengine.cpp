@@ -6,7 +6,7 @@
 
 #include <QtGlobal>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftEngine)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftEngine)
 
 namespace swift::misc::aviation
 {

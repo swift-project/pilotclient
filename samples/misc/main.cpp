@@ -20,7 +20,7 @@
 //! \ingroup samplekmisc
 
 using namespace swift::misc;
-using namespace BlackSample;
+using namespace swift::sample;
 using namespace swift::core;
 
 //! main

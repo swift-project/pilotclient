@@ -9,7 +9,7 @@ using namespace swift::misc::network;
 using namespace swift::misc::simulation;
 using namespace swift::core;
 
-namespace BlackSimPlugin::Fsx
+namespace swift::simplugin::fsx
 {
     ISimulator *CSimulatorFsxFactory::create(const CSimulatorPluginInfo &info,
                                              IOwnAircraftProvider *ownAircraftProvider,

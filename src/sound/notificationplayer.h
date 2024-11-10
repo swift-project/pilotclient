@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSOUND_NOTIFICATIONPLAYER_H
-#define BLACKSOUND_NOTIFICATIONPLAYER_H
+#ifndef SWIFT_SOUND_NOTIFICATIONPLAYER_H
+#define SWIFT_SOUND_NOTIFICATIONPLAYER_H
 
 #include "sound/swiftsoundexport.h"
 #include "misc/audio/notificationsounds.h"

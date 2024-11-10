@@ -20,7 +20,7 @@
 #include <QPair>
 #include <QHash>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftSituation, CAircraftSituationList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftSituation, CAircraftSituationList)
 
 namespace swift::misc
 {

@@ -17,7 +17,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::weather, CWindLayer)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::weather, CWindLayer)
 
 namespace swift::misc::weather
 {
@@ -114,16 +114,15 @@ namespace swift::misc::weather
         physical_quantities::CSpeed m_speed;
         physical_quantities::CSpeed m_gustSpeed;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CWindLayer,
-            BLACK_METAMEMBER(level),
-            BLACK_METAMEMBER(directionMain),
-            BLACK_METAMEMBER(directionFrom),
-            BLACK_METAMEMBER(directionTo),
-            BLACK_METAMEMBER(directionVariable),
-            BLACK_METAMEMBER(speed),
-            BLACK_METAMEMBER(gustSpeed)
-        );
+            SWIFT_METAMEMBER(level),
+            SWIFT_METAMEMBER(directionMain),
+            SWIFT_METAMEMBER(directionFrom),
+            SWIFT_METAMEMBER(directionTo),
+            SWIFT_METAMEMBER(directionVariable),
+            SWIFT_METAMEMBER(speed),
+            SWIFT_METAMEMBER(gustSpeed));
     };
 
 } // namespace

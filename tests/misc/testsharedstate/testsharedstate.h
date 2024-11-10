@@ -32,7 +32,7 @@ namespace MiscTest
 
     private:
         unsigned m_mask = ~0u;
-        BLACK_METACLASS(CTestFilter, BLACK_METAMEMBER(mask));
+        SWIFT_METACLASS(CTestFilter, SWIFT_METAMEMBER(mask));
     };
 }
 
@@ -46,7 +46,7 @@ namespace MiscTest
     class CTestScalarMutator : public swift::misc::shared_state::CScalarMutator<int>
     {
         Q_OBJECT
-        BLACK_SHARED_STATE_CHANNEL("test_scalar_channel")
+        SWIFT_SHARED_STATE_CHANNEL("test_scalar_channel")
     public:
         //! Ctor
         CTestScalarMutator(QObject *parent) : CScalarMutator(parent) {}
@@ -56,7 +56,7 @@ namespace MiscTest
     class CTestScalarJournal : public swift::misc::shared_state::CScalarJournal<int>
     {
         Q_OBJECT
-        BLACK_SHARED_STATE_CHANNEL("test_scalar_channel")
+        SWIFT_SHARED_STATE_CHANNEL("test_scalar_channel")
     public:
         //! Ctor
         CTestScalarJournal(QObject *parent) : CScalarJournal(parent) {}
@@ -66,7 +66,7 @@ namespace MiscTest
     class CTestScalarObserver : public swift::misc::shared_state::CScalarObserver<int>
     {
         Q_OBJECT
-        BLACK_SHARED_STATE_CHANNEL("test_scalar_channel")
+        SWIFT_SHARED_STATE_CHANNEL("test_scalar_channel")
     public:
         //! Ctor
         CTestScalarObserver(QObject *parent) : CScalarObserver(parent) {}
@@ -77,7 +77,7 @@ namespace MiscTest
     class CTestListMutator : public swift::misc::shared_state::CListMutator<QList<int>>
     {
         Q_OBJECT
-        BLACK_SHARED_STATE_CHANNEL("test_list_channel")
+        SWIFT_SHARED_STATE_CHANNEL("test_list_channel")
     public:
         //! Ctor
         CTestListMutator(QObject *parent) : CListMutator(parent) {}
@@ -87,7 +87,7 @@ namespace MiscTest
     class CTestListJournal : public swift::misc::shared_state::CListJournal<QList<int>>
     {
         Q_OBJECT
-        BLACK_SHARED_STATE_CHANNEL("test_list_channel")
+        SWIFT_SHARED_STATE_CHANNEL("test_list_channel")
     public:
         //! Ctor
         CTestListJournal(QObject *parent) : CListJournal(parent) {}
@@ -97,7 +97,7 @@ namespace MiscTest
     class CTestListObserver : public swift::misc::shared_state::CListObserver<QList<int>, CTestFilter>
     {
         Q_OBJECT
-        BLACK_SHARED_STATE_CHANNEL("test_list_channel")
+        SWIFT_SHARED_STATE_CHANNEL("test_list_channel")
     public:
         //! Ctor
         CTestListObserver(QObject *parent) : CListObserver(parent) {}

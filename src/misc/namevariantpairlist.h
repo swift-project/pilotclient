@@ -15,7 +15,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc, CNameVariantPair, CNameVariantPairList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc, CNameVariantPair, CNameVariantPairList)
 
 namespace swift::misc
 {

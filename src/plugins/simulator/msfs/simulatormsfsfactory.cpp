@@ -9,7 +9,7 @@ using namespace swift::misc::network;
 using namespace swift::misc::simulation;
 using namespace swift::core;
 
-namespace BlackSimPlugin::Msfs
+namespace swift::simplugin::msfs
 {
     ISimulator *CSimulatorMsFsFactory::create(const CSimulatorPluginInfo &info,
                                               IOwnAircraftProvider *ownAircraftProvider,

@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSOUND_CODECS_OPUSDECODER_H
-#define BLACKSOUND_CODECS_OPUSDECODER_H
+#ifndef SWIFT_SOUND_CODECS_OPUSDECODER_H
+#define SWIFT_SOUND_CODECS_OPUSDECODER_H
 
 #include "sound/swiftsoundexport.h"
 #include "opus/opus.h"

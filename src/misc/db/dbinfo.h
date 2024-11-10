@@ -11,7 +11,7 @@
 #include "misc/valueobject.h"
 #include "misc/swiftmiscexport.h"
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::db, CDbInfo)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::db, CDbInfo)
 
 namespace swift::misc::db
 {
@@ -102,13 +102,12 @@ namespace swift::misc::db
         int m_entries; //!< number of entries
         network::CEntityFlags::Entity m_entity = network::CEntityFlags::NoEntity; //!< lazy initialized entity
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CDbInfo,
-            BLACK_METAMEMBER(dbKey),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch),
-            BLACK_METAMEMBER(tableName),
-            BLACK_METAMEMBER(entries)
-        );
+            SWIFT_METAMEMBER(dbKey),
+            SWIFT_METAMEMBER(timestampMSecsSinceEpoch),
+            SWIFT_METAMEMBER(tableName),
+            SWIFT_METAMEMBER(entries));
     };
 } // namespace
 

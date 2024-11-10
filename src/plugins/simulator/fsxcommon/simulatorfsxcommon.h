@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_FSXCOMMON_SIMULATORFSXCOMMON_H
-#define BLACKSIMPLUGIN_FSXCOMMON_SIMULATORFSXCOMMON_H
+#ifndef SWIFT_SIMPLUGIN_FSXCOMMON_SIMULATORFSXCOMMON_H
+#define SWIFT_SIMPLUGIN_FSXCOMMON_SIMULATORFSXCOMMON_H
 
 #include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 #include "plugins/simulator/fsxcommon/simconnectdatadefinition.h"
@@ -31,7 +31,7 @@
 #include <QList>
 #include <QFutureWatcher>
 
-namespace BlackSimPlugin::FsxCommon
+namespace swift::simplugin::fsxcommon
 {
     //! SimConnect Event IDs
     enum EventIds
@@ -115,7 +115,7 @@ namespace BlackSimPlugin::FsxCommon
     };
 
     //! FSX Simulator Implementation
-    class FSXCOMMON_EXPORT CSimulatorFsxCommon : public FsCommon::CSimulatorFsCommon
+    class FSXCOMMON_EXPORT CSimulatorFsxCommon : public fscommon::CSimulatorFsCommon
     {
         Q_OBJECT
         Q_INTERFACES(swift::core::ISimulator)
@@ -469,7 +469,7 @@ namespace BlackSimPlugin::FsxCommon
         void updateProbeFromSimulator(const swift::misc::aviation::CCallsign &callsign, const DataDefinitionPosData &remoteAircraftData);
 
         //! Customization point for adjusting altitude to compensate for temperature effect
-        virtual void setTrueAltitude(swift::misc::aviation::CAircraftSituation &aircraftSituation, const BlackSimPlugin::FsxCommon::DataDefinitionOwnAircraft &simulatorOwnAircraft);
+        virtual void setTrueAltitude(swift::misc::aviation::CAircraftSituation &aircraftSituation, const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft);
 
         //! Called when data about our own aircraft are received
         void updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft);

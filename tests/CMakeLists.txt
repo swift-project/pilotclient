@@ -10,5 +10,5 @@ add_subdirectory(gui)
 add_subdirectory(misc)
 
 if(SWIFT_BUILD_FSX_PLUGIN)
-    add_subdirectory(blacksimpluginfsxp3d)
+    add_subdirectory(swiftsimpluginfsxp3d)
 endif()

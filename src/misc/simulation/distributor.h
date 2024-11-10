@@ -21,7 +21,7 @@
 #include <QSet>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CDistributor)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CDistributor)
 
 namespace swift::misc::simulation
 {
@@ -141,17 +141,16 @@ namespace swift::misc::simulation
         //! "Clean up" the keys, like X-CSL => XCSL
         static QString unifyKeyOrAlias(const QString &value);
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CDistributor,
-            BLACK_METAMEMBER(dbKey, 0, CaseInsensitiveComparison),
-            BLACK_METAMEMBER(loadedFromDb),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch),
-            BLACK_METAMEMBER(order),
-            BLACK_METAMEMBER(description),
-            BLACK_METAMEMBER(alias1, 0, CaseInsensitiveComparison),
-            BLACK_METAMEMBER(alias2, 0, CaseInsensitiveComparison),
-            BLACK_METAMEMBER(simulator)
-        );
+            SWIFT_METAMEMBER(dbKey, 0, CaseInsensitiveComparison),
+            SWIFT_METAMEMBER(loadedFromDb),
+            SWIFT_METAMEMBER(timestampMSecsSinceEpoch),
+            SWIFT_METAMEMBER(order),
+            SWIFT_METAMEMBER(description),
+            SWIFT_METAMEMBER(alias1, 0, CaseInsensitiveComparison),
+            SWIFT_METAMEMBER(alias2, 0, CaseInsensitiveComparison),
+            SWIFT_METAMEMBER(simulator));
     };
 
     //! Distributor/id map

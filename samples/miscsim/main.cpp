@@ -22,7 +22,7 @@
 #include <QtGlobal>
 
 using namespace swift::misc;
-using namespace BlackSample;
+using namespace swift::sample;
 
 //! main
 int main(int argc, char *argv[])

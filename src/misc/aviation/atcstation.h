@@ -28,7 +28,7 @@
 #include <array>
 #include <tuple>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAtcStation)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAtcStation)
 
 namespace swift::misc::aviation
 {
@@ -241,21 +241,20 @@ namespace swift::misc::aviation
         CInformationMessage m_atis { CInformationMessage::ATIS };
         CInformationMessage m_metar { CInformationMessage::METAR };
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CAtcStation,
-            BLACK_METAMEMBER(callsign),
-            BLACK_METAMEMBER(controller),
-            BLACK_METAMEMBER(frequency),
-            BLACK_METAMEMBER(position),
-            BLACK_METAMEMBER(range),
-            BLACK_METAMEMBER(isOnline),
-            BLACK_METAMEMBER(isAfvCrossCoupled),
-            BLACK_METAMEMBER(logoffTimeUtc),
-            BLACK_METAMEMBER(atis),
-            BLACK_METAMEMBER(metar),
-            BLACK_METAMEMBER(relativeDistance),
-            BLACK_METAMEMBER(relativeBearing)
-        );
+            SWIFT_METAMEMBER(callsign),
+            SWIFT_METAMEMBER(controller),
+            SWIFT_METAMEMBER(frequency),
+            SWIFT_METAMEMBER(position),
+            SWIFT_METAMEMBER(range),
+            SWIFT_METAMEMBER(isOnline),
+            SWIFT_METAMEMBER(isAfvCrossCoupled),
+            SWIFT_METAMEMBER(logoffTimeUtc),
+            SWIFT_METAMEMBER(atis),
+            SWIFT_METAMEMBER(metar),
+            SWIFT_METAMEMBER(relativeDistance),
+            SWIFT_METAMEMBER(relativeBearing));
     };
 } // namespace
 

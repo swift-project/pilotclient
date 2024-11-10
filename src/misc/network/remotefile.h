@@ -17,7 +17,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CRemoteFile)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CRemoteFile)
 
 namespace swift::misc::network
 {
@@ -129,15 +129,14 @@ namespace swift::misc::network
         qint64 m_size = 0;
         qint64 m_created = 0;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CRemoteFile,
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch),
-            BLACK_METAMEMBER(name),
-            BLACK_METAMEMBER(description),
-            BLACK_METAMEMBER(url),
-            BLACK_METAMEMBER(size),
-            BLACK_METAMEMBER(created)
-        );
+            SWIFT_METAMEMBER(timestampMSecsSinceEpoch),
+            SWIFT_METAMEMBER(name),
+            SWIFT_METAMEMBER(description),
+            SWIFT_METAMEMBER(url),
+            SWIFT_METAMEMBER(size),
+            SWIFT_METAMEMBER(created));
     };
 } // ns
 

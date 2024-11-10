@@ -15,7 +15,7 @@ using namespace swift::misc::aviation;
 using namespace swift::misc::simulation;
 using namespace swift::core;
 
-namespace BlackSimPlugin::FsxCommon
+namespace swift::simplugin::fsxcommon
 {
     CSimConnectObject::CSimConnectObject()
     {

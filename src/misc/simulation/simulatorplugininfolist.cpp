@@ -7,7 +7,7 @@
 
 #include <algorithm>
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CSimulatorPluginInfo, CSimulatorPluginInfoList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CSimulatorPluginInfo, CSimulatorPluginInfoList)
 
 namespace swift::misc::simulation
 {

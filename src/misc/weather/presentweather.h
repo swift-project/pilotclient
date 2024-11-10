@@ -17,7 +17,7 @@
 #include <QString>
 #include <tuple>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::weather, CPresentWeather)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::weather, CPresentWeather)
 
 namespace swift::misc::weather
 {
@@ -128,12 +128,11 @@ namespace swift::misc::weather
         Descriptor m_descriptor = None;
         int m_weatherPhenomena;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CPresentWeather,
-            BLACK_METAMEMBER(intensity),
-            BLACK_METAMEMBER(descriptor),
-            BLACK_METAMEMBER(weatherPhenomena)
-        );
+            SWIFT_METAMEMBER(intensity),
+            SWIFT_METAMEMBER(descriptor),
+            SWIFT_METAMEMBER(weatherPhenomena));
     };
 
 } // namespace

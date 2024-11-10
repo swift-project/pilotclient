@@ -33,7 +33,7 @@
 #include <QMultiMap>
 #include <atomic>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::Simulation, CAircraftModel, CAircraftModelList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::Simulation, CAircraftModel, CAircraftModelList)
 
 namespace swift::misc
 {

@@ -4,12 +4,12 @@
 //! \file
 //! \ingroup samplemiscquantities
 
-#ifndef BLACKSAMPLE_SAMPLESGEO_H
-#define BLACKSAMPLE_SAMPLESGEO_H
+#ifndef SWIFT_SAMPLE_SAMPLESGEO_H
+#define SWIFT_SAMPLE_SAMPLESGEO_H
 
 class QTextStream;
 
-namespace BlackSample
+namespace swift::sample
 {
     //! Samples for physical quantities
     class CSamplesGeo

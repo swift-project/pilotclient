@@ -11,7 +11,7 @@ class QDBusConnection;
 
 #define FGSWIFTBUS_SERVICE_SERVICENAME "org.swift-project.fgswiftbus"
 
-namespace BlackSimPlugin::Flightgear
+namespace swift::simplugin::flightgear
 {
     CFGSwiftBusServiceProxy::CFGSwiftBusServiceProxy(QDBusConnection &connection, QObject *parent, bool dummy) : QObject(parent)
     {

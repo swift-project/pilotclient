@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSOUND_DSP_BIQUADFILTER_H
-#define BLACKSOUND_DSP_BIQUADFILTER_H
+#ifndef SWIFT_SOUND_DSP_BIQUADFILTER_H
+#define SWIFT_SOUND_DSP_BIQUADFILTER_H
 
 #include "sound/swiftsoundexport.h"
 

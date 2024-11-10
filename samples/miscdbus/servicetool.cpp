@@ -48,7 +48,7 @@ using namespace swift::misc::simulation::fscommon;
 using namespace swift::misc::test;
 using namespace swift::core;
 
-namespace BlackSample
+namespace swift::sample
 {
     void ServiceTool::dataTransferTestServer(CDBusServer *dBusServer, bool verbose)
     {

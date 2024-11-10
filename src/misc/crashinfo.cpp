@@ -7,7 +7,7 @@
 
 #include <QStringBuilder>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CCrashInfo)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CCrashInfo)
 
 namespace swift::misc
 {

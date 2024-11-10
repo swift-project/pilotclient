@@ -15,9 +15,9 @@ using namespace swift::misc::network;
 using namespace swift::misc::simulation;
 using namespace swift::misc::simulation::fscommon;
 using namespace swift::core;
-using namespace BlackSimPlugin::Common;
+using namespace swift::simplugin::common;
 
-namespace BlackSimPlugin::FsCommon
+namespace swift::simplugin::fscommon
 {
     CSimulatorFsCommon::CSimulatorFsCommon(
         const CSimulatorPluginInfo &info,
@@ -47,7 +47,7 @@ namespace BlackSimPlugin::FsCommon
 
     void CSimulatorFsCommon::registerHelp()
     {
-        if (CSimpleCommandParser::registered("BlackSimPlugin::FsCommon::CSimulatorFsCommon")) { return; }
+        if (CSimpleCommandParser::registered("swift::simplugin::fscommon::CSimulatorFsCommon")) { return; }
         CSimpleCommandParser::registerCommand({ ".drv", "alias: .driver .plugin" });
     }
 

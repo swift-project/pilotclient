@@ -4,8 +4,8 @@
 //! \file
 //! \ingroup samplemisc
 
-#ifndef BLACKSAMPLE_SAMPLESPERFORMANCE_H
-#define BLACKSAMPLE_SAMPLESPERFORMANCE_H
+#ifndef SWIFT_SAMPLE_SAMPLESPERFORMANCE_H
+#define SWIFT_SAMPLE_SAMPLESPERFORMANCE_H
 
 #include "misc/simulation/aircraftmodellist.h"
 #include "misc/aviation/aircraftsituationlist.h"
@@ -18,7 +18,7 @@
 
 class QTextStream;
 
-namespace BlackSample
+namespace swift::sample
 {
     //! Samples for our containers
     class CSamplesPerformance

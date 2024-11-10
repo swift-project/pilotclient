@@ -21,7 +21,7 @@
 #include <QMultiMap>
 #include <QStringList>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Simulation, CSimulatorInfo)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Simulation, CSimulatorInfo)
 
 namespace swift::misc::simulation
 {
@@ -230,10 +230,9 @@ namespace swift::misc::simulation
     private:
         int m_simulator = static_cast<int>(None);
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CSimulatorInfo,
-            BLACK_METAMEMBER(simulator)
-        );
+            SWIFT_METAMEMBER(simulator));
     };
 
     //! Count per simulator, small utility class allows to retrieve values as per simulator

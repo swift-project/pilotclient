@@ -267,7 +267,7 @@ namespace swift::core
         //! .drv aircraft readd callsign      re-add (add again) aircraft             swift::core::ISimulator
         //! .drv aircraft readd all           re-add all aircraft                     swift::core::ISimulator
         //! .drv aircraft rm callsign         remove aircraft                         swift::core::ISimulator
-        //! .drv fsuipc   on|off              enable/disable FSUIPC (if applicable)   BlackSimPlugin::FsCommon::CSimulatorFsCommon
+        //! .drv fsuipc   on|off              enable/disable FSUIPC (if applicable)   swift::simplugin::fscommon::CSimulatorFsCommon
         //! </pre>
         //! Parse command line for simulator drivers, derived classes can add specific parsing by overriding ISimulator::parseDetails
         virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator);

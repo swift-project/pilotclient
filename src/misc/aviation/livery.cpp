@@ -20,7 +20,7 @@
 using namespace swift::misc;
 using namespace swift::misc::db;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CLivery)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CLivery)
 
 namespace swift::misc::aviation
 {

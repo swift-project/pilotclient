@@ -14,7 +14,7 @@
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::network;
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAtcStation, CAtcStationList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAtcStation, CAtcStationList)
 
 namespace swift::misc::aviation
 {

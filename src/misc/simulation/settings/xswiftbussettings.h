@@ -15,7 +15,7 @@
 
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::Settings, CXSwiftBusSettings)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::Settings, CXSwiftBusSettings)
 
 namespace swift::misc::simulation::settings
 {
@@ -86,22 +86,21 @@ namespace swift::misc::simulation::settings
         virtual void objectUpdated() override final;
 
     private:
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CXSwiftBusSettings,
-            BLACK_METAMEMBER(dBusServerAddress),
-            BLACK_METAMEMBER(msgBox),
-            BLACK_METAMEMBER(nightTextureMode),
-            BLACK_METAMEMBER(maxPlanes),
-            BLACK_METAMEMBER(drawingLabels),
-            BLACK_METAMEMBER(labelColor),
-            BLACK_METAMEMBER(bundleTaxiLandingLights),
-            BLACK_METAMEMBER(maxDrawDistanceNM),
-            BLACK_METAMEMBER(followAircraftDistanceM),
-            BLACK_METAMEMBER(logRenderPhases),
-            BLACK_METAMEMBER(tcasEnabled),
-            BLACK_METAMEMBER(terrainProbeEnabled),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForComparison | DisabledForHashing)
-        );
+            SWIFT_METAMEMBER(dBusServerAddress),
+            SWIFT_METAMEMBER(msgBox),
+            SWIFT_METAMEMBER(nightTextureMode),
+            SWIFT_METAMEMBER(maxPlanes),
+            SWIFT_METAMEMBER(drawingLabels),
+            SWIFT_METAMEMBER(labelColor),
+            SWIFT_METAMEMBER(bundleTaxiLandingLights),
+            SWIFT_METAMEMBER(maxDrawDistanceNM),
+            SWIFT_METAMEMBER(followAircraftDistanceM),
+            SWIFT_METAMEMBER(logRenderPhases),
+            SWIFT_METAMEMBER(tcasEnabled),
+            SWIFT_METAMEMBER(terrainProbeEnabled),
+            SWIFT_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForComparison | DisabledForHashing));
     };
 
     /*!

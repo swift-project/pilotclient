@@ -4,8 +4,8 @@
 // in P3Dv4 the simconnect.h does not include windows.h
 // here we include windows.h first
 
-#ifndef BLACKSIMPLUGIN_FSX_SIMCONNECTWINDOWS_H
-#define BLACKSIMPLUGIN_FSX_SIMCONNECTWINDOWS_H
+#ifndef SWIFT_SIMPLUGIN_FSX_SIMCONNECTWINDOWS_H
+#define SWIFT_SIMPLUGIN_FSX_SIMCONNECTWINDOWS_H
 
 #ifndef NOMINMAX
 #    define NOMINMAX

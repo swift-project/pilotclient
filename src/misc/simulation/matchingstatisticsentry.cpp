@@ -4,7 +4,7 @@
 #include "misc/simulation/matchingstatisticsentry.h"
 #include "misc/comparefunctions.h"
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CMatchingStatisticsEntry)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CMatchingStatisticsEntry)
 
 namespace swift::misc::simulation
 {

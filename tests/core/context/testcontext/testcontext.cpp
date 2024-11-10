@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
     QCoreApplication app(argc, argv); // using QGuiApplication fails on Jenkins Linux, no display
 #endif
 
-    BLACKTEST_INIT(SwiftCoreTest::CTestContext)
+    SWIFTTEST_INIT(SwiftCoreTest::CTestContext)
     CApplication a(CApplicationInfo::UnitTest);
     a.addNetworkOptions();
     const bool setup = a.parseCommandLineArgsAndLoadSetup();

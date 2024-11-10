@@ -13,7 +13,7 @@ using namespace swift::misc::simulation;
 using namespace swift::misc::simulation::fscommon;
 using namespace swift::core;
 
-namespace BlackSimPlugin::Fsx
+namespace swift::simplugin::fsx
 {
     CSimulatorFsx::CSimulatorFsx(const CSimulatorPluginInfo &info,
                                  IOwnAircraftProvider *ownAircraftProvider,

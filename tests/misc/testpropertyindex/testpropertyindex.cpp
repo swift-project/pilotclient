@@ -107,7 +107,7 @@ namespace MiscTest
 } // namespace
 
 //! main
-BLACKTEST_APPLESS_MAIN(MiscTest::CTestPropertyIndex);
+SWIFTTEST_APPLESS_MAIN(MiscTest::CTestPropertyIndex);
 
 #include "testpropertyindex.moc"
 

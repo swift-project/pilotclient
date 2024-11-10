@@ -1,15 +1,15 @@
 // SPDX-FileCopyrightText: Copyright (C) 2014 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#ifndef BLACKSIMPLUGIN_FS9_CALLBACK_WRAPPER_H
-#define BLACKSIMPLUGIN_FS9_CALLBACK_WRAPPER_H
+#ifndef SWIFT_SIMPLUGIN_FS9_CALLBACK_WRAPPER_H
+#define SWIFT_SIMPLUGIN_FS9_CALLBACK_WRAPPER_H
 
 #include <QObject>
 #include <QPointer>
 #include <dplay8.h>
 #include <functional>
 
-namespace BlackSimPlugin::Fs9
+namespace swift::simplugin::fs9
 {
     //! Template, wrapping the C-style DirectPlay handler callback to a class member
     template <class Object, class ReturnType, class Argument1, class Argument2>

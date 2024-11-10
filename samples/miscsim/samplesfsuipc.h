@@ -4,12 +4,12 @@
 //! \file
 //! \ingroup samplemiscsim
 
-#ifndef BLACKSAMPLE_SAMPLESFSUIPC_H
-#define BLACKSAMPLE_SAMPLESFSUIPC_H
+#ifndef SWIFT_SAMPLE_SAMPLESFSUIPC_H
+#define SWIFT_SAMPLE_SAMPLESFSUIPC_H
 
 class QTextStream;
 
-namespace BlackSample
+namespace swift::sample
 {
     //! Samples for FSUIPC
     class CSamplesFsuipc

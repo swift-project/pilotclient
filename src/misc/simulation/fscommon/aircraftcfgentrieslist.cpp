@@ -12,7 +12,7 @@
 using namespace swift::misc;
 using namespace swift::misc::simulation;
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation::fscommon, CAircraftCfgEntries, CAircraftCfgEntriesList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation::fscommon, CAircraftCfgEntries, CAircraftCfgEntriesList)
 
 namespace swift::misc::simulation::fscommon
 {

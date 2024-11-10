@@ -3,7 +3,7 @@
 
 #include "misc/input/joystickbuttonlist.h"
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::input, CJoystickButton, CJoystickButtonList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::input, CJoystickButton, CJoystickButtonList)
 
 namespace swift::misc::input
 {

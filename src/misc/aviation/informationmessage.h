@@ -17,7 +17,7 @@
 #include <QString>
 #include <QtGlobal>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CInformationMessage)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CInformationMessage)
 
 namespace swift::misc::aviation
 {
@@ -115,12 +115,11 @@ namespace swift::misc::aviation
         InformationType m_type;
         QString m_message;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CInformationMessage,
-            BLACK_METAMEMBER(type),
-            BLACK_METAMEMBER(message),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch)
-        );
+            SWIFT_METAMEMBER(type),
+            SWIFT_METAMEMBER(message),
+            SWIFT_METAMEMBER(timestampMSecsSinceEpoch));
     };
 } // namespace
 

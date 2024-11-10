@@ -19,7 +19,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CServer)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CServer)
 
 namespace swift::misc::network
 {
@@ -217,19 +217,18 @@ namespace swift::misc::network
         bool m_isAcceptingConnections = true; //!< disable server for connections
         CFsdSetup m_fsdSetup;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CServer,
-            BLACK_METAMEMBER(name),
-            BLACK_METAMEMBER(description),
-            BLACK_METAMEMBER(address),
-            BLACK_METAMEMBER(port),
-            BLACK_METAMEMBER(user),
-            BLACK_METAMEMBER(fsdSetup),
-            BLACK_METAMEMBER(ecosystem),
-            BLACK_METAMEMBER(serverType),
-            BLACK_METAMEMBER(isAcceptingConnections),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForJson | DisabledForComparison)
-        );
+            SWIFT_METAMEMBER(name),
+            SWIFT_METAMEMBER(description),
+            SWIFT_METAMEMBER(address),
+            SWIFT_METAMEMBER(port),
+            SWIFT_METAMEMBER(user),
+            SWIFT_METAMEMBER(fsdSetup),
+            SWIFT_METAMEMBER(ecosystem),
+            SWIFT_METAMEMBER(serverType),
+            SWIFT_METAMEMBER(isAcceptingConnections),
+            SWIFT_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForJson | DisabledForComparison));
     };
 } // namespace
 

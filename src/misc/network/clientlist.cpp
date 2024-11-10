@@ -5,7 +5,7 @@
 
 using namespace swift::misc::aviation;
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CClient, CClientList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CClient, CClientList)
 
 namespace swift::misc::network
 {

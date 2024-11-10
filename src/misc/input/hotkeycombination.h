@@ -17,7 +17,7 @@
 #include <QMetaType>
 #include <QStringList>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::input, CHotkeyCombination)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::input, CHotkeyCombination)
 
 namespace swift::misc::input
 {
@@ -96,11 +96,10 @@ namespace swift::misc::input
         CKeyboardKeyList m_keyboardKeys;
         CJoystickButtonList m_joystickButtons;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CHotkeyCombination,
-            BLACK_METAMEMBER(keyboardKeys),
-            BLACK_METAMEMBER(joystickButtons)
-        );
+            SWIFT_METAMEMBER(keyboardKeys),
+            SWIFT_METAMEMBER(joystickButtons));
     };
 } // ns
 

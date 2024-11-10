@@ -12,7 +12,7 @@
 #include "misc/aviation/aircraftsituationchange.h"
 #include "misc/timestampobjectlist.h"
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftSituationChange, CAircraftSituationChangeList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftSituationChange, CAircraftSituationChangeList)
 
 namespace swift::misc::aviation
 {

@@ -23,7 +23,7 @@
 #include <QString>
 #include <array>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::geo, CCoordinateGeodetic)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::geo, CCoordinateGeodetic)
 
 namespace swift::misc
 {
@@ -352,13 +352,12 @@ namespace swift::misc
             double m_z = 0; //!< normal vector [-1,1]
             aviation::CAltitude m_geodeticHeight { 0, nullptr }; //!< height, ellipsoidal or geodetic height
 
-            BLACK_METACLASS(
+            SWIFT_METACLASS(
                 CCoordinateGeodetic,
-                BLACK_METAMEMBER(x),
-                BLACK_METAMEMBER(y),
-                BLACK_METAMEMBER(z),
-                BLACK_METAMEMBER(geodeticHeight)
-            );
+                SWIFT_METAMEMBER(x),
+                SWIFT_METAMEMBER(y),
+                SWIFT_METAMEMBER(z),
+                SWIFT_METAMEMBER(geodeticHeight));
         };
     } // namespace
 

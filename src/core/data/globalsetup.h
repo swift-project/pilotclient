@@ -19,7 +19,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::core::data, CGlobalSetup)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::core::data, CGlobalSetup)
 
 namespace swift::core::data
 {
@@ -179,26 +179,25 @@ namespace swift::core::data
         swift::misc::network::CUrl m_vatsimAuthUrl; //!< VATSIM Auth URL
         bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know what you are doing. Only works with CBuildConfig::isLocalDeveloperDebugBuild
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CGlobalSetup,
-            BLACK_METAMEMBER(dbRootDirectoryUrl, 0, RequiredForJson),
-            BLACK_METAMEMBER(dbHttpsPort, 0, RequiredForJson),
-            BLACK_METAMEMBER(vatsimStatusFileUrl, 0, RequiredForJson),
-            BLACK_METAMEMBER(vatsimDataFileUrl, 0, RequiredForJson),
-            BLACK_METAMEMBER(vatsimServerFileUrl, 0, RequiredForJson),
-            BLACK_METAMEMBER(vatsimFsdHttpUrl, 0, RequiredForJson),
-            BLACK_METAMEMBER(vatsimMetarsUrl, 0, RequiredForJson),
-            BLACK_METAMEMBER(sharedUrl, 0, RequiredForJson),
-            BLACK_METAMEMBER(onlineHelpUrl, 0, RequiredForJson),
-            BLACK_METAMEMBER(predefinedServers, 0, RequiredForJson),
-            BLACK_METAMEMBER(mappingMinimumVersion, 0, RequiredForJson),
-            BLACK_METAMEMBER(comNavEquipmentHelpUrl, 0, RequiredForJson),
-            BLACK_METAMEMBER(ssrEquipmentHelpUrl, 0, RequiredForJson),
-            BLACK_METAMEMBER(dbDebugFlag, 0, RequiredForJson),
-            BLACK_METAMEMBER(afvApiServerUrl, 0, RequiredForJson),
-            BLACK_METAMEMBER(afvMapUrl, 0, RequiredForJson),
-            BLACK_METAMEMBER(vatsimAuthUrl, 0, RequiredForJson)
-        );
+            SWIFT_METAMEMBER(dbRootDirectoryUrl, 0, RequiredForJson),
+            SWIFT_METAMEMBER(dbHttpsPort, 0, RequiredForJson),
+            SWIFT_METAMEMBER(vatsimStatusFileUrl, 0, RequiredForJson),
+            SWIFT_METAMEMBER(vatsimDataFileUrl, 0, RequiredForJson),
+            SWIFT_METAMEMBER(vatsimServerFileUrl, 0, RequiredForJson),
+            SWIFT_METAMEMBER(vatsimFsdHttpUrl, 0, RequiredForJson),
+            SWIFT_METAMEMBER(vatsimMetarsUrl, 0, RequiredForJson),
+            SWIFT_METAMEMBER(sharedUrl, 0, RequiredForJson),
+            SWIFT_METAMEMBER(onlineHelpUrl, 0, RequiredForJson),
+            SWIFT_METAMEMBER(predefinedServers, 0, RequiredForJson),
+            SWIFT_METAMEMBER(mappingMinimumVersion, 0, RequiredForJson),
+            SWIFT_METAMEMBER(comNavEquipmentHelpUrl, 0, RequiredForJson),
+            SWIFT_METAMEMBER(ssrEquipmentHelpUrl, 0, RequiredForJson),
+            SWIFT_METAMEMBER(dbDebugFlag, 0, RequiredForJson),
+            SWIFT_METAMEMBER(afvApiServerUrl, 0, RequiredForJson),
+            SWIFT_METAMEMBER(afvMapUrl, 0, RequiredForJson),
+            SWIFT_METAMEMBER(vatsimAuthUrl, 0, RequiredForJson));
     };
 } // ns
 

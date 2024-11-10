@@ -7,7 +7,7 @@
 #include <QRegularExpression>
 #include <Qt>
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc, CCountry, CCountryList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CCountry, CCountryList)
 
 namespace swift::misc
 {

@@ -8,7 +8,7 @@
 #include <QtGlobal>
 #include <algorithm>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::input, CHotkeyCombination)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::input, CHotkeyCombination)
 
 namespace swift::misc::input
 {

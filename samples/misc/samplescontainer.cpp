@@ -32,7 +32,7 @@ using namespace swift::misc::geo;
 using namespace swift::misc::network;
 using namespace swift::misc::test;
 
-namespace BlackSample
+namespace swift::sample
 {
     int CSamplesContainer::samples()
     {

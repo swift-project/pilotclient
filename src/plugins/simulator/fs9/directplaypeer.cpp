@@ -15,7 +15,7 @@
 using namespace swift::misc;
 using namespace swift::misc::aviation;
 
-namespace BlackSimPlugin::Fs9
+namespace swift::simplugin::fs9
 {
     const QStringList &CDirectPlayPeer::getLogCategories()
     {

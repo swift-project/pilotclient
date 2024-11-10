@@ -9,7 +9,7 @@
 #include "misc/swiftmiscexport.h"
 #include "misc/valueobject.h"
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CConnectionStatus)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CConnectionStatus)
 
 namespace swift::misc::network
 {
@@ -52,10 +52,9 @@ namespace swift::misc::network
     private:
         ConnectionStatus m_connectionStatus = Disconnected;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CConnectionStatus,
-            BLACK_METAMEMBER(connectionStatus)
-        );
+            SWIFT_METAMEMBER(connectionStatus));
     };
 } // namespace
 

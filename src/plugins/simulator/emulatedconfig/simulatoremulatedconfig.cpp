@@ -4,7 +4,7 @@
 #include "simulatoremulatedconfig.h"
 #include "simulatoremulatedconfigwidget.h"
 
-namespace BlackSimPlugin::Emulated
+namespace swift::simplugin::emulated
 {
     CSimulatorEmulatedConfig::CSimulatorEmulatedConfig(QObject *parent) : QObject(parent)
     {

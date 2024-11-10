@@ -7,7 +7,7 @@
 using namespace swift::misc::math;
 using namespace swift::misc::physical_quantities;
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::geo, CCoordinateGeodetic, CCoordinateGeodeticList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::geo, CCoordinateGeodetic, CCoordinateGeodeticList)
 
 namespace swift::misc::geo
 {

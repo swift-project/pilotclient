@@ -163,7 +163,7 @@ namespace MiscTest
 } // namespace
 
 //! main
-BLACKTEST_APPLESS_MAIN(MiscTest::CTestWeather);
+SWIFTTEST_APPLESS_MAIN(MiscTest::CTestWeather);
 
 #include "testweather.moc"
 

@@ -16,7 +16,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CRole)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CRole)
 
 namespace swift::misc::network
 {
@@ -69,12 +69,11 @@ namespace swift::misc::network
         QString m_name;
         QString m_description;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CRole,
-            BLACK_METAMEMBER(dbKey),
-            BLACK_METAMEMBER(name),
-            BLACK_METAMEMBER(description)
-        );
+            SWIFT_METAMEMBER(dbKey),
+            SWIFT_METAMEMBER(name),
+            SWIFT_METAMEMBER(description));
     };
 
 } // ns

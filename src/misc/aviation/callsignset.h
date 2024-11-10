@@ -16,7 +16,7 @@
 #include <QStringList>
 #include <tuple>
 
-BLACK_DECLARE_COLLECTION_MIXINS(swift::misc::aviation, CCallsign, CCallsignSet)
+SWIFT_DECLARE_COLLECTION_MIXINS(swift::misc::aviation, CCallsign, CCallsignSet)
 
 namespace swift::misc::aviation
 {

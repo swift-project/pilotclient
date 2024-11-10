@@ -195,7 +195,7 @@ namespace MiscTest
 } // namespace
 
 //! main
-BLACKTEST_APPLESS_MAIN(MiscTest::CTestVariantAndMap);
+SWIFTTEST_APPLESS_MAIN(MiscTest::CTestVariantAndMap);
 
 #include "testvariantandmap.moc"
 

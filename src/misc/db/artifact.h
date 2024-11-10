@@ -13,7 +13,7 @@
 #include "misc/network/remotefile.h"
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::db, CArtifact)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::db, CArtifact)
 
 namespace swift::misc::db
 {
@@ -162,18 +162,17 @@ namespace swift::misc::db
         //! Trim a strin representing 4th segment
         static QString trim4thSegment(const QString &seg);
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CArtifact,
-            BLACK_METAMEMBER(name),
-            BLACK_METAMEMBER(version),
-            BLACK_METAMEMBER(md5),
-            BLACK_METAMEMBER(type),
-            BLACK_METAMEMBER(size),
-            BLACK_METAMEMBER(existing),
-            BLACK_METAMEMBER(platform),
-            BLACK_METAMEMBER(distributions),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch)
-        );
+            SWIFT_METAMEMBER(name),
+            SWIFT_METAMEMBER(version),
+            SWIFT_METAMEMBER(md5),
+            SWIFT_METAMEMBER(type),
+            SWIFT_METAMEMBER(size),
+            SWIFT_METAMEMBER(existing),
+            SWIFT_METAMEMBER(platform),
+            SWIFT_METAMEMBER(distributions),
+            SWIFT_METAMEMBER(timestampMSecsSinceEpoch));
     };
 } // ns
 

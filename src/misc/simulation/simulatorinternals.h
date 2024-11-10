@@ -19,7 +19,7 @@
 #include <QString>
 #include <tuple>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatorInternals)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatorInternals)
 
 namespace swift::misc::simulation
 {
@@ -97,10 +97,9 @@ namespace swift::misc::simulation
     private:
         swift::misc::CNameVariantPairList m_data;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CSimulatorInternals,
-            BLACK_METAMEMBER(data)
-        );
+            SWIFT_METAMEMBER(data));
     };
 } // namespace
 

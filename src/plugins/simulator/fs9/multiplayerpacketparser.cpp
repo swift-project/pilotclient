@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 #include "multiplayerpacketparser.h"
 
-namespace BlackSimPlugin::Fs9::Private
+namespace swift::simplugin::fs9::private_ns
 {
     QByteArray readValue(const QByteArray &data, QString &val)
     {

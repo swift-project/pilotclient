@@ -27,7 +27,7 @@ using namespace swift::misc::aviation;
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::db;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CAircraftModel)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CAircraftModel)
 
 namespace swift::misc::simulation
 {

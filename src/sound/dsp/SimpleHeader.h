@@ -26,8 +26,8 @@
  *	DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef BLACKSOUND_DSP_SIMPLE_HEADER_H
-#define BLACKSOUND_DSP_SIMPLE_HEADER_H
+#ifndef SWIFT_SOUND_DSP_SIMPLE_HEADER_H
+#define SWIFT_SOUND_DSP_SIMPLE_HEADER_H
 
 #if _MSC_VER > 1000 // MS Visual Studio
 #   define INLINE __forceinline  // forces inline

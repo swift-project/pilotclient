@@ -20,7 +20,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::core::data, CVatsimSetup)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::core::data, CVatsimSetup)
 
 namespace swift::core::data
 {
@@ -98,15 +98,14 @@ namespace swift::core::data
         swift::misc::network::CServerList m_fsdServers; //!< FSD test servers
         swift::misc::network::CServerList m_voiceServers; //!< voice servers
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CVatsimSetup,
-            BLACK_METAMEMBER(serverFileUrl),
-            BLACK_METAMEMBER(dataFileUrl),
-            BLACK_METAMEMBER(metarFileUrl),
-            BLACK_METAMEMBER(fsdServers),
-            BLACK_METAMEMBER(voiceServers),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch)
-        );
+            SWIFT_METAMEMBER(serverFileUrl),
+            SWIFT_METAMEMBER(dataFileUrl),
+            SWIFT_METAMEMBER(metarFileUrl),
+            SWIFT_METAMEMBER(fsdServers),
+            SWIFT_METAMEMBER(voiceServers),
+            SWIFT_METAMEMBER(timestampMSecsSinceEpoch));
     };
 
     //! Trait for global setup data

@@ -30,7 +30,7 @@ using namespace swift::misc::simulation::fscommon;
 using namespace swift::misc::simulation::settings;
 using namespace swift::misc::aviation;
 
-namespace BlackSample
+namespace swift::sample
 {
     void CSamplesModelMapping::samples(QTextStream &streamOut, QTextStream &streamIn)
     {

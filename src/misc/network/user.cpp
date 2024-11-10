@@ -19,7 +19,7 @@
 
 using namespace swift::misc::aviation;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CUser)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CUser)
 
 namespace swift::misc::network
 {

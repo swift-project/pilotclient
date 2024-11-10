@@ -15,7 +15,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CLogCategory)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CLogCategory)
 
 namespace swift::misc
 {
@@ -52,10 +52,9 @@ namespace swift::misc
     private:
         QString m_string;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CLogCategory,
-            BLACK_METAMEMBER(string)
-        );
+            SWIFT_METAMEMBER(string));
     };
 } // ns
 

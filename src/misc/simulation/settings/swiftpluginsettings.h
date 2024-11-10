@@ -12,7 +12,7 @@
 #include "misc/propertyindexref.h"
 #include "misc/swiftmiscexport.h"
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::Settings, CSwiftPluginSettings)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::Settings, CSwiftPluginSettings)
 
 namespace swift::misc::simulation::settings
 {
@@ -71,13 +71,12 @@ namespace swift::misc::simulation::settings
         CAircraftModel m_defaultModel;
         bool m_logFunctionCalls = true;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CSwiftPluginSettings,
-            BLACK_METAMEMBER(emulatedSimulator),
-            BLACK_METAMEMBER(ownModel),
-            BLACK_METAMEMBER(defaultModel),
-            BLACK_METAMEMBER(logFunctionCalls)
-        );
+            SWIFT_METAMEMBER(emulatedSimulator),
+            SWIFT_METAMEMBER(ownModel),
+            SWIFT_METAMEMBER(defaultModel),
+            SWIFT_METAMEMBER(logFunctionCalls));
     };
 
     //! Trait for swift plugin settings

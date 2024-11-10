@@ -34,7 +34,7 @@
 #include <QtGlobal>
 #include <array>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatedAircraft)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatedAircraft)
 
 namespace swift::misc
 {
@@ -478,25 +478,24 @@ namespace swift::misc
             //! Init, which synchronizes some denormalized values
             void init();
 
-            BLACK_METACLASS(
+            SWIFT_METACLASS(
                 CSimulatedAircraft,
-                BLACK_METAMEMBER(callsign),
-                BLACK_METAMEMBER(pilot),
-                BLACK_METAMEMBER(situation),
-                BLACK_METAMEMBER(com1system),
-                BLACK_METAMEMBER(com2system),
-                BLACK_METAMEMBER(transponder),
-                BLACK_METAMEMBER(parts),
-                BLACK_METAMEMBER(selcal),
-                BLACK_METAMEMBER(models),
-                BLACK_METAMEMBER(enabled),
-                BLACK_METAMEMBER(rendered),
-                BLACK_METAMEMBER(partsSynchronized),
-                BLACK_METAMEMBER(fastPositionUpdates),
+                SWIFT_METAMEMBER(callsign),
+                SWIFT_METAMEMBER(pilot),
+                SWIFT_METAMEMBER(situation),
+                SWIFT_METAMEMBER(com1system),
+                SWIFT_METAMEMBER(com2system),
+                SWIFT_METAMEMBER(transponder),
+                SWIFT_METAMEMBER(parts),
+                SWIFT_METAMEMBER(selcal),
+                SWIFT_METAMEMBER(models),
+                SWIFT_METAMEMBER(enabled),
+                SWIFT_METAMEMBER(rendered),
+                SWIFT_METAMEMBER(partsSynchronized),
+                SWIFT_METAMEMBER(fastPositionUpdates),
                 // ICoordinateWithRelativePosition
-                BLACK_METAMEMBER(relativeDistance),
-                BLACK_METAMEMBER(relativeBearing)
-            );
+                SWIFT_METAMEMBER(relativeDistance),
+                SWIFT_METAMEMBER(relativeBearing));
         };
     } // namespace
 } // namespace

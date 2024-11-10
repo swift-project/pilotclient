@@ -3,7 +3,7 @@
 
 #include "ssrequipment.h"
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CSsrEquipment)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CSsrEquipment)
 
 namespace swift::misc::aviation
 {

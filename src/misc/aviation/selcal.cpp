@@ -11,7 +11,7 @@
 
 using namespace swift::misc::physical_quantities;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CSelcal)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CSelcal)
 
 namespace swift::misc::aviation
 {

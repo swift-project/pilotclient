@@ -3,7 +3,7 @@
 
 #include "misc/network/facilitytype.h"
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CFacilityType)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CFacilityType)
 
 namespace swift::misc::network
 {

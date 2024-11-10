@@ -6,7 +6,7 @@
 
 using namespace swift::gui;
 
-namespace BlackSimPlugin::Emulated
+namespace swift::simplugin::emulated
 {
     CSimulatorEmulatedConfigWidget::CSimulatorEmulatedConfigWidget(QWidget *parent) : swift::gui::CPluginConfigWindow(parent),
                                                                                       ui(new Ui::CSimulatorEmulatedConfigWidget)

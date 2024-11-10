@@ -15,7 +15,7 @@
 #include <QString>
 #include <tuple>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAirportIcaoCode)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAirportIcaoCode)
 
 namespace swift::misc::aviation
 {
@@ -74,10 +74,9 @@ namespace swift::misc::aviation
     private:
         QString m_icaoCode;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CAirportIcaoCode,
-            BLACK_METAMEMBER(icaoCode, 0, CaseInsensitiveComparison)
-        );
+            SWIFT_METAMEMBER(icaoCode, 0, CaseInsensitiveComparison));
     };
 } // namespace
 

@@ -75,7 +75,7 @@ namespace MiscTest
 }
 
 //! main
-BLACKTEST_MAIN(MiscTest::CTestCompress);
+SWIFTTEST_MAIN(MiscTest::CTestCompress);
 
 #include "testcompress.moc"
 

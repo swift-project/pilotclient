@@ -9,7 +9,7 @@
 #include <QDBusMetaType>
 #include <QString>
 
-BLACK_DEFINE_COLLECTION_MIXINS(swift::misc, CPlatform, CPlatformSet)
+SWIFT_DEFINE_COLLECTION_MIXINS(swift::misc, CPlatform, CPlatformSet)
 
 namespace swift::misc
 {

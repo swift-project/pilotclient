@@ -6,7 +6,7 @@
 #include <QString>
 #include <QtGlobal>
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftEngine, CAircraftEngineList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftEngine, CAircraftEngineList)
 
 namespace swift::misc::aviation
 {

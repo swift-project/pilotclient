@@ -368,7 +368,7 @@ namespace MiscTest
 } // namespace
 
 //! main
-BLACKTEST_MAIN(MiscTest::CTestAircraftSituation);
+SWIFTTEST_MAIN(MiscTest::CTestAircraftSituation);
 
 #include "testaircraftsituation.moc"
 

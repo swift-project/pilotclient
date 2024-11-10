@@ -16,7 +16,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::input, CKeyboardKey)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::input, CKeyboardKey)
 
 namespace swift::misc::input
 {
@@ -85,10 +85,9 @@ namespace swift::misc::input
 
         KeyCode m_keyCode; //!< Key code
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CKeyboardKey,
-            BLACK_METAMEMBER(keyCode)
-        );
+            SWIFT_METAMEMBER(keyCode));
     };
 } // ns
 

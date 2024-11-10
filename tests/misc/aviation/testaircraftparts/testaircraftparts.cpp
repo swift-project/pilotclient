@@ -83,7 +83,7 @@ namespace MiscTest
 } // ns
 
 //! main
-BLACKTEST_APPLESS_MAIN(MiscTest::CTestAircraftParts);
+SWIFTTEST_APPLESS_MAIN(MiscTest::CTestAircraftParts);
 
 #include "testaircraftparts.moc"
 

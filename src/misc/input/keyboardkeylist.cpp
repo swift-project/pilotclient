@@ -4,7 +4,7 @@
 #include "misc/input/keyboardkeylist.h"
 #include "misc/input/keycodes.h"
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::input, CKeyboardKey, CKeyboardKeyList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::input, CKeyboardKey, CKeyboardKeyList)
 
 namespace swift::misc::input
 {

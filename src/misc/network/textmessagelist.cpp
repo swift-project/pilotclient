@@ -10,7 +10,7 @@
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::aviation;
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CTextMessage, CTextMessageList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CTextMessage, CTextMessageList)
 
 namespace swift::misc::network
 {

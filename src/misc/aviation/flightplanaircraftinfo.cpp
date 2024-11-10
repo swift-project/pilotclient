@@ -3,7 +3,7 @@
 
 #include "flightplanaircraftinfo.h"
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CFlightPlanAircraftInfo)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CFlightPlanAircraftInfo)
 
 namespace swift::misc::aviation
 {

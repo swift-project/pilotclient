@@ -9,7 +9,7 @@
 #include "misc/valueobject.h"
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CCrashInfo)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CCrashInfo)
 
 namespace swift::misc
 {
@@ -92,14 +92,13 @@ namespace swift::misc
         QString m_flightNetwork;
         QString m_logFileAndPath;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CCrashInfo,
-            BLACK_METAMEMBER(userName),
-            BLACK_METAMEMBER(info),
-            BLACK_METAMEMBER(simulatorString),
-            BLACK_METAMEMBER(flightNetwork),
-            BLACK_METAMEMBER(logFileAndPath)
-        );
+            SWIFT_METAMEMBER(userName),
+            SWIFT_METAMEMBER(info),
+            SWIFT_METAMEMBER(simulatorString),
+            SWIFT_METAMEMBER(flightNetwork),
+            SWIFT_METAMEMBER(logFileAndPath));
     };
 } // ns
 

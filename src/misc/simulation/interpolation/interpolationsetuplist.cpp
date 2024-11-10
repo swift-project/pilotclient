@@ -3,7 +3,7 @@
 
 #include "misc/simulation/interpolation/interpolationsetuplist.h"
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CInterpolationAndRenderingSetupPerCallsign, CInterpolationSetupList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CInterpolationAndRenderingSetupPerCallsign, CInterpolationSetupList)
 
 namespace swift::misc::simulation
 {

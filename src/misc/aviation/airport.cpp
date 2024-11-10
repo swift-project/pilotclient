@@ -15,7 +15,7 @@ using namespace swift::misc;
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::geo;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAirport)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAirport)
 
 namespace swift::misc::aviation
 {

@@ -3,13 +3,13 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_FSCOMMON_SIMULATORFSCOMMONFUNCTIONS_H
-#define BLACKSIMPLUGIN_FSCOMMON_SIMULATORFSCOMMONFUNCTIONS_H
+#ifndef SWIFT_SIMPLUGIN_FSCOMMON_SIMULATORFSCOMMONFUNCTIONS_H
+#define SWIFT_SIMPLUGIN_FSCOMMON_SIMULATORFSCOMMONFUNCTIONS_H
 
 #include <Windows.h>
 #include <QtGlobal>
 
-namespace BlackSimPlugin::FsCommon
+namespace swift::simplugin::fscommon
 {
     //! @{
     //! Correctly casted values/checks

@@ -13,7 +13,7 @@
 #include "misc/sequence.h"
 #include <QNetworkReply>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CUrlLog, CUrlLogList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CUrlLog, CUrlLogList)
 
 namespace swift::misc::network
 {

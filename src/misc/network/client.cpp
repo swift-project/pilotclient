@@ -12,7 +12,7 @@
 #include <QStringBuilder>
 #include <QStringList>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CClient)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CClient)
 
 namespace swift::misc::network
 {

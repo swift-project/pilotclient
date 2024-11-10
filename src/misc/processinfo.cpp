@@ -16,7 +16,7 @@
 #    include <psapi.h>
 #endif
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CProcessInfo)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CProcessInfo)
 
 namespace swift::misc
 {

@@ -17,7 +17,7 @@
 #include <QString>
 #include <QStringList>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::simulation, CDistributor, CDistributorList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::simulation, CDistributor, CDistributorList)
 
 namespace swift::misc::simulation
 {

@@ -18,7 +18,7 @@
 #include <QtGlobal>
 #include <tuple>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CTransponder)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CTransponder)
 
 namespace swift::misc::aviation
 {
@@ -157,11 +157,10 @@ namespace swift::misc::aviation
         int m_transponderCode; //!< Transponder code
         int m_transponderMode; //!< Transponder mode
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CTransponder,
-            BLACK_METAMEMBER(transponderCode),
-            BLACK_METAMEMBER(transponderMode)
-        );
+            SWIFT_METAMEMBER(transponderCode),
+            SWIFT_METAMEMBER(transponderMode));
     };
 } // ns
 

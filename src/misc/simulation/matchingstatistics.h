@@ -13,7 +13,7 @@
 #include "misc/collection.h"
 #include "misc/mixin/mixinmetatype.h"
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::simulation, CMatchingStatisticsEntry, CMatchingStatistics)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::simulation, CMatchingStatisticsEntry, CMatchingStatistics)
 
 namespace swift::misc::simulation
 {

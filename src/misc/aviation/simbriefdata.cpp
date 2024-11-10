@@ -7,7 +7,7 @@
 
 using namespace swift::misc::network;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CSimBriefData)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CSimBriefData)
 
 namespace swift::misc::aviation
 {

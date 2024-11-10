@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECT_DATADEFINITION_H
-#define BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECT_DATADEFINITION_H
+#ifndef SWIFT_SIMPLUGIN_FSXCOMMON_SIMCONNECT_DATADEFINITION_H
+#define SWIFT_SIMPLUGIN_FSXCOMMON_SIMCONNECT_DATADEFINITION_H
 
 #include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 #include "plugins/simulator/fsxcommon/simconnectwindows.h"
@@ -18,7 +18,7 @@ namespace swift::misc::aviation
 {
     class CAircraftParts;
 }
-namespace BlackSimPlugin::FsxCommon
+namespace swift::simplugin::fsxcommon
 {
     //! Data struct of our own aircraft
     //! \sa SimConnect variables http://msdn.microsoft.com/en-us/library/cc526981.aspx

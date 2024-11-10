@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_SIMULATOR_XPLANE_H
-#define BLACKSIMPLUGIN_SIMULATOR_XPLANE_H
+#ifndef SWIFT_SIMPLUGIN_SIMULATOR_XPLANE_H
+#define SWIFT_SIMPLUGIN_SIMULATOR_XPLANE_H
 
 #include "xplanempaircraft.h"
 #include "plugins/simulator/xplaneconfig/simulatorxplaneconfig.h"
@@ -57,7 +57,7 @@ namespace swift::misc
     }
 }
 
-namespace BlackSimPlugin::XPlane
+namespace swift::simplugin::xplane
 {
     class CXSwiftBusServiceProxy;
     class CXSwiftBusTrafficProxy;
@@ -110,7 +110,7 @@ namespace BlackSimPlugin::XPlane
     };
 
     //! X-Plane ISimulator implementation
-    class CSimulatorXPlane : public Common::CSimulatorPluginCommon
+    class CSimulatorXPlane : public common::CSimulatorPluginCommon
     {
         Q_OBJECT
 
@@ -333,9 +333,9 @@ namespace BlackSimPlugin::XPlane
     public:
         //! \copydoc swift::core::ISimulatorFactory::create
         virtual swift::core::ISimulator *create(const swift::misc::simulation::CSimulatorPluginInfo &info,
-                                              swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
-                                              swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                                              swift::misc::network::IClientProvider *clientProvider) override;
+                                                swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
+                                                swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                                                swift::misc::network::IClientProvider *clientProvider) override;
 
         //! \copydoc swift::core::ISimulatorFactory::createListener
         virtual swift::core::ISimulatorListener *createListener(const swift::misc::simulation::CSimulatorPluginInfo &info) override { return new CSimulatorXPlaneListener(info); }

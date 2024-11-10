@@ -14,7 +14,7 @@
 #include <QMetaType>
 #include <iterator>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc, CVariant, CVariantList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc, CVariant, CVariantList)
 
 namespace swift::misc
 {

@@ -12,9 +12,9 @@ using namespace swift::misc::network;
 using namespace swift::misc::simulation;
 using namespace swift::misc::simulation::fscommon;
 using namespace swift::core;
-using namespace BlackSimPlugin::FsxCommon;
+using namespace swift::simplugin::fsxcommon;
 
-namespace BlackSimPlugin::Msfs
+namespace swift::simplugin::msfs
 {
     CSimulatorMsFs::CSimulatorMsFs(const CSimulatorPluginInfo &info,
                                    IOwnAircraftProvider *ownAircraftProvider,

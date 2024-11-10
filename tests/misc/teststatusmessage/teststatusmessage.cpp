@@ -71,7 +71,7 @@ namespace MiscTest
 } // namespace
 
 //! main
-BLACKTEST_APPLESS_MAIN(MiscTest::CTestStatusMessage);
+SWIFTTEST_APPLESS_MAIN(MiscTest::CTestStatusMessage);
 
 #include "teststatusmessage.moc"
 

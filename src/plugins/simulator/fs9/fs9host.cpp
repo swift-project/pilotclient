@@ -15,7 +15,7 @@
 
 using namespace swift::misc;
 
-namespace BlackSimPlugin::Fs9
+namespace swift::simplugin::fs9
 {
     CFs9Host::CFs9Host(QObject *parent) : CDirectPlayPeer(sApp->swiftVersionString(), parent)
     {

@@ -7,7 +7,7 @@
 #include "misc/swiftmiscexport.h"
 #include "misc/valueobject.h"
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CSsrEquipment)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CSsrEquipment)
 
 namespace swift::misc::aviation
 {
@@ -66,10 +66,9 @@ namespace swift::misc::aviation
 
         SSrEquipment m_equipment = None;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CSsrEquipment,
-            BLACK_METAMEMBER(equipment)
-        );
+            SWIFT_METAMEMBER(equipment));
     };
 
 }

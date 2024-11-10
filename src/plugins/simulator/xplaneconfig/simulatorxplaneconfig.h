@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_SIMULATOR_XPLANE_CONFIG_H
-#define BLACKSIMPLUGIN_SIMULATOR_XPLANE_CONFIG_H
+#ifndef SWIFT_SIMPLUGIN_SIMULATOR_XPLANE_CONFIG_H
+#define SWIFT_SIMPLUGIN_SIMULATOR_XPLANE_CONFIG_H
 
 #include "gui/pluginconfig.h"
 #include "misc/settingscache.h"
@@ -18,7 +18,7 @@ namespace swift::gui
 {
     class CPluginConfigWindow;
 }
-namespace BlackSimPlugin::XPlane
+namespace swift::simplugin::xplane
 {
     /*!
      * Config plugin for the X-Plane plugin.

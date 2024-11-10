@@ -20,7 +20,7 @@
 #include <QPixmap>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CTextMessage)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CTextMessage)
 
 namespace swift::misc::network
 {
@@ -202,14 +202,13 @@ namespace swift::misc::network
         bool m_wasSent = false; //!< transient
         bool m_relayedMessage = false; //!< transient
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CTextMessage,
-            BLACK_METAMEMBER(message),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch),
-            BLACK_METAMEMBER(senderCallsign),
-            BLACK_METAMEMBER(recipientCallsign),
-            BLACK_METAMEMBER(frequency)
-        );
+            SWIFT_METAMEMBER(message),
+            SWIFT_METAMEMBER(timestampMSecsSinceEpoch),
+            SWIFT_METAMEMBER(senderCallsign),
+            SWIFT_METAMEMBER(recipientCallsign),
+            SWIFT_METAMEMBER(frequency));
     };
 } // namespace
 

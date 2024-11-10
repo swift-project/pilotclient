@@ -5,7 +5,7 @@
 
 /*!
  * \file
- * \ingroup testblackfsd
+ * \ingroup testswiftfsd
  */
 
 #include "config/buildconfig.h"
@@ -704,7 +704,7 @@ namespace MiscTest
 }
 
 //! main
-BLACKTEST_APPLESS_MAIN(MiscTest::CTestFsdMessages);
+SWIFTTEST_APPLESS_MAIN(MiscTest::CTestFsdMessages);
 
 #include "testfsdmessages.moc"
 

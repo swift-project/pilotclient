@@ -18,7 +18,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CTextMessage, CTextMessageList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CTextMessage, CTextMessageList)
 
 namespace swift::misc::network
 {

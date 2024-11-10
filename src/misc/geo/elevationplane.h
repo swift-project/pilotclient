@@ -138,10 +138,9 @@ namespace swift::misc::geo
     private:
         physical_quantities::CLength m_radius { 0, nullptr }; //!< elevation is valid in radius
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CElevationPlane,
-            BLACK_METAMEMBER(radius)
-        );
+            SWIFT_METAMEMBER(radius));
     };
 } // namespace
 

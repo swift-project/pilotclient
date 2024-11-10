@@ -20,11 +20,11 @@
 using namespace swift::config;
 using namespace swift::misc;
 using namespace swift::misc::simulation;
-using namespace swift::misc::simulation::Fsx;
+using namespace swift::misc::simulation::fsx;
 using namespace swift::misc::network;
 using namespace swift::gui;
 
-namespace BlackSimPlugin::FsxCommon
+namespace swift::simplugin::fsxcommon
 {
     CSimConnectSettingsComponent::CSimConnectSettingsComponent(QWidget *parent) : COverlayMessagesFrame(parent),
                                                                                   ui(new Ui::CSimConnectSettingsComponent)

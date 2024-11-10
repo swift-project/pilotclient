@@ -4,7 +4,7 @@
 #include "misc/aviation/informationmessage.h"
 #include "misc/comparefunctions.h"
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CInformationMessage)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CInformationMessage)
 
 namespace swift::misc::aviation
 {

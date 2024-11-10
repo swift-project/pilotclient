@@ -21,7 +21,7 @@
 
 using namespace swift::misc;
 
-namespace BlackSimPlugin::Fs9
+namespace swift::simplugin::fs9
 {
     CLobbyClient::CLobbyClient(QObject *parent)
         : QObject(parent),

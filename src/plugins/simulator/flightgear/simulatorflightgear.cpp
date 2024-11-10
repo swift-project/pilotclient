@@ -72,7 +72,7 @@ namespace
     }
 }
 
-namespace BlackSimPlugin::Flightgear
+namespace swift::simplugin::flightgear
 {
     int FGSWIFTBUS_API_VERSION = -1;
     QList<int> incompatibleVersions = { 1, 2 };
@@ -152,7 +152,7 @@ namespace BlackSimPlugin::Flightgear
             u++;
         }
 
-        if (parts.isNull() && Flightgear::FGSWIFTBUS_API_VERSION >= 2)
+        if (parts.isNull() && flightgear::FGSWIFTBUS_API_VERSION >= 2)
         {
             PlanesSurfaces surfaces;
             surfaces.push_back(callsign, parts);
@@ -539,7 +539,7 @@ namespace BlackSimPlugin::Flightgear
             PlanesPositions pos;
             pos.push_back(newRemoteAircraft.getSituation());
             m_trafficProxy->setPlanesPositions(pos);
-            if (Flightgear::FGSWIFTBUS_API_VERSION >= 2)
+            if (flightgear::FGSWIFTBUS_API_VERSION >= 2)
             {
                 PlanesSurfaces surfaces;
                 surfaces.push_back(newRemoteAircraft.getCallsign(), newRemoteAircraft.getParts());
@@ -693,7 +693,7 @@ namespace BlackSimPlugin::Flightgear
 
         } // all callsigns
 
-        if (!planesTransponders.isEmpty() && Flightgear::FGSWIFTBUS_API_VERSION >= 2)
+        if (!planesTransponders.isEmpty() && flightgear::FGSWIFTBUS_API_VERSION >= 2)
         {
             m_trafficProxy->setPlanesTransponders(planesTransponders);
         }
@@ -707,7 +707,7 @@ namespace BlackSimPlugin::Flightgear
             m_trafficProxy->setPlanesPositions(planesPositions);
         }
 
-        if (!planesSurfaces.isEmpty() && Flightgear::FGSWIFTBUS_API_VERSION >= 2)
+        if (!planesSurfaces.isEmpty() && flightgear::FGSWIFTBUS_API_VERSION >= 2)
         {
             m_trafficProxy->setPlanesSurfaces(planesSurfaces);
         }
@@ -1083,9 +1083,9 @@ namespace BlackSimPlugin::Flightgear
         bool result = service.isValid() && traffic.isValid();
         if (!result) { return; }
 
-        Flightgear::FGSWIFTBUS_API_VERSION = service.getVersionNumber();
+        flightgear::FGSWIFTBUS_API_VERSION = service.getVersionNumber();
 
-        if (Flightgear::incompatibleVersions.contains(Flightgear::FGSWIFTBUS_API_VERSION))
+        if (flightgear::incompatibleVersions.contains(flightgear::FGSWIFTBUS_API_VERSION))
         {
             CLogMessage(this).error(u"This version of swift is not compatible with this Flightgear version. For further information check http://wiki.flightgear.org/Swift.");
             return;

@@ -9,7 +9,7 @@
 using namespace swift::misc;
 using namespace swift::misc::simulation;
 
-namespace BlackSimPlugin::Emulated
+namespace swift::simplugin::emulated
 {
     swift::core::ISimulator *CSimulatorEmulatedFactory::create(const CSimulatorPluginInfo &info,
                                                                IOwnAircraftProvider *ownAircraftProvider,

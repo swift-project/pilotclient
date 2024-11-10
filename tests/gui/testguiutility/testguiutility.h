@@ -8,8 +8,8 @@
  * \ingroup testswiftgui
  */
 
-#ifndef BLACKGUITEST_TESTUTILS_H
-#define BLACKGUITEST_TESTUTILS_H
+#ifndef SWIFT_GUITEST_TESTUTILS_H
+#define SWIFT_GUITEST_TESTUTILS_H
 
 #include <QObject>
 

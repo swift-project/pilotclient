@@ -16,7 +16,7 @@
 #include <QString>
 #include <QMetaType>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::gui::settings, CDockWidgetSettings)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::gui::settings, CDockWidgetSettings)
 
 namespace swift::gui::settings
 {
@@ -100,15 +100,14 @@ namespace swift::gui::settings
         bool m_floating = false; //!< floating
         bool m_frameless = false; //!< frameless
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CDockWidgetSettings,
-            BLACK_METAMEMBER(floatingMargins),
-            BLACK_METAMEMBER(floatingFramelessMargins),
-            BLACK_METAMEMBER(dockedMargins),
-            BLACK_METAMEMBER(floating),
-            BLACK_METAMEMBER(frameless),
-            BLACK_METAMEMBER(geometry)
-        );
+            SWIFT_METAMEMBER(floatingMargins),
+            SWIFT_METAMEMBER(floatingFramelessMargins),
+            SWIFT_METAMEMBER(dockedMargins),
+            SWIFT_METAMEMBER(floating),
+            SWIFT_METAMEMBER(frameless),
+            SWIFT_METAMEMBER(geometry));
     };
 
     //! Trait for settings for dock widget

@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSOUND_SELCALPLAYER_H
-#define BLACKSOUND_SELCALPLAYER_H
+#ifndef SWIFT_SOUND_SELCALPLAYER_H
+#define SWIFT_SOUND_SELCALPLAYER_H
 
 #include "sound/threadedtonepairplayer.h"
 #include "sound/tonepair.h"

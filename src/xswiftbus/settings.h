@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright (C) 2019 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#ifndef BLACKMISC_XSWIFTBUS_CSETTINGS_H
-#define BLACKMISC_XSWIFTBUS_CSETTINGS_H
+#ifndef SWIFT_MISC_XSWIFTBUS_CSETTINGS_H
+#define SWIFT_MISC_XSWIFTBUS_CSETTINGS_H
 
 #include "misc/simulation/settings/xswiftbussettingsqtfree.h"
 #include "config.h"

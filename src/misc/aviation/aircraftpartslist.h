@@ -15,7 +15,7 @@
 #include <QHash>
 #include <QMetaType>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftParts, CAircraftPartsList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftParts, CAircraftPartsList)
 
 namespace swift::misc::aviation
 {

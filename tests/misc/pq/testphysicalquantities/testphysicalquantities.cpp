@@ -446,7 +446,7 @@ namespace MiscTest
 } // namespace
 
 //! main
-BLACKTEST_APPLESS_MAIN(MiscTest::CTestPhysicalQuantities);
+SWIFTTEST_APPLESS_MAIN(MiscTest::CTestPhysicalQuantities);
 
 #include "testphysicalquantities.moc"
 

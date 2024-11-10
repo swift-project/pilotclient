@@ -17,7 +17,7 @@
 #include <QSet>
 #include <QString>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::db, CArtifact, CArtifactList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::db, CArtifact, CArtifactList)
 
 namespace swift::misc::db
 {

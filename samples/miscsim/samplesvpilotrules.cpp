@@ -19,7 +19,7 @@ using namespace swift::misc;
 using namespace swift::misc::simulation;
 using namespace swift::misc::simulation::fscommon;
 
-namespace BlackSample
+namespace swift::sample
 {
 
     /*

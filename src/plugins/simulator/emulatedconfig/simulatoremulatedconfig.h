@@ -3,12 +3,12 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDCONFIG_H
-#define BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDCONFIG_H
+#ifndef SWIFT_SIMPLUGIN_EMULATED_SIMULATOREMULATEDCONFIG_H
+#define SWIFT_SIMPLUGIN_EMULATED_SIMULATOREMULATEDCONFIG_H
 
 #include "gui/pluginconfig.h"
 
-namespace BlackSimPlugin::Emulated
+namespace swift::simplugin::emulated
 {
     /*!
      * Window for setting up the FSX plugin.

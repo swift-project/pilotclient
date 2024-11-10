@@ -7,7 +7,7 @@
 #include <QtGlobal>
 #include <QString>
 
-#ifdef BLACK_USE_CRASHPAD
+#ifdef SWIFT_USE_CRASHPAD
 #    include "crashpad/client/simulate_crash.h"
 #endif
 
@@ -18,9 +18,9 @@
 
 #if defined(Q_CC_CLANG)
 #    if __has_builtin(__builtin_debugtrap)
-#        define BLACK_BUILTIN_DEBUGTRAP __builtin_debugtrap
+#        define SWIFT_BUILTIN_DEBUGTRAP __builtin_debugtrap
 #    elif __has_builtin(__builtin_debugger)
-#        define BLACK_BUILTIN_DEBUGTRAP __builtin_debugger
+#        define SWIFT_BUILTIN_DEBUGTRAP __builtin_debugger
 #    endif
 #endif
 
@@ -43,8 +43,8 @@ namespace swift::misc::private_ns
             __debugbreak();
             return;
         }
-#    elif defined(BLACK_BUILTIN_DEBUGTRAP)
-        BLACK_BUILTIN_DEBUGTRAP();
+#    elif defined(SWIFT_BUILTIN_DEBUGTRAP)
+        SWIFT_BUILTIN_DEBUGTRAP();
 #    elif defined(Q_PROCESSOR_X86)
         __asm__ volatile("int $0x03");
 #    elif defined(Q_PROCESSOR_ARM)
@@ -67,7 +67,7 @@ namespace swift::misc::private_ns
             log = QStringLiteral("Failed to verify: %1 in %2 line %3").arg(condition, filename, QString::number(line));
         }
         QMessageLogger().warning(QLoggingCategory(qPrintable(CLogCategories::verification()))) << log;
-#    if defined(BLACK_USE_CRASHPAD)
+#    if defined(SWIFT_USE_CRASHPAD)
         CRASHPAD_SIMULATE_CRASH();
 #    endif
 #endif

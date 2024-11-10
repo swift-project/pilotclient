@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSAMPLE_SAMPLEUTILS_H
-#define BLACKSAMPLE_SAMPLEUTILS_H
+#ifndef SWIFT_SAMPLE_SAMPLEUTILS_H
+#define SWIFT_SAMPLE_SAMPLEUTILS_H
 
 #include <QStringList>
 

@@ -18,7 +18,7 @@
 
 #include <QReadWriteLock>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CStatusMessage)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CStatusMessage)
 
 namespace swift::misc
 {
@@ -608,15 +608,14 @@ namespace swift::misc
         mutable QReadWriteLock m_lock; //!< lock (because of mutable member)
 
         //! \fixme KB 2019-01 order and timestamp "disabled" for Ref T184 token bucket. Would it be better to enable those and use a special comparison function for that (e.g. "equalMessageAndSeverity")?
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CStatusMessage,
-            BLACK_METAMEMBER(categories),
-            BLACK_METAMEMBER(severity),
-            BLACK_METAMEMBER(message),
-            BLACK_METAMEMBER(args),
-            BLACK_METAMEMBER(order, 0, DisabledForHashing | DisabledForComparison),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForHashing | DisabledForComparison)
-        );
+            SWIFT_METAMEMBER(categories),
+            SWIFT_METAMEMBER(severity),
+            SWIFT_METAMEMBER(message),
+            SWIFT_METAMEMBER(args),
+            SWIFT_METAMEMBER(order, 0, DisabledForHashing | DisabledForComparison),
+            SWIFT_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForHashing | DisabledForComparison));
     };
 
     // CContainerBase methods implemented out-of-line to avoid circular include

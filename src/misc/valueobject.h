@@ -31,7 +31,7 @@
 #include <iostream>
 
 //! \cond
-#define BLACK_TEMPLATE_VALUEOBJECT_MIXINS(Namespace, Class, Extern)    \
+#define SWIFT_TEMPLATE_VALUEOBJECT_MIXINS(Namespace, Class, Extern)    \
     namespace Namespace                                                \
     {                                                                  \
         class Class;                                                   \
@@ -58,21 +58,21 @@
 //! \endcond
 
 /*!
- * \def BLACK_DECLARE_VALUEOBJECT_MIXINS
+ * \def SWIFT_DECLARE_VALUEOBJECT_MIXINS
  * Explicit template declaration of mixins for a CValueObject subclass
  * to be placed near the top of the header that defines the class
  */
 
 /*!
- * \def BLACK_DEFINE_VALUEOBJECT_MIXINS
+ * \def SWIFT_DEFINE_VALUEOBJECT_MIXINS
  * Explicit template definition of mixins for a CValueObject subclass
  */
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)
-#    define BLACK_DECLARE_VALUEOBJECT_MIXINS(Namespace, Class)
-#    define BLACK_DEFINE_VALUEOBJECT_MIXINS(Namespace, Class)
+#    define SWIFT_DECLARE_VALUEOBJECT_MIXINS(Namespace, Class)
+#    define SWIFT_DEFINE_VALUEOBJECT_MIXINS(Namespace, Class)
 #else
-#    define BLACK_DECLARE_VALUEOBJECT_MIXINS(Namespace, Class) BLACK_TEMPLATE_VALUEOBJECT_MIXINS(Namespace, Class, extern)
-#    define BLACK_DEFINE_VALUEOBJECT_MIXINS(Namespace, Class) BLACK_TEMPLATE_VALUEOBJECT_MIXINS(Namespace, Class, )
+#    define SWIFT_DECLARE_VALUEOBJECT_MIXINS(Namespace, Class) SWIFT_TEMPLATE_VALUEOBJECT_MIXINS(Namespace, Class, extern)
+#    define SWIFT_DEFINE_VALUEOBJECT_MIXINS(Namespace, Class) SWIFT_TEMPLATE_VALUEOBJECT_MIXINS(Namespace, Class, )
 #endif
 
 namespace swift::misc

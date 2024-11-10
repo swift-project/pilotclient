@@ -14,7 +14,7 @@
 #include "misc/metaclass.h"
 #include "misc/swiftmiscexport.h"
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftVelocity)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftVelocity)
 
 namespace swift::misc::aviation
 {
@@ -84,15 +84,14 @@ namespace swift::misc::aviation
         double m_roll = 0;
         double m_heading = 0;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CAircraftVelocity,
-            BLACK_METAMEMBER(x),
-            BLACK_METAMEMBER(y),
-            BLACK_METAMEMBER(z),
-            BLACK_METAMEMBER(pitch),
-            BLACK_METAMEMBER(roll),
-            BLACK_METAMEMBER(heading)
-        );
+            SWIFT_METAMEMBER(x),
+            SWIFT_METAMEMBER(y),
+            SWIFT_METAMEMBER(z),
+            SWIFT_METAMEMBER(pitch),
+            SWIFT_METAMEMBER(roll),
+            SWIFT_METAMEMBER(heading));
     };
 }
 

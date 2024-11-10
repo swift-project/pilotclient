@@ -21,7 +21,7 @@ using namespace swift::misc::geo;
 using namespace swift::misc::physical_quantities;
 using namespace swift::config;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftSituation)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftSituation)
 
 namespace swift::misc::aviation
 {

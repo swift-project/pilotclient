@@ -77,7 +77,7 @@ namespace MiscTest
 } // ns
 
 //! main
-BLACKTEST_APPLESS_MAIN(MiscTest::CTestGeo);
+SWIFTTEST_APPLESS_MAIN(MiscTest::CTestGeo);
 
 #include "testgeo.moc"
 

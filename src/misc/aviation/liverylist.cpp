@@ -7,7 +7,7 @@
 
 using namespace swift::misc::aviation;
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CLivery, CLiveryList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CLivery, CLiveryList)
 
 namespace swift::misc::aviation
 {

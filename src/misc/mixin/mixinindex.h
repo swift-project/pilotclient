@@ -145,7 +145,7 @@ namespace swift::misc
          * the derived class uses this macro to disambiguate the inherited members.
          */
         // *INDENT-OFF*
-#define SWIFT_MISC_DECLARE_USING_MIXIN_INDEX(DERIVED)                  \
+#define SWIFT_MISC_DECLARE_USING_MIXIN_INDEX(DERIVED)                   \
     using ::swift::misc::mixin::Index<DERIVED>::apply;                  \
     using ::swift::misc::mixin::Index<DERIVED>::setPropertyByIndex;     \
     using ::swift::misc::mixin::Index<DERIVED>::propertyByIndex;        \

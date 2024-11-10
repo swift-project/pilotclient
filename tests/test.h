@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#ifndef BLACKMISCTEST_TEST_H
-#define BLACKMISCTEST_TEST_H
+#ifndef SWIFT_MISCTEST_TEST_H
+#define SWIFT_MISCTEST_TEST_H
 
 //! \cond PRIVATE_TESTS
 //! \file
@@ -15,7 +15,7 @@
 //! Implements a main() function that executes all tests in TestObject
 //! without instantiating a QApplication object.
 //! Also adds arguments automatically to print test results to an xml file.
-#define BLACKTEST_INIT(TestObject)                                               \
+#define SWIFTTEST_INIT(TestObject)                                               \
     TestObject to;                                                               \
     QTEST_SET_MAIN_SOURCE_PATH                                                   \
                                                                                  \
@@ -36,12 +36,12 @@
 //! Implements a main() function that executes all tests in TestObject
 //! without instantiating a QApplication object.
 //! Also adds arguments automatically to print test results to an xml file.
-#define BLACKTEST_APPLESS_MAIN(TestObject)  \
+#define SWIFTTEST_APPLESS_MAIN(TestObject)  \
     int main(int argc, char *argv[])        \
     {                                       \
         try                                 \
         {                                   \
-            BLACKTEST_INIT(TestObject)      \
+            SWIFTTEST_INIT(TestObject)      \
             return QTest::qExec(&to, args); \
         }                                   \
         catch (...)                         \
@@ -54,13 +54,13 @@
 //! Implements a main() function that executes all tests in TestObject
 //! including instantiating a QCoreApplication object.
 //! Also adds arguments automatically to print test results to an xml file.
-#define BLACKTEST_MAIN(TestObject)            \
+#define SWIFTTEST_MAIN(TestObject)            \
     int main(int argc, char *argv[])          \
     {                                         \
         try                                   \
         {                                     \
             QCoreApplication app(argc, argv); \
-            BLACKTEST_INIT(TestObject)        \
+            SWIFTTEST_INIT(TestObject)        \
             return QTest::qExec(&to, args);   \
         }                                     \
         catch (...)                           \

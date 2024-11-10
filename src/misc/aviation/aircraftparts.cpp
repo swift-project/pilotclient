@@ -10,7 +10,7 @@
 #include "QStringBuilder"
 #include <QtGlobal>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftParts)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftParts)
 
 namespace swift::misc::aviation
 {

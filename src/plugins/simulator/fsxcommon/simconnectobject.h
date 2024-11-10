@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECTOBJECT_H
-#define BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECTOBJECT_H
+#ifndef SWIFT_SIMPLUGIN_FSXCOMMON_SIMCONNECTOBJECT_H
+#define SWIFT_SIMPLUGIN_FSXCOMMON_SIMCONNECTOBJECT_H
 
 #include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 #include "plugins/simulator/fsxcommon/simconnectdatadefinition.h"
@@ -14,7 +14,7 @@
 #include <QStringList>
 #include <QByteArray>
 
-namespace BlackSimPlugin::FsxCommon
+namespace swift::simplugin::fsxcommon
 {
     //! Class representing a SimConnect object
     class FSXCOMMON_EXPORT CSimConnectObject

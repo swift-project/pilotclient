@@ -15,7 +15,7 @@
 #include <QMetaType>
 #include <initializer_list>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CRawFsdMessage, CRawFsdMessageList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CRawFsdMessage, CRawFsdMessageList)
 
 namespace swift::misc::network
 {

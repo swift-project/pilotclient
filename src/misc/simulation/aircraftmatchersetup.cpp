@@ -5,7 +5,7 @@
 #include "misc/stringutils.h"
 #include <QStringBuilder>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CAircraftMatcherSetup)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CAircraftMatcherSetup)
 
 namespace swift::misc::simulation
 {

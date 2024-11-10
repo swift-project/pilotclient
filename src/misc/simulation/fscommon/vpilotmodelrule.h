@@ -17,7 +17,7 @@
 #include <QString>
 #include <QtGlobal>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::fscommon, CVPilotModelRule)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::fscommon, CVPilotModelRule)
 
 namespace swift::misc::simulation::fscommon
 {
@@ -89,14 +89,13 @@ namespace swift::misc::simulation::fscommon
         QString m_callsignPrefix; //!< callsign prefix, aka airline ICAO
         qint64 m_updatedMsSinceEpoch; //!< updated when
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CVPilotModelRule,
-            BLACK_METAMEMBER(typeCode, 0, CaseInsensitiveComparison),
-            BLACK_METAMEMBER(callsignPrefix, 0, CaseInsensitiveComparison),
-            BLACK_METAMEMBER(modelName, 0, CaseInsensitiveComparison),
-            BLACK_METAMEMBER(folder, 0, CaseInsensitiveComparison),
-            BLACK_METAMEMBER(updatedMsSinceEpoch)
-        );
+            SWIFT_METAMEMBER(typeCode, 0, CaseInsensitiveComparison),
+            SWIFT_METAMEMBER(callsignPrefix, 0, CaseInsensitiveComparison),
+            SWIFT_METAMEMBER(modelName, 0, CaseInsensitiveComparison),
+            SWIFT_METAMEMBER(folder, 0, CaseInsensitiveComparison),
+            SWIFT_METAMEMBER(updatedMsSinceEpoch));
     };
 
 } // namespace

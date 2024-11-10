@@ -22,7 +22,7 @@
 #include <ctime>
 #include <numeric>
 
-namespace BlackSample
+namespace swift::sample
 {
     int CSamplesAlgorithm::samples()
     {

@@ -13,7 +13,7 @@
 #include "misc/sequence.h"
 #include <QMetaType>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CFlightPlan, CFlightPlanList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CFlightPlan, CFlightPlanList)
 
 namespace swift::misc::aviation
 {

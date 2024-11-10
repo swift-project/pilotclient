@@ -9,7 +9,7 @@
 
 using namespace swift::config;
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc, CApplicationInfo, CApplicationInfoList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CApplicationInfo, CApplicationInfoList)
 
 namespace swift::misc
 {

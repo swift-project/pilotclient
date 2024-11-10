@@ -11,7 +11,7 @@
 using namespace swift::misc::aviation;
 using namespace swift::misc::physical_quantities;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CAirspaceAircraftSnapshot)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CAirspaceAircraftSnapshot)
 
 namespace swift::misc::simulation
 {

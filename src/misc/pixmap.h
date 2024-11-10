@@ -16,7 +16,7 @@
 #include <QReadWriteLock>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CPixmap)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CPixmap)
 
 namespace swift::misc
 {
@@ -66,10 +66,9 @@ namespace swift::misc
         mutable bool m_hasCachedPixmap = false; //!< pixmap? Mutable because of lazy initialization
         mutable QReadWriteLock m_lock; //!< lock (because of mutable members)
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CPixmap,
-            BLACK_METAMEMBER(array)
-        );
+            SWIFT_METAMEMBER(array));
     };
 } // namespace
 

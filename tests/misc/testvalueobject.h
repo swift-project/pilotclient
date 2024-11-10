@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#ifndef BLACKMISC_TESTVALUEOBJECT_H
-#define BLACKMISC_TESTVALUEOBJECT_H
+#ifndef SWIFT_MISC_TESTVALUEOBJECT_H
+#define SWIFT_MISC_TESTVALUEOBJECT_H
 
 //! \cond PRIVATE_TESTS
 //! \file
@@ -110,11 +110,10 @@ namespace swift::misc
         QString m_name;
         QString m_description;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CTestValueObject,
-            BLACK_METAMEMBER(name),
-            BLACK_METAMEMBER(description)
-        );
+            SWIFT_METAMEMBER(name),
+            SWIFT_METAMEMBER(description));
     };
 
     //! \cond NO_DOXYGEN

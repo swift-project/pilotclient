@@ -18,7 +18,7 @@
 #include <QStringList>
 #include <tuple>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc, CCountry, CCountryList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc, CCountry, CCountryList)
 
 namespace swift::misc
 {

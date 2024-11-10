@@ -4,8 +4,8 @@
 //! \file
 //! \ingroup samplemiscdbus
 
-#ifndef BLACKSAMPLE_SERVICETOOL_H
-#define BLACKSAMPLE_SERVICETOOL_H
+#ifndef SWIFT_SAMPLE_SERVICETOOL_H
+#define SWIFT_SAMPLE_SERVICETOOL_H
 
 #include <QCoreApplication>
 #include <QDBusArgument>
@@ -21,7 +21,7 @@ namespace swift::misc
 {
     class CDBusServer;
 }
-namespace BlackSample
+namespace swift::sample
 {
     class Testservice; // forward declaration
 

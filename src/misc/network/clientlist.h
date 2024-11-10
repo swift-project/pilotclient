@@ -14,7 +14,7 @@
 #include <QMap>
 #include <QMetaType>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CClient, CClientList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CClient, CClientList)
 
 namespace swift::misc::network
 {

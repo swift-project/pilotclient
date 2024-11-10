@@ -6,7 +6,7 @@
 #include <QList>
 #include <tuple>
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CSimulatorInfo, CSimulatorInfoList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CSimulatorInfo, CSimulatorInfoList)
 
 namespace swift::misc::simulation
 {

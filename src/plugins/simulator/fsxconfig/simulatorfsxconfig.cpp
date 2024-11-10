@@ -5,9 +5,9 @@
 #include "../fsxcommon/simulatorfsxconfigwindow.h"
 
 using namespace swift::gui;
-using namespace BlackSimPlugin::FsxCommon;
+using namespace swift::simplugin::fsxcommon;
 
-namespace BlackSimPlugin::Fsx
+namespace swift::simplugin::fsx
 {
     CSimulatorFsxConfig::CSimulatorFsxConfig(QObject *parent) : QObject(parent)
     {

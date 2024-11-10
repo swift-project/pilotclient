@@ -10,7 +10,7 @@
 #include <QCoreApplication>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CProcessInfo)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CProcessInfo)
 
 namespace swift::misc
 {
@@ -53,11 +53,10 @@ namespace swift::misc
         qint64 m_pid = 0;
         QString m_name;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CProcessInfo,
-            BLACK_METAMEMBER(pid),
-            BLACK_METAMEMBER(name)
-        );
+            SWIFT_METAMEMBER(pid),
+            SWIFT_METAMEMBER(name));
     };
 }
 

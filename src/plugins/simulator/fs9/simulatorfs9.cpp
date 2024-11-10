@@ -30,10 +30,10 @@ using namespace swift::misc::network;
 using namespace swift::misc::simulation;
 using namespace swift::misc::simulation::fscommon;
 using namespace swift::core;
-using namespace BlackSimPlugin::FsCommon;
+using namespace swift::simplugin::fscommon;
 using namespace swift::config;
 
-namespace BlackSimPlugin::Fs9
+namespace swift::simplugin::fs9
 {
     CSimulatorFs9::CSimulatorFs9(const CSimulatorPluginInfo &info,
                                  const QSharedPointer<CFs9Host> &fs9Host,

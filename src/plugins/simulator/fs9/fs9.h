@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_FS9_FS9SDK_H
-#define BLACKSIMPLUGIN_FS9_FS9SDK_H
+#ifndef SWIFT_SIMPLUGIN_FS9_FS9SDK_H
+#define SWIFT_SIMPLUGIN_FS9_FS9SDK_H
 
 #include <QByteArray>
 #include <QString>
@@ -15,7 +15,7 @@
 #endif
 #include <dplay8.h>
 
-namespace BlackSimPlugin::Fs9
+namespace swift::simplugin::fs9
 {
     //! FS9 SDK
     class CFs9Sdk

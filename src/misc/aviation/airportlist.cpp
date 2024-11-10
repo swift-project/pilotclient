@@ -9,7 +9,7 @@
 
 using namespace swift::misc::physical_quantities;
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAirport, CAirportList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAirport, CAirportList)
 
 namespace swift::misc::aviation
 {

@@ -11,7 +11,7 @@
 
 using namespace swift::config;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CApplicationInfo)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CApplicationInfo)
 
 namespace swift::misc
 {

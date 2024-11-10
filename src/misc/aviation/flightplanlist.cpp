@@ -3,7 +3,7 @@
 
 #include "misc/aviation/flightplanlist.h"
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CFlightPlan, CFlightPlanList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CFlightPlan, CFlightPlanList)
 
 namespace swift::misc::aviation
 {

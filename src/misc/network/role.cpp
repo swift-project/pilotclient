@@ -6,7 +6,7 @@
 #include <QtGlobal>
 #include <QStringBuilder>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CRole)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CRole)
 
 namespace swift::misc::network
 {

@@ -18,7 +18,7 @@
 #include <QRegularExpression>
 #include <QtDebug>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::physical_quantities, CPqString)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::physical_quantities, CPqString)
 
 namespace swift::misc::physical_quantities
 {

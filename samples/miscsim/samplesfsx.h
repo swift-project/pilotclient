@@ -4,12 +4,12 @@
 //! \file
 //! \ingroup samplemiscsim
 
-#ifndef BLACKSAMPLE_SAMPLESFSX_H
-#define BLACKSAMPLE_SAMPLESFSX_H
+#ifndef SWIFT_SAMPLE_SAMPLESFSX_H
+#define SWIFT_SAMPLE_SAMPLESFSX_H
 
 class QTextStream;
 
-namespace BlackSample
+namespace swift::sample
 {
     //! Samples for FSX classes
     class CSamplesFsx

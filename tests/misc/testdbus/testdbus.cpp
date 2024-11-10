@@ -80,7 +80,7 @@ namespace MiscTest
 }
 
 //! main
-BLACKTEST_MAIN(MiscTest::CTestDBus);
+SWIFTTEST_MAIN(MiscTest::CTestDBus);
 
 #include "testdbus.moc"
 

@@ -4,12 +4,12 @@
 //! \file
 //! \ingroup samplemisc
 
-#ifndef BLACKSAMPLE_SAMPLESFILE_H
-#define BLACKSAMPLE_SAMPLESFILE_H
+#ifndef SWIFT_SAMPLE_SAMPLESFILE_H
+#define SWIFT_SAMPLE_SAMPLESFILE_H
 
 #include <QTextStream>
 
-namespace BlackSample
+namespace swift::sample
 {
     //! Samples for file/directory
     class CSamplesFile

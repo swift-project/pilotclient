@@ -15,7 +15,7 @@
 #include <QString>
 #include <QtGlobal>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::input, CJoystickButton)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::input, CJoystickButton)
 
 namespace swift::misc::input
 {
@@ -91,11 +91,10 @@ namespace swift::misc::input
         QString m_deviceName;
         int m_buttonIndex = InvalidButtonIndex;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CJoystickButton,
-            BLACK_METAMEMBER(deviceName),
-            BLACK_METAMEMBER(buttonIndex)
-        );
+            SWIFT_METAMEMBER(deviceName),
+            SWIFT_METAMEMBER(buttonIndex));
     };
 } // ns
 

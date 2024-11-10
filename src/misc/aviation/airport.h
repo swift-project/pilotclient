@@ -23,7 +23,7 @@
 #include <QVector3D>
 #include <array>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAirport)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAirport)
 
 namespace swift::misc::aviation
 {
@@ -167,21 +167,20 @@ namespace swift::misc::aviation
         swift::misc::CCountry m_country;
         swift::misc::geo::CCoordinateGeodetic m_position;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CAirport,
-            BLACK_METAMEMBER(icao),
-            BLACK_METAMEMBER(location),
-            BLACK_METAMEMBER(descriptiveName),
-            BLACK_METAMEMBER(position),
-            BLACK_METAMEMBER(country),
-            BLACK_METAMEMBER(operating),
+            SWIFT_METAMEMBER(icao),
+            SWIFT_METAMEMBER(location),
+            SWIFT_METAMEMBER(descriptiveName),
+            SWIFT_METAMEMBER(position),
+            SWIFT_METAMEMBER(country),
+            SWIFT_METAMEMBER(operating),
             // ICoordinateWithRelativePosition
-            BLACK_METAMEMBER(relativeDistance),
-            BLACK_METAMEMBER(relativeBearing),
+            SWIFT_METAMEMBER(relativeDistance),
+            SWIFT_METAMEMBER(relativeBearing),
             // IDatastoreObjectWithIntegerKey
-            BLACK_METAMEMBER(dbKey),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch)
-        );
+            SWIFT_METAMEMBER(dbKey),
+            SWIFT_METAMEMBER(timestampMSecsSinceEpoch));
     };
 } // namespace
 

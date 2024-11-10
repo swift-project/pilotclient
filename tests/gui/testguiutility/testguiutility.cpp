@@ -31,7 +31,7 @@ namespace SwiftGuiTest
 } // ns
 
 //! main
-BLACKTEST_APPLESS_MAIN(SwiftGuiTest::CTestGuiUtility);
+SWIFTTEST_APPLESS_MAIN(SwiftGuiTest::CTestGuiUtility);
 
 #include "testguiutility.moc"
 

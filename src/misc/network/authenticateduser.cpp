@@ -10,7 +10,7 @@
 #include <QStringBuilder>
 #include <QtGlobal>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CAuthenticatedUser)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CAuthenticatedUser)
 
 namespace swift::misc::network
 {

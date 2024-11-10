@@ -16,7 +16,7 @@
 
 #include <QMetaType>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAirport, CAirportList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAirport, CAirportList)
 
 namespace swift::misc::aviation
 {

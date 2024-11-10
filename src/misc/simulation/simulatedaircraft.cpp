@@ -16,7 +16,7 @@ using namespace swift::misc::physical_quantities;
 using namespace swift::misc::aviation;
 using namespace swift::misc::network;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatedAircraft)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatedAircraft)
 
 namespace swift::misc::simulation
 {

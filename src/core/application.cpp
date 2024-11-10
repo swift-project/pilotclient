@@ -1384,7 +1384,7 @@ namespace swift::core
 
     bool CApplication::isSupportingCrashpad() const
     {
-#ifdef BLACK_USE_CRASHPAD
+#ifdef SWIFT_USE_CRASHPAD
         return true;
 #else
         return false;

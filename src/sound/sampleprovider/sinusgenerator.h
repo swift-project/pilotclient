@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSOUND_SAMPLEPROVIDER_SINUSGENERATOR_H
-#define BLACKSOUND_SAMPLEPROVIDER_SINUSGENERATOR_H
+#ifndef SWIFT_SOUND_SAMPLEPROVIDER_SINUSGENERATOR_H
+#define SWIFT_SOUND_SAMPLEPROVIDER_SINUSGENERATOR_H
 
 #include "sound/swiftsoundexport.h"
 #include "sound/sampleprovider/sampleprovider.h"

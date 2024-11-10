@@ -10,7 +10,7 @@
 
 using namespace swift::misc;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CVoiceCapabilities)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CVoiceCapabilities)
 
 namespace swift::misc::network
 {

@@ -6,8 +6,8 @@
 using namespace swift::misc;
 using namespace swift::misc::physical_quantities;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::core::vatsim, CReaderSettings)
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::core::vatsim, CRawFsdMessageSettings)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::core::vatsim, CReaderSettings)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::core::vatsim, CRawFsdMessageSettings)
 
 namespace swift::core::vatsim
 {

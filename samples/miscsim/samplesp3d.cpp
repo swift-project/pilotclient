@@ -11,7 +11,7 @@
 
 using namespace swift::misc::simulation::fscommon;
 
-namespace BlackSample
+namespace swift::sample
 {
     void CSamplesP3D::samplesMisc(QTextStream &streamOut)
     {

@@ -4,7 +4,7 @@
 #include "misc/variantlist.h"
 #include <algorithm>
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc, CVariant, CVariantList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CVariant, CVariantList)
 
 namespace swift::misc
 {

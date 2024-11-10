@@ -23,7 +23,7 @@
  * Put this macro in the private section of a class to set the channel of its child endpoints.
  * \ingroup shared_state
  */
-#define BLACK_SHARED_STATE_CHANNEL(ID) Q_CLASSINFO("SharedStateChannel", ID)
+#define SWIFT_SHARED_STATE_CHANNEL(ID) Q_CLASSINFO("SharedStateChannel", ID)
 
 namespace swift::misc::shared_state
 {

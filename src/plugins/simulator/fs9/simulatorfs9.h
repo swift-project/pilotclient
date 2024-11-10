@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_SIMULATOR_FS9_H
-#define BLACKSIMPLUGIN_SIMULATOR_FS9_H
+#ifndef SWIFT_SIMPLUGIN_SIMULATOR_FS9_H
+#define SWIFT_SIMPLUGIN_SIMULATOR_FS9_H
 
 #include "fs9host.h"
 #include "fs9client.h"
@@ -23,7 +23,7 @@
 #include <QThread>
 #include <QHash>
 
-namespace BlackSimPlugin::Fs9
+namespace swift::simplugin::fs9
 {
     //! FS9 Simulator Implementation
     class CSimulatorFs9 : public FsCommon::CSimulatorFsCommon
@@ -87,7 +87,7 @@ namespace BlackSimPlugin::Fs9
         void updateOwnAircraftFromSimulator(const swift::misc::simulation::CSimulatedAircraft &ownAircraft);
 
         //! Render status
-        void updateRenderStatus(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft, BlackSimPlugin::Fs9::CFs9Client::ClientStatus);
+        void updateRenderStatus(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft, swift::simplugin::fs9::CFs9Client::ClientStatus);
 
         //! Disconnect all clients
         void disconnectAllClients();
@@ -95,7 +95,7 @@ namespace BlackSimPlugin::Fs9
         //! Sync time with user's computer
         void synchronizeTime();
 
-        BlackSimPlugin::FsCommon::CFsuipc *m_fsuipc = nullptr; //!< FSUIPC
+        swift::simplugin::fscommon::CFsuipc *m_fsuipc = nullptr; //!< FSUIPC
         QHash<swift::misc::aviation::CCallsign, QPointer<CFs9Client>> m_hashFs9Clients;
         QMetaObject::Connection m_connectionHostMessages;
         bool m_simConnected = false; //!< Is simulator connected?

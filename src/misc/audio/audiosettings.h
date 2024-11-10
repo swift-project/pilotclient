@@ -16,7 +16,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::audio, CSettings)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::audio, CSettings)
 
 namespace swift::misc::audio
 {
@@ -131,17 +131,16 @@ namespace swift::misc::audio
         int m_inVolume = 50; //!< AFV range
         bool m_audioEffects = true; //!< Audio effects en
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CSettings,
-            BLACK_METAMEMBER(notificationSoundDir),
-            BLACK_METAMEMBER(notification),
-            BLACK_METAMEMBER(notificationVolume),
-            BLACK_METAMEMBER(outVolume),
-            BLACK_METAMEMBER(outVolumeCom1),
-            BLACK_METAMEMBER(outVolumeCom2),
-            BLACK_METAMEMBER(inVolume),
-            BLACK_METAMEMBER(audioEffects)
-        );
+            SWIFT_METAMEMBER(notificationSoundDir),
+            SWIFT_METAMEMBER(notification),
+            SWIFT_METAMEMBER(notificationVolume),
+            SWIFT_METAMEMBER(outVolume),
+            SWIFT_METAMEMBER(outVolumeCom1),
+            SWIFT_METAMEMBER(outVolumeCom2),
+            SWIFT_METAMEMBER(inVolume),
+            SWIFT_METAMEMBER(audioEffects));
     };
 
     //! Audio related settings

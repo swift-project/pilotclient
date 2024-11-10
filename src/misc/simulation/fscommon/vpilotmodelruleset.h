@@ -17,7 +17,7 @@
 #include "misc/simulation/aircraftmodellist.h"
 #include "misc/simulation/fscommon/vpilotmodelrule.h"
 
-BLACK_DECLARE_COLLECTION_MIXINS(swift::misc::simulation::fscommon, CVPilotModelRule, CVPilotModelRuleSet)
+SWIFT_DECLARE_COLLECTION_MIXINS(swift::misc::simulation::fscommon, CVPilotModelRule, CVPilotModelRuleSet)
 
 namespace swift::misc::simulation::fscommon
 {

@@ -267,7 +267,7 @@ namespace swift::misc
  * When a derived class and a base class both inherit from mixin::JsonByTuple,
  * the derived class uses this macro to disambiguate the inherited members.
  */
-#define SWIFT_MISC_DECLARE_USING_MIXIN_JSON(DERIVED)             \
+#define SWIFT_MISC_DECLARE_USING_MIXIN_JSON(DERIVED)              \
     using ::swift::misc::mixin::JsonByMetaClass<DERIVED>::toJson; \
     using ::swift::misc::mixin::JsonByMetaClass<DERIVED>::convertFromJson;
     } // Mixin ns

@@ -64,7 +64,7 @@ namespace MiscTest
 }
 
 //! main
-BLACKTEST_MAIN(MiscTest::CTestDataStream);
+SWIFTTEST_MAIN(MiscTest::CTestDataStream);
 
 #include "testdatastream.moc"
 

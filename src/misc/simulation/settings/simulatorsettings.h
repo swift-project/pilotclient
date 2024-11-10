@@ -19,9 +19,9 @@
 #include <QStringList>
 #include <QObject>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::Settings, CSimulatorSettings)
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::Settings, CFsxP3DSettings)
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::Settings, CSimulatorMessagesSettings)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::Settings, CSimulatorSettings)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::Settings, CFsxP3DSettings)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::Settings, CSimulatorMessagesSettings)
 
 namespace swift::misc::simulation::settings
 {
@@ -144,16 +144,15 @@ namespace swift::misc::simulation::settings
         int m_cgSource = static_cast<int>(CGFromSimulatorFirst); //!< CG source
         physical_quantities::CLength m_recordedGndRadius { 250.0, physical_quantities::CLengthUnit::m() };
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CSimulatorSettings,
-            BLACK_METAMEMBER(simulatorDirectory),
-            BLACK_METAMEMBER(modelDirectories),
-            BLACK_METAMEMBER(excludeDirectoryPatterns),
-            BLACK_METAMEMBER(comIntegration),
-            BLACK_METAMEMBER(cgSource),
-            BLACK_METAMEMBER(recordGnd),
-            BLACK_METAMEMBER(recordedGndRadius)
-        );
+            SWIFT_METAMEMBER(simulatorDirectory),
+            SWIFT_METAMEMBER(modelDirectories),
+            SWIFT_METAMEMBER(excludeDirectoryPatterns),
+            SWIFT_METAMEMBER(comIntegration),
+            SWIFT_METAMEMBER(cgSource),
+            SWIFT_METAMEMBER(recordGnd),
+            SWIFT_METAMEMBER(recordedGndRadius));
     };
 
     //! Some P3D/FSX settings
@@ -193,11 +192,10 @@ namespace swift::misc::simulation::settings
         bool m_useSimulatedObjectAdding = false; //!< COM integration
         bool m_useSbOffsets = true; //!< use the SB offset
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CFsxP3DSettings,
-            BLACK_METAMEMBER(useSimulatedObjectAdding),
-            BLACK_METAMEMBER(useSbOffsets)
-        );
+            SWIFT_METAMEMBER(useSimulatedObjectAdding),
+            SWIFT_METAMEMBER(useSbOffsets));
     };
 
     //! Allows to have specific utility functions for each simulator
@@ -627,11 +625,10 @@ namespace swift::misc::simulation::settings
         int m_messageType = static_cast<int>(TextMessagePrivate | TextMessageSupervisor);
         bool m_relayGloballyEnabled = true; //!< messsage relay enabled to simulator
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CSimulatorMessagesSettings,
-            BLACK_METAMEMBER(technicalLogLevel),
-            BLACK_METAMEMBER(messageType)
-        );
+            SWIFT_METAMEMBER(technicalLogLevel),
+            SWIFT_METAMEMBER(messageType));
     };
 
     //! Trait for simulator message settings

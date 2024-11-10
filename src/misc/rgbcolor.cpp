@@ -16,7 +16,7 @@
 
 using namespace swift::misc;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CRgbColor)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CRgbColor)
 
 namespace swift::misc
 {

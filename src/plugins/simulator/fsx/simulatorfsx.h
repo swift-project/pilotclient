@@ -3,15 +3,15 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_FSX_SIMULATORFSX_H
-#define BLACKSIMPLUGIN_FSX_SIMULATORFSX_H
+#ifndef SWIFT_SIMPLUGIN_FSX_SIMULATORFSX_H
+#define SWIFT_SIMPLUGIN_FSX_SIMULATORFSX_H
 
 #include "../fsxcommon/simulatorfsxcommon.h"
 
-namespace BlackSimPlugin::Fsx
+namespace swift::simplugin::fsx
 {
     //! FSX simulator implementation
-    class CSimulatorFsx : public BlackSimPlugin::FsxCommon::CSimulatorFsxCommon
+    class CSimulatorFsx : public namespace swift::simplugin::fsxcommon::CSimulatorFsxCommon
     {
         Q_OBJECT
 

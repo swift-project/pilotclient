@@ -25,7 +25,7 @@ using namespace swift::misc::simulation;
 using namespace swift::misc::simulation::fscommon;
 using namespace swift::misc::simulation::settings;
 
-namespace BlackSample
+namespace swift::sample
 {
     void CSamplesFsCommon::samples(QTextStream &streamOut, QTextStream &streamIn)
     {

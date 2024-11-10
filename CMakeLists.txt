@@ -121,7 +121,7 @@ endif()
 add_compile_definitions(QT_NO_DEPRECATED_WARNINGS)
 
 if(SWIFT_USE_CRASHPAD)
-    add_compile_definitions(BLACK_USE_CRASHPAD)
+    add_compile_definitions(SWIFT_USE_CRASHPAD)
 endif()
 
 if(APPLE)

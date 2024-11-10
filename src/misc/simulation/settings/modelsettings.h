@@ -11,7 +11,7 @@
 #include "misc/swiftmiscexport.h"
 #include "misc/propertyindexref.h"
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::Settings, CModelSettings)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::Settings, CModelSettings)
 
 namespace swift::misc::simulation::settings
 {
@@ -46,10 +46,9 @@ namespace swift::misc::simulation::settings
     private:
         bool m_allowExcludeModels = false; //!< Allow excluded models in sets
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CModelSettings,
-            BLACK_METAMEMBER(allowExcludeModels)
-        );
+            SWIFT_METAMEMBER(allowExcludeModels));
     };
 
     //! Trait for simulator settings

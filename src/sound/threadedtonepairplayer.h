@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSOUND_THREADEDTONEPAIRPLAYER_H
-#define BLACKSOUND_THREADEDTONEPAIRPLAYER_H
+#ifndef SWIFT_SOUND_THREADEDTONEPAIRPLAYER_H
+#define SWIFT_SOUND_THREADEDTONEPAIRPLAYER_H
 
 #include "sound/swiftsoundexport.h"
 #include "sound/tonepair.h"

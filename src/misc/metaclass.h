@@ -24,17 +24,17 @@
 
 // Work around MinGW problem with combination of constexpr and extern template
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)
-#    define BLACK_NO_EXPORT_CONSTEXPR constexpr inline __attribute__((always_inline))
+#    define SWIFT_NO_EXPORT_CONSTEXPR constexpr inline __attribute__((always_inline))
 #else
-#    define BLACK_NO_EXPORT_CONSTEXPR constexpr
+#    define SWIFT_NO_EXPORT_CONSTEXPR constexpr
 #endif
 
 // MSVC, GCC, Clang all have non-standard extensions for skipping trailing
 // commas in variadic macros, but the MSVC extension differs from the others.
 #ifdef Q_CC_MSVC
-#    define BLACK_TRAILING_VA_ARGS(...) , __VA_ARGS__
+#    define SWIFT_TRAILING_VA_ARGS(...) , __VA_ARGS__
 #else
-#    define BLACK_TRAILING_VA_ARGS(...) , ##__VA_ARGS__
+#    define SWIFT_TRAILING_VA_ARGS(...) , ##__VA_ARGS__
 #endif
 
 //! \endcond
@@ -48,15 +48,15 @@
  * \note A semicolon is needed at the end.
  * \ingroup MetaClass
  */
-#define BLACK_METACLASS(CLASS, ...)                           \
-    friend struct swift::misc::private_ns::CMetaClassAccessor;\
-    struct MetaClass : public swift::misc::CMetaClass         \
-    {                                                         \
-        using Class = CLASS;                                  \
-        BLACK_NO_EXPORT_CONSTEXPR static auto getMemberList() \
-        {                                                     \
-            return makeMetaMemberList(__VA_ARGS__);           \
-        }                                                     \
+#define SWIFT_METACLASS(CLASS, ...)                            \
+    friend struct swift::misc::private_ns::CMetaClassAccessor; \
+    struct MetaClass : public swift::misc::CMetaClass          \
+    {                                                          \
+        using Class = CLASS;                                   \
+        SWIFT_NO_EXPORT_CONSTEXPR static auto getMemberList()  \
+        {                                                      \
+            return makeMetaMemberList(__VA_ARGS__);            \
+        }                                                      \
     }
 
 /*!
@@ -66,24 +66,24 @@
  * forwarded to CMetaClass::makeMetaMember.
  *
  * \tparam MEMBER The name of the member without m_ part.
- * \see BLACK_METACLASS
- * \see BLACK_METAMEMBER_NAMED
+ * \see SWIFT_METACLASS
+ * \see SWIFT_METAMEMBER_NAMED
  * \see swift::misc::CMetaClass::makeMetaMember
  * \ingroup MetaClass
  */
-#define BLACK_METAMEMBER(MEMBER, ...) \
+#define SWIFT_METAMEMBER(MEMBER, ...) \
     makeMetaMember(                   \
-        &Class::m_##MEMBER, #MEMBER BLACK_TRAILING_VA_ARGS(__VA_ARGS__))
+        &Class::m_##MEMBER, #MEMBER SWIFT_TRAILING_VA_ARGS(__VA_ARGS__))
 
 /*!
- * Same as BLACK_METAMEMBER but the second parameter is a string literal
+ * Same as SWIFT_METAMEMBER but the second parameter is a string literal
  * containing the JSON name of the member.
  *
  * \ingroup MetaClass
  */
-#define BLACK_METAMEMBER_NAMED(MEMBER, NAME, ...) \
+#define SWIFT_METAMEMBER_NAMED(MEMBER, NAME, ...) \
     makeMetaMember(                               \
-        &Class::m_##MEMBER, NAME BLACK_TRAILING_VA_ARGS(__VA_ARGS__))
+        &Class::m_##MEMBER, NAME SWIFT_TRAILING_VA_ARGS(__VA_ARGS__))
 // *INDENT-ON*
 
 //! std::string qHash

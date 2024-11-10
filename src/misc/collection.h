@@ -18,19 +18,19 @@
 #include <initializer_list>
 
 //! \cond
-#define BLACK_TEMPLATE_COLLECTION_MIXINS(NS, T, Set, Extern)             \
+#define SWIFT_TEMPLATE_COLLECTION_MIXINS(NS, T, Set, Extern)             \
     namespace NS                                                         \
     {                                                                    \
         class Set;                                                       \
     }                                                                    \
-    namespace swift::misc::private_ns                                       \
+    namespace swift::misc::private_ns                                    \
     {                                                                    \
         Extern template struct CValueObjectMetaInfo<NS::Set>;            \
         Extern template struct CValueObjectMetaInfo<CCollection<NS::T>>; \
         Extern template struct MetaTypeHelper<NS::Set>;                  \
         Extern template struct MetaTypeHelper<CCollection<NS::T>>;       \
     }                                                                    \
-    namespace swift::misc::mixin                                           \
+    namespace swift::misc::mixin                                         \
     {                                                                    \
         Extern template class MetaType<NS::Set>;                         \
         Extern template class MetaType<CCollection<NS::T>>;              \
@@ -43,21 +43,21 @@
 //! \endcond
 
 /*!
- * \def BLACK_DECLARE_COLLECTION_MIXINS
+ * \def SWIFT_DECLARE_COLLECTION_MIXINS
  * Explicit template declaration of mixins for a CCollection subclass
  * to be placed near the top of the header that defines the class
  */
 
 /*!
- * \def BLACK_DEFINE_COLLECTION_MIXINS
+ * \def SWIFT_DEFINE_COLLECTION_MIXINS
  * Explicit template definition of mixins for a CCollection subclass
  */
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)
-#    define BLACK_DECLARE_COLLECTION_MIXINS(Namespace, T, Set)
-#    define BLACK_DEFINE_COLLECTION_MIXINS(Namespace, T, Set)
+#    define SWIFT_DECLARE_COLLECTION_MIXINS(Namespace, T, Set)
+#    define SWIFT_DEFINE_COLLECTION_MIXINS(Namespace, T, Set)
 #else
-#    define BLACK_DECLARE_COLLECTION_MIXINS(Namespace, T, Set) BLACK_TEMPLATE_COLLECTION_MIXINS(Namespace, T, Set, extern)
-#    define BLACK_DEFINE_COLLECTION_MIXINS(Namespace, T, Set) BLACK_TEMPLATE_COLLECTION_MIXINS(Namespace, T, Set, )
+#    define SWIFT_DECLARE_COLLECTION_MIXINS(Namespace, T, Set) SWIFT_TEMPLATE_COLLECTION_MIXINS(Namespace, T, Set, extern)
+#    define SWIFT_DEFINE_COLLECTION_MIXINS(Namespace, T, Set) SWIFT_TEMPLATE_COLLECTION_MIXINS(Namespace, T, Set, )
 #endif
 
 namespace swift::misc

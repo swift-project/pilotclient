@@ -22,8 +22,8 @@
 using namespace swift::misc::network;
 using namespace swift::misc::physical_quantities;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CFlightPlanRemarks)
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CFlightPlan)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CFlightPlanRemarks)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CFlightPlan)
 
 namespace swift::misc::aviation
 {

@@ -16,7 +16,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::weather, CMetar, CMetarList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::weather, CMetar, CMetarList)
 
 namespace swift::misc::weather
 {

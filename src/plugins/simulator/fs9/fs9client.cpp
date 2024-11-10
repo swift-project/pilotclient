@@ -21,9 +21,9 @@ using namespace swift::misc::simulation;
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::geo;
 using namespace swift::core;
-using namespace BlackSimPlugin::FsCommon;
+using namespace swift::simplugin::fscommon;
 
-namespace BlackSimPlugin::Fs9
+namespace swift::simplugin::fs9
 {
     CFs9Client::CFs9Client(const CSimulatedAircraft &remoteAircraft,
                            const CTime &updateInterval,

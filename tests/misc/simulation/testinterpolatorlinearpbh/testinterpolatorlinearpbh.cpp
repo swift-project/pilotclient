@@ -260,7 +260,7 @@ namespace MiscTest
 }
 
 //! main
-BLACKTEST_MAIN(MiscTest::CTestInterpolatorLinearPbh);
+SWIFTTEST_MAIN(MiscTest::CTestInterpolatorLinearPbh);
 
 #include "testinterpolatorlinearpbh.moc"
 

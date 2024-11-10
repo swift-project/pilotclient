@@ -46,7 +46,7 @@ namespace MiscTest
 } // namespace
 
 //! main
-BLACKTEST_MAIN(MiscTest::CTestIcon);
+SWIFTTEST_MAIN(MiscTest::CTestIcon);
 
 #include "testicon.moc"
 

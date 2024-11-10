@@ -4,7 +4,7 @@
 #include "misc/aviation/ongroundinfo.h"
 #include "misc/verify.h"
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, COnGroundInfo)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, COnGroundInfo)
 
 using namespace swift::misc::physical_quantities;
 

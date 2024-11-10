@@ -11,7 +11,7 @@
 
 #include <atomic>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CUrlLog)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CUrlLog)
 
 namespace swift::misc::network
 {

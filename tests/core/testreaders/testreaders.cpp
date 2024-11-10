@@ -214,7 +214,7 @@ namespace swiftcoretest
 } // ns
 
 //! main
-BLACKTEST_APPLESS_MAIN(swiftcoretest::CTestReaders);
+SWIFTTEST_APPLESS_MAIN(swiftcoretest::CTestReaders);
 
 #include "testreaders.moc"
 

@@ -15,7 +15,7 @@ using namespace swift::misc;
 using namespace swift::misc::aviation;
 using namespace swift::misc::simulation;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::fscommon, CAircraftCfgEntries)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::fscommon, CAircraftCfgEntries)
 
 namespace swift::misc::simulation::fscommon
 {

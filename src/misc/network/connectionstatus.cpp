@@ -3,7 +3,7 @@
 
 #include "misc/network/connectionstatus.h"
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CConnectionStatus)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CConnectionStatus)
 
 namespace swift::misc::network
 {

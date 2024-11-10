@@ -14,7 +14,7 @@
 #include <Qt>
 #include <QtGlobal>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CServer)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CServer)
 
 namespace swift::misc::network
 {

@@ -19,7 +19,7 @@
 #include <QMetaType>
 #include <QHash>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAtcStation, CAtcStationList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAtcStation, CAtcStationList)
 
 namespace swift::misc::aviation
 {

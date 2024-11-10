@@ -222,7 +222,7 @@ namespace MiscTest
 } // ns
 
 //! main
-BLACKTEST_APPLESS_MAIN(MiscTest::CTestFlightPlanAircraftInfo);
+SWIFTTEST_APPLESS_MAIN(MiscTest::CTestFlightPlanAircraftInfo);
 
 #include "testflightplanaircraftinfo.moc"
 

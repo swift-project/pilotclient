@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright (C) 2018 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#ifndef BLACKSIM_XSWIFTBUS_DBUSCONNECTION_H
-#define BLACKSIM_XSWIFTBUS_DBUSCONNECTION_H
+#ifndef SWIFT_SIM_XSWIFTBUS_DBUSCONNECTION_H
+#define SWIFT_SIM_XSWIFTBUS_DBUSCONNECTION_H
 
 #include "dbusmessage.h"
 #include "dbuserror.h"

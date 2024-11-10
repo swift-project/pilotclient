@@ -13,7 +13,7 @@ using namespace swift::misc::aviation;
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::math;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::geo, CCoordinateGeodetic)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::geo, CCoordinateGeodetic)
 
 namespace swift::misc::geo
 {

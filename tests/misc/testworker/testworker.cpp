@@ -47,7 +47,7 @@ namespace MiscTest
 } // namespace
 
 //! main
-BLACKTEST_APPLESS_MAIN(MiscTest::CTestWorker);
+SWIFTTEST_APPLESS_MAIN(MiscTest::CTestWorker);
 
 #include "testworker.moc"
 

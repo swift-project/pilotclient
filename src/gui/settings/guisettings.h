@@ -13,7 +13,7 @@
 #include <QString>
 #include <QAbstractItemView>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::gui::settings, CGeneralGuiSettings)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::gui::settings, CGeneralGuiSettings)
 
 namespace swift::gui::settings
 {
@@ -60,11 +60,10 @@ namespace swift::gui::settings
         QString m_widgetStyle { "Fusion" };
         int m_preferredSelection = static_cast<int>(QAbstractItemView::ExtendedSelection);
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CGeneralGuiSettings,
-            BLACK_METAMEMBER(widgetStyle),
-            BLACK_METAMEMBER(preferredSelection)
-        );
+            SWIFT_METAMEMBER(widgetStyle),
+            SWIFT_METAMEMBER(preferredSelection));
     };
 
     //! General GUI settings

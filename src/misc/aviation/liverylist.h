@@ -17,7 +17,7 @@
 #include <QString>
 #include <QStringList>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CLivery, CLiveryList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CLivery, CLiveryList)
 
 namespace swift::misc::aviation
 {

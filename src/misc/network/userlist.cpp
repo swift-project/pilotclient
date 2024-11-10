@@ -3,7 +3,7 @@
 
 #include "misc/network/userlist.h"
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CUser, CUserList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CUser, CUserList)
 
 namespace swift::misc::network
 {

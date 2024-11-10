@@ -164,7 +164,7 @@ namespace MiscTest
 }
 
 //! main
-BLACKTEST_APPLESS_MAIN(MiscTest::CTestStringUtils);
+SWIFTTEST_APPLESS_MAIN(MiscTest::CTestStringUtils);
 
 #include "teststringutils.moc"
 

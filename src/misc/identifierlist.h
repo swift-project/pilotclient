@@ -12,7 +12,7 @@
 #include "misc/swiftmiscexport.h"
 #include <QMetaType>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc, CIdentifier, CIdentifierList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc, CIdentifier, CIdentifierList)
 
 namespace swift::misc
 {

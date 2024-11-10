@@ -7,7 +7,7 @@
 
 using namespace swift::misc::network;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::db, CDbInfo)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::db, CDbInfo)
 
 namespace swift::misc::db
 {

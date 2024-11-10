@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATED_H
-#define BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATED_H
+#ifndef SWIFT_SIMPLUGIN_EMULATED_SIMULATOREMULATED_H
+#define SWIFT_SIMPLUGIN_EMULATED_SIMULATOREMULATED_H
 
 #include "../plugincommon/simulatorplugincommon.h"
 #include "misc/aviation/comsystem.h"
@@ -21,10 +21,10 @@
 #include <QTimer>
 #include <QPointer>
 
-namespace BlackSimPlugin::Emulated
+namespace swift::simplugin::emulated
 {
     //! swift simulator implementation
-    class CSimulatorEmulated : public Common::CSimulatorPluginCommon
+    class CSimulatorEmulated : public common::CSimulatorPluginCommon
     {
         Q_OBJECT
         Q_INTERFACES(swift::core::ISimulator)
@@ -75,8 +75,8 @@ namespace BlackSimPlugin::Emulated
         // functions logged and used
         //! \ingroup swiftdotcommands
         //! <pre>
-        //! .drv show   show emulated driver window     BlackSimPlugin::Swift::CSimulatorEmulated
-        //! .drv hide   hide emulated driver window     BlackSimPlugin::Swift::CSimulatorEmulated
+        //! .drv show   show emulated driver window     swift::simplugin::emulated::CSimulatorEmulated
+        //! .drv hide   hide emulated driver window     swift::simplugin::emulated::CSimulatorEmulated
         //! </pre>
         //! \copydoc swift::core::ISimulator::parseCommandLine
         virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override;
@@ -88,27 +88,27 @@ namespace BlackSimPlugin::Emulated
         swift::misc::simulation::CSimulatorInfo getEmulatedSimulator() const;
 
         //! Internal own aircraft
-        //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
+        //! \remark normally used by corresponding swift::simplugin::emulated::CSimulatorEmulatedMonitorDialog
         const swift::misc::simulation::CSimulatedAircraft &getInternalOwnAircraft() const { return m_myAircraft; }
 
         //! Simulator internal change of COM values
-        //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
+        //! \remark normally used by corresponding swift::simplugin::emulated::CSimulatorEmulatedMonitorDialog
         bool changeInternalCom(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
         //! Simulator internal change of COM values
-        //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
+        //! \remark normally used by corresponding swift::simplugin::emulated::CSimulatorEmulatedMonitorDialog
         bool changeInternalCom(const swift::misc::aviation::CComSystem &comSystem, swift::misc::aviation::CComSystem::ComUnit unit);
 
         //! Simulator internal change of SELCAL
-        //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
+        //! \remark normally used by corresponding swift::simplugin::emulated::CSimulatorEmulatedMonitorDialog
         bool changeInternalSelcal(const swift::misc::aviation::CSelcal &selcal);
 
         //! Simulator internal change of situation
-        //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
+        //! \remark normally used by corresponding swift::simplugin::emulated::CSimulatorEmulatedMonitorDialog
         bool changeInternalSituation(const swift::misc::aviation::CAircraftSituation &situation);
 
         //! Simulator internal change of parts
-        //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
+        //! \remark normally used by corresponding swift::simplugin::emulated::CSimulatorEmulatedMonitorDialog
         bool changeInternalParts(const swift::misc::aviation::CAircraftParts &parts);
 
         //! Interpolator fetch time, <=0 stops

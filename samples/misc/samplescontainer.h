@@ -4,10 +4,10 @@
 //! \file
 //! \ingroup samplemisc
 
-#ifndef BLACKSAMPLE_SAMPLESCONTAINER_H
-#define BLACKSAMPLE_SAMPLESCONTAINER_H
+#ifndef SWIFT_SAMPLE_SAMPLESCONTAINER_H
+#define SWIFT_SAMPLE_SAMPLESCONTAINER_H
 
-namespace BlackSample
+namespace swift::sample
 {
     //! Samples for our containers
     class CSamplesContainer

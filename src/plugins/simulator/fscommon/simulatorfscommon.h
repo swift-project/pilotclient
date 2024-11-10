@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_FSCOMMON_SIMULATORFSCOMMON_H
-#define BLACKSIMPLUGIN_FSCOMMON_SIMULATORFSCOMMON_H
+#ifndef SWIFT_SIMPLUGIN_FSCOMMON_SIMULATORFSCOMMON_H
+#define SWIFT_SIMPLUGIN_FSCOMMON_SIMULATORFSCOMMON_H
 
 #include "plugins/simulator/plugincommon/simulatorplugincommon.h"
 #include "misc/simulation/interpolation/interpolator.h"
@@ -14,10 +14,10 @@
 #include <QObject>
 #include <memory>
 
-namespace BlackSimPlugin::FsCommon
+namespace swift::simplugin::fscommon
 {
     //! Common base class for MS flight simulators
-    class FSCOMMON_EXPORT CSimulatorFsCommon : public Common::CSimulatorPluginCommon
+    class FSCOMMON_EXPORT CSimulatorFsCommon : public common::CSimulatorPluginCommon
     {
         Q_OBJECT
         Q_INTERFACES(swift::core::ISimulator)

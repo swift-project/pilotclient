@@ -5,7 +5,7 @@
 
 #include <tuple>
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::weather, CMetar, CMetarList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::weather, CMetar, CMetarList)
 
 namespace swift::misc::weather
 {

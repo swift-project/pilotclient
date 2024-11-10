@@ -22,7 +22,7 @@ using namespace swift::misc::physical_quantities;
 using namespace swift::misc::math;
 using namespace swift::config;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftSituationChange)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftSituationChange)
 
 namespace swift::misc::aviation
 {

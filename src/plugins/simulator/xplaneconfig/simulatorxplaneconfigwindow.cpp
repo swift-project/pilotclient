@@ -17,7 +17,7 @@ using namespace swift::misc;
 using namespace swift::misc::simulation::settings;
 using namespace swift::misc::simulation::xplane;
 
-namespace BlackSimPlugin::XPlane
+namespace swift::simplugin::xplane
 {
     CSimulatorXPlaneConfigWindow::CSimulatorXPlaneConfigWindow(QWidget *parent) : CPluginConfigWindow(parent),
                                                                                   ui(new Ui::CSimulatorXPlaneConfigWindow)

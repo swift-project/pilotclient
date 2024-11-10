@@ -8,7 +8,7 @@
 #include <QMediaDevices>
 #include <algorithm>
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::audio, CAudioDeviceInfo, CAudioDeviceInfoList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::audio, CAudioDeviceInfo, CAudioDeviceInfoList)
 
 namespace swift::misc::audio
 {

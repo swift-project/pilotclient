@@ -3,7 +3,7 @@
 
 #include "misc/network/urlloglist.h"
 
-BLACK_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CUrlLog, CUrlLogList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CUrlLog, CUrlLogList)
 
 namespace swift::misc::network
 {

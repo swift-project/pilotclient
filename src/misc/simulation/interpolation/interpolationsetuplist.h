@@ -12,7 +12,7 @@
 #include "misc/collection.h"
 #include "misc/sequence.h"
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::simulation, CInterpolationAndRenderingSetupPerCallsign, CInterpolationSetupList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::simulation, CInterpolationAndRenderingSetupPerCallsign, CInterpolationSetupList)
 
 namespace swift::misc::simulation
 {

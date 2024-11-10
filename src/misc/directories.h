@@ -13,7 +13,7 @@
 
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CDirectories)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CDirectories)
 
 namespace swift::misc
 {
@@ -111,14 +111,13 @@ namespace swift::misc
         //! Return checkDir if existing, defaultDir otherwise
         QString existingOrDefaultDir(const QString &checkDir, const QString &defaultDir) const;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CDirectories,
-            BLACK_METAMEMBER(dirFlightPlan),
-            BLACK_METAMEMBER(dirLastViewJson),
-            BLACK_METAMEMBER(dirLastModelJson),
-            BLACK_METAMEMBER(dirLastModelStashJson),
-            BLACK_METAMEMBER(dirMatchingScript)
-        );
+            SWIFT_METAMEMBER(dirFlightPlan),
+            SWIFT_METAMEMBER(dirLastViewJson),
+            SWIFT_METAMEMBER(dirLastModelJson),
+            SWIFT_METAMEMBER(dirLastModelStashJson),
+            SWIFT_METAMEMBER(dirMatchingScript));
     };
 
     namespace settings

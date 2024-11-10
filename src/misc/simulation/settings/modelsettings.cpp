@@ -4,7 +4,7 @@
 #include "misc/simulation/settings/modelsettings.h"
 #include "misc/stringutils.h"
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CModelSettings)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CModelSettings)
 
 namespace swift::misc::simulation::settings
 {

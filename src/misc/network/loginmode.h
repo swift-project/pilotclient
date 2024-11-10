@@ -9,7 +9,7 @@
 #include "misc/swiftmiscexport.h"
 #include "misc/valueobject.h"
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CLoginMode)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CLoginMode)
 
 namespace swift::misc::network
 {
@@ -48,10 +48,9 @@ namespace swift::misc::network
     private:
         LoginMode m_loginMode = Pilot;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CLoginMode,
-            BLACK_METAMEMBER(loginMode)
-        );
+            SWIFT_METAMEMBER(loginMode));
     };
 } // namespace
 

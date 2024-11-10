@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDFACTORY_H
-#define BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDFACTORY_H
+#ifndef SWIFT_SIMPLUGIN_EMULATED_SIMULATOREMULATEDFACTORY_H
+#define SWIFT_SIMPLUGIN_EMULATED_SIMULATOREMULATEDFACTORY_H
 
 #include "core/simulator.h"
 #include "misc/simulation/simulatorplugininfo.h"
@@ -12,7 +12,7 @@
 #include <QObject>
 #include <QtPlugin>
 
-namespace BlackSimPlugin::Emulated
+namespace swift::simplugin::emulated
 {
     //! Factory implementation to create CSimulatorEmulated instances
     class CSimulatorEmulatedFactory :
@@ -26,9 +26,9 @@ namespace BlackSimPlugin::Emulated
     public:
         //! \copydoc swift::core::ISimulatorFactory::create
         virtual swift::core::ISimulator *create(const swift::misc::simulation::CSimulatorPluginInfo &info,
-                                              swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
-                                              swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                                              swift::misc::network::IClientProvider *clientProvider) override;
+                                                swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
+                                                swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                                                swift::misc::network::IClientProvider *clientProvider) override;
 
         //! \copydoc swift::core::ISimulatorFactory::createListener
         virtual swift::core::ISimulatorListener *createListener(const swift::misc::simulation::CSimulatorPluginInfo &info) override;

@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSOUND_AUDIOUTILITIES_H
-#define BLACKSOUND_AUDIOUTILITIES_H
+#ifndef SWIFT_SOUND_AUDIOUTILITIES_H
+#define SWIFT_SOUND_AUDIOUTILITIES_H
 
 #include "sound/swiftsoundexport.h"
 #include "misc/audio/audiodeviceinfo.h"

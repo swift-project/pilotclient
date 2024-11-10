@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright (C) 2017 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#ifndef BLACKSIM_XSWIFTBUS_ELEVATIONPROVIDER_H
-#define BLACKSIM_XSWIFTBUS_ELEVATIONPROVIDER_H
+#ifndef SWIFT_SIM_XSWIFTBUS_ELEVATIONPROVIDER_H
+#define SWIFT_SIM_XSWIFTBUS_ELEVATIONPROVIDER_H
 
 #include <XPLM/XPLMScenery.h>
 #include <string>

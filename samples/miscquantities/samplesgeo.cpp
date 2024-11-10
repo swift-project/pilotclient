@@ -23,7 +23,7 @@ using namespace swift::misc::aviation;
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::geo;
 
-namespace BlackSample
+namespace swift::sample
 {
     int CSamplesGeo::samples(QTextStream &out)
     {

@@ -6,7 +6,7 @@
 
 class QWidget;
 
-namespace BlackSimPlugin::Flightgear
+namespace swift::simplugin::flightgear
 {
     CSimulatorFlightgearConfig::CSimulatorFlightgearConfig(QObject *parent) : QObject(parent)
     {

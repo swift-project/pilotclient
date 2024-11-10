@@ -6,7 +6,7 @@
 
 using namespace swift::misc;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::core::data, CLauncherSetup)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::core::data, CLauncherSetup)
 
 namespace swift::core::data
 {

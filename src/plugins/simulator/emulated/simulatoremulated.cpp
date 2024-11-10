@@ -24,7 +24,7 @@ using namespace swift::misc::simulation::settings;
 using namespace swift::core;
 using namespace swift::core::context;
 
-namespace BlackSimPlugin::Emulated
+namespace swift::simplugin::emulated
 {
     CSimulatorEmulated::CSimulatorEmulated(const CSimulatorPluginInfo &info,
                                            IOwnAircraftProvider *ownAircraftProvider,
@@ -248,7 +248,7 @@ namespace BlackSimPlugin::Emulated
 
     void CSimulatorEmulated::registerHelp()
     {
-        if (CSimpleCommandParser::registered("BlackSimPlugin::Swift::CSimulatorEmulated")) { return; }
+        if (CSimpleCommandParser::registered("swift::simplugin::emulated::CSimulatorEmulated")) { return; }
         CSimpleCommandParser::registerCommand({ ".drv", "alias: .driver .plugin" });
         CSimpleCommandParser::registerCommand({ ".drv show", "show emulated driver window" });
         CSimpleCommandParser::registerCommand({ ".drv hide", "hide emulated driver window" });

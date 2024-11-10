@@ -4,7 +4,7 @@
 #include "simulatorp3dconfig.h"
 #include "../fsxcommon/simulatorfsxconfigwindow.h"
 
-namespace BlackSimPlugin::P3D
+namespace swift::simplugin::p3d
 {
     CSimulatorP3DConfig::CSimulatorP3DConfig(QObject *parent) : QObject(parent)
     {
@@ -13,6 +13,6 @@ namespace BlackSimPlugin::P3D
 
     swift::gui::CPluginConfigWindow *CSimulatorP3DConfig::createConfigWindow(QWidget *parent)
     {
-        return new FsxCommon::CSimulatorFsxConfigWindow("P3D", parent);
+        return new fsxcommon::CSimulatorFsxConfigWindow("P3D", parent);
     }
 }

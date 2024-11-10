@@ -4,7 +4,7 @@
 #include "misc/simulation/settings/swiftpluginsettings.h"
 #include "misc/stringutils.h"
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CSwiftPluginSettings)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CSwiftPluginSettings)
 
 namespace swift::misc::simulation::settings
 {

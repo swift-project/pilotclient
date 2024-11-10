@@ -10,7 +10,7 @@
 
 using namespace swift::misc;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CRawFsdMessage)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CRawFsdMessage)
 
 namespace swift::misc::network
 {

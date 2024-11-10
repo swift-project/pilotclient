@@ -6,7 +6,7 @@
 
 using namespace swift::gui;
 
-namespace BlackSimPlugin::FsxCommon
+namespace swift::simplugin::fsxcommon
 {
     CSimulatorFsxConfigWindow::CSimulatorFsxConfigWindow(const QString &simulator, QWidget *parent) : CPluginConfigWindow(parent),
                                                                                                       m_simulator(simulator),

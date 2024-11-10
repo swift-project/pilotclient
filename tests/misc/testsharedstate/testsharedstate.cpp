@@ -209,7 +209,7 @@ namespace MiscTest
 }
 
 //! main
-BLACKTEST_MAIN(MiscTest::CTestSharedState);
+SWIFTTEST_MAIN(MiscTest::CTestSharedState);
 
 #include "testsharedstate.moc"
 

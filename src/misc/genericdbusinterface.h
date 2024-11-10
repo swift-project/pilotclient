@@ -21,7 +21,7 @@
  * Any signals tagged with this macro will be ignored by swift::misc::CGenericDBusInterface::relayParentSignals().
  * \see QMetaMethod::tag
  */
-#    define BLACK_NO_RELAY
+#    define SWIFT_NO_RELAY
 #endif
 
 namespace swift::misc
@@ -40,7 +40,7 @@ namespace swift::misc
         {}
 
         //! For each signal in parent, attempt to connect to it an interface signal of the same name.
-        //! \see BLACK_NO_RELAY
+        //! \see SWIFT_NO_RELAY
         void relayParentSignals()
         {
             const QMetaObject *metaObject = this->parent()->metaObject();
@@ -51,7 +51,7 @@ namespace swift::misc
             {
                 const QMetaMethod method = metaObject->method(i);
                 if (method.methodType() != QMetaMethod::Signal) { continue; }
-                if (method.tag() && strcmp(method.tag(), "BLACK_NO_RELAY") == 0) { continue; }
+                if (method.tag() && strcmp(method.tag(), "SWIFT_NO_RELAY") == 0) { continue; }
 
                 const QByteArray signature = method.methodSignature().prepend("2"); // the reason for this "2" can be found in the definition of SIGNAL() macro
                 const bool c = this->connection().connect(this->service(), this->path(), this->interface(), method.name(), this->parent(), signature);

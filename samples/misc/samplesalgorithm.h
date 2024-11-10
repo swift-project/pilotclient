@@ -4,10 +4,10 @@
 //! \file
 //! \ingroup samplemisc
 
-#ifndef BLACKSAMPLE_SAMPLESALGORITHM_H
-#define BLACKSAMPLE_SAMPLESALGORITHM_H
+#ifndef SWIFT_SAMPLE_SAMPLESALGORITHM_H
+#define SWIFT_SAMPLE_SAMPLESALGORITHM_H
 
-namespace BlackSample
+namespace swift::sample
 {
     //! Samples for our algorithms
     class CSamplesAlgorithm

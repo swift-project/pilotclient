@@ -15,7 +15,7 @@
 #include <QString>
 #include <QtGlobal>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CSimBriefData)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CSimBriefData)
 
 namespace swift::misc::aviation
 {
@@ -67,11 +67,10 @@ namespace swift::misc::aviation
         QString m_url;
         QString m_username;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CSimBriefData,
-            BLACK_METAMEMBER(url),
-            BLACK_METAMEMBER(username)
-        );
+            SWIFT_METAMEMBER(url),
+            SWIFT_METAMEMBER(username));
     };
 
     namespace Data

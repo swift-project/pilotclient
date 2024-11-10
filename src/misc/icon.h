@@ -116,13 +116,12 @@ namespace swift::misc
         QString m_fileResourcePath; //!< file resource path
         QPixmap m_pixmap; //!< Used with generated pixmaps, when not used with index
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CIcon,
-            BLACK_METAMEMBER(index),
-            BLACK_METAMEMBER(rotateDegrees, 0, DisabledForComparison | DisabledForHashing),
-            BLACK_METAMEMBER(descriptiveText),
-            BLACK_METAMEMBER(fileResourcePath)
-        );
+            SWIFT_METAMEMBER(index),
+            SWIFT_METAMEMBER(rotateDegrees, 0, DisabledForComparison | DisabledForHashing),
+            SWIFT_METAMEMBER(descriptiveText),
+            SWIFT_METAMEMBER(fileResourcePath));
     };
 } // namespace
 

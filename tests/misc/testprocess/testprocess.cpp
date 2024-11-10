@@ -39,7 +39,7 @@ namespace MiscTest
 }
 
 //! main
-BLACKTEST_MAIN(MiscTest::CTestProcess);
+SWIFTTEST_MAIN(MiscTest::CTestProcess);
 
 #include "testprocess.moc"
 

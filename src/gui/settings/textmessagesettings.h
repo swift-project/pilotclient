@@ -10,7 +10,7 @@
 #include "misc/settingscache.h"
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::gui::settings, CTextMessageSettings)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::gui::settings, CTextMessageSettings)
 
 namespace swift::misc
 {
@@ -137,17 +137,16 @@ namespace swift::gui::settings
         bool m_latestFirst = false; //!< latest messages first
         QString m_styleSheet;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CTextMessageSettings,
-            BLACK_METAMEMBER(popupPrivateMessages),
-            BLACK_METAMEMBER(popupSupervisorMessages),
-            BLACK_METAMEMBER(popupFrequencyMessages),
-            BLACK_METAMEMBER(popupAllMessages),
-            BLACK_METAMEMBER(popupSelcalMessages),
-            BLACK_METAMEMBER(focus),
-            BLACK_METAMEMBER(latestFirst),
-            BLACK_METAMEMBER(styleSheet)
-        );
+            SWIFT_METAMEMBER(popupPrivateMessages),
+            SWIFT_METAMEMBER(popupSupervisorMessages),
+            SWIFT_METAMEMBER(popupFrequencyMessages),
+            SWIFT_METAMEMBER(popupAllMessages),
+            SWIFT_METAMEMBER(popupSelcalMessages),
+            SWIFT_METAMEMBER(focus),
+            SWIFT_METAMEMBER(latestFirst),
+            SWIFT_METAMEMBER(styleSheet));
     };
 
     //! Text message settings

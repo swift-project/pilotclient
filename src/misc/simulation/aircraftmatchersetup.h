@@ -9,7 +9,7 @@
 #include "misc/valueobject.h"
 #include "misc/swiftmiscexport.h"
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Simulation, CAircraftMatcherSetup)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Simulation, CAircraftMatcherSetup)
 
 namespace swift::misc::simulation
 {
@@ -277,17 +277,16 @@ namespace swift::misc::simulation
         bool m_msReverseEnabled = false; //!< enable network matching script
         bool m_msMatchingEnabled = false; //!< enable matching stage matching script
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CAircraftMatcherSetup,
-            BLACK_METAMEMBER(algorithm),
-            BLACK_METAMEMBER(mode),
-            BLACK_METAMEMBER(strategy),
-            BLACK_METAMEMBER(force),
-            BLACK_METAMEMBER(msReverseLookupFile),
-            BLACK_METAMEMBER(msMatchingStageFile),
-            BLACK_METAMEMBER(msReverseEnabled),
-            BLACK_METAMEMBER(msMatchingEnabled)
-        );
+            SWIFT_METAMEMBER(algorithm),
+            SWIFT_METAMEMBER(mode),
+            SWIFT_METAMEMBER(strategy),
+            SWIFT_METAMEMBER(force),
+            SWIFT_METAMEMBER(msReverseLookupFile),
+            SWIFT_METAMEMBER(msMatchingStageFile),
+            SWIFT_METAMEMBER(msReverseEnabled),
+            SWIFT_METAMEMBER(msMatchingEnabled));
     };
 } // namespace
 

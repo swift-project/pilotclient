@@ -16,7 +16,7 @@
 #include "misc/propertyindexref.h"
 #include "misc/swiftmiscexport.h"
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftSituationChange)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftSituationChange)
 
 namespace swift::misc
 {
@@ -212,36 +212,35 @@ namespace swift::misc
             physical_quantities::CLength m_maxGroundDistance = physical_quantities::CLength::null();
             physical_quantities::CLength m_minGroundDistance = physical_quantities::CLength::null();
 
-            BLACK_METACLASS(
+            SWIFT_METACLASS(
                 CAircraftSituationChange,
-                BLACK_METAMEMBER(situationsCount),
-                BLACK_METAMEMBER(correspondingCallsign),
-                BLACK_METAMEMBER(constAscending),
-                BLACK_METAMEMBER(constDescending),
-                BLACK_METAMEMBER(constOnGround),
-                BLACK_METAMEMBER(constNotOnGround),
-                BLACK_METAMEMBER(justTakeoff),
-                BLACK_METAMEMBER(justTouchdown),
-                BLACK_METAMEMBER(containsPushBack),
-                BLACK_METAMEMBER(rotateUp),
-                BLACK_METAMEMBER(altStdDev),
-                BLACK_METAMEMBER(altMean),
-                BLACK_METAMEMBER(elvStdDev),
-                BLACK_METAMEMBER(elvMean),
-                BLACK_METAMEMBER(gsStdDev),
-                BLACK_METAMEMBER(gsMean),
-                BLACK_METAMEMBER(gndDistStdDev),
-                BLACK_METAMEMBER(gndDistMean),
-                BLACK_METAMEMBER(pitchStdDev),
-                BLACK_METAMEMBER(pitchMean),
-                BLACK_METAMEMBER(guessedSceneryDeviation),
-                BLACK_METAMEMBER(guessedSceneryDeviationCG),
-                BLACK_METAMEMBER(guessedSceneryDeviationHint),
-                BLACK_METAMEMBER(timestampMSecsSinceEpoch),
-                BLACK_METAMEMBER(oldestTimestampMSecsSinceEpoch),
-                BLACK_METAMEMBER(oldestAdjustedTimestampMSecsSinceEpoch),
-                BLACK_METAMEMBER(latestAdjustedTimestampMSecsSinceEpoch)
-            );
+                SWIFT_METAMEMBER(situationsCount),
+                SWIFT_METAMEMBER(correspondingCallsign),
+                SWIFT_METAMEMBER(constAscending),
+                SWIFT_METAMEMBER(constDescending),
+                SWIFT_METAMEMBER(constOnGround),
+                SWIFT_METAMEMBER(constNotOnGround),
+                SWIFT_METAMEMBER(justTakeoff),
+                SWIFT_METAMEMBER(justTouchdown),
+                SWIFT_METAMEMBER(containsPushBack),
+                SWIFT_METAMEMBER(rotateUp),
+                SWIFT_METAMEMBER(altStdDev),
+                SWIFT_METAMEMBER(altMean),
+                SWIFT_METAMEMBER(elvStdDev),
+                SWIFT_METAMEMBER(elvMean),
+                SWIFT_METAMEMBER(gsStdDev),
+                SWIFT_METAMEMBER(gsMean),
+                SWIFT_METAMEMBER(gndDistStdDev),
+                SWIFT_METAMEMBER(gndDistMean),
+                SWIFT_METAMEMBER(pitchStdDev),
+                SWIFT_METAMEMBER(pitchMean),
+                SWIFT_METAMEMBER(guessedSceneryDeviation),
+                SWIFT_METAMEMBER(guessedSceneryDeviationCG),
+                SWIFT_METAMEMBER(guessedSceneryDeviationHint),
+                SWIFT_METAMEMBER(timestampMSecsSinceEpoch),
+                SWIFT_METAMEMBER(oldestTimestampMSecsSinceEpoch),
+                SWIFT_METAMEMBER(oldestAdjustedTimestampMSecsSinceEpoch),
+                SWIFT_METAMEMBER(latestAdjustedTimestampMSecsSinceEpoch));
         };
     } // namespace
 } // namespace

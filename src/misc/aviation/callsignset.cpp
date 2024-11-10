@@ -7,7 +7,7 @@
 #include <QDBusMetaType>
 #include <QString>
 
-BLACK_DEFINE_COLLECTION_MIXINS(swift::misc::aviation, CCallsign, CCallsignSet)
+SWIFT_DEFINE_COLLECTION_MIXINS(swift::misc::aviation, CCallsign, CCallsignSet)
 
 namespace swift::misc::aviation
 {

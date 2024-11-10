@@ -6,7 +6,7 @@
 #include <QFileInfo>
 #include <QDir>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CDirectories)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CDirectories)
 
 namespace swift::misc
 {

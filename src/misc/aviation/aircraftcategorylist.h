@@ -18,7 +18,7 @@
 #include <QList>
 #include <tuple>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftCategory, CAircraftCategoryList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftCategory, CAircraftCategoryList)
 
 namespace swift::misc::aviation
 {

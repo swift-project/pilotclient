@@ -20,7 +20,7 @@ using namespace swift::misc::physical_quantities;
 using namespace swift::misc::geo;
 using namespace swift::misc::network;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAtcStation)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAtcStation)
 
 namespace swift::misc::aviation
 {

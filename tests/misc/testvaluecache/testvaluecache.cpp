@@ -333,7 +333,7 @@ namespace MiscTest
 } // ns
 
 //! main
-BLACKTEST_MAIN(MiscTest::CTestValueCache);
+SWIFTTEST_MAIN(MiscTest::CTestValueCache);
 
 #include "testvaluecache.moc"
 

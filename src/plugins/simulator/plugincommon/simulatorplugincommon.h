@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_COMMON_SIMULATORPLUGINCOMMON_H
-#define BLACKSIMPLUGIN_COMMON_SIMULATORPLUGINCOMMON_H
+#ifndef SWIFT_SIMPLUGIN_COMMON_SIMULATORPLUGINCOMMON_H
+#define SWIFT_SIMPLUGIN_COMMON_SIMULATORPLUGINCOMMON_H
 
 #include "plugins/simulator/plugincommon/simulatorplugincommonexport.h"
 #include "core/simulator.h"
@@ -15,7 +15,7 @@ namespace swift::gui::components
 {
     class CInterpolationLogDisplayDialog;
 }
-namespace BlackSimPlugin::Common
+namespace swift::simplugin::common
 {
     //! Common base class for simulator plugins
     class SIMULATORPLUGINCOMMON_EXPORT CSimulatorPluginCommon : public swift::core::ISimulator

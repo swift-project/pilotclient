@@ -17,7 +17,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CUser)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CUser)
 
 namespace swift::misc::network
 {
@@ -180,15 +180,14 @@ namespace swift::misc::network
         aviation::CCallsign m_callsign;
         aviation::CAirportIcaoCode m_homebase;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CUser,
-            BLACK_METAMEMBER(id),
-            BLACK_METAMEMBER(realname),
-            BLACK_METAMEMBER(email),
-            BLACK_METAMEMBER(password),
-            BLACK_METAMEMBER(callsign),
-            BLACK_METAMEMBER(homebase)
-        );
+            SWIFT_METAMEMBER(id),
+            SWIFT_METAMEMBER(realname),
+            SWIFT_METAMEMBER(email),
+            SWIFT_METAMEMBER(password),
+            SWIFT_METAMEMBER(callsign),
+            SWIFT_METAMEMBER(homebase));
     };
 } // namespace
 

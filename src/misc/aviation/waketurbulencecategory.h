@@ -10,7 +10,7 @@
 #include <QString>
 #include <QtGlobal>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CWakeTurbulenceCategory)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CWakeTurbulenceCategory)
 
 namespace swift::misc::aviation
 {
@@ -49,10 +49,9 @@ namespace swift::misc::aviation
     private:
         WakeTurbulenceCategory m_wtc = UNKNOWN;
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CWakeTurbulenceCategory,
-            BLACK_METAMEMBER(wtc)
-        );
+            SWIFT_METAMEMBER(wtc));
     };
 
 }

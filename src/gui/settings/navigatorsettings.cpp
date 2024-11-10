@@ -9,7 +9,7 @@
 using namespace swift::misc;
 using namespace swift::gui;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CNavigatorSettings)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CNavigatorSettings)
 
 namespace swift::gui::settings
 {

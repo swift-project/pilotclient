@@ -16,7 +16,7 @@
 #include <QMetaType>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CCountry)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CCountry)
 
 namespace swift::misc
 {
@@ -139,18 +139,17 @@ namespace swift::misc
         QString m_alias2; //!< 2nd alias
         bool m_historic = false; //!< historic country
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CCountry,
-            BLACK_METAMEMBER(dbKey, 0, CaseInsensitiveComparison),
-            BLACK_METAMEMBER(loadedFromDb),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch),
-            BLACK_METAMEMBER(iso3),
-            BLACK_METAMEMBER(name),
-            BLACK_METAMEMBER(simplifiedName),
-            BLACK_METAMEMBER(alias1),
-            BLACK_METAMEMBER(alias2),
-            BLACK_METAMEMBER(historic)
-        );
+            SWIFT_METAMEMBER(dbKey, 0, CaseInsensitiveComparison),
+            SWIFT_METAMEMBER(loadedFromDb),
+            SWIFT_METAMEMBER(timestampMSecsSinceEpoch),
+            SWIFT_METAMEMBER(iso3),
+            SWIFT_METAMEMBER(name),
+            SWIFT_METAMEMBER(simplifiedName),
+            SWIFT_METAMEMBER(alias1),
+            SWIFT_METAMEMBER(alias2),
+            SWIFT_METAMEMBER(historic));
     };
 } // namespace
 

@@ -12,7 +12,7 @@
 #include <QStringBuilder>
 #include <QThreadStorage>
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CStatusMessage)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CStatusMessage)
 
 namespace swift::misc
 {

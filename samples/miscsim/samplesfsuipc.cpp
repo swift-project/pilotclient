@@ -15,12 +15,12 @@
 using namespace swift::misc;
 using namespace swift::misc::simulation;
 
-namespace BlackSample
+namespace swift::sample
 {
 #ifdef Q_OS_WIN
     void CSamplesFsuipc::samplesFsuipc(QTextStream &streamOut)
     {
-        using namespace BlackSimPlugin::FsCommon;
+        using namespace swift::simplugin::fscommon;
 
         swift::misc::registerMetadata();
         QScopedPointer<CFsuipc> fsuipc(new CFsuipc());

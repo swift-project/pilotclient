@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_FLIGHTGEAR_SERVICE_PROXY_H
-#define BLACKSIMPLUGIN_FLIGHTGEAR_SERVICE_PROXY_H
+#ifndef SWIFT_SIMPLUGIN_FLIGHTGEAR_SERVICE_PROXY_H
+#define SWIFT_SIMPLUGIN_FLIGHTGEAR_SERVICE_PROXY_H
 
 #include "misc/genericdbusinterface.h"
 
@@ -26,7 +26,7 @@ class QDBusPendingCallWatcher;
 #define FGSWIFTBUS_SERVICE_OBJECTPATH "/fgswiftbus/service"
 //! \endcond
 
-namespace BlackSimPlugin::Flightgear
+namespace swift::simplugin::flightgear
 {
     struct FlightgearData;
 
@@ -95,7 +95,7 @@ namespace BlackSimPlugin::Flightgear
 
     signals:
         //! Emitted if an asynchronous method call caused a DBus error
-        BLACK_NO_RELAY void asyncMethodError(QDBusError error);
+        SWIFT_NO_RELAY void asyncMethodError(QDBusError error);
 
         //! Own aircraft model changed
         void aircraftModelChanged(

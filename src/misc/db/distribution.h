@@ -18,7 +18,7 @@
 #include <QVersionNumber>
 #include <QString>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::db, CDistribution)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::db, CDistribution)
 
 namespace swift::misc::db
 {
@@ -109,14 +109,13 @@ namespace swift::misc::db
         bool m_restricted = false; //!< restricted access (i.e. password for download needed)
         network::CUrl m_downloadUrl; //!< download URL, here I get the installer
 
-        BLACK_METACLASS(
+        SWIFT_METACLASS(
             CDistribution,
-            BLACK_METAMEMBER(dbKey),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch),
-            BLACK_METAMEMBER(channel),
-            BLACK_METAMEMBER(stability),
-            BLACK_METAMEMBER(downloadUrl)
-        );
+            SWIFT_METAMEMBER(dbKey),
+            SWIFT_METAMEMBER(timestampMSecsSinceEpoch),
+            SWIFT_METAMEMBER(channel),
+            SWIFT_METAMEMBER(stability),
+            SWIFT_METAMEMBER(downloadUrl));
     };
 } // ns
 

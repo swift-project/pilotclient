@@ -24,7 +24,7 @@
 #include <tuple>
 #include <type_traits>
 
-BLACK_DECLARE_SEQUENCE_MIXINS(swift::misc, CLogCategory, CLogCategoryList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc, CLogCategory, CLogCategoryList)
 
 namespace swift::misc
 {

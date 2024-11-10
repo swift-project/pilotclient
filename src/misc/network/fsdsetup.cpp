@@ -13,7 +13,7 @@
 
 using namespace swift::misc;
 
-BLACK_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CFsdSetup)
+SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CFsdSetup)
 
 namespace swift::misc::network
 {

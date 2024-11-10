@@ -31,7 +31,7 @@
 #include <QVector3D>
 #include <array>
 
-BLACK_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftSituation)
+SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftSituation)
 
 namespace swift::misc
 {
@@ -501,26 +501,25 @@ namespace swift::misc
             int m_elvInfo = static_cast<int>(CAircraftSituation::NoElevationInfo); //!< where did we gnd.elevation from?
             aviation::COnGroundInfo m_onGroundInfo;
 
-            BLACK_METACLASS(
+            SWIFT_METACLASS(
                 CAircraftSituation,
-                BLACK_METAMEMBER(correspondingCallsign),
-                BLACK_METAMEMBER(position),
-                BLACK_METAMEMBER(pressureAltitude),
-                BLACK_METAMEMBER(heading),
-                BLACK_METAMEMBER(pitch),
-                BLACK_METAMEMBER(bank),
-                BLACK_METAMEMBER(groundSpeed),
-                BLACK_METAMEMBER(cg),
-                BLACK_METAMEMBER(hasVelocity),
-                BLACK_METAMEMBER(velocity),
-                BLACK_METAMEMBER(groundElevationPlane),
-                BLACK_METAMEMBER(onGroundInfo),
-                BLACK_METAMEMBER(elvInfo),
-                BLACK_METAMEMBER(isElvInfoTransferred),
-                BLACK_METAMEMBER(timestampMSecsSinceEpoch),
-                BLACK_METAMEMBER(timeOffsetMs),
-                BLACK_METAMEMBER(isInterim)
-            );
+                SWIFT_METAMEMBER(correspondingCallsign),
+                SWIFT_METAMEMBER(position),
+                SWIFT_METAMEMBER(pressureAltitude),
+                SWIFT_METAMEMBER(heading),
+                SWIFT_METAMEMBER(pitch),
+                SWIFT_METAMEMBER(bank),
+                SWIFT_METAMEMBER(groundSpeed),
+                SWIFT_METAMEMBER(cg),
+                SWIFT_METAMEMBER(hasVelocity),
+                SWIFT_METAMEMBER(velocity),
+                SWIFT_METAMEMBER(groundElevationPlane),
+                SWIFT_METAMEMBER(onGroundInfo),
+                SWIFT_METAMEMBER(elvInfo),
+                SWIFT_METAMEMBER(isElvInfoTransferred),
+                SWIFT_METAMEMBER(timestampMSecsSinceEpoch),
+                SWIFT_METAMEMBER(timeOffsetMs),
+                SWIFT_METAMEMBER(isInterim));
         };
     } // namespace
 } // namespace
