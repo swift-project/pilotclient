@@ -15,7 +15,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/propertyindexallclasses.h"
 #include "blackmisc/verify.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QTimer>
 #include <QPointer>
@@ -31,7 +31,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackCore;
 using namespace BlackSimPlugin::FsCommon;
-using namespace BlackConfig;
+using namespace swift::config;
 
 namespace BlackSimPlugin::Fs9
 {

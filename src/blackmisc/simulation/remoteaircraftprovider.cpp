@@ -7,13 +7,13 @@
 #include "blackmisc/json.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/stringutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Json;
-using namespace BlackConfig;
+using namespace swift::config;
 
 namespace BlackMisc::Simulation
 {

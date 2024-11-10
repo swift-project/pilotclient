@@ -8,7 +8,7 @@
 #include "blackgui/models/allmodels.h"
 #include "blackgui/components/texteditdialog.h"
 #include "blackmisc/worker.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QApplication>
 #include <QClipboard>

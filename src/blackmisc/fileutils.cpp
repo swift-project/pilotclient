@@ -4,7 +4,7 @@
 #include "blackmisc/fileutils.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/setbuilder.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QCoreApplication>
 #include <QDateTime>
@@ -19,7 +19,7 @@
 #include <algorithm>
 #include <QStringBuilder>
 
-using namespace BlackConfig;
+using namespace swift::config;
 
 namespace BlackMisc
 {

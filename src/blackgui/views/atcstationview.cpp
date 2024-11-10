@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackgui/views/atcstationview.h"
@@ -12,7 +12,7 @@
 #include <QFlags>
 #include <QtGlobal>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackGui::Models;

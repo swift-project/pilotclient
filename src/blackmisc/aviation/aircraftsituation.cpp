@@ -11,7 +11,7 @@
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/stringutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "blackmisc/propertyindexvariantmap.h" // needed for Mixin::Index::apply
 
 #include "QStringBuilder"
@@ -19,7 +19,7 @@
 
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackConfig;
+using namespace swift::config;
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftSituation)
 

@@ -3,9 +3,9 @@
 
 #include "blackcore/afv/audio/soundcardsampleprovider.h"
 #include "blackmisc/metadatautils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackSound::SampleProvider;
 

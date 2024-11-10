@@ -21,7 +21,7 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/threadutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QDir>
 #include <QJsonDocument>
@@ -36,7 +36,7 @@ using namespace BlackCore::Db;
 using namespace BlackCore::Data;
 using namespace BlackCore::Vatsim;
 using namespace BlackCore::Context;
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::Simulation;

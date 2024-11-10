@@ -11,13 +11,13 @@
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/icons.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QStringBuilder>
 #include <QPointer>
 #include <QtGlobal>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;

@@ -45,14 +45,14 @@
 #include "blackmisc/range.h"
 #include "blackmisc/verify.h"
 
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QHostAddress>
 #include <QStringBuilder>
 #include <QStringView>
 #include <QNetworkReply>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackCore::Vatsim;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

@@ -5,7 +5,7 @@
 //! \file
 //! \ingroup testblackmisc
 
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/network/fsdsetup.h"
@@ -19,7 +19,7 @@
 #include <QDateTime>
 #include <QDebug>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;

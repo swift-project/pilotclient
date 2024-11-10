@@ -21,7 +21,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/sharedstate/datalinkdbus.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QMessageBox>
 #include <QPixmap>
@@ -35,7 +35,7 @@
 #include <QPointer>
 #include <qcompilerdetection.h>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 using namespace BlackCore;

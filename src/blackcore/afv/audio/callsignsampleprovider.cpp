@@ -9,7 +9,7 @@
 #include "blacksound/audioutilities.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/metadatautils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QtMath>
 #include <QDebug>
@@ -18,7 +18,7 @@
 
 using namespace BlackMisc;
 using namespace BlackSound::SampleProvider;
-using namespace BlackConfig;
+using namespace swift::config;
 
 namespace BlackCore::Afv::Audio
 {

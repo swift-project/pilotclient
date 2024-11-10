@@ -11,7 +11,7 @@
 #include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/stringutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -22,7 +22,7 @@
 #include <QStringBuilder>
 #include <QFileInfo>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Db;

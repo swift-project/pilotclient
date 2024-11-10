@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackmisc/network/ping.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include <QProcess>
 
-using namespace BlackConfig;
+using namespace swift::config;
 
 namespace BlackMisc::Network
 {

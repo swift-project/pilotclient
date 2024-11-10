@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackmisc/simulation/interpolation/interpolator.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "blackmisc/simulation/interpolation/interpolationlogger.h"
 #include "blackmisc/simulation/interpolation/interpolatorlinear.h"
 #include "blackmisc/simulation/interpolation/interpolatorspline.h"
@@ -22,7 +22,7 @@
 #include <QDateTime>
 #include <QStringBuilder>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Math;

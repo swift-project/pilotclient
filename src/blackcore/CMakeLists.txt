@@ -256,7 +256,7 @@ target_link_libraries(core
             sound
             externals_sodium
             msgpack-cxx
-            blackconfig
+            config
         PRIVATE
             Qt::Qml
             Qt::Xml

@@ -9,14 +9,14 @@
 #include "blackmisc/network/url.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QPointer>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackCore::Data;
-using namespace BlackConfig;
+using namespace swift::config;
 
 namespace BlackGui::Components
 {

@@ -23,7 +23,7 @@
 #include "blackmisc/network/client.h"
 #include "blackmisc/pixmap.h"
 #include "blackmisc/pq/frequency.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QObject>
 #include <QtPlugin>
@@ -295,8 +295,8 @@ namespace BlackSimPlugin::FsxCommon
 
         //! @{
         //! Word size
-        static bool is32bit() { return (BlackConfig::CBuildConfig::buildWordSize() == 32); }
-        static bool is64bit() { return (BlackConfig::CBuildConfig::buildWordSize() == 64); }
+        static bool is32bit() { return (swift::config::CBuildConfig::buildWordSize() == 32); }
+        static bool is64bit() { return (swift::config::CBuildConfig::buildWordSize() == 64); }
         //! @}
 
         //! Format conversion

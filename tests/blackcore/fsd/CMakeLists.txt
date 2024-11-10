@@ -12,5 +12,5 @@ add_swift_test(
 add_swift_test(
         NAME core_fsdmessages
         SOURCES testfsdmessages/testfsdmessages.cpp
-        LINK_LIBRARIES blackconfig core tests_test Qt::Core Qt::Test
+        LINK_LIBRARIES config core tests_test Qt::Core Qt::Test
 )

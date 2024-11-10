@@ -9,7 +9,7 @@
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/stringutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QDateTime>
 #include <QDir>
@@ -28,7 +28,7 @@
 #include <tuple>
 #include <QStringView>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;

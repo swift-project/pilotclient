@@ -8,7 +8,7 @@
  * \ingroup testblackfsd
  */
 
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "blackcore/fsd/addatc.h"
 #include "blackcore/fsd/addpilot.h"
 #include "blackcore/fsd/atcdataupdate.h"
@@ -45,7 +45,7 @@
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackCore::Fsd;
 
 namespace BlackMiscTest

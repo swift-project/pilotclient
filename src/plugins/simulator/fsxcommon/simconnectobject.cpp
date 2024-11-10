@@ -7,9 +7,9 @@
 #include "blackcore/simulator.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/simulation/interpolation/interpolatormulti.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;

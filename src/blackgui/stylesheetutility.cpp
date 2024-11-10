@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/logmessage.h"
@@ -25,7 +25,7 @@
 #include <QtGlobal>
 #include <QStringBuilder>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 
 namespace BlackGui

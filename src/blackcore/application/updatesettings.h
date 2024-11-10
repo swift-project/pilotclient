@@ -7,7 +7,7 @@
 #define BLACKCORE_APPLICATION_UPDATESETTINGS_H
 
 #include "blackcore/application.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "blackmisc/platform.h"
 #include "blackmisc/settingscache.h"
 #include <QStringList>

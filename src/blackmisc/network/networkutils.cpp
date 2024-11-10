@@ -5,7 +5,7 @@
 #include "blackmisc/network/server.h"
 #include "blackmisc/eventloop.h"
 #include "blackmisc/stringutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include <QAbstractSocket>
 #include <QDateTime>
 #include <QMetaEnum>
@@ -22,7 +22,7 @@
 #include <QVariant>
 #include <QRegularExpression>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 

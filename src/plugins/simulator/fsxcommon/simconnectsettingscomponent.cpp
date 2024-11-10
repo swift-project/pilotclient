@@ -9,7 +9,7 @@
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/logmessage.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QDesktopServices>
@@ -17,7 +17,7 @@
 #include <QStringBuilder>
 #include <QDir>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Fsx;

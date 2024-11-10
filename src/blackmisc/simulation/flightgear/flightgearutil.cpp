@@ -4,7 +4,7 @@
 #include "blackmisc/simulation/flightgear/flightgearutil.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/directoryutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "qsystemdetection.h"
 #include <QDir>
 #include <QFile>
@@ -14,7 +14,7 @@
 #include <QSettings>
 #include <QStandardPaths>
 
-using namespace BlackConfig;
+using namespace swift::config;
 
 namespace BlackMisc::Simulation::Flightgear
 {

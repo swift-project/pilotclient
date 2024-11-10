@@ -27,7 +27,7 @@
 #include "blackmisc/pq/time.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/pixmap.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QObject>
 #include <QString>

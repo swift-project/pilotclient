@@ -26,7 +26,7 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/verify.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QMetaObject>
 #include <QStringBuilder>
@@ -36,7 +36,7 @@
 #include <QtGlobal>
 #include <QPointer>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackCore::Db;
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;

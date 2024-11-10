@@ -14,7 +14,7 @@
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/audio/audioutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "ui_infobarstatuscomponent.h"
 
 #include <QLabel>
@@ -28,7 +28,7 @@
 #include <QStringBuilder>
 #include <QTimer>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackGui;

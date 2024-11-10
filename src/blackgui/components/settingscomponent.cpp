@@ -4,7 +4,7 @@
 #include "blackgui/components/audionotificationcomponent.h"
 #include "blackgui/components/settingscomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "ui_settingscomponent.h"
 
 #include <QAction>
@@ -24,7 +24,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Settings;
 using namespace BlackCore;
 using namespace BlackGui;
-using namespace BlackConfig;
+using namespace swift::config;
 
 namespace BlackGui::Components
 {

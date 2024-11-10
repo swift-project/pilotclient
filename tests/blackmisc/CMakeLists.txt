@@ -15,7 +15,7 @@ add_swift_test(
 add_swift_test(
         NAME misc_aviation_aircraftsituation
         SOURCES aviation/testaircraftsituation/testaircraftsituation.cpp
-        LINK_LIBRARIES blackconfig misc tests_test Qt::Core
+        LINK_LIBRARIES config misc tests_test Qt::Core
 )
 
 add_swift_test(

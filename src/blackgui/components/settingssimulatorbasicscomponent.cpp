@@ -8,7 +8,7 @@
 #include "blackmisc/fileutils.h"
 #include "blackmisc/htmlutils.h"
 #include "blackmisc/logmessage.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QMessageBox>
 #include <QRegularExpression>
@@ -18,7 +18,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::Simulation::XPlane;
-using namespace BlackConfig;
+using namespace swift::config;
 
 namespace BlackGui::Components
 {

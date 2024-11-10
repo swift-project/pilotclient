@@ -7,7 +7,7 @@
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QPointer>
 #include <QTimer>
@@ -17,7 +17,7 @@ using namespace BlackCore::Context;
 using namespace BlackGui;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
-using namespace BlackConfig;
+using namespace swift::config;
 
 namespace BlackSimPlugin::FsxCommon
 {

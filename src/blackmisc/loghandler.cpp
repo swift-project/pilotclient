@@ -7,7 +7,7 @@
 #include "blackmisc/algorithm.h"
 #include "blackmisc/mixin/mixincompare.h"
 #include "blackmisc/threadutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #ifdef BLACK_USE_CRASHPAD
 #    include "crashpad/client/simulate_crash.h"
@@ -145,7 +145,7 @@ namespace BlackMisc
 
     void CLogHandler::logLocalMessage(const CStatusMessage &i_statusMessage)
     {
-        using namespace BlackConfig;
+        using namespace swift::config;
         CStatusMessage statusMessage = i_statusMessage;
         if (!CBuildConfig::isLocalDeveloperDebugBuild() && CLogPattern::empty().withSeverity(CStatusMessage::SeverityError).match(statusMessage))
         {

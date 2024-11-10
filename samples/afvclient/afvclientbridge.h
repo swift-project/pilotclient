@@ -48,7 +48,7 @@ public:
     //! \copydoc BlackCore::Afv::Clients::CAfvClient::connectTo
     Q_INVOKABLE void connectTo(const QString &cid, const QString &password, const QString &callsign)
     {
-        const QString client = "swift " % BlackConfig::CBuildConfig::getShortVersionString();
+        const QString client = "swift " % swift::config::CBuildConfig::getShortVersionString();
         m_afvClient->connectTo(cid, password, callsign, client);
     }
 

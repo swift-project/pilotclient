@@ -6,7 +6,7 @@
 #ifndef BLACKSOUND_SAMPLEPROVIDER_H
 #define BLACKSOUND_SAMPLEPROVIDER_H
 
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "blacksound/blacksoundexport.h"
 #include <QObject>
 #include <QVector>
@@ -33,7 +33,7 @@ namespace BlackSound::SampleProvider
 
     protected:
         //! Verbose logs?
-        bool static verbose() { return BlackConfig::CBuildConfig::isLocalDeveloperDebugBuild(); }
+        bool static verbose() { return swift::config::CBuildConfig::isLocalDeveloperDebugBuild(); }
     };
 
 } // ns

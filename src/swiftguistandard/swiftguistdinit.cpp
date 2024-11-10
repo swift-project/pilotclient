@@ -34,7 +34,7 @@
 #include "blackmisc/logpattern.h"
 #include "blackmisc/slot.h"
 #include "blackmisc/statusmessage.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QAction>
 #include <QHBoxLayout>
@@ -47,7 +47,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackMisc;

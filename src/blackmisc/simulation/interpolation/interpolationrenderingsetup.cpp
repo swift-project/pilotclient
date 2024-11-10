@@ -5,11 +5,11 @@
 #include "blackmisc/network/client.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/verify.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "blackmisc/propertyindexvariantmap.h" // needed for Mixin::Index::apply
 #include <QStringBuilder>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;

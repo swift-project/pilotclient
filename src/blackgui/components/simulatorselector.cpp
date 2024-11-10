@@ -7,7 +7,7 @@
 #include "blackcore/context/contextsimulator.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/mixin/mixincompare.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "ui_simulatorselector.h"
 
 #include <QCheckBox>
@@ -16,7 +16,7 @@
 #include <QtGlobal>
 #include <QPointer>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore::Context;

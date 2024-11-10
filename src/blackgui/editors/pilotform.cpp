@@ -9,11 +9,11 @@
 #include "blackgui/guiutility.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/network/user.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include <QCompleter>
 #include <QStyledItemDelegate>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;

@@ -5,7 +5,7 @@
 
 #include "blackcore/githubpackagesreader.h"
 #include "blackcore/application.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -13,7 +13,7 @@
 #include <QUrl>
 
 using namespace BlackMisc::Db;
-using namespace BlackConfig;
+using namespace swift::config;
 
 namespace BlackCore
 {

@@ -17,7 +17,7 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/verify.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <string.h>
 #include <QChar>
@@ -36,7 +36,7 @@
 #include <algorithm>
 #include <functional>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;

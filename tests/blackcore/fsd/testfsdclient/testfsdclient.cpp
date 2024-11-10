@@ -8,7 +8,7 @@
  * \ingroup testblackfsd
  */
 
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "blackcore/fsd/fsdclient.h"
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/network/clientprovider.h"
@@ -30,7 +30,7 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackCore::Fsd;
 
 namespace BlackFsdTest

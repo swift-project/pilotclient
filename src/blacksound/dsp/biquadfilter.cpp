@@ -3,13 +3,13 @@
 
 #include "biquadfilter.h"
 #include "blackmisc/verify.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QtMath>
 #include <algorithm>
 
 using namespace BlackMisc;
-using namespace BlackConfig;
+using namespace swift::config;
 
 namespace BlackSound::Dsp
 {

@@ -4,12 +4,12 @@
 #include "blackmisc/platform.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/comparefunctions.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QJsonValue>
 #include <QtGlobal>
 
-using namespace BlackConfig;
+using namespace swift::config;
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc, CPlatform)
 

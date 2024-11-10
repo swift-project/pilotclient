@@ -16,7 +16,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/processctrl.h"
 #include "blackmisc/statusmessage.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "ui_dbownmodelscomponent.h"
 
 #include <QAction>
@@ -27,7 +27,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore::Db;

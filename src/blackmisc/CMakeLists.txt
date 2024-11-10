@@ -693,7 +693,7 @@ target_compile_definitions(misc PRIVATE BUILD_BLACKMISC_LIB)
 
 target_link_libraries(misc
         PUBLIC
-            blackconfig
+            config
             Qt::Core
             Qt::Gui
             Qt::DBus

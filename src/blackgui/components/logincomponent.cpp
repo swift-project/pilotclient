@@ -30,7 +30,7 @@
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/crashhandler.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QDialogButtonBox>
 #include <QMessageBox>
@@ -46,7 +46,7 @@
 #include <QtGlobal>
 #include <QPointer>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Audio;

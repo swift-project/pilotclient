@@ -5,9 +5,9 @@
 #include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/stringutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
-using namespace BlackConfig;
+using namespace swift::config;
 
 BLACK_DEFINE_SEQUENCE_MIXINS(BlackMisc, CApplicationInfo, CApplicationInfoList)
 

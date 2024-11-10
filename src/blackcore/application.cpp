@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackcore/application.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulatorimpl.h"
 #include "blackcore/context/contextaudio.h"
@@ -53,7 +53,7 @@
 #include <QSysInfo>
 #include <cstdlib>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;

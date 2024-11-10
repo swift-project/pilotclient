@@ -8,7 +8,7 @@
  * \ingroup testblackmisc
  */
 
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "blackmisc/compressutils.h"
 #include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
@@ -21,7 +21,7 @@
 #include <QTest>
 
 using namespace BlackMisc;
-using namespace BlackConfig;
+using namespace swift::config;
 
 namespace BlackMiscTest
 {

@@ -72,7 +72,7 @@ target_include_directories(sound PUBLIC ${PROJECT_SOURCE_DIR}/src)
 target_link_libraries(sound
         PUBLIC
         Qt::Core
-        blackconfig
+        config
         Qt::Multimedia
         misc
         externals_opus

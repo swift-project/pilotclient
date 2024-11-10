@@ -40,7 +40,7 @@ target_link_libraries(fsxcommon
         PRIVATE
             gui
             fscommon
-            blackconfig
+            config
 )
 
 target_compile_definitions(fsxcommon PRIVATE BUILD_FSXCOMMON_LIB)

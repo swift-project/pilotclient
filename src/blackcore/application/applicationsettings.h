@@ -9,7 +9,7 @@
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/input/actionhotkeylist.h"
 #include "blackmisc/settingscache.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QStringList>
 

@@ -6,7 +6,7 @@
 #ifndef BLACKMISC_DB_DISTRIBUTION_H
 #define BLACKMISC_DB_DISTRIBUTION_H
 
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/db/datastore.h"

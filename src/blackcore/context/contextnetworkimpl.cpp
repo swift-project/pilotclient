@@ -30,13 +30,13 @@
 #include "blackmisc/sequence.h"
 #include "blackmisc/simplecommandparser.h"
 #include "blackmisc/stringutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <stdbool.h>
 #include <QStringBuilder>
 #include <QTimer>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;

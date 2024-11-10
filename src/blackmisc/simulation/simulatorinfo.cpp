@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "blackmisc/simulation/fscommon/fsdirectories.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
@@ -15,7 +15,7 @@
 #include <QStringBuilder>
 #include <algorithm>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::Simulation::FsCommon;

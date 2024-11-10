@@ -10,7 +10,7 @@
 #include "blackcore/application.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/obfuscation.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
@@ -19,7 +19,7 @@
 #include <QThread>
 #include <QTimer>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackCore;

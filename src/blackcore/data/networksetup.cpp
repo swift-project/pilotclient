@@ -3,9 +3,9 @@
 
 #include "blackcore/data/networksetup.h"
 #include "blackcore/application.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 

@@ -7,7 +7,7 @@
 #include "qjsonwebtoken/qjsonwebtoken.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/stringutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QJsonObject>
 #include <QJsonArray>
@@ -19,7 +19,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
-using namespace BlackConfig;
+using namespace swift::config;
 
 namespace BlackCore::Afv::Connection
 {

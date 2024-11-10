@@ -18,7 +18,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/logpattern.h"
 #include "blackmisc/network/url.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "ui_swiftdata.h"
 
 #include <QAction>
@@ -36,7 +36,7 @@ using namespace BlackCore::Data;
 using namespace BlackCore::Db;
 using namespace BlackGui;
 using namespace BlackGui::Components;
-using namespace BlackConfig;
+using namespace swift::config;
 
 CSwiftData::CSwiftData(QWidget *parent) : QMainWindow(parent),
                                           CIdentifiable(this),

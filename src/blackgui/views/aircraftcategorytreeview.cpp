@@ -5,7 +5,7 @@
 #include "blackgui/models/aircraftcategorytreemodel.h"
 #include "blackgui/menus/menuaction.h"
 #include "blackmisc/icons.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QFlags>
 #include <QMenu>

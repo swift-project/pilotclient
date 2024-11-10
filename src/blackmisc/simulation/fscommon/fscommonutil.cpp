@@ -9,7 +9,7 @@
 #include "blackmisc/fileutils.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/logmessage.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QDir>
 #include <QList>
@@ -25,7 +25,7 @@
 #include <QSettings>
 #include <QStringBuilder>
 
-using namespace BlackConfig;
+using namespace swift::config;
 
 namespace BlackMisc::Simulation::FsCommon
 {

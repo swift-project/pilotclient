@@ -13,7 +13,7 @@
 #include "blackmisc/stringutils.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/icons.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #ifdef Q_OS_WIN
 #    include "comdef.h"
@@ -274,7 +274,7 @@ namespace BlackCore::Context
         }
 
         const CUser connectedUser = this->getIContextNetwork()->getConnectedServer().getUser();
-        const QString client = "swift " % BlackConfig::CBuildConfig::getShortVersionString();
+        const QString client = "swift " % swift::config::CBuildConfig::getShortVersionString();
         CCallsign cs = connectedUser.getCallsign();
         this->unRegisterAudioCallsign(cs, this->identifier()); // un-register "myself"
         if (this->hasRegisteredAudioCallsign(cs)) // anybody else using that callsign

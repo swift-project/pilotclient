@@ -24,7 +24,7 @@
 #include "blackmisc/logcategories.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/threadutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #if defined(Q_OS_MACOS)
 #    include "blackinput/macos/macosinpututils.h"
@@ -70,7 +70,7 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Input;
 using namespace BlackMisc::Simulation;
-using namespace BlackConfig;
+using namespace swift::config;
 
 // Constructor
 SwiftGuiStd::SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowMode, QWidget *parent) : QMainWindow(parent, CEnableForFramelessWindow::modeToWindowFlags(windowMode)),

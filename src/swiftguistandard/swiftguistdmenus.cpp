@@ -11,7 +11,7 @@
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/logmessage.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "swiftguistd.h"
 #include "ui_swiftguistd.h"
 
@@ -24,7 +24,7 @@
 #include <QDesktopServices>
 #include <QMessageBox>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 using namespace BlackCore;

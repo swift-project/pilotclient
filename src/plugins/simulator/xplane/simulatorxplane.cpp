@@ -42,7 +42,7 @@
 #include "blackmisc/iterator.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/setbuilder.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include "dbus/dbus.h"
 
@@ -55,7 +55,7 @@
 #include <QElapsedTimer>
 #include <math.h>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;

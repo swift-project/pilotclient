@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/application.h"
 #include "blackmisc/json.h"
@@ -18,7 +18,7 @@
 #include <QStringList>
 #include <QStringBuilder>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Json;
 using namespace BlackMisc::Network;

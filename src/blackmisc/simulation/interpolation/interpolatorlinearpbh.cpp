@@ -4,9 +4,9 @@
 #include "blackmisc/simulation/interpolation/interpolatorlinearpbh.h"
 #include "blackmisc/simulation/interpolation/interpolatorfunctions.h"
 #include "blackmisc/verify.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 

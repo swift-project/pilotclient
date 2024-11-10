@@ -4,12 +4,12 @@
 #include "blackmisc/applicationinfo.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/comparefunctions.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QDir>
 #include <QStringBuilder>
 
-using namespace BlackConfig;
+using namespace swift::config;
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc, CApplicationInfo)
 

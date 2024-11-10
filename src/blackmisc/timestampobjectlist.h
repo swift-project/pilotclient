@@ -10,7 +10,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/verify.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include <QList>
 #include <QtGlobal>
 
@@ -274,7 +274,7 @@ namespace BlackMisc
             }
 
             // crosscheck
-            if (BlackConfig::CBuildConfig::isLocalDeveloperDebugBuild())
+            if (swift::config::CBuildConfig::isLocalDeveloperDebugBuild())
             {
                 Q_ASSERT_X(this->isSortedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
             }
@@ -563,7 +563,7 @@ namespace BlackMisc
                 front.setTimeOffsetMs(os);
             }
 
-            if (BlackConfig::CBuildConfig::isLocalDeveloperDebugBuild())
+            if (swift::config::CBuildConfig::isLocalDeveloperDebugBuild())
             {
                 BLACK_VERIFY_X(front.isNewerThanAdjusted(second), Q_FUNC_INFO, "Front/second timestamp");
                 BLACK_VERIFY_X(this->isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
@@ -588,7 +588,7 @@ namespace BlackMisc
             this->container().clear();
             const qint64 osTime = value.getTimeOffsetMs();
             const qint64 os = -1 * qAbs(deltaTimeMs < 0 ? osTime : deltaTimeMs);
-            if (BlackConfig::CBuildConfig::isLocalDeveloperDebugBuild())
+            if (swift::config::CBuildConfig::isLocalDeveloperDebugBuild())
             {
                 BLACK_VERIFY_X(os < 0, Q_FUNC_INFO, "Need negative offset time to prefill time");
             }

@@ -6,11 +6,11 @@
 #include "blackgui/guiapplication.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/dbusserver.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QIntValidator>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 

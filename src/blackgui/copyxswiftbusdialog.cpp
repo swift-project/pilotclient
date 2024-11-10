@@ -8,9 +8,9 @@
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation::XPlane;
 using namespace BlackCore::Context;

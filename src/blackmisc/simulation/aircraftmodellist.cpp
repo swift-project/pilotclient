@@ -14,7 +14,7 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/setbuilder.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QStringBuilder>
 #include <QJsonValue>
@@ -24,7 +24,7 @@
 #include <QDir>
 #include <tuple>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Math;
 using namespace BlackMisc::Aviation;

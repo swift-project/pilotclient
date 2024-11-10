@@ -40,7 +40,7 @@ target_link_libraries(simulatorfs9
         misc
         core
         fscommon
-        blackconfig
+        config
         externals_dplay
 )
 

@@ -14,7 +14,7 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/crashhandler.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QLabel>
 #include <QLineEdit>
@@ -28,7 +28,7 @@
 using namespace BlackCore;
 using namespace BlackCore::Db;
 using namespace BlackGui;
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 

@@ -8,7 +8,7 @@
 #include "blackmisc/stringutils.h"
 #include "blackmisc/network/ping.h"
 #include "blackmisc/setbuilder.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include <QCoreApplication>
 #include <QDir>
 #include <QUrl>
@@ -16,7 +16,7 @@
 #include <QDateTime>
 #include <QRegularExpression>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc::Network;
 
 namespace BlackMisc

@@ -1,0 +1,65 @@
+// SPDX-FileCopyrightText: Copyright (C) 2018 swift Project Community / Contributors
+// SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
+
+#ifndef IN_BUILDCONFIG_H
+#error This file is only to be included by buildconfig.inc
+#endif
+
+#define SWIFTCONFIG_ON true
+#define SWIFTCONFIG_OFF false
+
+constexpr bool swift::config::CBuildConfig::isCompiledWithCore()
+{
+    return SWIFTCONFIG_${SWIFT_BUILD_CORE};
+}
+
+constexpr bool swift::config::CBuildConfig::isCompiledWithSound()
+{
+    return SWIFTCONFIG_${SWIFT_BUILD_SOUND};
+}
+
+constexpr bool swift::config::CBuildConfig::isCompiledWithInput()
+{
+    return SWIFTCONFIG_${SWIFT_BUILD_INPUT};
+}
+
+constexpr bool swift::config::CBuildConfig::isCompiledWithFs9Support()
+{
+    return SWIFTCONFIG_${SWIFT_BUILD_FS9_PLUGIN};
+}
+
+constexpr bool swift::config::CBuildConfig::isCompiledWithP3DSupport()
+{
+    return SWIFTCONFIG_${SWIFT_BUILD_P3D_PLUGIN};
+}
+
+constexpr bool swift::config::CBuildConfig::isCompiledWithFsxSupport()
+{
+    return SWIFTCONFIG_${SWIFT_BUILD_FSX_PLUGIN};
+}
+
+constexpr bool swift::config::CBuildConfig::isCompiledWithFsuipcSupport()
+{
+    return isCompiledWithFsxSupport() || isCompiledWithP3DSupport() || isCompiledWithFs9Support() || SWIFTCONFIG_${SWIFT_BUILD_MSFS_PLUGIN};
+}
+
+constexpr bool swift::config::CBuildConfig::isCompiledWithXPlaneSupport()
+{
+    return SWIFTCONFIG_${SWIFT_BUILD_XPLANE_PLUGIN};
+}
+
+constexpr bool swift::config::CBuildConfig::isCompiledWithFGSupport()
+{
+    return SWIFTCONFIG_${SWIFT_BUILD_FLIGHTGEAR_PLUGIN};
+}
+
+constexpr bool swift::config::CBuildConfig::isCompiledWithGui()
+{
+    return SWIFTCONFIG_${SWIFT_BUILD_GUI};
+}
+
+constexpr int swift::config::CBuildConfig::versionMajor() { return ${SWIFT_VERSION_MAJOR}; }
+constexpr int swift::config::CBuildConfig::versionMinor() { return ${SWIFT_VERSION_MINOR}; }
+
+#undef SWIFTCONFIG_ON
+#undef SWIFTCONFIG_OFF

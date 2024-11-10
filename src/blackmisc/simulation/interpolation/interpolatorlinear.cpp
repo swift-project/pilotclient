@@ -10,11 +10,11 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/range.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <array>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Math;

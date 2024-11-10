@@ -12,10 +12,10 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/simulation/aircraftmodelutils.h"
 #include "blackmisc/simulation/modelconverterx.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include <QDesktopServices>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackGui;

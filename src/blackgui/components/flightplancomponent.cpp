@@ -28,7 +28,7 @@
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include "ui_flightplancomponent.h"
 
@@ -58,7 +58,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackGui;
 using namespace BlackCore;
-using namespace BlackConfig;
+using namespace swift::config;
 
 namespace BlackGui::Components
 {

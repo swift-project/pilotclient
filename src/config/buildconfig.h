@@ -11,20 +11,20 @@
 #include <QDateTime>
 #include <QVersionNumber>
 
-namespace BlackConfig
+namespace swift::config
 {
     //! Build configuration, also used to secure VATSIM key
     class CBuildConfig
     {
     public:
-        //! with BlackCore?
-        static constexpr bool isCompiledWithBlackCore(); // defined in buildconfig_gen.inc.in
+        //! with Core?
+        static constexpr bool isCompiledWithCore(); // defined in buildconfig_gen.inc.in
 
-        //! with BlackSound?
-        static constexpr bool isCompiledWithBlackSound(); // defined in buildconfig_gen.inc.in
+        //! with Sound?
+        static constexpr bool isCompiledWithSound(); // defined in buildconfig_gen.inc.in
 
-        //! with BlackInput?
-        static constexpr bool isCompiledWithBlackInput(); // defined in buildconfig_gen.inc.in
+        //! with Input?
+        static constexpr bool isCompiledWithInput(); // defined in buildconfig_gen.inc.in
 
         //! with FS9 support?
         static constexpr bool isCompiledWithFs9Support(); // defined in buildconfig_gen.inc.in

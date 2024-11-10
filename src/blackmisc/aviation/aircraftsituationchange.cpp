@@ -13,14 +13,14 @@
 #include "blackmisc/propertyindexref.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/stringutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "QStringBuilder"
 #include <QtGlobal>
 #include <QPair>
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Math;
-using namespace BlackConfig;
+using namespace swift::config;
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Aviation, CAircraftSituationChange)
 

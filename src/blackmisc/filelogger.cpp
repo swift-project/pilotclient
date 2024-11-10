@@ -3,7 +3,7 @@
 
 #include "blackmisc/filelogger.h"
 #include "blackmisc/swiftdirectories.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QCoreApplication>
 #include <QDateTime>
@@ -14,7 +14,7 @@
 #include <QStringBuilder>
 #include <QtGlobal>
 
-using namespace BlackConfig;
+using namespace swift::config;
 
 namespace BlackMisc
 {

@@ -14,11 +14,11 @@
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/crashhandler.h"
 #include "blackmisc/logmessage.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QPushButton>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;

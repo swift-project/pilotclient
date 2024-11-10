@@ -3,7 +3,7 @@
 
 #include "audioutilities.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QStringBuilder>
 #include <QAudioInput>
@@ -11,7 +11,7 @@
 #include <QAudioSource>
 #include <QMediaDevices>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc::Audio;
 
 namespace BlackSound

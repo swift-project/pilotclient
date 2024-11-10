@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2018 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "blackgui/components/texteditdialog.h"
 #include "blackgui/dockwidgetinfoarea.h"
 #include "blackgui/filters/filterdialog.h"
@@ -22,7 +22,7 @@
 
 #include <algorithm>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackGui;
 using namespace BlackGui::Menus;

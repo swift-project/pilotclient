@@ -10,7 +10,7 @@
 
 //! \cond PRIVATE
 
-namespace BlackConfig
+namespace swift::config
 {
     constexpr bool CBuildConfig::isCompiledWithMsFlightSimulatorSupport()
     {

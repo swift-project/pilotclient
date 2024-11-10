@@ -3,7 +3,7 @@
 
 #include "ui_loginmodebuttons.h"
 
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "blackgui/loginmodebuttons.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextsimulator.h"
@@ -11,7 +11,7 @@
 
 #include <QRadioButton>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackMisc::Network;

@@ -13,7 +13,7 @@
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/statusmessage.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QStringBuilder>
 #include <QByteArray>
@@ -25,7 +25,7 @@
 #include <QUrl>
 #include <QtGlobal>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;

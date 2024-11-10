@@ -13,14 +13,14 @@
 #include "blackcore/webdataservices.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/verify.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QStringList>
 #include <QFileDialog>
 #include <QPointer>
 #include <QMessageBox>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Settings;

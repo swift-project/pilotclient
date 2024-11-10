@@ -24,7 +24,7 @@
 #include "blackmisc/metadatautils.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/verify.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QAction>
 #include <QCloseEvent>
@@ -52,7 +52,7 @@
 #include <QWhatsThis>
 #include <Qt>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;

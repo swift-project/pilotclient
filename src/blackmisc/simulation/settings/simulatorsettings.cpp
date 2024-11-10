@@ -8,10 +8,10 @@
 #include "blackmisc/simulation/flightgear/flightgearutil.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/stringutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include <QStringBuilder>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Simulation::XPlane;

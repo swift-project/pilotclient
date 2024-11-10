@@ -3,11 +3,11 @@
 
 #include "blackcore/afv/connection/clientconnection.h"
 #include "blackmisc/logmessage.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QNetworkDatagram>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackCore::Afv::Crypto;
 

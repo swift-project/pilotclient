@@ -5,7 +5,7 @@
 #include <QRegularExpression>
 #include <QStringBuilder>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 

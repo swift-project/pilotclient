@@ -3,13 +3,13 @@
 
 #include "blackmisc/db/updateinfo.h"
 #include "blackmisc/stringutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include <QStringBuilder>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
 
-using namespace BlackConfig;
+using namespace swift::config;
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Db, CUpdateInfo)
 

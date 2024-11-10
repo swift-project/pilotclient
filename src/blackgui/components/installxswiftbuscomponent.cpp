@@ -10,7 +10,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/fileutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QMessageBox>
 #include <QFileDialog>
@@ -21,7 +21,7 @@
 #include <QPointer>
 #include <QDesktopServices>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;

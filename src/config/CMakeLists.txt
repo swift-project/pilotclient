@@ -4,7 +4,7 @@
 configure_file(buildconfig_gen.inc.in buildconfig_gen.inc)
 configure_file(buildconfig_gen.cpp.in buildconfig_gen.cpp)
 
-add_library(blackconfig STATIC
+add_library(config STATIC
         buildconfig.cpp
         buildconfig.h
         buildconfig.inc
@@ -12,11 +12,11 @@ add_library(blackconfig STATIC
         ${CMAKE_CURRENT_BINARY_DIR}/buildconfig_gen.cpp
         )
 
-target_link_libraries(blackconfig PUBLIC Qt::Core)
+target_link_libraries(config PUBLIC Qt::Core)
 
-target_include_directories(blackconfig
+target_include_directories(config
         PUBLIC
         ${PROJECT_SOURCE_DIR}/src
         ${CMAKE_CURRENT_BINARY_DIR}
 )
-set_property(TARGET blackconfig PROPERTY POSITION_INDEPENDENT_CODE ON)
+set_property(TARGET config PROPERTY POSITION_INDEPENDENT_CODE ON)

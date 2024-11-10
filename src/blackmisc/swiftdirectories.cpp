@@ -8,7 +8,7 @@
 #include "blackmisc/fileutils.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/range.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include <QCoreApplication>
 #include <QDir>
 #include <QUrl>
@@ -16,7 +16,7 @@
 #include <QRegularExpression>
 #include <QStandardPaths>
 
-using namespace BlackConfig;
+using namespace swift::config;
 
 namespace BlackMisc
 {

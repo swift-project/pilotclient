@@ -14,13 +14,13 @@
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/db/databasewriter.h"
 #include "blackcore/webdataservices.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QStringBuilder>
 
 using namespace BlackCore;
 using namespace BlackCore::Db;
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;

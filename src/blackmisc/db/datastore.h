@@ -9,7 +9,7 @@
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QJsonObject>
 #include <QJsonValue>

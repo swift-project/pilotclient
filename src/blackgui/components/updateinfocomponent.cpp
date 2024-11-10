@@ -10,12 +10,12 @@
 #include "blackmisc/db/distributionlist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/stringutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QDesktopServices>
 #include <QMessageBox>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackCore::Application;
 using namespace BlackMisc;
 using namespace BlackMisc::Db;

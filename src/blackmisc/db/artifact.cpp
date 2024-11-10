@@ -3,11 +3,11 @@
 
 #include "blackmisc/db/artifact.h"
 #include "blackmisc/stringutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include <QRegularExpression>
 #include <QStringBuilder>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc::Network;
 
 BLACK_DEFINE_VALUEOBJECT_MIXINS(BlackMisc::Db, CArtifact)

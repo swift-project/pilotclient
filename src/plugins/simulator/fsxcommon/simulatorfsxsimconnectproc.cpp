@@ -9,12 +9,12 @@
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/logmessage.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <cstring>
 
 using namespace BlackCore;
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;

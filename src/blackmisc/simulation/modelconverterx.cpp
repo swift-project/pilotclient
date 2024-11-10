@@ -2,13 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "blackmisc/simulation/modelconverterx.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/logmessage.h"
 #include <QFile>
 #include <QDir>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation::Settings;
 

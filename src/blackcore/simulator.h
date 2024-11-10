@@ -32,7 +32,7 @@
 #include "blackmisc/pixmap.h"
 #include "blackmisc/simplecommandparser.h"
 #include "blackmisc/tokenbucket.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QFlags>
 #include <QObject>

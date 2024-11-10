@@ -17,7 +17,7 @@
 #include <QSysInfo>
 #include <QOperatingSystemVersion>
 
-namespace BlackConfig
+namespace swift::config
 {
     const QString &CBuildConfig::swiftGuiExecutableName()
     {
@@ -98,10 +98,10 @@ namespace BlackConfig
             if (infoShort.isEmpty())
             {
                 QStringList sl;
-                if (CBuildConfig::isCompiledWithBlackCore()) { sl << "BlackCore"; }
-                if (CBuildConfig::isCompiledWithBlackSound()) { sl << "BlackSound"; }
-                if (CBuildConfig::isCompiledWithBlackInput()) { sl << "BlackInput"; }
-                if (CBuildConfig::isCompiledWithGui()) { sl << "BlackGui"; }
+                if (CBuildConfig::isCompiledWithCore()) { sl << "Core"; }
+                if (CBuildConfig::isCompiledWithSound()) { sl << "Sound"; }
+                if (CBuildConfig::isCompiledWithInput()) { sl << "Input"; }
+                if (CBuildConfig::isCompiledWithGui()) { sl << "Gui"; }
                 if (CBuildConfig::isCompiledWithFs9Support()) { sl << "FS9"; }
                 if (CBuildConfig::isCompiledWithFsxSupport()) { sl << "FSX"; }
                 if (CBuildConfig::isCompiledWithXPlaneSupport()) { sl << "XPlane"; }
@@ -117,9 +117,9 @@ namespace BlackConfig
             static QString infoLong;
             if (infoLong.isEmpty())
             {
-                infoLong = infoLong.append("BlackCore: ").append(boolToYesNo(isCompiledWithBlackCore()));
-                infoLong = infoLong.append(" BlackInput: ").append(boolToYesNo(isCompiledWithBlackInput()));
-                infoLong = infoLong.append(" BlackSound: ").append(boolToYesNo(isCompiledWithBlackSound()));
+                infoLong = infoLong.append("Core: ").append(boolToYesNo(isCompiledWithCore()));
+                infoLong = infoLong.append(" Input: ").append(boolToYesNo(isCompiledWithInput()));
+                infoLong = infoLong.append(" Sound: ").append(boolToYesNo(isCompiledWithSound()));
                 infoLong = infoLong.append(" GUI: ").append(boolToYesNo(isCompiledWithGui()));
 
                 infoLong = infoLong.append(" FS9: ").append(boolToYesNo(isCompiledWithFs9Support()));

@@ -22,7 +22,7 @@
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/verify.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QTimer>
 #include <QPointer>
@@ -30,7 +30,7 @@
 #include <type_traits>
 #include <QElapsedTimer>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;

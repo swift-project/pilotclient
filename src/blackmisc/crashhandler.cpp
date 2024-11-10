@@ -6,7 +6,7 @@
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/filelogger.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QCoreApplication>
 #include <QFileInfo>
@@ -22,7 +22,7 @@
 #    include "crashpad/client/simulate_crash.h"
 #endif
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace crashpad;
 

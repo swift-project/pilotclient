@@ -7,7 +7,7 @@
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/icons.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 
 #include <QFlags>
 #include <QMenu>

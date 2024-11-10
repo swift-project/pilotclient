@@ -14,11 +14,11 @@
 #include "blackmisc/swiftdirectories.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/stringutils.h"
-#include "blackconfig/buildconfig.h"
+#include "config/buildconfig.h"
 #include <QDateTime>
 #include <QStringBuilder>
 
-using namespace BlackConfig;
+using namespace swift::config;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
