@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CDownloadDialog</class>
+ <widget class="QDialog" name="CDownloadDialog">
+  <property name="windowTitle">
+   <string>Download files</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_DownloadDialog">
+   <property name="leftMargin">
+    <number>6</number>
+   </property>
+   <property name="topMargin">
+    <number>6</number>
+   </property>
+   <property name="rightMargin">
+    <number>6</number>
+   </property>
+   <property name="bottomMargin">
+    <number>6</number>
+   </property>
+   <item>
+    <widget class="swift::gui::components::CDownloadComponent" name="comp_Download"/>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="bb_DownloadDialog">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Close</set>
+     </property>
+     <property name="centerButtons">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::components::CDownloadComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/downloadcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>bb_DownloadDialog</sender>
+   <signal>clicked(QAbstractButton*)</signal>
+   <receiver>CDownloadDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>102</x>
+     <y>36</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>102</x>
+     <y>28</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

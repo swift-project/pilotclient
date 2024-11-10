@@ -4,14 +4,14 @@
 #include "ui_simulatorxplaneconfigwindow.h"
 #include "simulatorxplaneconfigwindow.h"
 #include "core/context/contextsimulator.h"
-#include "blackgui/guiapplication.h"
+#include "gui/guiapplication.h"
 #include "misc/simulation/xplane/xswiftbusconfigwriter.h"
 
 #include <QComboBox>
 #include <QDialogButtonBox>
 #include <vector>
 
-using namespace BlackGui;
+using namespace swift::gui;
 using namespace swift::core::context;
 using namespace swift::misc;
 using namespace swift::misc::simulation::settings;

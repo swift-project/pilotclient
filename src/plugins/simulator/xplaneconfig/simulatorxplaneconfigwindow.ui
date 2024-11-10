@@ -54,7 +54,7 @@
        <number>3</number>
       </property>
       <item>
-       <widget class="BlackGui::Components::CDBusServerAddressSelector" name="comp_SettingsXSwiftBus">
+       <widget class="swift::gui::components::CDBusServerAddressSelector" name="comp_SettingsXSwiftBus">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -142,7 +142,7 @@
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="BlackGui::Components::CColorSelector" name="cs_LabelColor" />
+       <widget class="swift::gui::components::CColorSelector" name="cs_LabelColor" />
       </item>
       <item row="5" column="0">
        <widget class="QLabel" name="lbl_BundleLights">
@@ -350,11 +350,11 @@
          <property name="bottomMargin">
           <number>0</number>
          </property>
-         <item row="1" column="0"><widget class="BlackGui::Components::CColorSelector" name="cs_ColorFreq" /></item>
-         <item row="1" column="1"><widget class="BlackGui::Components::CColorSelector" name="cs_ColorPriv" /></item>
-         <item row="1" column="2"><widget class="BlackGui::Components::CColorSelector" name="cs_ColorServ" /></item>
-         <item row="1" column="3"><widget class="BlackGui::Components::CColorSelector" name="cs_ColorStat" /></item>
-         <item row="1" column="4"><widget class="BlackGui::Components::CColorSelector" name="cs_ColorSup" /></item>
+         <item row="1" column="0"><widget class="swift::gui::components::CColorSelector" name="cs_ColorFreq" /></item>
+         <item row="1" column="1"><widget class="swift::gui::components::CColorSelector" name="cs_ColorPriv" /></item>
+         <item row="1" column="2"><widget class="swift::gui::components::CColorSelector" name="cs_ColorServ" /></item>
+         <item row="1" column="3"><widget class="swift::gui::components::CColorSelector" name="cs_ColorStat" /></item>
+         <item row="1" column="4"><widget class="swift::gui::components::CColorSelector" name="cs_ColorSup" /></item>
          <item row="0" column="0">
           <widget class="QLabel" name="lbl_ColorFreq">
            <property name="text">
@@ -478,15 +478,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Components::CDBusServerAddressSelector</class>
+   <class>swift::gui::components::CDBusServerAddressSelector</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/dbusserveraddressselector.h</header>
+   <header>gui/components/dbusserveraddressselector.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CColorSelector</class>
+   <class>swift::gui::components::CColorSelector</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/colorselector.h</header>
+   <header>gui/components/colorselector.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

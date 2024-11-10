@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CLegalInfoComponent</class>
+ <widget class="QFrame" name="CLegalInfoComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>542</width>
+    <height>285</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>swift legal information</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QFrame" name="fr_Tip">
+     <layout class="QHBoxLayout" name="hl_Tp" stretch="0,1">
+      <item>
+       <widget class="QLabel" name="lbl_Icon">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../../misc/misc.qrc">:/pastel/icons/pastel/32/exclamation.png</pixmap>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lbl_Tip">
+        <property name="text">
+         <string>HINT: Read the checklist before the first flight</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="swift::gui::components::CAboutHtmlComponent" name="comp_AboutHTML">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>200</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="fr_Agree">
+     <layout class="QHBoxLayout" name="hl_Agree">
+      <item>
+       <widget class="QCheckBox" name="cb_Agree">
+        <property name="text">
+         <string>I agree with the swift license and privacy policy</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="cb_CrashDumps">
+        <property name="text">
+         <string>Enable sending crash reports to help improve the software</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::components::CAboutHtmlComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/abouthtmlcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../../misc/misc.qrc"/>
+ </resources>
+ <connections/>
+</ui>

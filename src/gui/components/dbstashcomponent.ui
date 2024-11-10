@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CDbStashComponent</class>
+ <widget class="QFrame" name="CDbStashComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>910</width>
+    <height>222</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_DbStashComponent">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="swift::gui::views::CAircraftModelView" name="tvp_StashAircraftModels">
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="fr_StashHandling">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QGridLayout" name="gl_StashHandling">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <property name="horizontalSpacing">
+       <number>4</number>
+      </property>
+      <item row="0" column="10">
+       <widget class="QPushButton" name="pb_Livery">
+        <property name="text">
+         <string> &amp;4: Livery</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="11">
+       <widget class="QPushButton" name="pb_AirlineIcao">
+        <property name="toolTip">
+         <string>Airline ICAO</string>
+        </property>
+        <property name="text">
+         <string> &amp;5: Airline</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QPushButton" name="pb_Unstash">
+        <property name="text">
+         <string>Unstash</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="pb_Validate">
+        <property name="text">
+         <string>&amp;Validate</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QPushButton" name="pb_Publish">
+        <property name="text">
+         <string>&amp;Publish</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="7">
+       <widget class="QPushButton" name="pb_Model">
+        <property name="text">
+         <string>&amp;1: Model</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="8">
+       <widget class="QPushButton" name="pb_Distributor">
+        <property name="text">
+         <string> &amp;2: Distributor </string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="Line" name="line_Sep1">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QPushButton" name="pb_RemoveInvalid">
+        <property name="toolTip">
+         <string>Remove invalid models</string>
+        </property>
+        <property name="text">
+         <string> Rem. invalid </string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="6">
+       <widget class="Line" name="line_Sep2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="9">
+       <widget class="QPushButton" name="pb_AircraftIcao">
+        <property name="toolTip">
+         <string>Aircraft ICAO</string>
+        </property>
+        <property name="text">
+         <string> &amp;3: Aircraft</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QWidget" name="wi_CheckBoxes" native="true">
+        <layout class="QHBoxLayout" name="hl_CheckBoxes">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QCheckBox" name="cb_SelectedOnly">
+           <property name="toolTip">
+            <string>publish selected models only</string>
+           </property>
+           <property name="text">
+            <string>selected</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cb_ChangedOnly">
+           <property name="toolTip">
+            <string>changed only</string>
+           </property>
+           <property name="text">
+            <string>chg.only</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::views::CAircraftModelView</class>
+   <extends>QTableView</extends>
+   <header>gui/views/aircraftmodelview.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>tvp_StashAircraftModels</tabstop>
+  <tabstop>pb_Unstash</tabstop>
+  <tabstop>pb_Validate</tabstop>
+  <tabstop>pb_RemoveInvalid</tabstop>
+  <tabstop>pb_Publish</tabstop>
+  <tabstop>cb_SelectedOnly</tabstop>
+  <tabstop>cb_ChangedOnly</tabstop>
+  <tabstop>pb_Model</tabstop>
+  <tabstop>pb_Distributor</tabstop>
+  <tabstop>pb_AircraftIcao</tabstop>
+  <tabstop>pb_Livery</tabstop>
+  <tabstop>pb_AirlineIcao</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

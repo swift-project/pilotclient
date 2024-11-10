@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CNetworkDetailsComponent</class>
+ <widget class="QFrame" name="CNetworkDetailsComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>394</width>
+    <height>134</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Network details</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_CNetworkDetailsComponent">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+     <widget class="QWidget" name="tb_NetworkServer">
+      <layout class="QVBoxLayout" name="vl_NetworkServerPage">
+       <property name="leftMargin">
+        <number>2</number>
+       </property>
+       <property name="topMargin">
+        <number>2</number>
+       </property>
+       <property name="rightMargin">
+        <number>2</number>
+       </property>
+       <property name="bottomMargin">
+        <number>2</number>
+       </property>
+       <item>
+        <widget class="QTabWidget" name="tw_Network">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="tabPosition">
+          <enum>QTabWidget::North</enum>
+         </property>
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="tb_NetworkVatsim">
+          <attribute name="title">
+           <string>VATSIM</string>
+          </attribute>
+          <layout class="QGridLayout" name="gl_NetworkVATSIM">
+           <property name="leftMargin">
+            <number>3</number>
+           </property>
+           <property name="topMargin">
+            <number>3</number>
+           </property>
+           <property name="rightMargin">
+            <number>3</number>
+           </property>
+           <property name="bottomMargin">
+            <number>3</number>
+           </property>
+           <property name="horizontalSpacing">
+            <number>3</number>
+           </property>
+           <item row="1" column="0">
+            <widget class="QWidget" name="wi_VatsimButtons" native="true">
+             <layout class="QHBoxLayout" name="hl_VatsimButtons">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <spacer name="hs_VatsimButtons">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="swift::gui::components::CServerListSelector" name="comp_VatsimServers"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="tb_OtherServers">
+          <attribute name="title">
+           <string>Other servers</string>
+          </attribute>
+          <layout class="QGridLayout" name="gl_OtherServers">
+           <property name="leftMargin">
+            <number>3</number>
+           </property>
+           <property name="topMargin">
+            <number>3</number>
+           </property>
+           <property name="rightMargin">
+            <number>3</number>
+           </property>
+           <property name="bottomMargin">
+            <number>3</number>
+           </property>
+           <property name="horizontalSpacing">
+            <number>3</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="swift::gui::components::CServerListSelector" name="comp_OtherServers"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QWidget" name="wi_OtherServersButtons" native="true">
+             <layout class="QHBoxLayout" name="hl_OtherServersButtons">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <spacer name="hs_OtherServersButtons">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pb_RefreshOtherServers">
+                <property name="text">
+                 <string>reload</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="../../misc/misc.qrc">
+                  <normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pb_OtherServersGotoSettings">
+                <property name="text">
+                 <string>settings </string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="wi_FurtherLoginDetails" native="true">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <layout class="QFormLayout" name="fl_FurtherLoginDetails">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="le_PartnerCallsign">
+            <property name="placeholderText">
+             <string>partner callsign (pilot/co-pilot)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbl_Mode">
+            <property name="text">
+             <string>Login</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="swift::gui::CLoginModeButtons" name="frp_LoginMode">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="lbl_Copilot">
+            <property name="text">
+             <string>Partner callsign</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::editors::CFsdSetupForm</class>
+   <extends>QFrame</extends>
+   <header>gui/editors/fsdsetupform.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CServerListSelector</class>
+   <extends>QComboBox</extends>
+   <header>gui/components/serverlistselector.h</header>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::CLoginModeButtons</class>
+   <extends>QFrame</extends>
+   <header>gui/loginmodebuttons.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>tw_Network</tabstop>
+  <tabstop>comp_VatsimServers</tabstop>
+  <tabstop>le_PartnerCallsign</tabstop>
+  <tabstop>comp_OtherServers</tabstop>
+  <tabstop>pb_RefreshOtherServers</tabstop>
+  <tabstop>pb_OtherServersGotoSettings</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../../misc/misc.qrc"/>
+ </resources>
+ <connections/>
+</ui>

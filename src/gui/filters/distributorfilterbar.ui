@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CDistributorFilterBar</class>
+ <widget class="QFrame" name="CDistributorFilterBar">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>221</width>
+    <height>10</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Distributor filter bar</string>
+  </property>
+  <layout class="QGridLayout" name="gl_DistributorFilterBar">
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <property name="horizontalSpacing">
+    <number>4</number>
+   </property>
+   <item row="1" column="0" alignment="Qt::AlignRight">
+    <widget class="swift::gui::filters::CFilterBarButtons" name="filter_Buttons">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="swift::gui::components::CSimulatorSelector" name="comp_Simulator">
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>0</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::components::CSimulatorSelector</class>
+   <extends>QFrame</extends>
+   <header>gui/components/simulatorselector.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::filters::CFilterBarButtons</class>
+   <extends>QFrame</extends>
+   <header>gui/filters/filterbarbuttons.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

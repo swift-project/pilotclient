@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CDbLiveryColorSearch</class>
+ <widget class="QFrame" name="CDbLiveryColorSearch">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>171</width>
+    <height>52</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Search color livery</string>
+  </property>
+  <property name="whatsThis">
+   <string>search color livery</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="lbl_Fuselage">
+     <property name="text">
+      <string>Fuselage:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="lbl_Tail">
+     <property name="text">
+      <string>Tail:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="swift::gui::components::CColorSelector" name="comp_FuselageSelector">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="swift::gui::components::CColorSelector" name="comp_TailSelector">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::components::CColorSelector</class>
+   <extends>QFrame</extends>
+   <header>gui/components/colorselector.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

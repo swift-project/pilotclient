@@ -6,7 +6,7 @@
 #ifndef BLACKSIMPLUGIN_SIMULATOR_XPLANE_CONFIG_WINDOW_H
 #define BLACKSIMPLUGIN_SIMULATOR_XPLANE_CONFIG_WINDOW_H
 
-#include "blackgui/pluginconfigwindow.h"
+#include "gui/pluginconfigwindow.h"
 #include "misc/simulation/settings/xswiftbussettings.h"
 #include "simulatorxplaneconfig.h"
 #include <QObject>
@@ -21,7 +21,7 @@ namespace BlackSimPlugin::XPlane
     /*!
      * A window that shows all the X-Plane plugin options.
      */
-    class CSimulatorXPlaneConfigWindow : public BlackGui::CPluginConfigWindow
+    class CSimulatorXPlaneConfigWindow : public swift::gui::CPluginConfigWindow
     {
         Q_OBJECT
 

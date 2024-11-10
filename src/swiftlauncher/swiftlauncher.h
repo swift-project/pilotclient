@@ -6,9 +6,9 @@
 #ifndef SWIFTLAUNCHER_H
 #define SWIFTLAUNCHER_H
 
-#include "blackgui/enableforframelesswindow.h"
-#include "blackgui/overlaymessagesframe.h"
-#include "blackgui/mainwindowaccess.h"
+#include "gui/enableforframelesswindow.h"
+#include "gui/overlaymessagesframe.h"
+#include "gui/mainwindowaccess.h"
 #include "core/data/globalsetup.h"
 #include "core/data/launchersetup.h"
 #include "core/coremodeenums.h"
@@ -30,7 +30,7 @@ namespace Ui
 {
     class CSwiftLauncher;
 }
-namespace BlackGui::Components
+namespace swift::gui::components
 {
     class CConfigurationWizard;
     class CTextEditDialog;
@@ -44,13 +44,13 @@ namespace BlackGui::Components
  */
 class CSwiftLauncher :
     public QMainWindow,
-    public BlackGui::CEnableForFramelessWindow,
-    public BlackGui::IMainWindowAccess,
+    public swift::gui::CEnableForFramelessWindow,
+    public swift::gui::IMainWindowAccess,
     public swift::misc::simulation::data::CCentralMultiSimulatorModelSetCachesAware,
     public swift::misc::CIdentifiable
 {
     Q_OBJECT
-    Q_INTERFACES(BlackGui::IMainWindowAccess)
+    Q_INTERFACES(swift::gui::IMainWindowAccess)
 
 public:
     //! Pages
@@ -98,8 +98,8 @@ private slots:
 
 private:
     QScopedPointer<Ui::CSwiftLauncher> ui;
-    QScopedPointer<BlackGui::Components::CConfigurationWizard> m_wizard;
-    QScopedPointer<BlackGui::Components::CTextEditDialog> m_textEditDialog;
+    QScopedPointer<swift::gui::components::CConfigurationWizard> m_wizard;
+    QScopedPointer<swift::gui::components::CTextEditDialog> m_textEditDialog;
     swift::misc::CData<swift::core::data::TLauncherSetup> m_setup { this }; //!< setup, i.e. last user selection
     swift::misc::CLogHistoryReplica m_logHistory { this }; //!< for the overlay
 #ifdef Q_OS_MAC
@@ -117,7 +117,7 @@ private:
     swift::core::CoreModes::CoreMode getCoreMode() const;
 
     //! Selected window mode
-    BlackGui::CEnableForFramelessWindow::WindowMode getWindowMode() const;
+    swift::gui::CEnableForFramelessWindow::WindowMode getWindowMode() const;
 
     //! Init
     void init();

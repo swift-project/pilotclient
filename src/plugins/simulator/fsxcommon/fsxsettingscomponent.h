@@ -16,7 +16,7 @@ namespace Ui
 {
     class CFsxSettingsComponent;
 }
-namespace BlackGui
+namespace swift::gui
 {
     class COverlayMessagesFrame;
 }
@@ -68,7 +68,7 @@ namespace BlackSimPlugin::FsxCommon
         CSimulatorFsxCommon *getFsxOrP3DSimulator() const;
 
         swift::misc::simulation::CSimulatorInfo m_simulator { "FSX" };
-        BlackGui::COverlayMessagesFrame *m_mf = nullptr;
+        swift::gui::COverlayMessagesFrame *m_mf = nullptr;
         QScopedPointer<Ui::CFsxSettingsComponent> ui;
     };
 } // ns

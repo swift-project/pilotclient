@@ -58,7 +58,7 @@
      <number>2</number>
     </property>
     <item>
-     <widget class="BlackGui::COverlayMessagesFrame" name="fr_CentralFrameInside">
+     <widget class="swift::gui::COverlayMessagesFrame" name="fr_CentralFrameInside">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
@@ -126,7 +126,7 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="BlackGui::Components::CMainInfoAreaComponent" name="comp_MainInfoArea" native="true"/>
+            <widget class="swift::gui::components::CMainInfoAreaComponent" name="comp_MainInfoArea" native="true"/>
            </item>
           </layout>
          </widget>
@@ -148,7 +148,7 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="BlackGui::Components::CLoginComponent" name="comp_Login" native="true"/>
+            <widget class="swift::gui::components::CLoginComponent" name="comp_Login" native="true"/>
            </item>
           </layout>
          </widget>
@@ -170,14 +170,14 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="BlackGui::Components::CInternalsComponent" name="comp_Internals" native="true"/>
+            <widget class="swift::gui::components::CInternalsComponent" name="comp_Internals" native="true"/>
            </item>
           </layout>
          </widget>
         </widget>
        </item>
        <item>
-        <widget class="BlackGui::Components::CMainKeypadAreaComponent" name="comp_MainKeypadArea">
+        <widget class="swift::gui::components::CMainKeypadAreaComponent" name="comp_MainKeypadArea">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -301,7 +301,7 @@
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="BlackGui::CDockWidgetInfoBar" name="dw_InfoBarStatus">
+  <widget class="swift::gui::CDockWidgetInfoBar" name="dw_InfoBarStatus">
    <property name="features">
     <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetFloatable</set>
    </property>
@@ -332,7 +332,7 @@
       <number>0</number>
      </property>
      <item alignment="Qt::AlignLeft|Qt::AlignTop">
-      <widget class="BlackGui::Components::CInfoBarStatusComponent" name="comp_InfoBarStatus" native="true">
+      <widget class="swift::gui::components::CInfoBarStatusComponent" name="comp_InfoBarStatus" native="true">
        <property name="minimumSize">
         <size>
          <width>250</width>
@@ -526,45 +526,45 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::COverlayMessagesFrame</class>
+   <class>swift::gui::COverlayMessagesFrame</class>
    <extends>QFrame</extends>
-   <header>blackgui/overlaymessagesframe.h</header>
+   <header>gui/overlaymessagesframe.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CInfoBarStatusComponent</class>
+   <class>swift::gui::components::CInfoBarStatusComponent</class>
    <extends>QWidget</extends>
-   <header>blackgui/components/infobarstatuscomponent.h</header>
+   <header>gui/components/infobarstatuscomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CMainInfoAreaComponent</class>
+   <class>swift::gui::components::CMainInfoAreaComponent</class>
    <extends>QWidget</extends>
-   <header>blackgui/components/maininfoareacomponent.h</header>
+   <header>gui/components/maininfoareacomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::CDockWidgetInfoBar</class>
+   <class>swift::gui::CDockWidgetInfoBar</class>
    <extends>QDockWidget</extends>
-   <header>blackgui/dockwidgetinfobar.h</header>
+   <header>gui/dockwidgetinfobar.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CMainKeypadAreaComponent</class>
+   <class>swift::gui::components::CMainKeypadAreaComponent</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/mainkeypadareacomponent.h</header>
+   <header>gui/components/mainkeypadareacomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CLoginComponent</class>
+   <class>swift::gui::components::CLoginComponent</class>
    <extends>QWidget</extends>
-   <header>blackgui/components/logincomponent.h</header>
+   <header>gui/components/logincomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CInternalsComponent</class>
+   <class>swift::gui::components::CInternalsComponent</class>
    <extends>QWidget</extends>
-   <header>blackgui/components/internalscomponent.h</header>
+   <header>gui/components/internalscomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

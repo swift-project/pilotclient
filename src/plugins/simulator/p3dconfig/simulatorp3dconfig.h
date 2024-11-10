@@ -6,18 +6,18 @@
 #ifndef BLACKSIMPLUGIN_P3D_SIMULATORP3DCONFIG_H
 #define BLACKSIMPLUGIN_P3D_SIMULATORP3DCONFIG_H
 
-#include "blackgui/pluginconfig.h"
+#include "gui/pluginconfig.h"
 
 namespace BlackSimPlugin::P3D
 {
     /*!
      * Window for setting up the P3D plugin.
      */
-    class CSimulatorP3DConfig : public QObject, public BlackGui::IPluginConfig
+    class CSimulatorP3DConfig : public QObject, public swift::gui::IPluginConfig
     {
         Q_OBJECT
-        Q_PLUGIN_METADATA(IID "org.swift-project.blackgui.pluginconfiginterface" FILE "simulatorp3dconfig.json")
-        Q_INTERFACES(BlackGui::IPluginConfig)
+        Q_PLUGIN_METADATA(IID "org.swift-project.swiftgui.pluginconfiginterface" FILE "simulatorp3dconfig.json")
+        Q_INTERFACES(swift::gui::IPluginConfig)
 
     public:
         //! Ctor
@@ -26,8 +26,8 @@ namespace BlackSimPlugin::P3D
         //! Dtor
         virtual ~CSimulatorP3DConfig() {}
 
-        //! \copydoc BlackGui::IPluginConfig::createConfigWindow()
-        BlackGui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;
+        //! \copydoc swift::gui::IPluginConfig::createConfigWindow()
+        swift::gui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;
     };
 }
 

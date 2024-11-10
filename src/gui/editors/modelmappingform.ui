@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CModelMappingForm</class>
+ <widget class="QFrame" name="CModelMappingForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>452</width>
+    <height>104</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Model editor</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_ModelMappingForm">
+   <property name="spacing">
+    <number>4</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>2</number>
+   </property>
+   <item alignment="Qt::AlignTop">
+    <widget class="QGroupBox" name="gb_ModelMappingForm">
+     <property name="title">
+      <string>Simulator model</string>
+     </property>
+     <layout class="QGridLayout" name="gl_ModelMappingForm" columnstretch="0,1,0,1,1,0,1,1,0">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
+       <number>3</number>
+      </property>
+      <property name="spacing">
+       <number>4</number>
+      </property>
+      <item row="0" column="2">
+       <widget class="QLabel" name="lbl_ModelKey">
+        <property name="text">
+         <string>Model key:</string>
+        </property>
+        <property name="buddy">
+         <cstring>le_ModelKey</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="le_Id">
+        <property name="maximumSize">
+         <size>
+          <width>75</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="placeholderText">
+         <string>Id</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="7" alignment="Qt::AlignRight">
+       <widget class="QPushButton" name="pb_Stash">
+        <property name="text">
+         <string>Stash</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="8" rowspan="3">
+       <widget class="swift::gui::editors::CValidationIndicator" name="val_Indicator">
+        <property name="minimumSize">
+         <size>
+          <width>10</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="5">
+       <widget class="QLabel" name="lbl_CG">
+        <property name="text">
+         <string>CG:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_Updated">
+        <property name="text">
+         <string>Updated:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="le_LastUpdated"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_Name">
+        <property name="text">
+         <string>Name:</string>
+        </property>
+        <property name="buddy">
+         <cstring>le_Name</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3" colspan="2">
+       <widget class="QLineEdit" name="le_Description">
+        <property name="placeholderText">
+         <string>Model description</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QLabel" name="lbl_Path">
+        <property name="text">
+         <string>File:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLabel" name="lbl_Description">
+        <property name="text">
+         <string>Description:</string>
+        </property>
+        <property name="buddy">
+         <cstring>le_Description</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="le_Name">
+        <property name="placeholderText">
+         <string>Name</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="7">
+       <widget class="swift::gui::components::CModelModeSelector" name="selector_ModelMode">
+        <property name="minimumSize">
+         <size>
+          <width>50</width>
+          <height>22</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="swift::gui::CLabelAndIcon" name="lai_Id"/>
+      </item>
+      <item row="0" column="7">
+       <widget class="swift::gui::components::CSimulatorSelector" name="selector_Simulator">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>22</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="6">
+       <widget class="QLineEdit" name="le_CG">
+        <property name="maximumSize">
+         <size>
+          <width>75</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="placeholderText">
+         <string>e.g. 3ft or 2.3m</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3" colspan="4">
+       <widget class="QLineEdit" name="le_FileName">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3" colspan="2">
+       <widget class="QLineEdit" name="le_ModelKey">
+        <property name="placeholderText">
+         <string>Model  key</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QLabel" name="lbl_Parts">
+        <property name="text">
+         <string>Parts:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="6">
+       <widget class="QLineEdit" name="le_Parts">
+        <property name="maximumSize">
+         <size>
+          <width>75</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::components::CSimulatorSelector</class>
+   <extends>QFrame</extends>
+   <header>gui/components/simulatorselector.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CModelModeSelector</class>
+   <extends>QFrame</extends>
+   <header>gui/components/modelmodeselector.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::CLabelAndIcon</class>
+   <extends>QFrame</extends>
+   <header>gui/labelandicon.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::editors::CValidationIndicator</class>
+   <extends>QFrame</extends>
+   <header>gui/editors/validationindicator.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>le_Id</tabstop>
+  <tabstop>le_ModelKey</tabstop>
+  <tabstop>le_Parts</tabstop>
+  <tabstop>selector_Simulator</tabstop>
+  <tabstop>le_Name</tabstop>
+  <tabstop>le_Description</tabstop>
+  <tabstop>le_CG</tabstop>
+  <tabstop>selector_ModelMode</tabstop>
+  <tabstop>le_LastUpdated</tabstop>
+  <tabstop>le_FileName</tabstop>
+  <tabstop>pb_Stash</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

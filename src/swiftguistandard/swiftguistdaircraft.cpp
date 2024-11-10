@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/context/contextownaircraft.h"
-#include "blackgui/guiapplication.h"
+#include "gui/guiapplication.h"
 #include "misc/mixin/mixincompare.h"
 #include "misc/geo/coordinategeodetic.h"
 #include "misc/geo/latitude.h"
@@ -16,7 +16,7 @@
 
 using namespace swift::core;
 using namespace swift::misc;
-using namespace BlackGui;
+using namespace swift::gui;
 using namespace swift::misc::network;
 using namespace swift::misc::aviation;
 using namespace swift::misc::simulation;

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "swiftlauncher.h"
-#include "blackgui/guiapplication.h"
+#include "gui/guiapplication.h"
 #include "core/db/databasereaderconfig.h"
 #include "misc/directoryutils.h"
 #include "misc/icons.h"
@@ -13,7 +13,7 @@
 #include <QPushButton>
 #include <QCommandLineParser>
 
-using namespace BlackGui;
+using namespace swift::gui;
 using namespace swift::misc;
 using namespace swift::core;
 using namespace swift::core::db;

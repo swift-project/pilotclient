@@ -44,7 +44,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="BlackGui::Components::CDBusServerAddressSelector" name="comp_SettingsFGSwiftBus">
+       <widget class="swift::gui::components::CDBusServerAddressSelector" name="comp_SettingsFGSwiftBus">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -60,9 +60,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Components::CDBusServerAddressSelector</class>
+   <class>swift::gui::components::CDBusServerAddressSelector</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/dbusserveraddressselector.h</header>
+   <header>gui/components/dbusserveraddressselector.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

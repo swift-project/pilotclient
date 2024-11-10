@@ -21,7 +21,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="BlackGui::Components::CSettingsSwiftPlugin" name="comp_Settings">
+    <widget class="swift::gui::components::CSettingsSwiftPlugin" name="comp_Settings">
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -44,9 +44,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Components::CSettingsSwiftPlugin</class>
+   <class>swift::gui::components::CSettingsSwiftPlugin</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/settingsswiftplugin.h</header>
+   <header>gui/components/settingsswiftplugin.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

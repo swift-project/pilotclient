@@ -30,7 +30,7 @@
  */
 
 /*!
- * \namespace swift::core::Settings::Network
+ * \namespace swift::core::settings::Network
  * Network settings traits.
  */
 

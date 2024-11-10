@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CDbAircraftIcaoComponent</class>
+ <widget class="QFrame" name="CDbAircraftIcaoComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>258</width>
+    <height>208</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Search and find aircraft ICAO codes</string>
+  </property>
+  <property name="whatsThis">
+   <string>Search and find aircraft ICAO codes</string>
+  </property>
+  <property name="frameShape">
+   <enum>QFrame::StyledPanel</enum>
+  </property>
+  <property name="frameShadow">
+   <enum>QFrame::Raised</enum>
+  </property>
+  <layout class="QVBoxLayout" name="vl_AircraftIcaoComponent">
+   <property name="spacing">
+    <number>4</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="swift::gui::filters::CAircraftIcaoFilterBar" name="filter_AircraftIcao">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>100</height>
+      </size>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="swift::gui::views::CAircraftIcaoCodeView" name="tvp_AircraftIcao">
+     <property name="selectionMode">
+      <enum>QAbstractItemView::SingleSelection</enum>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::views::CAircraftIcaoCodeView</class>
+   <extends>QTableView</extends>
+   <header>gui/views/aircrafticaoview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::filters::CAircraftIcaoFilterBar</class>
+   <extends>QFrame</extends>
+   <header>gui/filters/aircrafticaofilterbar.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

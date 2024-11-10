@@ -12,7 +12,7 @@ SPDX-FileCopyrightText = "Copyright (c) 2019 B.Hoppe"
 SPDX-License-Identifier = "MIT"
 
 [[annotations]]
-path = "src/blackgui/**.ui"
+path = "src/gui/**.ui"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "Copyright (C) swift Project Community / Contributors"
 SPDX-License-Identifier = "GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1"

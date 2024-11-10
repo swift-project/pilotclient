@@ -6,7 +6,7 @@
 #ifndef BLACKSIMPLUGIN_SIMULATOR_FLIGHTGEAR_CONFIG_WINDOW_H
 #define BLACKSIMPLUGIN_SIMULATOR_FLIGHTGEAR_CONFIG_WINDOW_H
 
-#include "blackgui/pluginconfigwindow.h"
+#include "gui/pluginconfigwindow.h"
 #include "misc/simulation/settings/fgswiftbussettings.h"
 #include "simulatorflightgearconfig.h"
 #include <QObject>
@@ -21,7 +21,7 @@ namespace BlackSimPlugin::Flightgear
     /*!
      * A window that shows all the Flightgear plugin options.
      */
-    class CSimulatorFlightgearConfigWindow : public BlackGui::CPluginConfigWindow
+    class CSimulatorFlightgearConfigWindow : public swift::gui::CPluginConfigWindow
     {
         Q_OBJECT
 

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CModelMatcherLogComponent</class>
+ <widget class="QFrame" name="CModelMatcherLogComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>264</width>
+    <height>245</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <property name="frameShape">
+   <enum>QFrame::StyledPanel</enum>
+  </property>
+  <property name="frameShadow">
+   <enum>QFrame::Raised</enum>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>3</number>
+   </property>
+   <property name="topMargin">
+    <number>3</number>
+   </property>
+   <property name="rightMargin">
+    <number>3</number>
+   </property>
+   <property name="bottomMargin">
+    <number>3</number>
+   </property>
+   <item>
+    <widget class="QFrame" name="fr_DataEntry">
+     <layout class="QFormLayout" name="fl_MatcherLog">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>2</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>2</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbl_Callsign">
+        <property name="text">
+         <string>Callsign:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="swift::gui::components::CCallsignCompleter" name="comp_CallsignCompleter"/>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="swift::gui::components::CModelMatcherLogEnable" name="comp_EnableLog">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>15</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTextEdit" name="te_Messages">
+     <property name="documentTitle">
+      <string>Messages</string>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Result will go here</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::components::CModelMatcherLogEnable</class>
+   <extends>QFrame</extends>
+   <header>gui/components/modelmatcherlogenable.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CCallsignCompleter</class>
+   <extends>QFrame</extends>
+   <header>gui/components/callsigncompleter.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

@@ -6,14 +6,14 @@
 #ifndef STDGUI_SWIFTGUISTD_H
 #define STDGUI_SWIFTGUISTD_H
 
-#include "blackgui/components/maininfoareacomponent.h"
-#include "blackgui/components/navigatordialog.h"
-#include "blackgui/components/aircraftmodelsetvalidationdialog.h"
-#include "blackgui/components/textmessagecomponenttab.h"
-#include "blackgui/enableforframelesswindow.h"
-#include "blackgui/mainwindowaccess.h"
-#include "blackgui/managedstatusbar.h"
-#include "blackgui/guiactionbind.h"
+#include "gui/components/maininfoareacomponent.h"
+#include "gui/components/navigatordialog.h"
+#include "gui/components/aircraftmodelsetvalidationdialog.h"
+#include "gui/components/textmessagecomponenttab.h"
+#include "gui/enableforframelesswindow.h"
+#include "gui/mainwindowaccess.h"
+#include "gui/managedstatusbar.h"
+#include "gui/guiactionbind.h"
 #include "core/actionbind.h"
 #include "misc/network/connectionstatus.h"
 #include "misc/simulation/simulatedaircraft.h"
@@ -43,7 +43,7 @@ namespace swift::misc::aviation
 {
     class CAltitude;
 }
-namespace BlackGui::Components
+namespace swift::gui::components
 {
     class CDbLoadDataDialog;
     class CAutoPublishDialog;
@@ -58,11 +58,11 @@ namespace Ui
 class SwiftGuiStd :
     public QMainWindow,
     public swift::misc::CIdentifiable,
-    public BlackGui::CEnableForFramelessWindow,
-    public BlackGui::IMainWindowAccess
+    public swift::gui::CEnableForFramelessWindow,
+    public swift::gui::IMainWindowAccess
 {
     Q_OBJECT
-    Q_INTERFACES(BlackGui::IMainWindowAccess)
+    Q_INTERFACES(swift::gui::IMainWindowAccess)
 
 public:
     //! Main page indexes
@@ -118,15 +118,15 @@ protected:
 
 private:
     QScopedPointer<Ui::SwiftGuiStd> ui;
-    QScopedPointer<BlackGui::Components::CNavigatorDialog> m_navigator { new BlackGui::Components::CNavigatorDialog() }; //!< navigator dialog bar, if I pass the parent, the dialog is always centered over the parent
-    QScopedPointer<BlackGui::Components::CDbLoadDataDialog> m_dbLoadDialog; //!< load DB data, lazy init UI component
-    QScopedPointer<BlackGui::Components::CAutoPublishDialog> m_autoPublishDialog; //!< auto publish dialog
-    QScopedPointer<BlackGui::Components::CModelBrowserDialog> m_modelBrower; //!< model browser
-    QScopedPointer<BlackGui::Components::CAircraftModelSetValidationDialog> m_validationDialog; //!< aircraft model validation dialog
+    QScopedPointer<swift::gui::components::CNavigatorDialog> m_navigator { new swift::gui::components::CNavigatorDialog() }; //!< navigator dialog bar, if I pass the parent, the dialog is always centered over the parent
+    QScopedPointer<swift::gui::components::CDbLoadDataDialog> m_dbLoadDialog; //!< load DB data, lazy init UI component
+    QScopedPointer<swift::gui::components::CAutoPublishDialog> m_autoPublishDialog; //!< auto publish dialog
+    QScopedPointer<swift::gui::components::CModelBrowserDialog> m_modelBrower; //!< model browser
+    QScopedPointer<swift::gui::components::CAircraftModelSetValidationDialog> m_validationDialog; //!< aircraft model validation dialog
     swift::misc::CData<swift::misc::simulation::data::TLastAutoPublish> m_lastAutoPublish { this };
     swift::core::CActionBind m_actionPtt { swift::misc::input::pttHotkeyAction(), swift::misc::CIcons::StandardIconRadio16, this, &SwiftGuiStd::onPttChanged };
     swift::core::CActionBindings m_menuHotkeyHandlers;
-    BlackGui::CManagedStatusBar m_statusBar;
+    swift::gui::CManagedStatusBar m_statusBar;
     swift::misc::CLogHistoryReplica m_logHistoryForLogButtons { this };
     swift::misc::CLogHistoryReplica m_logHistoryForOverlay { this };
     swift::misc::CSetting<swift::misc::audio::TSettings> m_audioSettings { this };
@@ -222,7 +222,7 @@ private:
     void setMainPage(MainPageIndex mainPage);
 
     //! Set the main info area
-    void setMainPageInfoArea(BlackGui::Components::CMainInfoAreaComponent::InfoArea infoArea);
+    void setMainPageInfoArea(swift::gui::components::CMainInfoAreaComponent::InfoArea infoArea);
 
     //! Display the settings page
     void setSettingsPage(int settingsTabIndex = -1);
@@ -322,7 +322,7 @@ private:
     //! @{
     //! Request overlay inline text message
     void onShowOverlayVariant(const swift::misc::CVariant &variant, int durationMs);
-    void onShowOverlayInlineTextMessageTab(BlackGui::Components::TextMessageTab tab);
+    void onShowOverlayInlineTextMessageTab(swift::gui::components::TextMessageTab tab);
     void onShowOverlayInlineTextMessageCallsign(const swift::misc::aviation::CCallsign &callsign);
     //! @}
 };

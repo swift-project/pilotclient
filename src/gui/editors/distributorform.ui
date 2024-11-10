@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CDistributorForm</class>
+ <widget class="QFrame" name="CDistributorForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>254</width>
+    <height>185</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>185</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Distributor editor</string>
+  </property>
+  <layout class="QHBoxLayout" name="hl_DistributorEditor">
+   <property name="spacing">
+    <number>4</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QGroupBox" name="gb_Distributor">
+     <property name="title">
+      <string>Distributor</string>
+     </property>
+     <layout class="QGridLayout" name="gl_Distributor" columnstretch="0,1,1,0">
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="le_Alias1">
+        <property name="placeholderText">
+         <string>An alias</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_Alias">
+        <property name="text">
+         <string>Alias1/2:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QLineEdit" name="le_Alias2">
+        <property name="placeholderText">
+         <string>Another alias</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_Description">
+        <property name="text">
+         <string>Description:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="lbl_Timestamp">
+        <property name="text">
+         <string>Last updated:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1" colspan="2">
+       <widget class="QLineEdit" name="le_Updated">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="3">
+       <widget class="swift::gui::CDropSite" name="drop_DropData">
+        <property name="text">
+         <string>Drop data here</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="2">
+       <widget class="QLineEdit" name="le_Description">
+        <property name="placeholderText">
+         <string>Describe distributor</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3" rowspan="5">
+       <widget class="swift::gui::editors::CValidationIndicator" name="val_Indicator">
+        <property name="minimumSize">
+         <size>
+          <width>16</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="2">
+       <widget class="swift::gui::components::CDbDistributorSelectorComponent" name="comp_DistributorSelector">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="swift::gui::CLabelAndIcon" name="lai_Id">
+        <property name="minimumSize">
+         <size>
+          <width>20</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::CLabelAndIcon</class>
+   <extends>QFrame</extends>
+   <header>gui/labelandicon.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::editors::CValidationIndicator</class>
+   <extends>QFrame</extends>
+   <header>gui/editors/validationindicator.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::CDropSite</class>
+   <extends>QLabel</extends>
+   <header>gui/dropsite.h</header>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CDbDistributorSelectorComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/dbdistributorselectorcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>comp_DistributorSelector</tabstop>
+  <tabstop>le_Description</tabstop>
+  <tabstop>le_Alias1</tabstop>
+  <tabstop>le_Alias2</tabstop>
+  <tabstop>le_Updated</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

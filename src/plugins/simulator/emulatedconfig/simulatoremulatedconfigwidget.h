@@ -6,7 +6,7 @@
 #ifndef BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDCONFIGWIDGET_H
 #define BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDCONFIGWIDGET_H
 
-#include <blackgui/pluginconfigwindow.h>
+#include "gui/pluginconfigwindow.h"
 #include <QScopedPointer>
 
 namespace Ui
@@ -18,7 +18,7 @@ namespace BlackSimPlugin::Emulated
     /*!
      * Configuration window for CSimulatorEmulatedConfig
      */
-    class Q_DECL_EXPORT CSimulatorEmulatedConfigWidget : public BlackGui::CPluginConfigWindow
+    class Q_DECL_EXPORT CSimulatorEmulatedConfigWidget : public swift::gui::CPluginConfigWindow
     {
         Q_OBJECT
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>CSwiftCore</class>
- <widget class="BlackGui::CSystemTrayWindow" name="CSwiftCore">
+ <widget class="swift::gui::CSystemTrayWindow" name="CSwiftCore">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -46,7 +46,7 @@
         <number>4</number>
        </property>
        <item>
-        <widget class="BlackGui::Components::CCommandInput" name="lep_CommandLineInput">
+        <widget class="swift::gui::components::CCommandInput" name="lep_CommandLineInput">
          <property name="placeholderText">
           <string>.dot commands</string>
          </property>
@@ -118,7 +118,7 @@ QTextEdit {
      </widget>
     </item>
     <item row="0" column="0" colspan="3">
-     <widget class="BlackGui::Components::CInfoBarStatusComponent" name="comp_InfoBarStatus" native="true">
+     <widget class="swift::gui::components::CInfoBarStatusComponent" name="comp_InfoBarStatus" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
         <horstretch>0</horstretch>
@@ -143,7 +143,7 @@ QTextEdit {
      </widget>
     </item>
     <item row="4" column="0" colspan="3">
-     <widget class="BlackGui::Components::CCoreInfoAreaComponent" name="comp_InfoArea" native="true">
+     <widget class="swift::gui::components::CCoreInfoAreaComponent" name="comp_InfoArea" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
         <horstretch>0</horstretch>
@@ -177,7 +177,7 @@ QTextEdit {
         <number>2</number>
        </property>
        <item>
-        <widget class="BlackGui::Components::CDBusServerAddressSelector" name="comp_DBusSelector">
+        <widget class="swift::gui::components::CDBusServerAddressSelector" name="comp_DBusSelector">
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
@@ -289,33 +289,33 @@ QTextEdit {
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Components::CDBusServerAddressSelector</class>
+   <class>swift::gui::components::CDBusServerAddressSelector</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/dbusserveraddressselector.h</header>
+   <header>gui/components/dbusserveraddressselector.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CCommandInput</class>
+   <class>swift::gui::components::CCommandInput</class>
    <extends>QLineEdit</extends>
-   <header>blackgui/components/commandinput.h</header>
+   <header>gui/components/commandinput.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CInfoBarStatusComponent</class>
+   <class>swift::gui::components::CInfoBarStatusComponent</class>
    <extends>QWidget</extends>
-   <header>blackgui/components/infobarstatuscomponent.h</header>
+   <header>gui/components/infobarstatuscomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::CSystemTrayWindow</class>
+   <class>swift::gui::CSystemTrayWindow</class>
    <extends>QMainWindow</extends>
-   <header>blackgui/systemtraywindow.h</header>
+   <header>gui/systemtraywindow.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CCoreInfoAreaComponent</class>
+   <class>swift::gui::components::CCoreInfoAreaComponent</class>
    <extends>QWidget</extends>
-   <header>blackgui/components/coreinfoareacomponent.h</header>
+   <header>gui/components/coreinfoareacomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

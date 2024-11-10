@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CTextMessageComponent</class>
+ <widget class="QFrame" name="CTextMessageComponent">
+  <property name="windowTitle">
+   <string>Text messages</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_TextMessages">
+   <property name="spacing">
+    <number>5</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>5</number>
+   </property>
+   <item>
+    <widget class="QTabWidget" name="tw_TextMessages">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tb_TextMessagesAll">
+      <attribute name="title">
+       <string>All</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_TextMessagesAll">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="swift::gui::views::CTextMessageView" name="tvp_TextMessagesAll">
+         <property name="verticalScrollBarPolicy">
+          <enum>Qt::ScrollBarAsNeeded</enum>
+         </property>
+         <property name="horizontalScrollBarPolicy">
+          <enum>Qt::ScrollBarAsNeeded</enum>
+         </property>
+         <property name="autoScroll">
+          <bool>false</bool>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
+         </property>
+         <property name="verticalScrollMode">
+          <enum>QAbstractItemView::ScrollPerPixel</enum>
+         </property>
+         <property name="horizontalScrollMode">
+          <enum>QAbstractItemView::ScrollPerPixel</enum>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_TextMessagesUnicom">
+      <attribute name="title">
+       <string>UNICOM</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_TextMessagesUnicom">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="swift::gui::CTextMessageTextEdit" name="tep_TextMessagesUnicom">
+         <property name="documentTitle">
+          <string>UNICOM</string>
+         </property>
+         <property name="lineWrapMode">
+          <enum>QTextEdit::WidgetWidth</enum>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_TextMessagesCOM1">
+      <attribute name="title">
+       <string>COM1</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_TextMessagesCom1">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="swift::gui::CTextMessageTextEdit" name="tep_TextMessagesCOM1">
+         <property name="documentTitle">
+          <string>COM1</string>
+         </property>
+         <property name="lineWrapMode">
+          <enum>QTextEdit::WidgetWidth</enum>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_TextMessagesCOM2">
+      <attribute name="title">
+       <string>COM2</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_TextMessagesCom2">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="swift::gui::CTextMessageTextEdit" name="tep_TextMessagesCOM2">
+         <property name="autoFormatting">
+          <set>QTextEdit::AutoNone</set>
+         </property>
+         <property name="documentTitle">
+          <string>COM2</string>
+         </property>
+         <property name="lineWrapMode">
+          <enum>QTextEdit::WidgetWidth</enum>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gb_MessageTo">
+     <property name="title">
+      <string>Message to</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <layout class="QHBoxLayout" name="hl_MessageTo">
+      <property name="leftMargin">
+       <number>2</number>
+      </property>
+      <property name="topMargin">
+       <number>2</number>
+      </property>
+      <property name="rightMargin">
+       <number>2</number>
+      </property>
+      <property name="bottomMargin">
+       <number>2</number>
+      </property>
+      <item>
+       <widget class="swift::gui::components::CAtcButtonComponent" name="comp_AtcStations">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gb_Settings">
+     <property name="title">
+      <string>Settings</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <layout class="QGridLayout" name="gl_Settings">
+      <property name="leftMargin">
+       <number>1</number>
+      </property>
+      <property name="topMargin">
+       <number>1</number>
+      </property>
+      <property name="rightMargin">
+       <number>1</number>
+      </property>
+      <property name="bottomMargin">
+       <number>1</number>
+      </property>
+      <item row="1" column="1">
+       <widget class="swift::gui::components::CSettingsTextMessageStyle" name="comp_SettingsStyle">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" alignment="Qt::AlignRight">
+       <widget class="QCheckBox" name="cb_LatestFirst">
+        <property name="text">
+         <string>latest 1st</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" colspan="2">
+       <widget class="swift::gui::components::CSettingsTextMessageInlineComponent" name="comp_SettingsOverlay">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="fr_TextMessage">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="hl_TextMessage">
+      <item>
+       <widget class="swift::gui::CLineEditHistory" name="lep_TextMessages">
+        <property name="toolTip">
+         <string>command line (e.g. &quot;.com1&quot;, &quot;.x&quot;, &quot;.msg com1&quot;)</string>
+        </property>
+        <property name="placeholderText">
+         <string>text message text goes here</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::views::CTextMessageView</class>
+   <extends>QTableView</extends>
+   <header>gui/views/textmessageview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::CTextMessageTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header>gui/textmessagetextedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CSettingsTextMessageInlineComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/settingstextmessageinlinecomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::CLineEditHistory</class>
+   <extends>QLineEdit</extends>
+   <header>gui/lineedithistory.h</header>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CSettingsTextMessageStyle</class>
+   <extends>QFrame</extends>
+   <header>gui/components/settingstextmessagestyle.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CAtcButtonComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/atcbuttoncomponent.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>tw_TextMessages</tabstop>
+  <tabstop>tvp_TextMessagesAll</tabstop>
+  <tabstop>gb_MessageTo</tabstop>
+  <tabstop>gb_Settings</tabstop>
+  <tabstop>lep_TextMessages</tabstop>
+  <tabstop>tep_TextMessagesUnicom</tabstop>
+  <tabstop>tep_TextMessagesCOM1</tabstop>
+  <tabstop>tep_TextMessagesCOM2</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

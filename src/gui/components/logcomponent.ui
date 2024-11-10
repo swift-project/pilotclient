@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CLogComponent</class>
+ <widget class="QFrame" name="CLogComponent">
+  <property name="windowTitle">
+   <string>Log component</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_LogComponent">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+     <widget class="QWidget" name="pg_LogPage">
+      <attribute name="title">
+       <string>Log</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_StatusPageMessages">
+       <property name="spacing">
+        <number>4</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="swift::gui::components::CStatusMessagesDetail" name="comp_StatusMessages"/>
+       </item>
+      </layout>
+     </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::components::CConsoleTextEdit</class>
+   <extends>QPlainTextEdit</extends>
+   <header>gui/components/logcomponent.h</header>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CStatusMessagesDetail</class>
+   <extends>QFrame</extends>
+   <header>gui/components/statusmessagesdetail.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

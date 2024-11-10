@@ -3,11 +3,11 @@
 
 #include "swiftlauncher.h"
 #include "ui_swiftlauncher.h"
-#include "blackgui/overlaymessagesframe.h"
-#include "blackgui/components/configurationwizard.h"
-#include "blackgui/components/texteditdialog.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/stylesheetutility.h"
+#include "gui/overlaymessagesframe.h"
+#include "gui/components/configurationwizard.h"
+#include "gui/components/texteditdialog.h"
+#include "gui/guiapplication.h"
+#include "gui/stylesheetutility.h"
 #include "core/context/contextapplicationproxy.h"
 #include "core/setupreader.h"
 #include "sound/audioutilities.h"
@@ -36,8 +36,8 @@
 #include <qcompilerdetection.h>
 
 using namespace swift::config;
-using namespace BlackGui;
-using namespace BlackGui::Components;
+using namespace swift::gui;
+using namespace swift::gui::components;
 using namespace swift::core;
 using namespace swift::core::context;
 using namespace swift::core::data;

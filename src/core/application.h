@@ -83,7 +83,7 @@ namespace swift::core
      * - If applicable VATSIM status data (where are the VATSIM files?) are loaded
      * - An end of lifetime can be specified, aka time bombing
      *
-     * \sa BlackGui::CGuiApplication for the GUI version of application
+     * \sa swift::gui::CGuiApplication for the GUI version of application
      */
     class SWIFT_CORE_EXPORT CApplication :
         public QObject,
@@ -526,7 +526,7 @@ namespace swift::core
         //! Startup completed
         virtual void onStartUpCompleted();
 
-        //! Init class, allows to init from BlackGui::CGuiApplication as well (pseudo virtual)
+        //! Init class, allows to init from swift::gui::CGuiApplication as well (pseudo virtual)
         void init(bool withMetadata);
 
         //! Is the command line option represented in the given arguments?

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CDbAircraftCategoryComponent</class>
+ <widget class="QFrame" name="CDbAircraftCategoryComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>278</width>
+    <height>235</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Aircraft category</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_AircraftCategoryComponent">
+   <property name="leftMargin">
+    <number>2</number>
+   </property>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
+    <number>2</number>
+   </property>
+   <item>
+    <widget class="QTabWidget" name="tb_Views">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tb_TreeView">
+      <attribute name="title">
+       <string>Tree</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_Tree">
+       <item>
+        <widget class="swift::gui::views::CAircraftCategoryTreeView" name="tvp_AircraftCategoryTree">
+         <attribute name="headerVisible">
+          <bool>false</bool>
+         </attribute>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_TableView">
+      <attribute name="title">
+       <string>Table</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_Table">
+       <item>
+        <widget class="swift::gui::views::CAircraftCategoryView" name="tvp_AircraftCategoryView">
+         <property name="selectionMode">
+          <enum>QAbstractItemView::SingleSelection</enum>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
+         </property>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::views::CAircraftCategoryView</class>
+   <extends>QTableView</extends>
+   <header>gui/views/aircraftcategoryview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::views::CAircraftCategoryTreeView</class>
+   <extends>QTreeView</extends>
+   <header>gui/views/aircraftcategorytreeview.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

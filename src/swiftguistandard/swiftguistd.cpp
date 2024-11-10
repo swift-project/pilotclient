@@ -3,16 +3,16 @@
 
 #include "ui_swiftguistd.h"
 
-#include "blackgui/components/infobarstatuscomponent.h"
-#include "blackgui/components/logcomponent.h"
-#include "blackgui/components/dbloaddatadialog.h"
-#include "blackgui/components/autopublishdialog.h"
-#include "blackgui/components/modelbrowserdialog.h"
-#include "blackgui/components/settingscomponent.h"
-#include "blackgui/components/textmessagecomponent.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/guiutility.h"
-#include "blackgui/overlaymessagesframe.h"
+#include "gui/components/infobarstatuscomponent.h"
+#include "gui/components/logcomponent.h"
+#include "gui/components/dbloaddatadialog.h"
+#include "gui/components/autopublishdialog.h"
+#include "gui/components/modelbrowserdialog.h"
+#include "gui/components/settingscomponent.h"
+#include "gui/components/textmessagecomponent.h"
+#include "gui/guiapplication.h"
+#include "gui/guiutility.h"
+#include "gui/overlaymessagesframe.h"
 #include "core/context/contextapplication.h"
 #include "core/context/contextaudio.h"
 #include "core/context/contextnetwork.h"
@@ -48,7 +48,7 @@ class QEvent;
 class QMouseEvent;
 class QWidget;
 
-namespace BlackGui
+namespace swift::gui
 {
     class CEnableForFramelessWindow;
     class IMainWindowAccess;
@@ -60,8 +60,8 @@ namespace swift::misc
 
 using namespace swift::core;
 using namespace swift::core::context;
-using namespace BlackGui;
-using namespace BlackGui::Components;
+using namespace swift::gui;
+using namespace swift::gui::components;
 using namespace swift::misc;
 using namespace swift::misc::network;
 using namespace swift::misc::aviation;
@@ -73,10 +73,10 @@ using namespace swift::misc::simulation;
 using namespace swift::config;
 
 // Constructor
-SwiftGuiStd::SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowMode, QWidget *parent) : QMainWindow(parent, CEnableForFramelessWindow::modeToWindowFlags(windowMode)),
-                                                                                                        CIdentifiable(this),
-                                                                                                        CEnableForFramelessWindow(windowMode, true, "framelessMainWindow", this),
-                                                                                                        ui(new Ui::SwiftGuiStd)
+SwiftGuiStd::SwiftGuiStd(swift::gui::CEnableForFramelessWindow::WindowMode windowMode, QWidget *parent) : QMainWindow(parent, CEnableForFramelessWindow::modeToWindowFlags(windowMode)),
+                                                                                                          CIdentifiable(this),
+                                                                                                          CEnableForFramelessWindow(windowMode, true, "framelessMainWindow", this),
+                                                                                                          ui(new Ui::SwiftGuiStd)
 {
     // GUI
     Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
@@ -584,7 +584,7 @@ void SwiftGuiStd::onShowOverlayVariant(const CVariant &variant, int durationMs)
     ui->fr_CentralFrameInside->showOverlayVariant(variant, durationMs);
 }
 
-void SwiftGuiStd::onShowOverlayInlineTextMessageTab(Components::TextMessageTab tab)
+void SwiftGuiStd::onShowOverlayInlineTextMessageTab(components::TextMessageTab tab)
 {
     if (!sGui || sGui->isShuttingDown()) { return; }
     ui->fr_CentralFrameInside->showOverlayInlineTextMessage(tab);

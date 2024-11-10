@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simulatorplugincommon.h"
-#include "blackgui/components/interpolationlogdisplaydialog.h"
-#include "blackgui/guiapplication.h"
+#include "gui/components/interpolationlogdisplaydialog.h"
+#include "gui/guiapplication.h"
 #include "misc/simplecommandparser.h"
 
-using namespace BlackGui;
-using namespace BlackGui::Components;
+using namespace swift::gui;
+using namespace swift::gui::components;
 using namespace swift::core;
 using namespace swift::misc;
 using namespace swift::misc::network;

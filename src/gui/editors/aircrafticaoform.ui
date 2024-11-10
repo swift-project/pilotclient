@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CAircraftIcaoForm</class>
+ <widget class="QFrame" name="CAircraftIcaoForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>402</width>
+    <height>271</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>200</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Aircraft ICAO</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_AirccraftIcaoForm">
+   <property name="spacing">
+    <number>4</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QGroupBox" name="gb_AircraftIcao">
+     <property name="title">
+      <string>Aircraft ICAO</string>
+     </property>
+     <layout class="QGridLayout" name="gl_AircraftIcao" columnstretch="0,1,0">
+      <item row="0" column="2" rowspan="9">
+       <widget class="swift::gui::editors::CValidationIndicator" name="val_Indicator">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>16</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="swift::gui::CLabelAndIcon" name="lai_Id">
+        <property name="minimumSize">
+         <size>
+          <width>20</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QWidget" name="wi_Checkboxes" native="true">
+        <layout class="QHBoxLayout" name="hl_CheckBoxes">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QComboBox" name="cb_Wtc">
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Wake turbulence category</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>L</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>M</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>H</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Unspecified</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="lbl_Wtc">
+           <property name="text">
+            <string>WTC</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cb_RealWorld">
+           <property name="toolTip">
+            <string>Real world aircraft</string>
+           </property>
+           <property name="text">
+            <string>Real</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cb_Legacy">
+           <property name="toolTip">
+            <string>Legacy aircraft, e.g. Concord, ME109</string>
+           </property>
+           <property name="text">
+            <string>Leg.</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cb_Military">
+           <property name="toolTip">
+            <string>Military aircraft</string>
+           </property>
+           <property name="text">
+            <string>Mil.</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QWidget" name="wi_IataFamily" native="true">
+        <layout class="QHBoxLayout" name="hl_IataFamily">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLineEdit" name="le_Iata">
+           <property name="layoutDirection">
+            <enum>Qt::RightToLeft</enum>
+           </property>
+           <property name="maxLength">
+            <number>10</number>
+           </property>
+           <property name="placeholderText">
+            <string>IATA</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="le_Family">
+           <property name="maxLength">
+            <number>10</number>
+           </property>
+           <property name="placeholderText">
+            <string>Family</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QWidget" name="wi_DesignatorRank" native="true">
+        <layout class="QHBoxLayout" name="hl_DesignatorRank">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="swift::gui::components::CDbAircraftIcaoSelectorComponent" name="aircraft_Selector">
+           <property name="focusPolicy">
+            <enum>Qt::StrongFocus</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="cb_Rank">
+           <item>
+            <property name="text">
+             <string>0</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>1</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>2</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>3</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>4</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>5</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>6</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>7</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>8</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>9</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Unspecified</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="swift::gui::components::CAircraftCombinedTypeSelector" name="combined_TypeSelector">
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QWidget" name="wi_IdPaste" native="true">
+        <layout class="QHBoxLayout" name="hl_IdPaste">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLineEdit" name="le_Id">
+           <property name="maximumSize">
+            <size>
+             <width>75</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="placeholderText">
+            <string>Id</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="tb_Paste">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../../misc/misc.qrc">
+             <normaloff>:/diagona/icons/diagona/icons/clipboard-paste.png</normaloff>:/diagona/icons/diagona/icons/clipboard-paste.png</iconset>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="hs_IdPaste">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_IataFamily">
+        <property name="text">
+         <string>IATA/family:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="lbl_ModelDescription">
+        <property name="text">
+         <string>Model:</string>
+        </property>
+        <property name="buddy">
+         <cstring>le_ModelDescription</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="le_Manufacturer">
+        <property name="placeholderText">
+         <string>e.g. Boeing, Airbus</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLineEdit" name="le_ModelDescription">
+        <property name="placeholderText">
+         <string>Aircraft model</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QLineEdit" name="le_Updated">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>Last updated</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="lbl_MiscFlags">
+        <property name="text">
+         <string>Misc.:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="lbl_CombinedCode">
+        <property name="toolTip">
+         <string>Type / Engine / Engine count</string>
+        </property>
+        <property name="text">
+         <string>Comb. type:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="lbl_Manufacturer">
+        <property name="text">
+         <string>Manufacturer:</string>
+        </property>
+        <property name="buddy">
+         <cstring>le_Manufacturer</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="lbl_Timestamp">
+        <property name="text">
+         <string>Last updated:</string>
+        </property>
+        <property name="buddy">
+         <cstring>le_Updated</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_IcaoDesignator">
+        <property name="text">
+         <string>Design./Rank:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0" colspan="2">
+       <widget class="swift::gui::CDropSite" name="drop_DropData">
+        <property name="text">
+         <string>Drop data here</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::components::CDbAircraftIcaoSelectorComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/dbaircrafticaoselectorcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::CLabelAndIcon</class>
+   <extends>QFrame</extends>
+   <header>gui/labelandicon.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::editors::CValidationIndicator</class>
+   <extends>QFrame</extends>
+   <header>gui/editors/validationindicator.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::CDropSite</class>
+   <extends>QLabel</extends>
+   <header>gui/dropsite.h</header>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CAircraftCombinedTypeSelector</class>
+   <extends>QFrame</extends>
+   <header>gui/components/aircraftcombinedtypeselector.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>aircraft_Selector</tabstop>
+  <tabstop>cb_Rank</tabstop>
+  <tabstop>le_Iata</tabstop>
+  <tabstop>le_Family</tabstop>
+  <tabstop>le_Manufacturer</tabstop>
+  <tabstop>le_ModelDescription</tabstop>
+  <tabstop>combined_TypeSelector</tabstop>
+  <tabstop>cb_Wtc</tabstop>
+  <tabstop>cb_RealWorld</tabstop>
+  <tabstop>cb_Legacy</tabstop>
+  <tabstop>cb_Military</tabstop>
+  <tabstop>le_Updated</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../../misc/misc.qrc"/>
+ </resources>
+ <connections/>
+</ui>

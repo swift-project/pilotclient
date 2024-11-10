@@ -101,7 +101,7 @@ namespace swift::core
     {
         return {
             QStringLiteral("org.swift-project.swift_core.simulatorinterface"),
-            QStringLiteral("org.swift-project.blackgui.pluginconfiginterface")
+            QStringLiteral("org.swift-project.swiftgui.pluginconfiginterface")
         };
     }
 

@@ -6,9 +6,9 @@
 #ifndef SWIFTDATA_H
 #define SWIFTDATA_H
 
-#include "blackgui/settings/guisettings.h"
-#include "blackgui/mainwindowaccess.h"
-#include "blackgui/managedstatusbar.h"
+#include "gui/settings/guisettings.h"
+#include "gui/mainwindowaccess.h"
+#include "gui/managedstatusbar.h"
 #include "core/db/backgrounddataupdater.h"
 #include "misc/loghistory.h"
 #include "misc/identifiable.h"
@@ -26,7 +26,7 @@ namespace swift::core
 {
     class CWebDataServices;
 }
-namespace BlackGui::Components
+namespace swift::gui::components
 {
     class CAutoPublishDialog;
 }
@@ -37,10 +37,10 @@ namespace BlackGui::Components
 class CSwiftData :
     public QMainWindow,
     public swift::misc::CIdentifiable,
-    public BlackGui::IMainWindowAccess
+    public swift::gui::IMainWindowAccess
 {
     Q_OBJECT
-    Q_INTERFACES(BlackGui::IMainWindowAccess)
+    Q_INTERFACES(swift::gui::IMainWindowAccess)
 
 public:
     //! Constructor
@@ -85,13 +85,13 @@ private:
     void checkMinimumVersion();
 
     QScopedPointer<Ui::CSwiftData> ui;
-    BlackGui::CManagedStatusBar m_statusBar;
+    swift::gui::CManagedStatusBar m_statusBar;
     swift::core::db::CBackgroundDataUpdater *m_updater = nullptr; //!< consolidate with DB data
-    swift::misc::CSettingReadOnly<BlackGui::Settings::TBackgroundConsolidation> m_consolidationSettings { this, &CSwiftData::consolidationSettingChanged }; //!< consolidation time
+    swift::misc::CSettingReadOnly<swift::gui::settings::TBackgroundConsolidation> m_consolidationSettings { this, &CSwiftData::consolidationSettingChanged }; //!< consolidation time
     swift::misc::CLogHistoryReplica m_logHistory { this };
 
     // auto update
-    BlackGui::Components::CAutoPublishDialog *m_autoPublishDialog = nullptr; //!< auto publishing dialog
+    swift::gui::components::CAutoPublishDialog *m_autoPublishDialog = nullptr; //!< auto publishing dialog
 };
 
 #endif // guard

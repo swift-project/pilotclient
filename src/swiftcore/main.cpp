@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/corefacadeconfig.h"
-#include "blackgui/guiapplication.h"
+#include "gui/guiapplication.h"
 #include "misc/icons.h"
 #include "misc/crashhandler.h"
 #include "swiftcore.h"
@@ -15,7 +15,7 @@
 
 using namespace swift::misc;
 using namespace swift::core;
-using namespace BlackGui;
+using namespace swift::gui;
 
 int main(int argc, char *argv[])
 {

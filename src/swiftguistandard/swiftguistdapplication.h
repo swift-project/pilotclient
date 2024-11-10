@@ -6,7 +6,7 @@
 #ifndef SWIFTGUISTDAPPLICATION_H
 #define SWIFTGUISTDAPPLICATION_H
 
-#include "blackgui/guiapplication.h"
+#include "gui/guiapplication.h"
 
 #include <QCommandLineOption>
 #include <QCoreApplication>
@@ -17,7 +17,7 @@
  * Specialized GUI application for swift pilot client.
  * Handles parsing of some specialized CMD line argumenets and startup of core
  */
-class CSwiftGuiStdApplication : public BlackGui::CGuiApplication
+class CSwiftGuiStdApplication : public swift::gui::CGuiApplication
 {
     Q_OBJECT
 

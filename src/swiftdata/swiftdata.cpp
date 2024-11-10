@@ -2,13 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "swiftdata.h"
-#include "blackgui/components/datamaininfoareacomponent.h"
-#include "blackgui/components/dbmappingcomponent.h"
-#include "blackgui/components/logcomponent.h"
-#include "blackgui/components/datasettingscomponent.h"
-#include "blackgui/components/autopublishdialog.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/stylesheetutility.h"
+#include "gui/components/datamaininfoareacomponent.h"
+#include "gui/components/dbmappingcomponent.h"
+#include "gui/components/logcomponent.h"
+#include "gui/components/datasettingscomponent.h"
+#include "gui/components/autopublishdialog.h"
+#include "gui/guiapplication.h"
+#include "gui/stylesheetutility.h"
 #include "core/data/globalsetup.h"
 #include "misc/simulation/autopublishdata.h"
 #include "misc/simulation/distributorlist.h"
@@ -34,8 +34,8 @@ using namespace swift::misc::simulation;
 using namespace swift::core;
 using namespace swift::core::data;
 using namespace swift::core::db;
-using namespace BlackGui;
-using namespace BlackGui::Components;
+using namespace swift::gui;
+using namespace swift::gui::components;
 using namespace swift::config;
 
 CSwiftData::CSwiftData(QWidget *parent) : QMainWindow(parent),

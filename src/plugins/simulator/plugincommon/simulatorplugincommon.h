@@ -11,7 +11,7 @@
 #include <QObject>
 #include <QPointer>
 
-namespace BlackGui::Components
+namespace swift::gui::components
 {
     class CInterpolationLogDisplayDialog;
 }
@@ -57,7 +57,7 @@ namespace BlackSimPlugin::Common
         //! Clean up the interpolation log.display if any
         void deleteInterpolationDisplay();
 
-        QPointer<BlackGui::Components::CInterpolationLogDisplayDialog> m_interpolationDisplayDialog; //!< can be owned by main window after setting a parent
+        QPointer<swift::gui::components::CInterpolationLogDisplayDialog> m_interpolationDisplayDialog; //!< can be owned by main window after setting a parent
     };
 } // namespace
 

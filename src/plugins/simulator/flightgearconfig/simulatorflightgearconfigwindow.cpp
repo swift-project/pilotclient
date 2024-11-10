@@ -4,12 +4,12 @@
 #include "ui_simulatorflightgearconfigwindow.h"
 #include "simulatorflightgearconfigwindow.h"
 #include "core/application.h"
-#include "blackgui/guiapplication.h"
+#include "gui/guiapplication.h"
 
 #include <QComboBox>
 #include <QDialogButtonBox>
 
-using namespace BlackGui;
+using namespace swift::gui;
 using namespace swift::misc;
 using namespace swift::misc::simulation::settings;
 // using namespace swift::misc::simulation::Flightgear;

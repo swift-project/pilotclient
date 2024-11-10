@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simulatoremulated.h"
-#include "blackgui/guiapplication.h"
+#include "gui/guiapplication.h"
 #include "core/context/contextsimulator.h"
 #include "misc/simulation/simulatorplugininfo.h"
 #include "misc/aviation/altitude.h"
@@ -12,7 +12,7 @@
 #include <QTimer>
 #include <QApplication>
 
-using namespace BlackGui;
+using namespace swift::gui;
 using namespace swift::misc;
 using namespace swift::misc::aviation;
 using namespace swift::misc::physical_quantities;

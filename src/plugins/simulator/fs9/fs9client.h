@@ -96,7 +96,7 @@ namespace BlackSimPlugin::Fs9
         void handleConnectionCompleted();
 
         //! Simulator interface
-        const swift::core::ISimulator *simulator() const;
+        const swift::coree::ISimulator *simulator() const;
 
         swift::misc::simulation::CSimulatedAircraft m_remoteAircraft;
         swift::misc::physical_quantities::CTime m_updateInterval;

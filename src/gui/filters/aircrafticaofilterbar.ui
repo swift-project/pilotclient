@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CAircraftIcaoFilterBar</class>
+ <widget class="QFrame" name="CAircraftIcaoFilterBar">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>602</width>
+    <height>48</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>10</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <property name="frameShape">
+   <enum>QFrame::StyledPanel</enum>
+  </property>
+  <property name="frameShadow">
+   <enum>QFrame::Raised</enum>
+  </property>
+  <layout class="QGridLayout" name="gl_CAircraftIcaoFilterBar">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <property name="horizontalSpacing">
+    <number>4</number>
+   </property>
+   <property name="verticalSpacing">
+    <number>2</number>
+   </property>
+   <item row="0" column="3">
+    <widget class="QLabel" name="lbl_Manufacturer">
+     <property name="text">
+      <string>Manufacturer</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="4">
+    <widget class="QLineEdit" name="le_Manufacturer">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="placeholderText">
+      <string>Manufacturer, e.g. Airbus, Boeing</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="7">
+    <spacer name="hs_AircraftIcaoFilterBar">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="0" column="2">
+    <widget class="QLineEdit" name="le_Designator">
+     <property name="maximumSize">
+      <size>
+       <width>75</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="maxLength">
+      <number>6</number>
+     </property>
+     <property name="placeholderText">
+      <string>ICAO</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLabel" name="lbl_Designator">
+     <property name="text">
+      <string>Designator:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="swift::gui::filters::CFilterBarButtons" name="filter_Buttons">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="5">
+    <widget class="QLabel" name="lbl_Description">
+     <property name="text">
+      <string>Description:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="6">
+    <widget class="QLineEdit" name="le_Description">
+     <property name="placeholderText">
+      <string>Descriptive text</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QWidget" name="wi_Id" native="true">
+     <layout class="QHBoxLayout" name="hl_DbId">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="lbl_Id">
+        <property name="text">
+         <string>Id:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="le_Id">
+        <property name="maximumSize">
+         <size>
+          <width>50</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="placeholderText">
+         <string>id</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="hs_Id">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="4" colspan="3">
+    <widget class="swift::gui::components::CAircraftCombinedTypeSelector" name="combinedType_Selector">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>10</height>
+      </size>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="QLabel" name="lbl_Combined">
+     <property name="text">
+      <string>Combined:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLabel" name="lbl_Family">
+     <property name="text">
+      <string>Family:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QLineEdit" name="le_Family">
+     <property name="maximumSize">
+      <size>
+       <width>75</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="maxLength">
+      <number>10</number>
+     </property>
+     <property name="placeholderText">
+      <string>Family</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::filters::CFilterBarButtons</class>
+   <extends>QFrame</extends>
+   <header>gui/filters/filterbarbuttons.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CAircraftCombinedTypeSelector</class>
+   <extends>QFrame</extends>
+   <header>gui/components/aircraftcombinedtypeselector.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>le_Designator</tabstop>
+  <tabstop>le_Manufacturer</tabstop>
+  <tabstop>le_Description</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

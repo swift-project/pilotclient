@@ -4,11 +4,11 @@
 #include "simulatoremulatedconfigwidget.h"
 #include "ui_simulatoremulatedconfigwidget.h"
 
-using namespace BlackGui;
+using namespace swift::gui;
 
 namespace BlackSimPlugin::Emulated
 {
-    CSimulatorEmulatedConfigWidget::CSimulatorEmulatedConfigWidget(QWidget *parent) : BlackGui::CPluginConfigWindow(parent),
+    CSimulatorEmulatedConfigWidget::CSimulatorEmulatedConfigWidget(QWidget *parent) : swift::gui::CPluginConfigWindow(parent),
                                                                                       ui(new Ui::CSimulatorEmulatedConfigWidget)
     {
         ui->setupUi(this);

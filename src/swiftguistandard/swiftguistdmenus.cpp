@@ -1,13 +1,13 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackgui/components/maininfoareacomponent.h"
-#include "blackgui/components/settingscomponent.h"
-#include "blackgui/components/autopublishdialog.h"
-#include "blackgui/guiactionbind.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/foreignwindows.h"
-#include "blackgui/copyxswiftbusdialog.h"
+#include "gui/components/maininfoareacomponent.h"
+#include "gui/components/settingscomponent.h"
+#include "gui/components/autopublishdialog.h"
+#include "gui/guiactionbind.h"
+#include "gui/guiapplication.h"
+#include "gui/foreignwindows.h"
+#include "gui/copyxswiftbusdialog.h"
 #include "misc/aviation/altitude.h"
 #include "misc/pq/units.h"
 #include "misc/logmessage.h"
@@ -25,8 +25,8 @@
 #include <QMessageBox>
 
 using namespace swift::config;
-using namespace BlackGui;
-using namespace BlackGui::Components;
+using namespace swift::gui;
+using namespace swift::gui::components;
 using namespace swift::core;
 using namespace swift::misc;
 using namespace swift::misc::physical_quantities;
@@ -70,7 +70,7 @@ void SwiftGuiStd::onMenuClicked()
     else if (sender == ui->menu_WindowFont)
     {
         this->setMainPageToInfoArea();
-        ui->comp_MainInfoArea->selectSettingsTab(BlackGui::Components::CSettingsComponent::SettingTabGui);
+        ui->comp_MainInfoArea->selectSettingsTab(swift::gui::components::CSettingsComponent::SettingTabGui);
     }
     else if (sender == ui->menu_InternalsPage)
     {

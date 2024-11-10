@@ -11,7 +11,7 @@ namespace BlackSimPlugin::Emulated
         // void
     }
 
-    BlackGui::CPluginConfigWindow *CSimulatorEmulatedConfig::createConfigWindow(QWidget *parent)
+    swift::gui::CPluginConfigWindow *CSimulatorEmulatedConfig::createConfigWindow(QWidget *parent)
     {
         return new CSimulatorEmulatedConfigWidget(parent);
     }

@@ -13,7 +13,7 @@ namespace BlackSimPlugin::XPlane
         // void
     }
 
-    BlackGui::CPluginConfigWindow *CSimulatorXPlaneConfig::createConfigWindow(QWidget *parent)
+    swift::gui::CPluginConfigWindow *CSimulatorXPlaneConfig::createConfigWindow(QWidget *parent)
     {
         CSimulatorXPlaneConfigWindow *w = new CSimulatorXPlaneConfigWindow(parent);
         return w;

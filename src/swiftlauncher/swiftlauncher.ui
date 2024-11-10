@@ -47,7 +47,7 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="BlackGui::COverlayMessagesFrame" name="fr_SwiftLauncherMain">
+      <widget class="swift::gui::COverlayMessagesFrame" name="fr_SwiftLauncherMain">
        <layout class="QVBoxLayout" name="vl_SwiftLauncherMain">
         <property name="spacing">
          <number>20</number>
@@ -90,7 +90,7 @@
            </attribute>
            <layout class="QVBoxLayout" name="vl_About">
             <item>
-             <widget class="BlackGui::Components::CAboutHtmlComponent" name="comp_AboutHTML"/>
+             <widget class="swift::gui::components::CAboutHtmlComponent" name="comp_AboutHTML"/>
             </item>
            </layout>
           </widget>
@@ -304,7 +304,7 @@
                 <number>4</number>
                </property>
                <item>
-                <widget class="BlackGui::Components::CDBusServerAddressSelector" name="comp_DBusSelector">
+                <widget class="swift::gui::components::CDBusServerAddressSelector" name="comp_DBusSelector">
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -368,7 +368,7 @@
                 <number>4</number>
                </property>
                <item>
-                <widget class="BlackGui::Components::CUpdateInfoComponent" name="comp_UpdateInfo">
+                <widget class="swift::gui::components::CUpdateInfoComponent" name="comp_UpdateInfo">
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -429,7 +429,7 @@
                     <number>3</number>
                    </property>
                    <item>
-                    <widget class="BlackGui::Components::CInfoBarWebReadersStatusSmallComponent" name="comp_InfoBar">
+                    <widget class="swift::gui::components::CInfoBarWebReadersStatusSmallComponent" name="comp_InfoBar">
                      <property name="frameShape">
                       <enum>QFrame::StyledPanel</enum>
                      </property>
@@ -439,7 +439,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="BlackGui::Components::CDbLoadOverviewComponent" name="comp_DataUpdates">
+                    <widget class="swift::gui::components::CDbLoadOverviewComponent" name="comp_DataUpdates">
                      <property name="frameShape">
                       <enum>QFrame::StyledPanel</enum>
                      </property>
@@ -740,7 +740,7 @@
              </widget>
             </item>
             <item row="0" column="0" colspan="3">
-             <widget class="BlackGui::Components::CScaleScreenFactor" name="comp_Scale">
+             <widget class="swift::gui::components::CScaleScreenFactor" name="comp_Scale">
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
               </property>
@@ -780,7 +780,7 @@
       <number>3</number>
      </property>
      <item>
-      <widget class="BlackGui::Components::CLogComponent" name="comp_SwiftLauncherLog">
+      <widget class="swift::gui::components::CLogComponent" name="comp_SwiftLauncherLog">
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
        </property>
@@ -809,51 +809,51 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::COverlayMessagesFrame</class>
+   <class>swift::gui::COverlayMessagesFrame</class>
    <extends>QFrame</extends>
-   <header>blackgui/overlaymessagesframe.h</header>
+   <header>gui/overlaymessagesframe.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CDbLoadOverviewComponent</class>
+   <class>swift::gui::components::CDbLoadOverviewComponent</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/dbloadoverviewcomponent.h</header>
+   <header>gui/components/dbloadoverviewcomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CLogComponent</class>
+   <class>swift::gui::components::CLogComponent</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/logcomponent.h</header>
+   <header>gui/components/logcomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CInfoBarWebReadersStatusSmallComponent</class>
+   <class>swift::gui::components::CInfoBarWebReadersStatusSmallComponent</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/infobarwebreadersstatussmallcomponent.h</header>
+   <header>gui/components/infobarwebreadersstatussmallcomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CUpdateInfoComponent</class>
+   <class>swift::gui::components::CUpdateInfoComponent</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/updateinfocomponent.h</header>
+   <header>gui/components/updateinfocomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CDBusServerAddressSelector</class>
+   <class>swift::gui::components::CDBusServerAddressSelector</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/dbusserveraddressselector.h</header>
+   <header>gui/components/dbusserveraddressselector.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CAboutHtmlComponent</class>
+   <class>swift::gui::components::CAboutHtmlComponent</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/abouthtmlcomponent.h</header>
+   <header>gui/components/abouthtmlcomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CScaleScreenFactor</class>
+   <class>swift::gui::components::CScaleScreenFactor</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/scalescreenfactor.h</header>
+   <header>gui/components/scalescreenfactor.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

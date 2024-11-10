@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CStatusMessagesDetail</class>
+ <widget class="QFrame" name="CStatusMessagesDetail">
+  <property name="windowTitle">
+   <string>Status messages plus details</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_StatusMessages">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="swift::gui::filters::CStatusMessageFilterBar" name="filter_LogMessages">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>60</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="swift::gui::views::CStatusMessageView" name="tvp_StatusMessages">
+     <property name="whatsThis">
+      <string>Status message log view</string>
+     </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOn</enum>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::SingleSelection</enum>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+    </widget>
+   </item>
+   <item>
+    <widget class="swift::gui::components::CStatusMessageForm" name="form_StatusMessage">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>100</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>100</height>
+      </size>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::views::CStatusMessageView</class>
+   <extends>QTableView</extends>
+   <header>gui/views/statusmessageview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CStatusMessageForm</class>
+   <extends>QFrame</extends>
+   <header>gui/components/statusmessageform.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::filters::CStatusMessageFilterBar</class>
+   <extends>QFrame</extends>
+   <header>gui/filters/statusmessagefilterbar.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

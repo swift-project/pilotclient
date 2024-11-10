@@ -5,13 +5,13 @@
 //! \ingroup samplehotkey
 
 #include "misc/directoryutils.h"
-#include "blackgui/components/settingshotkeycomponent.h"
-#include "blackgui/guiapplication.h"
+#include "gui/components/settingshotkeycomponent.h"
+#include "gui/guiapplication.h"
 
 #include <QApplication>
 
 using namespace swift::misc;
-using namespace BlackGui;
+using namespace swift::gui;
 
 //! main
 int main(int argc, char *argv[])
@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
     CGuiApplication a("samplehotkey", swift::misc::CApplicationInfo::Sample, QPixmap());
-    BlackGui::Components::CSettingsHotkeyComponent w;
+    swift::gui::components::CSettingsHotkeyComponent w;
     w.show();
     return a.exec();
 }

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CAudioAdvancedDistributedDialog</class>
+ <widget class="QDialog" name="CAudioAdvancedDistributedDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>500</width>
+    <height>350</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>500</width>
+    <height>350</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Advanced and sitributed audio setup</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_CAudioAdvancedDistributedComponent">
+   <item>
+    <widget class="swift::gui::components::CAudioAdvancedDistributedComponent" name="comp_AudioAdvancedDistributed">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="bb_AudioAdvancedDistributedDialog">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Close</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::components::CAudioAdvancedDistributedComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/audioadvanceddistributedcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>bb_AudioAdvancedDistributedDialog</sender>
+   <signal>accepted()</signal>
+   <receiver>CAudioAdvancedDistributedDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>bb_AudioAdvancedDistributedDialog</sender>
+   <signal>rejected()</signal>
+   <receiver>CAudioAdvancedDistributedDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

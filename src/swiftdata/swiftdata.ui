@@ -40,7 +40,7 @@
      <number>2</number>
     </property>
     <item>
-     <widget class="BlackGui::Components::CInfoBarWebReadersStatusComponent" name="comp_InfoBar">
+     <widget class="swift::gui::components::CInfoBarWebReadersStatusComponent" name="comp_InfoBar">
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -60,7 +60,7 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="BlackGui::Components::CDataMainInfoAreaComponent" name="comp_MainInfoArea"/>
+      <widget class="swift::gui::components::CDataMainInfoAreaComponent" name="comp_MainInfoArea"/>
       <widget class="QWidget" name="comp_EmptyPage"/>
      </widget>
     </item>
@@ -252,15 +252,15 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Components::CDataMainInfoAreaComponent</class>
+   <class>swift::gui::components::CDataMainInfoAreaComponent</class>
    <extends>QWidget</extends>
-   <header>blackgui/components/datamaininfoareacomponent.h</header>
+   <header>gui/components/datamaininfoareacomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CInfoBarWebReadersStatusComponent</class>
+   <class>swift::gui::components::CInfoBarWebReadersStatusComponent</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/infobarwebreadersstatuscomponent.h</header>
+   <header>gui/components/infobarwebreadersstatuscomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

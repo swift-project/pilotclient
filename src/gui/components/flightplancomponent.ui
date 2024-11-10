@@ -1,0 +1,1180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CFlightPlanComponent</class>
+ <widget class="QTabWidget" name="CFlightPlanComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>392</width>
+    <height>510</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Flight plan</string>
+  </property>
+  <property name="currentIndex">
+   <number>0</number>
+  </property>
+  <widget class="QWidget" name="tb_FlightPlanMainTab">
+   <attribute name="title">
+    <string>Flight plan</string>
+   </attribute>
+   <layout class="QVBoxLayout" name="vl_FlightPlanMainTab">
+    <property name="leftMargin">
+     <number>2</number>
+    </property>
+    <property name="topMargin">
+     <number>2</number>
+    </property>
+    <property name="rightMargin">
+     <number>2</number>
+    </property>
+    <property name="bottomMargin">
+     <number>2</number>
+    </property>
+    <item>
+     <widget class="QScrollArea" name="sa_FlightPlanTabMain">
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="qw_FlightPlanTabMain">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>-71</y>
+         <width>368</width>
+         <height>548</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <layout class="QVBoxLayout" name="vl_FlightPlanMainScroll">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>2</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>2</number>
+        </property>
+        <property name="bottomMargin">
+         <number>2</number>
+        </property>
+        <item>
+         <layout class="QGridLayout" name="gl_FlightPlan">
+          <property name="leftMargin">
+           <number>2</number>
+          </property>
+          <property name="topMargin">
+           <number>2</number>
+          </property>
+          <property name="rightMargin">
+           <number>2</number>
+          </property>
+          <property name="bottomMargin">
+           <number>2</number>
+          </property>
+          <property name="spacing">
+           <number>4</number>
+          </property>
+          <item row="10" column="0" colspan="4">
+           <widget class="QPlainTextEdit" name="pte_Remarks">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>75</height>
+             </size>
+            </property>
+            <property name="tabChangesFocus">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>enter remarks here or use &quot;generator&quot;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QComboBox" name="cb_Wtc"/>
+          </item>
+          <item row="3" column="0">
+           <layout class="QGridLayout" name="gl_NavComEquipment">
+            <item row="0" column="4">
+             <widget class="QToolButton" name="tb_EditNavComEquipment">
+              <property name="toolTip">
+               <string>Edit</string>
+              </property>
+              <property name="whatsThis">
+               <string>Edit Nav/Com equipment code</string>
+              </property>
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../../misc/misc.qrc">
+                <normaloff>:/pastel/icons/pastel/16/pencil.png</normaloff>:/pastel/icons/pastel/16/pencil.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QLineEdit" name="le_NavComEquipment">
+              <property name="placeholderText">
+               <string>equip.code</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="9" column="1">
+           <widget class="QComboBox" name="cb_VoiceCapabilitiesFirstPage">
+            <item>
+             <property name="text">
+              <string>Full voice</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Text only</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Receive voice</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="lbl_Callsign">
+            <property name="text">
+             <string>2. Callsign</string>
+            </property>
+            <property name="scaledContents">
+             <bool>false</bool>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="0">
+           <widget class="QLabel" name="lbl_PilotsNameAndHomeBase">
+            <property name="toolTip">
+             <string>pilot's name</string>
+            </property>
+            <property name="text">
+             <string>17. Pilot / homebase</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0" colspan="4">
+           <widget class="QPlainTextEdit" name="pte_Route">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>75</height>
+             </size>
+            </property>
+            <property name="tabChangesFocus">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="2">
+           <widget class="QLabel" name="lbl_TakeOffTimePlanned">
+            <property name="text">
+             <string>9. Departure time</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="3">
+           <widget class="QLineEdit" name="le_CruiseTrueAirspeed">
+            <property name="maxLength">
+             <number>40</number>
+            </property>
+            <property name="placeholderText">
+             <string>e.g. 100 kts</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="2">
+           <widget class="QLineEdit" name="le_FuelOnBoard">
+            <property name="inputMask">
+             <string>99:99</string>
+            </property>
+            <property name="text">
+             <string>00:00</string>
+            </property>
+            <property name="maxLength">
+             <number>5</number>
+            </property>
+            <property name="placeholderText">
+             <string>hh:mm e.g. 02:30</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="3">
+           <layout class="QGridLayout" name="gl_CruiseAltitude">
+            <item row="0" column="0">
+             <widget class="swift::gui::CAltitudeEdit" name="lep_CrusingAltitude"/>
+            </item>
+            <item row="0" column="1">
+             <widget class="QToolButton" name="tb_AltitudeDialog">
+              <property name="toolTip">
+               <string>altitude formats</string>
+              </property>
+              <property name="whatsThis">
+               <string>altitude formats</string>
+              </property>
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../../misc/misc.qrc">
+                <normaloff>:/pastel/icons/pastel/16/help.png</normaloff>:/pastel/icons/pastel/16/help.png</iconset>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="7" column="1">
+           <widget class="QLabel" name="lbl_EstimatedTimeEnroute">
+            <property name="toolTip">
+             <string>Estimated time enroute</string>
+            </property>
+            <property name="text">
+             <string>13. Est.time enroute</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="2">
+           <widget class="QLineEdit" name="le_TakeOffTimePlanned">
+            <property name="inputMask">
+             <string>99:99</string>
+            </property>
+            <property name="text">
+             <string>00:00</string>
+            </property>
+            <property name="maxLength">
+             <number>5</number>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="3">
+           <widget class="QLineEdit" name="le_PilotsHomeBase">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>homebase (read only)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QWidget" name="wi_Callsign" native="true">
+            <layout class="QHBoxLayout" name="hl_CallsignWidget">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLineEdit" name="le_Callsign">
+               <property name="maxLength">
+                <number>40</number>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+               <property name="placeholderText">
+                <string>e.g. DLH1331</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="tb_SyncWithSimulator">
+               <property name="toolTip">
+                <string>Synchronize with simulator</string>
+               </property>
+               <property name="whatsThis">
+                <string>Synchronize with simulator</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../../misc/misc.qrc">
+                 <normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</iconset>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="9" column="2">
+           <widget class="QPushButton" name="pb_RemarksGenerator">
+            <property name="toolTip">
+             <string>goto generator page</string>
+            </property>
+            <property name="text">
+             <string>goto gen.</string>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="0">
+           <widget class="QLabel" name="lbl_LastSent">
+            <property name="text">
+             <string>Sent</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="3">
+           <widget class="QPushButton" name="pb_GetFromGenerator">
+            <property name="toolTip">
+             <string>copy from generator page</string>
+            </property>
+            <property name="text">
+             <string>from gen.</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="lbl_AircraftType">
+            <property name="toolTip">
+             <string>Aircraft type</string>
+            </property>
+            <property name="text">
+             <string>3. Aircraft</string>
+            </property>
+            <property name="scaledContents">
+             <bool>false</bool>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbl_Type">
+            <property name="text">
+             <string>1. Type</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QComboBox" name="cb_FlightRule">
+            <item>
+             <property name="text">
+              <string>IFR</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>VFR</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>SVFR</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>DVFR</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QLineEdit" name="le_EstimatedTimeEnroute">
+            <property name="inputMask">
+             <string>99:99</string>
+            </property>
+            <property name="text">
+             <string>00:00</string>
+            </property>
+            <property name="placeholderText">
+             <string>hh:mm e.g. 02:30</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="lbl_DestinationAirport">
+            <property name="text">
+             <string>12. Destination airport</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLineEdit" name="le_AircraftType">
+            <property name="placeholderText">
+             <string>ICAO, e.g. A321</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QLineEdit" name="le_OriginAirport">
+            <property name="maxLength">
+             <number>4</number>
+            </property>
+            <property name="placeholderText">
+             <string>ICAO, e.g. EDDF</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="3">
+           <widget class="QLabel" name="lbl_CrusingAltitude">
+            <property name="text">
+             <string>10. Cruising altitude</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="3">
+           <widget class="QLabel" name="lbl_CruiseTrueAirspeed">
+            <property name="toolTip">
+             <string>True airspeed</string>
+            </property>
+            <property name="text">
+             <string>7. TAS</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLabel" name="lbl_OriginAirport">
+            <property name="text">
+             <string>8. Departure airport</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="1" colspan="2">
+           <widget class="QLineEdit" name="le_PilotsName">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>pilot's name (read only)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="2">
+           <widget class="QLabel" name="lbl_FuelOnBoard">
+            <property name="text">
+             <string>14. Fuel on board</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0">
+           <widget class="QLineEdit" name="le_DestinationAirport">
+            <property name="maxLength">
+             <number>4</number>
+            </property>
+            <property name="placeholderText">
+             <string>ICAO, e.g. EDDF</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="3">
+           <widget class="QLineEdit" name="le_AlternateAirport">
+            <property name="maxLength">
+             <number>4</number>
+            </property>
+            <property name="placeholderText">
+             <string>ICAO, e.g. EDDF</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="3">
+           <widget class="QLabel" name="lbl_AlternateAirport">
+            <property name="text">
+             <string>15. Alternate airport</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
+           <widget class="QPushButton" name="pb_Remarks">
+            <property name="text">
+             <string>16. remarks</string>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="1" colspan="3">
+           <widget class="QLineEdit" name="le_LastSent">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>sent time will go here (read only)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>4. Wake Turbulence Category</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="lbl_Route">
+            <property name="text">
+             <string>11. Route</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <layout class="QGridLayout" name="gl_SsrEquipment">
+            <item row="0" column="0">
+             <widget class="QLineEdit" name="le_SsrEquipment"/>
+            </item>
+            <item row="0" column="1">
+             <widget class="QToolButton" name="tb_EditSsrEquipment">
+              <property name="toolTip">
+               <string>Edit</string>
+              </property>
+              <property name="whatsThis">
+               <string>Edit SSR equipment code</string>
+              </property>
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../../misc/misc.qrc">
+                <normaloff>:/pastel/icons/pastel/16/pencil.png</normaloff>:/pastel/icons/pastel/16/pencil.png</iconset>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="2" column="0">
+           <layout class="QHBoxLayout" name="hl_navCom">
+            <item>
+             <widget class="QLabel" name="lbl_NavCom">
+              <property name="text">
+               <string>5. NAV/COM Equipment</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="tb_NavComHelp">
+              <property name="toolTip">
+               <string>NAV/COM equipment overview</string>
+              </property>
+              <property name="whatsThis">
+               <string>NAV/COM equipment overview</string>
+              </property>
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../../misc/misc.qrc">
+                <normaloff>:/pastel/icons/pastel/16/help.png</normaloff>:/pastel/icons/pastel/16/help.png</iconset>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="2" column="1">
+           <layout class="QHBoxLayout" name="hl_Ssr">
+            <item>
+             <widget class="QLabel" name="lbl_Ssr">
+              <property name="text">
+               <string>6. SSR Equipment</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="tb_SsrHelp">
+              <property name="toolTip">
+               <string>SSR equipment overview</string>
+              </property>
+              <property name="whatsThis">
+               <string>SSR equipment overview</string>
+              </property>
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../../misc/misc.qrc">
+                <normaloff>:/pastel/icons/pastel/16/help.png</normaloff>:/pastel/icons/pastel/16/help.png</iconset>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QWidget" name="wi_FPButtons" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>100</height>
+           </size>
+          </property>
+          <layout class="QGridLayout" name="gl_FPButtons">
+           <property name="leftMargin">
+            <number>3</number>
+           </property>
+           <property name="topMargin">
+            <number>3</number>
+           </property>
+           <property name="rightMargin">
+            <number>3</number>
+           </property>
+           <property name="bottomMargin">
+            <number>3</number>
+           </property>
+           <property name="spacing">
+            <number>3</number>
+           </property>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="pb_SaveDisk">
+             <property name="toolTip">
+              <string>Save to disk</string>
+             </property>
+             <property name="text">
+              <string>Save</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../../misc/misc.qrc">
+               <normaloff>:/pastel/icons/pastel/16/disk.png</normaloff>:/pastel/icons/pastel/16/disk.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="pb_Reset">
+             <property name="text">
+              <string>&amp;Reset</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../../misc/misc.qrc">
+               <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="pb_Download">
+             <property name="toolTip">
+              <string>Load flight plan from network</string>
+             </property>
+             <property name="text">
+              <string>Download</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../../misc/misc.qrc">
+               <normaloff>:/diagona/icons/diagona/icons/network-cloud.png</normaloff>:/diagona/icons/diagona/icons/network-cloud.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QPushButton" name="pb_LoadDisk">
+             <property name="toolTip">
+              <string>Load from disk</string>
+             </property>
+             <property name="text">
+              <string>Load</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../../misc/misc.qrc">
+               <normaloff>:/pastel/icons/pastel/16/disk.png</normaloff>:/pastel/icons/pastel/16/disk.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QPushButton" name="pb_SimBrief">
+             <property name="text">
+              <string>SimBrief</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="pb_Send">
+             <property name="toolTip">
+              <string>Send flight plan to network</string>
+             </property>
+             <property name="text">
+              <string>Send</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../../misc/misc.qrc">
+               <normaloff>:/diagona/icons/diagona/icons/network-cloud.png</normaloff>:/diagona/icons/diagona/icons/network-cloud.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QPushButton" name="pb_SaveTemplate">
+             <property name="text">
+              <string>Save template</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QPushButton" name="pb_ClearTemplate">
+             <property name="text">
+              <string>Clear template</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QPushButton" name="pb_LoadTemplate">
+             <property name="text">
+              <string>Load template</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="tb_RemarksGenerator">
+   <attribute name="title">
+    <string>Remarks generator</string>
+   </attribute>
+   <layout class="QVBoxLayout" name="vl_RemarksGenerator">
+    <property name="leftMargin">
+     <number>2</number>
+    </property>
+    <property name="topMargin">
+     <number>2</number>
+    </property>
+    <property name="rightMargin">
+     <number>2</number>
+    </property>
+    <property name="bottomMargin">
+     <number>2</number>
+    </property>
+    <item>
+     <widget class="QScrollArea" name="sa_RemarksGenerator">
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="qw_RemarksGenerator">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>345</width>
+         <height>520</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="vl_RemarksGeneratorScroll">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <layout class="QGridLayout" name="gl_RemarksGenerator">
+          <property name="leftMargin">
+           <number>2</number>
+          </property>
+          <property name="topMargin">
+           <number>2</number>
+          </property>
+          <property name="rightMargin">
+           <number>2</number>
+          </property>
+          <property name="bottomMargin">
+           <number>2</number>
+          </property>
+          <property name="spacing">
+           <number>6</number>
+          </property>
+          <item row="5" column="1">
+           <widget class="QComboBox" name="cb_VoiceCapabilities">
+            <item>
+             <property name="text">
+              <string>Full voice</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Text only</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Receive voice</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="lbl_AircraftRegistration">
+            <property name="text">
+             <string>Aircraft registration</string>
+            </property>
+            <property name="wordWrap">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0">
+           <widget class="QLabel" name="lbl_RemarksGenerated">
+            <property name="text">
+             <string>Remarks</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QComboBox" name="cb_PerformanceCategory">
+            <property name="toolTip">
+             <string>Final Approach Speed</string>
+            </property>
+            <item>
+             <property name="text">
+              <string>VFR - not required</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>A: below 91kts</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>B: 91-120kts</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>C: 121-140kts</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>D: 141-165kts</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>E: 166-210kts</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="lbl_SidsStars">
+            <property name="text">
+             <string>SIDs / STARs</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="lbl_Selcal">
+            <property name="text">
+             <string>SELCAL</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="le_AirlineOperator"/>
+          </item>
+          <item row="2" column="1">
+           <widget class="QCheckBox" name="cb_NoSidsStarts">
+            <property name="text">
+             <string>no SIDs / STARs</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QComboBox" name="cb_PilotRating">
+            <item>
+             <property name="text">
+              <string>P0 - unrated</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>P1</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>P2</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>P3</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>P4</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>P5</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QPlainTextEdit" name="pte_RemarksGenerated">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>75</height>
+             </size>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>generated remarks</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="1">
+           <widget class="QPlainTextEdit" name="pte_AdditionalRemarks">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>75</height>
+             </size>
+            </property>
+            <property name="placeholderText">
+             <string>simulator related remarks</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbl_AirlineOperator">
+            <property name="text">
+             <string>Airline operator</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="lbl_PerformanceCategory">
+            <property name="text">
+             <string>Performance category</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="1">
+           <widget class="QFrame" name="fr_Buttons">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_2">
+             <item row="0" column="1" alignment="Qt::AlignRight">
+              <widget class="QPushButton" name="pb_CopyOver">
+               <property name="text">
+                <string>Copy over</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QComboBox" name="cb_RequiredNavigationPerformance">
+            <item>
+             <property name="text">
+              <string>VFR - not required</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10 miles radius</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>4 miles radius</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="le_AircraftRegistration"/>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="lbl_RequiredNavigationPerformance">
+            <property name="text">
+             <string>Required Navigation Performance</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="lbl_PilotRating">
+            <property name="text">
+             <string>Pilot rating</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="swift::gui::components::CSelcalCodeSelector" name="frp_SelcalCode"/>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="lbl_VoiceCapabilities">
+            <property name="text">
+             <string>Voice capabilities</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="0" alignment="Qt::AlignTop">
+           <widget class="QPushButton" name="pb_AddRemarks">
+            <property name="text">
+             <string>add.remarks</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::components::CSelcalCodeSelector</class>
+   <extends>QFrame</extends>
+   <header>gui/components/selcalcodeselector.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::CAltitudeEdit</class>
+   <extends>QLineEdit</extends>
+   <header>gui/altitudeedit.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>cb_FlightRule</tabstop>
+  <tabstop>le_Callsign</tabstop>
+  <tabstop>le_AircraftType</tabstop>
+  <tabstop>cb_Wtc</tabstop>
+  <tabstop>tb_EditNavComEquipment</tabstop>
+  <tabstop>tb_EditSsrEquipment</tabstop>
+  <tabstop>le_CruiseTrueAirspeed</tabstop>
+  <tabstop>le_OriginAirport</tabstop>
+  <tabstop>le_TakeOffTimePlanned</tabstop>
+  <tabstop>lep_CrusingAltitude</tabstop>
+  <tabstop>pte_Route</tabstop>
+  <tabstop>le_DestinationAirport</tabstop>
+  <tabstop>le_EstimatedTimeEnroute</tabstop>
+  <tabstop>le_FuelOnBoard</tabstop>
+  <tabstop>le_AlternateAirport</tabstop>
+  <tabstop>pte_Remarks</tabstop>
+  <tabstop>pb_GetFromGenerator</tabstop>
+  <tabstop>le_PilotsName</tabstop>
+  <tabstop>le_PilotsHomeBase</tabstop>
+  <tabstop>le_LastSent</tabstop>
+  <tabstop>pb_SimBrief</tabstop>
+  <tabstop>pb_Reset</tabstop>
+  <tabstop>pb_Send</tabstop>
+  <tabstop>pb_Download</tabstop>
+  <tabstop>pb_SaveDisk</tabstop>
+  <tabstop>pb_LoadDisk</tabstop>
+  <tabstop>pb_SaveTemplate</tabstop>
+  <tabstop>pb_LoadTemplate</tabstop>
+  <tabstop>pb_ClearTemplate</tabstop>
+  <tabstop>sa_RemarksGenerator</tabstop>
+  <tabstop>le_AirlineOperator</tabstop>
+  <tabstop>le_AircraftRegistration</tabstop>
+  <tabstop>cb_NoSidsStarts</tabstop>
+  <tabstop>cb_RequiredNavigationPerformance</tabstop>
+  <tabstop>cb_PerformanceCategory</tabstop>
+  <tabstop>cb_VoiceCapabilities</tabstop>
+  <tabstop>cb_PilotRating</tabstop>
+  <tabstop>pte_RemarksGenerated</tabstop>
+  <tabstop>pb_AddRemarks</tabstop>
+  <tabstop>pte_AdditionalRemarks</tabstop>
+  <tabstop>pb_CopyOver</tabstop>
+  <tabstop>tb_SyncWithSimulator</tabstop>
+  <tabstop>le_NavComEquipment</tabstop>
+  <tabstop>tb_AltitudeDialog</tabstop>
+  <tabstop>sa_FlightPlanTabMain</tabstop>
+  <tabstop>cb_VoiceCapabilitiesFirstPage</tabstop>
+  <tabstop>pb_Remarks</tabstop>
+  <tabstop>le_SsrEquipment</tabstop>
+  <tabstop>pb_RemarksGenerator</tabstop>
+  <tabstop>tb_NavComHelp</tabstop>
+  <tabstop>tb_SsrHelp</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../../misc/misc.qrc"/>
+ </resources>
+ <connections/>
+</ui>

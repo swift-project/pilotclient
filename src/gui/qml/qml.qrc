@@ -1,0 +1,12 @@
+<!--
+ SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
+ SPDX-License-Identifier: CC0-1.0
+-->
+
+<RCC>
+    <qresource prefix="/gui/qml">
+        <file>AFVMap.qml</file>
+        <file>AtcRing.qml</file>
+        <file>Transceiver.qml</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CInternalsComponent</class>
+ <widget class="QWidget" name="CInternalsComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>326</width>
+    <height>690</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gl_Messages">
+   <property name="leftMargin">
+    <number>2</number>
+   </property>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
+    <number>2</number>
+   </property>
+   <item row="0" column="0">
+    <widget class="QTabWidget" name="tw_Internals">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tb_Messages">
+      <attribute name="title">
+       <string>Messages</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_Messages">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>3</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QGroupBox" name="gb_StatusMessage">
+         <property name="title">
+          <string>Status message</string>
+         </property>
+         <layout class="QGridLayout" name="gl_StatusMessage">
+          <property name="leftMargin">
+           <number>4</number>
+          </property>
+          <property name="topMargin">
+           <number>4</number>
+          </property>
+          <property name="rightMargin">
+           <number>4</number>
+          </property>
+          <property name="bottomMargin">
+           <number>4</number>
+          </property>
+          <item row="0" column="3">
+           <widget class="QRadioButton" name="rb_StatusMessageWarning">
+            <property name="text">
+             <string>w</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QRadioButton" name="rb_StatusMessageError">
+            <property name="text">
+             <string>e</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QRadioButton" name="rb_StatusMessageInfo">
+            <property name="text">
+             <string>i</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLineEdit" name="le_StatusMessage">
+            <property name="placeholderText">
+             <string>status message</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QToolButton" name="tb_LogStatusMessage">
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../../misc/misc.qrc">
+              <normaloff>:/diagona/icons/diagona/icons/arrow-circle-225-left.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-225-left.png</iconset>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="gb_TextMessages">
+         <property name="title">
+          <string>Text message</string>
+         </property>
+         <layout class="QGridLayout" name="gl_TextMessages">
+          <property name="leftMargin">
+           <number>4</number>
+          </property>
+          <property name="topMargin">
+           <number>4</number>
+          </property>
+          <property name="rightMargin">
+           <number>4</number>
+          </property>
+          <property name="bottomMargin">
+           <number>4</number>
+          </property>
+          <item row="2" column="0" colspan="3">
+           <widget class="QPlainTextEdit" name="pte_TxtMsg">
+            <property name="placeholderText">
+             <string>Text message</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLineEdit" name="le_TxtMsgFrom">
+            <property name="placeholderText">
+             <string>from</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="le_TxtMsgTo">
+            <property name="placeholderText">
+             <string>to</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QDoubleSpinBox" name="dsb_TxtMsgFrequency">
+            <property name="suffix">
+             <string>MHz</string>
+            </property>
+            <property name="decimals">
+             <number>3</number>
+            </property>
+            <property name="minimum">
+             <double>117.974999999999994</double>
+            </property>
+            <property name="maximum">
+             <double>136.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.025000000000000</double>
+            </property>
+            <property name="value">
+             <double>117.974999999999994</double>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QWidget" name="wi_SendTextMessageButtons" native="true">
+            <layout class="QHBoxLayout" name="wi_SendButtons">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="pb_SendTextMessageDirectly">
+               <property name="text">
+                <string>send</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pb_SendTextMessageDeferred">
+               <property name="text">
+                <string>send deferred</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="gb_Atis">
+         <property name="title">
+          <string>ATIS</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="1">
+           <widget class="QPushButton" name="pb_SendAtis">
+            <property name="text">
+             <string>send</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLineEdit" name="le_AtisCallsign">
+            <property name="placeholderText">
+             <string>callsign</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="2">
+           <widget class="QPlainTextEdit" name="pte_Atis">
+            <property name="placeholderText">
+             <string>ATIS</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_Debug">
+      <attribute name="title">
+       <string>Debug</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_Debug">
+       <item>
+        <widget class="QGroupBox" name="gb_DebugContext">
+         <property name="title">
+          <string>Contexts</string>
+         </property>
+         <layout class="QGridLayout" name="gl_Contexts">
+          <property name="leftMargin">
+           <number>4</number>
+          </property>
+          <property name="topMargin">
+           <number>4</number>
+          </property>
+          <property name="rightMargin">
+           <number>4</number>
+          </property>
+          <property name="bottomMargin">
+           <number>4</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="cb_DebugContextAudio">
+            <property name="text">
+             <string>Audio</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QCheckBox" name="cb_DebugContextNetwork">
+            <property name="text">
+             <string>Network</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QCheckBox" name="cb_DebugContextOwnAircraft">
+            <property name="text">
+             <string>Own aircraft</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="cb_DebugContextSimulator">
+            <property name="text">
+             <string>Simulator</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QCheckBox" name="cb_DebugContextApplication">
+            <property name="text">
+             <string>Application</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="gb_CrashDumps">
+         <property name="title">
+          <string>Crash dumps</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QCheckBox" name="cb_CrashDumpUpload">
+            <property name="text">
+             <string>uploads enabled</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pb_SimulateCrash">
+            <property name="text">
+             <string>crash!</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pb_SimulateAssert">
+            <property name="text">
+             <string>assert!</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="vs_Debug">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_Statistics">
+      <attribute name="title">
+       <string>Statistics / Logs</string>
+      </attribute>
+      <layout class="QGridLayout" name="gl_Statistics" columnstretch="0,0,0">
+       <item row="1" column="1">
+        <widget class="QPushButton" name="pb_LatestPartsLog">
+         <property name="text">
+          <string>show</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="lbl_LatestPartsLog">
+         <property name="text">
+          <string>Latest parts log</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QPushButton" name="pb_LatestInterpolationLog">
+         <property name="text">
+          <string>show</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="lbl_LatestInterpolationLog">
+         <property name="text">
+          <string>Latest interpolation log</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <spacer name="vs_Statistics">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="2" column="0" colspan="3">
+        <widget class="QPlainTextEdit" name="pte_NetworkCalls"/>
+       </item>
+       <item row="3" column="2">
+        <widget class="QPushButton" name="pb_NetworkUpdateAndReset">
+         <property name="text">
+          <string>update and reset</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QPushButton" name="pb_NetworkUpdate">
+         <property name="text">
+          <string>update</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QCheckBox" name="cb_NetworkStatistics">
+         <property name="text">
+          <string>network statistics</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_AircraftParts">
+      <attribute name="title">
+       <string>Aircraft parts</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_AircraftParts">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="swift::gui::components::CAircraftPartsComponent" name="comp_AircraftParts">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_RawFsdMessages">
+      <attribute name="title">
+       <string>FSD Messages</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="swift::gui::components::CRawFsdMessagesComponent" name="comp_RawFsdMessages">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::components::CRawFsdMessagesComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/rawfsdmessagescomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CAircraftPartsComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/aircraftpartscomponent.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>tw_Internals</tabstop>
+  <tabstop>le_StatusMessage</tabstop>
+  <tabstop>tb_LogStatusMessage</tabstop>
+  <tabstop>rb_StatusMessageInfo</tabstop>
+  <tabstop>rb_StatusMessageWarning</tabstop>
+  <tabstop>rb_StatusMessageError</tabstop>
+  <tabstop>le_TxtMsgFrom</tabstop>
+  <tabstop>le_TxtMsgTo</tabstop>
+  <tabstop>dsb_TxtMsgFrequency</tabstop>
+  <tabstop>pb_SendTextMessageDirectly</tabstop>
+  <tabstop>pb_SendTextMessageDeferred</tabstop>
+  <tabstop>pte_TxtMsg</tabstop>
+  <tabstop>le_AtisCallsign</tabstop>
+  <tabstop>pb_SendAtis</tabstop>
+  <tabstop>pte_Atis</tabstop>
+  <tabstop>cb_DebugContextAudio</tabstop>
+  <tabstop>cb_DebugContextNetwork</tabstop>
+  <tabstop>cb_DebugContextOwnAircraft</tabstop>
+  <tabstop>cb_DebugContextSimulator</tabstop>
+  <tabstop>cb_DebugContextApplication</tabstop>
+  <tabstop>cb_CrashDumpUpload</tabstop>
+  <tabstop>pb_SimulateCrash</tabstop>
+  <tabstop>pb_SimulateAssert</tabstop>
+  <tabstop>pb_LatestInterpolationLog</tabstop>
+  <tabstop>pb_LatestPartsLog</tabstop>
+  <tabstop>pte_NetworkCalls</tabstop>
+  <tabstop>cb_NetworkStatistics</tabstop>
+  <tabstop>pb_NetworkUpdate</tabstop>
+  <tabstop>pb_NetworkUpdateAndReset</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../../misc/misc.qrc"/>
+ </resources>
+ <connections/>
+</ui>

@@ -6,7 +6,7 @@ target_link_libraries(tests_test INTERFACE Qt::Core Qt::Test)
 target_include_directories(tests_test INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_subdirectory(core)
-add_subdirectory(blackgui)
+add_subdirectory(gui)
 add_subdirectory(misc)
 
 if(SWIFT_BUILD_FSX_PLUGIN)

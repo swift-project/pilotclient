@@ -1,10 +1,10 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "blackgui/components/datainfoareacomponent.h"
-#include "blackgui/components/datamaininfoareacomponent.h"
-#include "blackgui/components/dbmappingcomponent.h"
-#include "blackgui/guiapplication.h"
+#include "gui/components/datainfoareacomponent.h"
+#include "gui/components/datamaininfoareacomponent.h"
+#include "gui/components/dbmappingcomponent.h"
+#include "gui/guiapplication.h"
 #include "misc/icons.h"
 #include "misc/swiftdirectories.h"
 #include "misc/directoryutils.h"
@@ -19,9 +19,9 @@
 #include <QString>
 #include <QtGlobal>
 
-using namespace BlackGui;
+using namespace swift::gui;
 using namespace swift::core;
-using namespace BlackGui::Components;
+using namespace swift::gui::components;
 using namespace swift::misc;
 
 void CSwiftData::onMenuClicked()
@@ -30,7 +30,7 @@ void CSwiftData::onMenuClicked()
     if (sender == ui->menu_WindowFont)
     {
         // this->ps_setMainPageToInfoArea();
-        // ui->comp_MainInfoArea->selectSettingsTab(BlackGui::Components::CSettingsComponent::SettingTabGui);
+        // ui->comp_MainInfoArea->selectSettingsTab(swift::gui::components::CSettingsComponent::SettingTabGui);
     }
     else if (sender == ui->menu_MappingMaxData)
     {

@@ -7,8 +7,8 @@
 #define SWIFTCORE_H
 
 #include "core/coremodeenums.h"
-#include "blackgui/mainwindowaccess.h"
-#include "blackgui/systemtraywindow.h"
+#include "gui/mainwindowaccess.h"
+#include "gui/systemtraywindow.h"
 #include "misc/identifiable.h"
 #include "misc/statusmessage.h"
 
@@ -17,7 +17,7 @@
 #include <QString>
 
 class QWidget;
-namespace BlackGui::Components
+namespace swift::gui::components
 {
     class CCoreSettingsDialog;
     class CRawFsdMessagesDialog;
@@ -33,12 +33,12 @@ namespace Ui
  * swift core control GUI
  */
 class CSwiftCore :
-    public BlackGui::CSystemTrayWindow,
-    public BlackGui::IMainWindowAccess,
+    public swift::gui::CSystemTrayWindow,
+    public swift::gui::IMainWindowAccess,
     public swift::misc::CIdentifiable
 {
     Q_OBJECT
-    Q_INTERFACES(BlackGui::IMainWindowAccess)
+    Q_INTERFACES(swift::gui::IMainWindowAccess)
 
 public:
     //! Constructor
@@ -82,10 +82,10 @@ private:
     //! Restart CMD args
     QStringList getRestartCmdArgs() const;
 
-    QScopedPointer<BlackGui::Components::CCoreSettingsDialog> m_settingsDialog;
-    QScopedPointer<BlackGui::Components::CRawFsdMessagesDialog> m_rawFsdMessageDialog;
-    QScopedPointer<BlackGui::Components::CCockpitComAudioDialog> m_audioDialog;
-    QScopedPointer<BlackGui::Components::CAudioAdvancedDistributedDialog> m_audioAdvDialog;
+    QScopedPointer<swift::gui::components::CCoreSettingsDialog> m_settingsDialog;
+    QScopedPointer<swift::gui::components::CRawFsdMessagesDialog> m_rawFsdMessageDialog;
+    QScopedPointer<swift::gui::components::CCockpitComAudioDialog> m_audioDialog;
+    QScopedPointer<swift::gui::components::CAudioAdvancedDistributedDialog> m_audioAdvDialog;
 
     QScopedPointer<Ui::CSwiftCore> ui;
 };

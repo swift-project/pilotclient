@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CMappingComponent</class>
+ <widget class="QFrame" name="CMappingComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>376</width>
+    <height>293</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Mapping component</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_MappingComponent">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QSplitter" name="sp_MappingComponentSplitter">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <widget class="QTabWidget" name="tw_SpecializedViews">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tb_CurrentMappings">
+       <attribute name="title">
+        <string>Rendered aircraft</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="vl_CurrentMappings">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="swift::gui::views::CSimulatedAircraftView" name="tvp_RenderedAircraft">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::SingleSelection</enum>
+          </property>
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+          <attribute name="verticalHeaderVisible">
+           <bool>false</bool>
+          </attribute>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tb_AircraftModels">
+       <attribute name="title">
+        <string>Aircraft models</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="vl_AircraftModels">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="swift::gui::views::CAircraftModelView" name="tvp_AircraftModels">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::SingleSelection</enum>
+          </property>
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+          <attribute name="verticalHeaderVisible">
+           <bool>false</bool>
+          </attribute>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tb_Statistics">
+       <attribute name="title">
+        <string>Statistics</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="vl_Statistics">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="swift::gui::components::CMatchingStatisticsComponent" name="comp_Statistics"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tb_MatchingLog">
+       <attribute name="title">
+        <string>Matching log</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="vl_MatchingLog">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="swift::gui::components::CModelMatcherLogComponent" name="comp_MatchingLog"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="fr_AircraftModifications">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>80</height>
+       </size>
+      </property>
+      <layout class="QGridLayout" name="gl_AircraftModifications" columnstretch="0,0,0,0,0,0">
+       <property name="leftMargin">
+        <number>3</number>
+       </property>
+       <property name="topMargin">
+        <number>3</number>
+       </property>
+       <property name="rightMargin">
+        <number>3</number>
+       </property>
+       <property name="bottomMargin">
+        <number>3</number>
+       </property>
+       <item row="0" column="3">
+        <widget class="QPushButton" name="pb_ValidateModelSet">
+         <property name="text">
+          <string>validate</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="lbl_AircraftIcon">
+         <property name="text">
+          <string>Icon</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="4">
+        <widget class="QPushButton" name="pb_DoMatchingAgain">
+         <property name="toolTip">
+          <string>do all matchings again</string>
+         </property>
+         <property name="text">
+          <string>re-match</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="5">
+        <widget class="QPushButton" name="pb_SaveAircraft">
+         <property name="toolTip">
+          <string>save selected model</string>
+         </property>
+         <property name="text">
+          <string>save</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="QPushButton" name="pb_ResetAircraft">
+         <property name="toolTip">
+          <string>reset model by callsign</string>
+         </property>
+         <property name="text">
+          <string>reset</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../misc/misc.qrc">
+           <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QLineEdit" name="le_Callsign">
+         <property name="toolTip">
+          <string>callsign of aircraft</string>
+         </property>
+         <property name="maxLength">
+          <number>15</number>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+         <property name="placeholderText">
+          <string>callsign</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="4" colspan="2">
+        <widget class="QPushButton" name="pb_LoadModels">
+         <property name="toolTip">
+          <string>load model set</string>
+         </property>
+         <property name="text">
+          <string>load model set</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="lbl_Aircraft">
+         <property name="toolTip">
+          <string>aircraft enabled</string>
+         </property>
+         <property name="text">
+          <string>Enbl.</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="swift::gui::components::CSimulatorSelector" name="comp_SimulatorSelector">
+         <property name="minimumSize">
+          <size>
+           <width>50</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="6">
+        <widget class="swift::gui::components::CAircraftModelStringCompleter" name="completer_ModelStrings">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>20</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QCheckBox" name="cb_AircraftIconDisplayed">
+         <property name="toolTip">
+          <string>show / hide icon of aircraft</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QCheckBox" name="cb_AircraftEnabled">
+         <property name="toolTip">
+          <string>aircraft enabled/disable</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::views::CAircraftModelView</class>
+   <extends>QTableView</extends>
+   <header>gui/views/aircraftmodelview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CSimulatorSelector</class>
+   <extends>QFrame</extends>
+   <header>gui/components/simulatorselector.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::views::CSimulatedAircraftView</class>
+   <extends>QTableView</extends>
+   <header>gui/views/simulatedaircraftview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CModelMatcherLogComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/modelmatcherlogcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CAircraftModelStringCompleter</class>
+   <extends>QFrame</extends>
+   <header>gui/components/aircraftmodelstringcompleter.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CMatchingStatisticsComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/matchingstatisticscomponent.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>tw_SpecializedViews</tabstop>
+  <tabstop>tvp_RenderedAircraft</tabstop>
+  <tabstop>cb_AircraftIconDisplayed</tabstop>
+  <tabstop>pb_ValidateModelSet</tabstop>
+  <tabstop>cb_AircraftEnabled</tabstop>
+  <tabstop>le_Callsign</tabstop>
+  <tabstop>pb_ResetAircraft</tabstop>
+  <tabstop>pb_DoMatchingAgain</tabstop>
+  <tabstop>pb_SaveAircraft</tabstop>
+  <tabstop>tvp_AircraftModels</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../../misc/misc.qrc"/>
+ </resources>
+ <connections/>
+</ui>

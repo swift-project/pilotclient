@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CAirportDialog</class>
+ <widget class="QDialog" name="CAirportDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>300</width>
+    <height>90</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Select an airport</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_LayoutAirpotDialog">
+   <item alignment="Qt::AlignTop">
+    <widget class="swift::gui::components::CAirportCompleter" name="comp_AirportCompleter"/>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="bb_AirportDialog">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::components::CAirportCompleter</class>
+   <extends>QFrame</extends>
+   <header>gui/components/airportcompleter.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>bb_AirportDialog</sender>
+   <signal>accepted()</signal>
+   <receiver>CAirportDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>bb_AirportDialog</sender>
+   <signal>rejected()</signal>
+   <receiver>CAirportDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

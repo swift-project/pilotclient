@@ -2,15 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "swiftcore.h"
-#include "blackgui/components/commandinput.h"
-#include "blackgui/components/coreinfoareacomponent.h"
-#include "blackgui/components/coresettingsdialog.h"
-#include "blackgui/components/cockpitcomaudiodialog.h"
-#include "blackgui/components/audioadvanceddistributeddialog.h"
-#include "blackgui/components/logcomponent.h"
-#include "blackgui/components/rawfsdmessagesdialog.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/stylesheetutility.h"
+#include "gui/components/commandinput.h"
+#include "gui/components/coreinfoareacomponent.h"
+#include "gui/components/coresettingsdialog.h"
+#include "gui/components/cockpitcomaudiodialog.h"
+#include "gui/components/audioadvanceddistributeddialog.h"
+#include "gui/components/logcomponent.h"
+#include "gui/components/rawfsdmessagesdialog.h"
+#include "gui/guiapplication.h"
+#include "gui/stylesheetutility.h"
 #include "core/context/contextaudio.h"
 #include "core/context/contextnetwork.h"
 #include "core/corefacade.h"
@@ -33,8 +33,8 @@
 
 using namespace swift::misc;
 using namespace swift::core;
-using namespace BlackGui;
-using namespace BlackGui::Components;
+using namespace swift::gui;
+using namespace swift::gui::components;
 
 CSwiftCore::CSwiftCore(QWidget *parent) : CSystemTrayWindow(CIcons::swiftCore24(), parent),
                                           CIdentifiable(this),

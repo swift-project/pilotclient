@@ -1,0 +1,44 @@
+// SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
+// SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
+
+//! \file
+
+/*!
+ * \namespace swift::gui
+ * \brief GUI related classes.
+ */
+
+/*!
+ * \namespace swift::gui::components
+ * \brief High level reusable GUI components.
+ */
+
+/*!
+ * \namespace swift::gui::Context
+ * \brief The context classes are high level API classes providing the interface for DBus.
+ */
+
+/*!
+ * \namespace swift::gui::filters
+ * \brief Filter to search data sets.
+ */
+
+/*!
+ * \namespace swift::gui::models
+ * \brief Models to be used with views, mainly QTableView
+ */
+
+/*!
+ * \namespace swift::gui::vatsim
+ * \brief Specific classes for the VATSIM network
+ */
+
+/*!
+ * \namespace swift::gui::views
+ * \brief Views, mainly QTableView
+ */
+
+/*!
+ * \namespace swift::gui::win
+ * \brief Windows specific classes.
+ */

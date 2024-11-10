@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CLiveryForm</class>
+ <widget class="QFrame" name="CLiveryForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>361</width>
+    <height>422</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Livery editor</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_LiveryForm">
+   <property name="spacing">
+    <number>4</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QGroupBox" name="gb_Livery">
+     <property name="title">
+      <string>Livery</string>
+     </property>
+     <layout class="QGridLayout" name="gl_Livery" columnstretch="0,1,1,1,0,0">
+      <item row="4" column="0">
+       <widget class="QLabel" name="lbl_Timestamp">
+        <property name="text">
+         <string>Last updated:</string>
+        </property>
+        <property name="buddy">
+         <cstring>le_Updated</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="lbl_FuselageColor">
+        <property name="text">
+         <string>Fuselage/Tail:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_Description">
+        <property name="text">
+         <string>Description:</string>
+        </property>
+        <property name="buddy">
+         <cstring>le_Description</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_Code">
+        <property name="text">
+         <string>Code:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="le_Id">
+        <property name="maximumSize">
+         <size>
+          <width>75</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="placeholderText">
+         <string>Id</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QPushButton" name="pb_TempLivery">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;set a 'no color' livery, allowing to create a&lt;br/&gt;temp. DB entry which will later be specified.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>temp.</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" colspan="4">
+       <widget class="QLineEdit" name="le_Description">
+        <property name="placeholderText">
+         <string>Livery description</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0" colspan="5">
+       <widget class="swift::gui::CDropSite" name="drop_DropData">
+        <property name="text">
+         <string>Drop data here</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QCheckBox" name="cb_Military">
+        <property name="toolTip">
+         <string>Military livery</string>
+        </property>
+        <property name="text">
+         <string>Mil.</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1" colspan="4">
+       <widget class="QLineEdit" name="le_Updated">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3" alignment="Qt::AlignRight">
+       <widget class="QPushButton" name="pb_SearchColor">
+        <property name="toolTip">
+         <string>find a color livery</string>
+        </property>
+        <property name="text">
+         <string>search color</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0" colspan="5">
+       <widget class="swift::gui::editors::CAirlineIcaoForm" name="editor_AirlineIcao">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>225</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="swift::gui::CLabelAndIcon" name="lai_Id"/>
+      </item>
+      <item row="0" column="5" rowspan="7">
+       <widget class="swift::gui::editors::CValidationIndicator" name="val_Indicator">
+        <property name="minimumSize">
+         <size>
+          <width>16</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1" colspan="4">
+       <widget class="QWidget" name="wi_Colors" native="true">
+        <layout class="QHBoxLayout" name="hl_Colors">
+         <property name="spacing">
+          <number>4</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item alignment="Qt::AlignLeft">
+          <widget class="swift::gui::components::CColorSelector" name="color_Fuselage">
+           <property name="minimumSize">
+            <size>
+             <width>75</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::StrongFocus</enum>
+           </property>
+          </widget>
+         </item>
+         <item alignment="Qt::AlignLeft">
+          <widget class="swift::gui::components::CColorSelector" name="color_Tail">
+           <property name="minimumSize">
+            <size>
+             <width>75</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::StrongFocus</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="hs_Colors">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="3">
+       <widget class="swift::gui::components::CDbLiverySelectorComponent" name="comp_LiverySelector">
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" alignment="Qt::AlignLeft">
+       <widget class="QToolButton" name="tb_Paste">
+        <property name="text">
+         <string>...</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../misc/misc.qrc">
+          <normaloff>:/diagona/icons/diagona/icons/clipboard-paste.png</normaloff>:/diagona/icons/diagona/icons/clipboard-paste.png</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::components::CColorSelector</class>
+   <extends>QFrame</extends>
+   <header>gui/components/colorselector.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::CLabelAndIcon</class>
+   <extends>QFrame</extends>
+   <header>gui/labelandicon.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::editors::CValidationIndicator</class>
+   <extends>QFrame</extends>
+   <header>gui/editors/validationindicator.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::CDropSite</class>
+   <extends>QLabel</extends>
+   <header>gui/dropsite.h</header>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::editors::CAirlineIcaoForm</class>
+   <extends>QFrame</extends>
+   <header>gui/editors/airlineicaoform.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CDbLiverySelectorComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/dbliveryselectorcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>le_Id</tabstop>
+  <tabstop>pb_SearchColor</tabstop>
+  <tabstop>pb_TempLivery</tabstop>
+  <tabstop>comp_LiverySelector</tabstop>
+  <tabstop>cb_Military</tabstop>
+  <tabstop>le_Description</tabstop>
+  <tabstop>color_Fuselage</tabstop>
+  <tabstop>color_Tail</tabstop>
+  <tabstop>le_Updated</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../../misc/misc.qrc"/>
+ </resources>
+ <connections/>
+</ui>

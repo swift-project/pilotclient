@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CInstallFsxTerrainProbeComponent</class>
+ <widget class="QFrame" name="CInstallFsxTerrainProbeComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>427</width>
+    <height>257</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Copy swift probe</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_InstallFsxTerrainProbe">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QFrame" name="fr_InfoHeader">
+     <layout class="QHBoxLayout" name="hl_InfoHeader" stretch="1,1,3">
+      <item>
+       <widget class="QLabel" name="lbl_Explaination">
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;The &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;swift&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; probe allows to query data around the displayed aircraft. It is needed whenever you use the 32bit version of the P3D/FSX driver. The probe will be copied into the SimObjects/Misc folder.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="textFormat">
+         <enum>Qt::RichText</enum>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gb_CopySwiftProbe">
+     <property name="title">
+      <string>Copy swift probe</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="1">
+       <widget class="QWidget" name="wi_Simulator" native="true">
+        <layout class="QHBoxLayout" name="hl_Simulator">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item alignment="Qt::AlignLeft">
+          <widget class="swift::gui::components::CSimulatorSelector" name="comp_SimulatorSelector">
+           <property name="minimumSize">
+            <size>
+             <width>125</width>
+             <height>0</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_Target">
+        <property name="toolTip">
+         <string>The target directory, &quot;SimObjects&quot;</string>
+        </property>
+        <property name="text">
+         <string>Target (&quot;SimObjects&quot;) dir.:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="le_Target">
+        <property name="toolTip">
+         <string>specify the &quot;SimObjects&quot; directory</string>
+        </property>
+        <property name="placeholderText">
+         <string>specify the &quot;SimObjects&quot; directory</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbl_Simulator">
+        <property name="text">
+         <string>Simulator:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QPushButton" name="pb_DirectoryBrowser">
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="le_Source">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>source directory of probe</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="pb_Copy">
+        <property name="text">
+         <string>copy</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_Source">
+        <property name="text">
+         <string>Source directory:</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::components::CSimulatorSelector</class>
+   <extends>QFrame</extends>
+   <header>gui/components/simulatorselector.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>le_Source</tabstop>
+  <tabstop>le_Target</tabstop>
+  <tabstop>pb_DirectoryBrowser</tabstop>
+  <tabstop>pb_Copy</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

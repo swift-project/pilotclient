@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CSettingsXSwiftBusComponent</class>
+ <widget class="QFrame" name="CSettingsXSwiftBusComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>315</width>
+    <height>116</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>xswiftbus settings</string>
+  </property>
+  <layout class="QHBoxLayout" name="hl_SettingsXSwiftBus">
+   <item>
+    <widget class="swift::gui::components::CDBusServerAddressSelector" name="comp_DBusServer">
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>75</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>400</width>
+       <height>16777215</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="fr_Buttons">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <spacer name="vs_Buttons">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item alignment="Qt::AlignLeft">
+       <widget class="QPushButton" name="pb_Reset">
+        <property name="text">
+         <string>reset</string>
+        </property>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignLeft">
+       <widget class="QPushButton" name="pb_Save">
+        <property name="text">
+         <string>save</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::components::CDBusServerAddressSelector</class>
+   <extends>QFrame</extends>
+   <header>gui/components/dbusserveraddressselector.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>pb_Reset</tabstop>
+  <tabstop>pb_Save</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

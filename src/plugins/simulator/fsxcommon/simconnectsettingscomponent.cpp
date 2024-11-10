@@ -3,7 +3,7 @@
 
 #include "simconnectsettingscomponent.h"
 #include "ui_simconnectsettingscomponent.h"
-#include "blackgui/guiapplication.h"
+#include "gui/guiapplication.h"
 #include "core/context/contextapplication.h"
 #include "core/context/contextsimulator.h"
 #include "misc/simulation/fsx/simconnectutilities.h"
@@ -22,7 +22,7 @@ using namespace swift::misc;
 using namespace swift::misc::simulation;
 using namespace swift::misc::simulation::Fsx;
 using namespace swift::misc::network;
-using namespace BlackGui;
+using namespace swift::gui;
 
 namespace BlackSimPlugin::FsxCommon
 {

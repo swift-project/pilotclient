@@ -4,8 +4,8 @@
 #include "fsxsettingscomponent.h"
 #include "ui_fsxsettingscomponent.h"
 #include "simulatorfsxcommon.h"
-#include "blackgui/overlaymessagesframe.h"
-#include "blackgui/guiapplication.h"
+#include "gui/overlaymessagesframe.h"
+#include "gui/guiapplication.h"
 #include "core/context/contextsimulator.h"
 #include "config/buildconfig.h"
 
@@ -14,7 +14,7 @@
 
 using namespace swift::core;
 using namespace swift::core::context;
-using namespace BlackGui;
+using namespace swift::gui;
 using namespace swift::misc;
 using namespace swift::misc::simulation;
 using namespace swift::config;

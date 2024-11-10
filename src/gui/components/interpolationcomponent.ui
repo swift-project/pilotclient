@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CInterpolationComponent</class>
+ <widget class="QFrame" name="CInterpolationComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Interpolation component</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_InterpolationComponent">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QTabWidget" name="tw_InterpolationSetup">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tb_InterpolationSetup">
+      <attribute name="title">
+       <string>Setup</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_InterpolationSetup">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="swift::gui::components::CInterpolationSetupComponent" name="comp_InterpolationSetup"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_PartsHistory">
+      <attribute name="title">
+       <string>Aircraft parts log</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_PartsLog">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="swift::gui::components::CAircraftPartsHistory" name="comp_PartsHistory"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_InterpolationLog">
+      <attribute name="title">
+       <string>Interpolation log.</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_InterpolationLog">
+       <property name="leftMargin">
+        <number>4</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>4</number>
+       </property>
+       <property name="bottomMargin">
+        <number>4</number>
+       </property>
+       <item>
+        <widget class="swift::gui::components::CCallsignCompleter" name="comp_CallsignCompleter">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="swift::gui::views::CStatusMessageView" name="tvp_InterpolationMessages">
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignRight">
+        <widget class="QPushButton" name="pb_ReloadInterpolationMessages">
+         <property name="text">
+          <string>reload</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::components::CAircraftPartsHistory</class>
+   <extends>QFrame</extends>
+   <header>gui/components/aircraftpartshistory.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CInterpolationSetupComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/interpolationsetupcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CCallsignCompleter</class>
+   <extends>QFrame</extends>
+   <header>gui/components/callsigncompleter.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::views::CStatusMessageView</class>
+   <extends>QTableView</extends>
+   <header>gui/views/statusmessageview.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

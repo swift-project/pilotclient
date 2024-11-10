@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CDataSettingsComponent</class>
+ <widget class="QFrame" name="CDataSettingsComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>519</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>400</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Settings</string>
+  </property>
+  <layout class="QGridLayout" name="gl_DataSettingsComponent">
+   <property name="leftMargin">
+    <number>4</number>
+   </property>
+   <property name="topMargin">
+    <number>4</number>
+   </property>
+   <property name="rightMargin">
+    <number>4</number>
+   </property>
+   <property name="bottomMargin">
+    <number>4</number>
+   </property>
+   <item row="3" column="4">
+    <widget class="QGroupBox" name="gb_DistributorPreferences">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>200</height>
+      </size>
+     </property>
+     <property name="title">
+      <string>Distributor preferences</string>
+     </property>
+     <layout class="QVBoxLayout" name="vl_DistributorPreferencesGroupBox">
+      <property name="leftMargin">
+       <number>4</number>
+      </property>
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="rightMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item>
+       <widget class="swift::gui::components::CDistributorPreferencesComponent" name="comp_DistributorPreferences">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QGroupBox" name="gb_Models">
+     <property name="title">
+      <string>Models</string>
+     </property>
+     <layout class="QVBoxLayout" name="vl_ModelSettings">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
+       <number>3</number>
+      </property>
+      <item>
+       <widget class="swift::gui::components::CSettingsModelComponent" name="comp_ModelSettings"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="gb_GuiSettings">
+     <property name="minimumSize">
+      <size>
+       <width>160</width>
+       <height>160</height>
+      </size>
+     </property>
+     <property name="title">
+      <string>GUI</string>
+     </property>
+     <layout class="QVBoxLayout" name="vl_GuiSettings">
+      <property name="leftMargin">
+       <number>4</number>
+      </property>
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="rightMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item>
+       <widget class="swift::gui::components::CSettingsGuiComponent" name="comp_GuiSettings">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>150</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="vs_GuiSetup">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>10</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QGroupBox" name="gb_SwiftDb">
+     <property name="title">
+      <string>swift DB</string>
+     </property>
+     <layout class="QGridLayout" name="gl_SwiftDB">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
+       <number>3</number>
+      </property>
+      <property name="spacing">
+       <number>4</number>
+      </property>
+      <item row="1" column="0">
+       <spacer name="vs_SwiftDb">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>10</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="0">
+       <widget class="swift::gui::components::CDbLoginComponent" name="comp_LoginComponent">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>175</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="4" rowspan="3">
+    <widget class="QGroupBox" name="gb_Simulator">
+     <property name="title">
+      <string>Simulator</string>
+     </property>
+     <layout class="QVBoxLayout" name="vl_Simulator">
+      <property name="leftMargin">
+       <number>4</number>
+      </property>
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="rightMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item>
+       <widget class="swift::gui::components::CSettingsSimulatorBasicsComponent" name="comp_SimulatorComponent">
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="gb_ExternalTools">
+     <property name="title">
+      <string>External tools</string>
+     </property>
+     <layout class="QVBoxLayout" name="vl_ExternalTools">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
+       <number>3</number>
+      </property>
+      <item>
+       <widget class="swift::gui::components::CModelConverterXSetupComponent" name="comp_ModelConverterX"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::components::CDbLoginComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/dblogincomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CDistributorPreferencesComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/distributorpreferencescomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CSettingsSimulatorBasicsComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/settingssimulatorbasicscomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CSettingsGuiComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/settingsguicomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CSettingsModelComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/settingsmodelcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CModelConverterXSetupComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/modelconverterxsetupcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

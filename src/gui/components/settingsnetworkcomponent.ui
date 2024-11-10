@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CSettingsNetworkComponent</class>
+ <widget class="QFrame" name="CSettingsNetworkComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_SettingsNetworkComponent">
+   <item>
+    <widget class="QGroupBox" name="gb_Services">
+     <property name="title">
+      <string>Services</string>
+     </property>
+     <layout class="QVBoxLayout" name="vl_NetworkServices">
+      <item>
+       <widget class="swift::gui::components::CSettingsVatsimReadersComponent" name="comp_ReaderSettings">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="vs_NetworkSettings">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::components::CSettingsVatsimReadersComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/settingsvatsimreaderscomponent.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

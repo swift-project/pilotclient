@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CInitialDataLoadComponent</class>
+ <widget class="QFrame" name="CInitialDataLoadComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Initial data loading</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_DataLoadComponent" stretch="0,1">
+   <property name="leftMargin">
+    <number>4</number>
+   </property>
+   <property name="topMargin">
+    <number>4</number>
+   </property>
+   <property name="rightMargin">
+    <number>4</number>
+   </property>
+   <property name="bottomMargin">
+    <number>4</number>
+   </property>
+   <item>
+    <widget class="QFrame" name="fr_Header">
+     <layout class="QHBoxLayout" name="hl_HeaderText" stretch="0,1">
+      <item>
+       <widget class="QLabel" name="lbl_HeaderIcon">
+        <property name="textFormat">
+         <enum>Qt::AutoText</enum>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../../misc/misc.qrc">:/own/icons/own/swift3D/sw3DGreen-32.png</pixmap>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lbl_HeaderText">
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;We recommend to download an initial data set. This may take some time, but then you can start to use all tools with full functionality. You can wait until the load is completed and you see entries for all cache values (C#). or you can click next without waiting, and data will &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;continue to load in the background&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item alignment="Qt::AlignTop">
+    <widget class="QGroupBox" name="gb_DataLoading">
+     <property name="title">
+      <string>Data loading</string>
+     </property>
+     <layout class="QVBoxLayout" name="vl_DataLoading">
+      <property name="leftMargin">
+       <number>4</number>
+      </property>
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="rightMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item>
+       <widget class="swift::gui::components::CInfoBarWebReadersStatusSmallComponent" name="comp_InfoBar">
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="swift::gui::components::CDbLoadOverviewComponent" name="comp_DataUpdates">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>200</height>
+         </size>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::components::CDbLoadOverviewComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/dbloadoverviewcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>swift::gui::components::CInfoBarWebReadersStatusSmallComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/infobarwebreadersstatussmallcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../../misc/misc.qrc"/>
+ </resources>
+ <connections/>
+</ui>

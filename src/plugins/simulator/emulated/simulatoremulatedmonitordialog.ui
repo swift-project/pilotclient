@@ -37,7 +37,7 @@
        </widget>
       </item>
       <item>
-       <widget class="BlackGui::CLedWidget" name="led_Receiving" native="true"/>
+       <widget class="swift::gui::CLedWidget" name="led_Receiving" native="true"/>
       </item>
       <item>
        <widget class="QLabel" name="lbl_Sending">
@@ -47,7 +47,7 @@
        </widget>
       </item>
       <item>
-       <widget class="BlackGui::CLedWidget" name="led_Sending" native="true"/>
+       <widget class="swift::gui::CLedWidget" name="led_Sending" native="true"/>
       </item>
       <item>
        <spacer name="hs_LedHeader">
@@ -88,7 +88,7 @@
         <number>6</number>
        </property>
        <item alignment="Qt::AlignTop">
-        <widget class="BlackGui::Editors::CSituationForm" name="editor_Situation">
+        <widget class="swift::gui::editors::CSituationForm" name="editor_Situation">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -124,7 +124,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <item>
-           <widget class="BlackGui::Editors::CCockpitComForm" name="editor_Com">
+           <widget class="swift::gui::editors::CCockpitComForm" name="editor_Com">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -143,7 +143,7 @@
          </property>
          <layout class="QVBoxLayout" name="vl_GroupBoxParts">
           <item>
-           <widget class="BlackGui::Editors::CAircraftPartsForm" name="editor_AircraftParts">
+           <widget class="swift::gui::editors::CAircraftPartsForm" name="editor_AircraftParts">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -156,7 +156,7 @@
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="BlackGui::Components::CCockpitComTransmissionComponent" name="comp_ComTransmissions">
+        <widget class="swift::gui::components::CCockpitComTransmissionComponent" name="comp_ComTransmissions">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -283,7 +283,7 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="BlackGui::Components::CCallsignCompleter" name="comp_CallsignCompleter">
+              <widget class="swift::gui::components::CCallsignCompleter" name="comp_CallsignCompleter">
                <property name="minimumSize">
                 <size>
                  <width>125</width>
@@ -370,7 +370,7 @@
            </widget>
           </item>
           <item row="1" column="5">
-           <widget class="BlackGui::Components::CCallsignCompleter" name="comp_LogInterpolatorCallsign">
+           <widget class="swift::gui::components::CCallsignCompleter" name="comp_LogInterpolatorCallsign">
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -400,7 +400,7 @@
            </widget>
           </item>
           <item row="0" column="3">
-           <widget class="BlackGui::CLedWidget" name="led_Fetching" native="true"/>
+           <widget class="swift::gui::CLedWidget" name="led_Fetching" native="true"/>
           </item>
          </layout>
         </widget>
@@ -606,7 +606,7 @@
              </property>
              <layout class="QVBoxLayout" name="vl_LogMessagesScrollArea">
               <item>
-               <widget class="BlackGui::Components::CStatusMessagesDetail" name="comp_LogComponent">
+               <widget class="swift::gui::components::CStatusMessagesDetail" name="comp_LogComponent">
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -636,7 +636,7 @@
          </property>
          <layout class="QVBoxLayout" name="vl_GroupBoxSettings">
           <item>
-           <widget class="BlackGui::Components::CSettingsSwiftPlugin" name="comp_Settings"/>
+           <widget class="swift::gui::components::CSettingsSwiftPlugin" name="comp_Settings"/>
           </item>
          </layout>
         </widget>
@@ -659,51 +659,51 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Components::CSettingsSwiftPlugin</class>
+   <class>swift::gui::components::CSettingsSwiftPlugin</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/settingsswiftplugin.h</header>
+   <header>gui/components/settingsswiftplugin.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CStatusMessagesDetail</class>
+   <class>swift::gui::components::CStatusMessagesDetail</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/statusmessagesdetail.h</header>
+   <header>gui/components/statusmessagesdetail.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Editors::CSituationForm</class>
+   <class>swift::gui::editors::CSituationForm</class>
    <extends>QFrame</extends>
-   <header>blackgui/editors/situationform.h</header>
+   <header>gui/editors/situationform.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Editors::CAircraftPartsForm</class>
+   <class>swift::gui::editors::CAircraftPartsForm</class>
    <extends>QFrame</extends>
-   <header>blackgui/editors/aircraftpartsform.h</header>
+   <header>gui/editors/aircraftpartsform.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Editors::CCockpitComForm</class>
+   <class>swift::gui::editors::CCockpitComForm</class>
    <extends>QFrame</extends>
-   <header>blackgui/editors/cockpitcomform.h</header>
+   <header>gui/editors/cockpitcomform.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::CLedWidget</class>
+   <class>swift::gui::CLedWidget</class>
    <extends>QWidget</extends>
-   <header>blackgui/led.h</header>
+   <header>gui/led.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CCallsignCompleter</class>
+   <class>swift::gui::components::CCallsignCompleter</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/callsigncompleter.h</header>
+   <header>gui/components/callsigncompleter.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CCockpitComTransmissionComponent</class>
+   <class>swift::gui::components::CCockpitComTransmissionComponent</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/cockpitcomtransmissioncomponent.h</header>
+   <header>gui/components/cockpitcomtransmissioncomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

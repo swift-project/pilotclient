@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CCopyModelsFromOtherSwiftVersionsDialog</class>
+ <widget class="QDialog" name="CCopyModelsFromOtherSwiftVersionsDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Copy models from another swift version</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_CopyFromAnotherSwiftDialog">
+   <item>
+    <widget class="swift::gui::components::CCopyModelsFromOtherSwiftVersionsComponent" name="comp_CopyComponent"/>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="bb_CopyDialog">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Close</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::components::CCopyModelsFromOtherSwiftVersionsComponent</class>
+   <extends>QFrame</extends>
+   <header>gui/components/copymodelsfromotherswiftversionscomponent.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CSettingsMatchingComponent</class>
+ <widget class="QFrame" name="CSettingsMatchingComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>315</width>
+    <height>309</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Matching settings</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_MatchingComponent" stretch="1,0">
+   <property name="leftMargin">
+    <number>3</number>
+   </property>
+   <property name="topMargin">
+    <number>3</number>
+   </property>
+   <property name="rightMargin">
+    <number>3</number>
+   </property>
+   <property name="bottomMargin">
+    <number>3</number>
+   </property>
+   <item>
+    <widget class="QScrollArea" name="sa_MatchingForm">
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="qw_MatchingForm">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>296</width>
+        <height>700</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="vl_ScrollAreaContent">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="swift::gui::editors::CMatchingForm" name="form_Matching">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>700</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="fr_Buttons">
+     <layout class="QHBoxLayout" name="hl_Buttons">
+      <item>
+       <spacer name="hs_Buttons">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_MatchingAgain">
+        <property name="toolTip">
+         <string>do matching for all models again</string>
+        </property>
+        <property name="text">
+         <string> re-matching </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_Reload">
+        <property name="text">
+         <string>reload</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_Save">
+        <property name="text">
+         <string>save</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::editors::CMatchingForm</class>
+   <extends>QFrame</extends>
+   <header>gui/editors/matchingform.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>pb_Reload</tabstop>
+  <tabstop>pb_Save</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

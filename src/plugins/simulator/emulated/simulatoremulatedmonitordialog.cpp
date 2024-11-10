@@ -5,8 +5,8 @@
 #include "ui_simulatoremulatedmonitordialog.h"
 #include "simulatoremulated.h"
 #include "core/context/contextsimulator.h"
-#include "blackgui/components/cockpitcomtransmissioncomponent.h"
-#include "blackgui/guiapplication.h"
+#include "gui/components/cockpitcomtransmissioncomponent.h"
+#include "gui/guiapplication.h"
 #include "misc/logmessage.h"
 
 #include <QIntValidator>
@@ -15,9 +15,9 @@ using namespace swift::config;
 using namespace swift::misc;
 using namespace swift::misc::aviation;
 using namespace swift::misc::simulation;
-using namespace BlackGui;
-using namespace BlackGui::Components;
-using namespace BlackGui::Editors;
+using namespace swift::gui;
+using namespace swift::gui::components;
+using namespace swift::gui::editors;
 
 namespace BlackSimPlugin::Emulated
 {

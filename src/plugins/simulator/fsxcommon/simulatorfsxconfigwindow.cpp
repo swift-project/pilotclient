@@ -4,7 +4,7 @@
 #include "simulatorfsxconfigwindow.h"
 #include "ui_simulatorfsxconfigwindow.h"
 
-using namespace BlackGui;
+using namespace swift::gui;
 
 namespace BlackSimPlugin::FsxCommon
 {

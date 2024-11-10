@@ -4,7 +4,7 @@
 add_subdirectory(config)
 add_subdirectory(core)
 add_subdirectory(misc)
-add_subdirectory(blackgui)
+add_subdirectory(gui)
 add_subdirectory(input)
 add_subdirectory(sound)
 

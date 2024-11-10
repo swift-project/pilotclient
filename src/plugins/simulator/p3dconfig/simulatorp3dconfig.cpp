@@ -11,7 +11,7 @@ namespace BlackSimPlugin::P3D
         // void
     }
 
-    BlackGui::CPluginConfigWindow *CSimulatorP3DConfig::createConfigWindow(QWidget *parent)
+    swift::gui::CPluginConfigWindow *CSimulatorP3DConfig::createConfigWindow(QWidget *parent)
     {
         return new FsxCommon::CSimulatorFsxConfigWindow("P3D", parent);
     }

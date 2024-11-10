@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>COtherSwiftVersionsComponent</class>
+ <widget class="QFrame" name="COtherSwiftVersionsComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>305</width>
+    <height>233</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Other swift versions</string>
+  </property>
+  <layout class="QFormLayout" name="fl_OtherSwiftVersions">
+   <item row="0" column="0">
+    <widget class="QLabel" name="lbl_ThisVersion">
+     <property name="text">
+      <string>This:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLineEdit" name="le_ThisVersion">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QWidget" name="wi_OtherVersions" native="true">
+     <layout class="QVBoxLayout" name="vl_OtherVersions">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="lbl_OtherVersions">
+        <property name="text">
+         <string>Others:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="tb_DataDir">
+        <property name="toolTip">
+         <string>data directory</string>
+        </property>
+        <property name="text">
+         <string>...</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../misc/misc.qrc">
+          <normaloff>:/diagona/icons/diagona/icons/folder--plus.png</normaloff>:/diagona/icons/diagona/icons/folder--plus.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="vs_OtherVersions">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="swift::gui::views::CApplicationInfoView" name="tvp_ApplicationInfo">
+     <property name="selectionMode">
+      <enum>QAbstractItemView::SingleSelection</enum>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::views::CApplicationInfoView</class>
+   <extends>QTableView</extends>
+   <header>gui/views/applicationinfoview.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>tb_DataDir</tabstop>
+  <tabstop>le_ThisVersion</tabstop>
+  <tabstop>tvp_ApplicationInfo</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../../misc/misc.qrc"/>
+ </resources>
+ <connections/>
+</ui>

@@ -3,25 +3,25 @@
 
 #include "swiftguistd.h"
 #include "ui_swiftguistd.h"
-#include "blackgui/components/aircraftcomponent.h"
-#include "blackgui/components/atcstationcomponent.h"
-#include "blackgui/components/cockpitcomponent.h"
-#include "blackgui/components/flightplancomponent.h"
-#include "blackgui/components/logcomponent.h"
-#include "blackgui/components/logincomponent.h"
-#include "blackgui/components/interpolationcomponent.h"
-#include "blackgui/components/maininfoareacomponent.h"
-#include "blackgui/components/mainkeypadareacomponent.h"
-#include "blackgui/components/mappingcomponent.h"
-#include "blackgui/components/navigatordialog.h"
-#include "blackgui/components/settingscomponent.h"
-#include "blackgui/components/textmessagecomponent.h"
-#include "blackgui/components/usercomponent.h"
-#include "blackgui/dockwidgetinfobar.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/managedstatusbar.h"
-#include "blackgui/overlaymessagesframe.h"
-#include "blackgui/stylesheetutility.h"
+#include "gui/components/aircraftcomponent.h"
+#include "gui/components/atcstationcomponent.h"
+#include "gui/components/cockpitcomponent.h"
+#include "gui/components/flightplancomponent.h"
+#include "gui/components/logcomponent.h"
+#include "gui/components/logincomponent.h"
+#include "gui/components/interpolationcomponent.h"
+#include "gui/components/maininfoareacomponent.h"
+#include "gui/components/mainkeypadareacomponent.h"
+#include "gui/components/mappingcomponent.h"
+#include "gui/components/navigatordialog.h"
+#include "gui/components/settingscomponent.h"
+#include "gui/components/textmessagecomponent.h"
+#include "gui/components/usercomponent.h"
+#include "gui/dockwidgetinfobar.h"
+#include "gui/guiapplication.h"
+#include "gui/managedstatusbar.h"
+#include "gui/overlaymessagesframe.h"
+#include "gui/stylesheetutility.h"
 #include "core/webdataservices.h"
 #include "core/context/contextnetwork.h"
 #include "core/context/contextsimulator.h"
@@ -54,8 +54,8 @@ using namespace swift::misc;
 using namespace swift::misc::aviation;
 using namespace swift::misc::network;
 using namespace swift::misc::input;
-using namespace BlackGui;
-using namespace BlackGui::Components;
+using namespace swift::gui;
+using namespace swift::gui::components;
 
 void SwiftGuiStd::init()
 {

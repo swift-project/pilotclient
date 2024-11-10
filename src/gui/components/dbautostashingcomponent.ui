@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CDbAutoStashingComponent</class>
+ <widget class="QDialog" name="CDbAutoStashingComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>416</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>400</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Auto stashing</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_AutoStashing">
+   <item>
+    <widget class="QGroupBox" name="gb_Configuration">
+     <property name="title">
+      <string>Configuration</string>
+     </property>
+     <layout class="QGridLayout" name="gl_Configuration">
+      <item row="0" column="3">
+       <widget class="QLineEdit" name="le_All">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>all</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QRadioButton" name="rb_All">
+        <property name="text">
+         <string>all</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="le_MaxModelsStashed">
+        <property name="placeholderText">
+         <string>max.models to be stashed</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_Description">
+        <property name="text">
+         <string>Description:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="lbl_Livery">
+        <property name="text">
+         <string>Livery:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="cb_UseTempLivery">
+        <property name="text">
+         <string>use 'temp' livery if not resolved</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="rb_Selected">
+        <property name="text">
+         <string>selected</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_Max">
+        <property name="text">
+         <string>Max stashed:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="le_Description">
+        <property name="maxLength">
+         <number>255</number>
+        </property>
+        <property name="placeholderText">
+         <string>Override description in model</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="le_Selected">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>selected</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2" colspan="2">
+       <widget class="QWidget" name="wi_DescriptionRadioButtons" native="true">
+        <layout class="QHBoxLayout" name="hl_DescriptionButtons">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>1</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>1</number>
+         </property>
+         <item>
+          <widget class="QRadioButton" name="rb_DescriptionAll">
+           <property name="text">
+            <string>all</string>
+           </property>
+          </widget>
+         </item>
+         <item alignment="Qt::AlignLeft">
+          <widget class="QRadioButton" name="rb_DescriptionEmptyOnly">
+           <property name="toolTip">
+            <string>apply only if description is empty</string>
+           </property>
+           <property name="text">
+            <string>empty only</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="tb_ResetDescription">
+           <property name="toolTip">
+            <string>reset description</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../../misc/misc.qrc">
+             <normaloff>:/diagona/icons/diagona/icons/cross-white.png</normaloff>:/diagona/icons/diagona/icons/cross-white.png</iconset>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="hs_ResetDescription">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gb_Result">
+     <property name="title">
+      <string>Result</string>
+     </property>
+     <layout class="QHBoxLayout" name="hl_Result">
+      <item>
+       <widget class="swift::gui::views::CStatusMessageView" name="tvp_StatusMessages">
+        <property name="selectionMode">
+         <enum>QAbstractItemView::NoSelection</enum>
+        </property>
+        <attribute name="verticalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gb_Statistics">
+     <property name="title">
+      <string>Statistics</string>
+     </property>
+     <layout class="QHBoxLayout" name="hl_Statistics">
+      <item>
+       <widget class="QLabel" name="lbl_Stashed">
+        <property name="text">
+         <string>Stashed:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="le_Stashed">
+        <property name="dragEnabled">
+         <bool>true</bool>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>stashed models</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lbl_NoData">
+        <property name="text">
+         <string>No data:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="le_NoData">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>incomplete data</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lbl_Invalid">
+        <property name="text">
+         <string>Invalid:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="le_ValidationFailed">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>invalid models</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="gl_AutoStashing">
+     <property name="leftMargin">
+      <number>5</number>
+     </property>
+     <property name="topMargin">
+      <number>2</number>
+     </property>
+     <property name="rightMargin">
+      <number>5</number>
+     </property>
+     <property name="bottomMargin">
+      <number>2</number>
+     </property>
+     <item row="1" column="2" colspan="2">
+      <widget class="QDialogButtonBox" name="bb_AutoStashing">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="standardButtons">
+        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="4">
+      <widget class="QProgressBar" name="pb_StashingProgress">
+       <property name="value">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" colspan="2" alignment="Qt::AlignLeft">
+      <widget class="QCheckBox" name="cb_RemovedChecked">
+       <property name="text">
+        <string>Remove stashed</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>swift::gui::views::CStatusMessageView</class>
+   <extends>QTableView</extends>
+   <header>gui/views/statusmessageview.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>le_Stashed</tabstop>
+  <tabstop>le_NoData</tabstop>
+  <tabstop>le_ValidationFailed</tabstop>
+  <tabstop>cb_RemovedChecked</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../../misc/misc.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>bb_AutoStashing</sender>
+   <signal>accepted()</signal>
+   <receiver>CDbAutoStashingComponent</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>bb_AutoStashing</sender>
+   <signal>rejected()</signal>
+   <receiver>CDbAutoStashingComponent</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

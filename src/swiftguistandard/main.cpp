@@ -4,9 +4,9 @@
 #include "swiftguistd.h"
 #include "swiftguistdapplication.h"
 
-#include "blackgui/enableforframelesswindow.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/guiutility.h"
+#include "gui/enableforframelesswindow.h"
+#include "gui/guiapplication.h"
+#include "gui/guiutility.h"
 #include "misc/audio/audioutils.h"
 #include "misc/crashhandler.h"
 
@@ -14,7 +14,7 @@
 
 #include <QApplication>
 
-using namespace BlackGui;
+using namespace swift::gui;
 using namespace swift::misc;
 using namespace swift::misc::audio;
 using namespace swift::core;
