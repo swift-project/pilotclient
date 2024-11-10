@@ -14,7 +14,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Input;
 
-namespace BlackInput
+namespace swift::input
 {
     // https://www.cl.cam.ac.uk/~mgk25/ucs/keysymdef.h
     static QHash<int, Input::KeyCode> keyMapping {

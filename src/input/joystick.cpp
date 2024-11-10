@@ -13,7 +13,7 @@
 #    error "Platform is not supported!"
 #endif
 
-namespace BlackInput
+namespace swift::input
 {
 
     IJoystick::IJoystick(QObject *parent) : QObject(parent)
@@ -32,4 +32,4 @@ namespace BlackInput
         return ptr;
     }
 
-} // BlackInput
+} // swift::input

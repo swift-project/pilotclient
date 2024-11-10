@@ -13,7 +13,7 @@
 
 // clazy:excludeall=detaching-member
 
-using namespace BlackInput;
+using namespace swift::input;
 using namespace BlackMisc;
 using namespace BlackMisc::Input;
 

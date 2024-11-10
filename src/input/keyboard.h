@@ -3,21 +3,21 @@
 
 //! \file
 
-#ifndef BLACKINPUT_KEYBOARD_H
-#define BLACKINPUT_KEYBOARD_H
+#ifndef SWIFT_INPUT_KEYBOARD_H
+#define SWIFT_INPUT_KEYBOARD_H
 
-#include "blackinput/blackinputexport.h"
+#include "input/swiftinputexport.h"
 #include "blackmisc/input/keyboardkeylist.h"
 #include "blackmisc/input/hotkeycombination.h"
 #include <QObject>
 #include <memory>
 
-namespace BlackInput
+namespace swift::input
 {
     /*!
      * Abstract interface for native keyboard handling.
      */
-    class BLACKINPUT_EXPORT IKeyboard : public QObject
+    class SWIFT_INPUT_EXPORT IKeyboard : public QObject
     {
         Q_OBJECT
 

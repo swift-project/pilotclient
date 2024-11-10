@@ -27,7 +27,7 @@
 #include "config/buildconfig.h"
 
 #if defined(Q_OS_MACOS)
-#    include "blackinput/macos/macosinpututils.h"
+#    include "input/macos/macosinpututils.h"
 #endif
 
 #include "swiftguistd.h"
@@ -455,7 +455,7 @@ void SwiftGuiStd::verifyPrerequisites()
     }
 
 #if defined(Q_OS_MACOS)
-    if (!BlackInput::CMacOSInputUtils::hasAccess())
+    if (!swift::input::CMacOSInputUtils::hasAccess())
     {
         // A log message about missing permissions is already emitted when initializing the keyboard.
         // But this happens way before initializing the GUI. Hence do the check here again to show an error message

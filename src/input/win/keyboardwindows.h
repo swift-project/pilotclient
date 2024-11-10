@@ -3,11 +3,11 @@
 
 //! \file
 
-#ifndef BLACKINPUT_KEYBOARD_WINDOWS_H
-#define BLACKINPUT_KEYBOARD_WINDOWS_H
+#ifndef SWIFT_INPUT_KEYBOARD_WINDOWS_H
+#define SWIFT_INPUT_KEYBOARD_WINDOWS_H
 
-#include "blackinput/blackinputexport.h"
-#include "blackinput/keyboard.h"
+#include "input/swiftinputexport.h"
+#include "input/keyboard.h"
 #include "blackmisc/input/keyboardkey.h"
 #include "blackmisc/input/keyboardkeylist.h"
 #include <QHash>
@@ -17,10 +17,10 @@
 #endif
 #include <Windows.h>
 
-namespace BlackInput
+namespace swift::input
 {
     //! Windows implemenation of IKeyboard using hook procedure
-    class BLACKINPUT_EXPORT CKeyboardWindows : public IKeyboard
+    class SWIFT_INPUT_EXPORT CKeyboardWindows : public IKeyboard
     {
         Q_OBJECT
 

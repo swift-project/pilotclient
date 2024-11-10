@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 add_library(input SHARED
-        blackinputexport.h
+        swiftinputexport.h
         joystick.cpp
         joystick.h
         keyboard.cpp
@@ -45,7 +45,7 @@ target_link_libraries(input
             misc
 )
 
-target_compile_definitions(input PRIVATE BUILD_BLACKINPUT_LIB)
+target_compile_definitions(input PRIVATE BUILD_SWIFT_INPUT_LIB)
 
 install(TARGETS input
     LIBRARY DESTINATION lib

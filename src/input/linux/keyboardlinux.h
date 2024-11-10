@@ -3,10 +3,10 @@
 
 //! \file
 
-#ifndef BLACKINPUT_KEYBOARD_LINUX_H
-#define BLACKINPUT_KEYBOARD_LINUX_H
+#ifndef SWIFT_INPUT_KEYBOARD_LINUX_H
+#define SWIFT_INPUT_KEYBOARD_LINUX_H
 
-#include "blackinput/keyboard.h"
+#include "input/keyboard.h"
 #include "blackmisc/input/hotkeycombination.h"
 #include <QHash>
 #include <QDir>
@@ -15,7 +15,7 @@
 #include <X11/X.h>
 #include <X11/Xlib.h>
 
-namespace BlackInput
+namespace swift::input
 {
     //! \brief Linux implemenation of IKeyboard using hook procedure
     class CKeyboardLinux : public IKeyboard

@@ -1,14 +1,14 @@
 // SPDX-FileCopyrightText: Copyright (C) 2019 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#ifndef BLACKINPUT_MACOSINPUTUTILS_H
-#define BLACKINPUT_MACOSINPUTUTILS_H
+#ifndef SWIFT_INPUT_MACOSINPUTUTILS_H
+#define SWIFT_INPUT_MACOSINPUTUTILS_H
 
 //! \file
 
 #include <CoreFoundation/CoreFoundation.h>
 
-namespace BlackInput
+namespace swift::input
 {
     //! Common MacOS input utilities
     class CMacOSInputUtils

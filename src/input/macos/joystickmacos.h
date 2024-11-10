@@ -1,18 +1,18 @@
 // SPDX-FileCopyrightText: Copyright (C) 2019 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#ifndef BLACKINPUT_JOYSTICKMACOS_H
-#define BLACKINPUT_JOYSTICKMACOS_H
+#ifndef SWIFT_INPUT_JOYSTICKMACOS_H
+#define SWIFT_INPUT_JOYSTICKMACOS_H
 
 //! \file
 
-#include "blackinput/joystick.h"
+#include "input/joystick.h"
 #include "blackmisc/input/joystickbutton.h"
 
 #include <QHash>
 #include <IOKit/hid/IOHIDManager.h>
 
-namespace BlackInput
+namespace swift::input
 {
 
     //! Joystick device
@@ -66,7 +66,7 @@ namespace BlackInput
         //! Destructor
         virtual ~CJoystickMacOS() override;
 
-        //! \copydoc BlackInput::IJoystick::getAllAvailableJoystickButtons()
+        //! \copydoc swift::input::IJoystick::getAllAvailableJoystickButtons()
         virtual BlackMisc::Input::CJoystickButtonList getAllAvailableJoystickButtons() const override;
 
     protected:
@@ -95,6 +95,6 @@ namespace BlackInput
         BlackMisc::Input::CHotkeyCombination m_buttonCombination;
     };
 
-} // namespace BlackInput
+} // namespace swift::input
 
-#endif // BLACKINPUT_JOYSTICKMACOS_H
+#endif // SWIFT_INPUT_JOYSTICKMACOS_H

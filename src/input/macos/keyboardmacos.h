@@ -3,10 +3,10 @@
 
 //! \file
 
-#ifndef BLACKINPUT_KEYBOARDMACOS_H
-#define BLACKINPUT_KEYBOARDMACOS_H
+#ifndef SWIFT_INPUT_KEYBOARDMACOS_H
+#define SWIFT_INPUT_KEYBOARDMACOS_H
 
-#include "blackinput/keyboard.h"
+#include "input/keyboard.h"
 #include "blackmisc/input/hotkeycombination.h"
 #include "blackmisc/input/keycodes.h"
 
@@ -15,7 +15,7 @@
 #include <ApplicationServices/ApplicationServices.h>
 #include <QHash>
 
-namespace BlackInput
+namespace swift::input
 {
     //! MacOS implemenation of IKeyboard using hook procedure
     class CKeyboardMacOS : public IKeyboard

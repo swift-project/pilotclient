@@ -1,12 +1,12 @@
 // SPDX-FileCopyrightText: Copyright (C) 2014 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#ifndef BLACKINPUT_JOYSTICKLINUX_H
-#define BLACKINPUT_JOYSTICKLINUX_H
+#ifndef SWIFT_INPUT_JOYSTICKLINUX_H
+#define SWIFT_INPUT_JOYSTICKLINUX_H
 
 //! \file
 
-#include "blackinput/joystick.h"
+#include "input/joystick.h"
 #include "blackmisc/input/joystickbutton.h"
 #include "blackmisc/collection.h"
 #include <QMap>
@@ -16,7 +16,7 @@ class QFile;
 class QFileSystemWatcher;
 class QSignalMapper;
 
-namespace BlackInput
+namespace swift::input
 {
     //! Linux Joystick device
     class CJoystickDevice : public QObject
@@ -66,7 +66,7 @@ namespace BlackInput
         //! \brief Destructor
         virtual ~CJoystickLinux() = default;
 
-        //! \copydoc BlackInput::IJoystick::getAllAvailableJoystickButtons()
+        //! \copydoc swift::input::IJoystick::getAllAvailableJoystickButtons()
         virtual BlackMisc::Input::CJoystickButtonList getAllAvailableJoystickButtons() const override;
 
     private:
@@ -93,6 +93,6 @@ namespace BlackInput
         QFileSystemWatcher *m_inputWatcher = nullptr;
     };
 
-} // namespace BlackInput
+} // namespace swift::input
 
-#endif // BLACKINPUT_JOYSTICKLINUX_H
+#endif // SWIFT_INPUT_JOYSTICKLINUX_H

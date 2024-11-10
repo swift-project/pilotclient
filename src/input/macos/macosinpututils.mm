@@ -6,7 +6,7 @@
 #include <IOKit/hid/IOHIDKeys.h>
 #include <IOKit/hidsystem/IOHIDLib.h>
 
-namespace BlackInput
+namespace swift::input
 {
 
     bool CMacOSInputUtils::hasAccess()

@@ -11,7 +11,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Input;
 
-namespace BlackInput
+namespace swift::input
 {
     // https://developer.apple.com/documentation/iokit/1592915-anonymous?language=objc
     static QHash<quint32, KeyCode> keyMapping

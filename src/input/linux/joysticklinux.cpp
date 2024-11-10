@@ -23,7 +23,7 @@ namespace
     }
 }
 
-namespace BlackInput
+namespace swift::input
 {
     CJoystickDevice::CJoystickDevice(const QString &path, QFile *fd, QObject *parent)
         : QObject(parent), m_path(path), m_fd(fd)

@@ -16,7 +16,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Input;
 
-namespace BlackInput
+namespace swift::input
 {
     CJoystickDevice::CJoystickDevice(DirectInput8Ptr directInputPtr, const DIDEVICEINSTANCE *pdidInstance, QObject *parent) : QObject(parent),
                                                                                                                               m_guidDevice(pdidInstance->guidInstance),

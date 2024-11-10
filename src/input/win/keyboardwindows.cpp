@@ -5,7 +5,7 @@
 
 using namespace BlackMisc::Input;
 
-namespace BlackInput
+namespace swift::input
 {
     static const auto &keyMapping()
     {

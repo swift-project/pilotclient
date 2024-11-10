@@ -13,7 +13,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Input;
 
-namespace BlackInput
+namespace swift::input
 {
     CJoystickDevice::CJoystickDevice(QObject *parent) :
         QObject(parent)
@@ -224,4 +224,4 @@ namespace BlackInput
         obj->removeJoystickDevice(device);
     }
 
-} // namespace BlackInput
+} // namespace swift::input

@@ -3,24 +3,24 @@
 
 //! \file
 
-#ifndef BLACKINPUT_BLACKINPUTEXPORT_H
-#define BLACKINPUT_BLACKINPUTEXPORT_H
+#ifndef SWIFT_INPUT_SWIFT_INPUTEXPORT_H
+#define SWIFT_INPUT_SWIFT_INPUTEXPORT_H
 
 #include <QtGlobal>
 
 /*!
- * \def BLACKINPUT_EXPORT
+ * \def SWIFT_INPUT_EXPORT
  * Export a class or function from the library
  */
 
 #ifndef WITH_STATIC
-#    if defined(BUILD_BLACKINPUT_LIB)
-#        define BLACKINPUT_EXPORT Q_DECL_EXPORT
+#    if defined(BUILD_SWIFT_INPUT_LIB)
+#        define SWIFT_INPUT_EXPORT Q_DECL_EXPORT
 #    else
-#        define BLACKINPUT_EXPORT Q_DECL_IMPORT
+#        define SWIFT_INPUT_EXPORT Q_DECL_IMPORT
 #    endif
 #else
-#    define BLACKINPUT_EXPORT
+#    define SWIFT_INPUT_EXPORT
 #endif
 
 #endif // guard

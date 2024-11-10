@@ -8,8 +8,8 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/application/applicationsettings.h"
-#include "blackinput/joystick.h"
-#include "blackinput/keyboard.h"
+#include "input/joystick.h"
+#include "input/keyboard.h"
 #include "blackmisc/input/hotkeycombination.h"
 #include "blackmisc/input/joystickbuttonlist.h"
 #include "blackmisc/settingscache.h"
@@ -91,7 +91,7 @@ namespace BlackCore
         //! Releases all devices
         void releaseDevices();
 
-        //! \copydoc BlackInput::IJoystick::getAllAvailableJoystickButtons()
+        //! \copydoc swift::input::IJoystick::getAllAvailableJoystickButtons()
         BlackMisc::Input::CJoystickButtonList getAllAvailableJoystickButtons() const;
 
     signals:
@@ -130,8 +130,8 @@ namespace BlackCore
         //! Process the hotkey combination
         void processCombination(const BlackMisc::Input::CHotkeyCombination &combination);
 
-        std::unique_ptr<BlackInput::IKeyboard> m_keyboard; //!< keyboard
-        std::unique_ptr<BlackInput::IJoystick> m_joystick; //!< joystick
+        std::unique_ptr<swift::input::IKeyboard> m_keyboard; //!< keyboard
+        std::unique_ptr<swift::input::IJoystick> m_joystick; //!< joystick
 
         QMap<QString, BlackMisc::CIcons::IconIndex> m_availableActions;
         QHash<BlackMisc::Input::CHotkeyCombination, QString> m_configuredActions;

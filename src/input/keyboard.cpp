@@ -13,7 +13,7 @@
 #    error "Platform is not supported!"
 #endif
 
-namespace BlackInput
+namespace swift::input
 {
     IKeyboard::IKeyboard(QObject *parent) : QObject(parent) {}
 

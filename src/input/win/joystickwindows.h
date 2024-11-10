@@ -1,13 +1,13 @@
 // SPDX-FileCopyrightText: Copyright (C) 2014 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#ifndef BLACKINPUT_JOYSTICKWINDOWS_H
-#define BLACKINPUT_JOYSTICKWINDOWS_H
+#ifndef SWIFT_INPUT_JOYSTICKWINDOWS_H
+#define SWIFT_INPUT_JOYSTICKWINDOWS_H
 
 //! \file
 
-#include "blackinput/blackinputexport.h"
-#include "blackinput/joystick.h"
+#include "input/swiftinputexport.h"
+#include "input/joystick.h"
 #include "blackmisc/input/joystickbutton.h"
 #include "blackmisc/collection.h"
 #include <QVector>
@@ -19,7 +19,7 @@
 
 #include <dinput.h>
 
-namespace BlackInput
+namespace swift::input
 {
     //! Shared IDirectInput8 ptr
     using DirectInput8Ptr = std::shared_ptr<IDirectInput8>;
@@ -99,7 +99,7 @@ namespace BlackInput
     bool operator==(CJoystickDevice const &lhs, CJoystickDevice const &rhs);
 
     //! Windows implemenation of IJoystick with DirectInput
-    class BLACKINPUT_EXPORT CJoystickWindows : public IJoystick
+    class SWIFT_INPUT_EXPORT CJoystickWindows : public IJoystick
     {
         Q_OBJECT
 
@@ -113,7 +113,7 @@ namespace BlackInput
         //! \brief Destructor
         virtual ~CJoystickWindows() override;
 
-        //! \copydoc BlackInput::IJoystick::getAllAvailableJoystickButtons()
+        //! \copydoc swift::input::IJoystick::getAllAvailableJoystickButtons()
         virtual BlackMisc::Input::CJoystickButtonList getAllAvailableJoystickButtons() const override;
 
     private:

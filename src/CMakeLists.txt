@@ -5,7 +5,7 @@ add_subdirectory(config)
 add_subdirectory(blackcore)
 add_subdirectory(blackmisc)
 add_subdirectory(blackgui)
-add_subdirectory(blackinput)
+add_subdirectory(input)
 add_subdirectory(blacksound)
 
 add_subdirectory(swiftguistandard)

@@ -3,20 +3,20 @@
 
 //! \file
 
-#ifndef BLACKINPUT_JOYSTICK_H
-#define BLACKINPUT_JOYSTICK_H
+#ifndef SWIFT_INPUT_JOYSTICK_H
+#define SWIFT_INPUT_JOYSTICK_H
 
-#include "blackinput/blackinputexport.h"
+#include "input/swiftinputexport.h"
 #include "blackmisc/input/hotkeycombination.h"
 #include <QObject>
 #include <memory>
 
-namespace BlackInput
+namespace swift::input
 {
     /*!
      * Abstract interface for native joystick handling.
      */
-    class BLACKINPUT_EXPORT IJoystick : public QObject
+    class SWIFT_INPUT_EXPORT IJoystick : public QObject
     {
         Q_OBJECT
 
