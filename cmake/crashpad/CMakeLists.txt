@@ -3,6 +3,7 @@
 
 add_library(externals_crashpad INTERFACE)
 target_include_directories(externals_crashpad INTERFACE
+    ${PROJECT_SOURCE_DIR}/third_party/externals/common/include
     ${PROJECT_SOURCE_DIR}/third_party/externals/common/include/crashpad
     ${PROJECT_SOURCE_DIR}/third_party/externals/common/include/crashpad/mini_chromium
 )
