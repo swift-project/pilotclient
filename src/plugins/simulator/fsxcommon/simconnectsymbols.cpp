@@ -21,47 +21,46 @@ bool loadAndResolveSimConnect(bool manifestProbing)
 }
 
 // old FSX API: https://docs.microsoft.com/en-us/previous-versions/microsoft-esp/cc526983(v=msdn.10)
-//! \todo MS 2018-11 as of slack chat, change to "using PfnSimConnect_Open = HRESULT(__stdcall *)(HANDLE *, LPCSTR, HWND, DWORD, HANDLE, DWORD);"
-typedef HRESULT(__stdcall *PfnSimConnect_Open)(HANDLE *, LPCSTR, HWND, DWORD, HANDLE, DWORD);
-typedef HRESULT(__stdcall *PfnSimConnect_Close)(HANDLE);
-typedef HRESULT(__stdcall *PfnSimConnect_AddToDataDefinition)(HANDLE, SIMCONNECT_DATA_DEFINITION_ID, const char *, const char *, SIMCONNECT_DATATYPE, float, DWORD);
-typedef HRESULT(__stdcall *PfnSimConnect_Text)(HANDLE, SIMCONNECT_TEXT_TYPE, float, SIMCONNECT_CLIENT_EVENT_ID, DWORD, void *);
-typedef HRESULT(__stdcall *PfnSimConnect_CallDispatch)(HANDLE, DispatchProc, void *);
-typedef HRESULT(__stdcall *PfnSimConnect_WeatherSetModeCustom)(HANDLE);
-typedef HRESULT(__stdcall *PfnSimConnect_WeatherSetModeGlobal)(HANDLE);
-typedef HRESULT(__stdcall *PfnSimConnect_WeatherSetObservation)(HANDLE, DWORD, const char *);
-typedef HRESULT(__stdcall *PfnSimConnect_TransmitClientEvent)(HANDLE, SIMCONNECT_OBJECT_ID, SIMCONNECT_CLIENT_EVENT_ID, DWORD, SIMCONNECT_NOTIFICATION_GROUP_ID, SIMCONNECT_EVENT_FLAG);
-typedef HRESULT(__stdcall *PfnSimConnect_SetClientData)(HANDLE, SIMCONNECT_CLIENT_DATA_ID, SIMCONNECT_CLIENT_DATA_DEFINITION_ID, SIMCONNECT_CLIENT_DATA_SET_FLAG, DWORD, DWORD, void *);
-typedef HRESULT(__stdcall *PfnSimConnect_RequestDataOnSimObject)(HANDLE, SIMCONNECT_DATA_REQUEST_ID, SIMCONNECT_DATA_DEFINITION_ID, SIMCONNECT_OBJECT_ID, SIMCONNECT_PERIOD, SIMCONNECT_DATA_REQUEST_FLAG, DWORD, DWORD, DWORD);
-typedef HRESULT(__stdcall *PfnSimConnect_RequestClientData)(HANDLE, SIMCONNECT_CLIENT_DATA_ID, SIMCONNECT_DATA_REQUEST_ID, SIMCONNECT_CLIENT_DATA_DEFINITION_ID, SIMCONNECT_CLIENT_DATA_PERIOD, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG, DWORD, DWORD, DWORD);
-typedef HRESULT(__stdcall *PfnSimConnect_SubscribeToSystemEvent)(HANDLE, SIMCONNECT_CLIENT_EVENT_ID, const char *);
-typedef HRESULT(__stdcall *PfnSimConnect_MapClientEventToSimEvent)(HANDLE, SIMCONNECT_CLIENT_EVENT_ID, const char *);
-typedef HRESULT(__stdcall *PfnSimConnect_SubscribeToFacilities)(HANDLE, SIMCONNECT_FACILITY_LIST_TYPE, SIMCONNECT_DATA_REQUEST_ID);
-typedef HRESULT(__stdcall *PfnSimConnect_GetLastSentPacketID)(HANDLE, DWORD *);
-typedef HRESULT(__stdcall *PfnSimConnect_AIRemoveObject)(HANDLE, SIMCONNECT_OBJECT_ID, SIMCONNECT_DATA_REQUEST_ID);
-typedef HRESULT(__stdcall *PfnSimConnect_SetDataOnSimObject)(HANDLE, SIMCONNECT_DATA_DEFINITION_ID, SIMCONNECT_OBJECT_ID, SIMCONNECT_DATA_SET_FLAG, DWORD, DWORD, void *);
-typedef HRESULT(__stdcall *PfnSimConnect_AIReleaseControl)(HANDLE, SIMCONNECT_OBJECT_ID, SIMCONNECT_DATA_REQUEST_ID);
-typedef HRESULT(__stdcall *PfnSimConnect_AICreateNonATCAircraft)(HANDLE, const char *, const char *, SIMCONNECT_DATA_INITPOSITION, SIMCONNECT_DATA_REQUEST_ID);
-typedef HRESULT(__stdcall *PfnSimConnect_AICreateEnrouteATCAircraft)(HANDLE, const char *, const char *, int, const char *, double, BOOL, SIMCONNECT_DATA_REQUEST_ID);
-typedef HRESULT(__stdcall *PfnSimConnect_AICreateParkedATCAircraft)(HANDLE, const char *, const char *, const char *, SIMCONNECT_DATA_REQUEST_ID);
-typedef HRESULT(__stdcall *PfnSimConnect_AICreateSimulatedObject)(HANDLE, const char *, SIMCONNECT_DATA_INITPOSITION, SIMCONNECT_DATA_REQUEST_ID);
-typedef HRESULT(__stdcall *PfnSimConnect_MapClientDataNameToID)(HANDLE, const char *, SIMCONNECT_CLIENT_DATA_ID);
-typedef HRESULT(__stdcall *PfnSimConnect_CreateClientData)(HANDLE, SIMCONNECT_CLIENT_DATA_ID, DWORD, SIMCONNECT_CREATE_CLIENT_DATA_FLAG);
-typedef HRESULT(__stdcall *PfnSimConnect_AddToClientDataDefinition)(HANDLE, SIMCONNECT_CLIENT_DATA_DEFINITION_ID, DWORD, DWORD, float, DWORD);
+using PfnSimConnect_Open = HRESULT(__stdcall *)(HANDLE *, LPCSTR, HWND, DWORD, HANDLE, DWORD);
+using PfnSimConnect_Close = HRESULT(__stdcall *)(HANDLE);
+using PfnSimConnect_AddToDataDefinition = HRESULT(__stdcall *)(HANDLE, SIMCONNECT_DATA_DEFINITION_ID, const char *, const char *, SIMCONNECT_DATATYPE, float, DWORD);
+using PfnSimConnect_Text = HRESULT(__stdcall *)(HANDLE, SIMCONNECT_TEXT_TYPE, float, SIMCONNECT_CLIENT_EVENT_ID, DWORD, void *);
+using PfnSimConnect_CallDispatch = HRESULT(__stdcall *)(HANDLE, DispatchProc, void *);
+using PfnSimConnect_WeatherSetModeCustom = HRESULT(__stdcall *)(HANDLE);
+using PfnSimConnect_WeatherSetModeGlobal = HRESULT(__stdcall *)(HANDLE);
+using PfnSimConnect_WeatherSetObservation = HRESULT(__stdcall *)(HANDLE, DWORD, const char *);
+using PfnSimConnect_TransmitClientEvent = HRESULT(__stdcall *)(HANDLE, SIMCONNECT_OBJECT_ID, SIMCONNECT_CLIENT_EVENT_ID, DWORD, SIMCONNECT_NOTIFICATION_GROUP_ID, SIMCONNECT_EVENT_FLAG);
+using PfnSimConnect_SetClientData = HRESULT(__stdcall *)(HANDLE, SIMCONNECT_CLIENT_DATA_ID, SIMCONNECT_CLIENT_DATA_DEFINITION_ID, SIMCONNECT_CLIENT_DATA_SET_FLAG, DWORD, DWORD, void *);
+using PfnSimConnect_RequestDataOnSimObject = HRESULT(__stdcall *)(HANDLE, SIMCONNECT_DATA_REQUEST_ID, SIMCONNECT_DATA_DEFINITION_ID, SIMCONNECT_OBJECT_ID, SIMCONNECT_PERIOD, SIMCONNECT_DATA_REQUEST_FLAG, DWORD, DWORD, DWORD);
+using PfnSimConnect_RequestClientData = HRESULT(__stdcall *)(HANDLE, SIMCONNECT_CLIENT_DATA_ID, SIMCONNECT_DATA_REQUEST_ID, SIMCONNECT_CLIENT_DATA_DEFINITION_ID, SIMCONNECT_CLIENT_DATA_PERIOD, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG, DWORD, DWORD, DWORD);
+using PfnSimConnect_SubscribeToSystemEvent = HRESULT(__stdcall *)(HANDLE, SIMCONNECT_CLIENT_EVENT_ID, const char *);
+using PfnSimConnect_MapClientEventToSimEvent = HRESULT(__stdcall *)(HANDLE, SIMCONNECT_CLIENT_EVENT_ID, const char *);
+using PfnSimConnect_SubscribeToFacilities = HRESULT(__stdcall *)(HANDLE, SIMCONNECT_FACILITY_LIST_TYPE, SIMCONNECT_DATA_REQUEST_ID);
+using PfnSimConnect_GetLastSentPacketID = HRESULT(__stdcall *)(HANDLE, DWORD *);
+using PfnSimConnect_AIRemoveObject = HRESULT(__stdcall *)(HANDLE, SIMCONNECT_OBJECT_ID, SIMCONNECT_DATA_REQUEST_ID);
+using PfnSimConnect_SetDataOnSimObject = HRESULT(__stdcall *)(HANDLE, SIMCONNECT_DATA_DEFINITION_ID, SIMCONNECT_OBJECT_ID, SIMCONNECT_DATA_SET_FLAG, DWORD, DWORD, void *);
+using PfnSimConnect_AIReleaseControl = HRESULT(__stdcall *)(HANDLE, SIMCONNECT_OBJECT_ID, SIMCONNECT_DATA_REQUEST_ID);
+using PfnSimConnect_AICreateNonATCAircraft = HRESULT(__stdcall *)(HANDLE, const char *, const char *, SIMCONNECT_DATA_INITPOSITION, SIMCONNECT_DATA_REQUEST_ID);
+using PfnSimConnect_AICreateEnrouteATCAircraft = HRESULT(__stdcall *)(HANDLE, const char *, const char *, int, const char *, double, BOOL, SIMCONNECT_DATA_REQUEST_ID);
+using PfnSimConnect_AICreateParkedATCAircraft = HRESULT(__stdcall *)(HANDLE, const char *, const char *, const char *, SIMCONNECT_DATA_REQUEST_ID);
+using PfnSimConnect_AICreateSimulatedObject = HRESULT(__stdcall *)(HANDLE, const char *, SIMCONNECT_DATA_INITPOSITION, SIMCONNECT_DATA_REQUEST_ID);
+using PfnSimConnect_MapClientDataNameToID = HRESULT(__stdcall *)(HANDLE, const char *, SIMCONNECT_CLIENT_DATA_ID);
+using PfnSimConnect_CreateClientData = HRESULT(__stdcall *)(HANDLE, SIMCONNECT_CLIENT_DATA_ID, DWORD, SIMCONNECT_CREATE_CLIENT_DATA_FLAG);
+using PfnSimConnect_AddToClientDataDefinition = HRESULT(__stdcall *)(HANDLE, SIMCONNECT_CLIENT_DATA_DEFINITION_ID, DWORD, DWORD, float, DWORD);
 
 #ifdef Q_OS_WIN64
-typedef HRESULT(__stdcall *PfnSimConnect_RequestGroundInfo)(HANDLE, SIMCONNECT_DATA_REQUEST_ID, double, double, double, double, double, double, DWORD, DWORD, SIMCONNECT_GROUND_INFO_LATLON_FORMAT, SIMCONNECT_GROUND_INFO_ALT_FORMAT, SIMCONNECT_GROUND_INFO_SOURCE_FLAG);
-typedef HRESULT(__stdcall *PfnSimConnect_ChangeView)(HANDLE, const char *);
-typedef HRESULT(__stdcall *PfnSimConnect_AIReleaseControlEx)(HANDLE, SIMCONNECT_OBJECT_ID, SIMCONNECT_DATA_REQUEST_ID, BOOL);
-typedef HRESULT(__stdcall *PfnSimConnect_CloseView)(HANDLE, const char *);
-typedef HRESULT(__stdcall *PfnSimConnect_OpenView)(HANDLE, const char *, const char *);
-typedef HRESULT(__stdcall *PfnSimConnect_ChangeView)(HANDLE, const char *);
-typedef HRESULT(__stdcall *PfnSimConnect_CreateCameraInstance)(HANDLE, const GUID, const char *, SIMCONNECT_OBJECT_ID, SIMCONNECT_DATA_REQUEST_ID);
-typedef HRESULT(__stdcall *PfnSimConnect_DeleteCameraInstance)(HANDLE, const GUID, UINT32);
-typedef HRESULT(__stdcall *PfnSimConnect_CreateCameraDefinition)(HANDLE, const GUID, SIMCONNECT_CAMERA_TYPE, const char *, SIMCONNECT_DATA_XYZ, SIMCONNECT_DATA_PBH);
-typedef HRESULT(__stdcall *PfnSimConnect_ObserverAttachToEntityOn)(HANDLE, const char *, DWORD, SIMCONNECT_DATA_XYZ);
-typedef HRESULT(__stdcall *PfnSimConnect_CreateObserver)(HANDLE, const char *, SIMCONNECT_DATA_OBSERVER);
-typedef HRESULT(__stdcall *PfnSimConnect_SetObserverLookAt)(HANDLE, const char *, SIMCONNECT_DATA_LATLONALT);
+using PfnSimConnect_RequestGroundInfo = HRESULT(__stdcall *)(HANDLE, SIMCONNECT_DATA_REQUEST_ID, double, double, double, double, double, double, DWORD, DWORD, SIMCONNECT_GROUND_INFO_LATLON_FORMAT, SIMCONNECT_GROUND_INFO_ALT_FORMAT, SIMCONNECT_GROUND_INFO_SOURCE_FLAG);
+using PfnSimConnect_ChangeView = HRESULT(__stdcall *)(HANDLE, const char *);
+using PfnSimConnect_AIReleaseControlEx = HRESULT(__stdcall *)(HANDLE, SIMCONNECT_OBJECT_ID, SIMCONNECT_DATA_REQUEST_ID, BOOL);
+using PfnSimConnect_CloseView = HRESULT(__stdcall *)(HANDLE, const char *);
+using PfnSimConnect_OpenView = HRESULT(__stdcall *)(HANDLE, const char *, const char *);
+using PfnSimConnect_ChangeView = HRESULT(__stdcall *)(HANDLE, const char *);
+using PfnSimConnect_CreateCameraInstance = HRESULT(__stdcall *)(HANDLE, const GUID, const char *, SIMCONNECT_OBJECT_ID, SIMCONNECT_DATA_REQUEST_ID);
+using PfnSimConnect_DeleteCameraInstance = HRESULT(__stdcall *)(HANDLE, const GUID, UINT32);
+using PfnSimConnect_CreateCameraDefinition = HRESULT(__stdcall *)(HANDLE, const GUID, SIMCONNECT_CAMERA_TYPE, const char *, SIMCONNECT_DATA_XYZ, SIMCONNECT_DATA_PBH);
+using PfnSimConnect_ObserverAttachToEntityOn = HRESULT(__stdcall *)(HANDLE, const char *, DWORD, SIMCONNECT_DATA_XYZ);
+using PfnSimConnect_CreateObserver = HRESULT(__stdcall *)(HANDLE, const char *, SIMCONNECT_DATA_OBSERVER);
+using PfnSimConnect_SetObserverLookAt = HRESULT(__stdcall *)(HANDLE, const char *, SIMCONNECT_DATA_LATLONALT);
 #endif
 
 //! The SimConnect Symbols
