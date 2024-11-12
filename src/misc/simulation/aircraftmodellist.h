@@ -256,10 +256,10 @@ namespace swift::misc
             //! Find duplicate model strings and return those models with at least 1 duplicate model string
             CAircraftModelList findDuplicateModelStrings() const;
 
-            //! All models of the FS (FSX, P3D, FS9) family
+            //! All models of the FS (FSX, P3D, FS9, MSFS) family
             CAircraftModelList findFsFamilyModels() const;
 
-            //! All models NOT of the FS (FSX, P3D, FS9) family
+            //! All models NOT of the FS (FSX, P3D, FS9, MSFS) family
             CAircraftModelList findNonFsFamilyModels() const;
 
             //! @{
@@ -296,10 +296,10 @@ namespace swift::misc
             //! Which simulators are supported in this model list
             CSimulatorInfo simulatorsSupported() const;
 
-            //! Is this here a FS family (P3D/FSX/FS9) model list?
+            //! Is this here a FS family (P3D/FSX/FS9/MSFS) model list?
             bool isLikelyFsFamilyModelList() const;
 
-            //! Is this here a FS family (P3D/FSX) model list?
+            //! Is this here a FSX family (P3D/FSX/MSFS) model list?
             bool isLikelyFsxFamilyModelList() const;
 
             //! Is this here a XPlane model list?
@@ -357,12 +357,12 @@ namespace swift::misc
             //! \return number of elements removed
             int removeByAircraftAndAirline(const aviation::CAircraftIcaoCode &aircraftIcao, const aviation::CAirlineIcaoCode &airline);
 
-            //! Remove if NOT FS family model, ie. FSX/P3D/FS9
+            //! Remove if NOT FS family model, ie. FSX/P3D/FS9/MSFS
             //! \return number of elements removed
             int removeIfNotFsFamily();
 
             //! Remove those models of a particular file, but not in the given set
-            //! \remark mostly used for FSX/FS9/P3D consolidation
+            //! \remark mostly used for FSX/FS9/P3D/MSFS consolidation
             CAircraftModelList removeIfFileButNotInSet(const QString &fileName, const QSet<QString> &modelStrings);
 
             //! Replace or add based on model string

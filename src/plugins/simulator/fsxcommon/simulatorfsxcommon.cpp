@@ -194,6 +194,25 @@ namespace swift::simplugin::fsxcommon
                 }
                 changed = true;
             }
+            else if (this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS())
+            {
+                DataDefinitionMSFSTransponderMode t;
+                t.transponderMode = (newTransponder.isInStandby() ? 1 : 4);
+                t.ident = newTransponder.isIdentifying();
+
+                HRESULT hr = s_ok();
+
+                hr += SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataTransponderModeMSFS,
+                                                    SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0,
+                                                    sizeof(DataDefinitionMSFSTransponderMode), &t);
+
+                if (isFailure(hr))
+                {
+                    CLogMessage(this).warning(u"Setting transponder mode failed (MSFS)");
+                }
+
+                changed = true;
+            }
         }
 
         // avoid changes of cockpit back to old values due to an outdated read back value
@@ -468,32 +487,48 @@ namespace swift::simplugin::fsxcommon
         const CFsxP3DSettings settings = m_detailsSettings.getSettings(this->getSimulatorInfo());
         m_useAddSimulatedObj = settings.isAddingAsSimulatedObjectEnabled();
         m_useSbOffsets = settings.isSbOffsetsEnabled();
+        if (this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS())
+        {
+            m_useSbOffsets = false; // Always disable SbOffsets for MSFS. Using new transponder mode property directly
+        }
 
-        const HRESULT hr1 = this->logAndTraceSendId(
+        HRESULT hr = s_ok();
+        hr += this->logAndTraceSendId(
             SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestOwnAircraft,
                                               CSimConnectDefinitions::DataOwnAircraft, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_VISUAL_FRAME),
             "Cannot request own aircraft data", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
 
-        const HRESULT hr2 = this->logAndTraceSendId(
+        hr += this->logAndTraceSendId(
             SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestOwnAircraftTitle,
                                               CSimConnectDefinitions::DataOwnAircraftTitle,
                                               SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SECOND, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
             "Cannot request title", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
 
-        const HRESULT hr3 = this->logAndTraceSendId(
+        hr += this->logAndTraceSendId(
             SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestSimEnvironment,
                                               CSimConnectDefinitions::DataSimEnvironment,
                                               SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SECOND, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
             "Cannot request sim.env.", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
 
-        // Request the data from SB only when its changed and only ONCE so we don't have to run a 1sec event to get/set this info ;)
-        // there was a bug with SIMCONNECT_CLIENT_DATA_PERIOD_ON_SET, see https://www.prepar3d.com/forum/viewtopic.php?t=124789
-        const HRESULT hr4 = this->logAndTraceSendId(
-            SimConnect_RequestClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::RequestSbData,
-                                         CSimConnectDefinitions::DataClientAreaSb, SIMCONNECT_CLIENT_DATA_PERIOD_SECOND, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED),
-            "Cannot request client data", Q_FUNC_INFO, "SimConnect_RequestClientData");
+        if (!this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS())
+        {
+            // Request the data from SB only when its changed and only ONCE so we don't have to run a 1sec event to get/set this info ;)
+            // there was a bug with SIMCONNECT_CLIENT_DATA_PERIOD_ON_SET, see https://www.prepar3d.com/forum/viewtopic.php?t=124789
+            hr += this->logAndTraceSendId(
+                SimConnect_RequestClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::RequestSbData,
+                                             CSimConnectDefinitions::DataClientAreaSb, SIMCONNECT_CLIENT_DATA_PERIOD_SECOND, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED),
+                "Cannot request client data", Q_FUNC_INFO, "SimConnect_RequestClientData");
+        }
+        else
+        {
+            hr += this->logAndTraceSendId(
+                SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestMSFSTransponder,
+                                                  CSimConnectDefinitions::DataTransponderModeMSFS,
+                                                  SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_VISUAL_FRAME, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
+                "Cannot request MSFS transponder data", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
+        }
 
-        if (isFailure(hr1, hr2, hr3, hr4)) { return; }
+        if (isFailure(hr)) { return; }
         this->emitSimulatorCombinedStatus(); // force sending status
     }
 
@@ -927,6 +962,27 @@ namespace swift::simplugin::fsxcommon
         CTransponder xpdr = myAircraft.getTransponder();
         xpdr.setTransponderMode(newMode);
         this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), xpdr, this->identifier());
+    }
+
+    void CSimulatorFsxCommon::updateTransponderMode(const CTransponder::TransponderMode xpdrMode)
+    {
+        if (m_skipCockpitUpdateCycles > 0) { return; }
+        const CSimulatedAircraft myAircraft(this->getOwnAircraft());
+        const bool changed = (myAircraft.getTransponderMode() != xpdrMode);
+        if (!changed) { return; }
+        CTransponder myXpdr = myAircraft.getTransponder();
+        myXpdr.setTransponderMode(xpdrMode);
+        this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), myXpdr, this->identifier());
+    }
+
+    void CSimulatorFsxCommon::updateMSFSTransponderMode(const DataDefinitionMSFSTransponderMode transponderMode)
+    {
+        auto mode = CTransponder::StateIdent;
+        if (!transponderMode.ident)
+        {
+            qRound(transponderMode.transponderMode) >= 3 ? mode = CTransponder::ModeC : mode = CTransponder::StateStandby;
+        }
+        this->updateTransponderMode(mode);
     }
 
     bool CSimulatorFsxCommon::simulatorReportedObjectAdded(DWORD objectId)
@@ -1880,7 +1936,7 @@ namespace swift::simplugin::fsxcommon
 
     HRESULT CSimulatorFsxCommon::initDataDefinitionsWhenConnected()
     {
-        return CSimConnectDefinitions::initDataDefinitionsWhenConnected(m_hSimConnect);
+        return CSimConnectDefinitions::initDataDefinitionsWhenConnected(m_hSimConnect, this->getSimulatorPluginInfo().getSimulatorInfo());
     }
 
     HRESULT CSimulatorFsxCommon::initWhenConnected()

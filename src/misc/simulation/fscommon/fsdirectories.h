@@ -37,14 +37,26 @@ namespace swift::misc::simulation::fscommon
         //! FSX's simobject dir, resolved from multiple sources
         static const QString &fsxSimObjectsDir();
 
+        //! MSFS's simobject dir, resolved from multiple sources
+        static const QString &msfsSimObjectsDir();
+
         //! FSX aircraft dir, relative to simulator directory
         static QString fsxSimObjectsDirFromSimDir(const QString &simDir);
+
+        //! MSFS aircraft dir, relative to simulator directory
+        static QString msfsSimObjectsDirFromSimDir(const QString &simDir);
 
         //! Exclude directories for simObjects
         static const QStringList &fsxSimObjectsExcludeDirectoryPatterns();
 
+        //! Exclude directories for simObjects
+        static const QStringList &msfs20SimObjectsExcludeDirectoryPatterns();
+
         //! FSX's simObject dir and the add on dirs
         static QStringList fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir = "");
+
+        //! MSFS's simObject dir and the add on dirs
+        static QStringList msfsSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir = "");
 
         //! P3D's simObject dir and the add on dirs
         static QStringList p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir, const QString &versionHint);
@@ -69,6 +81,12 @@ namespace swift::misc::simulation::fscommon
 
         //! Exclude directories for simObjects
         static const QStringList &p3dSimObjectsExcludeDirectoryPatterns();
+
+        //! MSFS directory from different sources
+        static const QString &msfsDir();
+
+        //! MSFS's packages dir
+        static const QString &msfsPackagesDir();
 
         //! FS9 directory obtained from registry
         static const QString &fs9DirFromRegistry();
@@ -110,17 +128,32 @@ namespace swift::misc::simulation::fscommon
         //! Get all the SimObjects paths from all config files
         static QSet<QString> allFsxSimObjectPaths();
 
+        //! Get all the SimObjects paths from all config files
+        static QSet<QString> allMsfsSimObjectPaths();
+
         //! Find the config files (fsx.cfg)
         // C:/Users/Joe Doe/AppData/Roaming/Microsoft/FSX/fsx.cfg
         static QStringList findFsxConfigFiles();
+
+        //! Find the config files (fsx.cfg)
+        // C:/Users/Joe Doe/AppData/Roaming/Microsoft/FSX/fsx.cfg
+        static QStringList findMsfsConfigFiles();
 
         //! Get all the SimObjects paths from fsx.cfg
         // SimObjectPaths.0=SimObjects\Airplanes
         static QSet<QString> fsxSimObjectsPaths(const QStringList &fsxFiles, bool checked);
 
+        //! Get all the SimObjects paths from msfs.cfg
+        // SimObjectPaths.0=SimObjects\Airplanes
+        static QSet<QString> msfsSimObjectsPaths(const QStringList &msfsFiles, bool checked);
+
         //! Get all the SimObjects files from fsx.cfg
         // SimObjectPaths.0=SimObjects\Airplanes
         static QSet<QString> fsxSimObjectsPaths(const QString &fsxFile, bool checked);
+
+        //! Get all the SimObjects files from fsx.cfg
+        // SimObjectPaths.0=SimObjects\Airplanes
+        static QSet<QString> msfsSimObjectsPaths(const QString &msfsFile, bool checked);
 
         //! .air file filter
         static const QString &airFileFilter();

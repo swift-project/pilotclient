@@ -31,19 +31,11 @@ namespace swift::simplugin::msfs
 
     bool CSimulatorMsFs::connectTo()
     {
-#ifdef Q_OS_WIN64
         if (!loadAndResolveMSFSimConnect())
         {
             return false;
         }
         return CSimulatorFsxCommon::connectTo();
-#else
-        if (!loadAndResolveFsxSimConnect(true))
-        {
-            return false;
-        }
-        return CSimulatorFsxCommon::connectTo();
-#endif
     }
 
     void CSimulatorMsFs::setTrueAltitude(CAircraftSituation &aircraftSituation, const DataDefinitionOwnAircraft &simulatorOwnAircraft)
@@ -54,19 +46,11 @@ namespace swift::simplugin::msfs
 
     void CSimulatorMsFsListener::startImpl()
     {
-#ifdef Q_OS_WIN64
         if (!loadAndResolveMSFSimConnect())
         {
             return;
         }
         CSimulatorFsxCommonListener::startImpl();
-#else
-        if (!loadAndResolveFsxSimConnect(true))
-        {
-            return;
-        }
-        CSimulatorFsxCommonListener::startImpl();
-#endif
     }
 
 } // ns

@@ -221,7 +221,7 @@ namespace swift::misc::simulation
 
     const QSet<QString> &CDistributor::standardAllFsFamily()
     {
-        static const QSet<QString> fsFamily({ standardFS9(), standardFSX(), standardP3D() });
+        static const QSet<QString> fsFamily({ standardFS9(), standardFSX(), standardP3D(), standardMsfs() });
         return fsFamily;
     }
 
@@ -240,6 +240,12 @@ namespace swift::misc::simulation
     const QString &CDistributor::xplaneXcsl()
     {
         static const QString k("XCSL");
+        return k;
+    }
+
+    const QString &CDistributor::standardMsfs()
+    {
+        static const QString k("MSFS");
         return k;
     }
 

@@ -213,6 +213,7 @@ namespace swift::core::fsd
         case CSimulatorInfo::FS9: m_simType = SimType::MSFS2004; break;
         case CSimulatorInfo::FG: m_simType = SimType::FlightGear; break;
         case CSimulatorInfo::XPLANE: m_simType = SimType::XPLANE11; break;
+        case CSimulatorInfo::MSFS: m_simType = SimType::MSFS; break;
         default: m_simType = SimType::Unknown; break;
         }
         m_simTypeInfo = CSimulatorInfo(simulator);

@@ -309,7 +309,7 @@ namespace swift::gui::components
             QPointer<CDbOwnModelsComponent> ownModelsComp(qobject_cast<CDbOwnModelsComponent *>(this->parent()));
             Q_ASSERT_X(ownModelsComp, Q_FUNC_INFO, "Cannot access parent");
 
-            if (m_loadActions.isEmpty()) { m_loadActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr }); }
+            if (m_loadActions.isEmpty()) { m_loadActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }); }
             menuActions.addMenuSimulator();
             if (sims.isFSX())
             {
@@ -376,12 +376,25 @@ namespace swift::gui::components
                 }
                 menuActions.addAction(m_loadActions[4], CMenuAction::pathSimulator());
             }
+            if (sims.isMSFS())
+            {
+                if (!m_loadActions[5])
+                {
+                    m_loadActions[5] = new QAction(CIcons::appModels16(), "MSFS models", this);
+                    connect(m_loadActions[5], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
+                        if (!ownModelsComp) { return; }
+                        Q_UNUSED(checked)
+                        ownModelsComp->setSimulator(CSimulatorInfo::msfs(), true);
+                    });
+                }
+                menuActions.addAction(m_loadActions[5], CMenuAction::pathSimulator());
+            }
 
             // with models loaded I allow a refresh reload
             // I need those models because I want to merge with DB data in the loader
             if (sGui && sGui->getWebDataServices() && sGui->getWebDataServices()->getModelsCount() > 0)
             {
-                if (m_reloadActions.isEmpty()) { m_reloadActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }); }
+                if (m_reloadActions.isEmpty()) { m_reloadActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }); }
                 menuActions.addMenu(CIcons::refresh16(), "Force model reload", CMenuAction::pathSimulatorModelsReload());
                 if (sims.isFSX())
                 {
@@ -512,6 +525,31 @@ namespace swift::gui::components
                     menuActions.addAction(m_reloadActions[8], CMenuAction::pathSimulatorModelsReload());
                     menuActions.addAction(m_reloadActions[9], CMenuAction::pathSimulatorModelsReload());
                 }
+                if (sims.isMSFS())
+                {
+                    if (!m_reloadActions[10])
+                    {
+                        m_reloadActions[10] = new QAction(CIcons::appModels16(), "MSFS models", this);
+                        connect(m_reloadActions[10], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
+                            if (!ownModelsComp) { return; }
+                            Q_UNUSED(checked)
+                            ownModelsComp->requestSimulatorModels(CSimulatorInfo::msfs(), IAircraftModelLoader::InBackgroundNoCache);
+                        });
+                        m_reloadActions[11] = new QAction(CIcons::appModels16(), "MSFS models from directoy", this);
+                        connect(m_reloadActions[11], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
+                            if (!ownModelsComp) { return; }
+                            Q_UNUSED(checked)
+                            const CSimulatorInfo sim(CSimulatorInfo::MSFS);
+                            const QString dir = ownModelsComp->directorySelector(sim);
+                            if (!dir.isEmpty())
+                            {
+                                ownModelsComp->requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache, QStringList(dir));
+                            }
+                        });
+                    }
+                    menuActions.addAction(m_reloadActions[10], CMenuAction::pathSimulatorModelsReload());
+                    menuActions.addAction(m_reloadActions[11], CMenuAction::pathSimulatorModelsReload());
+                }
             }
             else
             {
@@ -520,7 +558,7 @@ namespace swift::gui::components
                 a.setActionEnabled(false); // gray out
             }
 
-            if (m_clearCacheActions.isEmpty()) { m_clearCacheActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr }); }
+            if (m_clearCacheActions.isEmpty()) { m_clearCacheActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }); }
             menuActions.addMenu(CIcons::delete16(), "Clear model caches", CMenuAction::pathSimulatorModelsClearCache());
             if (sims.isFSX())
             {
@@ -586,6 +624,19 @@ namespace swift::gui::components
                     });
                 }
                 menuActions.addAction(m_clearCacheActions[4], CMenuAction::pathSimulatorModelsClearCache());
+            }
+            if (sims.isMSFS())
+            {
+                if (!m_clearCacheActions[5])
+                {
+                    m_clearCacheActions[5] = new QAction(CIcons::appModels16(), "Clear MSFS cache", this);
+                    connect(m_clearCacheActions[5], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
+                        if (!ownModelsComp) { return; }
+                        Q_UNUSED(checked)
+                        ownModelsComp->clearSimulatorCache(CSimulatorInfo::msfs());
+                    });
+                }
+                menuActions.addAction(m_clearCacheActions[5], CMenuAction::pathSimulatorModelsClearCache());
             }
 
             if (sims.isXPlane() && CBuildConfig::isRunningOnWindowsNtPlatform() && CBuildConfig::buildWordSize() == 64)

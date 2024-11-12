@@ -478,6 +478,13 @@ namespace swift::simplugin::fsxcommon
         //! \threadsafe
         void updateOwnAircraftFromSimulator(const DataDefinitionClientAreaSb &sbDataArea);
 
+        //! Update transponder mode
+        //! \threadsafe
+        void updateTransponderMode(const misc::aviation::CTransponder::TransponderMode xpdrMode);
+
+        //! Update transponder mode from MSFS
+        void updateMSFSTransponderMode(const DataDefinitionMSFSTransponderMode transponderMode);
+
         //! An AI aircraft was added in the simulator
         bool simulatorReportedObjectAdded(DWORD objectId);
 

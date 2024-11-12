@@ -93,6 +93,9 @@ This plugin acts as the interface between swift and MSFS.</detailedDescription>
                         <distributionFile>
                             <origin>../../dist/bin/plugins/simulator/simulatormsfs.dll</origin>
                         </distributionFile>
+                        <distributionFile>
+                            <origin>../../dist/bin/plugins/simulator/simulatormsfsconfig.dll</origin>
+                        </distributionFile>
                     </distributionFileList>
                 </folder>
             </folderList>

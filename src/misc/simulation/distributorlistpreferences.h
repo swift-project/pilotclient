@@ -52,6 +52,7 @@ namespace swift::misc::simulation
         CDistributorList m_distributorsFs9;
         CDistributorList m_distributorsXPlane;
         CDistributorList m_distributorsFG;
+        CDistributorList m_distributorsMsfs;
         CSimulatorInfo m_lastUpdatedSimulator;
 
         SWIFT_METACLASS(
@@ -61,6 +62,7 @@ namespace swift::misc::simulation
             SWIFT_METAMEMBER(distributorsFs9),
             SWIFT_METAMEMBER(distributorsXPlane),
             SWIFT_METAMEMBER(distributorsFG),
+            SWIFT_METAMEMBER(distributorsMsfs),
             SWIFT_METAMEMBER(lastUpdatedSimulator));
     };
 } // namespace

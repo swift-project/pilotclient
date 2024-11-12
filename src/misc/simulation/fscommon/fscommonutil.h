@@ -16,7 +16,7 @@
 
 namespace swift::misc::simulation::fscommon
 {
-    //! FS9/FSX/P3D utils
+    //! FS9/FSX/P3D/MSFS utils
     class SWIFT_MISC_EXPORT CFsCommonUtil
     {
     public:
@@ -36,7 +36,7 @@ namespace swift::misc::simulation::fscommon
         static int copyFsxTerrainProbeFiles(const QString &simObjectDir, CStatusMessageList &messages);
 
         //! Validate aircraft.cfg entries (sometimes also sim.cfg)
-        //! \remark only for FSX/P3D/FS9 models
+        //! \remark only for FSX/P3D/FS9/MSFS models
         static CStatusMessageList validateAircraftConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &wasStopped);
 
         //! Validate if known SimObjects path are used
@@ -46,6 +46,10 @@ namespace swift::misc::simulation::fscommon
         //! Validate if known SimObjects path are used
         //! \remark only for FSX
         static CStatusMessageList validateFSXSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simulatorDir);
+
+        //! Validate if known SimObjects path are used
+        //! \remark only for MSFS
+        static CStatusMessageList validateMSFSSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simulatorDir);
 
     private:
         //! Validate if known SimObjects path are used

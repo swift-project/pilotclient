@@ -57,7 +57,7 @@ namespace swift::misc::simulation
         Q_DECLARE_FLAGS(Simulator, SimulatorFlag)
 
         //! Number of known individual simulators
-        static constexpr int NumberOfSimulators = 5;
+        static constexpr int NumberOfSimulators = 6;
 
         //! Default constructor
         CSimulatorInfo();
@@ -75,7 +75,7 @@ namespace swift::misc::simulation
         CSimulatorInfo(int flagsAsInt);
 
         //! Constructor
-        CSimulatorInfo(bool isFSX, bool isFS9, bool xp, bool isP3D, bool fg);
+        CSimulatorInfo(bool isFSX, bool isFS9, bool xp, bool isP3D, bool fg, bool msfs);
 
         //! Unspecified simulator
         bool isUnspecified() const;
@@ -172,7 +172,7 @@ namespace swift::misc::simulation
         CStatusMessage validateSimulatorsForModel() const;
 
         //! Bool flags to enum
-        static Simulator boolToFlag(bool isFSX, bool isFS9, bool xp, bool isP3D, bool fg);
+        static Simulator boolToFlag(bool isFSX, bool isFS9, bool xp, bool isP3D, bool fg, bool msfs);
 
         //! Identifer, as provided by plugin
         static Simulator identifierToSimulator(const QString &identifier);
@@ -225,6 +225,11 @@ namespace swift::misc::simulation
             static const CSimulatorInfo s(XPLANE);
             return s;
         }
+        static const CSimulatorInfo &msfs()
+        {
+            static const CSimulatorInfo s(MSFS);
+            return s;
+        }
         //! @}
 
     private:
@@ -248,10 +253,10 @@ namespace swift::misc::simulation
         //! Unknown count
         int getCountForUnknownSimulators() const;
 
-        //! P3D, FSX, or FS9
+        //! P3D, FSX, MSFS or FS9
         int getCountForFsFamilySimulators() const;
 
-        //! P3D or FSX
+        //! P3D, MSFS or FSX
         int getCountForFsxFamilySimulators() const;
 
         //! Set count

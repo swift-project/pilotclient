@@ -179,6 +179,11 @@ namespace swift::misc::simulation
                 const CStatusMessageList specificTests2 = fscommon::CFsCommonUtil::validateFSXSimObjectsPath(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped, simulatorDir);
                 specificTests.push_back(specificTests2);
             }
+            else if (simulator.isMSFS())
+            {
+                const CStatusMessageList specificTests2 = fscommon::CFsCommonUtil::validateMSFSSimObjectsPath(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped, simulatorDir);
+                specificTests.push_back(specificTests2);
+            }
         }
         else if (simulator.isXPlane() || models.isLikelyXPlaneModelList())
         {

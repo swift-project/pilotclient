@@ -121,6 +121,14 @@ namespace swift::gui::components
         preferences.setDistributors(distributors, simulator);
         const CStatusMessage m = m_distributorPreferences.setAndSave(preferences);
         CLogMessage::preformatted(m);
+        if (m.isSuccess())
+        {
+            this->showOverlayHTMLMessage("Saved settings", 5000);
+        }
+        else
+        {
+            this->showOverlayMessage(m);
+        }
     }
 
     void CDistributorPreferencesComponent::onSimulatorChanged(const CSimulatorInfo &simulator)

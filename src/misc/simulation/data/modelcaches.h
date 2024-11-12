@@ -66,6 +66,13 @@ namespace swift::misc::simulation::data
         static const char *key() { return "modelcachefg"; }
     };
 
+    //! MSFS
+    struct TModelCacheMsfs : public TModelCache
+    {
+        //! Key in data cache
+        static const char *key() { return "modelcachemsfs"; }
+    };
+
     //! Last selection
     struct TModelCacheLastSelection : public TDataTrait<CSimulatorInfo>
     {
@@ -116,6 +123,13 @@ namespace swift::misc::simulation::data
     {
         //! Key in data cache
         static const char *key() { return "modelsetfg"; }
+    };
+
+    //! MSFS
+    struct TModelSetCacheMsfs : public TModelCache
+    {
+        //! Key in data cache
+        static const char *key() { return "modelsetmsfs"; }
     };
 
     //! Last selection
@@ -281,6 +295,7 @@ namespace swift::misc::simulation::data
         void changedP3D() { this->emitCacheChanged(CSimulatorInfo::p3d()); }
         void changedXP() { this->emitCacheChanged(CSimulatorInfo::xplane()); }
         void changedFG() { this->emitCacheChanged(CSimulatorInfo::fg()); }
+        void changedMsfs() { this->emitCacheChanged(CSimulatorInfo::msfs()); }
         //! @}
 
         //! Is the cache already synchronized?
@@ -297,6 +312,7 @@ namespace swift::misc::simulation::data
         std::atomic_bool m_syncFS9 { false };
         std::atomic_bool m_syncFG { false };
         std::atomic_bool m_syncXPlane { false };
+        std::atomic_bool m_syncMsfs { false };
         //! @}
     };
 
@@ -332,6 +348,7 @@ namespace swift::misc::simulation::data
         CData<TModelCacheP3D> m_modelCacheP3D { this, &CModelCaches::changedP3D }; //!< P3D cache
         CData<TModelCacheXP> m_modelCacheXP { this, &CModelCaches::changedXP }; //!< XP cache
         CData<TModelCacheFG> m_modelCacheFG { this, &CModelCaches::changedFG }; //!< XP cache
+        CData<TModelCacheMsfs> m_modelCacheMsfs { this, &CModelCaches::changedMsfs }; //!< MSFS cache
 
         //! Non virtual version (can be used in ctor)
         void synchronizeCacheImpl(const CSimulatorInfo &simulator);
@@ -373,6 +390,7 @@ namespace swift::misc::simulation::data
         CData<TModelSetCacheP3D> m_modelCacheP3D { this, &CModelSetCaches::changedP3D }; //!< P3D cache
         CData<TModelSetCacheXP> m_modelCacheXP { this, &CModelSetCaches::changedXP }; //!< XP cache
         CData<TModelSetCacheFG> m_modelCacheFG { this, &CModelSetCaches::changedFG }; //!< FG cache
+        CData<TModelSetCacheMsfs> m_modelCacheMsfs { this, &CModelSetCaches::changedMsfs }; //!< MSFS cache
 
         //! Non virtual version (can be used in ctor)
         void synchronizeCacheImpl(const CSimulatorInfo &simulator);

@@ -62,6 +62,11 @@ namespace swift::misc::simulation
             if (!m_loaderFG) { m_loaderFG = this->initLoader(CSimulatorInfo::fg()); }
             return m_loaderFG;
         }
+        case CSimulatorInfo::MSFS:
+        {
+            if (!m_loaderMsfs) { m_loaderMsfs = this->initLoader(CSimulatorInfo::msfs()); }
+            return m_loaderMsfs;
+        }
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
             break;

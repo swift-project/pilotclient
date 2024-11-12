@@ -590,6 +590,22 @@ namespace swift::gui::components
                     });
                     m_setNewActions.append(a);
                 }
+                if (sims.isMSFS())
+                {
+                    QAction *a = new QAction(CIcons::appModels16(), "MSFS models", this);
+                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
+                        Q_UNUSED(checked)
+                        ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::MSFS));
+                    });
+                    m_setActions.append(a);
+
+                    a = new QAction(CIcons::appModels16(), "New set MSFS models", this);
+                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
+                        Q_UNUSED(checked)
+                        ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::MSFS));
+                    });
+                    m_setNewActions.append(a);
+                }
 
                 QAction *a = new QAction(CIcons::appDistributors16(), "Apply distributor preferences", this);
                 connect(a, &QAction::triggered, ownModelSetComp, &CDbOwnModelSetComponent::distributorPreferencesChanged, Qt::QueuedConnection);

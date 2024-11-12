@@ -130,6 +130,7 @@ namespace swift::misc::simulation
         static const QSet<QString> &xplaneMostPopular();
         static const QString &xplaneBlueBell();
         static const QString &xplaneXcsl();
+        static const QString &standardMsfs();
         //! @}
 
     private:

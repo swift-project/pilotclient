@@ -331,6 +331,20 @@ namespace swift::misc::simulation::settings
         }
     };
 
+    //! Trait for simulator settings
+    struct TSimulatorMsfs : public TSettingTrait<CSimulatorSettings>
+    {
+        //! \copydoc swift::misc::TSettingTrait::key
+        static const char *key() { return "settingssimulatormsfs"; }
+
+        //! \copydoc swift::misc::TSettingTrait::humanReadable
+        static const QString &humanReadable()
+        {
+            static const QString name("MSFS settings");
+            return name;
+        }
+    };
+
     //! Selected P3D version (64bit)
     struct TP3DVersion : public TSettingTrait<QString>
     {
@@ -515,6 +529,7 @@ namespace swift::misc::simulation::settings
         CSetting<TSimulatorFsx> m_simSettingsFsx { this, &CMultiSimulatorSettings::onFsxSettingsChanged }; //!< FSX settings
         CSetting<TSimulatorFs9> m_simSettingsFs9 { this, &CMultiSimulatorSettings::onFs9SettingsChanged }; //!< FS9 settings
         CSetting<TSimulatorP3D> m_simSettingsP3D { this, &CMultiSimulatorSettings::onP3DSettingsChanged }; //!< P3D settings
+        CSetting<TSimulatorMsfs> m_simSettingsMsfs { this, &CMultiSimulatorSettings::onMsfsSettingsChanged }; //!< MSFS settings
         CSetting<TSimulatorXP> m_simSettingsXP { this, &CMultiSimulatorSettings::onXPSettingsChanged }; //!< XP settings
         CSetting<TSimulatorFG> m_simSettingsFG { this, &CMultiSimulatorSettings::onFGSettingsChanged }; //!< FG settings
 
@@ -523,6 +538,7 @@ namespace swift::misc::simulation::settings
         void onFsxSettingsChanged();
         void onFs9SettingsChanged();
         void onP3DSettingsChanged();
+        void onMsfsSettingsChanged();
         void onXPSettingsChanged();
         void onFGSettingsChanged();
         //! @}
