@@ -382,12 +382,12 @@ namespace swift::gui::components
         if (!info.isUnspecified())
         {
             m_pluginLoaded = true;
-            ui->lbl_PluginInfo->setText(info.getDescription());
+            ui->lbl_PluginInfo->setText("Connected to: " % info.getName());
         }
         else
         {
             m_pluginLoaded = false;
-            ui->lbl_PluginInfo->setText("No plugin loaded");
+            ui->lbl_PluginInfo->setText("No connection to simulator");
         }
         this->setGuiValues();
     }
