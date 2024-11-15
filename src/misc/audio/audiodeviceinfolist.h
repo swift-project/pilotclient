@@ -30,7 +30,7 @@ namespace swift::misc::audio
         using CSequence::CSequence;
 
         //! Default constructor.
-        CAudioDeviceInfoList();
+        CAudioDeviceInfoList() = default;
 
         //! Construct from a base class object.
         CAudioDeviceInfoList(const CSequence &other);
@@ -101,4 +101,4 @@ namespace swift::misc::audio
 Q_DECLARE_METATYPE(swift::misc::audio::CAudioDeviceInfoList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::audio::CAudioDeviceInfo>)
 
-#endif // guard
+#endif // SWIFT_MISC_AUDIO_AUDIODEVICELIST_H

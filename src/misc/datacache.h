@@ -11,7 +11,6 @@
 #include "misc/identifier.h"
 #include "misc/propertyindexref.h"
 #include "misc/statusmessage.h"
-#include "misc/logcategories.h"
 #include "misc/valuecache.h"
 #include "misc/valuecacheprivate.h"
 #include "misc/variantmap.h"

@@ -77,7 +77,7 @@ namespace swift::misc
         typename QMap<T, T>::iterator insert(const T &value) { return QMap<T, T>::insert(value, value); }
 
         //! Default constructor.
-        QOrderedSet() {}
+        QOrderedSet() = default;
 
         //! Initializer list constructor.
         QOrderedSet(std::initializer_list<T> il)
@@ -104,37 +104,37 @@ namespace swift::misc
     {
     public:
         //! STL compatibility
-        typedef T key_type;
+        using key_type = T;
 
         //! STL compatibility
-        typedef T value_type;
+        using value_type = T;
 
         //! STL compatibility
-        typedef T &reference;
+        using reference = T &;
 
         //! STL compatibility
-        typedef const T &const_reference;
+        using const_reference = const T &;
 
         //! STL compatibility
-        typedef T *pointer;
+        using pointer = T *;
 
         //! STL compatibility
-        typedef const T *const_pointer;
+        using const_pointer = const T *;
 
         //! STL compatibility
-        typedef typename QOrderedSet<T>::const_iterator const_iterator;
+        using const_iterator = typename QOrderedSet<T>::const_iterator;
 
         //! STL compatibility
-        typedef const_iterator iterator; // can't modify elements in-place
+        using iterator = const_iterator; // can't modify elements in-place
 
         //! STL compatibility
-        typedef ptrdiff_t difference_type;
+        using difference_type = ptrdiff_t;
 
         //! STL compatibility
-        typedef int size_type;
+        using size_type = int;
 
         //! Default constructor.
-        CCollection() {}
+        CCollection() = default;
 
         //! Initializer list constructor.
         CCollection(std::initializer_list<T> il) : m_impl(il) {}

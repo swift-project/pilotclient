@@ -408,7 +408,7 @@ void CSwiftLauncher::saveSetup()
 bool CSwiftLauncher::warnAboutOtherSwiftApplications()
 {
     CApplicationInfoList running = CGuiApplication::getRunningApplications();
-    running.removeApplication(CApplicationInfo::Laucher);
+    running.removeApplication(CApplicationInfo::Launcher);
     if (running.isEmpty()) { return true; }
 
     // getting here means another application is running

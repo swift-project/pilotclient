@@ -5,7 +5,6 @@
 #include "misc/swiftdirectories.h"
 #include "misc/fileutils.h"
 #include <QtGlobal>
-#include <QStringBuilder>
 #include <QDir>
 
 using namespace swift::misc::audio;
@@ -76,9 +75,7 @@ namespace swift::misc::audio
 
     void CSettings::setNotificationVolume(int volume)
     {
-        m_notificationVolume = volume;
-        if (m_notificationVolume < 0) { m_notificationVolume = 0; }
-        else if (m_notificationVolume > 100) { m_notificationVolume = 100; }
+        m_notificationVolume = std::clamp(volume, 0, 100);
     }
 
     void CSettings::setOutVolume(int volume)

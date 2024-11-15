@@ -14,7 +14,7 @@ namespace swift::misc::audio
     SWIFT_MISC_EXPORT bool startWindowsMixer();
 
     //! On windows init the audio devices
-    //! \remarks workaround for WSAPI driver crashes, hoping that upfront init already sets global vars. etc.
+    //! \remarks workaround for WASAPI driver crashes, hoping that upfront init already sets global vars. etc.
     SWIFT_MISC_EXPORT void initWindowsAudioDevices();
 }
 

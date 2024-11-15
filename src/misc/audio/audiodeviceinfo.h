@@ -119,4 +119,4 @@ namespace swift::misc::audio
 Q_DECLARE_METATYPE(swift::misc::audio::CAudioDeviceInfo)
 Q_DECLARE_METATYPE(swift::misc::audio::CAudioDeviceInfo::DeviceType)
 
-#endif // guard
+#endif // SWIFT_MISC_AUDIO_AUDIODEVICE_H

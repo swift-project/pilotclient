@@ -29,7 +29,7 @@ namespace swift::misc
         };
 
         //! Default constructor.
-        CCrashInfo();
+        CCrashInfo() = default;
 
         //! Get user name
         const QString &getUserName() const { return m_userName; }
@@ -104,4 +104,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CCrashInfo)
 
-#endif // guard
+#endif // SWIFT_MISC_CRASHINFO_H

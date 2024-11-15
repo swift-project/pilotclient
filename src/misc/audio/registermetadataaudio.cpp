@@ -10,21 +10,19 @@
 
 #include <QDBusMetaType>
 
-namespace swift::misc
+namespace swift::misc::audio
 {
-    namespace audio
+    //! Register metadata for audio / voice
+    void registerMetadata()
     {
-        //! Register metadata for audio / voice
-        void registerMetadata()
-        {
-            CAudioDeviceInfo::registerMetadata();
-            CAudioDeviceInfoList::registerMetadata();
-            CSettings::registerMetadata();
+        CAudioDeviceInfo::registerMetadata();
+        CAudioDeviceInfoList::registerMetadata();
+        CSettings::registerMetadata();
 
-            // ENUMs
-            qDBusRegisterMetaType<CNotificationSounds::NotificationFlag>();
-            qDBusRegisterMetaType<CAudioDeviceInfo::DeviceType>();
-        }
+        // ENUMs
+        qDBusRegisterMetaType<CNotificationSounds::NotificationFlag>();
+        qDBusRegisterMetaType<CAudioDeviceInfo::DeviceType>();
     }
+}
 
-} // ns
+// ns

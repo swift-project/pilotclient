@@ -41,4 +41,4 @@ namespace swift::misc
     };
 } // ns
 
-#endif // guard
+#endif // SWIFT_MISC_COMPRESSUTILS_H

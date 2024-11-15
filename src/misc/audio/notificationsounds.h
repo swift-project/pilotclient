@@ -75,4 +75,4 @@ namespace swift::misc::audio
 Q_DECLARE_METATYPE(swift::misc::audio::CNotificationSounds::Notification)
 Q_DECLARE_METATYPE(swift::misc::audio::CNotificationSounds::NotificationFlag)
 
-#endif // guard
+#endif // SWIFT_MISC_NOTIFICATIONSOUNDS_H

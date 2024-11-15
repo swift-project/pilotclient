@@ -12,8 +12,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::audio, CAudioDeviceInfo, CAudioDeviceI
 
 namespace swift::misc::audio
 {
-    CAudioDeviceInfoList::CAudioDeviceInfoList() {}
-
     CAudioDeviceInfoList::CAudioDeviceInfoList(const CSequence &other) : CSequence(other)
     {}
 

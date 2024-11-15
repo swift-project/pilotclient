@@ -44,4 +44,4 @@ namespace swift::misc::Compare
     }
 } // ns
 
-#endif
+#endif // SWIFT_MISC_COMPAREFUNCTIONS_H

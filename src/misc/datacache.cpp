@@ -5,7 +5,6 @@
 
 #include "misc/datacache.h"
 #include "misc/atomicfile.h"
-#include "misc/directoryutils.h"
 #include "misc/identifier.h"
 #include "misc/logmessage.h"
 #include "misc/processinfo.h"

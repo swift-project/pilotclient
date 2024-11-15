@@ -15,8 +15,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CApplicationInfo)
 
 namespace swift::misc
 {
-    CApplicationInfo::CApplicationInfo() {}
-
     CApplicationInfo::CApplicationInfo(Application app) : m_app(app),
                                                           m_wordSize(CBuildConfig::buildWordSize()),
                                                           m_exePath(QCoreApplication::applicationDirPath()),
@@ -43,7 +41,7 @@ namespace swift::misc
 
         switch (getApplication())
         {
-        case Laucher: return launcher;
+        case Launcher: return launcher;
         case PilotClientCore: return core;
         case PilotClientGui: return gui;
         case MappingTool: return mapping;
@@ -94,7 +92,7 @@ namespace swift::misc
     {
         switch (getApplication())
         {
-        case Laucher: return CIcons::SwiftLauncher16;
+        case Launcher: return CIcons::SwiftLauncher16;
         case PilotClientCore: return CIcons::SwiftCore16;
         case PilotClientGui: return CIcons::Swift16;
         case MappingTool: return CIcons::SwiftDatabase16;
@@ -218,7 +216,7 @@ namespace swift::misc
         if (a.contains("test")) { return CApplicationInfo::UnitTest; } // names like testcore
         if (a.contains("sample")) { return CApplicationInfo::Sample; }
         if (a.contains("core")) { return CApplicationInfo::PilotClientCore; }
-        if (a.contains("launcher")) { return CApplicationInfo::Laucher; }
+        if (a.contains("launcher")) { return CApplicationInfo::Launcher; }
         if (a.contains("gui")) { return CApplicationInfo::PilotClientGui; }
         if (a.contains("data") || a.contains("mapping")) { return CApplicationInfo::MappingTool; }
         return CApplicationInfo::Unknown;

@@ -676,7 +676,7 @@ namespace swift::gui
         addMenuForStyleSheets(menu);
         QAction *a = nullptr;
         bool c = false;
-        if (this->getApplicationInfo().getApplication() != CApplicationInfo::Laucher)
+        if (this->getApplicationInfo().getApplication() != CApplicationInfo::Launcher)
         {
             menu.addSeparator();
             a = menu.addAction(CIcons::swiftLauncher24(), "Start swift launcher");

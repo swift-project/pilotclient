@@ -28,7 +28,7 @@ namespace swift::misc
         enum Application
         {
             Unknown,
-            Laucher,
+            Launcher,
             PilotClientCore,
             PilotClientGui,
             MappingTool,
@@ -52,7 +52,7 @@ namespace swift::misc
         };
 
         //! Default constructor.
-        CApplicationInfo();
+        CApplicationInfo() = default;
 
         //! Constructor.
         CApplicationInfo(Application app);
@@ -154,7 +154,7 @@ namespace swift::misc
         //! Name of swift core
         static const QString &swiftCore();
 
-        //! Info automatically initalized
+        //! Info automatically initialized
         static const CApplicationInfo &autoInfo();
 
         //! File name of the application info file
@@ -165,7 +165,7 @@ namespace swift::misc
 
     private:
         int m_app = static_cast<int>(Unknown);
-        int m_wordSize;
+        int m_wordSize {};
         QString m_exePath;
         QString m_applicationDataDir;
         QString m_version;

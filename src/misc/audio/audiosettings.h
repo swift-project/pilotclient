@@ -65,9 +65,6 @@ namespace swift::misc::audio
         bool afvBlocked() const { return this->isNotificationFlagSet(CNotificationSounds::AFVBlocked); }
         //! @}
 
-        //! Settings value
-        CStatusMessage value(const QString &path, const QString &command, const CVariant &value, bool &changedFlag);
-
         //! Directory
         void setNotificationSoundDirectory(const QString &dir);
 
@@ -167,4 +164,4 @@ namespace swift::misc::audio
 
 Q_DECLARE_METATYPE(swift::misc::audio::CSettings)
 
-#endif // guard
+#endif // SWIFT_MISC_AUDIO_SETTINGS_H

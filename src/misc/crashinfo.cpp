@@ -5,14 +5,10 @@
 #include "misc/fileutils.h"
 #include "misc/worker.h"
 
-#include <QStringBuilder>
-
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CCrashInfo)
 
 namespace swift::misc
 {
-    CCrashInfo::CCrashInfo() {}
-
     QString CCrashInfo::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
@@ -38,8 +34,7 @@ namespace swift::misc
     QVariant CCrashInfo::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
-        switch (i)
+        switch (index.frontCasted<ColumnIndex>())
         {
         case IndexUserName: return QVariant::fromValue(m_userName);
         case IndexInfo: return QVariant::fromValue(m_info);
@@ -57,8 +52,7 @@ namespace swift::misc
             (*this) = variant.value<CCrashInfo>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
-        switch (i)
+        switch (index.frontCasted<ColumnIndex>())
         {
         case IndexUserName: this->setUserName(variant.toString()); break;
         case IndexInfo: this->setUserName(variant.toString()); break;
@@ -71,8 +65,7 @@ namespace swift::misc
     int CCrashInfo::comparePropertyByIndex(CPropertyIndexRef index, const CCrashInfo &compareValue) const
     {
         if (index.isMyself()) { return this->getInfo().compare(compareValue.getInfo()); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
-        switch (i)
+        switch (index.frontCasted<ColumnIndex>())
         {
         case IndexUserName: return this->getUserName().compare(compareValue.getUserName());
         case IndexInfo: return this->getInfo().compare(compareValue.getInfo());

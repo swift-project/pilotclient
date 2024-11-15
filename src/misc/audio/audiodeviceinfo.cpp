@@ -6,7 +6,6 @@
 #include "misc/comparefunctions.h"
 #include "misc/verify.h"
 
-#include <QStringBuilder>
 #include <QHostInfo>
 #include <QtGlobal>
 #include <QAudioDevice>
@@ -49,19 +48,18 @@ namespace swift::misc::audio
 
     CAudioDeviceInfo CAudioDeviceInfo::getDefaultOutputDevice()
     {
-        return CAudioDeviceInfo(OutputDevice, QMediaDevices::defaultAudioOutput().description());
+        return { OutputDevice, QMediaDevices::defaultAudioOutput().description() };
     }
 
     CAudioDeviceInfo CAudioDeviceInfo::getDefaultInputDevice()
     {
-        return CAudioDeviceInfo(InputDevice, QMediaDevices::defaultAudioInput().description());
+        return { InputDevice, QMediaDevices::defaultAudioInput().description() };
     }
 
     QVariant CAudioDeviceInfo::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
-        switch (i)
+        switch (index.frontCasted<ColumnIndex>())
         {
         case IndexDeviceType: return QVariant::fromValue(this->getType());
         case IndexDeviceTypeAsString: return QVariant::fromValue(this->getTypeAsString());
@@ -79,8 +77,7 @@ namespace swift::misc::audio
             (*this) = variant.value<CAudioDeviceInfo>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
-        switch (i)
+        switch (index.frontCasted<ColumnIndex>())
         {
         case IndexDeviceType: m_type = static_cast<DeviceType>(variant.toInt()); return;
         case IndexName: m_deviceName = variant.toString(); return;
@@ -93,8 +90,7 @@ namespace swift::misc::audio
     int CAudioDeviceInfo::comparePropertyByIndex(CPropertyIndexRef index, const CAudioDeviceInfo &compareValue) const
     {
         if (index.isMyself()) { return m_deviceName.compare(compareValue.m_deviceName, Qt::CaseInsensitive); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
-        switch (i)
+        switch (index.frontCasted<ColumnIndex>())
         {
         case IndexDeviceTypeAsString:
         case IndexDeviceType: return Compare::compare(m_type, compareValue.m_type);

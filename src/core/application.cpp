@@ -261,7 +261,7 @@ namespace swift::core
         switch (application)
         {
         case CApplicationInfo::PilotClientCore: searchFor = "core"; break;
-        case CApplicationInfo::Laucher: searchFor = "launcher"; break;
+        case CApplicationInfo::Launcher: searchFor = "launcher"; break;
         case CApplicationInfo::MappingTool: searchFor = "data"; break;
         case CApplicationInfo::PilotClientGui: searchFor = "gui"; break;
         default: break;
@@ -278,8 +278,8 @@ namespace swift::core
 
     bool CApplication::startLauncher()
     {
-        static const QString launcher = CApplication::getExecutableForApplication(CApplicationInfo::Application::Laucher);
-        if (launcher.isEmpty() || CApplication::isApplicationRunning(CApplicationInfo::Laucher)) { return false; }
+        static const QString launcher = CApplication::getExecutableForApplication(CApplicationInfo::Application::Launcher);
+        if (launcher.isEmpty() || CApplication::isApplicationRunning(CApplicationInfo::Launcher)) { return false; }
 
         // const QStringList args = this->argumentsJoined({}, { "--dbus", "--core", "--coreaudio" });
         const QStringList args = this->argumentsJoined({}, { "--dbus", "--core" });

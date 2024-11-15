@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     CGuiApplication::highDpiScreenSupport(CGuiApplication::scaleFactor(argc, argv));
     QApplication qa(argc, argv); // needed
     Q_UNUSED(qa)
-    CGuiApplication a(CApplicationInfo::swiftLauncher(), CApplicationInfo::Laucher, CIcons::swiftLauncher1024());
+    CGuiApplication a(CApplicationInfo::swiftLauncher(), CApplicationInfo::Launcher, CIcons::swiftLauncher1024());
     a.addNetworkOptions(); // so it can be passed (hand over) to started applications
     a.addDBusAddressOption(); // required by the dbus server address selector
     const QCommandLineOption installerOption { { "i", "installer" }, QCoreApplication::translate("main", "Installer setup.") };
