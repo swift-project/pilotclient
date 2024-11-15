@@ -41,16 +41,12 @@ namespace swift::gui
         //! Emitted when user enables/disables the particular plugin
         void pluginStateChanged(const QString &identifier, bool enabled);
 
-        //! Emitted when user clicks the "Details" button
-        void pluginDetailsRequested(const QString &identifier);
-
         //! Emitted when user clicks the "Settings" button
         void pluginConfigRequested(const QString &identifier);
 
     private:
         void handlePluginStateChange();
 
-        QSignalMapper *m_detailsButtonMapper = new QSignalMapper(this);
         QSignalMapper *m_configButtonMapper = new QSignalMapper(this);
     };
 } // ns

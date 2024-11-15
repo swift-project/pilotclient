@@ -23,7 +23,6 @@ namespace swift::gui
         QVBoxLayout *layout = new QVBoxLayout;
         setLayout(layout);
 
-        connect(m_detailsButtonMapper, &QSignalMapper::mappedString, this, &CPluginSelector::pluginDetailsRequested);
         connect(m_configButtonMapper, &QSignalMapper::mappedString, this, &CPluginSelector::pluginConfigRequested);
     }
 
@@ -62,15 +61,8 @@ namespace swift::gui
             pw->layout()->addWidget(config);
         }
 
-        QPushButton *details = new QPushButton("?");
-        details->setToolTip("Plugin details");
-        m_detailsButtonMapper->setMapping(details, identifier);
-        connect(details, &QPushButton::clicked, m_detailsButtonMapper, qOverload<>(&QSignalMapper::map));
-        pw->layout()->addWidget(details);
-
         layout->setStretch(0, 1);
         layout->setStretch(1, 0);
-        layout->setStretch(2, 0);
 
         this->layout()->addWidget(pw);
     }

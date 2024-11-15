@@ -80,9 +80,6 @@ namespace swift::gui::components
         //! Simulator plugin changed
         void simulatorPluginChanged(const swift::misc::simulation::CSimulatorPluginInfo &info);
 
-        //! Open plugin details window
-        void showPluginDetails(const QString &identifier);
-
         //! Show plugin config
         void showPluginConfig(const QString &identifier);
 

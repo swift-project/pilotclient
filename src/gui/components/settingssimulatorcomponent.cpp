@@ -61,7 +61,6 @@ namespace swift::gui::components
 
         // connects
         connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginStateChanged, this, &CSettingsSimulatorComponent::pluginStateChanged);
-        connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginDetailsRequested, this, &CSettingsSimulatorComponent::showPluginDetails);
         connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginConfigRequested, this, &CSettingsSimulatorComponent::showPluginConfig);
 
         connect(ui->pb_Reload, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onReload, Qt::QueuedConnection);
@@ -391,26 +390,6 @@ namespace swift::gui::components
             ui->lbl_PluginInfo->setText("No plugin loaded");
         }
         this->setGuiValues();
-    }
-
-    void CSettingsSimulatorComponent::showPluginDetails(const QString &identifier)
-    {
-        const CSimulatorPluginInfoList simDrivers(this->getAvailablePlugins());
-        const CSimulatorPluginInfo selected = simDrivers.findByIdentifier(identifier);
-
-        QWidget *aw = qApp->activeWindow();
-        Q_ASSERT_X(aw, Q_FUNC_INFO, "Missing active window");
-
-        CPluginDetailsWindow *w = new CPluginDetailsWindow(aw);
-        SWIFT_VERIFY_X(w, Q_FUNC_INFO, "Missing window");
-        if (!w) { return; }
-
-        w->setAttribute(Qt::WA_DeleteOnClose);
-        w->setPluginIdentifier(selected.getIdentifier());
-        w->setPluginName(selected.getName());
-        w->setPluginDescription(selected.getDescription());
-
-        w->show();
     }
 
     void CSettingsSimulatorComponent::showPluginConfig(const QString &identifier)
