@@ -55,7 +55,7 @@ namespace swift::misc
         switch (index.frontCasted<ColumnIndex>())
         {
         case IndexUserName: this->setUserName(variant.toString()); break;
-        case IndexInfo: this->setUserName(variant.toString()); break;
+        case IndexInfo: this->setInfo(variant.toString()); break;
         case IndexSimulatorString: this->setSimulatorString(variant.toString()); break;
         case IndexFlightNetworkInfo: this->setFlightNetworkString(variant.toString()); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
